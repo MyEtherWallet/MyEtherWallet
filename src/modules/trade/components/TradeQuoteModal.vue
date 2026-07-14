@@ -1,8 +1,8 @@
 <template>
   <app-dialog
     v-model:is-open="model"
-    title="Trade Quote"
-    class="sm:max-w-[460px] sm:mx-auto"
+    :title="$t('trade.quote_modal.title')"
+    class="sm:max-w-[500px] sm:mx-auto sm:min-w-[460px]"
   >
     <template #content>
       <div class="mx-4 mb-1 pb-2">
@@ -10,12 +10,12 @@
           class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
-            Trade Quote from 1inch Fusion
+            {{ $t('trade.quote_modal.quote_from') }}
           </h3>
           <div
             class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
           >
-            <span> For</span>
+            <span> {{ $t('trade.quote_modal.for') }}</span>
 
             <app-token-logo
               :url="fromToken?.logoURI"
@@ -40,7 +40,7 @@
                 class="!text-s-17 lg:!text-s-20 !font-bold ml-[2px]"
               />
             </div>
-            <span> you will get:</span>
+            <span> {{ $t('trade.quote_modal.you_will_get') }}</span>
           </div>
           <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
             <div class="relative flex-none overflow-visible">
@@ -79,45 +79,61 @@
           <!-- Quote Details -->
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
-              <span class="text-info">Estimated Amount</span>
-              <span class="font-medium flex items-center gap-1"
-                >{{ toAmountFormatted }}
-                <app-token-symbol
-                  :symbol="toToken?.symbol || 'UNKNOWN'"
-                  :address="
-                    toToken && chain
-                      ? { address: toToken.address, network: chain.name }
-                      : undefined
-                  "
-                  class="!text-s-14 !font-medium !leading-p-100"
+              <p class="text-info">
+                {{ $t('trade.quote_modal.estimated_amount') }}
+                <app-tooltip
+                  :text="$t('trade.quote_modal.limit_order_warning')"
+                  class="inline-flex align-middle"
                 />
-              </span>
+              </p>
+              <div>
+                <p class="font-medium flex items-center gap-1">
+                  {{ toAmountFormatted }}
+                  <app-token-symbol
+                    :symbol="toToken?.symbol || 'UNKNOWN'"
+                    :address="
+                      toToken && chain
+                        ? { address: toToken.address, network: chain.name }
+                        : undefined
+                    "
+                    class="!text-s-14 !font-medium !leading-p-100"
+                  />
+                </p>
+                <p class="text-info font-normal text-right text-s-12">
+                  ${{ toAmountFiat }}
+                </p>
+              </div>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
-              <span class="text-info">Min Amount</span>
-              <span class="font-medium flex items-center gap-1"
-                >{{ minAmountFormatted }}
-                <app-token-symbol
-                  :symbol="toToken?.symbol || 'UNKNOWN'"
-                  :address="
-                    toToken && chain
-                      ? { address: toToken.address, network: chain.name }
-                      : undefined
-                  "
-                  class="!text-s-14 !font-medium !leading-p-100"
-                />
-              </span>
+              <span class="text-info">{{
+                $t('trade.quote_modal.min_amount')
+              }}</span>
+              <div>
+                <p class="font-medium flex items-center gap-1">
+                  {{ minAmountFormatted }}
+                  <app-token-symbol
+                    :symbol="toToken?.symbol || 'UNKNOWN'"
+                    :address="
+                      toToken && chain
+                        ? { address: toToken.address, network: chain.name }
+                        : undefined
+                    "
+                    class="!text-s-14 !font-medium !leading-p-100"
+                  />
+                </p>
+                <p class="text-info font-normal text-right text-s-12">
+                  ${{ minAmountFiat }}
+                </p>
+              </div>
             </div>
           </div>
-
-          <!-- Warning -->
-          <div class="mt-4 p-3 bg-warning-10 rounded-12 text-s-12 text-warning">
-            <p>
-              This is a limit order trade. The final amount may vary slightly
-              based on market conditions.
-            </p>
-          </div>
         </div>
+
+        <!-- Rewards eligibility banner -->
+        <rewards-trade-confirmation-banner
+          :trade-amount="toAmountFiat"
+          :is-cashout="isCashout ?? false"
+        />
 
         <!-- Actions -->
         <div class="flex flex-col gap-3 mt-4">
@@ -143,9 +159,9 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>Processing...</span>
+              <span>{{ $t('common.processing') }}</span>
             </div>
-            <span v-else>Confirm Trade</span>
+            <span v-else>{{ $t('trade.quote_modal.confirm_trade') }}</span>
           </app-base-button>
           <app-btn-text
             :disabled="loading"
@@ -153,7 +169,7 @@
             class="text-error"
             @click="$emit('cancel')"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </app-btn-text>
         </div>
       </div>
@@ -168,6 +184,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
+import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfirmationBanner.vue'
 import { formatUnits } from 'viem'
 import {
   formatFloatingPointValue,
@@ -189,6 +207,7 @@ const props = defineProps<{
   fromAmount: string
   loading?: boolean
   chain?: Chain
+  isCashout?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -216,6 +235,17 @@ const toAmountFiat = computed(() => {
   if (!props.quote || !props.toToken) return '0.00'
   const amount = props.quote.avgAmount || props.quote.startAmount
   const formatted = formatUnits(amount, props.toToken.decimals || 18)
+  const price = props.toToken.price || 0
+  const fiat = parseFloat(formatted) * price
+  return formatFiatValue(fiat.toString()).value
+})
+
+const minAmountFiat = computed(() => {
+  if (!props.quote?.endAmount || !props.toToken) return '0.00'
+  const formatted = formatUnits(
+    props.quote.endAmount,
+    props.toToken.decimals || 18,
+  )
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
   return formatFiatValue(fiat.toString()).value

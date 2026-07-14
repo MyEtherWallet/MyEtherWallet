@@ -304,8 +304,8 @@
                     {{ formatChange(contract.priceChangePercent) }}
                   </p>
                   <table-sparkline
-                    v-if="contract.sparkline?.price.length"
-                    :points="contract.sparkline.price.map(Number)"
+                    v-if="contract.sparkline?.price?.length"
+                    :points="(contract.sparkline?.price ?? []).map(Number)"
                     :width="70"
                     :height="24"
                     :max-points="34"
@@ -621,6 +621,11 @@ import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
@@ -638,6 +643,7 @@ const leverageError = ref('')
 const leverageMarket = ref('')
 const leverageSymbol = ref('')
 const leverageMaxLeverage = ref(20)
+const leverageOldValue = ref(1)
 const perpsToasts = usePerpsToasts()
 
 const openLeverage = (
@@ -656,6 +662,7 @@ const openLeverage = (
     ? parsedCurrent
     : maxLev
   tempLeverage.value = Math.min(initial, maxLev)
+  leverageOldValue.value = tempLeverage.value
   leverageError.value = ''
   showLeverageDialog.value = true
 }
@@ -663,14 +670,36 @@ const openLeverage = (
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: leverageMarket.value,
+    oldLeverage: leverageOldValue.value,
+    maxLeverage: leverageMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(leverageMarket.value, tempLeverage.value)
     showLeverageDialog.value = false
     perpsToasts.toastLeverageUpdated(tempLeverage.value, leverageMarket.value)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }
@@ -766,15 +795,20 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
   for (const m of markets.value) {
     marketMap.set(m.market, m)
   }
-  return contracts.value.map(c => {
-    const pair = marketMap.get(c.market)
-    return {
-      ...c,
-      displayName: pair?.displayName ?? c.baseCurrency,
-      longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
-      defaultLeverage: pair?.defaultLeverage ?? '',
-    }
-  })
+  // Contracts flagged `disabled` by the API must not appear in the market
+  // list (MEW-2025). Filtered here (display source) rather than at the shared
+  // `contracts` ref so an active/held disabled market still resolves elsewhere.
+  return contracts.value
+    .filter(c => !c.disabled)
+    .map(c => {
+      const pair = marketMap.get(c.market)
+      return {
+        ...c,
+        displayName: pair?.displayName ?? c.baseCurrency,
+        longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
+        defaultLeverage: pair?.defaultLeverage ?? '',
+      }
+    })
 })
 
 const filteredContracts = computed(() => {

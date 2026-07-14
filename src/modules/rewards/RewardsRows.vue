@@ -2,6 +2,7 @@
   <div class="flex flex-col gap-5 xs:gap-3">
     <!-- Swap Row -->
     <div
+      v-if="hasSwap"
       class="flex items-center justify-between gap-3"
       :class="{
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
@@ -27,7 +28,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Swap and Earn $5</span
+            >Swap and Earn 5 USDC</span
           >
           <template v-if="!swapClaimed && !swapNoRewards">
             <div
@@ -83,6 +84,7 @@
 
     <!-- Trade Row -->
     <div
+      v-if="hasTrade"
       class="flex items-center justify-between gap-3"
       :class="{
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
@@ -112,7 +114,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Trade and Earn $5</span
+            >Trade and Earn 5 USDC</span
           >
           <template
             v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
@@ -154,7 +156,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        Trade $25+
+        Trade ${{ minSpendTrade }}+
       </app-base-button>
       <button
         v-else
@@ -210,6 +212,9 @@ defineProps<{
   timeUntilTradeNextEligible: string
   timeUntilMarketOpen: string
   isRewardsView?: boolean
+  hasSwap: boolean
+  hasTrade: boolean
+  minSpendTrade: string
 }>()
 
 defineEmits<{

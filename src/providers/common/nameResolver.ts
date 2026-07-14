@@ -1,4 +1,5 @@
 import { isAddress, toChecksumAddress } from '@/utils/addressUtils'
+import i18n from '@/i18n'
 import NameResolver, { type CoinType } from '@enkryptcom/name-resolution'
 import { createWeb3Name } from '@web3-name-sdk/core'
 
@@ -48,7 +49,7 @@ export default class ENSNameResolver {
 
   async resolveName(name: string): Promise<string> {
     if (!this.isValidName(name)) {
-      throw new Error('Invalid name')
+      throw new Error(i18n.global.t('common.error.invalid_name'))
     }
     const normalized = normalize(name)
     let address: string | null = await this.resolver.resolveAddress(

@@ -158,8 +158,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       const eligible = result?.swap.eligible ?? result?.trade.eligible ?? false
       analytics.setUserProperties({
         canClaimRewards: eligible,
-        canClaimSwap: result?.trade.eligible,
-        canClaimTrade: result?.swap.eligible,
+        canClaimSwap: result?.swap.eligible,
+        canClaimTrade: result?.trade.eligible,
       })
     } catch (error) {
       console.error('Failed to fetch reward eligibility:', error)
@@ -238,14 +238,20 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
 
   /** User Rewards */
   const swapClaimed = computed(() => {
-    return eligibilityV2.value ? !eligibilityV2.value.swap.eligible && eligibilityV2.value?.swap.reasons.some(
-      r => r.type === 'USER_RECENTLY_REWARDED',
-    ) : null
+    return eligibilityV2.value
+      ? !eligibilityV2.value.swap.eligible &&
+          eligibilityV2.value?.swap.reasons.some(
+            r => r.type === 'USER_RECENTLY_REWARDED',
+          )
+      : null
   })
   const tradeClaimed = computed(() => {
-    return eligibilityV2.value ? !eligibilityV2.value.trade.eligible && eligibilityV2.value?.trade.reasons.some(
-      r => r.type === 'USER_RECENTLY_REWARDED',
-    ) : null
+    return eligibilityV2.value
+      ? !eligibilityV2.value.trade.eligible &&
+          eligibilityV2.value?.trade.reasons.some(
+            r => r.type === 'USER_RECENTLY_REWARDED',
+          )
+      : null
   })
 
   const hasRewards = computed(() => rewards.value.length > 0)
@@ -278,9 +284,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   const isRewardEarnedDuringCampaign = (reward: V2RewardItem): boolean => {
     if (!poolV2.value) return false
     const CAMPAIGN_START = new Date(poolV2.value.campaignStartDate)
-    const CAMPAIGN_END = new Date(
-      new Date(poolV2.value.campaignEndDate)
-    )
+    const CAMPAIGN_END = new Date(new Date(poolV2.value.campaignEndDate))
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
     return rewardDate >= CAMPAIGN_START && rewardDate < CAMPAIGN_END
@@ -290,17 +294,11 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     const _rewards = rewards.value.slice(0, 2)
     if (_rewards.length === 0) return
     _rewards.forEach(r => {
-      if (
-        r.swapType === 'SWAP' &&
-        isRewardEarnedDuringCampaign(r)
-      ) {
+      if (r.swapType === 'SWAP' && isRewardEarnedDuringCampaign(r)) {
         analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
           type: 'swap',
         })
-      } else if (
-        r.swapType === 'TRADE' &&
-        isRewardEarnedDuringCampaign(r)
-      ) {
+      } else if (r.swapType === 'TRADE' && isRewardEarnedDuringCampaign(r)) {
         analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
           type: 'trade',
         })
@@ -323,7 +321,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         setEarnedPotentialReward(false)
       }
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   const fetchAll = async () => {
@@ -355,11 +353,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     const swapGeneric = eligibilityV2.value?.swap.reasons.some(
       r => r.type === 'REWARDS_DISABLED',
     )
-
-    if (!tradeRecentlyRewarded || !swapRecentlyRewarded) {
-      return tradeGeneric || swapGeneric
-    }
-    return false
+    // Banned only when BOTH trade and swap are rewards-disabled; if either one
+    // is still enabled the user can keep earning, so they are not banned.
+    const bothRecentlyRewarded = tradeRecentlyRewarded && swapRecentlyRewarded
+    return !bothRecentlyRewarded && !!(tradeGeneric && swapGeneric)
   })
 
   const canClaimReward = computed(() => {
@@ -368,6 +365,17 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     return (
       eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
     )
+  })
+
+  const canClaimTradeReward = computed(() => {
+    if (isBitcoinChain.value) return true
+    if (!eligibilityV2.value) return false
+    return eligibilityV2.value.trade.eligible
+  })
+
+  const minSpendTrade = computed(() => {
+    const min = tradePool.value?.minSpendUsd
+    return min != null ? Math.ceil(min).toString() : '-'
   })
 
   const isLoading = computed(() => {
@@ -423,6 +431,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     hadInitialLoad,
     isRewardEarnedDuringCampaign,
     isBanned,
-    checkRewards
+    checkRewards,
+    minSpendTrade,
+    canClaimTradeReward,
   }
 })

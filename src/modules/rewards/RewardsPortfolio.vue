@@ -10,14 +10,15 @@
     <!-- Default State -->
     <div
       v-else
-      class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
+      class="bg-white rounded-16 h-full flex flex-col justify-space-around px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
       <div class="flex items-start justify-between gap-2 mb-5">
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            First trades of $25+ and swaps of $50+ earn 5 USDC each hour.
+            The first 15 trades over ${{ minSpendTrade }} every hour receive 5
+            in USDC in rewards. Once per week per wallet.
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
@@ -58,10 +59,13 @@
         :time-until-swap-next-eligible="timeUntilSwapNextEligible"
         :time-until-trade-next-eligible="timeUntilTradeNextEligible"
         :time-until-market-open="timeUntilMarketOpen"
+        :has-swap="false"
+        :has-trade="true"
+        :min-spend-trade="minSpendTrade"
         @swap="goToSwap"
         @trade="goToTrade"
         class="max-w-[360px] 2xl:max-w-none"
-        :class="[isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : '']"
+        :class="[isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : 'mt-5']"
         is-rewards-view
       />
 
@@ -70,13 +74,13 @@
         <p class="text-s-14 font-semibold text-error leading-5">
           Not eligible for rewards
         </p>
-        <p
+        <!-- <p
           class="text-s-14 text-[#575757] leading-5 mt-1"
           :class="{ '2xl:hidden ': isOpenSideMenu }"
         >
           Wallets created after April 20th are not eligible for rewards. Try
           connecting an older wallet.
-        </p>
+        </p> -->
         <button
           class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
           @click="onConnectAddress"
@@ -154,6 +158,7 @@ const {
   tradeRemainingCount,
   nextHourStart,
   isBanned,
+  minSpendTrade,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)

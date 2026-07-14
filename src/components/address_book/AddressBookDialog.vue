@@ -38,7 +38,7 @@
                 <app-search-input
                   v-model="searchInput"
                   class="grow"
-                  placeholder="Search by Name"
+                  :placeholder="$t('common.search_by_name_or_address')"
                   bg-class="bg-surface"
                 />
                 <app-base-button
@@ -46,8 +46,8 @@
                   class="!px-5 !min-h-[40px] !text-s-15"
                   @click="showAddAddress = true"
                 >
-                  Add
-                </app-base-button>
+                  {{ $t('common.add') }}
+</app-base-button>
               </div>
             </div>
 
@@ -71,9 +71,8 @@
               >
                 {{
                   selectedListItem.id === 'recent'
-                    ? 'Recent Transactions'
-                    : (network?.nameLong || selectedChain?.nameLong) +
-                      ' Addresses'
+                    ? $t('address_book.recent_transactions')
+                    : $t('address_book.chain_addresses', { chain: network?.nameLong || selectedChain?.nameLong })
                 }}
               </p>
               <address-book-item
@@ -90,8 +89,7 @@
                 v-if="otherChainsAdrs.length"
                 class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
-                Non-{{ network?.nameLong || selectedChain?.nameLong }}
-                Compatible Addresses
+                {{ $t('address_book.non_compatible', { chain: network?.nameLong || selectedChain?.nameLong }) }}
               </p>
               <address-book-item
                 v-for="adr in otherChainsAdrs"
@@ -108,15 +106,14 @@
                 v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
                 class="text-s-17 mb-2 px-2 mt-6 text-info text-center"
               >
-                You do not have any saved addresses that are compatible with
-                this network.
+                {{ $t('address_book.no_saved_addresses') }}
               </p>
 
               <p
                 v-if="otherAddressBook.length"
                 class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
-                Incompatible Addresses
+                {{ $t('address_book.incompatible_addresses') }}
               </p>
               <address-book-item
                 v-for="adr in incompatibleAddresses"
@@ -146,7 +143,8 @@
  *
  */
 import AddAddress from './AddAddress.vue'
-import { ref, computed, type PropType } from 'vue'
+import { ref, computed, watch, type PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
 import AppBtnGroup from '../AppBtnGroup.vue'
@@ -159,6 +157,8 @@ import AddressBookItem from './AddressBookItem.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import type { Chain } from '@/mew_api/types'
+
+const { t } = useI18n()
 
 const props = defineProps({
   label: {
@@ -194,12 +194,17 @@ interface AddressListItem {
   id: string
 }
 
-const addressList = ref<AddressListItem[]>([
-  { name: 'Recent', id: 'recent' },
-  { name: 'Saved', id: 'addresses' },
+const addressList = computed<AddressListItem[]>(() => [
+  { name: t('address_book.recent'), id: 'recent' },
+  { name: t('address_book.saved'), id: 'addresses' },
 ])
 
 const selectedListItem = ref<AddressListItem>(addressList.value[0])
+
+watch(addressList, newList => {
+  const refreshed = newList.find(item => item.id === selectedListItem.value.id)
+  if (refreshed) selectedListItem.value = refreshed
+})
 
 /**------------------------
  * Items
@@ -313,9 +318,9 @@ const showAddAddress = ref(false)
 const dialogTitle = computed(() => {
   return showAddAddress.value
     ? editAdr.value
-      ? 'Edit Address'
-      : 'Add Address'
-    : 'Address Book'
+      ? t('address_book.edit_address')
+      : t('address_book.add_address')
+    : t('address_book.title')
 })
 
 const editAdr = ref<Address | undefined>(undefined)

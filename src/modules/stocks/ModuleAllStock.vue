@@ -4,14 +4,14 @@
       <div
         class="flex flex-wrap justify-start md:justify-between items-center gap-2 mb-6"
       >
-        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">All Stocks</h1>
+        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">{{ $t('stocks.all_stocks') }}</h1>
 
         <!-- Mobile only Categories-->
         <app-select
           v-model:selected="selectedCryptoFilter"
           :options="cryptoFilterOptions"
           position="left-0"
-          placeholder="Category Menu"
+          :placeholder="$t('stocks.category_menu')"
           class="w-full md:hidden"
         >
           <template #select-button="{ toggleSelect }">
@@ -55,7 +55,7 @@
                   @click="toggleSelect"
                 >
                   <div class="flex items-center text-s-17 leading-p-140">
-                    <span>More</span>
+                    <span>{{ $t('common.more') }}</span>
                     <chevron-down-icon class="w-4 h-4 ml-1" />
                   </div>
                 </button>
@@ -101,7 +101,7 @@
                     }"
                     @click="setHeaderSort('NAME')"
                   >
-                    Name
+                    {{ $t('stocks.name') }}
                     <arrow-long-up-icon
                       class="w-3 h-3"
                       v-if="headerSort === 'NAME' && tableDirection === 'asc'"
@@ -123,7 +123,7 @@
                     }"
                     @click="setHeaderSort('PRICE')"
                   >
-                    Price
+                    {{ $t('stocks.price') }}
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
@@ -146,7 +146,7 @@
                     }"
                     @click="setHeaderSort('PRICE_CHANGE_PERCENTAGE_24H')"
                   >
-                    24h
+                    {{ $t('stocks.twenty_four_h') }}
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
@@ -176,7 +176,7 @@
                     }"
                     @click="setHeaderSort('VOLUME_24H')"
                   >
-                    24h Volume
+                    {{ $t('stocks.twenty_four_h_volume') }}
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
@@ -202,7 +202,7 @@
                     }"
                     @click="setHeaderSort('MARKET_CAP')"
                   >
-                    Market Cap
+                    {{ $t('stocks.market_cap') }}
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
@@ -221,7 +221,7 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">Actions</p>
+                  <p class="hidden lg:block font-bold">{{ $t('stocks.actions') }}</p>
                 </th>
               </tr>
             </thead>
@@ -238,8 +238,8 @@
                   <button
                     :aria-label="
                       isWatchListed(token.coinId)
-                        ? 'Remove from Watchlist'
-                        : 'Add to Watchlist'
+                        ? $t('common.remove_from_watchlist')
+                        : $t('common.add_to_watchlist')
                     "
                     @click.stop="setWatchlistToken(token.coinId)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
@@ -340,12 +340,12 @@
                     class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
                   >
                     <app-pop-up-menu
-                      placeholder="actions menu"
+                      :placeholder="$t('stocks.actions_menu')"
                       location="right"
                     >
                       <template #menu-button="{ toggleMenu }">
                         <app-btn-icon
-                          label="action menu"
+                          :label="$t('common.action_menu')"
                           @click.stop="toggleMenu"
                           height="h-7 xs:h-8"
                           width="w-7 xs:w-8"
@@ -375,8 +375,8 @@
                             />
                             <span class="ml-2">{{
                               isWatchListed(token.coinId)
-                                ? 'Remove from Watchlist'
-                                : 'Add to Watchlist'
+                                ? $t('common.remove_from_watchlist')
+                                : $t('common.add_to_watchlist')
                             }}</span>
                           </button>
                           <hr
@@ -392,7 +392,7 @@
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-trade class="text-primary w-4 h-4 mr-2" />
-                              <p>Trade</p>
+                              <p>{{ $t('stocks.trade') }}</p>
                             </li>
                           </ul>
                         </div>
@@ -403,7 +403,7 @@
                     class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                   >
                     <app-base-button size="small" @click="tradeBtn(token)"
-                      >Trade
+                      >{{ $t('stocks.trade') }}
                     </app-base-button>
                   </div>
                 </td>
@@ -418,17 +418,17 @@
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
               class="mb-1 text-center lg:mt-10"
             >
-              You don't have any watchlisted stocks.
+              {{ $t('stocks.no_watchlisted_stocks') }}
             </p>
             <p v-if="searchInput" class="mb-1 text-center lg:my-10">
-              No results found for "{{ searchInput }}".
+              {{ $t('stocks.no_results_for', { search: searchInput }) }}
             </p>
             <button
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
               class="underline lg:mb-10"
               @click="selectedCryptoFilter = cryptoFilterOptions[0]"
             >
-              Discover more stocks
+              {{ $t('stocks.discover_more_stocks') }}
               <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
             </button>
           </div>
@@ -453,24 +453,29 @@
             class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
-            {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
+            {{
+              $t('stocks.results_count', {
+                current: getCurrentViewableItemsIndex,
+                total: totalTokenCount,
+              })
+            }}
           </div>
           <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
             <app-btn-icon
               :disabled="!isLoading && page === 1"
-              label="previous page"
+              :label="$t('common.previous_page')"
               @click.stop="previousPage"
             >
               <chevron-left-icon class="w-4 h-4" />
             </app-btn-icon>
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-black tabular-nums">{{ page }}</span>
-              <span class="text-info">of</span>
-              <span class="text-info tabular-nums">{{ totalPages }}</span>
+              <span class="text-info">
+                {{ $t('stocks.page_of', { current: page, total: totalPages }) }}
+              </span>
             </div>
             <app-btn-icon
               :disabled="!isLoading && page >= totalPages"
-              label="next page"
+              :label="$t('common.next_page')"
               @click.stop="nextPage"
             >
               <chevron-right-icon class="w-4 h-4" />
@@ -510,6 +515,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -558,6 +564,7 @@ import { useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
+const { t } = useI18n()
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -672,17 +679,23 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
-const cryptoFilterOptions = ref([
-  { label: 'All Assets', value: 'all' },
-  { label: 'Watchlist', value: 'watchlist' },
-  { label: 'ETF', value: 'ETF' },
-  { label: 'Stock', value: 'STOCK' },
-  { label: 'Equities', value: 'EQUITIES' },
-  { label: 'Commodities', value: 'COMMODITIES' },
-  { label: 'Fixed Income', value: 'FIXED_INCOME' },
+const cryptoFilterOptions = computed(() => [
+  { label: t('stocks.category_all_assets'), value: 'all' },
+  { label: t('stocks.category_watchlist'), value: 'watchlist' },
+  { label: t('stocks.category_etf'), value: 'ETF' },
+  { label: t('stocks.category_stock'), value: 'STOCK' },
+  { label: t('stocks.category_equities'), value: 'EQUITIES' },
+  { label: t('stocks.category_commodities'), value: 'COMMODITIES' },
+  { label: t('stocks.category_fixed_income'), value: 'FIXED_INCOME' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+watch(cryptoFilterOptions, options => {
+  selectedCryptoFilter.value =
+    options.find(opt => opt.value === selectedCryptoFilter.value.value) ||
+    options[0]
+})
 
 interface DisplayToken {
   symbol: string
@@ -963,7 +976,7 @@ watch(
 )
 
 watch(
-  () => selectedCryptoFilter.value,
+  () => selectedCryptoFilter.value.value,
   () => {
     analytics.trackStockMarketFilterEvent(StockMarketEvent.SELECTED_FILTER, {
       value: selectedCryptoFilter.value.value,
@@ -973,7 +986,7 @@ watch(
 
 // Reset page to 1 when filter or items per page changes
 watch(
-  () => [selectedCryptoFilter.value, shownItems.value],
+  () => [selectedCryptoFilter.value.value, shownItems.value],
   () => {
     page.value = 1
   },
@@ -986,7 +999,7 @@ const prevWatchValues = ref({
   shownItems: shownItems.value,
   headerSort: headerSort.value,
   tableDirection: tableDirection.value,
-  cryptoFilter: selectedCryptoFilter.value,
+  cryptoFilter: selectedCryptoFilter.value.value,
 })
 
 watch(
@@ -996,7 +1009,7 @@ watch(
     shownItems.value,
     headerSort.value,
     tableDirection.value,
-    selectedCryptoFilter.value,
+    selectedCryptoFilter.value.value,
   ],
   () => {
     const prev = prevWatchValues.value
@@ -1004,7 +1017,7 @@ watch(
       prev.chain === selectedChainFilter.value &&
       prev.page === page.value &&
       prev.shownItems === shownItems.value &&
-      prev.cryptoFilter === selectedCryptoFilter.value &&
+      prev.cryptoFilter === selectedCryptoFilter.value.value &&
       (prev.headerSort !== headerSort.value ||
         prev.tableDirection !== tableDirection.value)
 
@@ -1015,7 +1028,7 @@ watch(
       shownItems: shownItems.value,
       headerSort: headerSort.value,
       tableDirection: tableDirection.value,
-      cryptoFilter: selectedCryptoFilter.value,
+      cryptoFilter: selectedCryptoFilter.value.value,
     }
 
     // If on watchlist and only sort changed, just re-sort existing data

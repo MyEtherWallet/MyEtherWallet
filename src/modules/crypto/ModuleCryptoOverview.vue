@@ -7,7 +7,7 @@
       <h2
         class="col-span-4 lg:col-span-1 text-s-18 md:text-s-24 font-bold md:ml-2 leading-p-120 min-w-[140px]"
       >
-        Crypto Today
+        {{ $t('crypto.crypto_today') }}
       </h2>
       <div
         class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
@@ -15,7 +15,7 @@
         <p
           class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
-          Total Market Cap
+          {{ $t('crypto.total_market_cap') }}
         </p>
         <p
           v-if="data && !isLoading"
@@ -53,7 +53,7 @@
         <p
           class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
-          24h Trading Volume
+          {{ $t('crypto.twenty_four_h_trading_volume') }}
         </p>
         <p
           v-if="data && !isLoading"
@@ -72,7 +72,7 @@
         <p
           class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
-          BTC Dominance
+          {{ $t('crypto.btc_dominance') }}
         </p>
         <p
           v-if="data && !isLoading"
@@ -96,7 +96,7 @@
         <p
           class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
-          ETH Dominance
+          {{ $t('crypto.eth_dominance') }}
         </p>
         <p
           v-if="data && !isLoading"
@@ -117,7 +117,7 @@
     </div>
     <!-- NEW TOKENS -->
     <OverviewContainer
-      title="New Tokens"
+      :title="$t('crypto.new_tokens')"
       :current-page="currPageNewTokens"
       :total-pages="totalPagesNewTokens"
       :is-loading="isLoading"
@@ -140,7 +140,7 @@
     </div>
     <!-- RWA TOP Gainers-->
     <OverviewContainer
-      title="RWA Top Gainers"
+      :title="$t('crypto.rwa_top_gainers')"
       :current-page="currPageGainersTokens"
       :total-pages="totalPagesGainersTokens"
       :is-loading="isLoading"

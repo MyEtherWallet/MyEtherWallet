@@ -6,7 +6,7 @@
       >
         <app-slide-group
           :totalItems="topMovers.length"
-          title="Top Movers"
+          :title="$t('stocks.top_movers')"
           paginateLocation="top"
         >
           <template

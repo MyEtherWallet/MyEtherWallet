@@ -9,7 +9,7 @@
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
         <app-btn-icon
           :disabled="isLoading || currentPage === 0"
-          label="previous page"
+          :label="t('common.previous_page')"
           @click="prevPage"
           height="h-8"
           width="w-8"
@@ -18,11 +18,11 @@
         </app-btn-icon>
 
         <span class="px-2 text-s-12 text-info font-medium"
-          >{{ currentPage + 1 }} of {{ totalPages }}</span
+          >{{ t('portfolio.gains_and_losses.page_of', { current: currentPage + 1, total: totalPages }) }}</span
         >
         <app-btn-icon
           :disabled="isLoading || currentPage + 1 >= totalPages"
-          label="next page"
+          :label="t('common.next_page')"
           @click="nextPage"
           height="h-8"
           width="w-8"
@@ -38,9 +38,9 @@
       <div
         class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >
-        <p class="col-span-2">Token</p>
-        <p class="col-span-1">Price / 24h</p>
-        <p class="text-right col-span-1">Gain / Loss</p>
+        <p class="col-span-2">{{ t('portfolio.table.token_header') }}</p>
+        <p class="col-span-1">{{ t('portfolio.gains_and_losses.price_24h_header') }}</p>
+        <p class="text-right col-span-1">{{ t('portfolio.gains_and_losses.gain_loss_header') }}</p>
       </div>
       <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow
@@ -55,12 +55,12 @@
           class="flex flex-col items-center justify-center p-6 text-center"
         >
           <p class="text-s-14 text-info mb-4">
-            You don't have any tokenized stocks or ETFS in your portfolio yet.
+            {{ t('portfolio.gains_and_losses.empty_stocks') }}
           </p>
           <app-base-button
             size="medium"
             @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
-            >Explore stocks</app-base-button
+            >{{ t('common.explore_stocks') }}</app-base-button
           >
         </div>
         <div v-if="!hasBalances && type !== 'stock'" class="text-center"></div>
@@ -91,6 +91,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
 import TokenRow from './components/gains_or_loss/TokenRow.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -108,6 +109,8 @@ import { usePaginate } from '@/composables/usePaginate'
 import { ROUTES_MAIN } from '@/router/routeNames'
 type GainOrLossType = 'all' | 'stock'
 
+const { t } = useI18n()
+
 const props = withDefaults(
   defineProps<{
     type: GainOrLossType
@@ -120,18 +123,18 @@ const props = withDefaults(
 const title = computed(() => {
   switch (props.type) {
     case 'stock':
-      return 'Tokenized Stocks Gains & Losses'
+      return t('portfolio.gains_and_losses.title_stocks')
     default:
-      return 'All Gains & Losses'
+      return t('portfolio.gains_and_losses.title_all')
   }
 })
 
 const buttonText = computed(() => {
   switch (props.type) {
     case 'stock':
-      return 'All tokenized stocks trends'
+      return t('portfolio.gains_and_losses.link_stocks')
     default:
-      return 'All crypto trends'
+      return t('portfolio.gains_and_losses.link_all')
   }
 })
 const walletStore = useWalletStore()

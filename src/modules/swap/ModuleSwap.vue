@@ -6,20 +6,20 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner
+        <!-- <rewards-small-banner
           :class="blurClass"
           :location="'small-banner-swap'"
-        />
+        /> -->
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">
-            {{ isSwapView ? 'Swap' : 'Bridge' }}
+            {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
           <app-btn-text
             v-if="supportedNetwork"
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
         <div :class="['relative transition-all duration-300', blurClass]">
@@ -29,7 +29,7 @@
               class="text-s-12 font-bold ml-3"
               :class="{ 'mb-1': !isSwapView }"
             >
-              You are selling
+              {{ $t('swap.you-are-selling') }}
             </p>
             <select-chain-for-app
               v-if="!isSwapView"
@@ -46,7 +46,26 @@
               :is-pristine="isPristine"
               sort-context="swap"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
-            />
+            >
+              <template #balance-action>
+                <div
+                  v-if="
+                    isWalletConnected &&
+                    !isWatchOnly &&
+                    fromTokenSelected &&
+                    isInternalWallet()
+                  "
+                >
+                  <button
+                    type="button"
+                    class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    @click="handleMaxClick"
+                  >
+                    {{ $t('common.max') }}
+                  </button>
+                </div>
+              </template>
+            </app-swap-enter-amount>
           </div>
 
           <!-- Arrow Button -->
@@ -60,7 +79,9 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 font-bold ml-3">You are buying</p>
+            <p class="text-s-12 font-bold ml-3">
+              {{ $t('swap.you-are-buying') }}
+            </p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="parsedToChains"
@@ -122,13 +143,25 @@
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-warning" />
               <p class="text-warning font-medium text-s-16">
-                Network Not Supported
+                {{ $t('swap.network-not-supported') }}
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ isSwapView ? 'Swapping' : 'Bridging' }} is not available on
-              {{ selectedChain?.nameLong || selectedChain?.name }}. Please
-              switch to a supported network.
+              {{
+                isSwapView
+                  ? $t('swap.swapping-not-available', {
+                      network:
+                        selectedChain?.nameLong ||
+                        selectedChain?.name ||
+                        $t('common.network'),
+                    })
+                  : $t('swap.bridging-not-available', {
+                      network:
+                        selectedChain?.nameLong ||
+                        selectedChain?.name ||
+                        $t('common.network'),
+                    })
+              }}
             </p>
 
             <select-chain-for-app
@@ -150,7 +183,9 @@
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
-          Price impact is too high {{ priceImpact.toFixed(2) }}%
+          {{
+            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+          }}
         </p>
       </div>
       <div
@@ -182,13 +217,15 @@
             @click="swapButton"
             class="w-full"
           >
-            {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+            {{
+              isSwapView ? $t('common.swap') : $t('common.bridge')
+            }}</app-base-button
           >
         </transition>
       </div>
 
       <app-need-help
-        title="Need help swaping?"
+        :title="t('swap.need-help-swapping')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
         :class="blurClass"
@@ -237,7 +274,7 @@ import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
@@ -246,6 +283,7 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useInputStore } from '@/stores/inputStore'
@@ -492,7 +530,10 @@ const fromAmountError = computed(() => {
 
   // Balance Check
   const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-  const remainingBalance = tokenParams.totalBalance - baseAmount
+  const isMainToken = isMainTokenAddress(fromTokenSelected.value.address)
+  const remainingNativeBalance = isMainToken
+    ? tokenParams.totalBalance - baseAmount
+    : tokenParams.baseNetworkBalance
 
   // Insufficient Balance Error
   if (isWalletConnected.value && tokenParams.baseBalance < baseAmount) {
@@ -506,7 +547,7 @@ const fromAmountError = computed(() => {
     const fees = BigInt(
       selectedQuote.value.additionalNativeFees?.toString() || '0',
     )
-    if (isWalletConnected.value && fees > remainingBalance) {
+    if (isWalletConnected.value && fees > remainingNativeBalance) {
       return t('swap.error.insufficient-balance-for-fees', {
         symbol: selectedChain.value?.currencyName,
       })
@@ -536,7 +577,8 @@ const toAmountError = computed(() => {
     qoutesError.value &&
     fromAmount.value !== '0' &&
     fromAmount.value !== '' &&
-    fromAmountError.value === ''
+    fromAmountError.value === '' &&
+    generalError.value === ''
   ) {
     return t('swap.error.no-quotes')
   }
@@ -575,7 +617,7 @@ const isSwapDisabled = computed(
 // --- Helper Methods ---
 
 const getTokenBalanceParams = (token: NewTokenInfo) => {
-  const isMainToken = token.address === MAIN_TOKEN_CONTRACT
+  const isMainToken = isMainTokenAddress(token.address)
   const balance = token.balance || '0'
   const baseTokenBalance = walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)
   const baseNetworkBalance = parseUnits(
@@ -593,12 +635,57 @@ const getTokenBalanceParams = (token: NewTokenInfo) => {
   return { baseBalance, totalBalance, baseNetworkBalance }
 }
 
+const isMainTokenAddress = (address?: string) => {
+  return address?.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()
+}
+
+const getSwapFee = (): bigint => {
+  const feeData = swapGasFeeQuote.value?.fees?.[gasPriceType.value]
+  const gasFee = BigInt(feeData?.nativeValue || feeData?.nativeFeeTotal || '0')
+  const additionalFees = BigInt(
+    selectedQuote.value?.additionalNativeFees?.toString() || '0',
+  )
+  return gasFee + additionalFees
+}
+
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
+  useMaxAmount({
+    getBalance: () => {
+      if (!fromTokenSelected.value) return 0n
+      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+      return tokenParams.totalBalance
+    },
+    getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+    isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+    isTokenSelected: () => !!fromTokenSelected.value,
+    amountRef: fromAmount,
+    isPristineRef: isPristine,
+    getTokenIdentifier: () => fromTokenSelected.value?.address,
+    getDependencies: () => [
+      fromTokenSelected.value?.balance,
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+      selectedQuote.value?.additionalNativeFees?.toString(),
+    ],
+  })
+
+const handleMaxClick = (): void => {
+  if (isMaxSelected.value) return
+  // Discard any prior quote/fee so the new max is calculated against the full
+  // balance, not against a fee that was estimated for a smaller manual amount.
+  selectedQuote.value = undefined
+  swapGasFeeQuote.value = undefined
+  setMaxAmount()
+}
+
 const switchGlobalNetwork = (chain: Chain) => {
   globalStore.setSelectedNetwork(chain.name)
 }
 
 const clearValues = () => {
   isPristine.value = true // Reset to pristine state
+  resetMaxState()
   toAddressError.value = '' // Clear error immediately
   generalError.value = '' // Clear general error
   clearSwapValues()
@@ -610,8 +697,8 @@ const clearValues = () => {
   // Reset token selections so setToToken/setFromToken will set defaults
   fromTokenSelected.value = null
   toTokenSelected.value = null
-  setToToken()
   setFromToken()
+  setToToken()
 }
 
 const validateToAddress = async () => {
@@ -621,13 +708,13 @@ const validateToAddress = async () => {
     return
   }
   if (!userToAddress.value) {
-    toAddressError.value = 'Recipient address is required for bridging'
+    toAddressError.value = t('swap.error.recipient-required')
     return
   }
   const valid = await toTokenSelected.value?.networkInfo.isAddress(
     userToAddress.value,
   )
-  toAddressError.value = valid ? '' : 'invalid address'
+  toAddressError.value = valid ? '' : t('swap.error.invalid-address')
 }
 const getAnalyticsShared = (): SwapPayloadShared => {
   return {
@@ -749,7 +836,7 @@ const proceedWithSwap = async (quoteId: string) => {
     if (isUserRejectionError(e)) {
       toastStore.addToastMessage({
         type: ToastType.Info,
-        text: t('swap.toast.canceled-by-user'),
+        text: t('swap.toast.swap-canceled'),
       })
       analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
         ...analyticsPayload,
@@ -779,14 +866,14 @@ const proceedWithSwap = async (quoteId: string) => {
       ) {
         toastStore.addToastMessage({
           type: ToastType.Info,
-          text: 'Transaction canceled by user',
+          text: t('swap.toast.swap-canceled'),
         })
         return
       }
       generalError.value = errorMessage
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Swap Failed',
+        text: t('swap.toast.swap-failed'),
         textSecondary: errorMessage,
         duration: 10000,
       })
@@ -806,7 +893,7 @@ const swapFeeError = computed<string | undefined>(() => {
   ) {
     return undefined
   }
-  const isMainToken = fromTokenSelected.value.address === MAIN_TOKEN_CONTRACT
+  const isMainToken = isMainTokenAddress(fromTokenSelected.value.address)
   const fee = BigInt(
     swapGasFeeQuote.value?.fees[gasPriceType.value]?.nativeValue || '0',
   )
@@ -896,13 +983,19 @@ const swapForEvm = async () => {
   const analyticsPayload = getAnalyticsShared()
   try {
     await debounceFetchQuotes()
-
+    if (!swapInfo.value) {
+      throw new Error(t('swap.error.pair-not-available'))
+    }
     const res = await generateEVMGasFeeQuote()
 
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching gas fees'
+    // "Pair not available" is an expected, user-facing condition (the selected
+    // pair has no route/quote). Keep the throw so generalError + analytics are
+    // handled here as designed, but skip the Sentry report to avoid noise.
+    const isPairNotAvailable = e?.message === t('swap.error.pair-not-available')
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -910,13 +1003,15 @@ const swapForEvm = async () => {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error fetching gas fees',
-          errorMessage: generalError.value,
-        },
-      })
+      if (!isPairNotAvailable) {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error fetching gas fees',
+            errorMessage: generalError.value,
+          },
+        })
+      }
     }
   } finally {
     bestSwapLoadingOpen.value = false
@@ -969,10 +1064,14 @@ const fetchQuotes = async () => {
           quote =>
             BigInt(quote.minMax.minimumFrom.toString()) <= fromAmountBase,
         )
-
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
+        // if no providers were selected after filter minimum
+        // fromValue is probably too low
+        if (quotes.length > 0) {
+          generalError.value = t('swap.error.minimum-amount')
+        }
         const event = bestSwapLoadingOpen.value
           ? SwapEventError.OFFER_ERROR
           : SwapEventError.PRELIMINARY_ERROR
@@ -1081,7 +1180,6 @@ const setToToken = () => {
   // 2. Select Token Logic
   if (hasSwapValues.value) {
     // Deep link / restore values - use stored token
-
     const match = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
@@ -1120,11 +1218,9 @@ const setToToken = () => {
     }
     // Selected token doesn't exist in new list, fall through to default selection
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.top]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1134,7 +1230,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1148,11 +1243,9 @@ const setToToken = () => {
   } else {
     // No token selected, no stored values - use default
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.trending]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1162,7 +1255,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1300,6 +1392,11 @@ watch(
 )
 
 // Fetch Quote Trigger
+const prevFromToken = ref<string | null>(null)
+const prevToToken = ref<string | null>(null)
+const prevUserAddress = ref<string | null>(null)
+const prevToAddress = ref<string | null>(null)
+
 watch(
   () => [
     fromAmount.value,
@@ -1310,10 +1407,38 @@ watch(
   ],
   () => {
     generalError.value = ''
-
     qoutesError.value = false
+
+    const currentFromToken = fromTokenSelected.value?.address || null
+    const currentToToken = toTokenSelected.value?.address || null
+    const currentUserAddress = userAddress.value || null
+    const currentToAddress = toAddress.value || null
+    const onlyAmountChanged =
+      prevFromToken.value === currentFromToken &&
+      prevToToken.value === currentToToken &&
+      prevUserAddress.value === currentUserAddress &&
+      prevToAddress.value === currentToAddress &&
+      prevFromToken.value !== null
+
+    prevFromToken.value = currentFromToken
+    prevToToken.value = currentToToken
+    prevUserAddress.value = currentUserAddress
+    prevToAddress.value = currentToAddress
+
     if (isSameToken.value) {
       toAmount.value = ''
+      return
+    }
+
+    const isNativeToken =
+      fromTokenSelected.value?.address?.toLowerCase() ===
+      MAIN_TOKEN_CONTRACT.toLowerCase()
+    if (
+      isMaxSelected.value &&
+      onlyAmountChanged &&
+      isNativeToken &&
+      selectedQuote.value
+    ) {
       return
     }
 
@@ -1325,7 +1450,7 @@ watch(
     ) {
       if (isCrossChain.value && !toAddress.value && !isPristine.value) {
         // Highlight the missing address instead of silently returning
-        toAddressError.value = 'Recipient address is required for bridging'
+        toAddressError.value = t('swap.error.recipient-required')
         return
       }
       debounceFetchQuotes()
@@ -1435,6 +1560,7 @@ watch(
 watch(
   () => fromTokenSelected.value?.address,
   () => {
+    swapGasFeeQuote.value = undefined
     if (
       fromTokenSelected.value &&
       toTokenSelected.value &&

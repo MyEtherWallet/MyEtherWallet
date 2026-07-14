@@ -157,8 +157,10 @@ export type TradePayloadShared = {
   network: string
   fromToken: string
   fromAmount: string
+  fromAmountUSD: string
   toToken: string
   toAmount: string
+  toAmountUSD: string
   tradePair: string
   providerName?: string
   orderHash?: string
@@ -193,6 +195,32 @@ export type TradeEventStatusPayload = TradePayloadShared & {
   txHash?: string
   percentageDiff?: number
   canEarnReward?: boolean
+  qualifyingTradeAmount?: string
+  qualifyingTradeToken?: string
+  qualifiedSince?: string
+  holdCampaignStatus?: string
+}
+
+// =============================================================================
+// PERPS SIGN IN
+// =============================================================================
+
+export const PerpsSignInEvent = {
+  CLICKED: 'Perps_Sign_In_Clicked',
+  SUCCESS: 'Perps_Sign_In_Success',
+  ERROR: 'Perps_Sign_In_Error',
+  CANCEL: 'Perps_Sign_In_Cancel',
+} as const
+export type PerpsSignInEvent =
+  (typeof PerpsSignInEvent)[keyof typeof PerpsSignInEvent]
+
+export type PerpsSignInPayload = {
+  source?: string
+}
+
+export type PerpsSignInErrorPayload = PerpsSignInPayload & {
+  errorMessage: string
+  walletType?: string
 }
 
 // =============================================================================
@@ -203,6 +231,139 @@ export const DepositEvent = {
   SHOWN: 'Deposit_Shown',
 } as const
 export type DepositEvent = (typeof DepositEvent)[keyof typeof DepositEvent]
+
+// =============================================================================
+// PERPS DEPOSIT
+// =============================================================================
+
+export const PerpsDepositEvent = {
+  CLICKED: 'Perps_Deposit_Clicked',
+  SUBMIT: 'Perps_Deposit_Submit',
+  SUCCESS: 'Perps_Deposit_Success',
+  ERROR: 'Perps_Deposit_Error',
+  COMPLETED: 'Perps_Deposit_Completed',
+} as const
+export type PerpsDepositEvent =
+  (typeof PerpsDepositEvent)[keyof typeof PerpsDepositEvent]
+
+export type PerpsDepositPayload = {
+  depositAmount?: string
+  token?: string
+}
+
+export type PerpsDepositErrorPayload = PerpsDepositPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
+// PERPS TRADE ORDER
+// =============================================================================
+
+export const PerpsTradeOrderEvent = {
+  CLICKED_PREVIEW: 'Perps_Trade_Order_Clicked_Preview',
+  CLICKED_SUBMIT: 'Perps_Trade_Order_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Trade_Order_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Trade_Order_Submit_Fail',
+  CLICKED_CANCEL: 'Perps_Trade_Order_Clicked_Cancel',
+  FILLED: 'Perps_Trade_Order_Filled',
+} as const
+export type PerpsTradeOrderEvent =
+  (typeof PerpsTradeOrderEvent)[keyof typeof PerpsTradeOrderEvent]
+
+export type PerpsTradeOrderPayload = {
+  market?: string
+  currentPrice?: number
+  orderSide?: 'buy' | 'sell'
+  orderType?: 'market' | 'limit'
+  leverage?: number
+  previousLeverage?: number
+  maxLeverage?: number
+  margin?: string
+  estimatedLiquidation?: number | null
+  takeProfit?: number | null
+  stopLoss?: number | null
+  marginRatio?: number | null
+  feeRate?: string
+}
+
+export type PerpsTradeOrderFailPayload = PerpsTradeOrderPayload & {
+  errorMessage: string
+  higherThanReasonablePrice?: boolean
+}
+
+// =============================================================================
+// PERPS TP/SL
+// =============================================================================
+
+export const PerpsTpSlEvent = {
+  CLICKED: 'Perps_Tp_Sl_Clicked',
+  CLICKED_ADD_TP: 'Perps_Tp_Sl_Clicked_Add_Tp',
+  CLICKED_ADD_SL: 'Perps_Tp_Sl_Clicked_Add_Sl',
+  CLICKED_SAVE: 'Perps_Tp_Sl_Clicked_Save',
+  CLICKED_CANCEL: 'Perps_Tp_Sl_Clicked_Cancel',
+} as const
+export type PerpsTpSlEvent =
+  (typeof PerpsTpSlEvent)[keyof typeof PerpsTpSlEvent]
+
+export type PerpsTpSlSavePayload = {
+  tpAmount?: string
+  tpPercentageDiffFromCurrent?: string
+  slAmount?: string
+  slPercentageDiffFromCurrent?: string
+}
+
+// =============================================================================
+// PERPS CHANGE LEVERAGE
+// =============================================================================
+
+export const PerpsChangeLeverageEvent = {
+  CLICKED_SUBMIT: 'Perps_Change_Leverage_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Change_Leverage_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Change_Leverage_Submit_Fail',
+} as const
+export type PerpsChangeLeverageEvent =
+  (typeof PerpsChangeLeverageEvent)[keyof typeof PerpsChangeLeverageEvent]
+
+export type PerpsChangeLeveragePayload = {
+  assetName: string
+  oldLeverage: number
+  maxLeverage: number
+  newLeverage: number
+}
+
+export type PerpsChangeLeverageFailPayload = PerpsChangeLeveragePayload & {
+  errorMessage: string
+}
+
+// =============================================================================
+// PERPS CLOSE POSITION
+// =============================================================================
+
+export const PerpsClosePositionEvent = {
+  CLICKED: 'Perps_Close_Position_Clicked',
+  CLICKED_SUBMIT: 'Perps_Close_Position_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Close_Position_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Close_Position_Submit_Fail',
+  FILLED: 'Perps_Close_Position_Filled',
+} as const
+export type PerpsClosePositionEvent =
+  (typeof PerpsClosePositionEvent)[keyof typeof PerpsClosePositionEvent]
+
+export type PerpsClosePositionPayload = {
+  assetName: string
+  orderDirection: 'buy' | 'sell'
+  orderType: 'market' | 'limit'
+  newPositionSize: string
+  oldPositionSize: string
+  isClosedInFull: boolean
+  marketPrice: number
+  currentUPnL: number
+  amountToClose: string
+}
+
+export type PerpsClosePositionFailPayload = PerpsClosePositionPayload & {
+  errorMessage: string
+}
 
 // =============================================================================
 // NOTIFICATIONS
@@ -233,17 +394,18 @@ export const ClickTokenTradeEvent = {
 
 export type ClickTokenTradePayload = {
   location:
-    | 'balance_table'
-    | 'token_details_page'
-    | 'stocks_table'
-    | 'crypto_table'
-    | 'trade_module'
-    | 'trade'
-    | 'swap'
-    | 'bridge'
-    | 'send'
-    | 'portfolio_no_balance'
-    | 'select_fee'
+  | 'balance_table'
+  | 'token_details_page'
+  | 'stocks_table'
+  | 'crypto_table'
+  | 'trade_module'
+  | 'trade'
+  | 'swap'
+  | 'bridge'
+  | 'send'
+  | 'portfolio_no_balance'
+  | 'select_fee'
+  | 'hold_rewards_banner'
 
   token?: string
   isMobile?: boolean
@@ -256,7 +418,7 @@ export type ClickTokenTradePayload = {
 export const ClickMainMenuEvent = 'Clicked_Wallet_Menu' as const
 
 export type ClickMainMenuPayload = {
-  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send'
+  button: 'trade' | 'swap' | 'bridge' | 'send' | 'purchase' | 'perps'
 }
 
 // =============================================================================
@@ -264,30 +426,6 @@ export type ClickMainMenuPayload = {
 // =============================================================================
 
 export const SelectNewAddressEvent = 'Selected_New_Address' as const
-
-// =============================================================================
-// REWARDS
-// =============================================================================
-
-export const RewardsEvent = {
-  MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
-  LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
-  CLICK_SWAP: 'Rewards_Clicked_Swap',
-  CLICK_TRADE: 'Rewards_Clicked_Trade',
-  REWARD_EARNED: 'Rewards_Earned',
-} as const
-
-export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
-
-export type RewardsPayload = {
-  location?:
-    | 'main-banner'
-    | 'small-banner-swap'
-    | 'small-banner-trade'
-    | 'small-banner-bridge'
-    | 'learn-more-dialog'
-  type?: 'swap' | 'trade'
-}
 
 // =============================================================================
 // STOCK MARKET
@@ -311,7 +449,7 @@ export type StockMarketSearchPayload = {
 }
 
 export type StockMarketClickStockPayload = {
-  location: 'token_row' | 'trade_button'
+  location: 'token_row' | 'trade_button' | 'spacex_annoucement_banner'
   stockName: string
   stockSymbol: string
 }
@@ -358,6 +496,36 @@ export type CryptoMarketSelectNetworkPayload = {
 }
 
 // =============================================================================
+// GLOBAL SEARCH
+// =============================================================================
+
+export const GlobalSearchEvent = {
+  SHOWN: 'Global_Search_Shown',
+  SELECT_TOKEN: 'Global_Search_Select_Token',
+  TOKEN_NOT_FOUND: 'Global_Search_Token_Not_Found',
+} as const
+export type GlobalSearchEvent =
+  (typeof GlobalSearchEvent)[keyof typeof GlobalSearchEvent]
+
+export const GlobalSearchCategory = {
+  STOCK: 'stock',
+  CRYPTO: 'crypto',
+} as const
+export type GlobalSearchCategory =
+  (typeof GlobalSearchCategory)[keyof typeof GlobalSearchCategory]
+
+export type GlobalSearchSelectTokenPayload = {
+  symbol: string
+  name: string
+  category: GlobalSearchCategory
+  isRecent: boolean
+}
+
+export type GlobalSearchTokenNotFoundPayload = {
+  searchString: string
+}
+
+// =============================================================================
 // TRADE / SWAP SORT
 // =============================================================================
 
@@ -367,4 +535,184 @@ export const SwapClickSortEvent = 'Swap_Click_Sort' as const
 export type ClickSortPayload = {
   sortOption: string
   isFromView?: boolean
+}
+
+// =============================================================================
+// WEEKEND TRADING ANNOUNCEMENT (MEW-1958)
+// =============================================================================
+
+export const WeekendTradingAnnouncementEvent = {
+  MODAL_SHOWN: '24/7_Banner_Shown',
+  MODAL_CLICK_TRADE_NOW: '24/7_Banner_Clicked_Trade',
+  MODAL_DISMISSED: '24/7_Banner_Dismissed',
+  TOOLTIP_SHOWN: '24/7_Toast_Shown',
+  TOOLTIP_DISMISSED: '24/7_Toast_Dismissed',
+} as const
+
+export type WeekendTradingAnnouncementEvent =
+  (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
+
+// =============================================================================
+// REWARDS/ TRADE
+// =============================================================================
+
+export const RewardsEvent = {
+  MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
+  LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
+  CLICK_SWAP: 'Rewards_Clicked_Swap',
+  CLICK_TRADE: 'Rewards_Clicked_Trade',
+  REWARD_EARNED: 'Rewards_Earned',
+} as const
+
+export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
+
+export type RewardsPayload = {
+  location?:
+  | 'main-banner'
+  | 'small-banner-swap'
+  | 'small-banner-trade'
+  | 'small-banner-bridge'
+  | 'learn-more-dialog'
+  type?: 'swap' | 'trade'
+}
+// =============================================================================
+// Rewards Hold
+// =============================================================================
+
+export const campaigns = ['hold', 'trade', 'buy_no_fees'] as const
+
+type Campaign = (typeof campaigns)[number]
+export const HoldRewardsBannerEvent = {
+  MODAL_SHOWN: 'Hold_Rewards_Banner_Shown',
+  MODAL_DISMISSED: 'Hold_Rewards_Banner_Dismissed',
+} as const
+
+export const HoldRewardsMainCardEvent = {
+  MODAL_SHOWN: 'Hold_Rewards_Main_Card_Shown',
+} as const
+
+export type HoldRewardsMainCardEventPayload = {
+  status: string
+}
+
+export const RerwadsAndOffersEvent = {
+  CLICKED_CTA: 'Clicked_Reward_Offer_CTA',
+  CLICKED_MORE_INFO: 'Clicked_Reward_Offer_More_Info',
+} as const
+
+export type RerwadsAndOffersEventPayload = {
+  campaign: Campaign
+  cta: string
+  card_status?: string
+  location?:
+  | 'main-banner'
+  | 'main_card'
+  | 'offers_card'
+  | 'trade_confirmation'
+  | 'info_modal'
+}
+
+export const TradeConfirmationBannerEvent = {
+  SHOWN: 'Trade_Confirmation_Banner_Shown',
+} as const
+
+export type TradeConfirmationBannerEventPayload = {
+  campaign: Campaign
+  isQualified: boolean
+}
+
+// =============================================================================
+// BUY (Fiat Onramp)
+// =============================================================================
+export const BuyEvent = {
+  SHOWN: 'Buy_Shown',
+  PRELIMINARY_SHOWN: 'Buy_Preliminary_Rate_Shown',
+  CLICK_CONTINUE: 'Buy_Clicked_Continue',
+} as const
+export type BuyEvent = (typeof BuyEvent)[keyof typeof BuyEvent]
+
+export type BuyPayloadShared = {
+  network?: string
+  token: string
+  currency: string
+  amountUSD: string
+  amountOriginalCurrency: string
+}
+
+export const BuyOfferEvent = {
+  OFFER_SHOWN: 'Buy_Offer_Shown',
+  OFFER_CANCELED: 'Buy_Offer_Canceled',
+  OFFER_PROCEED: 'Buy_Offer_Clicked_Continue',
+} as const
+export type BuyOfferEvent = (typeof BuyOfferEvent)[keyof typeof BuyOfferEvent]
+
+export const PROVIDER_NAMES = [
+  'moonpay',
+  'simplex',
+  'topper',
+  'coinbase',
+] as const
+export type ProviderName = (typeof PROVIDER_NAMES)[number]
+
+export type BuyOfferPayloadShared = BuyPayloadShared & {
+  MoonpayRate?: string
+  SimplexRate?: string
+  TopperRate?: string
+  CoinbaseRate?: string
+  bestProviderRate: string
+  selectedRate: string
+  selectedProvider: ProviderName
+}
+
+export const BuyEventError = {
+  PRELIMINARY_ERROR: 'Buy_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Buy_Offer_Error',
+} as const
+export type BuyEventError = (typeof BuyEventError)[keyof typeof BuyEventError]
+
+export type BuyErrorPayload = BuyPayloadShared & {
+  errorMsg: string
+}
+
+// =============================================================================
+// SELL (Fiat Offramp)
+// =============================================================================
+
+export const SellEvent = {
+  SHOWN: 'Sell_Shown',
+  PRELIMINARY_SHOWN: 'Sell_Preliminary_Rate_Shown',
+  CLICK_CONTINUE: 'Sell_Clicked_Continue',
+} as const
+export type SellEvent = (typeof SellEvent)[keyof typeof SellEvent]
+
+export type SellPayloadShared = {
+  network?: string
+  token: string
+  currency: string
+  amountToken: string
+  amountUSD?: string
+  amountOriginalCurrency?: string
+  networkFeeUSD?: string
+}
+
+export const SellOfferEvent = {
+  OFFER_SHOWN: 'Sell_Offer_Shown',
+  OFFER_CANCELED: 'Sell_Offer_Canceled',
+  OFFER_PROCEED: 'Sell_Offer_Clicked_Continue',
+} as const
+export type SellOfferEvent = (typeof SellOfferEvent)[keyof typeof SellOfferEvent]
+
+export type SellOfferPayload = SellPayloadShared & {
+  moonpayRate: string
+}
+
+export const SellEventError = {
+  PRELIMINARY_ERROR: 'Sell_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Sell_Offer_Error',
+} as const
+export type SellEventError =
+  (typeof SellEventError)[keyof typeof SellEventError]
+
+export type SellErrorPayload = SellPayloadShared & {
+  errorMsg: string
 }

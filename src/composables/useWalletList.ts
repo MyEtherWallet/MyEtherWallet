@@ -43,6 +43,7 @@ export const useWalletList = () => {
     if (wallet.rkDetails && wallet.rkDetails.name) return wallet.rkDetails.name
     return wallet.name
   }
+
   /** -------------------
    * Wallets
    * -------------------*/
@@ -120,7 +121,8 @@ export const useWalletList = () => {
         )
         if (
           existingWalletIndex < 0 &&
-          !DEFAULT_IDS.includes(injectedWallet.name.toLowerCase())
+          !DEFAULT_IDS.includes(injectedWallet.id) &&
+          !DEFAULT_IDS.includes(injectedWallet.name)
         ) {
           // If no wallet with same name, add injected wallet to array
           newConArr.push(injectedWallet)
@@ -157,7 +159,11 @@ export const useWalletList = () => {
       const wallet = walletConfigs[key]
       if (wallet.isWC) {
         const wcWallet = connectors.find(w => w.id === wallet.id)
-        defaultWallets.push(Object.assign({}, wallet, wcWallet))
+        // Merge wcWallet first so the static walletConfigs UI metadata
+        // (icon, name, type) wins. The wagmi connector can expose `icon`
+        // as undefined or a non-function value, which used to overwrite
+        // the static MewLogo and crash BtnWallet's resolveImg.
+        defaultWallets.push(Object.assign({}, wcWallet, wallet))
       } else {
         defaultWallets.push(wallet)
       }

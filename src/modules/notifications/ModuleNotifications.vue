@@ -1,62 +1,64 @@
 <template>
-  <div class="space-y-3">
-    <!-- Category Filter -->
-    <app-btn-group
-      v-model:selected="selectedCategory"
-      :btn-list="categories"
-      size="xs"
-      class="mb-5"
-    >
-      <template #btn-content="{ data }">
-        {{ data.label }}
-      </template>
-    </app-btn-group>
+  <div>
+    <div class="space-y-3 overflow-scroll max-h-[500px]">
+      <!-- Category Filter -->
+      <app-btn-group
+        v-model:selected="selectedCategory"
+        :btn-list="categories"
+        size="xs"
+        class="mb-5"
+      >
+        <template #btn-content="{ data }">
+          {{ data.label }}
+        </template>
+      </app-btn-group>
 
-    <div
-      v-for="(item, index) in filteredNotifications"
-      :key="item.hash"
-      class="relative"
-    >
-      <!-- Transaction Notification -->
-      <transaction-container
-        v-if="isTransaction(item)"
-        :transaction="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Swap Notification -->
-      <swap-container
-        v-else-if="isSwap(item)"
-        :swap="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Bridge Notification -->
-      <bridge-container
-        v-else-if="isBridge(item)"
-        :bridge="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Trade Order Notification -->
-      <trade-order-container
-        v-else
-        :order="item as SavedTradeOrder"
-        :remaining-time="
-          getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
-        "
-        @remove="removeNotification"
-      />
       <div
-        v-if="item.seen === false"
-        class="absolute top-0 left-0 -translate-x-1/2 -translate-y-[70%] rounded-full bg-primary w-2 h-2"
-      ></div>
-      <hr
-        v-if="index < filteredNotifications.length - 1"
-        class="border-t border-grey-10 mt-4"
-      />
+        v-for="(item, index) in filteredNotifications"
+        :key="item.hash"
+        class="relative"
+      >
+        <!-- Transaction Notification -->
+        <transaction-container
+          v-if="isTransaction(item)"
+          :transaction="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Swap Notification -->
+        <swap-container
+          v-else-if="isSwap(item)"
+          :swap="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Bridge Notification -->
+        <bridge-container
+          v-else-if="isBridge(item)"
+          :bridge="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Trade Order Notification -->
+        <trade-order-container
+          v-else
+          :order="item as SavedTradeOrder"
+          :seen="item.seen"
+          :remaining-time="
+            getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
+          "
+          @remove="removeNotification"
+        />
+        <hr
+          v-if="index < filteredNotifications.length - 1"
+          class="border-t border-grey-10 mt-4"
+        />
+      </div>
+      <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     </div>
-    <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     <div class="flex justify-center">
       <app-btn-text
         v-if="notificationsCount > 1"
@@ -107,6 +109,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
+import BigNumber from 'bignumber.js'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 import {
@@ -171,6 +175,24 @@ const {
   fetchEligibility,
 } = rewardsStore
 const { earnedPotentialReward } = storeToRefs(rewardsStore)
+const holdingsStore = useHoldingsStore()
+
+// Hold-campaign context attached to trade status events
+const getRewardFields = () => {
+  const reward = holdingsStore.activeReward
+  const meta = reward
+    ? holdingsStore.info?.metas?.find(m => m.id === reward.id)
+    : undefined
+  const decimals = meta?.crypto?.decimals?.[0] ?? 18
+  return {
+    holdCampaignStatus: holdingsStore.status,
+    qualifyingTradeAmount: reward?.qualifying_amount
+      ? new BigNumber(reward.qualifying_amount).shiftedBy(-decimals).toString()
+      : undefined,
+    qualifyingTradeToken: meta?.symbol,
+    qualifiedSince: reward?.qualification_timestamp,
+  }
+}
 
 // Get notifications count based on selected category
 const notificationsCount = computed(() => {
@@ -330,7 +352,9 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
   const analyticsPayload: TradeEventStatusPayload = {
     orderHash: hash,
     fromAmount: order.fromAmount,
+    fromAmountUSD: order.usdValue ?? '',
     toAmount: order.expectedToAmount,
+    toAmountUSD: order.toUsdValue ?? '',
     fromToken: order.fromSymbol,
     toToken: order.toSymbol,
     network: order.chainName,
@@ -339,6 +363,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     txHash: status.fills.length > 0 ? status.fills[0].txHash : '',
     finalToAmount: order.finalToAmount,
     percentageDiff: order.percentageDiff,
+    ...getRewardFields(),
   }
 
   if (status.status === 'filled' && status.finalToAmount) {

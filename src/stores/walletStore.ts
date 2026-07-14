@@ -23,7 +23,8 @@ import {
 } from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
-import { useMarketStatus } from '@/modules/trade/composables'
+import { useGlobalStore } from './globalStore'
+import { useStocksStore } from './stocksStore'
 
 const PARTNER = 'ondo-finance'
 
@@ -40,7 +41,8 @@ export const useWalletStore = defineStore('walletStore', () => {
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
   const userProperties = reactive<UserProperties>({})
-  const { isTradingRestrictedInRegion } = useMarketStatus()
+  const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+  const stocksStore = useStocksStore()
 
   /** -------------------------------
   * The Wallet
@@ -53,9 +55,9 @@ export const useWalletStore = defineStore('walletStore', () => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
     const tradingRestricted = isTradingRestrictedInRegion.value
-    const canTrade = !tradingRestricted && !isRestricted;
+    const canTrade = !tradingRestricted && !isRestricted
     userProperties.canTrade = canTrade
-    analytics.setUserProperties({ ...userProperties, canTrade: canTrade });
+    analytics.setUserProperties({ ...userProperties, canTrade: canTrade })
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true
@@ -126,6 +128,10 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const isWalletConnected = computed(() => {
     return wallet.value !== null && walletAddress.value !== null
+  })
+
+  const isWalletUnlocked = computed(() => {
+    return isWalletConnected.value && !isWatchOnly.value
   })
 
   /** -------------------------------
@@ -200,7 +206,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     }
     return null
   })
-  const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
+  const setTokens = async (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
     hasMissingBalances.value = false
     removeTokens()
@@ -235,6 +241,71 @@ export const useWalletStore = defineStore('walletStore', () => {
         }
       }
     })
+    // Case when coingecko id is missing from Ondo api
+    const missingOndoTokens = newTokenCopy.filter(
+      token =>
+        !token.ondo &&
+        stocksStore.isStock(
+          token.contract || '',
+          selectedChain.value?.name || '',
+        ),
+    )
+    for (const token of missingOndoTokens) {
+      const ondoData = await stocksStore.fetchMissingStockData(
+        token.symbol,
+        token.contract || '',
+        selectedChain.value?.name || '',
+      )
+      if (ondoData) {
+        token.ondo = {
+          stockAlias: ondoData.stockAlias,
+          iconPngUrl: ondoData.iconPngUrl,
+          iconSvgUrl: ondoData.iconSvgUrl,
+          primaryMarket: {
+            symbol: token.symbol,
+          },
+          underlyingMarket: {
+            name: ondoData.underlyingMarket?.name,
+          },
+        }
+        //fill missing data from ondo if not present
+        if (
+          token.price === undefined &&
+          ondoData?.primaryMarket?.price !== undefined
+        ) {
+          token.price = Number(ondoData.primaryMarket.price)
+        }
+
+        if (
+          token.market_cap === undefined &&
+          ondoData?.underlyingMarket?.marketCap !== undefined
+        ) {
+          token.market_cap = Number(ondoData.underlyingMarket.marketCap)
+        }
+        if (
+          token.price_change_percentage_24h === undefined &&
+          ondoData?.primaryMarket?.priceChangePercentage24h !== undefined
+        ) {
+          token.price_change_percentage_24h = Number(
+            ondoData.primaryMarket.priceChangePercentage24h,
+          )
+        }
+
+        const tokenHasNoSparkline =
+          token.sparkline_in_7d === undefined ||
+          token.sparkline_in_7d === null ||
+          token.sparkline_in_7d.length === 0
+        if (
+          tokenHasNoSparkline &&
+          ondoData?.primaryMarket?.priceChart24h !== undefined
+        ) {
+          token.sparkline_in_7d = ondoData.primaryMarket.priceChart24h.map(
+            price => Number(price),
+          )
+        }
+      }
+    }
+
     tokens.value = newTokenCopy
     //Analytics: hasBalance
     const raw = [...newTokenCopy]
@@ -271,8 +342,14 @@ export const useWalletStore = defineStore('walletStore', () => {
       return total.plus(tokenValue)
     }, new BigNumber(0))
     let balanceBracket: BalanceBracket
-    if (totalBalanceFiat.isLessThan(500)) {
-      balanceBracket = BalanceBracket.UNDER_500
+    if (totalBalanceFiat.isLessThan(50)) {
+      balanceBracket = BalanceBracket.UNDER_50
+    } else if (totalBalanceFiat.isLessThan(100)) {
+      balanceBracket = BalanceBracket.BRACKET_50
+    } else if (totalBalanceFiat.isLessThan(250)) {
+      balanceBracket = BalanceBracket.BRACKET_100
+    } else if (totalBalanceFiat.isLessThan(500)) {
+      balanceBracket = BalanceBracket.BRACKET_250
     } else if (totalBalanceFiat.isLessThan(2500)) {
       balanceBracket = BalanceBracket.BRACKET_500
     } else if (totalBalanceFiat.isLessThan(10000)) {
@@ -463,5 +540,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     allStocks,
     hasChainBalance,
     userProperties,
+    isWalletUnlocked,
   }
 })

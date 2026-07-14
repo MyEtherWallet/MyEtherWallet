@@ -3,7 +3,7 @@
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Your Balances</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('portfolio.your_balances') }}</h1>
       <!--Filter Lists-->
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
@@ -13,7 +13,7 @@
           class="flex-wrap"
         >
           <template #btn-content="{ data }">
-            <span class="px-2">{{ data.label }}</span>
+            <span class="px-2">{{ $t(data.label) }}</span>
           </template>
         </app-btn-group>
       </div>
@@ -21,7 +21,7 @@
         v-model:selected="selectedCryptoFilter"
         :options="allTokensFilterOptions"
         position="right-0"
-        placeholder="Balance Menu"
+        :placeholder="$t('portfolio.balance_menu')"
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
@@ -32,7 +32,7 @@
             >
               <div class="flex items-center justify-between">
                 <span class="text-s-16 font-medium">{{
-                  selectedCryptoFilter.label
+                  $t(selectedCryptoFilter.label)
                 }}</span>
                 <chevron-down-icon class="w-4 h-4 ml-1" />
               </div>
@@ -47,7 +47,7 @@
         v-if="showTableTokens"
         :view="selectedCryptoFilter.value"
       />
-      <div v-else class="text-center my-10">Coming soon</div>
+      <div v-else class="text-center my-10">{{ $t('common.coming_soon') }}</div>
     </app-sheet>
   </div>
 </template>

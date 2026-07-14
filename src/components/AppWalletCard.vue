@@ -3,15 +3,16 @@
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
         class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        :class="{ 'mew-card-readable': !useDynamicContrast }"
+        :style="useDynamicContrast ? { color: textColor } : undefined"
       >
         <img
-          ref="mewCard"
-          :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
-          alt="MEW Card"
+          :src="mewCardUrl"
+          :alt="t('common.my_wallet')"
           width="500"
           height="424"
           class="rounded-16 drop-shadow absolute z-0 h-full w-full object-cover"
-          @load="animateMewCard"
+          @load="onMewCardLoad"
         />
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
@@ -23,10 +24,10 @@
                   @click="toggleMenu"
                 >
                   <!-- TODO: add ens resolution-->
-                  <p v-if="!isWatchOnly">My wallet</p>
+                  <p v-if="!isWatchOnly">{{ t('common.my_wallet') }}</p>
                   <p v-else>
                     <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
-                    Watch only
+                    {{ t('common.watch_only') }}
                   </p>
                   <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
                 </button>
@@ -124,7 +125,7 @@
               {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
             </p>
             <p class="text-s-12 leading-p-150">
-              and {{ tokens.length }} Tokens
+              {{ t('common.and_tokens', tokens.length) }}
             </p>
           </div>
           <div
@@ -135,7 +136,7 @@
             class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
-            {{ isWatchOnly ? 'connect' : 'disconnect' }}
+            {{ isWatchOnly ? t('common.connect') : t('common.disconnect') }}
           </button>
         </div>
       </div>
@@ -163,6 +164,7 @@ import { useI18n } from 'vue-i18n'
 import { useChainsStore } from '@/stores/chainsStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
+import { useImageContrastTextColor } from '@/composables/useImageContrastTextColor'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
@@ -212,7 +214,7 @@ const fetchBalances = () => {
  */
 const copyClick = async () => {
   try {
-    if (!walletAddress.value) throw new Error('No wallet address to copy')
+    if (!walletAddress.value) throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
@@ -238,9 +240,8 @@ const setOpenPaperWalletDialog = (value: boolean) => {
 /**
  * Animates wallet card
  */
-const animateMewCard = (event: Event) => {
+const animateMewCard = (el: HTMLElement) => {
   if (walletCardWasAnimated.value) return
-  const el = event.currentTarget as HTMLElement
   el.style.opacity = '0'
   animate(el, {
     opacity: 1,
@@ -249,6 +250,22 @@ const animateMewCard = (event: Event) => {
     easing: 'easeInOutQuad',
   })
   walletCardWasAnimated.value = true
+}
+
+// Visible <img> loads without crossorigin so the card always renders. The
+// composable separately requests an anonymous copy for CORS-enabled pixel
+// sampling; if mewcard.mewapi.io does not yet return CORS headers the sampler
+// fails silently and we keep the static text-shadow fallback.
+const { textColor, isDynamic: useDynamicContrast, sampleFromUrl } =
+  useImageContrastTextColor()
+
+const mewCardUrl = computed(
+  () => `https://mewcard.mewapi.io/?address=${walletAddress.value ?? ''}`,
+)
+
+const onMewCardLoad = (event: Event) => {
+  animateMewCard(event.currentTarget as HTMLImageElement)
+  if (walletAddress.value) sampleFromUrl(mewCardUrl.value)
 }
 
 const getExplorerLink = computed(() => {
@@ -333,6 +350,17 @@ const switchAddress = () => {
   filter:
     drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.24)),
     drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.24));
+}
+/* MEW-1644: keep white text legible when the generated mewcard background
+   happens to be very light. The gradient overlay handles most cases; the
+   shadow is a belt-and-suspenders pass for the brightest cards. */
+.mew-card-readable p,
+.mew-card-readable button,
+.mew-card-readable a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.mew-card-readable .text-black {
+  text-shadow: none;
 }
 .mew-card {
   opacity: 0;

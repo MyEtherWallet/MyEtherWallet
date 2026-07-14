@@ -662,7 +662,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
                                 @click.stop="[
                                   toggleMenu(),
-                                  cancelInfoOrder(order),
+                                  openCancelConfirmation(order),
                                 ]"
                               >
                                 {{
@@ -902,7 +902,15 @@
     :order="selectedOrder"
     :cancelling="cancellingOrderId === selectedOrder.orderId"
     @close="showOrderDialog = false"
-    @cancel="cancelInfoOrder"
+    @cancel="openCancelConfirmation"
+  />
+  <perps-cancel-order-confirmation-dialog
+    v-if="orderPendingCancel"
+    v-model:is-open="showCancelConfirmation"
+    :order="orderPendingCancel"
+    :display-symbol="baseCurrency"
+    :is-cancelling="cancellingOrderId === orderPendingCancel.orderId"
+    @confirm="confirmCancelOrder"
   />
   <perps-fill-details-dialog
     v-if="selectedFill"
@@ -923,6 +931,7 @@ import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
+import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderConfirmationDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
@@ -947,12 +956,19 @@ import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsToasts } from './composables/usePerpsToasts'
+import { perpsWs } from './sdk/ws'
+import { ensurePerpsWsLifecycle } from './composables/usePerpsWsLifecycle'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { analytics, ConnectWalletEvent, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
 
 const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
   useWalletMenuStore()
@@ -975,7 +991,12 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
-const connectWallet = () => useAccessStore().openAccessDialog()
+const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Market_Info',
+  })
+  useAccessStore().openAccessDialog()
+}
 
 const props = defineProps({
   market: {
@@ -996,6 +1017,7 @@ const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
 const { leverage } = usePerpsTradeForm()
 const perpsToasts = usePerpsToasts()
+ensurePerpsWsLifecycle()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -1187,8 +1209,8 @@ const showCancelButton = (order: ApiOrder) => {
   )
 }
 
-const cancelInfoOrder = async (order: ApiOrder) => {
-  if (cancellingOrderId.value === order.orderId) return
+const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
+  if (cancellingOrderId.value === order.orderId) return false
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket = market?.longName ?? market?.displayName ?? order.market
@@ -1203,6 +1225,7 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     })
     showOrderDialog.value = false
     await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
+    return true
   } catch (e) {
     console.error('Failed to cancel order:', e)
     const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
@@ -1216,9 +1239,28 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     } else {
       perpsToasts.toastCancelFailedGeneric()
     }
+    return false
   } finally {
     cancellingOrderId.value = null
   }
+}
+
+const orderPendingCancel = ref<ApiOrder | null>(null)
+const showCancelConfirmation = ref(false)
+
+const openCancelConfirmation = (order: ApiOrder) => {
+  orderPendingCancel.value = order
+  showCancelConfirmation.value = true
+}
+
+watch(showCancelConfirmation, isOpen => {
+  if (isOpen) showOrderDialog.value = false
+})
+
+const confirmCancelOrder = async () => {
+  if (!orderPendingCancel.value) return
+  const succeeded = await cancelInfoOrder(orderPendingCancel.value)
+  if (succeeded) showCancelConfirmation.value = false
 }
 
 const ordersSkeletonColumns: SkeletonColumn[] = [
@@ -1239,8 +1281,6 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: '', width: '36px' },
 ]
 
-let ordersPollTimer: ReturnType<typeof setInterval> | null = null
-let fillsPollTimer: ReturnType<typeof setInterval> | null = null
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false
 
@@ -1275,8 +1315,6 @@ async function refreshFillsPageZero() {
 watch(
   [token, () => props.market],
   () => {
-    if (ordersPollTimer) clearInterval(ordersPollTimer)
-    if (fillsPollTimer) clearInterval(fillsPollTimer)
     ordersPagination.reset()
     fillsPagination.reset()
     openOrdersCountForMarket.value = 0
@@ -1285,11 +1323,6 @@ watch(
     void ordersPagination.refetch()
     void fillsPagination.refetch()
     void fetchOpenOrdersCount()
-    ordersPollTimer = setInterval(() => {
-      void refreshOrdersPageZero()
-      void fetchOpenOrdersCount()
-    }, 10_000)
-    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
   },
   { immediate: true },
 )
@@ -1301,6 +1334,16 @@ watch(refreshKey, () => {
   void refreshOrdersPageZero()
   void refreshFillsPageZero()
   void fetchOpenOrdersCount()
+})
+
+const unsubscribeOrdersWs = perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
+  if (!token.value) return
+  void refreshOrdersPageZero()
+  void fetchOpenOrdersCount()
+})
+const unsubscribeFillsWs = perpsWs.subscribe<ApiFill>('fillsPerps', () => {
+  if (!token.value) return
+  void refreshFillsPageZero()
 })
 
 // Funding countdown timer
@@ -1329,8 +1372,8 @@ updateFundingCountdown()
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
-  if (ordersPollTimer) clearInterval(ordersPollTimer)
-  if (fillsPollTimer) clearInterval(fillsPollTimer)
+  unsubscribeOrdersWs()
+  unsubscribeFillsWs()
 })
 
 // Tabs
@@ -1373,15 +1416,37 @@ const marketMaxLeverage = computed(() => {
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: props.market,
+    oldLeverage: leverage.value,
+    maxLeverage: marketMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(props.market, tempLeverage.value)
     showLeverageDialog.value = false
     leverage.value = tempLeverage.value
     perpsToasts.toastLeverageUpdated(tempLeverage.value, props.market)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }
@@ -1395,10 +1460,10 @@ watch(selectedManageAction, action => {
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
     const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
-    const initial = Number.isFinite(parsedPosition) && parsedPosition > 0
-      ? parsedPosition
-      : leverage.value || marketMaxLeverage.value
-    tempLeverage.value = Math.min(initial, marketMaxLeverage.value)
+    tempLeverage.value =
+      Number.isFinite(parsedPosition) && parsedPosition > 0
+        ? Math.min(parsedPosition, marketMaxLeverage.value)
+        : marketMaxLeverage.value
     leverageError.value = ''
     showLeverageDialog.value = true
   }

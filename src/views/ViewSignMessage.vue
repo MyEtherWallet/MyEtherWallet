@@ -1,11 +1,12 @@
 <template>
   <div class="flex justify-center w-full">
+    <router-view />
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('sign-message')">
         <div class="flex items-center flex-col gap-1 pt-6">
           <app-text-field
             v-model="message"
-            placeholder="Enter the message to sign"
+            :placeholder="$t('sign_message.enter_message_to_sign')"
             class="w-full"
           />
           <app-base-button
@@ -24,7 +25,7 @@
 
           <app-dialog
             v-model:is-open="signedModal"
-            title="Signature"
+            :title="$t('sign_message.signature_title')"
             class="sm:max-w-xl sm:mx-auto"
             has-content-gutter
           >
@@ -32,7 +33,7 @@
               <div class="flex flex-col gap-6 pb-6 pt-2">
                 <div>
                   <h3 class="text-s-14 font-medium text-grey-50 mb-1">
-                    Message:
+                    {{ $t('sign_message.message_label') }}
                   </h3>
                   <div
                     class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
@@ -42,7 +43,7 @@
                 </div>
                 <div>
                   <h3 class="text-s-14 font-medium text-grey-50 mb-1">
-                    Signing address:
+                    {{ $t('sign_message.signing_address_label') }}
                   </h3>
                   <div
                     class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
@@ -52,7 +53,7 @@
                 </div>
                 <div>
                   <h3 class="text-s-14 font-medium text-grey-50 mb-1">
-                    Signature:
+                    {{ $t('sign_message.signature_label') }}
                   </h3>
                   <div
                     class="bg-grey-5 rounded-xl p-4 text-s-12 break-all border border-grey-10 text-grey-70 font-mono"
@@ -61,7 +62,7 @@
                   </div>
                 </div>
                 <app-base-button @click="copy" class="xs:mx-auto xs:w-auto">
-                  Copy Signature
+                  {{ $t('sign_message.copy_signature') }}
                 </app-base-button>
               </div>
             </template>
@@ -89,6 +90,9 @@ import { useAccessStore } from '@/stores/accessStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import Configs from '@/configs'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const isDevMode = Configs.IS_DEV_MODE
 const accessDialog = useAccessStore()
@@ -125,7 +129,7 @@ const copy = () => {
       .writeText(JSON.stringify(signObject))
       .then(() => {
         toastStore.addToastMessage({
-          text: 'Signature copied to clipboard',
+          text: t('sign_message.signature_copied'),
           type: ToastType.Success,
         })
         signedModal.value = false
@@ -133,7 +137,7 @@ const copy = () => {
       })
       .catch(() => {
         toastStore.addToastMessage({
-          text: 'Failed to copy signature to clipboard',
+          text: t('sign_message.signature_copy_failed'),
           type: ToastType.Error,
         })
         reject(false)
@@ -165,7 +169,7 @@ const signMessage = async () => {
       })
   } catch (e) {
     toastStore.addToastMessage({
-      text: 'Signing Failed',
+      text: t('sign_message.signing_failed'),
       textSecondary: e instanceof Error ? e.message : String(e),
       type: ToastType.Error,
       duration: 10000,

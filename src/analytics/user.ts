@@ -22,6 +22,10 @@ export type AssetHolderType =
   (typeof AssetHolderType)[keyof typeof AssetHolderType]
 
 export const BalanceBracket = {
+  UNDER_50: '<50',
+  BRACKET_50: '50-100',
+  BRACKET_100: '100-250',
+  BRACKET_250: '250-500',
   UNDER_500: '<500',
   BRACKET_500: '500-2500',
   BRACKET_2500: '2500-10k',
@@ -48,4 +52,5 @@ export type UserProperties = {
   canClaimTrade?: boolean
   canClaimSwap?: boolean
   canTrade?: boolean
+  holdCampaignStatus?: string
 }

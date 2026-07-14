@@ -50,7 +50,7 @@
             </div>
             <perps-amount
               v-model:amount="takeProfitPrice"
-              :error="takeProfitError ? precisionMessage : ''"
+              :error="takeProfitError || ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -74,7 +74,7 @@
                 v-if="takeProfitError"
                 class="text-error text-s-12 mt-1 pl-3"
               >
-                {{ precisionMessage }}
+                {{ takeProfitError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
@@ -120,7 +120,7 @@
             </div>
             <perps-amount
               v-model:amount="stopLossPrice"
-              :error="stopLossError ? precisionMessage : ''"
+              :error="stopLossError || ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -141,7 +141,7 @@
             </perps-amount>
             <transition name="fade" mode="out-in">
               <div v-if="stopLossError" class="text-error text-s-12 mt-1 pl-3">
-                {{ precisionMessage }}
+                {{ stopLossError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
@@ -170,7 +170,7 @@
         <!-- Actions -->
         <div class="flex flex-col gap-1">
           <app-base-button
-            :disabled="!hasEdits"
+            :disabled="!hasEdits || !!takeProfitError || !!stopLossError"
             class="w-full"
             @click="$emit('confirm')"
           >
@@ -190,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, type PropType } from 'vue'
+import { ref, watch, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -199,27 +199,21 @@ import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import { PlusCircleIcon } from '@heroicons/vue/24/solid'
+import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-const props = defineProps<{
+defineProps<{
   displaySymbol: string
   currentPrice: number
   tempProjectedProfit: number | null
   tempProjectedLoss: number | null
   activeTpPill: number | null
   activeSlPill: number | null
-  takeProfitError?: boolean
-  stopLossError?: boolean
-  quoteDecimals?: number
+  takeProfitError?: string
+  stopLossError?: string
   hasEdits?: boolean
 }>()
-
-const precisionMessage = computed(() => {
-  const dec = props.quoteDecimals ?? 2
-  if (dec === 0) return 'Price must be a whole number'
-  return `Price supports up to ${dec} decimal place${dec === 1 ? '' : 's'}`
-})
 
 const emit = defineEmits<{
   clearTakeProfit: []
@@ -247,6 +241,7 @@ const setTempTakeProfitPrice = () => {
     emit('setTakeProfitPct', 30)
   }
   hasTakeProfit.value = true
+  void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_ADD_TP)
 }
 
 const setTempStopLossPrice = () => {
@@ -254,6 +249,7 @@ const setTempStopLossPrice = () => {
     emit('setStopLossPct', 3)
   }
   hasStopLoss.value = true
+  void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_ADD_SL)
 }
 
 const removeTakeProfit = () => {
