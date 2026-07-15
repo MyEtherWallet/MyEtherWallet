@@ -202,6 +202,29 @@ export type TradeEventStatusPayload = TradePayloadShared & {
 }
 
 // =============================================================================
+// PERPS SHARED ENUMS
+// =============================================================================
+
+export const PerpsEventSource = {
+  MAIN_BANNER: 'Perps_Main_Banner',
+  MARKET_INFO: 'Perps_Market_Info',
+  PORTFOLIO: 'Perps_Portfolio',
+  TRADE: 'Perps_Trade',
+} as const
+export type PerpsEventSource =
+  (typeof PerpsEventSource)[keyof typeof PerpsEventSource]
+
+export const PerpsEventLocation = {
+  MARKET: 'Perps_Market',
+  POSITIONS_TABLE: 'Perps_Positions_Table',
+  MARKET_INFO: 'Perps_Market_Info',
+  TRADE: 'Perps_Trade',
+  ORDER_INFO: 'Perps_Order_Info',
+} as const
+export type PerpsEventLocation =
+  (typeof PerpsEventLocation)[keyof typeof PerpsEventLocation]
+
+// =============================================================================
 // PERPS SIGN IN
 // =============================================================================
 
@@ -215,7 +238,7 @@ export type PerpsSignInEvent =
   (typeof PerpsSignInEvent)[keyof typeof PerpsSignInEvent]
 
 export type PerpsSignInPayload = {
-  source?: string
+  source?: PerpsEventSource
 }
 
 export type PerpsSignInErrorPayload = PerpsSignInPayload & {
@@ -362,6 +385,82 @@ export type PerpsClosePositionPayload = {
 }
 
 export type PerpsClosePositionFailPayload = PerpsClosePositionPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
+// PERPS MANAGE (entry-point click events)
+// =============================================================================
+
+export const PerpsManageEvent = {
+  NEW_POSITION: 'Perps_Clicked_New_Position',
+  CHANGE_LEVERAGE: 'Perps_Clicked_Change_Leverage',
+  ADD_TO_POSITION: 'Perps_Clicked_Add_To_Position',
+  CLOSE_POSITION: 'Perps_Clicked_Close_Position',
+} as const
+export type PerpsManageEvent =
+  (typeof PerpsManageEvent)[keyof typeof PerpsManageEvent]
+
+export const PerpsNewPositionAction = {
+  MANAGE_LONG: 'Manage Long',
+  MANAGE_SHORT: 'Manage Short',
+  LONG: 'Long',
+  SHORT: 'Short',
+} as const
+export type PerpsNewPositionAction =
+  (typeof PerpsNewPositionAction)[keyof typeof PerpsNewPositionAction]
+
+export type PerpsManagePayload = {
+  assetName: string
+  location: PerpsEventLocation
+}
+
+export type PerpsNewPositionPayload = PerpsManagePayload & {
+  action: PerpsNewPositionAction
+}
+
+// =============================================================================
+// PERPS ORDERS
+// =============================================================================
+
+export const PerpsOrderEvent = {
+  CLICKED_VIEW_INFO: 'Perps_Order_Clicked_View_Info',
+  CLICKED_CANCEL: 'Perps_Order_Clicked_Cancel',
+  CANCEL_SUBMIT: 'Perps_Order_Cancel_Submit',
+  CANCEL_SUBMIT_SUCCESS: 'Perps_Order_Cancel_Submit_Success',
+  CANCEL_SUBMIT_ERROR: 'Perps_Order_Cancel_Submit_Error',
+} as const
+export type PerpsOrderEvent =
+  (typeof PerpsOrderEvent)[keyof typeof PerpsOrderEvent]
+
+export type PerpsOrderViewInfoPayload = {
+  assetName: string
+  status: string
+  orderId: string
+  type: string
+  location: PerpsEventLocation
+}
+
+export type PerpsOrderCancelClickedPayload = {
+  assetName: string
+  orderId: string
+  type: string
+  price: string
+  size: string
+  direction: 'buy' | 'sell'
+  location: PerpsEventLocation
+}
+
+export type PerpsOrderCancelSubmitPayload = {
+  assetName: string
+  orderId: string
+  type: string
+  price: string
+  size: string
+  direction: 'buy' | 'sell'
+}
+
+export type PerpsOrderCancelErrorPayload = PerpsOrderCancelSubmitPayload & {
   errorMessage: string
 }
 
