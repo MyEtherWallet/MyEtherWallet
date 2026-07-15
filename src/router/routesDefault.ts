@@ -23,6 +23,19 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  // Dev-only component previews — excluded from production builds.
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: '/button-preview',
+          name: 'button-preview',
+          component: () => import('@/views/ViewButtonPreview.vue'),
+          meta: {
+            noAuth: true,
+          },
+        },
+      ]
+    : []),
   {
     // New public Home is the root; disconnected users land here. It hosts its
     // own token/stock-info drawer children so clicks from the Home sections
