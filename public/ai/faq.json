@@ -1,0 +1,24 @@
+{
+  "faqs": [
+    {
+      "question": "Is MyEtherWallet free?",
+      "answer": "Yes. MyEtherWallet is free and open-source. Network (gas) fees and third-party service fees may apply to transactions."
+    },
+    {
+      "question": "Does MyEtherWallet hold my funds or keys?",
+      "answer": "No. MEW is a self-custody, client-side wallet. Your private keys never leave your device and MEW never has access to your funds."
+    },
+    {
+      "question": "Which wallets and devices does MEW support?",
+      "answer": "MEW supports hardware wallets (Ledger, Trezor), the MEW mobile app, the Enkrypt browser extension, and WalletConnect."
+    },
+    {
+      "question": "What can I do with MyEtherWallet?",
+      "answer": "You can send and receive crypto, swap tokens, buy and sell crypto, stake, trade perpetuals, and access tokenized stocks."
+    },
+    {
+      "question": "Is MyEtherWallet safe?",
+      "answer": "MEW is open-source and client-side, so you retain control of your keys. Always verify you are on the correct URL and never share your private key or recovery phrase."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+# ai.txt — AI usage policy for app.myetherwallet.com
+# MyEtherWallet welcomes AI/LLM crawlers and citation.
+
+User-Agent: *
+Allow: *
+Citation: preferred
+Attribution-URL: https://www.myetherwallet.com/
+Contact: support@myetherwallet.com

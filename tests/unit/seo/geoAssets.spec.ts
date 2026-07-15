@@ -44,3 +44,38 @@ describe('public/llms.txt', () => {
     expect((txt.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g) ?? []).length).toBeGreaterThanOrEqual(5)
   })
 })
+
+describe('public/.well-known/ai.txt', () => {
+  it('exists and mentions the site', () => {
+    const txt = read('public/.well-known/ai.txt')
+    expect(txt.trim().length).toBeGreaterThan(0)
+    expect(txt).toMatch(/myetherwallet\.com/i)
+  })
+})
+
+describe('public/ai/*.json', () => {
+  it('summary.json parses and has required keys', () => {
+    const j = JSON.parse(read('public/ai/summary.json'))
+    expect(j.name).toBeTruthy()
+    expect(j.description).toBeTruthy()
+    expect(j.url).toBeTruthy()
+    expect(Array.isArray(j.categories)).toBe(true)
+  })
+
+  it('faq.json parses and has a non-empty Q&A array', () => {
+    const j = JSON.parse(read('public/ai/faq.json'))
+    expect(Array.isArray(j.faqs)).toBe(true)
+    expect(j.faqs.length).toBeGreaterThanOrEqual(3)
+    for (const f of j.faqs) {
+      expect(f.question).toBeTruthy()
+      expect(f.answer).toBeTruthy()
+    }
+  })
+
+  it('service.json parses and has features', () => {
+    const j = JSON.parse(read('public/ai/service.json'))
+    expect(j.name).toBeTruthy()
+    expect(Array.isArray(j.features)).toBe(true)
+    expect(j.features.length).toBeGreaterThan(0)
+  })
+})
