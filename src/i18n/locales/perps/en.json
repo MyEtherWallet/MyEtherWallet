@@ -63,7 +63,8 @@
       "invalid-market-price": "Invalid market price. Please try again.",
       "close-position-failed": "Failed to close position.",
       "save-leverage-failed": "Failed to save leverage. Please try again.",
-      "order-failed": "Order failed. Please try again."
+      "order-failed": "Order failed. Please try again.",
+      "order-rejected-too-far": "Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead."
     },
     "trade": {
       "perpetuals": "Perpetuals",
