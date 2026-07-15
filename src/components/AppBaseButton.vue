@@ -1,30 +1,44 @@
 <template>
   <button
     :class="[
+      // ---- Size ----
       { 'py-1 px-3 text-s-13': size === BtnSize.SMALL },
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
-      { 'bg-white': isOutline },
-      disabled
-        ? isOutline
-          ? '!border-grey-outline !text-grey-50'
-          : '!bg-grey-outline'
-        : isOutline
-          ? 'hoverOpacity'
-          : 'hoverOpacityHasBG',
+      // ---- Base ----
       'rounded-full font-medium transition-colors hover:opacity-90 !box-border',
+      { 'bg-white': isOutline && !disabled },
+      // ---- Disabled / Hover (state) ----
+      disabled
+        ? isGhost
+          ? '!bg-transparent !text-grey-50'
+          : isOutline
+            ? '!border-grey-outline !text-grey-50'
+            : '!bg-grey-outline'
+        : isGhost
+          ? ''
+          : isOutline
+            ? 'hoverOpacity'
+            : 'hoverOpacityHasBG',
+      // ---- Theme colors + Pressed (active) state ----
       // computed breaks error style
       theme === 'primary'
-        ? isOutline
-          ? 'border border-2 border-primary text-primary bg-transparent'
-          : 'text-white bg-primary'
-        : theme === 'error'
-          ? isOutline
-            ? 'border border-2 border-error text-error bg-transparent'
-            : 'text-white bg-error'
+        ? isGhost
+          ? 'bg-transparent text-primary hover:bg-blue-10 active:bg-blue-10'
           : isOutline
-            ? 'border border-2 border-grey-outline text-black bg-transparent'
-            : 'text-black bg-bgMuted',
+            ? 'border border-2 border-primary text-primary bg-transparent active:bg-blue-10'
+            : 'text-white bg-primary active:brightness-95'
+        : theme === 'error'
+          ? isGhost
+            ? 'bg-transparent text-error hover:bg-error-10 active:bg-error-10'
+            : isOutline
+              ? 'border border-2 border-error text-error bg-transparent active:bg-error-10'
+              : 'text-white bg-error active:brightness-95'
+          : isGhost
+            ? 'bg-transparent text-black hover:bg-grey-5 active:bg-grey-10'
+            : isOutline
+              ? 'border border-2 border-grey-outline text-black bg-transparent active:bg-grey-5'
+              : 'text-black bg-bgMuted active:brightness-95',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -41,9 +55,13 @@
             { 'w-4 h-4 mt-[2px]': size === BtnSize.SMALL },
             { 'w-5 h-5': size === BtnSize.MEDIUM },
             { 'w-6 h-6  top-[25%]': size === BtnSize.LARGE },
-            isOutline
-              ? 'text-primary  fill-white/70'
-              : 'text-white/30  fill-white',
+            !isOutline && !isGhost
+              ? 'text-white/30  fill-white'
+              : theme === 'error'
+                ? 'text-error/30 fill-error'
+                : theme === 'neutral'
+                  ? 'text-black/20 fill-black/60'
+                  : 'text-primary/30 fill-primary',
           ]"
           viewBox="0 0 100 101"
           width="24"
@@ -63,8 +81,15 @@
       </div>
     </div>
 
-    <div :class="{ 'opacity-0': isLoading }">
+    <div
+      :class="[
+        'flex items-center justify-center gap-2',
+        { 'opacity-0': isLoading },
+      ]"
+    >
+      <slot name="leading" />
       <slot />
+      <slot name="trailing" />
     </div>
   </button>
 </template>
@@ -83,6 +108,15 @@ const props = defineProps({
     default: false,
   },
   isOutline: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Ghost variant — transparent background, no border, theme-colored text.
+   * Shows a subtle themed background on hover/pressed.
+   * Mutually exclusive with `isOutline` (takes precedence).
+   */
+  isGhost: {
     type: Boolean,
     default: false,
   },
