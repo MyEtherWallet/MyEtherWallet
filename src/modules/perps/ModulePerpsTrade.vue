@@ -691,18 +691,18 @@
           :disabled="submitDisabled"
           @click="showConfirmation"
           :theme="orderSide === 'buy' ? 'success' : 'error'"
-          class="w-full mt-4"
+          class="w-full mt-4 min-w-0"
         >
-          {{ getMainBtnText }}
+          <span class="block truncate">{{ getMainBtnText }}</span>
         </app-base-button>
         <app-base-button
           v-if="activePosition && manageMode === 'close'"
           :theme="orderSide === 'buy' ? 'success' : 'error'"
           :disabled="closeDisabled"
           @click="showCloseConfirmation"
-          class="w-full mt-4"
+          class="w-full mt-4 min-w-0"
         >
-          {{ closeButtonLabel }}
+          <span class="block truncate">{{ closeButtonLabel }}</span>
         </app-base-button>
       </template>
     </div>
