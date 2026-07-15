@@ -50,6 +50,16 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
+// The Ondo backend rejects market orders whose expected fill would exceed a
+// price tolerance (~10% from fair price), surfacing a raw "Rejecting market
+// order because … reasonable price …" string. Replace it with a UX-friendly
+// slippage explanation; otherwise users see backend jargon ("Fair price",
+// "Max reasonable Price") without context.
+const SLIPPAGE_REJECTION_PATTERN =
+  /rejecting\s+market\s+order.*reasonable\s+price/i
+const SLIPPAGE_REJECTION_MESSAGE =
+  'Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead.'
+
 const leverage = ref(20)
 const isFetchingLeverage = ref(false)
 
@@ -557,8 +567,10 @@ export function usePerpsTradeForm() {
       closeSliderValue.value = 0
       triggerRefresh()
     } catch (e: any) {
-      closeError.value =
-        e?.message || e?.toString() || t('perps.errors.close-position-failed')
+      const rawMsg = e?.message || e?.toString() || t('perps.errors.close-position-failed')
+      closeError.value = SLIPPAGE_REJECTION_PATTERN.test(rawMsg)
+        ? SLIPPAGE_REJECTION_MESSAGE
+        : rawMsg || 'Failed to close position.'
       const failPayload: PerpsClosePositionFailPayload = {
         ...closePayload,
         errorMessage: closeError.value,
@@ -1384,13 +1396,13 @@ export function usePerpsTradeForm() {
         }
       }
       const errorMessage =
-        error?.message ||
-        error?.toString() ||
-        t('perps.errors.order-failed')
+        SLIPPAGE_REJECTION_PATTERN.test(msg)
+          ? SLIPPAGE_REJECTION_MESSAGE
+          : error?.message || error?.toString() || t('perps.errors.order-failed')
       orderError.value = errorMessage
       const failPayload: PerpsTradeOrderFailPayload = {
         ...tradePayload,
-        errorMessage,
+        errorMessage: orderError.value,
         higherThanReasonablePrice: limitPriceOutOfTolerance.value,
       }
       void analytics.trackPerpsTradeOrderFailEvent(
