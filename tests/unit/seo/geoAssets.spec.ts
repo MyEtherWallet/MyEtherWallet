@@ -22,3 +22,25 @@ describe('public/robots.txt', () => {
     }
   })
 })
+
+describe('public/llms.txt', () => {
+  const txt = read('public/llms.txt')
+
+  it('has exactly one H1 and it is the first non-empty line', () => {
+    const firstNonEmpty = txt.split('\n').map(l => l.trim()).find(l => l !== '')
+    expect(firstNonEmpty).toMatch(/^# \S/)
+    expect((txt.match(/^# /gm) ?? []).length).toBe(1)
+  })
+
+  it('has a blockquote description', () => {
+    expect(txt).toMatch(/^> .+/m)
+  })
+
+  it('has at least 3 section headings', () => {
+    expect((txt.match(/^## /gm) ?? []).length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('has at least 5 markdown links to real URLs', () => {
+    expect((txt.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g) ?? []).length).toBeGreaterThanOrEqual(5)
+  })
+})

@@ -1,0 +1,32 @@
+# MyEtherWallet (MEW)
+
+> MyEtherWallet is a free, open-source, client-side wallet for Ethereum and EVM chains — send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks, all while holding your own keys.
+
+## Overview
+
+MyEtherWallet (MEW) is a self-custody web wallet. Private keys never leave the client and MEW never holds user funds. It supports hardware wallets (Ledger, Trezor), the MEW mobile app, the Enkrypt browser extension, and WalletConnect.
+
+## Features
+
+- Buy and sell crypto
+- Swap tokens across supported networks
+- Send and receive assets
+- Staking
+- Perpetuals trading
+- Tokenized stocks
+
+## Documentation
+
+- [Help center](https://help.myetherwallet.com/en/)
+- [GitHub](https://github.com/MyEtherWallet)
+
+## Security
+
+MEW is client-side and open-source, so users retain control of their private keys. Always confirm the correct URL and never share a private key or recovery phrase. See the [help center](https://help.myetherwallet.com/en/) for guidance.
+
+## Links
+
+- [Website](https://www.myetherwallet.com/)
+- [Enkrypt browser wallet](https://www.enkrypt.com)
+- [X / Twitter](https://twitter.com/myetherwallet)
+- [Medium](https://medium.com/myetherwallet)
