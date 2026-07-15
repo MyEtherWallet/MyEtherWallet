@@ -79,3 +79,43 @@ describe('public/ai/*.json', () => {
     expect(j.features.length).toBeGreaterThan(0)
   })
 })
+
+describe('index.html structured data', () => {
+  const html = read('index.html')
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map(m => JSON.parse(m[1]))
+  const types = blocks.map(b => b['@type'])
+
+  it('has Organization, WebSite and FAQPage JSON-LD that all parse', () => {
+    expect(types).toContain('Organization')
+    expect(types).toContain('WebSite')
+    expect(types).toContain('FAQPage')
+  })
+
+  it('FAQPage has a mainEntity Q&A list', () => {
+    const faq = blocks.find(b => b['@type'] === 'FAQPage')
+    expect(Array.isArray(faq.mainEntity)).toBe(true)
+    expect(faq.mainEntity.length).toBeGreaterThanOrEqual(3)
+    for (const q of faq.mainEntity) {
+      expect(q['@type']).toBe('Question')
+      expect(q.name).toBeTruthy()
+      expect(q.acceptedAnswer?.text).toBeTruthy()
+    }
+  })
+
+  it('WebSite points at the app domain', () => {
+    const site = blocks.find(b => b['@type'] === 'WebSite')
+    expect(site.url).toBe('https://app.myetherwallet.com/')
+  })
+
+  it('Organization keeps a non-empty sameAs array', () => {
+    const org = blocks.find(b => b['@type'] === 'Organization')
+    expect(Array.isArray(org.sameAs)).toBe(true)
+    expect(org.sameAs.length).toBeGreaterThan(0)
+  })
+
+  it('declares a self-canonical and og:url to the app domain', () => {
+    expect(html).toMatch(/<link rel="canonical" href="https:\/\/app\.myetherwallet\.com\/"\s*\/?>/)
+    expect(html).toMatch(/property="og:url" content="https:\/\/app\.myetherwallet\.com\/"/)
+  })
+})
