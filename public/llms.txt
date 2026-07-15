@@ -26,7 +26,8 @@ MEW is client-side and open-source, so users retain control of their private key
 
 ## Links
 
-- [Website](https://www.myetherwallet.com/)
+- [MyEtherWallet app](https://app.myetherwallet.com/)
+- [Website (myetherwallet.com)](https://www.myetherwallet.com/)
 - [Enkrypt browser wallet](https://www.enkrypt.com)
 - [X / Twitter](https://twitter.com/myetherwallet)
 - [Medium](https://medium.com/myetherwallet)

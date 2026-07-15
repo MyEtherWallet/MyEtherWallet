@@ -4,5 +4,5 @@
 User-Agent: *
 Allow: *
 Citation: preferred
-Attribution-URL: https://www.myetherwallet.com/
+Attribution-URL: https://app.myetherwallet.com/
 Contact: support@myetherwallet.com
