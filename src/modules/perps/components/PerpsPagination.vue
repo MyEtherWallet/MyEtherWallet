@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center gap-1">
     <app-btn-icon
       :disabled="disabled || !canPrev"
-      label="previous page"
+      :label="t('perps.pagination.previous-page')"
       height="h-8"
       width="w-8"
       @click="onPrev"
@@ -11,13 +11,20 @@
     </app-btn-icon>
     <span class="px-2 text-s-12 text-info font-medium">
       <template v-if="totalPages !== undefined"
-        >{{ currentPage + 1 }} of {{ totalPages }}</template
+        >{{
+          t('perps.pagination.page-of', {
+            current: currentPage + 1,
+            total: totalPages,
+          })
+        }}</template
       >
-      <template v-else>Page {{ currentPage + 1 }}</template>
+      <template v-else>{{
+        t('perps.pagination.page', { current: currentPage + 1 })
+      }}</template>
     </span>
     <app-btn-icon
       :disabled="disabled || !canNext"
-      label="next page"
+      :label="t('perps.pagination.next-page')"
       height="h-8"
       width="w-8"
       @click="onNext"
@@ -29,8 +36,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+
+const { t } = useI18n()
 
 const props = withDefaults(
   defineProps<{

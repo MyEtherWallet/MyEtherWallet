@@ -7,17 +7,21 @@
   >
     <template #title>
       <div class="flex flex-col items-center gap-1 text-center pt-5 w-full">
-        <p class="font-bold text-s-20">Confirm Sign In</p>
+        <p class="font-bold text-s-20">
+          {{ $t('perps.banner.confirm-sign-in-title') }}
+        </p>
         <p v-if="isWaitingForConfirm" class="text-info text-s-13">
-          Review the message before signing.
+          {{ $t('perps.banner.review-message') }}
         </p>
         <p
           v-else-if="isHardwareWallet"
           class="font-bold text-primary text-s-14 animate-pulse"
         >
-          Check your device to approve
+          {{ $t('perps.banner.check-device') }}
         </p>
-        <p v-else class="text-info text-s-13 animate-pulse">Signing…</p>
+        <p v-else class="text-info text-s-13 animate-pulse">
+          {{ $t('perps.banner.signing') }}
+        </p>
       </div>
     </template>
     <template #content>
@@ -25,7 +29,7 @@
         <!-- Message box -->
         <div class="flex flex-col gap-1">
           <p class="text-s-11 font-bold uppercase tracking-sp-06 text-info">
-            Message to sign
+            {{ $t('perps.banner.message-to-sign-label') }}
           </p>
           <pre
             class="bg-mewBg rounded-12 p-3 text-s-12 text-black font-mono break-all whitespace-pre-wrap max-h-44 overflow-y-auto"
@@ -38,7 +42,7 @@
           v-if="isWaitingForConfirm && isHardwareWallet"
           class="text-s-12 text-info text-center -mt-2"
         >
-          You will also need to confirm on your device.
+          {{ $t('perps.banner.hardware-confirm-hint') }}
         </p>
 
         <!-- Actions (only while waiting for user click) -->
@@ -48,13 +52,13 @@
             is-outline
             @click="$emit('cancel')"
           >
-            Cancel
+            {{ $t('perps.confirm.cancel') }}
           </AppBaseButton>
           <AppBaseButton
             class="flex-1 rounded-full bg-primary text-white py-2.5 text-s-14 font-medium hoverOpacity"
             @click="$emit('confirm')"
           >
-            Sign
+            {{ $t('perps.banner.sign-button') }}
           </AppBaseButton>
         </div>
       </div>

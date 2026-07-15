@@ -1,5 +1,6 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import {
   analytics,
@@ -49,10 +50,12 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
+
 const leverage = ref(20)
 const isFetchingLeverage = ref(false)
 
 export function usePerpsTradeForm() {
+  const { t } = useI18n()
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
   const { token, login, triggerRefresh } = usePerpsAuth()
@@ -67,11 +70,21 @@ export function usePerpsTradeForm() {
   const { markPriceData } = usePerpsMarkPrices()
   const perpsToasts = usePerpsToasts()
 
+  // The Ondo backend rejects market orders whose expected fill would exceed a
+  // price tolerance (~10% from fair price), surfacing a raw "Rejecting market
+  // order because … reasonable price …" string. Replace it with a UX-friendly
+  // slippage explanation; otherwise users see backend jargon ("Fair price",
+  // "Max reasonable Price") without context.
+  const SLIPPAGE_REJECTION_PATTERN =
+    /rejecting\s+market\s+order.*reasonable\s+price/i
+  const SLIPPAGE_REJECTION_MESSAGE =
+    t('perps.order-rejected-too-far')
+
   // ── State ──────────────────────────────────────────────────
 
   const orderSideButtons: OrderSideButton[] = [
-    { label: 'Long', value: 'buy' },
-    { label: 'Short', value: 'sell' },
+    { label: t('perps.trade.long'), value: 'buy' },
+    { label: t('perps.trade.short'), value: 'sell' },
   ]
 
   const orderSide = ref<OrderSide>(
@@ -415,13 +428,24 @@ export function usePerpsTradeForm() {
   const closeButtonLabel = computed(() => {
     const amt = parseFloat(closeAmount.value) || 0
     if (amt > 0 && amt < minOrderAmount.value) {
-      return `Min. amount ${formatUsd(minOrderAmount.value)}`
+      return t('perps.errors.min-amount', {
+        amount: formatUsd(minOrderAmount.value),
+      })
     }
     if (maxCloseSizeUsd.value !== null && amt > maxCloseSizeUsd.value) {
-      return `Exceeds max order size ${formatUsd(maxCloseSizeUsd.value)}`
+      return t('perps.errors.exceeds-max-order-size', {
+        max: formatUsd(maxCloseSizeUsd.value),
+      })
     }
-    if (isClosing.value) return 'Closing...'
-    return `Close ${displaySymbol.value} ${activePosition.value?.direction === 'long' ? 'Long' : 'Short'}`
+    if (isClosing.value) return t('perps.trade.closing')
+    const direction =
+      activePosition.value?.direction === 'long'
+        ? t('perps.trade.long')
+        : t('perps.trade.short')
+    return t('perps.trade.close-position', {
+      symbol: displaySymbol.value,
+      direction,
+    })
   })
 
   function setClosePercentage(pct: number) {
@@ -477,7 +501,7 @@ export function usePerpsTradeForm() {
           !Number.isFinite(effectivePrice.value) ||
           effectivePrice.value <= 0
         ) {
-          closeError.value = 'Invalid market price. Please try again.'
+          closeError.value = t('perps.errors.invalid-market-price')
           isClosing.value = false
           return
         }
@@ -544,8 +568,10 @@ export function usePerpsTradeForm() {
       closeSliderValue.value = 0
       triggerRefresh()
     } catch (e: any) {
-      closeError.value =
-        e?.message || e?.toString() || 'Failed to close position.'
+      const rawMsg = e?.message || e?.toString() || t('perps.errors.close-position-failed')
+      closeError.value = SLIPPAGE_REJECTION_PATTERN.test(rawMsg)
+        ? SLIPPAGE_REJECTION_MESSAGE
+        : rawMsg
       const failPayload: PerpsClosePositionFailPayload = {
         ...closePayload,
         errorMessage: closeError.value,
@@ -674,29 +700,47 @@ export function usePerpsTradeForm() {
       orderType.value === 'limit' &&
       (!limitPrice.value || parseFloat(limitPrice.value) <= 0)
     ) {
-      return 'Enter target price'
+      return t('perps.trade.enter-target-price')
     }
     const amt = parseFloat(inputAmount.value)
     if (availableMargin.value * leverage.value < minOrderAmount.value) {
-      return `Min. margin required ${formatUsd(minOrderAmount.value)}`
+      return t('perps.errors.min-margin-required', {
+        amount: formatUsd(minOrderAmount.value),
+      })
     }
     if (amt > 0 && positionSizeUsd.value < minOrderAmount.value) {
-      return `Min. amount ${formatUsd(minOrderAmount.value)}`
+      return t('perps.errors.min-amount', {
+        amount: formatUsd(minOrderAmount.value),
+      })
     }
     if (amt > availableMargin.value) {
-      return `Not enough margin ${formatUsd(amt)}`
+      return t('perps.errors.not-enough-margin', { amount: formatUsd(amt) })
     }
     if (
       maxBaseSizeForSubmit.value &&
       parseFloat(orderSize.value) > maxBaseSizeForSubmit.value
     ) {
       const maxUsd = maxBaseSizeForSubmit.value * currentPrice.value
-      return `Exceeds max order size ${formatUsd(maxUsd)}`
+      return t('perps.errors.exceeds-max-order-size', {
+        max: formatUsd(maxUsd),
+      })
     }
     if (activePosition.value) {
-      return `Add to ${displaySymbol.value} ${activePosition.value.direction === 'long' ? 'Long' : 'Short'}`
+      const direction =
+        activePosition.value.direction === 'long'
+          ? t('perps.trade.long')
+          : t('perps.trade.short')
+      return t('perps.trade.add-to-position', {
+        symbol: displaySymbol.value,
+        direction,
+      })
     }
-    return `${orderSide.value === 'buy' ? 'Long' : 'Short'} ${displaySymbol.value}`
+    const direction =
+      orderSide.value === 'buy' ? t('perps.trade.long') : t('perps.trade.short')
+    return t('perps.trade.open-position', {
+      direction,
+      symbol: displaySymbol.value,
+    })
   })
 
   // ── Slider / percentage helpers ────────────────────────────
@@ -774,17 +818,36 @@ export function usePerpsTradeForm() {
 
   // ── Market selector ────────────────────────────────────────
   const marketFilterTabs = [
-    { key: 'all', label: 'All' },
-    { key: 'Equities', label: 'Equities' },
-    { key: 'Commodities', label: 'Commodities' },
-    { key: 'Indices', label: 'Indices' },
+    { key: 'all', label: t('perps.select-market.filter-tab-all') },
+    { key: 'Equities', label: t('perps.select-market.filter-tab-equities') },
+    {
+      key: 'Commodities',
+      label: t('perps.select-market.filter-tab-commodities'),
+    },
+    { key: 'Indices', label: t('perps.select-market.filter-tab-indices') },
   ]
 
   const marketSortOptions: MarketSortOption[] = [
-    { value: 'name', label: 'Name', numeric: false },
-    { value: 'volume', label: 'Volume', numeric: true },
-    { value: 'price', label: 'Price', numeric: true },
-    { value: 'priceChange', label: 'Price change', numeric: true },
+    {
+      value: 'name',
+      label: t('perps.select-market.sort-name'),
+      numeric: false,
+    },
+    {
+      value: 'volume',
+      label: t('perps.select-market.sort-volume'),
+      numeric: true,
+    },
+    {
+      value: 'price',
+      label: t('perps.select-market.sort-price'),
+      numeric: true,
+    },
+    {
+      value: 'priceChange',
+      label: t('perps.select-market.sort-price-change'),
+      numeric: true,
+    },
   ]
 
   // Re-clicking the active sort flips its direction; a different sort jumps
@@ -917,7 +980,7 @@ export function usePerpsTradeForm() {
       leverageError.value =
         e?.message ||
         e?.toString() ||
-        'Failed to save leverage. Please try again.'
+        t('perps.errors.save-leverage-failed')
       perpsToasts.toastFailedToSetLeverage()
       const failPayload: PerpsChangeLeverageFailPayload = {
         ...payload,
@@ -1334,11 +1397,13 @@ export function usePerpsTradeForm() {
         }
       }
       const errorMessage =
-        error?.message || error?.toString() || 'Order failed. Please try again.'
+        SLIPPAGE_REJECTION_PATTERN.test(msg)
+          ? SLIPPAGE_REJECTION_MESSAGE
+          : error?.message || error?.toString() || t('perps.errors.order-failed')
       orderError.value = errorMessage
       const failPayload: PerpsTradeOrderFailPayload = {
         ...tradePayload,
-        errorMessage,
+        errorMessage: orderError.value,
         higherThanReasonablePrice: limitPriceOutOfTolerance.value,
       }
       void analytics.trackPerpsTradeOrderFailEvent(

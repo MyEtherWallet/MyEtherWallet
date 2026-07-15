@@ -11,8 +11,10 @@
     <!-- Header: Asset Info -->
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
       <div>
-        <p class="font-bold text-s-28">Perpetuals</p>
-        <p class="text-info text-s-12 ml-1">Powered by Ondo Perps</p>
+        <p class="font-bold text-s-28">{{ $t('perps.trade.perpetuals') }}</p>
+        <p class="text-info text-s-12 ml-1">
+          {{ $t('perps.trade.powered-by') }}
+        </p>
       </div>
     </div>
 
@@ -71,13 +73,17 @@
           <!-- Position Info -->
           <div v-if="activePosition" class="px-2 mt-3 flex flex-col gap-1">
             <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-info text-s-12">Position size</p>
+              <p class="text-info text-s-12">
+                {{ $t('perps.trade.position-size') }}
+              </p>
               <p class="font-medium">
                 {{ formatUsd(positionNotionalValue) }}
               </p>
             </div>
             <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-info text-s-12">Current Profit</p>
+              <p class="text-info text-s-12">
+                {{ $t('perps.trade.current-profit') }}
+              </p>
               <p
                 :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
                 class="font-medium"
@@ -109,7 +115,7 @@
                   'bg-error': orderSide === side.value && side.value === 'sell',
                 },
               ]"
-              @click="setOrderSide(side.value)"
+              @click="onClickOrderSide(side.value)"
             >
               {{ side.label }}
               <arrow-trending-up-icon
@@ -139,9 +145,9 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
-              @click="setSelectedTradeManageMode('add')"
+              @click="onClickManageMode('add')"
             >
-              Add
+              {{ $t('perps.trade.tab-add') }}
             </button>
             <button
               class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 w-full"
@@ -154,13 +160,17 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
-              @click="setSelectedTradeManageMode('close')"
+              @click="onClickManageMode('close')"
             >
-              Close
+              {{ $t('perps.trade.tab-close') }}
             </button>
           </div>
           <app-pop-up-menu
-            :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
+            :placeholder="
+              orderType === 'market'
+                ? $t('perps.trade.market')
+                : $t('perps.trade.limit')
+            "
             location="right"
             class="ml-3"
             :class="{
@@ -180,9 +190,11 @@
                   @click="[setOrderType('market'), toggleMenu()]"
                 >
                   <div>
-                    <p class="font-bold text-s-14">Market Order</p>
+                    <p class="font-bold text-s-14">
+                      {{ $t('perps.trade.market-order') }}
+                    </p>
                     <p class="text-info text-s-12 mt-0.5">
-                      Long or Short immediately
+                      {{ $t('perps.trade.market-order-description') }}
                     </p>
                   </div>
                   <check-icon
@@ -200,9 +212,11 @@
                   @click="[setOrderType('limit'), toggleMenu()]"
                 >
                   <div>
-                    <p class="font-bold text-s-14">Limit Order</p>
+                    <p class="font-bold text-s-14">
+                      {{ $t('perps.trade.limit-order') }}
+                    </p>
                     <p class="text-info text-s-12 mt-0.5">
-                      You set the price to enter a Long or Short
+                      {{ $t('perps.trade.limit-order-description') }}
                     </p>
                   </div>
                   <check-icon
@@ -221,7 +235,7 @@
           class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 py-3 transition-all flex flex-col justify-between"
         >
           <p class="font-semibold text-s-12 text-info">
-            Target {{ displaySymbol }} price
+            {{ $t('perps.trade.target-price', { symbol: displaySymbol }) }}
           </p>
           <div class="flex items-center py-1">
             <span
@@ -253,7 +267,7 @@
               v-if="!limitPrice || parseFloat(limitPrice) === 0"
               class="text-error text-s-12 mb-1"
             >
-              Target price required
+              {{ $t('perps.errors.target-required') }}
             </div>
             <div
               v-else-if="
@@ -261,13 +275,13 @@
               "
               class="text-error text-s-12 mb-1"
             >
-              Invalid price
+              {{ $t('perps.errors.invalid-price') }}
             </div>
             <div
               v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
               class="text-error text-s-12 mb-1"
             >
-              Price must be less than $10,000,000
+              {{ $t('perps.errors.price-max', { max: '$10,000,000' }) }}
             </div>
             <div
               v-else-if="limitPricePrecisionError"
@@ -275,15 +289,18 @@
             >
               {{
                 quoteDecimals === 0
-                  ? 'Price must be a whole number'
-                  : `Price supports up to ${quoteDecimals} decimal place${quoteDecimals === 1 ? '' : 's'}`
+                  ? $t('perps.errors.price-whole')
+                  : $t('perps.errors.price-precision-decimals', {
+                      decimals: quoteDecimals,
+                      count: quoteDecimals,
+                    })
               }}
             </div>
             <div
               v-else-if="limitPriceOutOfTolerance"
               class="text-error text-s-12 mb-1"
             >
-              Price must be within +/- 10% tolerance
+              {{ $t('perps.errors.out-of-tolerance') }}
             </div>
           </transition>
 
@@ -294,7 +311,11 @@
               class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
             >
-              {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
+              {{
+                pct === 0
+                  ? $t('perps.trade.mid')
+                  : (pct > 0 ? '+' : '') + pct + '%'
+              }}
             </button>
           </div>
         </div>
@@ -306,7 +327,7 @@
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between gap-2"
           >
             <p class="text-s-12 text-info mr-3 font-semibold">
-              Margin available:
+              {{ $t('perps.trade.margin-available') }}
               <span class="font-medium ml-1 font-normal">
                 {{ formatUsd(availableMargin) }}
               </span>
@@ -352,7 +373,7 @@
               </button>
             </div>
             <p class="text-info text-s-12 -mt-2 mb-2 truncate">
-              Size
+              {{ $t('perps.trade.size') }}
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>
 
@@ -362,7 +383,7 @@
                 v-if="marginPrecisionError"
                 class="text-error text-s-12 mb-1"
               >
-                Margin supports up to 2 decimal places
+                {{ $t('perps.errors.margin-precision') }}
               </div>
               <div
                 v-else-if="
@@ -373,8 +394,8 @@
               >
                 {{
                   isNaN(Number(inputAmount))
-                    ? 'Invalid amount'
-                    : 'Insufficient margin available'
+                    ? $t('perps.errors.invalid-amount')
+                    : $t('perps.errors.insufficient-margin')
                 }}
               </div>
               <div
@@ -384,7 +405,11 @@
                 "
                 class="text-error text-s-12 mb-1"
               >
-                Min. amount {{ formatUsd(minOrderAmount) }}
+                {{
+                  $t('perps.errors.min-amount', {
+                    amount: formatUsd(minOrderAmount),
+                  })
+                }}
               </div>
             </transition>
 
@@ -425,7 +450,9 @@
               v-if="activePosition && manageMode === 'add'"
               class="flex justify-between text-s-14 py-1 font-medium"
             >
-              <span class="font-bold text-s-12 text-info">New size</span>
+              <span class="font-bold text-s-12 text-info">{{
+                $t('perps.trade.new-size')
+              }}</span>
               <span class="font-bold">{{
                 submitDisabled
                   ? '-'
@@ -436,9 +463,9 @@
             </div>
             <!-- Est. Liquidation -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-info"
-                >Est. Liquidation</span
-              >
+              <span class="font-bold text-s-12 text-info">{{
+                $t('perps.trade.est-liquidation')
+              }}</span>
               <span class="font-bold">{{
                 submitDisabled
                   ? '-'
@@ -449,9 +476,9 @@
             </div>
             <!-- Margin Ratio -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-info"
-                >New Margin Ratio</span
-              >
+              <span class="font-bold text-s-12 text-info">{{
+                $t('perps.trade.new-margin-ratio')
+              }}</span>
               <span class="font-bold">{{
                 submitDisabled
                   ? '-'
@@ -469,7 +496,9 @@
               @click="openAutoCloseModal"
             >
               <plus-circle-icon class="w-4 h-4" />
-              <p class="text-s-12 font-medium">Add take profit or stop loss</p>
+              <p class="text-s-12 font-medium">
+                {{ $t('perps.trade.add-tp-sl') }}
+              </p>
             </button>
             <div
               v-else
@@ -481,7 +510,7 @@
                 @click="openAutoCloseModal"
               >
                 <p class="text-s-12">
-                  Take profit:
+                  {{ $t('perps.trade.take-profit-label') }}
                   <span class="font-medium">{{
                     formatUsd(takeProfitPrice)
                   }}</span>
@@ -494,7 +523,7 @@
                 @click="openAutoCloseModal"
               >
                 <p class="text-s-12">
-                  Stop loss:
+                  {{ $t('perps.trade.stop-loss-label') }}
                   <span class="font-medium">{{
                     formatUsd(stopLossPrice)
                   }}</span>
@@ -509,8 +538,8 @@
                 <p class="text-s-12 font-medium">
                   {{
                     takeProfitPrice === null
-                      ? 'Add take profit'
-                      : 'Add stop loss'
+                      ? $t('perps.trade.add-take-profit')
+                      : $t('perps.trade.add-stop-loss')
                   }}
                 </p>
               </button>
@@ -527,7 +556,7 @@
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between"
           >
             <p class="font-semibold text-s-12 text-info mr-3">
-              Amount to close
+              {{ $t('perps.trade.amount-to-close') }}
             </p>
             <!-- input -->
             <div
@@ -554,7 +583,7 @@
               />
             </div>
             <p class="text-info text-s-12 mb-2">
-              New Size
+              {{ $t('perps.trade.new-size-close') }}
               {{
                 formatUsd(
                   Math.max(
@@ -569,7 +598,7 @@
                 v-if="closeAmountPrecisionError"
                 class="text-error text-s-12 mb-1"
               >
-                Amount supports up to 2 decimal places
+                {{ $t('perps.errors.amount-precision') }}
               </div>
             </transition>
             <!--slider -->
@@ -625,13 +654,13 @@
           class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
         >
           <p class="text-info text-s-14 mb-4">
-            Perps is only available on Ethereum
+            {{ $t('perps.trade.eth-only') }}
           </p>
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
             @click="onSwitchToEthereum"
           >
-            Switch to Ethereum
+            {{ $t('perps.trade.switch-to-ethereum') }}
           </button>
         </div>
       </template>
@@ -650,9 +679,9 @@
         >
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-            @click="login('Perps_Trade')"
+            @click="login(PerpsEventSource.TRADE)"
           >
-            Sign in to Perps
+            {{ $t('perps.trade.sign-in') }}
           </button>
         </div>
       </template>
@@ -801,7 +830,14 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  PerpsEventSource,
+  PerpsManageEvent,
+  PerpsEventLocation,
+  PerpsNewPositionAction,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
@@ -816,8 +852,8 @@ const { t } = useI18n()
 const onSwitchToEthereum = () => {
   globalStore.setSelectedNetwork('ETHEREUM')
   toastStore.addToastMessage({
-    text: 'Switched to Ethereum',
-    textSecondary: 'Perpetuals are only available on Ethereum.',
+    text: t('perps.toast.switched-to-ethereum-title'),
+    textSecondary: t('perps.toast.switched-to-ethereum-detail'),
     type: ToastType.Info,
   })
 }
@@ -825,7 +861,7 @@ const onSwitchToEthereum = () => {
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Trade',
+    source: PerpsEventSource.TRADE,
   })
   accessStore.openAccessDialog()
 }
@@ -987,6 +1023,31 @@ const {
   closeLeverageModal,
   marketMaxLeverage,
 } = usePerpsTradeForm()
+
+const onClickOrderSide = (side: 'buy' | 'sell') => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: fullMarketName.value,
+    location: PerpsEventLocation.TRADE,
+    action:
+      side === 'buy'
+        ? PerpsNewPositionAction.LONG
+        : PerpsNewPositionAction.SHORT,
+  })
+  setOrderSide(side)
+}
+
+const onClickManageMode = (mode: 'add' | 'close') => {
+  void analytics.trackPerpsManageEvent(
+    mode === 'add'
+      ? PerpsManageEvent.ADD_TO_POSITION
+      : PerpsManageEvent.CLOSE_POSITION,
+    {
+      assetName: fullMarketName.value,
+      location: PerpsEventLocation.TRADE,
+    },
+  )
+  setSelectedTradeManageMode(mode)
+}
 
 const localLeverage = ref(leverage.value)
 

@@ -8,10 +8,7 @@
           width="w-8"
           height="h-8"
         />
-        <span class="font-bold text-s-20"
-          >Confirm Close {{ displaySymbol }}
-          {{ direction === 'long' ? 'Long' : 'Short' }}</span
-        >
+        <span class="font-bold text-s-20">{{ dialogTitle }}</span>
       </div>
     </template>
     <template #content>
@@ -19,41 +16,57 @@
         <!-- Close Details -->
         <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Side</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.side-label')
+            }}</span>
             <span
               class="font-bold"
               :class="direction === 'long' ? 'text-error' : 'text-success'"
               >{{
-                direction === 'long' ? 'Sell (Close Long)' : 'Buy (Close Short)'
+                direction === 'long'
+                  ? $t('perps.close.sell-close-long')
+                  : $t('perps.close.buy-close-short')
               }}</span
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Order type</span>
-            <span class="font-bold">Market</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.order-type-label')
+            }}</span>
+            <span class="font-bold">{{ $t('perps.confirm.market') }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Market price</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.market-price')
+            }}</span>
             <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Close amount</span>
+            <span class="text-info font-medium">{{
+              $t('perps.close.close-amount-label')
+            }}</span>
             <span class="font-bold">{{
               formatUsd(parseFloat(closeAmount) || 0)
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Size </span>
+            <span class="text-info font-medium"
+              >{{ $t('perps.trade.size') }}
+            </span>
             <span class="font-bold"
               >{{ closeOrderSize }} {{ displaySymbol }}</span
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Close percentage</span>
+            <span class="text-info font-medium">{{
+              $t('perps.close.close-percentage-label')
+            }}</span>
             <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Current P&amp;L</span>
+            <span class="text-info font-medium">{{
+              $t('perps.close.current-pnl-label')
+            }}</span>
             <span
               class="font-bold"
               :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
@@ -79,14 +92,18 @@
             :is-loading="isClosing"
             class="flex-1"
             @click="$emit('confirm')"
-            >{{ isClosing ? 'Closing...' : 'Confirm Close' }}</app-base-button
+            >{{
+              isClosing
+                ? $t('perps.close.closing')
+                : $t('perps.close.confirm-close')
+            }}</app-base-button
           >
           <app-btn-text
             :disabled="isClosing"
             class="mx-auto w-full"
             is-large
             @click="isOpen = false"
-            >Cancel</app-btn-text
+            >{{ $t('perps.confirm.cancel') }}</app-btn-text
           >
         </div>
       </div>
@@ -95,6 +112,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -102,7 +121,9 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import { formatUsd, formatPnl } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 
-defineProps({
+const { t } = useI18n()
+
+const props = defineProps({
   displaySymbol: {
     type: String,
     required: true,
@@ -153,4 +174,17 @@ const isOpen = defineModel('isOpen', {
 defineEmits<{
   confirm: []
 }>()
+
+const directionLabel = computed(() =>
+  props.direction === 'long'
+    ? t('perps.confirm.long')
+    : t('perps.confirm.short'),
+)
+
+const dialogTitle = computed(() =>
+  t('perps.close.title', {
+    symbol: props.displaySymbol,
+    direction: directionLabel.value,
+  }),
+)
 </script>

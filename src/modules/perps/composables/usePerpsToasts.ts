@@ -1,3 +1,4 @@
+import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { formatPrice, formatUsd } from '@/modules/perps/utils/formatters'
@@ -5,40 +6,28 @@ import { truncateAddress } from '@/utils/filters'
 
 type Side = 'long' | 'short' | 'buy' | 'sell' | (string & {})
 type OrderCategory = 'market' | 'limit' | 'stopMarket' | 'takeProfitMarket' | (string & {})
+type Translate = ReturnType<typeof useI18n>['t']
 
-function humanSide(side: Side): string {
+function humanSide(side: Side, t: Translate): string {
   const s = (side || '').toLowerCase()
-  if (s === 'buy' || s === 'long') return 'Long'
-  if (s === 'sell' || s === 'short') return 'Short'
+  if (s === 'buy' || s === 'long') return t('perps.trade.long')
+  if (s === 'sell' || s === 'short') return t('perps.trade.short')
   return side
 }
 
-function humanCategory(category: OrderCategory): string {
+function humanCategory(category: OrderCategory, t: Translate): string {
   switch ((category || '').toLowerCase()) {
     case 'market':
-      return 'Market'
+      return t('perps.trade.market')
     case 'limit':
-      return 'Limit'
+      return t('perps.trade.limit')
     case 'stopmarket':
-      return 'Stop Market'
+      return t('perps.toast.category-stop-market')
     case 'takeprofitmarket':
-      return 'Take Profit Market'
+      return t('perps.toast.category-take-profit-market')
     default:
       return category
   }
-}
-
-function orderLine(args: {
-  side: Side
-  size: string | number
-  category: OrderCategory
-  market: string
-  price?: string | number
-}): string {
-  const base = `${humanSide(args.side)} ${args.size} ${humanCategory(args.category)}: ${args.market}`
-  const isMarket = (args.category || '').toLowerCase() === 'market'
-  if (isMarket || args.price == null || args.price === '') return base
-  return `${base} at ${formatPrice(args.price)}`
 }
 
 export type SlTpArgs = {
@@ -67,57 +56,110 @@ export type FillArgs = {
 }
 
 export function usePerpsToasts() {
+  const { t } = useI18n()
   const toastStore = useToastStore()
+
+  const orderLine = (args: OrderArgs): string => {
+    const side = humanSide(args.side, t)
+    const category = humanCategory(args.category, t)
+    const isMarket = (args.category || '').toLowerCase() === 'market'
+    if (isMarket || args.price == null || args.price === '') {
+      return t('perps.toast.order-line', {
+        side,
+        size: args.size,
+        category,
+        market: args.market,
+      })
+    }
+    return t('perps.toast.order-line-with-price', {
+      side,
+      size: args.size,
+      category,
+      market: args.market,
+      price: formatPrice(args.price),
+    })
+  }
+
+  const slTpLine = (args: SlTpArgs): string =>
+    t('perps.toast.sl-tp-line', {
+      side: humanSide(args.direction, t).toUpperCase(),
+      netQuantity: args.netQuantity,
+      base: args.base,
+      quote: args.quote,
+      price: formatUsd(args.triggerPrice as string | number),
+    })
+
+  const fillLine = (args: FillArgs): string => {
+    // Determine the verb from the raw (untranslated) side so this doesn't
+    // depend on humanSide's already-localized output matching an English
+    // literal in non-English locales.
+    const s = (args.side || '').toLowerCase()
+    const isLong = s === 'buy' || s === 'long'
+    const isShort = s === 'sell' || s === 'short'
+    const verb = isLong
+      ? t('perps.toast.verb-bought')
+      : isShort
+        ? t('perps.toast.verb-sold')
+        : humanSide(args.side, t)
+    return t('perps.toast.fill-line', {
+      verb,
+      filledSize: args.filledSize,
+      size: args.size,
+      category: humanCategory(args.category, t),
+      market: args.market,
+      price: formatPrice(args.fillPrice),
+    })
+  }
 
   // --- Deposits & Withdrawals ---
   const toastDepositComplete = (size?: string | number, coin = 'USDC') => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Deposit Complete',
+      text: t('perps.toast.deposit-complete-title'),
       textSecondary:
-        size != null ? `${size} ${coin} added to your Trading Account` : undefined,
+        size != null ? t('perps.toast.deposit-complete-detail', { size, coin }) : undefined,
     })
   }
 
   const toastWithdrawalComplete = () => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Withdrawal Complete',
+      text: t('perps.toast.withdrawal-complete-title'),
     })
   }
 
   const toastDepositInitiated = () => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Deposit Initiated',
+      text: t('perps.toast.deposit-initiated-title'),
     })
   }
 
   const toastFailedToCreditAccount = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Credit Account',
+      text: t('perps.toast.failed-to-credit-account-title'),
     })
   }
 
   const toastDepositCanceled = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Deposit Canceled',
+      text: t('perps.toast.deposit-canceled-title'),
     })
   }
 
   const toastFailedToInitiateDeposit = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Initiate Deposit',
+      text: t('perps.toast.failed-to-initiate-deposit-title'),
     })
   }
 
   const toastFailedToSwitchNetwork = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Switch Network',
+      text: t('perps.toast.failed-to-switch-network-title'),
     })
   }
 
@@ -133,21 +175,17 @@ export function usePerpsToasts() {
   const toastLiquidationInitiated = () => {
     toastStore.addToastMessage({
       type: ToastType.Warning,
-      text: 'Liquidation Initiated',
-      textSecondary:
-        'Your account is temporarily locked and your open positions are being sold',
+      text: t('perps.toast.liquidation-initiated'),
+      textSecondary: t('perps.toast.liquidation-initiated-detail'),
       isInfinite: true,
     })
   }
 
   // --- Stop Loss & Take Profit ---
-  const slTpLine = (args: SlTpArgs) =>
-    `${humanSide(args.direction).toUpperCase()} ${args.netQuantity} PERPS: ${args.base}${args.quote} at ${formatUsd(args.triggerPrice as string | number)}`
-
   const toastStopLossAdded = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Stop Loss Added',
+      text: t('perps.toast.stop-loss-added-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -155,7 +193,7 @@ export function usePerpsToasts() {
   const toastTakeProfitAdded = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Take Profit Added',
+      text: t('perps.toast.take-profit-added-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -163,7 +201,7 @@ export function usePerpsToasts() {
   const toastStopLossModified = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Stop Loss Modified',
+      text: t('perps.toast.stop-loss-modified-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -171,7 +209,7 @@ export function usePerpsToasts() {
   const toastTakeProfitModified = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Take Profit Modified',
+      text: t('perps.toast.take-profit-modified-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -179,14 +217,14 @@ export function usePerpsToasts() {
   const toastStopLossInvalid = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Stop Loss Invalid',
+      text: t('perps.toast.stop-loss-invalid'),
     })
   }
 
   const toastTakeProfitInvalid = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Take Profit Invalid',
+      text: t('perps.toast.take-profit-invalid'),
     })
   }
 
@@ -196,7 +234,7 @@ export function usePerpsToasts() {
   const toastStopLossRemoved = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Stop Loss Removed',
+      text: t('perps.toast.stop-loss-removed-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -204,7 +242,7 @@ export function usePerpsToasts() {
   const toastTakeProfitRemoved = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Take Profit Removed',
+      text: t('perps.toast.take-profit-removed-title'),
       textSecondary: slTpLine(args),
     })
   }
@@ -212,14 +250,14 @@ export function usePerpsToasts() {
   const toastFailedToRemoveSlTp = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Remove Stop Loss / Take Profit',
+      text: t('perps.toast.failed-to-remove-sl-tp-title'),
     })
   }
 
   const toastFailedToRemoveOrder = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Remove Order',
+      text: t('perps.toast.failed-to-remove-order-title'),
     })
   }
 
@@ -229,7 +267,7 @@ export function usePerpsToasts() {
   const toastOrderCanceled = (args: OrderArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Order Canceled',
+      text: t('perps.toast.order-canceled'),
       textSecondary: orderLine(args),
     })
   }
@@ -237,22 +275,15 @@ export function usePerpsToasts() {
   const toastOrderPlaced = (args: OrderArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Order Placed',
+      text: t('perps.toast.order-placed'),
       textSecondary: orderLine(args),
     })
-  }
-
-  const fillLine = (args: FillArgs) => {
-    const human = humanSide(args.side)
-    const verb =
-      human === 'Long' ? 'Bought' : human === 'Short' ? 'Sold' : human
-    return `${verb} ${args.filledSize}/${args.size} ${humanCategory(args.category)}: ${args.market} at ${formatPrice(args.fillPrice)}`
   }
 
   const toastOrderFilled = (args: FillArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Order Filled',
+      text: t('perps.toast.order-filled-title'),
       textSecondary: fillLine(args),
     })
   }
@@ -260,7 +291,7 @@ export function usePerpsToasts() {
   const toastOrderPartiallyFilled = (args: FillArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Order Partially Filled',
+      text: t('perps.toast.order-partially-filled-title'),
       textSecondary: fillLine(args),
     })
   }
@@ -268,38 +299,38 @@ export function usePerpsToasts() {
   const toastCancelFailedInvalidOrderId = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Cancel Failed',
-      textSecondary: 'Invalid order ID',
+      text: t('perps.toast.cancel-failed-title'),
+      textSecondary: t('perps.toast.cancel-failed-invalid-id'),
     })
   }
 
   const toastCancelFailed = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Cancel Failed',
-      textSecondary: 'Failed to cancel order',
+      text: t('perps.toast.cancel-failed-title'),
+      textSecondary: t('perps.toast.cancel-failed'),
     })
   }
 
   const toastCancelFailedGeneric = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Cancel Failed',
-      textSecondary: 'An error occurred while cancelling the order',
+      text: t('perps.toast.cancel-failed-title'),
+      textSecondary: t('perps.toast.cancel-failed-generic'),
     })
   }
 
   const toastFailedToCloseAllPositions = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Close All Positions',
+      text: t('perps.toast.failed-to-close-all-positions-title'),
     })
   }
 
   const toastFailedToCancelOrders = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Cancel Orders',
+      text: t('perps.toast.failed-to-cancel-orders-title'),
     })
   }
 
@@ -307,15 +338,15 @@ export function usePerpsToasts() {
   const toastLeverageUpdated = (leverage: number, market: string) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Leverage Updated',
-      textSecondary: `${market} set to ${leverage}x`,
+      text: t('perps.toast.leverage-updated-title'),
+      textSecondary: t('perps.toast.leverage-updated-detail', { market, leverage }),
     })
   }
 
   const toastFailedToSetLeverage = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to Set Leverage',
+      text: t('perps.toast.failed-to-set-leverage-title'),
     })
   }
 

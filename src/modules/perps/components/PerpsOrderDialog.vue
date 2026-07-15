@@ -59,13 +59,17 @@
           :disabled="cancelling"
           @click="$emit('cancel', order)"
         >
-          {{ cancelling ? 'Cancelling...' : 'Cancel Order' }}
+          {{
+            cancelling
+              ? $t('perps.order.cancelling')
+              : $t('perps.order.cancel-order-button')
+          }}
         </button>
         <app-btn-text
           class="w-full mt-2 text-primary"
           is-large
           @click="$emit('close')"
-          >Close</app-btn-text
+          >{{ $t('perps.trade.tab-close') }}</app-btn-text
         >
       </div>
     </template>
@@ -74,6 +78,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -90,20 +95,22 @@ import {
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 
-const orderTypeLabels: Record<string, string> = {
-  limit: 'Limit',
-  market: 'Market',
-  stopMarket: 'Stop Loss',
-  takeProfitMarket: 'Take Profit',
-}
+const { t } = useI18n()
 
-const orderStatusLabels: Record<string, string> = {
-  open: 'Open',
-  fullyfilled: 'Fully Filled',
-  canceled: 'Canceled',
-  pending: 'Pending',
-  untriggered: 'Untriggered',
-}
+const orderTypeLabels = computed<Record<string, string>>(() => ({
+  limit: t('perps.confirm.limit'),
+  market: t('perps.confirm.market'),
+  stopMarket: t('perps.confirm.stop-loss'),
+  takeProfitMarket: t('perps.confirm.take-profit'),
+}))
+
+const orderStatusLabels = computed<Record<string, string>>(() => ({
+  open: t('perps.order.status-open'),
+  fullyfilled: t('perps.order.status-fully-filled'),
+  canceled: t('perps.order.status-canceled'),
+  pending: t('perps.order.status-pending'),
+  untriggered: t('perps.order.status-untriggered'),
+}))
 
 const props = defineProps<{
   visible: boolean
@@ -166,21 +173,24 @@ const displayFee = computed(() => fetchedFee.value ?? props.order.fee)
 const rows = computed(() => {
   const items: Row[] = [
     {
-      label: 'Market',
+      label: t('perps.confirm.market'),
       value: base.value,
     },
     {
-      label: 'Side',
-      value: props.order.side === 'buy' ? 'Buy' : 'Sell',
+      label: t('perps.confirm.side-label'),
+      value:
+        props.order.side === 'buy'
+          ? t('perps.order.buy')
+          : t('perps.order.sell'),
       colorClass: props.order.side === 'buy' ? 'text-success' : 'text-error',
     },
     {
-      label: 'Type',
-      value: orderTypeLabels[props.order.type] ?? props.order.type,
+      label: t('perps.order.type-label'),
+      value: orderTypeLabels.value[props.order.type] ?? props.order.type,
     },
     {
-      label: 'Status',
-      value: orderStatusLabels[props.order.status] ?? props.order.status,
+      label: t('perps.order.status-label'),
+      value: orderStatusLabels.value[props.order.status] ?? props.order.status,
       colorClass:
         props.order.status === 'open' || props.order.status === 'pending'
           ? 'text-primary'
@@ -189,26 +199,26 @@ const rows = computed(() => {
             : 'text-info',
     },
     {
-      label: 'Price',
+      label: t('perps.order.price-label'),
       value: formatPrice(getOrderPrice(props.order)),
     },
     {
-      label: 'Size',
+      label: t('perps.trade.size'),
       value: `${props.order.size} ${base.value}`,
     },
     {
-      label: 'Filled',
+      label: t('perps.order.filled-label'),
       value: `${props.order.filledSize} ${base.value}`,
     },
     {
-      label: 'Fee',
+      label: t('perps.order.fee-label'),
       value: formatUsdc(displayFee.value),
     },
   ]
 
   if (props.order.realizedPnl) {
     items.push({
-      label: 'Realized PnL',
+      label: t('perps.order.realized-pnl-label'),
       value: formatPnl(props.order.realizedPnl),
       colorClass: pnlColor(props.order.realizedPnl),
     })
@@ -216,42 +226,41 @@ const rows = computed(() => {
 
   if (props.order.timeInForce) {
     items.push({
-      label: 'Time in Force',
+      label: t('perps.order.time-in-force-label'),
       value: props.order.timeInForce,
-      tooltip:
-        'The order remains active until the order is completely filled or you manually cancel it.',
+      tooltip: t('perps.order.time-in-force-tooltip'),
     })
   }
 
   if (props.order.reduceOnly) {
     items.push({
-      label: 'Reduce Only',
-      value: 'Yes',
+      label: t('perps.order.reduce-only-label'),
+      value: t('perps.order.yes'),
     })
   }
 
   items.push({
-    label: 'Created',
+    label: t('perps.order.created-label'),
     value: formatDate(props.order.createdAt),
   })
 
   if (props.order.filledAt) {
     items.push({
-      label: 'Filled At',
+      label: t('perps.order.filled-at-label'),
       value: formatDate(props.order.filledAt),
     })
   }
 
   if (props.order.canceledAt) {
     items.push({
-      label: 'Canceled At',
+      label: t('perps.order.canceled-at-label'),
       value: formatDate(props.order.canceledAt),
     })
   }
 
   if (props.order.cancelReason) {
     items.push({
-      label: 'Cancel Reason',
+      label: t('perps.order.cancel-reason-label'),
       value: props.order.cancelReason,
     })
   }

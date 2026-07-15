@@ -8,7 +8,7 @@ import { decrypt, encrypt } from '@/utils/crypto'
 import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
-import { analytics, PerpsSignInEvent } from '@/analytics'
+import { analytics, PerpsSignInEvent, PerpsEventSource } from '@/analytics'
 import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
@@ -143,7 +143,7 @@ export function usePerpsAuth() {
     )
   }
 
-  async function login(source?: string) {
+  async function login(source?: PerpsEventSource) {
     if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'

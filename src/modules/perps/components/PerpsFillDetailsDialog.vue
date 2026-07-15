@@ -46,9 +46,9 @@
             </span>
           </div>
         </div>
-        <app-base-button class="w-full mt-4" @click="$emit('close')"
-          >Close</app-base-button
-        >
+        <app-base-button class="w-full mt-4" @click="$emit('close')">{{
+          $t('perps.trade.tab-close')
+        }}</app-base-button>
       </div>
     </template>
   </app-dialog>
@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -68,6 +69,8 @@ import {
   formatDate,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   visible: boolean
@@ -91,40 +94,42 @@ function formatDirection(direction: string | undefined) {
 
 const rows = computed(() => [
   {
-    label: 'Market',
+    label: t('perps.confirm.market'),
     value: base.value,
   },
   {
-    label: 'Price',
+    label: t('perps.fill.price-label'),
     value: formatPrice(props.fill.price),
   },
   {
-    label: 'Size',
+    label: t('perps.trade.size'),
     value: `${props.fill.size} ${base.value}`,
   },
   {
-    label: 'Cost',
+    label: t('perps.fill.cost-label'),
     value: formatUsd(props.fill.filledCost),
   },
   {
-    label: 'Fee',
+    label: t('perps.fill.fee-label'),
     value: formatUsd(props.fill.fee),
   },
   ...(props.fill.pnl
     ? [
         {
-          label: 'Realized PnL',
+          label: t('perps.fill.realized-pnl-label'),
           value: formatPnl(props.fill.pnl),
           colorClass: pnlColor(props.fill.pnl),
         },
       ]
     : []),
   {
-    label: 'Role',
-    value: props.fill.isMaker ? 'Maker' : 'Taker',
+    label: t('perps.fill.role-label'),
+    value: props.fill.isMaker
+      ? t('perps.confirm.maker')
+      : t('perps.confirm.taker'),
   },
   {
-    label: 'Time',
+    label: t('perps.fill.time-label'),
     value: formatDate(props.fill.time),
   },
 ])

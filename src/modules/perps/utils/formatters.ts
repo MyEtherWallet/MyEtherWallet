@@ -169,22 +169,27 @@ export function hasInvalidPrecision(
   return decimalPlaces(s) > maxDecimals
 }
 
+// Values are i18n keys (not raw English) so call sites resolve them via
+// `$t(...)`. For an unmapped status the function returns the raw status
+// string itself (not a key); `$t()` returns its argument verbatim when the
+// key is missing, so the raw enum still renders unchanged at the call site.
 export const orderStatusLabels: Record<string, string> = {
-  open: 'Open',
-  fullyfilled: 'Fully Filled',
-  canceled: 'Canceled',
-  pending: 'Pending',
-  untriggered: 'Untriggered',
+  open: 'perps.order-status.open',
+  fullyfilled: 'perps.order-status.fully-filled',
+  canceled: 'perps.order-status.canceled',
+  pending: 'perps.order-status.pending',
+  untriggered: 'perps.order-status.untriggered',
 }
 export const formatOrderStatus = (status: string): string => {
   return orderStatusLabels[status] ?? status
 }
 
+// See orderStatusLabels above re: i18n keys + raw-enum fallback.
 export const orderTypeLabels: Record<string, string> = {
-  limit: 'Limit',
-  market: 'Market',
-  stopMarket: 'Stop Loss',
-  takeProfitMarket: 'Take Profit',
+  limit: 'perps.order-type.limit',
+  market: 'perps.order-type.market',
+  stopMarket: 'perps.order-type.stop-loss',
+  takeProfitMarket: 'perps.order-type.take-profit',
 }
 
 export const formatOrderType = (type: string): string => {

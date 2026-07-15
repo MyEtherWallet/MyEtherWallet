@@ -54,7 +54,7 @@
           <p
             class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
           >
-            Perpetual
+            {{ $t('perps.info.perpetual-label') }}
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@
                   class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
                   @click="toggleSelect"
                 >
-                  <p>More</p>
+                  <p>{{ $t('perps.info.more-label') }}</p>
                   <chevron-down-icon class="w-4 h-4 ml-1" />
                 </button>
               </template>
@@ -107,7 +107,7 @@
         >
           <div class="flex flex-col items-center h-full justify-center gap-2">
             <p v-if="!chartLoading" class="text-s-14 text-info">
-              No chart data
+              {{ $t('perps.info.no-chart-data') }}
             </p>
           </div>
         </div>
@@ -119,7 +119,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Price
+              {{ $t('perps.order.price-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatPrice(currentPrice) }}
@@ -129,7 +129,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Mark Price
+              {{ $t('perps.positions.mark-price-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatPrice(markPrice) }}
@@ -139,7 +139,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              24hr Trade Vol
+              {{ $t('perps.info.volume-24h-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatVolume(contractData?.usdVolume) }}
@@ -149,7 +149,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Open Interest
+              {{ $t('perps.info.open-interest-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatVolume(contractData?.openInterestUsd) }}
@@ -159,7 +159,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Funding Countdown
+              {{ $t('perps.info.funding-countdown-label') }}
             </p>
             <p class="text-s-14 font-bold">
               <span :class="pnlColor(contractData?.fundingRate || '0')">
@@ -170,7 +170,7 @@
                 }}
               </span>
               <span v-if="fundingCountdown" class="text-info text-s-12">
-                in {{ fundingCountdown }}
+                {{ $t('perps.info.in-label') }} {{ fundingCountdown }}
               </span>
             </p>
           </div>
@@ -187,7 +187,7 @@
           class="flex flex-wrap items-center justify-between xs:justify-start px-2 gap-x-3 gap-y-1 w-full"
         >
           <h2 class="font-bold text-s-17 sm:text-s-20 leading-p-150 order-1">
-            Open Position:
+            {{ $t('perps.info.open-position-label') }}
           </h2>
           <div
             class="order-3 xs:order-2 basis-full xs:basis-auto -ml-1 xs:ml-0"
@@ -209,7 +209,7 @@
             v-model:selected="selectedManageAction"
             :options="manageOptions"
             position="right-0"
-            placeholder="Manage"
+            :placeholder="$t('perps.positions.manage-label')"
             class="ml-auto order-1 xs:order-3"
             v-if="!isWatchOnly"
           >
@@ -219,13 +219,13 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center">
-                  <span>Manage</span>
+                  <span>{{ $t('perps.positions.manage-label') }}</span>
                   <chevron-down-icon class="w-4 h-4 ml-1" />
                 </div>
               </button>
               <app-btn-icon
                 class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
-                label="Manage Position"
+                :label="$t('perps.info.manage-position-label')"
                 height="h-7 xs:h-8"
                 width="w-7 xs:w-8"
                 @click="toggleSelect"
@@ -236,7 +236,7 @@
           </app-select>
           <div v-else class="ml-auto order-1 xs:order-3">
             <app-base-button @click="connectWallet" size="medium">
-              Connect wallet</app-base-button
+              {{ $t('perps.info.connect-wallet-label') }}</app-base-button
             >
           </div>
         </div>
@@ -248,7 +248,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Value
+              {{ $t('perps.positions.value-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatUsd(marketPosition.notionalValue) }}
@@ -258,7 +258,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              uPnL
+              {{ $t('perps.info.upnl-label') }}
             </p>
             <p
               class="text-s-14 font-bold"
@@ -271,7 +271,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Liquidation
+              {{ $t('perps.info.liquidation-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ formatPrice(marketPosition.liquidationPrice) }}
@@ -281,7 +281,7 @@
             <p
               class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Quantity
+              {{ $t('perps.info.quantity-label') }}
             </p>
             <p class="text-s-14 font-bold">
               {{ marketPosition.netQuantity }} {{ baseCurrency.toUpperCase() }}
@@ -292,7 +292,7 @@
           size="medium"
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
-          >More
+          >{{ $t('perps.info.more-label') }}
           <chevron-down-icon
             class="w-4 h-4 ml-1 inline-block align-middle"
             :class="{ 'rotate-180 ': showPositionMore }"
@@ -307,7 +307,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                ROE
+                {{ $t('perps.info.roe-label') }}
               </p>
               <p
                 class="text-s-14 font-bold"
@@ -322,7 +322,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Entry Price
+                {{ $t('perps.positions.entry-price-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatPrice(marketPosition.averageEntryPrice) }}
@@ -332,7 +332,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Mark Price
+                {{ $t('perps.positions.mark-price-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatPrice(marketPosition.markPrice) }}
@@ -343,7 +343,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Used Margin
+                {{ $t('perps.balance.used-margin-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatUsd(marketPosition.usedMargin) }}
@@ -354,7 +354,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Bankruptcy
+                {{ $t('perps.info.bankruptcy-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatPrice(marketPosition.bankruptcyPrice) }}
@@ -364,7 +364,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Maint. Margin
+                {{ $t('perps.info.maint-margin-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatUsd(marketPosition.maintenanceMargin) }}
@@ -374,7 +374,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Funding
+                {{ $t('perps.info.funding-label') }}
               </p>
               <p class="text-s-14 font-bold">
                 {{ formatUsd(marketPosition.netFundingSinceNeutral) }}
@@ -385,7 +385,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Take Profit
+                {{ $t('perps.confirm.take-profit') }}
               </p>
               <p class="text-s-14 font-bold text-success">
                 {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
@@ -395,7 +395,7 @@
               <p
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
               >
-                Stop Loss
+                {{ $t('perps.confirm.stop-loss') }}
               </p>
               <p class="text-s-14 font-bold text-error">
                 {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
@@ -437,7 +437,7 @@
           v-model:selected="activeInfoTabObj"
           :options="infoTabs"
           position="left-0"
-          placeholder="Tab"
+          :placeholder="$t('perps.positions.tab-placeholder')"
           class="lg:hidden sm:mx-2 w-full sm:w-auto"
         >
           <template #select-button="{ toggleSelect }">
@@ -514,7 +514,7 @@
               "
               class="text-center py-8 text-info text-s-14"
             >
-              No orders for {{ baseCurrency }}
+              {{ $t('perps.info.no-orders-for', { symbol: baseCurrency }) }}
             </div>
             <table
               v-else
@@ -525,22 +525,26 @@
                 <tr
                   class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
                 >
-                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
+                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">
+                    {{ $t('perps.confirm.side-label') }}
+                  </th>
                   <th
                     class="px-1 py-3 text-left font-bold hidden 2xl:table-cell"
                   >
-                    Status
+                    {{ $t('perps.order.status-label') }}
                   </th>
                   <th
                     class="px-1 py-3 text-left font-bold hidden xl:table-cell"
                   >
-                    Type
+                    {{ $t('perps.order.type-label') }}
                   </th>
-                  <th class="px-1 py-3 text-right font-bold">Price</th>
+                  <th class="px-1 py-3 text-right font-bold">
+                    {{ $t('perps.order.price-label') }}
+                  </th>
                   <th
                     class="px-1 py-3 text-right font-bold hidden lg:table-cell"
                   >
-                    Filled / Size
+                    {{ $t('perps.positions.filled-size-header') }}
                   </th>
                   <!--Actions -->
                   <th
@@ -584,14 +588,14 @@
                               : '',
                       ]"
                     >
-                      {{ formatOrderStatus(order.status) }}
+                      {{ $t(formatOrderStatus(order.status)) }}
                     </p>
                   </td>
                   <!-- Type -->
                   <td
                     class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
                   >
-                    <p>{{ formatOrderType(order.type) }}</p>
+                    <p>{{ $t(formatOrderType(order.type)) }}</p>
 
                     <p
                       :class="[
@@ -606,7 +610,7 @@
                               : '',
                       ]"
                     >
-                      {{ formatOrderStatus(order.status) }}
+                      {{ $t(formatOrderStatus(order.status)) }}
                     </p>
                   </td>
                   <!-- Price -->
@@ -619,7 +623,12 @@
                   >
                     <p>{{ order.filledSize }} {{ baseCurrency }}</p>
                     <p class="text-s-12 text-info">
-                      out of {{ order.size }} {{ baseCurrency }}
+                      {{
+                        $t('perps.positions.out-of', {
+                          size: order.size,
+                          symbol: baseCurrency,
+                        })
+                      }}
                     </p>
                   </td>
                   <!-- Actions -->
@@ -630,12 +639,14 @@
                     <div class="flex items-center justify-end -mr-1 sm:mr-0">
                       <app-pop-up-menu
                         v-if="showCancelButton(order)"
-                        placeholder="actions menu"
+                        :placeholder="
+                          $t('perps.market-list.actions-menu-label')
+                        "
                         location="right"
                       >
                         <template #menu-button="{ toggleMenu }">
                           <app-btn-icon
-                            label="action menu"
+                            :label="$t('perps.market-list.action-menu-label')"
                             height="h-7 xs:h-8"
                             width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
@@ -655,7 +666,9 @@
                                   openOrderDialog(order),
                                 ]"
                               >
-                                <p>View Order</p>
+                                <p>
+                                  {{ $t('perps.positions.view-order-label') }}
+                                </p>
                               </li>
                               <li
                                 v-if="showCancelButton(order)"
@@ -667,8 +680,8 @@
                               >
                                 {{
                                   cancellingOrderId === order.orderId
-                                    ? 'Cancelling...'
-                                    : 'Cancel'
+                                    ? $t('perps.order.cancelling')
+                                    : $t('perps.confirm.cancel')
                                 }}
                               </li>
                             </ul>
@@ -677,7 +690,7 @@
                       </app-pop-up-menu>
                       <app-btn-icon
                         v-else
-                        label="view order details"
+                        :label="$t('perps.positions.view-order-details-label')"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                         :class="{ 'ml-auto': !showCancelButton(order) }"
@@ -720,7 +733,7 @@
               v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
               class="text-center py-6 text-info text-s-14"
             >
-              No fills for {{ baseCurrency }}
+              {{ $t('perps.info.no-fills-for', { symbol: baseCurrency }) }}
             </div>
             <div v-else class="w-full">
               <table ref="fillsTable" class="w-full text-s-14 table-fixed">
@@ -729,23 +742,25 @@
                     class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
                   >
                     <th class="px-1 sm:pl-4 py-3 text-left font-bold">
-                      Direction
+                      {{ $t('perps.positions.direction-header') }}
                     </th>
-                    <th class="px-1 py-3 text-right font-bold">Price</th>
-                    <th
-                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
-                    >
-                      Size
+                    <th class="px-1 py-3 text-right font-bold">
+                      {{ $t('perps.order.price-label') }}
                     </th>
                     <th
                       class="px-1 py-3 text-right font-bold hidden xl:table-cell"
                     >
-                      Fee
+                      {{ $t('perps.trade.size') }}
+                    </th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                    >
+                      {{ $t('perps.fill.fee-label') }}
                     </th>
                     <th
                       class="px-1 py-3 text-right font-bold hidden lg:table-cell"
                     >
-                      PnL
+                      {{ $t('perps.positions.pnl-header') }}
                     </th>
                     <th class="w-9 xs:w-12"></th>
                   </tr>
@@ -796,7 +811,7 @@
                     <!-- Actions -->
                     <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                       <app-btn-icon
-                        label="view fill details"
+                        :label="$t('perps.positions.view-fill-details-label')"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                         class="ml-auto"
@@ -829,7 +844,9 @@
     </div>
     <!-- About -->
     <div class="px-4 lg:px-10 py-6">
-      <h3 class="text-s-20 font-bold mb-3">About {{ baseCurrency }}</h3>
+      <h3 class="text-s-20 font-bold mb-3">
+        {{ $t('perps.info.about-symbol', { symbol: baseCurrency }) }}
+      </h3>
       <p class="text-s-14 text-info leading-relaxed">
         {{ stockDescription }}
       </p>
@@ -837,13 +854,15 @@
 
     <!-- Instrument Info -->
     <div class="px-4 lg:px-10 py-6">
-      <h3 class="text-s-20 font-bold mb-3">Instrument Information</h3>
+      <h3 class="text-s-20 font-bold mb-3">
+        {{ $t('perps.info.instrument-information') }}
+      </h3>
       <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
         <div>
           <p
             class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
-            Asset Name
+            {{ $t('perps.info.asset-name-label') }}
           </p>
           <p class="text-s-14 font-bold">{{ assetName }}</p>
         </div>
@@ -851,7 +870,7 @@
           <p
             class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
-            Ticker
+            {{ $t('perps.info.ticker-label') }}
           </p>
           <p class="text-s-14 font-bold">{{ baseCurrency }}</p>
         </div>
@@ -859,7 +878,7 @@
           <p
             class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
-            Category
+            {{ $t('perps.info.category-label') }}
           </p>
           <p class="text-s-14 font-bold">{{ category }}</p>
         </div>
@@ -867,7 +886,7 @@
           <p
             class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
-            24H High
+            {{ $t('perps.info.high-24h-label') }}
           </p>
           <p class="text-s-14 font-bold">
             {{ formatPrice(perpInfo?.underlyingMarket?.high) }}
@@ -877,7 +896,7 @@
           <p
             class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
-            24H Low
+            {{ $t('perps.info.low-24h-label') }}
           </p>
           <p class="text-s-14 font-bold">
             {{ formatPrice(perpInfo?.underlyingMarket?.low) }}
@@ -922,6 +941,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -964,7 +984,15 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { analytics, ConnectWalletEvent, PerpsChangeLeverageEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  PerpsChangeLeverageEvent,
+  PerpsEventSource,
+  PerpsManageEvent,
+  PerpsOrderEvent,
+  PerpsEventLocation,
+} from '@/analytics'
 import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
@@ -991,9 +1019,11 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
+const { t } = useI18n()
+
 const connectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Market_Info',
+    source: PerpsEventSource.MARKET_INFO,
   })
   useAccessStore().openAccessDialog()
 }
@@ -1051,9 +1081,19 @@ const priceChangePercent = computed(() => {
   return parseFloat(pct)
 })
 
+// getCategory() returns fixed enum-like tokens ('Equities' | 'Commodities' |
+// 'Indices') also used as filter keys elsewhere (usePerpsTradeForm.ts) — do
+// not translate its return value directly, map it through i18n here for
+// display only.
+const categoryLabelKeys: Record<string, string> = {
+  Equities: 'perps.select-market.filter-tab-equities',
+  Commodities: 'perps.select-market.filter-tab-commodities',
+  Indices: 'perps.select-market.filter-tab-indices',
+}
 const category = computed(() => {
   const c = contractData.value
-  return c ? getCategory(c) : 'Equities'
+  const raw = c ? getCategory(c) : 'Equities'
+  return t(categoryLabelKeys[raw] ?? categoryLabelKeys.Equities)
 })
 
 // Fetch perpetual info from Ondo API
@@ -1073,7 +1113,10 @@ watch(() => props.market, fetchPerpetualInfo, { immediate: true })
 const stockDescription = computed(
   () =>
     perpInfo.value?.description ??
-    `${baseCurrency.value}-PERP is a perpetual futures contract tracking the ${displayName.value} asset. Trade with up to 20x leverage.`,
+    t('perps.info.default-description', {
+      symbol: baseCurrency.value,
+      displayName: displayName.value,
+    }),
 )
 
 const marketPosition = computed(() => {
@@ -1129,8 +1172,8 @@ const openOrdersCountIsCapped = ref(false)
 let openOrdersFetchSeq = 0
 
 const orderFilterTabs = [
-  { label: 'All', value: 'all' },
-  { label: 'Pending', value: 'pending' },
+  { label: t('perps.select-market.filter-tab-all'), value: 'all' },
+  { label: t('perps.positions.filter-pending'), value: 'pending' },
 ]
 const selectedOrderFilter = ref(orderFilterTabs[0])
 
@@ -1197,6 +1240,16 @@ const showOrderDialog = ref(false)
 const selectedOrder = ref<ApiOrder | null>(null)
 
 const openOrderDialog = (order: ApiOrder) => {
+  void analytics.trackPerpsOrderViewInfoEvent(
+    PerpsOrderEvent.CLICKED_VIEW_INFO,
+    {
+      assetName: order.market,
+      status: order.status,
+      orderId: order.orderId,
+      type: order.type,
+      location: PerpsEventLocation.ORDER_INFO,
+    },
+  )
   selectedOrder.value = order
   showOrderDialog.value = true
 }
@@ -1214,8 +1267,24 @@ const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket = market?.longName ?? market?.displayName ?? order.market
+  const cancelPayload = {
+    assetName: order.market,
+    orderId: order.orderId,
+    type: order.type,
+    price: order.price,
+    size: order.size,
+    direction: order.side,
+  }
+  void analytics.trackPerpsOrderCancelSubmitEvent(
+    PerpsOrderEvent.CANCEL_SUBMIT,
+    cancelPayload,
+  )
   try {
     await perpsClient.cancelOrder(order.orderId)
+    void analytics.trackPerpsOrderCancelSubmitEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_SUCCESS,
+      cancelPayload,
+    )
     perpsToasts.toastOrderCanceled({
       side: order.side,
       size: order.size,
@@ -1228,7 +1297,12 @@ const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
     return true
   } catch (e) {
     console.error('Failed to cancel order:', e)
-    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    void analytics.trackPerpsOrderCancelErrorEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
+      { ...cancelPayload, errorMessage },
+    )
+    const msg = errorMessage.toLowerCase()
     if (
       msg.includes('invalid') &&
       (msg.includes('order') || msg.includes('id'))
@@ -1249,6 +1323,18 @@ const orderPendingCancel = ref<ApiOrder | null>(null)
 const showCancelConfirmation = ref(false)
 
 const openCancelConfirmation = (order: ApiOrder) => {
+  void analytics.trackPerpsOrderCancelClickedEvent(
+    PerpsOrderEvent.CLICKED_CANCEL,
+    {
+      assetName: order.market,
+      orderId: order.orderId,
+      type: order.type,
+      price: order.price,
+      size: order.size,
+      direction: order.side,
+      location: PerpsEventLocation.ORDER_INFO,
+    },
+  )
   orderPendingCancel.value = order
   showCancelConfirmation.value = true
 }
@@ -1264,20 +1350,36 @@ const confirmCancelOrder = async () => {
 }
 
 const ordersSkeletonColumns: SkeletonColumn[] = [
-  { header: 'Side' },
-  { header: 'Status', hidden: 'hidden 2xl:table-cell' },
-  { header: 'Type', hidden: 'hidden xl:table-cell' },
-  { header: 'Price', align: 'right' },
-  { header: 'Filled / Size', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: t('perps.confirm.side-label') },
+  { header: t('perps.order.status-label'), hidden: 'hidden 2xl:table-cell' },
+  { header: t('perps.order.type-label'), hidden: 'hidden xl:table-cell' },
+  { header: t('perps.order.price-label'), align: 'right' },
+  {
+    header: t('perps.positions.filled-size-header'),
+    align: 'right',
+    hidden: 'hidden lg:table-cell',
+  },
   { header: '', width: '40px' },
 ]
 
 const fillsSkeletonColumns: SkeletonColumn[] = [
-  { header: 'Direction' },
-  { header: 'Price', align: 'right' },
-  { header: 'Size', align: 'right', hidden: 'hidden xl:table-cell' },
-  { header: 'Fee', align: 'right', hidden: 'hidden xl:table-cell' },
-  { header: 'PnL', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: t('perps.positions.direction-header') },
+  { header: t('perps.order.price-label'), align: 'right' },
+  {
+    header: t('perps.trade.size'),
+    align: 'right',
+    hidden: 'hidden xl:table-cell',
+  },
+  {
+    header: t('perps.fill.fee-label'),
+    align: 'right',
+    hidden: 'hidden xl:table-cell',
+  },
+  {
+    header: t('perps.positions.pnl-header'),
+    align: 'right',
+    hidden: 'hidden lg:table-cell',
+  },
   { header: '', width: '36px' },
 ]
 
@@ -1358,13 +1460,14 @@ const updateFundingCountdown = () => {
   }
   const diff = new Date(ts).getTime() - Date.now()
   if (diff <= 0) {
-    fundingCountdown.value = 'now'
+    fundingCountdown.value = t('perps.info.countdown-now')
     return
   }
   const mins = Math.floor(diff / 60000)
   const secs = Math.floor((diff % 60000) / 1000)
-  fundingCountdown.value = `${mins} min`
-  if (mins === 0) fundingCountdown.value = `${secs}s`
+  fundingCountdown.value = t('perps.info.countdown-minutes', { mins })
+  if (mins === 0)
+    fundingCountdown.value = t('perps.info.countdown-seconds', { secs })
 }
 
 countdownTimer = setInterval(updateFundingCountdown, 5000)
@@ -1380,12 +1483,13 @@ onUnmounted(() => {
 const showPositionMore = ref<boolean>(false)
 const activeInfoTab = ref('orders')
 const infoTabs = [
-  { key: 'orders', value: 'orders', label: 'Orders' },
-  { key: 'fills', value: 'fills', label: 'Fills' },
+  { key: 'orders', value: 'orders', label: t('perps.positions.tab-orders') },
+  { key: 'fills', value: 'fills', label: t('perps.positions.tab-fills') },
   // { key: 'more', value: 'more', label: 'More' },
 ]
 const activeInfoTabObj = computed({
-  get: () => infoTabs.find(t => t.key === activeInfoTab.value) ?? infoTabs[0],
+  get: () =>
+    infoTabs.find(tab => tab.key === activeInfoTab.value) ?? infoTabs[0],
   set: (tab: (typeof infoTabs)[number]) => {
     activeInfoTab.value = tab.key
   },
@@ -1394,9 +1498,9 @@ const activeInfoTabObj = computed({
 // Close / Add Buttons
 
 const manageOptions = [
-  { value: 'add', label: 'Add to Position' },
-  { value: 'leverage', label: 'Change Leverage' },
-  { value: 'close', label: 'Close Position' },
+  { value: 'add', label: t('perps.market-list.add-to-position') },
+  { value: 'leverage', label: t('perps.market-list.change-leverage') },
+  { value: 'close', label: t('perps.market-list.close-position') },
 ]
 const selectedManageAction = ref<{ value: string; label: string } | undefined>(
   undefined,
@@ -1437,7 +1541,9 @@ const saveLeverage = async () => {
     )
   } catch (e) {
     leverageError.value =
-      e instanceof Error ? e.message : 'Failed to set leverage'
+      e instanceof Error
+        ? e.message
+        : t('perps.market-list.leverage-error-fallback')
     perpsToasts.toastFailedToSetLeverage()
     const failPayload: PerpsChangeLeverageFailPayload = {
       ...payload,
@@ -1454,11 +1560,27 @@ const saveLeverage = async () => {
 
 watch(selectedManageAction, action => {
   if (!action) return
-  if (action.value === 'add' || action.value === 'close') {
+  if (action.value === 'add') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.ADD_TO_POSITION, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
+    setSelectedTradeManageMode(action.value)
+    setWalletPanel('perps')
+    setIsOpenSideMenu(true)
+  } else if (action.value === 'close') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.CLOSE_POSITION, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
     setSelectedTradeManageMode(action.value)
     setWalletPanel('perps')
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.CHANGE_LEVERAGE, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
     const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
     tempLeverage.value =
       Number.isFinite(parsedPosition) && parsedPosition > 0

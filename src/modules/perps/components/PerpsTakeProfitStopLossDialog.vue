@@ -2,7 +2,7 @@
   <app-dialog
     v-model:is-open="isOpen"
     class="w-full max-w-[440px]"
-    title="Auto Close"
+    :title="$t('perps.auto-close.title')"
   >
     <!-- <template #title>
       <div class="mr-8 pt-5 pl-6">
@@ -23,7 +23,9 @@
             <span class="font-bold text-s-16">{{ displaySymbol }}</span>
           </div>
           <div class="text-right">
-            <span class="text-info text-s-14 mr-2">Current price</span>
+            <span class="text-info text-s-14 mr-2">{{
+              $t('perps.auto-close.current-price')
+            }}</span>
             <span class="font-bold text-s-16">{{
               formatUsd(currentPrice)
             }}</span>
@@ -39,13 +41,17 @@
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
-                Take profit if {{ displaySymbol }} reaches
+                {{
+                  $t('perps.auto-close.take-profit-reaches', {
+                    symbol: displaySymbol,
+                  })
+                }}
               </p>
               <app-btn-text
                 class="text-primary text-s-12 sm:text-s-14"
                 @click="removeTakeProfit"
               >
-                Remove
+                {{ $t('perps.auto-close.remove') }}
               </app-btn-text>
             </div>
             <perps-amount
@@ -78,7 +84,9 @@
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">Projected profit</span>
+              <span class="text-info">{{
+                $t('perps.auto-close.projected-profit')
+              }}</span>
               <span
                 v-if="tempProjectedProfit !== null && takeProfitPrice !== null"
                 class="text-success ml-2 font-medium"
@@ -96,7 +104,7 @@
             <plus-circle-icon
               class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
             />
-            Add Take Profit
+            {{ $t('perps.auto-close.add-take-profit') }}
           </button>
         </transition>
 
@@ -109,13 +117,17 @@
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
-                Stop loss if {{ displaySymbol }} reaches
+                {{
+                  $t('perps.auto-close.stop-loss-reaches', {
+                    symbol: displaySymbol,
+                  })
+                }}
               </p>
               <app-btn-text
                 class="text-primary text-s-12 sm:text-s-14"
                 @click="removeStopLoss"
               >
-                Remove
+                {{ $t('perps.auto-close.remove') }}
               </app-btn-text>
             </div>
             <perps-amount
@@ -145,7 +157,9 @@
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">Projected loss</span>
+              <span class="text-info">{{
+                $t('perps.auto-close.projected-loss')
+              }}</span>
               <span
                 v-if="tempProjectedLoss !== null && stopLossPrice !== null"
                 class="text-error font-medium ml-2"
@@ -163,7 +177,7 @@
             <plus-circle-icon
               class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
             />
-            Add Stop Loss
+            {{ $t('perps.auto-close.add-stop-loss') }}
           </button>
         </transition>
 
@@ -174,14 +188,10 @@
             class="w-full"
             @click="$emit('confirm')"
           >
-            Save
+            {{ $t('perps.auto-close.save') }}
           </app-base-button>
-          <app-btn-text
-            class="mx-auto w-full"
-            is-large
-            @click="isOpen = false"
-          >
-            Cancel
+          <app-btn-text class="mx-auto w-full" is-large @click="isOpen = false">
+            {{ $t('perps.auto-close.cancel') }}
           </app-btn-text>
         </div>
       </div>
