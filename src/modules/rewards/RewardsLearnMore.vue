@@ -181,7 +181,7 @@ const infoItems = computed(() => [
   },
   {
     icon: 'wallet-icon',
-    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+    text: 'The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.',
   },
   {
     icon: 'currency-dollar-gray',
