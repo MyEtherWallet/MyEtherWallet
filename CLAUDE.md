@@ -205,7 +205,7 @@ modules/send/
 ```
 
 **15 feature modules:**
-`access`, `create`, `crypto`, `home`, `nft`, `notifications`, `portfolio`, `rewards`, `send`, `stocks`, `swap`, `toast`, `trade`
+`access`, `create`, `crypto`, `home`, `nft`, `notifications`, `portfolio`, `rewards`, `send`, `stocks`, `swap`, `toast`, `trade`, `buy`, `sell`
 
 Modules are conditionally mounted in `App.vue`. Many render as dialogs (e.g., `ModuleAccessWallet`) controlled by store flags.
 
@@ -474,5 +474,4 @@ Commits follow Conventional Commits (enforced by commitlint):
 7. **Always use named routes** from `routeNames.ts`, not raw path strings.
 8. **Always translate** user-facing strings with `$t()` / `t()`.
 9. **Always destructure objects** whenever possible, especially when importing stores.
-10. **Always use `const`** when finding ones' self writing strings in logical operators.
-11. **Always use** native JS BN when creating calculations. Bignumber.js for numbers that are user facing.
+10. **Always use** native JS BN when creating calculations. Bignumber.js for numbers that are user facing.

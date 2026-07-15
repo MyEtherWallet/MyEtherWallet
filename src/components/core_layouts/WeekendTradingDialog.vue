@@ -61,6 +61,8 @@ import AppDialog from '@/components/AppDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
@@ -79,8 +81,15 @@ const walletMenu = useWalletMenuStore()
 const announcement = useWeekendTradingAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 
-const { isTradingRestrictedInRegion, fetchTradingRestriction } =
-  useMarketStatus()
+// The 24/7 announcement is sequenced behind the RWA "Trade & Hold" announcement:
+// it never shows while that modal is open and only surfaces 3 days after it is
+// first closed.
+const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+  useRwaAnnouncementStore(),
+)
+
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+const { fetchTradingRestriction } = useMarketStatus()
 
 const isOpen = ref(false)
 
@@ -113,6 +122,8 @@ const openDialog = () => {
   // Defer behind the Welcome dialog so a brand-new user isn't shown two modals
   // at once. In dev the Welcome dialog never mounts, so don't require it there.
   if (isTradingRestrictedInRegion.value) return
+  // Wait until 3 days after the RWA announcement was closed.
+  if (!rwaCooldownElapsed.value) return
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()
