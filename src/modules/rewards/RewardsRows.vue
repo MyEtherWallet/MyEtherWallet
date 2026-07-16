@@ -163,7 +163,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        {{ t('rewards.trade_button', { amount: `$${tradeMinimumAmount}+` }) }}
+        {{ t('rewards.trade_button', { amount: `$${minSpendTrade}+` }) }}
       </app-base-button>
       <button
         v-else
@@ -205,7 +205,6 @@ const walletMenuStore = useWalletMenuStore()
 const { t } = useI18n()
 const rewardAmount = 5
 const swapMinimumAmount = 50
-const tradeMinimumAmount = 25
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 
 defineProps<{
@@ -227,6 +226,7 @@ defineProps<{
   isRewardsView?: boolean
   hasSwap: boolean
   hasTrade: boolean
+  minSpendTrade: string
 }>()
 
 defineEmits<{

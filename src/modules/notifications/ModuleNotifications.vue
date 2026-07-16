@@ -110,6 +110,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
+import BigNumber from 'bignumber.js'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 import {
@@ -176,6 +178,24 @@ const {
   fetchEligibility,
 } = rewardsStore
 const { earnedPotentialReward } = storeToRefs(rewardsStore)
+const holdingsStore = useHoldingsStore()
+
+// Hold-campaign context attached to trade status events
+const getRewardFields = () => {
+  const reward = holdingsStore.activeReward
+  const meta = reward
+    ? holdingsStore.info?.metas?.find(m => m.id === reward.id)
+    : undefined
+  const decimals = meta?.crypto?.decimals?.[0] ?? 18
+  return {
+    holdCampaignStatus: holdingsStore.status,
+    qualifyingTradeAmount: reward?.qualifying_amount
+      ? new BigNumber(reward.qualifying_amount).shiftedBy(-decimals).toString()
+      : undefined,
+    qualifyingTradeToken: meta?.symbol,
+    qualifiedSince: reward?.qualification_timestamp,
+  }
+}
 
 // Get notifications count based on selected category
 const notificationsCount = computed(() => {
@@ -335,7 +355,9 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
   const analyticsPayload: TradeEventStatusPayload = {
     orderHash: hash,
     fromAmount: order.fromAmount,
+    fromAmountUSD: order.usdValue ?? '',
     toAmount: order.expectedToAmount,
+    toAmountUSD: order.toUsdValue ?? '',
     fromToken: order.fromSymbol,
     toToken: order.toSymbol,
     network: order.chainName,
@@ -344,6 +366,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     txHash: status.fills.length > 0 ? status.fills[0].txHash : '',
     finalToAmount: order.finalToAmount,
     percentageDiff: order.percentageDiff,
+    ...getRewardFields(),
   }
 
   if (status.status === 'filled' && status.finalToAmount) {

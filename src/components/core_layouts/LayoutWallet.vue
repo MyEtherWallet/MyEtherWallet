@@ -168,7 +168,7 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-grey-10 border-l-1',
         ]"
-        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"
@@ -195,6 +195,7 @@
       </div>
     </transition>
     <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <rwa-reward-modal />
   </div>
 </template>
 <script setup lang="ts">
@@ -224,6 +225,7 @@ import {
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'

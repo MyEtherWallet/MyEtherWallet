@@ -24,11 +24,11 @@ import { parseUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { useMarketStatus } from '@/modules/trade/composables'
 import {
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
 import * as Sentry from '@sentry/vue'
+import { isTransientSwapInitError } from '@/composables/swapInitError'
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -56,6 +56,11 @@ const NetworkNotSupportedError = new Error(
   'Selected network is not supported for swap',
 )
 
+// The swap SDK fetches token lists from a remote (GitHub raw) that can return
+// transient errors; retry a couple of times before surfacing to the user.
+const SWAP_INIT_RETRIES = 2
+const SWAP_INIT_RETRY_DELAY_MS = 800
+
 export const useSwap = (): {
   initSwapper: () => Promise<void>
   supportedNetwork: Ref<boolean>
@@ -68,7 +73,6 @@ export const useSwap = (): {
     quote: ProviderQuoteResponse,
   ) => Promise<ProviderSwapResponse | null>
 } => {
-  const { isTradingRestrictedInRegion } = useMarketStatus();
   const toastStore = useToastStore()
   const { t } = useI18n()
   const chainsStore = useChainsStore()
@@ -76,7 +80,7 @@ export const useSwap = (): {
   const walletStore = useWalletStore()
   const swapInstance: Ref<Swapper | null> = ref(null)
   const { selectedChain, allChains, swapChains } = storeToRefs(chainsStore)
-  const { selectedNetwork } = storeToRefs(globalStore)
+  const { selectedNetwork, isTradingRestrictedInRegion } = storeToRefs(globalStore)
   const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(true)
   const toChains = ref<Chain[]>([])
@@ -86,7 +90,7 @@ export const useSwap = (): {
 
   // Initialize the Swapper instance
   // parses tokens and to networks available for swapping
-  const initSwapper = async () => {
+  const initSwapper = async (retriesLeft = SWAP_INIT_RETRIES) => {
     try {
       swapLoaded.value = false
       const rpc = selectedChain.value?.rpcUrls?.[0] || ''
@@ -224,15 +228,28 @@ export const useSwap = (): {
       ) {
         supportedNetwork.value = false
         swapLoaded.value = true
-      } else {
-        toastStore.addToastMessage({
-          type: ToastType.Error,
-          text: 'Something went wrong',
-          textSecondary: t('swap.error.initializing-swap-failed'),
-        })
+        return
+      }
+      // Transient upstream failure (the swaplist fetch returned a non-JSON
+      // body / dropped) — these recover on their own, so retry before
+      // surfacing anything.
+      if (isTransientSwapInitError(e) && retriesLeft > 0) {
+        await new Promise(resolve =>
+          setTimeout(resolve, SWAP_INIT_RETRY_DELAY_MS),
+        )
+        return initSwapper(retriesLeft - 1)
+      }
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: 'Something went wrong',
+        textSecondary: t('swap.error.initializing-swap-failed'),
+      })
+      // Expected external flakiness (transient fetch / JSON parse of a non-JSON
+      // upstream body) is surfaced via the toast above but is pure Sentry noise
+      // — only report genuinely unexpected init failures.
+      if (!isTransientSwapInitError(e)) {
         Sentry.withScope(function (scope) {
           scope.setTag('swap', 'initSwapper failed')
-          // will be tagged with my-tag="my value"
           Sentry.captureException(e)
         })
       }

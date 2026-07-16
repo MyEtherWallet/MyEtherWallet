@@ -39,6 +39,10 @@
                 v-else-if="item.icon === 'calendar'"
                 class="w-4 h-4 text-grey-50"
               />
+              <wallet-icon
+                v-else-if="item.icon === 'wallet-icon'"
+                class="w-4 h-4 text-grey-50"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
                 class="w-4 h-4 text-grey-50"
@@ -74,6 +78,7 @@
           :time-until-swap-next-eligible="timeUntilSwapNextEligible"
           :time-until-trade-next-eligible="timeUntilTradeNextEligible"
           :time-until-market-open="timeUntilMarketOpen"
+          :min-spend-trade="minSpendTrade"
           class="mt-0"
           :has-swap="false"
           :has-trade="true"
@@ -97,8 +102,11 @@ import {
   FaceFrownIcon,
 } from '@heroicons/vue/24/solid'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
-import { analytics, RewardsEvent } from '@/analytics'
+import {
+  ArrowPathRoundedSquareIcon,
+  WalletIcon,
+} from '@heroicons/vue/24/outline'
+import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -141,7 +149,7 @@ const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
 
 const rewardsStore = useRewardsStore()
-const { isBanned } = storeToRefs(rewardsStore)
+const { isBanned, minSpendTrade } = storeToRefs(rewardsStore)
 
 const { t } = useI18n()
 
@@ -162,7 +170,9 @@ watch(isOpenModel, val => {
 const infoItems = computed(() => [
   {
     icon: 'swap',
-    text: t('rewards.info_make_trade', { min: MIN_TRADE_AMOUNT }),
+    text: t('rewards.info_make_trade', {
+      min: minSpendTrade.value || MIN_TRADE_AMOUNT,
+    }),
   },
   {
     icon: 'trade',
@@ -189,10 +199,14 @@ const infoItems = computed(() => [
     icon: 'calendar',
     text: t('rewards.info_one_reward_period', { days: CAMPAIGN_PERIOD_DAYS }),
   },
-  // {
-  //   icon: 'currency-dollar-gray',
-  //   text: 'You must have at least 0.001 ETH before April 20th',
-  // },
+  {
+    icon: 'wallet-icon',
+    text: 'The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.',
+  },
+  {
+    icon: 'currency-dollar-gray',
+    text: 'Cash out transactions do not qualify.',
+  },
   {
     icon: 'face-frown',
     text: t('rewards.info_no_sybil'),
@@ -200,9 +214,17 @@ const infoItems = computed(() => [
 ])
 
 const onNavigate = (panel: 'swap' | 'trade') => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
-    location: 'learn-more-dialog',
-  })
+  if (panel === 'trade') {
+    analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+      campaign: 'trade',
+      cta: 'trade',
+    })
+  } else {
+    analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
+      location: 'learn-more-dialog',
+      type: panel,
+    })
+  }
   isOpenModel.value = false
   const ETH_NETWORK_NAME = 'ETHEREUM'
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {

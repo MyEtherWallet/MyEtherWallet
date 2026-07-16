@@ -183,10 +183,10 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     isOffHoursOpen,
     currentSession,
     isTradingSessionOpen,
-    isTradingRestrictedInRegion,
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
+    fetchTradingRestriction,
     formatNextOpen,
   }
 }

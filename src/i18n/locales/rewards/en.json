@@ -16,7 +16,7 @@
     "try_again_later": "Sorry, try again later!",
     "learn_more": "Learn More",
     "earn_rewards_title": "Earn rewards",
-    "earn_rewards_description": "First {trade_count} trades of ${trade_minimum}+ and swaps of ${swap_minimum}+ earn {reward_amount} USDC each hour.",
+    "earn_rewards_description": "First {trade_count} trades of ${trade_minimum}+ earn {reward_amount} USDC each hour.",
     "not_eligible_at_this_time": "You are not eligible for rewards at this time",
     "switched_to_ethereum": "Switched app network to Ethereum",
     "congratulations": "Congratulations!",

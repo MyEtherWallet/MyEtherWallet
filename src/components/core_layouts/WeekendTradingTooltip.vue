@@ -71,8 +71,10 @@ import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
 import qqq from '@/assets/images/weekend-trading/qqq.png'
@@ -90,11 +92,19 @@ const props = defineProps<{
 const announcement = useWeekendTradingAnnouncementStore()
 const { shouldShowTooltip } = storeToRefs(announcement)
 
+// Sequenced behind the RWA "Trade & Hold" announcement: no 24/7 messaging until
+// 3 days after that modal is closed.
+const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+  useRwaAnnouncementStore(),
+)
+
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
+
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 const visible = ref(false)
 const anchorRect = ref<DOMRect | null>(null)
@@ -116,6 +126,8 @@ const tooltipStyle = computed(() => {
 })
 
 const tryShow = async () => {
+  if (isTradingRestrictedInRegion.value) return
+  if (!rwaCooldownElapsed.value) return
   if (!shouldShowTooltip.value || !props.anchor) return
   await nextTick()
   anchorRect.value = props.anchor.getBoundingClientRect()
@@ -154,7 +166,13 @@ onBeforeUnmount(() => {
 // anchor is null during this component's setup. tryShow() guards on
 // shouldShowTooltip + anchor and is idempotent (visible guard).
 watch(
-  [shouldShowTooltip, isWalletConnected, () => props.anchor],
+  [
+    shouldShowTooltip,
+    isWalletConnected,
+    () => props.anchor,
+    isTradingRestrictedInRegion,
+    rwaCooldownElapsed,
+  ],
   () => tryShow(),
   { immediate: true },
 )
