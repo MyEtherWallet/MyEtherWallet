@@ -40,7 +40,10 @@ export const getSessionDisabledAddresses = (
   if (!assets) return disabled
   const addAll = (asset: TradableAsset) => {
     for (const addr of asset.addresses) {
-      if (addr.address) disabled.add(addr.address.toLowerCase())
+      // Defensive: address members can be null or have a non-string `address`
+      // in malformed payloads; only lowercase real, non-empty strings.
+      if (typeof addr?.address === 'string' && addr.address)
+        disabled.add(addr.address.toLowerCase())
     }
   }
   for (const asset of assets) {
