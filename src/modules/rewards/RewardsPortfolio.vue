@@ -81,13 +81,6 @@
         <p class="text-s-14 font-semibold text-error leading-5">
           {{ t('rewards.not_eligible_for_rewards') }}
         </p>
-        <!-- <p
-          class="text-s-14 text-[#575757] leading-5 mt-1"
-          :class="{ '2xl:hidden ': isOpenSideMenu }"
-        >
-          Wallets created after April 20th are not eligible for rewards. Try
-          connecting an older wallet.
-        </p> -->
         <button
           class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
           @click="onConnectAddress"
