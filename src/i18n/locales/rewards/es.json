@@ -16,7 +16,7 @@
     "try_again_later": "¡Lo sentimos, inténtalo de nuevo más tarde!",
     "learn_more": "Más información",
     "earn_rewards_title": "Gana recompensas",
-    "earn_rewards_description": "Las primeras 10 operaciones de $25+ y los intercambios de $50+ ganan 5 USDC cada hora.",
+    "earn_rewards_description": "Las primeras {trade_count} operaciones de ${trade_minimum}+ ganan {reward_amount} USDC cada hora.",
     "not_eligible_at_this_time": "No eres elegible para recibir recompensas en este momento",
     "switched_to_ethereum": "Se cambió la red de la app a Ethereum",
     "congratulations": "¡Felicidades!",
