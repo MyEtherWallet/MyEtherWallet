@@ -227,15 +227,26 @@ export const useConnectWallet = () => {
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
-    connector?.onDisconnect()
-    connector?.emitter.on('message', msg => {
+    // No matching wagmi connector (e.g. wallet not installed / not registered).
+    // Surface a friendly, handled error instead of constructing a WagmiWallet
+    // with an undefined connector and dereferencing it on connect().
+    if (!connector) {
+      toastStore.addToastMessage({
+        text: 'Wallet not available',
+        textSecondary: `We couldn't connect to ${wallet.name}. Please select a different wallet or try again.`,
+        type: ToastType.Warning,
+      })
+      return
+    }
+    connector.onDisconnect()
+    connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
         accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
     const wagWallet = new WagmiWallet(
-      connector!,
+      connector,
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
