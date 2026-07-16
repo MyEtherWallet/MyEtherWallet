@@ -114,6 +114,18 @@ describe('getSessionDisabledAddresses', () => {
     expect(disabled?.has('0xaaa')).toBe(true)
   })
 
+  it('skips non-null malformed assets (missing addresses) and still processes valid ones', () => {
+    const assets = [
+      { tradable: false } as unknown as TradableAsset, // no addresses array
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+    ]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'regular')
+    }).not.toThrow()
+    expect(disabled?.has('0xaaa')).toBe(true)
+  })
+
   it('skips null asset elements during offhours without throwing', () => {
     const assets = [
       null,

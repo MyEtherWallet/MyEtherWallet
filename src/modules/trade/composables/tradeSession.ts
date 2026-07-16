@@ -45,9 +45,10 @@ export const getSessionDisabledAddresses = (
   }
   for (const asset of assets) {
     // Defensive: the Ondo assets API has been observed returning null/malformed
-    // elements (Sentry APP-MEW-WEB-1CE). Skip them so this pure utility never
-    // dereferences a null asset, independent of upstream filtering.
-    if (!asset) continue
+    // elements (Sentry APP-MEW-WEB-1CE). Skip anything that is not a shaped
+    // asset with an addresses array, so this pure utility never dereferences a
+    // bad entry, independent of upstream filtering.
+    if (!asset || !Array.isArray(asset.addresses)) continue
 
     // Off-hours override: an asset that EXPLICITLY lists `offhours` stays
     // tradable during off-hours even if globally paused. Must be an explicit
