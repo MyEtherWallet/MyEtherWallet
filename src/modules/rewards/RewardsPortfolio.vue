@@ -21,7 +21,11 @@
             {{ t('rewards.earn_rewards_title') }}
           </h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            {{ t('rewards.portfolio_trade_description', { min: minSpendTrade }) }}
+            {{
+              t('rewards.portfolio_trade_description', {
+                min: minSpendTrade || MIN_TRADE_AMOUNT,
+              })
+            }}
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
@@ -140,6 +144,9 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
 
 const { t } = useI18n()
+
+// Minimum USD trade spend used as a fallback before the rewards pool loads
+const MIN_TRADE_AMOUNT = 25
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
