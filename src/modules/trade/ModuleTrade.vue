@@ -271,6 +271,7 @@
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
+        :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
