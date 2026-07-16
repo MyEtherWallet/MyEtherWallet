@@ -35,6 +35,7 @@
     "not_found": {
       "chains": "No chains found"
     },
+    "all_chains": "All chains",
     "edit": "Edit",
     "delete": "Delete",
     "token_count": "no tokens| 1 token | {count} Tokens",
@@ -58,7 +59,10 @@
       "invalid_keystore": "Invalid JSON keystore",
       "verification_failed": "Verification failed",
       "no_wallet_address": "No wallet address to copy",
-      "invalid_password": "Invalid password"
+      "invalid_password": "Invalid password",
+      "address_required": "Address is required",
+      "invalid_address": "Invalid address",
+      "network_required": "Network is required"
     },
     "yes": "Yes",
     "no": "No",
@@ -202,7 +206,8 @@
     "swap_to": "Select token to buy",
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
-    "no_tokens_available": "No tokens available"
+    "no_tokens_available": "No tokens available",
+    "recently_viewed": "Recently Viewed"
   },
   "select_fee": {
     "title": "Select transaction fee",
