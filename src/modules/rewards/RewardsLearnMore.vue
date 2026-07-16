@@ -179,7 +179,6 @@ const infoItems = computed(() => [
     text: t('rewards.earn_rewards_description', {
       trade_count: 10,
       trade_minimum: 25,
-      swap_minimum: 50,
       reward_amount: 5,
     }),
   },
