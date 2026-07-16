@@ -108,10 +108,17 @@ export const describeMewApiFetchError = (
   ctx: MewApiFetchErrorContext,
 ): MewApiCapturedError => {
   const message = buildMewApiErrorMessage(ctx)
-  const error =
-    ctx.error instanceof Error && ctx.error.message
-      ? ctx.error
-      : new Error(message)
+  const hasUsableError =
+    ctx.error instanceof Error && ctx.error.message.length > 0
+  const error = hasUsableError ? (ctx.error as Error) : new Error(message)
+  // When we synthesize a fresh Error for the message, keep the original as its
+  // `cause` so Sentry can still reconstruct the original stack. (The `cause`
+  // constructor option isn't in this project's TS lib, so attach it after
+  // construction.)
+  if (!hasUsableError && ctx.error != null) {
+    const withCause = error as { cause?: unknown }
+    withCause.cause = ctx.error
+  }
 
   return {
     error,

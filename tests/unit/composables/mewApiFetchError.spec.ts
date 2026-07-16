@@ -150,4 +150,23 @@ describe('describeMewApiFetchError', () => {
     expect(captured.fingerprint).toEqual(['mew-api-fetch-error', 'network'])
     expect(captured.tags.mew_api_status).toBe('network_error')
   })
+
+  it('wraps the built message in a fresh Error but keeps the original as cause', () => {
+    // Empty-message error: we build a descriptive message but must not discard
+    // the original error's stack — preserve it via `cause` so Sentry can
+    // reconstruct the chain.
+    const original = new Error('')
+    const captured = describeMewApiFetchError({
+      error: original,
+      data: null,
+      status: 500,
+      statusText: '',
+      url: 'https://mew-api-prod.ethvm.dev/v1/tokens',
+    })
+    expect(captured.error).not.toBe(original)
+    expect(captured.error.message).toBe(
+      'MEW API request failed with status 500',
+    )
+    expect((captured.error as { cause?: unknown }).cause).toBe(original)
+  })
 })
