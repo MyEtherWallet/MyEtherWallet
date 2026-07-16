@@ -452,7 +452,7 @@ const loadList = async (page: number = 0) => {
     if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Something went wrong',
+      text: t('common.something_went_wrong'),
       textSecondary: e instanceof Error ? e.message : String(e),
     })
     captureException(e, SENTRY_MODULE_TAGS.ACCESS)

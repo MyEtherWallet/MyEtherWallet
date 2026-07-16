@@ -131,6 +131,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
@@ -141,6 +142,7 @@ const { setWalletPanel } = walletMenuStore
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
+const { t } = useI18n()
 const rewardsStore = useRewardsStore()
 const {
   hadInitialLoad,
@@ -221,7 +223,7 @@ const navigateTo = (panel: 'swap' | 'trade') => {
   const ETH_NETWORK_NAME = 'ETHEREUM'
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {
     globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
-    toastStore.addToastMessage({ text: 'Switched app network to Ethereum' })
+    toastStore.addToastMessage({ text: t('rewards.switched_to_ethereum') })
   }
   setWalletPanel(panel)
   if (!isOpenSideMenu.value) {

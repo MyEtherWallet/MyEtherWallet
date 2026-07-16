@@ -4,9 +4,11 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
+import { useI18n } from 'vue-i18n'
 
 export const useEmailSubscription = () => {
   const toastStore = useToastStore()
+  const { t } = useI18n()
 
   const email = ref('')
   const isValidEmail = ref<boolean>(true)
@@ -65,7 +67,7 @@ export const useEmailSubscription = () => {
           throw new Error(`Response status: ${response.status}`)
         } else {
           toastStore.addToastMessage({
-            text: 'Thank you for subscribing!',
+            text: t('common.subscribe.success'),
           })
           isLoading.value = false
         }
@@ -73,8 +75,8 @@ export const useEmailSubscription = () => {
       } catch (e) {
         captureException(e)
         toastStore.addToastMessage({
-          text: 'Something went wrong',
-          textSecondary: 'Please try again later.',
+          text: t('common.something_went_wrong'),
+          textSecondary: t('common.subscribe.error'),
           type: ToastType.Error,
         })
         isLoading.value = false
