@@ -91,6 +91,9 @@
     "usd_balance": "Saldo en USD",
     "fee": "Comisión",
     "copy_failed": "No se pudo copiar",
+    "something_went_wrong": "Algo salió mal",
+    "network_change_failed": "Error al cambiar de red",
+    "network_change_failed_description": "Comprueba si tu billetera es compatible con la red {network}",
     "and": "y",
     "deposit_title": "Tu dirección de {chain}",
     "deposit_description": "Puedes depositar cualquier token compatible con {chain} en esta dirección.",
@@ -164,7 +167,9 @@
     "subscribe": {
       "cta": "¡Mejora tus habilidades con consejos de seguridad, perspectivas del sector, noticias y mucho más!",
       "button": "¡Suscríbeme!",
-      "email_placeholder": "Ingresa tu correo electrónico"
+      "email_placeholder": "Ingresa tu correo electrónico",
+      "success": "¡Gracias por suscribirte!",
+      "error": "Inténtalo de nuevo más tarde."
     },
     "chart_1d": "1d",
     "chart_7d": "7d",

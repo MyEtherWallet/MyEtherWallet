@@ -91,6 +91,9 @@
     "usd_balance": "USD Balance",
     "fee": "Fee",
     "copy_failed": "Copy failed",
+    "something_went_wrong": "Something went wrong",
+    "network_change_failed": "Network change failed",
+    "network_change_failed_description": "Check if your wallet supports the {network} network",
     "and": "and",
     "deposit_title": "Your {chain} address",
     "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
@@ -164,7 +167,9 @@
     "subscribe": {
       "cta": "Level up your skills with security tips, industry insights, news and more!",
       "button": "Sign me up!",
-      "email_placeholder": "Enter your email"
+      "email_placeholder": "Enter your email",
+      "success": "Thank you for subscribing!",
+      "error": "Please try again later."
     },
     "chart_1d": "1d",
     "chart_7d": "7d",

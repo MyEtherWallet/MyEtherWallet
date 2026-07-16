@@ -91,6 +91,9 @@
     "usd_balance": "美元余额",
     "fee": "费用",
     "copy_failed": "复制失败",
+    "something_went_wrong": "出了点问题",
+    "network_change_failed": "网络切换失败",
+    "network_change_failed_description": "请检查您的钱包是否支持 {network} 网络",
     "and": "和",
     "deposit_title": "您的 {chain} 地址",
     "deposit_description": "您可以将 {chain} 支持的任何代币存入此地址。",
@@ -164,7 +167,9 @@
     "subscribe": {
       "cta": "通过安全提示、行业洞察、新闻等内容提升您的技能！",
       "button": "立即订阅！",
-      "email_placeholder": "请输入您的邮箱"
+      "email_placeholder": "请输入您的邮箱",
+      "success": "感谢您的订阅！",
+      "error": "请稍后再试。"
     },
     "chart_1d": "1天",
     "chart_7d": "7天",
