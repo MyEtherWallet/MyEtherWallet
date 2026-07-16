@@ -72,7 +72,8 @@
         "title": "Select address and network"
       }
     },
-    "connect": "Connect your Trezor"
+    "connect": "Connect your Trezor",
+    "not_supported": "Trezor is not supported on this browser. Please use a Chromium-based browser (such as Chrome, Brave, or Edge) on desktop to connect your Trezor."
   },
   "access_wallet_ledger": {
     "title": "Access Wallet with Ledger",
