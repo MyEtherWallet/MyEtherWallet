@@ -126,13 +126,16 @@ describe('getSessionDisabledAddresses', () => {
     expect(disabled?.has('0xaaa')).toBe(true)
   })
 
-  it('skips null asset elements during offhours without throwing', () => {
+  it('skips null asset elements during offhours and still disables valid paused assets', () => {
     const assets = [
       null,
-      asset({ symbol: 'A', sessions: ['offhours'], address: '0xAaA' }),
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
     ] as unknown as TradableAsset[]
-    expect(() =>
-      getSessionDisabledAddresses(assets, 'offhours'),
-    ).not.toThrow()
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'offhours')
+    }).not.toThrow()
+    // Paused asset that does not opt into offhours must still be disabled.
+    expect(disabled?.has('0xaaa')).toBe(true)
   })
 })
