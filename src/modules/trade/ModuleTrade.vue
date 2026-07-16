@@ -140,7 +140,8 @@
             !isLoading &&
             marketStatus &&
             !isTradingSessionOpen &&
-            isCurrentNetworkSupported
+            isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
           "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
@@ -172,7 +173,11 @@
 
         <!-- Network Not Supported Banner - Centered Overlay -->
         <div
-          v-if="!isLoading && !isCurrentNetworkSupported"
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
@@ -217,12 +222,10 @@
         </div>
 
         <!-- Trading Restricted Banner - Centered Overlay -->
+        <!-- Region restriction takes priority over the network-not-supported
+             and market-closed overlays (both gated by !isTradingRestrictedInRegion). -->
         <div
-          v-if="
-            !isLoading &&
-            isTradingRestrictedInRegion &&
-            isCurrentNetworkSupported
-          "
+          v-if="!isLoading && isTradingRestrictedInRegion"
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
