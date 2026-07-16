@@ -98,4 +98,29 @@ describe('getSessionDisabledAddresses', () => {
     const assets = [asset({ sessions: ['regular'], address: '0xAaA' })]
     expect(getSessionDisabledAddresses(assets, null).has('0xaaa')).toBe(true)
   })
+
+  // Regression: Sentry APP-MEW-WEB-1CE — the Ondo assets API can return an
+  // array containing a null element; reading `.tradable` off it threw
+  // "Cannot read properties of null (reading 'tradable')" and crashed <ModuleTrade>.
+  it('skips null asset elements without throwing and still processes valid ones', () => {
+    const assets = [
+      null,
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+    ] as unknown as TradableAsset[]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'regular')
+    }).not.toThrow()
+    expect(disabled?.has('0xaaa')).toBe(true)
+  })
+
+  it('skips null asset elements during offhours without throwing', () => {
+    const assets = [
+      null,
+      asset({ symbol: 'A', sessions: ['offhours'], address: '0xAaA' }),
+    ] as unknown as TradableAsset[]
+    expect(() =>
+      getSessionDisabledAddresses(assets, 'offhours'),
+    ).not.toThrow()
+  })
 })
