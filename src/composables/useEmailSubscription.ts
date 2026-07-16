@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { watchDebounced } from '@vueuse/core'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -6,6 +7,7 @@ import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
 
 export const useEmailSubscription = () => {
+  const { t } = useI18n()
   const toastStore = useToastStore()
 
   const email = ref('')
@@ -16,14 +18,14 @@ export const useEmailSubscription = () => {
   const validateEmail = () => {
     isValidEmail.value = true
     if (email.value === '' || email.value === undefined) {
-      emailErrorMessage.value = 'email required'
+      emailErrorMessage.value = t('common.subscribe.email_required')
       isValidEmail.value = false
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       isValidEmail.value = emailRegex.test(email.value)
       emailErrorMessage.value = isValidEmail.value
         ? undefined
-        : 'Email address is not valid'
+        : t('common.subscribe.email_invalid')
     }
   }
   const isLoading = ref(false)
