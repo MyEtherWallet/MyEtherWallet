@@ -1460,22 +1460,32 @@ watch(
 
 watch(
   () => selectedQuote.value,
-  async provider => {
+  async (provider, _prev, onCleanup) => {
     if (!provider) return
+    // A newer selectedQuote invalidates this run: flag it so late-resolving
+    // getSwap / gas-fee-quote calls don't overwrite state with stale data.
+    let cancelled = false
+    onCleanup(() => {
+      cancelled = true
+    })
     // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
     txProceeding.value = true
     try {
       const res = await getSwap(provider)
+      if (cancelled) return
       swapInfo.value = res
       const quoteRes = await (isBitcoinChain.value
         ? generateBTCGasFeeQuote()
         : generateEVMGasFeeQuote())
+      if (cancelled) return
       swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
     } catch (err) {
+      if (cancelled) return
+      swapInfo.value = null
       swapGasFeeQuote.value = undefined
       captureException(err)
     } finally {
-      txProceeding.value = false
+      if (!cancelled) txProceeding.value = false
     }
   },
   { deep: true },
