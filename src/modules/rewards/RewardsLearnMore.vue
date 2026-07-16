@@ -182,10 +182,6 @@ const infoItems = computed(() => [
       reward_amount: 5,
     }),
   },
-  // {
-  //   icon: 'trophy',
-  //   text: 'Be among the first 10 users per hour, per swap.',
-  // },
   {
     icon: 'trade',
     text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
