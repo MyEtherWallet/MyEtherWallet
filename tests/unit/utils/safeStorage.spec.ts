@@ -73,6 +73,8 @@ describe('createSafeStorage', () => {
     const storage = createSafeStorage(() => native)
     fail = true
     expect(() => storage.setItem('k', 'v')).not.toThrow()
+    // the failed write is served from the overlay, not stale native data
+    expect(storage.getItem('k')).toBe('v')
   })
 })
 

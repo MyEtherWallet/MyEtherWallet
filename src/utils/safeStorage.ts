@@ -74,27 +74,37 @@ export const createSafeStorage = (
     return createMemoryStorage()
   }
 
-  const fallback = createMemoryStorage()
+  // Overlay of values (and tombstones = null) for keys whose native operation
+  // failed after construction (e.g. quota exceeded, or privacy toggled
+  // mid-session). getItem consults it before the native store so a failed write
+  // is still read back and a failed removal stays deleted, instead of returning
+  // stale native data.
+  const overlay = new Map<string, string | null>()
   return {
     getItem: (key) => {
+      if (overlay.has(key)) {
+        return overlay.get(key) ?? null
+      }
       try {
         return native.getItem(key)
       } catch {
-        return fallback.getItem(key)
+        return null
       }
     },
     setItem: (key, value) => {
       try {
         native.setItem(key, value)
+        overlay.delete(key)
       } catch {
-        fallback.setItem(key, value)
+        overlay.set(key, String(value))
       }
     },
     removeItem: (key) => {
       try {
         native.removeItem(key)
+        overlay.delete(key)
       } catch {
-        fallback.removeItem(key)
+        overlay.set(key, null)
       }
     },
   }
