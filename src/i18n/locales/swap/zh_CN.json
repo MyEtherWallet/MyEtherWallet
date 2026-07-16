@@ -66,7 +66,12 @@
       "decline": "Decline Swap",
       "unknown-provider": "Unknown provider",
       "offers": "Offer | {count} other offers",
-      "offer_from": "Offer from { provider }"
+      "offer_from": "Offer from { provider }",
+      "best-rate": "best rate",
+      "rate": "Rate",
+      "approve-tx-on-device": "Approve Tx on your device",
+      "title-swap": "Swap",
+      "title-bridge": "Bridge"
     },
     "for": "for",
     "offer": "Offer"
