@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 import type { FeePriority } from '@/mew_api/types'
 import { analytics } from '@/analytics'
 import * as Sentry from '@sentry/vue'
+import { safeLocalStorage } from '@/utils/safeStorage'
 interface SelectedNetwork {
   selectedNetwork: string
 }
@@ -12,11 +13,12 @@ export const useGlobalStore = defineStore('global', () => {
   /** --------------------
  * NETWORK
  --------------------*/
-  const storage = useLocalStorage<SelectedNetwork>(
+  const storage = useStorage<SelectedNetwork>(
     'selectedNetwork',
     {
       selectedNetwork: 'ETHEREUM', // default network
     },
+    safeLocalStorage,
     { mergeDefaults: true },
   )
 
@@ -38,14 +40,15 @@ export const useGlobalStore = defineStore('global', () => {
     maxFeePerGas: '0',
   })
   const gasPriceType = ref<FeePriority>('REGULAR')
-  const defaultGasPriceType = useLocalStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR')
+  const defaultGasPriceType = useStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR', safeLocalStorage)
 
   /**--------------------
    * WELCOME DIALOG
    --------------------*/
-  const welcomeDialogDismissed = useLocalStorage<boolean>(
+  const welcomeDialogDismissed = useStorage<boolean>(
     'mew-welcome-dialog-dismissed',
     false,
+    safeLocalStorage,
   )
   const dismissWelcomeDialog = () => {
     welcomeDialogDismissed.value = true
