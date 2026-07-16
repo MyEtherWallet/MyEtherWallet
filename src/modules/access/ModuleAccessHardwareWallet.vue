@@ -118,8 +118,8 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import HWwallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
+import { getTrezorManager } from '@/providers/hw/trezorManager'
 import type { HWManager } from '@/providers/hw/types'
 import {
   getLedgerWebUSBTransport,
@@ -171,8 +171,13 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 const accessStore = useAccessStore()
 const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
 
+// Reuse one Trezor manager for the whole session: creating a fresh manager on
+// every connect / chain / derivation change re-ran the process-wide
+// `TrezorConnect.init()`, which threw "TrezorConnect has been already
+// initialized" and poisoned the cached provider (MEW-2042). Ledger keeps a
+// fresh manager per connection.
 const createHwManager = (): HWManager =>
-  currentView.value === 'ledger' ? new LedgerManager() : new HWwallet()
+  currentView.value === 'ledger' ? new LedgerManager() : getTrezorManager()
 
 // Wallet instance
 let hwWalletInstance: HWManager | null = createHwManager()
