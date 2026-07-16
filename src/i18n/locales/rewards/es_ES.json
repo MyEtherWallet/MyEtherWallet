@@ -16,11 +16,26 @@
     "try_again_later": "Sorry, try again later!",
     "learn_more": "Learn More",
     "earn_rewards_title": "Ganar recompensas",
-    "earn_rewards_description": "First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.",
+    "earn_rewards_description": "First {trade_count} trades of ${trade_minimum}+ earn {reward_amount} USDC each hour.",
     "not_eligible_at_this_time": "You are not eligible for rewards at this time",
     "switched_to_ethereum": "Switched app network to Ethereum",
     "congratulations": "Congratulations!",
     "you_received_reward": "You received your reward",
-    "toggle_full_text": "Toggle full text"
+    "toggle_full_text": "Toggle full text",
+    "learn_more_title": "Earn USDC rewards",
+    "swap_and_earn": "Swap and Earn {amount}",
+    "trade_and_earn": "Trade and Earn {amount}",
+    "rewards_left_label": "rewards left",
+    "reward_claimed": "Reward claimed",
+    "no_rewards_left": "No rewards left",
+    "swap_button": "Swap {amount}",
+    "trade_button": "Trade {amount}",
+    "back_in": "Back in {time}",
+    "market_is_closed": "Market is closed",
+    "info_make_trade": "Make a trade over ${min}.",
+    "info_first_users": "Be among the first {count} users per hour, per trade.",
+    "info_earn_per_trade": "Earn ${amount} USDC per trade.",
+    "info_one_reward_period": "Up to one reward per wallet per {days} day campaign period, sent directly to your wallet",
+    "info_no_sybil": "Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified."
   }
 }
