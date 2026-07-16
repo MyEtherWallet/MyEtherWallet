@@ -18,7 +18,7 @@
         <div class="text-left">
           <p class="font-semibold">This trade isn't eligible for rewards</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
+          <p v-if="isCashout" class="text-info mt-[2px]">
             Cash out transactions don't qualify for rewards.
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
@@ -48,6 +48,7 @@ import {
   TradeConfirmationBannerEvent,
   RerwadsAndOffersEvent,
 } from '@/analytics'
+import RwaTradeInfoModal from '../rwa_rewards/RwaTradeInfoModal.vue'
 
 const props = defineProps<{
   // USD value of the trade (the amount being spent)
@@ -90,6 +91,7 @@ const onClick = () => {
   if (canClaimHold.value) {
     holdingsStore.openModal()
   } else {
+    console.log('what')
     isTradeInfoOpen.value = true
     return
   }
@@ -107,15 +109,14 @@ const minSpend = computed(() =>
 )
 
 // Only render once we know the threshold, or for cash outs (which never qualify)
-const showBanner = computed(() => canClaimHold.value || canClaimTrade.value)
+const showBanner = computed(() => canClaimHold.value || true)
 
 const toAmountNumber = computed(() => Number(props.tradeAmount))
 
 const qualifies = computed(() => {
   const spendingThresholdReached =
     minSpend.value > 0 && toAmountNumber.value >= minSpend.value
-  if (canClaimHold.value) return spendingThresholdReached && !props.isCashout
-  return spendingThresholdReached && canClaimTrade.value
+  return spendingThresholdReached && !props.isCashout
 })
 
 // How much more (USD) the user needs to trade to reach the threshold

@@ -59,7 +59,7 @@
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-grey-10" />
+        <hr v-if="!isBanned" class="my-6 border-t border-grey-10" />
 
         <rewards-rows
           v-if="!isBanned"
