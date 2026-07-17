@@ -310,7 +310,7 @@ async function submitAuthorize() {
     isAddressAuthorized.value = true
   } catch (e) {
     const msg =
-      e instanceof Error ? e.message : 'Failed to authorize withdrawal address'
+      e instanceof Error ? e.message : t('perps.withdraw.authorize-failed')
     error.value = msg
     analytics.trackPerpsWithdrawAuthorizeErrorEvent(
       PerpsWithdrawAuthorizeEvent.ERROR,

@@ -279,7 +279,8 @@
       "amount-too-large": "Amount is too large",
       "amount-precision": "Amount supports up to {decimals} decimal places",
       "amount-exceeds-balance": "Amount exceeds available balance",
-      "withdrawal-failed": "Withdrawal failed"
+      "withdrawal-failed": "Withdrawal failed",
+      "authorize-failed": "Failed to authorize withdrawal address"
     },
     "market-list": {
       "title": "Perpetuals Markets",
