@@ -623,19 +623,16 @@ const handleSubmit = async () => {
       signedTx.value = signResponse.signed
       openTxModal.value = true
     } catch (e) {
+      const errorMsg =
+        e instanceof Error ? e.message : (e as { message?: string })?.message
       analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
         token: tokenSelected.value?.symbol,
-        errorMsg:
-          e instanceof Error || (e as any).message
-            ? (e as any).message
-            : 'Unknown error during signing',
+        errorMsg: errorMsg ?? 'Unknown error during signing',
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: t('send.toast.failed_to_sign'),
-        textSecondary:
-          getLocalizedWalletError(e instanceof Error ? e.message : undefined) ??
-          (e instanceof Error && e.message ? e.message : undefined),
+        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
       })
     }
     return
