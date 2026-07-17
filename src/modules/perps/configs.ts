@@ -1,4 +1,4 @@
-import configs from '@/configs'
+// import configs from '@/configs'
 import { PerpsClient } from './sdk'
 import { mainnet } from 'viem/chains'
 
@@ -15,7 +15,7 @@ const PERPS_WS_URL = {
 }
 
 const perpsClient = new PerpsClient(
-  !configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
+  PERPS_BASE_URL.sandbox.url,
 )
 
 const perpsWsUrl = IS_PERPS_LIVE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
