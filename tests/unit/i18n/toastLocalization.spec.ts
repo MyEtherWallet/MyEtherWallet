@@ -36,6 +36,9 @@ const TOAST_KEYS = [
   'common.subscribe.error',
   // Generic error (useSwap.ts, ModuleAccessHardwareWallet.vue, useEmailSubscription.ts)
   'common.something_went_wrong',
+  // Hardware-wallet (Ledger) errors — MEW-2049
+  'common.error.ledger_locked',
+  'common.error.ledger_app_not_open',
   // Balances processing (App.vue)
   'common.processing_tokens_title',
   'common.processing_tokens_description',
