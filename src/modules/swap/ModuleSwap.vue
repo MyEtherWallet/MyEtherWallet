@@ -1466,16 +1466,40 @@ watch(
 watch(
   () => selectedQuote.value,
   async provider => {
-    if (provider) {
-      // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
-      txProceeding.value = true
-      await getSwap(provider).then(async res => {
-        swapInfo.value = res
-        const quoteRes = await (isBitcoinChain.value
-          ? generateBTCGasFeeQuote()
-          : generateEVMGasFeeQuote())
-        swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
-      })
+    if (!provider) return
+    // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
+    txProceeding.value = true
+    const analyticsPayload = getAnalyticsShared()
+    try {
+      const res = await getSwap(provider)
+      swapInfo.value = res
+      const quoteRes = await (isBitcoinChain.value
+        ? generateBTCGasFeeQuote()
+        : generateEVMGasFeeQuote())
+      swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
+    } catch (e: any) {
+      generalError.value = e?.message || 'Error fetching gas fees'
+      const isExpectedQuoteError =
+        e?.message === t('swap.error.pair-not-available') ||
+        /insufficient funds/i.test(e?.message ?? '')
+      if (isDevMode) {
+        console.error('Error fetching gas fees:', e)
+      } else {
+        analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+          ...analyticsPayload,
+          errorMsg: generalError.value,
+        })
+        if (!isExpectedQuoteError) {
+          captureException(e, {
+            ...SENTRY_MODULE_TAGS.SWAP,
+            extra: {
+              title: 'SWAP: Error fetching gas fees on quote selection',
+              errorMessage: generalError.value,
+            },
+          })
+        }
+      }
+    } finally {
       txProceeding.value = false
     }
   },
