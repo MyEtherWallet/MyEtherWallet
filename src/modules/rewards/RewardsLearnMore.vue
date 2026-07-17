@@ -179,14 +179,9 @@ const infoItems = computed(() => [
     text: t('rewards.earn_rewards_description', {
       trade_count: 10,
       trade_minimum: 25,
-      swap_minimum: 50,
       reward_amount: 5,
     }),
   },
-  // {
-  //   icon: 'trophy',
-  //   text: 'Be among the first 10 users per hour, per swap.',
-  // },
   {
     icon: 'trade',
     text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
@@ -201,11 +196,11 @@ const infoItems = computed(() => [
   },
   {
     icon: 'wallet-icon',
-    text: 'The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.',
+    text: t('rewards.info_wallet_age'),
   },
   {
     icon: 'currency-dollar-gray',
-    text: 'Cash out transactions do not qualify.',
+    text: t('rewards.info_no_cashout'),
   },
   {
     icon: 'face-frown',
