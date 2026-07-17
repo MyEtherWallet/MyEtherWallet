@@ -139,6 +139,11 @@ import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { useI18n } from 'vue-i18n'
 import { toChecksumAddress } from '@/utils/addressUtils'
+import {
+  analytics,
+  PerpsWithdrawEvent,
+  PerpsWithdrawAuthorizeEvent,
+} from '@/analytics'
 
 const { t } = useI18n()
 
@@ -247,6 +252,7 @@ watch(
   () => props.visible,
   async visible => {
     if (!visible) return
+    analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.CLICKED)
     amount.value = null
     amountError.value = ''
     error.value = null
@@ -279,6 +285,7 @@ async function submitAuthorize() {
   if (!walletAddress.value || !wallet.value) return
   authorizing.value = true
   error.value = null
+  analytics.trackPerpsWithdrawAuthorizeEvent(PerpsWithdrawAuthorizeEvent.SUBMIT)
   try {
     const checksumAddress = toChecksumAddress(walletAddress.value)
     const challenge = await perpsClient.getAddressBookChallenge({
@@ -295,12 +302,20 @@ async function submitAuthorize() {
       addressLabel: 'wallet',
     })
     perpsToasts.toastWithdrawalAddressAdded(walletAddress.value)
+    analytics.trackPerpsWithdrawAuthorizeEvent(
+      PerpsWithdrawAuthorizeEvent.SUCCESS,
+    )
     // Keep the withdraw dialog open and switch to the withdraw view now that
     // the address is authorized (the toast already surfaces the 24h cooldown).
     isAddressAuthorized.value = true
   } catch (e) {
-    error.value =
-      e instanceof Error ? e.message : 'Failed to authorize withdrawal address'
+    const msg =
+      e instanceof Error ? e.message : t('perps.withdraw.authorize-failed')
+    error.value = msg
+    analytics.trackPerpsWithdrawAuthorizeErrorEvent(
+      PerpsWithdrawAuthorizeEvent.ERROR,
+      { errorMessage: msg },
+    )
   } finally {
     authorizing.value = false
   }
@@ -308,24 +323,43 @@ async function submitAuthorize() {
 
 async function submitWithdraw() {
   if (!isValidAmount.value || !walletAddress.value || !accountId.value) return
+  const withdrawAmount = String(amount.value)
   sending.value = true
   error.value = null
+  analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.SUBMIT, {
+    withdrawAmount,
+    token: 'USDC',
+  })
   try {
     await perpsClient.withdraw({
       customer_withdrawal_id: `withdraw-${Date.now()}`,
       symbol: 'USDC',
       network: 'ethereum',
-      amount: String(amount.value),
+      amount: withdrawAmount,
       address: toChecksumAddress(walletAddress.value),
       from: { id: accountId.value, wallet: 'margin' },
     })
     triggerRefresh()
+    analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.SUCCESS, {
+      withdrawAmount,
+      token: 'USDC',
+    })
+    analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.COMPLETED, {
+      withdrawAmount,
+      token: 'USDC',
+    })
     perpsToasts.toastWithdrawalComplete()
     emit('close')
   } catch (e) {
     // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
-    error.value =
+    const msg =
       e instanceof Error ? e.message : t('perps.withdraw.withdrawal-failed')
+    error.value = msg
+    analytics.trackPerpsWithdrawErrorEvent(PerpsWithdrawEvent.ERROR, {
+      withdrawAmount,
+      token: 'USDC',
+      errorMessage: msg,
+    })
   } finally {
     sending.value = false
   }

@@ -279,6 +279,45 @@ export type PerpsDepositErrorPayload = PerpsDepositPayload & {
 }
 
 // =============================================================================
+// PERPS WITHDRAW
+// =============================================================================
+
+export const PerpsWithdrawEvent = {
+  CLICKED: 'Perps_Withdraw_Clicked',
+  SUBMIT: 'Perps_Withdraw_Submit',
+  SUCCESS: 'Perps_Withdraw_Success',
+  ERROR: 'Perps_Withdraw_Error',
+  COMPLETED: 'Perps_Withdraw_Completed',
+} as const
+export type PerpsWithdrawEvent =
+  (typeof PerpsWithdrawEvent)[keyof typeof PerpsWithdrawEvent]
+
+export type PerpsWithdrawPayload = {
+  withdrawAmount?: string
+  token?: string
+}
+
+export type PerpsWithdrawErrorPayload = PerpsWithdrawPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
+// PERPS WITHDRAW AUTHORIZE
+// =============================================================================
+
+export const PerpsWithdrawAuthorizeEvent = {
+  SUBMIT: 'Perps_Withdraw_Authorize_Submit',
+  SUCCESS: 'Perps_Withdraw_Authorize_Success',
+  ERROR: 'Perps_Withdraw_Authorize_Error',
+} as const
+export type PerpsWithdrawAuthorizeEvent =
+  (typeof PerpsWithdrawAuthorizeEvent)[keyof typeof PerpsWithdrawAuthorizeEvent]
+
+export type PerpsWithdrawAuthorizeErrorPayload = {
+  errorMessage: string
+}
+
+// =============================================================================
 // PERPS TRADE ORDER
 // =============================================================================
 

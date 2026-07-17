@@ -53,6 +53,11 @@ import type {
   PerpsDepositEvent,
   PerpsDepositPayload,
   PerpsDepositErrorPayload,
+  PerpsWithdrawEvent,
+  PerpsWithdrawPayload,
+  PerpsWithdrawErrorPayload,
+  PerpsWithdrawAuthorizeEvent,
+  PerpsWithdrawAuthorizeErrorPayload,
   PerpsTradeOrderEvent,
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
@@ -763,6 +768,43 @@ export class Analytics {
   readonly trackPerpsDepositErrorEvent = (
     event: typeof PerpsDepositEvent.ERROR,
     payload: PerpsDepositErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS WITHDRAW
+  // =============================================================================
+
+  readonly trackPerpsWithdrawEvent = (
+    event: PerpsWithdrawEvent,
+    payload?: PerpsWithdrawPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsWithdrawErrorEvent = (
+    event: typeof PerpsWithdrawEvent.ERROR,
+    payload: PerpsWithdrawErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS WITHDRAW AUTHORIZE
+  // =============================================================================
+
+  readonly trackPerpsWithdrawAuthorizeEvent = (
+    event:
+      | typeof PerpsWithdrawAuthorizeEvent.SUBMIT
+      | typeof PerpsWithdrawAuthorizeEvent.SUCCESS,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackPerpsWithdrawAuthorizeErrorEvent = (
+    event: typeof PerpsWithdrawAuthorizeEvent.ERROR,
+    payload: PerpsWithdrawAuthorizeErrorPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
