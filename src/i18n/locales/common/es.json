@@ -51,6 +51,8 @@
     "next": "Siguiente",
     "error": {
       "user_canceled_request": "El usuario canceló la solicitud",
+      "ledger_locked": "Tu Ledger está bloqueado. Desbloquéalo e inténtalo de nuevo.",
+      "ledger_app_not_open": "Abre la aplicación de Ethereum en tu Ledger e inténtalo de nuevo.",
       "method_not_implemented": "Método no implementado: {method}",
       "invalid_name": "Nombre no válido",
       "address_resolution_failed": "No se pudo resolver la dirección",

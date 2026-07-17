@@ -139,6 +139,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
@@ -632,7 +633,9 @@ const handleSubmit = async () => {
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: t('send.toast.failed_to_sign'),
-        textSecondary: e instanceof Error && e.message ? e.message : undefined,
+        textSecondary:
+          getLocalizedWalletError(e instanceof Error ? e.message : undefined) ??
+          (e instanceof Error && e.message ? e.message : undefined),
       })
     }
     return

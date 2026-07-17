@@ -116,6 +116,7 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
@@ -453,7 +454,9 @@ const loadList = async (page: number = 0) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('common.something_went_wrong'),
-      textSecondary: e instanceof Error ? e.message : String(e),
+      textSecondary:
+        getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
+        (e instanceof Error ? e.message : String(e)),
     })
     captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {

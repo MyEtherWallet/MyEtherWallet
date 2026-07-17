@@ -275,7 +275,11 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  getLocalizedWalletError,
+} from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -346,7 +350,7 @@ const { t } = useI18n()
 
 const sanitizeErrorMessage = (e: string) => {
   if (e.toLowerCase().includes('rejected'))
-    return 'User rejected the transaction'
+    return t('common.error.user_canceled_request')
   return e
 }
 
@@ -452,7 +456,7 @@ const confirmTransaction = async () => {
         toastStore.addToastMessage({
           type: ToastType.Error,
           text: t('send.toast.tx-send-failed'),
-          textSecondary: errorMessage,
+          textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
         captureException(e instanceof Error ? e : new Error(msg), {
@@ -491,7 +495,7 @@ const confirmTransaction = async () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
     captureException(
       e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),
