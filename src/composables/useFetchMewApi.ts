@@ -98,10 +98,12 @@ export const useFetchMewApi = (
           await execute()
           return ctx
         } else {
+          const status = response?.status
+          const isClientError = !!status && status >= 400 && status < 500
           if (isDevMode) {
             console.error('Failed to fetch. URL: ', url.value)
           }
-          if (!isDevMode) {
+          if (!isDevMode && isClientError) {
             captureException(ctx.error)
           }
           ctx.error = data?.message || 'Unknown Error. Failed to fetch.'

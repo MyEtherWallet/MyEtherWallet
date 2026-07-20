@@ -267,13 +267,6 @@ export const useConnectWallet = () => {
           error = 'Connection timed out. Please try again.'
           _type = ToastType.Info
         }
-        if (
-          err.message &&
-          err.message.toLowerCase().includes('proposal expired')
-        ) {
-          error = 'Connection timed out. Please try again.'
-          _type = ToastType.Info
-        }
         toastStore.addToastMessage({
           text: 'Could not connect to wallet',
           textSecondary: error,
