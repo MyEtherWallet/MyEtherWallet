@@ -1,5 +1,29 @@
 import { describe, it, expect } from 'vitest'
-import { resolveEffectivePrice } from '@/modules/perps/utils/market'
+import { getBase, resolveEffectivePrice } from '@/modules/perps/utils/market'
+
+describe('getBase', () => {
+  it('returns the base symbol for a well-formed market', () => {
+    expect(getBase('BTC-USD')).toBe('BTC')
+  })
+
+  it('returns the whole string when there is no separator', () => {
+    expect(getBase('BTC')).toBe('BTC')
+  })
+
+  it('returns an empty string for an empty market', () => {
+    expect(getBase('')).toBe('')
+  })
+
+  it('returns an empty string when market is undefined (no crash)', () => {
+    // Positions/orders can carry an undefined market before data loads —
+    // getBase must not throw a TypeError reading .split (Sentry APP-MEW-WEB-16D).
+    expect(getBase(undefined as unknown as string)).toBe('')
+  })
+
+  it('returns an empty string when market is null (no crash)', () => {
+    expect(getBase(null as unknown as string)).toBe('')
+  })
+})
 
 describe('resolveEffectivePrice', () => {
   describe('market orders', () => {

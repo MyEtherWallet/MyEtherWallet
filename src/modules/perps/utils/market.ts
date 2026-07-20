@@ -8,7 +8,7 @@ export function getLogoUrl(base: string): string {
 }
 
 export function getBase(market: string): string {
-  return market.split('-')[0] ?? market
+  return market?.split('-')?.[0] ?? market ?? ''
 }
 
 export function midPrice(contract: Contract): number {
