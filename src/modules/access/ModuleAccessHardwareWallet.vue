@@ -598,7 +598,15 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
 const { closeAccessDialog } = useAccessStore()
 
 const access = async () => {
-  const wallet = walletList.value[selectedIndex.value]?.walletInstance
+  // `selectedIndex` holds the derivation index (set by SelectAddressList from
+  // `walletList[i].index`), not the array position. On page 2+ those differ, so
+  // indexing the array directly returned undefined and crashed in
+  // markRaw(undefined). Look the entry up by its derivation index and bail out
+  // if none matches.
+  const wallet = walletList.value.find(
+    item => item.index === selectedIndex.value,
+  )?.walletInstance
+  if (!wallet) return
   isUnlockingWallet.value = true
 
   setWallet(
