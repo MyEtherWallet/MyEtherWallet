@@ -5,4 +5,5 @@ export const SENTRY_MODULE_TAGS = {
   SEND: { tags: { module: 'send' } },
   NOTIFICATIONS: { tags: { module: 'notifications' } },
   PORTFOLIO: { tags: { module: 'portfolio' } },
+  PERPS: { tags: { module: 'perps' } },
 } as const

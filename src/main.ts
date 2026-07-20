@@ -27,7 +27,7 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && process.env.NODE_ENV === 'production') {
   sentryInit({
     app,
     dsn,
