@@ -44,6 +44,10 @@ if (dsn) {
       // auto-recovered by router.onError (reload once), so they are noise.
       'Unable to preload CSS',
       'Failed to fetch dynamically imported module',
+      // WalletConnect benign rejections when the user abandons the connection flow
+      'Proposal expired',
+      'Pairing expired',
+      'Request expired',
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
     // carry parsed extension frames).
