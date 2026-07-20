@@ -1478,6 +1478,7 @@ watch(
     onCleanup(() => {
       cancelled = true
     })
+    const analyticsPayload = getAnalyticsShared()
     // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
     txProceeding.value = true
     try {
@@ -1489,11 +1490,30 @@ watch(
         : generateEVMGasFeeQuote())
       if (cancelled) return
       swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
-    } catch (err) {
+    } catch (err: any) {
       if (cancelled) return
       swapInfo.value = null
       swapGasFeeQuote.value = undefined
-      captureException(err)
+      const isExpectedQuoteError =
+        err?.message === t('swap.error.pair-not-available') ||
+        /insufficient funds/i.test(err?.message ?? '')
+      if (isDevMode) {
+        console.error('Error fetching gas fees:', err)
+      } else {
+        analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+          ...analyticsPayload,
+          errorMsg: generalError.value,
+        })
+        if (!isExpectedQuoteError) {
+          captureException(err, {
+            ...SENTRY_MODULE_TAGS.SWAP,
+            extra: {
+              title: 'SWAP: Error fetching gas fees on quote selection',
+              errorMessage: generalError.value,
+            },
+          })
+        }
+      }
     } finally {
       if (!cancelled) txProceeding.value = false
     }
