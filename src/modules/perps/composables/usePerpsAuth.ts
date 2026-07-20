@@ -192,13 +192,25 @@ export function usePerpsAuth() {
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+
+      // Drop any existing entries for this address so re-login doesn't accumulate stale tokens.
+      const filterResults = await Promise.all(
+        storedTokens.map(async (eToken: string, i: number) => {
+          try {
+            await decrypt(eToken, address)
+            return null
+          } catch {
+            return { token: eToken, account: storedAccId[i] ?? null }
+          }
+        }),
+      )
+      const kept = filterResults.filter(Boolean) as { token: string; account: string | null }[]
+
       const encryptedToken = await encrypt(token.value, address)
       const encryptedAcc = await encrypt(accountId.value, address)
 
-      storedTokens.push(encryptedToken)
-      storedAccId.push(encryptedAcc)
-      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(storedTokens))
-      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(storedAccId))
+      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify([...kept.map(e => e.token), encryptedToken]))
+      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify([...kept.map(e => e.account), encryptedAcc]))
 
       await perpsClient.acceptAgreement({
         termsVersion: 1,
