@@ -138,9 +138,7 @@ export const useConnectWallet = () => {
       return
     }
     const providerInjected = Eip6963Providers.value.find(
-      p =>
-        p.info.name.toLowerCase() === wallet.name.toLowerCase() ||
-        p.info.name.toLowerCase() === wallet.id.toLowerCase(),
+      p => p.info.name === wallet.name || p.info.name === wallet.id,
     )
 
     if (!providerInjected) {

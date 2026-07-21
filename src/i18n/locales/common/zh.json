@@ -171,7 +171,9 @@
       "button": "立即订阅！",
       "email_placeholder": "请输入您的邮箱",
       "success": "感谢您的订阅！",
-      "error": "请稍后再试。"
+      "error": "请稍后再试。",
+      "email_required": "请输入您的邮箱",
+      "email_invalid": "邮箱地址无效"
     },
     "chart_1d": "1天",
     "chart_7d": "7天",

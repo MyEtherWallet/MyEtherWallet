@@ -1,31 +1,37 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { watchDebounced } from '@vueuse/core'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
-import { useI18n } from 'vue-i18n'
 
 export const useEmailSubscription = () => {
-  const toastStore = useToastStore()
   const { t } = useI18n()
+  const toastStore = useToastStore()
 
   const email = ref('')
   const isValidEmail = ref<boolean>(true)
-  const emailErrorMessage = ref<string | undefined>(undefined)
+  // Store the i18n key (not the resolved string) so the message re-translates
+  // reactively when the locale changes — resolving with t() into a plain ref
+  // would freeze the message in whatever locale was active at validation time.
+  const emailErrorKey = ref<string | undefined>(undefined)
+  const emailErrorMessage = computed(() =>
+    emailErrorKey.value ? t(emailErrorKey.value) : undefined,
+  )
 
   // Valid Email:
   const validateEmail = () => {
     isValidEmail.value = true
     if (email.value === '' || email.value === undefined) {
-      emailErrorMessage.value = 'email required'
+      emailErrorKey.value = 'common.subscribe.email_required'
       isValidEmail.value = false
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       isValidEmail.value = emailRegex.test(email.value)
-      emailErrorMessage.value = isValidEmail.value
+      emailErrorKey.value = isValidEmail.value
         ? undefined
-        : 'Email address is not valid'
+        : 'common.subscribe.email_invalid'
     }
   }
   const isLoading = ref(false)

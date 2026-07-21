@@ -171,7 +171,9 @@
       "button": "Sign me up!",
       "email_placeholder": "Enter your email",
       "success": "Thank you for subscribing!",
-      "error": "Please try again later."
+      "error": "Please try again later.",
+      "email_required": "email required",
+      "email_invalid": "Email address is not valid"
     },
     "chart_1d": "1d",
     "chart_7d": "7d",
@@ -184,6 +186,10 @@
   "learn": "Learn",
   "stake": "Stake",
   "earn": "Earn",
+  "perps": "Perps",
+  "perpetuals": "Perpetuals",
+  "buy": "Buy",
+  "sell": "Sell",
   "buy-sell": "Buy & Sell",
   "tools": "Tools",
   "verify-message": "Verify Message",

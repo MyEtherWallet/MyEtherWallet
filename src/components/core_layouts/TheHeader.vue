@@ -158,6 +158,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { useTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -175,6 +176,7 @@ const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isTradingRestrictedInRegion } = useTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
@@ -187,7 +189,7 @@ const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
  * Menu Items
  ------------------------------*/
 const coreMenuList = computed<AppMenuListItem[]>(() => {
-  return [
+  const items: AppMenuListItem[] = [
     {
       title: t('home'),
       routeName: ROUTES_MAIN.HOME.NAME,
@@ -203,12 +205,20 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
-    },
   ]
+  if (!isTradingRestrictedInRegion.value) {
+    items.push({
+      title: t('perpetuals'),
+      routeName: ROUTES_MAIN.PERPS.NAME,
+      iconID: ICON_IDS.PERPS,
+    })
+  }
+  items.push({
+    title: t('earn'),
+    routeName: ROUTES_MAIN.EARN.NAME,
+    iconID: ICON_IDS.STAKE,
+  })
+  return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
@@ -267,7 +277,7 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
-            if(accounts && (accounts as string[]).length === 0) {
+            if (accounts && (accounts as string[]).length === 0) {
               disconnectWallet()
               return
             }

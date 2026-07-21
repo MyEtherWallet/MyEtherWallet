@@ -171,7 +171,9 @@
       "button": "¡Suscríbeme!",
       "email_placeholder": "Ingresa tu correo electrónico",
       "success": "¡Gracias por suscribirte!",
-      "error": "Inténtalo de nuevo más tarde."
+      "error": "Inténtalo de nuevo más tarde.",
+      "email_required": "Correo electrónico obligatorio",
+      "email_invalid": "La dirección de correo electrónico no es válida"
     },
     "chart_1d": "1d",
     "chart_7d": "7d",
