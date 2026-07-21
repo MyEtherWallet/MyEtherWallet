@@ -25,11 +25,11 @@
         <template v-if="!showDepositAddress">
           <!-- Content Card -->
           <div class="relative">
-            <AppToggle
+            <!-- <AppToggle
               v-model="showIsLive"
               :label="$t('perps.deposit.live-mode-label')"
               class="mb-4"
-            />
+            /> -->
             <div class="bg-mewBg rounded-20 px-4 p-4">
               <!-- Amount Input -->
               <p class="font-bold ml-3 mb-1">
@@ -133,7 +133,7 @@
             <!-- Error -->
             <div
               v-if="error"
-              class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-4"
+              class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-4 mt-2"
             >
               <p class="text-[#ff5b5a] text-s-14 font-medium">{{ error }}</p>
             </div>
@@ -250,7 +250,6 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
-import AppToggle from '@/components/AppToggle.vue'
 import {
   perpsClient,
   USDC_ADDRESS,
@@ -626,13 +625,12 @@ const sendLiveDeposit = async () => {
     }
 
     // Broadcast
-    const broadcastFn =
+    const hash =
       wallet.value.getWalletType() === WalletType.WAGMI ||
       wallet.value.getWalletType() === WalletType.INJECTED
-        ? wallet.value.SendTransaction
-        : wallet.value.broadcastTransaction
+        ? await wallet.value.SendTransaction?.(signedTx as HexPrefixedString)
+        : await wallet.value.broadcastTransaction(signedTx as HexPrefixedString)
 
-    const hash = await broadcastFn?.(signedTx as HexPrefixedString)
     if (!hash) {
       throw new Error(t('perps.deposit.broadcast-failed'))
     }
@@ -647,8 +645,9 @@ const sendLiveDeposit = async () => {
     })
     perpsToasts.toastDepositInitiated()
     clearAmount()
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e ?? '')
+  } catch (e: unknown | Error) {
+    const msg =
+      e instanceof Error ? e.message : String((e as Error).message ?? e ?? '')
     if (isUserCancelError(e)) {
       error.value = t('perps.deposit.transaction-cancelled')
       perpsToasts.toastDepositCanceled()
