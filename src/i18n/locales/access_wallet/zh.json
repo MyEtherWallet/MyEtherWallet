@@ -38,6 +38,19 @@
       "ledger": "如何连接您的 Ledger 钱包",
       "trezor": "如何连接您的 Trezor 钱包",
       "default": "连接钱包需要帮助吗？"
+    },
+    "toast": {
+      "wallet_connected": "钱包已连接",
+      "wallet_connected_description": "您已成功连接您的 {name} 钱包。",
+      "wallet_not_detected": "未检测到 {wallet}",
+      "web3_wallet_not_detected": "未检测到 Web3 钱包",
+      "install_extension": "请安装 {name} 扩展程序。",
+      "install_extension_or_select": "请安装 {name} 扩展程序以连接，或选择其他钱包。",
+      "click_here_to_install": "点击此处安装",
+      "could_not_connect": "无法连接到钱包",
+      "connection_timed_out": "连接超时。请重试。",
+      "connect_request_pending": "连接请求已在处理中，请检查您的钱包扩展程序",
+      "network_not_supported": "您的钱包不支持所选网络。请切换到受支持的网络或在钱包中启用它。"
     }
   },
   "access_wallet_keystore": {
@@ -134,7 +147,10 @@
     "search": "按标签或路径搜索",
     "not_found": "未找到派生路径：",
     "enter_label": "输入标签",
-    "enter_path": "输入路径"
+    "enter_path": "输入路径",
+    "label_exists": "派生标签已存在！",
+    "added_successfully": "自定义派生路径添加成功！",
+    "invalid_path": "无效的派生路径！"
   },
   "error_connecting": "连接失败。请检查您的钱包是否有错误"
 }

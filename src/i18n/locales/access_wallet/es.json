@@ -38,6 +38,19 @@
       "ledger": "Cómo conectar tu billetera Ledger",
       "trezor": "Cómo conectar tu billetera Trezor",
       "default": "¿Necesitas ayuda para conectar tu billetera?"
+    },
+    "toast": {
+      "wallet_connected": "Billetera conectada",
+      "wallet_connected_description": "Has conectado correctamente tu billetera {name}.",
+      "wallet_not_detected": "{wallet} no detectado",
+      "web3_wallet_not_detected": "Billetera Web3 no detectada",
+      "install_extension": "Instala la extensión {name}.",
+      "install_extension_or_select": "Instala la extensión {name} para conectarte o selecciona otra billetera.",
+      "click_here_to_install": "Haz clic aquí para instalar",
+      "could_not_connect": "No se pudo conectar a la billetera",
+      "connection_timed_out": "Se agotó el tiempo de conexión. Inténtalo de nuevo.",
+      "connect_request_pending": "Ya hay una solicitud de conexión pendiente, revisa la extensión de tu billetera",
+      "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera."
     }
   },
   "access_wallet_keystore": {
@@ -134,7 +147,10 @@
     "search": "Buscar por etiqueta o ruta",
     "not_found": "No se encontraron rutas de derivación:",
     "enter_label": "Ingresa la etiqueta",
-    "enter_path": "Ingresa la ruta"
+    "enter_path": "Ingresa la ruta",
+    "label_exists": "¡La etiqueta de derivación ya existe!",
+    "added_successfully": "¡Ruta de derivación personalizada añadida correctamente!",
+    "invalid_path": "¡Ruta de derivación no válida!"
   },
   "error_connecting": "No se pudo conectar. Revisa tu billetera para ver los errores"
 }

@@ -139,6 +139,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
@@ -622,17 +623,16 @@ const handleSubmit = async () => {
       signedTx.value = signResponse.signed
       openTxModal.value = true
     } catch (e) {
+      const errorMsg =
+        e instanceof Error ? e.message : (e as { message?: string })?.message
       analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
         token: tokenSelected.value?.symbol,
-        errorMsg:
-          e instanceof Error || (e as any).message
-            ? (e as any).message
-            : 'Unknown error during signing',
+        errorMsg: errorMsg ?? 'Unknown error during signing',
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: t('send.toast.failed_to_sign'),
-        textSecondary: e instanceof Error && e.message ? e.message : undefined,
+        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
       })
     }
     return

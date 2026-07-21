@@ -51,6 +51,8 @@
     "next": "下一步",
     "error": {
       "user_canceled_request": "用户已取消请求",
+      "ledger_locked": "您的 Ledger 已锁定。请解锁后重试。",
+      "ledger_app_not_open": "请在您的 Ledger 上打开以太坊应用后重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",
@@ -91,6 +93,9 @@
     "usd_balance": "美元余额",
     "fee": "费用",
     "copy_failed": "复制失败",
+    "something_went_wrong": "出了点问题",
+    "network_change_failed": "网络切换失败",
+    "network_change_failed_description": "请检查您的钱包是否支持 {network} 网络",
     "and": "和",
     "deposit_title": "您的 {chain} 地址",
     "deposit_description": "您可以将 {chain} 支持的任何代币存入此地址。",
@@ -165,6 +170,8 @@
       "cta": "通过安全提示、行业洞察、新闻等内容提升您的技能！",
       "button": "立即订阅！",
       "email_placeholder": "请输入您的邮箱",
+      "success": "感谢您的订阅！",
+      "error": "请稍后再试。",
       "email_required": "请输入您的邮箱",
       "email_invalid": "邮箱地址无效"
     },

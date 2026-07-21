@@ -25,6 +25,7 @@ import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
 import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
+import i18n from '@/i18n'
 
 const PARTNER = 'ondo-finance'
 
@@ -178,8 +179,11 @@ export const useWalletStore = defineStore('walletStore', () => {
         if (!networkChangeStatus) {
           const toastStore = useToastStore()
           toastStore.addToastMessage({
-            text: 'Network change failed',
-            textSecondary: `Check if your wallet supports the ${newChain.nameLong} network`,
+            text: i18n.global.t('common.network_change_failed'),
+            textSecondary: i18n.global.t(
+              'common.network_change_failed_description',
+              { network: newChain.nameLong },
+            ),
             type: ToastType.Error,
           })
         }

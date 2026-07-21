@@ -5,6 +5,7 @@ import { useLocalStorage } from '@vueuse/core'
 
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
+import i18n from '@/i18n'
 
 import { ethereum } from '@/modules/access/common/configs/configPaths'
 import { checkCustomPath } from '@/utils/customPathHelpers'
@@ -72,7 +73,7 @@ export const useDerivationStore = defineStore('derivationStore', () => {
 
     if (existingDerivation) {
       addToastMessage({
-        text: 'Derivation label already exists!',
+        text: i18n.global.t('derivation_path.label_exists'),
         type: ToastType.Error,
         duration: 5000,
       })
@@ -81,13 +82,13 @@ export const useDerivationStore = defineStore('derivationStore', () => {
     if (checkCustomPath(derivationPath.path)) {
       store.value.customDerivations.push(derivationPath)
       addToastMessage({
-        text: 'Custom Derivation Path added successfully!',
+        text: i18n.global.t('derivation_path.added_successfully'),
         type: ToastType.Success,
         duration: 5000,
       })
     } else {
       addToastMessage({
-        text: 'Invalid Derivation Path!',
+        text: i18n.global.t('derivation_path.invalid_path'),
         type: ToastType.Error,
         duration: 5000,
       })
