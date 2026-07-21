@@ -677,7 +677,7 @@
       </template>
       <template v-else-if="!token && !isWatchOnly">
         <div
-          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+          class="rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
         >
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
