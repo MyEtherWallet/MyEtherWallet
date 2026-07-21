@@ -36,19 +36,23 @@ function startWs() {
   ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
 
-  watch(token, (newToken, oldToken) => {
-    if (oldToken) {
-      positions.value = []
-      hasLoaded.value = false
-    }
-    if (newToken) void fetchPositions()
-  }, { immediate: true })
-
-  watch(refreshKey, () => {
-    if (token.value) void fetchPositions()
-  })
-
+  // Detached scope so these singleton watchers survive the unmount of the first
+  // component that calls usePerpsPositions() — otherwise they die on route/panel
+  // change and, guarded by `initialized`, never re-register, so an account
+  // switch A→B stops clearing/refetching and keeps showing A's positions.
   effectScope(true).run(() => {
+    watch(token, (newToken, oldToken) => {
+      if (oldToken) {
+        positions.value = []
+        hasLoaded.value = false
+      }
+      if (newToken) void fetchPositions()
+    }, { immediate: true })
+
+    watch(refreshKey, () => {
+      if (token.value) void fetchPositions()
+    })
+
     perpsWs.subscribe<Position>('positionsPerps', (rows) => {
       positions.value = rows
       hasLoaded.value = true

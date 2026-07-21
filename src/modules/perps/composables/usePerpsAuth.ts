@@ -45,6 +45,13 @@ function _waitForSignConfirmation(): Promise<void> {
   })
 }
 let _walletWatcherRegistered = false
+// Detached scope so the walletAddress watcher survives the unmount of whichever
+// component first called usePerpsAuth(). Without it the watcher is owned by that
+// component's setup scope and Vue disposes it on unmount (route / side-panel
+// change) — after which the `_walletWatcherRegistered` guard permanently blocks
+// re-registration, so a later address switch A→B never resets the token and the
+// UI keeps serving account A's positions/balance/history.
+const _walletWatcherScope = effectScope(true)
 
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
@@ -121,26 +128,29 @@ export function usePerpsAuth() {
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
 
   // Register the walletAddress watcher exactly once for the lifetime of the
-  // module. Re-registering after a sign-out would race with `clearAuth()`'s
-  // localStorage filtering — the fresh watcher's `immediate: true` fire would
-  // call `tryRestoreAuth` against the unfiltered localStorage and re-hydrate
-  // the token we just cleared.
+  // module, inside a detached effectScope so it outlives the caller component's
+  // unmount (see `_walletWatcherScope` above). Re-registering after a sign-out
+  // would race with `clearAuth()`'s localStorage filtering — the fresh
+  // watcher's `immediate: true` fire would call `tryRestoreAuth` against the
+  // unfiltered localStorage and re-hydrate the token we just cleared.
   if (!_walletWatcherRegistered) {
     _walletWatcherRegistered = true
-    watch(
-      walletAddress,
-      async address => {
-        if (!address || address === _currentAddress) return
-        _currentAddress = address
-        token.value = null
-        accountId.value = null
-        perpsClient.setToken(null)
-        perpsWs.logout()
-        await tryRestoreAuth(address)
-        if (token.value) refreshKey.value++
-      },
-      { immediate: true },
-    )
+    _walletWatcherScope.run(() => {
+      watch(
+        walletAddress,
+        async address => {
+          if (!address || address === _currentAddress) return
+          _currentAddress = address
+          token.value = null
+          accountId.value = null
+          perpsClient.setToken(null)
+          perpsWs.logout()
+          await tryRestoreAuth(address)
+          if (token.value) refreshKey.value++
+        },
+        { immediate: true },
+      )
+    })
   }
 
   async function login(source?: PerpsEventSource) {
@@ -310,38 +320,42 @@ export function usePerpsBalance() {
 
     _sharedFetchBalance = fetchBalance
 
-    watch(
-      token,
-      (now, prev) => {
-        if (prev && !now) {
-          balance.value = null
-        }
-        if (now) void fetchBalance()
-      },
-      { immediate: true },
-    )
-
-    watch(refreshKey, () => {
-      if (token.value) void fetchBalance()
-    })
-
+    const perpsToasts = usePerpsToasts()
+    // Detached scope so these singleton watchers survive the unmount of the
+    // first component that calls usePerpsBalance() — otherwise they die on
+    // route/panel change and, guarded by `_balanceInitialized`, never
+    // re-register, so an account switch A→B stops clearing/refetching balance.
     effectScope(true).run(() => {
+      watch(
+        token,
+        (now, prev) => {
+          if (prev && !now) {
+            balance.value = null
+          }
+          if (now) void fetchBalance()
+        },
+        { immediate: true },
+      )
+
+      watch(refreshKey, () => {
+        if (token.value) void fetchBalance()
+      })
+
       perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
         if (rows.length === 0) return
         balance.value = rows[0]
       })
-    })
 
-    const perpsToasts = usePerpsToasts()
-    watch(
-      () => _sharedBalance.value?.underLiquidation,
-      (current, previous) => {
-        if (current === true && previous === false) {
-          perpsToasts.toastLiquidationInitiated()
-        }
-      },
-      { immediate: false },
-    )
+      watch(
+        () => _sharedBalance.value?.underLiquidation,
+        (current, previous) => {
+          if (current === true && previous === false) {
+            perpsToasts.toastLiquidationInitiated()
+          }
+        },
+        { immediate: false },
+      )
+    })
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }
@@ -352,9 +366,10 @@ const _sharedSummary = ref<PortfolioSummary | null>(null)
 const _sharedSummaryLoading = ref(false)
 let _summaryInitialized = false
 let _sharedFetchSummary: (() => Promise<void>) | null = null
+const _summaryScope = effectScope(true)
 
 export function usePerpsPortfolioSummary() {
-  const { token } = usePerpsAuth()
+  const { token, refreshKey } = usePerpsAuth()
   const summary = _sharedSummary
   const loading = _sharedSummaryLoading
 
@@ -385,7 +400,25 @@ export function usePerpsPortfolioSummary() {
       }
     }
 
-    poll()
+    // Detached scope so the watchers outlive the first caller's unmount (see
+    // usePerpsBalance above). Without a token watcher the summary only
+    // refreshed on the 5-minute interval, so after an account switch A→B it
+    // kept showing account A's summary until the next tick.
+    _summaryScope.run(() => {
+      watch(
+        token,
+        (now, prev) => {
+          if (prev && !now) summary.value = null
+          if (now) void fetchSummary()
+        },
+        { immediate: true },
+      )
+
+      watch(refreshKey, () => {
+        if (token.value) void fetchSummary()
+      })
+    })
+
     setInterval(poll, 300_000) // refresh every 5 minutes
 
     _sharedFetchSummary = fetchSummary
