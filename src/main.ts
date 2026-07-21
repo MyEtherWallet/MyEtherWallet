@@ -21,6 +21,7 @@ import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
 } from '@/sentry/extensionNoise'
+import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
 const app = createApp(App)
 
@@ -53,16 +54,19 @@ if (dsn) {
     // carry parsed extension frames).
     denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
-    // "provider disconnected") and viem InvalidAddressError (a wallet returned
-    // a malformed address on connect — already handled with a user toast).
-    // These surface as serialized plain objects with no parsed frames, so
+    // "provider disconnected"), viem InvalidAddressError (a wallet returned a
+    // malformed address on connect — already handled with a user toast), and
+    // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
+    // surfacing as an unhandled "Connection is closed" rejection). These surface
+    // as serialized plain objects or bare strings with no parsed frames, so
     // denyUrls can't catch them — inspect the original exception instead.
     // Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
-        isInvalidWalletAddressError(originalException)
+        isInvalidWalletAddressError(originalException) ||
+        isTransientRpcError(originalException)
       )
         return null
       return event
