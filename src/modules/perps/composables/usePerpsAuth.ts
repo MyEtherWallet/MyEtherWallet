@@ -53,6 +53,29 @@ let _walletWatcherRegistered = false
 // UI keeps serving account A's positions/balance/history.
 const _walletWatcherScope = effectScope(true)
 
+// Data composables (positions, balance, summary, portfolio graph) register a
+// callback here so auth teardown — sign-out AND account switch — can wipe their
+// singleton caches synchronously and directly, instead of depending on a
+// per-composable `watch(token)` being alive at that moment. Showing a previous
+// account's balances/positions is a correctness/trust bug, so the reset must not
+// hinge on watcher liveness or on the WS pushing a fresh snapshot.
+const _dataResetHandlers = new Set<() => void>()
+export function onPerpsAuthReset(fn: () => void): () => void {
+  _dataResetHandlers.add(fn)
+  return () => {
+    _dataResetHandlers.delete(fn)
+  }
+}
+function resetPerpsData() {
+  for (const fn of _dataResetHandlers) {
+    try {
+      fn()
+    } catch {
+      // a failing reset handler must not block the others
+    }
+  }
+}
+
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
@@ -87,6 +110,7 @@ async function clearAuth() {
   accountId.value = null
   perpsClient.setToken(null)
   perpsWs.logout()
+  resetPerpsData()
   // Reset module-scope guards so a subsequent Sign In click is not silently
   // blocked by a stale auth-restored flag from a previous session.
   _authRestored = false
@@ -145,6 +169,7 @@ export function usePerpsAuth() {
           accountId.value = null
           perpsClient.setToken(null)
           perpsWs.logout()
+          resetPerpsData()
           await tryRestoreAuth(address)
           if (token.value) refreshKey.value++
         },
@@ -320,6 +345,10 @@ export function usePerpsBalance() {
 
     _sharedFetchBalance = fetchBalance
 
+    onPerpsAuthReset(() => {
+      balance.value = null
+    })
+
     const perpsToasts = usePerpsToasts()
     // Detached scope so these singleton watchers survive the unmount of the
     // first component that calls usePerpsBalance() — otherwise they die on
@@ -399,6 +428,10 @@ export function usePerpsPortfolioSummary() {
         summary.value = null
       }
     }
+
+    onPerpsAuthReset(() => {
+      summary.value = null
+    })
 
     // Detached scope so the watchers outlive the first caller's unmount (see
     // usePerpsBalance above). Without a token watcher the summary only

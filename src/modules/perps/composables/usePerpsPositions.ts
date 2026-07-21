@@ -1,6 +1,6 @@
 import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
-import { usePerpsAuth } from './usePerpsAuth'
+import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 import type { Position } from '../sdk/types'
@@ -35,6 +35,11 @@ function startWs() {
   initialized = true
   ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
+
+  onPerpsAuthReset(() => {
+    positions.value = []
+    hasLoaded.value = false
+  })
 
   // Detached scope so these singleton watchers survive the unmount of the first
   // component that calls usePerpsPositions() — otherwise they die on route/panel

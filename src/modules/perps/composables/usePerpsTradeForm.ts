@@ -365,6 +365,15 @@ export function usePerpsTradeForm() {
       return Number.isFinite(price) ? Math.max(price, 0) : 0
     }
 
+    // Open position: prefer the backend's authoritative liquidationPrice. It
+    // is validated to match the local cross-margin formula to the cent for
+    // every open position, so this just uses the engine's own number as ground
+    // truth and avoids any drift. Fall back to the local computation only when
+    // the API omits it or reports 0 (e.g. deeply-collateralized positions the
+    // backend treats as having no liquidation price).
+    const apiLiq = parseFloat(activePosition.value.liquidationPrice ?? '')
+    if (Number.isFinite(apiLiq) && apiLiq > 0) return apiLiq
+
     const { direction } = activePosition.value
     const netQuantity = parseFloat(activePosition.value.netQuantity)
 
