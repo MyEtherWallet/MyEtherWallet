@@ -164,7 +164,9 @@
     "subscribe": {
       "cta": "セキュリティの豆知識、業界の最新情報、ニュースなど、スキルアップに欠かせない情報を配信中！",
       "button": "購読する",
-      "email_placeholder": "メールアドレスを入力してください..."
+      "email_placeholder": "メールアドレスを入力してください...",
+      "email_required": "email required",
+      "email_invalid": "Email address is not valid"
     },
     "chart_1d": "1d",
     "chart_7d": "7d",
