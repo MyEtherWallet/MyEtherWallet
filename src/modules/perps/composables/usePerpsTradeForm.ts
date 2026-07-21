@@ -52,6 +52,13 @@ const SL_TP_INVALID_PATTERN =
 
 
 const leverage = ref(20)
+// Add-mode staged leverage: the value the user picks in the leverage dialog
+// before it is persisted to the API (which only happens at submit time via
+// confirmAndSubmitAndSetLeverage). It lives outside the `leverage` singleton
+// because that singleton is routinely overwritten by fetchLeverage/position
+// sync, which would silently discard the user's choice. `null` means "nothing
+// staged — fall back to the saved singleton".
+const stagedLeverage = ref<number | null>(null)
 const isFetchingLeverage = ref(false)
 
 export function usePerpsTradeForm() {
@@ -263,19 +270,72 @@ export function usePerpsTradeForm() {
   })
 
   // ── Order sizing ───────────────────────────────────────────
+  // The leverage that sizing, liquidation, and the placed order all use. In
+  // add mode it reflects the staged (not-yet-persisted) leverage so the panel,
+  // confirm modal, and submitted order agree; otherwise it tracks the saved
+  // singleton.
+  const effectiveLeverage = computed(() =>
+    stagedLeverage.value != null ? stagedLeverage.value : leverage.value,
+  )
+
+  function setStagedLeverage(val: number) {
+    stagedLeverage.value = val
+  }
+
+  // Any authoritative change to the saved singleton (fetchLeverage, position
+  // sync, saveLeverage, per-market clamp, market reset) supersedes a staged
+  // pick, so drop it and fall back to the singleton. Mirrors the previous
+  // localLeverage-follows-singleton behavior.
+  watch(
+    () => leverage.value,
+    () => {
+      stagedLeverage.value = null
+    },
+  )
+
   const positionSizeUsd = computed(() => {
     const amt = parseFloat(inputAmount.value) || 0
-    return amt * leverage.value
+    return amt * effectiveLeverage.value
+  })
+
+  // The maintenance-margin tier for the market being priced — the open
+  // position's market when there is one, otherwise the market about to be
+  // traded, so the pre-trade estimate uses the same schedule the backend
+  // applies once the position exists. `marginInfo` is a tiered list: each
+  // entry's `positionBracketUsd` is the upper notional bound for that tier, and
+  // each carries its own rate plus a flat `maintenanceAmount` credit. Pick the
+  // narrowest tier whose bound covers this position's notional, falling back to
+  // the widest tier when the notional exceeds every bound.
+  const maintenanceBracket = computed(() => {
+    const marketName = activePosition.value?.market ?? fullMarketName.value
+    const market = markets.value.find(asset => asset.market === marketName)
+    const brackets = market?.marginInfo
+    if (!brackets?.length) return null
+    const notional = activePosition.value
+      ? positionNotionalValue.value
+      : positionSizeUsd.value
+    const sorted = [...brackets].sort(
+      (a, b) =>
+        parseFloat(a.positionBracketUsd) - parseFloat(b.positionBracketUsd),
+    )
+    return (
+      sorted.find(b => notional <= parseFloat(b.positionBracketUsd)) ??
+      sorted[sorted.length - 1]
+    )
   })
 
   const maintenanceMarginRate = computed(() => {
-    if (activePosition.value) {
-      const market = markets.value.find(asset => asset.market === activePosition.value?.market)
-      if (market?.marginInfo?.length) {
-        return parseFloat(market.marginInfo[0].maintenanceMarginRate)
-      }
-    }
-    return 0.03
+    const rate = parseFloat(
+      maintenanceBracket.value?.maintenanceMarginRate ?? '',
+    )
+    // 0.03 is a conservative fallback for markets that don't publish a
+    // marginInfo schedule; the real rate flows through whenever one is present.
+    return Number.isFinite(rate) && rate > 0 ? rate : 0.03
+  })
+
+  const maintenanceAmount = computed(() => {
+    const amount = parseFloat(maintenanceBracket.value?.maintenanceAmount ?? '')
+    return Number.isFinite(amount) ? amount : 0
   })
 
   const estimatedLiquidation = computed(() => {
@@ -288,7 +348,16 @@ export function usePerpsTradeForm() {
       const newQuantity = positionSizeUsd.value / entryPrice
       const sideNotionalValue = positionSizeUsd.value * sideVal
       const sideQuantity = newQuantity * sideVal
-      const numerator = inputAmountNum - sideNotionalValue
+      // Cross margin: the whole account equity (net of maintenance already
+      // reserved by other open positions) backs the new position, matching the
+      // active-position branch below and the Ondo backend. Using only the typed
+      // margin here (isolated) produced a liquidation price that jumped the
+      // moment the position opened and switched to the cross formula.
+      const numerator =
+        marginBalance.value -
+        maintenanceMarginOtherPositions.value -
+        sideNotionalValue +
+        maintenanceAmount.value
       const denominator = newQuantity * maintenanceMarginRate.value - sideQuantity
       if (denominator === 0) return 0
 
@@ -305,7 +374,10 @@ export function usePerpsTradeForm() {
     const sideNotionalValue = positionNotionalValue.value * sideVal
     const sideQuantity = netQuantity * sideVal
     const numerator =
-      marginBalance.value - maintenanceMarginOtherPositions.value - sideNotionalValue
+      marginBalance.value -
+      maintenanceMarginOtherPositions.value -
+      sideNotionalValue +
+      maintenanceAmount.value
     const denominator = netQuantity * maintenanceMarginRate.value - sideQuantity
     if (denominator === 0) return 0
 
@@ -392,7 +464,7 @@ export function usePerpsTradeForm() {
   const maxBaseSizeForSubmit = computed(() => {
     if (!maxOrderSize.value) return null
     const side = orderSide.value === 'buy' ? 'maxBidBaseSize' : 'maxAskBaseSize'
-    const leverageScale = leverage.value / 20
+    const leverageScale = effectiveLeverage.value / 20
     return (
       (parseFloat(maxOrderSize.value.percent100[side]) || 0) * leverageScale
     )
@@ -683,7 +755,7 @@ export function usePerpsTradeForm() {
     if (limitPriceHasError.value) return true
     if (marginPrecisionError.value) return true
     if (takeProfitErrorMessage.value || stopLossErrorMessage.value) return true
-    if (availableMargin.value * leverage.value < minOrderAmount.value)
+    if (availableMargin.value * effectiveLeverage.value < minOrderAmount.value)
       return true
     if (amt > availableMargin.value) return true
     if (positionSizeUsd.value < minOrderAmount.value) return true
@@ -703,7 +775,7 @@ export function usePerpsTradeForm() {
       return t('perps.trade.enter-target-price')
     }
     const amt = parseFloat(inputAmount.value)
-    if (availableMargin.value * leverage.value < minOrderAmount.value) {
+    if (availableMargin.value * effectiveLeverage.value < minOrderAmount.value) {
       return t('perps.errors.min-margin-required', {
         amount: formatUsd(minOrderAmount.value),
       })
@@ -753,7 +825,7 @@ export function usePerpsTradeForm() {
       75: 'percent75',
       100: 'percent100',
     }
-    const leverageScale = leverage.value / 20
+    const leverageScale = effectiveLeverage.value / 20
     const levelKey = levels[pct]
     if (levelKey) {
       return (
@@ -768,7 +840,7 @@ export function usePerpsTradeForm() {
   function setPercentage(pct: number) {
     const baseSize = getBaseSizeForPercent(pct)
     if (baseSize !== null && baseSize > 0 && currentPrice.value > 0) {
-      const margin = (baseSize * currentPrice.value) / leverage.value
+      const margin = (baseSize * currentPrice.value) / effectiveLeverage.value
       inputAmount.value = margin.toFixed(2)
       const maxBase = getBaseSizeForPercent(100) || 1
       sliderValue.value = Math.min((baseSize / maxBase) * 100, 100)
@@ -779,7 +851,7 @@ export function usePerpsTradeForm() {
     const maxBase = getBaseSizeForPercent(100)
     if (maxBase && maxBase > 0 && currentPrice.value > 0) {
       const baseSize = maxBase * (sliderValue.value / 100)
-      const margin = (baseSize * currentPrice.value) / leverage.value
+      const margin = (baseSize * currentPrice.value) / effectiveLeverage.value
       inputAmount.value = margin.toFixed(2)
     } else if (availableMargin.value > 0) {
       inputAmount.value = (
@@ -1229,7 +1301,7 @@ export function usePerpsTradeForm() {
       currentPrice: currentPrice.value,
       orderSide: orderSide.value,
       orderType: orderType.value,
-      leverage: leverage.value,
+      leverage: effectiveLeverage.value,
       previousLeverage: priorLeverage,
       maxLeverage: marketMaxLeverage.value,
       margin: inputAmount.value,
@@ -1600,6 +1672,8 @@ export function usePerpsTradeForm() {
     orderType,
     inputAmount,
     leverage,
+    effectiveLeverage,
+    setStagedLeverage,
     sliderValue,
     positionSizeUsd,
     minOrderAmount,

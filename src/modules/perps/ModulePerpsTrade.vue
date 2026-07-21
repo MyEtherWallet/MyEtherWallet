@@ -367,7 +367,9 @@
                   class="ml-auto bg-grey-10 animate-pulse rounded-full h-4 w-8"
                 />
                 <p v-else class="ml-auto font-semibold text-s-14">
-                  {{ manageMode === 'add' ? localLeverage : leverage }}&times;
+                  {{
+                    manageMode === 'add' ? effectiveLeverage : leverage
+                  }}&times;
                 </p>
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
@@ -716,7 +718,7 @@
       :current-price="currentPrice"
       :limit-price="limitPrice"
       :input-amount="inputAmount"
-      :leverage="manageMode === 'add' ? localLeverage : leverage"
+      :leverage="manageMode === 'add' ? effectiveLeverage : leverage"
       :position-size-usd="positionSizeUsd"
       :order-size="orderSize"
       :estimated-liquidation="estimatedLiquidation"
@@ -800,7 +802,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import {
   ChevronDownIcon,
   CheckIcon,
@@ -841,7 +843,14 @@ import {
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
-const { showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
+const {
+  showSigningPrompt,
+  signingMessage,
+  isHardwareWalletSigning,
+  isWaitingForConfirm,
+  confirmSign,
+  cancelSign,
+} = usePerpsAuth()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
@@ -889,13 +898,16 @@ const onCloseAmountInput = (e: Event) => {
 }
 
 const confirmAndSubmitAndSetLeverage = async () => {
-  // In add mode `localLeverage` is the authoritative, user-staged leverage
+  // In add mode `effectiveLeverage` is the authoritative, user-staged leverage
   // (what the panel and confirm modal show). `tempLeverage` is only the
   // leverage dialog's slider draft and can drift from the singleton via its
-  // own watcher, so sync it to `localLeverage` before saving to avoid sending
-  // a stale value to setLeverage (MEW-1913).
-  if (manageMode.value === 'add' && localLeverage.value !== leverage.value) {
-    tempLeverage.value = localLeverage.value
+  // own watcher, so sync it to `effectiveLeverage` before saving to avoid
+  // sending a stale value to setLeverage (MEW-1913).
+  if (
+    manageMode.value === 'add' &&
+    effectiveLeverage.value !== leverage.value
+  ) {
+    tempLeverage.value = effectiveLeverage.value
     await saveLeverage()
     if (!leverageError.value) await confirmAndSubmitOrder()
   } else {
@@ -928,6 +940,8 @@ const {
   orderType,
   inputAmount,
   leverage,
+  effectiveLeverage,
+  setStagedLeverage,
   sliderValue,
   positionSizeUsd,
   minOrderAmount,
@@ -1049,37 +1063,31 @@ const onClickManageMode = (mode: 'add' | 'close') => {
   setSelectedTradeManageMode(mode)
 }
 
-const localLeverage = ref(leverage.value)
-
-// if this changed, it means that the marketinfo page changed leverage and should reflect
-watch(
-  () => leverage.value,
-  val => {
-    if (val) localLeverage.value = val
-  },
-)
-
-// 'add' mode doesn't persist via the API on save — it stages a leverage for
-// the next add order. Only commit to localLeverage on explicit save (never on
-// dismiss). Non-add modes go through saveLeverage(), which updates the
-// `leverage` singleton and the watcher above syncs localLeverage.
+// 'add' mode doesn't persist via the API on save — it stages a leverage (in
+// the composable) for the next add order so sizing/liquidation reflect it while
+// surviving the fetchLeverage/position-sync writes to the singleton. Non-add
+// modes go through saveLeverage(), which updates the `leverage` singleton (and
+// clears any staged value via the composable's watcher).
 const onSaveLeverage = () => {
   if (manageMode.value === 'add') {
-    localLeverage.value = tempLeverage.value
+    setStagedLeverage(tempLeverage.value)
     closeLeverageModal()
   } else {
     saveLeverage()
   }
 }
 
-// Seed tempLeverage from localLeverage in add mode (which tracks the open
+// Seed tempLeverage from effectiveLeverage in add mode (which tracks the open
 // position's leverage and any staged-but-unapplied change) instead of the
 // singleton. The composable's openLeverageModal seeds from the singleton,
 // which would jump the slider back to the user's preferred leverage and
 // drop a staged add-mode value.
 const openLeverage = () => {
   if (manageMode.value === 'add') {
-    tempLeverage.value = Math.min(localLeverage.value, marketMaxLeverage.value)
+    tempLeverage.value = Math.min(
+      effectiveLeverage.value,
+      marketMaxLeverage.value,
+    )
     leverageError.value = ''
     showLeverageModal.value = true
   } else {
@@ -1092,7 +1100,7 @@ const openLeverage = () => {
 watch(
   () => showLeverageModal.value,
   val => {
-    if (!val) tempLeverage.value = localLeverage.value
+    if (!val) tempLeverage.value = effectiveLeverage.value
   },
 )
 
