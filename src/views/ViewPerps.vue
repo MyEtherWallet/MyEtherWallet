@@ -68,7 +68,8 @@ const router = useRouter()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const { isWatchOnly, walletAddress } = storeToRefs(walletStore)
-const { token, isAuthenticating, login, logout } = usePerpsAuth()
+const { token, isAuthenticating, isRestoringAuth, login, logout } =
+  usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
 
 // Trigger auto-login only when the connected wallet address actually changes
@@ -76,18 +77,26 @@ const { isDesktopAndUp } = useAppBreakpoints()
 // re-fired on any internal provider mutation, which after a Sign Out would
 // silently re-auth the user and make the page flash back to the signed-in
 // view.
-watch(walletAddress, (newAddr, oldAddr) => {
-  if (
-    newAddr &&
-    oldAddr &&
-    newAddr !== oldAddr &&
-    !isWatchOnly.value &&
-    !isAuthenticating.value &&
-    !token.value
-  ) {
+//
+// The auth layer asynchronously tries to restore a stored, non-expired token
+// for the new wallet first (`isRestoringAuth`). We must wait for that to settle
+// before deciding to prompt — otherwise we'd request a signature during the
+// restore window even though the new wallet already has a valid token.
+let autoLoginPending = false
+const maybeAutoLogin = () => {
+  if (!autoLoginPending || isRestoringAuth.value) return
+  autoLoginPending = false
+  if (!isWatchOnly.value && !isAuthenticating.value && !token.value) {
     login()
   }
+}
+watch(walletAddress, (newAddr, oldAddr) => {
+  if (newAddr && oldAddr && newAddr !== oldAddr && !isWatchOnly.value) {
+    autoLoginPending = true
+    maybeAutoLogin()
+  }
 })
+watch(isRestoringAuth, () => maybeAutoLogin())
 
 const connectWallet = () => useAccessStore().openAccessDialog()
 

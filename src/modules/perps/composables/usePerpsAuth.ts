@@ -13,8 +13,15 @@ import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
+// Absolute Unix-second expiry per stored token, index-aligned with the token
+// array above, so a switch to a wallet whose token has expired falls through to
+// a fresh signed login instead of silently restoring a dead token.
+const STORAGE_KEY_EXPIRATION = 'perps_auth_expiration'
+// Treat a token as expired slightly before its real deadline so it can't lapse
+// mid-request right after we restore it.
+const TOKEN_EXPIRY_BUFFER_SECS = 60
 
-function getStoredArray(key: string): string[] {
+function getStoredArray<T = string>(key: string): T[] {
   try {
     const parsed = JSON.parse(localStorage.getItem(key) ?? '[]')
     return Array.isArray(parsed) ? parsed : []
@@ -23,9 +30,21 @@ function getStoredArray(key: string): string[] {
   }
 }
 
+// Missing/malformed expiry → not-expired: pre-existing sessions stored before
+// expiry tracking keep working, and the server's 401 → onUnauthorized path still
+// catches a genuinely dead legacy token. Only a known, elapsed expiry blocks a
+// silent restore.
+function isTokenExpired(expirationSecs: unknown): boolean {
+  if (typeof expirationSecs !== 'number' || !Number.isFinite(expirationSecs) || expirationSecs <= 0) {
+    return false
+  }
+  return Date.now() / 1000 >= expirationSecs - TOKEN_EXPIRY_BUFFER_SECS
+}
+
 const token = ref<string | null>(null)
 const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
+const isRestoringAuth = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
 const showSigningPrompt = ref(false)
@@ -79,27 +98,36 @@ function resetPerpsData() {
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
+  const storedExpirations: number[] = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
   for (let i = 0; i < storedTokens.length; i++) {
+    let decryptedToken: string
     try {
-      const decryptedToken = await decrypt(storedTokens[i], address)
-      token.value = decryptedToken
-      perpsClient.setToken(decryptedToken)
-      perpsWs.login(decryptedToken)
-      _authRestored = true
-      try {
-        accountId.value = storedAccounts[i]
-          ? await decrypt(storedAccounts[i], address)
-          : null
-
-      } catch {
-        _authRestored = false
-        accountId.value = null
-      }
-      break
+      decryptedToken = await decrypt(storedTokens[i], address)
     } catch {
       _authRestored = false
       // token belongs to a different address, try next
+      continue
     }
+    // This entry belongs to `address`. Only restore it while it is still valid —
+    // an expired token must fall through so the caller prompts for a fresh
+    // signature rather than silently restoring a token the API would 401.
+    if (isTokenExpired(storedExpirations[i])) {
+      _authRestored = false
+      break
+    }
+    token.value = decryptedToken
+    perpsClient.setToken(decryptedToken)
+    perpsWs.login(decryptedToken)
+    _authRestored = true
+    try {
+      accountId.value = storedAccounts[i]
+        ? await decrypt(storedAccounts[i], address)
+        : null
+    } catch {
+      _authRestored = false
+      accountId.value = null
+    }
+    break
   }
 }
 
@@ -120,6 +148,7 @@ async function clearAuth() {
   if (!wallet.value) return;
   const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+  const storedExp = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
 
   const address = await wallet.value!.getAddress();
   const results = await Promise.all(
@@ -128,16 +157,23 @@ async function clearAuth() {
         await decrypt(eToken, address)
         return null
       } catch {
-        return { token: eToken, account: storedAccId[i] ?? null }
+        return {
+          token: eToken,
+          account: storedAccId[i] ?? null,
+          exp: storedExp[i] ?? 0,
+        }
       }
     }),
   )
-  const kept = results.filter(Boolean) as { token: string; account: string | null }[]
-  const filteredStoredTokens = kept.map(e => e.token)
-  const filteredStoredAccounts = kept.map(e => e.account)
+  const kept = results.filter(Boolean) as {
+    token: string
+    account: string | null
+    exp: number
+  }[]
 
-  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(filteredStoredTokens))
-  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(filteredStoredAccounts))
+  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(kept.map(e => e.token)))
+  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(kept.map(e => e.account)))
+  localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify(kept.map(e => e.exp)))
 }
 
 perpsClient.setOnUnauthorized(() => {
@@ -165,12 +201,21 @@ export function usePerpsAuth() {
         async address => {
           if (!address || address === _currentAddress) return
           _currentAddress = address
+          // Flip synchronously — before the await — so a same-tick auto-login
+          // watcher (ViewPerps) can see a restore is in flight and hold off on
+          // prompting for a signature until we know whether the new wallet has a
+          // valid stored token.
+          isRestoringAuth.value = true
           token.value = null
           accountId.value = null
           perpsClient.setToken(null)
           perpsWs.logout()
           resetPerpsData()
-          await tryRestoreAuth(address)
+          try {
+            await tryRestoreAuth(address)
+          } finally {
+            isRestoringAuth.value = false
+          }
           if (token.value) refreshKey.value++
         },
         { immediate: true },
@@ -179,7 +224,7 @@ export function usePerpsAuth() {
   }
 
   async function login(source?: PerpsEventSource) {
-    if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
+    if (isRestoringAuth.value || _authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
@@ -227,6 +272,7 @@ export function usePerpsAuth() {
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+      const storedExp = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
 
       // Drop any existing entries for this address so re-login doesn't accumulate stale tokens.
       const filterResults = await Promise.all(
@@ -235,17 +281,26 @@ export function usePerpsAuth() {
             await decrypt(eToken, address)
             return null
           } catch {
-            return { token: eToken, account: storedAccId[i] ?? null }
+            return {
+              token: eToken,
+              account: storedAccId[i] ?? null,
+              exp: storedExp[i] ?? 0,
+            }
           }
         }),
       )
-      const kept = filterResults.filter(Boolean) as { token: string; account: string | null }[]
+      const kept = filterResults.filter(Boolean) as {
+        token: string
+        account: string | null
+        exp: number
+      }[]
 
       const encryptedToken = await encrypt(token.value, address)
       const encryptedAcc = await encrypt(accountId.value, address)
 
       localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify([...kept.map(e => e.token), encryptedToken]))
       localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify([...kept.map(e => e.account), encryptedAcc]))
+      localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify([...kept.map(e => e.exp), complete.result.expirationSecs]))
 
       await perpsClient.acceptAgreement({
         termsVersion: 1,
@@ -297,6 +352,7 @@ export function usePerpsAuth() {
     token,
     accountId,
     isAuthenticating,
+    isRestoringAuth,
     authError,
     isWalletConnected,
     login,
@@ -358,6 +414,7 @@ export function usePerpsBalance() {
 
     onPerpsAuthReset(() => {
       balance.value = null
+      loading.value = false
     })
 
     const perpsToasts = usePerpsToasts()
@@ -382,6 +439,11 @@ export function usePerpsBalance() {
       })
 
       perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
+        // Ignore pushes while signed out / mid wallet-switch: the socket can
+        // still be authenticated as the previous account until logout/login
+        // round-trips, and an in-flight frame would otherwise repopulate the
+        // just-cleared balance with the old wallet's value.
+        if (!token.value) return
         if (rows.length === 0) return
         balance.value = rows[0]
       })

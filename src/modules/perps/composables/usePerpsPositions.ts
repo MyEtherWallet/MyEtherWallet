@@ -59,6 +59,10 @@ function startWs() {
     })
 
     perpsWs.subscribe<Position>('positionsPerps', (rows) => {
+      // Ignore pushes while signed out / mid wallet-switch — see the balancePerps
+      // guard in usePerpsAuth: a stale frame for the previous account would
+      // otherwise repopulate positions we just cleared.
+      if (!token.value) return
       positions.value = rows
       hasLoaded.value = true
     })

@@ -317,6 +317,40 @@ describe('perpsWs — auth', () => {
     expect(ws.authStatus.value).toBe('unauthenticated')
   })
 
+  it('logout() unsubscribes private channels so a re-login resubscribes fresh', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.subscribe('positionsPerps', () => {})
+    ws.subscribe('balancePerps', () => {})
+    ws.login('tok-A')
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'loggedIn' }),
+    } as MessageEvent)
+    FakeSocket.instances[0].sent.length = 0
+
+    // Account switch: logout as A must unsubscribe the private channels.
+    ws.logout()
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'unsubscribe', channel: 'positionsPerps' }),
+    )
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'unsubscribe', channel: 'balancePerps' }),
+    )
+
+    // Login as B → loggedIn re-subscribes the same private channels fresh.
+    FakeSocket.instances[0].sent.length = 0
+    ws.login('tok-B')
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'loggedIn' }),
+    } as MessageEvent)
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'subscribe', channel: 'positionsPerps' }),
+    )
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'subscribe', channel: 'balancePerps' }),
+    )
+  })
+
   it('subscribing to a private channel defers the subscribe until loggedIn', () => {
     ws.connect()
     FakeSocket.instances[0].open()
