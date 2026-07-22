@@ -82,7 +82,7 @@ export function usePerpsTradeForm() {
   const SLIPPAGE_REJECTION_PATTERN =
     /rejecting\s+market\s+order.*reasonable\s+price/i
   const SLIPPAGE_REJECTION_MESSAGE =
-    t('perps.order-rejected-too-far')
+    t('perps.errors.order-rejected-too-far')
 
   // ── State ──────────────────────────────────────────────────
 
