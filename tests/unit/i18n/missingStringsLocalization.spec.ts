@@ -33,20 +33,30 @@ import esCommon from '@/i18n/locales/common/es.json'
 import zhCommon from '@/i18n/locales/common/zh.json'
 
 type Dict = Record<string, unknown>
+type Flat = Record<string, unknown>
 
-/** Flatten a nested translation object into dot-notation keys. */
-const flatten = (obj: Dict, prefix = '', acc: Record<string, string> = {}) => {
+/**
+ * Flatten a nested translation object into dot-notation keys, preserving each
+ * leaf's original value type. We intentionally do NOT coerce with String() —
+ * that would launder `null`/numbers into non-empty strings and let malformed
+ * locale data pass the "non-empty string" assertion.
+ */
+const flatten = (obj: Dict, prefix = '', acc: Flat = {}): Flat => {
   for (const key of Object.keys(obj)) {
     const value = obj[key]
     const nextKey = prefix ? `${prefix}.${key}` : key
     if (value && typeof value === 'object' && !Array.isArray(value)) {
       flatten(value as Dict, nextKey, acc)
     } else {
-      acc[nextKey] = String(value)
+      acc[nextKey] = value
     }
   }
   return acc
 }
+
+/** Coerce a leaf to a string for placeholder inspection (non-strings → ''). */
+const asString = (value: unknown): string =>
+  typeof value === 'string' ? value : ''
 
 /** Extract the set of {named} interpolation placeholders from a string. */
 const placeholders = (value: string) =>
@@ -56,8 +66,9 @@ const placeholders = (value: string) =>
  * Keys that were ALREADY missing from es/zh on the base branch (verified via
  * `git show HEAD:.../common/{en,es,zh}.json`). Not introduced by this sweep;
  * `common.perps`/`common.perpetuals` belong to the perps feature, localized
- * en-only and separately. Logged in workspace FOLLOWUPS.md. Excluded here so
- * the guard asserts THIS branch introduced no new drift.
+ * en-only and separately. Logged in workspace FOLLOWUPS.md. Excluded from BOTH
+ * sides of the parity comparison so the guard asserts THIS branch introduced
+ * no new drift, in either direction.
  */
 const PREEXISTING_DRIFT: Record<string, Set<string>> = {
   common: new Set([
@@ -92,41 +103,47 @@ describe.each(suites)('$name localization parity', ({ name, en, es, zh }) => {
   const enFlat = flatten(en as Dict)
   const esFlat = flatten(es as Dict)
   const zhFlat = flatten(zh as Dict)
-  // Compare against the source keys minus known pre-existing drift.
-  const enKeys = Object.keys(enFlat)
-    .filter(k => !allow.has(k))
-    .sort()
+  // Normalized key set: drop the known pre-existing drift from every locale so
+  // the comparison is symmetric (rejects both missing AND stale/extra keys).
+  const norm = (flat: Flat) =>
+    Object.keys(flat)
+      .filter(k => !allow.has(k))
+      .sort()
+  const enKeys = norm(enFlat)
 
   it('English source has keys', () => {
     expect(enKeys.length).toBeGreaterThan(0)
   })
 
-  it('Spanish covers every English key', () => {
-    for (const key of enKeys) {
-      expect(esFlat, `es missing ${name}.${key}`).toHaveProperty([key])
-    }
+  it('Spanish key set matches English exactly (both directions)', () => {
+    expect(norm(esFlat)).toEqual(enKeys)
   })
 
-  it('Chinese covers every English key', () => {
-    for (const key of enKeys) {
-      expect(zhFlat, `zh missing ${name}.${key}`).toHaveProperty([key])
-    }
+  it('Chinese key set matches English exactly (both directions)', () => {
+    expect(norm(zhFlat)).toEqual(enKeys)
   })
 
   it('every key resolves to a non-empty string in all locales', () => {
     for (const key of enKeys) {
-      expect(enFlat[key].trim(), `en.${key}`).not.toBe('')
-      expect((esFlat[key] ?? '').trim(), `es.${key}`).not.toBe('')
-      expect((zhFlat[key] ?? '').trim(), `zh.${key}`).not.toBe('')
+      for (const [lang, flat] of [
+        ['en', enFlat],
+        ['es', esFlat],
+        ['zh', zhFlat],
+      ] as const) {
+        const value = flat[key]
+        expect(typeof value, `${lang}.${name}.${key} must be a string`).toBe(
+          'string',
+        )
+        expect((value as string).trim(), `${lang}.${name}.${key}`).not.toBe('')
+      }
     }
   })
 
   it('interpolation placeholders match English in every locale', () => {
     for (const key of enKeys) {
-      if (esFlat[key] === undefined || zhFlat[key] === undefined) continue
-      const expected = placeholders(enFlat[key])
-      expect(placeholders(esFlat[key]), `es.${key}`).toEqual(expected)
-      expect(placeholders(zhFlat[key]), `zh.${key}`).toEqual(expected)
+      const expected = placeholders(asString(enFlat[key]))
+      expect(placeholders(asString(esFlat[key])), `es.${key}`).toEqual(expected)
+      expect(placeholders(asString(zhFlat[key])), `zh.${key}`).toEqual(expected)
     }
   })
 })
@@ -141,6 +158,18 @@ describe('newly extracted strings are actually translated (not English copies)',
     ['portfolio.welcome.title', enPortfolio, esPortfolio, zhPortfolio],
     ['purchase.min', enPurchase, esPurchase, zhPurchase],
     ['purchase.bank', enPurchase, esPurchase, zhPurchase],
+    // Weekend-trading promo copy (trade namespace)
+    ['trade.weekend.dialog_headline', enTrade, esTrade, zhTrade],
+    ['trade.weekend.dialog_body', enTrade, esTrade, zhTrade],
+    ['trade.weekend.trade_now', enTrade, esTrade, zhTrade],
+    ['trade.weekend.dismiss_tooltip', enTrade, esTrade, zhTrade],
+    // Shared banner + a11y copy (common namespace)
+    ['common.sidebar', enCommon, esCommon, zhCommon],
+    ['common.got_it', enCommon, esCommon, zhCommon],
+    ['common.close_banner', enCommon, esCommon, zhCommon],
+    ['common.mew_app_banner.title', enCommon, esCommon, zhCommon],
+    ['common.mew_app_banner.rewards_line1', enCommon, esCommon, zhCommon],
+    ['common.mew_app_banner.download_now', enCommon, esCommon, zhCommon],
   ]
   it.each(cases)('%s differs from English in es and zh', (key, en, es, zh) => {
     const enFlat = flatten(en as Dict)
