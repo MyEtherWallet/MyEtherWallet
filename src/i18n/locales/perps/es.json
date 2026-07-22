@@ -129,8 +129,8 @@
       "size": "Tamaño ({symbol})",
       "est-liquidation": "Liquidación est.",
       "est-fee": "Comisión est. ({type})",
-      "maker": "Maker",
-      "taker": "Taker",
+      "maker": "Creador",
+      "taker": "Tomador",
       "take-profit": "Take Profit",
       "stop-loss": "Stop Loss",
       "cancel": "Cancelar"
