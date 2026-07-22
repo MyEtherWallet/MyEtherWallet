@@ -64,7 +64,14 @@
       "close-position-failed": "Failed to close position.",
       "save-leverage-failed": "Failed to save leverage. Please try again.",
       "order-failed": "Order failed. Please try again.",
-      "order-rejected-too-far": "Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead."
+      "order-rejected-too-far": "Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead.",
+      "tp-max": "Take Profit must be less than {max}",
+      "tp-above-mark": "Take Profit must be above mark price",
+      "tp-above-zero": "Take Profit must be above 0",
+      "tp-below-mark": "Take Profit must be below mark price",
+      "sl-above-zero": "Stop Loss must be above 0",
+      "sl-below-mark": "Stop Loss must be below mark price",
+      "sl-above-mark": "Stop Loss must be above mark price"
     },
     "trade": {
       "perpetuals": "Perpetuals",

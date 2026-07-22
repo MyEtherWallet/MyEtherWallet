@@ -27,7 +27,11 @@ import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
 import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
-import { takeProfitError, stopLossError } from '../utils/tpSlValidation'
+import {
+  takeProfitError,
+  stopLossError,
+  type TpSlError,
+} from '../utils/tpSlValidation'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -626,25 +630,40 @@ export function usePerpsTradeForm() {
       : orderSide.value === 'buy',
   )
 
+  // Resolve a TpSlError descriptor (or null) into a localized string. Empty
+  // string means "valid" and keeps the falsy-check gating below working. The
+  // plural is passed as the vue-i18n `count` param, matching how the limit
+  // price input resolves perps.errors.price-precision-decimals.
+  const resolveTpSlError = (e: TpSlError): string => {
+    if (!e) return ''
+    return e.plural !== undefined
+      ? t(e.key, { ...(e.params ?? {}), count: e.plural })
+      : t(e.key, e.params ?? {})
+  }
+
   // Full validation messages for the Auto Close dialog (precision + positivity
   // + correct side of mark + max price). Empty string means valid. These also
   // gate submitDisabled so an invalid TP/SL can't be sent and rejected by the
   // backend after confirm.
   const takeProfitErrorMessage = computed(() =>
-    takeProfitError(
-      tempTakeProfitPrice.value,
-      currentPrice.value,
-      isTpSlLong.value,
-      quoteDecimals.value,
+    resolveTpSlError(
+      takeProfitError(
+        tempTakeProfitPrice.value,
+        currentPrice.value,
+        isTpSlLong.value,
+        quoteDecimals.value,
+      ),
     ),
   )
 
   const stopLossErrorMessage = computed(() =>
-    stopLossError(
-      tempStopLossPrice.value,
-      currentPrice.value,
-      isTpSlLong.value,
-      quoteDecimals.value,
+    resolveTpSlError(
+      stopLossError(
+        tempStopLossPrice.value,
+        currentPrice.value,
+        isTpSlLong.value,
+        quoteDecimals.value,
+      ),
     ),
   )
 
