@@ -121,6 +121,10 @@
     "previous_page": "previous page",
     "next_page": "next page",
     "action_menu": "action menu",
+    "wallet_menu": "wallet menu",
+    "sidebar": "Sidebar",
+    "close_banner": "Close banner",
+    "got_it": "Got it",
     "delete_notification": "delete notification",
     "no_data_available": "No data available",
     "confirm": "Confirm",
@@ -166,6 +170,15 @@
       "name_already_exists": "name already exists"
     },
     "and_tokens": "and 1 token | and {count} tokens",
+    "mew_app_banner": {
+      "title": "Get MEW app",
+      "rewards_line1": "Earn tokenized stock rewards",
+      "rewards_line2": "from a $100,000 pool",
+      "download_now": "Download now",
+      "scan_to_download": "스캔하여 다운로드",
+      "qr_code_alt": "QR code",
+      "app_alt": "Mew wallet app"
+    },
     "subscribe": {
       "cta": "보안 팁, 업계 인사이트, 뉴스 등을 통해 실력을 높여보세요!",
       "button": "가입하세요!",
