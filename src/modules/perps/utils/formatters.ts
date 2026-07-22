@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import type { ApiOrder } from '../sdk/types'
+import type { ApiOrder, WithdrawalStatus } from '../sdk/types'
 /**
  * Common formatting utilities for the perps module.
  */
@@ -197,4 +197,32 @@ export const formatOrderType = (type: string): string => {
 }
 export const formatDirection = (direction: string | undefined) => {
   return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
+}
+
+// Withdrawal status is a WITHDRAWAL_* enum (see WalletWithdrawal in sdk/types).
+// See orderStatusLabels above re: i18n keys + raw-enum fallback.
+export const withdrawalStatusLabels: Record<WithdrawalStatus, string> = {
+  WITHDRAWAL_SUCCESS: 'perps.withdrawal-status.success',
+  WITHDRAWAL_FAILURE: 'perps.withdrawal-status.failure',
+  WITHDRAWAL_PENDING: 'perps.withdrawal-status.pending',
+  WITHDRAWAL_CANCELLED: 'perps.withdrawal-status.cancelled',
+  WITHDRAWAL_UNKNOWN: 'perps.withdrawal-status.unknown',
+}
+
+export const formatWithdrawalStatus = (status: string): string => {
+  return withdrawalStatusLabels[status as WithdrawalStatus] ?? status
+}
+
+export const withdrawalStatusColor = (status: string): string => {
+  switch (status) {
+    case 'WITHDRAWAL_SUCCESS':
+      return 'text-success'
+    case 'WITHDRAWAL_PENDING':
+      return 'text-warning'
+    case 'WITHDRAWAL_FAILURE':
+      return 'text-error'
+    default:
+      // WITHDRAWAL_CANCELLED / WITHDRAWAL_UNKNOWN / anything unmapped
+      return 'text-info'
+  }
 }

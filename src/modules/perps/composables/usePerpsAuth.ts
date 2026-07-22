@@ -345,6 +345,17 @@ export function usePerpsBalance() {
 
     _sharedFetchBalance = fetchBalance
 
+    // Poll the balance while the user is connected. The WS `balancePerps` push
+    // keeps it live during active use, but a periodic refetch guards against
+    // dropped/missed WS frames so the balance never drifts stale for long.
+    function poll() {
+      if (token.value) {
+        void fetchBalance()
+      } else {
+        balance.value = null
+      }
+    }
+
     onPerpsAuthReset(() => {
       balance.value = null
     })
@@ -385,6 +396,8 @@ export function usePerpsBalance() {
         { immediate: false },
       )
     })
+
+    setInterval(poll, 60_000) // refresh every 1 minute
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }

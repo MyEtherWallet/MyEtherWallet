@@ -898,6 +898,8 @@ import {
   formatOrderStatus,
   formatOrderType,
   formatDirection,
+  formatWithdrawalStatus,
+  withdrawalStatusColor,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
@@ -1334,13 +1336,8 @@ const combinedDW = computed<CombinedDWRow[]>(() => {
       coin: w.coin,
       size: w.size,
       usdValue: w.usdValue,
-      statusLabel: w.status,
-      statusColor:
-        w.status === 'confirmed'
-          ? 'text-success'
-          : w.status === 'pending'
-            ? 'text-warning'
-            : 'text-info',
+      statusLabel: t(formatWithdrawalStatus(w.status)),
+      statusColor: withdrawalStatusColor(w.status),
       time: w.time,
     })
   }

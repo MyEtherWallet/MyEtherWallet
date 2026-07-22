@@ -2,9 +2,23 @@
   <app-sheet :is-elivated="false" sheet-class="!p-4 sm:!p-6 lg:!w-[300px]">
     <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between">
       <div>
-        <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
-          {{ $t('perps.portfolio.account-balance-label') }}
-        </p>
+        <div class="flex items-center gap-2">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
+            {{ $t('perps.portfolio.account-balance-label') }}
+          </p>
+          <app-btn-icon
+            :label="$t('refresh_balance')"
+            :disabled="loading"
+            height="h-6"
+            width="w-6"
+            @click="refetch"
+          >
+            <ArrowPathIcon
+              class="w-4 h-4 text-info"
+              :class="{ 'animate-spin': loading }"
+            />
+          </app-btn-icon>
+        </div>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">
           {{ walletBalance }}
         </p>
@@ -113,9 +127,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import PerpsBalanceDetailsDialog from './PerpsBalanceDetailsDialog.vue'
 import { usePerpsBalance } from '../composables/usePerpsAuth'
@@ -169,7 +185,7 @@ const onSwitchToEthereum = () => {
 
 const showBalanceDialog = ref(false)
 
-const { balance } = usePerpsBalance()
+const { balance, loading, refetch } = usePerpsBalance()
 const marginBalance = computed(
   () => `$${formatFiatValue(balance.value?.marginBalance ?? '0').value}`,
 )
