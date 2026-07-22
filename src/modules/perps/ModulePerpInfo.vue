@@ -200,7 +200,7 @@
                 ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
               ]"
             >
-              {{ marketPosition.direction === 'long' ? $t('perps.trade.long') : $t('perps.trade.short') }}
+              {{ marketPosition.direction === 'long' ? $t('perps.trade.long') : marketPosition.direction === 'short' ? $t('perps.trade.short') : marketPosition.direction }}
               {{ marketPosition.leverage }}x
             </span>
           </div>
@@ -571,11 +571,11 @@
                       ]"
                     >
                       {{
-                        $t(
-                          order.side === 'buy'
-                            ? 'perps.order.buy'
-                            : 'perps.order.sell',
-                        )
+                        order.side === 'buy'
+                          ? $t('perps.order.buy')
+                          : order.side === 'sell'
+                            ? $t('perps.order.sell')
+                            : order.side
                       }}
                     </p>
                   </td>

@@ -408,11 +408,11 @@
                       ]"
                     >
                       {{
-                        $t(
-                          order.side === 'buy'
-                            ? 'perps.order.buy'
-                            : 'perps.order.sell',
-                        )
+                        order.side === 'buy'
+                          ? $t('perps.order.buy')
+                          : order.side === 'sell'
+                            ? $t('perps.order.sell')
+                            : order.side
                       }}
                     </p>
                   </div>
@@ -427,11 +427,11 @@
                   ]"
                 >
                   {{
-                    $t(
-                      order.side === 'buy'
-                        ? 'perps.order.buy'
-                        : 'perps.order.sell',
-                    )
+                    order.side === 'buy'
+                      ? $t('perps.order.buy')
+                      : order.side === 'sell'
+                        ? $t('perps.order.sell')
+                        : order.side
                   }}
                 </span>
               </td>
