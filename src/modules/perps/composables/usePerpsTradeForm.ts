@@ -683,12 +683,17 @@ export function usePerpsTradeForm() {
     }
   }
 
-  // ── New margin ratio ────────────────────────────────────────
+  // ── Margin ratio ────────────────────────────────────────────
+  // Surface the engine's own account margin ratio from /v1/perps/balance
+  // rather than re-deriving one on the client. The backend `marginRatio` is a
+  // maintenance-based account-health fraction (0–1); the previous local
+  // (usedMargin + additionalMargin) / marginBalance measured used-margin
+  // utilization instead, which is a different metric and diverged from the
+  // value Ondo's own UI shows. Returned as the raw fraction; the panel renders
+  // it ×100 as a percentage.
   const newMarginRatio = computed<number | null>(() => {
-    const usedMargin = parseFloat(balance.value?.usedMargin || '0')
-    const additionalMargin = parseFloat(inputAmount.value || '0')
-    if (!marginBalance.value || !additionalMargin) return null
-    return (usedMargin + additionalMargin) / marginBalance.value
+    const ratio = parseFloat(balance.value?.marginRatio ?? '')
+    return Number.isFinite(ratio) ? ratio : null
   })
 
   // ── Precision validation ───────────────────────────────────

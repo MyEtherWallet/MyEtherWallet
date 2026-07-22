@@ -479,14 +479,12 @@
             <!-- Margin Ratio -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
               <span class="font-bold text-s-12 text-info">{{
-                $t('perps.trade.new-margin-ratio')
+                $t('perps.balance.margin-ratio-label')
               }}</span>
               <span class="font-bold">{{
-                submitDisabled
-                  ? '-'
-                  : newMarginRatio !== null
-                    ? newMarginRatio.toFixed(2)
-                    : '0'
+                newMarginRatio !== null
+                  ? `${(newMarginRatio * 100).toFixed(2)}%`
+                  : '-'
               }}</span>
             </div>
           </div>
