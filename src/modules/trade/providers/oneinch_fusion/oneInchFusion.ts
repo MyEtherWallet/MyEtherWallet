@@ -164,7 +164,11 @@ class OneInchFusion {
       }
     } catch (e: unknown) {
       const response =
-        ((e as AxiosError).response?.data as any)?.description || null
+        e && typeof e === 'object' && 'response' in e
+          ? ((e as AxiosError).response?.data as any)?.description || null
+          : null
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
       captureException(e, {
         ...SENTRY_MODULE_TAGS.TRADE,
@@ -174,7 +178,7 @@ class OneInchFusion {
       })
       throw new Error(
         response ||
-          (e as Error).message ||
+          rawMessage ||
           i18n.global.t('trade.error.failed-fetch-quote-1inch'),
       )
     }

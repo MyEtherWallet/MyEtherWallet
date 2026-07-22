@@ -160,7 +160,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       )
       needsApproval.value = approvalRequired
     } catch (e) {
-      const rawMessage = (e as Error).message
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
