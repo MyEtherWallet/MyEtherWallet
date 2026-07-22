@@ -174,13 +174,21 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         // Transient RPC/WebSocket drops (e.g. the allowance read over
         // wss://nodes.mewapi.io) are surfaced to the user above but are pure
         // Sentry noise — only report genuine quote failures.
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error fetching quote',
-            errorMessage: generalError.value,
-          },
-        })
+        // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
+        // are surfaced to the user above but are pure Sentry noise — skip them.
+        const isExpectedClientError = !!(e as { expectedClientError?: boolean })
+          .expectedClientError
+        if (isDevMode) {
+          console.error('Error fetching quote:', e)
+        } else if (!isExpectedClientError) {
+          captureException(e, {
+            ...SENTRY_MODULE_TAGS.TRADE,
+            extra: {
+              title: 'TRADE: Error fetching quote',
+              errorMessage: generalError.value,
+            },
+          })
+        }
       }
     } finally {
       isLoadingQuote.value = false

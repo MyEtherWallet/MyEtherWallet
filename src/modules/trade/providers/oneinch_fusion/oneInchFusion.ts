@@ -28,6 +28,8 @@ import {
 } from './configs'
 import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
+// NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
+// in the caller (useTradeQuote) so expected 4xx client errors can be skipped.
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type {
   GetWebSwapOndoAssetsResponse,
@@ -37,8 +39,6 @@ import type {
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import { captureException } from '@sentry/vue'
-import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
   address: string
@@ -163,6 +163,7 @@ class OneInchFusion {
           2n,
       }
     } catch (e: unknown) {
+      const status = (e as AxiosError).response?.status
       const response =
         e && typeof e === 'object' && 'response' in e
           ? ((e as AxiosError).response?.data as any)?.description || null
@@ -170,17 +171,19 @@ class OneInchFusion {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.TRADE,
-        extra: {
-          title: 'TRADE: Error fetching quote from 1inch',
-        },
-      })
-      throw new Error(
+      // 1inch returns 4xx (e.g. 400 Bad Request) for expected, user-facing quote
+      // failures: amount below minimum, illiquid/unsupported pair, invalid params.
+      // Flag those so the single caller (useTradeQuote) can skip Sentry reporting
+      // — reporting is centralized there to avoid double-capture. Genuine failures
+      // (5xx / network / no response) stay unflagged and are reported by the caller.
+      const error = new Error(
         response ||
           rawMessage ||
           i18n.global.t('trade.error.failed-fetch-quote-1inch'),
-      )
+      ) as Error & { expectedClientError?: boolean }
+      error.expectedClientError =
+        typeof status === 'number' && status >= 400 && status < 500
+      throw error
     }
   }
 
