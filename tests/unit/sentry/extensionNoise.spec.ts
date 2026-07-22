@@ -205,6 +205,37 @@ describe('isForeignStackOverflow', () => {
     ).toBe(false)
   })
 
+  it('is FALSE for a relative /assets/ app bundle path', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: '/assets/index-abc.js' },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is true for an extension bundle whose path merely contains /assets/', () => {
+    // `/assets/` must be anchored: chrome-extension://…/assets/… is NOT ours.
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'chrome-extension://abcd/assets/foo.js' },
+        ]),
+      ),
+    ).toBe(true)
+  })
+
+  it('is true for a look-alike host (not our anchored domain)', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://notmyetherwallet.com/assets/x.js' },
+        ]),
+      ),
+    ).toBe(true)
+  })
+
   it('is FALSE for a non-stack-overflow error, even with no app frame', () => {
     expect(
       isForeignStackOverflow(

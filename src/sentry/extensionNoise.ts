@@ -38,8 +38,13 @@ export function isInvalidWalletAddressError(err: unknown): boolean {
 }
 
 // A stack frame belongs to MEW app code if its source URL is one of ours.
-// `/assets/` covers the hashed production bundles; localhost covers dev.
-const APP_FRAME_URL = /myetherwallet\.com|\/assets\/|localhost|127\.0\.0\.1/i
+// The host is anchored to `*.myetherwallet.com` / localhost so look-alike hosts
+// (e.g. `notmyetherwallet.com`) don't match, and a bare `/assets/` is accepted
+// only as a relative path so foreign bundles like
+// `chrome-extension://…/assets/foo.js` are excluded. The hashed production
+// bundles are served from `app.myetherwallet.com/assets/…`.
+const APP_FRAME_URL =
+  /^(?:https?:\/\/(?:(?:[a-z0-9-]+\.)*myetherwallet\.com|localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)|\/assets\/)/i
 
 interface SentryFrameLike {
   filename?: unknown
