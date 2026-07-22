@@ -202,7 +202,15 @@
       "view-fill-details-label": "ver detalles de la ejecución",
       "out-of": "de {size} {symbol}",
       "deposit-label": "Depósito",
-      "withdrawal-label": "Retiro"
+      "withdrawal-label": "Retiro",
+      "dw-status": {
+        "pending": "Pendiente",
+        "confirmed": "Confirmada",
+        "completed": "Completado",
+        "failed": "Fallido",
+        "cancelled": "Cancelada",
+        "unknown": "Desconocido"
+      }
     },
     "order": {
       "type-label": "Tipo",
@@ -264,7 +272,15 @@
       "fee-label": "Comisión",
       "realized-pnl-label": "PnL realizado",
       "role-label": "Rol",
-      "time-label": "Hora"
+      "time-label": "Hora",
+      "direction": {
+        "open-long": "Abrir Largo",
+        "open-short": "Abrir Corto",
+        "close-long": "Cerrar Largo",
+        "close-short": "Cerrar Corto",
+        "flip-long-to-short": "Cambiar de Largo a Corto",
+        "flip-short-to-long": "Cambiar de Corto a Largo"
+      }
     },
     "order-status": {
       "open": "Abierta",

@@ -202,7 +202,15 @@
       "view-fill-details-label": "查看成交详情",
       "out-of": "共 {size} {symbol}",
       "deposit-label": "存款",
-      "withdrawal-label": "提现"
+      "withdrawal-label": "提现",
+      "dw-status": {
+        "pending": "待处理",
+        "confirmed": "已确认",
+        "completed": "已完成",
+        "failed": "失败",
+        "cancelled": "已取消",
+        "unknown": "未知"
+      }
     },
     "order": {
       "type-label": "类型",
@@ -264,7 +272,15 @@
       "fee-label": "费用",
       "realized-pnl-label": "已实现盈亏",
       "role-label": "角色",
-      "time-label": "时间"
+      "time-label": "时间",
+      "direction": {
+        "open-long": "开多",
+        "open-short": "开空",
+        "close-long": "平多",
+        "close-short": "平空",
+        "flip-long-to-short": "做多转做空",
+        "flip-short-to-long": "做空转做多"
+      }
     },
     "order-status": {
       "open": "未成交",

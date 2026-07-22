@@ -228,7 +228,15 @@
       "fee-label": "Fee",
       "realized-pnl-label": "Realized PnL",
       "role-label": "Role",
-      "time-label": "Time"
+      "time-label": "Time",
+      "direction": {
+        "open-long": "Open Long",
+        "open-short": "Open Short",
+        "close-long": "Close Long",
+        "close-short": "Close Short",
+        "flip-long-to-short": "Flip Long to Short",
+        "flip-short-to-long": "Flip Short to Long"
+      }
     },
     "balance": {
       "title": "Perpetuals Portfolio",
@@ -375,7 +383,15 @@
       "view-fill-details-label": "view fill details",
       "out-of": "out of {size} {symbol}",
       "deposit-label": "Deposit",
-      "withdrawal-label": "Withdrawal"
+      "withdrawal-label": "Withdrawal",
+      "dw-status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "completed": "Completed",
+        "failed": "Failed",
+        "cancelled": "Cancelled",
+        "unknown": "Unknown"
+      }
     },
     "portfolio": {
       "account-balance-label": "Perpetuals account balance",
