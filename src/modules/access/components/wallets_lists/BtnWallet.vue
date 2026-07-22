@@ -38,7 +38,7 @@
       <AsyncImg
         :img="img"
         :is-loaded="isLoadedImg"
-        :alt="wallet.name"
+        :alt="wallet.nameKey ? $t(wallet.nameKey) : wallet.name"
         class="rounded-lg mx-auto"
       />
     </div>
