@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ref, reactive } from 'vue'
 import type { Ref } from 'vue'
-import type { Contract } from '@/modules/perps/sdk/types'
+import type { Contract, PerpsBalance, Position, TradingPair } from '@/modules/perps/sdk/types'
 
 // ── Mocks ────────────────────────────────────────────────────
 // usePerpsTradeForm pulls in the whole perps stack (auth, markets,
@@ -68,13 +68,22 @@ vi.mock('@/modules/perps/configs', () => ({
   BUILDER_CODE: 'BC',
 }))
 
+const mockPerpsState = vi.hoisted(
+  () =>
+    ({
+      balance: { value: null } as Ref<PerpsBalance | null>,
+      positions: { value: [] } as Ref<Position[]>,
+      markets: { value: [] } as Ref<TradingPair[]>,
+    }) as const,
+)
+
 vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsAuth: () => ({
     token: ref(null),
     login: vi.fn(),
     triggerRefresh: vi.fn(),
   }),
-  usePerpsBalance: () => ({ balance: ref(null) }),
+  usePerpsBalance: () => ({ balance: mockPerpsState.balance }),
 }))
 
 // A settable contracts ref so tests can drive the market list (MEW-2025).
@@ -87,18 +96,23 @@ const mockContracts = vi.hoisted(
 vi.mock('@/modules/perps/composables/usePerpsMarkets', () => {
   mockContracts.contracts = ref<Contract[]>([])
   return {
-    usePerpsMarkets: () => ({ markets: ref([]), isLoading: ref(false) }),
+    usePerpsMarkets: () => ({
+      markets: mockPerpsState.markets,
+      isLoading: ref(false),
+    }),
     usePerpsContracts: () => ({ contracts: mockContracts.contracts }),
   }
 })
 
-vi.mock('@/modules/perps/composables/usePerpsPositions', () => ({
-  usePerpsPositions: () => ({
-    positions: ref([]),
-    hasLoaded: ref(true),
-    closePosition: vi.fn(),
-  }),
-}))
+vi.mock('@/modules/perps/composables/usePerpsPositions', () => {
+  return {
+    usePerpsPositions: () => ({
+      positions: mockPerpsState.positions,
+      hasLoaded: ref(true),
+      closePosition: vi.fn(),
+    }),
+  }
+})
 
 vi.mock('@/modules/perps/composables/usePerpsMarkPrices', () => ({
   usePerpsMarkPrices: () => ({ markPriceData: ref({}) }),
@@ -116,6 +130,9 @@ describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
     walletMenuState.selectedTradeOrderSide = 'buy'
     walletMenuState.selectedTradeManageMode = null
     walletMenuState.selectedTradeTokenSymbol = 'AAPL-USD'
+    mockPerpsState.balance.value = null
+    mockPerpsState.positions.value = []
+    mockPerpsState.markets.value = []
   })
 
   it('flags an empty limit price as an error on the limit tab', () => {
@@ -311,5 +328,71 @@ describe('usePerpsTradeForm — hide disabled tokens (MEW-2025)', () => {
     ]
     const form = usePerpsTradeForm()
     expect(form.filteredMarketList.value).toHaveLength(2)
+  })
+})
+
+describe('usePerpsTradeForm — cross-margin liquidation estimate', () => {
+  beforeEach(() => {
+    walletMenuState.selectedTradeOrderSide = 'sell'
+    walletMenuState.selectedTradeManageMode = null
+    walletMenuState.selectedTradeTokenSymbol = 'MSFT-USD'
+    mockPerpsState.balance.value = {
+      walletBalance: '110.621987',
+      realizedPnl: '-0.006',
+      unrealizedPnl: '0.864695',
+      marginBalance: '111.486682',
+      usedMargin: '65.768924',
+      availableMargin: '45.717758',
+      withdrawableMargin: '45.717758',
+      maintenanceMarginRequirement: '32.401618',
+      totalMaintenanceMargin: '32.401618',
+      marginRatio: '0.2907',
+      leverage: '10.5',
+      underLiquidation: false,
+      totalFundingPayments: '-0.012631',
+      totalTradingFees: '0.32247',
+      totalPnL: '0.523594',
+      netInvested: '110.640618',
+    }
+    mockPerpsState.positions.value = []
+    mockPerpsState.markets.value = [
+      {
+        market: 'MSFT-USD.P',
+        pair: { base: 'MSFT', quote: 'USD' },
+        defaultLeverage: '10',
+        marginInfo: [
+          {
+            positionBracketUsd: '1000000',
+            maintenanceMarginRate: '0.05',
+            maintenanceAmount: '0',
+            maxLeverage: '10',
+          },
+        ],
+      } as TradingPair,
+    ]
+    mockContracts.contracts.value = [
+      {
+        market: 'MSFT-USD.P',
+        baseCurrency: 'MSFT',
+        quoteCurrency: 'USD',
+        disabled: false,
+        bid: '396.2',
+        ask: '396.2',
+      } as Contract,
+    ]
+  })
+
+  afterEach(() => {
+    mockContracts.contracts.value = []
+  })
+
+  it('uses the balance snapshot total when positions have not refreshed yet', () => {
+    const form = usePerpsTradeForm()
+    form.setOrderSide('sell')
+    form.inputAmount.value = '2'
+
+    expect(form.currentPrice.value).toBe(396.2)
+    expect(form.positionSizeUsd.value).toBe(20)
+    expect(form.estimatedLiquidation.value).toBeCloseTo(1869.4, 2)
   })
 })

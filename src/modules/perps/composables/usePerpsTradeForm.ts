@@ -259,6 +259,16 @@ export function usePerpsTradeForm() {
   )
 
   const maintenanceMarginOtherPositions = computed(() => {
+    const reportedTotalMaintenanceMargin = parseFloat(
+      balance.value?.totalMaintenanceMargin || '',
+    )
+    // For a new position every open position is "other". The balance
+    // response provides this total from the same engine snapshot as
+    // marginBalance, avoiding a mixed balance/positions refresh.
+    if (!activePosition.value && Number.isFinite(reportedTotalMaintenanceMargin)) {
+      return reportedTotalMaintenanceMargin
+    }
+
     const positionsWithoutActive = positions.value.filter((item) => {
       return item.market !== activePosition.value?.market
     })
