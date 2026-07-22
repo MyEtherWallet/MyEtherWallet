@@ -17,7 +17,7 @@
               class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ $t('send.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
@@ -416,7 +416,7 @@ const confirmTransaction = async () => {
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
-          chainName: selectedChain.value?.nameLong || 'Unknown',
+          chainName: selectedChain.value?.nameLong || t('send.unknown_chain'),
           chainIcon: selectedChain.value?.icon,
           chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,

@@ -13,12 +13,12 @@
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
-          placeholder="table options"
+          :placeholder="$t('common.action_menu')"
           location="right"
         >
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
-              label="table options"
+              :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
               height="h-7"
               width="w-7"
@@ -32,7 +32,9 @@
                 class="flex items-center w-full p-2 hoverBGWhite rounded-12 text-s-14"
                 @click.stop="[toggleShowBalance(), toggleMenu()]"
               >
-                <span class="grow text-left">Hide tokens with no value</span>
+                <span class="grow text-left">{{
+                  $t('portfolio.table.hide_no_value')
+                }}</span>
                 <span
                   class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
                   :class="

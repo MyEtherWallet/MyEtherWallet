@@ -41,6 +41,9 @@
       }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "min": "最低",
+    "max": "最高",
+    "bank": "银行",
     "select_token": {
       "title": "代币",
       "subtitle": "从列表中选择一个",

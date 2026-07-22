@@ -9,7 +9,7 @@
         <button
           class="absolute top-3 right-3 w-4 h-4 rounded-full bg-black flex items-center justify-center transition-colors z-10 hover:bg-black/30"
           @click="dismissMewBanner"
-          aria-label="Close banner"
+          :aria-label="$t('common.close_banner')"
         >
           <XMarkIcon class="w-3 h-3 text-white" />
         </button>
@@ -18,13 +18,13 @@
           <p
             class="font-bold text-s-24 sm:text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
           >
-            Get MEW app
+            {{ $t('common.mew_app_banner.title') }}
           </p>
           <p
             class="text-s-14 sm:text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
-            Earn tokenized stock rewards
-            <br />from a $100,000 pool
+            {{ $t('common.mew_app_banner.rewards_line1') }}
+            <br />{{ $t('common.mew_app_banner.rewards_line2') }}
           </p>
 
           <!-- Download button + QR -->
@@ -35,7 +35,7 @@
               rel="noopener noreferrer"
               class="inline-flex items-center px-7 py-1 rounded-full bg-primary text-white font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
             >
-              Download now
+              {{ $t('common.mew_app_banner.download_now') }}
             </a>
             <button
               class="relative hidden sm:block"
@@ -52,11 +52,11 @@
                 class="absolute top-1/2 -translate-y-[70%] left-full ml-3 bg-white rounded-2xl shadow-xl p-3 w-[150px] h-[170px] flex flex-col z-20"
               >
                 <p class="text-xs font-semibold text-black mb-2">
-                  Scan to download
+                  {{ $t('common.mew_app_banner.scan_to_download') }}
                 </p>
                 <img
                   :src="qrCode"
-                  alt="QR code"
+                  :alt="$t('common.mew_app_banner.qr_code_alt')"
                   class="w-full flex-1 object-contain"
                 />
               </div>
@@ -86,12 +86,12 @@
         >
           <img
             :src="mewBannerItemMobile"
-            alt="Mew wallet app"
+            :alt="$t('common.mew_app_banner.app_alt')"
             class="h-[200px] sm:hidden"
           />
           <img
             :src="mewBannerItem"
-            alt="Mew wallet app"
+            :alt="$t('common.mew_app_banner.app_alt')"
             class="h-[245px] hidden sm:block"
           />
         </div>

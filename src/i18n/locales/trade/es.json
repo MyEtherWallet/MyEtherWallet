@@ -20,6 +20,15 @@
     "tokens_not_tradable": "Uno o más tokens no se pueden operar actualmente. Inténtalo más tarde o selecciona tokens diferentes.",
     "service_unavailable": "El servicio de operaciones no está disponible temporalmente. Inténtalo de nuevo más tarde.",
     "asset_not_tradable": "no se puede operar actualmente debido a {reason}",
+    "weekend": {
+      "dialog_headline": "Operaciones bursátiles de fin de semana:",
+      "dialog_headline_highlight": "¡Desbloqueadas!",
+      "dialog_body": "{tickers} ya están disponibles para operar 24/7. Opera con las noticias, opera con los tuits y haz tus movimientos bursátiles en cualquier momento.",
+      "trade_now": "Operar ahora",
+      "tooltip_headline": "Operaciones bursátiles de fin de semana",
+      "tooltip_body": "{tickers} ya están disponibles para operar 24/7.",
+      "dismiss_tooltip": "Descartar aviso"
+    },
     "quote_modal": {
       "title": "Cotización de la operación",
       "quote_from": "Cotización de la operación de 1inch Fusion",
@@ -51,7 +60,16 @@
     },
     "error": {
       "approval-failed": "No se pudo aprobar el token",
-      "submit-failed": "No se pudo enviar la orden de operación"
+      "submit-failed": "No se pudo enviar la orden de operación",
+      "token-unavailable": "Este token no está disponible para operar. Elige otro o inténtalo de nuevo más tarde.",
+      "minimum-trade-value": "El valor mínimo de operación es de aproximadamente $1.00",
+      "token-not-available": "{symbol} no está disponible para operar actualmente",
+      "no-quotes-returned": "No se recibieron cotizaciones",
+      "failed-to-fetch-quote": "No se pudo obtener la cotización",
+      "fusion-network-not-supported": "Fusion: red no compatible",
+      "failed-fetch-quote-1inch": "No se pudo obtener la cotización de 1inch",
+      "native-transaction-failed": "La transacción nativa falló",
+      "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch"
     }
   }
 }

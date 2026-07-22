@@ -20,6 +20,15 @@
     "tokens_not_tradable": "一个或多个代币当前不可交易。请稍后重试或选择其他代币。",
     "service_unavailable": "交易服务暂时不可用。请稍后重试。",
     "asset_not_tradable": "目前因 {reason} 暂不可交易",
+    "weekend": {
+      "dialog_headline": "周末股票交易：",
+      "dialog_headline_highlight": "已解锁！",
+      "dialog_body": "{tickers} 现已开放 24/7 全天候交易。跟着新闻交易，跟着推文交易，随时进行你的股票操作。",
+      "trade_now": "立即交易",
+      "tooltip_headline": "周末股票交易",
+      "tooltip_body": "{tickers} 现已开放 24/7 全天候交易。",
+      "dismiss_tooltip": "关闭提示"
+    },
     "quote_modal": {
       "title": "交易报价",
       "quote_from": "来自 1inch Fusion 的交易报价",
@@ -51,7 +60,16 @@
     },
     "error": {
       "approval-failed": "无法授权代币",
-      "submit-failed": "提交交易订单失败"
+      "submit-failed": "提交交易订单失败",
+      "token-unavailable": "该代币暂不可交易。请选择其他代币或稍后重试。",
+      "minimum-trade-value": "最低交易金额约为 $1.00",
+      "token-not-available": "{symbol} 当前不可交易",
+      "no-quotes-returned": "未返回任何报价",
+      "failed-to-fetch-quote": "获取报价失败",
+      "fusion-network-not-supported": "Fusion：不支持的网络",
+      "failed-fetch-quote-1inch": "从 1inch 获取报价失败",
+      "native-transaction-failed": "原生交易失败",
+      "failed-submit-order-1inch": "向 1inch 提交订单失败"
     }
   }
 }

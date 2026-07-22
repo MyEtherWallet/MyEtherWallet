@@ -7,6 +7,18 @@
     "filter_earning_interest": "Generando intereses",
     "filter_custom": "Personalizados",
     "filter_watchlist": "Lista de seguimiento",
+    "no_balance": {
+      "title": "No tienes ninguna cripto",
+      "description": "Para empezar a operar y gestionar tus activos digitales, necesitarás algo de {currencyName} en tu portafolio.",
+      "buy": "Comprar",
+      "deposit": "Depositar"
+    },
+    "welcome": {
+      "title": "¡Bienvenido al nuevo MEW Portfolio!",
+      "description": "Ahora puedes gestionar todas tus criptomonedas, acciones tokenizadas y ETF en un solo lugar, sin necesidad de una correduría.",
+      "nostalgic": "Esperamos que te encanten el nuevo panel y sus funciones. Mientras tanto, si sientes nostalgia, todavía puedes encontrar la versión anterior de MEW {link}.",
+      "here": "aquí"
+    },
     "overview": {
       "title": "Resumen",
       "tokenized_stocks": "Acciones tokenizadas",
@@ -39,6 +51,7 @@
       "24h_header": "24 H",
       "balance_header": "Saldo",
       "add_button": "+ Agregar",
+      "hide_no_value": "Ocultar tokens sin valor",
       "add_to_watchlist": "Añadir a la lista de seguimiento",
       "remove_from_watchlist": "Quitar de la lista de seguimiento",
       "trade": "Operar",

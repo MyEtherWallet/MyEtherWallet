@@ -7,6 +7,18 @@
     "filter_earning_interest": "赚取收益",
     "filter_custom": "自定义",
     "filter_watchlist": "自选列表",
+    "no_balance": {
+      "title": "您还没有任何加密货币",
+      "description": "要开始交易和管理您的数字资产，您需要在投资组合中持有一些 {currencyName}。",
+      "buy": "购买",
+      "deposit": "存入"
+    },
+    "welcome": {
+      "title": "欢迎使用全新的 MEW Portfolio！",
+      "description": "现在，您可以在一个地方管理您的所有加密货币、代币化股票和 ETF，无需任何券商账户。",
+      "nostalgic": "希望您会喜欢全新的仪表板和各项功能。同时，如果您有些怀旧，仍然可以在{link}找到旧版 MEW。",
+      "here": "此处"
+    },
     "overview": {
       "title": "概览",
       "tokenized_stocks": "代币化股票",
@@ -39,6 +51,7 @@
       "24h_header": "24 小时",
       "balance_header": "余额",
       "add_button": "+ 添加",
+      "hide_no_value": "隐藏无价值代币",
       "add_to_watchlist": "加入自选",
       "remove_from_watchlist": "移出自选",
       "trade": "交易",

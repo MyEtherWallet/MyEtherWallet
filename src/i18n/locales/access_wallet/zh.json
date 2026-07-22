@@ -31,6 +31,12 @@
       "private_key": "私钥",
       "mnemonic_phrase": "助记词"
     },
+    "wallet_name": {
+      "keystore": "Keystore 文件",
+      "mnemonic": "恢复（助记词）短语",
+      "private_key": "私钥"
+    },
+    "official_badge_alt": "MyEtherWallet 官方",
     "help": {
       "keystore": "如何连接您的 Keystore 钱包",
       "private_key": "如何使用私钥连接",

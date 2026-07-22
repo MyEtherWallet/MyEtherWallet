@@ -3,6 +3,9 @@
     "send-tokens": "发送代币",
     "send-nfts": "发送 NFT",
     "need-help": "发送时需要帮助？",
+    "approve-tx-on-device": "在您的设备上批准交易",
+    "unknown": "未知",
+    "unknown_chain": "未知链",
     "toast": {
       "failed_to_sign": "交易签名失败",
       "tx-send-success": "交易发送成功",

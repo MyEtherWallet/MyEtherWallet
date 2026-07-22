@@ -288,7 +288,7 @@ const analyticsEnabled = computed(() => analyticsStore.consent)
 const globalStore = useGlobalStore()
 const { defaultGasPriceType, locale: storedLocale } = storeToRefs(globalStore)
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 const LANGUAGE_OPTIONS = [
   { code: 'en', label: 'English', native: 'English', abbr: 'ENG' },
@@ -338,15 +338,15 @@ const selectedFee = computed({
   set: (val: string) => { defaultGasPriceType.value = FEE_MAP[val] as any },
 })
 
-const feeOptions = [
-  { id: 'economy', label: 'Economy', price: '$', description: 'Will likely go through unless activity increases' },
-  { id: 'recommended', label: 'Recommended', price: '$$', description: 'Will reliably go through in most scenarios' },
-  { id: 'higher', label: 'Higher priority', price: '$$$', description: 'Higher chance of going through quickly' },
-  { id: 'highest', label: 'Highest priority', price: '$$$$', description: 'Highest chance of going through quickly' },
-]
+const feeOptions = computed(() => [
+  { id: 'economy', label: t('settings.fee_option.economy.label'), price: '$', description: t('settings.fee_option.economy.description') },
+  { id: 'recommended', label: t('settings.fee_option.recommended.label'), price: '$$', description: t('settings.fee_option.recommended.description') },
+  { id: 'higher', label: t('settings.fee_option.higher.label'), price: '$$$', description: t('settings.fee_option.higher.description') },
+  { id: 'highest', label: t('settings.fee_option.highest.label'), price: '$$$$', description: t('settings.fee_option.highest.description') },
+])
 
 const selectedFeeLabel = computed(
-  () => feeOptions.find(option => option.id === selectedFee.value)?.label,
+  () => feeOptions.value.find(option => option.id === selectedFee.value)?.label,
 )
 
 const containerRef = ref<HTMLElement | null>(null)
