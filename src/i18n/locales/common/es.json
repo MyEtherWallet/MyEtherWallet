@@ -310,5 +310,7 @@
     "cancel": "Cancelar",
     "no_results_title": "No se encontraron coincidencias",
     "no_results_subtitle": "Prueba con otro símbolo o nombre."
-  }
+  },
+  "perps": "Perps",
+  "perpetuals": "Perpetuos"
 }

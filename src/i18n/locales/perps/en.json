@@ -388,7 +388,8 @@
       "range-7d": "7D",
       "range-30d": "30D",
       "range-all": "All",
-      "no-history": "No portfolio history available"
+      "no-history": "No portfolio history available",
+      "sign-out": "Sign Out"
     },
     "banner": {
       "sign-in-prompt": "– Sign in to your portfolio –",

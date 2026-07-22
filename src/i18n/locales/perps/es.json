@@ -404,7 +404,8 @@
       "range-7d": "7D",
       "range-30d": "30D",
       "range-all": "Todo",
-      "no-history": "No hay historial de portafolio disponible"
+      "no-history": "No hay historial de portafolio disponible",
+      "sign-out": "Cerrar sesión"
     },
     "banner": {
       "sign-in-prompt": "– Inicia sesión en tu portafolio –",

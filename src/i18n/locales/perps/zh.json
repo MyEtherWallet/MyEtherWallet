@@ -404,7 +404,8 @@
       "range-7d": "7D",
       "range-30d": "30D",
       "range-all": "全部",
-      "no-history": "暂无投资组合历史记录"
+      "no-history": "暂无投资组合历史记录",
+      "sign-out": "退出登录"
     },
     "banner": {
       "sign-in-prompt": "– 登录你的投资组合 –",
