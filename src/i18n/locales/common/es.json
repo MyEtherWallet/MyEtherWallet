@@ -121,6 +121,10 @@
     "previous_page": "página anterior",
     "next_page": "página siguiente",
     "action_menu": "menú de acciones",
+    "wallet_menu": "menú de la billetera",
+    "sidebar": "Barra lateral",
+    "close_banner": "Cerrar banner",
+    "got_it": "Entendido",
     "delete_notification": "eliminar notificación",
     "no_data_available": "No hay datos disponibles",
     "confirm": "Confirmar",
@@ -166,6 +170,15 @@
       "name_already_exists": "el nombre ya existe"
     },
     "and_tokens": "y 1 token | y {count} tokens",
+    "mew_app_banner": {
+      "title": "Consigue la app de MEW",
+      "rewards_line1": "Gana recompensas en acciones tokenizadas",
+      "rewards_line2": "de un fondo de $100,000",
+      "download_now": "Descargar ahora",
+      "scan_to_download": "Escanea para descargar",
+      "qr_code_alt": "Código QR",
+      "app_alt": "App de MEW Wallet"
+    },
     "subscribe": {
       "cta": "¡Mejora tus habilidades con consejos de seguridad, perspectivas del sector, noticias y mucho más!",
       "button": "¡Suscríbeme!",

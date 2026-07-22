@@ -11,6 +11,24 @@
     "open": "Abrir configuración",
     "select_transaction_fee": "Selecciona la comisión de transacción",
     "select_language": "Selecciona un idioma",
-    "fee_description": "Esta comisión la cobra la red de Ethereum y fluctúa según el tráfico de la red. MEW no obtiene ganancias de esta comisión."
+    "fee_description": "Esta comisión la cobra la red de Ethereum y fluctúa según el tráfico de la red. MEW no obtiene ganancias de esta comisión.",
+    "fee_option": {
+      "economy": {
+        "label": "Económica",
+        "description": "Probablemente se confirme, salvo que aumente la actividad de la red"
+      },
+      "recommended": {
+        "label": "Recomendada",
+        "description": "Se confirmará de forma fiable en la mayoría de los casos"
+      },
+      "higher": {
+        "label": "Mayor prioridad",
+        "description": "Mayor probabilidad de confirmarse rápidamente"
+      },
+      "highest": {
+        "label": "Máxima prioridad",
+        "description": "La mayor probabilidad de confirmarse rápidamente"
+      }
+    }
   }
 }

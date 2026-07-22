@@ -3,6 +3,9 @@
     "send-tokens": "Enviar tokens",
     "send-nfts": "Enviar NFT",
     "need-help": "¿Necesitas ayuda para enviar?",
+    "approve-tx-on-device": "Aprueba la transacción en tu dispositivo",
+    "unknown": "Desconocido",
+    "unknown_chain": "Cadena desconocida",
     "toast": {
       "failed_to_sign": "Error al firmar la transacción",
       "tx-send-success": "Transacción enviada correctamente",

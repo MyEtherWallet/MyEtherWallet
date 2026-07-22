@@ -5,7 +5,11 @@
     >
       <app-share-button :share-text="shareText" :disabled="isLoading" />
       <app-btn-icon
-        :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
+        :label="
+          isWatchlisted
+            ? $t('common.remove_from_watchlist')
+            : $t('common.add_to_watchlist')
+        "
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
       >
@@ -94,7 +98,7 @@
           v-if="!isLoading && existsOnCurrentChain"
           class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
         >
-          on {{ selectedChain?.name }}
+          {{ $t('crypto.on_chain', { chain: selectedChain?.name }) }}
         </p>
       </div>
     </div>

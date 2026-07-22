@@ -17,7 +17,10 @@
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
           <div class="">
-            <app-pop-up-menu placeholder="wallet menu" location="left">
+            <app-pop-up-menu
+              :placeholder="t('common.wallet_menu')"
+              location="left"
+            >
               <template #menu-button="{ toggleMenu }">
                 <button
                   class="p-1 text-s-11 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"

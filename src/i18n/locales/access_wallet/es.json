@@ -31,6 +31,12 @@
       "private_key": "clave privada",
       "mnemonic_phrase": "frase mnemotécnica"
     },
+    "wallet_name": {
+      "keystore": "Keystore",
+      "mnemonic": "Frase de recuperación (mnemotécnica)",
+      "private_key": "Clave privada"
+    },
+    "official_badge_alt": "MyEtherWallet oficial",
     "help": {
       "keystore": "Cómo conectar tu billetera con Keystore",
       "private_key": "Cómo conectar con tu clave privada",

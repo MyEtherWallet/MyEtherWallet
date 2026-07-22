@@ -41,6 +41,9 @@
       }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "min": "Mín",
+    "max": "Máx",
+    "bank": "Banco",
     "select_token": {
       "title": "Tokens",
       "subtitle": "Selecciona uno de la lista",

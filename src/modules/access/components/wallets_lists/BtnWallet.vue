@@ -8,7 +8,7 @@
       <img
         v-if="wallet.isOfficial"
         :src="OfficialBadge"
-        alt="Official MyEtherWallet"
+        :alt="$t('access_wallet.official_badge_alt')"
         height="20"
         width="68"
         class="w-[56px] object-contain h-5"
@@ -47,7 +47,7 @@
         id="wallet-name"
         class="text-s-14 my-2 font-medium leading-p-150 text-center mx-auto"
       >
-        {{ wallet.name }}
+        {{ wallet.nameKey ? $t(wallet.nameKey) : wallet.name }}
       </p>
     </div>
   </button>

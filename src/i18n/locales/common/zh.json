@@ -121,6 +121,10 @@
     "previous_page": "上一页",
     "next_page": "下一页",
     "action_menu": "操作菜单",
+    "wallet_menu": "钱包菜单",
+    "sidebar": "侧边栏",
+    "close_banner": "关闭横幅",
+    "got_it": "知道了",
     "delete_notification": "删除通知",
     "no_data_available": "暂无数据",
     "confirm": "确认",
@@ -166,6 +170,15 @@
       "name_already_exists": "名称已存在"
     },
     "and_tokens": "和 1 个代币 | 和 {count} 个代币",
+    "mew_app_banner": {
+      "title": "获取 MEW 应用",
+      "rewards_line1": "赚取代币化股票奖励",
+      "rewards_line2": "奖池高达 $100,000",
+      "download_now": "立即下载",
+      "scan_to_download": "扫码下载",
+      "qr_code_alt": "二维码",
+      "app_alt": "MEW Wallet 应用"
+    },
     "subscribe": {
       "cta": "通过安全提示、行业洞察、新闻等内容提升您的技能！",
       "button": "立即订阅！",

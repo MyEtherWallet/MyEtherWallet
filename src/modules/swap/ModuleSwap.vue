@@ -924,7 +924,7 @@ const swapForBtc = async () => {
     swapGasFeeQuote.value = (res as QuotesResponse) || undefined
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
-    generalError.value = e?.message || 'Error fetching BTC gas fees'
+    generalError.value = e?.message || t('swap.error.fetching-btc-gas-fees')
     if (isDevMode) {
       console.error('Error fetching BTC gas fees:', e)
     } else {
@@ -991,7 +991,7 @@ const swapForEvm = async () => {
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
-    generalError.value = e?.message || 'Error fetching gas fees'
+    generalError.value = e?.message || t('swap.error.fetching-gas-fees')
     // "Pair not available" is an expected, user-facing condition (the selected
     // pair has no route/quote). Keep the throw so generalError + analytics are
     // handled here as designed, but skip the Sentry report to avoid noise.

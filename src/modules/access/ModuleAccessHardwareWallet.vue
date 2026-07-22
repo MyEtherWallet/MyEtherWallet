@@ -339,10 +339,14 @@ const unlockWallet = async () => {
     loadList()
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)
+    const isNoDerivationPaths =
+      errorMessage === 'No supported derivation paths found for this wallet'
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: isNoDerivationPaths
+        ? t('access.no_supported_derivation_paths')
+        : errorMessage,
     })
     // Don't report expected user errors to Sentry
     if (!errorMessage.includes('Make sure you have')) {

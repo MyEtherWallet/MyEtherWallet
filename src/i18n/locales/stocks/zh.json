@@ -31,6 +31,26 @@
     "trending_colon": "热门：",
     "on_chain": "在 {chain} 上",
     "top_movers": "涨跌幅榜",
-    "actions_menu": "操作菜单"
+    "actions_menu": "操作菜单",
+    "open": "开盘价",
+    "twenty_four_h_high": "24 小时最高价",
+    "twenty_four_h_low": "24 小时最低价",
+    "underlying_asset": "基础资产",
+    "about": "关于",
+    "category": "类别",
+    "shares_per_token": "每代币股份数",
+    "total_holders": "持有者总数",
+    "ticker": "代码",
+    "historical_price": "历史价格",
+    "fifty_two_w_high": "52 周最高价",
+    "fifty_two_w_low": "52 周最低价",
+    "statistics": "统计数据",
+    "avg_volume": "平均交易量",
+    "shares_outstanding": "流通股数",
+    "dividends": "股息",
+    "dividend_yield": "股息收益率",
+    "payout_frequency": "派息频率",
+    "last_amount": "上次金额",
+    "last_payment_date": "上次派息日期"
   }
 }
