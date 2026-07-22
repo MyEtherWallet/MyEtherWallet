@@ -251,10 +251,20 @@ const deleteAllNotifications = () => {
 }
 // Fetch balances after status changes
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
-  wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-  })
+  wallet.value
+    ?.getBalance()
+    .then((balances: TokenBalancesRaw) => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+    })
 }
 
 // Runtime state (not persisted)

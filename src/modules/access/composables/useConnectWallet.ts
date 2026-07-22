@@ -277,13 +277,6 @@ export const useConnectWallet = () => {
           error = t('access_wallet.toast.connection_timed_out')
           _type = ToastType.Info
         }
-        if (
-          err.message &&
-          err.message.toLowerCase().includes('proposal expired')
-        ) {
-          error = t('access_wallet.toast.connection_timed_out')
-          _type = ToastType.Info
-        }
         toastStore.addToastMessage({
           text: t('access_wallet.toast.could_not_connect'),
           textSecondary: error,
