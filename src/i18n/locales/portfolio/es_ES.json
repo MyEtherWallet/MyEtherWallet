@@ -7,6 +7,18 @@
     "filter_earning_interest": "Earning Interest",
     "filter_custom": "Custom",
     "filter_watchlist": "Watchlist",
+    "no_balance": {
+      "title": "You don't have any crypto",
+      "description": "To start trading and managing your digital assets, you will need some {currencyName} in your portfolio.",
+      "buy": "Comprar",
+      "deposit": "Deposit"
+    },
+    "welcome": {
+      "title": "Welcome to the new MEW Portfolio!",
+      "description": "Now you can manage all your crypto, tokenized stocks, and ETFs in one place, no brokerage required.",
+      "nostalgic": "We hope you will love the new dashboard and features. Meanwhile, if you're feeling nostalgic, you can still find the previous version of MEW {link}.",
+      "here": "here"
+    },
     "overview": {
       "title": "Overview",
       "tokenized_stocks": "Tokenized Stocks",
@@ -39,6 +51,7 @@
       "24h_header": "24H",
       "balance_header": "Balance",
       "add_button": "+ Add",
+      "hide_no_value": "Hide tokens with no value",
       "add_to_watchlist": "Add to Watchlist",
       "remove_from_watchlist": "Remove from Watchlist",
       "trade": "Trade",
