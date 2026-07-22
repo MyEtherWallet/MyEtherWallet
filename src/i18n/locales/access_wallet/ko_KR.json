@@ -31,6 +31,12 @@
       "private_key": "private key",
       "mnemonic_phrase": "mnemonic phrase"
     },
+    "wallet_name": {
+      "keystore": "Keystore",
+      "mnemonic": "Recovery (mnemonic) Phrase",
+      "private_key": "Private Key"
+    },
+    "official_badge_alt": "Official MyEtherWallet",
     "help": {
       "keystore": "How to connect your keystore wallet",
       "private_key": "How to connect with your private key",
