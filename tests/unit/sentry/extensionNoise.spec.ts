@@ -3,6 +3,7 @@ import { InvalidAddressError } from 'viem'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isForeignStackOverflow,
 } from '@/sentry/extensionNoise'
 
 describe('isExtensionOrProviderError', () => {
@@ -107,5 +108,117 @@ describe('isInvalidWalletAddressError', () => {
     expect(isInvalidWalletAddressError(null)).toBe(false)
     expect(isInvalidWalletAddressError(undefined)).toBe(false)
     expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
+  })
+})
+
+describe('isForeignStackOverflow', () => {
+  // Builds a Sentry ErrorEvent-shaped payload for a single exception value.
+  const evt = (
+    value: string,
+    frames?: Array<{ filename?: unknown }>,
+    type = 'RangeError',
+  ) => ({
+    exception: {
+      values: [
+        {
+          type,
+          value,
+          ...(frames ? { stacktrace: { frames } } : {}),
+        },
+      ],
+    },
+  })
+
+  it('is true for the production payload: iOS masked frame, no app origin', () => {
+    // APP-MEW-WEB-BB: single frame Sentry could not attribute to a file
+    // (rendered as `undefined:38:249`), from an injected/extension script.
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: undefined, lineno: 38, colno: 249 } as {
+            filename?: unknown
+          },
+        ]),
+      ),
+    ).toBe(true)
+  })
+
+  it('is true when frames point at iOS webkit-masked-url (extension/injected)', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'webkit-masked-url://hidden/' },
+        ]),
+      ),
+    ).toBe(true)
+  })
+
+  it('is true when there is no parsed stacktrace at all', () => {
+    expect(
+      isForeignStackOverflow(evt('Maximum call stack size exceeded.')),
+    ).toBe(true)
+  })
+
+  it('is true regardless of exception type when the message matches', () => {
+    // Some iOS payloads surface the message on a generic Error type.
+    expect(
+      isForeignStackOverflow(
+        evt(
+          'RangeError: Maximum call stack size exceeded',
+          [{ filename: undefined }],
+          'Error',
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is FALSE for a genuine in-app stack overflow (carries an app frame)', () => {
+    // A real MEW recursion — must NOT be dropped.
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://app.myetherwallet.com/assets/index-abc.js' },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is FALSE when an app frame appears anywhere among masked frames', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'webkit-masked-url://hidden/' },
+          { filename: undefined },
+          { filename: 'https://app.myetherwallet.com/assets/chunk-x.js' },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is FALSE for a localhost (dev) app frame', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://localhost:8080/src/App.vue' },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is FALSE for a non-stack-overflow error, even with no app frame', () => {
+    expect(
+      isForeignStackOverflow(
+        evt("Cannot read properties of undefined (reading 'x')", [
+          { filename: undefined },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is FALSE for empty / non-object / frameless-exception inputs', () => {
+    expect(isForeignStackOverflow(null)).toBe(false)
+    expect(isForeignStackOverflow(undefined)).toBe(false)
+    expect(isForeignStackOverflow({})).toBe(false)
+    expect(isForeignStackOverflow({ exception: { values: [] } })).toBe(false)
   })
 })

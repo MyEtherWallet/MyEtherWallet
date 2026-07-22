@@ -20,6 +20,7 @@ import configs from '@/configs'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isForeignStackOverflow,
 } from '@/sentry/extensionNoise'
 
 const app = createApp(App)
@@ -50,8 +51,13 @@ if (dsn) {
       'Request expired',
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
-    // carry parsed extension frames).
-    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // carry parsed extension frames). `webkit-masked-url` is how iOS 16.4+
+    // WebKit exposes the source of extension / content-blocker / in-app-browser
+    // injected scripts.
+    denyUrls: [
+      /(?:chrome|moz|safari-web)-extension:\/\//i,
+      /webkit-masked-url:\/\//i,
+    ],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
     // "provider disconnected") and viem InvalidAddressError (a wallet returned
     // a malformed address on connect — already handled with a user toast).
@@ -62,7 +68,10 @@ if (dsn) {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
-        isInvalidWalletAddressError(originalException)
+        isInvalidWalletAddressError(originalException) ||
+        // iOS injected-script "Maximum call stack" RangeErrors with no app
+        // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
+        isForeignStackOverflow(event)
       )
         return null
       return event
