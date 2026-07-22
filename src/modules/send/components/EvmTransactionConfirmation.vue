@@ -416,7 +416,7 @@ const confirmTransaction = async () => {
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
-          chainName: selectedChain.value?.nameLong || t('send.unknown'),
+          chainName: selectedChain.value?.nameLong || t('send.unknown_chain'),
           chainIcon: selectedChain.value?.icon,
           chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,
