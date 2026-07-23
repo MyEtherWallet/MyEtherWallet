@@ -551,6 +551,7 @@ const sendSandboxDeposit = async () => {
     })
     perpsToasts.toastDepositComplete(depositAmount, 'USDC')
     clearAmount()
+    isOpen.value = false
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
@@ -645,6 +646,7 @@ const sendLiveDeposit = async () => {
     })
     perpsToasts.toastDepositInitiated()
     clearAmount()
+    isOpen.value = false
   } catch (e: unknown | Error) {
     const msg =
       e instanceof Error ? e.message : String((e as Error).message ?? e ?? '')
