@@ -163,7 +163,7 @@
                       ]"
                       @click.stop="openLeverage(pos)"
                     >
-                      {{ pos.direction }} {{ pos.leverage }}x
+                      {{ pos.direction === 'long' ? $t('perps.trade.long') : pos.direction === 'short' ? $t('perps.trade.short') : pos.direction }} {{ pos.leverage }}x
                     </p>
                   </div>
                 </div>
@@ -407,7 +407,13 @@
                         ' text-s-12 capitalize xl:hidden font-medium',
                       ]"
                     >
-                      {{ order.side }}
+                      {{
+                        order.side === 'buy'
+                          ? $t('perps.order.buy')
+                          : order.side === 'sell'
+                            ? $t('perps.order.sell')
+                            : order.side
+                      }}
                     </p>
                   </div>
                 </div>
@@ -420,7 +426,13 @@
                     'text-s-13 capitalize font-medium',
                   ]"
                 >
-                  {{ order.side }}
+                  {{
+                    order.side === 'buy'
+                      ? $t('perps.order.buy')
+                      : order.side === 'sell'
+                        ? $t('perps.order.sell')
+                        : order.side
+                  }}
                 </span>
               </td>
               <!-- Time -->
@@ -618,7 +630,7 @@
                           'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
                         ]"
                       >
-                        {{ formatDirection(fill.direction) }}
+                        {{ $t(directionKey(fill.direction)) }}
                       </p>
                     </div>
                   </div>
@@ -633,7 +645,7 @@
                       'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
                     ]"
                   >
-                    {{ formatDirection(fill.direction) }}
+                    {{ $t(directionKey(fill.direction)) }}
                   </span>
                 </td>
                 <!-- Time -->
@@ -800,7 +812,7 @@
                       item.statusColor,
                     ]"
                   >
-                    {{ item.statusLabel }}
+                    {{ $t(statusKey(item.statusLabel)) }}
                   </span>
                 </td>
               </tr>
@@ -897,7 +909,7 @@ import {
   getOrderPrice,
   formatOrderStatus,
   formatOrderType,
-  formatDirection,
+  directionKey,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
@@ -1300,6 +1312,22 @@ type CombinedDWRow = {
   statusColor: string
   time: string
 }
+
+// Maps a raw deposit/withdrawal status enum to its i18n key. Deposit statuses
+// ('pending' | 'confirmed') and withdrawal statuses ('WITHDRAWAL_*') never
+// collide, so a single map suffices. `WITHDRAWAL_PENDING` reuses the shared
+// 'pending' key. Unmapped statuses fall back to the raw value ($t renders it
+// verbatim), so the raw enum still shows unchanged.
+const dwStatusKeys: Record<string, string> = {
+  pending: 'perps.positions.dw-status.pending',
+  confirmed: 'perps.positions.dw-status.confirmed',
+  WITHDRAWAL_SUCCESS: 'perps.positions.dw-status.completed',
+  WITHDRAWAL_FAILURE: 'perps.positions.dw-status.failed',
+  WITHDRAWAL_PENDING: 'perps.positions.dw-status.pending',
+  WITHDRAWAL_CANCELLED: 'perps.positions.dw-status.cancelled',
+  WITHDRAWAL_UNKNOWN: 'perps.positions.dw-status.unknown',
+}
+const statusKey = (status: string): string => dwStatusKeys[status] ?? status
 
 // `type` stays 'Deposit' | 'Withdrawal' internally (used for the success/
 // warning color comparisons above), this only translates it for display.

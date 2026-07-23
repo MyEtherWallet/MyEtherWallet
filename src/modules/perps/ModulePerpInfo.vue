@@ -200,7 +200,7 @@
                 ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
               ]"
             >
-              {{ marketPosition.direction }}
+              {{ marketPosition.direction === 'long' ? $t('perps.trade.long') : marketPosition.direction === 'short' ? $t('perps.trade.short') : marketPosition.direction }}
               {{ marketPosition.leverage }}x
             </span>
           </div>
@@ -570,7 +570,13 @@
                         'text-s-13 capitalize font-medium',
                       ]"
                     >
-                      {{ order.side }}
+                      {{
+                        order.side === 'buy'
+                          ? $t('perps.order.buy')
+                          : order.side === 'sell'
+                            ? $t('perps.order.sell')
+                            : order.side
+                      }}
                     </p>
                   </td>
                   <!-- Status -->
@@ -784,7 +790,7 @@
                           'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
                         ]"
                       >
-                        {{ formatDirection(fill.direction) }}
+                        {{ $t(directionKey(fill.direction)) }}
                       </p>
                     </td>
                     <td class="px-1 py-3 text-right font-normal text-s-14">
@@ -1011,7 +1017,7 @@ import {
   formatDate,
   formatOrderStatus,
   formatOrderType,
-  formatDirection,
+  directionKey,
 } from './utils/formatters'
 import {
   getLogoUrl,

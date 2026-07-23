@@ -310,5 +310,7 @@
     "cancel": "取消",
     "no_results_title": "未找到匹配项",
     "no_results_subtitle": "请尝试其他代号或名称。"
-  }
+  },
+  "perps": "永续",
+  "perpetuals": "永续合约"
 }

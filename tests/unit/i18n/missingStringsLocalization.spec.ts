@@ -64,20 +64,14 @@ const placeholders = (value: string) =>
 
 /**
  * Keys that were ALREADY missing from es/zh on the base branch (verified via
- * `git show HEAD:.../common/{en,es,zh}.json`). Not introduced by this sweep;
- * `common.perps`/`common.perpetuals` belong to the perps feature, localized
- * en-only and separately. Logged in workspace FOLLOWUPS.md. Excluded from BOTH
- * sides of the parity comparison so the guard asserts THIS branch introduced
- * no new drift, in either direction.
+ * `git show HEAD:.../common/{en,es,zh}.json`), not introduced by this work, and
+ * excluded from BOTH sides of the parity comparison. `common.perps`/
+ * `common.perpetuals` (the perps nav labels) were localized as part of MEW-2012,
+ * so they are intentionally NOT allow-listed — they remain in the parity
+ * comparison and are asserted. Logged in workspace FOLLOWUPS.md.
  */
 const PREEXISTING_DRIFT: Record<string, Set<string>> = {
-  common: new Set([
-    'buy',
-    'sell',
-    'perps',
-    'perpetuals',
-    'select_token.recently_viewed',
-  ]),
+  common: new Set(['buy', 'sell', 'select_token.recently_viewed']),
 }
 
 const suites = [

@@ -195,6 +195,23 @@ export const orderTypeLabels: Record<string, string> = {
 export const formatOrderType = (type: string): string => {
   return orderTypeLabels[type] ?? type
 }
-export const formatDirection = (direction: string | undefined) => {
-  return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
+
+// Values are i18n keys (not raw English) so call sites resolve them via
+// `$t(...)`. Maps the API's camelCase fill directions to kebab-case keys under
+// `perps.fill.direction`. See orderStatusLabels above re: raw-enum fallback.
+export const directionLabels: Record<string, string> = {
+  openLong: 'perps.fill.direction.open-long',
+  openShort: 'perps.fill.direction.open-short',
+  closeLong: 'perps.fill.direction.close-long',
+  closeShort: 'perps.fill.direction.close-short',
+  flipLongToShort: 'perps.fill.direction.flip-long-to-short',
+  flipShortToLong: 'perps.fill.direction.flip-short-to-long',
+}
+
+// Returns the i18n key for a fill direction. Unknown directions fall back to
+// the raw value ($t renders it verbatim); undefined/empty returns '' so the
+// call site renders nothing rather than a missing-key warning.
+export const directionKey = (direction: string | undefined): string => {
+  if (!direction) return ''
+  return directionLabels[direction] ?? direction
 }
