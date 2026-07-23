@@ -11,7 +11,7 @@
             :disabled="loading"
             height="h-6"
             width="w-6"
-            @click="refetch"
+            @click="onRefreshBalance"
           >
             <ArrowPathIcon
               class="w-4 h-4 text-info"
@@ -134,7 +134,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import PerpsBalanceDetailsDialog from './PerpsBalanceDetailsDialog.vue'
-import { usePerpsBalance } from '../composables/usePerpsAuth'
+import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import {
   pnlColor,
   marginRatioColor,
@@ -186,6 +186,15 @@ const onSwitchToEthereum = () => {
 const showBalanceDialog = ref(false)
 
 const { balance, loading, refetch } = usePerpsBalance()
+const { triggerRefresh } = usePerpsAuth()
+
+// Refresh the balance (drives the spinner) and broadcast a refresh so the
+// deposits, withdrawals, and fills lists refetch too — clicking "refresh
+// balance" is the user's manual "sync everything" action.
+const onRefreshBalance = () => {
+  refetch()
+  triggerRefresh()
+}
 const marginBalance = computed(
   () => `$${formatFiatValue(balance.value?.marginBalance ?? '0').value}`,
 )

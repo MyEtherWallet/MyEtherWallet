@@ -52,6 +52,17 @@ const signingMessage = ref<string | null>(null)
 const isHardwareWalletSigning = ref(false)
 const isWaitingForConfirm = ref(false)
 
+// Post-transaction poll. After a deposit/withdrawal the on-chain broadcast and
+// backend settlement are asynchronous, so a single refresh isn't enough — the
+// balance/history won't reflect the pending transfer yet. We bump refreshKey on
+// an interval for a bounded window so every data composable (balance, deposits,
+// withdrawals, fills, summary) re-fetches until the transfer settles, even if
+// the WS push is missed. Kicking it off again restarts the window.
+const POST_TX_POLL_INTERVAL_MS = 20_000 // 20s
+const POST_TX_POLL_DURATION_MS = 120_000 // 2 min
+let _postTxPollTimer: ReturnType<typeof setInterval> | null = null
+let _postTxPollStop: ReturnType<typeof setTimeout> | null = null
+
 let _authRestored = false
 let _currentAddress: string | null = null
 let _resolveSign: (() => void) | null = null
@@ -139,6 +150,16 @@ async function clearAuth() {
   perpsClient.setToken(null)
   perpsWs.logout()
   resetPerpsData()
+  // Cancel any in-flight post-transaction poll so it doesn't keep bumping
+  // refreshKey (and refetching) for a signed-out / switched-away account.
+  if (_postTxPollTimer) {
+    clearInterval(_postTxPollTimer)
+    _postTxPollTimer = null
+  }
+  if (_postTxPollStop) {
+    clearTimeout(_postTxPollStop)
+    _postTxPollStop = null
+  }
   // Reset module-scope guards so a subsequent Sign In click is not silently
   // blocked by a stale auth-restored flag from a previous session.
   _authRestored = false
@@ -348,6 +369,29 @@ export function usePerpsAuth() {
     refreshKey.value++
   }
 
+  function stopPostTxPoll() {
+    if (_postTxPollTimer) {
+      clearInterval(_postTxPollTimer)
+      _postTxPollTimer = null
+    }
+    if (_postTxPollStop) {
+      clearTimeout(_postTxPollStop)
+      _postTxPollStop = null
+    }
+  }
+
+  // Refresh immediately, then keep polling every 20s for 2 minutes so a pending
+  // deposit/withdrawal settles into the balance/history without the user having
+  // to refresh manually. Restarts the window if called again mid-poll.
+  function startPostTxPoll() {
+    triggerRefresh()
+    stopPostTxPoll()
+    _postTxPollTimer = setInterval(() => {
+      if (token.value) refreshKey.value++
+    }, POST_TX_POLL_INTERVAL_MS)
+    _postTxPollStop = setTimeout(stopPostTxPoll, POST_TX_POLL_DURATION_MS)
+  }
+
   return {
     token,
     accountId,
@@ -359,6 +403,7 @@ export function usePerpsAuth() {
     logout,
     refreshKey,
     triggerRefresh,
+    startPostTxPoll,
     showSigningPrompt,
     signingMessage,
     isHardwareWalletSigning,

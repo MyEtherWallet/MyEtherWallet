@@ -283,7 +283,7 @@ const showIsLive = ref(IS_PERPS_LIVE)
 
 const isOpen = defineModel<boolean>({ required: true })
 
-const { accountId, triggerRefresh } = usePerpsAuth()
+const { accountId, startPostTxPoll } = usePerpsAuth()
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
@@ -540,7 +540,7 @@ const sendSandboxDeposit = async () => {
       deposit_destination: { id: accountId.value, wallet: 'margin' },
       chain_id: 'eth-sepolia',
     })
-    triggerRefresh()
+    startPostTxPoll()
     analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUCCESS, {
       depositAmount,
       token: 'USDC',
@@ -635,7 +635,7 @@ const sendLiveDeposit = async () => {
     if (!hash) {
       throw new Error(t('perps.deposit.broadcast-failed'))
     }
-    triggerRefresh()
+    startPostTxPoll()
     analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUCCESS, {
       depositAmount,
       token: 'USDC',

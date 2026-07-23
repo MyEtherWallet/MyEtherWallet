@@ -160,7 +160,7 @@ const isOpen = computed({
   set: () => {},
 })
 
-const { accountId, triggerRefresh } = usePerpsAuth()
+const { accountId, startPostTxPoll } = usePerpsAuth()
 const { balance } = usePerpsBalance()
 const { positions } = usePerpsPositions()
 const store = useWalletStore()
@@ -339,7 +339,7 @@ async function submitWithdraw() {
       address: toChecksumAddress(walletAddress.value),
       from: { id: accountId.value, wallet: 'margin' },
     })
-    triggerRefresh()
+    startPostTxPoll()
     analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.SUCCESS, {
       withdrawAmount,
       token: 'USDC',
