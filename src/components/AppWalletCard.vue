@@ -309,13 +309,13 @@ const disconnectWallet = () => {
   emit('close')
 }
 
-const deleteWallet = () => {
+const deleteWallet = async () => {
   const recentAddressStore = useWatchOnlyStore()
   recentAddressStore.removeWallet(
     walletAddress.value as string,
     selectedChain.value!,
   )
-  usePerpsAuth().logout()
+  await usePerpsAuth().logout()
   disconnectWallet()
   emit('close')
 }

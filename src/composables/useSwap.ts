@@ -92,6 +92,7 @@ export const useSwap = (): {
   const restrictedAddressesLower = ref<string[]>([])
   // Per-instance guard: deduplicates concurrent initSwapper calls
   let inflightInit: Promise<void> | null = null
+  let inflightInitChain: string | null = null
 
   // Updates fromTokens with current wallet balances without re-fetching swaplists.
   // Called after init and when wallet tokens/native balance change reactively.
@@ -315,13 +316,25 @@ export const useSwap = (): {
     }
   }
 
-  // Deduplicates concurrent calls — if initialization is already in progress,
-  // returns the same promise rather than starting a second fetch of swaplists.
+  // Deduplicates concurrent calls — if initialization is already in progress
+  // for the same chain, returns the same promise rather than starting a second
+  // fetch of swaplists. When the requested chain differs, a fresh init starts so
+  // a network change is never served the previous chain's in-flight promise.
   const initSwapper = async (): Promise<void> => {
-    if (inflightInit) return inflightInit
-    inflightInit = doInitSwapper() as Promise<void>
-    inflightInit.finally(() => { inflightInit = null })
-    return inflightInit
+    const targetChain = selectedChain.value?.name ?? null
+    if (inflightInit && inflightInitChain === targetChain) return inflightInit
+    inflightInitChain = targetChain
+    const p = doInitSwapper() as Promise<void>
+    inflightInit = p
+    p.finally(() => {
+      // Only clear if this run is still the current in-flight one; a newer
+      // init (e.g. for a different chain) must survive a stale completion.
+      if (inflightInit === p) {
+        inflightInit = null
+        inflightInitChain = null
+      }
+    })
+    return p
   }
 
   // Re-initialize swapper only when the network changes, not on every token/balance update.
