@@ -383,7 +383,7 @@
               </p>
             </td>
             <!-- Actions -->
-            <td class="lg:pl-6 lg:pr-2 py-1 rounded-r-12 relative text-right">
+            <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
               <div
                 class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
               >
@@ -490,7 +490,7 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
+                class="hidden lg:grid grid-cols-2 gap-2 w-[160px] ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
