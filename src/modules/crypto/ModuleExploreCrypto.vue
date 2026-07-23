@@ -488,7 +488,7 @@
                     </app-pop-up-menu>
                   </div>
                   <div
-                    class="hidden lg:grid grid-cols-2 gap-2 w-[160px] ml-auto"
+                    class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
                   >
                     <!-- Buy first (inverted order for the Explore Tokens table) -->
                     <app-base-button
