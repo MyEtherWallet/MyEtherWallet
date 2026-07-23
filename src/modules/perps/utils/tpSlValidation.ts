@@ -30,13 +30,14 @@ export function takeProfitError(
     return precisionMessage(quoteDecimals)
   if (price >= MAX_TRIGGER_PRICE)
     return 'Take Profit must be less than $10,000,000'
+  // The backend rejects a non-positive trigger price ("must be positive",
+  // error_code stop_order_trigger_price_negative) for either side, so a short's
+  // take profit still has to stay above 0 even though profit grows as price
+  // falls.
+  if (price <= 0) return 'Take Profit must be above 0'
   if (isLong) {
-    // For a long, take profit above the mark also guarantees it is positive.
     if (price <= markPrice) return 'Take Profit must be above mark price'
   } else {
-    // For a short, profit grows as price falls, so any value below the mark is
-    // valid — including 0 (asset to zero) or negative targets. Only the
-    // wrong-side-of-mark case is rejected.
     if (price >= markPrice) return 'Take Profit must be below mark price'
   }
   return ''

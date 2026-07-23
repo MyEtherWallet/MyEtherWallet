@@ -57,13 +57,12 @@
             <perps-amount
               v-model:amount="takeProfitPrice"
               :error="takeProfitError || ''"
-              :allow-negative="!isLong"
               :validate-input="() => {}"
             >
               <template #footer>
                 <div class="flex justify-start gap-2 mt-1">
                   <button
-                    v-for="pct in [10, 20, 30, 50, 100]"
+                    v-for="pct in takeProfitPills"
                     :key="pct"
                     class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
@@ -201,7 +200,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, type PropType } from 'vue'
+import { ref, watch, computed, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -214,7 +213,7 @@ import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<{
+const props = defineProps<{
   displaySymbol: string
   currentPrice: number
   tempProjectedProfit: number | null
@@ -224,10 +223,30 @@ defineProps<{
   // Position/order side. LONG → take profit above mark (price rises), stop loss
   // below (price falls); SHORT inverts both, so the pill labels flip sign.
   isLong: boolean
+  // Largest valid take-profit drop for a short: the % move that lands on the
+  // lowest positive increment-aligned price. Drives the biggest short pill so
+  // it never resolves to a non-positive (backend-rejected) trigger.
+  maxShortTakeProfitPct: number
   takeProfitError?: string
   stopLossError?: string
   hasEdits?: boolean
 }>()
+
+// A long's take profit is a price rise (+%), a short's is a price fall (-%).
+// The backend requires a positive trigger, so a short's largest pill is the
+// computed max drop (down to the lowest valid price) rather than a fixed value
+// that could round to 0. Dropped when it isn't larger than the 50% pill (e.g.
+// price not loaded, or an asset priced near its own increment).
+const takeProfitPills = computed(() => {
+  if (props.isLong) return [10, 20, 30, 50, 100]
+  // Keep the base pills; append the computed max only when it's a larger drop
+  // than 50% (otherwise the price hasn't loaded or the asset sits near its own
+  // increment).
+  const base = [10, 20, 30, 50]
+  return props.maxShortTakeProfitPct > 50
+    ? [...base, props.maxShortTakeProfitPct]
+    : base
+})
 
 const emit = defineEmits<{
   clearTakeProfit: []

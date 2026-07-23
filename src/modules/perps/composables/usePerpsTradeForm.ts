@@ -1207,20 +1207,40 @@ export function usePerpsTradeForm() {
     void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED)
   }
 
+  // The lowest a short's take profit can target is one quoteIncrement above 0 —
+  // the backend rejects a non-positive trigger, and formatQuotePrice floors to
+  // the increment, so anything below one increment rounds down to 0. Expressed
+  // as a percentage drop from the mark it becomes the largest short take-profit
+  // pill (replacing a hardcoded 99%, which would round to 0 on low-priced
+  // markets). Floored to 2 decimals so the label stays readable and the
+  // resulting price can never round back to 0.
+  const maxShortTakeProfitPct = computed(() => {
+    const price = currentPrice.value
+    const increment = activeMarketQuoteIncrement.value
+    if (!price || price <= increment) return 0
+    return Math.floor((1 - increment / price) * 100 * 100) / 100
+  })
+
   function setTakeProfitPct(pct: number) {
     if (!currentPrice.value) return
-    tempTakeProfitPrice.value = isTpSlLong.value
-      ? Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
-      : Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
+    // Snap to the market's quoteIncrement (as the submit path does) rather than
+    // a hardcoded 2 decimals, so the displayed price matches what's sent and
+    // whole-number-increment markets (e.g. BTC) don't reject it with "Price
+    // must be a whole number".
+    const raw = isTpSlLong.value
+      ? currentPrice.value * (1 + pct / 100)
+      : currentPrice.value * (1 - pct / 100)
+    tempTakeProfitPrice.value = Number(formatQuotePrice(raw))
 
     activeTpPill.value = pct
   }
 
   function setStopLossPct(pct: number) {
     if (!currentPrice.value) return
-    tempStopLossPrice.value = isTpSlLong.value
-      ? Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
-      : Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
+    const raw = isTpSlLong.value
+      ? currentPrice.value * (1 - pct / 100)
+      : currentPrice.value * (1 + pct / 100)
+    tempStopLossPrice.value = Number(formatQuotePrice(raw))
     activeSlPill.value = pct
   }
 
@@ -1751,6 +1771,7 @@ export function usePerpsTradeForm() {
     activeTpPill,
     activeSlPill,
     isTpSlLong,
+    maxShortTakeProfitPct,
     openAutoCloseModal,
     setTakeProfitPct,
     setStopLossPct,

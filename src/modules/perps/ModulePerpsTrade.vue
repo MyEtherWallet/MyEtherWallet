@@ -788,6 +788,7 @@
       :active-tp-pill="activeTpPill"
       :active-sl-pill="activeSlPill"
       :is-long="isTpSlLong"
+      :max-short-take-profit-pct="maxShortTakeProfitPct"
       :take-profit-error="takeProfitErrorMessage"
       :stop-loss-error="stopLossErrorMessage"
       :has-edits="hasAutoCloseEdits"
@@ -979,6 +980,7 @@ const {
   activeTpPill,
   activeSlPill,
   isTpSlLong,
+  maxShortTakeProfitPct,
   openAutoCloseModal,
   setTakeProfitPct,
   setStopLossPct,
