@@ -490,20 +490,26 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:flex flex-row gap-2 justify-end"
+                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
                   size="small"
                   @click="tradeBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('portfolio.table.trade') }}
                 </app-base-button>
                 <app-base-button
                   v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('common.swap') }}
                 </app-base-button>
                 <app-base-button
@@ -511,10 +517,10 @@
                   size="small"
                   @click="buyBtn(token)"
                   is-outline
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
                 </app-base-button>
-                <div v-else class="w-[60px]"></div>
               </div>
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
@@ -1111,6 +1117,10 @@ const getCurrentViewableItemsIndex = computed(() =>
 /** -------------------------------
  * Navigation & Handlers
  -------------------------------*/
+// A token has a "primary" action (trade / swap) in the desktop actions cell.
+// Used so a lone button spans the full actions width and rows stay aligned.
+const hasPrimaryAction = (token: DisplayToken): boolean =>
+  token.ondo !== undefined || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'balance_table',
