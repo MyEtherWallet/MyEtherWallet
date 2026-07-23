@@ -57,6 +57,7 @@
             <perps-amount
               v-model:amount="takeProfitPrice"
               :error="takeProfitError || ''"
+              :allow-negative="!isLong"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -70,7 +71,7 @@
                     "
                     @click="$emit('setTakeProfitPct', pct)"
                   >
-                    +{{ pct }}%
+                    {{ isLong ? '+' : '-' }}{{ pct }}%
                   </button>
                 </div>
               </template>
@@ -146,7 +147,7 @@
                     "
                     @click="$emit('setStopLossPct', pct)"
                   >
-                    -{{ pct }}%
+                    {{ isLong ? '-' : '+' }}{{ pct }}%
                   </button>
                 </div>
               </template>
@@ -220,6 +221,9 @@ defineProps<{
   tempProjectedLoss: number | null
   activeTpPill: number | null
   activeSlPill: number | null
+  // Position/order side. LONG → take profit above mark (price rises), stop loss
+  // below (price falls); SHORT inverts both, so the pill labels flip sign.
+  isLong: boolean
   takeProfitError?: string
   stopLossError?: string
   hasEdits?: boolean

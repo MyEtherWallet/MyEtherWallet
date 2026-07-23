@@ -34,7 +34,9 @@ export function takeProfitError(
     // For a long, take profit above the mark also guarantees it is positive.
     if (price <= markPrice) return 'Take Profit must be above mark price'
   } else {
-    if (price <= 0) return 'Take Profit must be above 0'
+    // For a short, profit grows as price falls, so any value below the mark is
+    // valid — including 0 (asset to zero) or negative targets. Only the
+    // wrong-side-of-mark case is rejected.
     if (price >= markPrice) return 'Take Profit must be below mark price'
   }
   return ''

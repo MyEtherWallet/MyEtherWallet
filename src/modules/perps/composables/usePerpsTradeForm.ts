@@ -99,6 +99,16 @@ export function usePerpsTradeForm() {
   )
 
   const setOrderSide = (side: OrderSide) => {
+    if (orderSide.value !== side) {
+      // Switching side inverts the valid TP/SL direction (a long's take profit
+      // sits above mark and stop loss below; a short is the reverse), so any
+      // previously-set targets no longer apply — clear both the committed and
+      // draft values along with their pill highlights.
+      clearTakeProfit()
+      clearStopLoss()
+      clearTempTakeProfit()
+      clearTempStopLoss()
+    }
     orderSide.value = side
     walletMenuStore.setSelectedTradeOrderSide(side)
   }
@@ -1740,6 +1750,7 @@ export function usePerpsTradeForm() {
     tempStopLossPrice,
     activeTpPill,
     activeSlPill,
+    isTpSlLong,
     openAutoCloseModal,
     setTakeProfitPct,
     setStopLossPct,
