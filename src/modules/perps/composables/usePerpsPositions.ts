@@ -1,6 +1,6 @@
 import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
-import { usePerpsAuth } from './usePerpsAuth'
+import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 import type { Position } from '../sdk/types'
@@ -36,20 +36,33 @@ function startWs() {
   ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
 
-  watch(token, (newToken, oldToken) => {
-    if (oldToken) {
-      positions.value = []
-      hasLoaded.value = false
-    }
-    if (newToken) void fetchPositions()
-  }, { immediate: true })
-
-  watch(refreshKey, () => {
-    if (token.value) void fetchPositions()
+  onPerpsAuthReset(() => {
+    positions.value = []
+    hasLoaded.value = false
   })
 
+  // Detached scope so these singleton watchers survive the unmount of the first
+  // component that calls usePerpsPositions() — otherwise they die on route/panel
+  // change and, guarded by `initialized`, never re-register, so an account
+  // switch A→B stops clearing/refetching and keeps showing A's positions.
   effectScope(true).run(() => {
+    watch(token, (newToken, oldToken) => {
+      if (oldToken) {
+        positions.value = []
+        hasLoaded.value = false
+      }
+      if (newToken) void fetchPositions()
+    }, { immediate: true })
+
+    watch(refreshKey, () => {
+      if (token.value) void fetchPositions()
+    })
+
     perpsWs.subscribe<Position>('positionsPerps', (rows) => {
+      // Ignore pushes while signed out / mid wallet-switch — see the balancePerps
+      // guard in usePerpsAuth: a stale frame for the previous account would
+      // otherwise repopulate positions we just cleared.
+      if (!token.value) return
       positions.value = rows
       hasLoaded.value = true
     })

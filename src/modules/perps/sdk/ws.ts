@@ -81,6 +81,18 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   function logout() {
     pendingToken = null
     authStatus.value = 'unauthenticated'
+    // Explicitly unsubscribe every private channel server-side before logging
+    // out. On an account switch (logout-as-A → login-as-B) this forces the
+    // server to treat the follow-up subscribe as brand new and push a fresh
+    // snapshot for account B, instead of considering the channel still-active
+    // from account A and withholding it — which would leave A's data on screen.
+    // Channels stay in `subscribedChannels` so the `loggedIn` handler
+    // re-subscribes them for the new account.
+    for (const ch of subscribedChannels) {
+      if (isPrivate(ch as WsChannel)) {
+        _send({ op: 'unsubscribe', channel: ch as WsChannel })
+      }
+    }
     _send({ op: 'logout' })
   }
 

@@ -24,9 +24,9 @@ describe('takeProfitError (MEW-1912)', () => {
         key: 'perps.errors.tp-above-mark',
       })
     })
-    it('rejects zero as below mark', () => {
+    it('rejects zero as non-positive (backend rejects it for either side)', () => {
       expect(takeProfitError(0, MARK, true, DEC)).toEqual({
-        key: 'perps.errors.tp-above-mark',
+        key: 'perps.errors.tp-above-zero',
       })
     })
   })

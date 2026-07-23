@@ -54,11 +54,14 @@ export function takeProfitError(
       key: 'perps.errors.tp-max',
       params: { max: MAX_TRIGGER_PRICE_LABEL },
     }
+  // The backend rejects a non-positive trigger price ("must be positive",
+  // error_code stop_order_trigger_price_negative) for either side, so a short's
+  // take profit still has to stay above 0 even though profit grows as price
+  // falls.
+  if (price <= 0) return { key: 'perps.errors.tp-above-zero' }
   if (isLong) {
-    // For a long, take profit above the mark also guarantees it is positive.
     if (price <= markPrice) return { key: 'perps.errors.tp-above-mark' }
   } else {
-    if (price <= 0) return { key: 'perps.errors.tp-above-zero' }
     if (price >= markPrice) return { key: 'perps.errors.tp-below-mark' }
   }
   return null

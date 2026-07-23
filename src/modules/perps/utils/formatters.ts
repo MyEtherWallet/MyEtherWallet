@@ -215,3 +215,20 @@ export const directionKey = (direction: string | undefined): string => {
   if (!direction) return ''
   return directionLabels[direction] ?? direction
 }
+
+// Withdrawal status is a WITHDRAWAL_* enum (see WalletWithdrawal in sdk/types).
+// The label is localized via perps.positions.dw-status.* (PerpsPositionsTable's
+// statusKey); this maps a status to its display color only.
+export const withdrawalStatusColor = (status: string): string => {
+  switch (status) {
+    case 'WITHDRAWAL_SUCCESS':
+      return 'text-success'
+    case 'WITHDRAWAL_PENDING':
+      return 'text-warning'
+    case 'WITHDRAWAL_FAILURE':
+      return 'text-error'
+    default:
+      // WITHDRAWAL_CANCELLED / WITHDRAWAL_UNKNOWN / anything unmapped
+      return 'text-info'
+  }
+}

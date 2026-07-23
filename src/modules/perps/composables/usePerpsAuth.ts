@@ -13,8 +13,15 @@ import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
+// Absolute Unix-second expiry per stored token, index-aligned with the token
+// array above, so a switch to a wallet whose token has expired falls through to
+// a fresh signed login instead of silently restoring a dead token.
+const STORAGE_KEY_EXPIRATION = 'perps_auth_expiration'
+// Treat a token as expired slightly before its real deadline so it can't lapse
+// mid-request right after we restore it.
+const TOKEN_EXPIRY_BUFFER_SECS = 60
 
-function getStoredArray(key: string): string[] {
+function getStoredArray<T = string>(key: string): T[] {
   try {
     const parsed = JSON.parse(localStorage.getItem(key) ?? '[]')
     return Array.isArray(parsed) ? parsed : []
@@ -23,15 +30,38 @@ function getStoredArray(key: string): string[] {
   }
 }
 
+// Missing/malformed expiry → not-expired: pre-existing sessions stored before
+// expiry tracking keep working, and the server's 401 → onUnauthorized path still
+// catches a genuinely dead legacy token. Only a known, elapsed expiry blocks a
+// silent restore.
+function isTokenExpired(expirationSecs: unknown): boolean {
+  if (typeof expirationSecs !== 'number' || !Number.isFinite(expirationSecs) || expirationSecs <= 0) {
+    return false
+  }
+  return Date.now() / 1000 >= expirationSecs - TOKEN_EXPIRY_BUFFER_SECS
+}
+
 const token = ref<string | null>(null)
 const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
+const isRestoringAuth = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
 const showSigningPrompt = ref(false)
 const signingMessage = ref<string | null>(null)
 const isHardwareWalletSigning = ref(false)
 const isWaitingForConfirm = ref(false)
+
+// Post-transaction poll. After a deposit/withdrawal the on-chain broadcast and
+// backend settlement are asynchronous, so a single refresh isn't enough — the
+// balance/history won't reflect the pending transfer yet. We bump refreshKey on
+// an interval for a bounded window so every data composable (balance, deposits,
+// withdrawals, fills, summary) re-fetches until the transfer settles, even if
+// the WS push is missed. Kicking it off again restarts the window.
+const POST_TX_POLL_INTERVAL_MS = 20_000 // 20s
+const POST_TX_POLL_DURATION_MS = 120_000 // 2 min
+let _postTxPollTimer: ReturnType<typeof setInterval> | null = null
+let _postTxPollStop: ReturnType<typeof setTimeout> | null = null
 
 let _authRestored = false
 let _currentAddress: string | null = null
@@ -45,31 +75,70 @@ function _waitForSignConfirmation(): Promise<void> {
   })
 }
 let _walletWatcherRegistered = false
+// Detached scope so the walletAddress watcher survives the unmount of whichever
+// component first called usePerpsAuth(). Without it the watcher is owned by that
+// component's setup scope and Vue disposes it on unmount (route / side-panel
+// change) — after which the `_walletWatcherRegistered` guard permanently blocks
+// re-registration, so a later address switch A→B never resets the token and the
+// UI keeps serving account A's positions/balance/history.
+const _walletWatcherScope = effectScope(true)
+
+// Data composables (positions, balance, summary, portfolio graph) register a
+// callback here so auth teardown — sign-out AND account switch — can wipe their
+// singleton caches synchronously and directly, instead of depending on a
+// per-composable `watch(token)` being alive at that moment. Showing a previous
+// account's balances/positions is a correctness/trust bug, so the reset must not
+// hinge on watcher liveness or on the WS pushing a fresh snapshot.
+const _dataResetHandlers = new Set<() => void>()
+export function onPerpsAuthReset(fn: () => void): () => void {
+  _dataResetHandlers.add(fn)
+  return () => {
+    _dataResetHandlers.delete(fn)
+  }
+}
+function resetPerpsData() {
+  for (const fn of _dataResetHandlers) {
+    try {
+      fn()
+    } catch {
+      // a failing reset handler must not block the others
+    }
+  }
+}
 
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
+  const storedExpirations: number[] = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
   for (let i = 0; i < storedTokens.length; i++) {
+    let decryptedToken: string
     try {
-      const decryptedToken = await decrypt(storedTokens[i], address)
-      token.value = decryptedToken
-      perpsClient.setToken(decryptedToken)
-      perpsWs.login(decryptedToken)
-      _authRestored = true
-      try {
-        accountId.value = storedAccounts[i]
-          ? await decrypt(storedAccounts[i], address)
-          : null
-
-      } catch {
-        _authRestored = false
-        accountId.value = null
-      }
-      break
+      decryptedToken = await decrypt(storedTokens[i], address)
     } catch {
       _authRestored = false
       // token belongs to a different address, try next
+      continue
     }
+    // This entry belongs to `address`. Only restore it while it is still valid —
+    // an expired token must fall through so the caller prompts for a fresh
+    // signature rather than silently restoring a token the API would 401.
+    if (isTokenExpired(storedExpirations[i])) {
+      _authRestored = false
+      break
+    }
+    token.value = decryptedToken
+    perpsClient.setToken(decryptedToken)
+    perpsWs.login(decryptedToken)
+    _authRestored = true
+    try {
+      accountId.value = storedAccounts[i]
+        ? await decrypt(storedAccounts[i], address)
+        : null
+    } catch {
+      _authRestored = false
+      accountId.value = null
+    }
+    break
   }
 }
 
@@ -80,6 +149,17 @@ async function clearAuth() {
   accountId.value = null
   perpsClient.setToken(null)
   perpsWs.logout()
+  resetPerpsData()
+  // Cancel any in-flight post-transaction poll so it doesn't keep bumping
+  // refreshKey (and refetching) for a signed-out / switched-away account.
+  if (_postTxPollTimer) {
+    clearInterval(_postTxPollTimer)
+    _postTxPollTimer = null
+  }
+  if (_postTxPollStop) {
+    clearTimeout(_postTxPollStop)
+    _postTxPollStop = null
+  }
   // Reset module-scope guards so a subsequent Sign In click is not silently
   // blocked by a stale auth-restored flag from a previous session.
   _authRestored = false
@@ -89,6 +169,7 @@ async function clearAuth() {
   if (!wallet.value) return;
   const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+  const storedExp = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
 
   const address = await wallet.value!.getAddress();
   const results = await Promise.all(
@@ -97,16 +178,23 @@ async function clearAuth() {
         await decrypt(eToken, address)
         return null
       } catch {
-        return { token: eToken, account: storedAccId[i] ?? null }
+        return {
+          token: eToken,
+          account: storedAccId[i] ?? null,
+          exp: storedExp[i] ?? 0,
+        }
       }
     }),
   )
-  const kept = results.filter(Boolean) as { token: string; account: string | null }[]
-  const filteredStoredTokens = kept.map(e => e.token)
-  const filteredStoredAccounts = kept.map(e => e.account)
+  const kept = results.filter(Boolean) as {
+    token: string
+    account: string | null
+    exp: number
+  }[]
 
-  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(filteredStoredTokens))
-  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(filteredStoredAccounts))
+  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(kept.map(e => e.token)))
+  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(kept.map(e => e.account)))
+  localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify(kept.map(e => e.exp)))
 }
 
 perpsClient.setOnUnauthorized(() => {
@@ -121,30 +209,43 @@ export function usePerpsAuth() {
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
 
   // Register the walletAddress watcher exactly once for the lifetime of the
-  // module. Re-registering after a sign-out would race with `clearAuth()`'s
-  // localStorage filtering — the fresh watcher's `immediate: true` fire would
-  // call `tryRestoreAuth` against the unfiltered localStorage and re-hydrate
-  // the token we just cleared.
+  // module, inside a detached effectScope so it outlives the caller component's
+  // unmount (see `_walletWatcherScope` above). Re-registering after a sign-out
+  // would race with `clearAuth()`'s localStorage filtering — the fresh
+  // watcher's `immediate: true` fire would call `tryRestoreAuth` against the
+  // unfiltered localStorage and re-hydrate the token we just cleared.
   if (!_walletWatcherRegistered) {
     _walletWatcherRegistered = true
-    watch(
-      walletAddress,
-      async address => {
-        if (!address || address === _currentAddress) return
-        _currentAddress = address
-        token.value = null
-        accountId.value = null
-        perpsClient.setToken(null)
-        perpsWs.logout()
-        await tryRestoreAuth(address)
-        if (token.value) refreshKey.value++
-      },
-      { immediate: true },
-    )
+    _walletWatcherScope.run(() => {
+      watch(
+        walletAddress,
+        async address => {
+          if (!address || address === _currentAddress) return
+          _currentAddress = address
+          // Flip synchronously — before the await — so a same-tick auto-login
+          // watcher (ViewPerps) can see a restore is in flight and hold off on
+          // prompting for a signature until we know whether the new wallet has a
+          // valid stored token.
+          isRestoringAuth.value = true
+          token.value = null
+          accountId.value = null
+          perpsClient.setToken(null)
+          perpsWs.logout()
+          resetPerpsData()
+          try {
+            await tryRestoreAuth(address)
+          } finally {
+            isRestoringAuth.value = false
+          }
+          if (token.value) refreshKey.value++
+        },
+        { immediate: true },
+      )
+    })
   }
 
   async function login(source?: PerpsEventSource) {
-    if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
+    if (isRestoringAuth.value || _authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
@@ -192,13 +293,35 @@ export function usePerpsAuth() {
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+      const storedExp = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
+
+      // Drop any existing entries for this address so re-login doesn't accumulate stale tokens.
+      const filterResults = await Promise.all(
+        storedTokens.map(async (eToken: string, i: number) => {
+          try {
+            await decrypt(eToken, address)
+            return null
+          } catch {
+            return {
+              token: eToken,
+              account: storedAccId[i] ?? null,
+              exp: storedExp[i] ?? 0,
+            }
+          }
+        }),
+      )
+      const kept = filterResults.filter(Boolean) as {
+        token: string
+        account: string | null
+        exp: number
+      }[]
+
       const encryptedToken = await encrypt(token.value, address)
       const encryptedAcc = await encrypt(accountId.value, address)
 
-      storedTokens.push(encryptedToken)
-      storedAccId.push(encryptedAcc)
-      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(storedTokens))
-      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(storedAccId))
+      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify([...kept.map(e => e.token), encryptedToken]))
+      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify([...kept.map(e => e.account), encryptedAcc]))
+      localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify([...kept.map(e => e.exp), complete.result.expirationSecs]))
 
       await perpsClient.acceptAgreement({
         termsVersion: 1,
@@ -246,16 +369,41 @@ export function usePerpsAuth() {
     refreshKey.value++
   }
 
+  function stopPostTxPoll() {
+    if (_postTxPollTimer) {
+      clearInterval(_postTxPollTimer)
+      _postTxPollTimer = null
+    }
+    if (_postTxPollStop) {
+      clearTimeout(_postTxPollStop)
+      _postTxPollStop = null
+    }
+  }
+
+  // Refresh immediately, then keep polling every 20s for 2 minutes so a pending
+  // deposit/withdrawal settles into the balance/history without the user having
+  // to refresh manually. Restarts the window if called again mid-poll.
+  function startPostTxPoll() {
+    triggerRefresh()
+    stopPostTxPoll()
+    _postTxPollTimer = setInterval(() => {
+      if (token.value) refreshKey.value++
+    }, POST_TX_POLL_INTERVAL_MS)
+    _postTxPollStop = setTimeout(stopPostTxPoll, POST_TX_POLL_DURATION_MS)
+  }
+
   return {
     token,
     accountId,
     isAuthenticating,
+    isRestoringAuth,
     authError,
     isWalletConnected,
     login,
     logout,
     refreshKey,
     triggerRefresh,
+    startPostTxPoll,
     showSigningPrompt,
     signingMessage,
     isHardwareWalletSigning,
@@ -298,38 +446,65 @@ export function usePerpsBalance() {
 
     _sharedFetchBalance = fetchBalance
 
-    watch(
-      token,
-      (now, prev) => {
-        if (prev && !now) {
-          balance.value = null
-        }
-        if (now) void fetchBalance()
-      },
-      { immediate: true },
-    )
+    // Poll the balance while the user is connected. The WS `balancePerps` push
+    // keeps it live during active use, but a periodic refetch guards against
+    // dropped/missed WS frames so the balance never drifts stale for long.
+    function poll() {
+      if (token.value) {
+        void fetchBalance()
+      } else {
+        balance.value = null
+      }
+    }
 
-    watch(refreshKey, () => {
-      if (token.value) void fetchBalance()
-    })
-
-    effectScope(true).run(() => {
-      perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
-        if (rows.length === 0) return
-        balance.value = rows[0]
-      })
+    onPerpsAuthReset(() => {
+      balance.value = null
+      loading.value = false
     })
 
     const perpsToasts = usePerpsToasts()
-    watch(
-      () => _sharedBalance.value?.underLiquidation,
-      (current, previous) => {
-        if (current === true && previous === false) {
-          perpsToasts.toastLiquidationInitiated()
-        }
-      },
-      { immediate: false },
-    )
+    // Detached scope so these singleton watchers survive the unmount of the
+    // first component that calls usePerpsBalance() — otherwise they die on
+    // route/panel change and, guarded by `_balanceInitialized`, never
+    // re-register, so an account switch A→B stops clearing/refetching balance.
+    effectScope(true).run(() => {
+      watch(
+        token,
+        (now, prev) => {
+          if (prev && !now) {
+            balance.value = null
+          }
+          if (now) void fetchBalance()
+        },
+        { immediate: true },
+      )
+
+      watch(refreshKey, () => {
+        if (token.value) void fetchBalance()
+      })
+
+      perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
+        // Ignore pushes while signed out / mid wallet-switch: the socket can
+        // still be authenticated as the previous account until logout/login
+        // round-trips, and an in-flight frame would otherwise repopulate the
+        // just-cleared balance with the old wallet's value.
+        if (!token.value) return
+        if (rows.length === 0) return
+        balance.value = rows[0]
+      })
+
+      watch(
+        () => _sharedBalance.value?.underLiquidation,
+        (current, previous) => {
+          if (current === true && previous === false) {
+            perpsToasts.toastLiquidationInitiated()
+          }
+        },
+        { immediate: false },
+      )
+    })
+
+    setInterval(poll, 60_000) // refresh every 1 minute
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }
@@ -340,9 +515,10 @@ const _sharedSummary = ref<PortfolioSummary | null>(null)
 const _sharedSummaryLoading = ref(false)
 let _summaryInitialized = false
 let _sharedFetchSummary: (() => Promise<void>) | null = null
+const _summaryScope = effectScope(true)
 
 export function usePerpsPortfolioSummary() {
-  const { token } = usePerpsAuth()
+  const { token, refreshKey } = usePerpsAuth()
   const summary = _sharedSummary
   const loading = _sharedSummaryLoading
 
@@ -373,7 +549,29 @@ export function usePerpsPortfolioSummary() {
       }
     }
 
-    poll()
+    onPerpsAuthReset(() => {
+      summary.value = null
+    })
+
+    // Detached scope so the watchers outlive the first caller's unmount (see
+    // usePerpsBalance above). Without a token watcher the summary only
+    // refreshed on the 5-minute interval, so after an account switch A→B it
+    // kept showing account A's summary until the next tick.
+    _summaryScope.run(() => {
+      watch(
+        token,
+        (now, prev) => {
+          if (prev && !now) summary.value = null
+          if (now) void fetchSummary()
+        },
+        { immediate: true },
+      )
+
+      watch(refreshKey, () => {
+        if (token.value) void fetchSummary()
+      })
+    })
+
     setInterval(poll, 300_000) // refresh every 5 minutes
 
     _sharedFetchSummary = fetchSummary

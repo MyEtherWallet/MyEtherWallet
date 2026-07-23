@@ -1,6 +1,6 @@
 import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
-import { usePerpsAuth } from './usePerpsAuth'
+import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
 import type { PortfolioGraphPoint } from '../sdk/types'
 
 export type GraphRange = '24h' | '7d' | '30d' | 'all'
@@ -45,6 +45,11 @@ export function usePerpsPortfolioGraph() {
 
   if (!_initialized) {
     _initialized = true
+
+    onPerpsAuthReset(() => {
+      _graphData.value = []
+      _cache.value.clear()
+    })
 
     // Clear cache every 5 minutes
     setInterval(() => {

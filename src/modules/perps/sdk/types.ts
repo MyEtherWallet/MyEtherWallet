@@ -383,10 +383,17 @@ export interface WalletDeposit {
   usdValue: string
 }
 
+export type WithdrawalStatus =
+  | 'WITHDRAWAL_SUCCESS'
+  | 'WITHDRAWAL_FAILURE'
+  | 'WITHDRAWAL_PENDING'
+  | 'WITHDRAWAL_CANCELLED'
+  | 'WITHDRAWAL_UNKNOWN'
+
 export interface WalletWithdrawal {
   coin: string
   size: string
-  status: string
+  status: WithdrawalStatus
   address: string
   withdrawal_id: string
   txid: string
