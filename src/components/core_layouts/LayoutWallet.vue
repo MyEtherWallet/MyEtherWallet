@@ -63,6 +63,7 @@
             </button>
             <!-- Perps button -->
             <button
+              v-if="!isTradingRestrictedInRegion"
               @click="openPanel('perps')"
               :class="[
                 walletPanel === 'perps' && isOpenSideMenu
@@ -199,7 +200,7 @@
             <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
             <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
             <ModulePerpsTrade
-              v-else-if="walletPanel === 'perps'"
+              v-else-if="walletPanel === 'perps' && !isTradingRestrictedInRegion"
               key="perps-trade"
             />
             <ModulePurchase
@@ -249,6 +250,7 @@ import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingToolt
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
+import { useTradingRestriction } from '@/composables/useTradingRestriction'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
@@ -258,6 +260,7 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
+const { isTradingRestrictedInRegion } = useTradingRestriction()
 
 onMounted(() => {
   if (
