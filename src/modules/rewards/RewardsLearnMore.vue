@@ -177,11 +177,15 @@ const infoItems = computed(() => [
   },
   {
     icon: 'calendar',
-    text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
+    text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet.',
   },
   {
     icon: 'wallet-icon',
-    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+    text: 'The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.',
+  },
+  {
+    icon: 'currency-dollar-gray',
+    text: 'Cash out transactions do not qualify.',
   },
   {
     icon: 'face-frown',

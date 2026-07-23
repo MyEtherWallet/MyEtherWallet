@@ -14,7 +14,7 @@ class Web3InjectedWallet extends BaseEvmWallet {
 
   constructor(provider: Eip6963Provider, chainId: string) {
     super(chainId)
-
+    console.log(chainId)
     this.provider = provider
     this.address = '0x'
   }
@@ -50,6 +50,7 @@ class Web3InjectedWallet extends BaseEvmWallet {
   override async SendTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<HexPrefixedString> {
+    console.log(this, 'hello?')
     const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
       hexToBytes(serializedTx),
       { common: commonGenerator(BigInt(this.chainId), Hardfork.London) },
