@@ -38,6 +38,7 @@ import type {
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
+import { isExpectedTradeError } from '@/modules/trade/composables/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
 export type HardcodedTokenInfo = {
   address: string
@@ -233,15 +234,29 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
+      // Preserve the original message (the caller lowercases it for display)
+      // and keep the wallet/RPC `code`, then flag expected client errors —
+      // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
+      // pair / invalid order) — so the caller (confirmTrade) can surface them
+      // to the user while skipping Sentry capture. The previous catch re-threw
+      // a bare Error that dropped `code`, collapsing user cancellations into
+      // opaque "Failed to submit order to 1inch" noise in Sentry.
       const errorMessage =
         e instanceof Error && e.message
-          ? e.message.toLowerCase()
+          ? e.message
           : (e as any).details
             ? (e as any).details
             : typeof e === 'string'
               ? e
               : 'Failed to submit order to 1inch'
-      throw new Error(errorMessage)
+      const error = new Error(errorMessage) as Error & {
+        code?: number
+        expectedClientError?: boolean
+      }
+      const code = (e as { code?: number }).code
+      if (typeof code === 'number') error.code = code
+      error.expectedClientError = isExpectedTradeError(e)
+      throw error
     }
   }
 
