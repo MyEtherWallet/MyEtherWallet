@@ -241,11 +241,18 @@ class OneInchFusion {
       // to the user while skipping Sentry capture. The previous catch re-threw
       // a bare Error that dropped `code`, collapsing user cancellations into
       // opaque "Failed to submit order to 1inch" noise in Sentry.
+      // Narrow to a non-null object first: the SDK/wallet may throw `null` or
+      // `undefined`, and reading `.details` / `.code` off those would raise a
+      // TypeError that escapes as fresh Sentry noise — the opposite of intent.
+      const errObj =
+        typeof e === 'object' && e !== null
+          ? (e as Record<string, unknown>)
+          : undefined
       const errorMessage =
         e instanceof Error && e.message
           ? e.message
-          : (e as any).details
-            ? (e as any).details
+          : errObj && typeof errObj.details === 'string'
+            ? errObj.details
             : typeof e === 'string'
               ? e
               : 'Failed to submit order to 1inch'
@@ -253,8 +260,7 @@ class OneInchFusion {
         code?: number
         expectedClientError?: boolean
       }
-      const code = (e as { code?: number }).code
-      if (typeof code === 'number') error.code = code
+      if (errObj && typeof errObj.code === 'number') error.code = errObj.code
       error.expectedClientError = isExpectedTradeError(e)
       throw error
     }
