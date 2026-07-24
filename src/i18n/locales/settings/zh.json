@@ -1,0 +1,34 @@
+{
+  "settings": {
+    "title": "设置",
+    "preferences": "偏好设置",
+    "security": "安全",
+    "currency": "货币",
+    "language": "语言",
+    "default_fee": "默认费用",
+    "usage_analytics": "使用分析",
+    "usage_analytics_tooltip": "收集匿名使用数据以帮助改进应用",
+    "open": "打开设置",
+    "select_transaction_fee": "选择交易费用",
+    "select_language": "选择语言",
+    "fee_description": "此费用由以太坊网络收取，并会根据网络拥堵情况波动。MEW 不会从中获利。",
+    "fee_option": {
+      "economy": {
+        "label": "经济",
+        "description": "除非网络活动增加，否则很可能会被确认"
+      },
+      "recommended": {
+        "label": "推荐",
+        "description": "在大多数情况下都能可靠地被确认"
+      },
+      "higher": {
+        "label": "较高优先级",
+        "description": "更有可能快速被确认"
+      },
+      "highest": {
+        "label": "最高优先级",
+        "description": "最有可能快速被确认"
+      }
+    }
+  }
+}

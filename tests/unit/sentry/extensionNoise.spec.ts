@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { isExtensionOrProviderError } from '@/sentry/extensionNoise'
+import { InvalidAddressError } from 'viem'
+import {
+  isExtensionOrProviderError,
+  isInvalidWalletAddressError,
+} from '@/sentry/extensionNoise'
 
 describe('isExtensionOrProviderError', () => {
   it('is true for the EIP-1193 4900 "disconnected" rejection from an extension', () => {
@@ -63,5 +67,45 @@ describe('isExtensionOrProviderError', () => {
     expect(isExtensionOrProviderError(undefined)).toBe(false)
     expect(isExtensionOrProviderError('chrome-extension://x')).toBe(false)
     expect(isExtensionOrProviderError(new Error('plain'))).toBe(false)
+  })
+})
+
+describe('isInvalidWalletAddressError', () => {
+  it('is true for a real viem InvalidAddressError instance', () => {
+    // The exact production trigger: a wallet returns a malformed account
+    // address from eth_requestAccounts and viem's getAddress throws.
+    const err = new InvalidAddressError({
+      address: '87ee29ce5319f07638605abc5f053e40d4e1b1d94e',
+    })
+    expect(isInvalidWalletAddressError(err)).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with name)', () => {
+    // Sentry hands beforeSend the original exception, but be robust to a
+    // serialized plain object carrying only the viem error name.
+    expect(
+      isInvalidWalletAddressError({
+        name: 'InvalidAddressError',
+        message: 'Address "87ee29ce…94e" is invalid.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isInvalidWalletAddressError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(isInvalidWalletAddressError(new Error('boom'))).toBe(false)
+    expect(
+      isInvalidWalletAddressError({ name: 'SomeOtherError', message: 'x' }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isInvalidWalletAddressError(null)).toBe(false)
+    expect(isInvalidWalletAddressError(undefined)).toBe(false)
+    expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
   })
 })

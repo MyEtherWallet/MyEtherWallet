@@ -116,6 +116,7 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
@@ -338,10 +339,14 @@ const unlockWallet = async () => {
     loadList()
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)
+    const isNoDerivationPaths =
+      errorMessage === 'No supported derivation paths found for this wallet'
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: isNoDerivationPaths
+        ? t('access.no_supported_derivation_paths')
+        : errorMessage,
     })
     // Don't report expected user errors to Sentry
     if (!errorMessage.includes('Make sure you have')) {
@@ -364,13 +369,45 @@ onMounted(async () => {
   }
 })
 
+// User dismissing the WebUSB/BLE device picker is an expected action, not an
+// error. WebUSB surfaces it as TransportOpenUserCancelled / "No device selected"
+// (or a DOMException NotFoundError); the BLE flow surfaces it as a generic
+// "...was cancelled" message. Detect all of these so we don't toast or report
+// the cancellation to Sentry as noise.
+const isUserCancelledTransport = (e: unknown): boolean => {
+  const name = (e as { name?: string })?.name
+  const message = e instanceof Error ? e.message : String(e ?? '')
+  return (
+    name === 'TransportOpenUserCancelled' ||
+    name === 'NotFoundError' ||
+    /no device selected|was cancelled|user cancel(l)?ed/i.test(message)
+  )
+}
+
+const openTransport = async (getTransport: () => Promise<unknown>) => {
+  try {
+    await getTransport()
+    return true
+  } catch (e) {
+    if (isUserCancelledTransport(e)) return false
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('error_connecting'),
+      textSecondary: errorMessage,
+    })
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    return false
+  }
+}
+
 const connectViaUSB = async () => {
-  await getLedgerWebUSBTransport()
+  if (!(await openTransport(getLedgerWebUSBTransport))) return
   return unlockWallet()
 }
 
 const connectViaBluetooth = async () => {
-  await getLedgerBLETransport()
+  if (!(await openTransport(getLedgerBLETransport))) return
   return unlockWallet()
 }
 
@@ -452,8 +489,10 @@ const loadList = async (page: number = 0) => {
     if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Something went wrong',
-      textSecondary: e instanceof Error ? e.message : String(e),
+      text: t('common.something_went_wrong'),
+      textSecondary:
+        getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
+        (e instanceof Error ? e.message : String(e)),
     })
     captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
@@ -566,7 +605,15 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
 const { closeAccessDialog } = useAccessStore()
 
 const access = async () => {
-  const wallet = walletList.value[selectedIndex.value]?.walletInstance
+  // `selectedIndex` holds the derivation index (set by SelectAddressList from
+  // `walletList[i].index`), not the array position. On page 2+ those differ, so
+  // indexing the array directly returned undefined and crashed in
+  // markRaw(undefined). Look the entry up by its derivation index and bail out
+  // if none matches.
+  const wallet = walletList.value.find(
+    item => item.index === selectedIndex.value,
+  )?.walletInstance
+  if (!wallet) return
   isUnlockingWallet.value = true
 
   setWallet(

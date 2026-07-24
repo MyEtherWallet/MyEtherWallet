@@ -158,6 +158,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { useTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -175,6 +176,7 @@ const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isTradingRestrictedInRegion } = useTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
@@ -187,28 +189,36 @@ const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
  * Menu Items
  ------------------------------*/
 const coreMenuList = computed<AppMenuListItem[]>(() => {
-  return [
+  const items: AppMenuListItem[] = [
     {
       title: t('home'),
       routeName: ROUTES_MAIN.HOME.NAME,
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('stocks'),
+      title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
     },
     {
-      title: t('crypto'),
+      title: t('common.crypto'),
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
-    },
   ]
+  if (!isTradingRestrictedInRegion.value) {
+    items.push({
+      title: t('perpetuals'),
+      routeName: ROUTES_MAIN.PERPS.NAME,
+      iconID: ICON_IDS.PERPS,
+    })
+  }
+  items.push({
+    title: t('earn'),
+    routeName: ROUTES_MAIN.EARN.NAME,
+    iconID: ICON_IDS.STAKE,
+  })
+  return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
@@ -222,16 +232,16 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
-const learnMenuList: AppSelectOption[] = [
+const learnMenuList = computed<AppSelectOption[]>(() => [
   {
-    label: 'Help Center',
+    label: t('common.help_center'),
     value: 'https://help.myetherwallet.com/en/',
   },
   {
-    label: 'Blog',
+    label: t('common.blog'),
     value: 'https://www.myetherwallet.com/blog',
   },
-]
+])
 
 const displayLinks = computed(() => {
   return coreMenuList.value
@@ -267,7 +277,7 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
-            if(accounts && (accounts as string[]).length === 0) {
+            if (accounts && (accounts as string[]).length === 0) {
               disconnectWallet()
               return
             }

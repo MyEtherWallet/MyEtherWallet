@@ -8,6 +8,7 @@ import * as sessionReplay from '@amplitude/session-replay-browser'
 import { pageUrlEnrichmentPlugin } from "@amplitude/plugin-page-url-enrichment-browser";
 import { pageViewedEnrichmentPlugin } from './pageViewedEnrichment';
 import configs from '@/configs';
+import { safeLocalStorage } from '@/utils/safeStorage';
 
 const __TMP_VERSION__ = configs.APP_VERSION
 const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
@@ -22,7 +23,7 @@ const amplitude = createInstance()
  * Reads the persisted consent state from localStorage.
  */
 const getConsentToTrack = (): boolean => {
-  const initialPopupStateJson = localStorage.getItem(
+  const initialPopupStateJson = safeLocalStorage.getItem(
     StoreConfigs.LOCAL_STORAGE_KEYS.analytics,
   )
   if (!initialPopupStateJson) {

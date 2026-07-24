@@ -79,6 +79,9 @@ vi.mock('vue-router', () => ({
 
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({ t: (key: string) => key }),
+  // walletStore/walletUtils import the real `@/i18n` singleton at module load,
+  // which calls createI18n. Stub it so those transitive imports don't crash.
+  createI18n: () => ({ global: { t: (key: string) => key } }),
 }))
 
 // storeToRefs is mocked to an identity so the plain store mocks below (whose

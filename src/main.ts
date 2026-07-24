@@ -17,7 +17,11 @@ import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
-import { isExtensionOrProviderError } from '@/sentry/extensionNoise'
+import {
+  isExtensionOrProviderError,
+  isInvalidWalletAddressError,
+} from '@/sentry/extensionNoise'
+import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
 const app = createApp(App)
 
@@ -27,7 +31,7 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && process.env.NODE_ENV === 'production') {
   sentryInit({
     app,
     dsn,
@@ -41,16 +45,30 @@ if (dsn) {
       // auto-recovered by router.onError (reload once), so they are noise.
       'Unable to preload CSS',
       'Failed to fetch dynamically imported module',
+      // WalletConnect benign rejections when the user abandons the connection flow
+      'Proposal expired',
+      'Pairing expired',
+      'Request expired',
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
     // carry parsed extension frames).
     denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
-    // "provider disconnected"). These surface as serialized plain objects with
-    // no parsed frames, so denyUrls can't catch them — inspect the original
-    // exception instead. Genuine app errors are unaffected.
+    // "provider disconnected"), viem InvalidAddressError (a wallet returned a
+    // malformed address on connect — already handled with a user toast), and
+    // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
+    // surfacing as an unhandled "Connection is closed" rejection). These surface
+    // as serialized plain objects or bare strings with no parsed frames, so
+    // denyUrls can't catch them — inspect the original exception instead.
+    // Genuine app errors are unaffected.
     beforeSend(event, hint) {
-      if (isExtensionOrProviderError(hint?.originalException)) return null
+      const originalException = hint?.originalException
+      if (
+        isExtensionOrProviderError(originalException) ||
+        isInvalidWalletAddressError(originalException) ||
+        isTransientRpcError(originalException)
+      )
+        return null
       return event
     },
     integrations: [

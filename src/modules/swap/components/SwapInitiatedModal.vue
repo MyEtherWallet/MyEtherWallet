@@ -372,7 +372,7 @@ const notificationStatus = computed(() => {
 })
 
 const toTokenSymbol = computed(() => {
-  return snapshot.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
+  return snapshot.selectedQuote?.quote.options.toToken.symbol || t('swap.unknown')
 })
 
 const toTokenAmount = computed(() => {
@@ -394,7 +394,7 @@ const toTokenIcon = computed(() => {
 })
 
 const toTokenChain = computed(() => {
-  return snapshot.toChain?.nameLong || 'Unknown Chain'
+  return snapshot.toChain?.nameLong || t('swap.unknown_chain')
 })
 
 const toTokenChainImg = computed(() => {
@@ -407,7 +407,7 @@ const toTokenAddress = computed(() => {
 
 const fromTokenSymbol = computed(() => {
   return (
-    snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+    snapshot.selectedQuote?.quote.options.fromToken.symbol || t('swap.unknown_token')
   )
 })
 const fromTokenAmount = computed(() => {
@@ -424,7 +424,7 @@ const fromTokenAmountFiat = computed(() => {
 })
 
 const fromTokenChain = computed(() => {
-  return snapshot.fromChain?.name || 'Unknown Chain'
+  return snapshot.fromChain?.name || t('swap.unknown_chain')
 })
 const fromTokenIcon = computed(() => {
   return snapshot.selectedQuote?.quote.options.fromToken.logoURI || ethSvg
@@ -468,7 +468,7 @@ const title = computed(() => {
 })
 
 const completedNote = computed(() => {
-  const symbol = toTokenSymbol.value || 'the token'
+  const symbol = toTokenSymbol.value || t('swap.the_token')
   return isBridge.value
     ? t('swap.initiated.bridge-completed-note', { symbol })
     : t('swap.initiated.swap-completed-note', { symbol })
