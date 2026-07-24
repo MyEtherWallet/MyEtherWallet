@@ -66,7 +66,9 @@
       </div>
 
       <div class="mt-3 bg-white rounded-16 py-4 px-2">
-        <div class="px-2 py-2 mb-4">
+        <div
+          class="flex items-center px-2 pt-2 pb-6 mb-4 border-b border-grey-5"
+        >
           <div
             class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:max-w-[500px]"
           >

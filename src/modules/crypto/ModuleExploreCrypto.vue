@@ -367,6 +367,12 @@
                   <p class="font-normal text-s-14 text-black">
                     {{ token.price }}
                   </p>
+                  <p
+                    class="text-s-12 font-normal xs:hidden"
+                    :class="getPercentClass(getActivePercent(token))"
+                  >
+                    {{ parsePercent(getActivePercent(token)) }}
+                  </p>
                 </td>
                 <!-- Actions -->
 

@@ -1494,6 +1494,7 @@ watch(
       if (cancelled) return
       swapInfo.value = null
       swapGasFeeQuote.value = undefined
+      generalError.value = err?.message || 'Error fetching gas fees'
       const isExpectedQuoteError =
         err?.message === t('swap.error.pair-not-available') ||
         /insufficient funds/i.test(err?.message ?? '')

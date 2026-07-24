@@ -21,10 +21,12 @@
         @keypress="checkIfNumber"
         @paste="onAmountPaste"
       />
-      <app-token-select
-        v-model:selected-token-contract="selectedToken"
-        @open:select-token="setIsOpenSelectToken"
-      />
+      <slot name="token-select">
+        <app-token-select
+          v-model:selected-token-contract="selectedToken"
+          @open:select-token="setIsOpenSelectToken"
+        />
+      </slot>
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
@@ -64,6 +66,7 @@
         </p>
       </transition>
     </div>
+    <slot name="footer" />
   </div>
 </template>
 
@@ -97,6 +100,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  tokenObj: {
+    type: Object as PropType<TokenBalance | null>,
+    default: null,
+  },
 })
 
 //String will be returned when input is cleared --> ''
@@ -114,6 +121,7 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
+  if (props.tokenObj) return props.tokenObj
   if (isLoading.value || !selectedToken.value) return null
   return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
