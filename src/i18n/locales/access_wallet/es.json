@@ -1,0 +1,162 @@
+{
+  "access_wallet": {
+    "title": "Acceder al portafolio de MEW",
+    "need_help": "¿Necesitas ayuda para acceder a tu billetera?",
+    "search_wallet": "Busca tu billetera",
+    "select_wallet": "Selecciona tu billetera",
+    "recent": "Recientes",
+    "detected": "Detectadas",
+    "all_wallets": {
+      "title": "Todas las billeteras",
+      "description": "Ledger, clave privada, keystore, billeteras móviles, lo tenemos todo"
+    },
+    "not_found": "Billetera no encontrada:",
+    "sort": {
+      "popular": "Populares",
+      "name_a_z": "Nombre A-Z",
+      "name_z_a": "Nombre Z-A"
+    },
+    "sort_and_filter": "Ordenar y filtrar",
+    "filter": {
+      "all": "Todas",
+      "hardware": "Hardware",
+      "mobile": "Móviles",
+      "software": "Software"
+    },
+    "back_to_connect_options": "volver a las opciones de conexión",
+    "connect_wallet_title": "Conectar billetera",
+    "connect_with": "Conectar con {method}",
+    "method": {
+      "keystore": "Keystore",
+      "private_key": "clave privada",
+      "mnemonic_phrase": "frase mnemotécnica"
+    },
+    "wallet_name": {
+      "keystore": "Keystore",
+      "mnemonic": "Frase de recuperación (mnemotécnica)",
+      "private_key": "Clave privada"
+    },
+    "official_badge_alt": "MyEtherWallet oficial",
+    "help": {
+      "keystore": "Cómo conectar tu billetera con Keystore",
+      "private_key": "Cómo conectar con tu clave privada",
+      "mnemonic": "Cómo conectar con tu frase de recuperación",
+      "ledger": "Cómo conectar tu billetera Ledger",
+      "trezor": "Cómo conectar tu billetera Trezor",
+      "default": "¿Necesitas ayuda para conectar tu billetera?"
+    },
+    "toast": {
+      "wallet_connected": "Billetera conectada",
+      "wallet_connected_description": "Has conectado correctamente tu billetera {name}.",
+      "wallet_not_detected": "{wallet} no detectado",
+      "web3_wallet_not_detected": "Billetera Web3 no detectada",
+      "install_extension": "Instala la extensión {name}.",
+      "install_extension_or_select": "Instala la extensión {name} para conectarte o selecciona otra billetera.",
+      "click_here_to_install": "Haz clic aquí para instalar",
+      "could_not_connect": "No se pudo conectar a la billetera",
+      "connection_timed_out": "Se agotó el tiempo de conexión. Inténtalo de nuevo.",
+      "connect_request_pending": "Ya hay una solicitud de conexión pendiente, revisa la extensión de tu billetera",
+      "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera."
+    }
+  },
+  "access_wallet_keystore": {
+    "title": "Acceder a la billetera con archivo Keystore",
+    "upload_keystore": "Subir Keystore",
+    "enter_password": "Ingresar contraseña",
+    "select_keystore_file_title": "Selecciona tu archivo Keystore",
+    "select_keystore_file_description": "Selecciona el archivo Keystore que desbloquea tu billetera.",
+    "enter_password_title": "Ingresar contraseña",
+    "enter_password_description": "Ingresa tu contraseña para desbloquear tu billetera.",
+    "keystore_file_alt": "Archivo Keystore",
+    "select_keystore": "Seleccionar Keystore",
+    "invalid_password": "Contraseña no válida",
+    "error_reading_file": "Error al leer el archivo. Inténtalo de nuevo.",
+    "invalid_keystore_file": "Archivo Keystore no válido. Inténtalo de nuevo.",
+    "something_went_wrong": "Algo salió mal",
+    "error_accessing_wallet": "Hubo un error al acceder a la billetera. Inténtalo de nuevo."
+  },
+  "access_wallet_recovery_phrase": {
+    "title": "Acceder a la billetera con frase de recuperación",
+    "enter_phrase": "Ingresa tu frase",
+    "invalid_phrase": "Frase no válida",
+    "do_you_have_an_extra_word": "¿Tienes una palabra adicional?",
+    "enter_extra_word": "Ingresar palabra adicional",
+    "extra_word_known_as": "También conocida como \"frase de contraseña\" o \"palabra 13/25\"",
+    "step": {
+      "step1": {
+        "short": "Ingresar frase",
+        "title": "Ingresa tu frase de recuperación",
+        "description": "También llamada frase mnemotécnica, puedes usar una frase de 12, 15, 18, 21 o 24 palabras para acceder a tu billetera. Solo ingresa todas las palabras que tengas en tu frase."
+      },
+      "step2": {
+        "short": "dirección y red",
+        "title": "Selecciona la dirección y la red"
+      }
+    }
+  },
+  "access_wallet_trezor": {
+    "title": "Acceder a la billetera con Trezor",
+    "step": {
+      "step1": {
+        "short": "Conectar Trezor",
+        "title": "Conecta tu Trezor",
+        "description": "Conecta tu Trezor a la computadora. Sigue las instrucciones en la pestaña de conexión de Trezor."
+      },
+      "step2": {
+        "short": "dirección y red",
+        "title": "Selecciona la dirección y la red"
+      }
+    },
+    "connect": "Conecta tu Trezor"
+  },
+  "access_wallet_ledger": {
+    "title": "Acceder a la billetera con Ledger",
+    "step": {
+      "step1": {
+        "short": "Conectar Ledger",
+        "title": "Conecta tu Ledger",
+        "description": "Conecta tu Ledger a la computadora. Sigue las instrucciones en tu dispositivo Ledger."
+      },
+      "step2": {
+        "short": "dirección y red",
+        "title": "Selecciona la dirección y la red"
+      }
+    },
+    "connect": "Conecta tu Ledger",
+    "connect_usb": "Conecta tu Ledger por USB",
+    "connect_bluetooth": "o conecta por Bluetooth"
+  },
+  "access_wallet_private_key": {
+    "title": "Acceder a la billetera con clave privada",
+    "enter_private_key": "Ingresa tu clave privada",
+    "private_key_input_label": "campo de clave privada",
+    "invalid_private_key": "Clave privada no válida"
+  },
+  "wc_dialog": {
+    "title": "Conectar al portafolio de MEW",
+    "no_wallet": "¿No tienes una billetera?",
+    "get_wallet": "Obtener una billetera",
+    "scan_qr_code": "Escanea el código QR con { walletName } para conectar.",
+    "or_copy_link": "O copia el enlace",
+    "need_help": "Cómo conectar tu billetera"
+  },
+  "web3_wallet": {
+    "opening_wallet": "Abriendo { walletName }",
+    "confirm_in_extension": "Confirma la conexión en la extensión",
+    "connection_failed": "Conexión fallida"
+  },
+  "derivation_path": {
+    "title": "Ruta de derivación",
+    "description": "Selecciona la ruta de derivación para tu billetera. Si no estás seguro, déjala como predeterminada.",
+    "add_path": "Agregar ruta",
+    "select_path": "Seleccionar ruta de derivación",
+    "search": "Buscar por etiqueta o ruta",
+    "not_found": "No se encontraron rutas de derivación:",
+    "enter_label": "Ingresa la etiqueta",
+    "enter_path": "Ingresa la ruta",
+    "label_exists": "¡La etiqueta de derivación ya existe!",
+    "added_successfully": "¡Ruta de derivación personalizada añadida correctamente!",
+    "invalid_path": "¡Ruta de derivación no válida!"
+  },
+  "error_connecting": "No se pudo conectar. Revisa tu billetera para ver los errores"
+}

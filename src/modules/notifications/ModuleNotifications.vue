@@ -6,10 +6,10 @@
         v-model:selected="selectedCategory"
         :btn-list="categories"
         size="xs"
-        class="mb-5"
+        has-full-width
       >
         <template #btn-content="{ data }">
-          {{ data.label }}
+          {{ $t(data.label) }}
         </template>
       </app-btn-group>
 
@@ -65,7 +65,7 @@
         @click="deleteAllNotifications"
         class="text-primary text-s-14"
       >
-        Delete all
+        {{ $t('common.delete_all') }}
       </app-btn-text>
     </div>
   </div>
@@ -73,6 +73,7 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 //Components
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import TransactionContainer from './components/TransactionContainer.vue'
@@ -124,6 +125,7 @@ import {
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
 const { isNotificationsOpen } = storeToRefs(appLayoutStore)
+const { t } = useI18n()
 // Extended TradeOrder with runtime-only remainingTime
 interface TradeOrder extends SavedTradeOrder {
   remainingTime: number
@@ -132,15 +134,16 @@ interface TradeOrder extends SavedTradeOrder {
 // Category filter types
 interface CategoryOption {
   value: 'all' | 'trade' | 'txs' | 'swap' | 'bridge'
+  // i18n key resolved for display; kept stable so selection comparison is locale-independent
   label: string
 }
 
 const categories: CategoryOption[] = [
-  { value: 'all', label: 'All' },
-  { value: 'trade', label: 'Trades' },
-  { value: 'txs', label: 'Transactions' },
-  { value: 'swap', label: 'Swaps' },
-  { value: 'bridge', label: 'Bridge' },
+  { value: 'all', label: 'notifications_module.filter_all' },
+  { value: 'trade', label: 'notifications_module.filter_trades' },
+  { value: 'txs', label: 'notifications_module.filter_transactions' },
+  { value: 'swap', label: 'notifications_module.filter_swaps' },
+  { value: 'bridge', label: 'notifications_module.filter_bridge' },
 ]
 
 const selectedCategory = ref<CategoryOption>(categories[0])
@@ -149,13 +152,13 @@ const emptyText = computed<string | undefined>(() => {
   const category = selectedCategory.value.value
   switch (category) {
     case 'trade':
-      return 'Your stock trade orders will appear here.'
+      return t('notifications_module.empty_trade')
     case 'txs':
-      return 'Your send transactions will appear here.'
+      return t('notifications_module.empty_txs')
     case 'bridge':
-      return 'Your token bridges will appear here.'
+      return t('notifications_module.empty_bridge')
     case 'swap':
-      return 'Your token swaps will appear here.'
+      return t('notifications_module.empty_swap')
     default:
       return undefined
   }
@@ -399,7 +402,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
       // Show success toast with trade info
       toastStore.addToastMessage({
         type: ToastType.Success,
-        text: 'Trade Order Filled',
+        text: t('notifications_module.toast_trade_filled'),
         duration: 10000,
         tradeInfo: {
           fromToken: order.fromSymbol,
@@ -440,7 +443,10 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     if (!isNotificationsOpen.value) {
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
+        text:
+          status.status === 'cancelled'
+            ? t('notifications_module.toast_trade_cancelled')
+            : t('notifications_module.toast_trade_expired'),
         duration: 10000,
         tradeInfo: {
           fromToken: order.fromSymbol,
@@ -583,7 +589,10 @@ const updateNotificationStatus = (
       // Show toast for transaction status update
       toastStore.addToastMessage({
         type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-        text: `Transaction ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        text:
+          newStatus === 'confirmed'
+            ? t('notifications_module.toast_transaction_successful')
+            : t('notifications_module.toast_transaction_failed'),
         duration: 10000,
       })
     }
@@ -623,7 +632,10 @@ const updateNotificationStatus = (
       // Show toast for swap status update
       toastStore.addToastMessage({
         type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-        text: `Swap ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        text:
+          newStatus === 'confirmed'
+            ? t('notifications_module.toast_swap_successful')
+            : t('notifications_module.toast_swap_failed'),
         duration: 10000,
         tradeInfo: {
           fromToken: swap.fromSymbol,
@@ -675,7 +687,10 @@ const updateNotificationStatus = (
 
       toastStore.addToastMessage({
         type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-        text: `Bridge ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        text:
+          newStatus === 'confirmed'
+            ? t('notifications_module.toast_bridge_successful')
+            : t('notifications_module.toast_bridge_failed'),
         textSecondary: `${bridge.fromChainName} → ${bridge.toChainName}`,
         duration: 10000,
         tradeInfo: {

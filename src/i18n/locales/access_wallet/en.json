@@ -22,6 +22,41 @@
       "hardware": "Hardware",
       "mobile": "Mobile",
       "software": "Software"
+    },
+    "back_to_connect_options": "back to connect options",
+    "connect_wallet_title": "Connect Wallet",
+    "connect_with": "Connect with {method}",
+    "method": {
+      "keystore": "keystore",
+      "private_key": "private key",
+      "mnemonic_phrase": "mnemonic phrase"
+    },
+    "wallet_name": {
+      "keystore": "Keystore",
+      "mnemonic": "Recovery (mnemonic) Phrase",
+      "private_key": "Private Key"
+    },
+    "official_badge_alt": "Official MyEtherWallet",
+    "help": {
+      "keystore": "How to connect your keystore wallet",
+      "private_key": "How to connect with your private key",
+      "mnemonic": "How to connect with your recovery phrase",
+      "ledger": "How to connect your Ledger wallet",
+      "trezor": "How to connect your Trezor wallet",
+      "default": "Need Help connecting your wallet?"
+    },
+    "toast": {
+      "wallet_connected": "Wallet connected",
+      "wallet_connected_description": "You have successfully connected your {name} wallet.",
+      "wallet_not_detected": "{wallet} not detected",
+      "web3_wallet_not_detected": "Web3 wallet not detected",
+      "install_extension": "Please install {name} extension.",
+      "install_extension_or_select": "Please install {name} extension to connect or select a different wallet.",
+      "click_here_to_install": "Click here to install",
+      "could_not_connect": "Could not connect to wallet",
+      "connection_timed_out": "Connection timed out. Please try again.",
+      "connect_request_pending": "Request to connect already pending, please check your wallet extension",
+      "network_not_supported": "Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet."
     }
   },
   "access_wallet_keystore": {
@@ -118,7 +153,10 @@
     "search": "Search by label or path",
     "not_found": "No derivation paths found:",
     "enter_label": "Enter label",
-    "enter_path": "Enter  path"
+    "enter_path": "Enter  path",
+    "label_exists": "Derivation label already exists!",
+    "added_successfully": "Custom Derivation Path added successfully!",
+    "invalid_path": "Invalid Derivation Path!"
   },
   "error_connecting": "Failed to connect. Check your wallet for errors"
 }

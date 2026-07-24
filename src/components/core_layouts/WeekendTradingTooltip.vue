@@ -44,19 +44,22 @@
 
         <!-- Headline -->
         <p class="text-s-14 font-semibold leading-[1.3] mb-1">
-          Weekend stock trading
+          {{ $t('trade.weekend.tooltip_headline') }}
         </p>
 
         <!-- Body -->
         <p class="text-s-12 text-info leading-[1.4]">
-          SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon are now open for 24/7
-          trading.
+          {{
+            $t('trade.weekend.tooltip_body', {
+              tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
+            })
+          }}
         </p>
 
         <!-- Dismiss button -->
         <button
           class="absolute top-2 right-2 p-1 rounded-full hoverNoBG"
-          aria-label="Dismiss tooltip"
+          :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="dismiss"
         >
           <XMarkIcon class="w-4 h-4 text-info" />

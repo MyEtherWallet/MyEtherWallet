@@ -116,6 +116,7 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
@@ -338,10 +339,14 @@ const unlockWallet = async () => {
     loadList()
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)
+    const isNoDerivationPaths =
+      errorMessage === 'No supported derivation paths found for this wallet'
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: isNoDerivationPaths
+        ? t('access.no_supported_derivation_paths')
+        : errorMessage,
     })
     // Don't report expected user errors to Sentry
     if (!errorMessage.includes('Make sure you have')) {
@@ -484,8 +489,10 @@ const loadList = async (page: number = 0) => {
     if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Something went wrong',
-      textSecondary: e instanceof Error ? e.message : String(e),
+      text: t('common.something_went_wrong'),
+      textSecondary:
+        getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
+        (e instanceof Error ? e.message : String(e)),
     })
     captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {

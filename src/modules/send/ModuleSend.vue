@@ -3,11 +3,11 @@
     <div class="static w-full flex flex-col items-center justify-items-stretch">
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">Send</p>
+          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
           <app-btn-text
             class="text-primary text-s-15 pb-1"
             @click="resetSendModule"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
         <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
@@ -139,6 +139,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
@@ -622,17 +623,16 @@ const handleSubmit = async () => {
       signedTx.value = signResponse.signed
       openTxModal.value = true
     } catch (e) {
+      const errorMsg =
+        e instanceof Error ? e.message : (e as { message?: string })?.message
       analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
         token: tokenSelected.value?.symbol,
-        errorMsg:
-          e instanceof Error || (e as any).message
-            ? (e as any).message
-            : 'Unknown error during signing',
+        errorMsg: errorMsg ?? 'Unknown error during signing',
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Could not sign transaction',
-        textSecondary: e instanceof Error && e.message ? e.message : undefined,
+        text: t('send.toast.failed_to_sign'),
+        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
       })
     }
     return

@@ -1,0 +1,75 @@
+{
+  "purchase": {
+    "buy": {
+      "title": "Comprar",
+      "youre_buying": "Estás comprando",
+      "enter_amount": "Ingresa la cantidad",
+      "continue": "Continuar",
+      "connect_wallet": "Conectar billetera",
+      "no_quotes": "No se encontraron cotizaciones",
+      "need_help": "¿Necesitas ayuda para comprar?",
+      "network_not_supported": "Red no compatible",
+      "network_not_available": "La compra no está disponible en {network}. Cambia a una red compatible.",
+      "error": {
+        "min": "Mínimo permitido: {min}",
+        "max": "Máximo permitido: {max}",
+        "no_quotes": "No se encontraron cotizaciones"
+      }
+    },
+    "sell": {
+      "title": "Vender",
+      "youre_selling": "Estás vendiendo",
+      "your_balance": "Tu saldo:",
+      "enter_amount": "Ingresa la cantidad",
+      "continue": "Continuar",
+      "connect_wallet": "Conectar billetera",
+      "need_help": "¿Necesitas ayuda para vender?",
+      "network_fee": "Comisión de red",
+      "network_fee_tooltip": "Las comisiones en la red {chain} se cobran en {symbol}",
+      "network_not_supported": "Red no compatible",
+      "network_not_available": "La venta no está disponible en {network}. Cambia a una red compatible.",
+      "error": {
+        "min": "Mínimo permitido: {min}",
+        "max": "Máximo permitido: {max}",
+        "insufficient": "No tienes suficiente {symbol}"
+      },
+      "provider": {
+        "title": "Venderás {amount}",
+        "youll_send": "Enviarás",
+        "youll_receive": "Recibirás",
+        "continue": "Continuar"
+      }
+    },
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "min": "Mín",
+    "max": "Máx",
+    "bank": "Banco",
+    "select_token": {
+      "title": "Tokens",
+      "subtitle": "Selecciona uno de la lista",
+      "search_placeholder": "Buscar",
+      "filter_all_networks": "Todas las redes",
+      "filter_title": "Filtrar por red",
+      "filter_subtitle": "Selecciona una red de la lista",
+      "no_results": "Ningún token coincide"
+    },
+    "select_currency": {
+      "title": "Moneda",
+      "subtitle": "Selecciona una moneda de la lista",
+      "search_placeholder": "Buscar",
+      "no_results": "Ninguna moneda coincide"
+    },
+    "select_provider": {
+      "title": "Pagarás {amount}",
+      "subtitle": "Selecciona uno de los siguientes proveedores para definir cuánto {crypto} recibirás.",
+      "best_value": "Mejor valor",
+      "youll_pay": "Pagarás",
+      "youll_receive": "Recibirás",
+      "continue": "Continuar",
+      "error": {
+        "no_quotes": "No hay proveedores disponibles para esta selección. Prueba con otra cantidad o moneda."
+      },
+      "redirect": "Se te redirigirá a {provider} para completar tu compra."
+    }
+  }
+}
