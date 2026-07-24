@@ -45,7 +45,7 @@ export const useGlobalStore = defineStore('global', () => {
   /**--------------------
    * LANGUAGE
    --------------------*/
-  const locale = useLocalStorage<string>('mew-locale', 'en')
+  const locale = useStorage<string>('mew-locale', 'en', safeLocalStorage)
 
   /**--------------------
    * WELCOME DIALOG
