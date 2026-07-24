@@ -80,14 +80,18 @@ export function usePerpsToasts() {
     })
   }
 
-  const slTpLine = (args: SlTpArgs): string =>
-    t('perps.toast.sl-tp-line', {
+  const slTpLine = (args: SlTpArgs): string => {
+    console.log(args)
+    return t('perps.toast.sl-tp-line', {
       side: humanSide(args.direction, t).toUpperCase(),
       netQuantity: args.netQuantity,
       base: args.base,
-      quote: args.quote,
+      // quote: args.quote,
       price: formatUsd(args.triggerPrice as string | number),
     })
+
+  }
+
 
   const fillLine = (args: FillArgs): string => {
     // Determine the verb from the raw (untranslated) side so this doesn't
