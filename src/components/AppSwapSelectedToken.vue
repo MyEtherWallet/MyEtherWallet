@@ -1,16 +1,22 @@
 <template>
-  <button
-    :class="[
-      isLoading || !selectedToken
-        ? 'bg-grey-10 animate-pulse min-w-[120px]'
-        : 'bg-white hoverNoBG shadow-button border-grey-10 border',
-      'rounded-full px-1 min-h-9 transition-colors',
-    ]"
-    type="button"
-    @click="showAllTokens = true"
-    :aria-label="$t('select_token.title')"
-    :disabled="isLoading || !selectedToken"
+  <slot
+    name="trigger"
+    :open="openSelectToken"
+    :is-loading="isLoading"
+    :selected-token="selectedToken"
   >
+    <button
+      :class="[
+        isLoading || !selectedToken
+          ? 'bg-grey-10 animate-pulse min-w-[120px]'
+          : 'bg-white hoverNoBG shadow-button border-grey-10 border',
+        'rounded-full px-1 min-h-9 transition-colors',
+      ]"
+      type="button"
+      @click="openSelectToken"
+      :aria-label="$t('select_token.title')"
+      :disabled="isLoading || !selectedToken"
+    >
     <div
       v-if="!isLoading && selectedToken"
       class="flex flex-nowrap items-center"
@@ -40,7 +46,8 @@
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
     </div>
-  </button>
+    </button>
+  </slot>
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
@@ -471,6 +478,9 @@ const tokens = computed<NewTokenInfo[]>(() => {
 })
 
 const showAllTokens = ref(false)
+const openSelectToken = () => {
+  showAllTokens.value = true
+}
 const searchInput = ref('')
 // Debounced query drives the (expensive) sort + fuzzy search so heavy work runs
 // after the user pauses typing instead of on every keystroke — the untouched

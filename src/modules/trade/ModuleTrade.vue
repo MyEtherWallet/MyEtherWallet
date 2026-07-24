@@ -1,137 +1,72 @@
 <template>
-  <div>
+  <div
+    class="flex flex-col -mx-4 -mb-6 sm:-mt-6 min-h-[calc(100%+24px)] sm:min-h-[calc(100%+48px)]"
+  >
+    <div class="flex flex-col gap-1 pt-8 px-5 w-full max-w-[540px] mx-auto">
+      <p class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
+        {{ $t('trade.title') }}
+      </p>
+      <p class="text-s-12 text-info leading-[18px]">
+        {{ $t('trade.subtitle') }}
+      </p>
+    </div>
     <div
       :class="[
-        'static w-full flex flex-col items-center justify-items-stretch gap-3',
+        'static w-full flex flex-col items-center justify-items-stretch gap-3 p-5',
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner
-          :class="blurClass"
-          location="small-banner-trade"
+        <trade-market-status-pill
+          status="regular"
+          until-text="Until 3:59 PM"
+          class="mb-3"
         />
-
-        <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
-          <div>
-            <p class="font-bold text-s-28">{{ $t('trade.title') }}</p>
-            <p class="text-info text-s-12 ml-1">
-              {{ $t('trade.subtitle') }}
-            </p>
-          </div>
-          <app-btn-text
-            v-if="
-              isTradingSessionOpen &&
-              isCurrentNetworkSupported &&
-              !isTradingRestrictedInRegion
-            "
-            class="text-primary text-s-14 pb-1"
-            @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
-          >
-        </div>
         <div :class="['relative transition-all duration-300', blurClass]">
-          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
-            <select-chain-for-app
-              :can-store="false"
-              :passed-chains="fromChains"
-              :preselected-chain="selectedFromChain"
-              @update:selected-chain="setFromChain"
-            />
-          </div>
-          <!-- From Section -->
-          <div
+          <!-- Sell Section -->
+          <trade-amount-card
             v-if="supportedNetwork"
-            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
-          >
-            <p class="text-s-12 mb-1 font-bold ml-3">
-              {{ $t('trade.you_are_selling') }}
-            </p>
+            v-model:amount="fromAmount"
+            v-model:selected-token="fromTokenSelected!"
+            v-model:error="fromAmountError"
+            side="sell"
+            :external-loading="isLoading || !swapLoaded"
+            :tokens="fromTokens"
+            :show-balance="isWalletConnected"
+            :network-name="selectedFromChain?.name"
+            :is-pristine="isPristine"
+            :disabled-tokens="disabledTokenAddresses"
+            :max-disabled="fromTokenSelected?.address === MAIN_TOKEN_CONTRACT"
+            sort-context="trade"
+            @percent="setPercentageAmount"
+          />
 
-            <div>
-              <app-swap-enter-amount
-                v-model:amount="fromAmount"
-                v-model:selected-token="fromTokenSelected!"
-                v-model:error="fromAmountError"
-                :external-loading="isLoading || !swapLoaded"
-                :tokens="fromTokens"
-                :show-balance="isWalletConnected"
-                :network-name="selectedFromChain?.name"
-                :is-pristine="isPristine"
-                :disabled-tokens="disabledTokenAddresses"
-                sort-context="trade"
-                class="mt-2"
-              >
-                <!-- Percentage Buttons -->
-
-                <template #header>
-                  <div
-                    v-if="isWalletConnected && fromTokenSelected"
-                    class="flex justify-end gap-2 -mt-2 mr-1 mb-4"
-                  >
-                    <button
-                      v-for="pct in [25, 50, 75, 100]"
-                      :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                      :disabled="
-                        pct === 100 &&
-                        fromTokenSelected?.address === MAIN_TOKEN_CONTRACT
-                      "
-                      :class="{
-                        'opacity-40 cursor-not-allowed':
-                          pct === 100 &&
-                          fromTokenSelected?.address === MAIN_TOKEN_CONTRACT,
-                      }"
-                      @click="setPercentageAmount(pct)"
-                    >
-                      {{ pct === 100 ? $t('common.max') : `${pct}%` }}
-                    </button>
-                  </div></template
-                ></app-swap-enter-amount
-              >
-            </div>
-          </div>
-
-          <!-- Arrow Button -->
-          <div class="relative h-0 z-10 flex justify-center items-center">
-            <!-- <button
+          <!-- Swap Direction Button -->
+          <div class="relative h-0 z-10 flex justify-center">
+            <button
+              type="button"
               :aria-label="$t('trade.swap_from_to')"
-              :class="[
-                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
-              ]"
+              class="absolute top-[6px] -translate-y-1/2 bg-bgBase border-4 border-white rounded-12 p-2.5 transition-colors hoverNoBG"
               @click="swapTokens"
             >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </button> -->
-            <!-- Arrow Button -->
-            <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
-            >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
-            </div>
+              <arrows-up-down-icon class="w-5 h-5" />
+            </button>
           </div>
 
-          <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">
-              {{ $t('trade.you_are_buying') }}
-            </p>
-            <app-swap-enter-amount
-              v-model:amount="toAmount"
-              v-model:selected-token="toTokenSelected!"
-              v-model:error="toAmountError"
-              :external-loading="isLoadingQuote"
-              :show-balance="false"
-              :tokens="toTokenSantized"
-              :readonly="true"
-              :network-name="selectedFromChain?.name"
-              :is-estimate="true"
-              :is-from-view="false"
-              :is-pristine="isPristine"
-              :disabled-tokens="disabledTokenAddresses"
-              sort-context="trade"
-              class="mt-2"
-            />
-          </div>
+          <!-- Buy Section -->
+          <trade-amount-card
+            v-model:amount="toAmount"
+            v-model:selected-token="toTokenSelected!"
+            v-model:error="toAmountError"
+            side="buy"
+            :external-loading="isLoadingQuote"
+            :tokens="toTokenSantized"
+            :show-balance="isWalletConnected"
+            :network-name="selectedFromChain?.name"
+            :is-pristine="isPristine"
+            :disabled-tokens="disabledTokenAddresses"
+            sort-context="trade"
+            class="mt-3"
+          />
         </div>
 
         <!-- Market Closed Banner - Centered Overlay -->
@@ -311,10 +246,18 @@
               source="trade"
               class="mb-5 -mt-1"
             />
+            <button
+              v-else-if="isTradeDisabled && !isApproving"
+              type="button"
+              disabled
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-bgBase text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+            >
+              {{ ctaDisabledLabel }}
+            </button>
             <app-base-button
               v-else
               class="w-full"
-              :disabled="isTradeDisabled || isApproving"
+              :disabled="isApproving"
               @click="needsApproval ? handleApprove() : openTradeModal()"
             >
               <span
@@ -346,12 +289,17 @@
           </transition>
         </div>
       </div>
-      <app-need-help
-        :title="$t('trade.need_help')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mx-auto"
-        :class="blurClass"
-      />
+    </div>
+
+    <div v-if="showHelpLink" class="mt-auto flex justify-center px-5 pb-5">
+      <a
+        href="https://help.myetherwallet.com/en/article/what-is-gas"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-10 items-center px-3 rounded-24 text-primary text-s-14 font-semibold tracking-[-0.28px] hoverNoBG"
+      >
+        {{ $t('trade.need_help') }}
+      </a>
     </div>
 
     <!-- Trade Quote Modal -->
@@ -385,16 +333,13 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowsUpDownIcon } from '@heroicons/vue/20/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
+import TradeAmountCard from './components/TradeAmountCard.vue'
+import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -432,6 +377,8 @@ import {
 } from '@heroicons/vue/24/solid'
 
 const { t } = useI18n()
+
+const showHelpLink = import.meta.env.DEV
 
 // --- Stores ---
 const pairStore = usePairStore()
@@ -516,12 +463,6 @@ const isCurrentNetworkSupported = computed(() => {
 
 // Get list of supported chains for the unsupported network message
 const supportedChainsList = computed(() => {
-  return chains.value.filter(chain =>
-    supportedChainNames.value.includes(chain.name.toUpperCase()),
-  )
-})
-
-const fromChains = computed(() => {
   return chains.value.filter(chain =>
     supportedChainNames.value.includes(chain.name.toUpperCase()),
   )
@@ -698,6 +639,13 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   isLoadingQuote,
 })
 
+const ctaDisabledLabel = computed(() => {
+  if (fromAmount.value === '' || fromAmount.value === '0') {
+    return t('trade.enter_amount')
+  }
+  return needsApproval.value ? t('common.approve') : t('trade.trade_button')
+})
+
 // --- Trade Execution ---
 const {
   isApproving,
@@ -783,15 +731,15 @@ const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
 }
 
-// const swapTokens = () => {
-//   const tempFrom = fromTokenSelected.value
-//   const tempTo = toTokenSelected.value
+const swapTokens = () => {
+  const tempFrom = fromTokenSelected.value
+  const tempTo = toTokenSelected.value
 
-//   fromTokenSelected.value = tempTo
-//   toTokenSelected.value = tempFrom
-//   fromAmount.value = '0'
-//   toAmount.value = '0'
-// }
+  fromTokenSelected.value = tempTo
+  toTokenSelected.value = tempFrom
+  fromAmount.value = '0'
+  toAmount.value = '0'
+}
 
 const setPercentageAmount = (percentage: number) => {
   if (!fromTokenSelected.value || !isWalletConnected.value) return
@@ -871,8 +819,8 @@ watch(selectedChain, newChain => {
 
 // Watch for swap loaded to set default tokens after chain change
 watch(
-  () => swapLoaded.value,
-  loaded => {
+  [() => swapLoaded.value, () => fromTokens.value],
+  ([loaded]) => {
     if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
       fromTokenSelected.value = getDefaultFromToken()
     }

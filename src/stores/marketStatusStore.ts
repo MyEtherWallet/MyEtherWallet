@@ -1,0 +1,236 @@
+import { ref, computed } from 'vue'
+import { defineStore, storeToRefs } from 'pinia'
+import { captureException } from '@sentry/vue'
+import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
+import {
+  getMarketStatus,
+  isTradingRestricted,
+} from '@/modules/trade/providers/ondoHelpers'
+import { resolveCurrentSession } from '@/modules/trade/composables/marketSession'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import Configs from '@/configs'
+import i18n from '@/i18n'
+import { useGlobalStore } from './globalStore'
+
+const isDevMode = Configs.IS_DEV_MODE
+
+const REFRESH_BUFFER_MS = 2_000
+const MIN_REFRESH_DELAY_MS = 10_000
+const STALE_AFTER_MS = 60_000
+
+export const useMarketStatusStore = defineStore('marketStatus', () => {
+  const { fetchedTradingThisSession, isTradingRestrictedInRegion } =
+    storeToRefs(useGlobalStore())
+
+  const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
+  const countdownText = ref('')
+  const lastFetchedAt = ref(0)
+
+  let countdownInterval: ReturnType<typeof setInterval> | null = null
+  let refreshTimeout: ReturnType<typeof setTimeout> | null = null
+  let inFlightFetch: Promise<void> | null = null
+  let visibilityListenerAttached = false
+
+  const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
+
+  const isOffHoursOpen = computed(
+    () => marketStatus.value?.offhours?.isOpen ?? false,
+  )
+
+  const currentSession = computed(() =>
+    resolveCurrentSession(marketStatus.value),
+  )
+
+  // True when ANY session is tradable (conventional or off-hours). While the
+  // status is still loading (null) we stay optimistic to avoid a blur flash.
+  const isTradingSessionOpen = computed(
+    () => marketStatus.value === null || currentSession.value !== null,
+  )
+
+  const updateCountdown = () => {
+    if (!marketStatus.value?.nextOpen || isTradingSessionOpen.value) {
+      countdownText.value = ''
+      return
+    }
+
+    const now = Date.now()
+    const nextOpen = new Date(marketStatus.value.nextOpen).getTime()
+    const diff = nextOpen - now
+
+    if (diff <= 0) {
+      countdownText.value = i18n.global.t('trade.opening_soon')
+      fetchMarketStatus()
+      return
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+    if (hours > 0) {
+      countdownText.value = `${hours}h ${minutes}m ${seconds}s`
+    } else if (minutes > 0) {
+      countdownText.value = `${minutes}m ${seconds}s`
+    } else {
+      countdownText.value = `${seconds}s`
+    }
+  }
+
+  const startCountdown = () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval)
+    }
+    updateCountdown()
+    countdownInterval = setInterval(updateCountdown, 1000)
+  }
+
+  const stopCountdown = () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval)
+      countdownInterval = null
+    }
+    countdownText.value = ''
+  }
+
+  // Earliest upcoming session boundary reported by the API (conventional or
+  // off-hours). Null when every reported timestamp is already in the past.
+  const nextTransitionAt = (): number | null => {
+    const status = marketStatus.value
+    if (!status) return null
+    const now = Date.now()
+    const futureTimestamps = [
+      status.nextClose,
+      status.nextOpen,
+      status.offhours?.nextOpen,
+      status.offhours?.nextClose,
+    ]
+      .map(value => (value ? new Date(value).getTime() : NaN))
+      .filter(time => Number.isFinite(time) && time > now)
+    return futureTimestamps.length ? Math.min(...futureTimestamps) : null
+  }
+
+  // One timer aimed at the next boundary (+buffer so the backend is already
+  // past it). If the API still reports stale boundaries, retry on a short
+  // delay until it crosses over.
+  const scheduleNextRefresh = () => {
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout)
+      refreshTimeout = null
+    }
+    if (!marketStatus.value) return
+    const transitionAt = nextTransitionAt()
+    const delay = transitionAt
+      ? Math.max(transitionAt + REFRESH_BUFFER_MS - Date.now(), MIN_REFRESH_DELAY_MS)
+      : MIN_REFRESH_DELAY_MS
+    refreshTimeout = setTimeout(() => {
+      fetchMarketStatus()
+    }, delay)
+  }
+
+  const onVisibilityChange = () => {
+    if (
+      document.visibilityState === 'visible' &&
+      Date.now() - lastFetchedAt.value > STALE_AFTER_MS
+    ) {
+      fetchMarketStatus()
+    }
+  }
+
+  const attachVisibilityListener = () => {
+    if (visibilityListenerAttached) return
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    visibilityListenerAttached = true
+  }
+
+  const fetchTradingRestriction = async () => {
+    if (fetchedTradingThisSession.value) {
+      return fetchedTradingThisSession.value
+    }
+    try {
+      const restricted = await isTradingRestricted()
+      isTradingRestrictedInRegion.value = restricted
+      fetchedTradingThisSession.value = true
+    } catch (e) {
+      if (isDevMode) {
+        console.error('Failed to check trading restriction:', e)
+      } else {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
+          extra: {
+            title: 'TRADE: Error checking trading restriction',
+            errorMessage: (e as Error).message || 'Unknown error',
+          },
+        })
+      }
+      isTradingRestrictedInRegion.value = true
+    }
+  }
+
+  const fetchMarketStatus = async (): Promise<void> => {
+    if (inFlightFetch) return inFlightFetch
+    inFlightFetch = (async () => {
+      try {
+        const [statusResult] = await Promise.all([
+          getMarketStatus(),
+          fetchTradingRestriction(),
+        ])
+        if (statusResult) {
+          marketStatus.value = statusResult
+        }
+        lastFetchedAt.value = Date.now()
+
+        if (!isTradingSessionOpen.value) {
+          startCountdown()
+        } else {
+          stopCountdown()
+        }
+        scheduleNextRefresh()
+        attachVisibilityListener()
+      } catch (e) {
+        if (isDevMode) {
+          console.error('Failed to fetch market status:', e)
+        } else {
+          captureException(e, {
+            ...SENTRY_MODULE_TAGS.TRADE,
+            extra: {
+              title: 'TRADE: Error fetching market status',
+              errorMessage: (e as Error).message || 'Unknown error',
+            },
+          })
+        }
+      } finally {
+        inFlightFetch = null
+      }
+    })()
+    return inFlightFetch
+  }
+
+  const formatNextOpen = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short',
+      })
+    } catch {
+      return dateString
+    }
+  }
+
+  return {
+    marketStatus,
+    countdownText,
+    lastFetchedAt,
+    isMarketOpen,
+    isOffHoursOpen,
+    currentSession,
+    isTradingSessionOpen,
+    fetchMarketStatus,
+    fetchTradingRestriction,
+    formatNextOpen,
+  }
+})

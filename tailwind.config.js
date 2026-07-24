@@ -78,6 +78,9 @@ export default {
       warning: 'rgba(255,165,0, 1)',
       'warning-10': 'rgba(255,165,0,0.1)',
       success: 'rgba(5,192,165,1)',
+      'success-600': '#01a08c',
+      'orange-600': '#e27d00',
+      'neutral-500': '#767676',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',
       //Text:

@@ -50,8 +50,40 @@
       "quote-loading": "Please wait for quote to load"
     },
     "error": {
-      "approval-failed": "Could not approve token",
-      "submit-failed": "Failed to submit trade order"
-    }
+      "not_enough_balance": "Not enough balance",
+      "minimum_amount": "Enter +{amount} {symbol}",
+      "remove_decimals": "Remove {count} decimal | Remove {count} decimals"
+    },
+    "market_status": {
+      "regular": "Regular market",
+      "premarket": "Pre-Market",
+      "postmarket": "Post-Market",
+      "overnight": "Overnight",
+      "weekend": "Weekend",
+      "paused": "Market paused",
+      "limited": "Market limited",
+      "info_label": "Market status information"
+    },
+    "market_status_popover": {
+      "open_title": "The market is open.",
+      "open_body": "All supported stocks are available.",
+      "premarket_title": "The market hasn't opened yet.",
+      "closed_title": "The market has closed.",
+      "weekend_title": "The market is closed for the weekend.",
+      "paused_title": "The market is paused.",
+      "paused_body": "Regular market is about to open.",
+      "limited_body": "Only eligible stocks are available.",
+      "learn_more": "Learn more",
+      "learn_more_suffix": "about market hours."
+    },
+    "market_timeline": {
+      "premarket": "Pre-market",
+      "regular": "Regular market",
+      "postmarket": "Post-market",
+      "overnight": "Overnight"
+    },
+    "sell_label": "Sell",
+    "buy_label": "Buy",
+    "enter_amount": "Enter amount"
   }
 }

@@ -120,7 +120,12 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       ? fromAmount.value.split('.')[1]?.length || 0
       : 0
     if (decimalPlaces > decimals) {
-      return t('swap.error.too-many-decimals')
+      const excessDecimals = decimalPlaces - decimals
+      return t(
+        'trade.error.remove_decimals',
+        { count: excessDecimals },
+        excessDecimals,
+      )
     }
 
     // Minimum $0.95 value check
@@ -128,7 +133,14 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (tokenPrice > 0) {
       const usdValue = amountBN.times(tokenPrice)
       if (usdValue.lt(0.95)) {
-        return 'Minimum trade value is around $1.00'
+        const minAmount = BigNumber(0.95).div(tokenPrice)
+        const roundedMinAmount = minAmount.gte(1)
+          ? minAmount.integerValue(BigNumber.ROUND_CEIL)
+          : minAmount.precision(2, BigNumber.ROUND_CEIL)
+        return t('trade.error.minimum_amount', {
+          amount: roundedMinAmount.toFixed(),
+          symbol: fromTokenSelected.value.symbol,
+        })
       }
     }
 
@@ -139,9 +151,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
 
         if (tokenParams.baseBalance < baseAmount) {
-          return t('swap.error.insufficient-native', {
-            symbol: fromTokenSelected.value.symbol,
-          })
+          return t('trade.error.not_enough_balance')
         }
       } catch (e) {
         if (isDevMode) {

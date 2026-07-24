@@ -2,12 +2,12 @@ import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import { measureTextWidth } from '@/utils/measureText'
 
 /**
- * Picks a font scale from `SCALES` so that `text` fits within
- * `CONTAINER_WIDTH_PX`. Used by the Buy/Sell amount input to keep the typed
- * value visible as it grows (52px → 40px → 32px → ...).
+ * Picks a font scale from `scales` so that `text` fits within
+ * `containerWidthPx`. Used by amount inputs (Buy/Sell, Trade) to keep the
+ * typed value visible as it grows.
  *
  * Also exposes `measureWithScale`, a helper to measure an arbitrary string at
- * the currently active font size — used to size the `<input>` to the exact
+ * the currently active font size — used to size an `<input>` to the exact
  * width of its content.
  */
 
@@ -17,7 +17,7 @@ export interface TextScale {
   tracking: number
 }
 
-const SCALES: ReadonlyArray<TextScale> = [
+const DEFAULT_SCALES: ReadonlyArray<TextScale> = [
   { size: 52, lineHeight: 56, tracking: -2.08 },
   { size: 40, lineHeight: 44, tracking: -1.6 },
   { size: 32, lineHeight: 36, tracking: -1.28 },
@@ -25,20 +25,32 @@ const SCALES: ReadonlyArray<TextScale> = [
   { size: 16, lineHeight: 22, tracking: -0.32 },
 ] as const
 
-const CONTAINER_WIDTH_PX = 301
+const DEFAULT_CONTAINER_WIDTH_PX = 301
 const FIT_PADDING_PX = 4
 
 const buildFont = (size: number): string =>
   `700 ${size}px "DM Sans", sans-serif`
 
-export const useTextScaler = (text: MaybeRefOrGetter<string>) => {
+interface UseTextScalerOptions {
+  scales?: ReadonlyArray<TextScale>
+  containerWidthPx?: MaybeRefOrGetter<number>
+}
+
+export const useTextScaler = (
+  text: MaybeRefOrGetter<string>,
+  options: UseTextScalerOptions = {},
+) => {
+  const scales = options.scales ?? DEFAULT_SCALES
+
   const scale = computed<TextScale>(() => {
     const value = toValue(text)
-    const limit = CONTAINER_WIDTH_PX - FIT_PADDING_PX
-    for (const s of SCALES) {
+    const containerWidth =
+      toValue(options.containerWidthPx) || DEFAULT_CONTAINER_WIDTH_PX
+    const limit = containerWidth - FIT_PADDING_PX
+    for (const s of scales) {
       if (measureTextWidth(value, buildFont(s.size)) <= limit) return s
     }
-    return SCALES[SCALES.length - 1]
+    return scales[scales.length - 1]
   })
 
   const scaleStyle = computed(() => ({
