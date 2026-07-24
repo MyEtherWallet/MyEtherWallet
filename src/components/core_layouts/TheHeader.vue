@@ -101,7 +101,11 @@
               })
             "
           >
-            {{ $t('common.create_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.create_wallet_short')
+                : $t('common.create_wallet')
+            }}
           </router-link>
           <!-- Connect wallet button -->
           <router-link
@@ -114,9 +118,13 @@
             "
             class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden sm:flex items-center justify-center"
           >
-            {{ $t('connect_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.connect_wallet_short')
+                : $t('connect_wallet')
+            }}
           </router-link>
-          <the-current-network />
+          <the-current-network :compact="isNetworkCollapsed" />
           <!-- Address Menu -->
           <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
@@ -196,12 +204,29 @@ const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 const headerCollapse = useBreakpoints({
   earn: 1160,
   learn: 1255,
+  walletCta: 1500,
+  network: 1555,
 })
 const isLearnCollapsed = computed<boolean>(
   () => headerCollapse.smaller('learn').value,
 )
 const isEarnCollapsed = computed<boolean>(
   () => headerCollapse.smaller('earn').value,
+)
+/**
+ * A disconnected header carries the extra Create/Connect wallet buttons, so it
+ * runs out of room sooner. Collapse the network button to its icon-only mobile
+ * look below 1555px while the wallet is disconnected.
+ */
+const isNetworkCollapsed = computed<boolean>(
+  () => !isWalletConnected.value && headerCollapse.smaller('network').value,
+)
+/**
+ * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
+ * "Connect") to save space before the network button collapses.
+ */
+const isWalletCtaShort = computed<boolean>(
+  () => headerCollapse.smaller('walletCta').value,
 )
 
 /** ------------------------------

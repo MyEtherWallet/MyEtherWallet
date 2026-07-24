@@ -15,7 +15,7 @@
             height="32"
             width="32"
           />
-          <div v-if="!isXS" class="ml-1 pr-1 min-w-[30px]">
+          <div v-if="!isXS && !compact" class="ml-1 pr-1 min-w-[30px]">
             <p
               class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
             >
@@ -34,6 +34,13 @@
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+/**
+ * @compact When true, force the icon-only layout (no chain name) — the same
+ * collapsed look the mobile `isXS` breakpoint produces. Used to reclaim header
+ * space when the wallet is disconnected and the bar would otherwise cut off.
+ */
+defineProps<{ compact?: boolean }>()
 
 const { isXS } = useAppBreakpoints()
 </script>
