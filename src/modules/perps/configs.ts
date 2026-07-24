@@ -1,24 +1,22 @@
-import configs from '@/configs'
 import { PerpsClient } from './sdk'
 import { mainnet } from 'viem/chains'
 
 const IS_PERPS_LIVE = true
 
 const PERPS_BASE_URL = {
-  sandbox: { url: `https://api.ondoperps-sandbox.xyz` },
+  sandbox: { url: `https://app.ondoperps-sandbox.xyz` },
   live: { url: `https://api.ondoperps.xyz` },
 }
 
 const PERPS_WS_URL = {
-  sandbox: `wss://api.ondoperps-sandbox.xyz/ws`,
+  sandbox: `wss://app.ondoperps-sandbox.xyz/ws`,
   live: `wss://api.ondoperps.xyz/ws`,
 }
 
-const perpsClient = new PerpsClient(
-  !configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
-)
+// Point the perps REST + WS client at the Ondo sandbox instead of the live API.
+const perpsClient = new PerpsClient(PERPS_BASE_URL.sandbox.url)
 
-const perpsWsUrl = !configs.IS_DEV_MODE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
+const perpsWsUrl = PERPS_WS_URL.sandbox
 
 const SUPPORTED_NETWORK = [mainnet]
 // Perps operates on Ethereum mainnet only; the API takes chainId as a string.
