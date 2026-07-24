@@ -70,7 +70,7 @@
                   'bg-grey-5 text-primary':
                     selected && option.value === selected.value,
                 },
-                'flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
+                'flex text-left items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
               ]"
               role="option"
               :id="option.value"
@@ -79,7 +79,7 @@
               {{ option.label }}
               <check-icon
                 v-if="selected && option.value === selected.value"
-                class="ml-auto w-4 h-4 text-primary"
+                class="ml-auto w-8 h-4 text-primary px-2 -mr-3"
               />
             </button>
           </div>

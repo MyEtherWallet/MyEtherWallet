@@ -18,7 +18,9 @@ import {
 } from '@/analytics'
 import Configs from '@/configs'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
 import { isUserRejectionError } from '@/utils/walletUtils'
+import BigNumber from 'bignumber.js'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -55,6 +57,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const toastStore = useToastStore()
   const tradeOrdersStore = useTradeOrdersStore()
   const rewardsStore = useRewardsStore()
+  const holdingsStore = useHoldingsStore()
 
   const isApproving = ref(false)
   const txProceeding = ref(false)
@@ -62,14 +65,46 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const tradeInitiatedOpen = ref(false)
   const orderHash = ref<string>('')
 
+  // USD value of the to-side quote (endAmount is in base units)
+  const getToAmountUSD = (): number => {
+    const endAmount = currentQuote.value?.endAmount
+    if (!endAmount) return 0
+    const toDecimals = toTokenSelected.value?.decimals || 18
+    const toHuman = parseFloat(formatUnits(endAmount, toDecimals))
+    return toHuman * (toTokenSelected.value?.price || 0)
+  }
+
   const getAnalyticsPayload = (): TradePayloadShared => ({
     network: selectedFromChain.value?.name || 'N/A',
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
+    fromAmountUSD: (
+      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+    ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
+    toAmountUSD: getToAmountUSD().toString(),
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
+
+  // Hold-campaign context attached to trade status events
+  const getRewardFields = () => {
+    const reward = holdingsStore.activeReward
+    const meta = reward
+      ? holdingsStore.info?.metas?.find(m => m.id === reward.id)
+      : undefined
+    const decimals = meta?.crypto?.decimals?.[0] ?? 18
+    return {
+      holdCampaignStatus: holdingsStore.status,
+      qualifyingTradeAmount: reward?.qualifying_amount
+        ? new BigNumber(reward.qualifying_amount)
+          .shiftedBy(-decimals)
+          .toString()
+        : undefined,
+      qualifyingTradeToken: meta?.symbol,
+      qualifiedSince: reward?.qualification_timestamp,
+    }
+  }
   const handleApprove = async () => {
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
       return
@@ -195,7 +230,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 25) {
+      if (fromUsdValue > 250) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
       }
@@ -203,6 +238,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ...analyticsPayload,
         canEarnReward,
         orderHash: result.hash,
+        ...getRewardFields(),
       })
 
       // Add order to store
@@ -234,6 +270,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           ? (
             parseFloat(fromAmount.value) * fromTokenSelected.value.price
           ).toFixed(2)
+          : undefined,
+        toUsdValue: toTokenSelected.value.price
+          ? (parseFloat(expectedToAmount) * toTokenSelected.value.price).toFixed(
+            2,
+          )
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,

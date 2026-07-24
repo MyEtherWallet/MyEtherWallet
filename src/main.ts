@@ -17,6 +17,10 @@ import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
+import {
+  isExtensionOrProviderError,
+  isInvalidWalletAddressError,
+} from '@/sentry/extensionNoise'
 
 const app = createApp(App)
 
@@ -26,7 +30,7 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && process.env.NODE_ENV === 'production') {
   sentryInit({
     app,
     dsn,
@@ -35,7 +39,34 @@ if (dsn) {
       'TypeError: Failed to fetch',
       'TypeError: NetworkError when attempting to fetch resource',
       'TypeError: Load failed',
+      // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
+      // assets that no longer exist after a redeploy. These are already
+      // auto-recovered by router.onError (reload once), so they are noise.
+      'Unable to preload CSS',
+      'Failed to fetch dynamically imported module',
+      // WalletConnect benign rejections when the user abandons the connection flow
+      'Proposal expired',
+      'Pairing expired',
+      'Request expired',
     ],
+    // Drop errors thrown inside browser extensions (catches events that DO
+    // carry parsed extension frames).
+    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
+    // "provider disconnected") and viem InvalidAddressError (a wallet returned
+    // a malformed address on connect — already handled with a user toast).
+    // These surface as serialized plain objects with no parsed frames, so
+    // denyUrls can't catch them — inspect the original exception instead.
+    // Genuine app errors are unaffected.
+    beforeSend(event, hint) {
+      const originalException = hint?.originalException
+      if (
+        isExtensionOrProviderError(originalException) ||
+        isInvalidWalletAddressError(originalException)
+      )
+        return null
+      return event
+    },
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration({

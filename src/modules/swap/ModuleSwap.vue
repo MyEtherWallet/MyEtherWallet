@@ -952,6 +952,7 @@ const generateBTCGasFeeQuote = async () => {
     (swapInfo.value?.transactions as GenericTransaction[]) || []
   ).map(tx => ({ address: tx.to, amount: tx.value }))
 
+  if (transactions.length === 0) return undefined
   const txForm: BitcoinQuotesRequestBody = {
     fromAddresses: [userAddress.value],
     consolidationAddress: userAddress.value,
@@ -993,6 +994,9 @@ const generateEVMGasFeeQuote = async () => {
     value: tx.value || '0x0',
     action: dataTxAction(tx) as EvmTransactionAction,
   }))
+
+  if (parsedTransactions.length === 0) return undefined
+
   const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
   return res
 }
@@ -1485,18 +1489,53 @@ watch(
 
 watch(
   () => selectedQuote.value,
-  async provider => {
-    if (provider) {
-      // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
-      txProceeding.value = true
-      await getSwap(provider).then(async res => {
-        swapInfo.value = res
-        const quoteRes = await (isBitcoinChain.value
-          ? generateBTCGasFeeQuote()
-          : generateEVMGasFeeQuote())
-        swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
-      })
-      txProceeding.value = false
+  async (provider, _prev, onCleanup) => {
+    if (!provider) return
+    // A newer selectedQuote invalidates this run: flag it so late-resolving
+    // getSwap / gas-fee-quote calls don't overwrite state with stale data.
+    let cancelled = false
+    onCleanup(() => {
+      cancelled = true
+    })
+    const analyticsPayload = getAnalyticsShared()
+    // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
+    txProceeding.value = true
+    try {
+      const res = await getSwap(provider)
+      if (cancelled) return
+      swapInfo.value = res
+      const quoteRes = await (isBitcoinChain.value
+        ? generateBTCGasFeeQuote()
+        : generateEVMGasFeeQuote())
+      if (cancelled) return
+      swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
+    } catch (err: any) {
+      if (cancelled) return
+      swapInfo.value = null
+      swapGasFeeQuote.value = undefined
+      generalError.value = err?.message || 'Error fetching gas fees'
+      const isExpectedQuoteError =
+        err?.message === t('swap.error.pair-not-available') ||
+        /insufficient funds/i.test(err?.message ?? '')
+      if (isDevMode) {
+        console.error('Error fetching gas fees:', err)
+      } else {
+        analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+          ...analyticsPayload,
+          errorMsg: generalError.value,
+        })
+        if (!isExpectedQuoteError) {
+          captureException(err, {
+            ...SENTRY_MODULE_TAGS.SWAP,
+            extra: {
+              title: 'SWAP: Error fetching gas fees on quote selection',
+              errorMessage: generalError.value,
+            },
+          })
+        }
+      }
+    } finally {
+      if (!cancelled) txProceeding.value = false
     }
   },
   { deep: true },
