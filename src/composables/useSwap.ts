@@ -255,7 +255,7 @@ export const useSwap = (): {
       }
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Something went wrong',
+        text: t('common.something_went_wrong'),
         textSecondary: t('swap.error.initializing-swap-failed'),
       })
       // Expected external flakiness (transient fetch / JSON parse of a non-JSON
@@ -309,7 +309,7 @@ export const useSwap = (): {
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Something went wrong',
+        text: t('common.something_went_wrong'),
         textSecondary: t('swap.error.getting-swap'),
       })
       return null

@@ -6,12 +6,12 @@
       class="xs:w-[360px] sm:mx-auto !min-h-[200px]"
     >
       <template #title>
-        <div class="flex items-center pr-2 pt-4 pl-6">
-          <IconWatchOnly
-            v-if="isWatchOnly"
-            class="w-6 h-6 inline-block mr-2 mt-[2px]"
-          />
+        <div class="pt-4 pl-6 pr-8">
           <p class="text-s-24 font-bold">
+            <IconWatchOnly
+              v-if="isWatchOnly"
+              class="w-6 h-6 inline-flex mr-2 mt-[2px]"
+            />
             {{ isWatchOnly ? $t('watch_only_wallet') : $t('connected_wallet') }}
           </p>
         </div>

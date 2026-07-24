@@ -12,7 +12,7 @@
               class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ t('swap.swap-offer.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
@@ -141,7 +141,7 @@
                           v-if="idx === 0"
                           class="bg-primary text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
                         >
-                          best rate
+                          {{ t('swap.swap-offer.best-rate') }}
                         </p>
                       </div>
                       <div
@@ -213,7 +213,7 @@
           </app-pop-up-menu>
           <div class="pt-3 ml-2">
             <div class="text-s-14 text-info flex items-center gap-1">
-              <span>Rate: 1</span>
+              <span>{{ t('swap.swap-offer.rate') }}: 1</span>
               <app-token-symbol
                 :symbol="fromToken?.symbol || 'UNKNOWN'"
                 :address="
@@ -271,7 +271,7 @@
           is-large
           @click="declineSwap"
         >
-          Cancel
+          {{ t('common.cancel') }}
         </app-btn-text>
       </div>
     </template>
@@ -409,7 +409,9 @@ const isBridge = computed(() => {
 })
 
 const title = computed(() => {
-  return isBridge.value ? 'Bridge' : 'Swap'
+  return isBridge.value
+    ? t('swap.swap-offer.title-bridge')
+    : t('swap.swap-offer.title-swap')
 })
 
 const btnText = computed(() => {

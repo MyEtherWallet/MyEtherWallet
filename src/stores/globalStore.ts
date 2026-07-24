@@ -41,6 +41,11 @@ export const useGlobalStore = defineStore('global', () => {
   const defaultGasPriceType = useLocalStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR')
 
   /**--------------------
+   * LANGUAGE
+   --------------------*/
+  const locale = useLocalStorage<string>('mew-locale', 'en')
+
+  /**--------------------
    * WELCOME DIALOG
    --------------------*/
   const welcomeDialogDismissed = useLocalStorage<boolean>(
@@ -68,5 +73,6 @@ export const useGlobalStore = defineStore('global', () => {
     dismissWelcomeDialog,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
+    locale,
   }
 })

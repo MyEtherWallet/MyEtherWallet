@@ -1,7 +1,7 @@
 <template>
   <div>
     <app-btn-text class="text-primary text-s-14" @click="openDialog = true">
-      View All</app-btn-text
+      {{ $t('common.view_all') }}</app-btn-text
     >
     <app-dialog
       v-model:is-open="openDialog"

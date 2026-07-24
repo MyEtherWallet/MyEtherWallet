@@ -7,20 +7,25 @@
       <div class="flex-1 min-w-0">
         <div class="text-s-11 font-semibold text-black leading-tight">
           <div v-if="props.location === 'small-banner-swap'">
-            Swap $50+ on Ethereum and
-            <span class="text-primary"> Earn 5 USDC</span>
+            {{ t('rewards.small_banner_swap_text') }}
+            <span class="text-primary">
+              {{ t('rewards.small_banner_swap_highlight') }}</span
+            >
           </div>
           <div v-else>
-            Trade, hold and get <span class="text-primary"> 10 USDC</span>
+            {{ t('rewards.small_banner_trade_text') }}
+            <span class="text-primary">
+              {{ t('rewards.small_banner_trade_highlight') }}</span
+            >
             <br />
-            Trade $100 to qualify
+            {{ t('rewards.small_banner_trade_sub') }}
           </div>
         </div>
       </div>
       <button
         class="flex items-center gap-1 text-s-14 text-black underline whitespace-nowrap hoverOpacity shrink-0"
       >
-        Learn more
+        {{ t('rewards.learn_more') }}
       </button>
     </div>
   </div>
@@ -28,8 +33,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   location: 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
