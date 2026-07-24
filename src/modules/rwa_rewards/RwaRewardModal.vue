@@ -255,6 +255,7 @@
                 </div>
                 <app-base-button
                   size="medium"
+                  :is-loading="isClaiming"
                   class="w-[120px] shrink-0 text-s-16 font-semibold tracking-[-0.32px]"
                   @click="onClaim"
                 >
@@ -363,6 +364,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
@@ -375,7 +378,8 @@ import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { isModalOpen, seasonEnd, status, activeReward, info } =
+const { addToastMessage } = useToastStore()
+const { isModalOpen, seasonEnd, status, activeReward, info, isClaiming } =
   storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
@@ -527,8 +531,21 @@ const onTrade = () => {
   walletMenuStore.openPanel('trade')
   holdingsStore.closeModal()
 }
-const onClaim = () => {
+const onClaim = async () => {
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  const reward = activeReward.value
+  if (!reward || isClaiming.value) return
+  const result = await holdingsStore.claim(reward)
+  if (result.success) {
+    addToastMessage({
+      text: t('rwaRewards.claim_success'),
+      type: ToastType.Success,
+    })
+  } else {
+    addToastMessage({
+      text: t(`rwaRewards.claim_errors.${result.errorKey}`),
+      type: ToastType.Error,
+    })
+  }
 }
 </script>
