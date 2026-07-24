@@ -81,7 +81,6 @@ export function usePerpsToasts() {
   }
 
   const slTpLine = (args: SlTpArgs): string => {
-    console.log(args)
     return t('perps.toast.sl-tp-line', {
       side: humanSide(args.direction, t).toUpperCase(),
       netQuantity: args.netQuantity,
