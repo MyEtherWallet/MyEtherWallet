@@ -61,6 +61,10 @@ export const useGlobalStore = defineStore('global', () => {
    --------------------*/
   const fetchedTradingThisSession = ref(false)
   const isTradingRestrictedInRegion = ref(false)
+  const setIsTradingRestrictedInRegion = (restricted: boolean) => {
+    isTradingRestrictedInRegion.value = restricted
+    analytics.setIsRegionRestricted(restricted)
+  }
 
   return {
     isEIP1559SupportedNetwork,
@@ -73,6 +77,7 @@ export const useGlobalStore = defineStore('global', () => {
     dismissWelcomeDialog,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
+    setIsTradingRestrictedInRegion,
     locale,
   }
 })
