@@ -29,6 +29,7 @@
 
     <app-base-button
       v-if="variant === 'claim'"
+      :is-loading="loading"
       class="w-full text-s-16 font-semibold tracking-[-0.32px]"
       @click="emit('claim')"
     >
@@ -47,6 +48,7 @@ defineProps<{
   subtitle: string
   variant: 'claim' | 'sent' | 'closed'
   claimLabel?: string
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{ claim: [] }>()
