@@ -120,8 +120,8 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // platform: PLATFORM,
-          // version: configs.APP_VERSION,
+          platform: PLATFORM,
+          version: configs.APP_VERSION,
         },
         body: JSON.stringify({ transaction, signature }),
       })
