@@ -126,7 +126,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(swap.createdAt) }}
+            {{ formatNotificationDate(swap.createdAt) }}
           </p>
         </div>
 
@@ -189,6 +189,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue,
 } from '@/utils/numberFormatHelper'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
 const props = defineProps<{
@@ -202,12 +203,6 @@ defineEmits<{
 }>()
 
 const showMoreDetails = ref(false)
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {
