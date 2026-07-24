@@ -6,12 +6,12 @@ const IS_PERPS_LIVE = true
 
 const PERPS_BASE_URL = {
   sandbox: { url: `https://api.ondoperps-sandbox.xyz` },
-  live: { url: `https://api.ondoperps.xyz` },
+  live: { url: `https://api.ondoperps-sandbox.xyz` },
 }
 
 const PERPS_WS_URL = {
   sandbox: `wss://api.ondoperps-sandbox.xyz/ws`,
-  live: `wss://api.ondoperps.xyz/ws`,
+  live: `wss://api.ondoperps-sandbox.xyz/ws`,
 }
 
 const perpsClient = new PerpsClient(
