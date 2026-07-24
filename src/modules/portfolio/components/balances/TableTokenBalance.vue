@@ -1,7 +1,7 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-grey-5"
     >
       <div
         class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"

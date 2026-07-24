@@ -98,8 +98,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       holdCampaignStatus: holdingsStore.status,
       qualifyingTradeAmount: reward?.qualifying_amount
         ? new BigNumber(reward.qualifying_amount)
-            .shiftedBy(-decimals)
-            .toString()
+          .shiftedBy(-decimals)
+          .toString()
         : undefined,
       qualifyingTradeToken: meta?.symbol,
       qualifiedSince: reward?.qualification_timestamp,
@@ -230,7 +230,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 100) {
+      if (fromUsdValue > 250) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
       }

@@ -2,12 +2,15 @@ import {
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
+  PERP_INFO_ROUTE_NAME,
 } from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { STOCK_INFO_ROUTE } from './routeStockInfo'
+import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -16,6 +19,7 @@ const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
+const ViewPerps = () => import('@/views/ViewPerps.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -108,6 +112,28 @@ const DefaultRoutes = <RouteNameCollection>[
       {
         name: STOCK_INFO_ROUTE_NAMES.sign,
         ...STOCK_INFO_ROUTE,
+      },
+    ],
+  },
+  {
+    path: ROUTES_MAIN.PERPS.PATH,
+    name: ROUTES_MAIN.PERPS.NAME,
+    component: ViewPerps,
+    meta: {
+      noAuth: true,
+    },
+    beforeEnter: async (_to, _from, next) => {
+      const restricted = await fetchTradingRestriction()
+      if (restricted) {
+        next({ name: ROUTES_MAIN.HOME.NAME })
+      } else {
+        next()
+      }
+    },
+    children: [
+      {
+        name: PERP_INFO_ROUTE_NAME,
+        ...PERP_INFO_ROUTE,
       },
     ],
   },
