@@ -99,8 +99,26 @@ export const useConnectWallet = () => {
         })
         return
       }
+      // Resolve the injected provider that matches the selected wallet.
+      // Wallets other than Unisat / Enkrypt (e.g. SafePal) do not expose a
+      // supported Bitcoin injection, so bail out gracefully instead of
+      // dereferencing an undefined provider (MEW-2040).
+      const btcInjection =
+        wallet.id === 'unisat'
+          ? unisatInjection
+          : wallet.id === 'enkrypt'
+            ? enkryptInjection
+            : undefined
+      if (!btcInjection) {
+        toastStore.addToastMessage({
+          text: 'Wallet not supported for Bitcoin',
+          textSecondary: `${wallet.name} can't be used to connect to Bitcoin. Please select a different wallet.`,
+          type: ToastType.Warning,
+        })
+        return
+      }
       const unisatWallet = new UnisatInjectWallet(
-        wallet.id === 'unisat' ? unisatInjection! : enkryptInjection!,
+        btcInjection,
         selectedChain.value?.name ?? 'BITCOIN',
       )
 
