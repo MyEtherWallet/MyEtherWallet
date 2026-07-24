@@ -23,3 +23,16 @@ export function isExtensionOrProviderError(err: unknown): boolean {
   }
   return typeof e.stack === 'string' && EXTENSION_URL.test(e.stack)
 }
+
+/**
+ * Whether an error is a viem `InvalidAddressError` — thrown when a connected
+ * wallet returns a malformed account address from `eth_requestAccounts`
+ * (observed from buggy in-app wallet browsers). The connect flow already
+ * handles it (the user sees a "Could not connect" toast), so it is external,
+ * unactionable Sentry noise. Detected via the viem-guaranteed error `name`
+ * rather than the message so it survives minification.
+ */
+export function isInvalidWalletAddressError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  return (err as { name?: unknown }).name === 'InvalidAddressError'
+}

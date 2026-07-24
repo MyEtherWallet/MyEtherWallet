@@ -128,9 +128,7 @@ export const useConnectWallet = () => {
       return
     }
     const providerInjected = Eip6963Providers.value.find(
-      p =>
-        p.info.name.toLowerCase() === wallet.name.toLowerCase() ||
-        p.info.name.toLowerCase() === wallet.id.toLowerCase(),
+      p => p.info.name === wallet.name || p.info.name === wallet.id,
     )
 
     if (!providerInjected) {
@@ -263,13 +261,6 @@ export const useConnectWallet = () => {
           error = t('common.error.user_canceled_request')
           _type = ToastType.Info
         } else if (
-          err.message &&
-          err.message.toLowerCase().includes('proposal expired')
-        ) {
-          error = 'Connection timed out. Please try again.'
-          _type = ToastType.Info
-        }
-        if (
           err.message &&
           err.message.toLowerCase().includes('proposal expired')
         ) {
