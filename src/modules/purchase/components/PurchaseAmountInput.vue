@@ -21,7 +21,7 @@
     <!-- Amount + estimate / helper / spinner / error -->
     <div
       class="flex-1 w-full flex flex-col items-center justify-center gap-2 cursor-text"
-      @click="focus"
+      @click="onAreaClick"
     >
       <label
         :for="inputId"
@@ -324,6 +324,14 @@ const onSelectPreset = async (btn: QuickButton) => {
 }
 
 const focus = () => inputEl.value?.focus()
+
+const onAreaClick = (event: MouseEvent) => {
+  const input = inputEl.value
+  if (!input || event.target === input) return
+  input.focus()
+  const cursorPosition = input.value.length
+  input.setSelectionRange(cursorPosition, cursorPosition)
+}
 
 defineExpose({ focus })
 
