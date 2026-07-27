@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import { useStorage } from '@vueuse/core'
+import { safeLocalStorage } from '@/utils/safeStorage'
 import BigNumber from 'bignumber.js'
 import configs from '@/configs'
 import i18n from '@/i18n'
@@ -56,7 +58,14 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const error = ref<string | null>(null)
   const isModalOpen = ref(false)
   const isClaiming = ref(false)
-  const dismissed = ref<Set<string>>(new Set())
+  // Persisted so "Hide this offer" stays hidden across reloads. Stored as a
+  // plain array (JSON-serializable) and exposed as a Set for O(1) lookups.
+  const dismissedIds = useStorage<string[]>(
+    'mew-rwa-dismissed',
+    [],
+    safeLocalStorage,
+  )
+  const dismissed = computed(() => new Set(dismissedIds.value))
 
   let pollTimer: ReturnType<typeof setInterval> | null = null
   let currentAddress = ''
@@ -212,9 +221,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isModalOpen.value = false
   }
   const dismiss = (uuid: string) => {
-    const next = new Set(dismissed.value)
-    next.add(uuid)
-    dismissed.value = next
+    if (!dismissedIds.value.includes(uuid)) {
+      dismissedIds.value = [...dismissedIds.value, uuid]
+    }
   }
 
   const startPolling = (address: string) => {

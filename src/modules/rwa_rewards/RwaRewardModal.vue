@@ -260,7 +260,9 @@
                   @click="onClaim"
                 >
                   {{
-                    isWatchOnly ? $t('rwaRewards.login') : $t('rwaRewards.claim')
+                    isWatchOnly
+                      ? $t('rwaRewards.login')
+                      : $t('rwaRewards.claim')
                   }}
                 </app-base-button>
               </div>
