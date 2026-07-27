@@ -255,10 +255,13 @@
                 </div>
                 <app-base-button
                   size="medium"
-                  class="w-[120px] shrink-0 text-s-16 font-semibold tracking-[-0.32px]"
+                  :is-loading="isClaiming"
+                  class="min-w-[120px] shrink-0 whitespace-nowrap text-s-16 font-semibold tracking-[-0.32px]"
                   @click="onClaim"
                 >
-                  {{ $t('rwaRewards.claim') }}
+                  {{
+                    isWatchOnly ? $t('rwaRewards.login') : $t('rwaRewards.claim')
+                  }}
                 </app-base-button>
               </div>
 
@@ -363,6 +366,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
@@ -375,7 +380,9 @@ import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { isModalOpen, seasonEnd, status, activeReward, info } =
+const { isWatchOnly } = storeToRefs(useWalletStore())
+const { openAccessDialog } = useAccessStore()
+const { isModalOpen, seasonEnd, status, activeReward, info, isClaiming } =
   storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
@@ -527,8 +534,18 @@ const onTrade = () => {
   walletMenuStore.openPanel('trade')
   holdingsStore.closeModal()
 }
-const onClaim = () => {
+const onClaim = async () => {
+  // A watch-only address can't sign the claim — send the user to log in with a
+  // full wallet instead.
+  if (isWatchOnly.value) {
+    holdingsStore.closeModal()
+    openAccessDialog()
+    return
+  }
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  const reward = activeReward.value
+  if (!reward || isClaiming.value) return
+  // Toasts (success/error) are emitted by holdingsStore.claim itself.
+  await holdingsStore.claim(reward)
 }
 </script>

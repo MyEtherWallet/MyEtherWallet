@@ -1,10 +1,11 @@
 <template>
-  <!-- Geo-restricted regions never see reward info — only the "no MEW fees"
-       offer takes the top card's place. -->
+  <!-- The Zero MEW Fees offer takes the top card's place for geo-restricted
+       regions (which never see reward info) and once the hold offer has been
+       dismissed — the next eligible offer. -->
 
   <rwa-reward-card
     campaign="buy_no_fees"
-    v-if="isTradingRestrictedInRegion"
+    v-if="showZeroFeesOffer"
     illustration="fees"
     :title="$t('rwaRewards.fees_title')"
     :description="$t('rwaRewards.fees_description')"
@@ -119,6 +120,7 @@
         :amount-label="$t('rwaRewards.reward_amount')"
         :subtitle="$t('rwaRewards.sub_expires', { time: subExpiresText })"
         :claim-label="$t('rwaRewards.claim')"
+        :loading="isClaiming"
         @claim="onClaim"
       />
     </template>
@@ -297,8 +299,16 @@ const { t } = useI18n()
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { seasonEnd, status, activeReward } = storeToRefs(holdingsStore)
+const { seasonEnd, status, activeReward, isClaiming, isHoldOfferDismissed } =
+  storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+
+// The Zero MEW Fees offer is the default eligible offer shown in the hero slot
+// when there's no live hold offer to feature: geo-restricted users (no reward
+// info) and users who have dismissed their terminal hold offer.
+const showZeroFeesOffer = computed(
+  () => isTradingRestrictedInRegion.value || isHoldOfferDismissed.value,
+)
 
 // Fire a reward-offer CTA event for a main-card action
 const trackCta = (cta: string, campaign: 'hold' | 'buy_no_fees' = 'hold') =>
@@ -353,9 +363,10 @@ const disabledCtaTooltip = computed(() => {
   return t('rwaRewards.not_eligible_tooltip')
 })
 
-const onClaim = () => {
+const onClaim = async () => {
+  if (isClaiming.value) return
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  if (activeReward.value) await holdingsStore.claim(activeReward.value)
 }
 const onHide = () => {
   trackCta('hide_offer')
@@ -363,12 +374,13 @@ const onHide = () => {
 }
 
 // Report the hold main-card impression once per status while it is visible
-// (the geo-restricted "no fees" card takes over and is tracked elsewhere).
+// (when the "no fees" card takes over — geo-restricted or dismissed hold offer
+// — the hold card isn't shown, so skip; that card is tracked elsewhere).
 const lastReportedStatus = ref<string | null>(null)
 watch(
-  [status, isTradingRestrictedInRegion],
-  ([currentStatus, restricted]) => {
-    if (restricted || !currentStatus) return
+  [status, showZeroFeesOffer],
+  ([currentStatus, zeroFees]) => {
+    if (zeroFees || !currentStatus) return
     if (lastReportedStatus.value === currentStatus) return
     lastReportedStatus.value = currentStatus
     analytics.trackHoldRewardsMainCardEvent(
