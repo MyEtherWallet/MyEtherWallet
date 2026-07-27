@@ -1,4 +1,5 @@
 import { ref, type Ref, type ComputedRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -52,6 +53,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     generalError,
     isLoadingQuote,
   } = options
+
+  const { t } = useI18n()
 
   const currentQuote = ref<QuoteData | null>(null)
   const needsApproval = ref(false)
@@ -134,11 +137,11 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
 
       // No quote returned from the provider
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
-        generalError.value = 'No quotes returned'
+        generalError.value = t('trade.error.no-quotes-returned')
         toAmount.value = '0'
         analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
           ...getAnalyticsPayload(),
-          errorMsg: generalError.value,
+          errorMsg: 'No quotes returned',
         })
         return
       }
@@ -157,11 +160,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       )
       needsApproval.value = approvalRequired
     } catch (e) {
-      generalError.value = (e as Error).message || 'Failed to fetch quote'
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
+      generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
         ...getAnalyticsPayload(),
-        errorMsg: generalError.value,
+        errorMsg: rawMessage || 'Failed to fetch quote',
       })
       if (isDevMode) {
         console.error('Error fetching quote:', e)

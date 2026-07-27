@@ -18,8 +18,8 @@
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
       ]"
-      :aria-label="placeholder"
-      :placeholder="placeholder"
+      :aria-label="placeholder || $t('common.search')"
+      :placeholder="placeholder || $t('common.search')"
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
@@ -60,10 +60,11 @@ import { XCircleIcon } from '@heroicons/vue/24/outline'
 defineProps({
   /**
    * @placeholder The placeholder text of the input field. Also used as the aria label.
+   * When empty, falls back to the localized `common.search` string.
    */
   placeholder: {
     type: String,
-    default: 'Search',
+    default: '',
   },
   /**
    * @bgClass The background color of the input field.

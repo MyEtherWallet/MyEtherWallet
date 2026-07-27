@@ -104,7 +104,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(transaction.createdAt) }}
+            {{ formatNotificationDate(transaction.createdAt) }}
           </p>
         </div>
         <!-- Transaction -->
@@ -168,6 +168,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue,
 } from '@/utils/numberFormatHelper'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 // Props
 const props = defineProps<{
@@ -183,11 +184,6 @@ defineEmits<{
 const { isXsAndUp } = useAppBreakpoints()
 
 const showMoreDetails = ref(false)
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {

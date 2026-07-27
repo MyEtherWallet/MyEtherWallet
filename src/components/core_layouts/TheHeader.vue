@@ -196,12 +196,12 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('stocks'),
+      title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
     },
     {
-      title: t('crypto'),
+      title: t('common.crypto'),
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
@@ -232,16 +232,16 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
-const learnMenuList: AppSelectOption[] = [
+const learnMenuList = computed<AppSelectOption[]>(() => [
   {
-    label: 'Help Center',
+    label: t('common.help_center'),
     value: 'https://help.myetherwallet.com/en/',
   },
   {
-    label: 'Blog',
+    label: t('common.blog'),
     value: 'https://www.myetherwallet.com/blog',
   },
-]
+])
 
 const displayLinks = computed(() => {
   return coreMenuList.value

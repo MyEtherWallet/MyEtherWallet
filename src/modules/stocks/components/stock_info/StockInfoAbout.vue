@@ -17,7 +17,7 @@
         <h2
           class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-4 flex items-center"
         >
-          About
+          {{ $t('stocks.about') }}
           <app-token-symbol
             v-if="data.primaryMarket"
             :symbol="data.primaryMarket?.symbol"
@@ -39,7 +39,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-2"
           >
-            Category
+            {{ $t('stocks.category') }}
           </p>
           <div
             v-if="
@@ -67,7 +67,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
           >
-            Shares Per Token
+            {{ $t('stocks.shares_per_token') }}
           </p>
           <p
             class="text-s-16 font-medium"
@@ -86,7 +86,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
           >
-            Total Holders
+            {{ $t('stocks.total_holders') }}
           </p>
           <p class="text-s-16 font-medium">
             {{

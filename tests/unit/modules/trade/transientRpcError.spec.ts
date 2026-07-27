@@ -37,6 +37,17 @@ describe('isTransientRpcError', () => {
     ).toBe(true)
   })
 
+  it('is true for an object whose message is "Connection is closed"', () => {
+    expect(isTransientRpcError({ message: 'Connection is closed' })).toBe(true)
+  })
+
+  it('is true for a bare-string "Connection is closed" rejection', () => {
+    // The production shape captured by Sentry `onunhandledrejection`: a WS layer
+    // rejects with a plain string (no Error, no stack, no cause chain).
+    expect(isTransientRpcError('Connection is closed')).toBe(true)
+    expect(isTransientRpcError('The socket has been closed.')).toBe(true)
+  })
+
   it('is false for a genuine app error', () => {
     expect(
       isTransientRpcError({
@@ -50,9 +61,16 @@ describe('isTransientRpcError', () => {
     expect(isTransientRpcError(new Error('Bad Request'))).toBe(false)
   })
 
-  it('is false for non-object inputs', () => {
+  it('is false for a non-transient bare string', () => {
+    expect(isTransientRpcError('Bad Request')).toBe(false)
+    expect(isTransientRpcError('Cannot read properties of undefined')).toBe(
+      false,
+    )
+  })
+
+  it('is false for empty / nullish inputs', () => {
     expect(isTransientRpcError(null)).toBe(false)
     expect(isTransientRpcError(undefined)).toBe(false)
-    expect(isTransientRpcError('socket has been closed')).toBe(false)
+    expect(isTransientRpcError('')).toBe(false)
   })
 })

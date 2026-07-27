@@ -1,0 +1,17 @@
+{
+  "name": "MyEtherWallet",
+  "serviceType": "Self-custody cryptocurrency wallet",
+  "provider": "MyEtherWallet Inc",
+  "areaServed": "Worldwide",
+  "url": "https://app.myetherwallet.com/",
+  "features": [
+    "Buy and sell crypto",
+    "Token swaps",
+    "Send and receive",
+    "Staking",
+    "Perpetuals trading",
+    "Tokenized stocks",
+    "Hardware wallet support",
+    "WalletConnect"
+  ]
+}

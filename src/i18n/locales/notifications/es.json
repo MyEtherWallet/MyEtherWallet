@@ -1,0 +1,49 @@
+{
+  "notifications_module": {
+    "title": "Notificaciones",
+    "no_notifications_yet": "Aún no hay notificaciones",
+    "default_empty_text": "Tus órdenes, intercambios, puentes y transacciones recientes aparecerán aquí.",
+    "swap": "intercambios",
+    "bridge": "puente",
+    "transaction": "transacciones",
+    "trade_order": "operaciones",
+    "status": {
+      "pending": "Pendiente",
+      "possibly_dropped": "Posiblemente descartada",
+      "failed": "Fallida",
+      "successful": "Exitosa"
+    },
+    "destination_address": "Dirección de destino",
+    "price_difference": "Diferencia de precio",
+    "filled_in_tx": "Ejecutada en tx",
+    "est": "est:",
+    "order_status": {
+      "pending": "Pendiente",
+      "filled": "Ejecutada",
+      "cancelled": "Cancelada",
+      "expired": "Expirada"
+    },
+    "pin_to_keep_open": "Fijar para mantener abierto",
+    "unpin": "Desfijar",
+    "pin": "Fijar",
+    "drag": "Arrastrar",
+    "filter_all": "Todas",
+    "filter_trades": "Operaciones",
+    "filter_transactions": "Transacciones",
+    "filter_swaps": "Intercambios",
+    "filter_bridge": "Puente",
+    "empty_trade": "Tus órdenes de operaciones de acciones aparecerán aquí.",
+    "empty_txs": "Tus transacciones de envío aparecerán aquí.",
+    "empty_bridge": "Tus puentes de tokens aparecerán aquí.",
+    "empty_swap": "Tus intercambios de tokens aparecerán aquí.",
+    "toast_trade_filled": "Orden de operación ejecutada",
+    "toast_trade_cancelled": "Orden de operación cancelada",
+    "toast_trade_expired": "Orden de operación expirada",
+    "toast_transaction_successful": "Transacción exitosa",
+    "toast_transaction_failed": "Transacción fallida",
+    "toast_swap_successful": "Intercambio exitoso",
+    "toast_swap_failed": "Intercambio fallido",
+    "toast_bridge_successful": "Puente exitoso",
+    "toast_bridge_failed": "Puente fallido"
+  }
+}

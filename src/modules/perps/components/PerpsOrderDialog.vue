@@ -25,7 +25,7 @@
                 order.side === 'buy' ? 'text-success' : 'text-error',
               ]"
             >
-              {{ order.side }}
+              {{ order.side === 'buy' ? $t('perps.order.buy') : order.side === 'sell' ? $t('perps.order.sell') : order.side }}
             </span>
           </div>
         </div>

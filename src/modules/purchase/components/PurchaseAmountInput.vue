@@ -37,7 +37,7 @@
           :value="displayValue"
           type="text"
           inputmode="decimal"
-          aria-label="Amount"
+          :aria-label="$t('common.amount')"
           class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
           :style="{
             fontSize: 'inherit',

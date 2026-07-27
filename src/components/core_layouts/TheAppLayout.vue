@@ -59,7 +59,7 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              Old version of MEW Portfolio here
+              {{ t('common.old_version_link') }}
               <arrow-long-right-icon
                 class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
               />
@@ -93,6 +93,7 @@ import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
+const { t } = useI18n()
 
 const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
