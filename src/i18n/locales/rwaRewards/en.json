@@ -53,6 +53,7 @@
     "sub_sent": "Sent to your wallet",
     "sub_closed": "Claim window closed",
     "claim": "Claim",
+    "login": "Connect wallet to claim",
     "hide_offer": "Hide this offer",
     "modal_step1": "Make one qualifying trade worth $100 or more ",
     "modal_step1_bold": "on Ethereum or BNB.",
@@ -92,6 +93,8 @@
     "announcement_desc": "Make a qualifying trade.\nHold that trade for 14 days.\nGet a 10 USDC reward!",
     "go_to_offer": "Go to offer",
     "claim_success": "Reward claimed! Your 10 USDC is on its way.",
+    "register_success": "Trade registered! Hold for 14 days to earn your reward.",
+    "register_error": "We couldn't register your trade for rewards. Please try again.",
     "claim_errors": {
       "walletMissing": "Connect a wallet to claim your reward.",
       "wrongAddress": "This reward was earned by a different address. Switch to that wallet to claim.",

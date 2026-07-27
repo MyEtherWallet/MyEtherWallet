@@ -1,7 +1,7 @@
 <template>
   <!-- The Zero MEW Fees offer takes the top card's place for geo-restricted
        regions (which never see reward info) and once the hold offer has been
-       dismissed — the next campaign the user is eligible for. -->
+       dismissed — the next eligible offer. -->
 
   <rwa-reward-card
     campaign="buy_no_fees"
@@ -303,9 +303,9 @@ const { seasonEnd, status, activeReward, isClaiming, isHoldOfferDismissed } =
   storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
-// The Zero MEW Fees offer is the default campaign shown in the hero slot when
-// there's no live hold offer to feature: geo-restricted users (no reward info)
-// and users who have dismissed their terminal hold offer.
+// The Zero MEW Fees offer is the default eligible offer shown in the hero slot
+// when there's no live hold offer to feature: geo-restricted users (no reward
+// info) and users who have dismissed their terminal hold offer.
 const showZeroFeesOffer = computed(
   () => isTradingRestrictedInRegion.value || isHoldOfferDismissed.value,
 )
@@ -374,12 +374,13 @@ const onHide = () => {
 }
 
 // Report the hold main-card impression once per status while it is visible
-// (the geo-restricted "no fees" card takes over and is tracked elsewhere).
+// (when the "no fees" card takes over — geo-restricted or dismissed hold offer
+// — the hold card isn't shown, so skip; that card is tracked elsewhere).
 const lastReportedStatus = ref<string | null>(null)
 watch(
-  [status, isTradingRestrictedInRegion],
-  ([currentStatus, restricted]) => {
-    if (restricted || !currentStatus) return
+  [status, showZeroFeesOffer],
+  ([currentStatus, zeroFees]) => {
+    if (zeroFees || !currentStatus) return
     if (lastReportedStatus.value === currentStatus) return
     lastReportedStatus.value = currentStatus
     analytics.trackHoldRewardsMainCardEvent(

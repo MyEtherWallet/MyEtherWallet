@@ -2,8 +2,11 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { safeLocalStorage } from '@/utils/safeStorage'
+import BigNumber from 'bignumber.js'
 import configs from '@/configs'
+import i18n from '@/i18n'
 import { analytics } from '@/analytics'
+import { ToastType } from '@/types/notification'
 import type {
   RwaClaimErrorKey,
   RwaClaimPayload,
@@ -14,6 +17,7 @@ import type {
   RwaStatus,
 } from '@/mew_api/schemaRwaRewards'
 import { useWalletStore } from './walletStore'
+import { useToastStore } from './toastStore'
 
 const BASE = configs.RWA_REWARDS_API
 const POLL_INTERVAL = 30_000
@@ -88,17 +92,47 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     }
   }
 
-  const register = async (orderHash: string, chainId: number | string) => {
+  const register = async (
+    orderHash: string,
+    chainId: number | string,
+    usdValue?: string,
+  ) => {
+    // Only trades worth at least the campaign's qualification_value qualify.
+    // Skip silently (no request, no toast) for anything below the threshold or
+    // when the threshold isn't known yet (info not loaded / missing usdValue).
+    const threshold = new BigNumber(qualificationValue.value ?? '')
+    const value = new BigNumber(usdValue ?? '')
+    if (
+      threshold.isNaN() ||
+      threshold.lte(0) ||
+      value.isNaN() ||
+      value.lt(threshold)
+    ) {
+      return
+    }
+
+    const { addToastMessage } = useToastStore()
     try {
-      await fetch(`${BASE}/register?hash=${orderHash}&chainId=${chainId}`)
+      const res = await fetch(
+        `${BASE}/register?hash=${orderHash}&chainId=${chainId}`,
+      )
+      if (!res.ok) throw new Error(`RWA register request failed: ${res.status}`)
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.register_success'),
+        type: ToastType.Success,
+      })
     } catch {
       error.value = 'Failed to register RWA trade'
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.register_error'),
+        type: ToastType.Error,
+      })
     }
   }
 
-  const claim = async (reward: RwaRewardItem): Promise<RwaClaimResult> => {
-    if (isClaiming.value) return { success: false, errorKey: 'generic' }
-
+  const performClaim = async (
+    reward: RwaRewardItem,
+  ): Promise<RwaClaimResult> => {
     const walletStore = useWalletStore()
     const wallet = walletStore.wallet
     if (!wallet) return { success: false, errorKey: 'walletMissing' }
@@ -158,6 +192,26 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     } finally {
       isClaiming.value = false
     }
+  }
+
+  const claim = async (reward: RwaRewardItem): Promise<RwaClaimResult> => {
+    // Ignore re-entry while a claim is already in flight — no toast for that.
+    if (isClaiming.value) return { success: false, errorKey: 'generic' }
+
+    const result = await performClaim(reward)
+    const { addToastMessage } = useToastStore()
+    if (result.success) {
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.claim_success'),
+        type: ToastType.Success,
+      })
+    } else {
+      addToastMessage({
+        text: i18n.global.t(`rwaRewards.claim_errors.${result.errorKey}`),
+        type: ToastType.Error,
+      })
+    }
+    return result
   }
 
   const openModal = () => {
@@ -253,9 +307,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   // The "Hide this offer" button only appears in the terminal claimed/expired
   // states. Once the user hides that reward it is filtered out and `status`
   // falls back to 'default'. Rather than re-showing the generic hold promo,
-  // the hero card should move on to the next campaign the user is eligible
-  // for (defaulting to the Zero MEW Fees variant). This flag tells the hero
-  // card that the hold offer is spent so it can hand the slot over.
+  // the hero card should move on to the next eligible offer (defaulting to the
+  // Zero MEW Fees variant). This flag tells the hero card the hold offer is
+  // spent so it can hand the slot over.
   const dismissedTerminal = computed(() => {
     if (!dismissed.value.size || !info.value) return false
     return [
