@@ -119,6 +119,7 @@
         :amount-label="$t('rwaRewards.reward_amount')"
         :subtitle="$t('rwaRewards.sub_expires', { time: subExpiresText })"
         :claim-label="$t('rwaRewards.claim')"
+        :loading="isClaiming"
         @claim="onClaim"
       />
     </template>
@@ -297,7 +298,8 @@ const { t } = useI18n()
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { seasonEnd, status, activeReward } = storeToRefs(holdingsStore)
+const { seasonEnd, status, activeReward, isClaiming } =
+  storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 // Fire a reward-offer CTA event for a main-card action
@@ -353,9 +355,10 @@ const disabledCtaTooltip = computed(() => {
   return t('rwaRewards.not_eligible_tooltip')
 })
 
-const onClaim = () => {
+const onClaim = async () => {
+  if (isClaiming.value) return
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  if (activeReward.value) await holdingsStore.claim(activeReward.value)
 }
 const onHide = () => {
   trackCta('hide_offer')

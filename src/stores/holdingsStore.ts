@@ -1,15 +1,52 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import configs from '@/configs'
+import i18n from '@/i18n'
 import { analytics } from '@/analytics'
+import { ToastType } from '@/types/notification'
 import type {
+  RwaClaimErrorKey,
+  RwaClaimPayload,
+  RwaClaimResponse,
+  RwaClaimResult,
   RwaInfoResponse,
   RwaRewardItem,
   RwaStatus,
 } from '@/mew_api/schemaRwaRewards'
+import { useWalletStore } from './walletStore'
+import { useToastStore } from './toastStore'
 
 const BASE = configs.RWA_REWARDS_API
 const POLL_INTERVAL = 30_000
+
+// The web wallet always claims from the `web` platform (no device-integrity gating).
+const PLATFORM = 'web'
+
+// base64-encode a UTF-8 string (see src/utils/crypto.ts for the codebase convention).
+const toBase64 = (value: string) =>
+  btoa(String.fromCharCode(...new TextEncoder().encode(value)))
+
+// Map the claim endpoint's HTTP status to a translatable error key.
+const mapClaimError = (status: number): RwaClaimErrorKey => {
+  switch (status) {
+    case 403:
+      return 'restricted'
+    case 404:
+      return 'notClaimable'
+    case 406:
+      return 'platformMismatch'
+    case 409:
+      return 'alreadyClaimed'
+    case 410:
+      return 'windowClosed'
+    case 422:
+      return 'invalidRequest'
+    case 423:
+      return 'locked'
+    default:
+      return 'generic'
+  }
+}
 
 export const useHoldingsStore = defineStore('holdingsStore', () => {
   const info = ref<RwaInfoResponse | null>(null)
@@ -17,6 +54,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hadInitialLoad = ref(false)
   const error = ref<string | null>(null)
   const isModalOpen = ref(false)
+  const isClaiming = ref(false)
   const dismissed = ref<Set<string>>(new Set())
 
   let pollTimer: ReturnType<typeof setInterval> | null = null
@@ -45,15 +83,107 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   }
 
   const register = async (orderHash: string, chainId: number | string) => {
+    const { addToastMessage } = useToastStore()
     try {
-      await fetch(`${BASE}/register?hash=${orderHash}&chainId=${chainId}`)
+      const res = await fetch(
+        `${BASE}/register?hash=${orderHash}&chainId=${chainId}`,
+      )
+      if (!res.ok) throw new Error(`RWA register request failed: ${res.status}`)
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.register_success'),
+        type: ToastType.Success,
+      })
     } catch {
       error.value = 'Failed to register RWA trade'
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.register_error'),
+        type: ToastType.Error,
+      })
     }
   }
 
-  const claim = async (reward: RwaRewardItem) => {
-    void reward
+  const performClaim = async (
+    reward: RwaRewardItem,
+  ): Promise<RwaClaimResult> => {
+    const walletStore = useWalletStore()
+    const wallet = walletStore.wallet
+    if (!wallet) return { success: false, errorKey: 'walletMissing' }
+
+    isClaiming.value = true
+    error.value = null
+    try {
+      // The recovered signer must be the exact address that earned the entry.
+      const signer = await wallet.getAddress()
+      if (signer.toLowerCase() !== reward.address.toLowerCase()) {
+        return { success: false, errorKey: 'wrongAddress' }
+      }
+
+      // Build → base64 → sign. The signature is over the base64 `transaction`
+      // string itself (the server recovers the signer from it).
+      const payload: RwaClaimPayload = { uuid: reward.uuid, platform: PLATFORM }
+      const transaction = toBase64(JSON.stringify(payload))
+
+      let signature: string
+      try {
+        signature = await wallet.SignMessage({ message: transaction })
+      } catch {
+        // User rejected the signature or the signer errored.
+        return { success: false, errorKey: 'signatureFailed' }
+      }
+
+      const res = await fetch(`${BASE}/claim`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          version: configs.APP_VERSION,
+        },
+        body: JSON.stringify({ transaction, signature }),
+      })
+
+      if (!res.ok) {
+        const errorKey = mapClaimError(res.status)
+        error.value = 'Failed to claim RWA reward'
+        return { success: false, errorKey }
+      }
+
+      const data = (await res.json()) as RwaClaimResponse
+      // Response carries the recomputed buckets — refresh state so the entry
+      // moves into `claimed` and the modal reflects the new status.
+      info.value = {
+        info: data.info,
+        metas: data.metas ?? info.value?.metas,
+        qualified: data.qualified,
+        disqualified: data.disqualified,
+        claimed: data.claimed,
+        pending: data.pending,
+      }
+      return { success: true, response: data }
+    } catch {
+      error.value = 'Failed to claim RWA reward'
+      return { success: false, errorKey: 'generic' }
+    } finally {
+      isClaiming.value = false
+    }
+  }
+
+  const claim = async (reward: RwaRewardItem): Promise<RwaClaimResult> => {
+    // Ignore re-entry while a claim is already in flight — no toast for that.
+    if (isClaiming.value) return { success: false, errorKey: 'generic' }
+
+    const result = await performClaim(reward)
+    const { addToastMessage } = useToastStore()
+    if (result.success) {
+      addToastMessage({
+        text: i18n.global.t('rwaRewards.claim_success'),
+        type: ToastType.Success,
+      })
+    } else {
+      addToastMessage({
+        text: i18n.global.t(`rwaRewards.claim_errors.${result.errorKey}`),
+        type: ToastType.Error,
+      })
+    }
+    return result
   }
 
   const openModal = () => {
@@ -99,9 +229,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-        qualified.value.length +
-        claimed.value.length +
-        disqualified.value.length >
+      qualified.value.length +
+      claimed.value.length +
+      disqualified.value.length >
       0,
   )
 
@@ -166,6 +296,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     hadInitialLoad,
     error,
     isModalOpen,
+    isClaiming,
     fetchInfo,
     register,
     claim,
