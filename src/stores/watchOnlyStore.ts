@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import type { Chain, ChainType } from '@/mew_api/types'
+import { isAddressChainTypeMismatch } from '@/utils/addressUtils'
 
 interface AddressKeyValue {
   address: string
@@ -34,6 +35,13 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     type: ChainType,
     walletName: string,
   ) => {
+    // Never persist an address into a bucket whose chain type its format does
+    // not match (e.g. an EVM `0x` address under BITCOIN). Such a pair is later
+    // rebuilt into a watch-only wallet that hits an invalid balance endpoint
+    // (MEW-2043). This is the write-side root-cause guard.
+    if (isAddressChainTypeMismatch(address, type, chain.name)) {
+      return
+    }
     const addressKeyMap: AddressKeyValue = {
       walletType,
       walletName,
