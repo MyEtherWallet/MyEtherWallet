@@ -30,6 +30,8 @@
       "deposit-complete-title": "存款完成",
       "deposit-complete-detail": "{size} {coin} 已添加到你的交易账户",
       "withdrawal-complete-title": "提现完成",
+      "withdrawal-address-added-title": "提现地址已添加",
+      "withdrawal-address-added-detail": "你已授权 '{address}' 作为 Perps 账户的提现地址。提现前需等待 24 小时的冷却期。",
       "deposit-initiated-title": "存款已发起",
       "failed-to-credit-account-title": "账户入账失败",
       "deposit-canceled-title": "存款已取消",

@@ -30,6 +30,8 @@
       "deposit-complete-title": "Deposit Complete",
       "deposit-complete-detail": "{size} {coin} added to your Trading Account",
       "withdrawal-complete-title": "Withdrawal Complete",
+      "withdrawal-address-added-title": "Withdrawals Address has been added",
+      "withdrawal-address-added-detail": "You have authorized '{address}' as your withdrawal address for the Perps account. There is a 24 hour cooldown period, before you can withdraw.",
       "deposit-initiated-title": "Deposit Initiated",
       "failed-to-credit-account-title": "Failed to Credit Account",
       "deposit-canceled-title": "Deposit Canceled",

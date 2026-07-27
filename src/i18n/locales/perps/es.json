@@ -30,6 +30,8 @@
       "deposit-complete-title": "Depósito completado",
       "deposit-complete-detail": "{size} {coin} añadido a tu cuenta de trading",
       "withdrawal-complete-title": "Retiro completado",
+      "withdrawal-address-added-title": "Se ha añadido la dirección de retiro",
+      "withdrawal-address-added-detail": "Has autorizado '{address}' como tu dirección de retiro para la cuenta de Perps. Hay un período de espera de 24 horas antes de que puedas retirar.",
       "deposit-initiated-title": "Depósito iniciado",
       "failed-to-credit-account-title": "No se pudo acreditar la cuenta",
       "deposit-canceled-title": "Depósito cancelado",

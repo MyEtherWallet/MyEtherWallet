@@ -174,4 +174,26 @@ describe('usePerpsToasts', () => {
       textSecondary: 'perps.toast.cancel-failed-invalid-id',
     })
   })
+
+  // MEW-2074: the withdrawal-address confirmation toast used to hardcode
+  // English; it now resolves localized title + detail keys and interpolates the
+  // truncated address.
+  it('toastWithdrawalAddressAdded resolves localized title + detail with the truncated address', () => {
+    toasts.toastWithdrawalAddressAdded(
+      '0x987bdf5498f2b2e643d435a37bca3430beff8507',
+    )
+    expect(t).toHaveBeenCalledWith('perps.toast.withdrawal-address-added-title')
+    const detailCall = t.mock.calls.find(
+      c => c[0] === 'perps.toast.withdrawal-address-added-detail',
+    )
+    expect(detailCall, 'detail key called').toBeTruthy()
+    expect(detailCall?.[1]).toHaveProperty('address')
+    expect(String((detailCall?.[1] as { address: string }).address)).toMatch(
+      /^0x987b.*8507$/,
+    )
+    expect(store.messages[0]).toMatchObject({
+      type: ToastType.Success,
+      text: 'perps.toast.withdrawal-address-added-title',
+    })
+  })
 })

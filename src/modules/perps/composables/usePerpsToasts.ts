@@ -166,8 +166,10 @@ export function usePerpsToasts() {
   const toastWithdrawalAddressAdded = (address: string) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Withdrawals Address has been added',
-      textSecondary: `You have authorized '${truncateAddress(address)}' as your withdrawal address for the Perps account. There is a 24 hour cooldown period, before you can withdraw.`,
+      text: t('perps.toast.withdrawal-address-added-title'),
+      textSecondary: t('perps.toast.withdrawal-address-added-detail', {
+        address: truncateAddress(address),
+      }),
     })
   }
 
