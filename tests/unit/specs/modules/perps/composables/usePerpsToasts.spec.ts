@@ -188,8 +188,8 @@ describe('usePerpsToasts', () => {
     )
     expect(detailCall, 'detail key called').toBeTruthy()
     expect(detailCall?.[1]).toHaveProperty('address')
-    expect(String((detailCall?.[1] as { address: string }).address)).toMatch(
-      /^0x987b.*8507$/,
+    expect((detailCall?.[1] as { address: string }).address).toBe(
+      '0x987b...8507',
     )
     expect(store.messages[0]).toMatchObject({
       type: ToastType.Success,
