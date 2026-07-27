@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import BigNumber from 'bignumber.js'
 import configs from '@/configs'
 import i18n from '@/i18n'
 import { analytics } from '@/analytics'
@@ -82,7 +83,25 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     }
   }
 
-  const register = async (orderHash: string, chainId: number | string) => {
+  const register = async (
+    orderHash: string,
+    chainId: number | string,
+    usdValue?: string,
+  ) => {
+    // Only trades worth at least the campaign's qualification_value qualify.
+    // Skip silently (no request, no toast) for anything below the threshold or
+    // when the threshold isn't known yet (info not loaded / missing usdValue).
+    const threshold = new BigNumber(qualificationValue.value ?? '')
+    const value = new BigNumber(usdValue ?? '')
+    if (
+      threshold.isNaN() ||
+      threshold.lte(0) ||
+      value.isNaN() ||
+      value.lt(threshold)
+    ) {
+      return
+    }
+
     const { addToastMessage } = useToastStore()
     try {
       const res = await fetch(
