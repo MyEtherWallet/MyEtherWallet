@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import { useStorage } from '@vueuse/core'
+import { safeLocalStorage } from '@/utils/safeStorage'
 import configs from '@/configs'
 import { analytics } from '@/analytics'
 import type {
@@ -52,7 +54,14 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const error = ref<string | null>(null)
   const isModalOpen = ref(false)
   const isClaiming = ref(false)
-  const dismissed = ref<Set<string>>(new Set())
+  // Persisted so "Hide this offer" stays hidden across reloads. Stored as a
+  // plain array (JSON-serializable) and exposed as a Set for O(1) lookups.
+  const dismissedIds = useStorage<string[]>(
+    'mew-rwa-dismissed',
+    [],
+    safeLocalStorage,
+  )
+  const dismissed = computed(() => new Set(dismissedIds.value))
 
   let pollTimer: ReturnType<typeof setInterval> | null = null
   let currentAddress = ''
@@ -120,7 +129,6 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          platform: PLATFORM,
           version: configs.APP_VERSION,
         },
         body: JSON.stringify({ transaction, signature }),
@@ -159,9 +167,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isModalOpen.value = false
   }
   const dismiss = (uuid: string) => {
-    const next = new Set(dismissed.value)
-    next.add(uuid)
-    dismissed.value = next
+    if (!dismissedIds.value.includes(uuid)) {
+      dismissedIds.value = [...dismissedIds.value, uuid]
+    }
   }
 
   const startPolling = (address: string) => {
@@ -242,6 +250,24 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     return 'default'
   })
 
+  // The "Hide this offer" button only appears in the terminal claimed/expired
+  // states. Once the user hides that reward it is filtered out and `status`
+  // falls back to 'default'. Rather than re-showing the generic hold promo,
+  // the hero card should move on to the next campaign the user is eligible
+  // for (defaulting to the Zero MEW Fees variant). This flag tells the hero
+  // card that the hold offer is spent so it can hand the slot over.
+  const dismissedTerminal = computed(() => {
+    if (!dismissed.value.size || !info.value) return false
+    return [
+      ...(info.value.claimed ?? []),
+      ...(info.value.qualified ?? []),
+      ...(info.value.disqualified ?? []),
+    ].some(r => dismissed.value.has(r.uuid))
+  })
+  const isHoldOfferDismissed = computed(
+    () => status.value === 'default' && dismissedTerminal.value,
+  )
+
   // Mirror the hold campaign status onto the analytics user profile
   watch(
     status,
@@ -278,6 +304,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     hasReward,
     activeReward,
     status,
+    isHoldOfferDismissed,
     seasonEnd,
     qualificationValue,
   }

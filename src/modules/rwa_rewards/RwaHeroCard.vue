@@ -1,10 +1,11 @@
 <template>
-  <!-- Geo-restricted regions never see reward info — only the "no MEW fees"
-       offer takes the top card's place. -->
+  <!-- The Zero MEW Fees offer takes the top card's place for geo-restricted
+       regions (which never see reward info) and once the hold offer has been
+       dismissed — the next campaign the user is eligible for. -->
 
   <rwa-reward-card
     campaign="buy_no_fees"
-    v-if="isTradingRestrictedInRegion"
+    v-if="showZeroFeesOffer"
     illustration="fees"
     :title="$t('rwaRewards.fees_title')"
     :description="$t('rwaRewards.fees_description')"
@@ -298,9 +299,16 @@ const { t } = useI18n()
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { seasonEnd, status, activeReward, isClaiming } =
+const { seasonEnd, status, activeReward, isClaiming, isHoldOfferDismissed } =
   storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+
+// The Zero MEW Fees offer is the default campaign shown in the hero slot when
+// there's no live hold offer to feature: geo-restricted users (no reward info)
+// and users who have dismissed their terminal hold offer.
+const showZeroFeesOffer = computed(
+  () => isTradingRestrictedInRegion.value || isHoldOfferDismissed.value,
+)
 
 // Fire a reward-offer CTA event for a main-card action
 const trackCta = (cta: string, campaign: 'hold' | 'buy_no_fees' = 'hold') =>
