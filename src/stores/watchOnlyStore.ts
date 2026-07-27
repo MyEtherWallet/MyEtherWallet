@@ -38,8 +38,13 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     // Never persist an address into a bucket whose chain type its format does
     // not match (e.g. an EVM `0x` address under BITCOIN). Such a pair is later
     // rebuilt into a watch-only wallet that hits an invalid balance endpoint
-    // (MEW-2043). This is the write-side root-cause guard.
-    if (isAddressChainTypeMismatch(address, type, chain.name)) {
+    // (MEW-2043). This is the write-side root-cause guard. Validate against
+    // `chain.type` since that is the bucket key, and reject a caller whose
+    // `type` disagrees with it so an entry can't be stored under the wrong one.
+    if (
+      type !== chain.type ||
+      isAddressChainTypeMismatch(address, chain.type, chain.name)
+    ) {
       return
     }
     const addressKeyMap: AddressKeyValue = {

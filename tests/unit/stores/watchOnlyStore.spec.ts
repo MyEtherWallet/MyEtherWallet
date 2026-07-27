@@ -45,6 +45,15 @@ describe('watchOnlyStore.addWallet address/chain-type write guard (MEW-2043)', (
     expect(store.watchOnlyAddresses.EVM).toEqual([])
   })
 
+  it('does NOT persist when the caller type disagrees with chain.type', () => {
+    const store = useWatchOnlyStore()
+    // Address format is EVM and would match `type`, but the storage bucket key
+    // is `chain.type` (BITCOIN) — reject rather than store under the wrong one.
+    store.addWallet(EVM_ADDRESS, BTC_CHAIN, 'watch-only', 'EVM', 'w')
+    expect(store.watchOnlyAddresses.BITCOIN).toEqual([])
+    expect(store.watchOnlyAddresses.EVM).toEqual([])
+  })
+
   it('persists matching address/chain-type pairs', () => {
     const store = useWatchOnlyStore()
     store.addWallet(EVM_ADDRESS, ETH_CHAIN, 'watch-only', 'EVM', 'w')
