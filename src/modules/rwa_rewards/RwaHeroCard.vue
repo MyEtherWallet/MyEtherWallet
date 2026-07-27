@@ -374,12 +374,13 @@ const onHide = () => {
 }
 
 // Report the hold main-card impression once per status while it is visible
-// (the geo-restricted "no fees" card takes over and is tracked elsewhere).
+// (when the "no fees" card takes over — geo-restricted or dismissed hold offer
+// — the hold card isn't shown, so skip; that card is tracked elsewhere).
 const lastReportedStatus = ref<string | null>(null)
 watch(
-  [status, isTradingRestrictedInRegion],
-  ([currentStatus, restricted]) => {
-    if (restricted || !currentStatus) return
+  [status, showZeroFeesOffer],
+  ([currentStatus, zeroFees]) => {
+    if (zeroFees || !currentStatus) return
     if (lastReportedStatus.value === currentStatus) return
     lastReportedStatus.value = currentStatus
     analytics.trackHoldRewardsMainCardEvent(

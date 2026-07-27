@@ -256,7 +256,7 @@
                 <app-base-button
                   size="medium"
                   :is-loading="isClaiming"
-                  class="w-[120px] shrink-0 text-s-16 font-semibold tracking-[-0.32px]"
+                  class="min-w-[120px] shrink-0 whitespace-nowrap text-s-16 font-semibold tracking-[-0.32px]"
                   @click="onClaim"
                 >
                   {{
