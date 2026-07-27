@@ -403,6 +403,7 @@
       "liquidation-risk-title": "强平风险",
       "liquidation-risk-text": "你有未平仓的仓位。提取资金将减少你的账户权益并提高你的有效杠杆，这可能会增加你的强平风险。",
       "withdraw-button": "提现",
+      "authorize-button": "授权提现",
       "amount-too-large": "数量过大",
       "amount-precision": "数量最多支持 {decimals} 位小数",
       "amount-exceeds-balance": "数量超过可用余额",

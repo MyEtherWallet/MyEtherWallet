@@ -291,6 +291,7 @@
       "liquidation-risk-title": "Liquidation Risk",
       "liquidation-risk-text": "You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk.",
       "withdraw-button": "Withdraw",
+      "authorize-button": "Authorize Withdrawals",
       "amount-too-large": "Amount is too large",
       "amount-precision": "Amount supports up to {decimals} decimal places",
       "amount-exceeds-balance": "Amount exceeds available balance",

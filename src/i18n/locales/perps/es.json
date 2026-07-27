@@ -403,6 +403,7 @@
       "liquidation-risk-title": "Riesgo de liquidación",
       "liquidation-risk-text": "Tienes posiciones abiertas. Retirar fondos reducirá el capital de tu cuenta y aumentará tu apalancamiento efectivo, lo que puede aumentar tu riesgo de liquidación.",
       "withdraw-button": "Retirar",
+      "authorize-button": "Autorizar retiros",
       "amount-too-large": "La cantidad es demasiado grande",
       "amount-precision": "La cantidad admite hasta {decimals} decimales",
       "amount-exceeds-balance": "La cantidad supera el saldo disponible",
