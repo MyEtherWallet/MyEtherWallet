@@ -73,7 +73,11 @@
       "tp-below-mark": "Take Profit must be below mark price",
       "sl-above-zero": "Stop Loss must be above 0",
       "sl-below-mark": "Stop Loss must be below mark price",
-      "sl-above-mark": "Stop Loss must be above mark price"
+      "sl-above-mark": "Stop Loss must be above mark price",
+      "sl-trigger-order-buy": "Stop loss trigger price must be less than order price for buy orders",
+      "sl-trigger-order-sell": "Stop loss trigger price must be greater than order price for sell orders",
+      "tp-trigger-order-buy": "Take profit trigger price must be greater than order price for buy orders",
+      "tp-trigger-order-sell": "Take profit trigger price must be less than order price for sell orders"
     },
     "trade": {
       "perpetuals": "Perpetuals",

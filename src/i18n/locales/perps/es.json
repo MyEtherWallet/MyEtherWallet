@@ -73,7 +73,11 @@
       "tp-below-mark": "Take Profit debe estar por debajo del precio de marca",
       "sl-above-zero": "Stop Loss debe estar por encima de 0",
       "sl-below-mark": "Stop Loss debe estar por debajo del precio de marca",
-      "sl-above-mark": "Stop Loss debe estar por encima del precio de marca"
+      "sl-above-mark": "Stop Loss debe estar por encima del precio de marca",
+      "sl-trigger-order-buy": "El precio de activación del Stop Loss debe ser menor que el precio de la orden para órdenes de compra",
+      "sl-trigger-order-sell": "El precio de activación del Stop Loss debe ser mayor que el precio de la orden para órdenes de venta",
+      "tp-trigger-order-buy": "El precio de activación del Take Profit debe ser mayor que el precio de la orden para órdenes de compra",
+      "tp-trigger-order-sell": "El precio de activación del Take Profit debe ser menor que el precio de la orden para órdenes de venta"
     },
     "trade": {
       "perpetuals": "Perpetuos",
