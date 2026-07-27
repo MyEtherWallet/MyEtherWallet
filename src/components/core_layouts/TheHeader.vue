@@ -94,7 +94,7 @@
           <router-link
             v-if="!isWalletConnected"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-            class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
               analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
                 source: 'Header_Create',
@@ -116,7 +116,7 @@
                 source: 'Header_Connect',
               })
             "
-            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden sm:flex items-center justify-center"
+            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
           >
             {{
               isWalletCtaShort
@@ -204,6 +204,7 @@ const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 const headerCollapse = useBreakpoints({
   earn: 1160,
   learn: 1255,
+  networkConnected: 1310,
   walletCta: 1500,
   network: 1555,
 })
@@ -214,12 +215,15 @@ const isEarnCollapsed = computed<boolean>(
   () => headerCollapse.smaller('earn').value,
 )
 /**
- * A disconnected header carries the extra Create/Connect wallet buttons, so it
- * runs out of room sooner. Collapse the network button to its icon-only mobile
- * look below 1555px while the wallet is disconnected.
+ * Collapse the network button to its icon-only mobile look before the bar runs
+ * out of room. A disconnected header carries the extra Create/Connect wallet
+ * buttons, so it runs out of room sooner (< 1555px); a connected header has more
+ * space and only needs to collapse below 1310px.
  */
-const isNetworkCollapsed = computed<boolean>(
-  () => !isWalletConnected.value && headerCollapse.smaller('network').value,
+const isNetworkCollapsed = computed<boolean>(() =>
+  isWalletConnected.value
+    ? headerCollapse.smaller('networkConnected').value
+    : headerCollapse.smaller('network').value,
 )
 /**
  * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
