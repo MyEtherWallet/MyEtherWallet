@@ -216,7 +216,7 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId)
+      holdingsStore.register(order.hash, order.chainId, order.usdValue)
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
