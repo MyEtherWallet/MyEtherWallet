@@ -116,7 +116,10 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
-import { getLocalizedWalletError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletError,
+  isTransientTrezorError,
+} from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
@@ -494,7 +497,11 @@ const loadList = async (page: number = 0) => {
         getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
         (e instanceof Error ? e.message : String(e)),
     })
-    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    // Skip Sentry for the known transient Trezor connect state (APP-MEW-WEB-P5):
+    // the popup returns success with an empty payload and retrying works.
+    if (!isTransientTrezorError(e)) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
   } finally {
     if (generation === loadListGeneration) {
       isLoadingWalletList.value = false

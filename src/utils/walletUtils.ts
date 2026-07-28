@@ -60,5 +60,26 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  // Transient Trezor connect state (APP-MEW-WEB-P5)
+  if (isTransientTrezorError(raw)) {
+    return t('common.error.trezor_read_failed')
+  }
   return undefined
+}
+
+/**
+ * A transient Trezor Connect failure: the popup/iframe returned `success`
+ * with an empty payload, so `@enkryptcom/hw-wallets` runs an unguarded
+ * `Buffer.from(undefined)` and throws a cryptic TypeError (or "popup failed
+ * to open"). Retrying usually succeeds, so this is safe to surface as a
+ * friendly "reconnect" message rather than reporting it as noise.
+ */
+export const isTransientTrezorError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return (
+    message.includes('popup failed to open') ||
+    message.includes('the first argument must be one of type string, buffer')
+  )
 }

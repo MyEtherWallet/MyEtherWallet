@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import i18n from '@/i18n'
-import { getLocalizedWalletError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletError,
+  isTransientTrezorError,
+} from '@/utils/walletUtils'
 
 /**
  * MEW-2049 — hardware-wallet (Ledger) errors must be shown localized.
@@ -57,5 +60,40 @@ describe('getLocalizedWalletError (MEW-2049)', () => {
     expect(getLocalizedWalletError('')).toBeUndefined()
     expect(getLocalizedWalletError(undefined)).toBeUndefined()
     expect(getLocalizedWalletError(null)).toBeUndefined()
+  })
+
+  // APP-MEW-WEB-P5 (MEW-2080) — transient Trezor connect state:
+  // @enkryptcom/hw-wallets does an unguarded Buffer.from(undefined) when
+  // Trezor Connect returns success with an empty payload.
+  it('maps the transient Trezor Buffer/popup errors to a localized message', () => {
+    const friendly =
+      "Couldn't read your address from Trezor. Reconnect the device and try again."
+    expect(
+      getLocalizedWalletError(
+        'The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type undefined',
+      ),
+    ).toBe(friendly)
+    expect(getLocalizedWalletError('popup failed to open')).toBe(friendly)
+  })
+})
+
+describe('isTransientTrezorError (MEW-2080)', () => {
+  it('flags the transient Trezor connect failures', () => {
+    expect(
+      isTransientTrezorError(
+        new TypeError(
+          'The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type undefined',
+        ),
+      ),
+    ).toBe(true)
+    expect(isTransientTrezorError(new Error('popup failed to open'))).toBe(true)
+    expect(isTransientTrezorError('popup failed to open')).toBe(true)
+  })
+
+  it('does not flag unrelated errors', () => {
+    expect(isTransientTrezorError(new Error('Ledger locked 0x5515'))).toBe(false)
+    expect(isTransientTrezorError('some unrelated rpc error')).toBe(false)
+    expect(isTransientTrezorError(undefined)).toBe(false)
+    expect(isTransientTrezorError(null)).toBe(false)
   })
 })
