@@ -20,6 +20,7 @@ import configs from '@/configs'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isProviderNotFoundError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
@@ -55,7 +56,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
     denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
     // "provider disconnected"), viem InvalidAddressError (a wallet returned a
-    // malformed address on connect — already handled with a user toast), and
+    // malformed address on connect — already handled with a user toast), wagmi
+    // ProviderNotFoundError (user tried to connect a browser wallet with no
+    // injected provider — already handled with a user toast), and
     // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
     // surfacing as an unhandled "Connection is closed" rejection). These surface
     // as serialized plain objects or bare strings with no parsed frames, so
@@ -66,6 +69,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        isProviderNotFoundError(originalException) ||
         isTransientRpcError(originalException)
       )
         return null
