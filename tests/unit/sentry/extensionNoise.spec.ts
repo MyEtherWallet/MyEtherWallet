@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { InvalidAddressError } from 'viem'
+import {
+  InvalidAddressError,
+  WaitForTransactionReceiptTimeoutError,
+} from 'viem'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isTransactionReceiptTimeoutError,
 } from '@/sentry/extensionNoise'
 
 describe('isExtensionOrProviderError', () => {
@@ -57,9 +61,9 @@ describe('isExtensionOrProviderError', () => {
   })
 
   it('is false for non-benign provider-looking codes (e.g. -32603 internal)', () => {
-    expect(isExtensionOrProviderError({ code: -32603, message: 'Internal' })).toBe(
-      false,
-    )
+    expect(
+      isExtensionOrProviderError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
   })
 
   it('is false for non-object inputs', () => {
@@ -107,5 +111,55 @@ describe('isInvalidWalletAddressError', () => {
     expect(isInvalidWalletAddressError(null)).toBe(false)
     expect(isInvalidWalletAddressError(undefined)).toBe(false)
     expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
+  })
+})
+
+describe('isTransactionReceiptTimeoutError', () => {
+  it('is true for a real viem WaitForTransactionReceiptTimeoutError instance', () => {
+    const err = new WaitForTransactionReceiptTimeoutError({ hash: '0xabc' })
+    expect(isTransactionReceiptTimeoutError(err)).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with name)', () => {
+    // Sentry hands beforeSend the original exception, but be robust to a
+    // serialized plain object carrying only the viem error name.
+    expect(
+      isTransactionReceiptTimeoutError({
+        name: 'WaitForTransactionReceiptTimeoutError',
+        message:
+          'Timed out while waiting for transaction with hash "0x99…" to be confirmed.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true when nested in the cause chain', () => {
+    expect(
+      isTransactionReceiptTimeoutError({
+        name: 'SomeWrapperError',
+        cause: { name: 'WaitForTransactionReceiptTimeoutError' },
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isTransactionReceiptTimeoutError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isTransactionReceiptTimeoutError({
+        name: 'SomeOtherError',
+        message: 'x',
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isTransactionReceiptTimeoutError(null)).toBe(false)
+    expect(isTransactionReceiptTimeoutError(undefined)).toBe(false)
+    expect(
+      isTransactionReceiptTimeoutError('WaitForTransactionReceiptTimeoutError'),
+    ).toBe(false)
   })
 })
