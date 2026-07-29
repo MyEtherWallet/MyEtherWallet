@@ -175,12 +175,17 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         // wss://nodes.mewapi.io) are surfaced to the user above but are pure
         // Sentry noise — only report genuine quote failures.
         // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
-        // are surfaced to the user above but are pure Sentry noise — skip them.
+        // and transient axios "Network Error"s (the 1inch request never
+        // completed) are surfaced to the user above but are pure Sentry noise —
+        // skip them.
         const isExpectedClientError = !!(e as { expectedClientError?: boolean })
           .expectedClientError
+        const isTransientNetworkError = !!(
+          e as { transientNetworkError?: boolean }
+        ).transientNetworkError
         if (isDevMode) {
           console.error('Error fetching quote:', e)
-        } else if (!isExpectedClientError) {
+        } else if (!isExpectedClientError && !isTransientNetworkError) {
           captureException(e, {
             ...SENTRY_MODULE_TAGS.TRADE,
             extra: {
