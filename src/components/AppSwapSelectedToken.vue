@@ -243,7 +243,8 @@
               <div v-if="token.price !== 0" class="text-right">
                 <div v-if="isFromView && isWalletConnected">
                   <p class="font-medium text-black">
-                    $ {{ formatUsdBalance(token.usd_balance) }}
+                    {{ currencySymbol }}
+                    {{ formatUsdBalance(token.usd_balance) }}
                   </p>
                   <p class="text-info text-s-12">
                     {{ getBalance(token?.balance || '0', token.decimals) }}
@@ -252,10 +253,8 @@
                 </div>
                 <div v-else>
                   <p class="font-medium text-black">
-                    $
-                    {{
-                      token.price ? formatFiatValue(token.price).value : '0.00'
-                    }}
+                    {{ currencySymbol }}
+                    {{ token.price ? formatFiat(token.price).value : '0.00' }}
                   </p>
                   <p
                     v-if="
@@ -323,10 +322,8 @@
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-medium text-black">
-                  $
-                  {{
-                    token.price ? formatFiatValue(token.price).value : '0.00'
-                  }}
+                  {{ currencySymbol }}
+                  {{ token.price ? formatFiat(token.price).value : '0.00' }}
                 </p>
               </div>
             </div>
@@ -388,10 +385,8 @@ import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -440,6 +435,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 const emit = defineEmits<{
   'update:selectedToken': [token: NewTokenInfo]
   'open:selectToken': [isOpen: boolean]
@@ -800,7 +796,7 @@ const setSelectedToken = (token: NewTokenInfo) => {
 }
 
 const formatUsdBalance = (_value: number) => {
-  return formatFiatValue(_value).value
+  return formatFiat(_value).value
 }
 
 const getBalance = (value: string, decimals: number) => {

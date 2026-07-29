@@ -46,7 +46,7 @@
             />
           </p>
           <p v-if="swap.fromUsdValue" class="text-s-12 text-info">
-            ${{ swap.fromUsdValue }}
+            {{ formatFiat(swap.fromUsdValue).display }}
           </p>
         </div>
       </div>
@@ -73,7 +73,7 @@
             />
           </p>
           <p v-if="swap.toUsdValue" class="text-s-12 text-info">
-            ${{ swap.toUsdValue }}
+            {{ formatFiat(swap.toUsdValue).display }}
           </p>
         </div>
       </div>
@@ -162,7 +162,7 @@
               {{ swap.fromChainSymbol }}
             </p>
             <p v-if="swap.networkFeeUSD" class="text-s-12 text-info ml-1">
-              ${{ formatFiatValue(swap.networkFeeUSD).value }}
+              {{ formatFiat(swap.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -185,10 +185,10 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatFiat } = useCurrency()
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props

@@ -94,9 +94,7 @@
                       </div>
                       <div class="flex flex-col items-end flex-none">
                         <p class="text-s-14 font-medium">
-                          ${{
-                            formatFiatValue(stock.primaryMarket.price).value
-                          }}
+                          {{ formatFiat(stock.primaryMarket.price).display }}
                         </p>
                         <p
                           :class="
@@ -272,14 +270,13 @@ import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 
 // Utils and Types
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 
+const { formatFiat } = useCurrency()
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)
 const recentlyViewedTokensStore = useRecentlyViewedTokensStore()

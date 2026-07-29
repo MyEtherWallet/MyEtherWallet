@@ -46,7 +46,8 @@
               {{ $t('stocks.fifty_two_w_high') }}
             </p>
             <p class="text-s-16 font-medium">
-              ${{ asset ? formatFiatValue(asset.priceHigh52w).value : '-' }}
+              {{ currencySymbol
+              }}{{ asset ? formatFiat(asset.priceHigh52w).value : '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
@@ -54,7 +55,8 @@
               {{ $t('stocks.fifty_two_w_low') }}
             </p>
             <p class="text-s-16 font-medium">
-              ${{ asset ? formatFiatValue(asset.priceLow52w).value : '-' }}
+              {{ currencySymbol
+              }}{{ asset ? formatFiat(asset.priceLow52w).value : '-' }}
             </p>
           </div>
         </div>
@@ -77,7 +79,7 @@
               {{ $t('stocks.twenty_four_h_volume') }}
             </p>
             <p class="text-s-16 font-medium">
-              {{ asset ? formatFiatValue(asset.volume24h).value : '-' }}
+              {{ asset ? formatFiat(asset.volume24h).value : '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
@@ -85,7 +87,7 @@
               {{ $t('stocks.avg_volume') }}
             </p>
             <p class="text-s-16 font-medium">
-              {{ asset ? formatFiatValue(asset.averageVolume).value : '-' }}
+              {{ asset ? formatFiat(asset.averageVolume).value : '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
@@ -93,7 +95,7 @@
               {{ $t('stocks.market_cap') }}
             </p>
             <p class="text-s-16 font-medium">
-              {{ asset ? formatFiatValue(asset.marketCap).value : '-' }}
+              {{ asset ? formatFiat(asset.marketCap).value : '-' }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
@@ -154,14 +156,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
-  formatFiatValue,
   formatIntegerValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import BigNumber from 'bignumber.js'
 import type { StockUnderlyingAsset, StockDividends } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
+
+const { formatFiat, currencySymbol } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -192,7 +196,7 @@ const dividendYieldFormatted = computed(() => {
 
 const lastAmountFormatted = computed(() => {
   if (props.dividends?.lastCashAmount) {
-    return '$' + formatFiatValue(props.dividends.lastCashAmount).value
+    return formatFiat(props.dividends.lastCashAmount).display
   }
   return '-'
 })
