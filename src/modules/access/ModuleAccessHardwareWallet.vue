@@ -141,6 +141,7 @@ import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { isTrezorSupported } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
@@ -300,6 +301,18 @@ const backStep = () => {
 const connectingWallet = ref(false)
 
 const unlockWallet = async () => {
+  // Gate Trezor on browser capability: @enkryptcom/hw-wallets `getTrezorConnect`
+  // references the bare `chrome` global, which is undefined on non-Chromium
+  // browsers (e.g. iOS Safari) and throws an uncaught ReferenceError. Fail
+  // gracefully with a friendly message instead. See MEW-2041.
+  if (currentView.value === 'trezor' && !isTrezorSupported()) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('access_wallet_trezor.not_supported'),
+    })
+    return
+  }
+
   connectingWallet.value = true
   const networkName = chainToEnum[
     selectedChain.value?.name as string
