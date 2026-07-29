@@ -25,6 +25,22 @@ export function isExtensionOrProviderError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is the external "not found rainbowkit" rejection. It is
+ * emitted by a wallet's injected in-app-browser detection script (observed on
+ * mobile Safari / iOS in-app wallet browsers), never by app code or any bundled
+ * dependency — our `@rainbow-me/rainbowkit` only ever throws "Connector not
+ * found". It reaches the global Sentry `beforeSend` as an unhandled rejection
+ * with no first-party frames, so it is pure external noise. Matched by message
+ * on both the Error-object and bare-string payload shapes.
+ */
+export function isRainbowKitNotFoundError(err: unknown): boolean {
+  if (typeof err === 'string') return err.includes('not found rainbowkit')
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && message.includes('not found rainbowkit')
+}
+
+/**
  * Whether an error is a viem `InvalidAddressError` — thrown when a connected
  * wallet returns a malformed account address from `eth_requestAccounts`
  * (observed from buggy in-app wallet browsers). The connect flow already

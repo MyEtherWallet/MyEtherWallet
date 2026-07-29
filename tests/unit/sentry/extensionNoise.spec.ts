@@ -3,6 +3,7 @@ import { InvalidAddressError } from 'viem'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isRainbowKitNotFoundError,
 } from '@/sentry/extensionNoise'
 
 describe('isExtensionOrProviderError', () => {
@@ -107,5 +108,40 @@ describe('isInvalidWalletAddressError', () => {
     expect(isInvalidWalletAddressError(null)).toBe(false)
     expect(isInvalidWalletAddressError(undefined)).toBe(false)
     expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
+  })
+})
+
+describe('isRainbowKitNotFoundError', () => {
+  it('is true for the Error-object rejection from the injected script', () => {
+    expect(isRainbowKitNotFoundError(new Error('not found rainbowkit'))).toBe(
+      true,
+    )
+    expect(
+      isRainbowKitNotFoundError({ message: 'not found rainbowkit' }),
+    ).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(isRainbowKitNotFoundError('not found rainbowkit')).toBe(true)
+    // Some handlers prefix the Error name onto the serialized value.
+    expect(isRainbowKitNotFoundError('Error: not found rainbowkit')).toBe(true)
+  })
+
+  it('is false for our bundled rainbowkit "Connector not found" error', () => {
+    expect(isRainbowKitNotFoundError(new Error('Connector not found'))).toBe(
+      false,
+    )
+  })
+
+  it('is false for genuine app errors and non-matching inputs', () => {
+    expect(
+      isRainbowKitNotFoundError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(isRainbowKitNotFoundError(null)).toBe(false)
+    expect(isRainbowKitNotFoundError(undefined)).toBe(false)
+    expect(isRainbowKitNotFoundError({ message: 42 })).toBe(false)
+    expect(isRainbowKitNotFoundError('something else')).toBe(false)
   })
 })
