@@ -20,6 +20,7 @@ import configs from '@/configs'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isMetaMaskSdkDecryptError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
@@ -66,6 +67,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        isMetaMaskSdkDecryptError(originalException) ||
         isTransientRpcError(originalException)
       )
         return null
