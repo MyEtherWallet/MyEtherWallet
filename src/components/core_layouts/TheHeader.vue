@@ -124,7 +124,8 @@
                 : $t('connect_wallet')
             }}
           </router-link>
-          <the-current-network :compact="isNetworkCollapsed" />
+          <!-- Below xs the network selector moves into the settings popup -->
+          <the-current-network v-if="!isXS" :compact="isNetworkCollapsed" />
           <!-- Address Menu -->
           <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
@@ -184,7 +185,7 @@ const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
-const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 const { isTradingRestrictedInRegion } = useTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
