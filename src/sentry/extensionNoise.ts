@@ -36,3 +36,21 @@ export function isInvalidWalletAddressError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
   return (err as { name?: unknown }).name === 'InvalidAddressError'
 }
+
+/**
+ * Whether an error is a Trezor Connect `handshake failed` — thrown when the
+ * Trezor Connect popup/iframe can't complete its handshake with
+ * connect.trezor.io (popup blocked, third-party cookies disabled, adblocker,
+ * or a flaky network). The access address-load flow already handles it (the
+ * user sees a "Something went wrong / handshake failed" toast), so it is
+ * external, unactionable Sentry noise. Matched on the (Trezor-specific)
+ * message rather than a code/name because the library throws a plain `Error`.
+ */
+export function isTrezorHandshakeError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    message.toLowerCase().includes('handshake failed')
+  )
+}

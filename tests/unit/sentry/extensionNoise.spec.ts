@@ -3,6 +3,7 @@ import { InvalidAddressError } from 'viem'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
 
 describe('isExtensionOrProviderError', () => {
@@ -107,5 +108,38 @@ describe('isInvalidWalletAddressError', () => {
     expect(isInvalidWalletAddressError(null)).toBe(false)
     expect(isInvalidWalletAddressError(undefined)).toBe(false)
     expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
+  })
+})
+
+describe('isTrezorHandshakeError', () => {
+  it('is true for the Trezor Connect "handshake failed" Error', () => {
+    // The exact production trigger: the Trezor Connect popup/iframe fails to
+    // handshake with connect.trezor.io and @trezor/connect throws a plain Error.
+    expect(isTrezorHandshakeError(new Error('handshake failed'))).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with message)', () => {
+    expect(isTrezorHandshakeError({ message: 'handshake failed' })).toBe(true)
+  })
+
+  it('matches regardless of surrounding text / casing', () => {
+    expect(
+      isTrezorHandshakeError(new Error('TrezorConnect: Handshake failed')),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isTrezorHandshakeError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isTrezorHandshakeError(null)).toBe(false)
+    expect(isTrezorHandshakeError(undefined)).toBe(false)
+    expect(isTrezorHandshakeError('handshake failed')).toBe(false)
   })
 })
