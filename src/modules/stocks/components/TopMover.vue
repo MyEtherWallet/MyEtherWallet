@@ -70,10 +70,8 @@
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TopMoverHistoryChart from './TopMoverHistoryChart.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type StockTopMoverItem } from '@/mew_api/types'
 import { computed } from 'vue'
@@ -81,9 +79,11 @@ import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const props = defineProps<{ stock: StockTopMoverItem }>()
 
+const { formatFiat } = useCurrency()
+
 const getPrice = computed(() => {
   return props.stock.primaryMarket.price
-    ? `$${formatFiatValue(props.stock.primaryMarket.price).value}`
+    ? formatFiat(props.stock.primaryMarket.price).display
     : '-'
 })
 const getPriceChange = computed(() => {

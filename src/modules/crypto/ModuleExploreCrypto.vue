@@ -685,11 +685,8 @@ import type {
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import {
-  formatFiatValue,
-  formatIntegerValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
@@ -711,6 +708,7 @@ import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
@@ -1110,13 +1108,10 @@ onMounted(() => {
 const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
   return {
     ...item,
-    // TODO: update this to convert price to user selected currency
-    price: item.price ? `$${formatFiatValue(item.price).value}` : '-',
-    marketCap: item.marketCap
-      ? `$${formatIntegerValue(item.marketCap).value}`
-      : '-',
+    price: item.price ? formatFiat(item.price).display : '-',
+    marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
     totalVolume: item.totalVolume
-      ? `$${formatIntegerValue(item.totalVolume).value}`
+      ? formatFiat(item.totalVolume).display
       : '-',
   }
 }
@@ -1130,7 +1125,7 @@ const formatStock = (
     symbol: item.primaryMarket.symbol,
     logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
     price: item.primaryMarket.price
-      ? `$${formatFiatValue(Number(item.primaryMarket.price)).value}`
+      ? formatFiat(Number(item.primaryMarket.price)).display
       : '-',
     priceChangePercentage1h: null,
     priceChangePercentage24h: item.primaryMarket.priceChangePercentage24h
@@ -1138,10 +1133,10 @@ const formatStock = (
       : null,
     priceChangePercentage7d: null,
     totalVolume: item.underlyingMarket.volume24h
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.volume24h)).value}`
+      ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
     marketCap: item.underlyingMarket.marketCap
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.marketCap)).value}`
+      ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
     nativeChains: [],
@@ -1163,8 +1158,9 @@ const formatStock = (
 
 const parseFormattedNumber = (value: string): number => {
   if (value === '-') return 0
-  // Remove $ and commas
-  const cleaned = value.replace(/[$,]/g, '')
+  // Strip any currency symbol/prefix and grouping separators, keeping only
+  // digits, decimal point, and the K/M/B/T magnitude suffixes.
+  const cleaned = value.replace(/[^\d.KMBT]/g, '')
   // Handle K, M, B, T suffixes from formatIntegerValue
   const multipliers: Record<string, number> = {
     K: 1e3,

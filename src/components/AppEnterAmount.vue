@@ -79,16 +79,16 @@ import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
   storeToRefs(walletStore)
+
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   validateInput: {
@@ -132,7 +132,7 @@ const balanceFiat = computed(() => {
       BigNumber(amount.value || 0),
     ),
   )
-  return `$${formatFiatValue(_balance).value}`
+  return formatFiat(_balance).display
 })
 
 const balance = computed(() => {
