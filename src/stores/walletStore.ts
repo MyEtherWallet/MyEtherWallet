@@ -10,6 +10,7 @@ import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 import { useWatchOnlyStore } from './watchOnlyStore'
+import { isAddressChainTypeMismatch } from '@/utils/addressUtils'
 import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
@@ -90,24 +91,29 @@ export const useWalletStore = defineStore('walletStore', () => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
     const currentRecentAddressList =
       watchOnlyAddresses[selectedChain.value?.type || 'EVM']
-    if (currentRecentAddressList.length > 0) {
+    // Skip stale entries whose address format does not match their chain type
+    // (e.g. legacy localStorage with an EVM `0x` address under BITCOIN), which
+    // would otherwise rebuild a wallet that hits an invalid balance endpoint
+    // (MEW-2043). This is the read-side root-cause guard / self-heal.
+    const validEntries = currentRecentAddressList.filter(
+      item =>
+        !isAddressChainTypeMismatch(item.address, item.type, item.chain.name),
+    )
+    const latest = validEntries[validEntries.length - 1]
+    if (latest) {
       const newWallet = new WatchOnlyWallet(
-        currentRecentAddressList[currentRecentAddressList.length - 1].address,
-        currentRecentAddressList[currentRecentAddressList.length - 1].chain,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletType as WalletType,
-        currentRecentAddressList[currentRecentAddressList.length - 1].type,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletName,
+        latest.address,
+        latest.chain,
+        latest.walletType as WalletType,
+        latest.type,
+        latest.walletName,
       )
       wallet.value = null
       walletAddress.value = null
       setWallet(
         newWallet,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletName,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletType as WalletConfigType,
+        latest.walletName,
+        latest.walletType as WalletConfigType,
       )
     } else {
       wallet.value = null
