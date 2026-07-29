@@ -113,6 +113,10 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 
+  override getPublicKey(): Promise<HexPrefixedString> {
+    return Promise.resolve(this.publicKey)
+  }
+
   getWalletInstance(): HWManager | null {
     return this.hwWalletInstance
   }

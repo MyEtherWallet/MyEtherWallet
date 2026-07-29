@@ -17,7 +17,7 @@
               class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ $t('send.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
@@ -276,7 +276,11 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  getLocalizedWalletError,
+} from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -348,7 +352,7 @@ const { t } = useI18n()
 
 const sanitizeErrorMessage = (e: string) => {
   if (e.toLowerCase().includes('rejected'))
-    return 'User rejected the transaction'
+    return t('common.error.user_canceled_request')
   return e
 }
 
@@ -414,7 +418,7 @@ const confirmTransaction = async () => {
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
-          chainName: selectedChain.value?.nameLong || 'Unknown',
+          chainName: selectedChain.value?.nameLong || t('send.unknown_chain'),
           chainIcon: selectedChain.value?.icon,
           chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,
@@ -454,7 +458,7 @@ const confirmTransaction = async () => {
         toastStore.addToastMessage({
           type: ToastType.Error,
           text: t('send.toast.tx-send-failed'),
-          textSecondary: errorMessage,
+          textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
         captureException(e instanceof Error ? e : new Error(msg), {
@@ -493,7 +497,7 @@ const confirmTransaction = async () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
     captureException(
       e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),

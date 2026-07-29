@@ -104,7 +104,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(transaction.createdAt) }}
+            {{ formatNotificationDate(transaction.createdAt) }}
           </p>
         </div>
         <!-- Transaction -->
@@ -166,6 +166,7 @@ import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const { formatFiat } = useCurrency()
@@ -183,11 +184,6 @@ defineEmits<{
 const { isXsAndUp } = useAppBreakpoints()
 
 const showMoreDetails = ref(false)
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {

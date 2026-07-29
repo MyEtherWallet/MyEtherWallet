@@ -313,7 +313,9 @@ import {
   type Chain,
   type EvmTransactionAction,
   type QuotesResponse,
+  type BitcoinQuotesRequestBody,
 } from '@/mew_api/types'
+import { isP2shAddress } from '@/providers/common/btcInfo'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -924,7 +926,7 @@ const swapForBtc = async () => {
     swapGasFeeQuote.value = (res as QuotesResponse) || undefined
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
-    generalError.value = e?.message || 'Error fetching BTC gas fees'
+    generalError.value = e?.message || t('swap.error.fetching-btc-gas-fees')
     if (isDevMode) {
       console.error('Error fetching BTC gas fees:', e)
     } else {
@@ -951,11 +953,28 @@ const generateBTCGasFeeQuote = async () => {
   ).map(tx => ({ address: tx.to, amount: tx.value }))
 
   if (transactions.length === 0) return undefined
-
-  const txForm = {
+  const txForm: BitcoinQuotesRequestBody = {
     fromAddresses: [userAddress.value],
     consolidationAddress: userAddress.value,
     outputs: transactions,
+  }
+
+  // A P2SH from-address must declare its type and public key so the backend
+  // can build the correct redeem script for the quote.
+  if (
+    wallet.value &&
+    isP2shAddress(userAddress.value, wallet.value.getProvider())
+  ) {
+    const publicKey = await wallet.value.getPublicKey?.()
+    if (publicKey) {
+      txForm.p2shAddressTypes = [
+        {
+          address: userAddress.value,
+          type: 'P2SH_P2WPKH',
+          publicKey,
+        },
+      ]
+    }
   }
 
   const res = await wallet.value?.getBtcGasFee?.(txForm)
@@ -996,7 +1015,7 @@ const swapForEvm = async () => {
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
-    generalError.value = e?.message || 'Error fetching gas fees'
+    generalError.value = e?.message || t('swap.error.fetching-gas-fees')
     // "Pair not available" is an expected, user-facing condition (the selected
     // pair has no route/quote). Keep the throw so generalError + analytics are
     // handled here as designed, but skip the Sentry report to avoid noise.

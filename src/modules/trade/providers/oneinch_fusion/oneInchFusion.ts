@@ -39,6 +39,7 @@ import type {
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
   address: string
   cgId: string
@@ -116,7 +117,8 @@ class OneInchFusion {
 
   constructor(wallet: BaseEvmWallet, chainId: number) {
     const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
-    if (!chainConfig) throw new Error('Fusion: network not supported')
+    if (!chainConfig)
+      throw new Error(i18n.global.t('trade.error.fusion-network-not-supported'))
     this.wallet = wallet
     this.publicClient = createPublicClient({
       transport: webSocket(chainConfig.node),
@@ -163,7 +165,11 @@ class OneInchFusion {
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
       const response =
-        ((e as AxiosError).response?.data as any)?.description || null
+        e && typeof e === 'object' && 'response' in e
+          ? ((e as AxiosError).response?.data as any)?.description || null
+          : null
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
       // 1inch returns 4xx (e.g. 400 Bad Request) for expected, user-facing quote
       // failures: amount below minimum, illiquid/unsupported pair, invalid params.
@@ -171,7 +177,9 @@ class OneInchFusion {
       // — reporting is centralized there to avoid double-capture. Genuine failures
       // (5xx / network / no response) stay unflagged and are reported by the caller.
       const error = new Error(
-        response || (e as Error).message || 'Failed to fetch quote from 1inch',
+        response ||
+          rawMessage ||
+          i18n.global.t('trade.error.failed-fetch-quote-1inch'),
       ) as Error & { expectedClientError?: boolean }
       error.expectedClientError =
         typeof status === 'number' && status >= 400 && status < 500
@@ -229,7 +237,10 @@ class OneInchFusion {
               return {
                 hash: info.orderHash,
               }
-            else throw new Error('Native Transaction Failed')
+            else
+              throw new Error(
+                i18n.global.t('trade.error.native-transaction-failed'),
+              )
           })
       }
     } catch (e: unknown) {
@@ -240,7 +251,7 @@ class OneInchFusion {
             ? (e as any).details
             : typeof e === 'string'
               ? e
-              : 'Failed to submit order to 1inch'
+              : i18n.global.t('trade.error.failed-submit-order-1inch')
       throw new Error(errorMessage)
     }
   }

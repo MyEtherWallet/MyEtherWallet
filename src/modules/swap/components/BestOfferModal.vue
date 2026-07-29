@@ -11,7 +11,7 @@
           autoplay
           loop
           role="img"
-          aria-label="Looking for the best offer"
+          :aria-label="t('swap.best-offer.looking')"
         />
       </div>
       <div class="p-8 pb-12 flex flex-col items-center">

@@ -140,7 +140,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(bridge.createdAt) }}
+            {{ formatNotificationDate(bridge.createdAt) }}
           </p>
         </div>
 
@@ -227,6 +227,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 
 const { formatFiat } = useCurrency()
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
 const props = defineProps<{
@@ -240,12 +241,6 @@ defineEmits<{
 }>()
 
 const showMoreDetails = ref(false)
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {

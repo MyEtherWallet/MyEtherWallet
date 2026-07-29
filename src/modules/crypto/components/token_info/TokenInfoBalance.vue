@@ -111,7 +111,11 @@
               </div>
 
               <p class="text-info text-s-12 capitalize truncate">
-                on {{ i.chainNameLong || i.chainName.toLowerCase() }}
+                {{
+                  $t('crypto.on_chain', {
+                    chain: i.chainNameLong || i.chainName.toLowerCase(),
+                  })
+                }}
               </p>
             </div>
             <div class="ml-auto sm:mr-10 text-right">

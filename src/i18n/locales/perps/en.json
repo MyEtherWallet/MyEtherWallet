@@ -24,7 +24,7 @@
       "take-profit-removed-title": "Take Profit Removed",
       "failed-to-remove-sl-tp-title": "Failed to Remove Stop Loss / Take Profit",
       "failed-to-remove-order-title": "Failed to Remove Order",
-      "sl-tp-line": "{side} {netQuantity} PERPS: {base}{quote} at {price}",
+      "sl-tp-line": "{side} {netQuantity} PERPS: {base} at {price}",
       "liquidation-initiated": "Liquidation Initiated",
       "liquidation-initiated-detail": "Your account is temporarily locked and your open positions are being sold",
       "deposit-complete-title": "Deposit Complete",
@@ -64,7 +64,14 @@
       "close-position-failed": "Failed to close position.",
       "save-leverage-failed": "Failed to save leverage. Please try again.",
       "order-failed": "Order failed. Please try again.",
-      "order-rejected-too-far": "Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead."
+      "order-rejected-too-far": "Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead.",
+      "tp-max": "Take Profit must be less than {max}",
+      "tp-above-mark": "Take Profit must be above mark price",
+      "tp-above-zero": "Take Profit must be above 0",
+      "tp-below-mark": "Take Profit must be below mark price",
+      "sl-above-zero": "Stop Loss must be above 0",
+      "sl-below-mark": "Stop Loss must be below mark price",
+      "sl-above-mark": "Stop Loss must be above mark price"
     },
     "trade": {
       "perpetuals": "Perpetuals",
@@ -221,7 +228,15 @@
       "fee-label": "Fee",
       "realized-pnl-label": "Realized PnL",
       "role-label": "Role",
-      "time-label": "Time"
+      "time-label": "Time",
+      "direction": {
+        "open-long": "Open Long",
+        "open-short": "Open Short",
+        "close-long": "Close Long",
+        "close-short": "Close Short",
+        "flip-long-to-short": "Flip Long to Short",
+        "flip-short-to-long": "Flip Short to Long"
+      }
     },
     "balance": {
       "title": "Perpetuals Portfolio",
@@ -368,14 +383,15 @@
       "view-fill-details-label": "view fill details",
       "out-of": "out of {size} {symbol}",
       "deposit-label": "Deposit",
-      "withdrawal-label": "Withdrawal"
-    },
-    "withdrawal-status": {
-      "success": "Completed",
-      "failure": "Failed",
-      "pending": "Pending",
-      "cancelled": "Cancelled",
-      "unknown": "Unknown"
+      "withdrawal-label": "Withdrawal",
+      "dw-status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "completed": "Completed",
+        "failed": "Failed",
+        "cancelled": "Cancelled",
+        "unknown": "Unknown"
+      }
     },
     "portfolio": {
       "account-balance-label": "Perpetuals account balance",
@@ -388,7 +404,8 @@
       "range-7d": "7D",
       "range-30d": "30D",
       "range-all": "All",
-      "no-history": "No portfolio history available"
+      "no-history": "No portfolio history available",
+      "sign-out": "Sign Out"
     },
     "banner": {
       "sign-in-prompt": "– Sign in to your portfolio –",

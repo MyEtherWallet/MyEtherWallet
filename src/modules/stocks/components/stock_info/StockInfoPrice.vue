@@ -16,14 +16,14 @@
             is-stock
             class="text-s-20 xs:text-s-24 leading-p-150 mr-1 !font-bold"
           />
-          Price
+          {{ $t('stocks.price') }}
         </h2>
         <div
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              Open
+              {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
@@ -35,7 +35,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h High
+              {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
@@ -47,7 +47,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h Low
+              {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
@@ -63,14 +63,14 @@
         <h3
           class="basis-full xs:basis-auto font-bold text-s-17 leading-p-150 mb-6"
         >
-          Underlying Asset
+          {{ $t('stocks.underlying_asset') }}
         </h3>
         <div
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              Open
+              {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
@@ -82,7 +82,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h High
+              {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium capitalize">
               {{
@@ -94,7 +94,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h Low
+              {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">
               {{

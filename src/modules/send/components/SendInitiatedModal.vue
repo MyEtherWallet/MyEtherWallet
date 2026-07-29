@@ -334,7 +334,7 @@ const notificationStatus = computed(() => {
 })
 
 const displayTokenSymbol = computed(() => {
-  return snapshot.tokenSymbol || 'Unknown'
+  return snapshot.tokenSymbol || t('send.unknown')
 })
 
 const displayTokenIcon = computed(() => {
@@ -346,7 +346,7 @@ const displayAmountFiat = computed(() => {
 })
 
 const chainName = computed(() => {
-  return snapshot.chain?.nameLong || 'Unknown Chain'
+  return snapshot.chain?.nameLong || t('send.unknown_chain')
 })
 
 const chainIcon = computed(() => {
