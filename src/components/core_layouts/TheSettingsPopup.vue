@@ -10,6 +10,18 @@
       <cog6-tooth-icon class="w-6 h-6" />
     </app-btn-icon>
 
+    <!-- Headless network selector (mobile): owns the chain dialog. It renders
+         in front of the settings popup (z above the popup's z-[2101]) so the
+         popup stays open behind it. -->
+    <select-chain-for-app
+      v-if="isXS"
+      v-model:dialog-open="networkOpen"
+      dialog-z-index-overlay="z-[2110]"
+      dialog-z-index-container="z-[2120]"
+    >
+      <template #network-button><span class="hidden" /></template>
+    </select-chain-for-app>
+
     <!-- Popup -->
     <teleport to="#app">
       <transition
@@ -58,6 +70,32 @@
                 <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
                   {{ $t('settings.preferences') }}
                 </p>
+                <!-- Network (mobile only — relocated here from the header below
+                     xs). The trigger lives here; the dialog is owned by the
+                     headless SelectChainForApp mounted outside the popup. -->
+                <div
+                  v-if="isXS"
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="openNetwork"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="relative flex items-center gap-2.5">
+                    <globe-alt-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-black capitalize">{{ $t('common.network') }}</span>
+                  </div>
+                  <div class="relative flex items-center gap-2 min-w-0">
+                    <img
+                      v-if="selectedChain?.icon"
+                      :src="selectedChain.icon"
+                      alt=""
+                      class="w-5 h-5 rounded-full object-contain flex-shrink-0"
+                      height="20"
+                      width="20"
+                    />
+                    <span class="text-s-14 font-normal leading-[20px] text-[#575757] truncate max-w-[120px]">{{ selectedChain?.nameLong }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                  </div>
+                </div>
                 <!-- Currency -->
                 <div
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
@@ -346,24 +384,42 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon, BanknotesIcon } from '@heroicons/vue/20/solid'
+import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon, GlobeAltIcon, BanknotesIcon } from '@heroicons/vue/20/solid'
 import { ChevronRightIcon, QuestionMarkCircleIcon } from '@heroicons/vue/16/solid'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
 import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
 const { isSettingsOpen } = storeToRefs(appLayoutStore)
+
+// Below xs the network selector lives inside this popup (see template).
+const { isXS } = useAppBreakpoints()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+/**
+ * Whether the mobile chain dialog is open. Tapping the network row opens it in
+ * front of the settings popup, which stays open behind it.
+ */
+const networkOpen = ref(false)
+const openNetwork = () => {
+  networkOpen.value = true
+}
 
 const analyticsStore = useAnalyticsStore()
 const analyticsEnabled = computed(() => analyticsStore.consent)
@@ -501,6 +557,10 @@ const togglePopup = () => {
 }
 
 onClickOutside(containerRef, () => {
+  // Keep the popup open while the chain dialog is layered in front of it —
+  // clicks inside that dialog (teleported to #app) would otherwise register as
+  // an outside click and close the settings popup behind it.
+  if (networkOpen.value) return
   if (isSettingsOpen.value) {
     isSettingsOpen.value = false
     view.value = 'main'
