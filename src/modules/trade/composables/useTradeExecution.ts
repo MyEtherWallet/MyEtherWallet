@@ -5,7 +5,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {

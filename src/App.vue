@@ -43,7 +43,7 @@ import { useTimeoutFn } from '@vueuse/core'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import useBalanceHandler from './utils/balanceHandler'
 import { useStocksStore } from '@/stores/stocksStore'
-import { useSwap } from '@/composables/useSwap'
+import { useSwapStore } from '@/stores/swapStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
@@ -76,7 +76,7 @@ const {
 } = storeToRefs(store)
 const chainStore = useChainsStore()
 const holdingsStore = useHoldingsStore()
-useSwap()
+useSwapStore()
 const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)

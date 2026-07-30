@@ -1,7 +1,7 @@
 import { computed, type Ref, type ComputedRef } from 'vue'
 import { parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'

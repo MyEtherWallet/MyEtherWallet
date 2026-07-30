@@ -1,5 +1,5 @@
-import { storeToRefs } from 'pinia'
-import { effectScope, ref, type Ref, watch } from 'vue'
+import { defineStore, storeToRefs } from 'pinia'
+import { ref, watch, type Ref } from 'vue'
 
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -21,7 +21,7 @@ import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
 import BN from 'bn.js'
 import { parseUnits } from 'viem'
-import { useI18n } from 'vue-i18n'
+import i18n from '@/i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import {
@@ -54,6 +54,21 @@ export interface QuoteParam {
   rank?: number
 }
 
+interface SwapStoreState {
+  initSwapper: () => Promise<void>
+  supportedNetwork: Ref<boolean>
+  toTokens: Ref<ToTokenType | null>
+  fromTokens: Ref<NewTokenInfo[] | null>
+  toChains: Ref<Chain[]>
+  swapLoaded: Ref<boolean>
+  rawFromTokens: Ref<TokenType[]>
+  restrictedAddressesLower: Ref<string[]>
+  getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>
+  getSwap: (
+    quote: ProviderQuoteResponse,
+  ) => Promise<ProviderSwapResponse | null>
+}
+
 const NetworkNotSupportedError = new Error(
   'Selected network is not supported for swap',
 )
@@ -63,35 +78,9 @@ const NetworkNotSupportedError = new Error(
 const SWAP_INIT_RETRIES = 2
 const SWAP_INIT_RETRY_DELAY_MS = 800
 
-// Shared across all useSwap() consumers so swaplists are fetched once per
-// network instead of once per component.
-const swapInstance: Ref<Swapper | null> = ref(null)
-const supportedNetwork = ref<boolean>(true)
-const toChains = ref<Chain[]>([])
-const toTokens = ref<ToTokenType | null>(null)
-const fromTokens = ref<NewTokenInfo[] | null>(null)
-const swapLoaded = ref<boolean>(false)
-const rawFromTokens = ref<TokenType[]>([])
-const restrictedAddressesLower = ref<string[]>([])
-let inflightInit: Promise<void> | null = null
-let inflightNetworkName: string | null = null
-let initializedNetworkName: string | null = null
-let sharedWatchersStarted = false
-
-export const useSwap = (): {
-  initSwapper: () => Promise<void>
-  supportedNetwork: Ref<boolean>
-  toTokens: Ref<ToTokenType | null>
-  fromTokens: Ref<NewTokenInfo[] | null>
-  toChains: Ref<Chain[]>
-  swapLoaded: Ref<boolean>
-  getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>
-  getSwap: (
-    quote: ProviderQuoteResponse,
-  ) => Promise<ProviderSwapResponse | null>
-} => {
+export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
   const toastStore = useToastStore()
-  const { t } = useI18n()
+  const { t } = i18n.global
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
   const walletStore = useWalletStore()
@@ -99,10 +88,20 @@ export const useSwap = (): {
   const { selectedNetwork, isTradingRestrictedInRegion } = storeToRefs(globalStore)
   const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
 
+  let swapInstance: Swapper | null = null
+  const supportedNetwork = ref(true)
+  const toChains = ref<Chain[]>([])
+  const toTokens = ref<ToTokenType | null>(null)
+  const fromTokens = ref<NewTokenInfo[] | null>(null)
+  const swapLoaded = ref(false)
+  const rawFromTokens = ref<TokenType[]>([])
+  const restrictedAddressesLower = ref<string[]>([])
+  let inflightInit: Promise<void> | null = null
+
   // Updates fromTokens with current wallet balances without re-fetching swaplists.
   // Called after init and when wallet tokens/native balance change reactively.
   const applyTokenBalances = () => {
-    if (!swapInstance.value || !swapLoaded.value || !rawFromTokens.value.length) return
+    if (!swapInstance || !swapLoaded.value || !rawFromTokens.value.length) return
 
     const allFromTokensWithBalance = hydrateTokenBalances(
       rawFromTokens.value,
@@ -166,7 +165,7 @@ export const useSwap = (): {
         throw NetworkNotSupportedError
       }
 
-      swapInstance.value = new Swapper({
+      swapInstance = new Swapper({
         network: activeNetworkEnum,
         api: new Web3Eth(rpc) as any,
         walletIdentifier: WalletIdentifier.mew,
@@ -174,11 +173,11 @@ export const useSwap = (): {
           infiniteApproval: true,
         },
       })
-      await swapInstance.value.initPromise
-      const allFromTokens = swapInstance.value.getFromTokens()
+      await swapInstance.initPromise
+      const allFromTokens = swapInstance.getFromTokens()
       supportedNetwork.value = allFromTokens.all.length > 0
       rawFromTokens.value = allFromTokens.all
-      let swapToTokens = swapInstance.value.getToTokens()
+      let swapToTokens = swapInstance.getToTokens()
 
       // Check if trading is restricted and filter out restricted token addresses
       const fetchedRestrictedAddresses = await getRestrictedTokenAddresses()
@@ -229,7 +228,6 @@ export const useSwap = (): {
       swapChains.value = toChains.value
 
       swapLoaded.value = true
-      initializedNetworkName = activeNetworkName
       applyTokenBalances()
       return Promise.resolve()
     } catch (e) {
@@ -239,7 +237,6 @@ export const useSwap = (): {
       ) {
         supportedNetwork.value = false
         swapLoaded.value = true
-        initializedNetworkName = activeNetworkName
         return
       }
       // Transient upstream failure (the swaplist fetch returned a non-JSON
@@ -271,7 +268,7 @@ export const useSwap = (): {
   const getQuote = async (
     params: QuoteParam,
   ): Promise<ProviderQuoteResponse[] | undefined> => {
-    if (!swapInstance.value || !swapLoaded.value) {
+    if (!swapInstance || !swapLoaded.value) {
       return undefined
     }
 
@@ -279,7 +276,7 @@ export const useSwap = (): {
       params.amount.toString(),
       params.fromToken.decimals ?? 18,
     ).toString() // Default to 18 decimals if not specified);
-    const quotes = await swapInstance.value.getQuotes({
+    const quotes = await swapInstance.getQuotes({
       fromAddress: params.fromAddress,
       toAddress: params.toAddress,
       amount: new BN(rawAmount),
@@ -292,12 +289,12 @@ export const useSwap = (): {
   const getSwap = async (
     providerQuote: ProviderQuoteResponse,
   ): Promise<ProviderSwapResponse | null> => {
-    if (!swapInstance.value) {
+    if (!swapInstance) {
       return null
     }
 
     try {
-      const response = await swapInstance.value.getSwap(providerQuote.quote)
+      const response = await swapInstance.getSwap(providerQuote.quote)
       return response
     } catch (err) {
       reportModuleError({
@@ -314,50 +311,36 @@ export const useSwap = (): {
     }
   }
 
-  // No-op when already initialized for the current network; concurrent calls
-  // for the same network share the in-flight promise.
+  // Concurrent callers share one initialization. Network changes reset
+  // swapLoaded in the store watcher below before requesting a fresh instance.
   const initSwapper = async (): Promise<void> => {
-    const activeNetworkName = selectedChain.value?.name || selectedNetwork.value
-    if (swapLoaded.value && initializedNetworkName === activeNetworkName) return
+    if (swapLoaded.value) return
+    if (inflightInit) return inflightInit
 
-    if (inflightInit) {
-      if (inflightNetworkName === activeNetworkName) return inflightInit
-      // Network changed while another init was running: wait for it to
-      // settle and re-evaluate against the current network.
-      await inflightInit
-      return initSwapper()
+    const initPromise = doInitSwapper()
+    inflightInit = initPromise
+    try {
+      await initPromise
+    } finally {
+      if (inflightInit === initPromise) inflightInit = null
     }
-
-    inflightNetworkName = activeNetworkName
-    inflightInit = doInitSwapper() as Promise<void>
-    inflightInit.finally(() => {
-      inflightInit = null
-      inflightNetworkName = null
-    })
-    return inflightInit
   }
 
-  // Registered once in a detached scope so the watchers survive the unmount
-  // of whichever component called useSwap() first.
-  if (!sharedWatchersStarted) {
-    sharedWatchersStarted = true
-    effectScope(true).run(() => {
-      watch(
-        () => selectedChain.value?.name,
-        async chainName => {
-          if (chainName) {
-            await initSwapper()
-          }
-        },
-        { immediate: true },
-      )
+  watch(
+    () => selectedChain.value?.name,
+    async chainName => {
+      if (!chainName) return
+      if (inflightInit) await inflightInit
+      swapLoaded.value = false
+      await initSwapper()
+    },
+    { immediate: true },
+  )
 
-      watch(
-        () => [tokens.value, balanceWei.value] as const,
-        () => applyTokenBalances(),
-      )
-    })
-  }
+  watch(
+    () => [tokens.value, balanceWei.value] as const,
+    () => applyTokenBalances(),
+  )
 
   return {
     initSwapper,
@@ -368,5 +351,7 @@ export const useSwap = (): {
     swapLoaded,
     getQuote,
     getSwap,
+    rawFromTokens,
+    restrictedAddressesLower,
   }
-}
+})

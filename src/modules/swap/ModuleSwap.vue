@@ -282,7 +282,7 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useFormPristine } from '@/composables/useFormPristine'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -382,17 +382,16 @@ const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
 const { storeSwapValues, clearSwapValues } = inputStore
 
-// --- Use Swap Composable ---
+// --- Swap Store ---
+const swapStore = useSwapStore()
 const {
-  initSwapper,
   supportedNetwork,
   swapLoaded,
   toChains,
   fromTokens,
   toTokens,
-  getQuote,
-  getSwap,
-} = useSwap()
+} = storeToRefs(swapStore)
+const { initSwapper, getQuote, getSwap } = swapStore
 
 // --- Local State ---
 

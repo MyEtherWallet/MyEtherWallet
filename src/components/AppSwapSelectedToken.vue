@@ -370,7 +370,7 @@
 
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
-import { type NewTokenInfo } from '@/composables/useSwap'
+import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Ref, ref, computed, onMounted, watch } from 'vue'
 import {
   ChevronDownIcon,

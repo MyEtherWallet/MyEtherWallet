@@ -412,7 +412,7 @@ import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
 import { useTrade } from './composables/useTrade'
-import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMarketStatus } from './composables/useMarketStatus'
 import { useTradeTokens } from './composables/useTradeTokens'
 import { useTradeValidation } from './composables/useTradeValidation'
@@ -466,8 +466,10 @@ const {
   loadTradableAssets,
 } = useTrade()
 
-// --- Use Swap Composable for fromTokens ---
-const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
+// --- Swap Store for fromTokens ---
+const swapStore = useSwapStore()
+const { fromTokens: swapFromTokens, swapLoaded } = storeToRefs(swapStore)
+const { initSwapper } = swapStore
 
 // --- Local State ---
 // Initialize selectedFromChain immediately from the store to prevent defaulting to Ethereum
@@ -764,7 +766,7 @@ const clearValues = () => {
 const setFromChain = (chain: Chain) => {
   selectedFromChain.value = chain
   fromTokenManuallySelected.value = false
-  // Update the global network - useSwap has a watcher that will reinitialize
+  // Update the global network - swapStore has a watcher that will reinitialize
   globalStore.setSelectedNetwork(chain.name)
   // Clear current selections - they'll be repopulated when swapLoaded becomes true
   fromTokenSelected.value = null
