@@ -96,6 +96,7 @@
     "something_went_wrong": "Algo salió mal",
     "network_change_failed": "Error al cambiar de red",
     "network_change_failed_description": "Comprueba si tu billetera es compatible con la red {network}",
+    "network_switched": "Red cambiada a {network}",
     "and": "y",
     "deposit_title": "Tu dirección de {chain}",
     "deposit_description": "Puedes depositar cualquier token compatible con {chain} en esta dirección.",

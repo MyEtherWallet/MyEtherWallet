@@ -176,6 +176,20 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
+    // MEW-1980: announce every global network switch. This watcher is the
+    // single point all switch sources funnel through (header selector, Buy,
+    // Sell, Swap, Trade), so the toast fires uniformly. Guard on oldChain to
+    // skip the initial undefined→default hydration, and on the name to skip
+    // no-op re-sets to the same network.
+    if (newChain && oldChain && newChain.name !== oldChain.name) {
+      const toastStore = useToastStore()
+      toastStore.addToastMessage({
+        text: i18n.global.t('common.network_switched', {
+          network: newChain.nameLong,
+        }),
+        type: ToastType.Success,
+      })
+    }
     if (newChain && newChain.type !== oldChain?.type) {
       setWatchOnlyIfExist()
     }

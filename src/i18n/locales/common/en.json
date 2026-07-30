@@ -96,6 +96,7 @@
     "something_went_wrong": "Something went wrong",
     "network_change_failed": "Network change failed",
     "network_change_failed_description": "Check if your wallet supports the {network} network",
+    "network_switched": "Network switched to {network}",
     "and": "and",
     "deposit_title": "Your {chain} address",
     "deposit_description": "You can deposit any tokens supported by {chain} to this address.",

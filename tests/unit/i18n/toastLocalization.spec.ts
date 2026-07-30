@@ -31,6 +31,8 @@ const TOAST_KEYS = [
   // Network change (walletStore.ts)
   'common.network_change_failed',
   'common.network_change_failed_description',
+  // Global network switch toast — MEW-1980 (walletStore.ts)
+  'common.network_switched',
   // Email subscription (useEmailSubscription.ts)
   'common.subscribe.success',
   'common.subscribe.error',
