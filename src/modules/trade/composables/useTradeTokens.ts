@@ -7,6 +7,8 @@ import type {
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
+import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
@@ -224,6 +226,16 @@ function mapTradableAssetsToTokens(
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
 ): NewTokenInfo[] {
+  const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
+    address: token.address,
+    balance: token.balance || '0',
+  }))
+  const hydrate = (tokens: NewTokenInfo[]) =>
+    hydrateTokenBalances(tokens, {
+      balanceSources,
+      mainTokenAddress: MAIN_TOKEN_CONTRACT,
+    }) as NewTokenInfo[]
+
   const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
@@ -250,7 +262,6 @@ function mapTradableAssetsToTokens(
         cgId: matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: tokenPrice,
         networkInfo: {
           name: chainName.toLowerCase(),
@@ -279,7 +290,6 @@ function mapTradableAssetsToTokens(
           cgId: t.cgId,
           type: 'erc20',
           rank: matchingFromToken?.rank || 0,
-          balance: matchingFromToken?.balance || '0',
           price: t.price,
           networkInfo: {
             name: 'ETHEREUM',
@@ -287,10 +297,10 @@ function mapTradableAssetsToTokens(
           },
         }
       }) as unknown as NewTokenInfo[]
-    return [...mappedAssets, ...hardcodedTokens]
+    return hydrate([...mappedAssets, ...hardcodedTokens])
   }
 
-  return mappedAssets
+  return hydrate(mappedAssets)
 }
 
 // Helper to map supporting assets to token format
@@ -299,7 +309,7 @@ function mapSupportingAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
 ): NewTokenInfo[] {
-  return assets
+  const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
     )
@@ -322,7 +332,6 @@ function mapSupportingAssetsToTokens(
         cgId: asset.coinId || matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: asset.price || matchingFromToken?.price || 0,
         networkInfo: {
           name: chainName.toLowerCase(),
@@ -330,4 +339,12 @@ function mapSupportingAssetsToTokens(
         },
       }
     }) as unknown as NewTokenInfo[]
+
+  return hydrateTokenBalances(mappedAssets, {
+    balanceSources: Array.from(fromTokensMap.values()).map(token => ({
+      address: token.address,
+      balance: token.balance || '0',
+    })),
+    mainTokenAddress: MAIN_TOKEN_CONTRACT,
+  }) as NewTokenInfo[]
 }

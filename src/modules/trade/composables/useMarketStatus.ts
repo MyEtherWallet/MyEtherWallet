@@ -7,13 +7,10 @@ import {
   isTradingRestricted,
   TRADING_RESTRICTED_HELP_URL,
 } from '../providers/ondoHelpers'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import Configs from '@/configs'
 import { useGlobalStore } from '@/stores/globalStore'
 import { resolveCurrentSession } from '../common/marketSession'
-
-const isDevMode = Configs.IS_DEV_MODE
+import { reportModuleError } from '@/utils/reportModuleError'
 
 interface UseMarketStatusOptions {
   onMarketOpen?: () => void | Promise<void>
@@ -107,17 +104,11 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       setIsTradingRestrictedInRegion(res)
       fetchedTradingThisSession.value = true;
     } catch (e) {
-      if (isDevMode) {
-        console.error('Failed to check trading restriction:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error checking trading restriction',
-            errorMessage: (e as Error).message || 'Unknown error',
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error checking trading restriction',
+        error: e,
+      })
       setIsTradingRestrictedInRegion(true)
     }
   }
@@ -145,17 +136,11 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
         }
       }
     } catch (e) {
-      if (isDevMode) {
-        console.error('Failed to fetch market status:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error fetching market status',
-            errorMessage: (e as Error).message || 'Unknown error',
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error fetching market status',
+        error: e,
+      })
     }
   }
 

@@ -5,17 +5,14 @@ import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
   TradeEventError,
   type TradePayloadShared,
 } from '@/analytics'
-import Configs from '@/configs'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
-
-const isDevMode = Configs.IS_DEV_MODE
+import { reportModuleError } from '@/utils/reportModuleError'
 
 interface QuoteData {
   startAmount: bigint
@@ -168,28 +165,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         ...getAnalyticsPayload(),
         errorMsg: rawMessage || 'Failed to fetch quote',
       })
-      if (isDevMode) {
-        console.error('Error fetching quote:', e)
-      } else if (!isTransientRpcError(e)) {
-        // Transient RPC/WebSocket drops (e.g. the allowance read over
-        // wss://nodes.mewapi.io) are surfaced to the user above but are pure
-        // Sentry noise — only report genuine quote failures.
-        // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
-        // are surfaced to the user above but are pure Sentry noise — skip them.
-        const isExpectedClientError = !!(e as { expectedClientError?: boolean })
-          .expectedClientError
-        if (isDevMode) {
-          console.error('Error fetching quote:', e)
-        } else if (!isExpectedClientError) {
-          captureException(e, {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error fetching quote',
-              errorMessage: generalError.value,
-            },
-          })
-        }
-      }
+      const isExpectedClientError = !!(
+        e as { expectedClientError?: boolean }
+      ).expectedClientError
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error fetching quote',
+        error: e,
+        expected: isTransientRpcError(e) || isExpectedClientError,
+        extra: { errorMessage: generalError.value },
+      })
     } finally {
       isLoadingQuote.value = false
     }

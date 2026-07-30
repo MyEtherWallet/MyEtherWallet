@@ -27,8 +27,10 @@ import { ToastType } from '@/types/notification'
 import {
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
-import * as Sentry from '@sentry/vue'
 import { isTransientSwapInitError } from '@/utils/swapInitError'
+import { hydrateTokenBalances } from '@/utils/tokenBalance'
+import { reportModuleError } from '@/utils/reportModuleError'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -102,29 +104,21 @@ export const useSwap = (): {
   const applyTokenBalances = () => {
     if (!swapInstance.value || !swapLoaded.value || !rawFromTokens.value.length) return
 
-    const allFromTokensWithBalance = rawFromTokens.value.map(token => {
-      let tokenBalance = '0'
-      let tokenPrice = token.price
-      if (tokens.value.length > 0 || balanceWei.value !== '0') {
-        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
-          tokenBalance = balanceWei.value
-          tokenPrice = tokenPrice || selectedChain.value?.price || 0
-        } else {
-          const found = tokens.value.find(
-            t => t.contract.toLowerCase() === token.address.toLowerCase(),
-          )
-          if (found) {
-            tokenBalance = found.balanceWei
-            tokenPrice = tokenPrice || (found as any).price || 0
-          }
-        }
-      }
-      return Object.freeze({
-        ...token,
-        balance: tokenBalance,
-        price: tokenPrice,
-      }) as NewTokenInfo
-    })
+    const allFromTokensWithBalance = hydrateTokenBalances(
+      rawFromTokens.value,
+      {
+        balanceSources: tokens.value.map(token => ({
+          address: token.contract,
+          balance: token.balanceWei,
+          price: token.price ?? undefined,
+        })),
+        mainTokenAddress: MAIN_TOKEN_CONTRACT,
+        nativeBalance: balanceWei.value,
+        nativePrice: selectedChain.value?.price ?? undefined,
+        hydrate: tokens.value.length > 0 || balanceWei.value !== '0',
+        freeze: true,
+      },
+    ) as unknown as NewTokenInfo[]
 
     const fromAllTokensToWalletTokens = allFromTokensWithBalance.filter(
       token => {
@@ -265,12 +259,12 @@ export const useSwap = (): {
       // Expected external flakiness (transient fetch / JSON parse of a non-JSON
       // upstream body) is surfaced via the toast above but is pure Sentry noise
       // — only report genuinely unexpected init failures.
-      if (!isTransientSwapInitError(e)) {
-        Sentry.withScope(function (scope) {
-          scope.setTag('swap', 'initSwapper failed')
-          Sentry.captureException(e)
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.SWAP,
+        title: 'SWAP: initSwapper failed',
+        error: e,
+        expected: isTransientSwapInitError(e),
+      })
     }
   }
 
@@ -306,10 +300,10 @@ export const useSwap = (): {
       const response = await swapInstance.value.getSwap(providerQuote.quote)
       return response
     } catch (err) {
-      Sentry.withScope(function (scope) {
-        scope.setTag('swap', 'getSwap failed')
-        // will be tagged with my-tag="my value"
-        Sentry.captureException(err)
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.SWAP,
+        title: 'SWAP: getSwap failed',
+        error: err,
       })
       toastStore.addToastMessage({
         type: ToastType.Error,

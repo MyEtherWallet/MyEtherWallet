@@ -4,11 +4,8 @@ import BigNumber from 'bignumber.js'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import Configs from '@/configs'
-
-const isDevMode = Configs.IS_DEV_MODE
+import { reportModuleError } from '@/utils/reportModuleError'
 
 interface UseTradeValidationOptions {
   fromTokenSelected: Ref<NewTokenInfo | null>
@@ -144,18 +141,15 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
           })
         }
       } catch (e) {
-        if (isDevMode) {
-          console.error('Error parsing amount for balance check')
-        } else {
-          captureException(e, {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error parsing amount for balance check',
-              amount: fromAmount.value,
-              tokenSymbol: fromTokenSelected.value.symbol,
-            },
-          })
-        }
+        reportModuleError({
+          tag: SENTRY_MODULE_TAGS.TRADE,
+          title: 'TRADE: Error parsing amount for balance check',
+          error: e,
+          extra: {
+            amount: fromAmount.value,
+            tokenSymbol: fromTokenSelected.value.symbol,
+          },
+        })
       }
     }
 

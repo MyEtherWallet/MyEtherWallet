@@ -29,12 +29,16 @@ import * as Sentry from '@sentry/vue'
 import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
 import i18n from '@/i18n'
+import configs from '@/configs'
 
 const PARTNER = 'ondo-finance'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
+  const userAddress = computed(
+    () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
+  )
   const tokens: Ref<Array<TokenBalance>> = ref([])
   const balance = ref('0')
   const balanceWei = ref('0')
@@ -534,6 +538,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   return {
     wallet,
     walletAddress,
+    userAddress,
     walletName,
     setWatchOnlyIfExist,
     setWallet,

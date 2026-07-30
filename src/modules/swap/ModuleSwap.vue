@@ -284,6 +284,7 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { useFormPristine } from '@/composables/useFormPristine'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useInputStore } from '@/stores/inputStore'
@@ -332,8 +333,9 @@ import {
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { hydrateTokenBalances } from '@/utils/tokenBalance'
+import { reportModuleError } from '@/utils/reportModuleError'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
@@ -369,7 +371,7 @@ const { t } = useI18n()
 const { gasPriceType } = storeToRefs(globalStore)
 const {
   isWalletConnected,
-  walletAddress,
+  userAddress,
   wallet,
   isWatchOnly,
   tokens,
@@ -402,12 +404,16 @@ const toTokenSelected = ref<NewTokenInfo | null>(null)
 // Error State
 const toAddressError = ref<string>('')
 const generalError = ref<string>('')
-const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
 // Data Models
 const fromAmount = ref<string>('')
 const toAmount = ref<string>('')
 const userToAddress = ref<string>('')
+const {
+  isPristine,
+  reset: resetPristine,
+  markDirty: markFormDirty,
+} = useFormPristine([userToAddress, fromAmount])
 const foundNickName = ref<string>('')
 const providers = ref<ProviderQuoteResponse[]>([])
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
@@ -465,10 +471,6 @@ const parsedToChains = computed<Chain[]>(() => {
   }
   return toChains.value
 })
-
-const userAddress = computed(
-  () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
-)
 
 const isLoading = computed(() => !swapLoaded.value || isLoadingQuotes.value)
 
@@ -662,7 +664,8 @@ const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
     isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
     isTokenSelected: () => !!fromTokenSelected.value,
     amountRef: fromAmount,
-    isPristineRef: isPristine,
+    markFormDirty,
+    resetFormPristine: resetPristine,
     getTokenIdentifier: () => fromTokenSelected.value?.address,
     getDependencies: () => [
       fromTokenSelected.value?.balance,
@@ -686,7 +689,7 @@ const switchGlobalNetwork = (chain: Chain) => {
 }
 
 const clearValues = () => {
-  isPristine.value = true // Reset to pristine state
+  resetPristine()
   resetMaxState()
   toAddressError.value = '' // Clear error immediately
   generalError.value = '' // Clear general error
@@ -846,21 +849,18 @@ const proceedWithSwap = async (quoteId: string) => {
       })
       return
     } else {
-      if (isDevMode) {
-        console.error('Error proceeding with swap:', e)
-      } else {
+      if (!isDevMode) {
         analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,
         })
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.SWAP,
-          extra: {
-            title: 'SWAP: Error proceeding with swap',
-            errorMessage,
-          },
-        })
       }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.SWAP,
+        title: 'SWAP: Error proceeding with swap',
+        error: e,
+        extra: { errorMessage },
+      })
       if (
         errorMessage.includes('rejected') ||
         errorMessage.includes('denied') ||
@@ -927,21 +927,18 @@ const swapForBtc = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || t('swap.error.fetching-btc-gas-fees')
-    if (isDevMode) {
-      console.error('Error fetching BTC gas fees:', e)
-    } else {
+    if (!isDevMode) {
       analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error fetching BTC gas fees',
-          errorMessage: generalError.value,
-        },
-      })
     }
+    reportModuleError({
+      tag: SENTRY_MODULE_TAGS.SWAP,
+      title: 'SWAP: Error fetching BTC gas fees',
+      error: e,
+      extra: { errorMessage: generalError.value },
+    })
   } finally {
     bestSwapLoadingOpen.value = false
   }
@@ -1020,23 +1017,19 @@ const swapForEvm = async () => {
     // pair has no route/quote). Keep the throw so generalError + analytics are
     // handled here as designed, but skip the Sentry report to avoid noise.
     const isPairNotAvailable = e?.message === t('swap.error.pair-not-available')
-    if (isDevMode) {
-      console.error('Error fetching gas fees:', e)
-    } else {
+    if (!isDevMode) {
       analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      if (!isPairNotAvailable) {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.SWAP,
-          extra: {
-            title: 'SWAP: Error fetching gas fees',
-            errorMessage: generalError.value,
-          },
-        })
-      }
     }
+    reportModuleError({
+      tag: SENTRY_MODULE_TAGS.SWAP,
+      title: 'SWAP: Error fetching gas fees',
+      error: e,
+      expected: isPairNotAvailable,
+      extra: { errorMessage: generalError.value },
+    })
   } finally {
     bestSwapLoadingOpen.value = false
   }
@@ -1120,16 +1113,12 @@ const fetchQuotes = async () => {
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
-    if (isDevMode) {
-      console.error('Error fetching quotes:', err)
-    } else {
-      captureException(err, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: fetchQuotes Error',
-          errorMessage: err?.message || 'Unknown error',
-        },
-      })
+    reportModuleError({
+      tag: SENTRY_MODULE_TAGS.SWAP,
+      title: 'SWAP: fetchQuotes Error',
+      error: err,
+    })
+    if (!isDevMode) {
       const event = bestSwapLoadingOpen.value
         ? SwapEventError.OFFER_ERROR
         : SwapEventError.PRELIMINARY_ERROR
@@ -1176,30 +1165,19 @@ const setToToken = () => {
   const allToTokensRaw =
     toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all] || []
 
-  localToTokens.value = allToTokensRaw.map((token: TokenType) => {
-    let tokenBalance = '0'
-    let tokenPrice = token.price
-    const sameNetworks = currentToChain.name === selectedChain.value?.name
-    if (sameNetworks && (tokens.value.length > 0 || balanceWei.value !== '0')) {
-      if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
-        tokenBalance = balanceWei.value
-        tokenPrice = tokenPrice || selectedChain.value?.price || 0
-      } else {
-        const found = tokens.value.find(
-          t => t.contract.toLowerCase() === token.address.toLowerCase(),
-        )
-        if (found) {
-          tokenBalance = found.balanceWei
-          tokenPrice = tokenPrice || (found as any).price || 0
-        }
-      }
-    }
-    return {
-      ...token,
-      balance: tokenBalance,
-      price: tokenPrice,
-    } as NewTokenInfo
-  })
+  const sameNetworks = currentToChain.name === selectedChain.value?.name
+  localToTokens.value = hydrateTokenBalances(allToTokensRaw as TokenType[], {
+    balanceSources: tokens.value.map(token => ({
+      address: token.contract,
+      balance: token.balanceWei,
+      price: token.price ?? undefined,
+    })),
+    mainTokenAddress: MAIN_TOKEN_CONTRACT,
+    nativeBalance: balanceWei.value,
+    nativePrice: selectedChain.value?.price ?? undefined,
+    hydrate:
+      sameNetworks && (tokens.value.length > 0 || balanceWei.value !== '0'),
+  }) as unknown as NewTokenInfo[]
 
   // 2. Select Token Logic
   if (hasSwapValues.value) {
@@ -1377,7 +1355,7 @@ watch(
   () => swapValues.value,
   async newVal => {
     if (hasSwapValues.value) {
-      isPristine.value = false // Restoring values means form is not pristine
+      markFormDirty() // Restoring values means form is not pristine
       selectedToChain.value = newVal.toChain
       await nextTick()
       setToToken()
@@ -1517,23 +1495,19 @@ watch(
       const isExpectedQuoteError =
         err?.message === t('swap.error.pair-not-available') ||
         /insufficient funds/i.test(err?.message ?? '')
-      if (isDevMode) {
-        console.error('Error fetching gas fees:', err)
-      } else {
+      if (!isDevMode) {
         analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
           ...analyticsPayload,
           errorMsg: generalError.value,
         })
-        if (!isExpectedQuoteError) {
-          captureException(err, {
-            ...SENTRY_MODULE_TAGS.SWAP,
-            extra: {
-              title: 'SWAP: Error fetching gas fees on quote selection',
-              errorMessage: generalError.value,
-            },
-          })
-        }
       }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.SWAP,
+        title: 'SWAP: Error fetching gas fees on quote selection',
+        error: err,
+        expected: isExpectedQuoteError,
+        extra: { errorMessage: generalError.value },
+      })
     } finally {
       if (!cancelled) txProceeding.value = false
     }
@@ -1647,24 +1621,11 @@ watch(
   { deep: true },
 )
 
-// Mark form as not pristine when user starts typing in address or amount field
-watch(
-  () => [userToAddress.value, fromAmount.value],
-  ([newAdr, newAmount], [oldAdr, oldAmount]) => {
-    if (
-      (newAdr !== '' && oldAdr === '') ||
-      (newAmount !== '' && oldAmount === '')
-    ) {
-      isPristine.value = false
-    }
-  },
-)
-
 // --- Lifecycle ---
 
 onBeforeMount(async () => {
   if (hasSwapValues.value) {
-    isPristine.value = false // Restoring values means form is not pristine
+    markFormDirty() // Restoring values means form is not pristine
     selectedToChain.value = swapValues.value.toChain
   }
   if (isSwapView.value && !hasSwapValues.value && !isBitcoinChain.value) {

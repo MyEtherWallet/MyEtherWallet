@@ -418,10 +418,10 @@ import { useTradeTokens } from './composables/useTradeTokens'
 import { useTradeValidation } from './composables/useTradeValidation'
 import { useTradeQuote } from './composables/useTradeQuote'
 import { useTradeExecution } from './composables/useTradeExecution'
+import { useFormPristine } from '@/composables/useFormPristine'
 
 // Types
 import type { Chain } from '@/mew_api/types'
-import configs from '@/configs'
 
 //icons
 import {
@@ -445,6 +445,7 @@ const globalStore = useGlobalStore()
 const {
   isWalletConnected,
   walletAddress,
+  userAddress,
   wallet,
   isWatchOnly,
   allTokens,
@@ -478,7 +479,7 @@ const fromAmount = ref<string>('')
 const toAmount = ref<string>('')
 const generalError = ref<string>('')
 const toAmountError = ref<string>('')
-const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
+const { isPristine, reset: resetPristine } = useFormPristine([fromAmount])
 
 // --- Market Status ---
 const {
@@ -612,11 +613,6 @@ const getDefaultFromToken = (): NewTokenInfo | null => {
   )
 }
 
-// Use wallet address or fallback to donation address for quotes
-const userAddress = computed(
-  () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
-)
-
 const displayGeneralError = ref<string>('')
 
 watch(generalError, newVal => {
@@ -747,7 +743,7 @@ const restoreToToken = () => {
 }
 
 const clearValues = () => {
-  isPristine.value = true // Reset to pristine state
+  resetPristine()
   fromTokenManuallySelected.value = false
   fromAmount.value = ''
   toAmount.value = ''
@@ -944,16 +940,6 @@ watch(fromTokenSelected, token => {
 watch(toTokenSelected, token => {
   setTradeToSymbol(token?.symbol ?? null)
 })
-
-// Mark form as not pristine when user starts typing
-watch(
-  () => fromAmount.value,
-  (newVal, oldVal) => {
-    if (newVal !== '' && oldVal === '') {
-      isPristine.value = false
-    }
-  },
-)
 
 // --- Lifecycle ---
 onBeforeMount(async () => {

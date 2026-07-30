@@ -11,7 +11,8 @@ export interface UseMaxAmountOptions {
   isNativeToken: () => boolean
   isTokenSelected: () => boolean
   amountRef: Ref<string | number>
-  isPristineRef: Ref<boolean>
+  markFormDirty: () => void
+  resetFormPristine: () => void
   getTokenIdentifier: () => string | undefined
   getDependencies: () => unknown[]
   onMaxApplied?: () => void
@@ -29,7 +30,8 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     isNativeToken,
     isTokenSelected,
     amountRef,
-    isPristineRef,
+    markFormDirty,
+    resetFormPristine,
     getTokenIdentifier,
     getDependencies,
     onMaxApplied,
@@ -95,7 +97,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     // user modifies the amount (which deactivates max via the amount watcher).
     if (isMaxSelected.value) return
 
-    isPristineRef.value = false
+    markFormDirty()
     isFreshMaxClick.value = true
     preMaxAmount.value = amountRef.value
     isMaxSelected.value = true
@@ -123,7 +125,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
           preMaxAmount.value === 0 ||
           preMaxAmount.value === '0'
         ) {
-          isPristineRef.value = true
+          resetFormPristine()
         }
         preMaxAmount.value = ''
       }

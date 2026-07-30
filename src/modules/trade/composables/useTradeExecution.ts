@@ -7,7 +7,6 @@ import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -20,6 +19,7 @@ import Configs from '@/configs'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { isUserRejectionError } from '@/utils/walletUtils'
+import { reportModuleError } from '@/utils/reportModuleError'
 import BigNumber from 'bignumber.js'
 
 const isDevMode = Configs.IS_DEV_MODE
@@ -158,17 +158,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ...getAnalyticsPayload(),
         errorMsg: errorMessage,
       })
-      if (isDevMode) {
-        console.error('Error approving token:', e)
-      } else {
-        captureException(e instanceof Error ? e : new Error(errorMessage), {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error approving token',
-            errorMessage,
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error approving token',
+        error: e instanceof Error ? e : new Error(errorMessage),
+        extra: { errorMessage },
+      })
 
       toastStore.addToastMessage({
         text: t('trade.error.approval-failed'),
@@ -304,23 +299,15 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
             ? e
             : t('trade.error.submit-failed')
 
-      if (isDevMode) {
-        console.error('Error submitting trade order:', e)
-      } else {
-        // Expected client errors (user rejection code 4001, 1inch 4xx: expired
-        // quote / illiquid pair / invalid order), flagged by
-        // OneInchFusion.submitOrder, are surfaced to the user via the toast
-        // below but are pure Sentry noise — skip capture. Genuine 5xx /
-        // network failures stay unflagged and are reported.
-        if (!(e as { expectedClientError?: boolean }).expectedClientError) {
-          captureException(e instanceof Error ? e : new Error(errorMessage), {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error submitting trade order',
-              errorMessage,
-            },
-          })
-        }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error submitting trade order',
+        error: e instanceof Error ? e : new Error(errorMessage),
+        expected: !!(e as { expectedClientError?: boolean })
+          .expectedClientError,
+        extra: { errorMessage },
+      })
+      if (!isDevMode) {
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,

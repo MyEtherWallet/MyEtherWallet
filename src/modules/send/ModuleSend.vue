@@ -146,6 +146,7 @@ import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { useFormPristine } from '@/composables/useFormPristine'
 import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import {
@@ -187,7 +188,6 @@ const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
-const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
@@ -232,6 +232,11 @@ const {
   validateAddressInput,
   clearAddressInput,
 } = useAddressInput(selectedChain)
+const {
+  isPristine,
+  reset: resetPristine,
+  markDirty: markFormDirty,
+} = useFormPristine([amount, adrInput])
 
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
@@ -241,7 +246,7 @@ onMounted(async () => {
   publicKey.value = (await wallet.value.getPublicKey?.()) ?? ''
 
   if (hasSendValues.value) {
-    isPristine.value = false // Restoring values means form is not pristine
+    markFormDirty() // Restoring values means form is not pristine
     amount.value = sendValues.value.amount
     toAddress.value = sendValues.value.toAddress
     tokenSelectedContract.value = sendValues.value.token
@@ -273,7 +278,8 @@ const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxA
   isNativeToken: () => isNativeTokenSelected.value,
   isTokenSelected: () => !!tokenSelected.value,
   amountRef: amount,
-  isPristineRef: isPristine,
+  markFormDirty,
+  resetFormPristine: resetPristine,
   getTokenIdentifier: () => tokenSelectedContract.value,
   getDependencies: () => [
     tokenSelected.value?.balanceWei,
@@ -487,7 +493,7 @@ watchDebounced(
 )
 
 const resetSendModule = () => {
-  isPristine.value = true // Reset to pristine state
+  resetPristine()
   amountError.value = '' // Clear error immediately
   resetMaxState()
   amount.value = ''
@@ -496,19 +502,6 @@ const resetSendModule = () => {
   tokenSelectedContract.value = MAIN_TOKEN_CONTRACT
   clearAddressInput()
 }
-
-// Mark form as not pristine when user starts typing
-watch(
-  () => [amount.value, adrInput.value],
-  ([newAmount, newAdr], [oldAmount, oldAdr]) => {
-    if (
-      (newAmount !== '' && oldAmount === '') ||
-      (newAdr !== '' && oldAdr === '')
-    ) {
-      isPristine.value = false
-    }
-  },
-)
 
 watch(
   () => selectedChain.value,
