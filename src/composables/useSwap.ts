@@ -28,7 +28,7 @@ import {
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
 import * as Sentry from '@sentry/vue'
-import { isTransientSwapInitError } from '@/composables/swapInitError'
+import { isTransientSwapInitError } from '@/utils/swapInitError'
 
 // TODO: Import types from @enkryptcom/swap
 

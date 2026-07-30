@@ -38,7 +38,7 @@ import type {
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
-import { isExpectedTradeError } from '@/modules/trade/composables/expectedTradeError'
+import { isExpectedTradeError } from '@/modules/trade/common/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import i18n from '@/i18n'
 export type HardcodedTokenInfo = {

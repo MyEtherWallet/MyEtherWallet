@@ -1,6 +1,7 @@
 import { ref, computed, type Ref } from 'vue'
 import type { PaginatedResponse } from '../sdk/types'
 
+// Use for API collections with cursor pagination and stale-request cancellation.
 export function useCursorPaginate<T>(
   fetcher: (opts: {
     limit: number

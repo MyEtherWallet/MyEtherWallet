@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isTransientSwapInitError } from '@/composables/swapInitError'
+import { isTransientSwapInitError } from '@/utils/swapInitError'
 
 describe('isTransientSwapInitError', () => {
   it('is true for a JSON-parse SyntaxError (SDK parsed a non-JSON upstream body)', () => {

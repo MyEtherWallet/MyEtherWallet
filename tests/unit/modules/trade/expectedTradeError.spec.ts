@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isExpectedTradeError } from '@/modules/trade/composables/expectedTradeError'
+import { isExpectedTradeError } from '@/modules/trade/common/expectedTradeError'
 
 describe('isExpectedTradeError', () => {
   it('is true for a user rejection carrying EIP-1193 code 4001', () => {

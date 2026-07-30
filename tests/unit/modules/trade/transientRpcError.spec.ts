@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
+import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 
 describe('isTransientRpcError', () => {
   it('is true for the top-level viem error whose message is "WebSocket request failed"', () => {

@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue'
-import OneInchFusion from './providers/oneinch_fusion/oneInchFusion'
-import type { HardcodedTokenInfo } from './providers/oneinch_fusion/oneInchFusion'
+import OneInchFusion from '../providers/oneinch_fusion/oneInchFusion'
+import type { HardcodedTokenInfo } from '../providers/oneinch_fusion/oneInchFusion'
 import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,

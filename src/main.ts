@@ -21,7 +21,7 @@ import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
 } from '@/sentry/extensionNoise'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
+import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 
 const app = createApp(App)
 

@@ -53,7 +53,7 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import Intercom from '@intercom/messenger-js-sdk'
-import { useMarketStatus } from './modules/trade/composables'
+import { useMarketStatus } from './modules/trade/composables/useMarketStatus'
 const { fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()

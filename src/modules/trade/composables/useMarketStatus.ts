@@ -11,7 +11,7 @@ import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 import { useGlobalStore } from '@/stores/globalStore'
-import { resolveCurrentSession } from './marketSession'
+import { resolveCurrentSession } from '../common/marketSession'
 
 const isDevMode = Configs.IS_DEV_MODE
 

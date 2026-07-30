@@ -13,7 +13,7 @@ import {
   type TradePayloadShared,
 } from '@/analytics'
 import Configs from '@/configs'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
+import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 
 const isDevMode = Configs.IS_DEV_MODE
 

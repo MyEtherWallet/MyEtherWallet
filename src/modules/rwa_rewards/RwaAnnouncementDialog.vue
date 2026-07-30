@@ -49,7 +49,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useMarketStatus } from '@/modules/trade/composables'
+import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import overlayImg from '@/assets/images/rwa-rewards/tradeAndHoldFullscreenOverlayImg.png'
 import {

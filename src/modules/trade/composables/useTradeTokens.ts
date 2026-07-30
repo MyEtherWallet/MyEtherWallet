@@ -7,11 +7,10 @@ import type {
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
-import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
-} from './tradeSession'
+} from '../common/tradeSession'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
@@ -209,21 +208,12 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     return tradableTokens
   })
 
-  // Get default from token (main token or first available)
-  const getDefaultFromToken = (tokens: NewTokenInfo[]): NewTokenInfo | null => {
-    return (
-      tokens.find(t => t.address === MAIN_TOKEN_CONTRACT) || tokens[0] || null
-    )
-  }
-
   return {
-    isSellingTradableAsset,
     isCashOutTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
     disabledTokenAddresses,
     toTokens,
-    getDefaultFromToken,
   }
 }
 

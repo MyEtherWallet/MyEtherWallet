@@ -411,15 +411,13 @@ import { usePairStore } from '@/stores/pairStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
-import { useTrade } from './useTrade'
+import { useTrade } from './composables/useTrade'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
-import {
-  useMarketStatus,
-  useTradeTokens,
-  useTradeValidation,
-  useTradeQuote,
-  useTradeExecution,
-} from './composables'
+import { useMarketStatus } from './composables/useMarketStatus'
+import { useTradeTokens } from './composables/useTradeTokens'
+import { useTradeValidation } from './composables/useTradeValidation'
+import { useTradeQuote } from './composables/useTradeQuote'
+import { useTradeExecution } from './composables/useTradeExecution'
 
 // Types
 import type { Chain } from '@/mew_api/types'
