@@ -38,6 +38,7 @@ import type {
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
+import { isExpectedTradeError } from '@/modules/trade/composables/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
@@ -244,15 +245,35 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
+      // Preserve the original message (the caller lowercases it for display)
+      // and keep the wallet/RPC `code`, then flag expected client errors —
+      // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
+      // pair / invalid order) — so the caller (confirmTrade) can surface them
+      // to the user while skipping Sentry capture. The previous catch re-threw
+      // a bare Error that dropped `code`, collapsing user cancellations into
+      // opaque "Failed to submit order to 1inch" noise in Sentry.
+      // Narrow to a non-null object first: the SDK/wallet may throw `null` or
+      // `undefined`, and reading `.details` / `.code` off those would raise a
+      // TypeError that escapes as fresh Sentry noise — the opposite of intent.
+      const errObj =
+        typeof e === 'object' && e !== null
+          ? (e as Record<string, unknown>)
+          : undefined
       const errorMessage =
         e instanceof Error && e.message
-          ? e.message.toLowerCase()
-          : (e as any).details
-            ? (e as any).details
+          ? e.message
+          : errObj && typeof errObj.details === 'string'
+            ? errObj.details
             : typeof e === 'string'
               ? e
               : i18n.global.t('trade.error.failed-submit-order-1inch')
-      throw new Error(errorMessage)
+      const error = new Error(errorMessage) as Error & {
+        code?: number
+        expectedClientError?: boolean
+      }
+      if (errObj && typeof errObj.code === 'number') error.code = errObj.code
+      error.expectedClientError = isExpectedTradeError(e)
+      throw error
     }
   }
 
