@@ -3,6 +3,7 @@
     "search": "Buscar",
     "swap": "Cambio",
     "bridge": "Puente",
+    "perps": "Perps",
     "stocks": "Acciones",
     "crypto": "Cripto",
     "portfolio": "Portafolio",
@@ -311,6 +312,5 @@
     "no_results_title": "No se encontraron coincidencias",
     "no_results_subtitle": "Prueba con otro símbolo o nombre."
   },
-  "perps": "Perps",
   "perpetuals": "Perpetuos"
 }

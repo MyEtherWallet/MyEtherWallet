@@ -79,10 +79,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                {{ $t('perps') }}
+                {{ $t('common.perps') }}
               </p>
             </button>
             <!-- Bridge button -->
