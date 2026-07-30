@@ -30,6 +30,8 @@
     "more": "more",
     "dont_have_wallet": "Don't have a wallet?",
     "create_wallet": "ウォレットを作成",
+    "create_wallet_short": "Create",
+    "connect_wallet_short": "Connect",
     "access_wallet": "Access wallet",
     "load_more": "Load more",
     "not_found": {
