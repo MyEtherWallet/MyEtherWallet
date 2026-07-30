@@ -140,10 +140,8 @@ import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -165,6 +163,7 @@ import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const walletMenu = useWalletMenuStore()
+const { formatFiat } = useCurrency()
 
 const openBuyPanel = () => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
@@ -430,12 +429,12 @@ const hasFiatEstimates = computed(() => {
 })
 const selectedFeeFiat = computed(() => {
   if (hasFees.value && usedFeeToDisplay.value) {
-    const fiatValue = formatFiatValue(
+    const fiatValue = formatFiat(
       usedFeeToDisplay.value[gasPriceType.value].fiatValue ||
         usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal ||
         0,
-    ).value
-    return `${usedFeeToDisplay.value[gasPriceType.value].fiatSymbol} ${fiatValue} `
+    ).display
+    return `${fiatValue} `
   }
   return ''
 })
@@ -482,7 +481,7 @@ const displayFees = computed<DisplayFee[]>(() => {
       id: GasPriceType.ECONOMY,
       title: t('select_fee.economy.title'),
       description: t('select_fee.economy.description'),
-      fiatValue: `$${formatFiatValue(economy || 0).value}`,
+      fiatValue: formatFiat(economy || 0).display,
       nativeValue: usedFeeToDisplay.value
         ? formatFee(usedFeeToDisplay.value[GasPriceType.ECONOMY])
         : '0',
@@ -491,7 +490,7 @@ const displayFees = computed<DisplayFee[]>(() => {
       id: GasPriceType.REGULAR,
       title: t('select_fee.regular.title'),
       description: t('select_fee.regular.description'),
-      fiatValue: `$${formatFiatValue(regular || 0).value}`,
+      fiatValue: formatFiat(regular || 0).display,
       nativeValue: usedFeeToDisplay.value
         ? formatFee(usedFeeToDisplay.value[GasPriceType.REGULAR])
         : '0',
@@ -500,7 +499,7 @@ const displayFees = computed<DisplayFee[]>(() => {
       id: GasPriceType.FAST,
       title: t('select_fee.fast.title'),
       description: t('select_fee.fast.description'),
-      fiatValue: `$${formatFiatValue(fast || 0).value}`,
+      fiatValue: formatFiat(fast || 0).display,
       nativeValue: usedFeeToDisplay.value
         ? formatFee(usedFeeToDisplay.value[GasPriceType.FAST])
         : '0',
@@ -509,7 +508,7 @@ const displayFees = computed<DisplayFee[]>(() => {
       id: GasPriceType.FASTEST,
       title: t('select_fee.fastest.title'),
       description: t('select_fee.fastest.description'),
-      fiatValue: `$${formatFiatValue(fastest || 0).value}`,
+      fiatValue: formatFiat(fastest || 0).display,
       nativeValue: usedFeeToDisplay.value
         ? formatFee(usedFeeToDisplay.value[GasPriceType.FASTEST])
         : '0',

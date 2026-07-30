@@ -36,10 +36,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                Trade
+                {{ $t('common.trade') }}
               </p>
             </button>
             <!-- Swap button -->
@@ -55,7 +56,8 @@
               <icon-swap :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
@@ -77,10 +79,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                {{ $t('perps') }}
+                {{ $t('common.perps') }}
               </p>
             </button>
             <!-- Bridge button -->
@@ -98,10 +101,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                Bridge
+                {{ $t('common.bridge') }}
               </p>
             </button>
             <!-- Deposit button -->
@@ -117,7 +121,8 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -138,7 +143,8 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -157,7 +163,8 @@
               <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -187,8 +194,8 @@
         class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
-          label="close side menu"
-          class="sm:hidden flex-none ml-3 rounded-12 hoverNoBG"
+          :label="$t('common.close_side_menu')"
+          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <ChevronDoubleRightIcon class="w-5 h-5" />
@@ -249,10 +256,19 @@ import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.
 import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 import { useTradingRestriction } from '@/composables/useTradingRestriction'
 
+const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
+
+// Spanish labels are longer; shrink the side-menu action button text so they fit
+const actionTextSizeClass = computed(() =>
+  locale.value === 'es'
+    ? 'text-[7px] xs:text-s-8 text-wrap'
+    : 'text-s-9 xs:text-s-11',
+)
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
@@ -313,10 +329,5 @@ const openPanel = (panel: WalletPanel) => {
 const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
-const comingSoon = computed(() => {
-  const map = new Map<string, string>()
-  return map.get(walletPanel.value)
-    ? `${map.get(walletPanel.value)} is coming soon`
-    : 'Coming Soon'
-})
+const comingSoon = computed(() => t('common.coming_soon'))
 </script>

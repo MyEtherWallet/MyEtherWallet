@@ -179,6 +179,9 @@ export class Analytics {
     if (properties.holdCampaignStatus !== undefined) {
       identify.set('holdCampaignStatus', properties.holdCampaignStatus)
     }
+    if (properties.isRegionRestricted !== undefined) {
+      identify.set('isRegionRestricted', properties.isRegionRestricted)
+    }
 
     this.amplitude.identify(identify)
   }
@@ -224,6 +227,17 @@ export class Analytics {
   setNetwork(network: string): void {
     const identify = new Identify()
     identify.set('network', network)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set display currency user property
+   *
+   * @param currency   Currency code (e.g. USD, EUR)
+   */
+  setCurrency(currency: string): void {
+    const identify = new Identify()
+    identify.set('currency', currency)
     this.amplitude.identify(identify)
   }
 
@@ -301,6 +315,17 @@ export class Analytics {
   setHoldCampaignStatus(status: string): void {
     const identify = new Identify()
     identify.set('holdCampaignStatus', status)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set region restricted user property
+   *
+   * @param isRestricted   Whether trading is restricted in the user's region
+   */
+  setIsRegionRestricted(isRestricted: boolean): void {
+    const identify = new Identify()
+    identify.set('isRegionRestricted', isRestricted)
     this.amplitude.identify(identify)
   }
 

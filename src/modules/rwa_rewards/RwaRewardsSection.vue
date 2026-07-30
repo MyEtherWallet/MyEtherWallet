@@ -112,7 +112,14 @@ import { useRewardsStore } from '@/stores/rewardsStore'
 const { t } = useI18n()
 const walletMenuStore = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
-const { status, activeReward, seasonEnd } = storeToRefs(holdingsStore)
+const {
+  status,
+  activeReward,
+  seasonEnd,
+  canRegisterTrade,
+  isCampaignEnded,
+  isUnderReview,
+} = storeToRefs(holdingsStore)
 
 const rewardsStore = useRewardsStore()
 const { minSpendTrade } = storeToRefs(rewardsStore)
@@ -160,16 +167,25 @@ const holdCardStatus = computed<
   | 'holding'
   | 'claimed'
   | 'paused'
+  | 'full'
   | 'ended'
   | 'banned'
+  | 'underReview'
   | 'notEligible'
 >(() => {
+  // Outranks the wallet's own progress in the badge: the review is what decides
+  // whether any of that progress pays out.
+  if (isUnderReview.value) return 'underReview'
   if (status.value === 'holding') return 'holding'
   if (status.value === 'claimed') return 'claimed'
   if (status.value === 'temporarilyPaused') return 'paused'
+  if (status.value === 'campaignFull') return 'full'
   if (status.value === 'campaignEnded') return 'ended'
   if (status.value === 'banned') return 'banned'
   if (status.value === 'notEligible') return 'notEligible'
+  // A finished entry (lost/expired) keeps its own status, but the offer can
+  // still be closed to new trades — surface why, rather than "ends in N days".
+  if (!canRegisterTrade.value) return isCampaignEnded.value ? 'ended' : 'full'
   return 'ongoing'
 })
 
@@ -181,6 +197,9 @@ const holdCardStatusText = computed(() => {
   if (holdCardStatus.value === 'claimed') return t('rwaRewards.already_claimed')
   if (holdCardStatus.value === 'paused')
     return t('rwaRewards.temporarily_paused')
+  if (holdCardStatus.value === 'full') return t('rwaRewards.campaign_full')
+  if (holdCardStatus.value === 'underReview')
+    return t('rwaRewards.under_review')
   if (holdCardStatus.value === 'ended') return t('rwaRewards.campaign_ended')
   if (holdCardStatus.value === 'banned')
     return t('rwaRewards.modal_banned_title')

@@ -12,7 +12,7 @@
               class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ t('swap.swap-offer.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
@@ -100,7 +100,7 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
             </div>
           </div>
           <app-pop-up-menu
@@ -141,7 +141,7 @@
                           v-if="idx === 0"
                           class="bg-primary text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
                         >
-                          best rate
+                          {{ t('swap.swap-offer.best-rate') }}
                         </p>
                       </div>
                       <div
@@ -213,7 +213,7 @@
           </app-pop-up-menu>
           <div class="pt-3 ml-2">
             <div class="text-s-14 text-info flex items-center gap-1">
-              <span>Rate: 1</span>
+              <span>{{ t('swap.swap-offer.rate') }}: 1</span>
               <app-token-symbol
                 :symbol="fromToken?.symbol || 'UNKNOWN'"
                 :address="
@@ -271,7 +271,7 @@
           is-large
           @click="declineSwap"
         >
-          Cancel
+          {{ t('common.cancel') }}
         </app-btn-text>
       </div>
     </template>
@@ -299,16 +299,15 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 
 enum ProviderName {
   oneInch = 'oneInch',
@@ -409,7 +408,9 @@ const isBridge = computed(() => {
 })
 
 const title = computed(() => {
-  return isBridge.value ? 'Bridge' : 'Swap'
+  return isBridge.value
+    ? t('swap.swap-offer.title-bridge')
+    : t('swap.swap-offer.title-swap')
 })
 
 const btnText = computed(() => {
@@ -469,7 +470,7 @@ const toAmountFormatted = computed(() => {
 const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
   const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
-  return formatFiatValue(value.toString()).value
+  return formatFiat(value.toString()).value
 })
 
 const getAmountData = (amount: BN, decimals: number) => {

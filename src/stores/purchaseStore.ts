@@ -154,7 +154,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
 
   const sellFiats = computed<Map<string, BuyFiat>>(() => {
     const fiatsMap = new Map<string, BuyFiat>()
-    const provider = purchaseInfo.value?.providers.find(
+    const provider = purchaseInfo.value?.providers?.find(
       p => p.provider === SELL_PROVIDER,
     )
     if (!provider) return fiatsMap
@@ -377,6 +377,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
     isFetching,
     coinImages,
     exchangeRates,
+    fetchExchangeRates,
     buyableCoinIds,
     fetchPurchaseInfo,
     isBuyable,

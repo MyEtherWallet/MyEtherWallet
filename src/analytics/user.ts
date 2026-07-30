@@ -53,4 +53,5 @@ export type UserProperties = {
   canClaimSwap?: boolean
   canTrade?: boolean
   holdCampaignStatus?: string
+  isRegionRestricted?: boolean
 }

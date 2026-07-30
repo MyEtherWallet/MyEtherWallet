@@ -3,7 +3,9 @@
     <!-- Steps -->
     <div
       :class="['flex items-center w-full px-6', { 'md:mb-8': showStepNumber }]"
-      :aria-label="`Step ${activeStep + 1} of ${steps.length}`"
+      :aria-label="
+        $t('common.step_of', { current: activeStep + 1, total: steps.length })
+      "
     >
       <div
         v-for="(step, index) in steps"

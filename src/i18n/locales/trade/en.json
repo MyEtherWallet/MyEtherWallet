@@ -20,6 +20,15 @@
     "tokens_not_tradable": "One or more tokens are currently not tradable. Try again later or select different tokens.",
     "service_unavailable": "Trading service is temporarily unavailable. Please try again later.",
     "asset_not_tradable": "is currently not tradable due to {reason}",
+    "weekend": {
+      "dialog_headline": "Weekend stock trading:",
+      "dialog_headline_highlight": "Unlocked!",
+      "dialog_body": "{tickers} are now open for 24/7 trading. Trade the news, trade the tweets, make your stock moves any time.",
+      "trade_now": "Trade now",
+      "tooltip_headline": "Weekend stock trading",
+      "tooltip_body": "{tickers} are now open for 24/7 trading.",
+      "dismiss_tooltip": "Dismiss tooltip"
+    },
     "quote_modal": {
       "title": "Trade Quote",
       "quote_from": "Trade Quote from 1inch Fusion",
@@ -51,7 +60,16 @@
     },
     "error": {
       "approval-failed": "Could not approve token",
-      "submit-failed": "Failed to submit trade order"
+      "submit-failed": "Failed to submit trade order",
+      "token-unavailable": "This token is unavailable to trade. Please choose another or try again later.",
+      "minimum-trade-value": "Minimum trade value is around $1.00",
+      "token-not-available": "{symbol} is currently not available for trading",
+      "no-quotes-returned": "No quotes returned",
+      "failed-to-fetch-quote": "Failed to fetch quote",
+      "fusion-network-not-supported": "Fusion: network not supported",
+      "failed-fetch-quote-1inch": "Failed to fetch quote from 1inch",
+      "native-transaction-failed": "Native Transaction Failed",
+      "failed-submit-order-1inch": "Failed to submit order to 1inch"
     }
   }
 }

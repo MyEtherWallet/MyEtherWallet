@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import { useStorage } from '@vueuse/core'
+import { safeLocalStorage } from '@/utils/safeStorage'
 import BigNumber from 'bignumber.js'
 import configs from '@/configs'
 import i18n from '@/i18n'
 import { analytics } from '@/analytics'
 import { ToastType } from '@/types/notification'
 import type {
+  RwaAccessBlock,
   RwaClaimErrorKey,
   RwaClaimPayload,
   RwaClaimResponse,
@@ -26,6 +29,23 @@ const PLATFORM = 'web'
 // base64-encode a UTF-8 string (see src/utils/crypto.ts for the codebase convention).
 const toBase64 = (value: string) =>
   btoa(String.fromCharCode(...new TextEncoder().encode(value)))
+
+/**
+ * Why `/info` (or `/register`) refused. Anything else — network failure, 5xx —
+ * is transient and must not be read as the season being closed.
+ */
+const mapAccessBlock = (status: number): RwaAccessBlock | null => {
+  switch (status) {
+    case 403:
+      return 'notEligible'
+    case 404:
+      return 'campaignFull'
+    case 423:
+      return 'temporarilyPaused'
+    default:
+      return null
+  }
+}
 
 // Map the claim endpoint's HTTP status to a translatable error key.
 const mapClaimError = (status: number): RwaClaimErrorKey => {
@@ -56,10 +76,21 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const error = ref<string | null>(null)
   const isModalOpen = ref(false)
   const isClaiming = ref(false)
-  const dismissed = ref<Set<string>>(new Set())
+  // Persisted so "Hide this offer" stays hidden across reloads. Stored as a
+  // plain array (JSON-serializable) and exposed as a Set for O(1) lookups.
+  const dismissedIds = useStorage<string[]>(
+    'mew-rwa-dismissed',
+    [],
+    safeLocalStorage,
+  )
+  const dismissed = computed(() => new Set(dismissedIds.value))
 
   let pollTimer: ReturnType<typeof setInterval> | null = null
   let currentAddress = ''
+
+  // Why the season is closed to us, per the last `/info` or `/register` answer.
+  // Null means open (or only a transient failure, which is not the same thing).
+  const accessBlock = ref<RwaAccessBlock | null>(null)
 
   const fetchInfo = async (address: string) => {
     if (!address) return
@@ -67,10 +98,20 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isLoading.value = true
     try {
       const res = await fetch(`${BASE}/info?address=${address}`)
-      if (!res.ok) throw new Error(`RWA info request failed: ${res.status}`)
+      if (!res.ok) {
+        const block = mapAccessBlock(res.status)
+        if (block && address === currentAddress) {
+          accessBlock.value = block
+          // Drop any earlier payload — keeping it would leave the offer looking
+          // live and joinable after the season closed to this wallet.
+          info.value = null
+        }
+        throw new Error(`RWA info request failed: ${res.status}`)
+      }
       const data = (await res.json()) as RwaInfoResponse
       if (address !== currentAddress) return
       info.value = data
+      accessBlock.value = null
       error.value = null
     } catch {
       if (address === currentAddress)
@@ -88,26 +129,56 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     chainId: number | string,
     usdValue?: string,
   ) => {
-    // Only trades worth at least the campaign's qualification_value qualify.
-    // Skip silently (no request, no toast) for anything below the threshold or
-    // when the threshold isn't known yet (info not loaded / missing usdValue).
-    const threshold = new BigNumber(qualificationValue.value ?? '')
     const value = new BigNumber(usdValue ?? '')
-    if (
-      threshold.isNaN() ||
-      threshold.lte(0) ||
-      value.isNaN() ||
-      value.lt(threshold)
-    ) {
-      return
-    }
+    if (value.isNaN()) return
+
+    // Cheap pre-filter so an obviously non-qualifying trade costs no request.
+    // Only skipped when the threshold is unknown, where the trade can't be
+    // ruled out yet and the refresh below is what settles it.
+    const knownThreshold = new BigNumber(qualificationValue.value ?? '')
+    if (knownThreshold.isGreaterThan(0) && value.lt(knownThreshold)) return
+
+    // `/register` has no budget gate: it queues whatever hash it is given and
+    // answers ok, and the budget is only enforced up to 14 days later, when the
+    // entry tries to reserve its payout. A registration that can't be reserved
+    // promises a reward that will never be paid, so the client is the gate —
+    // and it has to be an authoritative one. Both the threshold and the
+    // availability we hold can be a poll interval old, so re-read `/info`
+    // rather than queueing a hash against a stale answer.
+    const walletStore = useWalletStore()
+    await fetchInfo(currentAddress || walletStore.walletAddress || '')
+
+    // A season that isn't taking entries: the UI already shows it closed, so
+    // there is nothing to tell the user here.
+    if (!canRegisterTrade.value) return
+
+    // Only trades worth at least the campaign's qualification_value qualify.
+    // Skip silently for anything below the threshold, or when the threshold is
+    // still unknown (the refresh above failed) — registering blind would show a
+    // success toast for an entry that can't qualify.
+    const threshold = new BigNumber(qualificationValue.value ?? '')
+    if (threshold.isNaN() || threshold.lte(0) || value.lt(threshold)) return
 
     const { addToastMessage } = useToastStore()
     try {
       const res = await fetch(
         `${BASE}/register?hash=${orderHash}&chainId=${chainId}`,
       )
-      if (!res.ok) throw new Error(`RWA register request failed: ${res.status}`)
+      if (!res.ok) {
+        // 423 (kill-switch) and 404 (registration window closed) mean the season
+        // stopped taking entries between our last `/info` and this trade.
+        const block = mapAccessBlock(res.status)
+        if (block) {
+          accessBlock.value = block
+          fetchInfo(currentAddress)
+          addToastMessage({
+            text: i18n.global.t('rwaRewards.register_unavailable'),
+            type: ToastType.Error,
+          })
+          return
+        }
+        throw new Error(`RWA register request failed: ${res.status}`)
+      }
       addToastMessage({
         text: i18n.global.t('rwaRewards.register_success'),
         type: ToastType.Success,
@@ -169,7 +240,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       // Response carries the recomputed buckets — refresh state so the entry
       // moves into `claimed` and the modal reflects the new status.
       info.value = {
-        info: data.info,
+        // Merged, not replaced: `is_available` and `under_review` are added by
+        // the info routes only, so a claim response omitting them would drop a
+        // known-closed season back to looking open until the next poll.
+        info: { ...info.value?.info, ...data.info },
         metas: data.metas ?? info.value?.metas,
         qualified: data.qualified,
         disqualified: data.disqualified,
@@ -212,9 +286,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isModalOpen.value = false
   }
   const dismiss = (uuid: string) => {
-    const next = new Set(dismissed.value)
-    next.add(uuid)
-    dismissed.value = next
+    if (!dismissedIds.value.includes(uuid)) {
+      dismissedIds.value = [...dismissedIds.value, uuid]
+    }
   }
 
   const startPolling = (address: string) => {
@@ -248,9 +322,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-      qualified.value.length +
-      claimed.value.length +
-      disqualified.value.length >
+        qualified.value.length +
+        claimed.value.length +
+        disqualified.value.length >
       0,
   )
 
@@ -284,14 +358,47 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     return !Number.isNaN(ms) && Date.now() >= ms
   })
 
+  // The season's payout budget is spent. A wallet that already has an entry
+  // learns this from `is_available`; one that doesn't gets a 404 instead.
+  const isCampaignFull = computed(
+    () =>
+      accessBlock.value === 'campaignFull' ||
+      info.value?.info?.is_available === false,
+  )
+
+  // Banned but holding entries: the backend answers 200 and flags it rather than
+  // hiding the program, so the wallet can be told its status is under review.
+  const isUnderReview = computed(() => info.value?.info?.under_review === true)
+
+  /**
+   * Whether a new trade can still be registered. Every CTA that invites one —
+   * "Trade now", "Trade again", "Start again", the announcement, the trade
+   * confirmation banner — has to check this, not just `status === 'default'`,
+   * because a wallet with a finished entry keeps a bucket status after the
+   * season closes to new entries.
+   */
+  const canRegisterTrade = computed(
+    () =>
+      !isCampaignFull.value &&
+      !isCampaignEnded.value &&
+      !isUnderReview.value &&
+      accessBlock.value === null,
+  )
+
   const status = computed<RwaStatus>(() => {
+    // The wallet's own progress comes first: an entry that is already holding or
+    // owed a reward is unaffected by the season closing to new entries, and a
+    // wallet under review is deliberately still shown its entries (the review is
+    // surfaced separately, via `isUnderReview`).
     if (claimableReward.value) return 'earned'
     if (pending.value.length) return 'holding'
     if (claimed.value.length) return 'claimed'
     if (expiredReward.value) return 'expired'
     if (disqualified.value.length) return 'lost'
+    if (isUnderReview.value) return 'underReview'
     if (isCampaignEnded.value) return 'campaignEnded'
-    if (info.value?.info?.is_available === false) return 'temporarilyPaused'
+    if (isCampaignFull.value) return 'campaignFull'
+    if (accessBlock.value) return accessBlock.value
     return 'default'
   })
 
@@ -349,6 +456,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     hasReward,
     activeReward,
     status,
+    isCampaignFull,
+    isCampaignEnded,
+    isUnderReview,
+    canRegisterTrade,
     isHoldOfferDismissed,
     seasonEnd,
     qualificationValue,

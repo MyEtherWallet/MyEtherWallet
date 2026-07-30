@@ -1,0 +1,49 @@
+{
+  "create_wallet": {
+    "title": "Crear billetera",
+    "subtitle": "MEW está disponible en dispositivos móviles y en tu navegador de escritorio.",
+    "back_to_connect_options": "Volver a las opciones de conexión",
+    "buy_hardware_wallet_title": "Comprar una billetera de hardware",
+    "create_mnemonic_wallet_title": "Crear una billetera con frase mnemotécnica",
+    "recommended": "Recomendada",
+    "not_recommended": "No recomendada",
+    "mew_mobile_app": "MEW Mobile App",
+    "ratings_count": "13k+ valoraciones",
+    "scan_to_download": "Escanea para descargar",
+    "google_play_alt": "Descargar de Google Play Store",
+    "apple_store_alt": "Descargar de Apple App Store",
+    "enkrypt_browser_wallet": "Enkrypt Browser Wallet",
+    "enkrypt_users_count": "100,000+ usuarios",
+    "get_enkrypt": "Obtener Enkrypt Browser Wallet",
+    "other_wallet_methods": "Otros métodos de billetera",
+    "hardware_wallet": "Billetera de hardware",
+    "hardware_wallet_alt": "billetera de hardware",
+    "hardware_wallet_description": "El más alto estándar de seguridad. Pide un dispositivo en línea y úsalo con MEW.",
+    "buy_hardware_wallet": "Comprar una billetera de hardware",
+    "software_wallet": "Billetera de software",
+    "software_wallet_alt": "billetera de software",
+    "software_wallet_description": "Crea una billetera usando una frase de recuperación. Úsala solo en entornos sin conexión.",
+    "create_software_wallet": "Crear una billetera de software",
+    "starting_from": "Desde",
+    "select_keystore": "Seleccionar Keystore",
+    "connect": "Conectar",
+    "mnemonic": {
+      "select_length": "Seleccionar longitud",
+      "update": "Actualizar",
+      "word_option": "{count} palabras",
+      "select_word": "Selecciona la palabra n.º {number}",
+      "create_another_wallet": "Crear otra billetera",
+      "stepper": {
+        "create": "crear",
+        "verify": "verificar",
+        "done": "listo"
+      },
+      "step1_title": "Tu frase",
+      "step1_description": "Anota tu frase de recuperación y guárdala en un lugar seguro. No la envíes por correo electrónico ni tomes capturas de pantalla.",
+      "step2_title": "Verifiquémosla",
+      "step2_description": "Selecciona las palabras correctas según su número.",
+      "step3_title": "¡Todo listo!",
+      "step3_description": "¡Ya estás listo para aprovechar todo lo que Ethereum tiene para ofrecer! Guarda tu frase en un lugar seguro; el acceso con frase mnemotécnica solo debe usarse en un entorno sin conexión."
+    }
+  }
+}

@@ -163,7 +163,14 @@
                       ]"
                       @click.stop="openLeverage(pos)"
                     >
-                      {{ pos.direction }} {{ pos.leverage }}x
+                      {{
+                        pos.direction === 'long'
+                          ? $t('perps.trade.long')
+                          : pos.direction === 'short'
+                            ? $t('perps.trade.short')
+                            : pos.direction
+                      }}
+                      {{ pos.leverage }}x
                     </p>
                   </div>
                 </div>
@@ -407,7 +414,13 @@
                         ' text-s-12 capitalize xl:hidden font-medium',
                       ]"
                     >
-                      {{ order.side }}
+                      {{
+                        order.side === 'buy'
+                          ? $t('perps.order.buy')
+                          : order.side === 'sell'
+                            ? $t('perps.order.sell')
+                            : order.side
+                      }}
                     </p>
                   </div>
                 </div>
@@ -420,7 +433,13 @@
                     'text-s-13 capitalize font-medium',
                   ]"
                 >
-                  {{ order.side }}
+                  {{
+                    order.side === 'buy'
+                      ? $t('perps.order.buy')
+                      : order.side === 'sell'
+                        ? $t('perps.order.sell')
+                        : order.side
+                  }}
                 </span>
               </td>
               <!-- Time -->
@@ -618,7 +637,7 @@
                           'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
                         ]"
                       >
-                        {{ formatDirection(fill.direction) }}
+                        {{ $t(directionKey(fill.direction)) }}
                       </p>
                     </div>
                   </div>
@@ -633,7 +652,7 @@
                       'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
                     ]"
                   >
-                    {{ formatDirection(fill.direction) }}
+                    {{ $t(directionKey(fill.direction)) }}
                   </span>
                 </td>
                 <!-- Time -->
@@ -800,7 +819,7 @@
                       item.statusColor,
                     ]"
                   >
-                    {{ item.statusLabel }}
+                    {{ $t(statusKey(item.statusLabel)) }}
                   </span>
                 </td>
               </tr>
@@ -897,8 +916,7 @@ import {
   getOrderPrice,
   formatOrderStatus,
   formatOrderType,
-  formatDirection,
-  formatWithdrawalStatus,
+  directionKey,
   withdrawalStatusColor,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
@@ -984,7 +1002,8 @@ const openLeverage = (pos: Position) => {
   const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
   localMaxLeverage.value = maxLev
   const parsedPos = Number(pos.leverage)
-  const initial = Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
+  const initial =
+    Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
   localLeverage.value = Math.min(initial, maxLev)
   localOldLeverage.value = localLeverage.value
   fullMarketName.value = pos.market
@@ -1032,7 +1051,7 @@ const fillsTable = ref<HTMLElement | null>(null)
 const ordersTable = ref<HTMLElement | null>(null)
 const dwTable = ref<HTMLElement | null>(null)
 
-const positionsSkeletonColumns: SkeletonColumn[] = [
+const positionsSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.positions.market-header') },
   { header: t('perps.positions.value-label'), align: 'right' },
   {
@@ -1066,9 +1085,9 @@ const positionsSkeletonColumns: SkeletonColumn[] = [
     hidden: 'hidden 3xl:table-cell',
   },
   { header: t('perps.market-list.column-actions'), align: 'right' },
-]
+])
 
-const fillsSkeletonColumns: SkeletonColumn[] = [
+const fillsSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.positions.market-header') },
   {
     header: t('perps.positions.direction-header'),
@@ -1086,9 +1105,9 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
     align: 'right',
     hidden: 'hidden md:table-cell',
   },
-]
+])
 
-const ordersSkeletonColumns: SkeletonColumn[] = [
+const ordersSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.positions.market-header') },
   {
     header: t('perps.confirm.side-label'),
@@ -1105,9 +1124,9 @@ const ordersSkeletonColumns: SkeletonColumn[] = [
     hidden: 'hidden sm:table-cell',
   },
   { header: '', width: '48px' },
-]
+])
 
-const dwSkeletonColumns: SkeletonColumn[] = [
+const dwSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.order.type-label'), hidden: 'hidden xs:table-cell' },
   { header: t('perps.positions.asset-header') },
   { header: t('perps.fill.time-label'), hidden: 'hidden sm:table-cell' },
@@ -1122,7 +1141,7 @@ const dwSkeletonColumns: SkeletonColumn[] = [
     align: 'right',
     hidden: 'hidden xs:table-cell',
   },
-]
+])
 
 const { positions, hasLoaded: positionsHasLoaded } = usePerpsPositions()
 
@@ -1160,14 +1179,27 @@ function openOrderDialog(order: ApiOrder) {
   showOrderDialog.value = true
 }
 
-const orderFilterTabs = [
+const orderFilterTabs = computed(() => [
   { label: t('perps.select-market.filter-tab-all'), value: 'all' },
 
   { label: t('perps.positions.filter-pending'), value: 'pending' },
-]
-const selectedOrderFilter = ref(orderFilterTabs[0])
+])
+
+// Track the filter by value, not by object: labels are locale-dependent and
+// AppBtnGroup compares the selection by structural equality.
+const selectedOrderFilterValue = ref('all')
+const selectedOrderFilter = computed({
+  get: () =>
+    orderFilterTabs.value.find(
+      tab => tab.value === selectedOrderFilterValue.value,
+    ) ?? orderFilterTabs.value[0],
+  set: (tab: { label: string; value: string }) => {
+    selectedOrderFilterValue.value = tab.value
+  },
+})
+
 const ordersStatusFilter = computed<OrdersStatusFilter>(() =>
-  selectedOrderFilter.value.value === 'pending' ? 'pending' : 'all',
+  selectedOrderFilterValue.value === 'pending' ? 'pending' : 'all',
 )
 
 const {
@@ -1303,6 +1335,22 @@ type CombinedDWRow = {
   time: string
 }
 
+// Maps a raw deposit/withdrawal status enum to its i18n key. Deposit statuses
+// ('pending' | 'confirmed') and withdrawal statuses ('WITHDRAWAL_*') never
+// collide, so a single map suffices. `WITHDRAWAL_PENDING` reuses the shared
+// 'pending' key. Unmapped statuses fall back to the raw value ($t renders it
+// verbatim), so the raw enum still shows unchanged.
+const dwStatusKeys: Record<string, string> = {
+  pending: 'perps.positions.dw-status.pending',
+  confirmed: 'perps.positions.dw-status.confirmed',
+  WITHDRAWAL_SUCCESS: 'perps.positions.dw-status.completed',
+  WITHDRAWAL_FAILURE: 'perps.positions.dw-status.failed',
+  WITHDRAWAL_PENDING: 'perps.positions.dw-status.pending',
+  WITHDRAWAL_CANCELLED: 'perps.positions.dw-status.cancelled',
+  WITHDRAWAL_UNKNOWN: 'perps.positions.dw-status.unknown',
+}
+const statusKey = (status: string): string => dwStatusKeys[status] ?? status
+
 // `type` stays 'Deposit' | 'Withdrawal' internally (used for the success/
 // warning color comparisons above), this only translates it for display.
 const formatDWType = (type: string) =>
@@ -1336,7 +1384,7 @@ const combinedDW = computed<CombinedDWRow[]>(() => {
       coin: w.coin,
       size: w.size,
       usdValue: w.usdValue,
-      statusLabel: t(formatWithdrawalStatus(w.status)),
+      statusLabel: w.status,
       statusColor: withdrawalStatusColor(w.status),
       time: w.time,
     })
@@ -1353,15 +1401,23 @@ const {
   prevPage: dwPrevPage,
 } = usePaginate<CombinedDWRow>(combinedDW, PERPS_PAGE_SIZE)
 
-const tabs = [
+const tabs = computed(() => [
   { label: t('perps.positions.tab-positions'), value: 'positions' },
   { label: t('perps.positions.tab-orders'), value: 'orders' },
   { label: t('perps.positions.tab-fills'), value: 'fills' },
   { label: t('perps.positions.tab-deposits'), value: 'deposits' },
-]
+])
 
-const selectedTab = ref(tabs[0])
-const activeTab = computed(() => selectedTab.value.value)
+// Track the tab by value, not by object: labels are locale-dependent and
+// AppBtnGroup/AppSelect compare the selection by structural equality.
+const activeTab = ref('positions')
+const selectedTab = computed({
+  get: () =>
+    tabs.value.find(tab => tab.value === activeTab.value) ?? tabs.value[0],
+  set: (tab: { label: string; value: string }) => {
+    activeTab.value = tab.value
+  },
+})
 
 // Open-orders count for the Orders tab badge. Sourced from the current cursor
 // page. When the Pending filter is active the API already restricts the page

@@ -75,7 +75,9 @@ const { graphData, graphLoading, graphRange, setRange } =
 
 type SeriesKey = 'value' | 'invested' | 'pnl'
 
-const seriesOptions: { key: SeriesKey; label: string; color: string }[] = [
+const seriesOptions = computed<
+  { key: SeriesKey; label: string; color: string }[]
+>(() => [
   {
     key: 'value',
     label: t('perps.portfolio.series-value'),
@@ -91,12 +93,14 @@ const seriesOptions: { key: SeriesKey; label: string; color: string }[] = [
     label: t('perps.portfolio.series-pnl'),
     color: 'rgb(5,192,165)',
   },
-]
+])
 
-const tooltipLabels = seriesOptions.map(s => ({
-  label: s.label,
-  color: s.color,
-}))
+const tooltipLabels = computed(() =>
+  seriesOptions.value.map(s => ({
+    label: s.label,
+    color: s.color,
+  })),
+)
 
 const activeSeries = reactive<Set<SeriesKey>>(
   new Set(['value', 'invested', 'pnl']),
@@ -115,19 +119,30 @@ interface RangeOption {
   value: GraphRange
 }
 
-const rangeOptions: RangeOption[] = [
+const rangeOptions = computed<RangeOption[]>(() => [
   { label: t('perps.portfolio.range-24h'), value: '24h' },
   { label: t('perps.portfolio.range-7d'), value: '7d' },
   { label: t('perps.portfolio.range-30d'), value: '30d' },
   { label: t('perps.portfolio.range-all'), value: 'all' },
-]
+])
 
-const selectedRange = ref<RangeOption>(
-  rangeOptions.find(r => r.value === graphRange.value) ?? rangeOptions[2],
+// Track the range by value, not by object: labels are locale-dependent and
+// AppBtnGroup compares the selection by structural equality.
+const selectedRangeValue = ref<GraphRange>(
+  rangeOptions.value.find(r => r.value === graphRange.value)?.value ?? '30d',
 )
 
-watch(selectedRange, r => {
-  setRange(r.value)
+const selectedRange = computed<RangeOption>({
+  get: () =>
+    rangeOptions.value.find(r => r.value === selectedRangeValue.value) ??
+    rangeOptions.value[2],
+  set: option => {
+    selectedRangeValue.value = option.value
+  },
+})
+
+watch(selectedRangeValue, value => {
+  setRange(value)
 })
 
 const chartPointsBalance = computed(() =>

@@ -287,8 +287,16 @@ const quickButtons = computed(() => {
     }))
   }
   return [
-    { label: 'Min', value: Math.round(MIN_USD * rate), usdValue: MIN_USD },
-    { label: 'Max', value: Math.round(MAX_USD * rate), usdValue: MAX_USD },
+    {
+      label: t('purchase.min'),
+      value: Math.round(MIN_USD * rate),
+      usdValue: MIN_USD,
+    },
+    {
+      label: t('purchase.max'),
+      value: Math.round(MAX_USD * rate),
+      usdValue: MAX_USD,
+    },
   ]
 })
 

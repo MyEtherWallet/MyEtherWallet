@@ -25,7 +25,7 @@
                   : 'text-error',
               ]"
             >
-              {{ formatDirection(fill.direction) }}
+              {{ $t(directionKey(fill.direction)) }}
             </span>
           </div>
         </div>
@@ -67,6 +67,7 @@ import {
   formatPnl,
   pnlColor,
   formatDate,
+  directionKey,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 
@@ -87,10 +88,6 @@ const isOpen = computed({
 })
 
 const base = computed(() => getBase(props.fill.market))
-
-function formatDirection(direction: string | undefined) {
-  return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
-}
 
 const rows = computed(() => [
   {

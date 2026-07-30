@@ -146,7 +146,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ fromTokenAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ formatFiat(fromTokenAmountFiat).display }}</p>
                 </div>
               </div>
 
@@ -203,7 +203,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ toTokenAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ formatFiat(toTokenAmountFiat).display }}</p>
                 </div>
               </div>
             </div>
@@ -287,12 +287,11 @@ import {
   type NotificationBaseSwapBridge,
 } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const appLayoutStore = useAppLayoutStore()
@@ -372,7 +371,7 @@ const notificationStatus = computed(() => {
 })
 
 const toTokenSymbol = computed(() => {
-  return snapshot.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
+  return snapshot.selectedQuote?.quote.options.toToken.symbol || t('swap.unknown')
 })
 
 const toTokenAmount = computed(() => {
@@ -382,11 +381,10 @@ const toTokenAmount = computed(() => {
   )
 })
 
+// Raw USD value (stored in notifications so containers can convert at display time).
 const toTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.toToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const toTokenIcon = computed(() => {
@@ -394,7 +392,7 @@ const toTokenIcon = computed(() => {
 })
 
 const toTokenChain = computed(() => {
-  return snapshot.toChain?.nameLong || 'Unknown Chain'
+  return snapshot.toChain?.nameLong || t('swap.unknown_chain')
 })
 
 const toTokenChainImg = computed(() => {
@@ -407,7 +405,7 @@ const toTokenAddress = computed(() => {
 
 const fromTokenSymbol = computed(() => {
   return (
-    snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+    snapshot.selectedQuote?.quote.options.fromToken.symbol || t('swap.unknown_token')
   )
 })
 const fromTokenAmount = computed(() => {
@@ -416,15 +414,14 @@ const fromTokenAmount = computed(() => {
     snapshot.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })
+// Raw USD value (stored in notifications so containers can convert at display time).
 const fromTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.fromToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const fromTokenChain = computed(() => {
-  return snapshot.fromChain?.name || 'Unknown Chain'
+  return snapshot.fromChain?.name || t('swap.unknown_chain')
 })
 const fromTokenIcon = computed(() => {
   return snapshot.selectedQuote?.quote.options.fromToken.logoURI || ethSvg
@@ -468,7 +465,7 @@ const title = computed(() => {
 })
 
 const completedNote = computed(() => {
-  const symbol = toTokenSymbol.value || 'the token'
+  const symbol = toTokenSymbol.value || t('swap.the_token')
   return isBridge.value
     ? t('swap.initiated.bridge-completed-note', { symbol })
     : t('swap.initiated.swap-completed-note', { symbol })

@@ -32,7 +32,7 @@
             : 'top-[18px] text-sm font-medium',
         ]"
       >
-        {{ label }}
+        {{ resolvedLabel }}
       </label>
       <!-- Input  -->
       <input
@@ -51,7 +51,7 @@
             : 'border border-grey-outline',
           'grow focus:outline-none focus:ring-0 bg-white   text-normal rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
-        :aria-label="label"
+        :aria-label="resolvedLabel"
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
         autocomplete="off"
@@ -141,6 +141,7 @@
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 import { UsersIcon } from '@heroicons/vue/24/solid'
 import { ref, computed, watch, nextTick, type PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
@@ -151,11 +152,12 @@ import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+const { t } = useI18n()
 
 const props = defineProps({
   label: {
     type: String,
-    default: 'To Address',
+    default: undefined,
   },
   resolvedAddress: {
     type: String,
@@ -199,6 +201,8 @@ const adrInput = defineModel<string>('adrInput', {
 })
 
 const isAddressBookOpen = ref(false)
+
+const resolvedLabel = computed(() => props.label || t('common.enter_address'))
 
 const addressBlockie = computed(() => {
   const addressToCheck = adrInput.value || props.resolvedAddress

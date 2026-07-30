@@ -29,6 +29,7 @@ import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 // import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
@@ -113,9 +114,8 @@ const fetchBalances = () => {
         // Refetch balances after 5 minutes if there are missing balances
         setTimeout(() => {
           toastStore.addToastMessage({
-            text: 'Sit tight!',
-            textSecondary:
-              "We are processing more tokens in your wallet. We'll update your balances soon.",
+            text: t('common.processing_tokens_title'),
+            textSecondary: t('common.processing_tokens_description'),
             type: ToastType.Info,
             duration: 300000,
           })
@@ -187,6 +187,7 @@ watch(
  -------------------------------*/
 
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 // const showFeedbackToast = () => {
 //   setTimeout(() => {
