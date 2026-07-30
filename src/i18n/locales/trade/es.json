@@ -56,7 +56,8 @@
     "toast": {
       "approval-success": "¡Aprobación exitosa!",
       "approval-success-secondary": "Ya puedes operar {symbol}.",
-      "quote-loading": "Espera a que se cargue la cotización"
+      "quote-loading": "Espera a que se cargue la cotización",
+      "tokens-switched": "Ahora operando {from} por {to}"
     },
     "error": {
       "approval-failed": "No se pudo aprobar el token",

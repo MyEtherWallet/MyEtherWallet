@@ -56,7 +56,8 @@
     "toast": {
       "approval-success": "Approval successful!",
       "approval-success-secondary": "You can now trade {symbol}.",
-      "quote-loading": "Please wait for quote to load"
+      "quote-loading": "Please wait for quote to load",
+      "tokens-switched": "Now trading {from} for {to}"
     },
     "error": {
       "approval-failed": "Could not approve token",

@@ -56,7 +56,8 @@
     "toast": {
       "approval-success": "授权成功！",
       "approval-success-secondary": "您现在可以交易 {symbol} 了。",
-      "quote-loading": "请等待报价加载"
+      "quote-loading": "请等待报价加载",
+      "tokens-switched": "正在交易 {from} 兑换 {to}"
     },
     "error": {
       "approval-failed": "无法授权代币",
