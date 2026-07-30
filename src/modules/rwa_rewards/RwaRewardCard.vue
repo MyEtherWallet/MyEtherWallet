@@ -92,8 +92,10 @@ export type RwaRewardStatus =
   | 'noRewards'
   | 'claimed'
   | 'paused'
+  | 'full'
   | 'ended'
   | 'banned'
+  | 'underReview'
   | 'notEligible'
 
 const props = defineProps<{
@@ -199,6 +201,7 @@ const illustrationSrc = computed(() => {
   const grey = { trade: illusTradeGrey, hold: illusHoldGrey, fees: illusFees }
   const isGrey =
     effectiveStatus.value === 'ended' ||
+    effectiveStatus.value === 'full' ||
     effectiveStatus.value === 'banned' ||
     effectiveStatus.value === 'notEligible'
   return (isGrey ? grey : normal)[props.illustration]
@@ -212,7 +215,9 @@ const statusBadge = computed(
       noRewards: { text: '#bb5602', bg: '#ffedc5' },
       claimed: { text: '#067f71', bg: '#c8fff1' },
       paused: { text: '#bb5602', bg: '#ffedc5' },
+      full: { text: '#cc0452', bg: '#ffdbe3' },
       ended: { text: '#cc0452', bg: '#ffdbe3' },
+      underReview: { text: '#bb5602', bg: '#ffedc5' },
       banned: { text: '#cc0452', bg: '#ffdbe3' },
       notEligible: { text: '#cc0452', bg: '#ffdbe3' },
     })[effectiveStatus.value ?? 'ongoing'],
