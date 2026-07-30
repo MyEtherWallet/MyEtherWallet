@@ -52,7 +52,7 @@
                 v-model:amount="fromAmount"
                 v-model:selected-token="fromTokenSelected!"
                 v-model:error="fromAmountError"
-                @update:selected-token="onFromTokenSelected"
+                @select:token="onFromTokenSelected"
                 :external-loading="isLoading || !swapLoaded"
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
@@ -120,7 +120,7 @@
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
               v-model:error="toAmountError"
-              @update:selected-token="onToTokenSelected"
+              @select:token="onToTokenSelected"
               :external-loading="isLoadingQuote"
               :show-balance="false"
               :tokens="toTokenSantized"
@@ -789,11 +789,11 @@ const switchToNetwork = (chain: Chain) => {
 }
 
 // MEW-1981: toast whenever the user switches a trade token via the picker.
-// `@update:selected-token` only fires on user-driven selection inside
-// AppSwapEnterAmount (defineModel), never on the programmatic resets
-// (setFromChain, resetForm) that assign the ref directly — so no watcher
-// guards are needed. Use the emitted token for the side that changed and read
-// the other side from state; skip until both sides are set.
+// Listen to `@select:token`, which the token-select child emits ONLY on an
+// explicit user pick — not on the programmatic defaulting it does on network
+// change (nor on setFromChain/resetForm ref assignments). That avoids a false
+// "Now trading…" toast on network switches. Use the emitted token for the side
+// that changed, read the other side from state; skip until both are set.
 const notifyTokensSwitched = (
   from?: NewTokenInfo | null,
   to?: NewTokenInfo | null,
@@ -807,10 +807,10 @@ const notifyTokensSwitched = (
     type: ToastType.Success,
   })
 }
-const onFromTokenSelected = (token: NewTokenInfo | undefined) => {
+const onFromTokenSelected = (token: NewTokenInfo) => {
   notifyTokensSwitched(token, toTokenSelected.value)
 }
-const onToTokenSelected = (token: NewTokenInfo | undefined) => {
+const onToTokenSelected = (token: NewTokenInfo) => {
   notifyTokensSwitched(fromTokenSelected.value, token)
 }
 
