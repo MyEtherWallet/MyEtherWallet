@@ -15,7 +15,9 @@
         >
           {{ title }}
         </p>
-        <p class="text-s-14 font-normal leading-5 text-[#575757]">
+        <p
+          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-pre-line"
+        >
           {{ description }}
         </p>
       </div>
@@ -89,9 +91,12 @@ export type RwaCardIllustration = 'trade' | 'hold' | 'fees'
 export type RwaRewardStatus =
   | 'ongoing'
   | 'holding'
+  /** Hold period complete, reward not claimed yet. */
+  | 'claimable'
   | 'noRewards'
   | 'claimed'
   | 'paused'
+  /** Web budget accounted for while the season is still running. */
   | 'full'
   | 'ended'
   | 'banned'
@@ -107,6 +112,11 @@ const props = defineProps<{
   status?: RwaRewardStatus
   statusText?: string
   primaryLabel?: string
+  /**
+   * Stable identifier reported to analytics in place of `primaryLabel`, which is
+   * localized and would otherwise split one funnel across every locale.
+   */
+  primaryCta?: string
   primaryDisabled?: boolean
   secondaryLabel?: string
 }>()
@@ -178,8 +188,9 @@ const clickPrimary = () => {
   if (effectivePrimaryDisabled.value) return
   analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
     campaign: props.campaign,
-    cta: props.primaryLabel ?? '',
+    cta: props.primaryCta ?? props.primaryLabel ?? '',
     card_status: effectiveStatus.value,
+    location: 'offers_carousel',
   })
   emit('primary')
 }
@@ -191,6 +202,7 @@ const clickSecondary = () => {
       campaign: props.campaign,
       cta: props.secondaryLabel ?? '',
       card_status: effectiveStatus.value,
+      location: 'offers_carousel',
     },
   )
   emit('secondary')
@@ -212,6 +224,7 @@ const statusBadge = computed(
     ({
       ongoing: { text: '#005ae5', bg: '#d6edff' },
       holding: { text: '#005ae5', bg: '#d6edff' },
+      claimable: { text: '#067f71', bg: '#c8fff1' },
       noRewards: { text: '#bb5602', bg: '#ffedc5' },
       claimed: { text: '#067f71', bg: '#c8fff1' },
       paused: { text: '#bb5602', bg: '#ffedc5' },

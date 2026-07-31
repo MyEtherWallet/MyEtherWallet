@@ -71,6 +71,7 @@ const {
   wallet,
   walletAddress,
   isWalletConnected,
+  isWalletUnlocked,
   hasMissingBalances,
   userProperties,
 } = storeToRefs(store)
@@ -151,6 +152,14 @@ watch(
   },
   { immediate: true },
 )
+
+// Logging in from a watch-only address keeps the same `walletAddress`, so the
+// watcher above never fires — refetch reward info on the unlock itself, so it
+// reflects the address that can actually claim.
+watch(isWalletUnlocked, unlocked => {
+  if (unlocked && walletAddress.value)
+    holdingsStore.fetchInfo(walletAddress.value)
+})
 
 const providerStore = useProviderStore()
 const { addProvider } = providerStore
