@@ -109,6 +109,8 @@ import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
 
 const { t } = useI18n()
@@ -121,7 +123,10 @@ const {
   canRegisterTrade,
   isCampaignEnded,
   isUnderReview,
+  isClaiming,
 } = storeToRefs(holdingsStore)
+const { isWatchOnly } = storeToRefs(useWalletStore())
+const { openAccessDialog } = useAccessStore()
 
 const rewardsStore = useRewardsStore()
 const { minSpendTrade } = storeToRefs(rewardsStore)
@@ -208,22 +213,39 @@ const holdCardDescription = computed(() =>
 // would otherwise split one funnel across every locale.
 const holdCardCta = computed(() => {
   if (holdCardStatus.value === 'claimable')
-    return { label: t('rwaRewards.claim'), id: 'claim' }
+    return {
+      // A watch-only address can't sign, so it is offered the login it needs
+      // rather than a claim that could only fail. Matches the top card.
+      label: isWatchOnly.value ? t('rwaRewards.login') : t('rwaRewards.claim'),
+      id: 'claim',
+    }
   if (holdCardStatus.value === 'full')
     return { label: t('rwaRewards.continue'), id: 'continue_mew_mobile' }
   return { label: t('rwaRewards.trade'), id: 'trade' }
 })
 
-// Only the states with something actionable keep a live button.
+// Only the states with something actionable keep a live button, and the claim
+// is held closed while one is already in flight.
 const holdPrimaryDisabled = computed(
   () =>
-    !['ongoing', 'holding', 'claimable', 'full'].includes(holdCardStatus.value),
+    !['ongoing', 'holding', 'claimable', 'full'].includes(
+      holdCardStatus.value,
+    ) ||
+    (holdCardStatus.value === 'claimable' && isClaiming.value),
 )
 
-const onHoldPrimary = () => {
+const onHoldPrimary = async () => {
   if (holdCardStatus.value === 'claimable') {
-    // Same path as the top card's claim button.
-    if (activeReward.value) holdingsStore.claim(activeReward.value)
+    // Same guards as the top card and the offer modal: a watch-only address is
+    // sent to log in, and a claim already in flight is left alone.
+    if (isWatchOnly.value) {
+      openAccessDialog()
+      return
+    }
+    const reward = activeReward.value
+    if (!reward || isClaiming.value) return
+    // Toasts (success/error) are emitted by holdingsStore.claim itself.
+    await holdingsStore.claim(reward)
     return
   }
   if (holdCardStatus.value === 'full') {
