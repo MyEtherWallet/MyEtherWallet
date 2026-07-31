@@ -212,13 +212,10 @@ const holdCardDescription = computed(() =>
 // `id` is the stable value reported to analytics; the label is localized and
 // would otherwise split one funnel across every locale.
 const holdCardCta = computed(() => {
+  // Stays "Claim" even for an address that can't sign yet: the click routes
+  // through the login it needs, so the offer never reads as unavailable.
   if (holdCardStatus.value === 'claimable')
-    return {
-      // A watch-only address can't sign, so it is offered the login it needs
-      // rather than a claim that could only fail. Matches the top card.
-      label: isWatchOnly.value ? t('rwaRewards.login') : t('rwaRewards.claim'),
-      id: 'claim',
-    }
+    return { label: t('rwaRewards.claim'), id: 'claim' }
   if (holdCardStatus.value === 'full')
     return { label: t('rwaRewards.continue'), id: 'continue_mew_mobile' }
   return { label: t('rwaRewards.trade'), id: 'trade' }
