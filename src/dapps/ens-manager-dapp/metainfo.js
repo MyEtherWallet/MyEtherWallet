@@ -1,5 +1,4 @@
 import { ENS_MANAGER_ROUTE, ensRouterGuard } from './configsRoutes';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
 export default {
   title: 'ENS Manager',
   subtitle: '',
@@ -13,7 +12,7 @@ export default {
     import(
       /* webpackChunkName: "dapp-ens" */ '@/dapps/ens-manager-dapp/TheENSManagerLayout'
     ),
-  networks: SUPPORTED_NETWORKS,
+  networks: [],
   layout: () =>
     import(/* webpackChunkName: "dapp-ens" */ './TheENSManagerLayout'),
   release: '07/08/2021',
