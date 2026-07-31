@@ -168,7 +168,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
-import { useTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -186,7 +186,7 @@ const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
-const { isTradingRestrictedInRegion } = useTradingRestriction()
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------

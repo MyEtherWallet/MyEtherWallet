@@ -1,10 +1,8 @@
 import { ref, computed, onUnmounted } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import {
   getMarketStatus,
-  isTradingRestricted,
   TRADING_RESTRICTED_HELP_URL,
 } from '../providers/ondoHelpers'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
@@ -20,8 +18,7 @@ interface UseMarketStatusOptions {
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
   const globalStore = useGlobalStore()
-  const { fetchedTradingThisSession } = storeToRefs(globalStore)
-  const { setIsTradingRestrictedInRegion } = globalStore
+  const { fetchTradingRestriction } = globalStore
   const { t } = useI18n()
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
@@ -94,25 +91,6 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     }
   }
 
-  const fetchTradingRestriction = async () => {
-    // should only fetch this once in the session
-    if (fetchedTradingThisSession.value) {
-      return fetchedTradingThisSession.value;
-    }
-    try {
-      const res = await isTradingRestricted()
-      setIsTradingRestrictedInRegion(res)
-      fetchedTradingThisSession.value = true;
-    } catch (e) {
-      reportModuleError({
-        tag: SENTRY_MODULE_TAGS.TRADE,
-        title: 'TRADE: Error checking trading restriction',
-        error: e,
-      })
-      setIsTradingRestrictedInRegion(true)
-    }
-  }
-
   const fetchMarketStatus = async () => {
     try {
       const [statusResult] = await Promise.all([
@@ -173,7 +151,6 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
-    fetchTradingRestriction,
     formatNextOpen,
   }
 }

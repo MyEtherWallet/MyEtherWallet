@@ -37,10 +37,16 @@ vi.mock('@enkryptcom/swap', () => {
     }
 
     getToTokens() {
+      const restrictedToken = {
+        address: '0xabc',
+        symbol: 'ABC',
+        decimals: 18,
+        price: 2,
+      }
       return {
-        top: { ETHEREUM: [] },
-        trending: { ETHEREUM: [] },
-        all: { ETHEREUM: [] },
+        top: { ETHEREUM: [restrictedToken] },
+        trending: { ETHEREUM: [restrictedToken] },
+        all: { ETHEREUM: [restrictedToken] },
       }
     }
 
@@ -93,7 +99,7 @@ vi.mock('@/stores/globalStore', async () => {
   return {
     useGlobalStore: defineStore('global', () => ({
       selectedNetwork: ref(''),
-      isTradingRestrictedInRegion: ref(false),
+      isTradingRestrictedInRegion: ref(true),
     })),
   }
 })
@@ -121,6 +127,7 @@ vi.mock('@/stores/toastStore', async () => {
 })
 
 import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useSwapStore } from '@/stores/swapStore'
 
@@ -203,6 +210,31 @@ describe('useSwapStore', () => {
     expect(swapperConstructor).toHaveBeenLastCalledWith(
       expect.objectContaining({ network: 'BSC' }),
     )
+  })
+
+  it('restores restricted tokens when a cold load resolves as unrestricted', async () => {
+    getRestrictedTokenAddresses.mockResolvedValueOnce(['0xabc'])
+    const chainsStore = useChainsStore()
+    const globalStore = useGlobalStore()
+    chainsStore.allChains = [ethereum]
+    chainsStore.selectedChain = ethereum
+    const swapStore = useSwapStore()
+    await settleStore()
+
+    expect(swapStore.fromTokens?.map(token => token.symbol)).toEqual(['ETH'])
+    expect(swapStore.toTokens?.all.ETHEREUM).toEqual([])
+
+    globalStore.isTradingRestrictedInRegion = false
+    await nextTick()
+
+    expect(swapStore.fromTokens?.map(token => token.symbol)).toEqual([
+      'ETH',
+      'ABC',
+    ])
+    expect(swapStore.toTokens?.all.ETHEREUM).toEqual([
+      expect.objectContaining({ symbol: 'ABC' }),
+    ])
+    expect(swapperConstructor).toHaveBeenCalledTimes(1)
   })
 
   it('initializes the latest network after a change during an in-flight init', async () => {

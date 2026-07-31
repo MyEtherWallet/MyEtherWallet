@@ -258,7 +258,7 @@ import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
-import { useTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
@@ -276,7 +276,7 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
-const { isTradingRestrictedInRegion } = useTradingRestriction()
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 onMounted(() => {
   if (

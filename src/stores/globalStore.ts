@@ -5,6 +5,9 @@ import type { FeePriority } from '@/mew_api/types'
 import { analytics } from '@/analytics'
 import * as Sentry from '@sentry/vue'
 import { safeLocalStorage } from '@/utils/safeStorage'
+import { isTradingRestricted } from '@/modules/trade/providers/ondoHelpers'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { reportModuleError } from '@/utils/reportModuleError'
 interface SelectedNetwork {
   selectedNetwork: string
 }
@@ -63,10 +66,45 @@ export const useGlobalStore = defineStore('global', () => {
    * TRADE
    --------------------*/
   const fetchedTradingThisSession = ref(false)
-  const isTradingRestrictedInRegion = ref(false)
-  const setIsTradingRestrictedInRegion = (restricted: boolean) => {
+  // Fail closed until the session-level restriction check resolves.
+  const isTradingRestrictedInRegion = ref(true)
+  let tradingRestrictionPromise: Promise<boolean> | null = null
+
+  const updateTradingRestriction = (restricted: boolean) => {
     isTradingRestrictedInRegion.value = restricted
     analytics.setIsRegionRestricted(restricted)
+  }
+
+  const fetchTradingRestriction = (): Promise<boolean> => {
+    if (fetchedTradingThisSession.value) {
+      return Promise.resolve(isTradingRestrictedInRegion.value)
+    }
+    if (tradingRestrictionPromise) return tradingRestrictionPromise
+
+    const request = isTradingRestricted()
+      .then(restricted => {
+        updateTradingRestriction(restricted)
+        fetchedTradingThisSession.value = true
+        return restricted
+      })
+      .catch(error => {
+        reportModuleError({
+          tag: SENTRY_MODULE_TAGS.TRADE,
+          title: 'TRADE: Error checking trading restriction',
+          error,
+        })
+        updateTradingRestriction(true)
+        // Keep failures retryable for consumers that mount later in the session.
+        return true
+      })
+
+    tradingRestrictionPromise = request
+    void request.then(() => {
+      if (tradingRestrictionPromise === request) {
+        tradingRestrictionPromise = null
+      }
+    })
+    return request
   }
 
   return {
@@ -80,7 +118,7 @@ export const useGlobalStore = defineStore('global', () => {
     dismissWelcomeDialog,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
-    setIsTradingRestrictedInRegion,
+    fetchTradingRestriction,
     locale,
   }
 })

@@ -62,6 +62,7 @@ interface SwapStoreState {
   toChains: Ref<Chain[]>
   swapLoaded: Ref<boolean>
   rawFromTokens: Ref<TokenType[]>
+  rawToTokens: Ref<ToTokenType | null>
   restrictedAddressesLower: Ref<string[]>
   getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>
   getSwap: (
@@ -95,6 +96,7 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
   const fromTokens = ref<NewTokenInfo[] | null>(null)
   const swapLoaded = ref(false)
   const rawFromTokens = ref<TokenType[]>([])
+  const rawToTokens = ref<ToTokenType | null>(null)
   const restrictedAddressesLower = ref<string[]>([])
   let inflightInit: Promise<void> | null = null
 
@@ -149,6 +151,44 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
     fromTokens.value = finalFromTokens
   }
 
+  const applyTradingRestrictionToToTokens = () => {
+    if (!rawToTokens.value) return
+    if (
+      !isTradingRestrictedInRegion.value ||
+      restrictedAddressesLower.value.length === 0
+    ) {
+      toTokens.value = rawToTokens.value
+      return
+    }
+
+    const filterTokenArray = (tokens: TokenTypeTo[]) =>
+      tokens.filter(
+        token =>
+          !restrictedAddressesLower.value.includes(token.address.toLowerCase()),
+      )
+
+    toTokens.value = {
+      top: Object.fromEntries(
+        Object.entries(rawToTokens.value.top).map(([network, tokens]) => [
+          network,
+          filterTokenArray(tokens as TokenTypeTo[]),
+        ]),
+      ) as ToTokenType['top'],
+      trending: Object.fromEntries(
+        Object.entries(rawToTokens.value.trending).map(([network, tokens]) => [
+          network,
+          filterTokenArray(tokens as TokenTypeTo[]),
+        ]),
+      ) as ToTokenType['trending'],
+      all: Object.fromEntries(
+        Object.entries(rawToTokens.value.all).map(([network, tokens]) => [
+          network,
+          filterTokenArray(tokens as TokenTypeTo[]),
+        ]),
+      ) as ToTokenType['all'],
+    }
+  }
+
   // Initialize the Swapper instance
   // parses tokens and to networks available for swapping
   const doInitSwapper = async (retriesLeft = SWAP_INIT_RETRIES) => {
@@ -177,7 +217,7 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
       const allFromTokens = swapInstance.getFromTokens()
       supportedNetwork.value = allFromTokens.all.length > 0
       rawFromTokens.value = allFromTokens.all
-      let swapToTokens = swapInstance.getToTokens()
+      rawToTokens.value = swapInstance.getToTokens()
 
       // Check if trading is restricted and filter out restricted token addresses
       const fetchedRestrictedAddresses = await getRestrictedTokenAddresses()
@@ -185,39 +225,9 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
         addr.toLowerCase(),
       )
 
-      // Filter toTokens if trading is restricted
-      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.value.length > 0) {
-        const filterTokenArray = (tkns: TokenTypeTo[]) =>
-          tkns.filter(
-            token =>
-              !restrictedAddressesLower.value.includes(token.address.toLowerCase()),
-          )
+      applyTradingRestrictionToToTokens()
 
-        swapToTokens = {
-          top: Object.fromEntries(
-            Object.entries(swapToTokens.top).map(([network, tkns]) => [
-              network,
-              filterTokenArray(tkns as TokenTypeTo[]),
-            ]),
-          ) as typeof swapToTokens.top,
-          trending: Object.fromEntries(
-            Object.entries(swapToTokens.trending).map(([network, tkns]) => [
-              network,
-              filterTokenArray(tkns as TokenTypeTo[]),
-            ]),
-          ) as typeof swapToTokens.trending,
-          all: Object.fromEntries(
-            Object.entries(swapToTokens.all).map(([network, tkns]) => [
-              network,
-              filterTokenArray(tkns as TokenTypeTo[]),
-            ]),
-          ) as typeof swapToTokens.all,
-        }
-      }
-
-      toTokens.value = swapToTokens
-
-      const toTokensNetworks = Object.keys(toTokens.value.all)
+      const toTokensNetworks = Object.keys(toTokens.value?.all ?? {})
       toChains.value = toTokensNetworks
         .map(networkName => {
           const chainName = enumToChain[networkName as SupportedNetworkName]
@@ -342,6 +352,11 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
     () => applyTokenBalances(),
   )
 
+  watch(isTradingRestrictedInRegion, () => {
+    applyTokenBalances()
+    applyTradingRestrictionToToTokens()
+  })
+
   return {
     initSwapper,
     supportedNetwork,
@@ -352,6 +367,7 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
     getQuote,
     getSwap,
     rawFromTokens,
+    rawToTokens,
     restrictedAddressesLower,
   }
 })
