@@ -50,7 +50,7 @@
             <div>
               <app-swap-enter-amount
                 v-model:amount="fromAmount"
-                v-model:selected-token="fromTokenSelected!"
+                v-model:selected-token="fromTokenModel"
                 v-model:error="fromAmountError"
                 :external-loading="isLoading || !swapLoaded"
                 :tokens="fromTokens"
@@ -117,7 +117,7 @@
             </p>
             <app-swap-enter-amount
               v-model:amount="toAmount"
-              v-model:selected-token="toTokenSelected!"
+              v-model:selected-token="toTokenModel"
               v-model:error="toAmountError"
               :external-loading="isLoadingQuote"
               :show-balance="false"
@@ -396,6 +396,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import { useTradeModule } from './composables/useTradeModule'
+import { computed } from 'vue'
 
 const {
   selectedChain,
@@ -448,4 +449,13 @@ const {
   connectWalletForTrade,
   blurClass,
 } = useTradeModule()
+
+const fromTokenModel = computed({
+  get: () => fromTokenSelected.value ?? undefined,
+  set: value => { fromTokenSelected.value = value ?? null },
+})
+const toTokenModel = computed({
+  get: () => toTokenSelected.value ?? undefined,
+  set: value => { toTokenSelected.value = value ?? null },
+})
 </script>

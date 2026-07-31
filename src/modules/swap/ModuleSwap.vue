@@ -37,7 +37,7 @@
             />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
-              v-model:selected-token="fromTokenSelected!"
+              v-model:selected-token="fromTokenModel"
               v-model:error="fromAmountError"
               :network-name="selectedChain?.name"
               :external-loading="fromLoadingState"
@@ -96,7 +96,7 @@
             />
             <app-swap-enter-amount
               v-model:amount="toAmount"
-              v-model:selected-token="toTokenSelected!"
+              v-model:selected-token="toTokenModel"
               v-model:error="toAmountError"
               :external-loading="toLoadingState"
               :show-balance="false"
@@ -272,7 +272,7 @@ import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import { useI18n } from 'vue-i18n'
 import { useSwapModule } from './composables/useSwapModule'
-import { onBeforeMount } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 
 const { t } = useI18n()
 const {
@@ -334,6 +334,15 @@ const {
   bindWatchers,
   initialize,
 } = useSwapModule()
+
+const fromTokenModel = computed({
+  get: () => fromTokenSelected.value ?? undefined,
+  set: value => { fromTokenSelected.value = value ?? null },
+})
+const toTokenModel = computed({
+  get: () => toTokenSelected.value ?? undefined,
+  set: value => { toTokenSelected.value = value ?? null },
+})
 
 bindWatchers()
 onBeforeMount(initialize)
