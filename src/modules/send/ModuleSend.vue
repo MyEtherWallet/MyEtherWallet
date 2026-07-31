@@ -23,7 +23,7 @@
                 <button
                   type="button"
                   class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMaxAmount"
+                @click="setMaxAmount()"
                 >
                   {{ $t('common.max') }}
                 </button>
@@ -277,7 +277,8 @@ const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxA
   getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
   isNativeToken: () => isNativeTokenSelected.value,
   isTokenSelected: () => !!tokenSelected.value,
-  amountRef: amount,
+  getAmount: () => amount.value,
+  onAmountChange: value => { amount.value = value },
   markFormDirty,
   resetFormPristine: resetPristine,
   getTokenIdentifier: () => tokenSelectedContract.value,

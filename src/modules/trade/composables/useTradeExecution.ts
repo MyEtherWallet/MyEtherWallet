@@ -5,8 +5,6 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
-import type { NewTokenInfo } from '@/stores/swapStore'
-import type { Chain } from '@/mew_api/types'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -21,8 +19,20 @@ import { useHoldingsStore } from '@/stores/holdingsStore'
 import { isUserRejectionError } from '@/utils/walletUtils'
 import { reportModuleError } from '@/utils/reportModuleError'
 import BigNumber from 'bignumber.js'
+import type { WalletInterface } from '@/providers/common/walletInterface'
+import type { TradeForm } from './useTradeForm'
 
 const isDevMode = Configs.IS_DEV_MODE
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && error.message) return error.message
+  if (typeof error === 'string') return error
+  if (error && typeof error === 'object') {
+    if ('message' in error && typeof error.message === 'string') return error.message
+    if ('details' in error && typeof error.details === 'string') return error.details
+  }
+  return fallback
+}
 
 interface QuoteData {
   startAmount: bigint
@@ -31,27 +41,22 @@ interface QuoteData {
 }
 
 interface UseTradeExecutionOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
+  form: TradeForm
   walletAddress: Ref<string | null | undefined>
-  wallet: Ref<any>
-  selectedFromChain: Ref<Chain | undefined>
+  wallet: Ref<WalletInterface | null>
   currentQuote: Ref<QuoteData | null>
   needsApproval: Ref<boolean>
 }
 
 export function useTradeExecution(options: UseTradeExecutionOptions) {
   const {
-    fromTokenSelected,
-    toTokenSelected,
-    fromAmount,
+    form,
     walletAddress,
     wallet,
-    selectedFromChain,
     currentQuote,
     needsApproval,
   } = options
+  const { fromTokenSelected, toTokenSelected, fromAmount, selectedFromChain } = form
 
   const { t } = useI18n()
   const toastStore = useToastStore()
@@ -146,13 +151,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
-        : (e as any).details
-          ? (e as any).details
-          : typeof e === 'string'
-            ? e
-            : t('trade.error.approval-failed')
+      const errorMessage = getErrorMessage(e, t('trade.error.approval-failed')).toLowerCase()
 
       analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
         ...getAnalyticsPayload(),
@@ -291,13 +290,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
-        : (e as any).details
-          ? (e as any).details
-          : typeof e === 'string'
-            ? e
-            : t('trade.error.submit-failed')
+      const errorMessage = getErrorMessage(e, t('trade.error.submit-failed')).toLowerCase()
 
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.TRADE,

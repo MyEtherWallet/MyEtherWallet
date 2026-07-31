@@ -30,7 +30,7 @@ import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
 // NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
 // in the caller (useTradeQuote) so expected 4xx client errors can be skipped.
-import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
@@ -70,7 +70,7 @@ class OneInchFusion {
   private sdk: FusionSDK
   private publicClient: PublicClient
   private chain: Chain
-  private wallet: BaseEvmWallet
+  private wallet: WalletInterface
 
   public static getSupportedChainNames() {
     return SUPPORTED_CHAINS.map(sc => sc.chainName)
@@ -116,7 +116,7 @@ class OneInchFusion {
     return results
   }
 
-  constructor(wallet: BaseEvmWallet, chainId: number) {
+  constructor(wallet: WalletInterface, chainId: number) {
     const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
     if (!chainConfig)
       throw new Error(i18n.global.t('trade.error.fusion-network-not-supported'))
@@ -165,10 +165,11 @@ class OneInchFusion {
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
-      const response =
+      const responseData =
         e && typeof e === 'object' && 'response' in e
-          ? ((e as AxiosError).response?.data as any)?.description || null
-          : null
+          ? (e as AxiosError<{ description?: string }>).response?.data
+          : undefined
+      const response = responseData?.description || null
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
@@ -221,14 +222,22 @@ class OneInchFusion {
           value: call.value,
           chain: this.chain,
         })
-        const serialized = serializeTransaction(tx as any)
+        const serialized = serializeTransaction(
+          tx as Parameters<typeof serializeTransaction>[0],
+        )
         let hash = ''
         if (isSignableWallet(this.wallet)) {
+          if (!this.wallet.SignTransaction) {
+            throw new Error('The connected wallet cannot sign transactions')
+          }
           const signedTx = await this.wallet.SignTransaction(serialized)
           hash = await this.publicClient.sendRawTransaction({
             serializedTransaction: signedTx.signed,
           })
         } else {
+          if (!this.wallet.SendTransaction) {
+            throw new Error('The connected wallet cannot send transactions')
+          }
           hash = await this.wallet.SendTransaction(serialized)
         }
         return this.publicClient
@@ -309,14 +318,22 @@ class OneInchFusion {
       account: fromAddress as `0x${string}`,
       chain: this.chain,
     })
-    const serialized = serializeTransaction(tx as any)
+    const serialized = serializeTransaction(
+      tx as Parameters<typeof serializeTransaction>[0],
+    )
     let hash = ''
     if (isSignableWallet(this.wallet)) {
+      if (!this.wallet.SignTransaction) {
+        throw new Error('The connected wallet cannot sign transactions')
+      }
       const signedTx = await this.wallet.SignTransaction(serialized)
       hash = await this.publicClient.sendRawTransaction({
         serializedTransaction: signedTx.signed,
       })
     } else {
+      if (!this.wallet.SendTransaction) {
+        throw new Error('The connected wallet cannot send transactions')
+      }
       hash = await this.wallet.SendTransaction(serialized)
     }
     return this.publicClient

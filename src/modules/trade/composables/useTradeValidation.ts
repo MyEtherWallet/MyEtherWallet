@@ -6,33 +6,26 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { reportModuleError } from '@/utils/reportModuleError'
+import type { TradeForm } from './useTradeForm'
 
 interface UseTradeValidationOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
-  toAmount: Ref<string>
+  form: TradeForm
   isWalletConnected: Ref<boolean>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   supportedNetwork: ComputedRef<boolean>
-  isLoadingQuote: Ref<boolean>
-  generalError: Ref<string>
-  toTokenSelected: Ref<NewTokenInfo | null>
 }
 
 export function useTradeValidation(options: UseTradeValidationOptions) {
   const {
-    fromTokenSelected,
-    fromAmount,
-    toAmount,
+    form,
     isWalletConnected,
     isMarketOpen,
     isSelectedAssetTradeable,
     supportedNetwork,
-    isLoadingQuote,
-    generalError,
-    toTokenSelected,
   } = options
+  const { fromTokenSelected, fromAmount, toAmount, isLoadingQuote,
+    generalError, toTokenSelected } = form
 
   const { t } = useI18n()
   const walletStore = useWalletStore()

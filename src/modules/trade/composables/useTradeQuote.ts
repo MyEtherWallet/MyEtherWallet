@@ -3,8 +3,6 @@ import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
-import type { NewTokenInfo } from '@/stores/swapStore'
-import type { Chain } from '@/mew_api/types'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -13,43 +11,35 @@ import {
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import { reportModuleError } from '@/utils/reportModuleError'
+import type { WalletInterface } from '@/providers/common/walletInterface'
+import type { TradeForm } from './useTradeForm'
 
-interface QuoteData {
+export interface QuoteData {
   startAmount: bigint
   endAmount?: bigint
   avgAmount?: bigint
 }
 
 interface UseTradeQuoteOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
-  toAmount: Ref<string>
+  form: TradeForm
   walletAddress: Ref<string | null | undefined>
-  wallet: Ref<any>
-  selectedFromChain: Ref<Chain | undefined>
+  wallet: Ref<WalletInterface | null>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   hasPreQuoteError: ComputedRef<boolean>
-  generalError: Ref<string>
-  isLoadingQuote: Ref<boolean>
 }
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
   const {
-    fromTokenSelected,
-    toTokenSelected,
-    fromAmount,
-    toAmount,
+    form,
     walletAddress,
     wallet,
-    selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
     hasPreQuoteError,
-    generalError,
-    isLoadingQuote,
   } = options
+  const { fromTokenSelected, toTokenSelected, fromAmount, toAmount,
+    selectedFromChain, generalError, isLoadingQuote } = form
 
   const { t } = useI18n()
 
@@ -101,6 +91,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       !fromAmount.value ||
       fromAmount.value === '0' ||
       !walletAddress.value ||
+      !wallet.value ||
       hasPreQuoteError.value
     ) {
       toAmount.value = '0'

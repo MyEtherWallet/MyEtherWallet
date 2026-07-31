@@ -10,13 +10,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { resolveCurrentSession } from '../common/marketSession'
 import { reportModuleError } from '@/utils/reportModuleError'
 
-interface UseMarketStatusOptions {
-  onMarketOpen?: () => void | Promise<void>
-}
-
-
-export function useMarketStatus(options: UseMarketStatusOptions = {}) {
-  const { onMarketOpen } = options
+export function useMarketStatus() {
   const globalStore = useGlobalStore()
   const { fetchTradingRestriction } = globalStore
   const { t } = useI18n()
@@ -24,7 +18,6 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
-  let wasMarketClosed = false
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
 
@@ -99,19 +92,11 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       ])
       marketStatus.value = statusResult
 
-      // Drive closure side-effects off the real tradable state (Case 3), so
-      // off-hours-open is treated as open and onMarketOpen only fires on a true
-      // closed -> open transition.
+      // Drive closure side-effects off the real tradable state (Case 3).
       if (!isTradingSessionOpen.value) {
-        wasMarketClosed = true
         startCountdown()
       } else {
         stopCountdown()
-        // Trading just (re)opened - call the callback if it was previously closed
-        if (wasMarketClosed && onMarketOpen) {
-          wasMarketClosed = false
-          await onMarketOpen()
-        }
       }
     } catch (e) {
       reportModuleError({

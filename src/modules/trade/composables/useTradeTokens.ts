@@ -2,7 +2,6 @@ import { computed, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
-  Chain,
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
@@ -13,16 +12,15 @@ import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
 } from '../common/tradeSession'
+import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
 
 interface UseTradeTokensOptions {
-  selectedFromChain: Ref<Chain | undefined>
+  form: TradeForm
   fromTokens: Ref<NewTokenInfo[]>
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
   tradableAssets: Ref<GetWebSwapOndoAssetsResponse | null>
   additionalBuyAssets: Ref<GetWebSwapOndoSupportingAssetsResponse | null>
   hardcodedTokensInfo: Ref<HardcodedTokenInfo[]>
@@ -31,15 +29,14 @@ interface UseTradeTokensOptions {
 
 export function useTradeTokens(options: UseTradeTokensOptions) {
   const {
-    selectedFromChain,
+    form,
     fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
     hardcodedTokensInfo,
     currentSession,
   } = options
+  const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
 
   const { t } = useI18n()
 
