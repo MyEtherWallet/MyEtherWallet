@@ -3,19 +3,11 @@
     "offers": {
       "title": "Ofertas para ti",
       "subtitle": "Descubre todos los beneficios de usar MEW",
+      "category": { "trade": "Trading", "buy": "Comprar" },
       "items": {
-        "buy": {
-          "title": "Compra acciones",
-          "desc": "Invierte en acciones tokenizadas con Ondo"
-        },
-        "swap": {
-          "title": "Intercambia tokens",
-          "desc": "Intercambia criptomonedas a las mejores tasas"
-        },
-        "earn": {
-          "title": "Gana recompensas",
-          "desc": "Pon a trabajar tus activos y gana recompensas"
-        }
+        "trade": { "title": "Opera +$50", "highlight": "Gana $10 USDC" },
+        "buy": { "title": "Compra cripto", "highlight": "Cero comisiones MEW" },
+        "hold": { "title": "Mantén y opera", "highlight": "Gana $100 USDC" }
       }
     },
     "listings": {
