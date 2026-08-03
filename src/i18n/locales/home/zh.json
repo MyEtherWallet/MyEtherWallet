@@ -25,7 +25,25 @@
     },
     "sectors": {
       "title": "行业板块",
-      "subtitle": "探索与特定行业板块相关的 Ondo 股票和加密货币代币"
+      "subtitle": "探索与特定行业板块相关的 Ondo 股票和加密货币代币",
+      "labels": {
+        "Equities": "股票",
+        "Stock": "股市",
+        "Large Cap": "大盘股",
+        "US": "美国",
+        "Growth": "成长型",
+        "Technology": "科技",
+        "ETF": "ETF",
+        "Value": "价值型",
+        "Small Cap": "小盘股",
+        "Industrials": "工业",
+        "DeFi": "DeFi",
+        "Layer 1": "第1层",
+        "Stablecoins": "稳定币",
+        "Meme": "模因币",
+        "Gaming": "游戏",
+        "AI": "人工智能"
+      }
     },
     "news": {
       "title": "市场资讯",

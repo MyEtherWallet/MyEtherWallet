@@ -25,7 +25,25 @@
     },
     "sectors": {
       "title": "Industry sectors",
-      "subtitle": "Discover Ondo stocks and crypto tokens related to specific sectors in the industry"
+      "subtitle": "Discover Ondo stocks and crypto tokens related to specific sectors in the industry",
+      "labels": {
+        "Equities": "Equities",
+        "Stock": "Stock",
+        "Large Cap": "Large Cap",
+        "US": "US",
+        "Growth": "Growth",
+        "Technology": "Technology",
+        "ETF": "ETF",
+        "Value": "Value",
+        "Small Cap": "Small Cap",
+        "Industrials": "Industrials",
+        "DeFi": "DeFi",
+        "Layer 1": "Layer 1",
+        "Stablecoins": "Stablecoins",
+        "Meme": "Meme",
+        "Gaming": "Gaming",
+        "AI": "AI"
+      }
     },
     "news": {
       "title": "Market news",

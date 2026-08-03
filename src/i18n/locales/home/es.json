@@ -25,7 +25,25 @@
     },
     "sectors": {
       "title": "Sectores de la industria",
-      "subtitle": "Descubre acciones de Ondo y tokens de criptomonedas relacionados con sectores específicos de la industria"
+      "subtitle": "Descubre acciones de Ondo y tokens de criptomonedas relacionados con sectores específicos de la industria",
+      "labels": {
+        "Equities": "Acciones",
+        "Stock": "Bolsa",
+        "Large Cap": "Gran capitalización",
+        "US": "EE. UU.",
+        "Growth": "Crecimiento",
+        "Technology": "Tecnología",
+        "ETF": "ETF",
+        "Value": "Valor",
+        "Small Cap": "Pequeña capitalización",
+        "Industrials": "Industriales",
+        "DeFi": "DeFi",
+        "Layer 1": "Capa 1",
+        "Stablecoins": "Monedas estables",
+        "Meme": "Meme",
+        "Gaming": "Videojuegos",
+        "AI": "IA"
+      }
     },
     "news": {
       "title": "Noticias del mercado",

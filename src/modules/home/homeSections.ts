@@ -28,4 +28,13 @@ export const homeSections: HomeSection[] = [
     titleKey: 'homePage.listings.title',
     subtitleKey: 'homePage.listings.subtitle',
   },
+  {
+    id: 'sectors',
+    component: defineAsyncComponent(
+      () => import('./sections/HomeIndustrySectors.vue'),
+    ),
+    visibleWhen: 'always',
+    titleKey: 'homePage.sectors.title',
+    subtitleKey: 'homePage.sectors.subtitle',
+  },
 ]
