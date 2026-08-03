@@ -4,8 +4,8 @@
     v-if="isLoadedChains"
     v-model:is-open="openDialog"
     class="w-full sm:w-[460px] sm:mx-auto"
-    z-index-overlay="z-[200]"
-    z-index-container="z-[201]"
+    :z-index-overlay="zIndexOverlay"
+    :z-index-container="zIndexContainer"
     has-content-gutter
     :title="$t('select_chain.title')"
   >
@@ -158,6 +158,14 @@ const prop = defineProps({
   filterBySelectedChainType: {
     type: Boolean,
     default: true,
+  },
+  zIndexOverlay: {
+    type: String,
+    default: 'z-[200]',
+  },
+  zIndexContainer: {
+    type: String,
+    default: 'z-[201]',
   },
 })
 

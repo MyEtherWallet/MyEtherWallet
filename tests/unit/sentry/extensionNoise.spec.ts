@@ -3,6 +3,7 @@ import { InvalidAddressError } from 'viem'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isProviderNotFoundError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
 
@@ -108,6 +109,32 @@ describe('isInvalidWalletAddressError', () => {
     expect(isInvalidWalletAddressError(null)).toBe(false)
     expect(isInvalidWalletAddressError(undefined)).toBe(false)
     expect(isInvalidWalletAddressError('InvalidAddressError')).toBe(false)
+  })
+})
+
+describe('isProviderNotFoundError', () => {
+  it('is true for a wagmi ProviderNotFoundError (matched by name)', () => {
+    // The exact production trigger: a connector calls getProvider() with no
+    // injected wallet present and @wagmi/core throws ProviderNotFoundError.
+    expect(
+      isProviderNotFoundError({
+        name: 'ProviderNotFoundError',
+        message: 'Provider not found.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(isProviderNotFoundError(new Error('boom'))).toBe(false)
+    expect(
+      isProviderNotFoundError({ name: 'TypeError', message: 'x' }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isProviderNotFoundError(null)).toBe(false)
+    expect(isProviderNotFoundError(undefined)).toBe(false)
+    expect(isProviderNotFoundError('Provider not found.')).toBe(false)
   })
 })
 

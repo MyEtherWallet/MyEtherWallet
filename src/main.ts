@@ -20,6 +20,7 @@ import configs from '@/configs'
 import {
   isExtensionOrProviderError,
   isInvalidWalletAddressError,
+  isProviderNotFoundError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
@@ -50,13 +51,20 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'Proposal expired',
       'Pairing expired',
       'Request expired',
+      // Transient WalletConnect relay hiccup: the @walletconnect/core Subscriber
+      // fails to subscribe to a session topic over the relay WebSocket. The
+      // connect flow already handles it (user gets a "Could not connect" toast
+      // and can retry), so it is benign, unactionable network noise.
+      /Subscribing to \w+ failed, please try again/,
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
     // carry parsed extension frames).
     denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
     // "provider disconnected"), viem InvalidAddressError (a wallet returned a
-    // malformed address on connect — already handled with a user toast), and
+    // malformed address on connect — already handled with a user toast), wagmi
+    // ProviderNotFoundError (user tried to connect a browser wallet with no
+    // injected provider — already handled with a user toast), and
     // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
     // surfacing as an unhandled "Connection is closed" rejection). These surface
     // as serialized plain objects or bare strings with no parsed frames, so
@@ -67,6 +75,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        isProviderNotFoundError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException)
       )

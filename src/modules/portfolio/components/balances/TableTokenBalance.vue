@@ -325,7 +325,7 @@
             >
               {{
                 token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
+                  ? formatFiat(token.market_cap).display
                   : '-'
               }}
             </td>
@@ -333,7 +333,7 @@
             <td
               class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
             >
-              {{ token.price ? `$${formatFiatValue(token.price).value}` : '-' }}
+              {{ token.price ? formatFiat(token.price).display : '-' }}
             </td>
             <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
@@ -701,10 +701,10 @@ import { truncate } from '@/utils/filters'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
@@ -763,6 +763,8 @@ const customTokenStore = useCustomTokenStore()
 const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyableOnCompatibleChain } = purchaseStore
+
+const { formatFiat } = useCurrency()
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
 const {
@@ -844,7 +846,7 @@ const formatStock = (
     balance: '0',
     contract: '',
     fiatBalance: 0,
-    fiatBalanceFormatted: '$0.00',
+    fiatBalanceFormatted: formatFiat(0).display,
     ondo: {
       stockAlias: item.stockAlias,
       iconPngUrl: item.iconPngUrl,
@@ -942,7 +944,7 @@ const mapToDisplay = (token: TokenBalance): DisplayToken => {
   return {
     ...token,
     fiatBalance: fiat.toNumber(),
-    fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+    fiatBalanceFormatted: formatFiat(fiat).display,
   }
 }
 
@@ -976,7 +978,7 @@ const tokens = computed<DisplayToken[]>(() => {
           return {
             ...token,
             fiatBalance: 0,
-            fiatBalanceFormatted: '$0.00',
+            fiatBalanceFormatted: formatFiat(0).display,
             balanceWei: '0x',
             balance: '0',
             contract: '',
@@ -1031,7 +1033,7 @@ const tokens = computed<DisplayToken[]>(() => {
           balanceWei: extra.nativeValue,
           balance,
           fiatBalance: fiat.toNumber(),
-          fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+          fiatBalanceFormatted: formatFiat(fiat).display,
           price: extra.priceFiatPerNative || 0,
         } as DisplayToken
       }
@@ -1044,7 +1046,7 @@ const tokens = computed<DisplayToken[]>(() => {
         balanceWei: '0x',
         balance: '0',
         fiatBalance: 0,
-        fiatBalanceFormatted: '$0.00',
+        fiatBalanceFormatted: formatFiat(0).display,
       } as DisplayToken
     })
   } else if (props.view === 'stocks') {
@@ -1088,7 +1090,7 @@ const totalValue = computed(() => {
     (acc, t) => acc.plus(t.fiatBalance || 0),
     new BigNumber(0),
   )
-  return `$${formatFiatValue(sum).value}`
+  return formatFiat(sum).display
 })
 
 /** -------------------------------

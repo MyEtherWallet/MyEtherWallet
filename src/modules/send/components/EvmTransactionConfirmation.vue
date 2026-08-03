@@ -86,7 +86,7 @@
                   <span class="text-s-14 text-info">{{ toToken.symbol }}</span>
                 </p>
                 <p class="text-info text-s-14 font-medium">
-                  ${{ toAmountFiat }}
+                  {{ formatFiat(toAmountFiat).display }}
                 </p>
               </div>
             </div>
@@ -127,7 +127,7 @@
                 {{ formatFee }} {{ network?.currencyName }}
               </p>
               <p class="text-s-12 font-medium text-info mt-0.5">
-                ${{ networkFeeUSD }}
+                {{ formatFiat(networkFeeUSD).display }}
               </p>
             </div>
           </div>
@@ -265,6 +265,7 @@ import {
   formatFloatingPointValue,
   formatIntegerToString,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
@@ -306,6 +307,7 @@ const model = defineModel()
 const emit = defineEmits<{
   'tx-sent': [txHash: string]
 }>()
+const { formatFiat } = useCurrency()
 const chainsStore = useChainsStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)

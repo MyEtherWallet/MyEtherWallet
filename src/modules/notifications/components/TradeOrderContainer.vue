@@ -126,7 +126,7 @@
             />
           </p>
           <p v-if="order.usdValue" class="text-s-12 text-info">
-            ${{ order.usdValue }}
+            {{ formatFiat(order.usdValue).display }}
           </p>
         </div>
       </div>
@@ -239,6 +239,7 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
@@ -252,6 +253,8 @@ const props = defineProps<{
 defineEmits<{
   remove: [hash: string]
 }>()
+
+const { formatFiat } = useCurrency()
 
 const { t } = useI18n()
 

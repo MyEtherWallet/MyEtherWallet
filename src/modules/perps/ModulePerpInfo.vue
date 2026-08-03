@@ -200,7 +200,13 @@
                 ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
               ]"
             >
-              {{ marketPosition.direction === 'long' ? $t('perps.trade.long') : marketPosition.direction === 'short' ? $t('perps.trade.short') : marketPosition.direction }}
+              {{
+                marketPosition.direction === 'long'
+                  ? $t('perps.trade.long')
+                  : marketPosition.direction === 'short'
+                    ? $t('perps.trade.short')
+                    : marketPosition.direction
+              }}
               {{ marketPosition.leverage }}x
             </span>
           </div>
@@ -1177,14 +1183,26 @@ const openOrdersCountForMarket = ref(0)
 const openOrdersCountIsCapped = ref(false)
 let openOrdersFetchSeq = 0
 
-const orderFilterTabs = [
+const orderFilterTabs = computed(() => [
   { label: t('perps.select-market.filter-tab-all'), value: 'all' },
   { label: t('perps.positions.filter-pending'), value: 'pending' },
-]
-const selectedOrderFilter = ref(orderFilterTabs[0])
+])
+
+// Track the filter by value, not by object: labels are locale-dependent and
+// AppBtnGroup compares the selection by structural equality.
+const selectedOrderFilterValue = ref('all')
+const selectedOrderFilter = computed({
+  get: () =>
+    orderFilterTabs.value.find(
+      tab => tab.value === selectedOrderFilterValue.value,
+    ) ?? orderFilterTabs.value[0],
+  set: (tab: { label: string; value: string }) => {
+    selectedOrderFilterValue.value = tab.value
+  },
+})
 
 const filteredMarketOrders = computed(() => {
-  if (selectedOrderFilter.value.value === 'all') return marketOrders.value
+  if (selectedOrderFilterValue.value === 'all') return marketOrders.value
   return marketOrders.value.filter(o => PENDING_STATUSES.has(o.status))
 })
 
@@ -1355,7 +1373,7 @@ const confirmCancelOrder = async () => {
   if (succeeded) showCancelConfirmation.value = false
 }
 
-const ordersSkeletonColumns: SkeletonColumn[] = [
+const ordersSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.confirm.side-label') },
   { header: t('perps.order.status-label'), hidden: 'hidden 2xl:table-cell' },
   { header: t('perps.order.type-label'), hidden: 'hidden xl:table-cell' },
@@ -1366,9 +1384,9 @@ const ordersSkeletonColumns: SkeletonColumn[] = [
     hidden: 'hidden lg:table-cell',
   },
   { header: '', width: '40px' },
-]
+])
 
-const fillsSkeletonColumns: SkeletonColumn[] = [
+const fillsSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: t('perps.positions.direction-header') },
   { header: t('perps.order.price-label'), align: 'right' },
   {
@@ -1387,7 +1405,7 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
     hidden: 'hidden lg:table-cell',
   },
   { header: '', width: '36px' },
-]
+])
 
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false
@@ -1488,26 +1506,27 @@ onUnmounted(() => {
 // Tabs
 const showPositionMore = ref<boolean>(false)
 const activeInfoTab = ref('orders')
-const infoTabs = [
+const infoTabs = computed(() => [
   { key: 'orders', value: 'orders', label: t('perps.positions.tab-orders') },
   { key: 'fills', value: 'fills', label: t('perps.positions.tab-fills') },
   // { key: 'more', value: 'more', label: 'More' },
-]
+])
 const activeInfoTabObj = computed({
   get: () =>
-    infoTabs.find(tab => tab.key === activeInfoTab.value) ?? infoTabs[0],
-  set: (tab: (typeof infoTabs)[number]) => {
+    infoTabs.value.find(tab => tab.key === activeInfoTab.value) ??
+    infoTabs.value[0],
+  set: (tab: { key: string; value: string; label: string }) => {
     activeInfoTab.value = tab.key
   },
 })
 
 // Close / Add Buttons
 
-const manageOptions = [
+const manageOptions = computed(() => [
   { value: 'add', label: t('perps.market-list.add-to-position') },
   { value: 'leverage', label: t('perps.market-list.change-leverage') },
   { value: 'close', label: t('perps.market-list.close-position') },
-]
+])
 const selectedManageAction = ref<{ value: string; label: string } | undefined>(
   undefined,
 )

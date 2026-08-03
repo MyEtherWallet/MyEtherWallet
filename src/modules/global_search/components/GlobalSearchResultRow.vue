@@ -21,7 +21,7 @@
     </div>
     <div class="text-right flex-none">
       <div class="text-s-14 text-black">
-        {{ item.priceUsd !== null ? formatUsd(item.priceUsd) : '—' }}
+        {{ item.priceUsd !== null ? formatFiat(item.priceUsd).display : '—' }}
       </div>
       <div
         v-if="item.change24hPct !== null"
@@ -37,15 +37,11 @@
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import { useCurrency } from '@/composables/useCurrency'
 import type { SearchResultItem } from '../types'
 
 defineProps<{ item: SearchResultItem }>()
 defineEmits<{ select: [item: SearchResultItem] }>()
 
-const formatUsd = (n: number) =>
-  n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: n !== 0 && Math.abs(n) < 1 ? 6 : 2,
-  })
+const { formatFiat } = useCurrency()
 </script>

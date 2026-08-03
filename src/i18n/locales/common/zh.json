@@ -3,6 +3,7 @@
     "search": "搜索",
     "swap": "兑换",
     "bridge": "跨链桥",
+    "perps": "永续",
     "stocks": "股票",
     "crypto": "加密货币",
     "portfolio": "投资组合",
@@ -53,6 +54,7 @@
       "user_canceled_request": "用户已取消请求",
       "ledger_locked": "您的 Ledger 已锁定。请解锁后重试。",
       "ledger_app_not_open": "请在您的 Ledger 上打开以太坊应用后重试。",
+      "trezor_read_failed": "无法从 Trezor 读取您的地址。请重新连接设备后重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",
@@ -311,6 +313,5 @@
     "no_results_title": "未找到匹配项",
     "no_results_subtitle": "请尝试其他代号或名称。"
   },
-  "perps": "永续",
   "perpetuals": "永续合约"
 }

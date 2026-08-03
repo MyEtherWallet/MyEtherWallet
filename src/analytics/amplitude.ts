@@ -231,6 +231,17 @@ export class Analytics {
   }
 
   /**
+   * Set display currency user property
+   *
+   * @param currency   Currency code (e.g. USD, EUR)
+   */
+  setCurrency(currency: string): void {
+    const identify = new Identify()
+    identify.set('currency', currency)
+    this.amplitude.identify(identify)
+  }
+
+  /**
    * Set balance bracket user property
    *
    * @param bracket   Balance bracket

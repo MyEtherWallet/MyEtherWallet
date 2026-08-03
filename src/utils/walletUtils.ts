@@ -13,6 +13,20 @@ export const isSignableWallet = (wallet: WalletInterface) => {
 }
 
 /**
+ * Whether the current browser can safely initiate a Trezor connection.
+ *
+ * `@enkryptcom/hw-wallets` `getTrezorConnect` references the bare `chrome`
+ * global (`if (chrome && chrome.runtime && ...)`). On non-Chromium browsers
+ * such as iOS Safari the `chrome` global does not exist, so that reference
+ * throws `ReferenceError: Can't find variable: chrome` before it can fall back
+ * to `@trezor/connect-web`. Gate the Trezor connect entry point on this
+ * capability so unsupported browsers fail gracefully with a friendly message
+ * instead of an uncaught ReferenceError. See MEW-2041.
+ */
+export const isTrezorSupported = (): boolean =>
+  typeof (globalThis as { chrome?: unknown }).chrome !== 'undefined'
+
+/**
  * Checks if an error is a user rejection (e.g. user cancelled transaction in wallet).
  * Detects EIP-1193 code 4001 and common rejection message patterns.
  */
@@ -60,5 +74,26 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  // Transient Trezor connect state (APP-MEW-WEB-P5)
+  if (isTransientTrezorError(raw)) {
+    return t('common.error.trezor_read_failed')
+  }
   return undefined
+}
+
+/**
+ * A transient Trezor Connect failure: the popup/iframe returned `success`
+ * with an empty payload, so `@enkryptcom/hw-wallets` runs an unguarded
+ * `Buffer.from(undefined)` and throws a cryptic TypeError (or "popup failed
+ * to open"). Retrying usually succeeds, so this is safe to surface as a
+ * friendly "reconnect" message rather than reporting it as noise.
+ */
+export const isTransientTrezorError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return (
+    message.includes('popup failed to open') ||
+    message.includes('the first argument must be one of type string, buffer')
+  )
 }
