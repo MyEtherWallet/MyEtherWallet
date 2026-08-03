@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
-import AppScrollFade from '@/components/AppScrollFade.vue'
 import AppIndustrySectorTile from '@/components/AppIndustrySectorTile.vue'
 import { sectors, sectorLink } from '@/modules/home/sectors'
 import type { Tab, Tab_Panel } from '@/types/components/appTabs'
@@ -64,7 +63,6 @@ const tabSectors = computed(() =>
               />
             </template>
           </AppSlideGroup>
-          <AppScrollFade edge="right" />
         </div>
       </template>
     </AppTabs>
