@@ -1,11 +1,19 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+
+const props = defineProps<{
   title: string
   source?: string
   thumbnail?: string
   timestamp?: string | number
   href?: string
 }>()
+
+// Matches the guard/format pattern in src/modules/stocks/ModuleNews.vue for
+// the same StockNewsItem.timestamp field.
+const formattedDate = computed(() =>
+  props.timestamp ? new Date(props.timestamp).toLocaleDateString() : '',
+)
 </script>
 
 <template>
@@ -23,6 +31,9 @@ defineProps<{
       class="mb-3 h-40 w-full rounded-lg object-cover"
     />
     <div data-test="news-title" class="font-semibold">{{ title }}</div>
-    <div v-if="source" class="mt-1 text-xs opacity-60">{{ source }}</div>
+    <div class="mt-1 flex items-center gap-2 text-xs opacity-60">
+      <span v-if="source">{{ source }}</span>
+      <span v-if="formattedDate" data-test="news-date">{{ formattedDate }}</span>
+    </div>
   </a>
 </template>

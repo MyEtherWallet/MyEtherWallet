@@ -18,4 +18,16 @@ describe('AppNewsCard', () => {
     const w = mount(AppNewsCard, { props: { title: 'Big news' } })
     expect(w.find('[data-test="news-card"]').exists()).toBe(true)
   })
+
+  it('renders a formatted date when timestamp is present', () => {
+    const w = mount(AppNewsCard, {
+      props: { title: 'Big news', timestamp: 1700000000000 },
+    })
+    expect(w.get('[data-test="news-date"]').text()).not.toBe('')
+  })
+
+  it('renders no date element when timestamp is omitted', () => {
+    const w = mount(AppNewsCard, { props: { title: 'Big news' } })
+    expect(w.find('[data-test="news-date"]').exists()).toBe(false)
+  })
 })
