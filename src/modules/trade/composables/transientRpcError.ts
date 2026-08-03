@@ -50,3 +50,22 @@ export function isTransientRpcError(e: unknown): boolean {
   }
   return false
 }
+
+/**
+ * Whether an error is an axios "Network Error" — the HTTP request never
+ * completed (no response received: offline, DNS/CORS failure, connection reset,
+ * request aborted). axios flags these with `code === 'ERR_NETWORK'` and a
+ * hard-coded `message === 'Network Error'`. These are transient, environmental
+ * failures already surfaced to the user, so the trade-quote flow skips reporting
+ * them to Sentry. Deliberately kept separate from `isTransientRpcError` (which
+ * the global `beforeSend` also uses) so the trade-quote suppression does not
+ * broaden into dropping unrelated "network error" messages app-wide.
+ */
+export function isAxiosNetworkError(e: unknown): boolean {
+  if (!e || typeof e !== 'object') return false
+  const err = e as { code?: unknown; message?: unknown; response?: unknown }
+  return (
+    err.code === 'ERR_NETWORK' ||
+    (err.response == null && err.message === 'Network Error')
+  )
+}
