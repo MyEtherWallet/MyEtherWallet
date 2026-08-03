@@ -28,15 +28,36 @@
           </app-slide-item>
         </div>
       </div>
+
+      <!-- Edge-centered circular nav buttons (opt-in via edgeNav) -->
+      <button
+        v-if="edgeNav && blurFront"
+        type="button"
+        :aria-label="$t('common.previous_page')"
+        class="absolute left-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+        @click="scrollToPreviousGroup"
+      >
+        <ChevronLeftIcon class="size-5" />
+      </button>
+      <button
+        v-if="edgeNav && blurEnd"
+        type="button"
+        :aria-label="$t('common.next_page')"
+        class="absolute right-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+        @click="scrollToNextGroup"
+      >
+        <ChevronRightIcon class="size-5" />
+      </button>
     </div>
     <div
+      v-if="!edgeNav || title"
       class="flex items-center justify-end"
       :class="[paginateLocation === 'top' ? 'order-1 mb-1' : '']"
     >
       <h2 v-if="title" class="text-s-20 font-bold ml-4 mr-auto">{{ title }}</h2>
 
       <app-btn-icon
-        v-if="!allIsVisible"
+        v-if="!allIsVisible && !edgeNav"
         :label="$t('common.previous_page')"
         class="ml-auto"
         @click="scrollToPreviousGroup"
@@ -44,7 +65,7 @@
         <ChevronLeftIcon class="w-4 h-4" />
       </app-btn-icon>
       <app-btn-icon
-        v-if="!allIsVisible"
+        v-if="!allIsVisible && !edgeNav"
         class="-mr-2"
         :label="$t('common.next_page')"
         @click="scrollToNextGroup"
@@ -75,6 +96,14 @@ const props = defineProps({
   title: {
     type: String,
     required: false,
+  },
+  /**
+   * Opt-in: render circular edge-centered prev/next buttons (over the fades)
+   * instead of the default bottom-right icon buttons.
+   */
+  edgeNav: {
+    type: Boolean,
+    default: false,
   },
 })
 

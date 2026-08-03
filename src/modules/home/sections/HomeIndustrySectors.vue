@@ -24,7 +24,7 @@ const tabSectors = computed(() =>
   <div class="relative">
     <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
     <div class="relative mt-6">
-      <AppSlideGroup :total-items="tabSectors.length">
+      <AppSlideGroup :total-items="tabSectors.length" edge-nav>
         <template
           v-for="(s, index) in tabSectors"
           :key="s.id"

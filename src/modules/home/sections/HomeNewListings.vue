@@ -125,7 +125,7 @@ const items = computed<ListingCardItem[]>(() =>
   <div class="relative">
     <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
     <div class="relative mt-6">
-      <AppSlideGroup :total-items="items.length">
+      <AppSlideGroup :total-items="items.length" edge-nav>
         <template
           v-for="(it, index) in items"
           :key="it.key"
