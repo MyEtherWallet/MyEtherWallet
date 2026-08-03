@@ -1,32 +1,62 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { vElementHover } from '@vueuse/components'
+import { ref, onBeforeUnmount } from 'vue'
 
 /**
  * Small hint tooltip matching the design-library "Tooltip": a white rounded
- * pill with a downward caret, shown centered above the slotted trigger on
- * hover. (The shared AppTooltip has a different look and no caret.)
+ * pill with a downward caret, shown centered above the slotted trigger after a
+ * short hover delay. Suppressed while hovering interactive children (buttons),
+ * so the hint doesn't cover a card's own CTA/actions.
  */
-defineProps<{ text?: string }>()
+defineProps<{ text?: string; delay?: number }>()
 
 const show = ref(false)
 const tipRef = ref<HTMLElement | null>(null)
 const activatorRef = ref<HTMLElement | null>(null)
+let timer: ReturnType<typeof setTimeout> | null = null
 
-const onHover = (hovered: boolean) => {
-  show.value = hovered
-  if (hovered && tipRef.value && activatorRef.value) {
+const clearTimer = () => {
+  if (timer) {
+    clearTimeout(timer)
+    timer = null
+  }
+}
+
+const position = () => {
+  if (tipRef.value && activatorRef.value) {
     const rect = activatorRef.value.getBoundingClientRect()
     tipRef.value.style.left = `${rect.left + rect.width / 2}px`
     tipRef.value.style.top = `${rect.top - 6}px`
   }
 }
+
+const onOver = (e: MouseEvent, delay = 500) => {
+  // Don't show over the card's own buttons (CTA, favorite).
+  if ((e.target as HTMLElement | null)?.closest('button')) {
+    clearTimer()
+    show.value = false
+    return
+  }
+  if (show.value || timer) return
+  timer = setTimeout(() => {
+    timer = null
+    show.value = true
+    position()
+  }, delay)
+}
+
+const onLeave = () => {
+  clearTimer()
+  show.value = false
+}
+
+onBeforeUnmount(clearTimer)
 </script>
 
 <template>
   <div
     ref="activatorRef"
-    v-element-hover="[onHover, { delayEnter: 500, delayLeave: 100 }]"
+    @mouseover="onOver($event, delay ?? 500)"
+    @mouseleave="onLeave"
   >
     <slot />
   </div>
