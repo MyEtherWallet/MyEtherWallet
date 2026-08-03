@@ -14,4 +14,13 @@ describe('AppHomeSection', () => {
     expect(w.get('[data-test="section-title"]').text()).toBe('Market news')
     expect(w.find('[data-test="content"]').exists()).toBe(true)
   })
+
+  it('renders headerless (no title header) when title is omitted', () => {
+    const w = mount(AppHomeSection, {
+      props: {},
+      slots: { default: '<div data-test="content">body</div>' },
+    })
+    expect(w.find('[data-test="section-title"]').exists()).toBe(false)
+    expect(w.find('[data-test="content"]').exists()).toBe(true)
+  })
 })

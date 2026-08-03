@@ -1,10 +1,13 @@
 <script setup lang="ts">
-defineProps<{ title: string; subtitle?: string }>()
+defineProps<{ title?: string; subtitle?: string }>()
 </script>
 
 <template>
   <section class="relative px-8 py-8">
-    <header class="mb-8 flex items-start justify-between gap-4">
+    <header
+      v-if="title"
+      class="mb-8 flex items-start justify-between gap-4"
+    >
       <div>
         <h2
           data-test="section-title"

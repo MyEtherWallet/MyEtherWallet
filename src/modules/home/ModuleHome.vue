@@ -21,8 +21,8 @@ const visible = computed(() =>
     <AppHomeSection
       v-for="s in visible"
       :key="s.id"
-      :title="t(s.titleKey)"
-      :subtitle="t(s.subtitleKey)"
+      :title="s.titleKey ? t(s.titleKey) : undefined"
+      :subtitle="s.subtitleKey ? t(s.subtitleKey) : undefined"
     >
       <component :is="s.component" />
     </AppHomeSection>

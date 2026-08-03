@@ -1,5 +1,6 @@
 {
   "homePage": {
+    "hero": { "placeholder": "Hero 区域" },
     "offers": {
       "title": "为您推荐的优惠",
       "subtitle": "探索使用 MEW 的所有权益",

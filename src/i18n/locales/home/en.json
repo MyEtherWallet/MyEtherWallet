@@ -1,5 +1,6 @@
 {
   "homePage": {
+    "hero": { "placeholder": "Hero section" },
     "offers": {
       "title": "Offers for you",
       "subtitle": "Explore all the benefits of using MEW",

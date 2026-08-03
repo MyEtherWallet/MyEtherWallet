@@ -1,5 +1,6 @@
 {
   "homePage": {
+    "hero": { "placeholder": "Sección Hero" },
     "offers": {
       "title": "Ofertas para ti",
       "subtitle": "Descubre todos los beneficios de usar MEW",
