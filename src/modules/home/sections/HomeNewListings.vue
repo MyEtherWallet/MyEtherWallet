@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useCurrency } from '@/composables/useCurrency'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
@@ -15,7 +16,8 @@ const { t } = useI18n()
 const router = useRouter()
 const stocksStore = useStocksStore()
 const walletMenu = useWalletMenuStore()
-const { formatFiat } = useCurrency()
+const watchlistStore = useWatchlistStore()
+const { formatFiat, formatFiatCompact } = useCurrency()
 
 const activeTabIndex = ref(0)
 
@@ -55,15 +57,16 @@ const stockItems = computed(() =>
     // card renders without one until a source exists.
     description: undefined,
     marketCap: item.underlyingMarket.marketCap
-      ? formatFiat(Number(item.underlyingMarket.marketCap)).display
+      ? formatFiatCompact(item.underlyingMarket.marketCap).display
       : '-',
     change: item.primaryMarket.priceChangePercentage24h
       ? parseFloat(item.primaryMarket.priceChangePercentage24h)
       : undefined,
     volume: item.underlyingMarket.volume24h
-      ? formatFiat(Number(item.underlyingMarket.volume24h)).display
+      ? formatFiatCompact(item.underlyingMarket.volume24h).display
       : '-',
     logo: item.iconPngUrl || item.iconSvgUrl,
+    favorite: watchlistStore.isWatchListed(item.primaryMarket.symbol),
     to: {
       name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: { symbol: item.primaryMarket.symbol },
@@ -80,9 +83,11 @@ const items = computed(() =>
   activeTabIndex.value === 0 ? stockItems.value : cryptoItems,
 )
 
-// TODO(watchlist): wire up real favorite/watchlist persistence — separate
-// follow-up, not part of this card rebuild.
-const onToggleFavorite = () => {}
+// Toggle stock favorite in the shared watchlist (same store the stocks table
+// uses), so favorites stay in sync across the app.
+const onToggleFavorite = (symbol: string) => {
+  watchlistStore.setWatchlistItem(symbol, true)
+}
 </script>
 
 <template>
@@ -113,10 +118,11 @@ const onToggleFavorite = () => {}
                 :change="it.change"
                 :volume-label="t('homePage.listings.stat.volume24h')"
                 :volume="it.volume"
+                :favorite="it.favorite"
                 :trade-label="t('homePage.listings.trade')"
                 @select="router.push(it.to)"
                 @trade="walletMenu.openPanel('trade')"
-                @toggle-favorite="onToggleFavorite"
+                @toggle-favorite="onToggleFavorite(it.symbol)"
               />
             </template>
           </AppSlideGroup>

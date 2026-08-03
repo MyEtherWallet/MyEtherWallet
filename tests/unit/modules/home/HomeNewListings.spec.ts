@@ -55,12 +55,19 @@ vi.mock('@/stores/stocksStore', () => ({
 vi.mock('@/composables/useCurrency', () => ({
   useCurrency: () => ({
     formatFiat: (value: string | number) => ({ display: `$${value}` }),
+    formatFiatCompact: (value: string | number) => ({ display: `$${value}` }),
   }),
 }))
 
 const openPanel = vi.fn()
 vi.mock('@/stores/walletMenuStore', () => ({
   useWalletMenuStore: () => ({ openPanel }),
+}))
+
+const setWatchlistItem = vi.fn()
+const isWatchListed = vi.fn(() => false)
+vi.mock('@/stores/watchlistTableStore', () => ({
+  useWatchlistStore: () => ({ setWatchlistItem, isWatchListed }),
 }))
 
 const push = vi.fn()
@@ -156,5 +163,24 @@ describe('HomeNewListings', () => {
     await w.get('[data-test="tab-switch"]').trigger('click')
 
     expect(w.findAll('[data-test="listing-card"]').length).toBe(0)
+  })
+
+  it('toggles the stock in the shared watchlist when the favorite star is clicked', async () => {
+    setWatchlistItem.mockClear()
+    const w = mountIt()
+    await w
+      .findAll('[data-test="listing-card"]')[0]
+      .get('[data-test="listing-favorite"]')
+      .trigger('click')
+    expect(setWatchlistItem).toHaveBeenCalledWith('AAPL', true)
+  })
+
+  it('shows a favorited (solid/blue) star when the stock is already watchlisted', () => {
+    isWatchListed.mockReturnValue(true)
+    const favorite = mountIt()
+      .findAll('[data-test="listing-card"]')[0]
+      .get('[data-test="listing-favorite"]')
+    expect(favorite.find('.text-primary').exists()).toBe(true)
+    isWatchListed.mockReturnValue(false)
   })
 })
