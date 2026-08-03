@@ -72,21 +72,28 @@ const items = computed(() =>
       :tabs="tabs"
       :panel="panels"
       :label="t('homePage.listings.title')"
-    />
-    <div class="relative mt-6">
-      <AppSlideGroup :total-items="items.length">
-        <template v-for="(it, index) in items" :key="it.key" #[`item-${index}`]>
-          <AppNewListingCard
-            :name="it.name"
-            :symbol="it.symbol"
-            :price="it.price"
-            :change="it.change"
-            :logo="it.logo"
-            :to="it.to"
-          />
-        </template>
-      </AppSlideGroup>
-      <AppScrollFade edge="right" />
-    </div>
+    >
+      <template #tab-panel>
+        <div class="relative mt-6">
+          <AppSlideGroup :total-items="items.length">
+            <template
+              v-for="(it, index) in items"
+              :key="it.key"
+              #[`item-${index}`]
+            >
+              <AppNewListingCard
+                :name="it.name"
+                :symbol="it.symbol"
+                :price="it.price"
+                :change="it.change"
+                :logo="it.logo"
+                :to="it.to"
+              />
+            </template>
+          </AppSlideGroup>
+          <AppScrollFade edge="right" />
+        </div>
+      </template>
+    </AppTabs>
   </div>
 </template>

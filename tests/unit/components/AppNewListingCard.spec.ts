@@ -39,12 +39,15 @@ describe('AppNewListingCard', () => {
     ).toBe('down')
   })
 
-  it('marks flat change when zero or unset', () => {
+  it('marks zero change as up (change >= 0)', () => {
     expect(
       mountIt({ change: 0 })
         .get('[data-test="listing-change"]')
         .attributes('data-dir'),
-    ).toBe('flat')
+    ).toBe('up')
+  })
+
+  it('marks flat change when unset', () => {
     expect(
       mountIt({ change: undefined })
         .get('[data-test="listing-change"]')

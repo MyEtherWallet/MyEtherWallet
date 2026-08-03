@@ -57,6 +57,19 @@ const AppSlideGroupStub = {
   template: '<div><slot name="item-0" /><slot name="item-1" /></div>',
 }
 
+// The real AppTabs binds `v-model:activeTabIndex` via `defineModel` — i.e.
+// prop `activeTabIndex` + `update:activeTabIndex` emit — and exposes a single
+// `tab-panel` slot that HomeNewListings.vue's listing content lives in. This
+// stub mirrors both: a button driving the same tab state HomeNewListings
+// itself reacts to (stocks index 0 / crypto index 1), plus passthrough of the
+// `tab-panel` slot so the cards it contains still render.
+const AppTabsStub = {
+  props: ['activeTabIndex'],
+  emits: ['update:activeTabIndex'],
+  template:
+    '<div><button data-test="tab-switch" @click="$emit(\'update:activeTabIndex\', activeTabIndex === 0 ? 1 : 0)" /><slot name="tab-panel" /></div>',
+}
+
 describe('HomeNewListings', () => {
   const mountIt = () =>
     mount(HomeNewListings, {
@@ -64,7 +77,7 @@ describe('HomeNewListings', () => {
         plugins: [i18n],
         stubs: {
           RouterLink: RouterLinkStub,
-          AppTabs: true,
+          AppTabs: AppTabsStub,
           AppSlideGroup: AppSlideGroupStub,
         },
       },
@@ -86,5 +99,14 @@ describe('HomeNewListings', () => {
     expect(
       w.findAll('[data-test="listing-change"]')[1].attributes('data-dir'),
     ).toBe('down')
+  })
+
+  it('switches from stocks (2 cards) to crypto (0 cards, empty placeholder) on tab change', async () => {
+    const w = mountIt()
+    expect(w.findAll('[data-test="listing-card"]').length).toBe(2)
+
+    await w.get('[data-test="tab-switch"]').trigger('click')
+
+    expect(w.findAll('[data-test="listing-card"]').length).toBe(0)
   })
 })

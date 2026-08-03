@@ -13,10 +13,9 @@ const props = defineProps<{
 
 const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
 
-const dir = computed<'up' | 'down' | 'flat'>(() => {
-  if (!props.change) return 'flat'
-  return props.change > 0 ? 'up' : 'down'
-})
+const dir = computed<'up' | 'down' | 'flat'>(() =>
+  props.change == null ? 'flat' : props.change >= 0 ? 'up' : 'down',
+)
 </script>
 
 <template>
