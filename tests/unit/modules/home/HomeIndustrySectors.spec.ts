@@ -25,13 +25,13 @@ const AppSlideGroupStub = {
   template: `<div>${Array.from({ length: MAX_ITEMS }, (_, i) => `<slot name="item-${i}" />`).join('')}</div>`,
 }
 
-// The real AppTabs binds `v-model:activeTabIndex` via `defineModel` and
-// exposes a single `tab-panel` slot. Mirrors HomeNewListings.spec.ts's stub.
-const AppTabsStub = {
-  props: ['activeTabIndex'],
-  emits: ['update:activeTabIndex'],
+// AppTabBar is an index-based `v-model` (modelValue + update:modelValue); the
+// content is a sibling, not a slot. Mirrors HomeNewListings.spec.ts's stub.
+const AppTabBarStub = {
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
   template:
-    '<div><button data-test="tab-switch" @click="$emit(\'update:activeTabIndex\', activeTabIndex === 0 ? 1 : 0)" /><slot name="tab-panel" /></div>',
+    '<button data-test="tab-switch" @click="$emit(\'update:modelValue\', modelValue === 0 ? 1 : 0)" />',
 }
 
 describe('HomeIndustrySectors', () => {
@@ -41,7 +41,7 @@ describe('HomeIndustrySectors', () => {
         plugins: [i18n],
         stubs: {
           RouterLink: RouterLinkStub,
-          AppTabs: AppTabsStub,
+          AppTabBar: AppTabBarStub,
           AppSlideGroup: AppSlideGroupStub,
         },
       },

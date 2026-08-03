@@ -104,17 +104,15 @@ const AppSlideGroupStub = {
   template: '<div><slot name="item-0" /><slot name="item-1" /></div>',
 }
 
-// The real AppTabs binds `v-model:activeTabIndex` via `defineModel` — i.e.
-// prop `activeTabIndex` + `update:activeTabIndex` emit — and exposes a single
-// `tab-panel` slot that HomeNewListings.vue's listing content lives in. This
-// stub mirrors both: a button driving the same tab state HomeNewListings
-// itself reacts to (stocks index 0 / crypto index 1), plus passthrough of the
-// `tab-panel` slot so the cards it contains still render.
-const AppTabsStub = {
-  props: ['activeTabIndex'],
-  emits: ['update:activeTabIndex'],
+// The real AppTabBar is an index-based `v-model` (prop `modelValue` +
+// `update:modelValue`); the listing content is now a SIBLING of it, not a
+// slot. The stub is just a button that toggles the tab index HomeNewListings
+// reacts to (stocks index 0 / crypto index 1).
+const AppTabBarStub = {
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
   template:
-    '<div><button data-test="tab-switch" @click="$emit(\'update:activeTabIndex\', activeTabIndex === 0 ? 1 : 0)" /><slot name="tab-panel" /></div>',
+    '<button data-test="tab-switch" @click="$emit(\'update:modelValue\', modelValue === 0 ? 1 : 0)" />',
 }
 
 describe('HomeNewListings', () => {
@@ -123,7 +121,7 @@ describe('HomeNewListings', () => {
       global: {
         plugins: [i18n],
         stubs: {
-          AppTabs: AppTabsStub,
+          AppTabBar: AppTabBarStub,
           AppSlideGroup: AppSlideGroupStub,
           // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
           // internally — irrelevant to this section's mapping logic, so

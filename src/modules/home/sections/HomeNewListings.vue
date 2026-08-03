@@ -14,10 +14,9 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
-import AppTabs from '@/components/tabs/AppTabs.vue'
+import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
-import type { Tab, Tab_Panel } from '@/types/components/appTabs'
 
 // Unified shape both stock and crypto listings map onto for the card.
 interface ListingCardItem {
@@ -50,29 +49,10 @@ onMounted(fetchNewCoins)
 
 const activeTabIndex = ref(0)
 
-const tabs = computed<Tab[]>(() => [
-  {
-    id: 'home-listings-stocks-tab',
-    name: t('homePage.listings.tab.stocks'),
-    controlsPanel: 'home-listings-stocks-panel',
-  },
-  {
-    id: 'home-listings-crypto-tab',
-    name: t('homePage.listings.tab.crypto'),
-    controlsPanel: 'home-listings-crypto-panel',
-  },
+const tabLabels = computed(() => [
+  t('homePage.listings.tab.stocks'),
+  t('homePage.listings.tab.crypto'),
 ])
-
-const panels: Tab_Panel[] = [
-  {
-    id: 'home-listings-stocks-panel',
-    ariaLabelledBy: 'home-listings-stocks-tab',
-  },
-  {
-    id: 'home-listings-crypto-panel',
-    ariaLabelledBy: 'home-listings-crypto-tab',
-  },
-]
 
 const stockItems = computed<ListingCardItem[]>(() =>
   stocksStore.newlyAdded.map(item => ({
@@ -143,45 +123,37 @@ const items = computed<ListingCardItem[]>(() =>
 
 <template>
   <div class="relative">
-    <AppTabs
-      v-model:activeTabIndex="activeTabIndex"
-      :tabs="tabs"
-      :panel="panels"
-      :label="t('homePage.listings.title')"
-    >
-      <template #tab-panel>
-        <div class="relative mt-6">
-          <AppSlideGroup :total-items="items.length">
-            <template
-              v-for="(it, index) in items"
-              :key="it.key"
-              #[`item-${index}`]
-            >
-              <AppNewListingCard
-                :logo="it.logo"
-                :symbol="it.symbol"
-                :is-stock="it.isStock"
-                :name="it.name"
-                :price="it.price"
-                :description="it.description"
-                :market-cap-label="t('homePage.listings.stat.marketCap')"
-                :market-cap="it.marketCap"
-                :change-label="t('homePage.listings.stat.change24h')"
-                :change="it.change"
-                :volume-label="t('homePage.listings.stat.volume24h')"
-                :volume="it.volume"
-                :favorite="it.favorite"
-                :trade-label="t('homePage.listings.trade')"
-                @select="router.push(it.to)"
-                @trade="walletMenu.openPanel(it.tradePanel)"
-                @toggle-favorite="
-                  watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
-                "
-              />
-            </template>
-          </AppSlideGroup>
-        </div>
-      </template>
-    </AppTabs>
+    <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
+    <div class="relative mt-6">
+      <AppSlideGroup :total-items="items.length">
+        <template
+          v-for="(it, index) in items"
+          :key="it.key"
+          #[`item-${index}`]
+        >
+          <AppNewListingCard
+            :logo="it.logo"
+            :symbol="it.symbol"
+            :is-stock="it.isStock"
+            :name="it.name"
+            :price="it.price"
+            :description="it.description"
+            :market-cap-label="t('homePage.listings.stat.marketCap')"
+            :market-cap="it.marketCap"
+            :change-label="t('homePage.listings.stat.change24h')"
+            :change="it.change"
+            :volume-label="t('homePage.listings.stat.volume24h')"
+            :volume="it.volume"
+            :favorite="it.favorite"
+            :trade-label="t('homePage.listings.trade')"
+            @select="router.push(it.to)"
+            @trade="walletMenu.openPanel(it.tradePanel)"
+            @toggle-favorite="
+              watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
+            "
+          />
+        </template>
+      </AppSlideGroup>
+    </div>
   </div>
 </template>
