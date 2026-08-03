@@ -22,6 +22,7 @@ import {
   isForeignStackOverflow,
   isInvalidWalletAddressError,
   isProviderNotFoundError,
+  isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
@@ -72,16 +73,19 @@ if (dsn && process.env.NODE_ENV === 'production') {
     // ProviderNotFoundError (user tried to connect a browser wallet with no
     // injected provider — already handled with a user toast), and
     // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
-    // surfacing as an unhandled "Connection is closed" rejection). These surface
-    // as serialized plain objects or bare strings with no parsed frames, so
-    // denyUrls can't catch them — inspect the original exception instead.
-    // Genuine app errors are unaffected.
+    // surfacing as an unhandled "Connection is closed" rejection), and viem
+    // WaitForTransactionReceiptTimeoutError (a submitted trade tx that did not
+    // confirm within the timeout — a network condition the app already handles).
+    // These surface as serialized plain objects or bare strings with no parsed
+    // frames, so denyUrls can't catch them — inspect the original exception
+    // instead. Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isProviderNotFoundError(originalException) ||
+        isTransactionReceiptTimeoutError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
@@ -142,11 +146,10 @@ pinia.use(
           },
           purchase: null,
           chainsStore: {
-            ...state.chainsStore as | Record<string, unknown> | undefined,
+            ...(state.chainsStore as Record<string, unknown> | undefined),
             allChains: null, // too large to send
-            chains: null // too large to send
-
-          }
+            chains: null, // too large to send
+          },
         }
       }
       return state
