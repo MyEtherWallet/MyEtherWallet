@@ -22,6 +22,7 @@ import {
   isForeignStackOverflow,
   isInvalidWalletAddressError,
   isProviderNotFoundError,
+  isRainbowKitNotFoundError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
@@ -73,18 +74,21 @@ if (dsn && process.env.NODE_ENV === 'production') {
     // ProviderNotFoundError (user tried to connect a browser wallet with no
     // injected provider — already handled with a user toast), and
     // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
-    // surfacing as an unhandled "Connection is closed" rejection), and viem
+    // surfacing as an unhandled "Connection is closed" rejection), viem
     // WaitForTransactionReceiptTimeoutError (a submitted trade tx that did not
-    // confirm within the timeout — a network condition the app already handles).
-    // These surface as serialized plain objects or bare strings with no parsed
-    // frames, so denyUrls can't catch them — inspect the original exception
-    // instead. Genuine app errors are unaffected.
+    // confirm within the timeout — a network condition the app already handles),
+    // and the external "not found rainbowkit" rejection emitted by a wallet's
+    // injected in-app-browser detection script (not app code — our bundle never
+    // throws it). These surface as serialized plain objects or bare strings with
+    // no parsed frames, so denyUrls can't catch them — inspect the original
+    // exception instead. Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isProviderNotFoundError(originalException) ||
+        isRainbowKitNotFoundError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException) ||
