@@ -363,6 +363,11 @@ watch(
               (accounts as string[])[0] !== (await wallet.value?.getAddress())
             ) {
               const _wallet = wallet.value as Web3InjectedWallet
+              // The listener outlives the injected wallet: switching to a
+              // watch-only view (which inherits walletType INJECTED) or
+              // disconnecting leaves a wallet without updateAddress. Bail
+              // instead of crashing on a stale accountsChanged event.
+              if (typeof _wallet?.updateAddress !== 'function') return
               _wallet.updateAddress(
                 (accounts as string[])[0] as HexPrefixedString,
               )
@@ -378,6 +383,7 @@ watch(
             (accounts as string[])[0] !== (await wallet.value?.getAddress())
           ) {
             const _wallet = wallet.value as Web3InjectedWallet
+            if (typeof _wallet?.updateAddress !== 'function') return
             _wallet.updateAddress(
               (accounts as string[])[0] as HexPrefixedString,
             )
