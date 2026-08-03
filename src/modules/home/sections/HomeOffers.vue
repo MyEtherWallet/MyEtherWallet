@@ -2,10 +2,12 @@
 import { useI18n } from 'vue-i18n'
 import AppRewardsCard from '@/components/AppRewardsCard.vue'
 import { useHomeOffers } from '../composables/useHomeOffers'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import peggyAstronaut from '@/assets/images/home/offers/peggy-astronaut.svg'
 
 const { t } = useI18n()
 const { offers } = useHomeOffers()
+const walletMenu = useWalletMenuStore()
 </script>
 
 <template>
@@ -24,7 +26,7 @@ const { offers } = useHomeOffers()
       :title="t(o.titleKey)"
       :highlight="t(o.highlightKey)"
       :gradient="o.gradient"
-      :to="o.to"
+      @click="walletMenu.openPanel(o.panel)"
     />
   </div>
 </template>

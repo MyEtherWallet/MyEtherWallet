@@ -15,15 +15,18 @@ const props = withDefaults(
   { gradient: 'purple' },
 )
 
-const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
+// Renders as a link when `to` is set, otherwise a real button so consumers
+// can wire a click action (e.g. open a side-drawer module) accessibly.
+const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
 </script>
 
 <template>
   <component
     :is="tag"
     :to="props.to"
+    :type="props.to ? undefined : 'button'"
     data-test="rewards-card"
-    class="group relative flex h-[230px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5"
+    class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left"
   >
     <!-- decorative gradient blob (per-card variant) -->
     <span

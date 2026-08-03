@@ -1,6 +1,6 @@
 import { shallowRef, type Ref, type Component } from 'vue'
 import { ChartBarSquareIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid'
-import type { RouteLocationRaw } from 'vue-router'
+import type { WalletPanel } from '@/stores/walletMenuStore'
 
 export interface HomeOffer {
   id: string
@@ -9,7 +9,8 @@ export interface HomeOffer {
   titleKey: string
   highlightKey: string
   gradient: 'purple' | 'blue' | 'green'
-  to?: RouteLocationRaw
+  // Side-drawer panel this offer opens (not a route — opens a module).
+  panel: WalletPanel
 }
 
 // ponytail: static placeholder — swap this body for a CMS fetch when the endpoint exists.
@@ -26,7 +27,7 @@ export function useHomeOffers(): {
       titleKey: 'homePage.offers.items.trade.title',
       highlightKey: 'homePage.offers.items.trade.highlight',
       gradient: 'purple',
-      to: '/',
+      panel: 'trade',
     },
     {
       id: 'buy',
@@ -35,7 +36,7 @@ export function useHomeOffers(): {
       titleKey: 'homePage.offers.items.buy.title',
       highlightKey: 'homePage.offers.items.buy.highlight',
       gradient: 'blue',
-      to: '/stocks',
+      panel: 'purchase',
     },
     {
       id: 'hold',
@@ -44,7 +45,7 @@ export function useHomeOffers(): {
       titleKey: 'homePage.offers.items.hold.title',
       highlightKey: 'homePage.offers.items.hold.highlight',
       gradient: 'green',
-      to: '/',
+      panel: 'trade',
     },
   ])
   return { offers, isLoading: shallowRef(false) }
