@@ -50,6 +50,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'Proposal expired',
       'Pairing expired',
       'Request expired',
+      // Transient WalletConnect relay hiccup: the @walletconnect/core Subscriber
+      // fails to subscribe to a session topic over the relay WebSocket. The
+      // connect flow already handles it (user gets a "Could not connect" toast
+      // and can retry), so it is benign, unactionable network noise.
+      /Subscribing to \w+ failed, please try again/,
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
     // carry parsed extension frames).
