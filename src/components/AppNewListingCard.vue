@@ -60,7 +60,7 @@ const changeText = computed(() =>
       <button
         type="button"
         data-test="listing-favorite"
-        class="flex size-8 shrink-0 items-center justify-center rounded-full"
+        class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
       >
         <StarSolidIcon v-if="favorite" class="size-5 text-primary" />
