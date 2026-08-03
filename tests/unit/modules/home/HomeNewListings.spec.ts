@@ -125,10 +125,14 @@ describe('HomeNewListings', () => {
         stubs: {
           AppTabs: AppTabsStub,
           AppSlideGroup: AppSlideGroupStub,
-          // AppTokenLogo pulls in stocksStore (Pinia) internally — irrelevant
-          // to this section's mapping logic, so it's stubbed rather than
-          // wiring a store.
+          // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
+          // internally — irrelevant to this section's mapping logic, so
+          // they're stubbed. AppTokenSymbol still renders the symbol text.
           AppTokenLogo: true,
+          AppTokenSymbol: {
+            props: ['symbol'],
+            template: '<span>{{ symbol }}</span>',
+          },
         },
       },
     })

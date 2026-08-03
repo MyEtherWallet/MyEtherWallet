@@ -160,6 +160,7 @@ const items = computed<ListingCardItem[]>(() =>
               <AppNewListingCard
                 :logo="it.logo"
                 :symbol="it.symbol"
+                :is-stock="it.isStock"
                 :name="it.name"
                 :price="it.price"
                 :description="it.description"

@@ -4,11 +4,13 @@ import { StarIcon as StarSolidIcon } from '@heroicons/vue/20/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
 interface Props {
   logo?: string
   symbol: string
   name?: string
+  isStock?: boolean
   price?: string
   description?: string
   marketCapLabel?: string
@@ -48,6 +50,7 @@ const changeText = computed(() =>
       <AppTokenLogo
         :url="logo"
         :symbol="symbol"
+        :is-stock="isStock"
         width="size-10"
         height="size-10"
         class="shrink-0"
@@ -71,9 +74,11 @@ const changeText = computed(() =>
     <!-- B. Name block -->
     <div class="flex w-full flex-col gap-1">
       <div class="flex w-full items-baseline gap-1 text-s-16">
-        <span class="shrink-0 font-semibold tracking-[-0.32px] text-black">{{
-          symbol
-        }}</span>
+        <AppTokenSymbol
+          :symbol="symbol"
+          :is-stock="isStock"
+          class="shrink-0 !text-s-16 !font-semibold tracking-[-0.32px] text-black"
+        />
         <span v-if="name" class="min-w-0 flex-1 truncate text-[#575757]">{{
           name
         }}</span>

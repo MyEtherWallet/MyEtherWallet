@@ -7,7 +7,18 @@ describe('AppNewListingCard', () => {
     mount(AppNewListingCard, {
       // AppTokenLogo pulls in stocksStore (Pinia) internally — irrelevant to
       // this card's own behavior, so it's stubbed rather than wiring a store.
-      global: { stubs: { AppTokenLogo: true } },
+      // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia) internally —
+      // irrelevant to this card's own logic, so they're stubbed. The
+      // AppTokenSymbol stub still renders the symbol text so assertions hold.
+      global: {
+        stubs: {
+          AppTokenLogo: true,
+          AppTokenSymbol: {
+            props: ['symbol'],
+            template: '<span>{{ symbol }}</span>',
+          },
+        },
+      },
       props: {
         symbol: 'AAPL',
         name: 'Apple',
