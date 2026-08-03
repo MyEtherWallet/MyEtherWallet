@@ -677,14 +677,34 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
+// Category values the table API filters by server-side
+// (src/mew_api/schema.ts → WebStocksTableCategory). Any other tab renders but
+// falls back to the unfiltered list until the backend adds support — see
+// fetchTableUrl. Sending an unsupported value would 400 the request.
+const API_CATEGORIES = new Set([
+  'EQUITIES',
+  'STOCK',
+  'ETF',
+  'COMMODITIES',
+  'FIXED_INCOME',
+])
+
+// Product-defined category tabs (MEW-2069). 'all' is the fixed default view;
+// the rest are stock categories in the requested order. Only the
+// API_CATEGORIES subset filters today; the others (Large Cap, US, Growth,
+// Technology, Value, Small Cap, Industrials) are not yet supported server-side.
 const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
-  { label: t('stocks.category_watchlist'), value: 'watchlist' },
-  { label: t('stocks.category_etf'), value: 'ETF' },
-  { label: t('stocks.category_stock'), value: 'STOCK' },
   { label: t('stocks.category_equities'), value: 'EQUITIES' },
-  { label: t('stocks.category_commodities'), value: 'COMMODITIES' },
-  { label: t('stocks.category_fixed_income'), value: 'FIXED_INCOME' },
+  { label: t('stocks.category_stock'), value: 'STOCK' },
+  { label: t('stocks.category_large_cap'), value: 'LARGE_CAP' },
+  { label: t('stocks.category_us'), value: 'US' },
+  { label: t('stocks.category_growth'), value: 'GROWTH' },
+  { label: t('stocks.category_technology'), value: 'TECHNOLOGY' },
+  { label: t('stocks.category_etf'), value: 'ETF' },
+  { label: t('stocks.category_value'), value: 'VALUE' },
+  { label: t('stocks.category_small_cap'), value: 'SMALL_CAP' },
+  { label: t('stocks.category_industrials'), value: 'INDUSTRIALS' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
@@ -801,7 +821,9 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('search', searchInput.value)
   }
 
-  if (selectedCryptoFilter.value.value !== 'all') {
+  // Only send `category` for API-supported values; unsupported tabs (and 'all')
+  // fall back to the unfiltered list rather than 400-ing the request.
+  if (API_CATEGORIES.has(selectedCryptoFilter.value.value)) {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }
 
