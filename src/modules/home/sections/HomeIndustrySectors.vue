@@ -32,8 +32,9 @@ const tabSectors = computed(() =>
         >
           <AppIndustrySectorTile
             :label="t(s.labelKey)"
+            :color="s.color"
+            :icon="s.icon"
             :to="sectorLink(s)"
-            class="mr-6"
           />
         </template>
       </AppSlideGroup>

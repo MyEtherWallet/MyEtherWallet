@@ -2,33 +2,30 @@ import { describe, it, expect } from 'vitest'
 import { sectors, sectorLink } from '@/modules/home/sectors'
 
 describe('sectors', () => {
-  it('exposes the researched stock categories', () => {
+  it('exposes the Figma stock sector tiles', () => {
     const filters = sectors.filter(s => s.market === 'stocks').map(s => s.filter)
-    expect(filters).toEqual(
-      expect.arrayContaining([
-        'Equities',
-        'Stock',
-        'Large Cap',
-        'US',
-        'Growth',
-        'Technology',
-        'ETF',
-        'Value',
-        'Small Cap',
-        'Industrials',
-      ]),
-    )
-    expect(filters.length).toBe(10)
+    expect(filters).toEqual([
+      '24/7 RWAs',
+      'Consumer',
+      'ETFs',
+      'Financials',
+      'Growth',
+      'Technology',
+      'Value',
+      'Commodities',
+    ])
   })
 
-  it('exposes 6 crypto categories', () => {
+  it('exposes 6 crypto sectors', () => {
     const filters = sectors.filter(s => s.market === 'crypto').map(s => s.filter)
     expect(filters.length).toBe(6)
   })
 
-  it('gives every sector a namespaced labelKey', () => {
+  it('gives every sector a namespaced labelKey, a color and an icon', () => {
     sectors.forEach(s => {
-      expect(s.labelKey).toBe(`homePage.sectors.labels.${s.filter}`)
+      expect(s.labelKey).toMatch(/^homePage\.sectors\.labels\./)
+      expect(s.color).toMatch(/^#[0-9a-f]{6}$/i)
+      expect(s.icon).toBeTruthy()
     })
   })
 
