@@ -37,7 +37,12 @@
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
-          <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
+          <div
+            :class="[
+              'min-h-[600px] pt-3 xs:pt-6',
+              isHomeStaging ? '' : 'px-3 xs:px-5',
+            ]"
+          >
             <router-view />
           </div>
           <MewFooter
@@ -123,6 +128,12 @@ const backgroundClass = computed(() => {
     return ''
   }
 })
+
+// The new Home page keeps the layout max-width but drops the shared horizontal
+// padding, so its sections own their padding.
+const isHomeStaging = computed(
+  () => route.name === ROUTES_MAIN.HOME_STAGING.NAME,
+)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

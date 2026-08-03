@@ -17,7 +17,7 @@ const visible = computed(() =>
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-[1360px]">
+  <div class="w-full">
     <AppHomeSection
       v-for="s in visible"
       :key="s.id"
