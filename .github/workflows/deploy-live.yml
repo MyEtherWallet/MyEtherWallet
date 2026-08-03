@@ -47,7 +47,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_TOKEN}}
           SENTRY_ORG: myetherwallet-inc
         run: |
-          curl -sL https://sentry.io/get-cli/ | bash
+          curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION=2.41.1 bash
           TAG=${{ steps.get_release_tag.outputs.VERSION }}
           RELEASE=${TAG//v/}
           sentry-cli releases new -p myetherwallet-web-v6 $RELEASE
