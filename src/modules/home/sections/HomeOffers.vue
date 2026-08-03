@@ -14,7 +14,7 @@ const { offers } = useHomeOffers()
       :src="peggyAstronaut"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-[120px] right-6 z-10 hidden h-[120px] w-auto -scale-x-100 md:block"
+      class="pointer-events-none absolute -top-[120px] right-6 z-[1] hidden h-[120px] w-auto -scale-x-100 md:block"
     />
     <AppRewardsCard
       v-for="o in offers"
