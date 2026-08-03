@@ -19,4 +19,13 @@ export const homeSections: HomeSection[] = [
     titleKey: 'homePage.offers.title',
     subtitleKey: 'homePage.offers.subtitle',
   },
+  {
+    id: 'listings',
+    component: defineAsyncComponent(
+      () => import('./sections/HomeNewListings.vue'),
+    ),
+    visibleWhen: 'always',
+    titleKey: 'homePage.listings.title',
+    subtitleKey: 'homePage.listings.subtitle',
+  },
 ]
