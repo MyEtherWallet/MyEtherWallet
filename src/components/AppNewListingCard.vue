@@ -70,11 +70,13 @@ const changeText = computed(() =>
 
     <!-- B. Name block -->
     <div class="flex w-full flex-col gap-1">
-      <div class="flex items-baseline gap-1 text-s-16">
-        <span class="font-semibold tracking-[-0.32px] text-black">{{
+      <div class="flex w-full items-baseline gap-1 text-s-16">
+        <span class="shrink-0 font-semibold tracking-[-0.32px] text-black">{{
           symbol
         }}</span>
-        <span v-if="name" class="text-[#575757]">{{ name }}</span>
+        <span v-if="name" class="min-w-0 flex-1 truncate text-[#575757]">{{
+          name
+        }}</span>
       </div>
       <p
         v-if="description"
