@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ title: string; subtitle?: string; loading?: boolean; empty?: boolean; error?: boolean }>()
+defineProps<{ title: string; subtitle?: string }>()
 </script>
 
 <template>
@@ -12,9 +12,6 @@ defineProps<{ title: string; subtitle?: string; loading?: boolean; empty?: boole
       <slot name="action" />
     </header>
 
-    <div v-if="loading" data-test="section-skeleton" class="animate-pulse h-40 rounded-lg bg-black/5" />
-    <div v-else-if="error" data-test="section-error"><slot name="error" /></div>
-    <div v-else-if="empty" data-test="section-empty" class="text-sm opacity-70"><slot name="empty" /></div>
-    <slot v-else />
+    <slot />
   </section>
 </template>

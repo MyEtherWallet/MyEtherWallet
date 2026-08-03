@@ -14,14 +14,4 @@ describe('AppHomeSection', () => {
     expect(w.get('[data-test="section-title"]').text()).toBe('Market news')
     expect(w.find('[data-test="content"]').exists()).toBe(true)
   })
-  it('shows skeleton and hides content when loading', () => {
-    const w = mountIt({ loading: true })
-    expect(w.find('[data-test="section-skeleton"]').exists()).toBe(true)
-    expect(w.find('[data-test="content"]').exists()).toBe(false)
-  })
-  it('shows empty state when empty', () => {
-    const w = mountIt({ empty: true })
-    expect(w.find('[data-test="section-empty"]').exists()).toBe(true)
-    expect(w.find('[data-test="content"]').exists()).toBe(false)
-  })
 })
