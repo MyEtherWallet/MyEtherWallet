@@ -122,6 +122,8 @@ describe('HomeNewListings', () => {
         plugins: [i18n],
         stubs: {
           AppTabBar: AppTabBarStub,
+          // Tooltip wraps each card; render its slot inline (skip teleport/hover).
+          AppTooltip: { template: '<div><slot /></div>' },
           AppSlideGroup: AppSlideGroupStub,
           // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
           // internally — irrelevant to this section's mapping logic, so
@@ -196,6 +198,17 @@ describe('HomeNewListings', () => {
       .get('[data-test="listing-favorite"]')
       .trigger('click')
     expect(setWatchlistItem).toHaveBeenCalledWith('btc', false)
+  })
+
+  it('opens the swap panel from a crypto card CTA', async () => {
+    openPanel.mockClear()
+    const w = mountIt()
+    await w.get('[data-test="tab-switch"]').trigger('click') // crypto
+    await w
+      .findAll('[data-test="listing-card"]')[0]
+      .get('[data-test="listing-trade"]')
+      .trigger('click')
+    expect(openPanel).toHaveBeenCalledWith('swap')
   })
 
   it('toggles the stock in the shared watchlist when the favorite star is clicked', async () => {

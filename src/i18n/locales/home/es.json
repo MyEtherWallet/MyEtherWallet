@@ -20,7 +20,10 @@
         "change24h": "24 h",
         "volume24h": "Vol. 24 h"
       },
-      "trade": "Operar"
+      "trade": "Operar",
+      "swap": "Intercambiar",
+      "openStockPage": "Abrir página de la acción",
+      "openCryptoPage": "Abrir página del token"
     },
     "sectors": {
       "title": "Sectores de la industria",

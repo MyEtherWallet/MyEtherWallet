@@ -20,7 +20,10 @@
         "change24h": "24h",
         "volume24h": "24h vol"
       },
-      "trade": "Trade"
+      "trade": "Trade",
+      "swap": "Swap",
+      "openStockPage": "Open stock page",
+      "openCryptoPage": "Open crypto page"
     },
     "sectors": {
       "title": "Industry sectors",

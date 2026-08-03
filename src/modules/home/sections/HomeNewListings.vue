@@ -17,6 +17,7 @@ import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 
 // Unified shape both stock and crypto listings map onto for the card.
 interface ListingCardItem {
@@ -33,6 +34,8 @@ interface ListingCardItem {
   favoriteId: string
   isStock: boolean
   tradePanel: WalletPanel
+  ctaLabel: string
+  tooltip: string
   to: RouteLocationRaw
 }
 
@@ -79,6 +82,8 @@ const stockItems = computed<ListingCardItem[]>(() =>
     favoriteId: item.primaryMarket.symbol,
     isStock: true,
     tradePanel: 'trade',
+    ctaLabel: t('homePage.listings.trade'),
+    tooltip: t('homePage.listings.openStockPage'),
     to: {
       name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: { symbol: item.primaryMarket.symbol },
@@ -104,6 +109,8 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
     favoriteId: item.coinId,
     isStock: false,
     tradePanel: 'swap',
+    ctaLabel: t('homePage.listings.swap'),
+    tooltip: t('homePage.listings.openCryptoPage'),
     to: item.ondo
       ? {
           name: STOCK_INFO_ROUTE_NAMES.crypto,
@@ -131,27 +138,29 @@ const items = computed<ListingCardItem[]>(() =>
           :key="it.key"
           #[`item-${index}`]
         >
-          <AppNewListingCard
-            :logo="it.logo"
-            :symbol="it.symbol"
-            :is-stock="it.isStock"
-            :name="it.name"
-            :price="it.price"
-            :description="it.description"
-            :market-cap-label="t('homePage.listings.stat.marketCap')"
-            :market-cap="it.marketCap"
-            :change-label="t('homePage.listings.stat.change24h')"
-            :change="it.change"
-            :volume-label="t('homePage.listings.stat.volume24h')"
-            :volume="it.volume"
-            :favorite="it.favorite"
-            :trade-label="t('homePage.listings.trade')"
-            @select="router.push(it.to)"
-            @trade="walletMenu.openPanel(it.tradePanel)"
-            @toggle-favorite="
-              watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
-            "
-          />
+          <AppTooltip :text="it.tooltip" position="middle">
+            <AppNewListingCard
+              :logo="it.logo"
+              :symbol="it.symbol"
+              :is-stock="it.isStock"
+              :name="it.name"
+              :price="it.price"
+              :description="it.description"
+              :market-cap-label="t('homePage.listings.stat.marketCap')"
+              :market-cap="it.marketCap"
+              :change-label="t('homePage.listings.stat.change24h')"
+              :change="it.change"
+              :volume-label="t('homePage.listings.stat.volume24h')"
+              :volume="it.volume"
+              :favorite="it.favorite"
+              :trade-label="it.ctaLabel"
+              @select="router.push(it.to)"
+              @trade="walletMenu.openPanel(it.tradePanel)"
+              @toggle-favorite="
+                watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
+              "
+            />
+          </AppTooltip>
         </template>
       </AppSlideGroup>
     </div>

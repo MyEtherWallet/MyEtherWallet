@@ -20,7 +20,10 @@
         "change24h": "24小时",
         "volume24h": "24小时成交量"
       },
-      "trade": "交易"
+      "trade": "交易",
+      "swap": "兑换",
+      "openStockPage": "打开股票页面",
+      "openCryptoPage": "打开加密页面"
     },
     "sectors": {
       "title": "行业板块",
