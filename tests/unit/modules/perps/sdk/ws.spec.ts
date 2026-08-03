@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createPerpsWs, type PerpsWs } from '../ws'
+import { createPerpsWs, type PerpsWs } from '@/modules/perps/sdk/ws'
 
 class FakeSocket {
   static instances: FakeSocket[] = []

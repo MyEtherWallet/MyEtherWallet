@@ -134,8 +134,8 @@ describe('WatchOnlyWallet.getBalance address/chain-type guard (MEW-2043)', () =>
       'watch-only',
     )
 
-    await expect(wallet.getBalance()).resolves.toEqual<TokenBalancesRaw>({
+    await expect(wallet.getBalance()).resolves.toEqual({
       result: [],
-    })
+    } satisfies TokenBalancesRaw)
   })
 })
