@@ -1,16 +1,41 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, type RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import {
+  useWalletMenuStore,
+  type WalletPanel,
+} from '@/stores/walletMenuStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useCurrency } from '@/composables/useCurrency'
-import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  STOCK_INFO_ROUTE_NAMES,
+  TOKEN_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
+import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
 import type { Tab, Tab_Panel } from '@/types/components/appTabs'
+
+// Unified shape both stock and crypto listings map onto for the card.
+interface ListingCardItem {
+  key: string
+  symbol: string
+  name?: string
+  price?: string
+  description?: string
+  marketCap: string
+  change?: number
+  volume: string
+  logo?: string
+  favorite: boolean
+  favoriteId: string
+  isStock: boolean
+  tradePanel: WalletPanel
+  to: RouteLocationRaw
+}
 
 const { t } = useI18n()
 const router = useRouter()
@@ -18,6 +43,10 @@ const stocksStore = useStocksStore()
 const walletMenu = useWalletMenuStore()
 const watchlistStore = useWatchlistStore()
 const { formatFiat, formatFiatCompact } = useCurrency()
+const { newCoins, fetchNewCoins } = useCryptoNewCoins()
+
+// Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
+onMounted(fetchNewCoins)
 
 const activeTabIndex = ref(0)
 
@@ -45,7 +74,7 @@ const panels: Tab_Panel[] = [
   },
 ]
 
-const stockItems = computed(() =>
+const stockItems = computed<ListingCardItem[]>(() =>
   stocksStore.newlyAdded.map(item => ({
     key: item.primaryMarket.symbol,
     name: item.underlyingMarket.name,
@@ -67,6 +96,9 @@ const stockItems = computed(() =>
       : '-',
     logo: item.iconPngUrl || item.iconSvgUrl,
     favorite: watchlistStore.isWatchListed(item.primaryMarket.symbol),
+    favoriteId: item.primaryMarket.symbol,
+    isStock: true,
+    tradePanel: 'trade',
     to: {
       name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: { symbol: item.primaryMarket.symbol },
@@ -74,20 +106,39 @@ const stockItems = computed(() =>
   })),
 )
 
-// No crypto "newly added" overview endpoint exists yet (unlike stocksStore's
-// `newlyAdded`, there's no equivalent crypto store/composable at the time of
-// writing) — documented placeholder until that data source lands.
-const cryptoItems: (typeof stockItems)['value'] = []
-
-const items = computed(() =>
-  activeTabIndex.value === 0 ? stockItems.value : cryptoItems,
+// Crypto tab: the `newCoins` from the crypto overview. These only carry
+// price + 24h change (no market cap / volume in the API), so those stats show
+// "-". Ondo-backed coins link to the stock page; the rest to the token page.
+const cryptoItems = computed<ListingCardItem[]>(() =>
+  newCoins.value.map(item => ({
+    key: item.coinId,
+    name: item.name,
+    symbol: item.symbol,
+    price: formatFiat(item.price).display,
+    description: undefined,
+    marketCap: '-',
+    change: item.priceChangePercentage24h,
+    volume: '-',
+    logo: item.logoUrl ?? undefined,
+    favorite: watchlistStore.isWatchListed(item.coinId),
+    favoriteId: item.coinId,
+    isStock: false,
+    tradePanel: 'swap',
+    to: item.ondo
+      ? {
+          name: STOCK_INFO_ROUTE_NAMES.crypto,
+          params: { symbol: item.ondo.primaryMarket.symbol },
+        }
+      : {
+          name: TOKEN_INFO_ROUTE_NAMES.crypto,
+          params: { tokenId: item.coinId },
+        },
+  })),
 )
 
-// Toggle stock favorite in the shared watchlist (same store the stocks table
-// uses), so favorites stay in sync across the app.
-const onToggleFavorite = (symbol: string) => {
-  watchlistStore.setWatchlistItem(symbol, true)
-}
+const items = computed<ListingCardItem[]>(() =>
+  activeTabIndex.value === 0 ? stockItems.value : cryptoItems.value,
+)
 </script>
 
 <template>
@@ -121,8 +172,10 @@ const onToggleFavorite = (symbol: string) => {
                 :favorite="it.favorite"
                 :trade-label="t('homePage.listings.trade')"
                 @select="router.push(it.to)"
-                @trade="walletMenu.openPanel('trade')"
-                @toggle-favorite="onToggleFavorite(it.symbol)"
+                @trade="walletMenu.openPanel(it.tradePanel)"
+                @toggle-favorite="
+                  watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
+                "
               />
             </template>
           </AppSlideGroup>

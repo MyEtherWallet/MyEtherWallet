@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
@@ -73,6 +74,23 @@ vi.mock('@/stores/watchlistTableStore', () => ({
 const push = vi.fn()
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push }),
+}))
+
+// Crypto tab data — the `newCoins` from the crypto overview composable.
+const newCoins = ref([
+  {
+    coinId: 'btc',
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    price: 60000,
+    priceChangePercentage24h: 2.1,
+    logoUrl: null,
+    ondo: null,
+  },
+])
+const fetchNewCoins = vi.fn()
+vi.mock('@/modules/home/composables/useCryptoNewCoins', () => ({
+  useCryptoNewCoins: () => ({ newCoins, fetchNewCoins, isLoading: ref(false) }),
 }))
 
 import HomeNewListings from '@/modules/home/sections/HomeNewListings.vue'
@@ -156,13 +174,26 @@ describe('HomeNewListings', () => {
     expect(openPanel).toHaveBeenCalledWith('trade')
   })
 
-  it('switches from stocks (2 cards) to crypto (0 cards, empty placeholder) on tab change', async () => {
+  it('switches from stocks (2 cards) to crypto newCoins on tab change', async () => {
     const w = mountIt()
     expect(w.findAll('[data-test="listing-card"]').length).toBe(2)
 
     await w.get('[data-test="tab-switch"]').trigger('click')
 
-    expect(w.findAll('[data-test="listing-card"]').length).toBe(0)
+    const cards = w.findAll('[data-test="listing-card"]')
+    expect(cards.length).toBe(1)
+    expect(cards[0].text()).toContain('BTC')
+  })
+
+  it('toggles a crypto coin as a token (isStock=false) on the crypto tab', async () => {
+    setWatchlistItem.mockClear()
+    const w = mountIt()
+    await w.get('[data-test="tab-switch"]').trigger('click') // crypto
+    await w
+      .findAll('[data-test="listing-card"]')[0]
+      .get('[data-test="listing-favorite"]')
+      .trigger('click')
+    expect(setWatchlistItem).toHaveBeenCalledWith('btc', false)
   })
 
   it('toggles the stock in the shared watchlist when the favorite star is clicked', async () => {
