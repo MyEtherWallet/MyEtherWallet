@@ -2,15 +2,16 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStocksStore } from '@/stores/stocksStore'
+import { useCurrency } from '@/composables/useCurrency'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
-import AppScrollFade from '@/components/AppScrollFade.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
 import type { Tab, Tab_Panel } from '@/types/components/appTabs'
 
 const { t } = useI18n()
 const stocksStore = useStocksStore()
+const { formatFiat } = useCurrency()
 
 const activeTabIndex = ref(0)
 
@@ -43,7 +44,9 @@ const stockItems = computed(() =>
     key: item.primaryMarket.symbol,
     name: item.underlyingMarket.name,
     symbol: item.primaryMarket.symbol,
-    price: item.primaryMarket.price,
+    price: item.primaryMarket.price
+      ? formatFiat(item.primaryMarket.price).display
+      : undefined,
     change: item.primaryMarket.priceChangePercentage24h
       ? parseFloat(item.primaryMarket.priceChangePercentage24h)
       : undefined,
@@ -91,7 +94,6 @@ const items = computed(() =>
               />
             </template>
           </AppSlideGroup>
-          <AppScrollFade edge="right" />
         </div>
       </template>
     </AppTabs>

@@ -17,6 +17,8 @@ const i18n = createI18n({
 // Real StockOverviewItem shape (src/mew_api/schema.ts →
 // GetWebStocksOverviewResponse['newlyAdded'][number]): fields are nested
 // under primaryMarket/underlyingMarket, not flat name/symbol/changePercent.
+// `price` is a raw numeric string per the API schema (e.g. "172.34"), with no
+// currency symbol — formatting is HomeNewListings' job, via useCurrency below.
 vi.mock('@/stores/stocksStore', () => ({
   useStocksStore: () => ({
     newlyAdded: [
@@ -25,7 +27,7 @@ vi.mock('@/stores/stocksStore', () => ({
         iconPngUrl: undefined,
         primaryMarket: {
           symbol: 'AAPL',
-          price: '$1',
+          price: '172.34',
           priceChangePercentage24h: '1.5',
           sparkline24h: [],
         },
@@ -36,13 +38,23 @@ vi.mock('@/stores/stocksStore', () => ({
         iconPngUrl: undefined,
         primaryMarket: {
           symbol: 'TSLA',
-          price: '$2',
+          price: '248.5',
           priceChangePercentage24h: '-1.5',
           sparkline24h: [],
         },
         underlyingMarket: { name: 'Tesla', volume24h: '0', marketCap: '0' },
       },
     ],
+  }),
+}))
+
+// Mirrors TokenRow.vue's use of useCurrency().formatFiat(price).display —
+// mocked directly (rather than through the real currencyStore/purchaseStore
+// chain) since only the formatting call-site in HomeNewListings is under
+// test here.
+vi.mock('@/composables/useCurrency', () => ({
+  useCurrency: () => ({
+    formatFiat: (value: string) => ({ display: `$${value}` }),
   }),
 }))
 
@@ -99,6 +111,13 @@ describe('HomeNewListings', () => {
     expect(
       w.findAll('[data-test="listing-change"]')[1].attributes('data-dir'),
     ).toBe('down')
+  })
+
+  it('formats the raw price string via useCurrency before handing it to the card', () => {
+    const w = mountIt()
+    const prices = w.findAll('[data-test="listing-price"]')
+    expect(prices[0].text()).toBe('$172.34')
+    expect(prices[1].text()).toBe('$248.5')
   })
 
   it('switches from stocks (2 cards) to crypto (0 cards, empty placeholder) on tab change', async () => {
