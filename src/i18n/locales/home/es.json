@@ -14,7 +14,13 @@
     "listings": {
       "title": "Nuevas cotizaciones",
       "subtitle": "Encuentra nuevas acciones de Ondo y tokens de criptomonedas en el mercado",
-      "tab": { "stocks": "Acciones", "crypto": "Cripto" }
+      "tab": { "stocks": "Acciones", "crypto": "Cripto" },
+      "stat": {
+        "marketCap": "Cap. mercado",
+        "change24h": "24 h",
+        "volume24h": "Vol. 24 h"
+      },
+      "trade": "Operar"
     },
     "sectors": {
       "title": "Sectores de la industria",

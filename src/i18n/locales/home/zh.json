@@ -14,7 +14,13 @@
     "listings": {
       "title": "新上市",
       "subtitle": "发现市场上新的 Ondo 股票和加密货币代币",
-      "tab": { "stocks": "股票", "crypto": "加密货币" }
+      "tab": { "stocks": "股票", "crypto": "加密货币" },
+      "stat": {
+        "marketCap": "市值",
+        "change24h": "24小时",
+        "volume24h": "24小时成交量"
+      },
+      "trade": "交易"
     },
     "sectors": {
       "title": "行业板块",

@@ -1,53 +1,145 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { RouteLocationRaw } from 'vue-router'
+import { StarIcon as StarSolidIcon } from '@heroicons/vue/20/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 
-const props = defineProps<{
-  name: string
-  symbol: string
-  price?: string
-  change?: number
+interface Props {
   logo?: string
-  to?: string | RouteLocationRaw
+  symbol: string
+  name?: string
+  price?: string
+  description?: string
+  marketCapLabel?: string
+  marketCap?: string
+  changeLabel?: string
+  change?: number
+  volumeLabel?: string
+  volume?: string
+  favorite?: boolean
+  tradeLabel?: string
+}
+
+const props = defineProps<Props>()
+
+defineEmits<{
+  select: []
+  trade: []
+  'toggle-favorite': []
 }>()
 
-const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
-
-const dir = computed<'up' | 'down' | 'flat'>(() =>
-  props.change == null ? 'flat' : props.change >= 0 ? 'up' : 'down',
+const up = computed(() => (props.change ?? 0) >= 0)
+const changeColor = computed(() => (up.value ? 'text-success' : 'text-error'))
+const changeArrowIcon = computed(() => (up.value ? ArrowUpIcon : ArrowDownIcon))
+const changeText = computed(() =>
+  props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
 )
 </script>
 
 <template>
-  <component
-    :is="tag"
-    :to="props.to"
+  <div
     data-test="listing-card"
-    class="block w-[160px] shrink-0 rounded-2xl bg-surface p-4 xs:w-[180px]"
+    class="flex w-full cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4"
+    @click="$emit('select')"
   >
-    <img v-if="logo" :src="logo" alt="" class="mb-3 h-8 w-8 rounded-full" />
-    <div data-test="listing-name" class="truncate text-s-15 font-semibold">
-      {{ name }}
+    <!-- A. Header row -->
+    <div class="flex w-full items-center gap-2">
+      <AppTokenLogo
+        :url="logo"
+        :symbol="symbol"
+        width="size-10"
+        height="size-10"
+        class="shrink-0"
+      />
+      <p
+        class="min-w-0 flex-1 truncate text-right text-s-16 font-semibold tracking-[-0.32px] text-black"
+      >
+        {{ price }}
+      </p>
+      <button
+        type="button"
+        data-test="listing-favorite"
+        class="flex size-8 shrink-0 items-center justify-center rounded-full"
+        @click.stop="$emit('toggle-favorite')"
+      >
+        <StarSolidIcon v-if="favorite" class="size-5 text-primary" />
+        <StarOutlineIcon v-else class="size-5 text-[#575757]" />
+      </button>
     </div>
-    <div data-test="listing-symbol" class="text-s-12 text-info">
-      {{ symbol }}
+
+    <!-- B. Name block -->
+    <div class="flex w-full flex-col gap-1">
+      <div class="flex items-baseline gap-1 text-s-16">
+        <span class="font-semibold tracking-[-0.32px] text-black">{{
+          symbol
+        }}</span>
+        <span v-if="name" class="text-[#575757]">{{ name }}</span>
+      </div>
+      <p
+        v-if="description"
+        class="line-clamp-3 text-s-14 leading-5 text-[#575757]"
+      >
+        {{ description }}
+      </p>
     </div>
-    <div data-test="listing-price" class="mt-2 text-s-15 font-medium">
-      {{ price }}
+
+    <!-- C. Stats row -->
+    <div class="flex w-full items-start gap-6">
+      <div class="flex min-w-0 flex-1 flex-col">
+        <p
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+        >
+          {{ marketCapLabel }}
+        </p>
+        <p
+          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
+        >
+          {{ marketCap }}
+        </p>
+      </div>
+      <div class="flex min-w-0 flex-1 flex-col">
+        <p
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+        >
+          {{ changeLabel }}
+        </p>
+        <div v-if="change != null" class="flex items-center gap-1">
+          <p
+            class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
+            :class="changeColor"
+          >
+            {{ changeText }}
+          </p>
+          <component
+            :is="changeArrowIcon"
+            class="size-4"
+            :class="changeColor"
+          />
+        </div>
+      </div>
+      <div class="flex min-w-0 flex-1 flex-col">
+        <p
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+        >
+          {{ volumeLabel }}
+        </p>
+        <p
+          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
+        >
+          {{ volume }}
+        </p>
+      </div>
     </div>
-    <div
-      data-test="listing-change"
-      :data-dir="dir"
-      class="text-s-12"
-      :class="{
-        'text-success': dir === 'up',
-        'text-error': dir === 'down',
-        'text-info': dir === 'flat',
-      }"
+
+    <!-- D. Trade button -->
+    <button
+      type="button"
+      data-test="listing-trade"
+      class="flex h-10 w-full items-center justify-center rounded-3xl bg-[#d6edff] text-s-14 font-semibold tracking-[-0.28px] text-primary"
+      @click.stop="$emit('trade')"
     >
-      {{
-        change != null ? `${change > 0 ? '+' : ''}${change.toFixed(2)}%` : '--'
-      }}
-    </div>
-  </component>
+      {{ tradeLabel }}
+    </button>
+  </div>
 </template>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useCurrency } from '@/composables/useCurrency'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
@@ -10,7 +12,9 @@ import AppNewListingCard from '@/components/AppNewListingCard.vue'
 import type { Tab, Tab_Panel } from '@/types/components/appTabs'
 
 const { t } = useI18n()
+const router = useRouter()
 const stocksStore = useStocksStore()
+const walletMenu = useWalletMenuStore()
 const { formatFiat } = useCurrency()
 
 const activeTabIndex = ref(0)
@@ -47,9 +51,18 @@ const stockItems = computed(() =>
     price: item.primaryMarket.price
       ? formatFiat(item.primaryMarket.price).display
       : undefined,
+    // data gap: newlyAdded has no description field (src/mew_api/schema.ts) —
+    // card renders without one until a source exists.
+    description: undefined,
+    marketCap: item.underlyingMarket.marketCap
+      ? formatFiat(Number(item.underlyingMarket.marketCap)).display
+      : '-',
     change: item.primaryMarket.priceChangePercentage24h
       ? parseFloat(item.primaryMarket.priceChangePercentage24h)
       : undefined,
+    volume: item.underlyingMarket.volume24h
+      ? formatFiat(Number(item.underlyingMarket.volume24h)).display
+      : '-',
     logo: item.iconPngUrl || item.iconSvgUrl,
     to: {
       name: STOCK_INFO_ROUTE_NAMES.stocks,
@@ -66,6 +79,10 @@ const cryptoItems: (typeof stockItems)['value'] = []
 const items = computed(() =>
   activeTabIndex.value === 0 ? stockItems.value : cryptoItems,
 )
+
+// TODO(watchlist): wire up real favorite/watchlist persistence — separate
+// follow-up, not part of this card rebuild.
+const onToggleFavorite = () => {}
 </script>
 
 <template>
@@ -85,12 +102,21 @@ const items = computed(() =>
               #[`item-${index}`]
             >
               <AppNewListingCard
-                :name="it.name"
-                :symbol="it.symbol"
-                :price="it.price"
-                :change="it.change"
                 :logo="it.logo"
-                :to="it.to"
+                :symbol="it.symbol"
+                :name="it.name"
+                :price="it.price"
+                :description="it.description"
+                :market-cap-label="t('homePage.listings.stat.marketCap')"
+                :market-cap="it.marketCap"
+                :change-label="t('homePage.listings.stat.change24h')"
+                :change="it.change"
+                :volume-label="t('homePage.listings.stat.volume24h')"
+                :volume="it.volume"
+                :trade-label="t('homePage.listings.trade')"
+                @select="router.push(it.to)"
+                @trade="walletMenu.openPanel('trade')"
+                @toggle-favorite="onToggleFavorite"
               />
             </template>
           </AppSlideGroup>

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount, RouterLinkStub } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
 // HomeNewListings uses useI18n() (Composition API), which needs the i18n
@@ -54,8 +54,18 @@ vi.mock('@/stores/stocksStore', () => ({
 // test here.
 vi.mock('@/composables/useCurrency', () => ({
   useCurrency: () => ({
-    formatFiat: (value: string) => ({ display: `$${value}` }),
+    formatFiat: (value: string | number) => ({ display: `$${value}` }),
   }),
+}))
+
+const openPanel = vi.fn()
+vi.mock('@/stores/walletMenuStore', () => ({
+  useWalletMenuStore: () => ({ openPanel }),
+}))
+
+const push = vi.fn()
+vi.mock('vue-router', () => ({
+  useRouter: () => ({ push }),
 }))
 
 import HomeNewListings from '@/modules/home/sections/HomeNewListings.vue'
@@ -88,9 +98,12 @@ describe('HomeNewListings', () => {
       global: {
         plugins: [i18n],
         stubs: {
-          RouterLink: RouterLinkStub,
           AppTabs: AppTabsStub,
           AppSlideGroup: AppSlideGroupStub,
+          // AppTokenLogo pulls in stocksStore (Pinia) internally — irrelevant
+          // to this section's mapping logic, so it's stubbed rather than
+          // wiring a store.
+          AppTokenLogo: true,
         },
       },
     })
@@ -102,22 +115,38 @@ describe('HomeNewListings', () => {
 
   it('maps the real StockOverviewItem fields onto the card', () => {
     const w = mountIt()
-    const cards = w.findAll('[data-test="listing-name"]')
-    expect(cards[0].text()).toBe('Apple')
-    expect(w.findAll('[data-test="listing-symbol"]')[0].text()).toBe('AAPL')
-    expect(
-      w.findAll('[data-test="listing-change"]')[0].attributes('data-dir'),
-    ).toBe('up')
-    expect(
-      w.findAll('[data-test="listing-change"]')[1].attributes('data-dir'),
-    ).toBe('down')
+    const cards = w.findAll('[data-test="listing-card"]')
+    expect(cards[0].text()).toContain('AAPL')
+    expect(cards[0].text()).toContain('Apple')
+    expect(cards[0].find('.text-success').exists()).toBe(true)
+    expect(cards[1].text()).toContain('TSLA')
+    expect(cards[1].text()).toContain('Tesla')
+    expect(cards[1].find('.text-error').exists()).toBe(true)
   })
 
   it('formats the raw price string via useCurrency before handing it to the card', () => {
     const w = mountIt()
-    const prices = w.findAll('[data-test="listing-price"]')
-    expect(prices[0].text()).toBe('$172.34')
-    expect(prices[1].text()).toBe('$248.5')
+    const cards = w.findAll('[data-test="listing-card"]')
+    expect(cards[0].text()).toContain('$172.34')
+    expect(cards[1].text()).toContain('$248.5')
+  })
+
+  it('routes to the stock detail page when a card is selected', async () => {
+    const w = mountIt()
+    await w.findAll('[data-test="listing-card"]')[0].trigger('click')
+    expect(push).toHaveBeenCalledWith({
+      name: expect.anything(),
+      params: { symbol: 'AAPL' },
+    })
+  })
+
+  it('opens the trade panel when a card trade button is clicked', async () => {
+    const w = mountIt()
+    await w
+      .findAll('[data-test="listing-card"]')[0]
+      .find('[data-test="listing-trade"]')
+      .trigger('click')
+    expect(openPanel).toHaveBeenCalledWith('trade')
   })
 
   it('switches from stocks (2 cards) to crypto (0 cards, empty placeholder) on tab change', async () => {

@@ -14,7 +14,13 @@
     "listings": {
       "title": "New listings",
       "subtitle": "Find new Ondo stocks and crypto tokens in the market",
-      "tab": { "stocks": "Stocks", "crypto": "Crypto" }
+      "tab": { "stocks": "Stocks", "crypto": "Crypto" },
+      "stat": {
+        "marketCap": "Mkt cap",
+        "change24h": "24h",
+        "volume24h": "24h vol"
+      },
+      "trade": "Trade"
     },
     "sectors": {
       "title": "Industry sectors",
