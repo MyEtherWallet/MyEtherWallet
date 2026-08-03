@@ -19,6 +19,7 @@ import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
   isExtensionOrProviderError,
+  isForeignStackOverflow,
   isInvalidWalletAddressError,
   isProviderNotFoundError,
   isTrezorHandshakeError,
@@ -58,8 +59,13 @@ if (dsn && process.env.NODE_ENV === 'production') {
       /Subscribing to \w+ failed, please try again/,
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
-    // carry parsed extension frames).
-    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // carry parsed extension frames). `webkit-masked-url` is how iOS 16.4+
+    // WebKit exposes the source of extension / content-blocker / in-app-browser
+    // injected scripts.
+    denyUrls: [
+      /(?:chrome|moz|safari-web)-extension:\/\//i,
+      /webkit-masked-url:\/\//i,
+    ],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
     // "provider disconnected"), viem InvalidAddressError (a wallet returned a
     // malformed address on connect — already handled with a user toast), wagmi
@@ -77,7 +83,10 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isInvalidWalletAddressError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isTransientRpcError(originalException) ||
-        isTrezorHandshakeError(originalException)
+        isTrezorHandshakeError(originalException) ||
+        // iOS injected-script "Maximum call stack" RangeErrors with no app
+        // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
+        isForeignStackOverflow(event)
       )
         return null
       return event

@@ -67,3 +67,65 @@ export function isTrezorHandshakeError(err: unknown): boolean {
     message.toLowerCase().includes('handshake failed')
   )
 }
+
+// A stack frame belongs to MEW app code if its source URL is one of ours.
+// The host is anchored to `*.myetherwallet.com` / localhost so look-alike hosts
+// (e.g. `notmyetherwallet.com`) don't match, and a bare `/assets/` is accepted
+// only as a relative path so foreign bundles like
+// `chrome-extension://…/assets/foo.js` are excluded. The hashed production
+// bundles are served from `app.myetherwallet.com/assets/…`.
+const APP_FRAME_URL =
+  /^(?:https?:\/\/(?:(?:[a-z0-9-]+\.)*myetherwallet\.com|localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)|\/assets\/)/i
+
+interface SentryFrameLike {
+  filename?: unknown
+}
+interface SentryExceptionLike {
+  value?: unknown
+  stacktrace?: { frames?: unknown } | null
+}
+interface SentryEventLike {
+  exception?: { values?: unknown } | null
+}
+
+/**
+ * Whether a Sentry event is a "Maximum call stack size exceeded" `RangeError`
+ * that did NOT originate in app code, and is therefore unactionable noise.
+ *
+ * On iOS Safari / WKWebView, scripts injected by content blockers, Safari
+ * extensions, and in-app browsers (the "Google" in-app browser, etc.) throw
+ * uncaught `RangeError`s that bubble to the page's `window.onerror` and get
+ * reported as if they were ours. Since iOS 16.4 / WebKit masks the source URL
+ * of such scripts (`webkit-masked-url://` or an empty URL), the event carries
+ * only frames Sentry cannot attribute to a file (rendered as `undefined:LL:CC`).
+ *
+ * A genuine in-app recursion always leaves at least one frame whose URL is an
+ * app origin, so the presence of any app frame keeps the event. This is
+ * event-based (not `originalException`-based) because "no app frame" is only
+ * reliable on the parsed event frames — the raw exception often has no stack.
+ */
+export function isForeignStackOverflow(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const values = (event as SentryEventLike).exception?.values
+  if (!Array.isArray(values) || values.length === 0) return false
+
+  const isStackOverflow = values.some(v => {
+    const value = (v as SentryExceptionLike)?.value
+    return (
+      typeof value === 'string' &&
+      /maximum call stack size exceeded/i.test(value)
+    )
+  })
+  if (!isStackOverflow) return false
+
+  // Keep the event if ANY frame points at app code — that is a real MEW bug.
+  const hasAppFrame = values.some(v => {
+    const frames = (v as SentryExceptionLike)?.stacktrace?.frames
+    if (!Array.isArray(frames)) return false
+    return frames.some(f => {
+      const filename = (f as SentryFrameLike)?.filename
+      return typeof filename === 'string' && APP_FRAME_URL.test(filename)
+    })
+  })
+  return !hasAppFrame
+}
