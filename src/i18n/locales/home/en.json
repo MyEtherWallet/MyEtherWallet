@@ -1,0 +1,20 @@
+{
+  "offers": {
+    "title": "Offers for you",
+    "subtitle": "Explore all the benefits of using MEW"
+  },
+  "listings": {
+    "title": "New listings",
+    "subtitle": "Find new Ondo stocks and crypto tokens in the market",
+    "tab": { "stocks": "Stocks", "crypto": "Crypto" }
+  },
+  "sectors": {
+    "title": "Industry sectors",
+    "subtitle": "Discover Ondo stocks and crypto tokens related to specific sectors in the industry"
+  },
+  "news": {
+    "title": "Market news",
+    "subtitle": "Get informed of the most important news of the market",
+    "empty": "No news available right now"
+  }
+}

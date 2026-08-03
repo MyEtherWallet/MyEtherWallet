@@ -1,0 +1,20 @@
+{
+  "offers": {
+    "title": "Ofertas para ti",
+    "subtitle": "Descubre todos los beneficios de usar MEW"
+  },
+  "listings": {
+    "title": "Nuevas cotizaciones",
+    "subtitle": "Encuentra nuevas acciones de Ondo y tokens de criptomonedas en el mercado",
+    "tab": { "stocks": "Acciones", "crypto": "Cripto" }
+  },
+  "sectors": {
+    "title": "Sectores de la industria",
+    "subtitle": "Descubre acciones de Ondo y tokens de criptomonedas relacionados con sectores específicos de la industria"
+  },
+  "news": {
+    "title": "Noticias del mercado",
+    "subtitle": "Mantente informado de las noticias más importantes del mercado",
+    "empty": "No hay noticias disponibles por el momento"
+  }
+}
