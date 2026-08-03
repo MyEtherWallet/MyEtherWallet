@@ -1,20 +1,22 @@
 {
-  "offers": {
-    "title": "为您推荐的优惠",
-    "subtitle": "探索使用 MEW 的所有权益"
-  },
-  "listings": {
-    "title": "新上市",
-    "subtitle": "发现市场上新的 Ondo 股票和加密货币代币",
-    "tab": { "stocks": "股票", "crypto": "加密货币" }
-  },
-  "sectors": {
-    "title": "行业板块",
-    "subtitle": "探索与特定行业板块相关的 Ondo 股票和加密货币代币"
-  },
-  "news": {
-    "title": "市场资讯",
-    "subtitle": "了解市场上最重要的资讯",
-    "empty": "目前暂无相关资讯"
+  "homePage": {
+    "offers": {
+      "title": "为您推荐的优惠",
+      "subtitle": "探索使用 MEW 的所有权益"
+    },
+    "listings": {
+      "title": "新上市",
+      "subtitle": "发现市场上新的 Ondo 股票和加密货币代币",
+      "tab": { "stocks": "股票", "crypto": "加密货币" }
+    },
+    "sectors": {
+      "title": "行业板块",
+      "subtitle": "探索与特定行业板块相关的 Ondo 股票和加密货币代币"
+    },
+    "news": {
+      "title": "市场资讯",
+      "subtitle": "了解市场上最重要的资讯",
+      "empty": "目前暂无相关资讯"
+    }
   }
 }
