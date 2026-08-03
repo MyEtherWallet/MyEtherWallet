@@ -557,7 +557,7 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
@@ -689,12 +689,13 @@ const API_CATEGORIES = new Set([
   'FIXED_INCOME',
 ])
 
-// Product-defined category tabs (MEW-2069). 'all' is the fixed default view;
-// the rest are stock categories in the requested order. Only the
+// Product-defined category tabs (MEW-2069). 'all' + 'watchlist' are the fixed
+// view modes; the rest are stock categories in the requested order. Only the
 // API_CATEGORIES subset filters today; the others (Large Cap, US, Growth,
 // Technology, Value, Small Cap, Industrials) are not yet supported server-side.
 const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
+  { label: t('stocks.category_watchlist'), value: 'watchlist' },
   { label: t('stocks.category_equities'), value: 'EQUITIES' },
   { label: t('stocks.category_stock'), value: 'STOCK' },
   { label: t('stocks.category_large_cap'), value: 'LARGE_CAP' },
@@ -708,6 +709,15 @@ const cryptoFilterOptions = computed(() => [
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+// Deep-link: a home Industry Sectors tile opens /stocks?category=<value>.
+// Preselect the matching tab so the table opens on that filter.
+const route = useRoute()
+const initialCategory = route.query.category
+if (typeof initialCategory === 'string') {
+  const match = cryptoFilterOptions.value.find(o => o.value === initialCategory)
+  if (match) selectedCryptoFilter.value = match
+}
 
 watch(cryptoFilterOptions, options => {
   selectedCryptoFilter.value =

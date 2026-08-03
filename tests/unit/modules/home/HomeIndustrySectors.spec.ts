@@ -67,7 +67,7 @@ describe('HomeIndustrySectors', () => {
     const stockSectors = sectors.filter(s => s.market === 'stocks')
     expect(links[0].props('to')).toEqual({
       path: '/stocks',
-      query: { sector: stockSectors[0].filter },
+      query: { category: stockSectors[0].filter },
     })
   })
 })

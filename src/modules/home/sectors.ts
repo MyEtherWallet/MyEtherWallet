@@ -1,87 +1,101 @@
 import type { Component } from 'vue'
 import {
-  ClockIcon,
-  GiftIcon,
-  ChartPieIcon,
+  ChartBarIcon,
   BuildingOffice2Icon,
-  ChevronUpIcon,
+  BuildingLibraryIcon,
+  FlagIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   CpuChipIcon,
-  CurrencyDollarIcon,
-  CubeIcon,
+  ChartPieIcon,
+  TagIcon,
+  BuildingStorefrontIcon,
+  WrenchScrewdriverIcon,
   BanknotesIcon,
+  CurrencyDollarIcon,
   FaceSmileIcon,
-  PuzzlePieceIcon,
-  SparklesIcon,
+  MusicalNoteIcon,
 } from '@heroicons/vue/24/outline'
 
 export interface IndustrySector {
   id: string
   labelKey: string
   market: 'stocks' | 'crypto'
+  /** Filter value the destination page reads from `?category=` to preselect. */
   filter: string
-  /** Solid tile background — the exact Figma color-token hex. */
+  /** Solid tile background — reuses the Figma tile palette. */
   color: string
   /** Heroicon rendered white inside the translucent bubble. */
   icon: Component
 }
 
-// Colors + icons come 1:1 from the Figma "IndustrySectorTile" set
-// (design-library node 873:5582): a solid colored card with a translucent
-// white icon bubble top-right and a bold white label bottom-left. `color` is
-// the Figma color-token hex; `icon` is the exact heroicon used per tile.
+// Figma tile palette (design-library node 873:5582), cycled across the tiles.
+const PALETTE = [
+  '#684cff',
+  '#f31b6f',
+  '#e27d00',
+  '#c16cff',
+  '#067f71',
+  '#4d1ee3',
+  '#cc0452',
+  '#ffa500',
+]
+
 function make(
   market: 'stocks' | 'crypto',
-  slug: string,
+  labelKey: string,
   filter: string,
-  color: string,
   icon: Component,
+  index: number,
 ): IndustrySector {
   return {
-    id: `${market}-${slug}`,
-    labelKey: `homePage.sectors.labels.${slug}`,
+    id: `${market}-${filter}`,
+    labelKey,
     market,
     filter,
-    color,
+    color: PALETTE[index % PALETTE.length],
     icon,
   }
 }
 
-// Hardcoded list (no sector API yet). Stocks mirror the Figma tiles exactly.
+// Stocks tab: the All-Stocks table categories (MEW-2069, Ondo endpoint), in the
+// same order as the /stocks filter. `filter` matches the table's category
+// value so a tile deep-links straight into that filtered view. Labels reuse the
+// stocks category strings so there is a single source of truth.
 const STOCK_SECTORS: IndustrySector[] = [
-  make('stocks', 'rwas', '24/7 RWAs', '#684cff', ClockIcon),
-  make('stocks', 'consumer', 'Consumer', '#f31b6f', GiftIcon),
-  make('stocks', 'etfs', 'ETFs', '#e27d00', ChartPieIcon),
-  make('stocks', 'financials', 'Financials', '#c16cff', BuildingOffice2Icon),
-  make('stocks', 'growth', 'Growth', '#067f71', ChevronUpIcon),
-  make('stocks', 'technology', 'Technology', '#4d1ee3', CpuChipIcon),
-  make('stocks', 'value', 'Value', '#cc0452', BuildingOffice2Icon),
-  make('stocks', 'commodities', 'Commodities', '#ffa500', BuildingOffice2Icon),
+  make('stocks', 'stocks.category_equities', 'EQUITIES', ChartBarIcon, 0),
+  make('stocks', 'stocks.category_stock', 'STOCK', BuildingOffice2Icon, 1),
+  make('stocks', 'stocks.category_large_cap', 'LARGE_CAP', BuildingLibraryIcon, 2),
+  make('stocks', 'stocks.category_us', 'US', FlagIcon, 3),
+  make('stocks', 'stocks.category_growth', 'GROWTH', ArrowTrendingUpIcon, 4),
+  make('stocks', 'stocks.category_technology', 'TECHNOLOGY', CpuChipIcon, 5),
+  make('stocks', 'stocks.category_etf', 'ETF', ChartPieIcon, 6),
+  make('stocks', 'stocks.category_value', 'VALUE', TagIcon, 7),
+  make('stocks', 'stocks.category_small_cap', 'SMALL_CAP', BuildingStorefrontIcon, 8),
+  make('stocks', 'stocks.category_industrials', 'INDUSTRIALS', WrenchScrewdriverIcon, 9),
 ]
 
-// Crypto tab: same tile style, a hardcoded set of common crypto sectors
-// (the Figma only speced the stocks tab). Colors reuse the same palette.
+// Crypto tab: the categories currently live in the /crypto filter (Coingecko),
+// minus watchlist. `filter` matches the crypto filter value for deep-linking.
 const CRYPTO_SECTORS: IndustrySector[] = [
-  make('crypto', 'defi', 'DeFi', '#684cff', CurrencyDollarIcon),
-  make('crypto', 'layer1', 'Layer 1', '#f31b6f', CubeIcon),
-  make('crypto', 'stablecoins', 'Stablecoins', '#e27d00', BanknotesIcon),
-  make('crypto', 'meme', 'Meme', '#c16cff', FaceSmileIcon),
-  make('crypto', 'gaming', 'Gaming', '#067f71', PuzzlePieceIcon),
-  make('crypto', 'ai', 'AI', '#4d1ee3', SparklesIcon),
+  make('crypto', 'crypto.top_gainers', 'topGainers', ArrowTrendingUpIcon, 0),
+  make('crypto', 'crypto.top_losers', 'topLosers', ArrowTrendingDownIcon, 1),
+  make('crypto', 'crypto.stablecoins', 'stablecoins', BanknotesIcon, 2),
+  make('crypto', 'crypto.defi', 'defi-index', CurrencyDollarIcon, 3),
+  make('crypto', 'crypto.meme', 'meme-token', FaceSmileIcon, 4),
+  make('crypto', 'crypto.tiktok', 'tiktok-meme', MusicalNoteIcon, 5),
 ]
 
 export const sectors: IndustrySector[] = [...STOCK_SECTORS, ...CRYPTO_SECTORS]
 
-// NOTE: neither /stocks nor /crypto currently reads a `sector` query param
-// (verified: no query handling exists on either page). This deep-link
-// carries intent only — navigation to the base route still works, but the
-// destination page won't yet pre-filter by sector. Wiring that up is a
-// downstream dependency, out of scope for this PR.
+// Deep-link into the destination page's filter. /stocks (ModuleAllStock) and
+// /crypto (ModuleExploreCrypto) read `?category=` on mount to preselect the tab.
 export function sectorLink(s: IndustrySector): {
   path: string
   query: Record<string, string>
 } {
   return {
     path: s.market === 'stocks' ? '/stocks' : '/crypto',
-    query: { sector: s.filter },
+    query: { category: s.filter },
   }
 }
