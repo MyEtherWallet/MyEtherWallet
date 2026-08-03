@@ -40,7 +40,7 @@ const changeText = computed(() =>
 <template>
   <div
     data-test="listing-card"
-    class="flex w-full cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4"
+    class="flex w-[300px] shrink-0 cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4"
     @click="$emit('select')"
   >
     <!-- A. Header row -->
