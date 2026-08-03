@@ -2,7 +2,21 @@
   "homePage": {
     "offers": {
       "title": "Ofertas para ti",
-      "subtitle": "Descubre todos los beneficios de usar MEW"
+      "subtitle": "Descubre todos los beneficios de usar MEW",
+      "items": {
+        "buy": {
+          "title": "Compra acciones",
+          "desc": "Invierte en acciones tokenizadas con Ondo"
+        },
+        "swap": {
+          "title": "Intercambia tokens",
+          "desc": "Intercambia criptomonedas a las mejores tasas"
+        },
+        "earn": {
+          "title": "Gana recompensas",
+          "desc": "Pon a trabajar tus activos y gana recompensas"
+        }
+      }
     },
     "listings": {
       "title": "Nuevas cotizaciones",

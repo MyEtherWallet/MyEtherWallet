@@ -2,7 +2,21 @@
   "homePage": {
     "offers": {
       "title": "Offers for you",
-      "subtitle": "Explore all the benefits of using MEW"
+      "subtitle": "Explore all the benefits of using MEW",
+      "items": {
+        "buy": {
+          "title": "Buy stocks",
+          "desc": "Invest in tokenized stocks with Ondo"
+        },
+        "swap": {
+          "title": "Swap tokens",
+          "desc": "Trade crypto tokens at the best rates"
+        },
+        "earn": {
+          "title": "Earn rewards",
+          "desc": "Put your assets to work and earn rewards"
+        }
+      }
     },
     "listings": {
       "title": "New listings",

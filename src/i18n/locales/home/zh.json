@@ -2,7 +2,21 @@
   "homePage": {
     "offers": {
       "title": "为您推荐的优惠",
-      "subtitle": "探索使用 MEW 的所有权益"
+      "subtitle": "探索使用 MEW 的所有权益",
+      "items": {
+        "buy": {
+          "title": "购买股票",
+          "desc": "通过 Ondo 投资代币化股票"
+        },
+        "swap": {
+          "title": "兑换代币",
+          "desc": "以最优汇率交易加密货币代币"
+        },
+        "earn": {
+          "title": "赢取奖励",
+          "desc": "让您的资产发挥作用并赢取奖励"
+        }
+      }
     },
     "listings": {
       "title": "新上市",
