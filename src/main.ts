@@ -19,8 +19,12 @@ import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
   isExtensionOrProviderError,
+  isForeignStackOverflow,
   isInvalidWalletAddressError,
   isProviderNotFoundError,
+  isRainbowKitNotFoundError,
+  isTransactionReceiptTimeoutError,
+  isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
@@ -57,25 +61,40 @@ if (dsn && process.env.NODE_ENV === 'production') {
       /Subscribing to \w+ failed, please try again/,
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
-    // carry parsed extension frames).
-    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // carry parsed extension frames). `webkit-masked-url` is how iOS 16.4+
+    // WebKit exposes the source of extension / content-blocker / in-app-browser
+    // injected scripts.
+    denyUrls: [
+      /(?:chrome|moz|safari-web)-extension:\/\//i,
+      /webkit-masked-url:\/\//i,
+    ],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
     // "provider disconnected"), viem InvalidAddressError (a wallet returned a
     // malformed address on connect — already handled with a user toast), wagmi
     // ProviderNotFoundError (user tried to connect a browser wallet with no
     // injected provider — already handled with a user toast), and
     // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
-    // surfacing as an unhandled "Connection is closed" rejection). These surface
-    // as serialized plain objects or bare strings with no parsed frames, so
-    // denyUrls can't catch them — inspect the original exception instead.
-    // Genuine app errors are unaffected.
+    // surfacing as an unhandled "Connection is closed" rejection), viem
+    // WaitForTransactionReceiptTimeoutError (a submitted trade tx that did not
+    // confirm within the timeout — a network condition the app already handles),
+    // and the external "not found rainbowkit" rejection emitted by a wallet's
+    // injected in-app-browser detection script (not app code — our bundle never
+    // throws it). These surface as serialized plain objects or bare strings with
+    // no parsed frames, so denyUrls can't catch them — inspect the original
+    // exception instead. Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isProviderNotFoundError(originalException) ||
-        isTransientRpcError(originalException)
+        isRainbowKitNotFoundError(originalException) ||
+        isTransactionReceiptTimeoutError(originalException) ||
+        isTransientRpcError(originalException) ||
+        isTrezorHandshakeError(originalException) ||
+        // iOS injected-script "Maximum call stack" RangeErrors with no app
+        // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
+        isForeignStackOverflow(event)
       )
         return null
       return event
@@ -131,11 +150,10 @@ pinia.use(
           },
           purchase: null,
           chainsStore: {
-            ...state.chainsStore as | Record<string, unknown> | undefined,
+            ...(state.chainsStore as Record<string, unknown> | undefined),
             allChains: null, // too large to send
-            chains: null // too large to send
-
-          }
+            chains: null, // too large to send
+          },
         }
       }
       return state
