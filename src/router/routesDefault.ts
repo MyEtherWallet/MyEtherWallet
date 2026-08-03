@@ -20,6 +20,7 @@ const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
 const ViewPerps = () => import('@/views/ViewPerps.vue')
+const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -154,6 +155,14 @@ const DefaultRoutes = <RouteNameCollection>[
         ...TOKEN_INFO_ROUTE,
       },
     ],
+  },
+  {
+    path: ROUTES_MAIN.HOME_STAGING.PATH,
+    name: ROUTES_MAIN.HOME_STAGING.NAME,
+    component: ViewHome,
+    meta: {
+      noAuth: true,
+    },
   },
   {
     path: '/:pathMatch(.*)*',
