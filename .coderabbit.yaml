@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+focus: 'balanced'
+reviews:
+  request_changes_workflow: true
+  collapse_walkthrough: false
+  slop_detection:
+    enabled: true
+    label: 'slop'
+  auto_review:
+    ignore_title_keywords:
+      - '!cr'
+    base_branches:
+      - feat/v7
+  finishing_touches:
+    unit_tests:
+      enabled: false
+  tools:
+    eslint:
+      enabled: true

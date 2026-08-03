@@ -57,3 +57,16 @@ export function isMetaMaskSdkDecryptError(err: unknown): boolean {
     e.stack.includes('metamask-sdk')
   )
 }
+
+/**
+ * Whether an error is a wagmi `ProviderNotFoundError` — thrown when a connector
+ * calls `getProvider()` and no injected wallet is present (e.g. the user clicks
+ * "Browser Wallet" with no extension installed). The connect flow already
+ * handles it (the user sees a "Could not connect" toast), so it is expected,
+ * unactionable Sentry noise. Detected via the wagmi-guaranteed error `name`
+ * rather than the message so it survives minification.
+ */
+export function isProviderNotFoundError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  return (err as { name?: unknown }).name === 'ProviderNotFoundError'
+}

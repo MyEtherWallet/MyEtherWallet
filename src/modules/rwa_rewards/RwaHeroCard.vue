@@ -85,8 +85,23 @@
 
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
-        <div class="flex gap-2 w-full">
+        <div class="flex gap-2 w-full [container-type:inline-size]">
+          <app-tooltip
+            v-if="isDisabledCta"
+            :text="disabledCtaTooltip"
+            position="middle"
+            class="flex-1"
+          >
+            <button
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              disabled
+            >
+              {{ disabledCtaLabel }}
+              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+            </button>
+          </app-tooltip>
           <app-base-button
+            v-else
             class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
             @click="onTrade"
           >
@@ -299,8 +314,16 @@ const { t } = useI18n()
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { seasonEnd, status, activeReward, isClaiming, isHoldOfferDismissed } =
-  storeToRefs(holdingsStore)
+const {
+  seasonEnd,
+  status,
+  activeReward,
+  isClaiming,
+  isHoldOfferDismissed,
+  isCampaignFull,
+  isUnderReview,
+  canRegisterTrade,
+} = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 // The Zero MEW Fees offer is the default eligible offer shown in the hero slot
@@ -344,22 +367,25 @@ const onContactSupport = () => {
   showIntercom()
 }
 
+// Covers the promo CTA and the "Trade again" retry, both of which would
+// otherwise invite a trade the season can no longer register.
 const isDisabledCta = computed(
-  () =>
-    status.value === 'notEligible' ||
-    status.value === 'temporarilyPaused' ||
-    status.value === 'campaignEnded',
+  () => status.value === 'notEligible' || !canRegisterTrade.value,
 )
 const disabledCtaLabel = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.under_review')
   if (status.value === 'temporarilyPaused')
     return t('rwaRewards.temporarily_paused')
   if (status.value === 'campaignEnded') return t('rwaRewards.campaign_ended')
+  if (isCampaignFull.value) return t('rwaRewards.campaign_full')
   return t('rwaRewards.not_eligible')
 })
 const disabledCtaTooltip = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.under_review_tooltip')
   if (status.value === 'temporarilyPaused')
     return t('rwaRewards.temporarily_paused_tooltip')
   if (status.value === 'campaignEnded') return t('rwaRewards.campaign_ended')
+  if (isCampaignFull.value) return t('rwaRewards.campaign_full_tooltip')
   return t('rwaRewards.not_eligible_tooltip')
 })
 

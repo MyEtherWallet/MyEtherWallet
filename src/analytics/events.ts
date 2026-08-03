@@ -745,7 +745,10 @@ export type RerwadsAndOffersEventPayload = {
   location?:
   | 'main-banner'
   | 'main_card'
+  /** The offer detail modal. */
   | 'offers_card'
+  /** A card in the "Rewards & offers" carousel. */
+  | 'offers_carousel'
   | 'trade_confirmation'
   | 'info_modal'
 }

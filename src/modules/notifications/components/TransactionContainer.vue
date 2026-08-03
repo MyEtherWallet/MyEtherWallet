@@ -35,7 +35,7 @@
             {{ transaction.symbol }}
           </p>
           <p v-if="transaction.usdValue" class="text-s-12 text-info">
-            ${{ formatFiatValue(transaction.usdValue).value }}
+            {{ formatFiat(transaction.usdValue).display }}
           </p>
         </div>
       </div>
@@ -141,7 +141,7 @@
               v-if="transaction.networkFeeUSD"
               class="text-s-12 text-info ml-1"
             >
-              ${{ formatFiatValue(transaction.networkFeeUSD).value }}
+              {{ formatFiat(transaction.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -164,12 +164,12 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+const { formatFiat } = useCurrency()
 // Props
 const props = defineProps<{
   transaction: TransactionNotification

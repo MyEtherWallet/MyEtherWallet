@@ -1,5 +1,7 @@
 <template>
-  <div v-if="!isBanned">
+  <!-- Every location except the swap one advertises the hold campaign ("Trade,
+       hold and get 10 USDC"), so those are hidden once it stops taking trades. -->
+  <div v-if="!isBanned && (isSwapLocation || canRegisterTrade)">
     <div
       class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
@@ -32,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
@@ -47,6 +50,9 @@ const rewardsStore = useRewardsStore()
 const { isBanned } = storeToRefs(rewardsStore)
 
 const holdingsStore = useHoldingsStore()
+const { canRegisterTrade } = storeToRefs(holdingsStore)
+
+const isSwapLocation = computed(() => props.location === 'small-banner-swap')
 
 const onLearnMore = () => {
   holdingsStore.openModal()

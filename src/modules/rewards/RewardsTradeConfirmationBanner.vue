@@ -68,13 +68,16 @@ const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
 )
 const holdingsStore = useHoldingsStore()
-const { status } = storeToRefs(holdingsStore)
+const { status, canRegisterTrade } = storeToRefs(holdingsStore)
 
+// Only surface the hold campaign while a new trade can still be registered for
+// it — otherwise fall through to the trade campaign.
 const canClaimHold = computed(
   () =>
-    status.value === 'default' ||
-    status.value === 'expired' ||
-    status.value === 'lost',
+    canRegisterTrade.value &&
+    (status.value === 'default' ||
+      status.value === 'expired' ||
+      status.value === 'lost'),
 )
 
 // Which reward campaign this banner is surfacing

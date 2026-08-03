@@ -138,7 +138,7 @@
                       class="inline-flex !text-s-16 lg:!text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ displayAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ currencySymbol }}{{ displayAmountFiat }}</p>
                 </div>
               </div>
 
@@ -245,13 +245,12 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'
 import { type HexPrefixedString } from '@/providers/types'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import createIcon from '@/providers/ethereum/blockies'
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()
 const appLayoutStore = useAppLayoutStore()
 const { isNotificationsOpen } = storeToRefs(appLayoutStore)
@@ -343,7 +342,7 @@ const displayTokenIcon = computed(() => {
 })
 
 const displayAmountFiat = computed(() => {
-  return formatFiatValue(snapshot.amountFiat || '0').value
+  return formatFiat(snapshot.amountFiat || '0').value
 })
 
 const chainName = computed(() => {

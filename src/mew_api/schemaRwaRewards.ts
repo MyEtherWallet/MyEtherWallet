@@ -47,7 +47,18 @@ export interface RwaSeasonInfo {
   end: string
   rewards: { id: string; amount: string }[]
   qualification_value: string
+  /**
+   * Remaining payout budget for this platform's budget group (web has its own).
+   * False once the season is full: existing entries are still shown and still
+   * claimable, but no new trade can be registered. A wallet with no entries of
+   * its own never sees this — `/info` answers 404 for it instead.
+   */
   is_available?: boolean
+  /**
+   * True when the wallet is on the ban list but has entries, so it gets a normal
+   * 200 instead of a 403. Its status is under review and claims will not pay.
+   */
+  under_review?: boolean
 }
 
 export interface RwaInfoResponse extends RwaBuckets {
@@ -63,9 +74,30 @@ export type RwaStatus =
   | 'lost'
   | 'expired'
   | 'banned'
+  /**
+   * On the ban list but holding entries, so the backend returns them flagged
+   * rather than hiding the program. Distinct from `banned`: the wallet still
+   * sees its own progress while its status is reviewed.
+   */
+  | 'underReview'
   | 'notEligible'
   | 'temporarilyPaused'
+  /** Season payout budget spent — entries run on, no new ones are accepted. */
+  | 'campaignFull'
   | 'campaignEnded'
+
+/**
+ * Why the season is refusing new entries, as reported by `/info` and
+ * `/register`. Kept separate from the per-wallet buckets so a wallet that
+ * already holds an entry still sees its own progress.
+ */
+export type RwaAccessBlock =
+  /** 404 — out of budget for this platform group and no entries of our own. */
+  | 'campaignFull'
+  /** 423 — register/info kill-switch. */
+  | 'temporarilyPaused'
+  /** 403 — restricted region, or banned with no entries. */
+  | 'notEligible'
 
 /**
  * The claim payload that gets JSON-stringified, base64-encoded into

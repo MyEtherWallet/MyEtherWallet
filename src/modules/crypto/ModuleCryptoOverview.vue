@@ -21,7 +21,7 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.marketCap).value }}
+          {{ formatFiat(data.marketCap).display }}
           <span
             class="text-s-10 md:text-s-13 font-bold leading-p-150 ml-1"
             :class="{
@@ -59,7 +59,7 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.volume24h).value }}
+          {{ formatFiat(data.volume24h).display }}
         </p>
         <div
           v-else
@@ -166,16 +166,15 @@ import OverviewContainer from './components/overview/OverviewContainer.vue'
 import TokenRow from './components/overview/TokenRow.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ref } from 'vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import type { CryptoOverview, CryptoOverviewToken } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import { usePaginate } from '@/composables/usePaginate'
 
 const { useMEWFetch } = useFetchMewApi()
+const { formatFiat } = useCurrency()
 
 const newTokens = ref<CryptoOverviewToken[]>([])
 const gainersTokens = ref<CryptoOverviewToken[]>([])

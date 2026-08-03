@@ -116,11 +116,14 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
-import { getLocalizedWalletError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletError,
+  isTransientTrezorError,
+} from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import HWwallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
+import { getTrezorManager } from '@/providers/hw/trezorManager'
 import type { HWManager } from '@/providers/hw/types'
 import {
   getLedgerWebUSBTransport,
@@ -141,6 +144,7 @@ import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { isTrezorSupported } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
@@ -172,8 +176,13 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 const accessStore = useAccessStore()
 const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
 
+// Reuse one Trezor manager for the whole session: creating a fresh manager on
+// every connect / chain / derivation change re-ran the process-wide
+// `TrezorConnect.init()`, which threw "TrezorConnect has been already
+// initialized" and poisoned the cached provider (MEW-2042). Ledger keeps a
+// fresh manager per connection.
 const createHwManager = (): HWManager =>
-  currentView.value === 'ledger' ? new LedgerManager() : new HWwallet()
+  currentView.value === 'ledger' ? new LedgerManager() : getTrezorManager()
 
 // Wallet instance
 let hwWalletInstance: HWManager | null = createHwManager()
@@ -295,6 +304,18 @@ const backStep = () => {
 const connectingWallet = ref(false)
 
 const unlockWallet = async () => {
+  // Gate Trezor on browser capability: @enkryptcom/hw-wallets `getTrezorConnect`
+  // references the bare `chrome` global, which is undefined on non-Chromium
+  // browsers (e.g. iOS Safari) and throws an uncaught ReferenceError. Fail
+  // gracefully with a friendly message instead. See MEW-2041.
+  if (currentView.value === 'trezor' && !isTrezorSupported()) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('access_wallet_trezor.not_supported'),
+    })
+    return
+  }
+
   connectingWallet.value = true
   const networkName = chainToEnum[
     selectedChain.value?.name as string
@@ -494,7 +515,11 @@ const loadList = async (page: number = 0) => {
         getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
         (e instanceof Error ? e.message : String(e)),
     })
-    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    // Skip Sentry for the known transient Trezor connect state (APP-MEW-WEB-P5):
+    // the popup returns success with an empty payload and retrying works.
+    if (!isTransientTrezorError(e)) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
   } finally {
     if (generation === loadListGeneration) {
       isLoadingWalletList.value = false

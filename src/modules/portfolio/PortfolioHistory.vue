@@ -19,9 +19,8 @@
         </p>
         <div v-if="!isLoadingBalances">
           <p class="text-s-20 font-semibold text-black leading-none mt-2">
-            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+' }}${{
-              formatFiatValue(lastTwentyFourHours.fiat.abs()).value
-            }}
+            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+'
+            }}{{ formatFiat(lastTwentyFourHours.fiat.abs()).display }}
           </p>
           <span
             class="text-s-11 leading-none"
@@ -68,13 +67,12 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { computed } from 'vue'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
 const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)
