@@ -24,7 +24,10 @@ const onHover = (hovered: boolean) => {
 </script>
 
 <template>
-  <div ref="activatorRef" v-element-hover="[onHover, { delayLeave: 100 }]">
+  <div
+    ref="activatorRef"
+    v-element-hover="[onHover, { delayEnter: 500, delayLeave: 100 }]"
+  >
     <slot />
   </div>
   <teleport to="#app">
