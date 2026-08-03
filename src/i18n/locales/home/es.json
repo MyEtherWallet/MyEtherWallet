@@ -32,7 +32,11 @@
     "news": {
       "title": "Noticias del mercado",
       "subtitle": "Mantente informado de las noticias más importantes del mercado",
-      "empty": "No hay noticias disponibles por el momento"
+      "empty": "No hay noticias disponibles por el momento",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "daysAgo": "hace {n} días",
+      "pagination": "Mostrando página {page} de {total}"
     }
   }
 }

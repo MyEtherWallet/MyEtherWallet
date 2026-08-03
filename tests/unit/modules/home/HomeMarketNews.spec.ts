@@ -38,7 +38,16 @@ vi.mock('@/stores/stocksStore', () => ({
 import HomeMarketNews from '@/modules/home/sections/HomeMarketNews.vue'
 
 describe('HomeMarketNews', () => {
-  const mountIt = () => mount(HomeMarketNews, { global: { plugins: [i18n] } })
+  // The news card renders a token badge (AppTokenLogo + AppTokenSymbol) when a
+  // ticker is present; both pull in stocksStore internals irrelevant here, so
+  // they're stubbed.
+  const mountIt = () =>
+    mount(HomeMarketNews, {
+      global: {
+        plugins: [i18n],
+        stubs: { AppTokenLogo: true, AppTokenSymbol: true },
+      },
+    })
 
   it('shows only the first page (perPage=6) then advances', async () => {
     box.value = makeNews(8)

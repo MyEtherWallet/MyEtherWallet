@@ -32,7 +32,11 @@
     "news": {
       "title": "Market news",
       "subtitle": "Get informed of the most important news of the market",
-      "empty": "No news available right now"
+      "empty": "No news available right now",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{n} days ago",
+      "pagination": "Showing page {page} of {total}"
     }
   }
 }

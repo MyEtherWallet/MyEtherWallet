@@ -7,14 +7,45 @@ import AppPagination from '@/components/AppPagination.vue'
 
 const PER_PAGE = 6
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const stocksStore = useStocksStore()
 const page = ref(1)
 
 const total = computed(() => stocksStore.recentNews.length)
 const pageItems = computed(() =>
-  stocksStore.recentNews.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
+  stocksStore.recentNews.slice(
+    (page.value - 1) * PER_PAGE,
+    page.value * PER_PAGE,
+  ),
 )
+
+// recentNews carries no source field — derive a readable publisher name from
+// the article host (e.g. "www.reuters.com" -> "Reuters").
+const sourceFromUrl = (url?: string): string => {
+  if (!url) return ''
+  try {
+    const name = new URL(url).hostname.replace(/^www\./, '').split('.')[0]
+    return name.charAt(0).toUpperCase() + name.slice(1)
+  } catch {
+    return ''
+  }
+}
+
+// Relative label per the design: Today / Yesterday / N days ago, then an
+// absolute date once an article is a week or older.
+const DAY = 86400000
+const dateLabel = (ts?: number): string => {
+  if (!ts) return ''
+  const days = Math.floor((Date.now() - ts) / DAY)
+  if (days <= 0) return t('homePage.news.today')
+  if (days === 1) return t('homePage.news.yesterday')
+  if (days < 7) return t('homePage.news.daysAgo', { n: days })
+  return new Date(ts).toLocaleDateString(locale.value, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 </script>
 
 <template>
@@ -22,7 +53,7 @@ const pageItems = computed(() =>
     <p
       v-if="total === 0"
       data-test="news-empty"
-      class="text-sm opacity-70"
+      class="text-s-16 text-[#575757]"
     >
       {{ t('homePage.news.empty') }}
     </p>
@@ -32,8 +63,9 @@ const pageItems = computed(() =>
           v-for="n in pageItems"
           :key="n.articleUrl"
           :title="n.title ?? ''"
-          :thumbnail="n.thumbnailUrl"
-          :timestamp="n.timestamp"
+          :source="sourceFromUrl(n.articleUrl)"
+          :date="dateLabel(n.timestamp)"
+          :ticker="n.tickers?.[0]"
           :href="n.articleUrl"
         />
       </div>
@@ -43,7 +75,11 @@ const pageItems = computed(() =>
         :total="total"
         :per-page="PER_PAGE"
         class="mt-6"
-      />
+      >
+        <template #label="{ page: p, pages }">
+          {{ t('homePage.news.pagination', { page: p, total: pages }) }}
+        </template>
+      </AppPagination>
     </template>
   </div>
 </template>

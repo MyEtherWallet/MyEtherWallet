@@ -32,7 +32,11 @@
     "news": {
       "title": "市场资讯",
       "subtitle": "了解市场上最重要的资讯",
-      "empty": "目前暂无相关资讯"
+      "empty": "目前暂无相关资讯",
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{n} 天前",
+      "pagination": "显示第 {page} 页，共 {total} 页"
     }
   }
 }
