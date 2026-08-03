@@ -17,7 +17,7 @@ import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltipHint from '@/components/AppTooltipHint.vue'
 
 // Unified shape both stock and crypto listings map onto for the card.
 interface ListingCardItem {
@@ -138,7 +138,7 @@ const items = computed<ListingCardItem[]>(() =>
           :key="it.key"
           #[`item-${index}`]
         >
-          <AppTooltip :text="it.tooltip" position="middle">
+          <AppTooltipHint :text="it.tooltip">
             <AppNewListingCard
               :logo="it.logo"
               :symbol="it.symbol"
@@ -160,7 +160,7 @@ const items = computed<ListingCardItem[]>(() =>
                 watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
               "
             />
-          </AppTooltip>
+          </AppTooltipHint>
         </template>
       </AppSlideGroup>
     </div>

@@ -123,7 +123,7 @@ describe('HomeNewListings', () => {
         stubs: {
           AppTabBar: AppTabBarStub,
           // Tooltip wraps each card; render its slot inline (skip teleport/hover).
-          AppTooltip: { template: '<div><slot /></div>' },
+          AppTooltipHint: { template: '<div><slot /></div>' },
           AppSlideGroup: AppSlideGroupStub,
           // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
           // internally — irrelevant to this section's mapping logic, so
