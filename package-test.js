@@ -120,7 +120,11 @@ const EXCEPTIONS = [
   '@trezor/connect-web',
   '@web3-name-sdk/core',
   'apollo-link-rest',
-  'webpack-bundle-analyzer'
+  'webpack-bundle-analyzer',
+  'graphql-tag',
+  'lodash',
+  'scrollmagic',
+  'bignumber.js'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
