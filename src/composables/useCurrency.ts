@@ -1,7 +1,13 @@
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useCurrencyStore } from '@/stores/currencyStore'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFiatValue,
+  formatIntegerValue,
+  convertToThousand,
+  OneThousand,
+  OneMillion,
+} from '@/utils/numberFormatHelper'
 
 export interface FormattedFiat {
   /** Formatted numeric part, e.g. "1,234.56" */
@@ -41,10 +47,33 @@ export const useCurrency = () => {
     }
   }
 
+  /**
+   * Compact fiat display — abbreviates thousands/millions (e.g. "$20K",
+   * "$20.6M") so large magnitudes (market cap, volume) stay short on cards.
+   * Rate- and symbol-aware like `formatFiat`.
+   */
+  const formatFiatCompact = (
+    usdValue: string | number | BigNumber | undefined | null,
+  ): FormattedFiat => {
+    const converted = new BigNumber(usdValue || 0).multipliedBy(rate.value)
+    const abs = converted.absoluteValue()
+    let value: string
+    if (abs.isGreaterThanOrEqualTo(OneMillion)) {
+      value = formatIntegerValue(converted).value
+    } else if (abs.isGreaterThanOrEqualTo(OneThousand)) {
+      value = convertToThousand(converted).value
+    } else {
+      value = formatFiatValue(converted).value
+    }
+    const symbol = currencySymbol.value
+    return { value, symbol, display: `${symbol}${value}` }
+  }
+
   return {
     currencyCode: selectedCurrency,
     currencySymbol,
     rate,
     formatFiat,
+    formatFiatCompact,
   }
 }
