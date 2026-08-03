@@ -4,9 +4,13 @@
       class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
       :class="{
         'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
-          blurFront,
+          blurFront && !edgeNav,
         'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
-          blurEnd,
+          blurEnd && !edgeNav,
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-[120px] before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
+          blurFront && edgeNav,
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-[120px] after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
+          blurEnd && edgeNav,
         'order-2': paginateLocation === 'top',
       }"
     >
