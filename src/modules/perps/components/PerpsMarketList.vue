@@ -553,10 +553,16 @@
                     </app-pop-up-menu>
                   </template>
                   <template v-else>
+                    <!--
+                      Restricted regions keep these clickable but drop the
+                      long/short colour coding: they no longer represent a
+                      tradeable action, they just open the side panel whose
+                      card explains why perps is unavailable.
+                    -->
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
-                      theme="success"
+                      :theme="isPerpsRestricted ? 'neutral' : 'success'"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -569,7 +575,7 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      theme="error"
+                      :theme="isPerpsRestricted ? 'neutral' : 'error'"
                       class="min-w-[64px]"
                       @click="
                         openNewPosition(
@@ -666,6 +672,7 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
@@ -687,6 +694,7 @@ import type {
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
+const { isPerpsRestricted } = usePerpsRestriction()
 const { isWatchOnly } = storeToRefs(walletStore)
 
 const emits = defineEmits<{

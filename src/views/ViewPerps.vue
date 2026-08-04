@@ -61,6 +61,7 @@ import PerpsMainBanner from '@/modules/perps/components/PerpsMainBanner.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
+import { usePerpsRestriction } from '@/modules/perps/composables/usePerpsRestriction'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useAccessStore } from '@/stores/accessStore'
 
@@ -71,6 +72,7 @@ const { isWatchOnly, walletAddress } = storeToRefs(walletStore)
 const { token, isAuthenticating, isRestoringAuth, login, logout } =
   usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
+const { isPerpsRestricted } = usePerpsRestriction()
 
 // Trigger auto-login only when the connected wallet address actually changes
 // (wallet switch / account swap). Watching the wallet object with `deep: true`
@@ -121,7 +123,11 @@ function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
 
   // Mobile/tablet: drawer covers the chart, so skip the route push to avoid
   // landing the user on the chart page when they close the drawer.
-  if (isDesktopAndUp.value) {
+  //
+  // Restricted regions also stay put: the design shows the blocked panel opening
+  // over the markets list, and sending the user to a market's chart to place an
+  // order they cannot place would be a pointless detour.
+  if (isDesktopAndUp.value && !isPerpsRestricted.value) {
     router.push({
       name: PERP_INFO_ROUTE_NAME,
       params: { market },
