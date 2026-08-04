@@ -1,6 +1,20 @@
 import { computed } from 'vue'
-import { useTradingRestriction } from '@/composables/useTradingRestriction'
+import {
+  useTradingRestriction,
+  fetchTradingRestriction,
+} from '@/composables/useTradingRestriction'
 import { TRADING_RESTRICTED_HELP_URL } from '@/modules/trade/providers/ondoHelpers'
+
+/**
+ * Awaits the session's geo check and resolves to its real value.
+ *
+ * Use this instead of reading `isPerpsRestricted` wherever a wrong answer has
+ * consequences beyond a frame — the ref defaults to `true` (fail-closed), so
+ * code running before the check resolves would treat everyone as restricted.
+ * The underlying fetch is cached per session, so awaiting it repeatedly is free.
+ */
+export const resolvePerpsRestricted = (): Promise<boolean> =>
+  fetchTradingRestriction()
 
 /**
  * Single source of truth for whether perpetuals are blocked in the user's

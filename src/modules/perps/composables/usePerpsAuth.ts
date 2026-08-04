@@ -8,6 +8,10 @@ import { decrypt, encrypt } from '@/utils/crypto'
 import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
+import {
+  usePerpsRestriction,
+  resolvePerpsRestricted,
+} from './usePerpsRestriction'
 import { analytics, PerpsSignInEvent, PerpsEventSource } from '@/analytics'
 import { isUserRejectionError } from '@/utils/walletUtils'
 
@@ -107,6 +111,19 @@ function resetPerpsData() {
 }
 
 async function tryRestoreAuth(address: string) {
+  // Perps is hard-blocked in restricted regions: a token stored before the user
+  // travelled (or before the flag flipped) must not silently sign them back in,
+  // otherwise the signed-in portfolio renders where the blocked state belongs.
+  //
+  // Awaits the resolved check rather than reading `isPerpsRestricted`, which
+  // defaults to `true`. This runs from an `immediate: true` watcher at app boot,
+  // so reading the unresolved ref would skip the restore for a legitimate user —
+  // and since the watcher only re-fires on an address *change*, they would stay
+  // signed out for the rest of the session.
+  if (await resolvePerpsRestricted()) {
+    _authRestored = false
+    return
+  }
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
   const storedExpirations: number[] = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
@@ -207,6 +224,7 @@ perpsWs.setOnUnauthorized(() => {
 export function usePerpsAuth() {
   const store = useWalletStore()
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
+  const { isPerpsRestricted } = usePerpsRestriction()
 
   // Register the walletAddress watcher exactly once for the lifetime of the
   // module, inside a detached effectScope so it outlives the caller component's
@@ -245,6 +263,16 @@ export function usePerpsAuth() {
   }
 
   async function login(source?: PerpsEventSource) {
+    // Hard block: no challenge, no signature prompt, no token. Gated here rather
+    // than at each call site so every entry point — banner CTA, ViewPerps
+    // auto-login on wallet switch, market-list actions — is covered by one check.
+    //
+    // Reads the ref rather than awaiting `resolvePerpsRestricted()` on purpose:
+    // the CTA's disabled state derives from the same ref, so the two can never
+    // disagree, and keeping this synchronous preserves the atomicity of the
+    // guard below (an `await` here would let two same-tick clicks both get past
+    // `isAuthenticating` before it is set).
+    if (isPerpsRestricted.value) return
     if (isRestoringAuth.value || _authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
