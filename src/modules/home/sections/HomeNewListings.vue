@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter, type RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
@@ -51,6 +51,14 @@ const { newCoins, fetchNewCoins } = useCryptoNewCoins()
 onMounted(fetchNewCoins)
 
 const activeTabIndex = ref(0)
+
+const slideGroup = ref<{ scrollToStart: () => void } | null>(null)
+
+// Reset the carousel to the first card whenever the tab changes so we never
+// land mid-scroll on the newly-shown set.
+watch(activeTabIndex, () => {
+  nextTick(() => slideGroup.value?.scrollToStart?.())
+})
 
 const tabLabels = computed(() => [
   t('homePage.listings.tab.stocks'),
@@ -132,7 +140,7 @@ const items = computed<ListingCardItem[]>(() =>
   <div class="relative">
     <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
     <div class="relative mt-6">
-      <AppSlideGroup :total-items="items.length" edge-nav>
+      <AppSlideGroup ref="slideGroup" :total-items="items.length" edge-nav>
         <template
           v-for="(it, index) in items"
           :key="it.key"

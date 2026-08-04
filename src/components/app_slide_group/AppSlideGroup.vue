@@ -7,9 +7,9 @@
           blurFront && !edgeNav,
         'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
           blurEnd && !edgeNav,
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-[120px] before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
           blurFront && edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-[120px] after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
           blurEnd && edgeNav,
         'order-2': paginateLocation === 'top',
       }"
@@ -22,7 +22,11 @@
           v-for="(item, index) in totalItems"
           :key="`scroll-item-${index}`"
           :id="`scroll-item-${index}`"
-          class="snap-start scroll-ml-6 w-[80%]"
+          :class="
+            edgeNav
+              ? 'w-full flex justify-center snap-center md:block md:w-[80%] md:justify-start md:snap-start md:scroll-ml-6'
+              : 'w-[80%] snap-start scroll-ml-6'
+          "
         >
           <app-slide-item
             :item-index="index"
@@ -145,4 +149,12 @@ const scrollToPreviousGroup = () => {
   const scrollSize = new BigNumber(width.value).multipliedBy(0.8).toNumber()
   scrollContainer.value?.scrollBy({ left: -scrollSize, behavior: 'smooth' })
 }
+
+// Reset the carousel to the first item — used by consumers when the underlying
+// item set changes (e.g. a tab switch) so the view doesn't stay mid-scroll.
+const scrollToStart = () => {
+  scrollContainer.value?.scrollTo({ left: 0, behavior: 'smooth' })
+}
+
+defineExpose({ scrollToStart })
 </script>
