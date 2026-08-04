@@ -101,7 +101,22 @@
       </p>
 
       <div class="flex justify-center">
-        <template v-if="!isOnEthereum && isUnisatWallet">
+        <!--
+          Restricted regions collapse all four CTA branches into one disabled
+          button. Nothing the other branches offer — download Enkrypt, switch to
+          Ethereum, connect a wallet — makes perps available here, so every one
+          of them would be a dead end. The label matches the design's mock.
+          Wallets can still be connected from the header.
+        -->
+        <template v-if="isPerpsRestricted">
+          <app-base-button
+            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
+            disabled
+          >
+            {{ $t('perps.banner.sign-in-button') }}
+          </app-base-button>
+        </template>
+        <template v-else-if="!isOnEthereum && isUnisatWallet">
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onDownloadEnkrypt"
@@ -144,8 +159,23 @@
         </template>
       </div>
 
+      <!--
+        Takes precedence over the network/wallet notices below: the region block
+        outranks them, since resolving either one still leaves perps unavailable.
+      -->
+      <p v-if="isPerpsRestricted" class="text-error text-s-14 mt-3">
+        {{ $t('perps.restricted.banner-notice') }}
+        <a
+          :href="perpsHelpUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-black font-bold underline hoverOpacity"
+        >
+          {{ $t('perps.restricted.learn-more') }}
+        </a>
+      </p>
       <p
-        v-if="!isOnEthereum && isUnisatWallet"
+        v-else-if="!isOnEthereum && isUnisatWallet"
         class="text-info text-s-12 mt-3"
       >
         {{ $t('perps.banner.unisat-not-supported') }}
@@ -175,6 +205,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
 
 const { t } = useI18n()
@@ -194,6 +225,7 @@ const {
   confirmSign,
   cancelSign,
 } = usePerpsAuth()
+const { isPerpsRestricted, perpsHelpUrl } = usePerpsRestriction()
 
 const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 
