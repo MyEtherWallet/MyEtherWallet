@@ -554,15 +554,15 @@
                   </template>
                   <template v-else>
                     <!--
-                      Restricted regions keep these clickable but drop the
-                      long/short colour coding: they no longer represent a
-                      tradeable action, they just open the side panel whose
-                      card explains why perps is unavailable.
+                      Disabled in restricted regions: there is no order to place,
+                      so the action is dead rather than redirected. Users reach
+                      the explanatory card via the Perps action-bar button.
                     -->
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
-                      :theme="isPerpsRestricted ? 'neutral' : 'success'"
+                      theme="success"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -575,8 +575,9 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      :theme="isPerpsRestricted ? 'neutral' : 'error'"
+                      theme="error"
                       class="min-w-[64px]"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
