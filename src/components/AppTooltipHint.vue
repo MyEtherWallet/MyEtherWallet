@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 /**
  * Small hint tooltip matching the design-library "Tooltip": a white rounded
@@ -49,7 +49,21 @@ const onLeave = () => {
   show.value = false
 }
 
-onBeforeUnmount(clearTimer)
+// A fixed-position tooltip detaches from its trigger once the page (or the
+// carousel) scrolls, so dismiss it on any scroll. Capture phase catches scroll
+// events from nested scroll containers too, since scroll doesn't bubble.
+const onScroll = () => {
+  if (show.value || timer) onLeave()
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { capture: true, passive: true })
+})
+
+onBeforeUnmount(() => {
+  clearTimer()
+  window.removeEventListener('scroll', onScroll, { capture: true })
+})
 </script>
 
 <template>
