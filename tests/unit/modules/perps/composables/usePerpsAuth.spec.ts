@@ -31,10 +31,19 @@ vi.mock('@/utils/crypto', () => ({
 }))
 
 const walletAddress = ref<string | null>('0xabc')
-const wallet = ref<{ getAddress: () => Promise<string>; SignMessage: (args: { message: string }) => Promise<string> } | null>({
+type MockWallet = {
+  getAddress: () => Promise<string>
+  SignMessage: (args: { message: string }) => Promise<string>
+  // Injected type keeps login() on the direct-sign path, skipping the
+  // hardware-wallet confirmation prompt that would otherwise block forever.
+  getWalletType: () => string
+}
+const makeWallet = (): MockWallet => ({
   getAddress: vi.fn(async () => '0xabc'),
   SignMessage: vi.fn(async () => 'signature'),
+  getWalletType: vi.fn(() => 'WAGMI'),
 })
+const wallet = ref<MockWallet | null>(makeWallet())
 const isWalletConnected = ref(true)
 
 vi.mock('pinia', async () => {
@@ -55,17 +64,54 @@ vi.mock('@/modules/perps/composables/usePerpsToasts', () => ({
   }),
 }))
 
+// Required for this spec to load at all: `@/analytics` reaches
+// `@/modules/access/common/walletConfigs` → `@enkryptcom/hw-wallets`, which
+// resolves a `@ledgerhq/hw-app-eth` path that does not exist in the installed
+// version. Without this mock every test here dies at import.
+const mockTrackSignIn = vi.fn()
+vi.mock('@/analytics', () => ({
+  analytics: {
+    trackPerpsSignInEvent: mockTrackSignIn,
+    trackPerpsSignInErrorEvent: vi.fn(),
+  },
+  PerpsSignInEvent: {
+    CLICKED: 'Perps_Sign_In_Clicked',
+    SUCCESS: 'Perps_Sign_In_Success',
+    ERROR: 'Perps_Sign_In_Error',
+    CANCEL: 'Perps_Sign_In_Cancel',
+  },
+  PerpsEventSource: {
+    MAIN_BANNER: 'Perps_Main_Banner',
+    MARKET_INFO: 'Perps_Market_Info',
+    PORTFOLIO: 'Perps_Portfolio',
+    TRADE: 'Perps_Trade',
+  },
+}))
+
+// Region gate. Defaults to allowed so the pre-existing cases below exercise the
+// normal auth flow; the restricted-region cases flip it.
+const isPerpsRestricted = ref(false)
+vi.mock('@/modules/perps/composables/usePerpsRestriction', () => ({
+  usePerpsRestriction: () => ({
+    isPerpsRestricted,
+    perpsHelpUrl: 'https://help.example.test',
+  }),
+  resolvePerpsRestricted: () => Promise.resolve(isPerpsRestricted.value),
+}))
+
+// The restore path awaits the geo check before touching localStorage, so a
+// couple of nextTicks are not always enough to see its result.
+const flushPromises = () => new Promise<void>(resolve => setTimeout(resolve, 0))
+
 describe('usePerpsAuth — clearAuth state reset (MEW-1860)', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.clearAllMocks()
     localStorage.clear()
     walletAddress.value = '0xabc'
-    wallet.value = {
-      getAddress: vi.fn(async () => '0xabc'),
-      SignMessage: vi.fn(async () => 'signature'),
-    }
+    wallet.value = makeWallet()
     isWalletConnected.value = true
+    isPerpsRestricted.value = false
 
     mockGetLoginChallenge.mockResolvedValue({
       result: { id: 'challenge-id', message: 'sign-me' },
@@ -94,8 +140,7 @@ describe('usePerpsAuth — clearAuth state reset (MEW-1860)', () => {
     const auth = usePerpsAuth()
 
     // Allow the immediate walletAddress watcher to restore the token.
-    await nextTick()
-    await nextTick()
+    await flushPromises()
     expect(auth.token.value).toBe('restored-token')
 
     // User signs out.
@@ -124,8 +169,7 @@ describe('usePerpsAuth — clearAuth state reset (MEW-1860)', () => {
       '@/modules/perps/composables/usePerpsAuth'
     )
     const auth = usePerpsAuth()
-    await nextTick()
-    await nextTick()
+    await flushPromises()
     expect(auth.token.value).toBe('restored-token')
 
     // Simulate perpsClient firing its onUnauthorized callback (e.g., 401 from
@@ -152,8 +196,7 @@ describe('usePerpsAuth — clearAuth state reset (MEW-1860)', () => {
       '@/modules/perps/composables/usePerpsAuth'
     )
     const auth = usePerpsAuth()
-    await nextTick()
-    await nextTick()
+    await flushPromises()
 
     // Simulate an in-flight login that crashed before reaching the finally
     // block (e.g., user closed the tab; the ref was left as `true`).
@@ -163,5 +206,127 @@ describe('usePerpsAuth — clearAuth state reset (MEW-1860)', () => {
     auth.logout()
     await nextTick()
     expect(auth.isAuthenticating.value).toBe(false)
+  })
+})
+
+describe('usePerpsAuth — restricted region hard block', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    localStorage.clear()
+    walletAddress.value = '0xabc'
+    wallet.value = makeWallet()
+    isWalletConnected.value = true
+    isPerpsRestricted.value = true
+
+    mockGetLoginChallenge.mockResolvedValue({
+      result: { id: 'challenge-id', message: 'sign-me' },
+    })
+    mockCompleteLoginChallenge.mockResolvedValue({
+      result: { token: 'new-token', accountId: 'acc-1' },
+    })
+    mockAcceptAgreement.mockResolvedValue(undefined)
+  })
+
+  it('login() never requests a challenge', async () => {
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+
+    await auth.login()
+
+    expect(mockGetLoginChallenge).not.toHaveBeenCalled()
+    expect(auth.token.value).toBeNull()
+  })
+
+  it('login() never prompts for a signature', async () => {
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+
+    await auth.login()
+
+    expect(wallet.value?.SignMessage).not.toHaveBeenCalled()
+    expect(auth.showSigningPrompt.value).toBe(false)
+  })
+
+  it('login() does not emit a sign-in click, so the funnel is not inflated', async () => {
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+
+    await auth.login()
+
+    expect(mockTrackSignIn).not.toHaveBeenCalled()
+  })
+
+  it('does not restore a token stored before the region became restricted', async () => {
+    // The regression this guards: a user signs in at home, then travels. Without
+    // the gate the stored token rehydrates and the signed-in portfolio renders
+    // where the blocked state belongs.
+    localStorage.setItem(
+      'perps_auth_token',
+      JSON.stringify(['enc:restored-token']),
+    )
+    localStorage.setItem(
+      'perps_auth_account',
+      JSON.stringify(['enc:restored-account']),
+    )
+
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+
+    expect(auth.token.value).toBeNull()
+    expect(mockSetToken).not.toHaveBeenCalledWith('restored-token')
+  })
+
+  it('leaves the stored token in place rather than purging it', async () => {
+    // Deliberate: restore is skipped, not destroyed, so returning to an allowed
+    // region gives the session back instead of forcing a fresh signature.
+    localStorage.setItem(
+      'perps_auth_token',
+      JSON.stringify(['enc:restored-token']),
+    )
+
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    usePerpsAuth()
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem('perps_auth_token') ?? '[]')).toEqual(
+      ['enc:restored-token'],
+    )
+  })
+
+  it('restores normally once the region is allowed again', async () => {
+    isPerpsRestricted.value = false
+    localStorage.setItem(
+      'perps_auth_token',
+      JSON.stringify(['enc:restored-token']),
+    )
+    localStorage.setItem(
+      'perps_auth_account',
+      JSON.stringify(['enc:restored-account']),
+    )
+
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+
+    // Proves the block above is the gate doing its job, not the fixture failing
+    // to restore for some unrelated reason.
+    expect(auth.token.value).toBe('restored-token')
   })
 })
