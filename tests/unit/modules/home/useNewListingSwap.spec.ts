@@ -1,17 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
-
-// Controllable token-info fetch: the composable calls
-// useMEWFetch(url).get().json() and awaits execute(); we drive `data` per test.
-const fetchData = ref<unknown>(null)
-const execute = vi.fn(async () => {})
-vi.mock('@/composables/useFetchMewApi', () => ({
-  useFetchMewApi: () => ({
-    useMEWFetch: () => ({
-      get: () => ({ json: () => ({ data: fetchData, execute }) }),
-    }),
-  }),
-}))
 
 // Ethereum is the only swap-supported chain in these tests.
 const chainHasSwapSupport = vi.fn((name: string) => name === 'Ethereum')
@@ -47,43 +34,15 @@ import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 describe('useNewListingSwap', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    fetchData.value = null
     selectedChain = { name: 'Ethereum' }
   })
 
-  it('uses supportedChains from the payload directly, without a lookup', async () => {
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('btc', 'BTC', 'Bitcoin', [
-      { chainName: 'Ethereum', contract: '0xFED' },
+  it('primes swap with the contract on the selected chain, then opens Swap', async () => {
+    const { openSwapForToken } = useNewListingSwap()
+    openSwapForToken('BTC', 'Bitcoin', [
+      { chainName: 'Ethereum', contract: '0xABC' },
     ])
 
-    expect(execute).not.toHaveBeenCalled()
-    expect(storeSwapValues).toHaveBeenCalledWith(
-      expect.objectContaining({
-        toToken: expect.objectContaining({ address: '0xFED' }),
-        toChain: { name: 'Ethereum' },
-      }),
-    )
-    expect(openPanel).toHaveBeenCalledWith('swap')
-  })
-
-  it('opens Swap without a lookup when supportedChains is provided but empty', async () => {
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('btc', 'BTC', 'Bitcoin', [])
-
-    expect(execute).not.toHaveBeenCalled()
-    expect(storeSwapValues).not.toHaveBeenCalled()
-    expect(openPanel).toHaveBeenCalledWith('swap')
-  })
-
-  it('primes swap with the contract on the selected chain, then opens Swap', async () => {
-    fetchData.value = {
-      supportedChains: [{ chainName: 'Ethereum', contract: '0xABC' }],
-    }
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('btc', 'BTC', 'Bitcoin')
-
-    expect(execute).toHaveBeenCalled()
     expect(storeSwapValues).toHaveBeenCalledWith(
       expect.objectContaining({
         toToken: expect.objectContaining({
@@ -97,12 +56,9 @@ describe('useNewListingSwap', () => {
     expect(openPanel).toHaveBeenCalledWith('swap')
   })
 
-  it('uses the native sentinel when the chain contract is null', async () => {
-    fetchData.value = {
-      supportedChains: [{ chainName: 'Ethereum', contract: null }],
-    }
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('eth', 'ETH', 'Ether')
+  it('uses the native sentinel when the chain contract is null', () => {
+    const { openSwapForToken } = useNewListingSwap()
+    openSwapForToken('ETH', 'Ether', [{ chainName: 'Ethereum', contract: null }])
 
     expect(storeSwapValues).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -113,16 +69,13 @@ describe('useNewListingSwap', () => {
     )
   })
 
-  it('falls back to the first swap-supported chain when the selected one is not', async () => {
+  it('falls back to the first swap-supported chain when the selected one is not', () => {
     selectedChain = { name: 'Polygon' } // not swap-supported here
-    fetchData.value = {
-      supportedChains: [
-        { chainName: 'Polygon', contract: '0x111' },
-        { chainName: 'Ethereum', contract: '0x222' },
-      ],
-    }
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('tok', 'TOK', 'Token')
+    const { openSwapForToken } = useNewListingSwap()
+    openSwapForToken('TOK', 'Token', [
+      { chainName: 'Polygon', contract: '0x111' },
+      { chainName: 'Ethereum', contract: '0x222' },
+    ])
 
     expect(storeSwapValues).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -132,23 +85,21 @@ describe('useNewListingSwap', () => {
     )
   })
 
-  it('still opens Swap (without priming) when no chain supports swap', async () => {
-    fetchData.value = {
-      supportedChains: [{ chainName: 'Polygon', contract: '0x111' }],
-    }
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('tok', 'TOK', 'Token')
+  it('still opens Swap (without priming) when no chain supports swap', () => {
+    const { openSwapForToken } = useNewListingSwap()
+    openSwapForToken('TOK', 'Token', [{ chainName: 'Polygon', contract: '0x111' }])
 
     expect(storeSwapValues).not.toHaveBeenCalled()
     expect(openPanel).toHaveBeenCalledWith('swap')
   })
 
-  it('still opens Swap when the lookup fails', async () => {
-    execute.mockRejectedValueOnce(new Error('network'))
-    const { openSwapForCoin } = useNewListingSwap()
-    await openSwapForCoin('tok', 'TOK', 'Token')
+  it('still opens Swap when supportedChains is missing or empty', () => {
+    const { openSwapForToken } = useNewListingSwap()
+    openSwapForToken('TOK', 'Token')
+    openSwapForToken('TOK', 'Token', [])
 
     expect(storeSwapValues).not.toHaveBeenCalled()
+    expect(openPanel).toHaveBeenCalledTimes(2)
     expect(openPanel).toHaveBeenCalledWith('swap')
   })
 })

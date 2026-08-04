@@ -54,7 +54,7 @@ const walletMenu = useWalletMenuStore()
 const watchlistStore = useWatchlistStore()
 const { formatFiat, formatFiatCompact } = useCurrency()
 const { newCoins, fetchNewCoins } = useCryptoNewCoins()
-const { openSwapForCoin } = useNewListingSwap()
+const { openSwapForToken } = useNewListingSwap()
 
 // Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
 onMounted(fetchNewCoins)
@@ -157,14 +157,13 @@ const items = computed<ListingCardItem[]>(() =>
 //   stocks & balance tables).
 // - Crypto opens the Swap panel, which matches its "to" token by on-chain
 //   contract address. useNewListingSwap resolves it from the payload's
-//   supportedChains when present, else looks the coin up by id — then primes
-//   the swap values and opens the panel itself.
+//   supportedChains, then primes the swap values and opens the panel itself.
 const onTrade = (it: ListingCardItem) => {
   if (it.isStock) {
     walletMenu.setSelectedTradeTokenSymbol(it.symbol)
     walletMenu.openPanel('trade')
   } else {
-    openSwapForCoin(it.key, it.symbol, it.name ?? '', it.supportedChains)
+    openSwapForToken(it.symbol, it.name ?? '', it.supportedChains)
   }
 }
 </script>

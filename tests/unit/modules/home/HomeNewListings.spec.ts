@@ -95,10 +95,11 @@ vi.mock('@/modules/home/composables/useCryptoNewCoins', () => ({
 }))
 
 // Crypto swap preselect is exercised in its own spec (useNewListingSwap.spec.ts);
-// here we only assert HomeNewListings delegates to it with the coin's id/symbol/name.
-const openSwapForCoin = vi.fn()
+// here we only assert HomeNewListings delegates to it with the coin's
+// symbol/name and supportedChains.
+const openSwapForToken = vi.fn()
 vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
-  useNewListingSwap: () => ({ openSwapForCoin }),
+  useNewListingSwap: () => ({ openSwapForToken }),
 }))
 
 import HomeNewListings from '@/modules/home/sections/HomeNewListings.vue'
@@ -214,7 +215,7 @@ describe('HomeNewListings', () => {
   })
 
   it('preselects + opens swap via useNewListingSwap from a crypto card CTA', async () => {
-    openSwapForCoin.mockClear()
+    openSwapForToken.mockClear()
     setSelectedTradeTokenSymbol.mockClear()
     const w = mountIt()
     await w.get('[data-test="tab-switch"]').trigger('click') // crypto
@@ -222,24 +223,19 @@ describe('HomeNewListings', () => {
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-trade"]')
       .trigger('click')
-    // Swap matches its "to" token by on-chain address, so the coin id/symbol/name
-    // (plus supportedChains when the payload carries them — undefined here) is
-    // handed to useNewListingSwap, which resolves the contract + opens Swap.
-    expect(openSwapForCoin).toHaveBeenCalledWith(
-      'btc',
-      'BTC',
-      'Bitcoin',
-      undefined,
-    )
+    // Swap matches its "to" token by on-chain address, so the symbol/name plus
+    // the payload's supportedChains (undefined here) is handed to
+    // useNewListingSwap, which resolves the contract + opens Swap.
+    expect(openSwapForToken).toHaveBeenCalledWith('BTC', 'Bitcoin', undefined)
     // Crypto uses Swap, never the trade-symbol path.
     expect(setSelectedTradeTokenSymbol).not.toHaveBeenCalled()
   })
 
   it('forwards supportedChains to useNewListingSwap when the payload carries them', async () => {
-    openSwapForCoin.mockClear()
+    openSwapForToken.mockClear()
     const chains = [{ chainName: 'Ethereum', contract: '0xABC' }]
     const original = newCoins.value
-    // BE will add supportedChains to newCoins (same shape as the stocks response).
+    // BE sends supportedChains on newCoins (same shape as the stocks response).
     newCoins.value = [{ ...original[0], supportedChains: chains } as any]
     const w = mountIt()
     await w.get('[data-test="tab-switch"]').trigger('click') // crypto
@@ -247,7 +243,7 @@ describe('HomeNewListings', () => {
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-trade"]')
       .trigger('click')
-    expect(openSwapForCoin).toHaveBeenCalledWith('btc', 'BTC', 'Bitcoin', chains)
+    expect(openSwapForToken).toHaveBeenCalledWith('BTC', 'Bitcoin', chains)
     newCoins.value = original
   })
 
