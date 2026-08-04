@@ -7,11 +7,13 @@
     >
       <div class="w-full max-w-[500px] relative">
         <!-- <rewards-small-banner
-          :class="blurClass"
+          :class="blockedClass"
           :location="'small-banner-swap'"
         /> -->
 
-        <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
+        <!-- Header stays at full opacity when blocked: only the form below the
+             unavailable card is dimmed. -->
+        <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">
             {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
@@ -22,7 +24,40 @@
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
-        <div :class="['relative transition-all duration-300', blurClass]">
+        <!-- Network Not Supported -->
+        <app-unavailable-card
+          v-if="swapLoaded && !supportedNetwork"
+          class="mb-3"
+          :title="$t('swap.network-not-supported')"
+          :description="
+            isSwapView
+              ? $t('swap.swapping-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              : $t('swap.bridging-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+          "
+        >
+          <template #action>
+            <select-chain-for-app
+              :passed-chains="fromChains"
+              :preselected-chain="defualtChainWhenNetworkUnsupported"
+              :can-store="false"
+              id="SWAP:NetworkNotSupported"
+              class="w-full"
+              @update:selected-chain="switchGlobalNetwork"
+            />
+          </template>
+        </app-unavailable-card>
+
+        <div :class="['relative transition-all duration-300', blockedClass]">
           <!-- From Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p
@@ -131,45 +166,12 @@
             />
           </div>
         </div>
-
-        <!-- Network Not Supported Banner - Centered Overlay -->
-        <app-unavailable-card
-          v-if="swapLoaded && !supportedNetwork"
-          overlay="top"
-          :title="$t('swap.network-not-supported')"
-          :description="
-            isSwapView
-              ? $t('swap.swapping-not-available', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-              : $t('swap.bridging-not-available', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-          "
-        >
-          <template #action>
-            <select-chain-for-app
-              :passed-chains="fromChains"
-              :preselected-chain="defualtChainWhenNetworkUnsupported"
-              :can-store="false"
-              id="SWAP:NetworkNotSupported"
-              class="w-full"
-              @update:selected-chain="switchGlobalNetwork"
-            />
-          </template>
-        </app-unavailable-card>
       </div>
 
       <!-- Error Display -->
       <div
         v-if="!isLoading && priceImpactTooHigh"
-        :class="blurClass"
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
@@ -180,7 +182,7 @@
       </div>
       <div
         v-if="!isLoading && generalError"
-        :class="blurClass"
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
@@ -189,12 +191,12 @@
       </div>
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
-        :class="['mx-auto w-full max-w-[340px]', blurClass]"
+        :class="['mx-auto w-full max-w-[340px]', blockedClass]"
         @click="connectWalletForSwap"
       >
         {{ t('connect_wallet') }}</app-base-button
       >
-      <div v-else :class="['w-full max-w-[340px]', blurClass]">
+      <div v-else :class="['w-full max-w-[340px]', blockedClass]">
         <transition name="fade" mode="out-in">
           <app-no-chain-balance
             v-if="!hasChainBalance"
@@ -218,7 +220,7 @@
         :title="t('swap.need-help-swapping')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
-        :class="blurClass"
+        :class="blockedClass"
       />
     </div>
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
@@ -270,6 +272,7 @@ import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -481,11 +484,11 @@ const defualtChainWhenNetworkUnsupported = computed(() => {
   )
 })
 
-const blurClass = computed(() => {
-  return swapLoaded && !supportedNetwork.value
-    ? 'blur-sm pointer-events-none opacity-60'
-    : ''
-})
+// Matches the unavailable card's own condition, so the form is never dimmed
+// without the card present to explain why.
+const { blockedClass } = useBlockedContent(
+  () => swapLoaded.value && !supportedNetwork.value,
+)
 
 const toAddress = computed(() => {
   if (selectedToChain.value?.name === selectedChain.value?.name)
