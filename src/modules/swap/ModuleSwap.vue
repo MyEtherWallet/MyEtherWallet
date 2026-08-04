@@ -133,47 +133,37 @@
         </div>
 
         <!-- Network Not Supported Banner - Centered Overlay -->
-        <div
+        <app-unavailable-card
           v-if="swapLoaded && !supportedNetwork"
-          class="absolute flex top-[100px] z-20 pointer-events-none"
+          overlay="top"
+          :title="$t('swap.network-not-supported')"
+          :description="
+            isSwapView
+              ? $t('swap.swapping-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              : $t('swap.bridging-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+          "
         >
-          <div
-            class="w-full max-w-[380px] px-5 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('swap.network-not-supported') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{
-                isSwapView
-                  ? $t('swap.swapping-not-available', {
-                      network:
-                        selectedChain?.nameLong ||
-                        selectedChain?.name ||
-                        $t('common.network'),
-                    })
-                  : $t('swap.bridging-not-available', {
-                      network:
-                        selectedChain?.nameLong ||
-                        selectedChain?.name ||
-                        $t('common.network'),
-                    })
-              }}
-            </p>
-
+          <template #action>
             <select-chain-for-app
               :passed-chains="fromChains"
               :preselected-chain="defualtChainWhenNetworkUnsupported"
               :can-store="false"
               id="SWAP:NetworkNotSupported"
-              class="mt-4"
+              class="w-full"
               @update:selected-chain="switchGlobalNetwork"
             />
-          </div>
-        </div>
+          </template>
+        </app-unavailable-card>
       </div>
 
       <!-- Error Display -->
@@ -265,7 +255,7 @@ import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
-import { ArrowDownIcon, ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -279,6 +269,7 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'

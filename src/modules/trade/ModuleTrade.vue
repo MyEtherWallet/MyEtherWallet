@@ -135,27 +135,19 @@
         </div>
 
         <!-- Market Closed Banner - Centered Overlay -->
-        <div
+        <app-unavailable-card
           v-if="
             !isLoading &&
             marketStatus &&
             !isTradingSessionOpen &&
             isCurrentNetworkSupported
           "
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+          accent="primary"
+          overlay="center"
+          :title="$t('trade.market_closed')"
+          :description="marketStatus.reason?.message"
         >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">
-                {{ $t('trade.market_closed') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{ marketStatus.reason?.message }}
-            </p>
+          <template #action>
             <div class="text-center">
               <p
                 v-if="countdownText"
@@ -167,89 +159,62 @@
                 {{ formatNextOpen(marketStatus.nextOpen) }}
               </p>
             </div>
-          </div>
-        </div>
+          </template>
+        </app-unavailable-card>
 
         <!-- Network Not Supported Banner - Centered Overlay -->
-        <div
+        <app-unavailable-card
           v-if="!isLoading && !isCurrentNetworkSupported"
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+          overlay="center"
+          :title="$t('trade.network_not_supported')"
+          :description="
+            $t('trade.trading_not_available_on', {
+              network:
+                selectedChain?.nameLong ||
+                selectedChain?.name ||
+                $t('common.network'),
+            })
+          "
         >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('trade.network_not_supported') }}
-              </p>
+          <template #action>
+            <div>
+              <button
+                v-for="chain in supportedChainsList.reverse()"
+                :key="chain.name"
+                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                @click="switchToNetwork(chain)"
+              >
+                <app-token-logo
+                  v-if="chain.icon"
+                  :url="chain.icon"
+                  :sumbol="chain.nameLong"
+                  width="w-5"
+                  height="h-5"
+                />
+                <span>{{ chain.nameLong || chain.name }}</span>
+              </button>
             </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{
-                $t('trade.trading_not_available_on', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-              }}
-            </p>
-            <div class="flex flex-col items-center justify-center">
-              <div class="">
-                <button
-                  v-for="chain in supportedChainsList.reverse()"
-                  :key="chain.name"
-                  class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
-                  @click="switchToNetwork(chain)"
-                >
-                  <app-token-logo
-                    v-if="chain.icon"
-                    :url="chain.icon"
-                    :sumbol="chain.nameLong"
-                    width="w-5"
-                    height="h-5"
-                  />
-                  <span>{{ chain.nameLong || chain.name }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          </template>
+        </app-unavailable-card>
 
         <!-- Trading Restricted Banner - Centered Overlay -->
-        <div
+        <app-unavailable-card
           v-if="
             !isLoading &&
             isTradingRestrictedInRegion &&
             isCurrentNetworkSupported
           "
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+          overlay="center"
+          :title="$t('trade.trading_not_available')"
+          :description="$t('trade.trading_restricted')"
         >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('trade.trading_not_available') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{ $t('trade.trading_restricted') }}
-            </p>
-            <div class="flex justify-center">
-              <a
-                :href="tradingRestrictedHelpUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-s-14 font-medium hover:underline"
-              >
-                {{ $t('trade.learn_more') }}
-                <arrow-long-right-icon class="w-4 h-4 inline-block" />
-              </a>
-            </div>
-          </div>
-        </div>
+          <template #action>
+            <app-learn-more-link
+              :href="tradingRestrictedHelpUrl"
+              :label="$t('trade.learn_more')"
+            />
+          </template>
+        </app-unavailable-card>
       </div>
 
       <!-- Error Display -->
@@ -400,6 +365,8 @@ import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 
 // Stores
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -424,12 +391,6 @@ import {
 // Types
 import type { Chain } from '@/mew_api/types'
 import configs from '@/configs'
-
-//icons
-import {
-  ExclamationCircleIcon,
-  ArrowLongRightIcon,
-} from '@heroicons/vue/24/solid'
 
 const { t } = useI18n()
 

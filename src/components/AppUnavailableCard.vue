@@ -2,6 +2,7 @@
   <div :class="overlay ? overlayClass : 'contents'">
     <div
       role="alert"
+      v-bind="$attrs"
       :class="[
         'w-full max-w-[380px] mx-auto p-6 bg-white border border-grey-10 rounded-16 shadow-button shadow-button-elevated',
         overlay ? 'pointer-events-auto' : '',
@@ -33,6 +34,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+
+// Attrs land on the card itself, not the positioning wrapper: without an
+// `overlay` the wrapper is `display: contents`, which generates no box, so a
+// caller-supplied `absolute`/`top-*` would be silently dropped there.
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(
   defineProps<{
