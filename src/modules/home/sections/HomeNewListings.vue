@@ -13,7 +13,12 @@ import {
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
+import type { CryptoOverviewToken } from '@/mew_api/types'
 import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
+import {
+  useNewListingSwap,
+  type ListingSupportedChain,
+} from '../composables/useNewListingSwap'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
@@ -37,6 +42,9 @@ interface ListingCardItem {
   ctaLabel: string
   tooltip: string
   to: RouteLocationRaw
+  // Crypto only: on-chain chains from the overview payload, when present. Absent
+  // (undefined) → useNewListingSwap looks the coin up by id instead.
+  supportedChains?: ListingSupportedChain[]
 }
 
 const { t } = useI18n()
@@ -46,6 +54,7 @@ const walletMenu = useWalletMenuStore()
 const watchlistStore = useWatchlistStore()
 const { formatFiat, formatFiatCompact } = useCurrency()
 const { newCoins, fetchNewCoins } = useCryptoNewCoins()
+const { openSwapForCoin } = useNewListingSwap()
 
 // Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
 onMounted(fetchNewCoins)
@@ -119,6 +128,13 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
     tradePanel: 'swap',
     ctaLabel: t('homePage.listings.swap'),
     tooltip: t('homePage.listings.openCryptoPage'),
+    // ponytail: cast until the BE adds `supportedChains` to overview newCoins
+    // (same shape as the stocks response) and the schema is regenerated.
+    supportedChains: (
+      item as CryptoOverviewToken & {
+        supportedChains?: ListingSupportedChain[]
+      }
+    ).supportedChains,
     to: item.ondo
       ? {
           name: STOCK_INFO_ROUTE_NAMES.crypto,
@@ -134,6 +150,23 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
 const items = computed<ListingCardItem[]>(() =>
   activeTabIndex.value === 0 ? stockItems.value : cryptoItems.value,
 )
+
+// Open the wallet drawer with the card's token preselected.
+// - Stocks open the Trade panel, which restores its "to" token from
+//   selectedTradeTokenSymbol — set that first (same as ViewStockInfo / the
+//   stocks & balance tables).
+// - Crypto opens the Swap panel, which matches its "to" token by on-chain
+//   contract address. useNewListingSwap resolves it from the payload's
+//   supportedChains when present, else looks the coin up by id — then primes
+//   the swap values and opens the panel itself.
+const onTrade = (it: ListingCardItem) => {
+  if (it.isStock) {
+    walletMenu.setSelectedTradeTokenSymbol(it.symbol)
+    walletMenu.openPanel('trade')
+  } else {
+    openSwapForCoin(it.key, it.symbol, it.name ?? '', it.supportedChains)
+  }
+}
 </script>
 
 <template>
@@ -163,7 +196,7 @@ const items = computed<ListingCardItem[]>(() =>
               :favorite="it.favorite"
               :trade-label="it.ctaLabel"
               @select="router.push(it.to)"
-              @trade="walletMenu.openPanel(it.tradePanel)"
+              @trade="onTrade(it)"
               @toggle-favorite="
                 watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
               "

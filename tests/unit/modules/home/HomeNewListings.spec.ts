@@ -61,8 +61,9 @@ vi.mock('@/composables/useCurrency', () => ({
 }))
 
 const openPanel = vi.fn()
+const setSelectedTradeTokenSymbol = vi.fn()
 vi.mock('@/stores/walletMenuStore', () => ({
-  useWalletMenuStore: () => ({ openPanel }),
+  useWalletMenuStore: () => ({ openPanel, setSelectedTradeTokenSymbol }),
 }))
 
 const setWatchlistItem = vi.fn()
@@ -91,6 +92,13 @@ const newCoins = ref([
 const fetchNewCoins = vi.fn()
 vi.mock('@/modules/home/composables/useCryptoNewCoins', () => ({
   useCryptoNewCoins: () => ({ newCoins, fetchNewCoins, isLoading: ref(false) }),
+}))
+
+// Crypto swap preselect is exercised in its own spec (useNewListingSwap.spec.ts);
+// here we only assert HomeNewListings delegates to it with the coin's id/symbol/name.
+const openSwapForCoin = vi.fn()
+vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
+  useNewListingSwap: () => ({ openSwapForCoin }),
 }))
 
 import HomeNewListings from '@/modules/home/sections/HomeNewListings.vue'
@@ -169,12 +177,17 @@ describe('HomeNewListings', () => {
     })
   })
 
-  it('opens the trade panel when a card trade button is clicked', async () => {
+  it('preselects the stock token and opens the trade panel on trade CTA', async () => {
+    openPanel.mockClear()
+    setSelectedTradeTokenSymbol.mockClear()
     const w = mountIt()
     await w
       .findAll('[data-test="listing-card"]')[0]
       .find('[data-test="listing-trade"]')
       .trigger('click')
+    // Trade restores its "to" token from selectedTradeTokenSymbol, so the symbol
+    // must be set before the panel opens — otherwise the drawer keeps the old token.
+    expect(setSelectedTradeTokenSymbol).toHaveBeenCalledWith('AAPL')
     expect(openPanel).toHaveBeenCalledWith('trade')
   })
 
@@ -200,15 +213,42 @@ describe('HomeNewListings', () => {
     expect(setWatchlistItem).toHaveBeenCalledWith('btc', false)
   })
 
-  it('opens the swap panel from a crypto card CTA', async () => {
-    openPanel.mockClear()
+  it('preselects + opens swap via useNewListingSwap from a crypto card CTA', async () => {
+    openSwapForCoin.mockClear()
+    setSelectedTradeTokenSymbol.mockClear()
     const w = mountIt()
     await w.get('[data-test="tab-switch"]').trigger('click') // crypto
     await w
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-trade"]')
       .trigger('click')
-    expect(openPanel).toHaveBeenCalledWith('swap')
+    // Swap matches its "to" token by on-chain address, so the coin id/symbol/name
+    // (plus supportedChains when the payload carries them — undefined here) is
+    // handed to useNewListingSwap, which resolves the contract + opens Swap.
+    expect(openSwapForCoin).toHaveBeenCalledWith(
+      'btc',
+      'BTC',
+      'Bitcoin',
+      undefined,
+    )
+    // Crypto uses Swap, never the trade-symbol path.
+    expect(setSelectedTradeTokenSymbol).not.toHaveBeenCalled()
+  })
+
+  it('forwards supportedChains to useNewListingSwap when the payload carries them', async () => {
+    openSwapForCoin.mockClear()
+    const chains = [{ chainName: 'Ethereum', contract: '0xABC' }]
+    const original = newCoins.value
+    // BE will add supportedChains to newCoins (same shape as the stocks response).
+    newCoins.value = [{ ...original[0], supportedChains: chains } as any]
+    const w = mountIt()
+    await w.get('[data-test="tab-switch"]').trigger('click') // crypto
+    await w
+      .findAll('[data-test="listing-card"]')[0]
+      .get('[data-test="listing-trade"]')
+      .trigger('click')
+    expect(openSwapForCoin).toHaveBeenCalledWith('btc', 'BTC', 'Bitcoin', chains)
+    newCoins.value = original
   })
 
   it('toggles the stock in the shared watchlist when the favorite star is clicked', async () => {
