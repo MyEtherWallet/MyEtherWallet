@@ -53,7 +53,7 @@
             :user-consent="analyticsStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
-            class="!px-3 !xs:px-5"
+            class="px-3 xs:px-5"
           />
           <div
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
