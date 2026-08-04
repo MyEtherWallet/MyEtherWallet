@@ -19,7 +19,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
     :is="tag"
     :to="props.to"
     data-test="sector-tile"
-    class="flex h-[120px] w-[200px] shrink-0 cursor-pointer flex-col items-end justify-center gap-10 overflow-hidden rounded-2xl px-4 py-3"
+    class="flex h-[120px] w-[200px] shrink-0 cursor-pointer flex-col items-end justify-center gap-10 overflow-hidden rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-black/20"
     :style="{ backgroundColor: color }"
   >
     <span class="flex items-center rounded-full bg-white/20 p-2">

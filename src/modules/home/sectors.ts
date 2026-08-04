@@ -29,7 +29,8 @@ export interface IndustrySector {
   icon: Component
 }
 
-// Figma tile palette (design-library node 873:5582), cycled across the tiles.
+// Figma tile palette (design-library "IndustrySectorTile", node 1082:2605):
+// the 10 distinct colors, cycled across the tiles.
 const PALETTE = [
   '#684cff',
   '#f31b6f',
@@ -39,6 +40,8 @@ const PALETTE = [
   '#4d1ee3',
   '#cc0452',
   '#ffa500',
+  '#9d00ff',
+  '#05c0a5',
 ]
 
 function make(

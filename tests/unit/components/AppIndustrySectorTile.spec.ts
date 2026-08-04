@@ -25,6 +25,11 @@ describe('AppIndustrySectorTile', () => {
     expect(tile.attributes('style')).toContain('background-color: rgb(1, 2, 3)')
   })
 
+  it('shows the subtle border on hover (design-library Hover state)', () => {
+    const tile = mountIt().get('[data-test="sector-tile"]')
+    expect(tile.attributes('class')).toContain('hover:border-black/20')
+  })
+
   it('renders the icon inside the bubble when provided', () => {
     const w = mountIt({ icon: ClockIcon })
     expect(w.findComponent(ClockIcon).exists()).toBe(true)
