@@ -18,8 +18,51 @@
       </div>
     </div>
 
+    <!-- Region-blocked: card explains why, form below stays visible but dimmed
+         and inert so the panel reads as present-but-unusable. -->
+    <app-unavailable-card
+      v-if="isPerpsRestricted"
+      class="mb-3"
+      :title="$t('perps.restricted.panel-title')"
+      :description="$t('perps.restricted.panel-description')"
+    >
+      <template #icon>
+        <div class="relative">
+          <globe-asia-australia-icon
+            class="w-12 h-12 text-black"
+            aria-hidden="true"
+          />
+          <!--
+            Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
+            knocked-out "!" lets the red through, and the 4px the circle extends
+            past the icon forms the red ring. Inverting these (white circle,
+            red icon) loses the ring and reads as a solid red blob. Keep the
+            two sizes 8px apart to preserve that ring width.
+          -->
+          <span
+            class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-error flex items-center justify-center"
+          >
+            <exclamation-circle-icon
+              class="w-5 h-5 text-white"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+      </template>
+      <template #action>
+        <app-learn-more-link
+          :href="perpsHelpUrl"
+          :label="$t('perps.restricted.learn-more')"
+        />
+      </template>
+    </app-unavailable-card>
+
     <!-- Active Trade Form -->
-    <div class="flex flex-col pb-6">
+    <div
+      class="flex flex-col pb-6"
+      :class="blockedClass"
+      :inert="isPerpsRestricted"
+    >
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -809,12 +852,18 @@ import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
   PlusCircleIcon,
+  GlobeAsiaAustraliaIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/vue/24/solid'
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsAuth } from './composables/usePerpsAuth'
+import { usePerpsRestriction } from './composables/usePerpsRestriction'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -851,6 +900,8 @@ const {
   confirmSign,
   cancelSign,
 } = usePerpsAuth()
+const { isPerpsRestricted, perpsHelpUrl } = usePerpsRestriction()
+const { blockedClass } = useBlockedContent(isPerpsRestricted)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
