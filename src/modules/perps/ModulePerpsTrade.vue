@@ -53,6 +53,7 @@
         <app-learn-more-link
           :href="perpsHelpUrl"
           :label="$t('perps.restricted.learn-more')"
+          @click="onRestrictedLearnMore"
         />
       </template>
     </app-unavailable-card>
@@ -888,6 +889,7 @@ import {
   PerpsManageEvent,
   PerpsEventLocation,
   PerpsNewPositionAction,
+  PerpsRestrictedEvent,
 } from '@/analytics'
 
 const walletStore = useWalletStore()
@@ -908,6 +910,12 @@ const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const { t } = useI18n()
+
+const onRestrictedLearnMore = () => {
+  void analytics.trackPerpsRestrictedEvent(PerpsRestrictedEvent.LEARN_MORE, {
+    source: PerpsEventSource.TRADE,
+  })
+}
 
 const onSwitchToEthereum = () => {
   globalStore.setSelectedNetwork('ETHEREUM')

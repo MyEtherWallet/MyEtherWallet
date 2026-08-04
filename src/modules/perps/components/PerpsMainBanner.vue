@@ -170,6 +170,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="text-black font-bold underline hoverOpacity"
+          @click="onRestrictedLearnMore"
         >
           {{ $t('perps.restricted.learn-more') }}
         </a>
@@ -206,7 +207,12 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
-import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  PerpsEventSource,
+  PerpsRestrictedEvent,
+} from '@/analytics'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -248,6 +254,12 @@ const onSwitchToEthereum = () => {
     text: t('perps.toast.switched-to-ethereum-title'),
     textSecondary: t('perps.toast.switched-to-ethereum-detail'),
     type: ToastType.Info,
+  })
+}
+
+const onRestrictedLearnMore = () => {
+  void analytics.trackPerpsRestrictedEvent(PerpsRestrictedEvent.LEARN_MORE, {
+    source: PerpsEventSource.MAIN_BANNER,
   })
 }
 
