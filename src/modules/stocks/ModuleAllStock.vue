@@ -677,22 +677,12 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
-// Category values the table API filters by server-side
-// (src/mew_api/schema.ts → WebStocksTableCategory). Any other tab renders but
-// falls back to the unfiltered list until the backend adds support — see
-// fetchTableUrl. Sending an unsupported value would 400 the request.
-const API_CATEGORIES = new Set([
-  'EQUITIES',
-  'STOCK',
-  'ETF',
-  'COMMODITIES',
-  'FIXED_INCOME',
-])
-
 // Product-defined category tabs (MEW-2069). 'all' + 'watchlist' are the fixed
-// view modes; the rest are stock categories in the requested order. Only the
-// API_CATEGORIES subset filters today; the others (Large Cap, US, Growth,
-// Technology, Value, Small Cap, Industrials) are not yet supported server-side.
+// view modes; the rest are stock categories in the requested order. Every
+// category is sent to the API as `?category=` (see fetchTableUrl); the values
+// the backend enum doesn't support yet (Large Cap, US, Growth, Technology,
+// Value, Small Cap, Industrials) simply return empty until it adds them — the
+// frontend is wired and ready.
 const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
   { label: t('stocks.category_watchlist'), value: 'watchlist' },
@@ -831,9 +821,10 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('search', searchInput.value)
   }
 
-  // Only send `category` for API-supported values; unsupported tabs (and 'all')
-  // fall back to the unfiltered list rather than 400-ing the request.
-  if (API_CATEGORIES.has(selectedCryptoFilter.value.value)) {
+  // Send the selected category for every view except "all". Values the backend
+  // enum doesn't support yet return empty (400) rather than filtering, until it
+  // adds them — the request is wired and ready.
+  if (selectedCryptoFilter.value.value !== 'all') {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }
 
@@ -1098,6 +1089,19 @@ const getSparkLinePoints = (token: DisplayToken) => {
  * Token Link
  --------------------------------*/
 const router = useRouter()
+
+// Keep the URL `?category=` in sync with the selected tab so the filter is
+// shareable, survives a reload, and round-trips with the home Industry Sectors
+// deep-links (which are read on mount, above).
+watch(
+  () => selectedCryptoFilter.value.value,
+  value => {
+    const query = { ...route.query }
+    if (value === 'all') delete query.category
+    else query.category = value
+    router.replace({ query })
+  },
+)
 
 const onRowClick = (token: DisplayToken) => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {

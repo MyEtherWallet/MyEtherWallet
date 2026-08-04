@@ -1447,6 +1447,19 @@ const getSparkLinePoints = (token: DisplayToken) => {
  --------------------------------*/
 const router = useRouter()
 
+// Keep the URL `?category=` in sync with the selected filter so it is shareable,
+// survives a reload, and round-trips with the home Industry Sectors deep-links
+// (which are read on mount, above).
+watch(
+  () => selectedCryptoFilter.value.value,
+  value => {
+    const query = { ...route.query }
+    if (value === 'all') delete query.category
+    else query.category = value
+    router.replace({ query })
+  },
+)
+
 const onRowClick = (token: DisplayToken) => {
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
     location: 'token_row',
