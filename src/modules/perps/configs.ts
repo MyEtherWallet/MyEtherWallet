@@ -15,7 +15,7 @@ const PERPS_WS_URL = {
 }
 
 const perpsClient = new PerpsClient(
-  configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
+  !configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
 )
 
 const perpsWsUrl = !configs.IS_DEV_MODE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
