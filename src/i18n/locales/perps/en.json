@@ -430,6 +430,9 @@
       "panel-title": "Perpetuals aren’t available",
       "panel-description": "Unfortunately, trading perpetuals isn’t allowed in your current jurisdiction."
     },
+    "status": {
+      "unavailable": "Service temporarily unavailable, please try again later."
+    },
     "order-status": {
       "open": "Open",
       "fully-filled": "Fully Filled",

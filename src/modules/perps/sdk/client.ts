@@ -36,6 +36,23 @@ import type {
   MarketInfoData,
 } from './types'
 
+/**
+ * Thrown for any non-2xx response, carrying the HTTP status so callers can tell
+ * classes of failure apart — a 429 is a throttle to back off from, a 5xx is an
+ * outage worth surfacing. `message` is unchanged from the plain `Error` this
+ * replaced (the body's `error` field, else `HTTP <status>`), so callers that
+ * only read the message keep working.
+ */
+export class PerpsHttpError extends Error {
+  readonly status: number
+
+  constructor(status: number, message: string) {
+    super(message)
+    this.name = 'PerpsHttpError'
+    this.status = status
+  }
+}
+
 export class PerpsClient {
   private baseUrl: string
   private token: string | null = null
@@ -70,7 +87,7 @@ export class PerpsClient {
       } catch {
         // ignore parse errors
       }
-      throw new Error(msg)
+      throw new PerpsHttpError(res.status, msg)
     }
     return res.json()
   }

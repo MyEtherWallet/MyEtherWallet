@@ -1,4 +1,4 @@
-export { PerpsClient } from './client'
+export { PerpsClient, PerpsHttpError } from './client'
 export type {
   GenericResponse,
   ErrorResponse,
