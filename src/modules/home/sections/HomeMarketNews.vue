@@ -46,6 +46,20 @@ const dateLabel = (ts?: number): string => {
     year: 'numeric',
   })
 }
+
+// recentNews doesn't type a `description` yet; read it optimistically so the
+// card fills in as soon as the BE starts returning it. Until then, fall back to
+// a useful placeholder that points the reader to the source article.
+const newsDescription = (item: {
+  description?: string
+  articleUrl?: string
+}): string => {
+  if (item.description) return item.description
+  const source = sourceFromUrl(item.articleUrl)
+  return source
+    ? t('homePage.news.readOnSource', { source })
+    : t('homePage.news.readMore')
+}
 </script>
 
 <template>
@@ -65,6 +79,7 @@ const dateLabel = (ts?: number): string => {
           :title="n.title ?? ''"
           :source="sourceFromUrl(n.articleUrl)"
           :date="dateLabel(n.timestamp)"
+          :description="newsDescription(n)"
           :ticker="n.tickers?.[0]"
           :href="n.articleUrl"
         />
