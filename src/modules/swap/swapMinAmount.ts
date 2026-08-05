@@ -1,15 +1,18 @@
+import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+// Display precision by magnitude (mirrors formatFloatingPointValue's tiers).
+const displayDecimalsFor = (value: BigNumber): number =>
+  value.gte(1) ? 2 : value.gte(0.0001) ? 4 : 8
 
 /**
  * Display string for the smallest provider minimum among the given quote
  * minimums, expressed in the from-token's own units.
  *
- * When every swap quote requires more than the user entered, MEW shows the
- * real minimum they need instead of a bare "amount too low" (MEW-2109). The
- * minimums come from the SDK in the from-token's base units, so they must be
- * formatted with that token's decimals — not a hardcoded 18.
+ * Rounded UP at display precision so the shown amount is never below the real
+ * minimum — otherwise a user who types the displayed value hits "amount too
+ * low" again (MEW-2109). The minimums arrive in the token's base units, so they
+ * are formatted with that token's decimals — never a fixed 18.
  */
 export const smallestMinFromDisplay = (
   mins: bigint[],
@@ -17,5 +20,7 @@ export const smallestMinFromDisplay = (
 ): string => {
   if (!mins.length) return '0'
   const smallest = mins.reduce((a, b) => (b < a ? b : a))
-  return formatFloatingPointValue(formatUnits(smallest, decimals)).value
+  const human = new BigNumber(formatUnits(smallest, decimals))
+  const dp = Math.min(displayDecimalsFor(human), decimals)
+  return human.decimalPlaces(dp, BigNumber.ROUND_CEIL).toFixed()
 }
