@@ -338,6 +338,8 @@ import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
+// Fallback token precision when a token omits `decimals` (ETH/most ERC20 = 18).
+const DEFAULT_TOKEN_DECIMALS = 18
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
@@ -519,7 +521,7 @@ const fromAmountError = computed(() => {
   if (!fromTokenSelected.value) return ''
 
   // Validate Decimals
-  const decimals = fromTokenSelected.value.decimals || 18
+  const decimals = fromTokenSelected.value.decimals ?? DEFAULT_TOKEN_DECIMALS
   if (BigNumber(fromAmount.value).toFixed().split('.')[1]?.length > decimals) {
     return t('swap.error.too-many-decimals')
   }
@@ -1080,7 +1082,8 @@ const fetchQuotes = async () => {
     })
 
     if (quotes && quotes.length > 0) {
-      const fromDecimals = fromTokenSelected.value?.decimals || 18
+      const fromDecimals =
+        fromTokenSelected.value?.decimals ?? DEFAULT_TOKEN_DECIMALS
       const fromAmountBase = parseUnits(fromAmount.value, fromDecimals)
 
       providers.value = quotes
