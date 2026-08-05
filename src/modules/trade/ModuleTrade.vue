@@ -73,7 +73,7 @@
           <template #action>
             <div>
               <button
-                v-for="chain in supportedChainsList.reverse()"
+                v-for="chain in supportedChainsList"
                 :key="chain.name"
                 class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
                 @click="switchToNetwork(chain)"
@@ -480,9 +480,11 @@ const isCurrentNetworkSupported = computed(() => {
 
 // Get list of supported chains for the unsupported network message
 const supportedChainsList = computed(() => {
-  return chains.value.filter(chain =>
-    supportedChainNames.value.includes(chain.name.toUpperCase()),
-  )
+  return chains.value
+    .filter(chain =>
+      supportedChainNames.value.includes(chain.name.toUpperCase()),
+    )
+    .reverse()
 })
 
 const fromChains = computed(() => {
@@ -657,6 +659,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   selectedFromChain,
   isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
+  isTradingRestrictedInRegion,
   hasPreQuoteError,
   generalError,
   isLoadingQuote,
@@ -681,6 +684,7 @@ const {
   selectedFromChain,
   currentQuote,
   needsApproval,
+  isTradingRestrictedInRegion,
 })
 
 // --- Methods ---

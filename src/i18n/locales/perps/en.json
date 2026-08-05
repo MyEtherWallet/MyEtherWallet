@@ -427,7 +427,7 @@
     "restricted": {
       "banner-notice": "Perpetuals trading isn’t available in the US.",
       "learn-more": "Learn more",
-      "panel-title": "Perpetuals isn’t available",
+      "panel-title": "Perpetuals aren’t available",
       "panel-description": "Unfortunately, trading perpetuals isn’t allowed in your current jurisdiction."
     },
     "order-status": {
