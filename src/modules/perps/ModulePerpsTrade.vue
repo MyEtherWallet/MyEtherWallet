@@ -861,6 +861,7 @@ import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsRestriction } from './composables/usePerpsRestriction'
+import { usePerpsStatus } from './composables/usePerpsStatus'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
@@ -904,6 +905,11 @@ const {
 } = usePerpsAuth()
 const { isPerpsRestricted, perpsHelpUrl } = usePerpsRestriction()
 const { blockedClass } = useBlockedContent(isPerpsRestricted)
+// Side-effect only: keeps `/status` polling alive while the trade panel is
+// mounted, which is what gates every other perps request during an outage. The
+// panel opens without ViewPerps (and its banner) in the tree, so without this
+// the panel would keep firing orders and quotes at a service reporting 500.
+usePerpsStatus()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)

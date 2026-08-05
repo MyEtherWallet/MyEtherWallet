@@ -66,10 +66,7 @@
       />
 
       <!-- Error -->
-      <div
-        v-else-if="contractsError"
-        class="text-center py-8 text-error text-s-14"
-      >
+      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
         {{ contractsError }}
       </div>
 

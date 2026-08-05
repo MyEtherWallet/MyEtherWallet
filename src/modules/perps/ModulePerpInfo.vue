@@ -990,6 +990,7 @@ import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsToasts } from './composables/usePerpsToasts'
 import { perpsWs } from './sdk/ws'
 import { ensurePerpsWsLifecycle } from './composables/usePerpsWsLifecycle'
+import { usePerpsStatus } from './composables/usePerpsStatus'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -1060,6 +1061,10 @@ const { markPriceData } = usePerpsMarkPrices()
 const { leverage } = usePerpsTradeForm()
 const perpsToasts = usePerpsToasts()
 ensurePerpsWsLifecycle()
+// Side-effect only: keeps `/status` polling alive while this surface is mounted,
+// which is what gates every other perps request during an outage. Without it
+// this page fetches happily against a service that has reported it is down.
+usePerpsStatus()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 

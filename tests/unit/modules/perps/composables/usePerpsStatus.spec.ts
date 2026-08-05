@@ -9,8 +9,13 @@ const getStatus = vi.fn(
 )
 
 // Mocked so the spec never constructs the real client (and never hits the API).
+const setServiceUnavailable = vi.fn()
 vi.mock('@/modules/perps/configs', () => ({
-  perpsClient: { getStatus: () => getStatus() },
+  perpsClient: {
+    getStatus: () => getStatus(),
+    setServiceUnavailable: (unavailable: boolean) =>
+      setServiceUnavailable(unavailable),
+  },
 }))
 
 const respondsOk = () =>
@@ -43,6 +48,7 @@ const freshImport = async () => {
 describe('usePerpsStatus', () => {
   beforeEach(() => {
     getStatus.mockReset()
+    setServiceUnavailable.mockClear()
     respondsOk()
   })
 
@@ -187,5 +193,59 @@ describe('usePerpsStatus', () => {
     second.stop()
     await vi.advanceTimersByTimeAsync(60_000)
     expect(getStatus).toHaveBeenCalledTimes(3)
+  })
+
+  describe('gating the rest of the perps client', () => {
+    it('closes the gate on a 500, so no other endpoint is called', async () => {
+      const { fetchPerpsStatus, respondsWith } = await freshImport()
+      respondsWith(500)
+
+      await fetchPerpsStatus()
+
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(true)
+    })
+
+    it('leaves the gate open on a 200', async () => {
+      const { fetchPerpsStatus } = await freshImport()
+      respondsOk()
+
+      await fetchPerpsStatus()
+
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(false)
+    })
+
+    it('leaves the gate open on a 429 — a throttle is not an outage', async () => {
+      const { fetchPerpsStatus, respondsWith } = await freshImport()
+      respondsWith(429)
+
+      await fetchPerpsStatus()
+
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(false)
+    })
+
+    it('leaves the gate open when the request never reached a response', async () => {
+      const { fetchPerpsStatus } = await freshImport()
+      getStatus.mockImplementation(() =>
+        Promise.reject(new Error('Failed to fetch')),
+      )
+
+      await fetchPerpsStatus()
+
+      // Offline is the user's connection, not the service — blocking every perps
+      // call on it would be a self-inflicted outage.
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(false)
+    })
+
+    it('reopens the gate on the poll after a recovery', async () => {
+      const { fetchPerpsStatus, respondsWith } = await freshImport()
+      respondsWith(500)
+      await fetchPerpsStatus()
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(true)
+
+      respondsOk()
+      await fetchPerpsStatus()
+
+      expect(setServiceUnavailable).toHaveBeenLastCalledWith(false)
+    })
   })
 })

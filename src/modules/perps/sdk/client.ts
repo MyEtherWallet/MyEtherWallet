@@ -53,13 +53,50 @@ export class PerpsHttpError extends Error {
   }
 }
 
+/**
+ * Thrown instead of issuing a request while the service is known to be down.
+ * Distinct from `PerpsHttpError` because no request was made and there is no
+ * status to report — nothing reached the network.
+ */
+export class PerpsServiceUnavailableError extends Error {
+  constructor() {
+    super('Perps service unavailable')
+    this.name = 'PerpsServiceUnavailableError'
+  }
+}
+
+/**
+ * The one path that stays reachable while the service is marked unavailable —
+ * it is how the outage is detected and, more importantly, how recovery is
+ * detected. Gating it would latch the outage forever.
+ */
+const STATUS_PATH = '/status'
+
 export class PerpsClient {
   private baseUrl: string
   private token: string | null = null
   private onUnauthorized: (() => void) | null = null
+  private serviceUnavailable = false
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
+  }
+
+  /**
+   * Marks the service up or down. While down, every request except `/status`
+   * fails immediately without touching the network — there is no point asking
+   * 30-odd endpoints for data the service has just said it cannot serve, and
+   * each one would otherwise add its own failed request, error toast and Sentry
+   * report to an outage the user has already been told about.
+   *
+   * Driven by `usePerpsStatus`, which owns the `/status` polling.
+   */
+  setServiceUnavailable(unavailable: boolean) {
+    this.serviceUnavailable = unavailable
+  }
+
+  isServiceUnavailable(): boolean {
+    return this.serviceUnavailable
   }
 
   setToken(token: string | null) {
@@ -75,6 +112,11 @@ export class PerpsClient {
   }
 
   private async request<T>(path: string, options?: RequestInit): Promise<T> {
+    // Single choke point for every endpoint on this client, so a new method
+    // cannot forget the gate.
+    if (this.serviceUnavailable && path !== STATUS_PATH) {
+      throw new PerpsServiceUnavailableError()
+    }
     const res = await fetch(`${this.baseUrl}${path}`, options)
     if (!res.ok) {
       if (res.status === 401 && this.onUnauthorized) {
@@ -132,7 +174,7 @@ export class PerpsClient {
   }
 
   async getStatus(): Promise<GenericResponse<StatusResult>> {
-    return this.request<GenericResponse<StatusResult>>('/status')
+    return this.request<GenericResponse<StatusResult>>(STATUS_PATH)
   }
 
   async getLoginChallenge(

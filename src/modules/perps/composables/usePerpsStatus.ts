@@ -39,6 +39,16 @@ let pollTimer: ReturnType<typeof setInterval> | null = null
 let consumers = 0
 
 /**
+ * True only while `/status` is answering with a server error. Everything else —
+ * a 200, a 429 throttle, an unreachable endpoint, or the window before the first
+ * response — reads as available, so the page never opens with an outage notice
+ * it cannot substantiate.
+ */
+const isServiceUnavailable = computed(
+  () => statusCode.value !== null && statusCode.value >= SERVER_ERROR_STATUS,
+)
+
+/**
  * Pings `/status` and returns the HTTP status it answered with (`null` if it
  * never answered).
  *
@@ -67,18 +77,12 @@ export async function fetchPerpsStatus(): Promise<number | null> {
   } finally {
     isLoadingStatus.value = false
   }
+  // Push the verdict into the client so every other perps endpoint is gated on
+  // it: while the service is down they fail immediately instead of each firing
+  // its own doomed request. Set on every poll, so a recovery reopens the gate.
+  perpsClient.setServiceUnavailable(isServiceUnavailable.value)
   return statusCode.value
 }
-
-/**
- * True only while `/status` is answering with a server error. Everything else —
- * a 200, a 429 throttle, an unreachable endpoint, or the window before the first
- * response — reads as available, so the page never opens with an outage notice
- * it cannot substantiate.
- */
-const isServiceUnavailable = computed(
-  () => statusCode.value !== null && statusCode.value >= SERVER_ERROR_STATUS,
-)
 
 /**
  * Availability of the perps service, from its `/status` endpoint.
