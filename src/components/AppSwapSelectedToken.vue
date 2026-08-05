@@ -707,6 +707,7 @@ const SUGGESTION_LIMIT = 6
 const STABLECOIN_SYMBOLS = new Set([
   'USDT',
   'USDC',
+  'USDY',
   'DAI',
   'USDE',
   'USDS',
