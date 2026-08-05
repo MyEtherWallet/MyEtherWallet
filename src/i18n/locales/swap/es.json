@@ -27,7 +27,7 @@
       "more-than-zero": "La cantidad debe ser mayor que 0.",
       "insufficient-balance-for-fees": "No tienes suficiente {symbol} para cubrir las comisiones de red.",
       "insufficient-native": "Saldo de {symbol} insuficiente.",
-      "minimum-amount": "Cantidad demasiado baja.",
+      "minimum-amount": "Cantidad demasiado baja. La cantidad mínima es {amount} {symbol}.",
       "maximum-amount": "Cantidad demasiado alta.",
       "no-quotes": "No hay cotizaciones disponibles para el par de tokens seleccionado",
       "fetching-quotes": "Error al obtener las cotizaciones. Inténtalo de nuevo.",

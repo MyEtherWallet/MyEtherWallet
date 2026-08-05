@@ -308,6 +308,7 @@ import {
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
 import { formatUnits, parseUnits } from 'viem'
+import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
 import dataTxAction from '@/utils/dataTxAction'
 import {
   type Chain,
@@ -562,7 +563,11 @@ const fromAmountError = computed(() => {
     const max = BigInt(
       selectedQuote.value.minMax?.maximumFrom.toString() || '0',
     )
-    if (baseAmount < min) return t('swap.error.minimum-amount')
+    if (baseAmount < min)
+      return t('swap.error.minimum-amount', {
+        amount: smallestMinFromDisplay([min], decimals),
+        symbol: fromTokenSelected.value.symbol,
+      })
     if (baseAmount > max) return t('swap.error.maximum-amount')
   }
 
@@ -1091,10 +1096,17 @@ const fetchQuotes = async () => {
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
-        // if no providers were selected after filter minimum
-        // fromValue is probably too low
+        // No provider's minimum was met. Tell the user the actual minimum
+        // required (smallest across the returned quotes, in the from-token's
+        // units) instead of a bare "amount too low" (MEW-2109).
         if (quotes.length > 0) {
-          generalError.value = t('swap.error.minimum-amount')
+          generalError.value = t('swap.error.minimum-amount', {
+            amount: smallestMinFromDisplay(
+              quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+              fromDecimals,
+            ),
+            symbol: fromTokenSelected.value?.symbol,
+          })
         }
         const event = bestSwapLoadingOpen.value
           ? SwapEventError.OFFER_ERROR
