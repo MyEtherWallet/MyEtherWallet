@@ -203,6 +203,10 @@ onFetchResponse(() => {
             stockAlias: gainer.stockAlias,
             primaryMarket: gainer.primaryMarket,
           },
+          // ondo stock gainers carry no crypto market data.
+          totalVolume: null,
+          marketCap: null,
+          supportedChains: [],
         }
       },
     )

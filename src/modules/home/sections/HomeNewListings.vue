@@ -13,7 +13,6 @@ import {
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
-import type { CryptoOverviewToken } from '@/mew_api/types'
 import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
 import {
   useNewListingSwap,
@@ -108,9 +107,9 @@ const stockItems = computed<ListingCardItem[]>(() =>
   })),
 )
 
-// Crypto tab: the `newCoins` from the crypto overview. These only carry
-// price + 24h change (no market cap / volume in the API), so those stats show
-// "-". Ondo-backed coins link to the stock page; the rest to the token page.
+// Crypto tab: the `newCoins` from the crypto overview (now with market cap +
+// 24h volume). Ondo-backed coins link to the stock page; the rest to the token
+// page.
 const cryptoItems = computed<ListingCardItem[]>(() =>
   newCoins.value.map(item => ({
     key: item.coinId,
@@ -118,9 +117,13 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
     symbol: item.symbol,
     price: formatFiat(item.price).display,
     description: undefined,
-    marketCap: '-',
+    marketCap:
+      item.marketCap != null ? formatFiatCompact(item.marketCap).display : '-',
     change: item.priceChangePercentage24h,
-    volume: '-',
+    volume:
+      item.totalVolume != null
+        ? formatFiatCompact(item.totalVolume).display
+        : '-',
     logo: item.logoUrl ?? undefined,
     favorite: watchlistStore.isWatchListed(item.coinId),
     favoriteId: item.coinId,
@@ -128,13 +131,7 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
     tradePanel: 'swap',
     ctaLabel: t('homePage.listings.swap'),
     tooltip: t('homePage.listings.openCryptoPage'),
-    // ponytail: cast until the BE adds `supportedChains` to overview newCoins
-    // (same shape as the stocks response) and the schema is regenerated.
-    supportedChains: (
-      item as CryptoOverviewToken & {
-        supportedChains?: ListingSupportedChain[]
-      }
-    ).supportedChains,
+    supportedChains: item.supportedChains,
     to: item.ondo
       ? {
           name: STOCK_INFO_ROUTE_NAMES.crypto,

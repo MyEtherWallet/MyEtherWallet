@@ -678,11 +678,9 @@ const setSelectedChain = (chain: Chain) => {
 }
 
 // Product-defined category tabs (MEW-2069). 'all' + 'watchlist' are the fixed
-// view modes; the rest are stock categories in the requested order. Every
-// category is sent to the API as `?category=` (see fetchTableUrl); the values
-// the backend enum doesn't support yet (Large Cap, US, Growth, Technology,
-// Value, Small Cap, Industrials) simply return empty until it adds them — the
-// frontend is wired and ready.
+// view modes; the rest are stock categories in the requested order, each sent
+// to the API as `?category=` (see fetchTableUrl). All values are supported
+// server-side (WebStocksTableCategory enum).
 const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
   { label: t('stocks.category_watchlist'), value: 'watchlist' },
@@ -821,9 +819,8 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('search', searchInput.value)
   }
 
-  // Send the selected category for every view except "all". Values the backend
-  // enum doesn't support yet return empty (400) rather than filtering, until it
-  // adds them — the request is wired and ready.
+  // Send the selected category for every view except "all" (watchlist uses its
+  // own fetch path, so it never reaches here).
   if (selectedCryptoFilter.value.value !== 'all') {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }

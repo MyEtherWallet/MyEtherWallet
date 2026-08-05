@@ -1260,7 +1260,7 @@ export interface components {
         /** @enum {string} */
         WebStocksWatchlistSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
         /** @enum {string} */
-        WebStocksTableCategory: "COMMODITIES" | "EQUITIES" | "FIXED_INCOME" | "STOCK" | "ETF";
+        WebStocksTableCategory: "COMMODITIES" | "EQUITIES" | "ETF" | "FIXED_INCOME" | "GROWTH" | "INDUSTRIALS" | "LARGE_CAP" | "SMALL_CAP" | "STOCK" | "TECHNOLOGY" | "US" | "VALUE";
         /** @enum {string} */
         WebTokensWatchlistSort: "NONE" | "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         BtcOutputInput: {
@@ -1590,6 +1590,14 @@ export interface components {
                     volume24h: string;
                     marketCap: string;
                 };
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    ondoGmNetworkChainId: string;
+                    contract: null | string;
+                    iconUrl: string;
+                }[];
             }[];
             recentNews: {
                 title?: string;
@@ -1613,6 +1621,14 @@ export interface components {
                     volume24h: string;
                     marketCap: string;
                 };
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    ondoGmNetworkChainId: string;
+                    contract: null | string;
+                    iconUrl: string;
+                }[];
             }[];
             topMovers: {
                 stockAlias?: string;
@@ -1632,11 +1648,27 @@ export interface components {
                     volume24h: string;
                     marketCap: string;
                 };
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    ondoGmNetworkChainId: string;
+                    contract: null | string;
+                    iconUrl: string;
+                }[];
             }[];
             banner: {
                 symbol?: string;
                 priceChangePercentage24h?: number;
                 sparkline24h?: number[];
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    ondoGmNetworkChainId: string;
+                    contract: null | string;
+                    iconUrl: string;
+                }[];
             }[];
         };
         GetWebStocksTableResponse: {
@@ -2145,6 +2177,8 @@ export interface components {
                 symbol: string;
                 price: number;
                 priceChangePercentage24h: number;
+                totalVolume: number | null;
+                marketCap: number | null;
                 logoUrl: string | null;
                 ondo: null | {
                     stockAlias?: string;
@@ -2152,6 +2186,13 @@ export interface components {
                         symbol: string;
                     };
                 };
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    chainIconUrl: string;
+                    contract: null | string;
+                }[];
             }[];
             ondoTopGainers: {
                 stockAlias?: string;
@@ -2165,7 +2206,17 @@ export interface components {
                 };
                 underlyingMarket: {
                     name: string;
+                    volume24h: string;
+                    marketCap: string;
                 };
+                supportedChains: {
+                    chainName: string;
+                    chainNameLong: string;
+                    chainType: components["schemas"]["ChainType"];
+                    ondoGmNetworkChainId: string;
+                    contract: null | string;
+                    iconUrl: string;
+                }[];
             }[];
         };
         GetCoinGeckoChainPreviewResponse: {
