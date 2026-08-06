@@ -93,10 +93,13 @@ export function usePerpsTradeForm() {
 
   // ── State ──────────────────────────────────────────────────
 
-  const orderSideButtons: OrderSideButton[] = [
+  // `computed` (not a plain array) so the labels re-translate when the user
+  // switches language after the trade form has mounted. A plain array froze
+  // `t()` at setup and left Long/Short stuck in the initial locale (MEW-2112).
+  const orderSideButtons = computed<OrderSideButton[]>(() => [
     { label: t('perps.trade.long'), value: 'buy' },
     { label: t('perps.trade.short'), value: 'sell' },
-  ]
+  ])
 
   const orderSide = ref<OrderSide>(
     walletMenuStore.selectedTradeOrderSide ?? 'buy',
