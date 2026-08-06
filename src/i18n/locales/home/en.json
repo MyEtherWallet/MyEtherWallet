@@ -6,9 +6,9 @@
       "subtitle": "Get rewarded for using MEW!",
       "category": { "trade": "Trade", "buy": "Buy", "hold": "Hold" },
       "items": {
-        "trade": { "title": "Trade +$50", "highlight": "Earn $10 USDC" },
+        "trade": { "title": "Trade +$250", "highlight": "Earn 5 USDC" },
         "buy": { "title": "Buy crypto", "highlight": "Pay zero MEW fees" },
-        "hold": { "title": "Hold Trade", "highlight": "Earn $100 USDC" }
+        "hold": { "title": "Trade & Hold", "highlight": "Earn 10 USDC" }
       }
     },
     "listings": {

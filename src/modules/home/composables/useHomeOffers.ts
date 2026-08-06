@@ -1,5 +1,9 @@
 import { shallowRef, type Ref, type Component } from 'vue'
-import { ChartBarSquareIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid'
+import {
+  ChartBarSquareIcon,
+  CurrencyDollarIcon,
+  ClockIcon,
+} from '@heroicons/vue/24/solid'
 import type { WalletPanel } from '@/stores/walletMenuStore'
 
 export interface HomeOffer {
@@ -41,7 +45,7 @@ export function useHomeOffers(): {
     {
       id: 'hold',
       categoryKey: 'homePage.offers.category.hold',
-      icon: ChartBarSquareIcon,
+      icon: ClockIcon,
       titleKey: 'homePage.offers.items.hold.title',
       highlightKey: 'homePage.offers.items.hold.highlight',
       gradient: 'green',

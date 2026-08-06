@@ -12,11 +12,14 @@ const walletMenu = useWalletMenuStore()
 
 <template>
   <div class="relative grid gap-6 md:grid-cols-3">
+    <!-- peggy peeks out from behind the cards: it's the first (earliest-DOM)
+         positioned child, so with no positive z-index the cards paint over its
+         lower half, giving the "emerging from behind" look. -->
     <img
       :src="peggyAstronaut"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-[120px] right-6 z-[1] hidden h-[120px] w-auto -scale-x-100 md:block"
+      class="pointer-events-none absolute -top-[116px] right-6 hidden h-[120px] w-auto -scale-x-100 md:block"
     />
     <AppRewardsCard
       v-for="o in offers"

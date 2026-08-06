@@ -6,9 +6,9 @@
       "subtitle": "使用 MEW 即可获得奖励！",
       "category": { "trade": "交易", "buy": "购买", "hold": "持有" },
       "items": {
-        "trade": { "title": "交易 +$50", "highlight": "赚取 $10 USDC" },
+        "trade": { "title": "交易 +$250", "highlight": "赚取 5 USDC" },
         "buy": { "title": "购买加密货币", "highlight": "零 MEW 手续费" },
-        "hold": { "title": "持有交易", "highlight": "赚取 $100 USDC" }
+        "hold": { "title": "交易并持有", "highlight": "赚取 10 USDC" }
       }
     },
     "listings": {
