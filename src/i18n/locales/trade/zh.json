@@ -1,0 +1,75 @@
+{
+  "trade": {
+    "title": "交易",
+    "subtitle": "买卖 Ondo 代币化股票",
+    "you_are_selling": "您要卖出",
+    "you_are_buying": "您要买入",
+    "swap_from_to": "切换买入/卖出股票",
+    "market_closed": "休市",
+    "trading_paused_session": "本时段交易已暂停",
+    "opens_in": "{countdown} 后开盘",
+    "opening_soon": "即将开盘…",
+    "network_not_supported": "不支持的网络",
+    "trading_not_available_on": "{network} 上暂不支持交易。请切换至受支持的网络。",
+    "trading_not_available": "暂不可交易",
+    "trading_restricted": "您所在的司法管辖区限制访问交易功能。",
+    "learn_more": "了解更多",
+    "approving": "授权中…",
+    "trade_button": "交易",
+    "need_help": "交易遇到问题？",
+    "tokens_not_tradable": "一个或多个代币当前不可交易。请稍后重试或选择其他代币。",
+    "service_unavailable": "交易服务暂时不可用。请稍后重试。",
+    "asset_not_tradable": "目前因 {reason} 暂不可交易",
+    "weekend": {
+      "dialog_headline": "周末股票交易：",
+      "dialog_headline_highlight": "已解锁！",
+      "dialog_body": "{tickers} 现已开放 24/7 全天候交易。跟着新闻交易，跟着推文交易，随时进行你的股票操作。",
+      "trade_now": "立即交易",
+      "tooltip_headline": "周末股票交易",
+      "tooltip_body": "{tickers} 现已开放 24/7 全天候交易。",
+      "dismiss_tooltip": "关闭提示"
+    },
+    "quote_modal": {
+      "title": "交易报价",
+      "quote_from": "来自 1inch Fusion 的交易报价",
+      "for": "用",
+      "you_will_get": "可获得：",
+      "estimated_amount": "预计数量",
+      "min_amount": "最小数量",
+      "limit_order_warning": "这是一笔限价交易。最终数量可能会因市场状况略有变化。",
+      "confirm_trade": "确认交易"
+    },
+    "initiated_modal": {
+      "title": "交易订单已提交",
+      "order_submitted": "您的交易订单已提交至 1inch Fusion 网络，订单正在成交中。",
+      "order_hash": "订单哈希",
+      "network": "网络",
+      "close_window_message": "您可以关闭此窗口，并",
+      "track_progress": "在通知中跟踪进度"
+    },
+    "status": {
+      "pending": "待处理",
+      "filled": "已成交",
+      "cancelled": "已取消",
+      "expired": "已过期"
+    },
+    "toast": {
+      "approval-success": "授权成功！",
+      "approval-success-secondary": "您现在可以交易 {symbol} 了。",
+      "quote-loading": "请等待报价加载"
+    },
+    "error": {
+      "approval-failed": "无法授权代币",
+      "submit-failed": "提交交易订单失败",
+      "token-unavailable": "该代币暂不可交易。请选择其他代币或稍后重试。",
+      "minimum-trade-value": "最低交易金额约为 $1.00",
+      "token-not-available": "{symbol} 当前不可交易",
+      "no-quotes-returned": "未返回任何报价",
+      "failed-to-fetch-quote": "获取报价失败",
+      "fusion-network-not-supported": "Fusion：不支持的网络",
+      "failed-fetch-quote-1inch": "从 1inch 获取报价失败",
+      "native-transaction-failed": "原生交易失败",
+      "failed-submit-order-1inch": "向 1inch 提交订单失败"
+    }
+  }
+}

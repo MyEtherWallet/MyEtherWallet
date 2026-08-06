@@ -48,7 +48,7 @@
           </router-link>
         </div>
         <app-select
-          v-if="!showMobileMenu"
+          v-if="!showMobileMenu && !isLearnCollapsed"
           :options="learnMenuList"
           :placeholder="$t('learn')"
           use-link
@@ -67,8 +67,8 @@
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
-          :options="displayTools"
-          :placeholder="$t('tools')"
+          :options="moreMenuOptions"
+          :placeholder="$t('common.more')"
           use-vue-router
           has-on-Hover
         >
@@ -95,20 +95,24 @@
           aria-hidden="true"
         />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
-             can't escape and paint over the search overlay. -->
+             can't escape and paint over the search overlay -->
         <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
             v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-            class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
               analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
                 source: 'Header_Create',
               })
             "
           >
-            {{ $t('common.create_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.create_wallet_short')
+                : $t('common.create_wallet')
+            }}
           </router-link>
           <!-- Connect wallet button -->
           <router-link
@@ -119,9 +123,13 @@
                 source: 'Header_Connect',
               })
             "
-            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
           >
-            {{ $t('connect_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.connect_wallet_short')
+                : $t('connect_wallet')
+            }}
           </router-link>
           <the-settings-popup />
           <the-notifications-popup v-if="isWalletConnected" />
@@ -151,6 +159,7 @@ import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
@@ -162,6 +171,7 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { useTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
@@ -178,6 +188,8 @@ const { selectedChain } = storeToRefs(chainStore)
 const { refreshDetectedAddress } = useDetectedAddress()
 const watchOnlyStore = useWatchOnlyStore()
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isTradingRestrictedInRegion } = useTradingRestriction()
+const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
  * Wallet-restore skeleton
@@ -199,7 +211,6 @@ const hasAnySavedAccount = computed<boolean>(() =>
   ),
 )
 const isRestoringWallet = ref(false)
-const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -207,32 +218,68 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
+/**
+ * Progressive "priority+" collapse of the desktop nav: as the viewport narrows
+ * (but before it drops to the mobile hamburger at `xl-min`/1140px), the
+ * right-most nav items fold into the "More" dropdown so the bar never squishes
+ * into the global search. These thresholds are header-specific, not Tailwind
+ * breakpoints. Learn folds in first (< 1255px), then Earn (< 1160px).
+ */
+const headerCollapse = useBreakpoints({
+  earn: 1160,
+  learn: 1255,
+  networkConnected: 1310,
+  walletCta: 1500,
+  network: 1555,
+})
+const isLearnCollapsed = computed<boolean>(
+  () => headerCollapse.smaller('learn').value,
+)
+const isEarnCollapsed = computed<boolean>(
+  () => headerCollapse.smaller('earn').value,
+)
+/**
+ * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
+ * "Connect") to save space before the network button collapses.
+ */
+const isWalletCtaShort = computed<boolean>(
+  () => headerCollapse.smaller('walletCta').value,
+)
+
 /** ------------------------------
  * Menu Items
  ------------------------------*/
 const coreMenuList = computed<AppMenuListItem[]>(() => {
-  return [
+  const items: AppMenuListItem[] = [
     {
       title: t('home'),
       routeName: ROUTES_MAIN.HOME.NAME,
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('stocks'),
+      title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
     },
     {
-      title: t('crypto'),
+      title: t('common.crypto'),
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
-    },
   ]
+  if (!isTradingRestrictedInRegion.value) {
+    items.push({
+      title: t('perpetuals'),
+      routeName: ROUTES_MAIN.PERPS.NAME,
+      iconID: ICON_IDS.PERPS,
+    })
+  }
+  items.push({
+    title: t('earn'),
+    routeName: ROUTES_MAIN.EARN.NAME,
+    iconID: ICON_IDS.STAKE,
+  })
+  return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
@@ -246,18 +293,24 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
-const learnMenuList: AppSelectOption[] = [
+const learnMenuList = computed<AppSelectOption[]>(() => [
   {
-    label: 'Help Center',
+    label: t('common.help_center'),
     value: 'https://help.myetherwallet.com/en/',
   },
   {
-    label: 'Blog',
+    label: t('common.blog'),
     value: 'https://www.myetherwallet.com/blog',
   },
-]
+])
 
 const displayLinks = computed(() => {
+  // Earn folds into the "More" dropdown below its threshold.
+  if (isEarnCollapsed.value) {
+    return coreMenuList.value.filter(
+      item => item.routeName !== ROUTES_MAIN.EARN.NAME,
+    )
+  }
   return coreMenuList.value
 })
 
@@ -267,6 +320,29 @@ const displayTools = computed<AppSelectOption[]>(() => {
     label: item.title,
     value: item.routeName as string,
   }))
+})
+
+/**
+ * Options for the "More" dropdown. Nav items that have collapsed out of the bar
+ * are prepended (Learn's external links first — kept at the top as requested —
+ * then Earn), followed by the always-present tools.
+ */
+const moreMenuOptions = computed<AppSelectOption[]>(() => {
+  const options: AppSelectOption[] = []
+  if (isLearnCollapsed.value) {
+    options.push(
+      ...learnMenuList.value.map(item => ({
+        label: item.label,
+        value: item.value,
+        external: true,
+      })),
+    )
+  }
+  if (isEarnCollapsed.value) {
+    options.push({ label: t('earn'), value: ROUTES_MAIN.EARN.NAME as string })
+  }
+  options.push(...displayTools.value)
+  return options
 })
 
 /**

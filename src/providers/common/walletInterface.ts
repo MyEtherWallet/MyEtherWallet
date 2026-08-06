@@ -47,6 +47,12 @@ export interface WalletInterface {
   /** Current address reported live by an injected extension (null if none /
    *  not applicable). Only injected wallets implement this. */
   getLiveAddress?: () => Promise<string | null>
+  /**
+   * Returns the wallet's compressed public key as a 0x-prefixed hex string.
+   * Only implemented by Bitcoin-family wallets, where it is required to declare
+   * the type of a P2SH from-address in a transaction quote request.
+   */
+  getPublicKey?: () => Promise<HexPrefixedString>
   getWalletType: () => WalletType
   getProvider: () => string
   getBalance: () => Promise<TokenBalancesRaw>

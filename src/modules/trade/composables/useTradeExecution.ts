@@ -98,8 +98,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       holdCampaignStatus: holdingsStore.status,
       qualifyingTradeAmount: reward?.qualifying_amount
         ? new BigNumber(reward.qualifying_amount)
-            .shiftedBy(-decimals)
-            .toString()
+          .shiftedBy(-decimals)
+          .toString()
         : undefined,
       qualifyingTradeToken: meta?.symbol,
       qualifiedSince: reward?.qualification_timestamp,
@@ -230,7 +230,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 100) {
+      if (fromUsdValue > 250) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
       }
@@ -307,13 +307,20 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       if (isDevMode) {
         console.error('Error submitting trade order:', e)
       } else {
-        captureException(e instanceof Error ? e : new Error(errorMessage), {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error submitting trade order',
-            errorMessage,
-          },
-        })
+        // Expected client errors (user rejection code 4001, 1inch 4xx: expired
+        // quote / illiquid pair / invalid order), flagged by
+        // OneInchFusion.submitOrder, are surfaced to the user via the toast
+        // below but are pure Sentry noise — skip capture. Genuine 5xx /
+        // network failures stay unflagged and are reported.
+        if (!(e as { expectedClientError?: boolean }).expectedClientError) {
+          captureException(e instanceof Error ? e : new Error(errorMessage), {
+            ...SENTRY_MODULE_TAGS.TRADE,
+            extra: {
+              title: 'TRADE: Error submitting trade order',
+              errorMessage,
+            },
+          })
+        }
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,

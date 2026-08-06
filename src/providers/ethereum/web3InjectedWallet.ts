@@ -14,7 +14,6 @@ class Web3InjectedWallet extends BaseEvmWallet {
 
   constructor(provider: Eip6963Provider, chainId: string) {
     super(chainId)
-
     this.provider = provider
     this.address = '0x'
   }

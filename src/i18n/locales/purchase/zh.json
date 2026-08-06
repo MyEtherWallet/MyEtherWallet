@@ -1,0 +1,75 @@
+{
+  "purchase": {
+    "buy": {
+      "title": "购买",
+      "youre_buying": "您正在购买",
+      "enter_amount": "输入数量",
+      "continue": "继续",
+      "connect_wallet": "连接钱包",
+      "no_quotes": "未找到报价",
+      "need_help": "购买需要帮助？",
+      "network_not_supported": "不支持该网络",
+      "network_not_available": "{network} 上暂不支持购买。请切换到受支持的网络。",
+      "error": {
+        "min": "最低允许 {min}",
+        "max": "最高允许 {max}",
+        "no_quotes": "未找到报价"
+      }
+    },
+    "sell": {
+      "title": "出售",
+      "youre_selling": "您正在出售",
+      "your_balance": "您的余额：",
+      "enter_amount": "输入数量",
+      "continue": "继续",
+      "connect_wallet": "连接钱包",
+      "need_help": "出售需要帮助？",
+      "network_fee": "网络费用",
+      "network_fee_tooltip": "{chain} 网络中的费用以 {symbol} 收取",
+      "network_not_supported": "不支持该网络",
+      "network_not_available": "{network} 上暂不支持出售。请切换到受支持的网络。",
+      "error": {
+        "min": "最低允许 {min}",
+        "max": "最高允许 {max}",
+        "insufficient": "{symbol} 不足"
+      },
+      "provider": {
+        "title": "您将出售 {amount}",
+        "youll_send": "您将发送",
+        "youll_receive": "您将收到",
+        "continue": "继续"
+      }
+    },
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "min": "最低",
+    "max": "最高",
+    "bank": "银行",
+    "select_token": {
+      "title": "代币",
+      "subtitle": "从列表中选择一个",
+      "search_placeholder": "搜索",
+      "filter_all_networks": "所有网络",
+      "filter_title": "按网络筛选",
+      "filter_subtitle": "从列表中选择一个网络",
+      "no_results": "没有匹配的代币"
+    },
+    "select_currency": {
+      "title": "货币",
+      "subtitle": "从列表中选择一种货币",
+      "search_placeholder": "搜索",
+      "no_results": "没有匹配的货币"
+    },
+    "select_provider": {
+      "title": "您将支付 {amount}",
+      "subtitle": "请从以下服务商中选择一个，以确定您将收到多少 {crypto}。",
+      "best_value": "最优",
+      "youll_pay": "您将支付",
+      "youll_receive": "您将收到",
+      "continue": "继续",
+      "error": {
+        "no_quotes": "没有适用于此选择的服务商。请尝试其他数量或货币。"
+      },
+      "redirect": "您将被重定向至 {provider} 以完成购买。"
+    }
+  }
+}

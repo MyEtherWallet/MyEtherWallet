@@ -6,11 +6,14 @@ import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrencyStore } from './currencyStore'
+import { getCurrencySymbol } from '@/utils/currencySymbols'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 import { useWatchOnlyStore } from './watchOnlyStore'
+import { isAddressChainTypeMismatch } from '@/utils/addressUtils'
 import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
@@ -27,6 +30,7 @@ import * as Sentry from '@sentry/vue'
 import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
+import i18n from '@/i18n'
 
 const PARTNER = 'ondo-finance'
 
@@ -112,14 +116,22 @@ export const useWalletStore = defineStore('walletStore', () => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
     const type = selectedChain.value?.type || 'EVM'
     const currentRecentAddressList = watchOnlyAddresses[type]
-    if (currentRecentAddressList.length > 0) {
+    // Skip stale entries whose address format does not match their chain type
+    // (e.g. legacy localStorage with an EVM `0x` address under BITCOIN), which
+    // would otherwise rebuild a wallet that hits an invalid balance endpoint
+    // (MEW-2043). This is the read-side root-cause guard / self-heal.
+    const validEntries = currentRecentAddressList.filter(
+      item =>
+        !isAddressChainTypeMismatch(item.address, item.type, item.chain.name),
+    )
+    if (validEntries.length > 0) {
       // Restore the address that was active before reload; fall back to the most
       // recently added one if the remembered address is no longer saved.
       const remembered = lastActiveAddress.value[type]
       const entry =
-        currentRecentAddressList.find(
+        validEntries.find(
           e => e.address.toLowerCase() === remembered?.toLowerCase(),
-        ) ?? currentRecentAddressList[currentRecentAddressList.length - 1]
+        ) ?? validEntries[validEntries.length - 1]
       const newWallet = new WatchOnlyWallet(
         entry.address,
         entry.chain,
@@ -208,8 +220,11 @@ export const useWalletStore = defineStore('walletStore', () => {
         if (!networkChangeStatus) {
           const toastStore = useToastStore()
           toastStore.addToastMessage({
-            text: 'Network change failed',
-            textSecondary: `Check if your wallet supports the ${newChain.nameLong} network`,
+            text: i18n.global.t('common.network_change_failed'),
+            textSecondary: i18n.global.t(
+              'common.network_change_failed_description',
+              { network: newChain.nameLong },
+            ),
             type: ToastType.Error,
           })
         }
@@ -497,17 +512,32 @@ export const useWalletStore = defineStore('walletStore', () => {
   //TODO: add proper formatting for fiat values
 
   /**
+   * Converts a USD BigNumber into the app-wide selected display currency.
+   * The currency store is accessed lazily here (not at store setup) to avoid a
+   * store-instantiation cycle: walletStore → currencyStore → purchaseStore → walletStore.
+   */
+  const toDisplayCurrency = (usdValue: BigNumber) => {
+    const currencyStore = useCurrencyStore()
+    return {
+      symbol: getCurrencySymbol(currencyStore.selectedCurrency),
+      converted: usdValue.multipliedBy(currencyStore.rate),
+    }
+  }
+
+  /**
    * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
   const formattedTotalFiatPortfolioValue = computed<string>(() => {
-    return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { symbol, converted } = toDisplayCurrency(totalFiatPortfolioValueBN.value)
+    return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
    * @formattedStockFiatPortfolioValue - the total stock portfolio value in fiat, formatted .
    */
   const formattedStockFiatPortfolioValue = computed<string>(() => {
-    return `$${totalStockBalanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { symbol, converted } = toDisplayCurrency(totalStockBalanceFiatBN.value)
+    return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
@@ -518,7 +548,8 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const formattedBalanceFiat = computed<string>(() => {
-    return `${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { converted } = toDisplayCurrency(balanceFiatBN.value)
+    return `${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   const hasBalances = computed(() => {

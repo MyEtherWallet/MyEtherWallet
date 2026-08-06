@@ -52,7 +52,7 @@
               <img
                 v-if="!isMobile"
                 :src="dragIcon"
-                alt="drag"
+                :alt="$t('notifications_module.drag')"
                 :class="[
                   isHovered ? 'opacity-100' : 'opacity-0',
                   'ml-1 w-5 h-5 transition-opacity align-middle inline-block',
@@ -72,7 +72,7 @@
                 >
                   <img
                     :src="pinIcon"
-                    alt="pin"
+                    :alt="$t('notifications_module.pin')"
                     :class="[{ grayscale: !isPinned }, 'w-5 h-5']"
                   />
                 </app-btn-icon>

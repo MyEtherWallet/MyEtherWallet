@@ -21,6 +21,7 @@ import type {
   ChainType,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
+import { isAddressChainTypeMismatch } from '@/utils/addressUtils'
 import type { Provider } from '@/stores/providerStore'
 import type { HWManager } from '@/providers/hw/types'
 
@@ -168,16 +169,22 @@ class WatchOnlyWallet implements WalletInterface {
   async getBalance(): Promise<TokenBalancesRaw> {
     const chainStore = useChainsStore()
     const { selectedChain } = storeToRefs(chainStore)
-    if (selectedChain.value?.type === this.chainType) {
-      const address = await this.getAddress()
-      const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
-      return fetchWithRetry<TokenBalancesRaw>(Endpoint)
-    } else {
-      const emptyResponse: TokenBalancesRaw = {
-        result: [],
-      }
+    const emptyResponse: TokenBalancesRaw = {
+      result: [],
+    }
+    if (selectedChain.value?.type !== this.chainType) {
       return emptyResponse
     }
+    const address = await this.getAddress()
+    // Guard against an address whose format does not match the chain type,
+    // e.g. an EVM `0x` address paired with a BITCOIN chain (or vice-versa).
+    // Building a balance request in that case yields an invalid endpoint the
+    // MEW API 404s on, surfacing as an unhandled rejection (MEW-2043).
+    if (isAddressChainTypeMismatch(address, this.chainType, this.chain.name)) {
+      return emptyResponse
+    }
+    const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
+    return fetchWithRetry<TokenBalancesRaw>(Endpoint).catch(() => emptyResponse)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

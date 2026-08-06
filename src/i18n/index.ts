@@ -1,8 +1,10 @@
 import { createI18n } from 'vue-i18n'
 import messages, { type MessagesSchema } from './locales'
 
+const savedLocale = localStorage.getItem('mew-locale') || 'en'
+
 const i18n = createI18n({
-  locale: 'en',
+  locale: savedLocale,
   fallbackLocale: 'en',
   legacy: false,
   messages: messages as MessagesSchema,

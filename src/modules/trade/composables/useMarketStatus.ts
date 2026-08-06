@@ -22,7 +22,9 @@ interface UseMarketStatusOptions {
 
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
-  const { fetchedTradingThisSession, isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+  const globalStore = useGlobalStore()
+  const { fetchedTradingThisSession } = storeToRefs(globalStore)
+  const { setIsTradingRestrictedInRegion } = globalStore
   const { t } = useI18n()
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
@@ -102,7 +104,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     }
     try {
       const res = await isTradingRestricted()
-      isTradingRestrictedInRegion.value = res
+      setIsTradingRestrictedInRegion(res)
       fetchedTradingThisSession.value = true;
     } catch (e) {
       if (isDevMode) {
@@ -116,7 +118,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
           },
         })
       }
-      isTradingRestrictedInRegion.value = true
+      setIsTradingRestrictedInRegion(true)
     }
   }
 
