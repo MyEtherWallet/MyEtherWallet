@@ -2,7 +2,6 @@
   <app-dialog
     v-model:is-open="isOpen"
     persistent
-    :has-content-gutter="true"
     class="w-full sm:max-w-[400px] sm:mx-auto"
   >
     <template #title>
@@ -16,7 +15,7 @@
       </button>
     </template>
     <template #content>
-      <div class="flex flex-col items-center gap-6 px-2 pt-12 pb-6 text-center">
+      <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">
         <div
           class="size-16 rounded-32 bg-[#f5f5f5] flex items-center justify-center overflow-hidden shrink-0"
         >
@@ -30,8 +29,9 @@
         </div>
         <div class="flex flex-col gap-2 w-full">
           <h2 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
-            {{ info?.addressName }} ({{ truncateAddress(info?.address ?? '', 6, 5) }})
-            {{ $t('multi_address.address_saved.title_suffix') }}
+            {{ titleLead }}<br />{{
+              $t('multi_address.address_saved.title_suffix')
+            }}
           </h2>
           <p class="text-s-14 text-[#575757] leading-[20px]">
             {{ $t('multi_address.address_saved.subtitle', { wallet: info?.walletName }) }}
@@ -76,6 +76,17 @@ import { truncateAddress } from '@/utils/filters'
 
 const accessStore = useAccessStore()
 const { addressSavedInfo: info } = storeToRefs(accessStore)
+
+// Title lead line. A saved account whose name was never customised defaults to
+// its own truncated address, so repeating it in brackets is redundant — show
+// just the truncated address in that case; otherwise "{name} ({truncated})".
+const titleLead = computed<string>(() => {
+  const address = info.value?.address ?? ''
+  const truncated = truncateAddress(address, 6, 5)
+  const name = info.value?.addressName
+  const hasCustomName = !!name && name !== truncateAddress(address, 6, 4)
+  return hasCustomName ? `${name} (${truncated})` : truncated
+})
 const { connect, openExtensionAccounts, watchExtensionAccounts } =
   useConnectWallet()
 
