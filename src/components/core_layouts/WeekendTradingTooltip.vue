@@ -78,6 +78,7 @@ import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import amzn from '@/assets/images/weekend-trading/amzn.png'
 import coin from '@/assets/images/weekend-trading/coin.png'
@@ -94,9 +95,16 @@ const props = defineProps<{
 const announcement = useWeekendTradingAnnouncementStore()
 const { shouldShowTooltip } = storeToRefs(announcement)
 
-// Sequenced behind the RWA "Trade & Hold" announcement: no 24/7 messaging until
-// 3 days after that modal is closed.
-const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+// Sequenced behind the RWA "Trade & Hold" campaign with no waiting period:
+//
+//  - never saw the campaign, dismissed the announcement → straight away
+//  - never saw it, took "Go to offer" → once the offer modal is closed
+//  - already saw the campaign in an earlier session → straight away
+//
+// `followupUnlocked` covers the first and third; the modal refs below cover the
+// second, since "Go to offer" closes the announcement (which unlocks) and opens
+// the offer modal in the same click.
+const { followupUnlocked: rwaCampaignDone, isTradeInfoOpen } = storeToRefs(
   useRwaAnnouncementStore(),
 )
 
@@ -107,6 +115,15 @@ const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+
+// The offer modal behind "Go to offer" (and the Hold card's "More info").
+const { isModalOpen: isRwaOfferModalOpen } = storeToRefs(useHoldingsStore())
+
+// True while any Trade & Hold modal is on screen. The announcement itself isn't
+// here: closing it is what unlocks the tooltip, so it can never still be open.
+const rwaModalOpen = computed(
+  () => isRwaOfferModalOpen.value || isTradeInfoOpen.value,
+)
 
 const visible = ref(false)
 const anchorRect = ref<DOMRect | null>(null)
@@ -129,9 +146,13 @@ const tooltipStyle = computed(() => {
 
 const tryShow = async () => {
   if (isTradingRestrictedInRegion.value) return
-  if (!rwaCooldownElapsed.value) return
+  if (!rwaCampaignDone.value) return
+  if (rwaModalOpen.value) return
   if (!shouldShowTooltip.value || !props.anchor) return
   await nextTick()
+  // Re-checked after the tick: "Go to offer" unlocks and opens the offer modal
+  // in one click, and the two land in either order.
+  if (rwaModalOpen.value) return
   anchorRect.value = props.anchor.getBoundingClientRect()
   if (visible.value) return // already showing
   visible.value = true
@@ -173,7 +194,8 @@ watch(
     isWalletConnected,
     () => props.anchor,
     isTradingRestrictedInRegion,
-    rwaCooldownElapsed,
+    rwaCampaignDone,
+    rwaModalOpen,
   ],
   () => tryShow(),
   { immediate: true },
