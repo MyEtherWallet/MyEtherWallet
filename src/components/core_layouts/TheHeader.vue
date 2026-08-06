@@ -241,7 +241,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
   const items: AppMenuListItem[] = [
     {
       title: t('home'),
-      routeName: ROUTES_MAIN.HOME.NAME,
+      routeName: ROUTES_MAIN.HOME_STAGING.NAME,
       iconID: ICON_IDS.PORTFOLIO,
     },
     {

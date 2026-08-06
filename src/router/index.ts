@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useWalletStore } from '@/stores/walletStore'
 import DefaultRoutes from './routesDefault'
+import { ROUTES_MAIN } from './routeNames'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,14 +18,18 @@ const router = createRouter({
 // reroute when address is undefined
 router.beforeEach((to, from, next) => {
   const store = useWalletStore()
-  if (to.meta && to.meta.noAuth) {
+  const newHome = { name: ROUTES_MAIN.HOME_STAGING.NAME }
+  // Disconnected users see the new Home instead of the portfolio ('/'): the
+  // portfolio root and any auth-required route bounce there until a wallet is
+  // connected.
+  if (!store.wallet && to.name === ROUTES_MAIN.HOME.NAME) {
+    next(newHome)
+  } else if (to.meta && to.meta.noAuth) {
+    next()
+  } else if (store.wallet) {
     next()
   } else {
-    if (store.wallet) {
-      next()
-    } else {
-      next('/')
-    }
+    next(newHome)
   }
 })
 

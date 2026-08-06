@@ -80,9 +80,9 @@
 
 <script setup lang="ts">
 import { MewFooter } from '@myetherwallet/vue-common-components'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { inject, computed, ref } from 'vue'
+import { inject, computed, ref, watch } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -118,6 +118,15 @@ const handleSetConsent = (consent: boolean) => {
 }
 
 const route = useRoute()
+const router = useRouter()
+
+// Once a wallet connects while the user is on the new Home, send them to their
+// portfolio ('/') — the connected landing.
+watch(isWalletConnected, connected => {
+  if (connected && route.name === ROUTES_MAIN.HOME_STAGING.NAME) {
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
+  }
+})
 
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
