@@ -39,6 +39,13 @@ interface UseTradeExecutionOptions {
   selectedFromChain: Ref<Chain | undefined>
   currentQuote: Ref<QuoteData | null>
   needsApproval: Ref<boolean>
+  /**
+   * Regional block. Guarded in each action as well as in the UI because the
+   * store's flag starts `false` and is only corrected once the async geo check
+   * resolves — until then the panel is live for a restricted user, and the
+   * blocked styling that would stop the clicks is not applied yet.
+   */
+  isTradingRestrictedInRegion: Ref<boolean>
 }
 
 export function useTradeExecution(options: UseTradeExecutionOptions) {
@@ -51,6 +58,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     selectedFromChain,
     currentQuote,
     needsApproval,
+    isTradingRestrictedInRegion,
   } = options
 
   const { t } = useI18n()
@@ -106,6 +114,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     }
   }
   const handleApprove = async () => {
+    if (isTradingRestrictedInRegion.value) return
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
       return
     }
@@ -181,6 +190,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   const openTradeModal = () => {
+    if (isTradingRestrictedInRegion.value) return
     if (!currentQuote.value) {
       toastStore.addToastMessage({
         text: t('trade.toast.quote-loading'),
@@ -193,6 +203,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   const confirmTrade = async () => {
+    // Last line of defence before an order is signed and submitted. Also closes
+    // the modal: if the geo check resolved while it was already open, leaving it
+    // up would give the user a Confirm button that silently does nothing.
+    if (isTradingRestrictedInRegion.value) {
+      quoteModalOpen.value = false
+      return
+    }
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
       return
     }

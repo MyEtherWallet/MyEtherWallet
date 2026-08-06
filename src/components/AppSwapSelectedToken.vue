@@ -699,7 +699,7 @@ const disabledGroupLabel = computed(
 )
 
 // Stablecoins & recently searched suggestions, pinned above the results and
-// shown whenever the picker is open (including while the user is searching).
+// shown whenever the picker is open (including while the user is searching)
 const SUGGESTION_LIMIT = 6
 
 // Well-known stablecoin symbols. The swap token type carries no stablecoin flag,
@@ -707,6 +707,7 @@ const SUGGESTION_LIMIT = 6
 const STABLECOIN_SYMBOLS = new Set([
   'USDT',
   'USDC',
+  'USDY',
   'DAI',
   'USDE',
   'USDS',

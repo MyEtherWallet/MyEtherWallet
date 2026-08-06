@@ -18,8 +18,75 @@
       </div>
     </div>
 
+    <!--
+      Service outage notice. The panel opens without ViewPerps (and its
+      PerpsStatusBanner) in the tree, so the outage needs saying here too — kept
+      to a compact label since the panel is narrow.
+
+      Suppressed while the region block shows, matching PerpsStatusBanner's
+      precedence: the jurisdiction card already explains why the form is
+      unusable, and a second notice would only compete with it.
+    -->
+    <div
+      v-if="showStatusLabel"
+      role="status"
+      class="flex items-center gap-1.5 mb-3 px-3 py-2 rounded-12 bg-warning-10"
+    >
+      <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
+           unreadable for copy, so the text stays near-black. -->
+      <exclamation-triangle-icon
+        class="w-4 h-4 shrink-0 text-warning"
+        aria-hidden="true"
+      />
+      <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
+    </div>
+
+    <!-- Region-blocked: card explains why, form below stays visible but dimmed
+         and inert so the panel reads as present-but-unusable. -->
+    <app-unavailable-card
+      v-if="isPerpsRestricted"
+      class="mb-3"
+      :title="$t('perps.restricted.panel-title')"
+      :description="$t('perps.restricted.panel-description')"
+    >
+      <template #icon>
+        <div class="relative">
+          <globe-asia-australia-icon
+            class="w-12 h-12 text-black"
+            aria-hidden="true"
+          />
+          <!--
+            Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
+            knocked-out "!" lets the red through, and the 4px the circle extends
+            past the icon forms the red ring. Inverting these (white circle,
+            red icon) loses the ring and reads as a solid red blob. Keep the
+            two sizes 8px apart to preserve that ring width.
+          -->
+          <span
+            class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-error flex items-center justify-center"
+          >
+            <exclamation-circle-icon
+              class="w-5 h-5 text-white"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+      </template>
+      <template #action>
+        <app-learn-more-link
+          :href="perpsHelpUrl"
+          :label="$t('perps.restricted.learn-more')"
+          @click="onRestrictedLearnMore"
+        />
+      </template>
+    </app-unavailable-card>
+
     <!-- Active Trade Form -->
-    <div class="flex flex-col pb-6">
+    <div
+      class="flex flex-col pb-6"
+      :class="blockedClass"
+      :inert="isPerpsRestricted"
+    >
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -656,15 +723,15 @@
           <p class="text-info text-s-14 mb-4">
             {{ $t('perps.trade.eth-only') }}
           </p>
-          <button
-            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-            @click="onSwitchToEthereum"
-          >
+          <app-base-button class="w-full" @click="onSwitchToEthereum">
             {{ $t('perps.trade.switch-to-ethereum') }}
-          </button>
+          </app-base-button>
         </div>
       </template>
       <template v-else-if="isWatchOnly">
+        <!-- Stays enabled during an outage: connecting a wallet is a
+             wallet-side action that doesn't touch the perps service, and it's
+             useful across the rest of the app regardless. -->
         <app-base-button
           v-if="!isWalletConnected || isWatchOnly"
           :class="['mx-auto w-full max-w-[340px] mt-4']"
@@ -677,12 +744,16 @@
         <div
           class="rounded-20 px-4 mt-2 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
         >
-          <button
-            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+          <!-- Signing in hits the perps service, so during an outage it would
+               only prompt for a signature the backend cannot redeem. The label
+               at the top of the panel says why the button is dead. -->
+          <app-base-button
+            class="w-full"
+            :disabled="isServiceUnavailable"
             @click="login(PerpsEventSource.TRADE)"
           >
             {{ $t('perps.trade.sign-in') }}
-          </button>
+          </app-base-button>
         </div>
       </template>
       <template v-else>
@@ -809,12 +880,20 @@ import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
   PlusCircleIcon,
+  GlobeAsiaAustraliaIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/vue/24/solid'
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsAuth } from './composables/usePerpsAuth'
+import { usePerpsRestriction } from './composables/usePerpsRestriction'
+import { usePerpsStatus } from './composables/usePerpsStatus'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -839,6 +918,7 @@ import {
   PerpsManageEvent,
   PerpsEventLocation,
   PerpsNewPositionAction,
+  PerpsRestrictedEvent,
 } from '@/analytics'
 
 const walletStore = useWalletStore()
@@ -851,12 +931,29 @@ const {
   confirmSign,
   cancelSign,
 } = usePerpsAuth()
+const { isPerpsRestricted, perpsHelpUrl } = usePerpsRestriction()
+const { blockedClass } = useBlockedContent(isPerpsRestricted)
+// Also keeps `/status` polling alive while the trade panel is mounted, which is
+// what gates every other perps request during an outage. The panel opens without
+// ViewPerps (and its banner) in the tree, so without this the panel would keep
+// firing orders and quotes at a service reporting 500.
+const { isServiceUnavailable } = usePerpsStatus()
+// Restricted outranks the outage: see the template comment on the label.
+const showStatusLabel = computed(
+  () => isServiceUnavailable.value && !isPerpsRestricted.value,
+)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const { t } = useI18n()
+
+const onRestrictedLearnMore = () => {
+  void analytics.trackPerpsRestrictedEvent(PerpsRestrictedEvent.LEARN_MORE, {
+    source: PerpsEventSource.TRADE,
+  })
+}
 
 const onSwitchToEthereum = () => {
   globalStore.setSelectedNetwork('ETHEREUM')

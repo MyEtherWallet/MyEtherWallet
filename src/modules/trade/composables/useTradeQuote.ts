@@ -33,6 +33,13 @@ interface UseTradeQuoteOptions {
   selectedFromChain: Ref<Chain | undefined>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
+  /**
+   * Regional block. Guarded here as well as in the UI because the store's flag
+   * starts `false` and is only corrected once the async geo check resolves, so
+   * there is a window on first load where the panel is live and unblocked for a
+   * restricted user.
+   */
+  isTradingRestrictedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
   isLoadingQuote: Ref<boolean>
@@ -49,6 +56,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
+    isTradingRestrictedInRegion,
     hasPreQuoteError,
     generalError,
     isLoadingQuote,
@@ -88,6 +96,14 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
     // Don't fetch quotes when market is closed
     if (!isMarketOpen.value) {
+      toAmount.value = '0'
+      return
+    }
+
+    // Don't fetch quotes for a region where trading is blocked. Silent, like
+    // the gates above: the panel already renders the restriction notice, and
+    // this path has no user gesture behind it to answer anyway.
+    if (isTradingRestrictedInRegion.value) {
       toAmount.value = '0'
       return
     }
