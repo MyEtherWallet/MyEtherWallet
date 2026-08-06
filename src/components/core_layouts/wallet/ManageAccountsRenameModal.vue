@@ -1,11 +1,10 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    :has-content-gutter="true"
     class="w-full sm:max-w-[400px] sm:mx-auto"
   >
     <template #title>
-      <div class="flex flex-col gap-1 px-4 pt-4 sm:pt-5 pr-10">
+      <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
         <h1 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
           {{ $t('multi_address.rename.title') }}
         </h1>
@@ -15,7 +14,9 @@
       </div>
     </template>
     <template #content>
-      <div class="flex flex-col gap-4 pb-6 pt-6">
+      <!-- AppDialog's title wrapper already contributes pb-2 (8px); pt-6 here
+           makes the total header↔content gap 32px per design. -->
+      <div class="flex flex-col gap-4 px-6 pt-6 pb-6">
         <div class="flex flex-col gap-1">
           <input
             ref="inputRef"
