@@ -2,6 +2,9 @@
 import { computed, type Component } from 'vue'
 import { ChevronRightIcon } from '@heroicons/vue/24/outline'
 import type { RouteLocationRaw } from 'vue-router'
+import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
+import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
+import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
 
 const props = withDefaults(
   defineProps<{
@@ -14,6 +17,14 @@ const props = withDefaults(
   }>(),
   { gradient: 'purple' },
 )
+
+// Colored gradient background image per card variant.
+const GRADIENT_SRC: Record<'purple' | 'blue' | 'green', string> = {
+  purple: gradientPurple,
+  blue: gradientBlue,
+  green: gradientGreen,
+}
+const gradientSrc = computed(() => GRADIENT_SRC[props.gradient])
 
 // Renders as a link when `to` is set, otherwise a real button so consumers
 // can wire a click action (e.g. open a side-drawer module) accessibly.
@@ -28,12 +39,12 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     data-test="rewards-card"
     class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left"
   >
-    <!-- decorative gradient blob (per-card variant) -->
-    <span
+    <!-- colored gradient background (per-card variant) -->
+    <img
+      :src="gradientSrc"
+      alt=""
       aria-hidden="true"
-      :data-gradient="props.gradient"
-      class="rewards-gradient pointer-events-none absolute -right-16 -top-24 size-[340px]"
-      :class="`rewards-gradient--${props.gradient}`"
+      class="pointer-events-none absolute inset-0 size-full object-cover object-right-top"
     />
 
     <!-- category chip -->
@@ -65,39 +76,3 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     </div>
   </component>
 </template>
-
-<style scoped>
-.rewards-gradient {
-  border-radius: 9999px;
-  filter: blur(32px);
-  opacity: 0.9;
-}
-.rewards-gradient--purple {
-  background: radial-gradient(
-    closest-side at 55% 40%,
-    #f0b8e8 0%,
-    #c7b5ff 32%,
-    #b9ccff 55%,
-    #c4ecff 72%,
-    transparent 85%
-  );
-}
-.rewards-gradient--blue {
-  background: radial-gradient(
-    closest-side at 55% 40%,
-    #9ad4ff 0%,
-    #a8c6ff 40%,
-    #cfe6ff 66%,
-    transparent 84%
-  );
-}
-.rewards-gradient--green {
-  background: radial-gradient(
-    closest-side at 58% 45%,
-    #7fe6a6 0%,
-    #c3ef7e 42%,
-    #b6ecc4 68%,
-    transparent 85%
-  );
-}
-</style>
