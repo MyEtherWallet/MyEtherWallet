@@ -11,17 +11,17 @@
       </button>
     </div>
     <div
-      class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 px-2 pt-4 text-center"
+      class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 pt-4 text-center"
     >
       <div
-        class="size-16 rounded-32 bg-[#f5f5f5] flex items-center justify-center overflow-hidden shrink-0"
+        class="size-16 rounded-full bg-[#f5f5f5] overflow-hidden shrink-0"
       >
         <img
           v-if="info?.walletIcon"
           :src="info.walletIcon"
           alt=""
           aria-hidden="true"
-          class="size-[65%] object-contain"
+          class="size-full object-cover"
         />
       </div>
       <div class="flex flex-col gap-1 w-full">
