@@ -443,7 +443,8 @@ const {
   hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
-const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
+const { isTradingRestrictedInRegion, isTradingAllowedInRegion } =
+  storeToRefs(globalStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
@@ -684,7 +685,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   selectedFromChain,
   isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
-  isTradingRestrictedInRegion,
+  isTradingAllowedInRegion,
   hasPreQuoteError,
   generalError,
   isLoadingQuote,
@@ -710,6 +711,7 @@ const {
   currentQuote,
   needsApproval,
   isTradingRestrictedInRegion,
+  isTradingAllowedInRegion,
 })
 
 // --- Methods ---
@@ -840,14 +842,21 @@ watch(
   },
 )
 
-watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
-  if (isSameTokenSelected.value) {
-    toAmount.value = '' // Reset same token error on any change
-    return
-  }
-  displayGeneralError.value = ''
-  fetchQuote()
-})
+// `isTradingAllowedInRegion` is a dependency so a quote requested while the geo
+// check was still in flight — which `fetchQuote` refuses and leaves at '0' — is
+// retried once the check resolves, instead of stranding the user on a zero
+// quote until they retype.
+watch(
+  [fromAmount, fromTokenSelected, toTokenSelected, isTradingAllowedInRegion],
+  () => {
+    if (isSameTokenSelected.value) {
+      toAmount.value = '' // Reset same token error on any change
+      return
+    }
+    displayGeneralError.value = ''
+    fetchQuote()
+  },
+)
 
 watch(selectedChain, newChain => {
   if (

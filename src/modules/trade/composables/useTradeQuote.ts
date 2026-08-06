@@ -34,12 +34,14 @@ interface UseTradeQuoteOptions {
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   /**
-   * Regional block. Guarded here as well as in the UI because the store's flag
-   * starts `false` and is only corrected once the async geo check resolves, so
-   * there is a window on first load where the panel is live and unblocked for a
-   * restricted user.
+   * Regional eligibility resolved AND allowed — see the store.
+   *
+   * Guarded here as well as in the UI, and expressed as "allowed" rather than
+   * "not restricted" because the underlying flag starts `false`: gating on that
+   * would quote for a restricted user during the window before the async geo
+   * check resolves, which is exactly the window this guard exists for.
    */
-  isTradingRestrictedInRegion: Ref<boolean>
+  isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
   isLoadingQuote: Ref<boolean>
@@ -56,7 +58,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
-    isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
     hasPreQuoteError,
     generalError,
     isLoadingQuote,
@@ -80,7 +82,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -100,10 +103,12 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       return
     }
 
-    // Don't fetch quotes for a region where trading is blocked. Silent, like
-    // the gates above: the panel already renders the restriction notice, and
-    // this path has no user gesture behind it to answer anyway.
-    if (isTradingRestrictedInRegion.value) {
+    // Only quote once the region is known to allow trading. Silent, like the
+    // gates above: the panel already renders the restriction notice, and this
+    // path has no user gesture behind it to answer anyway. The caller re-runs
+    // this when eligibility resolves, so a quote requested during the check is
+    // not lost — it just arrives a beat later.
+    if (!isTradingAllowedInRegion.value) {
       toAmount.value = '0'
       return
     }

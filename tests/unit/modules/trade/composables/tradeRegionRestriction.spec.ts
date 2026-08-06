@@ -90,7 +90,15 @@ const TOKEN = {
   logoURI: '',
 }
 
+// Mirrors the store: the restriction flag starts `false`, so "allowed" is only
+// true once the geo check has RESOLVED and come back unrestricted. Keeping the
+// derivation here rather than a second free ref stops the cases from expressing
+// a combination the store cannot produce.
 const isTradingRestrictedInRegion = ref(false)
+const hasResolvedRegion = ref(true)
+const isTradingAllowedInRegion = computed(
+  () => hasResolvedRegion.value && !isTradingRestrictedInRegion.value,
+)
 
 const makeQuoteHarness = async () => {
   const { useTradeQuote } =
@@ -108,7 +116,7 @@ const makeQuoteHarness = async () => {
     selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }) as never,
     isMarketOpen: computed(() => true),
     isSelectedAssetTradeable: computed(() => true),
-    isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
     hasPreQuoteError: computed(() => false),
     generalError,
     isLoadingQuote,
@@ -129,12 +137,14 @@ const makeExecutionHarness = async () => {
     currentQuote: ref({ startAmount: 1n, endAmount: 1n, avgAmount: 1n }),
     needsApproval: ref(true),
     isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
   })
 }
 
 describe('trade actions in a restricted region', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    hasResolvedRegion.value = true
     isTradingRestrictedInRegion.value = true
     mockGetQuote.mockRejectedValue(new Error('provider must not be reached'))
     mockSetApproval.mockRejectedValue(new Error('provider must not be reached'))
@@ -193,9 +203,70 @@ describe('trade actions in a restricted region', () => {
   })
 })
 
+// The window this guard exists for: on first load the restriction flag reads
+// `false` because nothing has been checked yet, not because trading is allowed.
+// Gating on `!isTradingRestrictedInRegion` passes here, which is the bug.
+describe('trade actions before the region check resolves', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    hasResolvedRegion.value = false
+    isTradingRestrictedInRegion.value = false
+    mockGetQuote.mockRejectedValue(new Error('provider must not be reached'))
+    mockSetApproval.mockRejectedValue(new Error('provider must not be reached'))
+    mockSubmitOrder.mockRejectedValue(new Error('provider must not be reached'))
+  })
+
+  it('fetchQuote does not request a quote', async () => {
+    const { fetchQuote, toAmount, isLoadingQuote } = await makeQuoteHarness()
+
+    await fetchQuote()
+
+    expect(mockGetQuote).not.toHaveBeenCalled()
+    expect(toAmount.value).toBe('0')
+    expect(isLoadingQuote.value).toBe(false)
+  })
+
+  it('handleApprove does not send an approval', async () => {
+    const { handleApprove, isApproving } = await makeExecutionHarness()
+
+    await handleApprove()
+
+    expect(mockSetApproval).not.toHaveBeenCalled()
+    expect(isApproving.value).toBe(false)
+  })
+
+  it('confirmTrade does not submit an order', async () => {
+    const { confirmTrade } = await makeExecutionHarness()
+
+    await confirmTrade()
+
+    expect(mockSubmitOrder).not.toHaveBeenCalled()
+    expect(mockAddOrder).not.toHaveBeenCalled()
+  })
+
+  // The pre-submit recheck: the guard at the top of confirmTrade runs before an
+  // await, so a check that lands against the user in that gap must still stop
+  // the order.
+  it('confirmTrade aborts if the check resolves as restricted mid-flight', async () => {
+    hasResolvedRegion.value = true
+    const { confirmTrade, quoteModalOpen } = await makeExecutionHarness()
+    quoteModalOpen.value = true
+
+    // Lands during confirmTrade's dynamic import, after the first guard passed.
+    void Promise.resolve().then(() => {
+      isTradingRestrictedInRegion.value = true
+    })
+    await confirmTrade()
+
+    expect(mockSubmitOrder).not.toHaveBeenCalled()
+    expect(quoteModalOpen.value).toBe(false)
+  })
+})
+
 describe('trade actions where trading is permitted', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    hasResolvedRegion.value = true
     isTradingRestrictedInRegion.value = false
   })
 

@@ -40,7 +40,11 @@ export const useGlobalStore = defineStore('global', () => {
     maxFeePerGas: '0',
   })
   const gasPriceType = ref<FeePriority>('REGULAR')
-  const defaultGasPriceType = useStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR', safeLocalStorage)
+  const defaultGasPriceType = useStorage<FeePriority>(
+    'mew-default-gas-price-type',
+    'REGULAR',
+    safeLocalStorage,
+  )
 
   /**--------------------
    * LANGUAGE
@@ -69,6 +73,24 @@ export const useGlobalStore = defineStore('global', () => {
     analytics.setIsRegionRestricted(restricted)
   }
 
+  /**
+   * Regional eligibility, resolved. True only once the geo check has come back
+   * AND come back allowed.
+   *
+   * Anything that starts a trade must gate on this rather than on
+   * `!isTradingRestrictedInRegion`: that flag starts `false`, so "not checked
+   * yet" is indistinguishable from "allowed" and a gate written against it lets
+   * orders through during the check. `fetchedTradingThisSession` only flips on a
+   * successful fetch, so a failed check — which also sets restricted `true` —
+   * stays blocked here too.
+   *
+   * Use `isTradingRestrictedInRegion` for the UI, where showing the restriction
+   * notice before the check resolves would be the wrong default.
+   */
+  const isTradingAllowedInRegion = computed(
+    () => fetchedTradingThisSession.value && !isTradingRestrictedInRegion.value,
+  )
+
   return {
     isEIP1559SupportedNetwork,
     eip1559,
@@ -80,6 +102,7 @@ export const useGlobalStore = defineStore('global', () => {
     dismissWelcomeDialog,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
     setIsTradingRestrictedInRegion,
     locale,
   }
