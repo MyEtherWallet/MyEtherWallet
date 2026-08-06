@@ -14,10 +14,8 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
-import {
-  useNewListingSwap,
-  type ListingSupportedChain,
-} from '../composables/useNewListingSwap'
+import { type ListingSupportedChain } from '../composables/useNewListingSwap'
+import { useNewListingCta } from '../composables/useNewListingCta'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
@@ -53,7 +51,19 @@ const walletMenu = useWalletMenuStore()
 const watchlistStore = useWatchlistStore()
 const { formatFiat, formatFiatCompact } = useCurrency()
 const { newCoins, fetchNewCoins } = useCryptoNewCoins()
-const { openSwapForToken } = useNewListingSwap()
+const { resolve: resolveCta, run: runCta } = useNewListingCta()
+
+// Crypto CTA mirrors the crypto page: Swap / Bridge / (none = no button).
+const cryptoCtaLabel = (
+  symbol: string,
+  name: string,
+  supportedChains?: ListingSupportedChain[],
+): string => {
+  const kind = resolveCta({ symbol, name, supportedChains })
+  if (kind === 'swap') return t('homePage.listings.swap')
+  if (kind === 'bridge') return t('homePage.listings.bridge')
+  return ''
+}
 
 // Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
 onMounted(fetchNewCoins)
@@ -129,7 +139,7 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
     favoriteId: item.coinId,
     isStock: false,
     tradePanel: 'swap',
-    ctaLabel: t('homePage.listings.swap'),
+    ctaLabel: cryptoCtaLabel(item.symbol, item.name, item.supportedChains),
     tooltip: t('homePage.listings.openCryptoPage'),
     supportedChains: item.supportedChains,
     to: item.ondo
@@ -152,15 +162,19 @@ const items = computed<ListingCardItem[]>(() =>
 // - Stocks open the Trade panel, which restores its "to" token from
 //   selectedTradeTokenSymbol — set that first (same as ViewStockInfo / the
 //   stocks & balance tables).
-// - Crypto opens the Swap panel, which matches its "to" token by on-chain
-//   contract address. useNewListingSwap resolves it from the payload's
-//   supportedChains, then primes the swap values and opens the panel itself.
+// - Crypto runs the resolved CTA (swap or bridge) via useNewListingCta, which
+//   primes the wallet drawer from the payload's supportedChains and opens the
+//   matching panel. Cards that resolve to "none" render without a CTA button.
 const onTrade = (it: ListingCardItem) => {
   if (it.isStock) {
     walletMenu.setSelectedTradeTokenSymbol(it.symbol)
     walletMenu.openPanel('trade')
   } else {
-    openSwapForToken(it.symbol, it.name ?? '', it.supportedChains)
+    runCta({
+      symbol: it.symbol,
+      name: it.name ?? '',
+      supportedChains: it.supportedChains,
+    })
   }
 }
 </script>

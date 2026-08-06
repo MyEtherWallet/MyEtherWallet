@@ -22,6 +22,7 @@
       },
       "trade": "Operar",
       "swap": "Intercambiar",
+      "bridge": "Bridge",
       "openStockPage": "Abrir página de la acción",
       "openCryptoPage": "Abrir página del token"
     },

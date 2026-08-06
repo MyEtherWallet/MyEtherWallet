@@ -94,12 +94,12 @@ vi.mock('@/modules/home/composables/useCryptoNewCoins', () => ({
   useCryptoNewCoins: () => ({ newCoins, fetchNewCoins, isLoading: ref(false) }),
 }))
 
-// Crypto swap preselect is exercised in its own spec (useNewListingSwap.spec.ts);
+// The CTA resolution (swap/bridge/none) is exercised in useNewListingCta.spec;
 // here we only assert HomeNewListings delegates to it with the coin's
-// symbol/name and supportedChains.
-const openSwapForToken = vi.fn()
-vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
-  useNewListingSwap: () => ({ openSwapForToken }),
+// symbol/name/supportedChains. `resolve` returns 'swap' so a CTA button renders.
+const runCta = vi.fn()
+vi.mock('@/modules/home/composables/useNewListingCta', () => ({
+  useNewListingCta: () => ({ resolve: () => 'swap', run: runCta }),
 }))
 
 import HomeNewListings from '@/modules/home/sections/HomeNewListings.vue'
@@ -214,8 +214,8 @@ describe('HomeNewListings', () => {
     expect(setWatchlistItem).toHaveBeenCalledWith('btc', false)
   })
 
-  it('preselects + opens swap via useNewListingSwap from a crypto card CTA', async () => {
-    openSwapForToken.mockClear()
+  it('runs the resolved CTA (useNewListingCta) from a crypto card', async () => {
+    runCta.mockClear()
     setSelectedTradeTokenSymbol.mockClear()
     const w = mountIt()
     await w.get('[data-test="tab-switch"]').trigger('click') // crypto
@@ -223,16 +223,18 @@ describe('HomeNewListings', () => {
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-trade"]')
       .trigger('click')
-    // Swap matches its "to" token by on-chain address, so the symbol/name plus
-    // the payload's supportedChains (undefined here) is handed to
-    // useNewListingSwap, which resolves the contract + opens Swap.
-    expect(openSwapForToken).toHaveBeenCalledWith('BTC', 'Bitcoin', undefined)
-    // Crypto uses Swap, never the trade-symbol path.
+    // Crypto delegates to useNewListingCta with the coin's symbol/name plus the
+    // payload's supportedChains (undefined here) — never the trade-symbol path.
+    expect(runCta).toHaveBeenCalledWith({
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      supportedChains: undefined,
+    })
     expect(setSelectedTradeTokenSymbol).not.toHaveBeenCalled()
   })
 
-  it('forwards supportedChains to useNewListingSwap when the payload carries them', async () => {
-    openSwapForToken.mockClear()
+  it('forwards supportedChains to the CTA when the payload carries them', async () => {
+    runCta.mockClear()
     const chains = [{ chainName: 'Ethereum', contract: '0xABC' }]
     const original = newCoins.value
     // BE sends supportedChains on newCoins (same shape as the stocks response).
@@ -243,7 +245,11 @@ describe('HomeNewListings', () => {
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-trade"]')
       .trigger('click')
-    expect(openSwapForToken).toHaveBeenCalledWith('BTC', 'Bitcoin', chains)
+    expect(runCta).toHaveBeenCalledWith({
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      supportedChains: chains,
+    })
     newCoins.value = original
   })
 

@@ -30,6 +30,11 @@ export function useNewListingSwap(): {
     name: string,
     supportedChains?: ListingSupportedChain[],
   ) => void
+  openBridgeForToken: (
+    symbol: string,
+    name: string,
+    supportedChains?: ListingSupportedChain[],
+  ) => void
 } {
   const chainsStore = useChainsStore()
   const { storeSwapValues } = useInputStore()
@@ -69,5 +74,36 @@ export function useNewListingSwap(): {
     walletMenu.openPanel('swap')
   }
 
-  return { openSwapForToken }
+  // Bridge the coin in from its home chain (the first swap-supported chain it
+  // lives on). Mirrors ModuleExploreCrypto's bridgeBtn: the "to" token is the
+  // native token of that chain so the bridge opens targeting it.
+  const openBridgeForToken = (
+    symbol: string,
+    name: string,
+    supportedChains?: ListingSupportedChain[],
+  ): void => {
+    const supported = supportedChains ?? []
+    const chain = supported.find(c =>
+      chainsStore.chainHasSwapSupport(c.chainName),
+    )
+    const toChain = chain
+      ? chainsStore.allChains.find(c => c.name === chain.chainName)
+      : undefined
+    if (chain && toChain) {
+      storeSwapValues({
+        fromToken: {} as NewTokenInfo,
+        toToken: {
+          address: MAIN_TOKEN_CONTRACT,
+          symbol,
+          name,
+          decimals: 18,
+        } as NewTokenInfo,
+        fromAmount: '',
+        toChain: toChain as Chain,
+      })
+    }
+    walletMenu.openPanel('bridge')
+  }
+
+  return { openSwapForToken, openBridgeForToken }
 }

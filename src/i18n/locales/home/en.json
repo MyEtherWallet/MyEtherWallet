@@ -22,6 +22,7 @@
       },
       "trade": "Trade",
       "swap": "Swap",
+      "bridge": "Bridge",
       "openStockPage": "Open stock page",
       "openCryptoPage": "Open crypto page"
     },

@@ -22,6 +22,7 @@
       },
       "trade": "交易",
       "swap": "兑换",
+      "bridge": "跨链",
       "openStockPage": "打开股票页面",
       "openCryptoPage": "打开加密页面"
     },

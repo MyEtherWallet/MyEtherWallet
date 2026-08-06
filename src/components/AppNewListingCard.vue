@@ -139,8 +139,10 @@ const changeText = computed(() =>
       </div>
     </div>
 
-    <!-- D. Trade button -->
+    <!-- D. Trade button. When there's no CTA for this listing we keep an
+         equal-height spacer so every card stays the same height. -->
     <button
+      v-if="tradeLabel"
       type="button"
       data-test="listing-trade"
       class="flex h-10 w-full items-center justify-center rounded-3xl bg-[#d6edff] text-s-14 font-semibold tracking-[-0.28px] text-primary"
@@ -148,5 +150,6 @@ const changeText = computed(() =>
     >
       {{ tradeLabel }}
     </button>
+    <div v-else class="h-10 w-full" aria-hidden="true" />
   </div>
 </template>
