@@ -55,6 +55,7 @@
           placeholder="account menu"
           location="right"
           teleport
+          menu-radius-class="rounded-16"
           @update:open="open => { if (!open) confirmingDelete = false }"
         >
           <template #menu-button="{ toggleMenu }">

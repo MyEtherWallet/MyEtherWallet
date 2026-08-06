@@ -9,20 +9,15 @@
       @click="$emit('select')"
     >
       <div class="relative flex-shrink-0 w-10 h-10">
-        <img
-          v-if="account.icon"
-          :src="account.icon"
-          class="w-10 h-10 rounded-full"
-          :class="{ 'ring-2 ring-primary': isActive }"
-          :alt="account.walletName"
-        />
+        <!-- Same avatar as the header multi-address dropdown: a blockie of the
+             address (not the wallet logo). Active row gets the green ring. -->
         <app-blockie
-          v-else
           :address="account.address"
           :size="10"
-          is-flat
           class="rounded-full"
-          :class="{ 'ring-2 ring-primary rounded-full': isActive }"
+          :class="{
+            'ring-2 ring-[#05c0a5] ring-offset-1 ring-offset-white': isActive,
+          }"
         />
       </div>
       <div class="min-w-0 flex-1">
@@ -35,7 +30,7 @@
             data-test="row-watch-only"
             class="w-4 h-4 flex-shrink-0 text-[#575757]"
           />
-          <account-connected-dot v-else data-test="row-connected" />
+          <account-connected-dot v-else size="md" data-test="row-connected" />
         </div>
         <!-- Wallet name always shows; the truncated address is prepended only for
              a custom label (a default-named row's bold label already IS the address). -->
@@ -76,6 +71,7 @@
       placeholder="account menu"
       location="right"
       teleport
+      menu-radius-class="rounded-16"
       @update:open="open => { if (!open) confirmingDelete = false }"
     >
       <template #menu-button="{ toggleMenu }">
@@ -116,7 +112,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { EyeIcon, CheckIcon } from '@heroicons/vue/16/solid'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'

@@ -33,7 +33,8 @@
             class="fixed z-[2200] app-popup-menu-floating"
           >
             <div
-              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
+              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl border border-grey-10 overflow-hidden"
+              :class="menuRadiusClass"
             >
               <slot name="menu-content" :toggleMenu="toggleMenu" />
             </div>
@@ -64,7 +65,8 @@
           ]"
         >
           <div
-            class="min-w-[180px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
+            class="min-w-[180px] max-w-full bg-white shadow-xl border border-grey-10 overflow-hidden"
+            :class="menuRadiusClass"
           >
             <slot name="menu-content" :toggleMenu="toggleMenu" />
           </div>
@@ -139,6 +141,15 @@ const props = defineProps({
   teleport: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * @menuRadiusClass Tailwind rounding class for the dropdown container.
+   * Defaults to the app-wide `rounded-3xl`; override per call site (e.g. the
+   * multi-address menus use `rounded-16`).
+   */
+  menuRadiusClass: {
+    type: String,
+    default: 'rounded-3xl',
   },
 })
 
