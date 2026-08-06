@@ -146,10 +146,20 @@
             {{ $t('perps.banner.connect-wallet-button') }}
           </app-base-button>
         </template>
+        <!--
+          Signing in hits the perps service, so during an outage it is disabled
+          rather than prompting for a signature the backend cannot redeem.
+          PerpsStatusBanner above already says the service is down.
+
+          Only this branch is gated: the connect-wallet branch above stays live
+          during an outage, since connecting is a wallet-side action that never
+          touches the perps service.
+        -->
         <template v-else>
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             :is-loading="isAuthenticating"
+            :disabled="isServiceUnavailable"
             @click="login(PerpsEventSource.MAIN_BANNER)"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
@@ -207,6 +217,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
+import { usePerpsStatus } from '../composables/usePerpsStatus'
 import {
   analytics,
   ConnectWalletEvent,
@@ -232,6 +243,7 @@ const {
   cancelSign,
 } = usePerpsAuth()
 const { isPerpsRestricted, perpsHelpUrl } = usePerpsRestriction()
+const { isServiceUnavailable } = usePerpsStatus()
 
 const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 

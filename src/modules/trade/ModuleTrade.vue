@@ -102,6 +102,28 @@
           :title="$t('trade.trading_not_available')"
           :description="$t('trade.trading_restricted')"
         >
+          <template #icon>
+            <div class="relative">
+              <globe-asia-australia-icon
+                class="w-12 h-12 text-black"
+                aria-hidden="true"
+              />
+              <!--
+                Badge geometry is from the design: a 16px glyph, 4px of padding,
+                and a 2px white ring. The ring is what separates the red disc
+                from the dark globe behind it — drop it and the badge reads as a
+                blob welded onto the globe's edge.
+              -->
+              <span
+                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
+              >
+                <exclamation-circle-icon
+                  class="w-4 h-4 text-white"
+                  aria-hidden="true"
+                />
+              </span>
+            </div>
+          </template>
           <template #action>
             <app-learn-more-link
               :href="tradingRestrictedHelpUrl"
@@ -352,7 +374,10 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon, GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
+// 16px variant: the badge glyph is drawn at 16px in the design, and the 24px
+// icon's strokes render muddy when scaled down that far.
+import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
