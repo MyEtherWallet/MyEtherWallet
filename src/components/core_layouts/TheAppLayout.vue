@@ -40,7 +40,7 @@
           <div
             :class="[
               'min-h-[600px] pt-3 xs:pt-6',
-              isHomeStaging ? '' : 'px-3 xs:px-5',
+              isNewHome ? '' : 'px-3 xs:px-5',
             ]"
           >
             <router-view />
@@ -120,16 +120,17 @@ const handleSetConsent = (consent: boolean) => {
 const route = useRoute()
 const router = useRouter()
 
-// Once a wallet connects while the user is on the new Home, send them to their
-// portfolio ('/') — the connected landing.
+// When the wallet is disconnected/removed, return the user to the public Home.
+// (Connecting does NOT auto-navigate — the user opens their portfolio manually
+// via the header logo or the hero CTA.)
 watch(isWalletConnected, connected => {
-  if (connected && route.name === ROUTES_MAIN.HOME_STAGING.NAME) {
+  if (!connected) {
     router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 })
 
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
+  if (route.name === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background '
   } else if (route.name === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
@@ -138,11 +139,9 @@ const backgroundClass = computed(() => {
   }
 })
 
-// The new Home page keeps the layout max-width but drops the shared horizontal
-// padding, so its sections own their padding.
-const isHomeStaging = computed(
-  () => route.name === ROUTES_MAIN.HOME_STAGING.NAME,
-)
+// The Home page ('/') keeps the layout max-width but drops the shared
+// horizontal padding, so its sections own their padding.
+const isNewHome = computed(() => route.name === ROUTES_MAIN.HOME.NAME)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

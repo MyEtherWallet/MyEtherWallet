@@ -7,7 +7,7 @@
       <!-- LOGO -->
       <div class="flex items-center gap-2 relative z-[0]">
         <router-link
-          :to="{ name: ROUTES_MAIN.HOME.NAME }"
+          :to="{ name: ROUTES_MAIN.PORTFOLIO.NAME }"
           class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"
         >
           <img
@@ -241,7 +241,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
   const items: AppMenuListItem[] = [
     {
       title: t('home'),
-      routeName: ROUTES_MAIN.HOME_STAGING.NAME,
+      routeName: ROUTES_MAIN.HOME.NAME,
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
