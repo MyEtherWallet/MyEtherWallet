@@ -9,7 +9,7 @@
       aria-hidden="true"
       class="absolute inset-0 w-full h-full object-cover"
     />
-    <div class="absolute inset-0 rounded-20 bg-black/25 backdrop-blur-[2px]" aria-hidden="true" />
+    <div class="absolute inset-0 rounded-20 bg-black/25 backdrop-blur-[1px]" aria-hidden="true" />
 
     <!-- Header: balance / name / wallet • address + actions -->
     <div class="relative flex items-start gap-3">
@@ -49,7 +49,7 @@
           @click="onCopy"
         >
           <check-icon v-if="copied" class="w-6 h-6" />
-          <clipboard-document-icon v-else class="w-6 h-6" />
+          <document-duplicate-icon v-else class="w-6 h-6" />
         </button>
         <app-pop-up-menu
           placeholder="account menu"
@@ -97,7 +97,7 @@
     <div class="relative flex items-end justify-between gap-2 text-s-14">
       <template v-if="account.kind === 'signing'">
         <span class="flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
+          <account-connected-dot size="md" />
           <span>{{ $t('multi_address.connected') }}</span>
         </span>
       </template>
@@ -133,13 +133,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import {
-  ClipboardDocumentIcon,
+  DocumentDuplicateIcon,
   ArrowPathIcon,
-  EllipsisVerticalIcon,
   CheckIcon,
 } from '@heroicons/vue/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { EyeIcon } from '@heroicons/vue/16/solid'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
 import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
