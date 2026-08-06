@@ -2,9 +2,9 @@
   "homePage": {
     "hero": { "placeholder": "Hero section" },
     "offers": {
-      "title": "Offers for you",
-      "subtitle": "Explore all the benefits of using MEW",
-      "category": { "trade": "Trade", "buy": "Buy" },
+      "title": "Exclusive Offers",
+      "subtitle": "Get rewarded for using MEW!",
+      "category": { "trade": "Trade", "buy": "Buy", "hold": "Hold" },
       "items": {
         "trade": { "title": "Trade +$50", "highlight": "Earn $10 USDC" },
         "buy": { "title": "Buy crypto", "highlight": "Pay zero MEW fees" },
@@ -12,8 +12,8 @@
       }
     },
     "listings": {
-      "title": "New listings",
-      "subtitle": "Find new Ondo stocks and crypto tokens in the market",
+      "title": "New Listings",
+      "subtitle": "Discover the latest stocks and crypto tokens in the market.",
       "tab": { "stocks": "Stocks", "crypto": "Crypto" },
       "stat": {
         "marketCap": "Mkt cap",
@@ -26,12 +26,12 @@
       "openCryptoPage": "Open crypto page"
     },
     "sectors": {
-      "title": "Industry sectors",
-      "subtitle": "Discover Ondo stocks and crypto tokens related to specific sectors in the industry"
+      "title": "Curated Collections",
+      "subtitle": "Explore different investing themes and collections exclusively on MEW."
     },
     "news": {
-      "title": "Market news",
-      "subtitle": "Get informed of the most important news of the market",
+      "title": "Market News",
+      "subtitle": "Keep your finger on the pulse of market news as it happens. Powered by MEW.",
       "empty": "No news available right now",
       "today": "Today",
       "yesterday": "Yesterday",

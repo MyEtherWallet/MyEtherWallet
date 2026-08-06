@@ -2,9 +2,9 @@
   "homePage": {
     "hero": { "placeholder": "Sección Hero" },
     "offers": {
-      "title": "Ofertas para ti",
-      "subtitle": "Descubre todos los beneficios de usar MEW",
-      "category": { "trade": "Trading", "buy": "Comprar" },
+      "title": "Ofertas exclusivas",
+      "subtitle": "¡Gana recompensas por usar MEW!",
+      "category": { "trade": "Trading", "buy": "Comprar", "hold": "Mantener" },
       "items": {
         "trade": { "title": "Opera +$50", "highlight": "Gana $10 USDC" },
         "buy": { "title": "Compra cripto", "highlight": "Cero comisiones MEW" },
@@ -13,7 +13,7 @@
     },
     "listings": {
       "title": "Nuevas cotizaciones",
-      "subtitle": "Encuentra nuevas acciones de Ondo y tokens de criptomonedas en el mercado",
+      "subtitle": "Descubre las últimas acciones y tokens de criptomonedas en el mercado.",
       "tab": { "stocks": "Acciones", "crypto": "Cripto" },
       "stat": {
         "marketCap": "Cap. mercado",
@@ -26,12 +26,12 @@
       "openCryptoPage": "Abrir página del token"
     },
     "sectors": {
-      "title": "Sectores de la industria",
-      "subtitle": "Descubre acciones de Ondo y tokens de criptomonedas relacionados con sectores específicos de la industria"
+      "title": "Colecciones seleccionadas",
+      "subtitle": "Explora distintos temas de inversión y colecciones exclusivamente en MEW."
     },
     "news": {
       "title": "Noticias del mercado",
-      "subtitle": "Mantente informado de las noticias más importantes del mercado",
+      "subtitle": "Mantente al tanto de las noticias del mercado en tiempo real. Con la tecnología de MEW.",
       "empty": "No hay noticias disponibles por el momento",
       "today": "Hoy",
       "yesterday": "Ayer",

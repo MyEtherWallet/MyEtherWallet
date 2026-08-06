@@ -40,7 +40,7 @@ export function useHomeOffers(): {
     },
     {
       id: 'hold',
-      categoryKey: 'homePage.offers.category.trade',
+      categoryKey: 'homePage.offers.category.hold',
       icon: ChartBarSquareIcon,
       titleKey: 'homePage.offers.items.hold.title',
       highlightKey: 'homePage.offers.items.hold.highlight',

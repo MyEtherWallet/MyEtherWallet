@@ -2,9 +2,9 @@
   "homePage": {
     "hero": { "placeholder": "Hero 区域" },
     "offers": {
-      "title": "为您推荐的优惠",
-      "subtitle": "探索使用 MEW 的所有权益",
-      "category": { "trade": "交易", "buy": "购买" },
+      "title": "专属优惠",
+      "subtitle": "使用 MEW 即可获得奖励！",
+      "category": { "trade": "交易", "buy": "购买", "hold": "持有" },
       "items": {
         "trade": { "title": "交易 +$50", "highlight": "赚取 $10 USDC" },
         "buy": { "title": "购买加密货币", "highlight": "零 MEW 手续费" },
@@ -13,7 +13,7 @@
     },
     "listings": {
       "title": "新上市",
-      "subtitle": "发现市场上新的 Ondo 股票和加密货币代币",
+      "subtitle": "发现市场上最新的股票和加密货币代币。",
       "tab": { "stocks": "股票", "crypto": "加密货币" },
       "stat": {
         "marketCap": "市值",
@@ -26,12 +26,12 @@
       "openCryptoPage": "打开加密页面"
     },
     "sectors": {
-      "title": "行业板块",
-      "subtitle": "探索与特定行业板块相关的 Ondo 股票和加密货币代币"
+      "title": "精选合集",
+      "subtitle": "在 MEW 独家探索不同的投资主题和合集。"
     },
     "news": {
       "title": "市场资讯",
-      "subtitle": "了解市场上最重要的资讯",
+      "subtitle": "实时掌握市场资讯动态。由 MEW 提供支持。",
       "empty": "目前暂无相关资讯",
       "today": "今天",
       "yesterday": "昨天",
