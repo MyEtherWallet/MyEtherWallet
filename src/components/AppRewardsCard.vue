@@ -39,12 +39,14 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     data-test="rewards-card"
     class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left"
   >
-    <!-- colored gradient background (per-card variant) -->
+    <!-- colored gradient background (per-card variant): the source images fade
+         to white toward their bottom-left, so contain + right keeps the color a
+         soft cloud in the top-right with the text side of the card clean. -->
     <img
       :src="gradientSrc"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute inset-0 size-full object-cover object-right-top"
+      class="pointer-events-none absolute inset-0 size-full object-contain object-right"
     />
 
     <!-- category chip -->
