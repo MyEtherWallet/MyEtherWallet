@@ -424,6 +424,15 @@
       "hardware-confirm-hint": "You will also need to confirm on your device.",
       "sign-button": "Sign"
     },
+    "restricted": {
+      "banner-notice": "Perpetuals trading isn’t available in the US.",
+      "learn-more": "Learn more",
+      "panel-title": "Perpetuals aren’t available",
+      "panel-description": "Unfortunately, trading perpetuals isn’t allowed in your current jurisdiction."
+    },
+    "status": {
+      "unavailable": "Service temporarily unavailable, please try again later."
+    },
     "order-status": {
       "open": "Open",
       "fully-filled": "Fully Filled",
