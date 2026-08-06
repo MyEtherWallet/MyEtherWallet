@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
+import {
+  isTransientRpcError,
+  isAxiosNetworkError,
+} from '@/modules/trade/composables/transientRpcError'
 
 describe('isTransientRpcError', () => {
   it('is true for the top-level viem error whose message is "WebSocket request failed"', () => {
@@ -72,5 +75,48 @@ describe('isTransientRpcError', () => {
     expect(isTransientRpcError(null)).toBe(false)
     expect(isTransientRpcError(undefined)).toBe(false)
     expect(isTransientRpcError('')).toBe(false)
+  })
+})
+
+describe('isAxiosNetworkError', () => {
+  it('is true for a raw axios network error (code ERR_NETWORK, no response)', () => {
+    // The exact production shape: axios rejects with code 'ERR_NETWORK' and a
+    // hard-coded message when the 1inch request never completes (APP-MEW-WEB-13E).
+    expect(
+      isAxiosNetworkError({
+        code: 'ERR_NETWORK',
+        message: 'Network Error',
+        request: {},
+      }),
+    ).toBe(true)
+  })
+
+  it('is true when the code is absent but message is "Network Error" and no response', () => {
+    expect(isAxiosNetworkError({ message: 'Network Error' })).toBe(true)
+  })
+
+  it('is false for a 1inch 4xx client error (has a response)', () => {
+    expect(
+      isAxiosNetworkError({
+        code: 'ERR_BAD_REQUEST',
+        message: 'Request failed with status code 400',
+        response: { status: 400 },
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isAxiosNetworkError({
+        name: 'TypeError',
+        message: "Cannot read properties of undefined (reading 'presets')",
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object / nullish inputs', () => {
+    expect(isAxiosNetworkError(null)).toBe(false)
+    expect(isAxiosNetworkError(undefined)).toBe(false)
+    expect(isAxiosNetworkError('Network Error')).toBe(false)
   })
 })

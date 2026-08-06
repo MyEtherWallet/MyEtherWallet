@@ -123,12 +123,12 @@ const DefaultRoutes = <RouteNameCollection>[
       noAuth: true,
     },
     beforeEnter: async (_to, _from, next) => {
-      const restricted = await fetchTradingRestriction()
-      if (restricted) {
-        next({ name: ROUTES_MAIN.HOME.NAME })
-      } else {
-        next()
-      }
+      // Perps stays reachable in restricted regions — the view renders a
+      // blocked state instead of redirecting away. The geo check is still
+      // awaited here so it is resolved before the first paint, otherwise a
+      // restricted user would briefly see a tradeable UI.
+      await fetchTradingRestriction()
+      next()
     },
     children: [
       {
