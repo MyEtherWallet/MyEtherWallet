@@ -27,7 +27,7 @@
       "more-than-zero": "Amount must be greater than 0.",
       "insufficient-balance-for-fees": "Not enough {symbol} to cover network fees.",
       "insufficient-native": "Insufficient {symbol} balance.",
-      "minimum-amount": "Amount too low.",
+      "minimum-amount": "Amount too low. Minimum amount is {amount} {symbol}.",
       "maximum-amount": "Amount too high.",
       "no-quotes": "No quotes available for selected token pair",
       "fetching-quotes": "Error fetching quotes. Please try again.",
