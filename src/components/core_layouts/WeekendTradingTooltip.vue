@@ -51,7 +51,7 @@
         <p class="text-s-12 text-info leading-[1.4]">
           {{
             $t('trade.weekend.tooltip_body', {
-              tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
+              tickers: 'AMZon, MSTRon, COINon, ORCLon, TQQQon',
             })
           }}
         </p>
@@ -79,14 +79,13 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
-import nvda from '@/assets/images/weekend-trading/nvda.png'
-import qqq from '@/assets/images/weekend-trading/qqq.png'
-import googl from '@/assets/images/weekend-trading/googl.png'
-import spy from '@/assets/images/weekend-trading/spy.png'
-import tsla from '@/assets/images/weekend-trading/tsla.png'
-import crcl from '@/assets/images/weekend-trading/crcl.png'
+import amzn from '@/assets/images/weekend-trading/amzn.png'
+import coin from '@/assets/images/weekend-trading/coin.png'
+import mstr from '@/assets/images/weekend-trading/mstr.png'
+import orcl from '@/assets/images/weekend-trading/orcl.png'
+import tqqq from '@/assets/images/weekend-trading/tqqq.png'
 
-const tokenIcons = [nvda, qqq, googl, spy, tsla, crcl]
+const tokenIcons = [amzn, coin, mstr, orcl, tqqq]
 
 const props = defineProps<{
   anchor: HTMLElement | null
