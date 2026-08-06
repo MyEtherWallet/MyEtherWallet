@@ -60,10 +60,12 @@
             <div class="flex flex-col h-full">
               <!-- Section 1: network pill + active-account card -->
               <div class="shrink-0 p-4">
-                <div class="bg-surface-hover rounded-20 overflow-hidden">
+                <div
+                  class="bg-surface-hover rounded-20 overflow-hidden transition-colors has-[[data-test=network-row]:hover]:bg-[#e6e6e6]"
+                >
                   <button
                     data-test="network-row"
-                    class="flex items-center justify-between gap-2.5 w-full pl-3 pr-4 py-3 text-left rounded-[22px] transition-colors hover:bg-black/5"
+                    class="flex items-center justify-between gap-2.5 w-full pl-3 pr-4 py-3 text-left rounded-[22px]"
                     @click="view = 'network'"
                   >
                     <div class="flex items-center gap-2.5 min-w-0">
@@ -79,7 +81,7 @@
                         {{ chainsStore.selectedChain?.nameLong }}
                       </span>
                     </div>
-                    <chevron-right-icon class="w-5 h-5 text-info flex-shrink-0" />
+                    <chevron-right-icon class="w-6 h-6 text-black flex-shrink-0" />
                   </button>
                   <manage-accounts-card
                     v-if="activeAccount"
