@@ -58,8 +58,8 @@ const isServiceUnavailable = computed(
 export async function fetchPerpsStatus(): Promise<number | null> {
   isLoadingStatus.value = true
   try {
-    // await perpsClient.getStatus()
-    statusCode.value = 500
+    await perpsClient.getStatus()
+    statusCode.value = 200
   } catch (e) {
     statusCode.value = e instanceof PerpsHttpError ? e.status : null
     if (isDevMode) {
