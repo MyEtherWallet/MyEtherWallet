@@ -35,12 +35,7 @@
             data-test="row-watch-only"
             class="w-4 h-4 flex-shrink-0 text-[#575757]"
           />
-          <span
-            v-else
-            data-test="row-connected"
-            class="w-2 h-2 rounded-full bg-success flex-shrink-0"
-            aria-hidden="true"
-          />
+          <account-connected-dot v-else data-test="row-connected" />
         </div>
         <!-- Wallet name always shows; the truncated address is prepended only for
              a custom label (a default-named row's bold label already IS the address). -->
@@ -123,6 +118,7 @@
 import { ref } from 'vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
 import { EyeIcon, CheckIcon } from '@heroicons/vue/16/solid'
+import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
