@@ -51,7 +51,7 @@
         <p class="text-s-12 text-info leading-[1.4]">
           {{
             $t('trade.weekend.tooltip_body', {
-              tickers: 'AMZon, MSTRon, COINon, ORCLon, TQQQon',
+              tickers: 'AMZNon, MSTRon, COINon, ORCLon, TQQQon',
             })
           }}
         </p>
