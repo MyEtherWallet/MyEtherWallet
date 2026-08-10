@@ -31,7 +31,10 @@
           {{ formattedTotalFiatPortfolioValue }}
         </span>
         <span class="flex items-center gap-1 w-full min-w-0">
-          <span class="text-[10px] leading-[12px] text-[#575757] truncate">
+          <span
+            class="text-[10px] leading-[12px] text-[#575757]"
+            :class="isDefaultName ? 'whitespace-nowrap' : 'truncate'"
+          >
             {{ accountName }}
           </span>
           <eye-icon
@@ -93,6 +96,12 @@ const chainsStore = useChainsStore()
 const accountName = computed<string>(
   () =>
     watchOnlyStore.activeAccount?.addressName ??
-    truncateAddress(walletAddress.value ?? '', 6),
+    truncateAddress(walletAddress.value ?? '', 6, 4),
+)
+
+// The default label IS the truncated address (6…4); it must always render in
+// full, so never ellipsis-clip it. Only long custom names get truncated.
+const isDefaultName = computed<boolean>(
+  () => accountName.value === truncateAddress(walletAddress.value ?? '', 6, 4),
 )
 </script>
