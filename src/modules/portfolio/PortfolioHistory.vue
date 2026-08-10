@@ -66,61 +66,20 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { computed } from 'vue'
-import BigNumber from 'bignumber.js'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { usePortfolio24hChange } from '@/composables/usePortfolio24hChange'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
-const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
+const { isWalletConnected, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)
 const { selectedChain } = storeToRefs(useChainsStore())
 const { useMEWFetch } = useFetchMewApi()
 
-const getTokenBalance = (contract: string) => {
-  const tokenBalanceRaw = walletStore.getTokenBalance(contract)
-  if (!tokenBalanceRaw) {
-    return new BigNumber(0)
-  }
-  return BigNumber(tokenBalanceRaw.price || 0).times(
-    BigNumber(tokenBalanceRaw.balance),
-  )
-}
-
-const getGainOrLoss = (percent: number, contract: string) => {
-  const newBalance = BigNumber(getTokenBalance(contract))
-  const oldBalance = newBalance.dividedBy(
-    BigNumber(1).plus(BigNumber(percent).dividedBy(100)),
-  )
-  return newBalance.minus(oldBalance)
-}
-
-interface Change {
-  fiat: BigNumber
-  percentChange: BigNumber
-}
-const lastTwentyFourHours = computed<Change>(() => {
-  const totalGainOrLoss = allTokens.value.reduce((acc, token) => {
-    const percentChange = token.price_change_percentage_24h || 0
-    const gainOrLoss = getGainOrLoss(percentChange, token.contract)
-    return acc.plus(gainOrLoss)
-  }, BigNumber(0))
-
-  const totalValueNow = walletStore.totalFiatPortfolioValueBN
-  const totalValueOld = totalValueNow.minus(totalGainOrLoss)
-
-  const percentChange =
-    totalValueOld.isZero() || totalValueOld.isNegative()
-      ? BigNumber(0)
-      : totalGainOrLoss.div(totalValueOld).multipliedBy(100)
-
-  return {
-    fiat: totalGainOrLoss,
-    percentChange: percentChange,
-  }
-})
+const { lastTwentyFourHours } = usePortfolio24hChange()
 
 const fetchUrl = computed(() => {
   if (selectedChain.value?.name && walletAddress.value) {
