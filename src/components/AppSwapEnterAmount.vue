@@ -47,6 +47,7 @@
         type="text"
         autoComplete="off"
         placeholder="0"
+        :aria-label="$t('common.amount')"
         v-model="amount"
         :readonly="readonly"
         @focus="setInFocusInput"
