@@ -1,5 +1,8 @@
 <template>
   <div class="flex flex-col gap-6">
+    <!-- Exchange status notice — self-hiding while markets are open -->
+    <perps-status-banner />
+
     <!-- Not authenticated -->
     <perps-main-banner v-if="!token" />
 
@@ -58,6 +61,7 @@ import PerpsMarketList from '@/modules/perps/components/PerpsMarketList.vue'
 import PerpsDepositDialog from '@/modules/perps/components/PerpsDepositDialog.vue'
 import PerpsWithdrawDialog from '@/modules/perps/components/PerpsWithdrawDialog.vue'
 import PerpsMainBanner from '@/modules/perps/components/PerpsMainBanner.vue'
+import PerpsStatusBanner from '@/modules/perps/components/PerpsStatusBanner.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'

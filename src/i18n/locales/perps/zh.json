@@ -440,6 +440,15 @@
       "hardware-confirm-hint": "你还需要在设备上确认。",
       "sign-button": "签名"
     },
+    "restricted": {
+      "banner-notice": "美国境内无法进行永续合约交易。",
+      "learn-more": "了解更多",
+      "panel-title": "永续合约不可用",
+      "panel-description": "很抱歉，您当前所在的司法管辖区不允许进行永续合约交易。"
+    },
+    "status": {
+      "unavailable": "服务暂时不可用，请稍后再试。"
+    },
     "pagination": {
       "previous-page": "上一页",
       "next-page": "下一页",

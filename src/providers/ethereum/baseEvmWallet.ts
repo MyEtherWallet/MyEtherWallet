@@ -66,6 +66,10 @@ class BaseEvmWallet implements WalletInterface {
   getMultipleSignableTransactions = async (
     feeObj: SignableTransactionParams,
   ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
+    // An empty quoteId builds `…/multi-quotes//unsigned`, which the API answers
+    // with a bare ROUTE_NOT_FOUND 404 ("check the url"). Fail loudly here so a
+    // missing quote is surfaced as a real error, never a malformed request.
+    if (!feeObj.quoteId) throw new Error('Missing swap quote id')
     const response =
       await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
         `/v1/evm/chains/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
@@ -81,6 +85,7 @@ class BaseEvmWallet implements WalletInterface {
   getSignableTransaction = async (
     feeObj: SignableTransactionParams,
   ): Promise<EthereumSignableTransactionResponse> => {
+    if (!feeObj.quoteId) throw new Error('Missing swap quote id')
     return fetchWithRetry<EthereumSignableTransactionResponse>(
       `/v1/evm/chains/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )

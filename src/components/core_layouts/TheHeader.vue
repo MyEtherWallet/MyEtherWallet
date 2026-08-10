@@ -171,7 +171,7 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
-import { useTradingRestriction } from '@/composables/useTradingRestriction'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
@@ -188,7 +188,11 @@ const { selectedChain } = storeToRefs(chainStore)
 const { refreshDetectedAddress } = useDetectedAddress()
 const watchOnlyStore = useWatchOnlyStore()
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
-const { isTradingRestrictedInRegion } = useTradingRestriction()
+// The perps nav entry is no longer gated on region — perps renders a blocked
+// state instead of disappearing. The check is still kicked off here, on a
+// component mounted at app start, so it is resolved by the time any perps
+// surface reads it and none of them flash their restricted state.
+fetchTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
@@ -266,19 +270,17 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
-  ]
-  if (!isTradingRestrictedInRegion.value) {
-    items.push({
+    {
       title: t('perpetuals'),
       routeName: ROUTES_MAIN.PERPS.NAME,
       iconID: ICON_IDS.PERPS,
-    })
-  }
-  items.push({
-    title: t('earn'),
-    routeName: ROUTES_MAIN.EARN.NAME,
-    iconID: ICON_IDS.STAKE,
-  })
+    },
+    {
+      title: t('earn'),
+      routeName: ROUTES_MAIN.EARN.NAME,
+      iconID: ICON_IDS.STAKE,
+    },
+  ]
   return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {

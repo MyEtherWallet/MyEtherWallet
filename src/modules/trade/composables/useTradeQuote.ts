@@ -33,6 +33,15 @@ interface UseTradeQuoteOptions {
   selectedFromChain: Ref<Chain | undefined>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
+  /**
+   * Regional eligibility resolved AND allowed — see the store.
+   *
+   * Guarded here as well as in the UI, and expressed as "allowed" rather than
+   * "not restricted" because the underlying flag starts `false`: gating on that
+   * would quote for a restricted user during the window before the async geo
+   * check resolves, which is exactly the window this guard exists for.
+   */
+  isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
   isLoadingQuote: Ref<boolean>
@@ -49,6 +58,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
+    isTradingAllowedInRegion,
     hasPreQuoteError,
     generalError,
     isLoadingQuote,
@@ -72,7 +82,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -88,6 +99,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
     // Don't fetch quotes when market is closed
     if (!isMarketOpen.value) {
+      toAmount.value = '0'
+      return
+    }
+
+    // Only quote once the region is known to allow trading. Silent, like the
+    // gates above: the panel already renders the restriction notice, and this
+    // path has no user gesture behind it to answer anyway. The caller re-runs
+    // this when eligibility resolves, so a quote requested during the check is
+    // not lost — it just arrives a beat later.
+    if (!isTradingAllowedInRegion.value) {
       toAmount.value = '0'
       return
     }

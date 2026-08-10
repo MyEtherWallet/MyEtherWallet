@@ -8,6 +8,10 @@ import { decrypt, encrypt } from '@/utils/crypto'
 import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
+import {
+  usePerpsRestriction,
+  resolvePerpsRestricted,
+} from './usePerpsRestriction'
 import { analytics, PerpsSignInEvent, PerpsEventSource } from '@/analytics'
 import { isUserRejectionError } from '@/utils/walletUtils'
 
@@ -65,6 +69,11 @@ let _postTxPollStop: ReturnType<typeof setTimeout> | null = null
 
 let _authRestored = false
 let _currentAddress: string | null = null
+// Bumped on every wallet switch (and by clearAuth) to fence in-flight restores.
+// `tryRestoreAuth` awaits the region check and one or two decrypts, and the
+// wallet can change under any of them; a run whose generation is no longer the
+// current one has been superseded and must not touch auth or client state.
+let _restoreGeneration = 0
 let _resolveSign: (() => void) | null = null
 let _rejectSign: ((reason?: unknown) => void) | null = null
 
@@ -106,7 +115,29 @@ function resetPerpsData() {
   }
 }
 
-async function tryRestoreAuth(address: string) {
+async function tryRestoreAuth(address: string, generation: number) {
+  // A restore started for address A must be abandoned the moment the wallet
+  // switches to B: resuming would install A's token while B is connected, so
+  // the user is silently signed into the previous account and every data
+  // composable serves A's balance/positions. `isStale()` is checked after every
+  // await, before any state is mutated.
+  const isStale = () => generation !== _restoreGeneration
+
+  // Perps is hard-blocked in restricted regions: a token stored before the user
+  // travelled (or before the flag flipped) must not silently sign them back in,
+  // otherwise the signed-in portfolio renders where the blocked state belongs.
+  //
+  // Awaits the resolved check rather than reading `isPerpsRestricted`, which
+  // defaults to `true`. This runs from an `immediate: true` watcher at app boot,
+  // so reading the unresolved ref would skip the restore for a legitimate user —
+  // and since the watcher only re-fires on an address *change*, they would stay
+  // signed out for the rest of the session.
+  const restricted = await resolvePerpsRestricted()
+  if (isStale()) return
+  if (restricted) {
+    _authRestored = false
+    return
+  }
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
   const storedExpirations: number[] = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
@@ -115,10 +146,12 @@ async function tryRestoreAuth(address: string) {
     try {
       decryptedToken = await decrypt(storedTokens[i], address)
     } catch {
+      if (isStale()) return
       _authRestored = false
       // token belongs to a different address, try next
       continue
     }
+    if (isStale()) return
     // This entry belongs to `address`. Only restore it while it is still valid —
     // an expired token must fall through so the caller prompts for a fresh
     // signature rather than silently restoring a token the API would 401.
@@ -126,18 +159,25 @@ async function tryRestoreAuth(address: string) {
       _authRestored = false
       break
     }
-    token.value = decryptedToken
-    perpsClient.setToken(decryptedToken)
-    perpsWs.login(decryptedToken)
-    _authRestored = true
+    // Decrypt the account id *before* installing anything, so the token, the
+    // client, the socket and accountId all land in one synchronous block. Doing
+    // it the other way round leaves half of A's session behind when the wallet
+    // switches during this await.
+    let decryptedAccount: string | null = null
+    let accountFailed = false
     try {
-      accountId.value = storedAccounts[i]
+      decryptedAccount = storedAccounts[i]
         ? await decrypt(storedAccounts[i], address)
         : null
     } catch {
-      _authRestored = false
-      accountId.value = null
+      accountFailed = true
     }
+    if (isStale()) return
+    token.value = decryptedToken
+    perpsClient.setToken(decryptedToken)
+    perpsWs.login(decryptedToken)
+    accountId.value = accountFailed ? null : decryptedAccount
+    _authRestored = !accountFailed
     break
   }
 }
@@ -164,6 +204,10 @@ async function clearAuth() {
   // blocked by a stale auth-restored flag from a previous session.
   _authRestored = false
   _currentAddress = null
+  // Fence any restore still in flight for the same reason a wallet switch does:
+  // a sign-out (or a 401 via onUnauthorized) landing mid-restore must not be
+  // undone by that restore reinstating the token we just cleared.
+  _restoreGeneration++
   isAuthenticating.value = false
 
   if (!wallet.value) return;
@@ -207,6 +251,7 @@ perpsWs.setOnUnauthorized(() => {
 export function usePerpsAuth() {
   const store = useWalletStore()
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
+  const { isPerpsRestricted } = usePerpsRestriction()
 
   // Register the walletAddress watcher exactly once for the lifetime of the
   // module, inside a detached effectScope so it outlives the caller component's
@@ -222,6 +267,9 @@ export function usePerpsAuth() {
         async address => {
           if (!address || address === _currentAddress) return
           _currentAddress = address
+          // Claim this restore attempt. Anything still in flight for the
+          // previous address is now stale and will bail out on its next check.
+          const generation = ++_restoreGeneration
           // Flip synchronously — before the await — so a same-tick auto-login
           // watcher (ViewPerps) can see a restore is in flight and hold off on
           // prompting for a signature until we know whether the new wallet has a
@@ -233,11 +281,16 @@ export function usePerpsAuth() {
           perpsWs.logout()
           resetPerpsData()
           try {
-            await tryRestoreAuth(address)
+            await tryRestoreAuth(address, generation)
           } finally {
-            isRestoringAuth.value = false
+            // Only the current attempt owns these. A superseded run finishing
+            // late must not clear the in-flight flag out from under the newer
+            // restore, nor bump refreshKey for a no-longer-connected account.
+            if (generation === _restoreGeneration) isRestoringAuth.value = false
           }
-          if (token.value) refreshKey.value++
+          if (generation === _restoreGeneration && token.value) {
+            refreshKey.value++
+          }
         },
         { immediate: true },
       )
@@ -245,6 +298,16 @@ export function usePerpsAuth() {
   }
 
   async function login(source?: PerpsEventSource) {
+    // Hard block: no challenge, no signature prompt, no token. Gated here rather
+    // than at each call site so every entry point — banner CTA, ViewPerps
+    // auto-login on wallet switch, market-list actions — is covered by one check.
+    //
+    // Reads the ref rather than awaiting `resolvePerpsRestricted()` on purpose:
+    // the CTA's disabled state derives from the same ref, so the two can never
+    // disagree, and keeping this synchronous preserves the atomicity of the
+    // guard below (an `await` here would let two same-tick clicks both get past
+    // `isAuthenticating` before it is set).
+    if (isPerpsRestricted.value) return
     if (isRestoringAuth.value || _authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'

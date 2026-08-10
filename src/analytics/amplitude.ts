@@ -72,6 +72,8 @@ import type {
   PerpsManageEvent,
   PerpsManagePayload,
   PerpsNewPositionPayload,
+  PerpsRestrictedEvent,
+  PerpsRestrictedPayload,
   PerpsOrderEvent,
   PerpsOrderViewInfoPayload,
   PerpsOrderCancelClickedPayload,
@@ -927,6 +929,13 @@ export class Analytics {
   readonly trackPerpsNewPositionEvent = (
     event: typeof PerpsManageEvent.NEW_POSITION,
     payload: PerpsNewPositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsRestrictedEvent = (
+    event: typeof PerpsRestrictedEvent.LEARN_MORE,
+    payload: PerpsRestrictedPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
