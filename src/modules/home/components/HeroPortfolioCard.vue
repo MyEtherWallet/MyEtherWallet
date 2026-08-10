@@ -3,11 +3,7 @@ import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  ArrowPathIcon,
-} from '@heroicons/vue/24/outline'
+import { EyeIcon, EyeSlashIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 import {
   ArrowUpIcon,
   ArrowDownIcon,
@@ -65,9 +61,7 @@ const MASKED_FIAT = '$***.**'
 const MASKED_PERCENT = '*.**%'
 
 const totalText = computed(() =>
-  hideBalances.value
-    ? MASKED_FIAT
-    : formattedTotalFiatPortfolioValue.value,
+  hideBalances.value ? MASKED_FIAT : formattedTotalFiatPortfolioValue.value,
 )
 const percentText = computed(() =>
   hideBalances.value
@@ -75,31 +69,30 @@ const percentText = computed(() =>
     : `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}%`,
 )
 
-const goToPortfolio = () =>
-  router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
+const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
 </script>
 
 <template>
   <div
     data-test="hero-portfolio-card"
-    class="flex h-full min-h-[300px] w-full flex-col justify-between rounded-2xl p-6"
+    class="relative flex h-full min-h-[300px] w-full flex-col justify-between rounded-2xl p-6"
     :class="state === 'notconnected' ? 'bg-primary text-white' : 'bg-white'"
   >
     <!-- ============ NOT CONNECTED ============ -->
     <template v-if="state === 'notconnected'">
-      <div class="flex flex-col gap-2" data-test="hero-portfolio-notconnected">
-        <p class="text-s-14 font-semibold">
+      <div class="flex w-full flex-col gap-2" data-test="hero-portfolio-notconnected">
+        <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
-        <h2 class="text-s-36 font-bold leading-[1.1]">
+        <h2 class="text-[40px] font-bold leading-[44px] tracking-[-1.2px]">
           {{ t('homePage.hero.welcomeSubtitle') }}
         </h2>
       </div>
-      <div class="flex items-center justify-end gap-2">
+      <div class="flex w-full items-center justify-end gap-4">
         <button
           type="button"
           data-test="hero-create"
-          class="hoverNoBG rounded-3xl px-5 py-3 text-s-14 font-semibold text-white"
+          class="hoverNoBG h-12 rounded-3xl px-6 text-s-16 font-semibold tracking-[-0.32px] text-white"
           @click="openCreateDialog"
         >
           {{ t('homePage.hero.createWallet') }}
@@ -107,7 +100,7 @@ const goToPortfolio = () =>
         <button
           type="button"
           data-test="hero-connect"
-          class="rounded-3xl bg-white px-5 py-3 text-s-14 font-semibold text-primary"
+          class="h-12 rounded-3xl bg-white px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
           @click="openAccessDialog"
         >
           {{ t('homePage.hero.connectWallet') }}
@@ -117,108 +110,77 @@ const goToPortfolio = () =>
 
     <!-- ============ CONNECTED (loading / noassets / assets) ============ -->
     <template v-else>
-      <!-- Top: address chip + eye/refresh -->
-      <div class="flex items-start justify-between">
-        <div class="flex items-center gap-2">
+      <!-- Eye + refresh: top-right icon cluster -->
+      <div class="absolute right-3 top-3 flex items-center gap-1 text-black">
+        <button
+          v-if="state !== 'noassets'"
+          type="button"
+          data-test="hero-eye"
+          :aria-label="t('homePage.hero.toggleBalance')"
+          class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
+          @click="toggleHideBalances"
+        >
+          <component :is="hideBalances ? EyeSlashIcon : EyeIcon" class="size-6" />
+        </button>
+        <button
+          type="button"
+          data-test="hero-refresh"
+          :aria-label="t('refresh_balance')"
+          class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
+          @click="refreshBalances"
+        >
+          <ArrowPathIcon class="size-6" />
+        </button>
+      </div>
+
+      <!-- Top group: chip + headline/subtitle -->
+      <div class="flex w-full flex-col gap-4">
+        <!-- Address chip -->
+        <div class="flex items-center gap-1">
           <template v-if="state === 'loading'">
             <div class="size-2 shrink-0 animate-pulse rounded-full bg-grey-10" />
-            <div class="h-4 w-24 animate-pulse rounded bg-grey-10" />
-            <div class="h-4 w-16 animate-pulse rounded bg-grey-10" />
+            <div class="h-5 w-24 animate-pulse rounded bg-grey-10" />
+            <div class="h-5 w-16 animate-pulse rounded bg-grey-10" />
           </template>
           <template v-else>
             <span class="size-2 shrink-0 rounded-full bg-success" />
             <span
-              class="text-s-14 text-black"
+              class="text-s-16 leading-[22px] text-[#575757]"
               data-test="hero-address"
             >
               {{ truncateAddress(walletAddress ?? '') }}
             </span>
-            <span class="text-[#575757]">•</span>
-            <span class="text-s-14 text-black">{{ selectedChain?.name }}</span>
+            <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
+            <span class="text-s-16 leading-[22px] text-[#575757]">
+              {{ selectedChain?.name }}
+            </span>
           </template>
         </div>
-        <div class="flex items-center gap-3 text-black">
-          <button
-            v-if="state === 'assets'"
-            type="button"
-            data-test="hero-eye"
-            :aria-label="t('homePage.hero.toggleBalance')"
-            class="hoverNoBG"
-            @click="toggleHideBalances"
-          >
-            <component
-              :is="hideBalances ? EyeSlashIcon : EyeIcon"
-              class="size-5"
-            />
-          </button>
-          <button
-            type="button"
-            data-test="hero-refresh"
-            :aria-label="t('refresh_balance')"
-            class="hoverNoBG"
-            @click="refreshBalances"
-          >
-            <ArrowPathIcon class="size-5" />
-          </button>
-        </div>
-      </div>
 
-      <!-- Middle + bottom vary per sub-state -->
-      <!-- LOADING -->
-      <template v-if="state === 'loading'">
-        <h2 class="text-s-36 font-bold leading-[1.1] text-black">
-          {{ t('homePage.hero.ownTotal') }}
-          <span class="ml-1 inline-block h-9 w-40 align-middle animate-pulse rounded-xl bg-grey-10" />
-        </h2>
-        <div class="flex items-center justify-between">
-          <div class="h-5 w-28 animate-pulse rounded bg-grey-10" />
-          <button
-            type="button"
-            data-test="hero-go-portfolio"
-            class="flex items-center gap-1 rounded-3xl bg-grey-10 px-4 py-2.5 text-s-14 font-semibold text-primary"
-            @click="goToPortfolio"
+        <!-- Headline -->
+        <template v-if="state === 'noassets'">
+          <h2
+            class="text-[40px] font-bold leading-[44px] tracking-[-1.2px] text-black"
+            data-test="hero-portfolio-noassets"
           >
-            {{ t('homePage.hero.goToPortfolio') }}
-            <ArrowRightIcon class="size-4" />
-          </button>
-        </div>
-      </template>
-
-      <!-- NO ASSETS -->
-      <template v-else-if="state === 'noassets'">
-        <div class="flex flex-col gap-2" data-test="hero-portfolio-noassets">
-          <h2 class="text-s-36 font-bold leading-[1.1] text-black">
             {{ t('homePage.hero.noAssetsTitle') }}
           </h2>
-          <p class="text-s-14 text-[#575757]">
+          <p class="text-s-16 leading-[22px] text-[#575757]">
             {{ t('homePage.hero.noAssetsSubtitle') }}
           </p>
-        </div>
-        <div class="flex items-center justify-end gap-2">
-          <button
-            type="button"
-            data-test="hero-deposit"
-            class="rounded-3xl bg-grey-10 px-5 py-3 text-s-14 font-semibold text-black"
-            @click="openDepositDialog = true"
-          >
-            {{ t('homePage.hero.makeDeposit') }}
-          </button>
-          <button
-            type="button"
-            data-test="hero-buy"
-            class="flex items-center gap-2 rounded-3xl bg-primary px-5 py-3 text-s-14 font-semibold text-white"
-            @click="openPanel('purchase')"
-          >
-            {{ t('homePage.hero.buyCrypto') }}
-            <CurrencyDollarIcon class="size-5" />
-          </button>
-        </div>
-      </template>
-
-      <!-- ASSETS / HIDDEN -->
-      <template v-else>
+        </template>
         <h2
-          class="text-s-36 font-bold leading-[1.1] text-black"
+          v-else-if="state === 'loading'"
+          class="text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
+        >
+          {{ t('homePage.hero.ownTotal') }}
+          <span
+            class="ml-2 inline-block h-11 w-48 animate-pulse rounded-xl bg-grey-10 align-middle"
+          />
+        </h2>
+        <h2
+          v-else
+          class="text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
           data-test="hero-portfolio-assets"
         >
           {{ t('homePage.hero.ownTotal') }}
@@ -226,36 +188,69 @@ const goToPortfolio = () =>
             totalText
           }}</span>
         </h2>
-        <div class="flex items-center justify-between">
-          <div
-            class="flex items-center gap-1 text-s-14 font-semibold"
-            data-test="hero-today"
+      </div>
+
+      <!-- Bottom group -->
+      <!-- NO ASSETS: deposit / buy -->
+      <div
+        v-if="state === 'noassets'"
+        class="flex w-full items-center justify-end gap-2"
+      >
+        <button
+          type="button"
+          data-test="hero-deposit"
+          class="h-12 rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
+          @click="openDepositDialog = true"
+        >
+          {{ t('homePage.hero.makeDeposit') }}
+        </button>
+        <button
+          type="button"
+          data-test="hero-buy"
+          class="flex h-12 items-center gap-2 rounded-3xl bg-primary px-6 text-s-16 font-semibold tracking-[-0.32px] text-white"
+          @click="openPanel('purchase')"
+        >
+          {{ t('homePage.hero.buyCrypto') }}
+          <CurrencyDollarIcon class="size-[22px]" />
+        </button>
+      </div>
+
+      <!-- LOADING / ASSETS: today % + go to portfolio -->
+      <div v-else class="flex w-full items-end justify-between">
+        <div
+          v-if="state === 'loading'"
+          class="h-6 w-28 animate-pulse rounded bg-grey-10"
+        />
+        <div
+          v-else
+          class="flex items-center gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px]"
+          data-test="hero-today"
+        >
+          <component
+            :is="isUp ? ArrowUpIcon : ArrowDownIcon"
+            class="size-[22px]"
             :class="
-              hideBalances
-                ? 'text-[#575757]'
-                : isUp
-                  ? 'text-success'
-                  : 'text-error'
+              hideBalances ? 'text-[#575757]' : isUp ? 'text-success' : 'text-error'
             "
+          />
+          <span
+            :class="
+              hideBalances ? 'text-[#575757]' : isUp ? 'text-success' : 'text-error'
+            "
+            >{{ percentText }}</span
           >
-            <component
-              :is="isUp ? ArrowUpIcon : ArrowDownIcon"
-              class="size-4"
-            />
-            <span>{{ percentText }}</span>
-            <span class="text-black">{{ t('homePage.hero.today') }}</span>
-          </div>
-          <button
-            type="button"
-            data-test="hero-go-portfolio"
-            class="flex items-center gap-1 rounded-3xl bg-grey-10 px-4 py-2.5 text-s-14 font-semibold text-primary"
-            @click="goToPortfolio"
-          >
-            {{ t('homePage.hero.goToPortfolio') }}
-            <ArrowRightIcon class="size-4" />
-          </button>
+          <span class="text-black">{{ t('homePage.hero.today') }}</span>
         </div>
-      </template>
+        <button
+          type="button"
+          data-test="hero-go-portfolio"
+          class="flex h-12 items-center gap-2 rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
+          @click="goToPortfolio"
+        >
+          {{ t('homePage.hero.goToPortfolio') }}
+          <ArrowRightIcon class="size-[22px]" />
+        </button>
+      </div>
     </template>
 
     <TheDepositDialog v-model:open-dialog="openDepositDialog" />
