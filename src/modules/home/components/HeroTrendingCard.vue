@@ -23,7 +23,7 @@ const { formatFiat } = useCurrency()
 <template>
   <div
     data-test="hero-trending-card"
-    class="flex w-full flex-col gap-4 rounded-2xl bg-white p-3"
+    class="flex w-full min-w-0 flex-col gap-4 rounded-2xl bg-white p-3"
   >
     <!-- Header: title + see-all chevron on the left, "Last 24h" on the right -->
     <div class="flex w-full items-end justify-between p-2">
