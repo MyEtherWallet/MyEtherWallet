@@ -1,6 +1,23 @@
 {
   "homePage": {
-    "hero": { "placeholder": "Sección Hero" },
+    "hero": {
+      "welcomeTitle": "Bienvenido a MEW portfolio",
+      "welcomeSubtitle": "Conecta tu wallet para empezar a operar acciones y cripto",
+      "createWallet": "Crear wallet",
+      "connectWallet": "Conectar wallet",
+      "ownTotal": "Tienes un total de",
+      "today": "hoy",
+      "goToPortfolio": "Ir al portafolio",
+      "noAssetsTitle": "No tienes ningún activo",
+      "noAssetsSubtitle": "Compra o deposita para empezar a operar acciones y cripto",
+      "makeDeposit": "Hacer un depósito",
+      "buyCrypto": "Comprar cripto",
+      "toggleBalance": "Mostrar u ocultar saldo",
+      "trendingStocks": "Acciones en tendencia",
+      "trendingCrypto": "Cripto en tendencia",
+      "last24h": "Últimas 24h",
+      "empty": "No hay datos disponibles"
+    },
     "offers": {
       "title": "Ofertas exclusivas",
       "subtitle": "¡Gana recompensas por usar MEW!",
