@@ -11,7 +11,6 @@ import {
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
-import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -37,7 +36,6 @@ export const useConnectWallet = () => {
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
-  const watchOnlyStore = useWatchOnlyStore()
   const recentWalletsStore = useRecentWalletsStore()
   const { addWallet } = recentWalletsStore
   const { setWallet } = walletStore
@@ -53,32 +51,12 @@ export const useConnectWallet = () => {
     wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
     config: WalletConfig,
   ) => {
-    // The extension's active address may already be saved. Rather than silently
-    // no-op, surface an informational step so the user knows to switch address in
-    // the extension. (Only reached for extension/injected wallets.)
+    // Connecting an address that's already saved is allowed — e.g. accessing the
+    // same wallet from a different device/provider (Enkrypt → MetaMask). Let it
+    // through so walletStore.setAddress upserts/reuses the saved entry instead of
+    // blocking with an "already saved" step. (MEW-2133)
     const address = await wallet.getAddress()
-    const type = selectedChain.value?.type
-    const existing = type
-      ? (watchOnlyStore.watchOnlyAddresses[type] ?? []).find(
-          e => e.address.toLowerCase() === address.toLowerCase(),
-        )
-      : undefined
     const walletIcon = typeof config.icon === 'string' ? config.icon : ''
-    // Adding a *new* address ("Connect another"): warn if the active address is
-    // already saved instead of silently no-opping.
-    if (existing && accessStore.expectNewAddress) {
-      accessStore.setAddressSavedInfo({
-        address,
-        addressName: existing.addressName,
-        walletName: config.name,
-        walletIcon,
-        config,
-      })
-      // Reset the dialog to the chooser so the back button on the modal returns
-      // there instead of the connecting spinner view.
-      accessStore.setCurrentView('default')
-      return
-    }
     // Connecting a *specific* saved address: an extension only connects its active
     // account, so if that isn't the intended address, prompt the user to select it.
     const intended = accessStore.intendedAddress

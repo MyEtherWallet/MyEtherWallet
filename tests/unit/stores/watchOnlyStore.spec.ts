@@ -96,6 +96,17 @@ describe('watchOnlyStore (extended)', () => {
     expect(bucket[0].addressName).toBe(truncateAddress('0x1', 6, 4))
   })
 
+  // MEW-2133: accessing the same wallet from a different device/provider must
+  // update the entry in place (no duplicate, no error) — not be rejected.
+  it('addWallet re-adds the same address under a new provider (device switch)', () => {
+    const s = useWatchOnlyStore()
+    s.addWallet('0x987', evmChain, 'INJECTED', 'EVM', 'Enkrypt')
+    s.addWallet('0x987', evmChain, 'INJECTED', 'EVM', 'MetaMask') // same address, new device
+    const bucket = s.watchOnlyAddresses.EVM
+    expect(bucket).toHaveLength(1) // not duplicated
+    expect(bucket[0].walletName).toBe('MetaMask') // reflects the new provider
+  })
+
   it('backfill assigns names to legacy entries missing addressName', () => {
     localStorage.setItem('watchOnlyList', JSON.stringify({
       EVM: [{ address: '0x1', walletName: 'W', chain: evmChain, type: 'EVM', walletType: 'INJECTED' }],
