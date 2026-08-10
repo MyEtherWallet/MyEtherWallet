@@ -140,9 +140,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <!-- Address chip -->
         <div class="flex items-center gap-1">
           <template v-if="state === 'loading'">
-            <div class="size-2 shrink-0 animate-pulse rounded-full bg-grey-10" />
-            <div class="h-5 w-24 animate-pulse rounded bg-grey-10" />
-            <div class="h-5 w-16 animate-pulse rounded bg-grey-10" />
+            <div class="size-5 shrink-0 animate-pulse rounded-md bg-[#e6e6e6]" />
+            <div class="h-5 w-[101px] animate-pulse rounded-md bg-[#e6e6e6]" />
+            <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
+            <div class="h-5 w-[72px] animate-pulse rounded-md bg-[#e6e6e6]" />
           </template>
           <template v-else>
             <span class="size-2 shrink-0 rounded-full bg-success" />
@@ -177,7 +178,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         >
           {{ t('homePage.hero.ownTotal') }}
           <span
-            class="ml-2 inline-block h-11 w-48 animate-pulse rounded-xl bg-grey-10 align-middle"
+            class="ml-2 inline-block h-[46px] w-32 animate-pulse rounded-lg bg-[#e6e6e6] align-middle"
           />
         </h2>
         <h2
@@ -186,7 +187,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           data-test="hero-portfolio-assets"
         >
           {{ t('homePage.hero.ownTotal') }}
-          <span :class="hideBalances ? 'text-[#575757]' : 'text-primary'">{{
+          <span :class="hideBalances ? 'text-[#a5a5a5]' : 'text-primary'">{{
             totalText
           }}</span>
         </h2>
@@ -219,10 +220,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
 
       <!-- LOADING / ASSETS: today % + go to portfolio -->
       <div v-else class="flex w-full items-end justify-between">
-        <div
-          v-if="state === 'loading'"
-          class="h-6 w-28 animate-pulse rounded bg-grey-10"
-        />
+        <div v-if="state === 'loading'" class="flex items-center gap-1">
+          <div class="size-[22px] animate-pulse rounded-md bg-[#e6e6e6]" />
+          <div class="h-[22px] w-[85px] animate-pulse rounded-md bg-[#e6e6e6]" />
+        </div>
         <div
           v-else
           class="flex items-center gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px]"
@@ -232,12 +233,12 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
             :is="isUp ? ArrowUpIcon : ArrowDownIcon"
             class="size-[22px]"
             :class="
-              hideBalances ? 'text-[#575757]' : isUp ? 'text-success' : 'text-error'
+              hideBalances ? 'text-[#a5a5a5]' : isUp ? 'text-success' : 'text-error'
             "
           />
           <span
             :class="
-              hideBalances ? 'text-[#575757]' : isUp ? 'text-success' : 'text-error'
+              hideBalances ? 'text-[#a5a5a5]' : isUp ? 'text-success' : 'text-error'
             "
             >{{ percentText }}</span
           >
