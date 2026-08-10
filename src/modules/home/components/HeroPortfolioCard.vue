@@ -84,7 +84,9 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
-        <h2 class="text-[40px] font-bold leading-[44px] tracking-[-1.2px]">
+        <h2
+          class="max-w-[411px] text-[40px] font-bold leading-[44px] tracking-[-1.2px]"
+        >
           {{ t('homePage.hero.welcomeSubtitle') }}
         </h2>
       </div>
@@ -160,7 +162,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <!-- Headline -->
         <template v-if="state === 'noassets'">
           <h2
-            class="text-[40px] font-bold leading-[44px] tracking-[-1.2px] text-black"
+            class="max-w-[318px] text-[40px] font-bold leading-[44px] tracking-[-1.2px] text-black"
             data-test="hero-portfolio-noassets"
           >
             {{ t('homePage.hero.noAssetsTitle') }}
@@ -171,7 +173,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         </template>
         <h2
           v-else-if="state === 'loading'"
-          class="text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
+          class="max-w-[325px] text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
         >
           {{ t('homePage.hero.ownTotal') }}
           <span
@@ -180,7 +182,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         </h2>
         <h2
           v-else
-          class="text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
+          class="max-w-[325px] text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
           data-test="hero-portfolio-assets"
         >
           {{ t('homePage.hero.ownTotal') }}
