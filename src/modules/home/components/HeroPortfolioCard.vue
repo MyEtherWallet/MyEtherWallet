@@ -81,7 +81,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
     <!-- ============ NOT CONNECTED ============ -->
     <template v-if="state === 'notconnected'">
       <div class="flex w-full flex-col gap-2" data-test="hero-portfolio-notconnected">
-        <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
+        <p class="text-s-16 font-normal leading-[22px]">
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
         <h2
