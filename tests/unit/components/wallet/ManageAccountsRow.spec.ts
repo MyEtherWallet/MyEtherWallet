@@ -62,12 +62,35 @@ describe('ManageAccountsRow', () => {
     expect(custom.text()).toContain('Enkrypt')
   })
 
-  it('shows the active check badge when active and the eye when watch-only', () => {
-    expect(factory({ isActive: true }).find('[data-test="badge"]').exists()).toBe(true)
-    const watchOnly = factory({ account: { kind: 'watchOnly' }, isActive: false })
-    expect(watchOnly.find('[data-test="badge"]').exists()).toBe(false)
-    // watch-only rows render the eye icon (heroicons EyeIcon svg)
-    expect(watchOnly.find('svg').exists()).toBe(true)
+  it('no longer renders a selected check badge (removed per QA)', () => {
+    expect(
+      factory({ isActive: true, account: { kind: 'signing' } })
+        .find('[data-test="badge"]').exists(),
+    ).toBe(false)
+  })
+
+  it('shows the connected dot for signing rows and hides it for watch-only', () => {
+    expect(
+      factory({ account: { kind: 'signing' } }).find('[data-test="row-connected"]').exists(),
+    ).toBe(true)
+    expect(
+      factory({ account: { kind: 'watchOnly' } }).find('[data-test="row-connected"]').exists(),
+    ).toBe(false)
+  })
+
+  it('rings the avatar only when active AND connected (signing)', () => {
+    // active + connected → ring
+    expect(
+      factory({ isActive: true, account: { kind: 'signing' } }).find('.ring-2').exists(),
+    ).toBe(true)
+    // active watch-only is not connected → no ring
+    expect(
+      factory({ isActive: true, account: { kind: 'watchOnly' } }).find('.ring-2').exists(),
+    ).toBe(false)
+    // saved but not active → no ring
+    expect(
+      factory({ isActive: false, account: { kind: 'signing' } }).find('.ring-2').exists(),
+    ).toBe(false)
   })
 
   it('emits select when the row body is clicked', async () => {

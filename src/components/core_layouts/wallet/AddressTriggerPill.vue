@@ -9,6 +9,7 @@
         <app-blockie
           :address="walletAddress ?? ''"
           :size="6"
+          :blocks="8"
           class="rounded-full"
         />
         <img

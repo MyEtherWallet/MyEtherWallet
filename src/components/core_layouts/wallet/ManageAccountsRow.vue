@@ -14,9 +14,11 @@
         <app-blockie
           :address="account.address"
           :size="10"
+          :blocks="8"
           class="rounded-full"
           :class="{
-            'ring-2 ring-[#05c0a5] ring-offset-1 ring-offset-white': isActive,
+            'ring-2 ring-[#05c0a5] ring-offset-1 ring-offset-white':
+              isActive && account.kind === 'signing',
           }"
         />
       </div>
@@ -45,14 +47,6 @@
         </div>
       </div>
     </button>
-
-    <span
-      v-if="isActive"
-      data-test="badge"
-      class="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-black"
-    >
-      <check-icon class="w-3 h-3 text-white" />
-    </span>
 
     <div
       v-if="balanceLoading || balance"
@@ -113,7 +107,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
-import { EyeIcon, CheckIcon } from '@heroicons/vue/16/solid'
+import { EyeIcon } from '@heroicons/vue/16/solid'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

@@ -63,6 +63,15 @@ const props = defineProps({
     type: Number,
     default: 8,
   },
+  /**
+   * @blocks Number of blockie squares per side (the pattern grid). Defaults to
+   * `size` for backward compatibility; pass it explicitly to keep the pattern
+   * identical across different box sizes (e.g. multi-address pill vs list row).
+   */
+  blocks: {
+    type: Number,
+    default: undefined,
+  },
 })
 
 const blockieImg = ref<string | null>(null)
@@ -70,7 +79,7 @@ const blockieImg = ref<string | null>(null)
 const createBlockie = () => {
   blockieImg.value = Blockies({
     seed: props.address ? props.address.toLowerCase() : '',
-    size: props.size,
+    size: props.blocks ?? props.size,
     scale: props.scale,
   }).toDataURL()
 }
@@ -97,6 +106,12 @@ watch(
 )
 watch(
   () => props.size,
+  () => {
+    createBlockie()
+  },
+)
+watch(
+  () => props.blocks,
   () => {
     createBlockie()
   },
