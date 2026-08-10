@@ -30,7 +30,7 @@ const { formatFiat } = useCurrency()
       <button
         type="button"
         data-test="trending-see-all"
-        class="hoverNoBG flex items-center gap-2"
+        class="flex items-center gap-2"
         @click="router.push(seeAllTo)"
       >
         <span
