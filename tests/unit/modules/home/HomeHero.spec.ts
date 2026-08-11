@@ -77,6 +77,23 @@ vi.mock('@/modules/home/components/HeroTrendingCard.vue', () => ({
 vi.mock('@/modules/home/components/HeroBanner.vue', () => ({
   default: { template: '<div data-test="hero-banner" />' },
 }))
+vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
+  default: { template: '<div data-test="hero-watchlist-banner" />' },
+}))
+
+// watchlistTableStore is consumed via storeToRefs → mock as a real Pinia setup
+// store with module-level refs the tests can mutate.
+const watchListedTokens = ref<string[]>([])
+const watchListedStocks = ref<string[]>([])
+vi.mock('@/stores/watchlistTableStore', async () => {
+  const { defineStore } = await import('pinia')
+  return {
+    useWatchlistStore: defineStore('useWatchlistStore', () => ({
+      watchListedTokens,
+      watchListedStocks,
+    })),
+  }
+})
 
 import HomeHero from '@/modules/home/sections/HomeHero.vue'
 
@@ -86,6 +103,8 @@ describe('HomeHero (MEW-2094)', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     fetchTrending.mockClear()
+    watchListedTokens.value = []
+    watchListedStocks.value = []
   })
 
   it('renders the portfolio card and two trending cards', () => {
@@ -111,5 +130,18 @@ describe('HomeHero (MEW-2094)', () => {
   it('fetches crypto trending on mount', () => {
     mountHero()
     expect(fetchTrending).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows the watchlist banner when the watchlist is empty', () => {
+    expect(
+      mountHero().find('[data-test="hero-watchlist-banner"]').exists(),
+    ).toBe(true)
+  })
+
+  it('hides the watchlist banner once the watchlist has items', () => {
+    watchListedStocks.value = ['AAPL']
+    expect(
+      mountHero().find('[data-test="hero-watchlist-banner"]').exists(),
+    ).toBe(false)
   })
 })

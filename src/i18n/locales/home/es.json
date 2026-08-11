@@ -22,6 +22,11 @@
         "subtitle": "Las primeras 10 operaciones de $50+ cada hora reciben 10 USDC.",
         "learnMore": "Saber más",
         "tradeStocks": "Operar acciones"
+      },
+      "watchlist": {
+        "title": "Arma tu lista de seguimiento",
+        "subtitle": "Encuentra activos para seguir según tus intereses",
+        "begin": "Empecemos"
       }
     },
     "offers": {

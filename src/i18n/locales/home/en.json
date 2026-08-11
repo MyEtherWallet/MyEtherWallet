@@ -22,6 +22,11 @@
         "subtitle": "The first 10 trades of $50+ each hour get 10 USDC.",
         "learnMore": "Learn more",
         "tradeStocks": "Trade stocks"
+      },
+      "watchlist": {
+        "title": "Build your watchlist",
+        "subtitle": "Find assets to follow based on your interests",
+        "begin": "Let's begin"
       }
     },
     "offers": {

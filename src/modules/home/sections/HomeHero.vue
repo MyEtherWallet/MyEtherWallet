@@ -3,24 +3,39 @@ import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useStocksStore } from '@/stores/stocksStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useCryptoTrending } from '@/modules/home/composables/useCryptoTrending'
 import HeroPortfolioCard from '@/modules/home/components/HeroPortfolioCard.vue'
 import HeroTrendingCard from '@/modules/home/components/HeroTrendingCard.vue'
 import HeroBanner from '@/modules/home/components/HeroBanner.vue'
+import HeroWatchlistBanner from '@/modules/home/components/HeroWatchlistBanner.vue'
 import type { TrendingRowItem } from '@/modules/home/components/heroTrending'
-
-// Promo banner above the cards. Visible with placeholder copy for now; the
-// final copy and whether it wires to an external campaign/service are still
-// TBD. Flip to `false` (or wire to a real feature flag) when it needs to be
-// hidden.
-const SHOW_HERO_TRADE_BANNER = true
 import {
   ROUTES_MAIN,
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 
+// Promo banner above the cards. Visible with placeholder copy for now; the
+// final copy and whether it wires to an external campaign/service are still
+// TBD. Flip to `false` (or wire to a real feature flag) when it needs to be
+// hidden.
+const SHOW_HERO_TRADE_BANNER = true
+
 const { t } = useI18n()
+
+// "Build your watchlist" banner, shown below the cards only while the user's
+// watchlist is empty (first-time onboarding).
+const watchlistStore = useWatchlistStore()
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const isWatchlistEmpty = computed(
+  () => !watchListedTokens.value.length && !watchListedStocks.value.length,
+)
+
+// The onboarding flow does not exist yet — placeholder until it's defined.
+const onWatchlistBegin = () => {
+  /* TODO(watchlist): start the build-your-watchlist onboarding flow */
+}
 
 // Card 2 — stocks: reuse the overview `trending` already fetched by ViewHome.
 const stocksStore = useStocksStore()
@@ -93,5 +108,9 @@ onMounted(fetchTrending)
         :is-loading="isLoadingCrypto"
       />
     </div>
+    <HeroWatchlistBanner
+      v-if="isWatchlistEmpty"
+      @begin="onWatchlistBegin"
+    />
   </div>
 </template>

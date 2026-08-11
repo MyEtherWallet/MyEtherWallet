@@ -22,6 +22,11 @@
         "subtitle": "每小时前 10 笔 $50+ 的交易可获得 10 USDC。",
         "learnMore": "了解更多",
         "tradeStocks": "交易股票"
+      },
+      "watchlist": {
+        "title": "创建您的关注列表",
+        "subtitle": "根据您的兴趣查找要关注的资产",
+        "begin": "开始"
       }
     },
     "offers": {
