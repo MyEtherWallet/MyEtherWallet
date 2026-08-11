@@ -24,6 +24,19 @@ const ViewColorPreview = () => import('@/views/ViewColorPreview.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  // Dev-only component previews — excluded from production builds.
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: '/button-preview',
+          name: 'button-preview',
+          component: () => import('@/views/ViewButtonPreview.vue'),
+          meta: {
+            noAuth: true,
+          },
+        },
+      ]
+    : []),
   {
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
