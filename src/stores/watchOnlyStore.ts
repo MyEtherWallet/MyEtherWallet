@@ -70,9 +70,31 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
       }),
   )
 
-  const activeAccount = computed<SavedAccount | null>(
-    () => allAccounts.value.find(a => a.id === activeId.value) ?? null,
-  )
+  const activeAccount = computed<SavedAccount | null>(() => {
+    const saved = allAccounts.value.find(a => a.id === activeId.value)
+    if (saved) return saved
+    // Cap edge case: the connected wallet may be over the saved-address cap, so
+    // addWallet dropped it and it isn't in the list. Surface it from the live
+    // wallet anyway so the popup shows the connected account instead of the
+    // misleading "no address for this network" empty state.
+    const address = walletStore.walletAddress
+    const chainType = chainsStore.selectedChain?.type as ChainType | undefined
+    if (!walletStore.isWalletConnected || !address || !chainType) return null
+    // Same chain-type guard as addWallet: never surface an EVM address under a
+    // Bitcoin network (or vice versa).
+    const looksEvm = address.toLowerCase().startsWith('0x')
+    if ((chainType === 'BITCOIN') === looksEvm) return null
+    return view(
+      makeEntry(
+        address,
+        chainsStore.selectedChain as Chain,
+        walletStore.wallet?.getWalletType() ?? '',
+        chainType,
+        walletStore.walletName,
+      ),
+      walletStore.isWatchOnly ? 'watchOnly' : 'signing',
+    )
+  })
 
   const savedAccounts = computed<SavedAccount[]>(() =>
     allAccounts.value.filter(a => a.id !== activeId.value),
