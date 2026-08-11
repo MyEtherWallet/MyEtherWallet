@@ -10,6 +10,7 @@
           :address="walletAddress ?? ''"
           :size="6"
           :blocks="8"
+          is-flat
           class="rounded-full"
         />
         <img

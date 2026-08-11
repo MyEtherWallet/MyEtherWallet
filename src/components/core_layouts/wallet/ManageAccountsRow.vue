@@ -15,6 +15,7 @@
           :address="account.address"
           :size="10"
           :blocks="8"
+          is-flat
           class="rounded-full"
           :class="{
             'ring-2 ring-[#05c0a5] ring-offset-1 ring-offset-white':
