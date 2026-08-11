@@ -16,7 +16,13 @@
       "trendingStocks": "Acciones en tendencia",
       "trendingCrypto": "Cripto en tendencia",
       "last24h": "Últimas 24h",
-      "empty": "No hay datos disponibles"
+      "empty": "No hay datos disponibles",
+      "banner": {
+        "title": "Opera y gana 5 USDC",
+        "subtitle": "Las primeras 10 operaciones de $50+ cada hora reciben 10 USDC.",
+        "learnMore": "Saber más",
+        "tradeStocks": "Operar acciones"
+      }
     },
     "offers": {
       "title": "Ofertas exclusivas",

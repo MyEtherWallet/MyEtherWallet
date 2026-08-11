@@ -16,7 +16,13 @@
       "trendingStocks": "Trending stocks",
       "trendingCrypto": "Trending crypto",
       "last24h": "Last 24h",
-      "empty": "No data available"
+      "empty": "No data available",
+      "banner": {
+        "title": "Trade and get 5 USDC",
+        "subtitle": "The first 10 trades of $50+ each hour get 10 USDC.",
+        "learnMore": "Learn more",
+        "tradeStocks": "Trade stocks"
+      }
     },
     "offers": {
       "title": "Exclusive Offers",

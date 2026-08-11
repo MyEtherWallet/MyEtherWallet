@@ -16,7 +16,13 @@
       "trendingStocks": "热门股票",
       "trendingCrypto": "热门加密货币",
       "last24h": "最近 24 小时",
-      "empty": "暂无数据"
+      "empty": "暂无数据",
+      "banner": {
+        "title": "交易即得 5 USDC",
+        "subtitle": "每小时前 10 笔 $50+ 的交易可获得 10 USDC。",
+        "learnMore": "了解更多",
+        "tradeStocks": "交易股票"
+      }
     },
     "offers": {
       "title": "专属优惠",

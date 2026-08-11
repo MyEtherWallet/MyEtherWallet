@@ -74,6 +74,9 @@ vi.mock('@/modules/home/components/HeroTrendingCard.vue', () => ({
       '<div data-test="trending" :data-count="items.length">{{ title }}</div>',
   },
 }))
+vi.mock('@/modules/home/components/HeroBanner.vue', () => ({
+  default: { template: '<div data-test="hero-banner" />' },
+}))
 
 import HomeHero from '@/modules/home/sections/HomeHero.vue'
 
@@ -89,6 +92,10 @@ describe('HomeHero (MEW-2094)', () => {
     const w = mountHero()
     expect(w.find('[data-test="portfolio-card"]').exists()).toBe(true)
     expect(w.findAll('[data-test="trending"]').length).toBe(2)
+  })
+
+  it('shows the promo banner above the cards', () => {
+    expect(mountHero().find('[data-test="hero-banner"]').exists()).toBe(true)
   })
 
   it('caps the stocks card at the top 5 trending items', () => {
