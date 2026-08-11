@@ -39,8 +39,12 @@
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
           <div
             :class="[
-              'min-h-[600px] pt-3 xs:pt-6',
-              isNewHome ? '' : 'px-3 xs:px-5',
+              'min-h-[600px]',
+              // The new Home's sections own their padding (AppHomeSection has
+              // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
+              // the hero's top padding stacks on the wrapper's. Other routes
+              // keep the shared page padding.
+              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
             <router-view />
