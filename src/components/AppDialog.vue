@@ -68,7 +68,8 @@
               <app-btn-icon-close
                 v-if="!persistent && !hideClose"
                 @close="setIsOpen(false)"
-                class="absolute top-4 right-4 min-w-[32px]"
+                class="absolute min-w-[32px]"
+                :class="closeClass"
               />
             </div>
             <div
@@ -180,6 +181,14 @@ defineProps({
   hasTitleUnderline: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * @closeClass - position classes for the close button
+   * @type string
+   */
+  closeClass: {
+    type: String,
+    default: 'top-4 right-4',
   },
 })
 

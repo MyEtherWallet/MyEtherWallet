@@ -206,11 +206,11 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 import { BigNumber } from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenBalance } from '@/mew_api/types'
+
+const { formatFiat } = useCurrency()
 
 const walletStore = useWalletStore()
 const {
@@ -261,7 +261,7 @@ const stocksValue = computed<BigNumber>(() => {
 })
 
 const stocksFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stocksValue.value).value}`
+  return formatFiat(stocksValue.value).display
 })
 
 const topStocksTokens = computed<TokenBalance[]>(() => {
@@ -289,7 +289,7 @@ const stablesValue = computed<BigNumber>(() => {
 })
 
 const stablesFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stablesValue.value).value}`
+  return formatFiat(stablesValue.value).display
 })
 
 const topStableTokens = computed<TokenBalance[]>(() => {
@@ -323,7 +323,7 @@ const largeCapValue = computed<BigNumber>(() => {
 })
 
 const largeCapFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(largeCapValue.value).value}`
+  return formatFiat(largeCapValue.value).display
 })
 
 const topLargeCapTokens = computed<TokenBalance[]>(() => {
@@ -369,7 +369,7 @@ const altcoinsValue = computed<BigNumber>(() => {
 })
 
 const altcoinsFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(altcoinsValue.value).value}`
+  return formatFiat(altcoinsValue.value).display
 })
 
 const topAltcoinTokens = computed<TokenBalance[]>(() => {

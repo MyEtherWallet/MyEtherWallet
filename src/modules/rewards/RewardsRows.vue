@@ -28,7 +28,9 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Swap and Earn 5 USDC</span
+            >{{
+              t('rewards.swap_and_earn', { amount: `$${rewardAmount}` })
+            }}</span
           >
           <template v-if="!swapClaimed && !swapNoRewards">
             <div
@@ -41,17 +43,17 @@
             </div>
             <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
               <b>{{ swapRemainingCount ?? '—' }}/{{ swapTotal ?? '—' }}</b>
-              rewards left
+              {{ t('rewards.rewards_left_label') }}
             </p>
           </template>
           <p
             v-else-if="swapClaimed"
             class="text-s-12 font-medium mt-0.5 text-success"
           >
-            Reward claimed
+            {{ t('rewards.reward_claimed') }}
           </p>
           <p v-else class="text-s-12 font-medium mt-0.5 text-error">
-            No rewards left
+            {{ t('rewards.no_rewards_left') }}
           </p>
         </div>
       </div>
@@ -62,7 +64,7 @@
         class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
-        Swap $50+
+        {{ t('rewards.swap_button', { amount: `$${swapMinimumAmount}+` }) }}
       </app-base-button>
       <button
         v-else
@@ -71,8 +73,11 @@
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
-        Back in
-        {{ swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset }}
+        {{
+          t('rewards.back_in', {
+            time: swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset,
+          })
+        }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
           :class="{
@@ -114,7 +119,9 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Trade and Earn 5 USDC</span
+            >{{
+              t('rewards.trade_and_earn', { amount: `$${rewardAmount}` })
+            }}</span
           >
           <template
             v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
@@ -129,23 +136,23 @@
             </div>
             <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
               <b>{{ tradeRemainingCount ?? '—' }}/{{ tradeTotal ?? '—' }}</b>
-              rewards left
+              {{ t('rewards.rewards_left_label') }}
             </p>
           </template>
           <p
             v-else-if="tradeClaimed"
             class="text-s-12 font-medium mt-0.5 text-success"
           >
-            Reward claimed
+            {{ t('rewards.reward_claimed') }}
           </p>
           <p
             v-else-if="tradeMarketClosed"
             class="text-s-12 font-medium mt-0.5 text-error"
           >
-            Market is closed
+            {{ t('rewards.market_is_closed') }}
           </p>
           <p v-else class="text-s-12 font-medium mt-0.5 text-error">
-            No rewards left
+            {{ t('rewards.no_rewards_left') }}
           </p>
         </div>
       </div>
@@ -156,7 +163,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        Trade ${{ minSpendTrade }}+
+        {{ t('rewards.trade_button', { amount: `$${minSpendTrade}+` }) }}
       </app-base-button>
       <button
         v-else
@@ -165,13 +172,14 @@
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
-        Back in
         {{
-          tradeClaimed
-            ? timeUntilTradeNextEligible
-            : tradeMarketClosed
-              ? timeUntilMarketOpen
-              : timeUntilHourReset
+          t('rewards.back_in', {
+            time: tradeClaimed
+              ? timeUntilTradeNextEligible
+              : tradeMarketClosed
+                ? timeUntilMarketOpen
+                : timeUntilHourReset,
+          })
         }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
@@ -187,12 +195,16 @@
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { ClockIcon } from '@heroicons/vue/24/outline'
+import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 
 const walletMenuStore = useWalletMenuStore()
+const { t } = useI18n()
+const rewardAmount = 5
+const swapMinimumAmount = 50
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 
 defineProps<{

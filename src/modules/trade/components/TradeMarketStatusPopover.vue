@@ -38,6 +38,7 @@
         :day-label="dayLabel"
         :marker-pct="markerPct"
         :time-label="timeLabel"
+        :session-ranges="sessionRanges"
       />
       <button
         :aria-label="$t('common.close')"
@@ -54,7 +55,9 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
-import TradeMarketTimeline from './TradeMarketTimeline.vue'
+import TradeMarketTimeline, {
+  type TimelineSessionRanges,
+} from './TradeMarketTimeline.vue'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
 const props = withDefaults(
@@ -64,12 +67,14 @@ const props = withDefaults(
     dayLabel?: string
     markerPct?: number
     timeLabel?: string
+    sessionRanges?: TimelineSessionRanges
   }>(),
   {
     nextOpenText: '',
     dayLabel: 'MON',
     markerPct: 55,
     timeLabel: '01:15 PM',
+    sessionRanges: undefined,
   },
 )
 
@@ -109,7 +114,7 @@ const body = computed(() => {
   if (props.status === 'regular')
     return t('trade.market_status_popover.open_body')
   if (props.status === 'paused')
-    return t('trade.market_status_popover.paused_body')
+    return props.nextOpenText || t('trade.market_status_popover.paused_body')
   return t('trade.market_status_popover.limited_body')
 })
 </script>

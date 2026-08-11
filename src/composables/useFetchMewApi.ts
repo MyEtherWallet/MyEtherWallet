@@ -2,6 +2,7 @@ import { ref, type Ref } from 'vue'
 import { createFetch, useTimeoutPoll } from '@vueuse/core'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
+import { describeMewApiFetchError } from '@/composables/mewApiFetchError'
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 const isDevMode = import.meta.env.DEV
@@ -84,7 +85,11 @@ export const useFetchMewApi = (
         // If the request fails,  retry the request
         const isNetworkError = !response
         const isServerError = response?.status && response.status >= 500
-        if (_hasRetry && retryCount.value < 3 && (isNetworkError || isServerError)) {
+        if (
+          _hasRetry &&
+          retryCount.value < 3 &&
+          (isNetworkError || isServerError)
+        ) {
           retryCount.value++
           // wait for delay
           await new Promise(resolve => setTimeout(resolve, delay.value))
@@ -98,13 +103,28 @@ export const useFetchMewApi = (
           await execute()
           return ctx
         } else {
-          const status = response?.status
-          const isClientError = !!status && status >= 400 && status < 500
           if (isDevMode) {
             console.error('Failed to fetch. URL: ', url.value)
           }
-          if (!isDevMode && isClientError) {
-            captureException(ctx.error)
+          if (!isDevMode) {
+            // `ctx.error` from useFetch is `new Error(response.statusText)` on a
+            // non-OK response; over HTTP/2+ `statusText` is empty, so capturing
+            // it directly reported an empty-message "No error message" issue
+            // that collapsed every API failure into one unactionable bucket.
+            // Report a described error tagged with the endpoint + status and
+            // fingerprinted per status so failures are diagnosable and grouped.
+            const captured = describeMewApiFetchError({
+              error: ctx.error,
+              data,
+              status: response?.status,
+              statusText: response?.statusText,
+              url: url.value,
+            })
+            captureException(captured.error, {
+              fingerprint: captured.fingerprint,
+              tags: captured.tags,
+              extra: captured.extra,
+            })
           }
           ctx.error = data?.message || 'Unknown Error. Failed to fetch.'
           retryCount.value = 0

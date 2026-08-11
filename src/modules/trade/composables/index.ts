@@ -1,5 +1,7 @@
 export { useMarketStatus } from './useMarketStatus'
+export { useMarketStatusDisplay } from './useMarketStatusDisplay'
 export { useTradeTokens } from './useTradeTokens'
 export { useTradeValidation } from './useTradeValidation'
 export { useTradeQuote } from './useTradeQuote'
+export { useTradeBreakdown } from './useTradeBreakdown'
 export { useTradeExecution } from './useTradeExecution'

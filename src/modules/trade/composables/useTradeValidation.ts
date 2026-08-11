@@ -103,7 +103,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       return ''
     }
     if (generalError.value === 'pathfinder error') {
-      return 'This token is unavailable to trade. Please choose another or try again later.'
+      return t('trade.error.token-unavailable')
     }
 
     const amountBN = BigNumber(fromAmount.value)

@@ -1,4 +1,5 @@
 import { ref, type Ref, type ComputedRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -16,11 +17,7 @@ import { isTransientRpcError } from '@/modules/trade/composables/transientRpcErr
 
 const isDevMode = Configs.IS_DEV_MODE
 
-interface QuoteData {
-  startAmount: bigint
-  endAmount?: bigint
-  avgAmount?: bigint
-}
+import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 
 interface UseTradeQuoteOptions {
   fromTokenSelected: Ref<NewTokenInfo | null>
@@ -32,6 +29,15 @@ interface UseTradeQuoteOptions {
   selectedFromChain: Ref<Chain | undefined>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
+  /**
+   * Regional eligibility resolved AND allowed — see the store.
+   *
+   * Guarded here as well as in the UI, and expressed as "allowed" rather than
+   * "not restricted" because the underlying flag starts `false`: gating on that
+   * would quote for a restricted user during the window before the async geo
+   * check resolves, which is exactly the window this guard exists for.
+   */
+  isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
   isLoadingQuote: Ref<boolean>
@@ -48,12 +54,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
+    isTradingAllowedInRegion,
     hasPreQuoteError,
     generalError,
     isLoadingQuote,
   } = options
 
-  const currentQuote = ref<QuoteData | null>(null)
+  const { t } = useI18n()
+
+  const currentQuote = ref<QuoteOutputType | null>(null)
+  const quoteExpiresAt = ref<number | null>(null)
   const needsApproval = ref(false)
 
   const getToAmountUSD = (): number => {
@@ -69,7 +79,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -85,6 +96,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
     // Don't fetch quotes when market is closed
     if (!isMarketOpen.value) {
+      toAmount.value = '0'
+      return
+    }
+
+    // Only quote once the region is known to allow trading. Silent, like the
+    // gates above: the panel already renders the restriction notice, and this
+    // path has no user gesture behind it to answer anyway. The caller re-runs
+    // this when eligibility resolves, so a quote requested during the check is
+    // not lost — it just arrives a beat later.
+    if (!isTradingAllowedInRegion.value) {
       toAmount.value = '0'
       return
     }
@@ -134,16 +155,19 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
 
       // No quote returned from the provider
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
-        generalError.value = 'No quotes returned'
+        generalError.value = t('trade.error.no-quotes-returned')
         toAmount.value = '0'
         analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
           ...getAnalyticsPayload(),
-          errorMsg: generalError.value,
+          errorMsg: 'No quotes returned',
         })
         return
       }
 
       currentQuote.value = quote
+      quoteExpiresAt.value = quote.auctionDurationSeconds
+        ? Date.now() + quote.auctionDurationSeconds * 1000
+        : null
       const toDecimals = toTokenSelected.value.decimals || 18
       toAmount.value = formatFloatingPointValue(
         formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
@@ -157,11 +181,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       )
       needsApproval.value = approvalRequired
     } catch (e) {
-      generalError.value = (e as Error).message || 'Failed to fetch quote'
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
+      generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
         ...getAnalyticsPayload(),
-        errorMsg: generalError.value,
+        errorMsg: rawMessage || 'Failed to fetch quote',
       })
       if (isDevMode) {
         console.error('Error fetching quote:', e)
@@ -170,12 +196,17 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         // wss://nodes.mewapi.io) are surfaced to the user above but are pure
         // Sentry noise — only report genuine quote failures.
         // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
-        // are surfaced to the user above but are pure Sentry noise — skip them.
+        // and transient axios "Network Error"s (the 1inch request never
+        // completed) are surfaced to the user above but are pure Sentry noise —
+        // skip them.
         const isExpectedClientError = !!(e as { expectedClientError?: boolean })
           .expectedClientError
+        const isTransientNetworkError = !!(
+          e as { transientNetworkError?: boolean }
+        ).transientNetworkError
         if (isDevMode) {
           console.error('Error fetching quote:', e)
-        } else if (!isExpectedClientError) {
+        } else if (!isExpectedClientError && !isTransientNetworkError) {
           captureException(e, {
             ...SENTRY_MODULE_TAGS.TRADE,
             extra: {
@@ -192,11 +223,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
 
   const resetQuote = () => {
     currentQuote.value = null
+    quoteExpiresAt.value = null
     needsApproval.value = false
   }
 
   return {
     currentQuote,
+    quoteExpiresAt,
     needsApproval,
     fetchQuote,
     resetQuote,

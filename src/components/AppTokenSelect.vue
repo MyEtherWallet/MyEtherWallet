@@ -59,7 +59,7 @@
                   class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
                   @click="toggleMenu"
                 >
-                  <span class="mr-2">{{ activeSortValue }}</span>
+                  <span class="mr-2">{{ activeSortLabel }}</span>
                   <ArrowLongUpIcon
                     v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
@@ -145,7 +145,7 @@
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-normal text-s-14 text-black">
-                  $ {{ formatUsdBalance(token.usd_balance) }}
+                  {{ currencySymbol }} {{ formatUsdBalance(token.usd_balance) }}
                 </p>
                 <div class="flex item-center justify-end gap-1">
                   <p class="text-info text-s-12 font-normal">
@@ -196,10 +196,8 @@ import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
 import AppTokenSymbol from './AppTokenSymbol.vue'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -213,6 +211,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 
 const store = useWalletStore()
 const {
@@ -286,6 +285,12 @@ enum SortDirection {
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
+const activeSortLabel = computed(() => {
+  const option = sortOptions.value.find(
+    option => option.value === activeSortValue.value,
+  )
+  return option ? option.label : ''
+})
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
@@ -349,7 +354,7 @@ const setSelectedToken = (token: TokenBalance) => {
 }
 
 const formatUsdBalance = (_value: number) => {
-  return formatFiatValue(_value).value
+  return formatFiat(_value).value
 }
 
 const getBalance = (_value: string) => {

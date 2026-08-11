@@ -40,7 +40,10 @@ export const useTextScaler = (
   text: MaybeRefOrGetter<string>,
   options: UseTextScalerOptions = {},
 ) => {
-  const scales = options.scales ?? DEFAULT_SCALES
+  const scales =
+    options.scales && options.scales.length > 0
+      ? options.scales
+      : DEFAULT_SCALES
 
   const scale = computed<TextScale>(() => {
     const value = toValue(text)

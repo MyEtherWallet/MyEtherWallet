@@ -78,7 +78,7 @@
                   class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
                   @click="toggleMenu"
                 >
-                  <span class="mr-2">{{ activeSortValue }}</span>
+                  <span class="mr-2">{{ activeSortLabel }}</span>
                   <ArrowLongUpIcon
                     v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
@@ -250,7 +250,8 @@
               <div v-if="token.price !== 0" class="text-right">
                 <div v-if="isFromView && isWalletConnected">
                   <p class="font-medium text-black">
-                    $ {{ formatUsdBalance(token.usd_balance) }}
+                    {{ currencySymbol }}
+                    {{ formatUsdBalance(token.usd_balance) }}
                   </p>
                   <p class="text-info text-s-12">
                     {{ getBalance(token?.balance || '0', token.decimals) }}
@@ -259,10 +260,8 @@
                 </div>
                 <div v-else>
                   <p class="font-medium text-black">
-                    $
-                    {{
-                      token.price ? formatFiatValue(token.price).value : '0.00'
-                    }}
+                    {{ currencySymbol }}
+                    {{ token.price ? formatFiat(token.price).value : '0.00' }}
                   </p>
                   <p
                     v-if="
@@ -330,10 +329,8 @@
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-medium text-black">
-                  $
-                  {{
-                    token.price ? formatFiatValue(token.price).value : '0.00'
-                  }}
+                  {{ currencySymbol }}
+                  {{ token.price ? formatFiat(token.price).value : '0.00' }}
                 </p>
               </div>
             </div>
@@ -395,10 +392,8 @@ import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -447,6 +442,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 const emit = defineEmits<{
   'update:selectedToken': [token: NewTokenInfo]
   'open:selectToken': [isOpen: boolean]
@@ -584,6 +580,10 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.RANK)
+const activeSortLabel = computed(() => {
+  const option = sortOptions.value.find(o => o.value === activeSortValue.value)
+  return option?.label || ''
+})
 const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {
@@ -709,7 +709,7 @@ const disabledGroupLabel = computed(
 )
 
 // Stablecoins & recently searched suggestions, pinned above the results and
-// shown whenever the picker is open (including while the user is searching).
+// shown whenever the picker is open (including while the user is searching)
 const SUGGESTION_LIMIT = 6
 
 // Well-known stablecoin symbols. The swap token type carries no stablecoin flag,
@@ -806,7 +806,7 @@ const setSelectedToken = (token: NewTokenInfo) => {
 }
 
 const formatUsdBalance = (_value: number) => {
-  return formatFiatValue(_value).value
+  return formatFiat(_value).value
 }
 
 const getBalance = (value: string, decimals: number) => {

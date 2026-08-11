@@ -8,7 +8,8 @@
     <div class="relative">
       <transition-group name="fadelist">
         <toast-reward key="toast-reward" />
-        <toast-layout
+        <component
+          :is="i.variant === 'dark' ? ToastTradeStatus : ToastLayout"
           v-for="(i, index) in showToastMessages"
           :key="`${i.text}-${index}`"
           :toast="i"
@@ -22,6 +23,7 @@
 import { useToastStore } from '@/stores/toastStore'
 import { storeToRefs } from 'pinia'
 import ToastLayout from './components/ToastLayout.vue'
+import ToastTradeStatus from './components/ToastTradeStatus.vue'
 import ToastReward from './components/ToastReward.vue'
 import { computed } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'

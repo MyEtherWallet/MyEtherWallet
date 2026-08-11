@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -24,11 +24,9 @@ import BigNumber from 'bignumber.js'
 
 const isDevMode = Configs.IS_DEV_MODE
 
-interface QuoteData {
-  startAmount: bigint
-  endAmount?: bigint
-  avgAmount?: bigint
-}
+import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
+
+export type TradeFlowStep = 'idle' | 'approving' | 'review' | 'processing'
 
 interface UseTradeExecutionOptions {
   fromTokenSelected: Ref<NewTokenInfo | null>
@@ -37,8 +35,25 @@ interface UseTradeExecutionOptions {
   walletAddress: Ref<string | null | undefined>
   wallet: Ref<any>
   selectedFromChain: Ref<Chain | undefined>
-  currentQuote: Ref<QuoteData | null>
+  currentQuote: Ref<QuoteOutputType | null>
   needsApproval: Ref<boolean>
+  /**
+   * Regional block. Guarded in each action as well as in the UI because the
+   * store's flag starts `false` and is only corrected once the async geo check
+   * resolves — until then the panel is live for a restricted user, and the
+   * blocked styling that would stop the clicks is not applied yet.
+   *
+   * Only for gates with no on-chain consequence; anything that signs or submits
+   * uses `isTradingAllowedInRegion`, since this flag reads "allowed" during that
+   * same unresolved window.
+   */
+  isTradingRestrictedInRegion: Ref<boolean>
+  /**
+   * Regional eligibility resolved AND allowed — see the store. This is what
+   * gates approvals and order submission, so an unresolved check blocks rather
+   * than passes.
+   */
+  isTradingAllowedInRegion: Ref<boolean>
 }
 
 export function useTradeExecution(options: UseTradeExecutionOptions) {
@@ -51,6 +66,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     selectedFromChain,
     currentQuote,
     needsApproval,
+    isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
   } = options
 
   const { t } = useI18n()
@@ -59,10 +76,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const rewardsStore = useRewardsStore()
   const holdingsStore = useHoldingsStore()
 
-  const isApproving = ref(false)
+  const tradeFlowStep = ref<TradeFlowStep>('idle')
+  // Reads the step through a call boundary so TS does not narrow it across
+  // awaits — the modals mutate it concurrently while these functions run.
+  const stepIs = (step: TradeFlowStep) => tradeFlowStep.value === step
+  const isApproving = computed(() => tradeFlowStep.value === 'approving')
   const txProceeding = ref(false)
-  const quoteModalOpen = ref(false)
-  const tradeInitiatedOpen = ref(false)
   const orderHash = ref<string>('')
 
   // USD value of the to-side quote (endAmount is in base units)
@@ -79,7 +98,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -105,14 +125,26 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       qualifiedSince: reward?.qualification_timestamp,
     }
   }
-  const handleApprove = async () => {
+  let approvalInFlight = false
+
+  const approveFromToken = async (): Promise<boolean> => {
+    // Resolved-and-allowed, not merely "not known to be restricted": this sends
+    // an on-chain approval, so an unresolved geo check must block it.
+    if (!isTradingAllowedInRegion.value) return false
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
-      return
+      return false
+    }
+    // A second click while the first approval still awaits the wallet only
+    // reattaches the waiting modal — the in-flight call owns the continuation.
+    if (approvalInFlight) {
+      tradeFlowStep.value = 'approving'
+      return false
     }
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.CLICK_APPROVE, analyticsPayload)
 
-    isApproving.value = true
+    approvalInFlight = true
+    tradeFlowStep.value = 'approving'
 
     try {
       const { default: OneInchFusion } =
@@ -127,13 +159,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       )
 
       needsApproval.value = false
-
-      toastStore.addToastMessage({
-        text: t('trade.toast.approval-success'),
-        textSecondary: t('trade.toast.approval-success-secondary', { symbol: fromTokenSelected.value.symbol }),
-        type: ToastType.Success,
-      })
+      return true
     } catch (e) {
+      tradeFlowStep.value = 'idle'
       if (isUserRejectionError(e)) {
         toastStore.addToastMessage({
           text: t('common.error.user_canceled_request'),
@@ -143,7 +171,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           ...getAnalyticsPayload(),
           errorMsg: 'declined_by_user',
         })
-        return
+        return false
       }
 
       const errorMessage = (e as any).message
@@ -175,12 +203,15 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         textSecondary: errorMessage,
         type: ToastType.Error,
       })
+      return false
     } finally {
-      isApproving.value = false
+      approvalInFlight = false
     }
   }
 
-  const openTradeModal = () => {
+  const startTradeFlow = async () => {
+    if (tradeFlowStep.value !== 'idle') return
+    if (isTradingRestrictedInRegion.value) return
     if (!currentQuote.value) {
       toastStore.addToastMessage({
         text: t('trade.toast.quote-loading'),
@@ -188,11 +219,27 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       return
     }
     analytics.trackTradeEvent(TradeEvent.CLICK_TRADE, getAnalyticsPayload())
-    quoteModalOpen.value = true
+
+    if (needsApproval.value) {
+      const approved = await approveFromToken()
+      const dismissedWhileApproving = !isApproving.value
+      if (!approved || dismissedWhileApproving) return
+    }
+
+    tradeFlowStep.value = 'review'
     analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
   }
 
   const confirmTrade = async () => {
+    // Last line of defence before an order is signed and submitted. Requires the
+    // geo check to have resolved as allowed — an unresolved check is not consent.
+    // Also closes the modal: if the check resolved against the user while it was
+    // already open, leaving it up would give them a Confirm button that silently
+    // does nothing.
+    if (!isTradingAllowedInRegion.value) {
+      tradeFlowStep.value = 'idle'
+      return
+    }
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
       return
     }
@@ -200,6 +247,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
+    // Cleared before the step change: the progress modal resolves its state by
+    // hash, and a stale hash from a previous order would flash that order's
+    // final state while the new one is being signed.
+    orderHash.value = ''
+    tradeFlowStep.value = 'processing'
 
     try {
       const { default: OneInchFusion } =
@@ -214,6 +266,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         decimals,
       ).toString()
 
+      // Rechecked here because the guard above ran before an await (the dynamic
+      // import), and the geo check can land against the user in that gap. This is
+      // the last point at which nothing has been signed yet.
+      if (!isTradingAllowedInRegion.value) {
+        tradeFlowStep.value = 'idle'
+        return
+      }
+
       const result = await fusion.submitOrder({
         fromTokenAddress: fromTokenSelected.value.address,
         toTokenAddress: toTokenSelected.value.address,
@@ -225,13 +285,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       orderHash.value = result.hash
 
-      quoteModalOpen.value = false
-      tradeInitiatedOpen.value = true
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 100) {
-        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction('trade')
+      if (fromUsdValue > 250) {
+        const canEarn =
+          await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {
@@ -246,8 +305,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const expectedToAmount = formatFloatingPointValue(
         formatUnits(
           currentQuote.value?.avgAmount ||
-          currentQuote.value?.startAmount ||
-          0n,
+            currentQuote.value?.startAmount ||
+            0n,
           toDecimals,
         ),
       ).value
@@ -268,13 +327,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fills: [],
         usdValue: fromTokenSelected.value.price
           ? (
-            parseFloat(fromAmount.value) * fromTokenSelected.value.price
-          ).toFixed(2)
+              parseFloat(fromAmount.value) * fromTokenSelected.value.price
+            ).toFixed(2)
           : undefined,
         toUsdValue: toTokenSelected.value.price
-          ? (parseFloat(expectedToAmount) * toTokenSelected.value.price).toFixed(
-            2,
-          )
+          ? (
+              parseFloat(expectedToAmount) * toTokenSelected.value.price
+            ).toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -283,7 +342,27 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fromTokenAddress: fromTokenSelected.value.address,
         toTokenAddress: toTokenSelected.value.address,
       })
+
+      // The user closed the progress modal while the wallet was still signing:
+      // the close handler ran before the hash existed, so the background toast
+      // it would have shown is fired here instead.
+      if (stepIs('idle')) {
+        toastStore.addToastMessage({
+          id: `trade-processing-${result.hash}`,
+          variant: 'dark',
+          text: t('trade.toast.processing_trade'),
+          textSecondary: t('trade.toast.processing_note'),
+          isInfinite: true,
+          tradeStatus: { kind: 'processing' },
+        })
+      }
     } catch (e) {
+      // Reopen the review modal only if the user is still in the flow — an
+      // early close of the progress modal must not resurrect it over a form
+      // that clearValues already reset.
+      if (stepIs('processing')) {
+        tradeFlowStep.value = 'review'
+      }
       if (isUserRejectionError(e)) {
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
@@ -307,13 +386,20 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       if (isDevMode) {
         console.error('Error submitting trade order:', e)
       } else {
-        captureException(e instanceof Error ? e : new Error(errorMessage), {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error submitting trade order',
-            errorMessage,
-          },
-        })
+        // Expected client errors (user rejection code 4001, 1inch 4xx: expired
+        // quote / illiquid pair / invalid order), flagged by
+        // OneInchFusion.submitOrder, are surfaced to the user via the toast
+        // below but are pure Sentry noise — skip capture. Genuine 5xx /
+        // network failures stay unflagged and are reported.
+        if (!(e as { expectedClientError?: boolean }).expectedClientError) {
+          captureException(e instanceof Error ? e : new Error(errorMessage), {
+            ...SENTRY_MODULE_TAGS.TRADE,
+            extra: {
+              title: 'TRADE: Error submitting trade order',
+              errorMessage,
+            },
+          })
+        }
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,
@@ -331,13 +417,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   return {
+    tradeFlowStep,
     isApproving,
     txProceeding,
-    quoteModalOpen,
-    tradeInitiatedOpen,
     orderHash,
-    handleApprove,
-    openTradeModal,
+    startTradeFlow,
     confirmTrade,
   }
 }

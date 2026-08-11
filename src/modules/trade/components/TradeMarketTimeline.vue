@@ -74,12 +74,14 @@ import { useI18n } from 'vue-i18n'
 
 type SessionKey = 'premarket' | 'regular' | 'postmarket' | 'overnight'
 
+export type TimelineSessionRanges = Record<SessionKey, string>
+
 const props = withDefaults(
   defineProps<{
     dayLabel: string
     markerPct: number
     timeLabel: string
-    sessionRanges?: Record<SessionKey, string>
+    sessionRanges?: TimelineSessionRanges
   }>(),
   {
     sessionRanges: () => ({

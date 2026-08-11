@@ -21,11 +21,14 @@
         <input
           v-if="side === 'sell'"
           ref="amountDisplayElement"
-          v-model="amount"
+          :value="amount"
           name="trade-amount-input"
           type="text"
+          inputmode="decimal"
           autocomplete="off"
           placeholder="0"
+          :aria-invalid="showError"
+          :aria-describedby="`trade-amount-message-${side}`"
           :class="[
             amountColorClass,
             amountSizeClass,
@@ -33,6 +36,7 @@
           ]"
           @focus="focusInput"
           @keypress="checkIfNumber"
+          @input="onAmountInput"
         />
         <p
           v-else
@@ -100,6 +104,9 @@
         <app-spinner v-if="isLoading" class="text-black" />
         <p
           v-else
+          :id="`trade-amount-message-${side}`"
+          :role="showError ? 'alert' : undefined"
+          aria-live="polite"
           :class="[
             showError ? 'text-error' : 'text-info',
             'text-s-12 leading-[18px] truncate',
@@ -148,10 +155,9 @@ import AppSpinner from '@/components/AppSpinner.vue'
 import AppSwapSelectedToken from '@/components/AppSwapSelectedToken.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { sanitizeDecimal } from '@/utils/sanitizeDecimal'
 import { type NewTokenInfo } from '@/composables/useSwap'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
@@ -191,6 +197,7 @@ const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 const error = defineModel<string>('error', { default: '' })
 
 const walletStore = useWalletStore()
+const { formatFiat, currencySymbol } = useCurrency()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
   storeToRefs(walletStore)
 
@@ -237,13 +244,12 @@ const tokenBalanceRaw = computed(() =>
 )
 
 const fiatText = computed(() => {
-  const numAmount = (amount.value || '').replace(/[^0-9.-]/g, '')
+  const numAmount = (amount.value || '').replace(/[^0-9.]/g, '')
   const price =
     tokenBalanceRaw.value?.price || selectedToken.value?.price || 0
-  const value = BigNumber(price)
-    .times(numAmount || 0)
-    .toFixed(2)
-  return `$${formatFiatValue(value).value}`
+  const value = BigNumber(price).times(numAmount || 0)
+  const safeValue = value.isFinite() ? value : BigNumber(0)
+  return `${currencySymbol.value}${formatFiat(safeValue.toFixed(2)).value}`
 })
 
 const balanceText = computed(() => {
@@ -317,5 +323,14 @@ const checkIfNumber = (e: KeyboardEvent) => {
   if (key >= '0' && key <= '9') return
   if (key === '.' && !(amount.value || '').includes('.')) return
   e.preventDefault()
+}
+
+const onAmountInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const sanitized = sanitizeDecimal(input.value)
+  if (input.value !== sanitized) {
+    input.value = sanitized
+  }
+  amount.value = sanitized
 }
 </script>

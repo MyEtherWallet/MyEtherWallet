@@ -17,10 +17,12 @@ const isDevMode = Configs.IS_DEV_MODE
 const REFRESH_BUFFER_MS = 2_000
 const MIN_REFRESH_DELAY_MS = 10_000
 const STALE_AFTER_MS = 60_000
+const MAX_FAILURE_BACKOFF_MS = 300_000
 
 export const useMarketStatusStore = defineStore('marketStatus', () => {
-  const { fetchedTradingThisSession, isTradingRestrictedInRegion } =
-    storeToRefs(useGlobalStore())
+  const globalStore = useGlobalStore()
+  const { fetchedTradingThisSession } = storeToRefs(globalStore)
+  const { setIsTradingRestrictedInRegion } = globalStore
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref('')
@@ -29,6 +31,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
   let countdownInterval: ReturnType<typeof setInterval> | null = null
   let refreshTimeout: ReturnType<typeof setTimeout> | null = null
   let inFlightFetch: Promise<void> | null = null
+  let consecutiveFailures = 0
   let visibilityListenerAttached = false
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
@@ -59,7 +62,10 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
 
     if (diff <= 0) {
       countdownText.value = i18n.global.t('trade.opening_soon')
-      fetchMarketStatus()
+      if (countdownInterval) {
+        clearInterval(countdownInterval)
+        countdownInterval = null
+      }
       return
     }
 
@@ -117,7 +123,18 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
       clearTimeout(refreshTimeout)
       refreshTimeout = null
     }
-    if (!marketStatus.value) return
+    // During an API outage, back off exponentially (up to 5 min) instead of
+    // hammering the endpoint every 10 seconds from every open tab.
+    if (consecutiveFailures > 0) {
+      const backoff = Math.min(
+        MIN_REFRESH_DELAY_MS * 2 ** (consecutiveFailures - 1),
+        MAX_FAILURE_BACKOFF_MS,
+      )
+      refreshTimeout = setTimeout(() => {
+        fetchMarketStatus()
+      }, backoff)
+      return
+    }
     const transitionAt = nextTransitionAt()
     const delay = transitionAt
       ? Math.max(transitionAt + REFRESH_BUFFER_MS - Date.now(), MIN_REFRESH_DELAY_MS)
@@ -148,7 +165,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     }
     try {
       const restricted = await isTradingRestricted()
-      isTradingRestrictedInRegion.value = restricted
+      setIsTradingRestrictedInRegion(restricted)
       fetchedTradingThisSession.value = true
     } catch (e) {
       if (isDevMode) {
@@ -162,7 +179,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
           },
         })
       }
-      isTradingRestrictedInRegion.value = true
+      setIsTradingRestrictedInRegion(true)
     }
   }
 
@@ -177,6 +194,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         if (statusResult) {
           marketStatus.value = statusResult
         }
+        consecutiveFailures = 0
         lastFetchedAt.value = Date.now()
 
         if (!isTradingSessionOpen.value) {
@@ -184,12 +202,13 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         } else {
           stopCountdown()
         }
-        scheduleNextRefresh()
-        attachVisibilityListener()
       } catch (e) {
+        consecutiveFailures += 1
         if (isDevMode) {
           console.error('Failed to fetch market status:', e)
-        } else {
+        } else if (consecutiveFailures === 1) {
+          // Only the first failure of a streak is reported — an outage would
+          // otherwise produce one event per retry, per open tab.
           captureException(e, {
             ...SENTRY_MODULE_TAGS.TRADE,
             extra: {
@@ -200,6 +219,8 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         }
       } finally {
         inFlightFetch = null
+        attachVisibilityListener()
+        scheduleNextRefresh()
       }
     })()
     return inFlightFetch

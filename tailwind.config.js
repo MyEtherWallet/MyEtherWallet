@@ -38,6 +38,7 @@ export default {
       appBackground: '#f5f5f7',
       bgBase: '#f5f5f5',
       bgMuted: '#e5e5e5',
+      bgInfo: '#1a1a1a',
       gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
       titleColor: '#222222',

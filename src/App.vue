@@ -29,6 +29,7 @@ import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 // import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
@@ -70,6 +71,7 @@ const {
   wallet,
   walletAddress,
   isWalletConnected,
+  isWalletUnlocked,
   hasMissingBalances,
   userProperties,
 } = storeToRefs(store)
@@ -113,9 +115,8 @@ const fetchBalances = () => {
         // Refetch balances after 5 minutes if there are missing balances
         setTimeout(() => {
           toastStore.addToastMessage({
-            text: 'Sit tight!',
-            textSecondary:
-              "We are processing more tokens in your wallet. We'll update your balances soon.",
+            text: t('common.processing_tokens_title'),
+            textSecondary: t('common.processing_tokens_description'),
             type: ToastType.Info,
             duration: 300000,
           })
@@ -152,6 +153,14 @@ watch(
   { immediate: true },
 )
 
+// Logging in from a watch-only address keeps the same `walletAddress`, so the
+// watcher above never fires — refetch reward info on the unlock itself, so it
+// reflects the address that can actually claim.
+watch(isWalletUnlocked, unlocked => {
+  if (unlocked && walletAddress.value)
+    holdingsStore.fetchInfo(walletAddress.value)
+})
+
 const providerStore = useProviderStore()
 const { addProvider } = providerStore
 const { setChainData } = chainStore
@@ -187,6 +196,7 @@ watch(
  -------------------------------*/
 
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 // const showFeedbackToast = () => {
 //   setTimeout(() => {
@@ -215,7 +225,7 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId)
+      holdingsStore.register(order.hash, order.chainId, order.usdValue)
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {

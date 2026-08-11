@@ -28,6 +28,10 @@
         v-if="infoOpen"
         :status="status"
         :next-open-text="nextOpenText"
+        :day-label="dayLabel"
+        :marker-pct="markerPct"
+        :time-label="timeLabel"
+        :session-ranges="sessionRanges"
         @close="infoOpen = false"
       />
     </div>
@@ -39,6 +43,7 @@
 import { computed } from 'vue'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import TradeMarketStatusPopover from './TradeMarketStatusPopover.vue'
+import type { TimelineSessionRanges } from './TradeMarketTimeline.vue'
 
 export type MarketStatusVariant =
   | 'regular'
@@ -52,6 +57,10 @@ const props = defineProps<{
   status: MarketStatusVariant
   untilText: string
   nextOpenText?: string
+  dayLabel?: string
+  markerPct?: number
+  timeLabel?: string
+  sessionRanges?: TimelineSessionRanges
 }>()
 
 const infoOpen = defineModel<boolean>('infoOpen', { default: false })

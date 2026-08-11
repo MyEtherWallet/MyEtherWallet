@@ -1,5 +1,6 @@
-import { ref, computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useCountdown as useCountdownCore } from '@/composables/useCountdown'
 
 /**
  * Live countdown to a target date. Shows a single, largest applicable unit
@@ -9,19 +10,7 @@ export function useCountdown(
   target: () => string | number | Date | null | undefined,
 ) {
   const { t } = useI18n()
-  const now = ref(Date.now())
-  const timer = setInterval(() => {
-    now.value = Date.now()
-  }, 1000)
-  onUnmounted(() => clearInterval(timer))
-
-  const remainingMs = computed<number | null>(() => {
-    const tgt = target()
-    if (!tgt) return null
-    const ts = new Date(tgt).getTime()
-    if (Number.isNaN(ts)) return null
-    return Math.max(0, ts - now.value)
-  })
+  const { remainingMs } = useCountdownCore(target)
 
   const text = computed(() => {
     const ms = remainingMs.value

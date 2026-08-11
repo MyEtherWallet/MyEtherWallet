@@ -28,6 +28,7 @@ import {
 } from './configs'
 import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
+import { isAxiosNetworkError } from '@/modules/trade/composables/transientRpcError'
 // NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
 // in the caller (useTradeQuote) so expected 4xx client errors can be skipped.
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
@@ -38,7 +39,9 @@ import type {
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
+import { isExpectedTradeError } from '@/modules/trade/composables/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
   address: string
   cgId: string
@@ -116,7 +119,8 @@ class OneInchFusion {
 
   constructor(wallet: BaseEvmWallet, chainId: number) {
     const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
-    if (!chainConfig) throw new Error('Fusion: network not supported')
+    if (!chainConfig)
+      throw new Error(i18n.global.t('trade.error.fusion-network-not-supported'))
     this.wallet = wallet
     this.publicClient = createPublicClient({
       transport: webSocket(chainConfig.node),
@@ -152,18 +156,25 @@ class OneInchFusion {
   async getQuote(config: QuoteInputType): Promise<QuoteOutputType> {
     try {
       const quote = await this.sdk.getQuote(getFusionParams(config))
+      const preset = quote.presets[quote.recommendedPreset]!
       return {
-        startAmount: quote.presets[quote.recommendedPreset]!.auctionStartAmount,
-        endAmount: quote.presets[quote.recommendedPreset]!.auctionEndAmount,
-        avgAmount:
-          (quote.presets[quote.recommendedPreset]!.auctionStartAmount +
-            quote.presets[quote.recommendedPreset]!.auctionEndAmount) /
-          2n,
+        startAmount: preset.auctionStartAmount,
+        endAmount: preset.auctionEndAmount,
+        avgAmount: (preset.auctionStartAmount + preset.auctionEndAmount) / 2n,
+        auctionDurationSeconds: Number(preset.auctionDuration),
+        slippage: quote.slippage,
+        tokenFee: preset.tokenFee,
+        marketReturn: quote.marketReturn,
+        usdPrices: quote.prices.usd,
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
       const response =
-        ((e as AxiosError).response?.data as any)?.description || null
+        e && typeof e === 'object' && 'response' in e
+          ? ((e as AxiosError).response?.data as any)?.description || null
+          : null
+      const rawMessage =
+        e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
       // 1inch returns 4xx (e.g. 400 Bad Request) for expected, user-facing quote
       // failures: amount below minimum, illiquid/unsupported pair, invalid params.
@@ -171,10 +182,19 @@ class OneInchFusion {
       // — reporting is centralized there to avoid double-capture. Genuine failures
       // (5xx / network / no response) stay unflagged and are reported by the caller.
       const error = new Error(
-        response || (e as Error).message || 'Failed to fetch quote from 1inch',
-      ) as Error & { expectedClientError?: boolean }
+        response ||
+          rawMessage ||
+          i18n.global.t('trade.error.failed-fetch-quote-1inch'),
+      ) as Error & {
+        expectedClientError?: boolean
+        transientNetworkError?: boolean
+      }
       error.expectedClientError =
         typeof status === 'number' && status >= 400 && status < 500
+      // A transient axios "Network Error" (the 1inch request never completed —
+      // no response received) is environmental noise, already surfaced to the
+      // user; flag it so the caller skips Sentry reporting.
+      error.transientNetworkError = isAxiosNetworkError(e)
       throw error
     }
   }
@@ -229,19 +249,42 @@ class OneInchFusion {
               return {
                 hash: info.orderHash,
               }
-            else throw new Error('Native Transaction Failed')
+            else
+              throw new Error(
+                i18n.global.t('trade.error.native-transaction-failed'),
+              )
           })
       }
     } catch (e: unknown) {
+      // Preserve the original message (the caller lowercases it for display)
+      // and keep the wallet/RPC `code`, then flag expected client errors —
+      // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
+      // pair / invalid order) — so the caller (confirmTrade) can surface them
+      // to the user while skipping Sentry capture. The previous catch re-threw
+      // a bare Error that dropped `code`, collapsing user cancellations into
+      // opaque "Failed to submit order to 1inch" noise in Sentry.
+      // Narrow to a non-null object first: the SDK/wallet may throw `null` or
+      // `undefined`, and reading `.details` / `.code` off those would raise a
+      // TypeError that escapes as fresh Sentry noise — the opposite of intent.
+      const errObj =
+        typeof e === 'object' && e !== null
+          ? (e as Record<string, unknown>)
+          : undefined
       const errorMessage =
         e instanceof Error && e.message
-          ? e.message.toLowerCase()
-          : (e as any).details
-            ? (e as any).details
+          ? e.message
+          : errObj && typeof errObj.details === 'string'
+            ? errObj.details
             : typeof e === 'string'
               ? e
-              : 'Failed to submit order to 1inch'
-      throw new Error(errorMessage)
+              : i18n.global.t('trade.error.failed-submit-order-1inch')
+      const error = new Error(errorMessage) as Error & {
+        code?: number
+        expectedClientError?: boolean
+      }
+      if (errObj && typeof errObj.code === 'number') error.code = errObj.code
+      error.expectedClientError = isExpectedTradeError(e)
+      throw error
     }
   }
 
