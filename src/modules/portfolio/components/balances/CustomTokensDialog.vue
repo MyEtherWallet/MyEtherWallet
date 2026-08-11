@@ -55,7 +55,7 @@
             class="flex justify-center items-center py-4"
           >
             <svg
-              class="animate-spin h-8 w-8 text-primary"
+              class="animate-spin h-8 w-8 text-brand"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -105,7 +105,7 @@
           v-if="currentView === 'delete'"
           class="max-w-[340px] text-center mb-2"
         >
-          <p class="text-s-16 text-black leading-relaxed">
+          <p class="text-s-16 text-fg leading-relaxed">
             {{ t('portfolio.custom_token.delete_confirm', { name: selectedToken?.name ?? '' }) }}
           </p>
         </div>

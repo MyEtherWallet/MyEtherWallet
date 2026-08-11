@@ -18,7 +18,7 @@
               :key="`placeholder-stocks-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-page border border-line shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -36,14 +36,14 @@
           </div>
           <div class="flex flex-col min-w-0">
             <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.tokenized_stocks') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-fg-subtle">{{
               t('common.token_count', stocksTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stocksFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-fg-subtle">{{
             stocksPercentageFormatted
           }}</span>
         </div>
@@ -58,7 +58,7 @@
               :key="`placeholder-stables-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-page border border-line shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -76,14 +76,14 @@
           </div>
           <div class="flex flex-col min-w-0">
             <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.stables') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-fg-subtle">{{
               t('common.token_count', stablesTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stablesFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-fg-subtle">{{
             stablesPercentageFormatted
           }}</span>
         </div>
@@ -98,7 +98,7 @@
               :key="`placeholder-largecap-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-page border border-line shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -125,7 +125,7 @@
                 :text="t('portfolio.overview.large_market_cap_tooltip')"
               />
             </div>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-fg-subtle">{{
               t('common.token_count', largeCapTokenCount)
             }}</span>
           </div>
@@ -134,7 +134,7 @@
           <span class="text-s-15 font-medium">{{
             largeCapFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-fg-subtle">{{
             largeCapPercentageFormatted
           }}</span>
         </div>
@@ -149,7 +149,7 @@
               :key="`placeholder-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-page border border-line shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -170,7 +170,7 @@
           </div>
           <div class="flex flex-col min-w-0">
             <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.altcoins') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-fg-subtle">{{
               t('common.token_count', altcoinsTokenCount)
             }}</span>
           </div>
@@ -179,7 +179,7 @@
           <span class="text-s-15 font-medium">{{
             altcoinsFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-fg-subtle">{{
             altcoinsPercentageFormatted
           }}</span>
         </div>
@@ -189,7 +189,7 @@
       <div
         v-for="i in 4"
         :key="`loading-overview-${i}`"
-        class="bg-grey-10 animate-pulse rounded-16 w-full h-[41px]"
+        class="bg-surface-strong animate-pulse rounded-16 w-full h-[41px]"
       ></div>
     </div>
   </app-sheet>
@@ -206,11 +206,11 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 import { BigNumber } from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenBalance } from '@/mew_api/types'
+
+const { formatFiat } = useCurrency()
 
 const walletStore = useWalletStore()
 const {
@@ -261,7 +261,7 @@ const stocksValue = computed<BigNumber>(() => {
 })
 
 const stocksFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stocksValue.value).value}`
+  return formatFiat(stocksValue.value).display
 })
 
 const topStocksTokens = computed<TokenBalance[]>(() => {
@@ -289,7 +289,7 @@ const stablesValue = computed<BigNumber>(() => {
 })
 
 const stablesFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stablesValue.value).value}`
+  return formatFiat(stablesValue.value).display
 })
 
 const topStableTokens = computed<TokenBalance[]>(() => {
@@ -323,7 +323,7 @@ const largeCapValue = computed<BigNumber>(() => {
 })
 
 const largeCapFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(largeCapValue.value).value}`
+  return formatFiat(largeCapValue.value).display
 })
 
 const topLargeCapTokens = computed<TokenBalance[]>(() => {
@@ -369,7 +369,7 @@ const altcoinsValue = computed<BigNumber>(() => {
 })
 
 const altcoinsFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(altcoinsValue.value).value}`
+  return formatFiat(altcoinsValue.value).display
 })
 
 const topAltcoinTokens = computed<TokenBalance[]>(() => {

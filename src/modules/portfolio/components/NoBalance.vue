@@ -9,13 +9,15 @@
       >
         <div class="max-w-[540px] mx-auto">
           <p class="text-s-20 xl:text-s-24 font-bold mb-2">
-            You don't have any crypto
+            {{ $t('portfolio.no_balance.title') }}
           </p>
 
-          <p class="text-s-15 xl:text-s-17 text-info leading-relaxed">
-            To start trading and managing your digital assets, you will need
-            some
-            {{ selectedChain?.currencyName }} in your portfolio.
+          <p class="text-s-15 xl:text-s-17 text-fg-subtle leading-relaxed">
+            {{
+              $t('portfolio.no_balance.description', {
+                currencyName: selectedChain?.currencyName,
+              })
+            }}
           </p>
         </div>
         <div
@@ -28,10 +30,13 @@
           >
             <div class="flex gap-2 items-center justify-center">
               <icon-buy
-                class="w-5 h-5 xl:w-6 xl:h-6 text-white"
+                class="w-5 h-5 xl:w-6 xl:h-6 text-fg-on-fill"
                 dollar-icon-color="rgb(0,90,229,1)"
               />
-              <p>Buy {{ selectedChain?.currencyName }}</p>
+              <p>
+                {{ $t('portfolio.no_balance.buy') }}
+                {{ selectedChain?.currencyName }}
+              </p>
             </div>
           </app-base-button>
           <app-base-button
@@ -41,8 +46,11 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-primary" />
-              <p>Deposit {{ selectedChain?.currencyName }}</p>
+              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-brand" />
+              <p>
+                {{ $t('portfolio.no_balance.deposit') }}
+                {{ selectedChain?.currencyName }}
+              </p>
             </div>
           </app-base-button>
         </div>

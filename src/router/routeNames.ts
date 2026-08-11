@@ -22,11 +22,14 @@ const ROUTES_MAIN: RouteNameCollection = {
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: '/sign' },
   SETTINGS: { NAME: 'Settings', PATH: '/settings' },
   EARN: { NAME: 'Earn', PATH: '/earn' },
+  PERPS: { NAME: 'Perps', PATH: '/perps' },
   SWAP: { NAME: 'Swap', PATH: '/swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
   LEARN: { NAME: 'Learn', PATH: '/learn' },
   STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
+  /** Design-system colour reference. Intentionally not linked from any nav. */
+  COLORS: { NAME: 'Colors', PATH: '/colors' },
 }
 const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {
@@ -46,6 +49,8 @@ const STOCK_INFO_ROUTE_NAMES = {
   verify: 'verify-stock-info',
   sign: 'sign-stock-info',
 }
+const PERP_INFO = { PATH: 'perp/:market' }
+const PERP_INFO_ROUTE_NAME = 'perps-perp-info'
 
 const ROUTES_SEND: RouteNameCollection = {
   SEND: { NAME: 'WalletSend', PATH: '/send' },
@@ -65,4 +70,6 @@ export {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO,
   STOCK_INFO_ROUTE_NAMES,
+  PERP_INFO,
+  PERP_INFO_ROUTE_NAME,
 }

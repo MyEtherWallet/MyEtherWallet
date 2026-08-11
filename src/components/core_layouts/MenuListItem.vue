@@ -3,7 +3,7 @@
     :key="listItem.title"
     :class="[
       'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
-      { 'bg-surface': isCurrentRoute },
+      { 'bg-surface-strong': isCurrentRoute },
       { 'pl-12 text-s-14': isSubmenu },
     ]"
     :is="listItem.routeName ? 'router-link' : 'button'"
@@ -48,6 +48,10 @@
         v-else-if="listItem.iconID === ICON_IDS.STOCKS"
         class="w-5 h-5"
       />
+      <icon-perps
+        v-else-if="listItem.iconID === ICON_IDS.PERPS"
+        class="w-5 h-5"
+      />
     </div>
     <p class="capitalize">{{ listItem.title }}</p>
     <chevron-down-icon
@@ -69,6 +73,7 @@ import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
 import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
 import IconCrypto from '@/assets/icons/core_menu/icon-crypto.vue'
 import IconStocks from '@/assets/icons/core_menu/icon-stocks.vue'
+import IconPerps from '@/modules/perps/IconPerps.vue'
 import {
   BellIcon,
   CogIcon,

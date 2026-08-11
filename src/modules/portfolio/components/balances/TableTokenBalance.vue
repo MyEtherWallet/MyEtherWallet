@@ -1,24 +1,24 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-line"
     >
       <div
         class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"
       >
         <div
-          class="flex grow justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[500px]"
+          class="flex grow justify-between items-center bg-surface-strong rounded-full p-1 w-full xs:max-w-[500px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
-          placeholder="table options"
+          :placeholder="$t('common.action_menu')"
           location="right"
         >
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
-              label="table options"
+              :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
               height="h-7"
               width="w-7"
@@ -27,23 +27,25 @@
             </app-btn-icon>
           </template>
           <template #menu-content="{ toggleMenu }">
-            <div class="px-2 py-3 bg-white rounded-xl min-w-[230px]">
+            <div class="px-2 py-3 bg-surface rounded-xl min-w-[230px]">
               <button
                 class="flex items-center w-full p-2 hoverBGWhite rounded-12 text-s-14"
                 @click.stop="[toggleShowBalance(), toggleMenu()]"
               >
-                <span class="grow text-left">Hide tokens with no value</span>
+                <span class="grow text-left">{{
+                  $t('portfolio.table.hide_no_value')
+                }}</span>
                 <span
                   class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
                   :class="
                     !hideLowBalance
-                      ? 'bg-primary border-primary'
-                      : 'border-grey-30'
+                      ? 'bg-brand border-brand'
+                      : 'border-fg-muted'
                   "
                 >
                   <svg
                     v-if="!hideLowBalance"
-                    class="w-3 h-3 text-white"
+                    class="w-3 h-3 text-fg-on-fill"
                     fill="none"
                     viewBox="0 0 12 12"
                   >
@@ -74,18 +76,18 @@
         class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2"
       >
         <div class="lg:text-right">
-          <p class="font-bold text-info uppercase tracking-sp-06 text-s-14">
+          <p class="font-bold text-fg-subtle uppercase tracking-sp-06 text-s-14">
             {{ $t('portfolio.table.total_value') }}
           </p>
           <p
             v-if="!isLoading"
-            class="text-s-24 font-bold rounded-12 leading-none text-black"
+            class="text-s-24 font-bold rounded-12 leading-none text-fg"
           >
             {{ totalValue }}
           </p>
           <div
             v-else
-            class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
+            class="bg-page animate-pulse w-[100px] h-6 rounded-lg"
           ></div>
         </div>
       </div>
@@ -95,21 +97,21 @@
         class="w-full text-sm table-fixed border-separate border-spacing-y-0"
       >
         <!-- Header-->
-        <thead class="bg-white">
+        <thead class="bg-surface">
           <tr
-            class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
+            class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 border-b border-line font-bold"
           >
             <!-- Watchlist -->
             <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
             <!-- Name & Balance -->
             <th
-              class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="cursor-pointer px-1 pb-4 hover:text-fg transition-colors"
               colspan="2"
             >
               <div
                 class="flex items-center gap-1 ml-11 font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.NAME,
+                  'text-fg': headerSort === SortValueString.NAME,
                 }"
                 @click="setHeaderSort(SortValueString.NAME)"
               >
@@ -132,13 +134,13 @@
             </th>
             <!-- Market Cap -->
             <th
-              class="hidden cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden cursor-pointer px-1 pb-4 hover:text-fg transition-colors"
               :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                  'text-fg': headerSort === SortValueString.MARKET_CAP,
                 }"
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
@@ -161,12 +163,12 @@
             </th>
             <!-- Price -->
             <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-fg transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.PRICE,
+                  'text-fg': headerSort === SortValueString.PRICE,
                 }"
                 @click="setHeaderSort(SortValueString.PRICE)"
               >
@@ -189,12 +191,12 @@
             </th>
             <!-- 24h % -->
             <th
-              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-fg transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.PERCENT,
+                  'text-fg': headerSort === SortValueString.PERCENT,
                 }"
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
@@ -218,12 +220,12 @@
 
             <!--Balance -->
             <th
-              class="cursor-pointer pl-1 pr-1 pb-4 hover:text-black transition-colors"
+              class="cursor-pointer pl-1 pr-1 pb-4 hover:text-fg transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.VALUE,
+                  'text-fg': headerSort === SortValueString.VALUE,
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
@@ -269,7 +271,7 @@
               <button
                 v-if="getWatchlistId(token)"
                 @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                class="p-2 text-fg rounded-full hover:bg-surface-hover transition-colors duration-300 ease-in-out"
               >
                 <!-- changes icon when active -->
                 <star-outline-icon
@@ -302,14 +304,14 @@
                     v-if="getTokenName(token).length > 20"
                   >
                     <p
-                      class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate text-fg-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-fg"
                     >
                       {{ getTokenName(token) }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
-                    class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                    class="truncate text-fg-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-fg"
                   >
                     {{ getTokenName(token) }}
                   </p>
@@ -318,20 +320,20 @@
             </td>
             <!-- Market Cap -->
             <td
-              class="hidden px-1 py-1 text-right font-normal text-s-14 text-black"
+              class="hidden px-1 py-1 text-right font-normal text-s-14 text-fg"
               :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               {{
                 token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
+                  ? formatFiat(token.market_cap).display
                   : '-'
               }}
             </td>
             <!-- Price -->
             <td
-              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-fg"
             >
-              {{ token.price ? `$${formatFiatValue(token.price).value}` : '-' }}
+              {{ token.price ? formatFiat(token.price).display : '-' }}
             </td>
             <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
@@ -345,7 +347,7 @@
                         ).includes('-')
                         ? 'text-error'
                         : 'text-success'
-                      : 'text-black',
+                      : 'text-fg',
                   ]"
                 >
                   {{
@@ -370,12 +372,12 @@
 
             <!-- Balance -->
             <td class="pl-1 pr-1 py-1 text-right">
-              <p class="font-normal text-s-14 text-black">
+              <p class="font-normal text-s-14 text-fg">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12 mt-0.5">
+              <p class="text-fg-subtle text-s-12 mt-0.5">
                 {{ formatFloatingPointValue(token.balance).value }}
-                <span class="uppercase font-normal text-info">{{
+                <span class="uppercase font-normal text-fg-subtle">{{
                   truncate(token.symbol, 7)
                 }}</span>
               </p>
@@ -401,7 +403,7 @@
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-surface rounded-xl min-w-[240px]"
                     >
                       <button
                         v-if="getWatchlistId(token)"
@@ -429,7 +431,7 @@
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                        class="h-px bg-surface-strong border-0 w-full my-2 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -438,7 +440,7 @@
                           @click.stop="[buyBtn(token, true), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <icon-buy class="text-primary w-4 h-4 mr-2" />
+                          <icon-buy class="text-brand w-4 h-4 mr-2" />
                           <p>{{ $t('common.buy') }}</p>
                         </li>
                         <template v-if="token.ondo !== undefined">
@@ -446,7 +448,7 @@
                             @click.stop="[tradeBtn(token, true), toggleMenu()]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-trade class="text-primary w-4 h-4 mr-2" />
+                            <icon-trade class="text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('portfolio.table.trade') }}</p>
                           </li>
                         </template>
@@ -455,7 +457,7 @@
                             @click.stop="[swapBtn(token, true), toggleMenu()]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-swap class="text-primary w-4 h-4 mr-2" />
+                            <icon-swap class="text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('common.swap') }}</p>
                           </li>
                         </template>
@@ -488,20 +490,26 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:flex flex-row gap-2 justify-end"
+                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
                   size="small"
                   @click="tradeBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('portfolio.table.trade') }}
                 </app-base-button>
                 <app-base-button
                   v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('common.swap') }}
                 </app-base-button>
                 <app-base-button
@@ -509,10 +517,10 @@
                   size="small"
                   @click="buyBtn(token)"
                   is-outline
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
                 </app-base-button>
-                <div v-else class="w-[60px]"></div>
               </div>
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
@@ -541,7 +549,7 @@
           paginatedArray.length === 0 &&
           props.view === 'watchlist'
         "
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-fg-subtle text-center py-10 text-s-14"
       >
         <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
@@ -551,7 +559,7 @@
       </div>
       <div
         v-if="paginatedArray.length === 0 && props.view === 'custom'"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-fg-subtle text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">{{ $t('portfolio.table.empty_custom') }}</p>
         <app-base-button size="medium" @click="openAddCustom">{{
@@ -560,7 +568,7 @@
       </div>
       <div
         v-if="paginatedArray.length === 0 && props.view === 'stocks'"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-fg-subtle text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">
           {{ $t('portfolio.table.empty_stocks') }}
@@ -573,7 +581,7 @@
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-fg-subtle text-center py-10 text-s-14"
       >
         <p class="mb-1 lg:mt-10">
           {{ $t('portfolio.table.no_results', { query: searchInput }) }}
@@ -587,16 +595,16 @@
           class="flex w-full h-[56px] py-2"
         >
           <div
-            class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+            class="bg-surface-strong/30 rounded-12 w-full h-full animate-pulse"
           ></div>
         </div>
       </div>
     </div>
 
     <div
-      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-line pt-4 px-2"
     >
-      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
+      <div v-if="!isLoading" class="text-fg-subtle order-3 xs:order-1 mb-4 xs:mb-0">
         {{
           $t('portfolio.table.results_of', {
             count: getCurrentViewableItemsIndex,
@@ -613,9 +621,9 @@
           <chevron-left-icon class="w-4 h-4" />
         </app-btn-icon>
         <div class="flex items-center gap-2">
-          <span class="text-black">{{ currentPage + 1 }}</span>
-          <span class="text-info">{{ $t('portfolio.table.page_of') }}</span>
-          <span class="text-info">{{ totalPages }}</span>
+          <span class="text-fg">{{ currentPage + 1 }}</span>
+          <span class="text-fg-subtle">{{ $t('portfolio.table.page_of') }}</span>
+          <span class="text-fg-subtle">{{ totalPages }}</span>
         </div>
         <app-btn-icon
           :disabled="!isLoading && currentPage + 1 >= totalPages"
@@ -635,11 +643,11 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-line hover:border-fg-muted transition-colors"
               @click="toggleSelect"
             >
               <span>{{ activeShownItems.label }}</span>
-              <chevron-down-icon class="w-4 h-4 text-info" />
+              <chevron-down-icon class="w-4 h-4 text-fg-subtle" />
             </button>
           </template>
         </app-select>
@@ -693,10 +701,10 @@ import { truncate } from '@/utils/filters'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
@@ -755,6 +763,8 @@ const customTokenStore = useCustomTokenStore()
 const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyableOnCompatibleChain } = purchaseStore
+
+const { formatFiat } = useCurrency()
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
 const {
@@ -836,7 +846,7 @@ const formatStock = (
     balance: '0',
     contract: '',
     fiatBalance: 0,
-    fiatBalanceFormatted: '$0.00',
+    fiatBalanceFormatted: formatFiat(0).display,
     ondo: {
       stockAlias: item.stockAlias,
       iconPngUrl: item.iconPngUrl,
@@ -934,7 +944,7 @@ const mapToDisplay = (token: TokenBalance): DisplayToken => {
   return {
     ...token,
     fiatBalance: fiat.toNumber(),
-    fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+    fiatBalanceFormatted: formatFiat(fiat).display,
   }
 }
 
@@ -968,7 +978,7 @@ const tokens = computed<DisplayToken[]>(() => {
           return {
             ...token,
             fiatBalance: 0,
-            fiatBalanceFormatted: '$0.00',
+            fiatBalanceFormatted: formatFiat(0).display,
             balanceWei: '0x',
             balance: '0',
             contract: '',
@@ -1023,7 +1033,7 @@ const tokens = computed<DisplayToken[]>(() => {
           balanceWei: extra.nativeValue,
           balance,
           fiatBalance: fiat.toNumber(),
-          fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+          fiatBalanceFormatted: formatFiat(fiat).display,
           price: extra.priceFiatPerNative || 0,
         } as DisplayToken
       }
@@ -1036,7 +1046,7 @@ const tokens = computed<DisplayToken[]>(() => {
         balanceWei: '0x',
         balance: '0',
         fiatBalance: 0,
-        fiatBalanceFormatted: '$0.00',
+        fiatBalanceFormatted: formatFiat(0).display,
       } as DisplayToken
     })
   } else if (props.view === 'stocks') {
@@ -1080,7 +1090,7 @@ const totalValue = computed(() => {
     (acc, t) => acc.plus(t.fiatBalance || 0),
     new BigNumber(0),
   )
-  return `$${formatFiatValue(sum).value}`
+  return formatFiat(sum).display
 })
 
 /** -------------------------------
@@ -1109,6 +1119,10 @@ const getCurrentViewableItemsIndex = computed(() =>
 /** -------------------------------
  * Navigation & Handlers
  -------------------------------*/
+// A token has a "primary" action (trade / swap) in the desktop actions cell.
+// Used so a lone button spans the full actions width and rows stay aligned.
+const hasPrimaryAction = (token: DisplayToken): boolean =>
+  token.ondo !== undefined || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'balance_table',

@@ -10,10 +10,10 @@
         {{ $t('crypto.crypto_today') }}
       </h2>
       <div
-        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+        class="border-l border-line pl-4 md:pl-6 h-full flex flex-col justify-center"
       >
         <p
-          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
+          class="text-s-8 md:text-s-10 text-fg-subtle uppercase tracking-sp-06 font-bold mb-1"
         >
           {{ $t('crypto.total_market_cap') }}
         </p>
@@ -21,7 +21,7 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.marketCap).value }}
+          {{ formatFiat(data.marketCap).display }}
           <span
             class="text-s-10 md:text-s-13 font-bold leading-p-150 ml-1"
             :class="{
@@ -44,14 +44,14 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
+          class="animate-pulse bg-surface-strong rounded-full h-6 w-3/4"
         ></div>
       </div>
       <div
-        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+        class="border-l border-line pl-4 md:pl-6 h-full flex flex-col justify-center"
       >
         <p
-          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
+          class="text-s-8 md:text-s-10 text-fg-subtle uppercase tracking-sp-06 font-bold mb-1"
         >
           {{ $t('crypto.twenty_four_h_trading_volume') }}
         </p>
@@ -59,18 +59,18 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.volume24h).value }}
+          {{ formatFiat(data.volume24h).display }}
         </p>
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
+          class="animate-pulse bg-surface-strong rounded-full h-6 w-3/4"
         ></div>
       </div>
       <div
-        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+        class="border-l border-line pl-4 md:pl-6 h-full flex flex-col justify-center"
       >
         <p
-          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
+          class="text-s-8 md:text-s-10 text-fg-subtle uppercase tracking-sp-06 font-bold mb-1"
         >
           {{ $t('crypto.btc_dominance') }}
         </p>
@@ -87,14 +87,14 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
+          class="animate-pulse bg-surface-strong rounded-full h-6 w-3/4"
         ></div>
       </div>
       <div
-        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+        class="border-l border-line pl-4 md:pl-6 h-full flex flex-col justify-center"
       >
         <p
-          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
+          class="text-s-8 md:text-s-10 text-fg-subtle uppercase tracking-sp-06 font-bold mb-1"
         >
           {{ $t('crypto.eth_dominance') }}
         </p>
@@ -111,7 +111,7 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
+          class="animate-pulse bg-surface-strong rounded-full h-6 w-3/4"
         ></div>
       </div>
     </div>
@@ -166,16 +166,15 @@ import OverviewContainer from './components/overview/OverviewContainer.vue'
 import TokenRow from './components/overview/TokenRow.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ref } from 'vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import type { CryptoOverview, CryptoOverviewToken } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import { usePaginate } from '@/composables/usePaginate'
 
 const { useMEWFetch } = useFetchMewApi()
+const { formatFiat } = useCurrency()
 
 const newTokens = ref<CryptoOverviewToken[]>([])
 const gainersTokens = ref<CryptoOverviewToken[]>([])

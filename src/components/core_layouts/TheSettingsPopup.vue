@@ -10,6 +10,18 @@
       <cog6-tooth-icon class="w-6 h-6" />
     </app-btn-icon>
 
+    <!-- Headless network selector (mobile): owns the chain dialog. It renders
+         in front of the settings popup (z above the popup's z-[2101]) so the
+         popup stays open behind it. -->
+    <select-chain-for-app
+      v-if="isXS"
+      v-model:dialog-open="networkOpen"
+      dialog-z-index-overlay="z-[2110]"
+      dialog-z-index-container="z-[2120]"
+    >
+      <template #network-button><span class="hidden" /></template>
+    </select-chain-for-app>
+
     <!-- Popup -->
     <teleport to="#app">
       <transition
@@ -24,7 +36,7 @@
           v-if="isSettingsOpen"
           ref="popupRef"
           :style="popupStyle"
-          class="fixed z-[2101] w-[344px] bg-white rounded-20 border border-[#E6E6E6] shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+          class="fixed z-[2101] w-[344px] bg-surface rounded-20 border border-line shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
         >
           <!-- Height-animated track container -->
           <div
@@ -46,86 +58,125 @@
               }"
             >
               <!-- Title -->
-              <h3 class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black">
+              <h3 class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg">
                 {{ $t('settings.title') }}
               </h3>
 
               <!-- Divider -->
-              <div class="self-stretch w-full h-px bg-[#E6E6E6]" />
+              <div class="self-stretch w-full h-px bg-line" />
 
               <!-- PREFERENCES section -->
               <div class="flex flex-col gap-6 w-full">
-                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
+                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-fg-subtle">
                   {{ $t('settings.preferences') }}
                 </p>
-                <!-- TODO: Currency (pending team input on supported currencies list)
-                <div class="relative flex w-full h-6 justify-between items-center cursor-pointer group">
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                <!-- Network (mobile only — relocated here from the header below
+                     xs). The trigger lives here; the dialog is owned by the
+                     headless SelectChainForApp mounted outside the popup. -->
+                <div
+                  v-if="isXS"
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="openNetwork"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <banknotes-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.currency') }}</span>
+                    <globe-alt-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg capitalize">{{ $t('common.network') }}</span>
                   </div>
-                  <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">USD</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                  <div class="relative flex items-center gap-2 min-w-0">
+                    <img
+                      v-if="selectedChain?.icon"
+                      :src="selectedChain.icon"
+                      alt=""
+                      class="w-5 h-5 rounded-full object-contain flex-shrink-0"
+                      height="20"
+                      width="20"
+                    />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle truncate max-w-[120px]">{{ selectedChain?.nameLong }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
-                TODO: Language (only English supported currently)
-                <div class="relative flex w-full h-6 justify-between items-center cursor-pointer group">
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                <!-- Currency -->
+                <div
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="view = 'currency'"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <language-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.language') }}</span>
+                    <banknotes-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.currency') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">ENG</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <app-token-logo
+                      :url="getFiatIcon(selectedCurrency)"
+                      :symbol="selectedCurrency"
+                      cover
+                      width="w-5"
+                      height="h-5"
+                      class="flex-shrink-0"
+                    />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedCurrency }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
-              -->
+                <!-- Language -->
+                <div
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="view = 'language'"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="relative flex items-center gap-2.5">
+                    <language-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.language') }}</span>
+                  </div>
+                  <div class="relative flex items-center gap-2">
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedLanguageAbbr }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
+                  </div>
+                </div>
                 <!-- Default fee -->
                 <div
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
                   @click="view = 'fee'"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <currency-dollar-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.default_fee') }}</span>
+                    <currency-dollar-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.default_fee') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedFeeLabel }}</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedFeeLabel }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
               </div>
 
               <!-- Divider between sections -->
-              <div class="self-stretch w-full h-px bg-[#E6E6E6]" />
+              <div class="self-stretch w-full h-px bg-line" />
 
               <!-- SECURITY section -->
               <div class="flex flex-col gap-6 w-full">
-                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
+                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-fg-subtle">
                   {{ $t('settings.security') }}
                 </p>
                 <!-- Usage analytics -->
                 <div class="flex w-full h-6 justify-between items-center">
                   <div class="flex items-center gap-2.5">
-                    <circle-stack-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                    <circle-stack-icon class="w-5 h-5 text-brand flex-shrink-0" />
                     <div class="flex items-center gap-1">
-                      <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.usage_analytics') }}</span>
+                      <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.usage_analytics') }}</span>
                       <app-tooltip :text="$t('settings.usage_analytics_tooltip')" position="middle">
-                        <question-mark-circle-icon class="w-4 h-4 text-[#A5A5A5] flex-shrink-0 cursor-pointer" />
+                        <question-mark-circle-icon class="w-4 h-4 text-fg-muted flex-shrink-0 cursor-pointer" />
                       </app-tooltip>
                     </div>
                   </div>
                   <!-- Toggle -->
                   <button
                     class="flex h-6 w-[45px] items-center rounded-full p-[3px] flex-shrink-0 transition-colors duration-200"
-                    :class="analyticsEnabled ? 'bg-primary justify-end' : 'bg-[#D6D6D6] justify-start'"
+                    :class="analyticsEnabled ? 'bg-brand justify-end' : 'bg-line-strong justify-start'"
                     @click="analyticsStore.setTrackingConsent(!analyticsEnabled)"
                   >
-                    <div class="h-[18px] w-[18px] rounded-full bg-white flex-shrink-0" />
+                    <div class="h-[18px] w-[18px] rounded-full bg-fg-on-fill flex-shrink-0" />
                   </button>
                 </div>
               </div>
@@ -152,13 +203,13 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-s-16 font-normal leading-[22px] text-fg">
                   {{ $t('settings.select_transaction_fee') }}
                 </span>
               </div>
 
               <!-- Description -->
-              <p class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]">
+              <p class="self-stretch text-s-14 font-normal leading-[20px] text-fg-subtle">
                 {{ $t('settings.fee_description') }}
               </p>
 
@@ -168,22 +219,157 @@
                   v-for="option in feeOptions"
                   :key="option.id"
                   class="flex items-center gap-12 p-4 rounded-xl border cursor-pointer transition-colors duration-150 group"
-                  :class="selectedFee === option.id ? 'border-primary' : 'border-[#E6E6E6] hover:border-[#A5A5A5]'"
+                  :class="selectedFee === option.id ? 'border-brand' : 'border-line hover:border-line-strong'"
                   @click="selectedFee = option.id"
                 >
                   <div class="flex-1 flex flex-col gap-1">
                     <div class="flex items-center gap-0.5">
-                      <span class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-black">{{ option.label }}</span>
-                      <span class="text-s-14 font-normal leading-[20px] text-[#A5A5A5]"> – {{ option.price }}</span>
+                      <span class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-fg">{{ option.label }}</span>
+                      <span class="text-s-14 font-normal leading-[20px] text-fg-muted"> – {{ option.price }}</span>
                     </div>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ option.description }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ option.description }}</span>
                   </div>
                   <check-circle-icon
                     class="w-5 h-5 flex-shrink-0 transition-colors duration-150"
                     :class="selectedFee === option.id
-                      ? 'text-primary'
-                      : 'text-[#D6D6D6] invisible group-hover:visible'"
+                      ? 'text-brand'
+                      : 'text-line-strong invisible group-hover:visible'"
                   />
+                </div>
+              </div>
+            </div>
+
+            <!-- Currency selector panel -->
+            <div
+              ref="currencyPanelRef"
+              :inert="view !== 'currency'"
+              class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
+              :style="{
+                transform: view === 'currency' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'currency' ? 1 : 0,
+                transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <!-- Header: back + title -->
+              <div class="flex items-center gap-2">
+                <app-btn-icon
+                  :label="$t('common.back')"
+                  width="w-6"
+                  height="h-6"
+                  @click="view = 'main'"
+                >
+                  <chevron-left-icon class="w-5 h-5" />
+                </app-btn-icon>
+                <span class="text-s-16 font-bold leading-[22px] text-fg">
+                  {{ $t('settings.select_currency') }}
+                </span>
+              </div>
+
+              <!-- Description -->
+              <p class="self-stretch text-s-14 font-normal leading-[20px] text-fg-subtle">
+                {{ $t('settings.currency_description') }}
+              </p>
+
+              <!-- Currency options -->
+              <div
+                ref="currencyListRef"
+                class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2"
+              >
+                <div
+                  v-for="option in currencyOptions"
+                  :key="option.code"
+                  class="relative flex items-center justify-between gap-3 p-3 rounded-xl cursor-pointer group"
+                  :class="selectedCurrency === option.code ? 'bg-brand-subtle' : ''"
+                  @click="selectCurrency(option.code)"
+                >
+                  <div
+                    v-if="selectedCurrency !== option.code"
+                    class="absolute inset-0 rounded-xl bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  />
+                  <div class="relative flex items-center gap-2.5 min-w-0">
+                    <app-token-logo
+                      :url="getFiatIcon(option.code)"
+                      :symbol="option.code"
+                      cover
+                      width="w-6"
+                      height="h-6"
+                      class="flex-shrink-0"
+                    />
+                    <span class="text-s-14 font-semibold leading-[20px] text-fg flex-shrink-0">{{ option.code }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-muted truncate">{{ option.name }}</span>
+                  </div>
+                  <check-circle-icon
+                    class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                    :class="selectedCurrency === option.code
+                      ? 'text-brand'
+                      : 'text-line-strong invisible group-hover:visible'"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Language selector panel -->
+            <div
+              ref="languagePanelRef"
+              :inert="view !== 'language'"
+              class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
+              :style="{
+                transform: view === 'language' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'language' ? 1 : 0,
+                transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <!-- Header: back + title -->
+              <div class="flex items-center gap-2">
+                <app-btn-icon
+                  :label="$t('common.back')"
+                  width="w-6"
+                  height="h-6"
+                  @click="view = 'main'"
+                >
+                  <chevron-left-icon class="w-5 h-5" />
+                </app-btn-icon>
+                <span class="text-s-16 font-normal leading-[22px] text-fg">
+                  {{ $t('settings.select_language') }}
+                </span>
+              </div>
+
+              <!-- Search -->
+              <app-search-input
+                v-model="languageQuery"
+                size="compact"
+                bg-class="bg-page"
+                :placeholder="$t('common.search')"
+              />
+
+              <!-- Language options -->
+              <div class="flex flex-col gap-6 w-full">
+                <!-- Pinned selected language -->
+                <div
+                  v-if="selectedLanguageOption"
+                  class="flex w-full items-center gap-1 border-y border-line py-3"
+                >
+                  <div class="flex flex-1 min-w-0 items-center gap-1">
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg">{{ selectedLanguageOption.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ selectedLanguageOption.native }}</span>
+                  </div>
+                  <check-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                </div>
+
+                <!-- Full language list -->
+                <div
+                  v-for="language in filteredLanguages"
+                  :key="language.code"
+                  class="relative flex w-full items-center gap-1 cursor-pointer group"
+                  @click="selectLanguage(language.code)"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="relative flex flex-1 min-w-0 items-center gap-1">
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg">{{ language.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ language.native }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,26 +382,95 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon } from '@heroicons/vue/20/solid'
+import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon, GlobeAltIcon, BanknotesIcon } from '@heroicons/vue/20/solid'
 import { ChevronRightIcon, QuestionMarkCircleIcon } from '@heroicons/vue/16/solid'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
+import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
 const { isSettingsOpen } = storeToRefs(appLayoutStore)
 
+// Below xs the network selector lives inside this popup (see template).
+const { isXS } = useAppBreakpoints()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+/**
+ * Whether the mobile chain dialog is open. Tapping the network row opens it in
+ * front of the settings popup, which stays open behind it.
+ */
+const networkOpen = ref(false)
+const openNetwork = () => {
+  networkOpen.value = true
+}
+
 const analyticsStore = useAnalyticsStore()
 const analyticsEnabled = computed(() => analyticsStore.consent)
 const globalStore = useGlobalStore()
-const { defaultGasPriceType } = storeToRefs(globalStore)
+const { defaultGasPriceType, locale: storedLocale } = storeToRefs(globalStore)
+
+const { t, locale } = useI18n()
+
+const LANGUAGE_OPTIONS = [
+  { code: 'en', label: 'English', native: 'English', abbr: 'ENG' },
+  { code: 'zh', label: 'Chinese', native: '中文', abbr: 'CHN' },
+  { code: 'es', label: 'Spanish', native: 'Español', abbr: 'ESP' },
+]
+
+const selectedLanguage = computed(() => storedLocale.value)
+const selectedLanguageAbbr = computed(
+  () => LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value)?.abbr,
+)
+const selectedLanguageOption = computed(
+  () => LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value),
+)
+
+const languageQuery = ref('')
+const filteredLanguages = computed(() => {
+  const query = languageQuery.value.trim().toLowerCase()
+  if (!query) return LANGUAGE_OPTIONS
+  return LANGUAGE_OPTIONS.filter(
+    language =>
+      language.label.toLowerCase().includes(query) || language.native.toLowerCase().includes(query),
+  )
+})
+const selectLanguage = (code: string) => {
+  storedLocale.value = code
+  locale.value = code
+  view.value = 'main'
+}
+
+const currencyStore = useCurrencyStore()
+const { selectedCurrency } = storeToRefs(currencyStore)
+
+// Surface the currently selected currency at the top of the list.
+const currencyOptions = computed(() => {
+  const active = SUPPORTED_CURRENCIES.filter(c => c.code === selectedCurrency.value)
+  const rest = SUPPORTED_CURRENCIES.filter(c => c.code !== selectedCurrency.value)
+  return [...active, ...rest]
+})
+
+const selectCurrency = (code: string) => {
+  currencyStore.setCurrency(code)
+  view.value = 'main'
+}
 
 const FEE_MAP: Record<string, string> = {
   economy: 'ECONOMY',
@@ -230,36 +485,59 @@ const FEE_MAP_REVERSE: Record<string, string> = {
   FASTEST: 'highest',
 }
 
-const view = ref<'main' | 'fee'>('main')
+const view = ref<'main' | 'fee' | 'currency' | 'language'>('main')
 const selectedFee = computed({
   get: () => FEE_MAP_REVERSE[defaultGasPriceType.value] ?? 'recommended',
   set: (val: string) => { defaultGasPriceType.value = FEE_MAP[val] as any },
 })
 
-const feeOptions = [
-  { id: 'economy', label: 'Economy', price: '$', description: 'Will likely go through unless activity increases' },
-  { id: 'recommended', label: 'Recommended', price: '$$', description: 'Will reliably go through in most scenarios' },
-  { id: 'higher', label: 'Higher priority', price: '$$$', description: 'Higher chance of going through quickly' },
-  { id: 'highest', label: 'Highest priority', price: '$$$$', description: 'Highest chance of going through quickly' },
-]
+const feeOptions = computed(() => [
+  { id: 'economy', label: t('settings.fee_option.economy.label'), price: '$', description: t('settings.fee_option.economy.description') },
+  { id: 'recommended', label: t('settings.fee_option.recommended.label'), price: '$$', description: t('settings.fee_option.recommended.description') },
+  { id: 'higher', label: t('settings.fee_option.higher.label'), price: '$$$', description: t('settings.fee_option.higher.description') },
+  { id: 'highest', label: t('settings.fee_option.highest.label'), price: '$$$$', description: t('settings.fee_option.highest.description') },
+])
 
 const selectedFeeLabel = computed(
-  () => feeOptions.find(option => option.id === selectedFee.value)?.label,
+  () => feeOptions.value.find(option => option.id === selectedFee.value)?.label,
 )
 
 const containerRef = ref<HTMLElement | null>(null)
 const popupRef = ref<HTMLElement | null>(null)
 const mainPanelRef = ref<HTMLElement | null>(null)
 const feePanelRef = ref<HTMLElement | null>(null)
+const currencyPanelRef = ref<HTMLElement | null>(null)
+const currencyListRef = ref<HTMLElement | null>(null)
+const languagePanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
-  const activeRef = view.value === 'main' ? mainPanelRef.value : feePanelRef.value
+  const panelByView = {
+    main: mainPanelRef.value,
+    fee: feePanelRef.value,
+    currency: currencyPanelRef.value,
+    language: languagePanelRef.value,
+  }
+  const activeRef = panelByView[view.value]
   if (activeRef) containerHeight.value = activeRef.scrollHeight
 }
 
-watch(isSettingsOpen, val => { if (val) nextTick(measureHeight) })
-watch(view, () => nextTick(measureHeight))
+watch(isSettingsOpen, val => {
+  if (val) {
+    currencyStore.ensureRates()
+    nextTick(measureHeight)
+  }
+})
+watch(view, val => {
+  if (view.value !== 'language') languageQuery.value = ''
+  nextTick(() => {
+    measureHeight()
+    if (val === 'currency' && currencyListRef.value) {
+      currencyListRef.value.scrollTop = 0
+    }
+  })
+})
+watch(filteredLanguages, () => nextTick(measureHeight))
 
 const popupStyle = computed(() => {
   const buttonEl = containerRef.value
@@ -279,6 +557,10 @@ const togglePopup = () => {
 }
 
 onClickOutside(containerRef, () => {
+  // Keep the popup open while the chain dialog is layered in front of it —
+  // clicks inside that dialog (teleported to #app) would otherwise register as
+  // an outside click and close the settings popup behind it.
+  if (networkOpen.value) return
   if (isSettingsOpen.value) {
     isSettingsOpen.value = false
     view.value = 'main'

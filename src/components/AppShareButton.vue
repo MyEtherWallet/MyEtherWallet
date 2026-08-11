@@ -13,7 +13,7 @@
       <div class="py-2 min-w-[200px]">
         <ul class="px-2 text-s-14">
           <li
-            class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
+            class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
             @click="
               () => {
                 shareOn('x')
@@ -33,7 +33,7 @@
             {{ $t('common.share_on_x') }}
           </li>
           <li
-            class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
+            class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
             @click="
               () => {
                 shareOn('telegram')
@@ -53,7 +53,7 @@
             {{ $t('common.share_on_telegram') }}
           </li>
           <li
-            class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
+            class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
             @click="
               () => {
                 shareOn('reddit')
@@ -73,7 +73,7 @@
             {{ $t('common.share_on_reddit') }}
           </li>
           <li
-            class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
+            class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
             @click="
               () => {
                 copyShareLink()

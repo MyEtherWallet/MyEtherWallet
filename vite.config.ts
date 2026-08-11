@@ -22,6 +22,7 @@ export default defineConfig({
     vue(),
     viteCommonjs({ skipPreBuild: true }),
     nightwatchPlugin(),
+    basicSsl(),
     vueDevTools(),
     nodePolyfills({
       include: [
@@ -36,7 +37,6 @@ export default defineConfig({
       ],
       protocolImports: true,
     }),
-    basicSsl(),
     wasm(),
   ],
   build: {

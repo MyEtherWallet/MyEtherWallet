@@ -13,15 +13,14 @@
       </div>
       <div class="text-right">
         <p
-          class="font-bold text-s-11 tracking-sp-06 uppercase text-info leading-none mb-1"
+          class="font-bold text-s-11 tracking-sp-06 uppercase text-fg-subtle leading-none mb-1"
         >
           {{ t('portfolio.history.last_24h') }}
         </p>
         <div v-if="!isLoadingBalances">
-          <p class="text-s-20 font-semibold text-black leading-none mt-2">
-            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+' }}${{
-              formatFiatValue(lastTwentyFourHours.fiat.abs()).value
-            }}
+          <p class="text-s-20 font-semibold text-fg leading-none mt-2">
+            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+'
+            }}{{ formatFiat(lastTwentyFourHours.fiat.abs()).display }}
           </p>
           <span
             class="text-s-11 leading-none"
@@ -39,19 +38,19 @@
         </div>
         <div
           v-else
-          class="h-11 w-[60px] bg-grey-10 rounded-xl animate-pulse"
+          class="h-11 w-[60px] bg-surface-strong rounded-xl animate-pulse"
         ></div>
       </div>
     </div>
     <div
       v-if="isFetching && !chartData.length"
-      class="flex-1 bg-grey-10 rounded-xl animate-pulse mx-4 min-h-[150px]"
+      class="flex-1 bg-surface-strong rounded-xl animate-pulse mx-4 min-h-[150px]"
     ></div>
     <div v-else-if="!chartData.length" class="px-4 pb-3">
       <div
-        class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[140px] w-full"
+        class="flex-1 flex items-center justify-center bg-page rounded-xl min-h-[140px] w-full"
       >
-        <p class="text-info text-center text-s-13">{{ t('portfolio.history.no_chart_data') }}</p>
+        <p class="text-fg-subtle text-center text-s-13">{{ t('portfolio.history.no_chart_data') }}</p>
       </div>
     </div>
     <history-chart v-else :data="chartData" class="-ml-[3px]" />
@@ -68,13 +67,12 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { computed } from 'vue'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
 const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)

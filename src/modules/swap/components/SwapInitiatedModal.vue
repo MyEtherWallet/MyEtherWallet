@@ -7,7 +7,7 @@
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center text-center">
-          <div class="text-s-13 lg:text-s-16 text-info px-4 leading-p-160">
+          <div class="text-s-13 lg:text-s-16 text-fg-subtle px-4 leading-p-160">
             {{ completedNote }}
             <div class="inline-flex align-middle">
               <app-blockie
@@ -21,11 +21,11 @@
                 :href="addressExplorerUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
+                class="hover:underline cursor-pointer font-mono text-fg text-s-13 lg:text-s-16 pr-1"
               >
                 {{ truncateHash(snapshot.toAddress) }}
                 <arrow-up-right-icon
-                  class="w-3 h-3 inline-block align-middle text-black"
+                  class="w-3 h-3 inline-block align-middle text-fg"
               /></a>
             </div>
             <span
@@ -47,7 +47,7 @@
               <div class="mr-2">
                 <svg
                   v-if="notificationStatus === 'sent'"
-                  class="w-5 h-5 animate-spin text-primary"
+                  class="w-5 h-5 animate-spin text-brand"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -80,7 +80,7 @@
               <span
                 class="text-s-14 font-semibold"
                 :class="{
-                  'text-primary': notificationStatus === 'sent',
+                  'text-brand': notificationStatus === 'sent',
                   'text-success': notificationStatus === 'confirmed',
                   'text-error': notificationStatus === 'failed',
                 }"
@@ -97,7 +97,7 @@
               </span>
             </div>
 
-            <div class="flex flex-col justify-start bg-mewBg p-4 rounded-20">
+            <div class="flex flex-col justify-start bg-brand-subtle p-4 rounded-20">
               <!-- From Row -->
               <div class="flex items-center gap-4">
                 <div class="relative">
@@ -127,7 +127,7 @@
                 <div class="flex flex-col text-left">
                   <p
                     v-if="isBridge"
-                    class="text-s-9 font-bold tracking-sp-06 uppercase text-info"
+                    class="text-s-9 font-bold tracking-sp-06 uppercase text-fg-subtle"
                   >
                     {{ t('swap.initiated.from-chain', { chain: fromTokenChain }) }}
                   </p>
@@ -146,7 +146,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ fromTokenAmountFiat }}</p>
+                  <p class="text-fg-subtle text-s-14">{{ formatFiat(fromTokenAmountFiat).display }}</p>
                 </div>
               </div>
 
@@ -184,7 +184,7 @@
                 <div class="flex flex-col text-left">
                   <p
                     v-if="isBridge"
-                    class="text-s-9 font-bold tracking-sp-06 uppercase text-info"
+                    class="text-s-9 font-bold tracking-sp-06 uppercase text-fg-subtle"
                   >
                     {{ t('swap.initiated.to-chain', { chain: toTokenChain }) }}
                   </p>
@@ -203,7 +203,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ toTokenAmountFiat }}</p>
+                  <p class="text-fg-subtle text-s-14">{{ formatFiat(toTokenAmountFiat).display }}</p>
                 </div>
               </div>
             </div>
@@ -212,7 +212,7 @@
             <div class="w-full my-5 px-2 lg:px-4">
               <div class="flex justify-between items-center">
                 <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-fg-subtle"
                   >{{ t('common.transaction_hash') }}</span
                 >
                 <div class="flex items-center gap-2">
@@ -228,7 +228,7 @@
 
         <div class="mt-6">
           <p
-            class="text-center text-s-13 lg:text-s-16 text-info px-4 leading-p-160"
+            class="text-center text-s-13 lg:text-s-16 text-fg-subtle px-4 leading-p-160"
           >
             {{ t('swap.initiated.close-window') }}
           </p>
@@ -287,12 +287,11 @@ import {
   type NotificationBaseSwapBridge,
 } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const appLayoutStore = useAppLayoutStore()
@@ -372,7 +371,7 @@ const notificationStatus = computed(() => {
 })
 
 const toTokenSymbol = computed(() => {
-  return snapshot.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
+  return snapshot.selectedQuote?.quote.options.toToken.symbol || t('swap.unknown')
 })
 
 const toTokenAmount = computed(() => {
@@ -382,11 +381,10 @@ const toTokenAmount = computed(() => {
   )
 })
 
+// Raw USD value (stored in notifications so containers can convert at display time).
 const toTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.toToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const toTokenIcon = computed(() => {
@@ -394,7 +392,7 @@ const toTokenIcon = computed(() => {
 })
 
 const toTokenChain = computed(() => {
-  return snapshot.toChain?.nameLong || 'Unknown Chain'
+  return snapshot.toChain?.nameLong || t('swap.unknown_chain')
 })
 
 const toTokenChainImg = computed(() => {
@@ -407,7 +405,7 @@ const toTokenAddress = computed(() => {
 
 const fromTokenSymbol = computed(() => {
   return (
-    snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+    snapshot.selectedQuote?.quote.options.fromToken.symbol || t('swap.unknown_token')
   )
 })
 const fromTokenAmount = computed(() => {
@@ -416,15 +414,14 @@ const fromTokenAmount = computed(() => {
     snapshot.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })
+// Raw USD value (stored in notifications so containers can convert at display time).
 const fromTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.fromToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const fromTokenChain = computed(() => {
-  return snapshot.fromChain?.name || 'Unknown Chain'
+  return snapshot.fromChain?.name || t('swap.unknown_chain')
 })
 const fromTokenIcon = computed(() => {
   return snapshot.selectedQuote?.quote.options.fromToken.logoURI || ethSvg
@@ -468,7 +465,7 @@ const title = computed(() => {
 })
 
 const completedNote = computed(() => {
-  const symbol = toTokenSymbol.value || 'the token'
+  const symbol = toTokenSymbol.value || t('swap.the_token')
   return isBridge.value
     ? t('swap.initiated.bridge-completed-note', { symbol })
     : t('swap.initiated.swap-completed-note', { symbol })

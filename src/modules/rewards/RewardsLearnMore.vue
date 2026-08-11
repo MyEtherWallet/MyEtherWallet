@@ -3,63 +3,63 @@
     <template #content>
       <div class="px-6 py-6 flex flex-col">
         <!-- Title -->
-        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
-        <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
-          Earn USDC rewards
+        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-brand">Trade</h3> -->
+        <h3 class="text-s-28 font-bold text-fg leading-p-120 mb-6">
+          {{ t('rewards.learn_more_title') }}
         </h3>
 
         <!-- Info Items -->
         <div class="flex flex-col gap-4">
           <div
             v-for="(item, index) in infoItems"
-            :key="item.text"
+            :key="item.icon"
             class="flex items-start gap-3"
           >
             <div
               class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-              :class="index < 3 ? 'bg-blue-10' : 'bg-grey-5'"
+              :class="index < 3 ? 'bg-brand-subtle' : 'bg-page'"
             >
               <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-brand"
                 v-if="item.icon === 'swap'"
               />
               <trophy-icon
                 v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-brand"
               />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-brand"
               />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-brand"
               />
               <calendar-icon
                 v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-fg-subtle"
               />
               <wallet-icon
                 v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-fg-subtle"
               />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-fg-subtle"
               />
               <face-frown-icon
                 v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-fg-subtle"
               />
             </div>
-            <p class="text-s-14 text-info leading-snug pt-1">
+            <p class="text-s-14 text-fg-subtle leading-snug pt-1">
               {{ item.text }}
             </p>
           </div>
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-grey-10" />
+        <hr class="my-6 border-t border-line" />
 
         <rewards-rows
           v-if="!isBanned"
@@ -91,7 +91,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch, computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import {
@@ -150,6 +151,14 @@ const toastStore = useToastStore()
 const rewardsStore = useRewardsStore()
 const { isBanned, minSpendTrade } = storeToRefs(rewardsStore)
 
+const { t } = useI18n()
+
+// Rewards program parameters — update these to change the displayed values
+const MIN_TRADE_AMOUNT = 25
+const MAX_USERS_PER_HOUR = 15
+const REWARD_AMOUNT = 5
+const CAMPAIGN_PERIOD_DAYS = 7
+
 watch(isOpenModel, val => {
   if (val) {
     analytics.trackRewardsEvent(RewardsEvent.LEARN_MORE_CLICKED, {
@@ -161,31 +170,41 @@ watch(isOpenModel, val => {
 const infoItems = computed(() => [
   {
     icon: 'swap',
-    text: `Make a trade over $${minSpendTrade.value} on Ethereum.`,
+    text: t('rewards.info_make_trade', {
+      min: minSpendTrade.value || MIN_TRADE_AMOUNT,
+    }),
   },
-  // {
-  //   icon: 'trophy',
-  //   text: 'Be among the first 10 users per hour, per swap.',
-  // },
   {
     icon: 'trade',
-    text: 'Be among the first 15 users per hour, per trade.',
+    text: t('rewards.earn_rewards_description', {
+      trade_count: 10,
+      trade_minimum: 25,
+      reward_amount: 5,
+    }),
+  },
+  {
+    icon: 'trade',
+    text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn 5 USDC per trade.',
+    text: t('rewards.info_earn_per_trade', { amount: REWARD_AMOUNT }),
   },
   {
     icon: 'calendar',
-    text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
+    text: t('rewards.info_one_reward_period', { days: CAMPAIGN_PERIOD_DAYS }),
   },
   {
     icon: 'wallet-icon',
-    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+    text: t('rewards.info_wallet_age'),
+  },
+  {
+    icon: 'currency-dollar-gray',
+    text: t('rewards.info_no_cashout'),
   },
   {
     icon: 'face-frown',
-    text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',
+    text: t('rewards.info_no_sybil'),
   },
 ])
 
@@ -206,7 +225,7 @@ const onNavigate = (panel: 'swap' | 'trade') => {
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {
     globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
     toastStore.addToastMessage({
-      text: 'Switched app network to Ethereum',
+      text: t('rewards.switched_to_ethereum'),
     })
   }
   setWalletPanel(panel)

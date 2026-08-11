@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="bg-bgBase border border-bgBase hover:border-grey-10 transition-colors w-full flex items-center gap-2 p-4 rounded-20"
+    class="bg-page border border-page hover:border-line transition-colors w-full flex items-center gap-2 p-4 rounded-20"
     @click="emit('click')"
   >
     <div class="relative w-10 h-10 flex-none">
@@ -13,7 +13,7 @@
         class="absolute top-0 left-0"
       />
       <span
-        class="absolute bottom-0 right-0 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-bgBase bg-white"
+        class="absolute bottom-0 right-0 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-page bg-surface"
       >
         <app-token-logo
           :url="chain.icon"
@@ -24,14 +24,14 @@
       </span>
     </div>
     <div class="flex flex-col items-start flex-1 min-w-0">
-      <p class="text-s-16 font-semibold text-black leading-[22px] truncate">
+      <p class="text-s-16 font-semibold text-fg leading-[22px] truncate">
         {{ displayTokenSymbol }}
       </p>
-      <p class="text-s-12 text-info leading-[18px] truncate">
+      <p class="text-s-12 text-fg-subtle leading-[18px] truncate">
         {{ chain.nameLong || chain.name }}
       </p>
     </div>
-    <chevron-right-icon class="w-5 h-5 text-black flex-none" />
+    <chevron-right-icon class="w-5 h-5 text-fg flex-none" />
   </button>
 </template>
 

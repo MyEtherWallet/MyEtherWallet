@@ -3,28 +3,31 @@
   <div>
     <div
       v-if="!hadInitialLoad"
-      class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
+      class="bg-surface rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
     >
-      <p class="text-center text-s-14 text-info">Loading Rewards</p>
+      <p class="text-center text-s-14 text-fg-subtle">
+        {{ t('rewards.loading') }}
+      </p>
     </div>
     <!-- Default State -->
     <div
       v-else
-      class="bg-white rounded-16 h-full flex flex-col justify-space-around px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
+      class="bg-surface rounded-16 h-full flex flex-col justify-space-around px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
       <div class="flex items-start justify-between gap-2 mb-5">
         <div class="flex flex-col pt-5">
-          <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
-          <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            The first 15 trades over ${{ minSpendTrade }} every hour receive 5
-            in USDC in rewards. Once per week per wallet.
+          <h3 class="text-s-20 font-bold leading-none">
+            {{ t('rewards.earn_rewards_title') }}
+          </h3>
+          <p class="text-s-16 text-fg-subtle leading-[22px] mt-2 max-w-[295px]">
+            {{ t('rewards.portfolio_trade_description', { min: minSpendTrade }) }}
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
             @click="onLearnMore"
           >
-            Learn more
+            {{ t('rewards.learn_more') }}
           </button>
         </div>
         <img
@@ -70,22 +73,15 @@
       />
 
       <!-- Not Eligible State -->
-      <div v-else class="border-t border-grey-10 pt-4 pb-1">
+      <div v-else class="border-t border-line pt-4 pb-1">
         <p class="text-s-14 font-semibold text-error leading-5">
-          Not eligible for rewards
+          {{ t('rewards.not_eligible_for_rewards') }}
         </p>
-        <!-- <p
-          class="text-s-14 text-[#575757] leading-5 mt-1"
-          :class="{ '2xl:hidden ': isOpenSideMenu }"
-        >
-          Wallets created after April 20th are not eligible for rewards. Try
-          connecting an older wallet.
-        </p> -->
         <button
-          class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
+          class="mt-4 bg-page text-fg font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
           @click="onConnectAddress"
         >
-          Connect another address
+          {{ t('rewards.connect_another_address') }}
         </button>
       </div>
       <img
@@ -122,6 +118,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import verticalUsdc from '@/assets/images/rewards/usdc-rewards-group-vertical.png'
@@ -134,6 +131,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
+
+const { t } = useI18n()
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
@@ -221,7 +220,7 @@ const navigateTo = (panel: 'swap' | 'trade') => {
   const ETH_NETWORK_NAME = 'ETHEREUM'
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {
     globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
-    toastStore.addToastMessage({ text: 'Switched app network to Ethereum' })
+    toastStore.addToastMessage({ text: t('rewards.switched_to_ethereum') })
   }
   setWalletPanel(panel)
   if (!isOpenSideMenu.value) {

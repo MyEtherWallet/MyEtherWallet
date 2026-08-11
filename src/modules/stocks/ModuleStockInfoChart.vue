@@ -39,11 +39,11 @@
     />
     <div
       v-else
-      class="w-full bg-surface h-full rounded-lg"
+      class="w-full bg-surface-strong h-full rounded-lg"
       :class="{ 'animate-pulse': isLoadingFetch }"
     >
       <div class="flex flex-col items-center h-full justify-center gap-2">
-        <p v-if="notAvailable" class="text-s-14 text-info">{{ $t('common.no_data_available') }}</p>
+        <p v-if="notAvailable" class="text-s-14 text-fg-subtle">{{ $t('common.no_data_available') }}</p>
       </div>
     </div>
   </div>

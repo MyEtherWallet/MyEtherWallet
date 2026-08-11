@@ -1,11 +1,11 @@
 <template>
   <div v-auto-animate v-if="items.length > 0 || isLoading">
     <div class="px-3 pt-2 pb-3 flex items-baseline gap-1.5">
-      <span class="text-s-14 text-black">
+      <span class="text-s-14 text-fg">
         {{ title }}
       </span>
-      <span class="text-s-14 text-black">·</span>
-      <span class="text-s-14 text-grey-subtle">{{ subtitle }}</span>
+      <span class="text-s-14 text-fg">·</span>
+      <span class="text-s-14 text-fg-muted">{{ subtitle }}</span>
     </div>
 
     <div v-if="items.length === 0 && isLoading">
@@ -40,17 +40,17 @@
       class="flex items-center justify-center gap-5 w-full px-3 pb-2"
       @click="$emit('toggle-expand')"
     >
-      <div class="flex-1 h-px bg-grey-5" />
+      <div class="flex-1 h-px bg-page" />
       <div class="flex items-center gap-1 shrink-0">
-        <span class="text-s-12 font-semibold text-black tracking-tight">
+        <span class="text-s-12 font-semibold text-fg tracking-tight">
           {{ expanded ? $t('search.show_less') : $t('search.show_more') }}
         </span>
         <chevron-down-icon
-          class="w-3.5 h-3.5 text-black transition-transform"
+          class="w-3.5 h-3.5 text-fg transition-transform"
           :class="{ 'rotate-180': expanded }"
         />
       </div>
-      <div class="flex-1 h-px bg-grey-5" />
+      <div class="flex-1 h-px bg-page" />
     </button>
   </div>
 </template>

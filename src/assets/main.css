@@ -35,13 +35,321 @@
   --line-height-p-150: 150%;
   --line-height-p-160: 160%;
 
-  --color-app-background: #f5f5f7;
-  --color-primary: rgb(0, 90, 229);
-  --color-info: rgba(0, 0, 0, 0.65);
-  --color-grey-5: rgba(0, 0, 0, 0.05);
-  --color-grey-10: rgba(0, 0, 0, 0.1);
-  --color-grey-outline: rgba(188, 200, 204, 1);
-  --color-mew-bg: rgba(53, 94, 236, 0.1);
+  /**
+   * COLOR PRIMITIVES
+   *
+   * Source of truth: Figma "MEW Web App Design Library", page 🎨 Colors
+   * (file SI6XCvKMRNrv9YCayhZ9MH, node 25:126). 7 ramps × 11 steps + neutral.
+   *
+   * This block is the ONLY place a color literal belongs. Components should
+   * reach for a semantic token below; use a ramp step directly only for
+   * something that must NOT change between light and dark.
+   */
+
+  /**
+   * Drop Tailwind's stock palette. The old JS config did this implicitly by
+   * setting `theme.colors` instead of `theme.extend.colors`; `@theme` EXTENDS
+   * by default, so without this reset every default shade reappears and
+   * off-system colors become reachable again as e.g. `bg-gray-200`.
+   */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* brand */
+  --color-brand-950: #0e2a5d;
+  --color-brand-900: #0d449b;
+  --color-brand-800: #084dc5;
+  --color-brand-700: #005ae5;
+  --color-brand-600: #0675ff;
+  --color-brand-500: #1e91ff;
+  --color-brand-400: #48adff;
+  --color-brand-300: #83cbff;
+  --color-brand-200: #b5deff;
+  --color-brand-100: #d6edff;
+  --color-brand-50: #edf6ff;
+
+  /* purple */
+  --color-purple-950: #1e0b6a;
+  --color-purple-900: #37169c;
+  --color-purple-800: #4018bf;
+  --color-purple-700: #4d1ee3;
+  --color-purple-600: #5c30f7;
+  --color-purple-500: #684cff;
+  --color-purple-400: #9285ff;
+  --color-purple-300: #b6b1ff;
+  --color-purple-200: #d5d4ff;
+  --color-purple-100: #e9e8ff;
+  --color-purple-50: #f2f2ff;
+
+  /* violet */
+  --color-violet-950: #4c0076;
+  --color-violet-900: #67079c;
+  --color-violet-800: #7d06c3;
+  --color-violet-700: #9d00ff;
+  --color-violet-600: #a00fff;
+  --color-violet-500: #ad35ff;
+  --color-violet-400: #c16cff;
+  --color-violet-300: #d8a5ff;
+  --color-violet-200: #e9cdff;
+  --color-violet-100: #f3e3ff;
+  --color-violet-50: #faf3ff;
+
+  /* red */
+  --color-red-950: #520023;
+  --color-red-900: #920947;
+  --color-red-800: #ab064c;
+  --color-red-700: #cc0452;
+  --color-red-600: #e40c58;
+  --color-red-500: #f31b6f;
+  --color-red-400: #ff5789;
+  --color-red-300: #ff8aa9;
+  --color-red-200: #ffc2d3;
+  --color-red-100: #ffdbe3;
+  --color-red-50: #fff0f3;
+
+  /* green */
+  --color-green-950: #003330;
+  --color-green-900: #0e534c;
+  --color-green-800: #0a655c;
+  --color-green-700: #067f71;
+  --color-green-600: #01a08c;
+  --color-green-500: #05c0a5;
+  --color-green-400: #1ee3c3;
+  --color-green-300: #51f7d7;
+  --color-green-200: #91fee5;
+  --color-green-100: #c8fff1;
+  --color-green-50: #effefa;
+
+  /* orange */
+  --color-orange-950: #481a00;
+  --color-orange-900: #7c360b;
+  --color-orange-800: #984108;
+  --color-orange-700: #bb5602;
+  --color-orange-600: #e27d00;
+  --color-orange-500: #ffa500;
+  --color-orange-400: #ffbe1b;
+  --color-orange-300: #ffcb46;
+  --color-orange-200: #ffde85;
+  --color-orange-100: #ffedc5;
+  --color-orange-50: #fff7ea;
+
+  /* neutral */
+  --color-white: #ffffff;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e6e6e6;
+  --color-neutral-300: #d6d6d6;
+  --color-neutral-400: #a5a5a5;
+  --color-neutral-500: #767676;
+  --color-neutral-600: #575757;
+  --color-neutral-700: #434343;
+  --color-neutral-800: #222222;
+  --color-neutral-900: #1a1a1a;
+  --color-black: #000000;
+}
+
+/**
+ * DARK VARIANT
+ *
+ * Escape hatch for the rare thing a semantic token can't express (theme-
+ * specific shadows, gradients). Prefer semantic tokens — they flip on their
+ * own, so `dark:` should stay rare.
+ */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/**
+ * SEMANTIC TOKENS — LIGHT
+ *
+ * The indirection layer. Components bind to these, never to a ramp step, so
+ * the whole theme swaps by redefining this handful of variables below.
+ *
+ * Tokens marked (✚) extend Figma's published set — they cover hover states,
+ * muted text, and status tints that the 16 Figma tokens don't express and
+ * that dark mode needs. Pending design sign-off to land back in the library.
+ */
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --page: var(--color-neutral-100); /* Figma background/base */
+  --surface: var(--color-white); /* Figma background/surface */
+  --surface-hover: var(--color-neutral-100); /* ✚ hover states */
+  --surface-strong: var(--color-neutral-200); /* ✚ filled/muted blocks */
+
+  /* foreground */
+  --fg: var(--color-black); /* Figma foreground/default */
+  --fg-subtle: var(--color-neutral-600); /* Figma foreground/subtle */
+  --fg-muted: var(--color-neutral-400); /* ✚ placeholder / tertiary */
+
+  /**
+   * Figma calls this foreground/inverted. It is text sitting ON a filled
+   * brand or status surface, which is white in BOTH themes — so it
+   * deliberately does not flip. A literal inversion would turn every primary
+   * button's label black on blue in dark mode.
+   */
+  --fg-on-fill: var(--color-white);
+
+  /**
+   * ✚ Maximum-contrast "inverse" surface — the solid black pill buttons in the
+   * header and side menu. Unlike --fg-on-fill this pair DOES flip, otherwise a
+   * black pill sits invisibly on a near-black page in dark mode.
+   */
+  --surface-inverse: var(--color-black);
+  --fg-on-inverse: var(--color-white);
+
+  /* borders */
+  --line: var(--color-neutral-200); /* Figma border/default */
+  --line-strong: var(--color-neutral-300); /* ✚ emphasised outline */
+
+  /* brand */
+  --brand: var(--color-brand-700); /* Figma foreground|border/brand */
+  --brand-hover: var(--color-brand-800); /* ✚ */
+  --brand-subtle: var(--color-brand-100); /* Figma background/brand-subtle */
+  --brand-subtle-hover: var(--color-brand-200); /* ✚ hover for brand-subtle */
+
+  /* status */
+  --success: var(--color-green-600); /* Figma background|foreground/success */
+  --success-subtle: var(--color-green-100); /* ✚ */
+  --warning: var(--color-orange-600); /* Figma background|foreground/warning */
+  --warning-subtle: var(--color-orange-100); /* ✚ */
+  --error: var(--color-red-600); /* Figma background|foreground|border/error */
+  --error-subtle: var(--color-red-100); /* ✚ */
+
+  /* accent — Enkrypt / secondary product surfaces */
+  --violet: var(--color-violet-700); /* ✚ */
+  --violet-subtle: var(--color-violet-100); /* ✚ */
+
+  /**
+   * Elevation. Each shadow is held whole in its own variable rather than
+   * assembled from parts: Tailwind's `shadow-*` parser walks the value looking
+   * for a colour slot to swap for `--tw-shadow-color`, and given a composed
+   * value it mistakes the blur or spread for the colour and emits invalid CSS.
+   * A single `var()` has nothing to mis-split.
+   *
+   * A 12%-black shadow is invisible on a near-black surface, so the dark
+   * variants below carry heavier alphas.
+   */
+  --shadow-token-value: 0px 3px 5px rgb(0 0 0 / 0.16);
+  --shadow-button-value: 0px 1px 4px 0px rgb(0 0 0 / 0.12);
+  --shadow-container-value: 0px 1.5px 6px 0px rgb(0 0 0 / 0.1);
+  --shadow-button-elevated-value:
+    0px 1px 4px 0px rgb(0 0 0 / 0.12), 0px 0px 1px 0px rgb(0 0 0 / 0.25);
+}
+
+/**
+ * SEMANTIC TOKENS — DARK
+ *
+ * The entire dark theme is this one block. Values are authored here (Figma
+ * publishes only a light "Base" mode) but every one is an existing ramp step,
+ * so no off-system color enters the codebase.
+ *
+ * Scoped to any [data-theme='dark'] rather than :root specifically, so a single
+ * container can be themed independently of the document — that is what lets
+ * /colors render the light and dark palettes side by side on one page.
+ *
+ * `brand`, `success`, `warning` and `error` all shift lighter: brand-700
+ * (#005ae5) on #1a1a1a is ~2.9:1, below AA for text, where brand-500
+ * (#1e91ff) reaches ~6.6:1.
+ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --page: var(--color-neutral-900);
+  --surface: var(--color-neutral-800);
+  --surface-hover: var(--color-neutral-700);
+  --surface-strong: var(--color-neutral-700);
+
+  --fg: var(--color-white);
+  --fg-subtle: var(--color-neutral-400);
+  --fg-muted: var(--color-neutral-500);
+  --fg-on-fill: var(--color-white); /* intentionally unchanged — see above */
+
+  --surface-inverse: var(--color-white);
+  --fg-on-inverse: var(--color-black);
+
+  --line: var(--color-neutral-700);
+  --line-strong: var(--color-neutral-600);
+
+  --brand: var(--color-brand-500);
+  --brand-hover: var(--color-brand-400);
+  --brand-subtle: var(--color-brand-950);
+  --brand-subtle-hover: var(--color-brand-900);
+
+  --success: var(--color-green-500);
+  --success-subtle: var(--color-green-950);
+  --warning: var(--color-orange-400);
+  --warning-subtle: var(--color-orange-950);
+  --error: var(--color-red-400);
+  --error-subtle: var(--color-red-950);
+
+  --violet: var(--color-violet-500);
+  --violet-subtle: var(--color-violet-950);
+
+  --shadow-token-value: 0px 3px 5px rgb(0 0 0 / 0.5);
+  --shadow-button-value: 0px 1px 4px 0px rgb(0 0 0 / 0.4);
+  --shadow-container-value: 0px 1.5px 6px 0px rgb(0 0 0 / 0.35);
+  --shadow-button-elevated-value:
+    0px 1px 4px 0px rgb(0 0 0 / 0.4), 0px 0px 1px 0px rgb(0 0 0 / 0.6);
+}
+
+/**
+ * SEMANTIC UTILITIES
+ *
+ * `inline` is load-bearing: it makes utilities resolve var(--fg) at the use
+ * site instead of baking in a copy of its value, which is what lets the
+ * [data-theme='dark'] block above swap the theme at runtime.
+ */
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-strong: var(--surface-strong);
+
+  --color-fg: var(--fg);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-on-fill: var(--fg-on-fill);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-fg-on-inverse: var(--fg-on-inverse);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-subtle-hover: var(--brand-subtle-hover);
+
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-error: var(--error);
+  --color-error-subtle: var(--error-subtle);
+
+  --color-violet: var(--violet);
+  --color-violet-subtle: var(--violet-subtle);
+
+  /**
+   * Vendor compatibility ONLY.
+   *
+   * @myetherwallet/vue-common-components hardcodes `bg-brand`, `text-fg-subtle`
+   * etc. as strings inside its dist bundle, which sits in our Tailwind
+   * content globs (tailwind.config.js). Removing these makes MewFooter lose
+   * its styling silently — Tailwind emits no CSS for an unknown class and
+   * raises no error.
+   *
+   * DO NOT use in app code. Use `brand` / `fg-subtle` instead.
+   */
+  --color-primary: var(--brand);
+  --color-info: var(--fg-subtle);
+
+  /* Elevation — see the *-value variables above for why these are indirected. */
+  --shadow-token: var(--shadow-token-value);
+  --shadow-button: var(--shadow-button-value);
+  --shadow-container: var(--shadow-container-value);
+  --shadow-button-elevated: var(--shadow-button-elevated-value);
 }
 
 /**
@@ -52,8 +360,8 @@
   --borderRadius: 5px;
   min-width: 320px;
   zoom: 1;
-  background-color: #f5f5f7;
-  color: rgba(0, 0, 0, 1);
+  background-color: var(--page);
+  color: var(--fg);
   box-sizing: border-box;
 }
 
@@ -177,7 +485,7 @@
 }
 
 .hoverNoBG {
-  @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
+  @apply hover:bg-surface-hover transition-colors duration-300 ease-in-out;
 }
 
 .hoverOnDarkBG {
@@ -185,7 +493,7 @@
 }
 
 .hoverBGWhite {
-  @apply hover:bg-grey-light transition-all duration-300 ease-in;
+  @apply hover:bg-surface-strong transition-all duration-300 ease-in;
 }
 
 /**
@@ -205,7 +513,10 @@ span.ripple {
   border-radius: 50%;
   transform: scale(0);
   animation: ripple 0.4s ease-out;
-  background-color: rgba(255, 255, 255, 0.3);
+  /* v-ripple lands mostly on filled buttons, so it tracks the on-fill
+     foreground — white in both themes, same as before, just no longer a
+     literal. */
+  background-color: color-mix(in srgb, var(--fg-on-fill) 30%, transparent);
 }
 
 @keyframes ripple {
@@ -314,7 +625,8 @@ html {
 .mew-scrollbar {
   scrollbar-width: thin !important;
   /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent !important;
+  /* Must follow the theme — a black thumb is invisible on a dark page. */
+  scrollbar-color: color-mix(in srgb, var(--fg) 20%, transparent) transparent !important;
   -ms-overflow-style: auto !important;
   /* IE and Edge */
 }
@@ -329,7 +641,7 @@ html {
 }
 
 .mew-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2) !important;
+  background-color: color-mix(in srgb, var(--fg) 20%, transparent) !important;
   border-radius: 10px !important;
   border: 4px solid transparent !important;
   background-clip: content-box !important;

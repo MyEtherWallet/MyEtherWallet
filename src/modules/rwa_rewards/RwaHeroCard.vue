@@ -1,10 +1,11 @@
 <template>
-  <!-- Geo-restricted regions never see reward info — only the "no MEW fees"
-       offer takes the top card's place. -->
+  <!-- The Zero MEW Fees offer takes the top card's place for geo-restricted
+       regions (which never see reward info) and once the hold offer has been
+       dismissed — the next eligible offer. -->
 
   <rwa-reward-card
     campaign="buy_no_fees"
-    v-if="isTradingRestrictedInRegion"
+    v-if="showZeroFeesOffer"
     illustration="fees"
     :title="$t('rwaRewards.fees_title')"
     :description="$t('rwaRewards.fees_description')"
@@ -14,7 +15,7 @@
   />
   <div
     v-else
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
+    class="relative isolate bg-surface overflow-hidden flex flex-col justify-between items-start h-full border border-line rounded-16 p-5 min-h-[293px]"
   >
     <img
       v-if="status !== 'banned'"
@@ -44,7 +45,7 @@
     <template v-if="status === 'holding'">
       <div class="relative z-10 w-full">
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black max-w-[210px]"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg max-w-[210px]"
         >
           {{ $t('rwaRewards.hero_holding_title') }}
         </p>
@@ -68,24 +69,39 @@
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
+          class="text-s-12 font-normal leading-[18px] text-fg-subtle whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg"
         >
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-fg-subtle">
           {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
 
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
-        <div class="flex gap-2 w-full">
+        <div class="flex gap-2 w-full [container-type:inline-size]">
+          <app-tooltip
+            v-if="isDisabledCta"
+            :text="disabledCtaTooltip"
+            position="middle"
+            class="flex-1"
+          >
+            <button
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-page text-fg-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              disabled
+            >
+              {{ disabledCtaLabel }}
+              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+            </button>
+          </app-tooltip>
           <app-base-button
+            v-else
             class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
             @click="onTrade"
           >
@@ -105,11 +121,11 @@
     <template v-else-if="status === 'earned'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg"
         >
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-fg-subtle">
           {{ $t('rwaRewards.hero_earned_desc') }}
         </p>
       </div>
@@ -119,6 +135,7 @@
         :amount-label="$t('rwaRewards.reward_amount')"
         :subtitle="$t('rwaRewards.sub_expires', { time: subExpiresText })"
         :claim-label="$t('rwaRewards.claim')"
+        :loading="isClaiming"
         @claim="onClaim"
       />
     </template>
@@ -126,11 +143,11 @@
     <template v-else-if="status === 'claimed'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_claimed_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-fg-subtle">
           {{ $t('rwaRewards.hero_claimed_desc') }}
         </p>
       </div>
@@ -153,11 +170,11 @@
     <template v-else-if="status === 'expired'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-fg-subtle">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
@@ -182,8 +199,8 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <lock-closed-icon class="w-7 h-7 text-primary" />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <lock-closed-icon class="w-7 h-7 text-brand" />
+          <p class="text-s-14 font-normal leading-5 text-fg-subtle text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
@@ -200,12 +217,12 @@
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
+          class="text-s-14 font-normal leading-5 text-fg-subtle whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
         <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_title') }}
         </p>
@@ -221,9 +238,9 @@
             :last="i === steps.length - 1"
             path-height="36px"
           >
-            <p class="text-s-14 leading-5 text-[#575757] pt-0.5">
+            <p class="text-s-14 leading-5 text-fg-subtle pt-0.5">
               {{ step.pre }}
-              <span class="font-semibold text-black tracking-[-0.28px]">{{
+              <span class="font-semibold text-fg tracking-[-0.28px]">{{
                 step.bold
               }}</span
               ><span v-if="step.post"> {{ step.post }}</span>
@@ -239,7 +256,7 @@
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-page text-fg-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
@@ -297,8 +314,24 @@ const { t } = useI18n()
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { seasonEnd, status, activeReward } = storeToRefs(holdingsStore)
+const {
+  seasonEnd,
+  status,
+  activeReward,
+  isClaiming,
+  isHoldOfferDismissed,
+  isCampaignFull,
+  isUnderReview,
+  canRegisterTrade,
+} = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+
+// The Zero MEW Fees offer is the default eligible offer shown in the hero slot
+// when there's no live hold offer to feature: geo-restricted users (no reward
+// info) and users who have dismissed their terminal hold offer.
+const showZeroFeesOffer = computed(
+  () => isTradingRestrictedInRegion.value || isHoldOfferDismissed.value,
+)
 
 // Fire a reward-offer CTA event for a main-card action
 const trackCta = (cta: string, campaign: 'hold' | 'buy_no_fees' = 'hold') =>
@@ -334,28 +367,32 @@ const onContactSupport = () => {
   showIntercom()
 }
 
+// Covers the promo CTA and the "Trade again" retry, both of which would
+// otherwise invite a trade the season can no longer register.
 const isDisabledCta = computed(
-  () =>
-    status.value === 'notEligible' ||
-    status.value === 'temporarilyPaused' ||
-    status.value === 'campaignEnded',
+  () => status.value === 'notEligible' || !canRegisterTrade.value,
 )
 const disabledCtaLabel = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.under_review')
   if (status.value === 'temporarilyPaused')
     return t('rwaRewards.temporarily_paused')
   if (status.value === 'campaignEnded') return t('rwaRewards.campaign_ended')
+  if (isCampaignFull.value) return t('rwaRewards.campaign_full')
   return t('rwaRewards.not_eligible')
 })
 const disabledCtaTooltip = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.under_review_tooltip')
   if (status.value === 'temporarilyPaused')
     return t('rwaRewards.temporarily_paused_tooltip')
   if (status.value === 'campaignEnded') return t('rwaRewards.campaign_ended')
+  if (isCampaignFull.value) return t('rwaRewards.campaign_full_tooltip')
   return t('rwaRewards.not_eligible_tooltip')
 })
 
-const onClaim = () => {
+const onClaim = async () => {
+  if (isClaiming.value) return
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  if (activeReward.value) await holdingsStore.claim(activeReward.value)
 }
 const onHide = () => {
   trackCta('hide_offer')
@@ -363,12 +400,13 @@ const onHide = () => {
 }
 
 // Report the hold main-card impression once per status while it is visible
-// (the geo-restricted "no fees" card takes over and is tracked elsewhere).
+// (when the "no fees" card takes over — geo-restricted or dismissed hold offer
+// — the hold card isn't shown, so skip; that card is tracked elsewhere).
 const lastReportedStatus = ref<string | null>(null)
 watch(
-  [status, isTradingRestrictedInRegion],
-  ([currentStatus, restricted]) => {
-    if (restricted || !currentStatus) return
+  [status, showZeroFeesOffer],
+  ([currentStatus, zeroFees]) => {
+    if (zeroFees || !currentStatus) return
     if (lastReportedStatus.value === currentStatus) return
     lastReportedStatus.value = currentStatus
     analytics.trackHoldRewardsMainCardEvent(

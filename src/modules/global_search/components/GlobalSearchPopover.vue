@@ -3,7 +3,7 @@
     <div
       v-if="isOpen"
       :class="[
-        'bg-white rounded-20 shadow-popup z-20 overflow-hidden flex flex-col max-h-[80vh]',
+        'bg-surface rounded-20 shadow-popup z-20 overflow-hidden flex flex-col max-h-[80vh]',
         isCompact
           ? 'fixed left-2 right-2 top-[72px] max-w-[420px] mx-auto'
           : 'absolute top-full left-0 mt-2 w-[480px]',
@@ -11,17 +11,17 @@
     >
       <div
         v-if="isCompact"
-        class="flex items-center gap-2 px-4 py-3 border-b border-mewBg"
+        class="flex items-center gap-2 px-4 py-3 border-b border-brand-subtle"
       >
-        <magnifying-glass-icon class="w-4 h-4 text-info" />
+        <magnifying-glass-icon class="w-4 h-4 text-fg-subtle" />
         <input
           ref="compactInputEl"
           v-model="query"
           type="text"
           :placeholder="$t('search.placeholder')"
-          class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
+          class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-fg-subtle"
         />
-        <button class="text-s-13 font-medium text-primary" @click="close">
+        <button class="text-s-13 font-medium text-brand" @click="close">
           {{ $t('search.cancel') }}
         </button>
       </div>
@@ -55,11 +55,11 @@
           v-if="showEmptyState"
           class="flex flex-col items-center justify-center gap-1 px-4 text-center flex-1"
         >
-          <magnifying-glass-icon class="w-8 h-8 text-info mb-1" />
+          <magnifying-glass-icon class="w-8 h-8 text-fg-subtle mb-1" />
           <p class="text-s-14 font-semibold">
             {{ $t('search.no_results_title') }}
           </p>
-          <p class="text-s-12 text-info">
+          <p class="text-s-12 text-fg-subtle">
             {{ $t('search.no_results_subtitle') }}
           </p>
         </div>

@@ -1,22 +1,22 @@
 <template>
-  <div class="relative px-2 rounded-16 bg-white">
+  <div class="relative px-2 rounded-16 bg-surface">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1">
-        <p class="text-info uppercase text-s-9 font-bold">
+        <p class="text-fg-subtle uppercase text-s-9 font-bold">
           {{ $t('notifications_module.transaction') }}
         </p>
         <div
           v-if="!seen"
-          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+          class="rounded-full bg-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
       <div
         :class="txStatus.color"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+        class="ml-2 px-[10px] py-[3px] rounded-full text-fg-on-fill uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
           v-if="txStatus.key === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
+          class="bg-fg-on-fill w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
         {{ $t(txStatus.labelKey) }}
       </div>
@@ -34,8 +34,8 @@
             {{ formatFloatingPointValue(transaction.amount).value }}
             {{ transaction.symbol }}
           </p>
-          <p v-if="transaction.usdValue" class="text-s-12 text-info">
-            ${{ formatFiatValue(transaction.usdValue).value }}
+          <p v-if="transaction.usdValue" class="text-s-12 text-fg-subtle">
+            {{ formatFiat(transaction.usdValue).display }}
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@
         <!-- Chain -->
         <div class="flex items-center justify-between pt-2">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.chain') }}</span
           >
           <div class="flex items-center gap-1">
@@ -100,17 +100,17 @@
         <!-- Created at -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(transaction.createdAt) }}
+            {{ formatNotificationDate(transaction.createdAt) }}
           </p>
         </div>
         <!-- Transaction -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.tx_hash') }}</span
           >
           <a
@@ -130,18 +130,18 @@
           class="flex items-start justify-between mt-3"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.network_fee') }}</span
           >
           <div class="text-right">
-            <p class="text-s-13 text-black">
+            <p class="text-s-13 text-fg">
               {{ transaction.networkFee }} {{ transaction.chainSymbol }}
             </p>
             <p
               v-if="transaction.networkFeeUSD"
-              class="text-s-12 text-info ml-1"
+              class="text-s-12 text-fg-subtle ml-1"
             >
-              ${{ formatFiatValue(transaction.networkFeeUSD).value }}
+              {{ formatFiat(transaction.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -164,11 +164,12 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+const { formatFiat } = useCurrency()
 // Props
 const props = defineProps<{
   transaction: TransactionNotification
@@ -183,11 +184,6 @@ defineEmits<{
 const { isXsAndUp } = useAppBreakpoints()
 
 const showMoreDetails = ref(false)
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {
@@ -206,13 +202,13 @@ const txStatus = computed(() => {
       return {
         key: 'possibly_dropped',
         labelKey: 'notifications_module.status.possibly_dropped',
-        color: 'bg-surface',
+        color: 'bg-surface-strong',
       }
     }
     return {
       key: 'pending',
       labelKey: 'notifications_module.status.pending',
-      color: 'bg-primary',
+      color: 'bg-brand',
     }
   } else if (status === 'failed') {
     return {

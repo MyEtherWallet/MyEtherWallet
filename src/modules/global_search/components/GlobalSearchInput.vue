@@ -10,22 +10,22 @@
       type="button"
       :aria-label="$t('search.placeholder')"
       class="w-9 h-9 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
+      :class="isOpen ? 'bg-surface' : 'bg-brand-subtle'"
       @click="open"
     >
-      <magnifying-glass-icon class="w-5 h-5 text-info" />
+      <magnifying-glass-icon class="w-5 h-5 text-fg-subtle" />
     </button>
     <div
       v-else
       class="flex items-center gap-2 px-4 py-2 rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
+      :class="isOpen ? 'bg-surface' : 'bg-brand-subtle'"
     >
-      <magnifying-glass-icon class="w-4 h-4 text-info" />
+      <magnifying-glass-icon class="w-4 h-4 text-fg-subtle" />
       <input
         v-model="query"
         type="text"
         :placeholder="$t('search.placeholder')"
-        class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
+        class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-fg-subtle"
         @focus="open"
         @click="open"
       />

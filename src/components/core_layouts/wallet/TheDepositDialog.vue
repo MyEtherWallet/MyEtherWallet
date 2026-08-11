@@ -26,7 +26,7 @@
             })
           }}
         </h1>
-        <p class="text-s-15 text-grey-60 leading-relaxed max-w-[320px]">
+        <p class="text-s-15 text-fg-subtle leading-relaxed max-w-[320px]">
           {{
             $t('common.deposit_description', {
               chain: selectedChain?.nameLong || 'Ethereum',
@@ -35,7 +35,7 @@
         </p>
         <div class="flex items-center justify-center my-6">
           <div
-            class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
+            class="rounded-30 p-8 shadow-button-elevated bg-surface flex items-center justify-center"
           >
             <div
               v-show="!isLoadingQRCode"
@@ -45,7 +45,7 @@
             <!-- Loading QR Placeholder -->
             <div
               v-show="isLoadingQRCode"
-              class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+              class="h-[150px] w-[150px] animate-pulse bg-surface-strong rounded-xl"
             ></div>
           </div>
         </div>
@@ -56,7 +56,7 @@
             class="flex-none rounded-full"
           />
           <div
-            class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
+            class="grow font-medium text-s-17 text-fg break-all leading-tight tracking-sp-06"
           >
             {{ walletAddress }}
           </div>
@@ -64,7 +64,7 @@
             <!-- Copy -->
             <app-btn-copy
               :copy-value="walletAddress"
-              class="!min-w-10 h-10 text-primary"
+              class="!min-w-10 h-10 text-brand"
             >
             </app-btn-copy>
             <!-- Block Explorer Link -->
@@ -72,9 +72,9 @@
               :href="getExplorerLink"
               :aria-label="$t('view_in_block_explorer')"
               target="_blank"
-              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-primary-light transition-colors"
+              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-brand-subtle transition-colors"
             >
-              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-primary" />
+              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-brand" />
             </a>
           </div>
         </div>

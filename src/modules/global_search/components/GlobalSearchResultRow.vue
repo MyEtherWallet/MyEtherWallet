@@ -15,13 +15,13 @@
       <app-token-symbol
         :symbol="item.symbol"
         :is-stock="item.isStock"
-        class="!text-s-16 font-semibold tracking-tight text-black"
+        class="!text-s-16 font-semibold tracking-tight text-fg"
       />
-      <div class="text-s-12 text-grey-subtle truncate">{{ item.name }}</div>
+      <div class="text-s-12 text-fg-muted truncate">{{ item.name }}</div>
     </div>
     <div class="text-right flex-none">
-      <div class="text-s-14 text-black">
-        {{ item.priceUsd !== null ? formatUsd(item.priceUsd) : '—' }}
+      <div class="text-s-14 text-fg">
+        {{ item.priceUsd !== null ? formatFiat(item.priceUsd).display : '—' }}
       </div>
       <div
         v-if="item.change24hPct !== null"
@@ -37,15 +37,11 @@
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import { useCurrency } from '@/composables/useCurrency'
 import type { SearchResultItem } from '../types'
 
 defineProps<{ item: SearchResultItem }>()
 defineEmits<{ select: [item: SearchResultItem] }>()
 
-const formatUsd = (n: number) =>
-  n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: n !== 0 && Math.abs(n) < 1 ? 6 : 2,
-  })
+const { formatFiat } = useCurrency()
 </script>

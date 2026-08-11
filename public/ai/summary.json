@@ -1,0 +1,8 @@
+{
+  "name": "MyEtherWallet",
+  "legalName": "MyEtherWallet Inc",
+  "url": "https://app.myetherwallet.com/",
+  "description": "MyEtherWallet (MEW) is a free, open-source, client-side wallet for Ethereum and EVM chains: send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks while holding your own keys.",
+  "categories": ["cryptocurrency", "ethereum wallet", "web3", "defi", "self-custody"],
+  "contact": "support@myetherwallet.com"
+}

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
+  <div class="flex flex-col mb-10 w-full divide-y divide-line">
     <app-asset-info-header
       :is-loading="isLoading"
       :has-data="!!stockData"
@@ -62,7 +62,7 @@
       :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6 ']"
     >
       <div
-        class="h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-full"
+        class="h-[308px] xs:h-[227px] animate-pulse bg-surface-strong rounded-12 w-full"
       ></div>
     </div>
   </div>
@@ -78,7 +78,7 @@ import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
 import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -89,6 +89,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   symbol: {
@@ -179,7 +180,7 @@ const existsOnCurrentChain = computed(() => {
 const shareText = computed(() => {
   const ticker = stockData.value?.stockAlias || props.symbol
   const price = stockData.value?.primaryMarket?.price
-    ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
+    ? formatFiat(stockData.value.primaryMarket.price).display
     : ''
   return t('common.share_message', { ticker, price })
 })

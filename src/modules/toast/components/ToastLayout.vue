@@ -4,12 +4,12 @@
     :class="[
       borderColor,
       isXS ? 'w-[95%] mx-auto' : 'w-[400px]',
-      'bg-gradient-to-r from-[7px] to-white to-0% min-h-[60px] rounded-2xl shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] mt-4',
+      'bg-gradient-to-r from-[7px] to-surface to-0% min-h-[60px] rounded-2xl shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] mt-4',
     ]"
   >
     <div class="flex w-full items-start py-3 px-2">
       <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
-      <div class="flex-1 px-2 pt-[5px] bg-white">
+      <div class="flex-1 px-2 pt-[5px] bg-surface">
         <p
           :class="[
             { 'mb-2': toast.link },
@@ -24,7 +24,7 @@
             v-if="!hideSecondaryText"
             :class="[
               { 'mb-3': toast.link },
-              'text-s-14 mt-1 text-info  word-break',
+              'text-s-14 mt-1 text-fg-subtle  word-break',
             ]"
           >
             {{ toast.textSecondary }}
@@ -32,7 +32,7 @@
           <div v-else>
             <button
               @click="isShownSecondaryTextInFull = !isShownSecondaryTextInFull"
-              class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+              class="-ml-4 text-s-14 py-2 px-4 text-fg-subtle word-break hoverBGWhite rounded-12 text-left"
               :aria-label="$t('rewards.toggle_full_text')"
             >
               <p>
@@ -54,7 +54,7 @@
           v-if="toast.hash"
           :class="[
             { 'mb-3': toast.link },
-            'text-s-14 mt-1 text-info word-break break-all',
+            'text-s-14 mt-1 text-fg-subtle word-break break-all',
           ]"
         >
           {{ toast.hash }}
@@ -65,14 +65,14 @@
           target="_blank"
           :class="[
             toast.link.isButton
-              ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
+              ? 'py-2  px-4 text-s-15 bg-brand hoverOpacityHasBG text-fg-on-fill rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface mb-1 text-center block mt-5 mx-auto'
               : 'underline',
           ]"
           >{{ toast.link.title }}</a
         >
         <div class="mt-4 -ml-4" v-if="toast.tradeInfo">
           <div
-            class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-grey-10 border-1 px-3 py-2"
+            class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-line border-1 px-3 py-2"
           >
             <div class="flex items-center gap-3">
               <app-token-logo
@@ -86,7 +86,7 @@
                   :symbol="toast.tradeInfo.fromToken"
                   :is-stock="toast.tradeInfo.fromTokenIsStock"
                 />
-                <p class="text-nowrap text-info text-s-14">
+                <p class="text-nowrap text-fg-subtle text-s-14">
                   {{ toast.tradeInfo.fromAmount }}
                 </p>
               </div>
@@ -103,7 +103,7 @@
                   :symbol="toast.tradeInfo.toToken"
                   :is-stock="toast.tradeInfo.toTokenIsStock"
                 />
-                <p class="text-nowrap text-info text-s-14">
+                <p class="text-nowrap text-fg-subtle text-s-14">
                   {{ toast.tradeInfo.toAmount }}
                 </p>
               </div>
@@ -158,7 +158,7 @@ const borderColor = computed(() => {
     case ToastType.Warning:
       return 'from-warning'
     default:
-      return 'from-primary'
+      return 'from-brand'
   }
 })
 
@@ -190,7 +190,7 @@ const iconColor = computed(() => {
     case ToastType.Warning:
       return 'text-warning'
     default:
-      return 'text-primary'
+      return 'text-brand'
   }
 })
 

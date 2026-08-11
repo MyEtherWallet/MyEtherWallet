@@ -2,7 +2,7 @@
   <div class="w-full">
     <p
       v-if="daysLeftLabel"
-      class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
+      class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-fg"
     >
       {{ daysLeftLabel }}
     </p>
@@ -18,11 +18,11 @@
       >
         <check-icon
           v-if="chipState(day) === 'done' || chipState(day) === 'doneGrey'"
-          class="w-3.5 h-3.5 text-white"
+          class="w-3.5 h-3.5 text-fg-on-fill"
         />
         <x-mark-icon
           v-else-if="chipState(day) === 'failed'"
-          class="w-3.5 h-3.5 text-white"
+          class="w-3.5 h-3.5 text-fg-on-fill"
         />
         <span
           v-else
@@ -68,14 +68,14 @@ const chipClass = (day: number) => {
     case 'current':
       return 'bg-white/70 border-2 border-[#0b53bf]'
     case 'failed':
-      return 'bg-[#e40c58]'
+      return 'bg-error'
     case 'doneGrey':
-      return 'bg-grey-subtle'
+      return 'bg-fg-muted'
     default:
-      return 'bg-[#e6e6e6]'
+      return 'bg-line'
   }
 }
 
 const numberClass = (day: number) =>
-  chipState(day) === 'current' ? 'text-[#0b53bf]' : 'text-[#575757]'
+  chipState(day) === 'current' ? 'text-[#0b53bf]' : 'text-fg-subtle'
 </script>

@@ -1,30 +1,57 @@
 <template>
   <button
     :class="[
+      // ---- Size ----
       { 'py-1 px-3 text-s-13': size === BtnSize.SMALL },
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
-      { 'bg-white': isOutline },
-      disabled
-        ? isOutline
-          ? '!border-grey-outline !text-grey-50'
-          : '!bg-grey-outline'
-        : isOutline
-          ? 'hoverOpacity'
-          : 'hoverOpacityHasBG',
+      // ---- Base ----
       'rounded-full font-medium transition-colors hover:opacity-90 !box-border',
-      // computed breaks error style
-      theme === 'primary'
-        ? isOutline
-          ? 'border border-2 border-primary text-primary bg-transparent'
-          : 'text-white bg-primary'
-        : theme === 'error'
-          ? isOutline
-            ? 'border border-2 border-error text-error bg-transparent'
-            : 'text-white bg-error'
+      /**
+       * Outline sits on a filled surface; ghost is the transparent variant.
+       * The theme strings below deliberately do NOT set a background for
+       * outline — two competing background utilities on one element resolve by
+       * Tailwind's emission order, and `bg-transparent` sorts after
+       * `bg-surface`, which silently made outline buttons transparent.
+       */
+      { 'bg-surface': isOutline && !isGhost && !disabled },
+      // ---- Disabled / Hover (state) ----
+      disabled
+        ? isGhost
+          ? '!bg-transparent !text-fg-muted'
           : isOutline
-            ? 'border border-2 border-grey-outline text-black bg-transparent'
-            : 'text-black bg-bgMuted',
+            ? '!border-line-strong !text-fg-muted'
+            : '!bg-line-strong'
+        : isGhost
+          ? ''
+          : isOutline
+            ? 'hoverOpacity'
+            : 'hoverOpacityHasBG',
+      // ---- Theme colors + Pressed (active) state ----
+      // Inlined rather than computed — a computed broke the error style.
+      theme === 'primary'
+        ? isGhost
+          ? 'bg-transparent text-brand hover:bg-brand-subtle active:bg-brand-subtle'
+          : isOutline
+            ? 'border border-2 border-brand text-brand active:bg-brand-subtle'
+            : 'text-fg-on-fill bg-brand active:brightness-95'
+        : theme === 'error'
+          ? isGhost
+            ? 'bg-transparent text-error hover:bg-error-subtle active:bg-error-subtle'
+            : isOutline
+              ? 'border border-2 border-error text-error active:bg-error-subtle'
+              : 'text-fg-on-fill bg-error active:brightness-95'
+          : theme === 'success'
+            ? isGhost
+              ? 'bg-transparent text-success hover:bg-success-subtle active:bg-success-subtle'
+              : isOutline
+                ? 'border border-2 border-success text-success active:bg-success-subtle'
+                : 'text-fg-on-fill bg-success active:brightness-95'
+            : isGhost
+              ? 'bg-transparent text-fg hover:bg-surface-hover active:bg-surface-strong'
+              : isOutline
+                ? 'border border-2 border-line-strong text-fg active:bg-surface-hover'
+                : 'text-fg bg-surface-strong active:brightness-95',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -41,9 +68,15 @@
             { 'w-4 h-4 mt-[2px]': size === BtnSize.SMALL },
             { 'w-5 h-5': size === BtnSize.MEDIUM },
             { 'w-6 h-6  top-[25%]': size === BtnSize.LARGE },
-            isOutline
-              ? 'text-primary  fill-white/70'
-              : 'text-white/30  fill-white',
+            !isOutline && !isGhost
+              ? 'text-fg-on-fill/30  fill-fg-on-fill'
+              : theme === 'error'
+                ? 'text-error/30 fill-error'
+                : theme === 'success'
+                  ? 'text-success/30 fill-success'
+                  : theme === 'neutral'
+                    ? 'text-fg/20 fill-fg/60'
+                    : 'text-brand/30 fill-brand',
           ]"
           viewBox="0 0 100 101"
           width="24"
@@ -63,8 +96,15 @@
       </div>
     </div>
 
-    <div :class="{ 'opacity-0': isLoading }">
+    <div
+      :class="[
+        'flex items-center justify-center gap-2',
+        { 'opacity-0': isLoading },
+      ]"
+    >
+      <slot name="leading" />
       <slot />
+      <slot name="trailing" />
     </div>
   </button>
 </template>
@@ -86,6 +126,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Ghost variant — transparent background, no border, theme-colored text.
+   * Shows a subtle themed background on hover/pressed.
+   * Mutually exclusive with `isOutline` (takes precedence).
+   */
+  isGhost: {
+    type: Boolean,
+    default: false,
+  },
   isLoading: {
     type: Boolean,
     default: false,
@@ -95,14 +144,15 @@ const props = defineProps({
     default: 'large',
   },
   /**
-   * Theme of the button, can be 'primary', 'error' or 'neutral'
-   * NOTE: this colors should be defined in the tailwind config
+   * Theme of the button, can be 'primary', 'error', 'success' or 'neutral'.
+   * NOTE: these map to semantic colour tokens defined in assets/main.css.
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'neutral'>,
+    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
     default: 'primary',
   },
 })
+
 const emit = defineEmits(['click'])
 const onClick = () => {
   if (!props.disabled && !props.isLoading) {

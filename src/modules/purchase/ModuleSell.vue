@@ -1,6 +1,20 @@
 <template>
   <div class="relative flex flex-col h-full">
-    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.sell.network_not_supported')"
+      :description="
+        t('purchase.sell.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="mb-3"
+    />
+
+    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
     <purchase-token-select-card
       v-if="displayChain"
       :chain="displayChain"
@@ -26,8 +40,8 @@
     />
 
     <!-- Network fee -->
-    <div class="flex items-center h-16 px-4 rounded-20 bg-bgBase border border-transparent">
-      <span class="flex items-center gap-1.5 text-s-12 text-info leading-[18px] flex-none">
+    <div class="flex items-center h-16 px-4 rounded-20 bg-page border border-transparent">
+      <span class="flex items-center gap-1.5 text-s-12 text-fg-subtle leading-[18px] flex-none">
         {{ t('purchase.sell.network_fee') }}
         <span
           ref="infoIconRef"
@@ -49,25 +63,25 @@
         class="flex-1 h-full flex items-center justify-end gap-1 text-s-12 leading-[18px]"
         @click="feeSelector?.openFeeModal()"
       >
-        <span class="text-info font-normal">≈</span>
-        <span class="text-black font-semibold tracking-[-0.24px]">{{ networkFeeDisplay }}</span>
-        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-info">
+        <span class="text-fg-subtle font-normal">≈</span>
+        <span class="text-fg font-semibold tracking-[-0.24px]">{{ networkFeeDisplay }}</span>
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-fg-subtle">
           <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <span v-else class="flex-1 text-right text-s-12 text-info leading-[18px]">---</span>
+      <span v-else class="flex-1 text-right text-s-12 text-fg-subtle leading-[18px]">---</span>
     </div>
 
     <teleport to="#app">
       <div
         v-if="showNetworkFeeTooltip"
-        class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-white px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
+        class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-surface px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
         :style="{ left: `${tooltipPos.left}px`, top: `${tooltipPos.top}px`, transform: 'translate(-50%, calc(-100% - 9px))' }"
       >
-        <p class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center">
+        <p class="text-s-12 font-semibold text-fg leading-[18px] tracking-[-0.24px] text-center">
           {{ t('purchase.sell.network_fee_tooltip', { symbol: displayChain?.currencyName ?? '', chain: displayChain?.nameLong ?? '' }) }}
         </p>
-        <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
+        <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-surface" />
       </div>
     </teleport>
 
@@ -84,7 +98,7 @@
       href="https://help.myetherwallet.com/"
       target="_blank"
       rel="noopener"
-      class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+      class="mt-auto self-center text-s-12 font-semibold text-brand tracking-[-0.24px] hover:underline"
     >
       {{ t('purchase.sell.need_help') }}
     </a>
@@ -93,20 +107,6 @@
       <app-select-tx-fee ref="feeSelector" />
     </div>
     </div>
-
-    <purchase-unsupported-network
-      v-if="showUnsupportedNetwork"
-      :title="t('purchase.sell.network_not_supported')"
-      :description="
-        t('purchase.sell.network_not_available', {
-          network:
-            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
-        })
-      "
-      :chains="supportedNetworkChains"
-      :default-chain="defaultSupportedChain"
-      class="absolute inset-x-2 top-[88px] z-20"
-    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -166,6 +166,7 @@ import {
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
@@ -227,9 +228,7 @@ const showUnsupportedNetwork = computed(
   () => !!purchaseInfo.value && !supportedNetwork.value,
 )
 
-const blurClass = computed(() =>
-  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
-)
+const { blockedClass } = useBlockedContent(showUnsupportedNetwork)
 
 const accessStore = useAccessStore()
 

@@ -7,7 +7,7 @@
     :class="[
       'rounded-full !cursor-pointer p-1 flex items-center justify-center ',
       { 'invert brightness-100': isWhite },
-      disabled ? 'text-grey-30' : 'hoverNoBG',
+      disabled ? 'text-fg-muted' : 'hoverNoBG',
       height,
       width,
     ]"

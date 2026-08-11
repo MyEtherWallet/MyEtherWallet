@@ -6,7 +6,7 @@
     <p
       class="text-s-9 md:text-s-11 font-semibold leading-p-150 text-nowrap"
       :class="{
-        'text-black': !stockIndex.priceChangePercentage24h,
+        'text-fg': !stockIndex.priceChangePercentage24h,
         'text-error':
           stockIndex.priceChangePercentage24h &&
           stockIndex.priceChangePercentage24h < 0,

@@ -19,7 +19,7 @@
       <!-- Search and Sort -->
       <div
         :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
-        class="flex grow gap-1 justify-between items-center bg-surface rounded-full p-1"
+        class="flex grow gap-1 justify-between items-center bg-surface-strong rounded-full p-1"
       >
         <app-search-input
           v-model="searchInput"
@@ -60,7 +60,7 @@
     </div>
     <div
       v-else
-      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-info"
+      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-fg-subtle"
     >
       {{ $t('access_wallet.not_found') }} {{ searchInput }}
     </div>

@@ -9,7 +9,7 @@
         ? 'max-w-[800px]'
         : '!max-w-[900px]',
     ]"
-    bg="bg-appBackground"
+    bg="bg-page"
     has-title-underline
     @close-dialog="closeAccess()"
   >
@@ -19,7 +19,7 @@
           <app-btn-icon
             v-if="currentView !== 'default'"
             icon="icon-arrow-left"
-            label="back to connect options"
+            :label="$t('access_wallet.back_to_connect_options')"
             class="!w-10 !h-10 mr-auto mt-4"
             @click="accessStore.setCurrentView('default')"
           >
@@ -97,6 +97,9 @@ import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import { computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 /**-------------------------------
  * Access Wallet Dialog
@@ -138,13 +141,13 @@ const getTitle = computed(() => {
   let method = ''
   switch (currentView.value) {
     case 'keystore':
-      method = 'keystore'
+      method = t('access_wallet.method.keystore')
       break
     case 'private_key':
-      method = 'private key'
+      method = t('access_wallet.method.private_key')
       break
     case 'mnemonic':
-      method = 'mnemonic phrase'
+      method = t('access_wallet.method.mnemonic_phrase')
       break
     case 'ledger':
       method = 'Ledger'
@@ -160,23 +163,25 @@ const getTitle = computed(() => {
       method = ''
       break
   }
-  return method ? `Connect with ${method}` : 'Connect Wallet'
+  return method
+    ? t('access_wallet.connect_with', { method })
+    : t('access_wallet.connect_wallet_title')
 })
 
 const helpLinkText = computed(() => {
   switch (currentView.value) {
     case 'keystore':
-      return 'How to connect your keystore wallet'
+      return t('access_wallet.help.keystore')
     case 'private_key':
-      return 'How to connect with your private key'
+      return t('access_wallet.help.private_key')
     case 'mnemonic':
-      return 'How to connect with your recovery phrase'
+      return t('access_wallet.help.mnemonic')
     case 'ledger':
-      return 'How to connect your Ledger wallet'
+      return t('access_wallet.help.ledger')
     case 'trezor':
-      return 'How to connect your Trezor wallet'
+      return t('access_wallet.help.trezor')
     default:
-      return 'Need Help connecting your wallet?'
+      return t('access_wallet.help.default')
   }
 })
 </script>

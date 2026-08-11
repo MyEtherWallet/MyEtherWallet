@@ -3,27 +3,29 @@
     <button
       v-if="showBanner"
       class="w-full hoverNoBG rounded-16 flex items-center justify-between border border-solid p-4 gap-5"
-      :class="qualifies ? 'border-success' : 'border-grey-10'"
+      :class="qualifies ? 'border-success' : 'border-line'"
       @click="onClick"
     >
       <!-- Variation 1: Trade qualifies for rewards -->
       <div v-if="qualifies" class="flex items-center gap-3">
         <check-circle-icon class="w-6 h-6 text-success shrink-0" />
-        <p class="text-s-14 font-semibold">This trade qualifies for rewards</p>
+        <p class="text-s-14 font-semibold">
+          {{ t('rewards.trade_qualifies') }}
+        </p>
       </div>
 
       <!-- Variations 2 & 3: Trade is not eligible for rewards -->
       <div v-else class="flex items-center gap-3 text-s-14">
         <exclamation-circle-icon class="w-6 h-6 text-warning shrink-0" />
         <div class="text-left">
-          <p class="font-semibold">This trade isn't eligible for rewards</p>
+          <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
-            Cash out transactions don't qualify for rewards.
+          <p v-if="isCashout && canClaimHold" class="text-fg-subtle mt-[2px]">
+            {{ t('rewards.cashout_not_qualify') }}
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
-          <p v-else class="text-info mt-[2px]">
-            Trade ${{ amountNeeded }} more to qualify
+          <p v-else class="text-fg-subtle mt-[2px]">
+            {{ t('rewards.trade_more_to_qualify', { amount: amountNeeded }) }}
           </p>
         </div>
       </div>
@@ -36,11 +38,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   ChevronRightIcon,
 } from '@heroicons/vue/24/solid'
+
+const { t } = useI18n()
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import {
@@ -63,13 +68,16 @@ const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
 )
 const holdingsStore = useHoldingsStore()
-const { status } = storeToRefs(holdingsStore)
+const { status, canRegisterTrade } = storeToRefs(holdingsStore)
 
+// Only surface the hold campaign while a new trade can still be registered for
+// it — otherwise fall through to the trade campaign.
 const canClaimHold = computed(
   () =>
-    status.value === 'default' ||
-    status.value === 'expired' ||
-    status.value === 'lost',
+    canRegisterTrade.value &&
+    (status.value === 'default' ||
+      status.value === 'expired' ||
+      status.value === 'lost'),
 )
 
 // Which reward campaign this banner is surfacing

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-16 flex flex-col px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden min-h-[250px]"
+    class="bg-surface rounded-16 flex flex-col px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden min-h-[250px]"
   >
     <div
       :class="
@@ -9,15 +9,14 @@
     >
       <!-- Top: icon + title -->
       <div class="flex items-start gap-3 mb-3">
-        <h3 class="text-s-20 font-bold text-primary leading-tight pt-1">
-          Rewards coming soon
+        <h3 class="text-s-20 font-bold text-brand leading-tight pt-1">
+          {{ t('rewards.coming_soon_title') }}
         </h3>
       </div>
 
       <!-- Body text -->
-      <p class="text-s-14 text-[#575757] leading-[22px] mb-6">
-        We're preparing the next rewards campaign. Follow @myetherwallet on X
-        for updates and upcoming announcements.
+      <p class="text-s-14 text-fg-subtle leading-[22px] mb-6">
+        {{ t('rewards.coming_soon_body') }}
       </p>
 
       <!-- CTA -->
@@ -26,9 +25,9 @@
           href="https://x.com/myetherwallet"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 border border-primary text-primary text-s-14 font-medium rounded-full px-4 py-2 hoverOpacity"
+          class="inline-flex items-center gap-1.5 border border-brand text-brand text-s-14 font-medium rounded-full px-4 py-2 hoverOpacity"
         >
-          Follow @myetherwallet
+          {{ t('rewards.follow_myetherwallet') }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -64,8 +63,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import coinsIcon from '@/assets/images/rewards/usdc-disable.png'
+
+const { t } = useI18n()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

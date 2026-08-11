@@ -8,46 +8,46 @@
     <template #content>
       <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
       <div class="flex flex-col gap-3 px-1">
-        <div class="text-grey-70 text-s-15 text-center mb-1">
+        <div class="text-fg-subtle text-s-15 text-center mb-1">
           {{ $t('verify-tx.description') }}
         </div>
         <expand-transition>
           <div v-if="showApproveMessage">
             <div
-              class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
+              class="flex items-center justify-center gap-5 my-4 font-bold text-brand animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ $t('send.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
         <div class="flex flex-col gap-2 text-wrap">
           <!-- Network -->
           <div
-            class="bg-mewBg border-none rounded-20 px-5 py-4 flex items-center"
+            class="bg-brand-subtle border-none rounded-20 px-5 py-4 flex items-center"
           >
             <img
               :src="selectedChain?.icon || '@/assets/icons/tokens/eth.svg'"
               alt=""
-              class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
+              class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-surface p-0.5"
             />
             <div>
               <p
-                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info"
+                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-fg-subtle"
               >
                 {{ $t('common.network') }}
               </p>
-              <p class="text-s-17 font-medium text-black">
+              <p class="text-s-17 font-medium text-fg">
                 {{ selectedChain?.nameLong || $t('verify-tx.unknown-network') }}
               </p>
             </div>
           </div>
           <!-- From-->
           <div
-            class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+            class="bg-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-fg-subtle ml-14"
             >
               {{ $t('common.from') }}
             </p>
@@ -56,10 +56,10 @@
               <img
                 alt=""
                 :src="createIcon(fromAddress)"
-                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-surface p-0.5 flex-none"
               />
               <p
-                class="text-s-15 font-medium text-black break-all leading-relaxed"
+                class="text-s-15 font-medium text-fg break-all leading-relaxed"
               >
                 {{ fromAddress }}
               </p>
@@ -67,10 +67,10 @@
           </div>
           <!-- Token Amount-->
           <div
-            class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+            class="bg-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-fg-subtle ml-14"
             >
               {{ $t('common.amount') }}
             </p>
@@ -78,25 +78,25 @@
               <img
                 alt=""
                 :src="toToken.logo_url || selectedChain?.icon"
-                class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
+                class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-surface p-0.5"
               />
               <div class="grow">
-                <p class="text-s-20 font-bold text-black leading-tight">
+                <p class="text-s-20 font-bold text-fg leading-tight">
                   {{ toAmount }}
-                  <span class="text-s-14 text-info">{{ toToken.symbol }}</span>
+                  <span class="text-s-14 text-fg-subtle">{{ toToken.symbol }}</span>
                 </p>
-                <p class="text-info text-s-14 font-medium">
-                  ${{ toAmountFiat }}
+                <p class="text-fg-subtle text-s-14 font-medium">
+                  {{ formatFiat(toAmountFiat).display }}
                 </p>
               </div>
             </div>
           </div>
           <!-- To -->
           <div
-            class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+            class="bg-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-fg-subtle ml-14"
             >
               {{ $t('common.to') }}
             </p>
@@ -105,10 +105,10 @@
               <img
                 alt=""
                 :src="createIcon(toAddress)"
-                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-surface p-0.5 flex-none"
               />
               <p
-                class="text-s-15 font-medium text-black break-all leading-relaxed"
+                class="text-s-15 font-medium text-fg break-all leading-relaxed"
               >
                 {{ toAddress }}
               </p>
@@ -118,16 +118,16 @@
           <!-- Network fee -->
           <div class="px-5 py-2 flex items-start justify-between mt-1">
             <p
-              class="text-s-11 font-bold uppercase tracking-sp-06 text-info py-1"
+              class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle py-1"
             >
               {{ $t('common.network_fee') }}
             </p>
             <div class="text-right">
-              <p class="font-bold text-s-15 text-black">
+              <p class="font-bold text-s-15 text-fg">
                 {{ formatFee }} {{ network?.currencyName }}
               </p>
-              <p class="text-s-12 font-medium text-info mt-0.5">
-                ${{ networkFeeUSD }}
+              <p class="text-s-12 font-medium text-fg-subtle mt-0.5">
+                {{ formatFiat(networkFeeUSD).display }}
               </p>
             </div>
           </div>
@@ -146,26 +146,26 @@
           </button>
           <expand-transition>
             <div v-if="showMoreDetails && txDataFormatted !== null">
-              <div class="my-2 flex flex-col gap-4 bg-mewBg py-6 rounded-20">
+              <div class="my-2 flex flex-col gap-4 bg-brand-subtle py-6 rounded-20">
                 <!-- Nonce-->
                 <div class="px-5 flex items-center justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle"
                   >
                     {{ $t('common.nonce') }}
                   </p>
-                  <p class="text-right text-s-14 font-medium text-black">
+                  <p class="text-right text-s-14 font-medium text-fg">
                     {{ txDataFormatted.nonce }}
                   </p>
                 </div>
                 <!-- Gas Limit -->
                 <div class="px-5 flex items-center justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle"
                   >
                     {{ $t('gas.limit') }}
                   </p>
-                  <p class="text-right text-s-14 font-medium text-black">
+                  <p class="text-right text-s-14 font-medium text-fg">
                     {{ txDataFormatted.gasLimit }}
                   </p>
                 </div>
@@ -175,11 +175,11 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle"
                   >
                     {{ $t('gas.max_fee') }}
                   </p>
-                  <p class="text-right text-s-14 font-medium text-black">
+                  <p class="text-right text-s-14 font-medium text-fg">
                     {{ txDataFormatted.maxFeePerGas }} Gwei
                   </p>
                 </div>
@@ -189,11 +189,11 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle"
                   >
                     {{ $t('gas.max_priority') }}
                   </p>
-                  <p class="text-right text-s-14 font-medium text-black">
+                  <p class="text-right text-s-14 font-medium text-fg">
                     {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
                   </p>
                 </div>
@@ -204,24 +204,24 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle"
                   >
                     {{ $t('gas.price') }}
                   </p>
-                  <p class="text-right text-s-14 font-medium text-black">
+                  <p class="text-right text-s-14 font-medium text-fg">
                     {{ txDataFormatted.gasPrice }} Gwei
                   </p>
                 </div>
                 <!-- Data -->
                 <div class="px-5 flex items-start justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info pt-2"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-fg-subtle pt-2"
                   >
                     {{ $t('common.data') }}
                   </p>
                   <div class="flex justify-end max-w-[70%]">
                     <p
-                      class="text-right text-s-12 break-all font-mono bg-white px-3 py-2 rounded-lg text-black"
+                      class="text-right text-s-12 break-all font-mono bg-surface px-3 py-2 rounded-lg text-fg"
                     >
                       {{ txDataFormatted.data }}
                     </p>
@@ -265,6 +265,7 @@ import {
   formatFloatingPointValue,
   formatIntegerToString,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
@@ -275,7 +276,11 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  getLocalizedWalletError,
+} from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -302,6 +307,7 @@ const model = defineModel()
 const emit = defineEmits<{
   'tx-sent': [txHash: string]
 }>()
+const { formatFiat } = useCurrency()
 const chainsStore = useChainsStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -346,7 +352,7 @@ const { t } = useI18n()
 
 const sanitizeErrorMessage = (e: string) => {
   if (e.toLowerCase().includes('rejected'))
-    return 'User rejected the transaction'
+    return t('common.error.user_canceled_request')
   return e
 }
 
@@ -412,7 +418,7 @@ const confirmTransaction = async () => {
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
-          chainName: selectedChain.value?.nameLong || 'Unknown',
+          chainName: selectedChain.value?.nameLong || t('send.unknown_chain'),
           chainIcon: selectedChain.value?.icon,
           chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,
@@ -452,7 +458,7 @@ const confirmTransaction = async () => {
         toastStore.addToastMessage({
           type: ToastType.Error,
           text: t('send.toast.tx-send-failed'),
-          textSecondary: errorMessage,
+          textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
         captureException(e instanceof Error ? e : new Error(msg), {
@@ -491,7 +497,7 @@ const confirmTransaction = async () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
     captureException(
       e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),

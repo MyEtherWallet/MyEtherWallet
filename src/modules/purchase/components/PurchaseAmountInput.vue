@@ -1,15 +1,15 @@
 <template>
   <div
     :class="[
-      isFocused ? 'bg-white border-grey-10' : 'bg-bgBase border-transparent',
+      isFocused ? 'bg-surface border-line' : 'bg-page border-transparent',
       'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
     ]"
   >
     <!-- Header -->
     <div
-      class="w-full flex items-center justify-between pb-3 border-b border-grey-10"
+      class="w-full flex items-center justify-between pb-3 border-b border-line"
     >
-      <p class="text-s-11 font-bold tracking-sp-06 uppercase text-black">
+      <p class="text-s-11 font-bold tracking-sp-06 uppercase text-fg">
         {{ label }}
       </p>
       <purchase-currency-chip
@@ -26,7 +26,7 @@
       <label
         :for="inputId"
         :style="scaleStyle"
-        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
+        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-brand font-bold"
       >
         <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
           effectiveSymbol
@@ -37,8 +37,8 @@
           :value="displayValue"
           type="text"
           inputmode="decimal"
-          aria-label="Amount"
-          class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
+          :aria-label="$t('common.amount')"
+          class="bg-transparent outline-none border-none p-0 font-bold text-fg appearance-none w-auto min-w-0 max-w-full text-left"
           :style="{
             fontSize: 'inherit',
             lineHeight: 'inherit',
@@ -53,7 +53,7 @@
         />
         <span
           v-if="amount === ''"
-          :class="isFocused ? 'text-grey-30' : 'text-black'"
+          :class="isFocused ? 'text-fg-muted' : 'text-fg'"
           aria-hidden="true"
           >0</span
         >
@@ -71,7 +71,7 @@
         aria-live="polite"
       >
         <span
-          class="inline-block w-5 h-5 rounded-full border-2 border-grey-10 border-t-grey-30 animate-spin"
+          class="inline-block w-5 h-5 rounded-full border-2 border-line border-t-fg-muted animate-spin"
         />
       </p>
       <p
@@ -82,29 +82,29 @@
       </p>
       <p
         v-else-if="helperMessage"
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+        class="text-s-16 font-semibold text-fg-subtle leading-[22px] tracking-[-0.32px] text-center"
       >
         {{ helperMessage }}
       </p>
       <p
         v-else
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+        class="text-s-16 font-semibold text-fg-subtle leading-[22px] tracking-[-0.32px] text-center"
       >
         ≈ {{ estimate }}
       </p>
     </div>
 
     <!-- Balance row (Sell mode) -->
-    <p v-if="balance" class="text-s-12 text-info leading-[18px] text-center">
+    <p v-if="balance" class="text-s-12 text-fg-subtle leading-[18px] text-center">
       {{ $t('purchase.sell.your_balance') }}
       <span
         :class="[
           'font-semibold tracking-[-0.24px]',
-          balance.hasError ? 'text-error' : 'text-black',
+          balance.hasError ? 'text-error' : 'text-fg',
         ]"
         >{{ balance.value }}</span
       >
-      <span class="text-info"> ({{ balance.fiat }})</span>
+      <span class="text-fg-subtle"> ({{ balance.fiat }})</span>
     </p>
 
     <!-- Quick amount buttons -->
@@ -114,9 +114,9 @@
         :key="btn.usdValue"
         type="button"
         :class="[
-          isFocused ? 'bg-bgBase' : 'bg-white',
+          isFocused ? 'bg-page' : 'bg-surface',
           selectedUsdValue === btn.usdValue
-            ? 'outline-2 outline-black -outline-offset-2'
+            ? 'outline-2 outline-fg -outline-offset-2'
             : '',
           'flex-1 min-w-0 flex items-center justify-center px-1 py-2 rounded-8 hoverNoBG transition-colors',
         ]"

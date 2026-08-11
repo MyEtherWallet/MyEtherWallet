@@ -39,10 +39,10 @@
         <aside
           v-if="sidebarIsOpen"
           id="default-sidebar"
-          class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-white"
-          aria-label="Sidebar"
+          class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-surface"
+          :aria-label="$t('common.sidebar')"
         >
-          <div class="h-full px-3 py-4 overflow-y-auto bg-white">
+          <div class="h-full px-3 py-4 overflow-y-auto bg-surface">
             <div class="flex items-center justify-between mb-4">
               <img
                 src="@/assets/images/mew/logo-header.webp"
@@ -118,7 +118,7 @@
                 <!--  DIVIDER -->
                 <hr
                   v-if="!isWalletConnected"
-                  class="h-px bg-grey-10 border-0 w-full my-3"
+                  class="h-px bg-surface-strong border-0 w-full my-3"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->
@@ -134,13 +134,13 @@
                 >
                   <button
                     @click="connectWallet"
-                    class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
+                    class="px-4 bg-surface-inverse text-fg-on-inverse h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
                   >
                     {{ $t('connect_wallet') }}
                   </button>
                   <router-link
                     :to="{ name: ROUTES_MAIN.HOME.NAME }"
-                    class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
+                    class="px-4 py-2 border-1 border-fg text-fg h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
                   >
                     {{ $t('common.create_wallet') }}
                   </router-link>
@@ -204,7 +204,7 @@ const toolsMenuItem = computed<AppMenuListItem>(() => {
 // const otherMenuList = computed<AppMenuListItem[]>(() => {
 //   return [
 // {
-//   title: t('settings'),
+//   title: t('common.settings'),
 //   iconID: ICON_IDS.SETTINGS,
 // },
 //   ]

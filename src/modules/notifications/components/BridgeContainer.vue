@@ -1,22 +1,22 @@
 <template>
-  <div class="relative px-2 rounded-16 bg-white">
+  <div class="relative px-2 rounded-16 bg-surface">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1">
-        <p class="text-info uppercase text-s-9 font-bold">
+        <p class="text-fg-subtle uppercase text-s-9 font-bold">
           {{ $t('notifications_module.bridge') }}
         </p>
         <div
           v-if="!seen"
-          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+          class="rounded-full bg-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
       <div
         :class="bridgeStatus.color"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+        class="ml-2 px-[10px] py-[3px] rounded-full text-fg-on-fill uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
           v-if="bridgeStatus.key === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
+          class="bg-surface w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
         {{ $t(bridgeStatus.labelKey) }}
       </div>
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div>
-          <p class="text-s-8 text-info uppercase tracking-sp-06 font-bold">
+          <p class="text-s-8 text-fg-subtle uppercase tracking-sp-06 font-bold">
             {{ bridge.fromChainName }}
           </p>
           <p class="font-bold text-s-14">
@@ -60,8 +60,8 @@
               class="inline-flex !text-s-14 !font-bold"
             />
           </p>
-          <p v-if="bridge.fromUsdValue" class="text-s-12 text-info">
-            ${{ bridge.fromUsdValue }}
+          <p v-if="bridge.fromUsdValue" class="text-s-12 text-fg-subtle">
+            {{ formatFiat(bridge.fromUsdValue).display }}
           </p>
         </div>
       </div>
@@ -88,7 +88,7 @@
           </div>
         </div>
         <div>
-          <p class="text-s-8 text-info uppercase tracking-sp-06 font-bold">
+          <p class="text-s-8 text-fg-subtle uppercase tracking-sp-06 font-bold">
             {{ bridge.toChainName }}
           </p>
           <p class="font-bold text-s-14">
@@ -102,8 +102,8 @@
               class="inline-flex !text-s-14 !font-bold"
             />
           </p>
-          <p v-if="bridge.toUsdValue" class="text-s-12 text-info">
-            ${{ bridge.toUsdValue }}
+          <p v-if="bridge.toUsdValue" class="text-s-12 text-fg-subtle">
+            {{ formatFiat(bridge.toUsdValue).display }}
           </p>
         </div>
       </div>
@@ -136,18 +136,18 @@
         <!-- Created at -->
         <div class="flex items-center justify-between pt-2">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(bridge.createdAt) }}
+            {{ formatNotificationDate(bridge.createdAt) }}
           </p>
         </div>
 
         <!-- Source Transaction -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
           >
             {{ $t('common.tx_hash') }}</span
           >
@@ -168,15 +168,15 @@
           class="flex items-start justify-between mt-3"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.network_fee') }}</span
           >
           <div class="text-right">
-            <p class="text-s-13 text-black">
+            <p class="text-s-13 text-fg">
               {{ bridge.networkFee }} {{ bridge.fromChainSymbol }}
             </p>
-            <p v-if="bridge.networkFeeUSD" class="text-s-12 text-info ml-1">
-              ${{ formatFiatValue(bridge.networkFeeUSD).value }}
+            <p v-if="bridge.networkFeeUSD" class="text-s-12 text-fg-subtle ml-1">
+              {{ formatFiat(bridge.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -184,7 +184,7 @@
         <!-- Destination Address -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('notifications_module.destination_address') }}</span
           >
           <a
@@ -223,10 +223,11 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatFiat } = useCurrency()
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
 const props = defineProps<{
@@ -240,12 +241,6 @@ defineEmits<{
 }>()
 
 const showMoreDetails = ref(false)
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {
@@ -264,13 +259,13 @@ const bridgeStatus = computed(() => {
       return {
         key: 'possibly_dropped',
         labelKey: 'notifications_module.status.possibly_dropped',
-        color: 'bg-surface',
+        color: 'bg-surface-strong',
       }
     }
     return {
       key: 'pending',
       labelKey: 'notifications_module.status.pending',
-      color: 'bg-primary',
+      color: 'bg-brand',
     }
   } else if (status === 'failed') {
     return {

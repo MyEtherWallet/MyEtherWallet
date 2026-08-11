@@ -53,7 +53,7 @@
                 },
                 hasContentGutter ? 'px-4 xs:px-6 sm:px-8' : '',
                 bg,
-                hasTitleUnderline ? 'border-b border-grey-outline' : '',
+                hasTitleUnderline ? 'border-b border-line-strong' : '',
               ]"
             >
               <slot name="title">
@@ -171,7 +171,7 @@ defineProps({
    */
   bg: {
     type: String,
-    default: 'bg-white',
+    default: 'bg-surface',
   },
   /**
    * @hasTitleUnderline - boolean to add a border bottom to the title section

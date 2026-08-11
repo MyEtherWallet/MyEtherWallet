@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-[220px] p-5 rounded-16"
+    class="relative isolate bg-surface overflow-hidden flex flex-col justify-between items-start h-[220px] p-5 rounded-16"
   >
     <img
       :src="illustrationSrc"
@@ -11,17 +11,19 @@
     <div class="relative z-10 flex flex-col max-w-[250px] gap-2">
       <div class="flex flex-col">
         <p
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg"
         >
           {{ title }}
         </p>
-        <p class="text-s-14 font-normal leading-5 text-[#575757]">
+        <p
+          class="text-s-14 font-normal leading-5 text-fg-subtle whitespace-pre-line"
+        >
           {{ description }}
         </p>
       </div>
       <p
         v-if="footnote"
-        class="text-s-12 font-normal leading-[18px] text-[#575757]"
+        class="text-s-12 font-normal leading-[18px] text-fg-subtle"
       >
         {{ footnote }}
       </p>
@@ -44,8 +46,8 @@
           class="flex items-center h-10 pr-3 pl-4 gap-1 rounded-full text-s-14 font-semibold"
           :class="
             effectivePrimaryDisabled
-              ? 'bg-[#f5f5f5] text-[#767676] cursor-default'
-              : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
+              ? 'bg-page text-fg-muted cursor-default'
+              : 'bg-brand text-fg-on-fill cursor-pointer hoverOpacityHasBG'
           "
           :disabled="effectivePrimaryDisabled"
           @click="clickPrimary"
@@ -63,7 +65,7 @@
         </button>
         <button
           v-if="secondaryLabel"
-          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-[#e6e6e6] text-black text-s-14 font-semibold"
+          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-line text-fg text-s-14 font-semibold"
           @click="clickSecondary"
         >
           {{ secondaryLabel }}
@@ -89,11 +91,16 @@ export type RwaCardIllustration = 'trade' | 'hold' | 'fees'
 export type RwaRewardStatus =
   | 'ongoing'
   | 'holding'
+  /** Hold period complete, reward not claimed yet. */
+  | 'claimable'
   | 'noRewards'
   | 'claimed'
   | 'paused'
+  /** Web budget accounted for while the season is still running. */
+  | 'full'
   | 'ended'
   | 'banned'
+  | 'underReview'
   | 'notEligible'
 
 const props = defineProps<{
@@ -105,6 +112,11 @@ const props = defineProps<{
   status?: RwaRewardStatus
   statusText?: string
   primaryLabel?: string
+  /**
+   * Stable identifier reported to analytics in place of `primaryLabel`, which is
+   * localized and would otherwise split one funnel across every locale.
+   */
+  primaryCta?: string
   primaryDisabled?: boolean
   secondaryLabel?: string
 }>()
@@ -176,8 +188,9 @@ const clickPrimary = () => {
   if (effectivePrimaryDisabled.value) return
   analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
     campaign: props.campaign,
-    cta: props.primaryLabel ?? '',
+    cta: props.primaryCta ?? props.primaryLabel ?? '',
     card_status: effectiveStatus.value,
+    location: 'offers_carousel',
   })
   emit('primary')
 }
@@ -189,6 +202,7 @@ const clickSecondary = () => {
       campaign: props.campaign,
       cta: props.secondaryLabel ?? '',
       card_status: effectiveStatus.value,
+      location: 'offers_carousel',
     },
   )
   emit('secondary')
@@ -199,6 +213,7 @@ const illustrationSrc = computed(() => {
   const grey = { trade: illusTradeGrey, hold: illusHoldGrey, fees: illusFees }
   const isGrey =
     effectiveStatus.value === 'ended' ||
+    effectiveStatus.value === 'full' ||
     effectiveStatus.value === 'banned' ||
     effectiveStatus.value === 'notEligible'
   return (isGrey ? grey : normal)[props.illustration]
@@ -209,10 +224,13 @@ const statusBadge = computed(
     ({
       ongoing: { text: '#005ae5', bg: '#d6edff' },
       holding: { text: '#005ae5', bg: '#d6edff' },
+      claimable: { text: '#067f71', bg: '#c8fff1' },
       noRewards: { text: '#bb5602', bg: '#ffedc5' },
       claimed: { text: '#067f71', bg: '#c8fff1' },
       paused: { text: '#bb5602', bg: '#ffedc5' },
+      full: { text: '#cc0452', bg: '#ffdbe3' },
       ended: { text: '#cc0452', bg: '#ffdbe3' },
+      underReview: { text: '#bb5602', bg: '#ffedc5' },
       banned: { text: '#cc0452', bg: '#ffdbe3' },
       notEligible: { text: '#cc0452', bg: '#ffdbe3' },
     })[effectiveStatus.value ?? 'ongoing'],

@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="flex gap-3 rounded-16 hoverBGWhite py-2 px-3 items-center bg-white"
+    class="flex gap-3 rounded-16 hoverBGWhite py-2 px-3 items-center bg-surface"
     :to="{
       name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: {
@@ -22,14 +22,14 @@
         "
       >
         <p
-          class="hidden xs:block text-s-12 text-info truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
+          class="hidden xs:block text-s-12 text-fg-subtle truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
         >
           {{ token.underlyingMarket.name }}
         </p>
       </app-tooltip>
       <p
         v-else
-        class="truncate text-s-12 text-info max-w-[120px] xs:max-w-full"
+        class="truncate text-s-12 text-fg-subtle max-w-[120px] xs:max-w-full"
       >
         {{ token.underlyingMarket.name || '' }}
       </p>
@@ -50,7 +50,7 @@
       <p
         class="text-s-12 text-right"
         :class="{
-          'text-black': !token.primaryMarket.priceChangePercentage24h,
+          'text-fg': !token.primaryMarket.priceChangePercentage24h,
           'text-error':
             token.primaryMarket.priceChangePercentage24h &&
             parseFloat(token.primaryMarket.priceChangePercentage24h) < 0,
@@ -68,10 +68,8 @@
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { StockOverviewItem } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
@@ -81,9 +79,11 @@ const props = defineProps<{
   token: StockOverviewItem
 }>()
 
+const { formatFiat } = useCurrency()
+
 const getPrice = computed(() => {
   return props.token.primaryMarket.price
-    ? `$${formatFiatValue(props.token.primaryMarket.price).value}`
+    ? formatFiat(props.token.primaryMarket.price).display
     : '-'
 })
 const getPriceChange = computed(() => {

@@ -3,7 +3,7 @@
     <div
       role="tablist"
       :aria-label="label"
-      class="flex justify-start bg-surface rounded-full p-1 xs:p-2 gap-1 max-w-fit"
+      class="flex justify-start bg-surface-strong rounded-full p-1 xs:p-2 gap-1 max-w-fit"
       v-bind="$attrs"
       @keydown="handleKeyDown"
     >
@@ -14,10 +14,16 @@
         :to="{ name: tab.routeName }"
         :class="[
           {
-            'bg-white shadow-container hover:bg-white':
+            'bg-surface shadow-container hover:bg-surface':
               activeTabIndex === index,
           },
-          'xs:min-h-12 p-1 xs:p-2 rounded-full bg-transparent text-s-17 xs:text-s-20 font-medium hoverNoBG min-w-[100px]',
+          /**
+           * Only the inactive tab clears its background — an unconditional
+           * bg-transparent competes with the active tab's bg-surface at equal
+           * specificity, leaving the winner down to Tailwind's emission order.
+           */
+          { 'bg-transparent hoverNoBG': activeTabIndex !== index },
+          'xs:min-h-12 p-1 xs:p-2 rounded-full text-s-17 xs:text-s-20 font-medium min-w-[100px]',
         ]"
         role="tab"
         :aria-selected="

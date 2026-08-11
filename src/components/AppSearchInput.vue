@@ -4,7 +4,7 @@
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
-        inFocusInput ? 'text-primary' : 'text-info',
+        inFocusInput ? 'text-brand' : 'text-fg-subtle',
       ]"
       @click="searchInput?.focus()"
     />
@@ -18,8 +18,8 @@
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
       ]"
-      :aria-label="placeholder"
-      :placeholder="placeholder"
+      :aria-label="placeholder || $t('common.search')"
+      :placeholder="placeholder || $t('common.search')"
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
@@ -38,7 +38,7 @@
         :label="$t('common.clear_icon')"
       >
         <x-circle-icon
-          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
+          :class="['text-brand', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
       /></app-btn-icon>
     </div>
   </div>
@@ -60,17 +60,18 @@ import { XCircleIcon } from '@heroicons/vue/24/outline'
 defineProps({
   /**
    * @placeholder The placeholder text of the input field. Also used as the aria label.
+   * When empty, falls back to the localized `common.search` string.
    */
   placeholder: {
     type: String,
-    default: 'Search',
+    default: '',
   },
   /**
    * @bgClass The background color of the input field.
    */
   bgClass: {
     type: String,
-    default: 'bg-white',
+    default: 'bg-surface',
   },
   /**
    * @size 'default' (24px icon, text-17) or 'compact' (20px icon, text-15).

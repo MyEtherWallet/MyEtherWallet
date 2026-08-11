@@ -11,7 +11,7 @@
       <a :href="configs.VINATGE" target="_blank" rel="noopener noreferrer" class="underline group"
         >{{ $t('coming_soon_page.previous_version') }}
         <arrow-long-right-icon
-          class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+          class="w-5 h-5 text-fg inline-block group-hover:translate-x-1 transition-transform"
       /></a>
     </p>
     <AppSubscribeToUpdates />

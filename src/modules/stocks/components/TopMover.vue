@@ -6,7 +6,7 @@
         symbol: stock.primaryMarket.symbol,
       },
     }"
-    class="rounded-16 bg-white shadow-button p-2 w-[200px] flex flex-col items-start"
+    class="rounded-16 bg-surface shadow-button p-2 w-[200px] flex flex-col items-start"
   >
     <div class="flex items-center justify-start gap-3 my-2 mx-2 w-full">
       <app-token-logo
@@ -27,23 +27,23 @@
             stock.underlyingMarket.name.length > 12
           "
         >
-          <p class="text-s-12 text-info truncate leading-tight max-w-[120px]">
+          <p class="text-s-12 text-fg-subtle truncate leading-tight max-w-[120px]">
             {{ stock.underlyingMarket.name }}
           </p>
         </app-tooltip>
-        <p v-else class="text-s-12 text-info truncate pr-2">
+        <p v-else class="text-s-12 text-fg-subtle truncate pr-2">
           {{ stock.underlyingMarket.name }}
         </p>
       </div>
     </div>
-    <div class="bg-mewBg rounded-12 mt-1 w-full">
+    <div class="bg-brand-subtle rounded-12 mt-1 w-full">
       <p class="text-s-16 font-semibold mt-2 ml-6">
         {{ getPrice }}
       </p>
       <p
         class="text-s-9 md:text-s-11 font-semibold leading-p-150 text-nowrap ml-6 mb-2"
         :class="{
-          'text-black': !stock.primaryMarket.priceChangePercentage24h,
+          'text-fg': !stock.primaryMarket.priceChangePercentage24h,
           'text-error':
             stock.primaryMarket.priceChangePercentage24h &&
             parseFloat(stock.primaryMarket.priceChangePercentage24h) < 0,
@@ -70,10 +70,8 @@
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TopMoverHistoryChart from './TopMoverHistoryChart.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type StockTopMoverItem } from '@/mew_api/types'
 import { computed } from 'vue'
@@ -81,9 +79,11 @@ import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const props = defineProps<{ stock: StockTopMoverItem }>()
 
+const { formatFiat } = useCurrency()
+
 const getPrice = computed(() => {
   return props.stock.primaryMarket.price
-    ? `$${formatFiatValue(props.stock.primaryMarket.price).value}`
+    ? formatFiat(props.stock.primaryMarket.price).display
     : '-'
 })
 const getPriceChange = computed(() => {

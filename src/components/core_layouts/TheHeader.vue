@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-surface shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
     :class="isSearchOpen ? 'z-[201]' : 'z-10'"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
@@ -41,14 +41,14 @@
             :key="index"
             :to="{ name: item.routeName }"
             class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-surface"
+            active-class="bg-surface-strong"
             v-ripple
           >
             {{ item.title }}
           </router-link>
         </div>
         <app-select
-          v-if="!showMobileMenu"
+          v-if="!showMobileMenu && !isLearnCollapsed"
           :options="learnMenuList"
           :placeholder="$t('learn')"
           use-link
@@ -67,8 +67,8 @@
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
-          :options="displayTools"
-          :placeholder="$t('tools')"
+          :options="moreMenuOptions"
+          :placeholder="$t('common.more')"
           use-vue-router
           has-on-Hover
         >
@@ -94,14 +94,18 @@
           <router-link
             v-if="!isWalletConnected"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-            class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-fg h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
               analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
                 source: 'Header_Create',
               })
             "
           >
-            {{ $t('common.create_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.create_wallet_short')
+                : $t('common.create_wallet')
+            }}
           </router-link>
           <!-- Connect wallet button -->
           <router-link
@@ -112,11 +116,16 @@
                 source: 'Header_Connect',
               })
             "
-            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            class="shrink-0 px-3 xl:px-4 bg-surface-inverse text-fg-on-inverse h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
           >
-            {{ $t('connect_wallet') }}
+            {{
+              isWalletCtaShort
+                ? $t('common.connect_wallet_short')
+                : $t('connect_wallet')
+            }}
           </router-link>
-          <the-current-network />
+          <!-- Below xs the network selector moves into the settings popup -->
+          <the-current-network v-if="!isXS" :compact="isNetworkCollapsed" />
           <!-- Address Menu -->
           <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
@@ -148,6 +157,7 @@ import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
@@ -158,6 +168,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -174,7 +185,12 @@ const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
-const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
+// The perps nav entry is no longer gated on region — perps renders a blocked
+// state instead of disappearing. The check is still kicked off here, on a
+// component mounted at app start, so it is resolved by the time any perps
+// surface reads it and none of them flash their restricted state.
+fetchTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
@@ -183,25 +199,69 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
+/**
+ * Progressive "priority+" collapse of the desktop nav: as the viewport narrows
+ * (but before it drops to the mobile hamburger at `xl-min`/1140px), the
+ * right-most nav items fold into the "More" dropdown so the bar never squishes
+ * into the global search. These thresholds are header-specific, not Tailwind
+ * breakpoints. Learn folds in first (< 1255px), then Earn (< 1160px).
+ */
+const headerCollapse = useBreakpoints({
+  earn: 1160,
+  learn: 1255,
+  networkConnected: 1310,
+  walletCta: 1500,
+  network: 1555,
+})
+const isLearnCollapsed = computed<boolean>(
+  () => headerCollapse.smaller('learn').value,
+)
+const isEarnCollapsed = computed<boolean>(
+  () => headerCollapse.smaller('earn').value,
+)
+/**
+ * Collapse the network button to its icon-only mobile look before the bar runs
+ * out of room. A disconnected header carries the extra Create/Connect wallet
+ * buttons, so it runs out of room sooner (< 1555px); a connected header has more
+ * space and only needs to collapse below 1310px.
+ */
+const isNetworkCollapsed = computed<boolean>(() =>
+  isWalletConnected.value
+    ? headerCollapse.smaller('networkConnected').value
+    : headerCollapse.smaller('network').value,
+)
+/**
+ * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
+ * "Connect") to save space before the network button collapses.
+ */
+const isWalletCtaShort = computed<boolean>(
+  () => headerCollapse.smaller('walletCta').value,
+)
+
 /** ------------------------------
  * Menu Items
  ------------------------------*/
 const coreMenuList = computed<AppMenuListItem[]>(() => {
-  return [
+  const items: AppMenuListItem[] = [
     {
       title: t('home'),
       routeName: ROUTES_MAIN.HOME.NAME,
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('stocks'),
+      title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
     },
     {
-      title: t('crypto'),
+      title: t('common.crypto'),
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
+    },
+    {
+      title: t('perpetuals'),
+      routeName: ROUTES_MAIN.PERPS.NAME,
+      iconID: ICON_IDS.PERPS,
     },
     {
       title: t('earn'),
@@ -209,6 +269,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.STAKE,
     },
   ]
+  return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
@@ -222,18 +283,24 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
-const learnMenuList: AppSelectOption[] = [
+const learnMenuList = computed<AppSelectOption[]>(() => [
   {
-    label: 'Help Center',
+    label: t('common.help_center'),
     value: 'https://help.myetherwallet.com/en/',
   },
   {
-    label: 'Blog',
+    label: t('common.blog'),
     value: 'https://www.myetherwallet.com/blog',
   },
-]
+])
 
 const displayLinks = computed(() => {
+  // Earn folds into the "More" dropdown below its threshold.
+  if (isEarnCollapsed.value) {
+    return coreMenuList.value.filter(
+      item => item.routeName !== ROUTES_MAIN.EARN.NAME,
+    )
+  }
   return coreMenuList.value
 })
 
@@ -243,6 +310,29 @@ const displayTools = computed<AppSelectOption[]>(() => {
     label: item.title,
     value: item.routeName as string,
   }))
+})
+
+/**
+ * Options for the "More" dropdown. Nav items that have collapsed out of the bar
+ * are prepended (Learn's external links first — kept at the top as requested —
+ * then Earn), followed by the always-present tools.
+ */
+const moreMenuOptions = computed<AppSelectOption[]>(() => {
+  const options: AppSelectOption[] = []
+  if (isLearnCollapsed.value) {
+    options.push(
+      ...learnMenuList.value.map(item => ({
+        label: item.label,
+        value: item.value,
+        external: true,
+      })),
+    )
+  }
+  if (isEarnCollapsed.value) {
+    options.push({ label: t('earn'), value: ROUTES_MAIN.EARN.NAME as string })
+  }
+  options.push(...displayTools.value)
+  return options
 })
 
 /**
@@ -267,7 +357,7 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
-            if(accounts && (accounts as string[]).length === 0) {
+            if (accounts && (accounts as string[]).length === 0) {
               disconnectWallet()
               return
             }
@@ -275,6 +365,11 @@ watch(
               (accounts as string[])[0] !== (await wallet.value?.getAddress())
             ) {
               const _wallet = wallet.value as Web3InjectedWallet
+              // The listener outlives the injected wallet: switching to a
+              // watch-only view (which inherits walletType INJECTED) or
+              // disconnecting leaves a wallet without updateAddress. Bail
+              // instead of crashing on a stale accountsChanged event.
+              if (typeof _wallet?.updateAddress !== 'function') return
               _wallet.updateAddress(
                 (accounts as string[])[0] as HexPrefixedString,
               )
@@ -290,6 +385,7 @@ watch(
             (accounts as string[])[0] !== (await wallet.value?.getAddress())
           ) {
             const _wallet = wallet.value as Web3InjectedWallet
+            if (typeof _wallet?.updateAddress !== 'function') return
             _wallet.updateAddress(
               (accounts as string[])[0] as HexPrefixedString,
             )

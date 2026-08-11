@@ -1,7 +1,7 @@
 <template>
   <div>
-    <app-btn-text class="text-primary text-s-14" @click="openDialog = true">
-      View All</app-btn-text
+    <app-btn-text class="text-brand text-s-14" @click="openDialog = true">
+      {{ $t('common.view_all') }}</app-btn-text
     >
     <app-dialog
       v-model:is-open="openDialog"
@@ -13,7 +13,7 @@
           class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
         >
           <div
-            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+            class="flex gap-4 justify-between items-center mb-4 bg-surface-strong rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -43,12 +43,12 @@
                     </p>
                     <app-btn-icon-close @click="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
+                  <hr class="h-px bg-surface-strong border-0 w-full mt-1 mb-2" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
                     :class="[
-                      option.value === activeSortValue ? 'bg-grey-5' : '',
+                      option.value === activeSortValue ? 'bg-page' : '',
                       'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
                     ]"
                     :id="option.value"
@@ -61,9 +61,9 @@
                     >
                       <ArrowLongUpIcon
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
+                        class="w-5 h-5 text-brand"
                       />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
+                      <ArrowLongDownIcon v-else class="w-5 h-5 text-brand" />
                     </div>
                   </button>
                 </div>
@@ -75,7 +75,7 @@
               <button
                 v-for="token in searchResults"
                 :key="token.symbol + token.id"
-                class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-grey-5"
+                class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-surface-hover"
                 @click="routeToToken(token)"
               >
                 <div class="flex justify-between items-center w-full">
@@ -91,7 +91,7 @@
                         :symbol="token.symbol"
                         :is-stock="token.is_stock"
                       />
-                      <p class="text-info text-sm mt-0.5">
+                      <p class="text-fg-subtle text-sm mt-0.5">
                         {{ token.stock_alias || token.name }}
                       </p>
                     </div>
@@ -100,8 +100,8 @@
                     <p class="font-medium">
                       {{ token.formattedPercentage }}
                     </p>
-                    <p class="text-info text-s-14">
-                      $ {{ token.usdBalanceFormatted }}
+                    <p class="text-fg-subtle text-s-14">
+                      {{ currencySymbol }} {{ token.usdBalanceFormatted }}
                     </p>
                   </div>
                 </div>
@@ -125,7 +125,10 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenAllocation } from '@/modules/portfolio/types'
+
+const { currencySymbol } = useCurrency()
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useRouter } from 'vue-router'

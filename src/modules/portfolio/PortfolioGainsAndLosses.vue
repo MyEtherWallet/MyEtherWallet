@@ -17,7 +17,7 @@
           <ChevronLeftIcon class="w-4 h-4" />
         </app-btn-icon>
 
-        <span class="px-2 text-s-12 text-info font-medium"
+        <span class="px-2 text-s-12 text-fg-subtle font-medium"
           >{{ t('portfolio.gains_and_losses.page_of', { current: currentPage + 1, total: totalPages }) }}</span
         >
         <app-btn-icon
@@ -36,7 +36,7 @@
       sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
     >
       <div
-        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
+        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-fg-subtle tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >
         <p class="col-span-2">{{ t('portfolio.table.token_header') }}</p>
         <p class="col-span-1">{{ t('portfolio.gains_and_losses.price_24h_header') }}</p>
@@ -54,7 +54,7 @@
           v-if="type === 'stock' && allStocks.length === 0"
           class="flex flex-col items-center justify-center p-6 text-center"
         >
-          <p class="text-s-14 text-info mb-4">
+          <p class="text-s-14 text-fg-subtle mb-4">
             {{ t('portfolio.gains_and_losses.empty_stocks') }}
           </p>
           <app-base-button
@@ -69,7 +69,7 @@
         <div
           v-for="token in 4"
           :key="`loading-gains-and-losses-${token}`"
-          class="bg-grey-10 animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
+          class="bg-surface-strong animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
         ></div>
       </div>
     </app-sheet>
@@ -81,7 +81,7 @@
               ? ROUTES_MAIN.STOCKS.NAME
               : ROUTES_MAIN.CRYPTO.NAME,
         }"
-        class="font-bold text-s-14 transition-colors duration-300 hover:text-primary flex items-center px-1"
+        class="font-bold text-s-14 transition-colors duration-300 hover:text-brand flex items-center px-1"
       >
         {{ buttonText }}
         <arrow-long-up-icon class="rotate-90 w-4 h-4 ml-1.5"

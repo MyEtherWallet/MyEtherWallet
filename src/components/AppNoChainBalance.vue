@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col items-center justify-center gap-3 w-full">
-    <p class="text-info">{{ $t('common.add_funds_to_proceed') }}</p>
+    <p class="text-fg-subtle">{{ $t('common.add_funds_to_proceed') }}</p>
     <app-base-button v-if="isNativeBuyable" class="!w-full" @click="buyBtn">
       <div class="flex gap-2 items-center justify-center">
         <icon-buy
-          class="w-5 h-5 xl:w-6 xl:h-6 text-white"
+          class="w-5 h-5 xl:w-6 xl:h-6 text-fg-on-fill"
           dollar-icon-color="rgb(0,90,229,1)"
         />
         <p>{{ $t('common.buy_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
@@ -28,7 +28,7 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center">
-        <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-white" />
+        <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-fg-on-fill" />
         <p>{{ $t('common.deposit_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
       </div>
     </app-base-button>

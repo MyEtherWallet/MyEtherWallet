@@ -22,24 +22,39 @@
                 <app-select
                   v-model:selected="length"
                   :options="[
-                    { label: '12 words', value: '12' },
-                    { label: '18 words', value: '18' },
-                    { label: '24 words', value: '24' },
+                    {
+                      label: $t('create_wallet.mnemonic.word_option', {
+                        count: 12,
+                      }),
+                      value: '12',
+                    },
+                    {
+                      label: $t('create_wallet.mnemonic.word_option', {
+                        count: 18,
+                      }),
+                      value: '18',
+                    },
+                    {
+                      label: $t('create_wallet.mnemonic.word_option', {
+                        count: 24,
+                      }),
+                      value: '24',
+                    },
                   ]"
-                  placeholder="Select length"
+                  :placeholder="$t('create_wallet.mnemonic.select_length')"
                 />
               </div>
               <app-btn-text
-                class="text-primary hoverOpacity"
+                class="text-brand hoverOpacity"
                 @click="updateMnemonic"
               >
                 <arrow-path-icon class="inline w-5 h-5 mr-1" />
-                Update
+                {{ $t('create_wallet.mnemonic.update') }}
               </app-btn-text>
             </div>
             <div
               data-private
-              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
+              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-page/50"
             >
               <div
                 class="grid grid-cols-2 gap-x-4 gap-y-3 w-full max-w-[500px]"
@@ -49,7 +64,7 @@
                   :key="index"
                   class="flex items-center bg-white/80 px-4 py-2 rounded-12 shadow-sm"
                 >
-                  <span class="text-info text-s-12 w-6 shrink-0"
+                  <span class="text-fg-subtle text-s-12 w-6 shrink-0"
                     >{{ index + 1 }}.</span
                   >
                   <span class="font-medium text-s-17">{{ phrase }}</span>
@@ -77,10 +92,12 @@
                 <!-- First Sample -->
                 <div v-if="generatedVerifySamples.length">
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
-                    Select Word #{{
-                      generatedVerifySamples[0].indexToVerify + 1
+                    {{
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[0].indexToVerify + 1,
+                      })
                     }}
                   </p>
                   <app-btn-group
@@ -101,10 +118,12 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
-                    Select Word #{{
-                      generatedVerifySamples[1].indexToVerify + 1
+                    {{
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[1].indexToVerify + 1,
+                      })
                     }}
                   </p>
                   <app-btn-group
@@ -125,10 +144,12 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
-                    Select Word #{{
-                      generatedVerifySamples[2].indexToVerify + 1
+                    {{
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[2].indexToVerify + 1,
+                      })
                     }}
                   </p>
                   <app-btn-group
@@ -166,14 +187,14 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <check-icon class="w-10 h-10 text-primary stroke-[3px] mb-4" />
+              <check-icon class="w-10 h-10 text-brand stroke-[3px] mb-4" />
               <h3
                 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
                 {{ stepDescription[2].title }}
               </h3>
               <p
-                class="text-s-14 sm:text-s-16 text-info leading-p-150 text-center"
+                class="text-s-14 sm:text-s-16 text-fg-subtle leading-p-150 text-center"
               >
                 {{ stepDescription[2].description }}
               </p>
@@ -185,13 +206,13 @@
                   class="w-full xs:w-auto xs:min-w-[240px]"
                   @click="closeCreateOpenAccess()"
                 >
-                  Connect wallet
+                  {{ $t('connect_wallet') }}
                 </app-base-button>
                 <app-btn-text
                   class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
-                  Create another wallet
+                  {{ $t('create_wallet.mnemonic.create_another_wallet') }}
                   <arrow-long-right-icon
                     class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
                   />
@@ -223,7 +244,9 @@ import { useAccessStore } from '@/stores/accessStore'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { closeCreateDialog } = useCreateStore()
 const { openAccessDialog, setCurrentView } = useAccessStore()
 const { isMobile } = useAppBreakpoints()
@@ -231,23 +254,25 @@ const { isMobile } = useAppBreakpoints()
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = ['create', 'verify', ' done']
-const stepDescription: StepDescription[] = [
+const steps = computed(() => [
+  t('create_wallet.mnemonic.stepper.create'),
+  t('create_wallet.mnemonic.stepper.verify'),
+  t('create_wallet.mnemonic.stepper.done'),
+])
+const stepDescription = computed<StepDescription[]>(() => [
   {
-    title: 'Your phrase',
-    description:
-      'Write down your recovery phrase and keep it somewhere secure. Do not email it or take screenshots.',
+    title: t('create_wallet.mnemonic.step1_title'),
+    description: t('create_wallet.mnemonic.step1_description'),
   },
   {
-    title: "Let's double check it",
-    description: 'Please select correct words based on their numbers.',
+    title: t('create_wallet.mnemonic.step2_title'),
+    description: t('create_wallet.mnemonic.step2_description'),
   },
   {
-    title: 'All Done',
-    description:
-      'You are now ready to take advantage of all that Ethereum has to offer! Please store your phrase in a secure place, access with mnemonic phrase should only be used in an offline setting.',
+    title: t('create_wallet.mnemonic.step3_title'),
+    description: t('create_wallet.mnemonic.step3_description'),
   },
-]
+])
 
 const backStep = () => {
   activeStep.value = 0
@@ -357,7 +382,10 @@ const verifyMnemonic = computed(() => {
  -------------------------*/
 
 const mnemonic = ref('')
-const length = ref({ label: '12 words', value: '12' })
+const length = ref({
+  label: t('create_wallet.mnemonic.word_option', { count: 12 }),
+  value: '12',
+})
 
 watch(length, () => {
   updateMnemonic()

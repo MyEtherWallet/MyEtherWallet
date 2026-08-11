@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-fg-subtle rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-fg-on-fill shadow-button"
         :class="{ 'mew-card-readable': !useDynamicContrast }"
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
@@ -17,7 +17,10 @@
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
           <div class="">
-            <app-pop-up-menu placeholder="wallet menu" location="left">
+            <app-pop-up-menu
+              :placeholder="t('common.wallet_menu')"
+              location="left"
+            >
               <template #menu-button="{ toggleMenu }">
                 <button
                   class="p-1 text-s-11 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
@@ -37,29 +40,29 @@
                   <ul class="px-2 text-s-14">
                     <li
                       @click="setOpenPaperWalletDialog(true)"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <QrCodeIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-brand"
                       />
                       {{ $t('view_paper_wallet') }}
                     </li>
                     <li
                       v-if="canSwitchAddress"
                       @click="switchAddress()"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <UserGroupIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-brand"
                       />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
+                  <hr class="h-px bg-surface-strong border-0 w-full my-2" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <TrashIcon class="w-5 h-5 inline-block mr-2 text-error" />
                       {{
@@ -169,6 +172,7 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
 import {
@@ -203,17 +207,28 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
-  wallet.value?.getBalance().then(balances => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-  })
+  wallet.value
+    ?.getBalance()
+    .then(balances => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+    })
 }
 /**
  * Copies the wallet address to the clipboard.
  */
 const copyClick = async () => {
   try {
-    if (!walletAddress.value) throw new Error(t('common.error.no_wallet_address'))
+    if (!walletAddress.value)
+      throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
@@ -255,8 +270,11 @@ const animateMewCard = (el: HTMLElement) => {
 // composable separately requests an anonymous copy for CORS-enabled pixel
 // sampling; if mewcard.mewapi.io does not yet return CORS headers the sampler
 // fails silently and we keep the static text-shadow fallback.
-const { textColor, isDynamic: useDynamicContrast, sampleFromUrl } =
-  useImageContrastTextColor()
+const {
+  textColor,
+  isDynamic: useDynamicContrast,
+  sampleFromUrl,
+} = useImageContrastTextColor()
 
 const mewCardUrl = computed(
   () => `https://mewcard.mewapi.io/?address=${walletAddress.value ?? ''}`,
@@ -294,12 +312,13 @@ const disconnectWallet = () => {
   emit('close')
 }
 
-const deleteWallet = () => {
+const deleteWallet = async () => {
   const recentAddressStore = useWatchOnlyStore()
   recentAddressStore.removeWallet(
     walletAddress.value as string,
     selectedChain.value!,
   )
+  await usePerpsAuth().logout()
   disconnectWallet()
   emit('close')
 }
@@ -357,7 +376,7 @@ const switchAddress = () => {
 .mew-card-readable a {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
-.mew-card-readable .text-black {
+.mew-card-readable .text-fg {
   text-shadow: none;
 }
 .mew-card {

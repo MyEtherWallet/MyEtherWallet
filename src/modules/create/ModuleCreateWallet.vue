@@ -7,7 +7,7 @@
         ? 'max-w-[1024px] lg:h-auto'
         : 'max-w-[450px] lg:!max-w-[952px] lg:max-h-[650px]',
     ]"
-    bg="bg-appBackground"
+    bg="bg-page"
     @close-dialog="closeCreate()"
   >
     <template #title>
@@ -36,7 +36,7 @@
           </h1>
           <p
             v-if="currentView === 'default'"
-            class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-info"
+            class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-fg-subtle"
           >
             {{ $t('create_wallet.subtitle') }}
             <!-- <a
@@ -62,10 +62,10 @@
               tabindex="0"
               role="region"
               :aria-label="$t('create_wallet.mew_mobile_app')"
-              class="relative rounded-20 lg:rounded-32 bg-mewBg pt-4 px-4 lg:p-6"
+              class="relative rounded-20 lg:rounded-32 bg-brand-subtle pt-4 px-4 lg:p-6"
             >
               <div
-                class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
+                class="absolute top-0 right-0 bg-brand text-fg-on-fill text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
               >
                 {{ $t('create_wallet.recommended') }}
               </div>
@@ -110,10 +110,10 @@
                   />
                 </div>
                 <div
-                  class="order-1 lg:order-2 flex grow items-center justify-center flex-col lg:min-w-[180px] bg-white p-4 sm:px-5 rounded-2xl shadow-sm mb-0 self-end"
+                  class="order-1 lg:order-2 flex grow items-center justify-center flex-col lg:min-w-[180px] bg-surface p-4 sm:px-5 rounded-2xl shadow-sm mb-0 self-end"
                 >
                   <p
-                    class="text-info text-s-12 font-bold uppercase tracking-sp-06 mb-2"
+                    class="text-fg-subtle text-s-12 font-bold uppercase tracking-sp-06 mb-2"
                   >
                     {{ $t('create_wallet.scan_to_download') }}
                   </p>
@@ -171,10 +171,10 @@
               tabindex="0"
               role="region"
               :aria-label="$t('create_wallet.enkrypt_browser_wallet')"
-              class="relative rounded-20 lg:rounded-32 p-4 lg:p-6 bg-enkryptBg flex flex-col h-full w-full"
+              class="relative rounded-20 lg:rounded-32 p-4 lg:p-6 bg-violet-subtle flex flex-col h-full w-full"
             >
               <div
-                class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
+                class="absolute top-0 right-0 bg-brand text-fg-on-fill text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
               >
                 {{ $t('create_wallet.recommended') }}
               </div>
@@ -229,11 +229,11 @@
                 "
                 ><div class="flex items-center">
                   <p
-                    class="text-s-16 lg:text-s-17 text-center text-white font-semibold mr-2"
+                    class="text-s-16 lg:text-s-17 text-center text-fg-on-fill font-semibold mr-2"
                   >
                     {{ $t('create_wallet.get_enkrypt') }}
                   </p>
-                  <arrow-long-right-icon class="w-6 h-6 text-white" />
+                  <arrow-long-right-icon class="w-6 h-6 text-fg-on-fill" />
                 </div>
               </a>
             </div>
@@ -241,37 +241,43 @@
 
           <!-- Other Methods Section -->
           <div>
-            <h3 class="text-s-20 font-bold mb-3 px-4">{{ $t('create_wallet.other_wallet_methods') }}</h3>
+            <h3 class="text-s-20 font-bold mb-3 px-4">
+              {{ $t('create_wallet.other_wallet_methods') }}
+            </h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-2 pt-2">
               <!-- Hardware -->
               <button
                 type="button"
                 :aria-label="$t('create_wallet.buy_hardware_wallet')"
-                class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                class="flex flex-col text-left gap-4 lg:gap-6 p-4 lg:p-6 rounded-3xl bg-surface shadow-button focus:ring-2 focus:ring-brand focus:border-brand transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
-                <div class="w-1/3">
-                  <img
-                    :src="hardware"
-                    :alt="$t('create_wallet.hardware_wallet_alt')"
-                    class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <div class="lg:w-2/3 flex flex-col justify-between">
-                  <div>
-                    <h4 class="text-s-20 font-bold mb-2">{{ $t('create_wallet.hardware_wallet') }}</h4>
-                    <p class="text-info text-s-14 leading-p-150 mb-4">
-                      {{ $t('create_wallet.hardware_wallet_description') }}
-                    </p>
-                  </div>
-                  <div
-                    class="lg:-ml-2 flex items-center text-s-16 font-medium border-1 rounded-full px-4 py-1 size-max"
-                  >
-                    {{ $t('create_wallet.buy_hardware_wallet') }}
-                    <arrow-long-right-icon
-                      class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                <div class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6">
+                  <div class="lg:w-1/3">
+                    <img
+                      :src="hardware"
+                      :alt="$t('create_wallet.hardware_wallet_alt')"
+                      class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                     />
                   </div>
+                  <div class="lg:w-2/3 flex flex-col justify-between">
+                    <div>
+                      <h4 class="text-s-20 font-bold mb-2">
+                        {{ $t('create_wallet.hardware_wallet') }}
+                      </h4>
+                      <p class="text-fg-subtle text-s-14 leading-p-150 mb-4">
+                        {{ $t('create_wallet.hardware_wallet_description') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
+                >
+                  {{ $t('create_wallet.buy_hardware_wallet') }}
+                  <arrow-long-right-icon
+                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  />
                 </div>
               </button>
 
@@ -279,40 +285,40 @@
               <button
                 type="button"
                 :aria-label="$t('create_wallet.create_software_wallet')"
-                class="relative flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                class="relative flex flex-col text-left gap-4 lg:gap-6 p-4 lg:p-6 rounded-3xl bg-surface shadow-button focus:ring-2 focus:ring-brand focus:border-brand transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
                 <div
-                  class="absolute top-0 right-0 border-error border-1 bg-error-7 text-error text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-button"
+                  class="absolute top-0 right-0 border-error border-1 bg-error-subtle text-error text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-button"
                 >
                   {{ $t('create_wallet.not_recommended') }}
                 </div>
-                <div class="w-1/3 shrink-0">
-                  <img
-                    :src="software"
-                    :alt="$t('create_wallet.software_wallet_alt')"
-                    class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <div class="lg:w-2/3 flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-start justify-between gap-2 mb-2">
-                      <h4 class="text-s-20 font-bold leading-tight">
-                        {{ $t('create_wallet.software_wallet') }}
-                      </h4>
-                    </div>
-                    <p class="text-info text-s-14 leading-p-150 mb-4">
-                      {{ $t('create_wallet.software_wallet_description') }}
-                    </p>
-                  </div>
-                  <div
-                    class="lg:-ml-2 flex items-center font-medium text-s-16 border-1 rounded-full px-4 py-1 size-max w-fit"
-                  >
-                    {{ $t('create_wallet.create_software_wallet') }}
-                    <arrow-long-right-icon
-                      class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                <div class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6">
+                  <div class="lg:w-1/3">
+                    <img
+                      :src="software"
+                      :alt="$t('create_wallet.software_wallet_alt')"
+                      class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                     />
                   </div>
+                  <div class="lg:w-2/3 flex flex-col justify-between">
+                    <div>
+                      <h4 class="text-s-20 font-bold mb-2">
+                        {{ $t('create_wallet.software_wallet') }}
+                      </h4>
+                      <p class="text-fg-subtle text-s-14 leading-p-150 mb-4">
+                        {{ $t('create_wallet.software_wallet_description') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
+                >
+                  {{ $t('create_wallet.create_software_wallet') }}
+                  <arrow-long-right-icon
+                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  />
                 </div>
               </button>
             </div>
@@ -324,14 +330,14 @@
         >
           <button
             type="button"
-            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
+            class="cursor-pointer flex border border-line-strong rounded-24 p-8 bg-surface justify-between hover:shadow-button focus:ring-2 focus:ring-brand focus:border-brand transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
             @click="openBuyWallet('ledger')"
           >
             <div class="flex flex-col justify-between relative z-10">
               <img :src="ledgerIcon" width="100" class="mb-4" />
               <div>
                 <p
-                  class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
+                  class="text-fg-subtle text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
                   {{ $t('create_wallet.starting_from') }}
                 </p>
@@ -346,14 +352,14 @@
           </button>
           <button
             type="button"
-            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
+            class="cursor-pointer flex border border-line-strong rounded-24 p-8 bg-surface justify-between hover:shadow-button focus:ring-2 focus:ring-brand focus:border-brand transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
             @click="openBuyWallet('trezor')"
           >
             <div class="flex flex-col justify-between relative z-10">
               <img :src="trezorIcon" width="100" class="mb-4" />
               <div>
                 <p
-                  class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
+                  class="text-fg-subtle text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
                   {{ $t('create_wallet.starting_from') }}
                 </p>
@@ -424,8 +430,10 @@ const isOtherMethodsOpen = ref(false)
  -------------------------------*/
 const getTitle = computed(() => {
   if (currentView.value === 'default') return t('create_wallet.title')
-  if (currentView.value === 'buy') return t('create_wallet.buy_hardware_wallet_title')
-  if (currentView.value === 'mnemonic') return t('create_wallet.create_mnemonic_wallet_title')
+  if (currentView.value === 'buy')
+    return t('create_wallet.buy_hardware_wallet_title')
+  if (currentView.value === 'mnemonic')
+    return t('create_wallet.create_mnemonic_wallet_title')
   return t('create_wallet.title')
 })
 

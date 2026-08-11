@@ -7,7 +7,7 @@
     <template #content>
       <div class="mx-4 mb-1 pb-2">
         <div
-          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
+          class="p-4 flex flex-col border border-solid border-line rounded-20 mb-2"
         >
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             {{ $t('trade.quote_modal.quote_from') }}
@@ -42,7 +42,7 @@
             </div>
             <span> {{ $t('trade.quote_modal.you_will_get') }}</span>
           </div>
-          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+          <div class="flex items-center bg-brand-subtle rounded-20 p-4 my-2">
             <div class="relative flex-none overflow-visible">
               <app-token-logo
                 :url="toToken?.logoURI"
@@ -72,14 +72,16 @@
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 flex-none"
                 />
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-fg-subtle">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
 
           <!-- Quote Details -->
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
-              <p class="text-info">
+              <p class="text-fg-subtle">
                 {{ $t('trade.quote_modal.estimated_amount') }}
                 <app-tooltip
                   :text="$t('trade.quote_modal.limit_order_warning')"
@@ -99,13 +101,13 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-fg-subtle font-normal text-right text-s-12">
                   ${{ toAmountFiat }}
                 </p>
               </div>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
-              <span class="text-info">{{
+              <span class="text-fg-subtle">{{
                 $t('trade.quote_modal.min_amount')
               }}</span>
               <div>
@@ -121,7 +123,7 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-fg-subtle font-normal text-right text-s-12">
                   ${{ minAmountFiat }}
                 </p>
               </div>
@@ -187,13 +189,13 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfirmationBanner.vue'
 import { formatUnits } from 'viem'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { analytics, TradeEvent } from '@/analytics'
+
+const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
@@ -237,7 +239,7 @@ const toAmountFiat = computed(() => {
   const formatted = formatUnits(amount, props.toToken.decimals || 18)
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
-  return formatFiatValue(fiat.toString()).value
+  return formatFiat(fiat.toString()).value
 })
 
 const minAmountFiat = computed(() => {
@@ -248,7 +250,7 @@ const minAmountFiat = computed(() => {
   )
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
-  return formatFiatValue(fiat.toString()).value
+  return formatFiat(fiat.toString()).value
 })
 
 const isProcessing = ref(false)

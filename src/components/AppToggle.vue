@@ -3,7 +3,7 @@
     <span v-if="!isRight" class="text8 pr-2">{{ label }}</span>
     <button
       :class="[
-        model ? 'bg-primary' : 'bg-info',
+        model ? 'bg-brand' : 'bg-fg-subtle',
         ' w-11 h-6  rounded-full px-1 ',
       ]"
       @click="model = !model"
@@ -12,7 +12,7 @@
         aria-hidden="true"
         :class="[
           { 'translate-x-[125%]': model },
-          'h-4 w-4 rounded-full bg-white transition-transform',
+          'h-4 w-4 rounded-full bg-fg-on-fill transition-transform',
         ]"
       ></div>
     </button>

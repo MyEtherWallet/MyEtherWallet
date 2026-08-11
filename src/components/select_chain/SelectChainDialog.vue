@@ -4,8 +4,8 @@
     v-if="isLoadedChains"
     v-model:is-open="openDialog"
     class="w-full sm:w-[460px] sm:mx-auto"
-    z-index-overlay="z-[200]"
-    z-index-container="z-[201]"
+    :z-index-overlay="zIndexOverlay"
+    :z-index-container="zIndexContainer"
     has-content-gutter
     :title="$t('select_chain.title')"
   >
@@ -14,8 +14,8 @@
         class="relative h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
       >
         <!-- Search -->
-        <div class="sticky top-0 bg-white z-20">
-          <div class="flex items-center mb-2 bg-mewBg rounded-full p-1">
+        <div class="sticky top-0 bg-surface z-20">
+          <div class="flex items-center mb-2 bg-brand-subtle rounded-full p-1">
             <app-search-input
               v-model="searchInput"
               class="grow"
@@ -23,7 +23,7 @@
               bg-class="bg-transparent"
             />
           </div>
-          <div class="h-px bg-grey-10 w-full mb-2"></div>
+          <div class="h-px bg-surface-strong w-full mb-2"></div>
         </div>
         <!-- Search Result-->
         <div
@@ -36,7 +36,7 @@
             class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
             :class="[
               chain.name === selectedChain?.name
-                ? 'bg-mewBg'
+                ? 'bg-brand-subtle'
                 : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedChain(chain)"
@@ -46,17 +46,17 @@
                 <div class="relative mr-4 overflow-visible">
                   <img
                     v-if="chain.icon"
-                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                    class="w-9 h-9 rounded-full object-contain shadow-button bg-surface"
                     :src="chain.icon"
                     alt=""
                     aria-hidden="true"
                   />
                   <div
                     v-else
-                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                    class="w-9 h-9 rounded-full bg-surface-strong shadow-button"
                   ></div>
                 </div>
-                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
+                <span class="text-s-17 text-fg">{{ chain.nameLong }}</span>
               </div>
               <check-icon
                 v-if="chain.name === selectedChain?.name"
@@ -71,7 +71,7 @@
             <app-tooltip
               :text="$t('select_chain.incompatible_tooltip')"
             >
-              <p class="text-s-16 font-medium text-info">
+              <p class="text-s-16 font-medium text-fg-subtle">
                 {{ $t('select_chain.incompatible_title') }}
               </p></app-tooltip
             >
@@ -86,24 +86,24 @@
                 <div class="relative mr-4 overflow-visible">
                   <img
                     v-if="chain.icon"
-                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                    class="w-9 h-9 rounded-full object-contain shadow-button bg-surface"
                     :src="chain.icon"
                     alt=""
                     aria-hidden="true"
                   />
                   <div
                     v-else
-                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                    class="w-9 h-9 rounded-full bg-surface-strong shadow-button"
                   ></div>
                 </div>
-                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
+                <span class="text-s-17 text-fg">{{ chain.nameLong }}</span>
               </div>
             </div>
           </div>
         </div>
         <!-- Search not found-->
         <div v-else>
-          <div class="flex justify-center mt-10 h-[400px] text-info">
+          <div class="flex justify-center mt-10 h-[400px] text-fg-subtle">
             <p>{{ $t('common.not_found.chains') }}</p>
           </div>
         </div>
@@ -158,6 +158,14 @@ const prop = defineProps({
   filterBySelectedChainType: {
     type: Boolean,
     default: true,
+  },
+  zIndexOverlay: {
+    type: String,
+    default: 'z-[200]',
+  },
+  zIndexContainer: {
+    type: String,
+    default: 'z-[201]',
   },
 })
 

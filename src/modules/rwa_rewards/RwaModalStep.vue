@@ -12,23 +12,23 @@
         <check-icon
           v-if="variant === 'done' || variant === 'doneGrey'"
           class="w-3.5 h-3.5"
-          :class="variant === 'done' ? 'text-white' : 'text-[#a5a5a5]'"
+          :class="variant === 'done' ? 'text-fg-on-fill' : 'text-fg-muted'"
         />
         <x-mark-icon
           v-else-if="variant === 'failed'"
-          class="w-3.5 h-3.5 text-white"
+          class="w-3.5 h-3.5 text-fg-on-fill"
         />
         <span
           v-else
           class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
-          :class="variant === 'current' ? 'text-[#0b53bf]' : 'text-black'"
+          :class="variant === 'current' ? 'text-[#0b53bf]' : 'text-fg'"
           >{{ number }}</span
         >
       </div>
       <div
         v-if="!last"
         class="w-0.5 flex-1 my-0.5 rounded-[3px]"
-        :class="connectorBlue ? 'bg-[#0b53bf]' : 'bg-[#e6e6e6]'"
+        :class="connectorBlue ? 'bg-[#0b53bf]' : 'bg-line'"
       ></div>
     </div>
     <div class="flex-1 min-w-0">
@@ -58,13 +58,13 @@ const circleClass = computed(() => {
     case 'done':
       return 'bg-[#0b53bf]'
     case 'doneGrey':
-      return 'bg-[#e6e6e6]'
+      return 'bg-line'
     case 'current':
       return 'border-2 border-[#0b53bf]'
     case 'failed':
-      return 'bg-[#e40c58]'
+      return 'bg-error'
     default:
-      return 'bg-[#e6e6e6]'
+      return 'bg-line'
   }
 })
 </script>

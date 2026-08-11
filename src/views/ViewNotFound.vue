@@ -9,12 +9,12 @@
       aria-label=""
     />
     <h1 class="text-7xl my-10 text-center">{{ $t('not_found_page.title') }}</h1>
-    <h2 class="text-2xl mt-5 text-center text-mew-green-text">
+    <h2 class="text-2xl mt-5 text-center text-success">
       {{ $t('not_found_page.subtitle') }}
     </h2>
     <router-link
       :to="{ name: ROUTES_MAIN.HOME.NAME }"
-      class="bg-mew-green-text rounded-md w-40 mx-auto text-white py-5 block text-center mt-5"
+      class="bg-success rounded-md w-40 mx-auto text-fg-on-fill py-5 block text-center mt-5"
     >
       {{ $t('not_found_page.go_home') }}
     </router-link>

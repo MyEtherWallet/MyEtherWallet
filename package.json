@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.9",
+  "version": "7.2.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -22,7 +22,8 @@
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
     "update-api-schema": "npx openapi-typescript https://mew-api-prod.ethvm.dev/schema.yaml -o src/mew_api/schema.ts",
-    "update-rewards-schema": "npx openapi-typescript https://mew-rewards-prod.ethvm.dev/schema.yaml -o src/mew_api/schemaRewards.ts"
+    "update-rewards-schema": "npx openapi-typescript https://mew-rewards-prod.ethvm.dev/schema.yaml -o src/mew_api/schemaRewards.ts",
+    "update-perps-schema": "npx openapi-typescript https://registry.scalar.com/@ondoperps/apis/ondo-perps-rest-api@latest?format=json -o src/modules/perps/api/schema.ts"
   },
   "dependencies": {
     "@1inch/fusion-sdk": "^2.4.5",

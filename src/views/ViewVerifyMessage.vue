@@ -38,7 +38,7 @@
             class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
               verified
-                ? 'border-mew-green-text/20 text-t-default bg-success/5'
+                ? 'border-success/20 text-fg bg-success/5'
                 : 'border-error/20 text-error bg-error/5'
             "
           >

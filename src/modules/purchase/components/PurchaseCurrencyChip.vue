@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="flex items-center gap-1.5 text-black hover:text-info transition-colors duration-300 pl-3 -ml-2 pr-2 -mr-2 py-2.5 -my-1.5"
+    class="flex items-center gap-1.5 text-fg hover:text-fg-subtle transition-colors duration-300 pl-3 -ml-2 pr-2 -mr-2 py-2.5 -my-1.5"
     @click="emit('click')"
   >
     <app-token-logo

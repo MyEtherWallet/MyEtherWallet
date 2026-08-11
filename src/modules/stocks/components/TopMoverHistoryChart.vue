@@ -18,7 +18,7 @@ import {
   type ChartOptions,
   type ChartData,
 } from 'chart.js'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 interface DataPoint {
   timestamp: number
@@ -131,7 +131,13 @@ const yBounds = computed(() => {
   }
 })
 
-const chartOptions = computed<ChartOptions<'line'>>(() => ({
+const { formatFiat, rate, currencySymbol } = useCurrency()
+
+const chartOptions = computed<ChartOptions<'line'>>(() => {
+  // Track currency refs so the chart re-renders when the display currency changes.
+  void rate.value
+  void currencySymbol.value
+  return {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -163,7 +169,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             label += ': '
           }
           if (context.parsed.y !== null) {
-            return '$' + formatFiatValue(context.parsed.y).value
+            return formatFiat(context.parsed.y).display
           }
           return label
         },
@@ -198,7 +204,8 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     },
   },
   elements: { line: { capBezierPoints: true } },
-}))
+  }
+})
 </script>
 
 <style scoped>

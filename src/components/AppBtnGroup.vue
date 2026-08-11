@@ -2,7 +2,7 @@
   <div
     :class="[
       {
-        'bg-surface rounded-32 p-1': variant === 'default',
+        'bg-surface-strong rounded-32 p-1': variant === 'default',
       },
       { 'max-w-fit': !hasFullWidth },
       'flex  gap-1',
@@ -12,7 +12,9 @@
       v-if="isLoaded"
       class="flex flex-row"
       :class="[
-        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start',
+        hasFullWidth
+          ? 'justify-stretch  overflow-auto no-scrollbar scrollbar-hide'
+          : 'flex-wrap justify-start',
         variant === 'outline' ? 'gap-2' : 'gap-1',
       ]"
     >
@@ -27,21 +29,28 @@
           { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
           { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
           {
-            'bg-white shadow-container !hover:bg-white':
+            'bg-surface shadow-container':
               variant === 'default' && areEqual(selected, btn),
           },
           { hoverNoBG: variant === 'default' && !areEqual(selected, btn) },
           {
-            '!bg-surface': variant === 'outline' && !areEqual(selected, btn),
+            '!bg-surface-strong': variant === 'outline' && !areEqual(selected, btn),
           },
           {
-            ' !bg-black text-white':
+            ' !bg-surface-inverse text-fg-on-inverse':
               variant === 'outline' && areEqual(selected, btn),
           },
-          { 'w-full': hasFullWidth },
-          'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium  ',
-
-          variant === 'outline' ? '' : '',
+          /**
+           * Only the unselected button clears its background. Applying
+           * bg-transparent unconditionally left it competing with the selected
+           * button's bg-surface at equal specificity, so which one won came
+           * down to the order Tailwind happened to emit them in.
+           */
+          {
+            'bg-transparent': !(variant === 'default' && areEqual(selected, btn)),
+          },
+          { 'w-full !min-w-fit': hasFullWidth },
+          'text-s-17 px-2 leading-p-140  rounded-full font-medium  ',
         ]"
         @click="setSelected(btn)"
       >
@@ -56,7 +65,7 @@
       <div
         v-for="n in totalPlaceholders"
         :key="n"
-        class="animate-pulse bg-white rounded-full p-2 gap-1 flex items-center min-w-[110px]"
+        class="animate-pulse bg-surface rounded-full p-2 gap-1 flex items-center min-w-[110px]"
         :class="[
           { 'min-h-10': size === 'large' },
           { 'min-h-8': size === 'medium' },

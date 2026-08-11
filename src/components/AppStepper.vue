@@ -3,7 +3,9 @@
     <!-- Steps -->
     <div
       :class="['flex items-center w-full px-6', { 'md:mb-8': showStepNumber }]"
-      :aria-label="`Step ${activeStep + 1} of ${steps.length}`"
+      :aria-label="
+        $t('common.step_of', { current: activeStep + 1, total: steps.length })
+      "
     >
       <div
         v-for="(step, index) in steps"
@@ -20,24 +22,24 @@
         >
           <div
             :class="[
-              'w-6 h-6 rounded-full  bg-grey-30 flex items-center justify-center relative',
+              'w-6 h-6 rounded-full  bg-fg-muted flex items-center justify-center relative',
               {
-                '!bg-primary': index === activeStep,
+                '!bg-brand': index === activeStep,
               },
               {
-                '!bg-white border border-primary border-2': index < activeStep,
+                '!bg-surface border border-brand border-2': index < activeStep,
               },
             ]"
           >
-            <span v-if="index < activeStep" class="text-primary">
+            <span v-if="index < activeStep" class="text-brand">
               <check-icon class="w-3 h-3" />
             </span>
-            <span v-else class="text-white text-xs">{{ index + 1 }}</span>
+            <span v-else class="text-fg-on-fill text-xs">{{ index + 1 }}</span>
             <span
               v-if="showStepNumber"
               :class="[
                 'hidden md:block absolute top-8 w-[120px] text-center text-xs lowercase',
-                { 'text-info': index > activeStep },
+                { 'text-fg-subtle': index > activeStep },
               ]"
               >{{ step }}</span
             >
@@ -45,7 +47,7 @@
         </div>
         <hr
           v-if="index !== steps.length - 1"
-          class="h-px bg-grey-outline border-0 w-full"
+          class="h-px bg-line-strong border-0 w-full"
         />
       </div>
     </div>

@@ -5,7 +5,11 @@
     >
       <app-share-button :share-text="shareText" :disabled="isLoading" />
       <app-btn-icon
-        :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
+        :label="
+          isWatchlisted
+            ? $t('common.remove_from_watchlist')
+            : $t('common.add_to_watchlist')
+        "
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
       >
@@ -15,7 +19,7 @@
     </div>
     <div
       v-if="isLoading || !hasData"
-      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface rounded-12 w-[60%]"
+      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface-strong rounded-12 w-[60%]"
     />
     <div
       v-else
@@ -66,7 +70,7 @@
         </h1>
         <div>
           <p class="text-s-20 xs:text-s-24 inline">
-            ${{ currentPrice ? formatFiatValue(currentPrice).value : '--' }}
+            {{ currentPrice ? formatFiat(currentPrice).display : '--' }}
           </p>
           <div v-if="priceChangeNum !== null" class="inline-block ml-2">
             <ArrowTrendingDownIcon
@@ -92,9 +96,9 @@
         </div>
         <p
           v-if="!isLoading && existsOnCurrentChain"
-          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-fg-subtle"
         >
-          on {{ selectedChain?.name }}
+          {{ $t('crypto.on_chain', { chain: selectedChain?.name }) }}
         </p>
       </div>
     </div>
@@ -113,10 +117,8 @@ import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
 } from '@heroicons/vue/24/outline'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const props = defineProps({
   isLoading: { type: Boolean, required: true },
@@ -141,6 +143,8 @@ const props = defineProps({
 })
 
 defineEmits<{ 'toggle-watchlist': [] }>()
+
+const { formatFiat } = useCurrency()
 
 const priceChangeNum = computed(() => {
   if (props.priceChangePercentage === null || props.priceChangePercentage === undefined)

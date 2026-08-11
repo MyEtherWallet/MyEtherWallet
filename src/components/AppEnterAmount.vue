@@ -1,9 +1,9 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-surface p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput || isOpenSelectToken,
+      'ring-2 ring-brand': inFocusInput || isOpenSelectToken,
     }"
     @click="setInFocusInput"
   >
@@ -21,23 +21,25 @@
         @keypress="checkIfNumber"
         @paste="onAmountPaste"
       />
-      <app-token-select
-        v-model:selected-token-contract="selectedToken"
-        @open:select-token="setIsOpenSelectToken"
-      />
+      <slot name="token-select">
+        <app-token-select
+          v-model:selected-token-contract="selectedToken"
+          @open:select-token="setIsOpenSelectToken"
+        />
+      </slot>
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
-          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+          class="h-5 flex bg-surface-strong rounded-full w-1/2"
         ></div>
         <div v-else class="flex justify-between items-center gap-2">
           <div
             :class="[
               !!error && !isOpenSelectToken && !isPristine
                 ? 'text-error'
-                : 'text-info',
+                : 'text-fg-subtle',
               'text-s-14',
             ]"
           >
@@ -45,11 +47,11 @@
           </div>
           <div
             v-if="isWalletConnected"
-            class="flex items-center gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
+            class="flex items-center gap-2 text-s-12 leading-p-120 text-fg-subtle font-medium whitespace-nowrap"
           >
             <div>
               {{ $t('common.balance') }}:
-              <span class="text-black">{{ balance }}</span>
+              <span class="text-fg">{{ balance }}</span>
             </div>
             <slot name="balance-action" />
           </div>
@@ -64,6 +66,7 @@
         </p>
       </transition>
     </div>
+    <slot name="footer" />
   </div>
 </template>
 
@@ -76,16 +79,16 @@ import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
   storeToRefs(walletStore)
+
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   validateInput: {
@@ -96,6 +99,10 @@ const props = defineProps({
   isPristine: {
     type: Boolean,
     default: false,
+  },
+  tokenObj: {
+    type: Object as PropType<TokenBalance | null>,
+    default: null,
   },
 })
 
@@ -114,6 +121,7 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
+  if (props.tokenObj) return props.tokenObj
   if (isLoading.value || !selectedToken.value) return null
   return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
@@ -124,7 +132,7 @@ const balanceFiat = computed(() => {
       BigNumber(amount.value || 0),
     ),
   )
-  return `$${formatFiatValue(_balance).value}`
+  return formatFiat(_balance).display
 })
 
 const balance = computed(() => {
