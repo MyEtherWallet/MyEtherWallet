@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center gap-1.5 w-full">
-    <p class="text-[10px] leading-4 text-info text-center">
+    <p class="text-[10px] leading-4 text-fg-subtle text-center">
       {{ $t('purchase.payment_methods_list') }}
     </p>
     <div class="flex items-center gap-1">

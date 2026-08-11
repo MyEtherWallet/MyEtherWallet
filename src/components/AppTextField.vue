@@ -9,9 +9,9 @@
       :readonly="props.readonly"
       :class="[
         {
-          '!border-primary !border-2': inFocusInput,
+          '!border-brand !border-2': inFocusInput,
         },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline text-s-17 rounded-20 h-[160px] w-full px-6 pt-5 pb-4 transition-colors placeholder:text-grey-30',
+        'grow focus:outline-none focus:ring-0 bg-surface border border-1 border-line-strong text-s-17 rounded-20 h-[160px] w-full px-6 pt-5 pb-4 transition-colors placeholder:text-fg-muted',
       ]"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
@@ -32,7 +32,7 @@
       <button
         v-if="model && model !== ''"
         @click="clearInputValue"
-        class="text-s-14 font-medium text-primary hoverOpacity ml-auto px-2"
+        class="text-s-14 font-medium text-brand hoverOpacity ml-auto px-2"
       >
         {{ $t('common.clear') }}
       </button>

@@ -19,7 +19,7 @@
           </p>
           <app-btn-text
             v-if="supportedNetwork"
-            class="text-primary text-s-14 pb-1"
+            class="text-brand text-s-14 pb-1"
             @click="clearValues"
             >{{ $t('common.clear_all') }}</app-btn-text
           >
@@ -59,7 +59,7 @@
 
         <div :class="['relative transition-all duration-300', blockedClass]">
           <!-- From Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
+          <div class="bg-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p
               class="text-s-12 font-bold ml-3"
               :class="{ 'mb-1': !isSwapView }"
@@ -93,7 +93,7 @@
                 >
                   <button
                     type="button"
-                    class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     @click="handleMaxClick"
                   >
                     {{ $t('common.max') }}
@@ -106,14 +106,14 @@
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
             <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-surface rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <arrow-down-icon class="w-5 h-5 text-brand" />
             </div>
           </div>
 
           <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
+          <div class="bg-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
             <p class="text-s-12 font-bold ml-3">
               {{ $t('swap.you-are-buying') }}
             </p>
@@ -172,7 +172,7 @@
       <div
         v-if="!isLoading && priceImpactTooHigh"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-error-subtle border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
           {{
@@ -183,7 +183,7 @@
       <div
         v-if="!isLoading && generalError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-error-subtle border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
           {{ generalError }}

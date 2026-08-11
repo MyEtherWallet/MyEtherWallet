@@ -11,7 +11,7 @@
     />
     <div
       v-else
-      class="w-10 h-10 rounded-lg flex items-center justify-center bg-grey-5 rounded-xl"
+      class="w-10 h-10 rounded-lg flex items-center justify-center bg-page rounded-xl"
     ></div>
   </div>
 </template>

@@ -3,7 +3,7 @@
     :key="listItem.title"
     :class="[
       'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
-      { 'bg-surface': isCurrentRoute },
+      { 'bg-surface-strong': isCurrentRoute },
       { 'pl-12 text-s-14': isSubmenu },
     ]"
     :is="listItem.routeName ? 'router-link' : 'button'"

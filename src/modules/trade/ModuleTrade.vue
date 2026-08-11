@@ -13,7 +13,7 @@
         <div class="flex items-end justify-between mb-2 px-4">
           <div>
             <p class="font-bold text-s-28">{{ $t('trade.title') }}</p>
-            <p class="text-info text-s-12 ml-1">
+            <p class="text-fg-subtle text-s-12 ml-1">
               {{ $t('trade.subtitle') }}
             </p>
           </div>
@@ -23,7 +23,7 @@
               isCurrentNetworkSupported &&
               !isTradingRestrictedInRegion
             "
-            class="text-primary text-s-14 pb-1"
+            class="text-brand text-s-14 pb-1"
             @click="clearValues"
             >{{ $t('common.clear_all') }}</app-btn-text
           >
@@ -49,7 +49,7 @@
               >
                 {{ $t('trade.opens_in', { countdown: countdownText }) }}
               </p>
-              <p class="text-grey-50 text-s-11 mt-1">
+              <p class="text-fg-subtle text-s-11 mt-1">
                 {{ formatNextOpen(marketStatus.nextOpen) }}
               </p>
             </div>
@@ -75,7 +75,7 @@
               <button
                 v-for="chain in supportedChainsList"
                 :key="chain.name"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                class="flex items-center gap-2 px-4 py-2 bg-brand-subtle hover:bg-brand-subtle-hover font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
                 @click="switchToNetwork(chain)"
               >
                 <app-token-logo
@@ -105,7 +105,7 @@
           <template #icon>
             <div class="relative">
               <globe-asia-australia-icon
-                class="w-12 h-12 text-black"
+                class="w-12 h-12 text-fg"
                 aria-hidden="true"
               />
               <!--
@@ -115,10 +115,10 @@
                 blob welded onto the globe's edge.
               -->
               <span
-                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
+                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-surface flex items-center justify-center"
               >
                 <exclamation-circle-icon
-                  class="w-4 h-4 text-white"
+                  class="w-4 h-4 text-fg-on-fill"
                   aria-hidden="true"
                 />
               </span>
@@ -133,7 +133,7 @@
         </app-unavailable-card>
 
         <div :class="['relative transition-all duration-300', blockedClass]">
-          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
+          <div class="bg-brand-subtle rounded-20 p-4 mx-auto mb-2">
             <select-chain-for-app
               :can-store="false"
               :passed-chains="fromChains"
@@ -144,7 +144,7 @@
           <!-- From Section -->
           <div
             v-if="supportedNetwork"
-            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
+            class="bg-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto"
           >
             <p class="text-s-12 mb-1 font-bold ml-3">
               {{ $t('trade.you_are_selling') }}
@@ -174,7 +174,7 @@
                     <button
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       :disabled="
                         pct === 100 &&
                         fromTokenSelected?.address === MAIN_TOKEN_CONTRACT
@@ -199,22 +199,22 @@
             <!-- <button
               :aria-label="$t('trade.swap_from_to')"
               :class="[
-                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
+                'absolute right-[50%] top-1/2 bg-surface rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
               ]"
               @click="swapTokens"
             >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+              <arrows-up-down-icon class="w-5 h-5 text-brand" />
             </button> -->
             <!-- Arrow Button -->
             <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-surface rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <arrow-down-icon class="w-5 h-5 text-brand" />
             </div>
           </div>
 
           <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
+          <div class="bg-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
             <p class="text-s-12 mb-1 font-bold ml-3">
               {{ $t('trade.you_are_buying') }}
             </p>
@@ -242,7 +242,7 @@
       <div
         v-if="!isLoading && displayGeneralError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
+        class="w-full max-w-[340px] p-4 bg-error-subtle border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
         <p class="text-error text-s-14 text-center break-words">
           {{ displayGeneralError }}
@@ -257,7 +257,7 @@
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
-        class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-warning-subtle border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
           <app-token-symbol

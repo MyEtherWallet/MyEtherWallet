@@ -8,7 +8,7 @@
   <div
     v-if="showBanner"
     role="status"
-    class="flex items-center gap-2 w-full px-4 py-3 rounded-16 bg-warning-10 border-1 border-warning-10"
+    class="flex items-center gap-2 w-full px-4 py-3 rounded-16 bg-warning-subtle border-1 border-warning-subtle"
   >
     <!--
       The amber lives in the tinted shell and the icon rather than the text:

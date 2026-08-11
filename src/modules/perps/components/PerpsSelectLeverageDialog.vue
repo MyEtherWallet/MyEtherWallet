@@ -16,11 +16,11 @@
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <!-- Leverage Card -->
-        <div class="bg-mewBg rounded-[20px] p-5">
+        <div class="bg-brand-subtle rounded-[20px] p-5">
           <!-- +/- Controls -->
           <div class="flex items-center justify-center gap-6 mb-5">
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-surface hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
               :disabled="modelValue <= 1"
               :class="
                 modelValue <= 1
@@ -61,7 +61,7 @@
               <span class="font-bold text-[40px] tracking-tight">&times;</span>
             </div>
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-surface hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
               :disabled="modelValue >= maxLeverage"
               :class="
                 modelValue >= maxLeverage
@@ -82,7 +82,7 @@
               v-for="tick in tickValues"
               :key="tick"
               class="text-[11px] font-medium hoverNoBG rounded-full px-2 py-0.5"
-              :class="modelValue > tick ? 'text-info' : ''"
+              :class="modelValue > tick ? 'text-fg-subtle' : ''"
               @click="$emit('update:modelValue', tick)"
             >
               {{ tick }}&times;
@@ -112,7 +112,7 @@
         </div>
 
         <!-- Description -->
-        <p class="text-s-14 text-info leading-relaxed" v-if="mode === 'create'">
+        <p class="text-s-14 text-fg-subtle leading-relaxed" v-if="mode === 'create'">
           {{ $t('perps.select-leverage.leverage-description') }}
           <a href="#" class="text-[#0052ff] font-medium hover:underline">{{
             $t('perps.select-leverage.learn-more')
@@ -136,7 +136,7 @@
 
         <!-- Save Button -->
         <button
-          class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+          class="w-full bg-[#0052ff] text-fg-on-fill rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
           :disabled="isSaving"
           @click="$emit('save')"
         >

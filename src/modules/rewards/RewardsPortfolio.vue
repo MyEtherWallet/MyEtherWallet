@@ -3,16 +3,16 @@
   <div>
     <div
       v-if="!hadInitialLoad"
-      class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
+      class="bg-surface rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
     >
-      <p class="text-center text-s-14 text-info">
+      <p class="text-center text-s-14 text-fg-subtle">
         {{ t('rewards.loading') }}
       </p>
     </div>
     <!-- Default State -->
     <div
       v-else
-      class="bg-white rounded-16 h-full flex flex-col justify-space-around px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
+      class="bg-surface rounded-16 h-full flex flex-col justify-space-around px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
       <div class="flex items-start justify-between gap-2 mb-5">
@@ -20,7 +20,7 @@
           <h3 class="text-s-20 font-bold leading-none">
             {{ t('rewards.earn_rewards_title') }}
           </h3>
-          <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
+          <p class="text-s-16 text-fg-subtle leading-[22px] mt-2 max-w-[295px]">
             {{ t('rewards.portfolio_trade_description', { min: minSpendTrade }) }}
           </p>
           <button
@@ -73,12 +73,12 @@
       />
 
       <!-- Not Eligible State -->
-      <div v-else class="border-t border-grey-10 pt-4 pb-1">
+      <div v-else class="border-t border-line pt-4 pb-1">
         <p class="text-s-14 font-semibold text-error leading-5">
           {{ t('rewards.not_eligible_for_rewards') }}
         </p>
         <button
-          class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
+          class="mt-4 bg-page text-fg font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
           @click="onConnectAddress"
         >
           {{ t('rewards.connect_another_address') }}

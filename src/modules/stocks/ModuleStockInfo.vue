@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
+  <div class="flex flex-col mb-10 w-full divide-y divide-line">
     <app-asset-info-header
       :is-loading="isLoading"
       :has-data="!!stockData"
@@ -62,7 +62,7 @@
       :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6 ']"
     >
       <div
-        class="h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-full"
+        class="h-[308px] xs:h-[227px] animate-pulse bg-surface-strong rounded-12 w-full"
       ></div>
     </div>
   </div>

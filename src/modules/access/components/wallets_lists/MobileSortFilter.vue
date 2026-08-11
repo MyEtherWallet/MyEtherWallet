@@ -16,9 +16,9 @@
             :key="option.value"
             :class="[
               option.value === activeFilter.value
-                ? 'border-primary text-primary'
+                ? 'border-brand text-brand'
                 : '',
-              'border border-1 border-grey-outline items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-line-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
             ]"
             role="option"
             :id="option.value"
@@ -28,7 +28,7 @@
           </button>
         </div>
         <!-- DIVIDER -->
-        <hr class="h-px bg-grey-10 border-0 w-full mt-7 mb-6" />
+        <hr class="h-px bg-surface-strong border-0 w-full mt-7 mb-6" />
         <!-- Sort -->
         <p class="text7 ml-3 mb-2 !font-bold">{{ $t('common.sort_by') }}:</p>
         <div class="flex flex-wrap gap-x-2 gap-y-3">
@@ -37,9 +37,9 @@
             :key="option.value"
             :class="[
               option.value === activeSort.value
-                ? 'border-primary text-primary'
+                ? 'border-brand text-brand'
                 : '',
-              'border border-1 border-grey-outline items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-line-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
             ]"
             :id="option.value"
             @click="setActiveSort(option)"

@@ -36,7 +36,7 @@
           v-if="isSettingsOpen"
           ref="popupRef"
           :style="popupStyle"
-          class="fixed z-[2101] w-[344px] bg-white rounded-20 border border-[#E6E6E6] shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+          class="fixed z-[2101] w-[344px] bg-surface rounded-20 border border-line shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
         >
           <!-- Height-animated track container -->
           <div
@@ -58,16 +58,16 @@
               }"
             >
               <!-- Title -->
-              <h3 class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black">
+              <h3 class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-fg">
                 {{ $t('settings.title') }}
               </h3>
 
               <!-- Divider -->
-              <div class="self-stretch w-full h-px bg-[#E6E6E6]" />
+              <div class="self-stretch w-full h-px bg-line" />
 
               <!-- PREFERENCES section -->
               <div class="flex flex-col gap-6 w-full">
-                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
+                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-fg-subtle">
                   {{ $t('settings.preferences') }}
                 </p>
                 <!-- Network (mobile only — relocated here from the header below
@@ -78,10 +78,10 @@
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
                   @click="openNetwork"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <globe-alt-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black capitalize">{{ $t('common.network') }}</span>
+                    <globe-alt-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg capitalize">{{ $t('common.network') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2 min-w-0">
                     <img
@@ -92,8 +92,8 @@
                       height="20"
                       width="20"
                     />
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757] truncate max-w-[120px]">{{ selectedChain?.nameLong }}</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle truncate max-w-[120px]">{{ selectedChain?.nameLong }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
                 <!-- Currency -->
@@ -101,10 +101,10 @@
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
                   @click="view = 'currency'"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <banknotes-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.currency') }}</span>
+                    <banknotes-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.currency') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
                     <app-token-logo
@@ -115,8 +115,8 @@
                       height="h-5"
                       class="flex-shrink-0"
                     />
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedCurrency }}</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedCurrency }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
                 <!-- Language -->
@@ -124,14 +124,14 @@
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
                   @click="view = 'language'"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <language-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.language') }}</span>
+                    <language-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.language') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedLanguageAbbr }}</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedLanguageAbbr }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
                 <!-- Default fee -->
@@ -139,44 +139,44 @@
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
                   @click="view = 'fee'"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
-                    <currency-dollar-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.default_fee') }}</span>
+                    <currency-dollar-icon class="w-5 h-5 text-brand flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.default_fee') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedFeeLabel }}</span>
-                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                    <span class="text-s-14 font-normal leading-[20px] text-fg-subtle">{{ selectedFeeLabel }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-fg-subtle flex-shrink-0" />
                   </div>
                 </div>
               </div>
 
               <!-- Divider between sections -->
-              <div class="self-stretch w-full h-px bg-[#E6E6E6]" />
+              <div class="self-stretch w-full h-px bg-line" />
 
               <!-- SECURITY section -->
               <div class="flex flex-col gap-6 w-full">
-                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
+                <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-fg-subtle">
                   {{ $t('settings.security') }}
                 </p>
                 <!-- Usage analytics -->
                 <div class="flex w-full h-6 justify-between items-center">
                   <div class="flex items-center gap-2.5">
-                    <circle-stack-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                    <circle-stack-icon class="w-5 h-5 text-brand flex-shrink-0" />
                     <div class="flex items-center gap-1">
-                      <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.usage_analytics') }}</span>
+                      <span class="text-s-16 font-normal leading-[22px] text-fg">{{ $t('settings.usage_analytics') }}</span>
                       <app-tooltip :text="$t('settings.usage_analytics_tooltip')" position="middle">
-                        <question-mark-circle-icon class="w-4 h-4 text-[#A5A5A5] flex-shrink-0 cursor-pointer" />
+                        <question-mark-circle-icon class="w-4 h-4 text-fg-muted flex-shrink-0 cursor-pointer" />
                       </app-tooltip>
                     </div>
                   </div>
                   <!-- Toggle -->
                   <button
                     class="flex h-6 w-[45px] items-center rounded-full p-[3px] flex-shrink-0 transition-colors duration-200"
-                    :class="analyticsEnabled ? 'bg-primary justify-end' : 'bg-[#D6D6D6] justify-start'"
+                    :class="analyticsEnabled ? 'bg-brand justify-end' : 'bg-line-strong justify-start'"
                     @click="analyticsStore.setTrackingConsent(!analyticsEnabled)"
                   >
-                    <div class="h-[18px] w-[18px] rounded-full bg-white flex-shrink-0" />
+                    <div class="h-[18px] w-[18px] rounded-full bg-fg-on-fill flex-shrink-0" />
                   </button>
                 </div>
               </div>
@@ -203,13 +203,13 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-s-16 font-normal leading-[22px] text-fg">
                   {{ $t('settings.select_transaction_fee') }}
                 </span>
               </div>
 
               <!-- Description -->
-              <p class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]">
+              <p class="self-stretch text-s-14 font-normal leading-[20px] text-fg-subtle">
                 {{ $t('settings.fee_description') }}
               </p>
 
@@ -219,21 +219,21 @@
                   v-for="option in feeOptions"
                   :key="option.id"
                   class="flex items-center gap-12 p-4 rounded-xl border cursor-pointer transition-colors duration-150 group"
-                  :class="selectedFee === option.id ? 'border-primary' : 'border-[#E6E6E6] hover:border-[#A5A5A5]'"
+                  :class="selectedFee === option.id ? 'border-brand' : 'border-line hover:border-line-strong'"
                   @click="selectedFee = option.id"
                 >
                   <div class="flex-1 flex flex-col gap-1">
                     <div class="flex items-center gap-0.5">
-                      <span class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-black">{{ option.label }}</span>
-                      <span class="text-s-14 font-normal leading-[20px] text-[#A5A5A5]"> – {{ option.price }}</span>
+                      <span class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-fg">{{ option.label }}</span>
+                      <span class="text-s-14 font-normal leading-[20px] text-fg-muted"> – {{ option.price }}</span>
                     </div>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ option.description }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ option.description }}</span>
                   </div>
                   <check-circle-icon
                     class="w-5 h-5 flex-shrink-0 transition-colors duration-150"
                     :class="selectedFee === option.id
-                      ? 'text-primary'
-                      : 'text-[#D6D6D6] invisible group-hover:visible'"
+                      ? 'text-brand'
+                      : 'text-line-strong invisible group-hover:visible'"
                   />
                 </div>
               </div>
@@ -260,13 +260,13 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-bold leading-[22px] text-black">
+                <span class="text-s-16 font-bold leading-[22px] text-fg">
                   {{ $t('settings.select_currency') }}
                 </span>
               </div>
 
               <!-- Description -->
-              <p class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]">
+              <p class="self-stretch text-s-14 font-normal leading-[20px] text-fg-subtle">
                 {{ $t('settings.currency_description') }}
               </p>
 
@@ -279,12 +279,12 @@
                   v-for="option in currencyOptions"
                   :key="option.code"
                   class="relative flex items-center justify-between gap-3 p-3 rounded-xl cursor-pointer group"
-                  :class="selectedCurrency === option.code ? 'bg-mewBg' : ''"
+                  :class="selectedCurrency === option.code ? 'bg-brand-subtle' : ''"
                   @click="selectCurrency(option.code)"
                 >
                   <div
                     v-if="selectedCurrency !== option.code"
-                    class="absolute inset-0 rounded-xl bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                    class="absolute inset-0 rounded-xl bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5 min-w-0">
                     <app-token-logo
@@ -295,14 +295,14 @@
                       height="h-6"
                       class="flex-shrink-0"
                     />
-                    <span class="text-s-14 font-semibold leading-[20px] text-black flex-shrink-0">{{ option.code }}</span>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#A5A5A5] truncate">{{ option.name }}</span>
+                    <span class="text-s-14 font-semibold leading-[20px] text-fg flex-shrink-0">{{ option.code }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-muted truncate">{{ option.name }}</span>
                   </div>
                   <check-circle-icon
                     class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
                     :class="selectedCurrency === option.code
-                      ? 'text-primary'
-                      : 'text-[#D6D6D6] invisible group-hover:visible'"
+                      ? 'text-brand'
+                      : 'text-line-strong invisible group-hover:visible'"
                   />
                 </div>
               </div>
@@ -329,7 +329,7 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-s-16 font-normal leading-[22px] text-fg">
                   {{ $t('settings.select_language') }}
                 </span>
               </div>
@@ -338,7 +338,7 @@
               <app-search-input
                 v-model="languageQuery"
                 size="compact"
-                bg-class="bg-[#F5F5F5]"
+                bg-class="bg-page"
                 :placeholder="$t('common.search')"
               />
 
@@ -347,14 +347,14 @@
                 <!-- Pinned selected language -->
                 <div
                   v-if="selectedLanguageOption"
-                  class="flex w-full items-center gap-1 border-y border-[#E6E6E6] py-3"
+                  class="flex w-full items-center gap-1 border-y border-line py-3"
                 >
                   <div class="flex flex-1 min-w-0 items-center gap-1">
-                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black">{{ selectedLanguageOption.label }}</span>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">/</span>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ selectedLanguageOption.native }}</span>
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg">{{ selectedLanguageOption.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ selectedLanguageOption.native }}</span>
                   </div>
-                  <check-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                  <check-icon class="w-5 h-5 text-brand flex-shrink-0" />
                 </div>
 
                 <!-- Full language list -->
@@ -364,11 +364,11 @@
                   class="relative flex w-full items-center gap-1 cursor-pointer group"
                   @click="selectLanguage(language.code)"
                 >
-                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-surface-hover opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex flex-1 min-w-0 items-center gap-1">
-                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black">{{ language.label }}</span>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">/</span>
-                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ language.native }}</span>
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg">{{ language.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-fg-subtle">{{ language.native }}</span>
                   </div>
                 </div>
               </div>

@@ -33,13 +33,13 @@
 
           <div v-else>
             <!-- Search -->
-            <div class="sticky top-0 bg-white z-10 pt-2">
+            <div class="sticky top-0 bg-surface z-10 pt-2">
               <div class="px-4 sm:px-6 flex items-center gap-3">
                 <app-search-input
                   v-model="searchInput"
                   class="grow"
                   :placeholder="$t('common.search_by_name_or_address')"
-                  bg-class="bg-surface"
+                  bg-class="bg-surface-strong"
                 />
                 <app-base-button
                   size="medium"
@@ -104,7 +104,7 @@
               />
               <p
                 v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
-                class="text-s-17 mb-2 px-2 mt-6 text-info text-center"
+                class="text-s-17 mb-2 px-2 mt-6 text-fg-subtle text-center"
               >
                 {{ $t('address_book.no_saved_addresses') }}
               </p>

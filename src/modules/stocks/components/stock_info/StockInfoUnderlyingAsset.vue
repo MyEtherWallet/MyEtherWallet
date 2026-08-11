@@ -11,13 +11,13 @@
     <!-- Underlying Asset Info -->
     <div>
       <div
-        class="grid grid-cols-1 lg:grid-cols-2 mt-3 lg:divide-x divide-y lg:divide-y-0 divide-grey-10 lg:pb-6"
+        class="grid grid-cols-1 lg:grid-cols-2 mt-3 lg:divide-x divide-y lg:divide-y-0 divide-line lg:pb-6"
       >
         <div
           class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6 pb-6 lg:py-2"
         >
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.name') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -25,7 +25,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.ticker') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -42,7 +42,7 @@
             {{ $t('stocks.historical_price') }}
           </h3>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.fifty_two_w_high') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -51,7 +51,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.fifty_two_w_low') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -62,10 +62,10 @@
         </div>
       </div>
     </div>
-    <hr class="border-grey-10 mb-6" />
+    <hr class="border-line mb-6" />
 
     <div
-      class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-grey-10 gap-y-6"
+      class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-line gap-y-6"
     >
       <div class="lg:py-2 pr-6 pb-6 lg:pb-0">
         <h3
@@ -75,7 +75,7 @@
         </h3>
         <div class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6">
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.twenty_four_h_volume') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -83,7 +83,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.avg_volume') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -91,7 +91,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.market_cap') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -99,7 +99,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.shares_outstanding') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -116,7 +116,7 @@
         </h3>
         <div class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6">
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.dividend_yield') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -124,7 +124,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.payout_frequency') }}
             </p>
             <p class="text-s-16 font-medium capitalize">
@@ -132,7 +132,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.last_amount') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -140,7 +140,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.last_payment_date') }}
             </p>
             <p class="text-s-16 font-medium">

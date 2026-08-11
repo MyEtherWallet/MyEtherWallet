@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-20 overflow-hidden relative p-5 sm:py-14 lg:py-20 lg:px-10"
+    class="bg-surface rounded-20 overflow-hidden relative p-5 sm:py-14 lg:py-20 lg:px-10"
   >
     <perps-signing-prompt
       :show="showSigningPrompt"
@@ -88,7 +88,7 @@
     </div>
 
     <div class="relative text-center mx-auto">
-      <p class="text-primary font-bold text-s-11 uppercase tracking-sp-06 mb-3">
+      <p class="text-brand font-bold text-s-11 uppercase tracking-sp-06 mb-3">
         {{ $t('perps.banner.sign-in-prompt') }}
       </p>
       <h2
@@ -96,7 +96,7 @@
       >
         {{ $t('perps.banner.title') }}
       </h2>
-      <p class="text-info text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto">
+      <p class="text-fg-subtle text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto">
         {{ $t('perps.banner.description') }}
       </p>
 
@@ -179,7 +179,7 @@
           :href="perpsHelpUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-black font-bold underline hoverOpacity"
+          class="text-fg font-bold underline hoverOpacity"
           @click="onRestrictedLearnMore"
         >
           {{ $t('perps.restricted.learn-more') }}
@@ -187,11 +187,11 @@
       </p>
       <p
         v-else-if="!isOnEthereum && isUnisatWallet"
-        class="text-info text-s-12 mt-3"
+        class="text-fg-subtle text-s-12 mt-3"
       >
         {{ $t('perps.banner.unisat-not-supported') }}
       </p>
-      <p v-else-if="!isOnEthereum" class="text-info text-s-13 mt-3">
+      <p v-else-if="!isOnEthereum" class="text-fg-subtle text-s-13 mt-3">
         {{ $t('perps.banner.eth-only-notice') }}
       </p>
     </div>

@@ -14,7 +14,7 @@
           />
           <icon-watch-only
             v-if="isXS"
-            class="absolute w-3 h-3 p-[1px] inline-block text-info/50 bottom-[-2px] right-0 bg-white rounded-full shadow-button"
+            class="absolute w-3 h-3 p-[1px] inline-block text-fg-subtle/50 bottom-[-2px] right-0 bg-surface rounded-full shadow-button"
             :label="$t('watch_only_wallet')"
           />
         </div>
@@ -22,17 +22,17 @@
         <div v-if="!isXS" class="relative">
           <p
             v-if="isWatchOnly"
-            class="text-s-8 text-left ml-1 text-info mb-[2px] -mt-1"
+            class="text-s-8 text-left ml-1 text-fg-subtle mb-[2px] -mt-1"
           >
             <span>
               <icon-watch-only
-                class="w-3 h-3 inline-block text-info/50 mr-[3px]"
+                class="w-3 h-3 inline-block text-fg-subtle/50 mr-[3px]"
               /> </span
             >{{ $t('common.watch_only') }}
           </p>
           <div
             class="mr-2 ml-1 font-medium text-s-14 leading-p-100"
-            :class="{ 'text-info !text-s-12': isWatchOnly }"
+            :class="{ 'text-fg-subtle !text-s-12': isWatchOnly }"
           >
             {{ truncateAddress(walletAddress, 6) }}
           </div>

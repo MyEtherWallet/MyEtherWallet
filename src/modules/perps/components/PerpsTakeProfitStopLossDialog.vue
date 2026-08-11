@@ -23,7 +23,7 @@
             <span class="font-bold text-s-16">{{ displaySymbol }}</span>
           </div>
           <div class="text-right">
-            <span class="text-info text-s-14 mr-2">{{
+            <span class="text-fg-subtle text-s-14 mr-2">{{
               $t('perps.auto-close.current-price')
             }}</span>
             <span class="font-bold text-s-16">{{
@@ -37,7 +37,7 @@
           <div
             v-if="hasTakeProfit"
             key="take-profit-input"
-            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
+            class="bg-brand-subtle rounded-20 px-4 py-3 sm:p-5"
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
@@ -48,7 +48,7 @@
                 }}
               </p>
               <app-btn-text
-                class="text-primary text-s-12 sm:text-s-14"
+                class="text-brand text-s-12 sm:text-s-14"
                 @click="removeTakeProfit"
               >
                 {{ $t('perps.auto-close.remove') }}
@@ -64,9 +64,9 @@
                   <button
                     v-for="pct in takeProfitPills"
                     :key="pct"
-                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
-                      activeTpPill === pct ? '!bg-mewBg text-primary' : ''
+                      activeTpPill === pct ? '!bg-brand-subtle text-brand' : ''
                     "
                     @click="$emit('setTakeProfitPct', pct)"
                   >
@@ -84,7 +84,7 @@
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">{{
+              <span class="text-fg-subtle">{{
                 $t('perps.auto-close.projected-profit')
               }}</span>
               <span
@@ -98,7 +98,7 @@
           <button
             v-else
             key="add-take-profit"
-            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            class="bg-surface-strong font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-brand text hover:bg-brand-subtle transition-all duration-300 group"
             @click="setTempTakeProfitPrice"
           >
             <plus-circle-icon
@@ -113,7 +113,7 @@
           <div
             v-if="hasStopLoss"
             key="stop-loss-input"
-            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
+            class="bg-brand-subtle rounded-20 px-4 py-3 sm:p-5"
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
@@ -124,7 +124,7 @@
                 }}
               </p>
               <app-btn-text
-                class="text-primary text-s-12 sm:text-s-14"
+                class="text-brand text-s-12 sm:text-s-14"
                 @click="removeStopLoss"
               >
                 {{ $t('perps.auto-close.remove') }}
@@ -140,9 +140,9 @@
                   <button
                     v-for="pct in [1, 2, 3, 4, 5]"
                     :key="pct"
-                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
-                      activeSlPill === pct ? '!bg-mewBg text-primary' : ''
+                      activeSlPill === pct ? '!bg-brand-subtle text-brand' : ''
                     "
                     @click="$emit('setStopLossPct', pct)"
                   >
@@ -157,7 +157,7 @@
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">{{
+              <span class="text-fg-subtle">{{
                 $t('perps.auto-close.projected-loss')
               }}</span>
               <span
@@ -171,7 +171,7 @@
           <button
             v-else
             key="add-stop-loss"
-            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            class="bg-surface-strong font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-brand text hover:bg-brand-subtle transition-all duration-300 group"
             @click="setTempStopLossPrice"
           >
             <plus-circle-icon

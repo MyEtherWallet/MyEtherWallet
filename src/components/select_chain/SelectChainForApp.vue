@@ -33,14 +33,14 @@
           >
             <div class="flex items-center justify-center capitalize">
               <span>{{ $t('common.more') }}</span>
-              <chevron-down-icon class="text-info w-4 h-4 ml-1" />
+              <chevron-down-icon class="text-fg-subtle w-4 h-4 ml-1" />
             </div>
           </button>
         </template>
       </app-btn-group>
       <button
         v-else
-        class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+        class="bg-surface hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
         @click="setOpenDialog(true)"
       >
         <div v-if="selectedChain" class="flex items-center min-h-[36px]">
@@ -48,12 +48,12 @@
             v-if="selectedChain.icon"
             :src="selectedChain.icon"
             alt=""
-            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-mewBg"
+            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-brand-subtle"
             height="32"
             width="32"
           />
           <div class="ml-1 pr-1 min-w-[30px]">
-            <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+            <p class="text-fg-subtle text-left text-s-12 leading-[16px] capitalize">
               {{ $t('common.network') }}
             </p>
             <p

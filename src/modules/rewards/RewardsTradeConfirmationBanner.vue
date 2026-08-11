@@ -3,7 +3,7 @@
     <button
       v-if="showBanner"
       class="w-full hoverNoBG rounded-16 flex items-center justify-between border border-solid p-4 gap-5"
-      :class="qualifies ? 'border-success' : 'border-grey-10'"
+      :class="qualifies ? 'border-success' : 'border-line'"
       @click="onClick"
     >
       <!-- Variation 1: Trade qualifies for rewards -->
@@ -20,11 +20,11 @@
         <div class="text-left">
           <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
+          <p v-if="isCashout && canClaimHold" class="text-fg-subtle mt-[2px]">
             {{ t('rewards.cashout_not_qualify') }}
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
-          <p v-else class="text-info mt-[2px]">
+          <p v-else class="text-fg-subtle mt-[2px]">
             {{ t('rewards.trade_more_to_qualify', { amount: amountNeeded }) }}
           </p>
         </div>

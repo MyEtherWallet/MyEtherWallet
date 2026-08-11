@@ -54,14 +54,14 @@
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
-              class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
+              class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-surface shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
               :href="configs.VINATGE"
               target="_blank"
               rel="noopener noreferrer"
             >
               {{ t('common.old_version_link') }}
               <arrow-long-right-icon
-                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+                class="w-5 h-5 text-fg inline-block group-hover:translate-x-1 transition-transform"
               />
             </a>
           </div>
@@ -143,19 +143,20 @@ const onHeaderWheel = (e: WheelEvent) => {
     rgba(0, 152, 166, 0) 100%
   );
 }
+/**
+ * The colour band stays fixed — it is brand artwork. The wash over it is driven
+ * by --page so the heading keeps its contrast: a light bloom in light mode, a
+ * dark veil in dark mode. Hardcoding white here left white text on a pale
+ * gradient once the foreground token started flipping.
+ */
 .home-not-connected-background {
   background:
     radial-gradient(
       circle 350px at 50% 45%,
-      rgba(255, 255, 255, 0.5) 60%,
+      color-mix(in srgb, var(--page) 50%, transparent) 60%,
       transparent 100%
     ),
-    linear-gradient(
-      to bottom,
-      transparent,
-      rgba(255, 255, 255, 1) 400px,
-      #f5f5f7 100%
-    ),
+    linear-gradient(to bottom, transparent, var(--page) 400px, var(--page) 100%),
     linear-gradient(
       to right,
       rgba(90, 197, 210, 1) 0%,

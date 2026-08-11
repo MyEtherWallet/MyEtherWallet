@@ -14,7 +14,7 @@
           {{ t('portfolio.connect_wallet.title') }}
         </p>
 
-        <p class="text-s-14 lg:text-s-16 text-info">
+        <p class="text-s-14 lg:text-s-16 text-fg-subtle">
           {{ t('portfolio.connect_wallet.description') }}
         </p>
       </div>

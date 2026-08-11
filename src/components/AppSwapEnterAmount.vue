@@ -1,9 +1,9 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-surface p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': (inFocusInput || isOpenSelectToken) && !readonly,
+      'ring-2 ring-brand': (inFocusInput || isOpenSelectToken) && !readonly,
     }"
     @click="setInFocusInput"
   >
@@ -13,7 +13,7 @@
         v-if="!isFromView && !isLoading && amount"
         :class="{
           'text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-info': isLoading,
+          'animate-pulse text-fg-subtle': isLoading,
           '!text-s-24':
             amount &&
             amount.toString().length > 7 &&
@@ -32,7 +32,7 @@
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
           'text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-info': isLoading,
+          'animate-pulse text-fg-subtle': isLoading,
           '!text-s-24':
             amount &&
             amount.toString().length > 7 &&
@@ -68,7 +68,7 @@
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
-          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+          class="h-5 flex bg-surface-strong rounded-full w-1/2"
         ></div>
         <div v-else class="flex justify-between items-center">
           <div
@@ -76,7 +76,7 @@
             :class="[
               hasError && !isOpenSelectToken && !isPristine
                 ? 'text-error'
-                : 'text-info',
+                : 'text-fg-subtle',
             ]"
           >
             {{ balanceFiatOrError }}
@@ -86,19 +86,19 @@
             class="flex items-baseline gap-2 whitespace-nowrap"
           >
             <div
-              class="text-s-12 leading-p-120 text-info transition-colors"
+              class="text-s-12 leading-p-120 text-fg-subtle transition-colors"
               :class="{
-                'text-primary':
+                'text-brand':
                   (inFocusInput || isOpenSelectToken) &&
                   (!hasError || isPristine),
               }"
             >
               {{ $t('common.balance') }}:
-              <span class="text-black">{{ balance }}</span>
+              <span class="text-fg">{{ balance }}</span>
             </div>
             <slot name="balance-action" />
           </div>
-          <div v-else class="text-s-12 text-info transition-colors h-5">
+          <div v-else class="text-s-12 text-fg-subtle transition-colors h-5">
             {{ $t('common.price') }}:
             <span>{{ currencySymbol }}{{ tokenPrice }}</span>
           </div>

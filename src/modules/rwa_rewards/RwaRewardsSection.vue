@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-s-16 font-semibold text-black pl-4 mb-5">
+    <h3 class="text-s-16 font-semibold text-fg pl-4 mb-5">
       {{ $t('rwaRewards.section_title') }}
     </h3>
     <div class="relative">
@@ -58,7 +58,7 @@
       ></div>
       <button
         v-show="canScrollLeft"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-line bg-surface z-[2]"
         :aria-label="$t('rwaRewards.previous')"
         @click="scrollPrev"
       >
@@ -79,7 +79,7 @@
       ></div>
       <button
         v-show="canScrollRight"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-line bg-surface z-[2]"
         :aria-label="$t('rwaRewards.next')"
         @click="scrollNext"
       >

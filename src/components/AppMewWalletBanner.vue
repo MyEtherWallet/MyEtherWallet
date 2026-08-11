@@ -7,16 +7,16 @@
       >
         <!-- Close button -->
         <button
-          class="absolute top-3 right-3 w-4 h-4 rounded-full bg-black flex items-center justify-center transition-colors z-10 hover:bg-black/30"
+          class="absolute top-3 right-3 w-4 h-4 rounded-full bg-surface-inverse flex items-center justify-center transition-colors z-10 hover:bg-black/30"
           @click="dismissMewBanner"
           :aria-label="$t('common.close_banner')"
         >
-          <XMarkIcon class="w-3 h-3 text-white" />
+          <XMarkIcon class="w-3 h-3 text-fg-on-fill" />
         </button>
 
         <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
           <p
-            class="font-bold text-s-24 sm:text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
+            class="font-bold text-s-24 sm:text-s-28 text-fg leading-[30px] sm:leading-[60px] mb-1"
           >
             {{ $t('common.mew_app_banner.title') }}
           </p>
@@ -33,7 +33,7 @@
               href="https://download.mewwallet.com"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center px-7 py-1 rounded-full bg-primary text-white font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
+              class="inline-flex items-center px-7 py-1 rounded-full bg-brand text-fg-on-fill font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
             >
               {{ $t('common.mew_app_banner.download_now') }}
             </a>
@@ -43,15 +43,15 @@
               @mouseleave="showQr = false"
             >
               <div
-                class="w-10 h-10 bg-grey-light rounded-full flex items-center justify-center cursor-pointer"
+                class="w-10 h-10 bg-surface-strong rounded-full flex items-center justify-center cursor-pointer"
               >
                 <QrCodeIcon class="w-5 h-5" />
               </div>
               <div
                 v-if="showQr"
-                class="absolute top-1/2 -translate-y-[70%] left-full ml-3 bg-white rounded-2xl shadow-xl p-3 w-[150px] h-[170px] flex flex-col z-20"
+                class="absolute top-1/2 -translate-y-[70%] left-full ml-3 bg-surface rounded-2xl shadow-xl p-3 w-[150px] h-[170px] flex flex-col z-20"
               >
-                <p class="text-xs font-semibold text-black mb-2">
+                <p class="text-xs font-semibold text-fg mb-2">
                   {{ $t('common.mew_app_banner.scan_to_download') }}
                 </p>
                 <img

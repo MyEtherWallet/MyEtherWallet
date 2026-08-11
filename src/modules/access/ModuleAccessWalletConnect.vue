@@ -17,11 +17,11 @@
           <!-- Loading QR Placeholder -->
           <div
             v-show="isLoading"
-            class="h-[200px] w-[200px] sm:h-[280px] sm:w-[280px] flex items-center justify-center bg-grey-5 rounded-xl mt-5"
+            class="h-[200px] w-[200px] sm:h-[280px] sm:w-[280px] flex items-center justify-center bg-page rounded-xl mt-5"
           >
             <svg
               aria-hidden="true"
-              class="w-6 h-6 text-primary animate-spin fill-white mx-auto"
+              class="w-6 h-6 text-brand animate-spin fill-surface mx-auto"
               viewBox="0 0 100 101"
               width="24"
               height="24"
@@ -49,7 +49,7 @@
           />
         </div>
         <a
-          class="text-info text-center text-xs mx-auto block"
+          class="text-fg-subtle text-center text-xs mx-auto block"
           href="https://walletconnect.network/"
           target="_blank"
           rel="noreferrer"

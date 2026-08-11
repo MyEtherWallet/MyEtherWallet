@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-surface shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
     :class="isSearchOpen ? 'z-[201]' : 'z-10'"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
@@ -41,7 +41,7 @@
             :key="index"
             :to="{ name: item.routeName }"
             class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-surface"
+            active-class="bg-surface-strong"
             v-ripple
           >
             {{ item.title }}
@@ -94,7 +94,7 @@
           <router-link
             v-if="!isWalletConnected"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
+            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-fg h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
               analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
                 source: 'Header_Create',
@@ -116,7 +116,7 @@
                 source: 'Header_Connect',
               })
             "
-            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
+            class="shrink-0 px-3 xl:px-4 bg-surface-inverse text-fg-on-inverse h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
           >
             {{
               isWalletCtaShort

@@ -9,7 +9,7 @@
         ? 'max-w-[800px]'
         : '!max-w-[900px]',
     ]"
-    bg="bg-appBackground"
+    bg="bg-page"
     has-title-underline
     @close-dialog="closeAccess()"
   >

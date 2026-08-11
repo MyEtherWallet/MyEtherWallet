@@ -18,7 +18,7 @@
         <h3 class="text-s-24 text-p-120 font-bold">
           {{ t('swap.best-offer.looking') }}
         </h3>
-        <p class="text-s-14 text-grey-50 font-normal mt-2">
+        <p class="text-s-14 text-fg-subtle font-normal mt-2">
           {{ t('swap.best-offer.analyzing') }}
         </p>
       </div>

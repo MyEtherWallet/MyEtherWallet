@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'relative p-6 sm:px-10 lg:px-14  bg-white rounded-16 w-full ',
+      'relative p-6 sm:px-10 lg:px-14  bg-surface rounded-16 w-full ',
       sheetClass,
       { 'shadow-button': isElivated },
     ]"

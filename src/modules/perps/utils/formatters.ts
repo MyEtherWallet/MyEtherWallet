@@ -111,7 +111,7 @@ export function pnlColor(val: string): string {
   const n = parseFloat(val)
   if (n > 0) return 'text-success'
   if (n < 0) return 'text-error'
-  return 'text-info'
+  return 'text-fg-subtle'
 }
 
 export function marginRatioColor(val: string): string {
@@ -119,7 +119,7 @@ export function marginRatioColor(val: string): string {
   const minthreshold = new BigNumber(0.9) // example threshold, adjust as needed
   const maxThreshold = new BigNumber(0.95) // example threshold, adjust as needed
 
-  if (n.lt(minthreshold)) return 'text-black'
+  if (n.lt(minthreshold)) return 'text-fg'
   if (n.lt(maxThreshold)) return 'text-warning'
   return 'text-error'
 }
@@ -229,6 +229,6 @@ export const withdrawalStatusColor = (status: string): string => {
       return 'text-error'
     default:
       // WITHDRAWAL_CANCELLED / WITHDRAWAL_UNKNOWN / anything unmapped
-      return 'text-info'
+      return 'text-fg-subtle'
   }
 }

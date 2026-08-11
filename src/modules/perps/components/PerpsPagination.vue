@@ -9,7 +9,7 @@
     >
       <ChevronLeftIcon class="w-4 h-4" />
     </app-btn-icon>
-    <span class="px-2 text-s-12 text-info font-medium">
+    <span class="px-2 text-s-12 text-fg-subtle font-medium">
       <template v-if="totalPages !== undefined"
         >{{
           t('perps.pagination.page-of', {

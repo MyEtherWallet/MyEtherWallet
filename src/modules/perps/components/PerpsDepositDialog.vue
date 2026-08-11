@@ -8,7 +8,7 @@
     <template v-if="showDepositAddress && showIsLive" #title>
       <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
         <button
-          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-grey-5 transition-colors mr-2"
+          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-hover transition-colors mr-2"
           @click="showDepositAddress = false"
         >
           <chevron-left-icon class="w-5 h-5" />
@@ -30,7 +30,7 @@
               :label="$t('perps.deposit.live-mode-label')"
               class="mb-4"
             /> -->
-            <div class="bg-mewBg rounded-20 px-4 p-4">
+            <div class="bg-brand-subtle rounded-20 px-4 p-4">
               <!-- Amount Input -->
               <p class="font-bold ml-3 mb-1">
                 {{ $t('perps.deposit.amount-label') }}
@@ -61,7 +61,7 @@
                     <button
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setAmountPercent(pct)"
                     >
                       {{ pct === 100 ? $t('perps.deposit.max') : pct + '%' }}
@@ -73,7 +73,7 @@
               <!-- Network -->
               <div class="mt-5 px-2 flex items-center justify-between">
                 <p
-                  class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
+                  class="text-fg-subtle uppercase tracking-sp-06 text-s-12 font-bold"
                 >
                   {{ $t('perps.deposit.from-network-label') }}
                 </p>
@@ -98,7 +98,7 @@
               <!--Deposit Address-->
               <div class="py-4 px-2 flex items-center justify-between">
                 <p
-                  class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
+                  class="text-fg-subtle uppercase tracking-sp-06 text-s-12 font-bold"
                 >
                   {{ $t('perps.deposit.to-address-label') }}
                 </p>
@@ -108,7 +108,7 @@
                     v-if="showIsLive"
                     class="font-medium text-s-14 flex items-center gap-2"
                     :class="{
-                      'animate-pulse w-[120px] h-[21px] bg-surface rounded-8':
+                      'animate-pulse w-[120px] h-[21px] bg-surface-strong rounded-8':
                         !depositAddress,
                     }"
                   >
@@ -151,7 +151,7 @@
             <!-- Deposit Address Link -->
             <div v-if="showIsLive && depositAddress" class="text-center mt-5">
               <button
-                class="text-primary text-s-14 font-medium hover:underline inline-flex items-center gap-1"
+                class="text-brand text-s-14 font-medium hover:underline inline-flex items-center gap-1"
                 @click="showDepositAddress = true"
               >
                 {{ $t('perps.deposit.use-deposit-address-link') }}
@@ -184,7 +184,7 @@
                 class="absolute inset-0 flex items-center justify-center pointer-events-none"
               >
                 <div
-                  class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center"
+                  class="w-12 h-12 rounded-full bg-surface shadow-md flex items-center justify-center"
                 >
                   <app-token-logo
                     :url="selectedChain?.icon"

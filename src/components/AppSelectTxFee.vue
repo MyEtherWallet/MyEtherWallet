@@ -1,32 +1,32 @@
 <template>
   <div>
     <button
-      class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
+      class="hoverNoBG rounded-20 bg-surface shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
     >
       <div class="flex items-center gap-2">
-        <p class="text-info font-medium">{{ $t('common.fee') }}:</p>
+        <p class="text-fg-subtle font-medium">{{ $t('common.fee') }}:</p>
         <div
           v-if="!hasFees"
-          class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
+          class="bg-surface-strong rounded-full animate-pulse min-w-[80px] h-4"
         ></div>
-        <p v-else-if="hasFiatEstimates" class="font-medium text-black">
+        <p v-else-if="hasFiatEstimates" class="font-medium text-fg">
           {{ selectedFeeFiat }}
         </p>
-        <p v-else class="font-medium text-black">{{ selectedFeeNative }}</p>
+        <p v-else class="font-medium text-fg">{{ selectedFeeNative }}</p>
       </div>
 
       <div class="flex items-center gap-2">
         <div
           v-if="!hasFees"
-          class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
+          class="bg-surface-strong rounded-full animate-pulse w-24 h-4"
         ></div>
         <template v-else-if="hasFiatEstimates">
-          <span class="text-info font-medium">
+          <span class="text-fg-subtle font-medium">
             {{ selectedFeeNative }}
           </span>
-          <chevron-down-icon class="w-4 h-4 text-info" />
+          <chevron-down-icon class="w-4 h-4 text-fg-subtle" />
         </template>
       </div>
     </button>
@@ -48,7 +48,7 @@
                 })
               }}
               <button
-                class="text-primary cursor-pointer underline underline-offset-2"
+                class="text-brand cursor-pointer underline underline-offset-2"
                 @click="openBuyPanel"
               >
                 {{
@@ -71,7 +71,7 @@
     >
       <template #content>
         <div class="mx-2 xs:mx-6 mb-6">
-          <p class="text-info mx-4 sm:mx-3 mb-5">
+          <p class="text-fg-subtle mx-4 sm:mx-3 mb-5">
             {{ $t('select_fee.description') }}
           </p>
           <!-- fee options -->
@@ -81,8 +81,8 @@
               :key="fee.id"
               :class="[
                 gasPriceType === fee.id
-                  ? 'border-primary outline outline-primary bg-grey-5'
-                  : ' border-grey-outline',
+                  ? 'border-brand outline outline-brand bg-page'
+                  : ' border-line-strong',
                 'border-1 w-full  rounded-2xl hoverNoBG p-2 xs:p-4 min-h-[90px] ',
               ]"
               @click="setFee(fee.id)"
@@ -90,7 +90,7 @@
               <div class="flex items-center">
                 <div
                   :class="[
-                    { 'text-primary': gasPriceType === fee.id },
+                    { 'text-brand': gasPriceType === fee.id },
                     ' mr-2 xs:mr-4',
                   ]"
                 >
@@ -113,7 +113,7 @@
                 <div class="flex flex-col text-left">
                   <span class="text-[16px] font-medium">{{ fee.title }}</span>
 
-                  <span class="text-info text-xs mt-1">{{
+                  <span class="text-fg-subtle text-xs mt-1">{{
                     fee.description
                   }}</span>
                 </div>
@@ -121,7 +121,7 @@
                   <p class="font-medium">
                     {{ fee.fiatValue }}
                   </p>
-                  <span class="text-info text-xs"> {{ fee.nativeValue }}</span>
+                  <span class="text-fg-subtle text-xs"> {{ fee.nativeValue }}</span>
                 </div>
               </div>
             </button>

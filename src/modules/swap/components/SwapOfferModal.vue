@@ -9,7 +9,7 @@
         <expand-transition>
           <div v-if="showApproveMessage">
             <div
-              class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
+              class="flex items-center justify-center gap-5 my-4 font-bold text-brand animate-pulse"
               key="confirmation-approve-message"
             >
               {{ t('swap.swap-offer.approve-tx-on-device') }}
@@ -17,7 +17,7 @@
           </div>
         </expand-transition>
         <div
-          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
+          class="p-4 flex flex-col border border-solid border-line rounded-20 mb-2"
         >
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             {{ t('swap.swap-offer.best-offer-from') }}
@@ -52,7 +52,7 @@
             />
             {{ t('swap.swap-offer.you-will-get') }}:
           </p>
-          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+          <div class="flex items-center bg-brand-subtle rounded-20 p-4 my-2">
             <div class="relative">
               <app-token-logo
                 :url="toToken?.logoURI"
@@ -100,7 +100,7 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
+              <div class="text-s-12 text-fg-subtle">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
             </div>
           </div>
           <app-pop-up-menu
@@ -115,7 +115,7 @@
                   :key="idx + item.quote.provider + item.toTokenAmount"
                   class="w-full text-left p-3 rounded-12 mb-2 hoverBGWhite"
                   :class="{
-                    'bg-mewBg': item.quote.provider === selectedQuote?.provider,
+                    'bg-brand-subtle': item.quote.provider === selectedQuote?.provider,
                   }"
                   @click="
                     () => {
@@ -127,7 +127,7 @@
                     <div class="grow min-w-0">
                       <div class="flex items-center gap-2">
                         <p
-                          class="text-info text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
+                          class="text-fg-subtle text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
                         >
                           {{
                             t('swap.swap-offer.offer_from', {
@@ -139,7 +139,7 @@
                         </p>
                         <p
                           v-if="idx === 0"
-                          class="bg-primary text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
+                          class="bg-brand text-fg-on-fill rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
                         >
                           {{ t('swap.swap-offer.best-rate') }}
                         </p>
@@ -202,7 +202,7 @@
                       </span>
                       <CheckIcon
                         v-if="item.quote.provider === selectedQuote?.provider"
-                        class="w-5 h-5 text-primary"
+                        class="w-5 h-5 text-brand"
                       />
                       <div v-else class="w-4 h-4" />
                     </div>
@@ -212,7 +212,7 @@
             </template>
           </app-pop-up-menu>
           <div class="pt-3 ml-2">
-            <div class="text-s-14 text-info flex items-center gap-1">
+            <div class="text-s-14 text-fg-subtle flex items-center gap-1">
               <span>{{ t('swap.swap-offer.rate') }}: 1</span>
               <app-token-symbol
                 :symbol="fromToken?.symbol || 'UNKNOWN'"
@@ -237,14 +237,14 @@
               />
             </div>
             <!-- TODO: make library return these values -->
-            <!-- <div class="text-s-14 text-info">Price impact: -0.07%</div> -->
-            <div class="text-s-14 text-info">
+            <!-- <div class="text-s-14 text-fg-subtle">Price impact: -0.07%</div> -->
+            <div class="text-s-14 text-fg-subtle">
               {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
             </div>
-            <!-- <div class="text-s-14 text-info">
+            <!-- <div class="text-s-14 text-fg-subtle">
               {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
             </div> -->
-            <div class="text-s-14 text-info">
+            <div class="text-s-14 text-fg-subtle">
               {{
                 t('swap.swap-offer.offer-includes', {
                   feePercent: swapInfo?.fee,

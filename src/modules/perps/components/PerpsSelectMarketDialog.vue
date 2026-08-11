@@ -10,7 +10,7 @@
       <div class="flex flex-col">
         <!-- Search + Sort -->
         <div
-          class="flex gap-2 justify-between items-center mb-2 mx-4 bg-surface rounded-full p-1"
+          class="flex gap-2 justify-between items-center mb-2 mx-4 bg-surface-strong rounded-full p-1"
         >
           <app-search-input
             :model-value="search"
@@ -22,7 +22,7 @@
           <app-pop-up-menu location="right">
             <template #menu-button="{ toggleMenu }">
               <button
-                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap justify-center gap-1"
+                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-surface h-10 shadow-sm whitespace-nowrap justify-center gap-1"
                 @click="toggleMenu"
               >
                 <span>{{ activeSortLabel }}</span>
@@ -41,12 +41,12 @@
                   </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
-                <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
+                <hr class="h-px bg-line-strong border-0 w-full mt-1 mb-2" />
                 <button
                   v-for="option in sortOptions"
                   :key="option.value"
                   class="flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 text-s-15 font-medium"
-                  :class="{ 'bg-grey-5': sortValue === option.value }"
+                  :class="{ 'bg-page': sortValue === option.value }"
                   @click="[$emit('setSort', option.value), toggleMenu()]"
                 >
                   {{ option.label }}
@@ -57,7 +57,7 @@
                         : ArrowLongDownIcon
                     "
                     v-if="sortValue === option.value"
-                    class="ml-auto w-5 h-5 text-primary"
+                    class="ml-auto w-5 h-5 text-brand"
                   />
                 </button>
               </div>
@@ -77,7 +77,7 @@
             <template #btn-content="{ data }">{{ data.label }}</template>
           </app-btn-group>
         </div>
-        <hr class="border-t border-grey-5 mt-1 mx-4" />
+        <hr class="border-t border-line mt-1 mx-4" />
 
         <!-- Market List -->
         <div
@@ -89,7 +89,7 @@
             class="flex items-center justify-between w-full px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="
               contract.market === selectedMarketName
-                ? '!bg-mewBg'
+                ? '!bg-brand-subtle'
                 : 'bg-transparent hoverBGWhite'
             "
             :aria-pressed="contract.market === selectedMarketName"
@@ -109,11 +109,11 @@
                       contract.baseCurrency
                     }}</span>
                     <span
-                      class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                      class="shrink-0 bg-surface-strong text-fg-subtle font-bold rounded px-[6px] py-[1px] text-s-9"
                       >{{ getMarketLeverage(contract) }}x</span
                     >
                   </div>
-                  <span class="text-info text-s-12">{{
+                  <span class="text-fg-subtle text-s-12">{{
                     getMarketDisplayName(contract)
                   }}</span>
                 </div>
@@ -137,7 +137,7 @@
           </button>
           <div
             v-if="contracts.length === 0"
-            class="text-center py-8 text-info text-s-14"
+            class="text-center py-8 text-fg-subtle text-s-14"
           >
             {{ $t('perps.select-market.no-markets-found') }}
           </div>

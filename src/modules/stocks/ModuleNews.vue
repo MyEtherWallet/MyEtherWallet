@@ -42,7 +42,7 @@
               {{ article.title }}
             </p>
             <div class="flex items-center gap-2 flex-wrap">
-              <p class="text-s-11 text-info">
+              <p class="text-s-11 text-fg-subtle">
                 {{
                   article.timestamp
                     ? new Date(article.timestamp).toLocaleDateString()
@@ -52,7 +52,7 @@
               <span
 v-for="ticker in article.tickers || []"
                 :key="ticker"
-                class="text-s-9 font-semibold tracking-sp-06 uppercase text-info bg-mewBg px-2 py-[1px] rounded"
+                class="text-s-9 font-semibold tracking-sp-06 uppercase text-fg-subtle bg-brand-subtle px-2 py-[1px] rounded"
               >
                 {{ ticker }}
               </span>
@@ -64,7 +64,7 @@ v-for="ticker in article.tickers || []"
         <div
           v-for="token in 3"
           :key="`loading-trending-${token}`"
-          class="bg-grey-10 flex items-end justify-between rounded-16 w-full h-[60px]"
+          class="bg-surface-strong flex items-end justify-between rounded-16 w-full h-[60px]"
         ></div>
       </div>
     </app-sheet>

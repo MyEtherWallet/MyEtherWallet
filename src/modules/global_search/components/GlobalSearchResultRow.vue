@@ -15,12 +15,12 @@
       <app-token-symbol
         :symbol="item.symbol"
         :is-stock="item.isStock"
-        class="!text-s-16 font-semibold tracking-tight text-black"
+        class="!text-s-16 font-semibold tracking-tight text-fg"
       />
-      <div class="text-s-12 text-grey-subtle truncate">{{ item.name }}</div>
+      <div class="text-s-12 text-fg-muted truncate">{{ item.name }}</div>
     </div>
     <div class="text-right flex-none">
-      <div class="text-s-14 text-black">
+      <div class="text-s-14 text-fg">
         {{ item.priceUsd !== null ? formatFiat(item.priceUsd).display : '—' }}
       </div>
       <div

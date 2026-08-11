@@ -14,7 +14,7 @@
         class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102] fixed"
       >
         <div
-          class="bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
+          class="bg-surface print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-surface rounded-32 sm:min-h-[512px] px-3 sm:px-5"
         >
           <div class="flex justify-between items-center my-6 ml-3 mr-5">
             <img
@@ -26,7 +26,7 @@
             />
 
             <h1
-              class="text-portfolio text-s-17 font-medium px-2 capitalize border-l-2 border-portfolio ml-2"
+              class="text-brand text-s-17 font-medium px-2 capitalize border-l-2 border-brand ml-2"
             >
               {{ $t('paper_wallet.title') }}
             </h1>
@@ -67,17 +67,17 @@
               <!-- Loading QR Placeholder -->
               <div
                 v-show="isLoadingQRCode"
-                class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+                class="h-[150px] w-[150px] animate-pulse bg-surface-strong rounded-xl"
               ></div>
             </div>
           </div>
 
           <p
-            class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
+            class="my-6 mx-auto text-s-14 text-p-130 text-fg-subtle print:text-black text-center max-w-[400px]"
           >
             <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
           </p>
-          <hr class="h-px bg-grey-10 border-0 w-full my-6" />
+          <hr class="h-px bg-surface-strong border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->
           <div class="flex justify-between items-center mx-6 mb-6">
             <img
@@ -90,12 +90,12 @@
             <div class="ml-auto">
               <p class="mb-3">
                 <chat-bubble-bottom-center-text-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                  class="inline h-4 w-4 mr-2 text-brand"
                 />support@myetherwallet.com
               </p>
               <p>
                 <globe-alt-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                  class="inline h-4 w-4 mr-2 text-brand"
                 />https://www.myetherwallet.com
               </p>
             </div>

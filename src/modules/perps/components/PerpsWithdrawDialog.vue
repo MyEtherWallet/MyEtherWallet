@@ -8,7 +8,7 @@
   >
     <template #content>
       <div v-if="walletAddress" class="mb-6">
-        <div class="bg-mewBg rounded-20 p-4 bg-mewBg mb-4">
+        <div class="bg-brand-subtle rounded-20 p-4 bg-brand-subtle mb-4">
           <!-- Amount -->
           <div class="mb-4">
             <perps-amount
@@ -32,14 +32,14 @@
                   <div class="flex justify-start justify-between mt-3">
                     <button
                       v-if="!hasOpenPositions"
-                      class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setMax"
                     >
                       {{ $t('perps.withdraw.max') }}
                     </button>
                     <!-- Available balance -->
                     <div class="ml-auto text-left">
-                      <span class="text-info text-s-13">{{
+                      <span class="text-fg-subtle text-s-13">{{
                         $t('perps.withdraw.available-label')
                       }}</span>
                       <span class="font-medium text-s-13 ml-1">
@@ -54,7 +54,7 @@
           <!-- Withdraw to -->
           <div class="mb-4">
             <p
-              class="text-info text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
+              class="text-fg-subtle text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
             >
               {{ $t('perps.withdraw.withdraw-to-label') }}
             </p>
@@ -69,7 +69,7 @@
           </div>
           <!-- Withdrawal fee -->
           <div class="flex justify-between text-s-13">
-            <span class="text-info">{{
+            <span class="text-fg-subtle">{{
               $t('perps.withdraw.withdrawal-fee-label')
             }}</span>
             <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
@@ -85,7 +85,7 @@
         <transition name="fade">
           <div
             v-if="error"
-            class="w-full p-4 bg-error-10 border border-error rounded-12 mb-2"
+            class="w-full p-4 bg-error-subtle border border-error rounded-12 mb-2"
           >
             <p class="text-error text-s-14 text-center">
               {{ error }}

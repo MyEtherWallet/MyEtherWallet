@@ -1,6 +1,6 @@
 <template>
   <button
-    class="block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+    class="block text-fg-subtle text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
     @click="goToCreateWallet"
   >
     {{ $t('wc_dialog.no_wallet') }}

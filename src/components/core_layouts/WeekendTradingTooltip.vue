@@ -11,7 +11,7 @@
       <div
         v-if="visible"
         :style="tooltipStyle"
-        class="fixed z-[200] w-[360px] min-h-[144px] bg-white rounded-20 shadow-[0px_8px_12px_-4px_rgba(0,0,0,0.32)] p-4 origin-right"
+        class="fixed z-[200] w-[360px] min-h-[144px] bg-surface rounded-20 shadow-[0px_8px_12px_-4px_rgba(0,0,0,0.32)] p-4 origin-right"
         role="tooltip"
         aria-live="polite"
       >
@@ -37,7 +37,7 @@
             :key="i"
             :src="icon"
             alt=""
-            class="w-7 h-7 rounded-full border-[1.5px] border-white bg-white object-cover"
+            class="w-7 h-7 rounded-full border-[1.5px] border-surface bg-surface object-cover"
             :class="i > 0 ? '-ml-2' : ''"
           />
         </div>
@@ -48,7 +48,7 @@
         </p>
 
         <!-- Body -->
-        <p class="text-s-12 text-info leading-[1.4]">
+        <p class="text-s-12 text-fg-subtle leading-[1.4]">
           {{
             $t('trade.weekend.tooltip_body', {
               tickers: 'AMZNon, MSTRon, COINon, ORCLon, TQQQon',
@@ -62,7 +62,7 @@
           :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="dismiss"
         >
-          <XMarkIcon class="w-4 h-4 text-info" />
+          <XMarkIcon class="w-4 h-4 text-fg-subtle" />
         </button>
       </div>
     </transition>

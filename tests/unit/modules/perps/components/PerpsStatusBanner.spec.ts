@@ -77,7 +77,7 @@ describe('PerpsStatusBanner', () => {
     const banner = await mountBanner()
 
     const shell = banner.get('[role="status"]')
-    expect(shell.classes()).toContain('bg-warning-10')
+    expect(shell.classes()).toContain('bg-warning-subtle')
     expect(banner.get('svg').classes()).toContain('text-warning')
   })
 

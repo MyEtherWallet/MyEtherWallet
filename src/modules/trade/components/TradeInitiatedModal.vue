@@ -7,7 +7,7 @@
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center pt-8 text-center">
-          <p class="text-s-13 lg:text-s-14 text-info px-4 leading-p-160">
+          <p class="text-s-13 lg:text-s-14 text-fg-subtle px-4 leading-p-160">
             {{ $t('trade.initiated_modal.order_submitted') }}
           </p>
 
@@ -20,7 +20,7 @@
               <div class="mr-2">
                 <svg
                   v-if="notificationStatus === 'pending'"
-                  class="w-5 h-5 animate-spin text-primary"
+                  class="w-5 h-5 animate-spin text-brand"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -56,7 +56,7 @@
               <span
                 class="text-s-14 font-semibold"
                 :class="{
-                  'text-primary': notificationStatus === 'pending',
+                  'text-brand': notificationStatus === 'pending',
                   'text-success': notificationStatus === 'filled',
                   'text-error':
                     notificationStatus === 'cancelled' ||
@@ -66,7 +66,7 @@
                 {{ statusText }}
               </span>
             </div>
-            <div class="flex flex-col justify-start bg-mewBg p-4 rounded-20">
+            <div class="flex flex-col justify-start bg-brand-subtle p-4 rounded-20">
               <!-- From Row -->
               <div class="flex items-center gap-4">
                 <div class="relative">
@@ -108,7 +108,7 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ fromAmountFiat }}</p>
+                  <p class="text-fg-subtle text-s-14">{{ currencySymbol }}{{ fromAmountFiat }}</p>
                 </div>
               </div>
 
@@ -155,7 +155,7 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ toAmountFiat }}</p>
+                  <p class="text-fg-subtle text-s-14">{{ currencySymbol }}{{ toAmountFiat }}</p>
                 </div>
               </div>
             </div>
@@ -164,7 +164,7 @@
             <div class="w-full my-5 px-2 lg:px-4">
               <div class="flex justify-between items-center">
                 <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-fg-subtle"
                   >{{ $t('trade.initiated_modal.order_hash') }}</span
                 >
                 <div class="flex items-center gap-2">
@@ -176,7 +176,7 @@
               </div>
               <div class="flex justify-between items-center mt-4">
                 <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-fg-subtle"
                   >{{ $t('trade.initiated_modal.network') }}</span
                 >
                 <div class="flex items-center gap-2">
@@ -198,7 +198,7 @@
 
         <div class="mt-6 lg:mt-10">
           <p
-            class="text-center text-s-13 lg:text-s-14 text-info px-4 leading-p-160"
+            class="text-center text-s-13 lg:text-s-14 text-fg-subtle px-4 leading-p-160"
           >
             {{ $t('trade.initiated_modal.close_window_message') }}
           </p>

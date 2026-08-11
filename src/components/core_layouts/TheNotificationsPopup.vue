@@ -7,7 +7,7 @@
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
-          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-primary rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
+          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-brand rounded-full unseenNotificationsCount text-[11px] leading-none text-fg-on-fill flex items-center justify-center font-bold px-[4px]"
         >
           {{ unseenNotificationsCount }}
         </div>
@@ -28,7 +28,7 @@
           v-show="isNotificationsOpen"
           ref="popupRef"
           :style="popupStyle"
-          class="fixed z-[2101] w-[calc(100vw-32px)] sm:w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
+          class="fixed z-[2101] w-[calc(100vw-32px)] sm:w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-surface rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
         >
           <!-- Header (drag handle on desktop only) -->
           <div
@@ -45,7 +45,7 @@
 
               <span
                 v-if="unseenNotificationsCount > 0"
-                class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
+                class="bg-brand text-fg-on-fill text-s-12 font-bold px-2 py-0.5 rounded-full"
               >
                 {{ unseenNotificationsCount }}
               </span>
@@ -68,7 +68,7 @@
                 <app-btn-icon
                   :label="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin')"
                   @click="isPinned = !isPinned"
-                  class="text-primary"
+                  class="text-brand"
                 >
                   <img
                     :src="pinIcon"

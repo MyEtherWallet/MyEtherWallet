@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-fg-subtle rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-fg-on-fill shadow-button"
         :class="{ 'mew-card-readable': !useDynamicContrast }"
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
@@ -40,29 +40,29 @@
                   <ul class="px-2 text-s-14">
                     <li
                       @click="setOpenPaperWalletDialog(true)"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <QrCodeIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-brand"
                       />
                       {{ $t('view_paper_wallet') }}
                     </li>
                     <li
                       v-if="canSwitchAddress"
                       @click="switchAddress()"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <UserGroupIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-brand"
                       />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
+                  <hr class="h-px bg-surface-strong border-0 w-full my-2" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
-                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                      class="text-fg p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <TrashIcon class="w-5 h-5 inline-block mr-2 text-error" />
                       {{
@@ -376,7 +376,7 @@ const switchAddress = () => {
 .mew-card-readable a {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
-.mew-card-readable .text-black {
+.mew-card-readable .text-fg {
   text-shadow: none;
 }
 .mew-card {

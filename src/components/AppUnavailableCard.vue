@@ -1,7 +1,7 @@
 <template>
   <div
     role="alert"
-    class="w-full max-w-[380px] mx-auto p-6 bg-white border border-grey-10 rounded-16"
+    class="w-full max-w-[380px] mx-auto p-6 bg-surface border border-line rounded-16"
   >
     <div class="flex justify-center">
       <slot name="icon">
@@ -15,7 +15,7 @@
     <p :class="['mt-6 text-s-16 font-semibold text-center', accentClass]">
       {{ title }}
     </p>
-    <p v-if="description" class="text-s-12 text-info text-center">
+    <p v-if="description" class="text-s-12 text-fg-subtle text-center">
       {{ description }}
     </p>
 
@@ -45,6 +45,6 @@ const props = withDefaults(
 )
 
 const accentClass = computed(() =>
-  props.accent === 'primary' ? 'text-primary' : 'text-error',
+  props.accent === 'primary' ? 'text-brand' : 'text-error',
 )
 </script>

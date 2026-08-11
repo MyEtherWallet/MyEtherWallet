@@ -14,7 +14,7 @@
           <router-link
             v-if="i.id"
             :to="getTokenRouteParams(i)"
-            class="truncate group-hover:text-primary transition-colors block max-w-[80px]"
+            class="truncate group-hover:text-brand transition-colors block max-w-[80px]"
           >
             <app-token-symbol
               :symbol="i.symbol"
@@ -28,7 +28,7 @@
         </app-tooltip>
       </div>
       <p
-        class="px-2.5 py-0.5 leading-tight text-s-11 font-bold rounded-full bg-grey-5 text-info"
+        class="px-2.5 py-0.5 leading-tight text-s-11 font-bold rounded-full bg-page text-fg-subtle"
       >
         {{ i.formattedPercentage }}
       </p>

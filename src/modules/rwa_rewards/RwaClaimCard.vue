@@ -1,26 +1,26 @@
 <template>
   <div
-    class="flex flex-col w-full gap-4 p-4 rounded-16 border border-black/15 bg-white"
+    class="flex flex-col w-full gap-4 p-4 rounded-16 border border-black/15 bg-surface"
   >
     <div class="flex items-center gap-3 w-full">
       <img :src="usdcIcon" alt="" class="w-8 h-8 shrink-0" />
       <div class="flex flex-col flex-1 min-w-0">
         <p
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
+          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-fg"
         >
           {{ amountLabel }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-fg-subtle">
           {{ subtitle }}
         </p>
       </div>
       <div
         v-if="variant === 'sent' || variant === 'closed'"
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
-        :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
+        :class="variant === 'sent' ? 'bg-success' : 'bg-error'"
       >
-        <check-icon v-if="variant === 'sent'" class="w-3.5 h-3.5 text-white" />
-        <x-mark-icon v-else class="w-3.5 h-3.5 text-white" />
+        <check-icon v-if="variant === 'sent'" class="w-3.5 h-3.5 text-fg-on-fill" />
+        <x-mark-icon v-else class="w-3.5 h-3.5 text-fg-on-fill" />
       </div>
     </div>
 

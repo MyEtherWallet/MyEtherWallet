@@ -7,18 +7,18 @@
       >
         {{ $t('purchase.select_token.title') }}
       </h2>
-      <p class="text-s-16 text-info leading-[22px]">
+      <p class="text-s-16 text-fg-subtle leading-[22px]">
         {{ $t('purchase.select_token.subtitle') }}
       </p>
     </div>
 
     <div
-      class="flex items-center gap-2 h-12 px-1 bg-bgMuted rounded-24 flex-none"
+      class="flex items-center gap-2 h-12 px-1 bg-surface-strong rounded-24 flex-none"
     >
       <app-search-input
         v-model="searchInput"
         size="compact"
-        bg-class="bg-white"
+        bg-class="bg-surface"
         class="flex-1"
         :placeholder="$t('purchase.select_token.search_placeholder')"
       />
@@ -30,7 +30,7 @@
         <span class="text-s-13 font-medium whitespace-nowrap">
           {{ filterButtonLabel }}
         </span>
-        <chevron-right-icon class="w-4 h-4 text-black" />
+        <chevron-right-icon class="w-4 h-4 text-fg" />
       </button>
     </div>
 
@@ -40,7 +40,7 @@
       aria-live="polite"
     >
       <span
-        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+        class="inline-block w-8 h-8 rounded-full border-2 border-line border-t-brand animate-spin"
       />
     </div>
     <ul v-else role="listbox" class="flex-1 overflow-y-auto">
@@ -58,7 +58,7 @@
               height="h-10"
             />
             <span
-              class="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-white bg-white"
+              class="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-surface bg-surface"
             >
               <app-token-logo
                 :url="entry.chainIcon"
@@ -69,27 +69,27 @@
             </span>
           </div>
           <div class="min-w-0 flex-1 flex flex-col">
-            <p class="text-s-16 font-semibold text-black truncate">
+            <p class="text-s-16 font-semibold text-fg truncate">
               {{ entry.token.symbol }}
             </p>
-            <p class="text-s-12 text-info truncate">
+            <p class="text-s-12 text-fg-subtle truncate">
               {{ entry.token.name }}
             </p>
           </div>
           <span
-            class="text-s-11 font-bold tracking-sp-06 uppercase text-info whitespace-nowrap flex-none"
+            class="text-s-11 font-bold tracking-sp-06 uppercase text-fg-subtle whitespace-nowrap flex-none"
           >
             {{ entry.network.name }}
           </span>
           <check-circle-icon
             v-if="isSelectedToken(entry)"
-            class="w-5 h-5 text-primary flex-none"
+            class="w-5 h-5 text-brand flex-none"
           />
         </button>
       </li>
       <li
         v-if="filteredEntries.length === 0"
-        class="text-info text-s-14 text-center py-10"
+        class="text-fg-subtle text-s-14 text-center py-10"
       >
         {{ $t('purchase.select_token.no_results') }}
       </li>

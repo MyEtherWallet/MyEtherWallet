@@ -18,7 +18,7 @@
               })
             }}
           </h2>
-          <p class="text-s-16 text-info leading-[22px]">
+          <p class="text-s-16 text-fg-subtle leading-[22px]">
             {{
               t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
             }}
@@ -32,7 +32,7 @@
           aria-live="polite"
         >
           <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+            class="inline-block w-8 h-8 rounded-full border-2 border-line border-t-brand animate-spin"
           />
         </div>
 
@@ -52,16 +52,16 @@
             >
               <span
                 v-if="index === 0"
-                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-success text-white text-s-14 font-semibold leading-[20px] tracking-[-0.28px] px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
+                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-success text-fg-on-fill text-s-14 font-semibold leading-[20px] tracking-[-0.28px] px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
               >
                 {{ t('purchase.select_provider.best_value') }}
               </span>
               <button
                 type="button"
                 :class="[
-                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase transition-colors hoverNoBG',
+                  'w-full flex items-center gap-4 p-4 rounded-16 bg-page transition-colors hoverNoBG',
                   selectedIndex === index
-                    ? 'border-2 border-black'
+                    ? 'border-2 border-fg'
                     : 'border-2 border-transparent',
                 ]"
                 @click="selectedIndex = index"
@@ -71,13 +71,13 @@
                   class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
                 >
                   <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg"
                   >
                     {{ formattedCryptoAmount(quote) }}
                     {{ quote.crypto_currency }}
                   </p>
                   <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-info"
+                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-fg-subtle"
                   >
                     ≈ {{ formattedFiatReceive(quote) }}
                   </p>
@@ -91,7 +91,7 @@
                         quote.payment_methods,
                       )"
                       :key="method.alt"
-                      class="bg-white border border-grey-10 rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
+                      class="bg-surface border border-line rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
                     >
                       <img
                         :src="method.src"
@@ -114,16 +114,16 @@
           <!-- Summary -->
           <div class="flex flex-col gap-2">
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-fg-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_pay') }}
               </span>
               <span class="text-s-12 font-semibold tracking-[-0.24px]">
                 {{ formattedFiatAmount }}
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <div class="h-px bg-surface-strong" />
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-fg-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_receive') }}
               </span>
               <span class="text-s-12 font-semibold tracking-[-0.24px]">
@@ -132,7 +132,7 @@
                     ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`
                     : ''
                 }}
-                <span class="text-info font-normal">
+                <span class="text-fg-subtle font-normal">
                   {{
                     selectedQuote
                       ? `(≈ ${formattedFiatReceive(selectedQuote)})`
@@ -141,7 +141,7 @@
                 </span>
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <div class="h-px bg-surface-strong" />
           </div>
 
           <!-- Continue CTA -->
@@ -156,7 +156,7 @@
               />
             </span>
           </app-base-button>
-          <p class="text-info text-s-12 text-center -mt-5">
+          <p class="text-fg-subtle text-s-12 text-center -mt-5">
             {{
               t('purchase.select_provider.redirect', {
                 provider: providerNameFormatted,

@@ -1,28 +1,28 @@
 <template>
-  <div class="relative px-2 rounded-16 bg-white">
+  <div class="relative px-2 rounded-16 bg-surface">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1 basis-1/4">
-        <p class="text-info uppercase text-s-9 font-bold">
+        <p class="text-fg-subtle uppercase text-s-9 font-bold">
           {{ $t('notifications_module.trade_order') }}
         </p>
         <div
           v-if="!seen"
-          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+          class="rounded-full bg-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
       <span
         v-if="order.status === 'pending'"
-        class="text-s-12 font-mono text-primary ml-auto"
+        class="text-s-12 font-mono text-brand ml-auto"
       >
         {{ formatCountdown(remainingTime) }}
       </span>
       <div
         :class="statusBadgeClass"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+        class="ml-2 px-[10px] py-[3px] rounded-full text-fg-on-fill uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
           v-if="order.status === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
+          class="bg-fg-on-fill w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
         {{ orderStatusLabel }}
       </div>
@@ -76,7 +76,7 @@
             v-if="order.status === 'filled' && order.finalToAmount"
             class="flex flex-col"
           >
-            <span class="text-s-12 text-info">
+            <span class="text-s-12 text-fg-subtle">
               <span class="uppercase text-s-9 mr-1 opacity-80">{{
                 $t('notifications_module.est')
               }}</span>
@@ -125,7 +125,7 @@
               class="inline-flex !text-s-14 !font-bold"
             />
           </p>
-          <p v-if="order.usdValue" class="text-s-12 text-info">
+          <p v-if="order.usdValue" class="text-s-12 text-fg-subtle">
             {{ formatFiat(order.usdValue).display }}
           </p>
         </div>
@@ -162,7 +162,7 @@
           class="flex items-center justify-between pt-2"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('notifications_module.price_difference') }}</span
           >
           <span
@@ -179,7 +179,7 @@
         <!-- Created at -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
@@ -190,7 +190,7 @@
         <!-- Order Hash -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.order_hash') }}</span
           >
           <span class="font-mono text-s-12">
@@ -204,7 +204,7 @@
           class="flex items-center justify-between mt-3"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-fg-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('notifications_module.filled_in_tx') }}</span
           >
           <a
@@ -274,12 +274,12 @@ const statusBadgeClass = computed(() => {
     case 'filled':
       return 'bg-success'
     case 'pending':
-      return 'bg-primary'
+      return 'bg-brand'
     case 'cancelled':
     case 'expired':
       return 'bg-error'
     default:
-      return 'bg-grey-30'
+      return 'bg-fg-muted'
   }
 })
 

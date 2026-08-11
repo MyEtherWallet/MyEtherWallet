@@ -7,7 +7,7 @@
         <h1 class="text-s-24 xs:text-s-20 font-bold hidden lg:block">
           {{ selectedTab.label }}
         </h1>
-        <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+        <div class="hidden lg:flex lg:items-center bg-page rounded-full">
           <app-btn-group
             v-model:selected="selectedTab"
             :btn-list="tabs"
@@ -19,13 +19,13 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info text-s-12"
+                  class="ml-1 text-fg-subtle text-s-12"
                 >
                   · {{ positions.length }}
                 </span>
                 <span
                   v-else-if="data.value === 'orders' && openOrdersCount > 0"
-                  class="ml-1 text-info text-s-12"
+                  class="ml-1 text-fg-subtle text-s-12"
                 >
                   ·
                   {{
@@ -46,9 +46,9 @@
           class="lg:hidden"
         >
           <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <div class="bg-surface-strong rounded-full p-1 w-full xs:w-auto">
               <button
-                class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[200px] px-5 shadow-button"
+                class="rounded-full bg-surface py-3 w-full xs:w-auto min-w-[200px] px-5 shadow-button"
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
@@ -56,13 +56,13 @@
                     {{ selectedTab.label }}
                     <span
                       v-if="activeTab === 'positions' && positions.length > 0"
-                      class="ml-1 text-info"
+                      class="ml-1 text-fg-subtle"
                     >
                       · {{ positions.length }}
                     </span>
                     <span
                       v-else-if="activeTab === 'orders' && openOrdersCount > 0"
-                      class="ml-1 text-info"
+                      class="ml-1 text-fg-subtle"
                     >
                       ·
                       {{
@@ -91,14 +91,14 @@
       <template v-else-if="activeTab === 'positions'">
         <div
           v-if="positions.length === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-fg-subtle text-s-14"
         >
           {{ $t('perps.positions.no-open-positions') }}
         </div>
         <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold"
             >
               <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                 {{ $t('perps.positions.market-header') }}
@@ -158,7 +158,7 @@
                           ? 'text-success'
                           : pos.direction === 'short'
                             ? 'text-error'
-                            : 'text-info',
+                            : 'text-fg-subtle',
                         'font-medium text-s-12 capitalize hooverOpacity cursor-pointer',
                       ]"
                       @click.stop="openLeverage(pos)"
@@ -255,7 +255,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-surface rounded-xl min-w-[240px]"
                       >
                         <ul>
                           <li
@@ -331,7 +331,7 @@
                 >{{ data.label }}
                 <span
                   v-if="data.value === 'pending' && openOrdersCount > 0"
-                  class="ml-1 text-info text-s-11"
+                  class="ml-1 text-fg-subtle text-s-11"
                 >
                   ·
                   {{
@@ -351,7 +351,7 @@
         />
         <div
           v-else-if="orders.length === 0 && ordersCurrentPage === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-fg-subtle text-s-14"
         >
           {{ $t('perps.positions.no-orders') }}
         </div>
@@ -359,7 +359,7 @@
         <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold"
             >
               <th
                 class="px-1 sm:pl-4 py-3 text-left font-bold xs:w-[150px] 3xl:w-auto"
@@ -443,21 +443,21 @@
                 </span>
               </td>
               <!-- Time -->
-              <td class="px-1 py-3 text-info text-s-12 hidden xs:table-cell">
+              <td class="px-1 py-3 text-fg-subtle text-s-12 hidden xs:table-cell">
                 {{ formatDate(order.createdAt) }}
               </td>
               <!-- Status -->
               <td class="px-1 py-3 hidden lg:table-cell">
                 <p
                   :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface-strong',
                     order.status === 'open' || order.status === 'pending'
-                      ? 'text-primary'
+                      ? 'text-brand'
                       : order.status === 'fullyfilled'
                         ? 'text-success'
                         : order.status === 'canceled' ||
                             order.status === 'untriggered'
-                          ? 'text-info'
+                          ? 'text-fg-subtle'
                           : '',
                   ]"
                 >
@@ -472,7 +472,7 @@
               <td class="px-1 py-3 text-right font-normal text-s-14">
                 <p>{{ formatPrice(getOrderPrice(order)) }}</p>
 
-                <p class="text-s-12 text-info xs:hidden">
+                <p class="text-s-12 text-fg-subtle xs:hidden">
                   {{ formatDate(order.createdAt) }}
                 </p>
               </td>
@@ -481,7 +481,7 @@
                 class="px-1 py-3 text-right font-normal text-s-14 hidden sm:table-cell"
               >
                 <p>{{ order.filledSize }} {{ getBase(order.market) }}</p>
-                <p class="text-s-12 text-info">
+                <p class="text-s-12 text-fg-subtle">
                   {{
                     $t('perps.positions.out-of', {
                       size: order.size,
@@ -510,7 +510,7 @@
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-surface rounded-xl min-w-[240px]"
                     >
                       <ul>
                         <li
@@ -576,7 +576,7 @@
         />
         <div
           v-else-if="fills.length === 0 && fillsCurrentPage === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-fg-subtle text-s-14"
         >
           {{ $t('perps.positions.no-fills') }}
         </div>
@@ -584,7 +584,7 @@
           <table ref="fillsTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold"
               >
                 <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                   {{ $t('perps.positions.market-header') }}
@@ -634,7 +634,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-success'
                             : 'text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
+                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface-strong lg:hidden',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -649,7 +649,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-success'
                         : 'text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
+                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface-strong',
                     ]"
                   >
                     {{ $t(directionKey(fill.direction)) }}
@@ -657,14 +657,14 @@
                 </td>
                 <!-- Time -->
                 <td
-                  class="px-1 py-3 text-right text-s-12 lg:text-left text-info hidden xs:table-cell"
+                  class="px-1 py-3 text-right text-s-12 lg:text-left text-fg-subtle hidden xs:table-cell"
                 >
                   {{ formatDate(fill.time) }}
                 </td>
                 <!-- Price -->
                 <td class="px-1 py-3 text-right">
                   <p>{{ formatPrice(fill.price) }}</p>
-                  <p class="text-info text-s-12 xs:hidden">
+                  <p class="text-fg-subtle text-s-12 xs:hidden">
                     {{ formatDate(fill.time) }}
                   </p>
                 </td>
@@ -677,7 +677,7 @@
                   <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                     {{ formatPnl(fill.pnl) }}
                   </span>
-                  <span v-else class="text-info">—</span>
+                  <span v-else class="text-fg-subtle">—</span>
                 </td>
                 <!-- Actions -->
                 <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
@@ -720,7 +720,7 @@
         />
         <div
           v-else-if="deposits.length === 0 && withdrawals.length === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-fg-subtle text-s-14"
         >
           {{ $t('perps.positions.no-deposits-or-withdrawals') }}
         </div>
@@ -728,7 +728,7 @@
           <table ref="dwTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold"
               >
                 <th
                   class="px-1 sm:pl-4 py-3 text-left font-bold hidden xs:table-cell"
@@ -792,7 +792,7 @@
                 </td>
                 <!-- Time -->
                 <td
-                  class="px-1 py-3 text-left text-info text-s-12 hidden sm:table-cell"
+                  class="px-1 py-3 text-left text-fg-subtle text-s-12 hidden sm:table-cell"
                 >
                   {{ formatDate(item.time) }}
                 </td>
@@ -805,7 +805,7 @@
                   <p class="md:hidden">
                     {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
                   </p>
-                  <p class="text-info text-s-12 md:text-black md:text-s-14">
+                  <p class="text-fg-subtle text-s-12 md:text-fg md:text-s-14">
                     {{ item.size }} {{ item.coin }}
                   </p>
                 </td>
@@ -1373,7 +1373,7 @@ const combinedDW = computed<CombinedDWRow[]>(() => {
           ? 'text-success'
           : d.status === 'pending'
             ? 'text-warning'
-            : 'text-info',
+            : 'text-fg-subtle',
       time: d.time,
     })
   }

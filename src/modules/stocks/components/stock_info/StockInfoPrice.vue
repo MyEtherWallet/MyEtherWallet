@@ -4,7 +4,7 @@
     :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
   >
     <div
-      class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-grey-10 gap-y-6"
+      class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-line gap-y-6"
     >
       <div class="lg:py-2 pr-6 pb-6 lg:pb-0">
         <h2
@@ -22,7 +22,7 @@
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -34,7 +34,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -46,7 +46,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -69,7 +69,7 @@
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
@@ -81,7 +81,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium capitalize">
@@ -93,7 +93,7 @@
             </p>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
+            <p class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold">
               {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">

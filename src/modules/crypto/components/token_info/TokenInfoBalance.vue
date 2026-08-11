@@ -45,19 +45,19 @@
             />
           </div>
 
-          <p class="xs:ml-3 font-normal text-s-14 xs:text-s-24 text-info">
+          <p class="xs:ml-3 font-normal text-s-14 xs:text-s-24 text-fg-subtle">
             {{ currencySymbol }}{{ getFormattedFiatValueForChain(currentBalance) }}
           </p>
         </div>
       </div>
       <div
         v-else
-        class="h-[42px] animate-pulse bg-surface rounded-xl w-[200px]"
+        class="h-[42px] animate-pulse bg-surface-strong rounded-xl w-[200px]"
       ></div>
     </div>
     <hr
       v-if="otherChains.length > 0"
-      class="h-px bg-grey-10 border-0 w-full mt-6"
+      class="h-px bg-surface-strong border-0 w-full mt-6"
     />
 
     <!-- Balance on other chains -->
@@ -110,7 +110,7 @@
                 />
               </div>
 
-              <p class="text-info text-s-12 capitalize truncate">
+              <p class="text-fg-subtle text-s-12 capitalize truncate">
                 {{
                   $t('crypto.on_chain', {
                     chain: i.chainNameLong || i.chainName.toLowerCase(),
@@ -119,7 +119,7 @@
               </p>
             </div>
             <div class="ml-auto sm:mr-10 text-right">
-              <p class="text-info text-s-14 font-medium">
+              <p class="text-fg-subtle text-s-14 font-medium">
                 {{ currencySymbol }}{{ i.fiatValue }}
               </p>
             </div>

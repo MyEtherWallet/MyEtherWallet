@@ -19,7 +19,7 @@
     </div>
     <div
       v-if="isLoading || !hasData"
-      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface rounded-12 w-[60%]"
+      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface-strong rounded-12 w-[60%]"
     />
     <div
       v-else
@@ -96,7 +96,7 @@
         </div>
         <p
           v-if="!isLoading && existsOnCurrentChain"
-          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-fg-subtle"
         >
           {{ $t('crypto.on_chain', { chain: selectedChain?.name }) }}
         </p>

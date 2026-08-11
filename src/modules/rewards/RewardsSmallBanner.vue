@@ -3,20 +3,20 @@
        hold and get 10 USDC"), so those are hidden once it stops taking trades. -->
   <div v-if="!isBanned && (isSwapLocation || canRegisterTrade)">
     <div
-      class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
+      class="bg-brand-subtle rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
     >
       <div class="flex-1 min-w-0">
-        <div class="text-s-11 font-semibold text-black leading-tight">
+        <div class="text-s-11 font-semibold text-fg leading-tight">
           <div v-if="props.location === 'small-banner-swap'">
             {{ t('rewards.small_banner_swap_text') }}
-            <span class="text-primary">
+            <span class="text-brand">
               {{ t('rewards.small_banner_swap_highlight') }}</span
             >
           </div>
           <div v-else>
             {{ t('rewards.small_banner_trade_text') }}
-            <span class="text-primary">
+            <span class="text-brand">
               {{ t('rewards.small_banner_trade_highlight') }}</span
             >
             <br />
@@ -25,7 +25,7 @@
         </div>
       </div>
       <button
-        class="flex items-center gap-1 text-s-14 text-black underline whitespace-nowrap hoverOpacity shrink-0"
+        class="flex items-center gap-1 text-s-14 text-fg underline whitespace-nowrap hoverOpacity shrink-0"
       >
         {{ t('rewards.learn_more') }}
       </button>

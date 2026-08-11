@@ -4,11 +4,11 @@
       { 'py-1 px-3 text-s-13': size === BtnSize.SMALL },
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
-      { 'bg-white': isOutline },
+      { 'bg-surface': isOutline },
       disabled
         ? isOutline
-          ? '!border-grey-outline !text-grey-50'
-          : '!bg-grey-outline'
+          ? '!border-line-strong !text-fg-subtle'
+          : '!bg-line-strong'
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
@@ -31,8 +31,8 @@
             { 'w-5 h-5': size === BtnSize.MEDIUM },
             { 'w-6 h-6  top-[25%]': size === BtnSize.LARGE },
             isOutline
-              ? 'text-primary  fill-white/70'
-              : 'text-white/30  fill-white',
+              ? 'text-brand  fill-white/70'
+              : 'text-fg-on-fill/30  fill-fg-on-fill',
           ]"
           viewBox="0 0 100 101"
           width="24"
@@ -96,28 +96,28 @@ const props = defineProps({
 const themeStyle = computed(() => {
   if (props.theme === 'primary') {
     if (props.isOutline)
-      return 'border border-2 border-primary text-primary bg-transparent'
-    return 'text-white bg-primary'
+      return 'border border-2 border-brand text-brand bg-transparent'
+    return 'text-fg-on-fill bg-brand'
   }
 
   if (props.theme === 'success') {
     if (props.isOutline)
       return 'border border-2 border-success text-success bg-transparent'
-    return 'text-white bg-success'
+    return 'text-fg-on-fill bg-success'
   }
 
   if (props.theme === 'error') {
     if (props.isOutline)
       return 'border border-2 border-error text-error bg-transparent'
-    return 'text-white bg-error'
+    return 'text-fg-on-fill bg-error'
   }
   if (props.theme === 'neutral') {
     if (props.isOutline)
-      return 'border border-2 border-grey-outline text-black bg-transparent'
-    return 'text-black bg-bgMuted'
+      return 'border border-2 border-line-strong text-fg bg-transparent'
+    return 'text-fg bg-surface-strong'
   }
 
-  return 'text-white bg-primary'
+  return 'text-fg-on-fill bg-brand'
 })
 const emit = defineEmits(['click'])
 const onClick = () => {

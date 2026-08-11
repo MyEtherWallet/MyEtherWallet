@@ -15,7 +15,7 @@
       />
       <div class="flex-1 px-3">
         <p class="font-bold text-s-16">{{ $t('rewards.congratulations') }}</p>
-        <p class="text-s-14 text-info mt-0.5">{{ $t('rewards.you_received_reward') }}</p>
+        <p class="text-s-14 text-fg-subtle mt-0.5">{{ $t('rewards.you_received_reward') }}</p>
       </div>
       <app-btn-icon-close @close="toggleRewardToast(false)" />
     </div>

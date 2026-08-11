@@ -5,7 +5,7 @@
     >
       <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('crypto.explore_tokens') }}</h1>
 
-      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+      <div class="hidden lg:flex lg:items-center bg-page rounded-full">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
@@ -45,9 +45,9 @@
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full sm:w-auto">
+          <div class="bg-surface-strong rounded-full p-1 w-full sm:w-auto">
             <button
-              class="rounded-full bg-white py-3 w-full min-w-[180px] px-5 shadow-button"
+              class="rounded-full bg-surface py-3 w-full min-w-[180px] px-5 shadow-button"
               @click="toggleSelect"
             >
               <div class="flex items-center justify-between gap-1">
@@ -63,12 +63,12 @@
     </div>
 
     <div class="basis-full">
-      <div class="bg-white rounded-16 py-4 px-2">
+      <div class="bg-surface rounded-16 py-4 px-2">
         <div
-          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
+          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:pt-2 pb-6 mb-4 sm:gap-6 border-b border-line"
         >
           <button
-            class="xs:hidden mb-3 bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+            class="xs:hidden mb-3 bg-surface hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
             @click="openChainDialog = true"
           >
             <div class="flex items-center">
@@ -89,7 +89,7 @@
             </div>
           </button>
           <div
-            class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[600px]"
+            class="flex grow gap-4 justify-between items-center bg-surface-strong rounded-full p-1 w-full xs:max-w-[600px]"
           >
             <app-search-input
               v-model="searchInput"
@@ -125,21 +125,21 @@
             class="w-full text-sm table-fixed border-separate border-spacing-y-0"
           >
             <!-- Header-->
-            <thead class="bg-white">
+            <thead class="bg-surface">
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
+                class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 border-b border-line font-bold"
               >
                 <!-- Watchlist -->
                 <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
                 <!-- Name -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                  class="cursor-pointer px-1 pb-4 hover:text-fg transition-colors"
                   colspan="2"
                 >
                   <div
                     class="flex items-center gap-1 ml-11 font-bold"
                     :class="{
-                      'text-black': headerSort === 'NAME',
+                      'text-fg': headerSort === 'NAME',
                     }"
                     @click="setHeaderSort('NAME')"
                   >
@@ -157,12 +157,12 @@
 
                 <!-- Market Cap -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell"
+                  class="cursor-pointer px-1 pb-4 hover:text-fg transition-colors hidden md:table-cell"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
                     :class="{
-                      'text-black': headerSort === 'MARKET_CAP',
+                      'text-fg': headerSort === 'MARKET_CAP',
                     }"
                     @click="setHeaderSort('MARKET_CAP')"
                   >
@@ -184,12 +184,12 @@
 
                 <!-- Volume -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden 2xl:table-cell"
+                  class="cursor-pointer px-1 pb-4 hover:text-fg transition-colors hidden 2xl:table-cell"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
                     :class="{
-                      'text-black': headerSort === 'TOTAL_VOLUME',
+                      'text-fg': headerSort === 'TOTAL_VOLUME',
                     }"
                     @click="setHeaderSort('TOTAL_VOLUME')"
                   >
@@ -215,12 +215,12 @@
                   <app-select
                     v-model:selected="activePercent"
                     :options="percentOptions"
-                    class="text-black !text-s-14"
+                    class="text-fg !text-s-14"
                     position="right-0"
                   >
                     <template #select-button="{ toggleSelect }">
                       <button
-                        class="px-1 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        class="px-1 text-right !uppercase font-bold text-s-11 text-fg-subtle tracking-sp-06 hover:text-fg transition-colors capitalize w-full"
                         @click="toggleSelect"
                       >
                         <div class="flex items-center justify-end gap-1">
@@ -233,12 +233,12 @@
                 </th>
                 <!-- Price -->
                 <th
-                  class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+                  class="cursor-pointer pl-1 pr-6 pb-4 hover:text-fg transition-colors"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
                     :class="{
-                      'text-black': headerSort === 'PRICE',
+                      'text-fg': headerSort === 'PRICE',
                     }"
                     @click="setHeaderSort('PRICE')"
                   >
@@ -279,7 +279,7 @@
                         : $t('common.add_to_watchlist')
                     "
                     @click.stop="setWatchlistToken(token)"
-                    class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                    class="p-2 text-fg rounded-full hover:bg-surface-hover transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
                     <star-outline-icon
@@ -312,7 +312,7 @@
                         v-if="token.name.length > 20"
                       >
                         <p
-                          class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                          class="truncate text-fg-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-fg"
                         >
                           {{
                             token.ondo?.stockAlias
@@ -323,7 +323,7 @@
                       </app-tooltip>
                       <p
                         v-else
-                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate text-fg-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-fg"
                       >
                         {{ token.name }}
                       </p>
@@ -332,13 +332,13 @@
                 </td>
                 <!-- Market Cap -->
                 <td
-                  class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                  class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-fg"
                 >
                   {{ token.marketCap }}
                 </td>
                 <!-- Volume -->
                 <td
-                  class="hidden 2xl:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                  class="hidden 2xl:table-cell px-1 py-1 text-right font-normal text-s-14 text-fg"
                 >
                   {{ token.totalVolume }}
                 </td>
@@ -364,7 +364,7 @@
                 </td>
                 <!-- Price / Volume -->
                 <td class="pl-1 pr-1 py-1 text-right">
-                  <p class="font-normal text-s-14 text-black">
+                  <p class="font-normal text-s-14 text-fg">
                     {{ token.price }}
                   </p>
                   <p
@@ -396,7 +396,7 @@
                       </template>
                       <template #menu-content="{ toggleMenu }">
                         <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          class="px-2 py-3 max-w-full bg-surface rounded-xl min-w-[240px]"
                         >
                           <button
                             v-if="token.coinId || token.ondo"
@@ -428,7 +428,7 @@
                               token.chains.length > 0 ||
                               getTokenIsCurrentNative(token)
                             "
-                            class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                            class="h-px bg-surface-strong border-0 w-full my-2 xs:hidden"
                           />
 
                           <ul>
@@ -437,7 +437,7 @@
                               @click.stop="[toggleMenu(), buyBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-buy class="text-primary w-4 h-4 mr-2" />
+                              <icon-buy class="text-brand w-4 h-4 mr-2" />
                               <p>{{ $t('common.buy') }}</p>
                             </li>
                             <template v-if="token.ondo !== null">
@@ -448,7 +448,7 @@
                                 ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
-                                <icon-trade class="text-primary w-4 h-4 mr-2" />
+                                <icon-trade class="text-brand w-4 h-4 mr-2" />
                                 <p>{{ $t('crypto.trade') }}</p>
                               </li>
                             </template>
@@ -462,7 +462,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-bridge
-                                  class="text-primary w-4 h-4 mr-2"
+                                  class="text-brand w-4 h-4 mr-2"
                                 />
                                 <p>{{ $t('crypto.bridge') }}</p>
                               </li>
@@ -478,7 +478,7 @@
                                 ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
-                                <icon-swap class="text-primary w-4 h-4 mr-2" />
+                                <icon-swap class="text-brand w-4 h-4 mr-2" />
                                 <p>{{ $t('common.swap') }}</p>
                               </li>
                             </template>
@@ -542,7 +542,7 @@
           </table>
           <div
             v-if="!isLoading && tokens.length === 0"
-            class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+            class="w-full flex flex-col items-center justify-center mx-auto text-fg-subtle py-10 text-s-14"
           >
             <p
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
@@ -570,18 +570,18 @@
               class="flex w-full h-[56px] py-2"
             >
               <div
-                class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+                class="bg-surface-strong/30 rounded-12 w-full h-full animate-pulse"
               ></div>
             </div>
           </div>
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-line pt-4 px-2"
         >
           <div
             v-if="selectedCryptoFilter.value !== 'watchlist'"
-            class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
+            class="text-fg-subtle order-3 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
             {{
@@ -604,7 +604,7 @@
             </app-btn-icon>
 
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-info">
+              <span class="text-fg-subtle">
                 {{ $t('crypto.page_of', { current: page, total: totalPages }) }}
               </span>
             </div>
@@ -626,11 +626,11 @@
             >
               <template #select-button="{ toggleSelect }">
                 <button
-                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-line hover:border-fg-muted transition-colors"
                   @click="toggleSelect"
                 >
                   <span>{{ activeShownItems.label }}</span>
-                  <ChevronDownIcon class="w-4 h-4 text-info" />
+                  <ChevronDownIcon class="w-4 h-4 text-fg-subtle" />
                 </button>
               </template>
             </app-select>
@@ -1258,7 +1258,7 @@ const getPercentClass = (val: number | null): string => {
   if (val === null || val === undefined) return ''
   if (val > 0) return 'text-success'
   if (val < 0) return 'text-error'
-  return 'text-primary'
+  return 'text-brand'
 }
 
 const debounceTrackSearch = useDebounceFn((value: string) => {

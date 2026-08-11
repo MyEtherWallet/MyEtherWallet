@@ -6,7 +6,7 @@
     >
       <div class="flex items-center">
         <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p class="text-fg-subtle text-left text-s-12 leading-[16px] capitalize">
             {{ $t('derivation_path.title') }}
           </p>
           <p
@@ -14,7 +14,7 @@
             class="text-ellipsis truncate font-medium text-sm"
           >
             {{ selectedPath.label }}
-            <span class="text-info text-s-12 leading-[16px]">
+            <span class="text-fg-subtle text-s-12 leading-[16px]">
               - {{ selectedPath.basePath }}</span
             >
           </p>
@@ -37,7 +37,7 @@
           <!--PATH LIST-->
           <div>
             <!-- Seacrh -->
-            <div class="sticky top-0 bg-white z-10 pt-2">
+            <div class="sticky top-0 bg-surface z-10 pt-2">
               <div class="mb-1 flex items-center gap-2">
                 <app-search-input
                   v-model="searchInput"
@@ -45,7 +45,7 @@
                   :placeholder="$t('derivation_path.search')"
                 />
               </div>
-              <hr class="h-px bg-grey-10 border-0 w-full" />
+              <hr class="h-px bg-surface-strong border-0 w-full" />
             </div>
             <!-- Seacrh Result-->
             <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -57,13 +57,13 @@
               >
                 <div class="flex justify-between items-center w-full">
                   <p>{{ path.label }}</p>
-                  <p class="text-info">{{ path.basePath }}</p>
+                  <p class="text-fg-subtle">{{ path.basePath }}</p>
                 </div>
               </button>
             </div>
             <!-- Seacrh not found-->
             <div v-else>
-              <div class="flex justify-center mt-10 h-[400px] text-info">
+              <div class="flex justify-center mt-10 h-[400px] text-fg-subtle">
                 <p>{{ $t('derivation_path.not_found') }}: {{ searchInput }}</p>
               </div>
             </div>

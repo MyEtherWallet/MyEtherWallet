@@ -1,13 +1,13 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 sm:px-5 py-4 transition-all min-h-[120px] flex flex-col"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-surface px-4 sm:px-5 py-4 transition-all min-h-[120px] flex flex-col"
     :class="{
-      'ring-2 ring-primary': inFocusInput,
+      'ring-2 ring-brand': inFocusInput,
     }"
     @click="setInFocusInput"
   >
-    <p class="font-semibold text-s-12 text-info">{{ displayTitle }}</p>
+    <p class="font-semibold text-s-12 text-fg-subtle">{{ displayTitle }}</p>
     <div class="flex justify-start items-center w-full gap-1">
       <span
         class="font-medium text-s-28 tracking-tight shrink-0"

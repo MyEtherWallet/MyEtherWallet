@@ -20,15 +20,15 @@
     </template>
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
-        <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
+        <div class="bg-brand-subtle rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.market')
             }}</span>
             <span class="font-bold">{{ displaySymbol }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.side-label')
             }}</span>
             <span
@@ -43,7 +43,7 @@
             </span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.order-type-label')
             }}</span>
             <span class="font-bold">{{ humanCategory(order.type) }}</span>
@@ -52,7 +52,7 @@
             v-if="order.type !== 'market'"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.cancel-order.price-label')
             }}</span>
             <span class="font-bold">{{
@@ -60,19 +60,19 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.trade.size')
             }}</span>
             <div class="text-right">
               <p class="font-bold">{{ order.size }} {{ displaySymbol }}</p>
-              <p class="text-grey-50">{{ orderSizeInUsd }}</p>
+              <p class="text-fg-subtle">{{ orderSizeInUsd }}</p>
             </div>
           </div>
           <div
             v-if="parseFloat(order.filledSize) > 0"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.cancel-order.filled-label')
             }}</span>
             <span class="font-bold"

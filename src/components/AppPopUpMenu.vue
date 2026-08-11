@@ -34,7 +34,7 @@
         ]"
       >
         <div
-          class="min-w-[180px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
+          class="min-w-[180px] max-w-full bg-surface shadow-xl rounded-3xl border border-line overflow-hidden"
         >
           <slot name="menu-content" :toggleMenu="toggleMenu" />
         </div>

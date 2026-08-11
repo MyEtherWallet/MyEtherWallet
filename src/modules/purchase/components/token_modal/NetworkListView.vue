@@ -6,20 +6,20 @@
         class="flex-none w-8 h-8 -ml-1 flex items-center justify-center rounded-full hoverNoBG transition-colors"
         @click="emit('back')"
       >
-        <chevron-left-icon class="w-5 h-5 text-black" />
+        <chevron-left-icon class="w-5 h-5 text-fg" />
       </button>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
         <h2 class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]">
           {{ $t('purchase.select_token.filter_title') }}
         </h2>
-        <p class="text-s-16 text-info leading-[22px]">
+        <p class="text-s-16 text-fg-subtle leading-[22px]">
           {{ $t('purchase.select_token.filter_subtitle') }}
         </p>
       </div>
     </div>
 
     <div
-      class="flex items-center h-12 px-1 bg-white border-4 border-grey-10 rounded-24 flex-none"
+      class="flex items-center h-12 px-1 bg-surface border-4 border-line rounded-24 flex-none"
     >
       <app-search-input
         v-model="searchInput"
@@ -36,7 +36,7 @@
       aria-live="polite"
     >
       <span
-        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+        class="inline-block w-8 h-8 rounded-full border-2 border-line border-t-brand animate-spin"
       />
     </div>
     <ul v-else role="listbox" class="flex-1 overflow-y-auto">
@@ -48,15 +48,15 @@
           @click="emit('select-network', null)"
         >
           <div
-            class="w-10 h-10 flex-none rounded-full bg-bgBase"
+            class="w-10 h-10 flex-none rounded-full bg-page"
             aria-hidden="true"
           />
-          <span class="text-s-16 font-semibold text-black flex-1">
+          <span class="text-s-16 font-semibold text-fg flex-1">
             {{ $t('purchase.select_token.filter_all_networks') }}
           </span>
           <check-circle-icon
             v-if="currentFilter === null"
-            class="w-5 h-5 text-primary flex-none"
+            class="w-5 h-5 text-brand flex-none"
           />
         </button>
       </li>
@@ -74,12 +74,12 @@
             width="w-10"
             height="h-10"
           />
-          <span class="text-s-16 font-semibold text-black flex-1 truncate">
+          <span class="text-s-16 font-semibold text-fg flex-1 truncate">
             {{ network.name }}
           </span>
           <check-circle-icon
             v-if="currentFilter === network.chain"
-            class="w-5 h-5 text-primary flex-none"
+            class="w-5 h-5 text-brand flex-none"
           />
         </button>
       </li>
@@ -87,7 +87,7 @@
       <!-- Incompatible networks section -->
       <template v-if="incompatibleNetworks.length">
         <li class="px-1 pt-5 pb-1">
-          <p class="text-s-14 font-medium text-info">
+          <p class="text-s-14 font-medium text-fg-subtle">
             {{ $t('select_chain.incompatible_title') }}
           </p>
         </li>
@@ -102,7 +102,7 @@
             width="w-10"
             height="h-10"
           />
-          <span class="text-s-16 font-semibold text-black flex-1 truncate">
+          <span class="text-s-16 font-semibold text-fg flex-1 truncate">
             {{ network.name }}
           </span>
         </li>
@@ -112,7 +112,7 @@
         v-if="
           compatibleNetworks.length === 0 && incompatibleNetworks.length === 0
         "
-        class="text-info text-s-14 text-center py-10"
+        class="text-fg-subtle text-s-14 text-center py-10"
       >
         {{ $t('common.not_found.chains') }}
       </li>

@@ -45,7 +45,7 @@
                 />
               </div>
               <app-btn-text
-                class="text-primary hoverOpacity"
+                class="text-brand hoverOpacity"
                 @click="updateMnemonic"
               >
                 <arrow-path-icon class="inline w-5 h-5 mr-1" />
@@ -54,7 +54,7 @@
             </div>
             <div
               data-private
-              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
+              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-page/50"
             >
               <div
                 class="grid grid-cols-2 gap-x-4 gap-y-3 w-full max-w-[500px]"
@@ -64,7 +64,7 @@
                   :key="index"
                   class="flex items-center bg-white/80 px-4 py-2 rounded-12 shadow-sm"
                 >
-                  <span class="text-info text-s-12 w-6 shrink-0"
+                  <span class="text-fg-subtle text-s-12 w-6 shrink-0"
                     >{{ index + 1 }}.</span
                   >
                   <span class="font-medium text-s-17">{{ phrase }}</span>
@@ -92,7 +92,7 @@
                 <!-- First Sample -->
                 <div v-if="generatedVerifySamples.length">
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -118,7 +118,7 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -144,7 +144,7 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-fg-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -187,14 +187,14 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <check-icon class="w-10 h-10 text-primary stroke-[3px] mb-4" />
+              <check-icon class="w-10 h-10 text-brand stroke-[3px] mb-4" />
               <h3
                 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
                 {{ stepDescription[2].title }}
               </h3>
               <p
-                class="text-s-14 sm:text-s-16 text-info leading-p-150 text-center"
+                class="text-s-14 sm:text-s-16 text-fg-subtle leading-p-150 text-center"
               >
                 {{ stepDescription[2].description }}
               </p>

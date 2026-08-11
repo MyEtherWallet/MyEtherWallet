@@ -14,9 +14,9 @@
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <!-- Close Details -->
-        <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
+        <div class="bg-brand-subtle rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.side-label')
             }}</span>
             <span
@@ -30,19 +30,19 @@
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.order-type-label')
             }}</span>
             <span class="font-bold">{{ $t('perps.confirm.market') }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.confirm.market-price')
             }}</span>
             <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.close.close-amount-label')
             }}</span>
             <span class="font-bold">{{
@@ -50,7 +50,7 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium"
+            <span class="text-fg-subtle font-medium"
               >{{ $t('perps.trade.size') }}
             </span>
             <span class="font-bold"
@@ -58,13 +58,13 @@
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.close.close-percentage-label')
             }}</span>
             <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-fg-subtle font-medium">{{
               $t('perps.close.current-pnl-label')
             }}</span>
             <span

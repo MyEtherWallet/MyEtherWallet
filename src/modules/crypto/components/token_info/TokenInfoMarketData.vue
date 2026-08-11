@@ -5,7 +5,7 @@
       v-if="isLoading"
       :class="[
         isOpenSideMenu ? 'lg:mx-6 2xl:mx-10' : 'lg:mx-10',
-        'mx-4 my-6 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[90%]',
+        'mx-4 my-6 h-[308px] xs:h-[227px] animate-pulse bg-surface-strong rounded-12 w-[90%]',
       ]"
     ></div>
     <div
@@ -26,7 +26,7 @@
           class="flex flex-col gap-1"
         >
           <p
-            class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-2"
+            class="text-s-11 text-fg-subtle uppercase tracking-sp-06 font-bold mb-2"
           >
             {{ item.label }}
           </p>

@@ -3,7 +3,7 @@
     <div
       role="tablist"
       :aria-label="label"
-      class="flex justify-start w-full border-b-1 border-b-grey-outline px-4"
+      class="flex justify-start w-full border-b-1 border-b-line-strong px-4"
       v-bind="$attrs"
       @keydown="handleKeyDown"
     >
@@ -14,7 +14,7 @@
         :to="useRouteLink ? { name: tab.routeName } : undefined"
         :class="[
           {
-            ' border-b-2  border-b-primary text-primary ':
+            ' border-b-2  border-b-brand text-brand ':
               activeTabIndex === index,
           },
           'p-2 rounded-t-12 bg-transparent text-s-15 font-medium hoverNoBG min-w-[90px] -mb-[1px]',

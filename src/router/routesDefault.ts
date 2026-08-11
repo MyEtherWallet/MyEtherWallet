@@ -20,6 +20,7 @@ const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
 const ViewPerps = () => import('@/views/ViewPerps.vue')
+const ViewColorPreview = () => import('@/views/ViewColorPreview.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -60,6 +61,17 @@ const DefaultRoutes = <RouteNameCollection>[
         ...STOCK_INFO_ROUTE,
       },
     ],
+  },
+  {
+    // Design-system colour reference. Reachable by URL only — deliberately not
+    // linked from any nav, so it stays an internal tool without being hidden
+    // from QA builds.
+    path: ROUTES_MAIN.COLORS.PATH,
+    name: ROUTES_MAIN.COLORS.NAME,
+    component: ViewColorPreview,
+    meta: {
+      noAuth: true,
+    },
   },
   {
     path: ROUTES_MAIN.EARN.PATH,

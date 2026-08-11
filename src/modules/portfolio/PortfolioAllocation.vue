@@ -27,7 +27,7 @@
     </div>
     <div
       v-else-if="isLoadingBalances"
-      class="bg-grey-10 rounded-2xl animate-pulse h-[140px]"
+      class="bg-surface-strong rounded-2xl animate-pulse h-[140px]"
     ></div>
   </app-sheet>
 </template>

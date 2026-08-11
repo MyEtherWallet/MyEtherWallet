@@ -14,16 +14,16 @@
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <app-btn-icon-close
-          class="absolute top-4 right-4 z-20 bg-[#f5f5f5]"
+          class="absolute top-4 right-4 z-20 bg-page"
           @close="holdingsStore.closeModal()"
         />
 
         <div class="relative z-10 flex flex-col items-start gap-2">
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <p class="text-s-12 leading-[18px] text-fg-subtle">
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
           </p>
           <p
-            class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black whitespace-pre-line"
+            class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-fg whitespace-pre-line"
           >
             {{ $t('rwaRewards.hero_title') }}
           </p>
@@ -55,20 +55,20 @@
                       status === 'underReview' ||
                       status === 'campaignEnded'
                     "
-                    class="flex items-center w-full h-12 pr-5 justify-between rounded-full bg-[#e6e6e6]"
+                    class="flex items-center w-full h-12 pr-5 justify-between rounded-full bg-line"
                   >
                     <div
-                      class="flex items-center justify-center shrink-0 w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px]"
+                      class="flex items-center justify-center shrink-0 w-40 h-12 px-4 rounded-24 bg-page text-fg-muted text-s-16 font-semibold tracking-[-0.32px]"
                     >
                       {{ $t('rwaRewards.trade_now') }}
                     </div>
                     <div class="flex items-center gap-2">
                       <span
-                        class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
+                        class="text-s-14 font-normal leading-5 text-fg-subtle whitespace-nowrap"
                         >{{ disabledCtaLabel }}</span
                       >
                       <information-circle-icon
-                        class="w-[22px] h-[22px] text-[#575757] shrink-0"
+                        class="w-[22px] h-[22px] text-fg-subtle shrink-0"
                       />
                     </div>
                   </div>
@@ -139,7 +139,7 @@
               </rwa-modal-step>
               <rwa-modal-step variant="failed" stretch>
                 <div class="flex flex-col items-start gap-3 pb-7">
-                  <p class="text-s-14 font-semibold leading-5 text-[#e40c58]">
+                  <p class="text-s-14 font-semibold leading-5 text-error">
                     {{ $t('rwaRewards.modal_lost_title') }}
                   </p>
                   <p :class="stepText">
@@ -165,7 +165,7 @@
                          nothing to start again. -->
                     <div
                       v-else
-                      class="flex flex-1 items-center justify-center h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                      class="flex flex-1 items-center justify-center h-12 px-4 rounded-24 bg-page text-fg-muted text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                     >
                       {{ disabledCtaLabel }}
                     </div>
@@ -286,7 +286,7 @@
                 <div
                   class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-success"
                 >
-                  <check-icon class="w-3.5 h-3.5 text-white" />
+                  <check-icon class="w-3.5 h-3.5 text-fg-on-fill" />
                 </div>
               </div>
 
@@ -319,9 +319,9 @@
                   </p>
                 </div>
                 <div
-                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-[#e40c58]"
+                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-error"
                 >
-                  <x-mark-icon class="w-3.5 h-3.5 text-white" />
+                  <x-mark-icon class="w-3.5 h-3.5 text-fg-on-fill" />
                 </div>
               </div>
             </template>
@@ -330,9 +330,9 @@
                  whichever progress view it had, with the review explained here. -->
             <div
               v-if="showNotice"
-              class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
+              class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-page"
             >
-              <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
+              <lock-closed-icon class="w-6 h-6 text-brand shrink-0" />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">
                   {{ noticeTitle }}
@@ -353,7 +353,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-[#e6e6e6] w-full"></div>
+          <div class="h-px bg-line w-full"></div>
 
           <div class="flex flex-col gap-3 w-full">
             <p :class="titleText">
@@ -557,16 +557,16 @@ const qualifyingLabel = computed(() => {
   return `${amount.toFormat()} ${symbol}`.trim()
 })
 
-const stepText = 'text-s-14 leading-5 text-[#575757]'
-const boldText = 'font-semibold text-black tracking-[-0.28px]'
-const mutedText = 'text-s-14 leading-5 text-grey-subtle'
+const stepText = 'text-s-14 leading-5 text-fg-subtle'
+const boldText = 'font-semibold text-fg tracking-[-0.28px]'
+const mutedText = 'text-s-14 leading-5 text-fg-muted'
 const titleText =
-  'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
-const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
-const subText = 'text-s-12 leading-[18px] text-[#575757]'
+  'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-fg'
+const bodyText = 'text-s-14 font-normal leading-5 text-fg-subtle'
+const subText = 'text-s-12 leading-[18px] text-fg-subtle'
 const expiresPill =
-  'h-12 px-4 rounded-24 bg-[#e6e6e6] text-[#575757] text-s-14 font-semibold whitespace-nowrap'
-const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
+  'h-12 px-4 rounded-24 bg-line text-fg-subtle text-s-14 font-semibold whitespace-nowrap'
+const subCard = 'p-5 rounded-16 border border-black/15 bg-surface'
 
 const onTrade = () => {
   trackCta('trade')

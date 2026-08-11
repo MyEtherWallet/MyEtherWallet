@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <!-- Topbar -->
-    <div class="border-b border-grey-10 -mx-4">
+    <div class="border-b border-line -mx-4">
       <div class="flex items-center gap-4 px-4 -mb-px">
         <button
           v-for="tab in tabs"
@@ -10,8 +10,8 @@
           :class="[
             'px-1 pb-2 border-b-2 transition-colors',
             currentTab === tab.value
-              ? 'border-black text-black'
-              : 'border-transparent text-grey-30',
+              ? 'border-fg text-fg'
+              : 'border-transparent text-fg-muted',
           ]"
           @click="currentTab = tab.value"
         >

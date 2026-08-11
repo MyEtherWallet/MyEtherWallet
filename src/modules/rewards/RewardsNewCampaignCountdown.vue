@@ -1,10 +1,10 @@
 <template>
   <div
-    class="flex flex-col justify-between gap-4 rounded-2xl border border-grey-10 bg-white px-5 py-5 xs:px-6 xs:py-6 w-full relative"
+    class="flex flex-col justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-5 xs:px-6 xs:py-6 w-full relative"
   >
     <div class="flex flex-col gap-1">
-      <p class="text-s-20 font-bold text-black">{{ t('rewards.get_ready') }}</p>
-      <h2 class="text-s-32 xs:text-s-26 font-bold leading-p-110 text-primary">
+      <p class="text-s-20 font-bold text-fg">{{ t('rewards.get_ready') }}</p>
+      <h2 class="text-s-32 xs:text-s-26 font-bold leading-p-110 text-brand">
         {{ t('rewards.new_rewards_program') }}
         <br class="hidden sm:block lg:hidden xl:block" />{{ headingLabel }}
       </h2>
@@ -14,7 +14,7 @@
       :src="usdcTokens"
       alt=""
     />
-    <p class="text-s-20 font-bold text-black">{{ t('rewards.stay_tuned') }}</p>
+    <p class="text-s-20 font-bold text-fg">{{ t('rewards.stay_tuned') }}</p>
   </div>
 </template>
 

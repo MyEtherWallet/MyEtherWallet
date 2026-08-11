@@ -12,7 +12,7 @@
             {{ $t('portfolio.no_balance.title') }}
           </p>
 
-          <p class="text-s-15 xl:text-s-17 text-info leading-relaxed">
+          <p class="text-s-15 xl:text-s-17 text-fg-subtle leading-relaxed">
             {{
               $t('portfolio.no_balance.description', {
                 currencyName: selectedChain?.currencyName,
@@ -30,7 +30,7 @@
           >
             <div class="flex gap-2 items-center justify-center">
               <icon-buy
-                class="w-5 h-5 xl:w-6 xl:h-6 text-white"
+                class="w-5 h-5 xl:w-6 xl:h-6 text-fg-on-fill"
                 dollar-icon-color="rgb(0,90,229,1)"
               />
               <p>
@@ -46,7 +46,7 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-primary" />
+              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-brand" />
               <p>
                 {{ $t('portfolio.no_balance.deposit') }}
                 {{ selectedChain?.currencyName }}

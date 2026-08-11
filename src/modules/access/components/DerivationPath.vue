@@ -6,7 +6,7 @@
     >
       <div class="flex items-center">
         <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p class="text-fg-subtle text-left text-s-12 leading-[16px] capitalize">
             {{ $t('derivation_path.title') }}
           </p>
           <p
@@ -14,7 +14,7 @@
             class="text-ellipsis truncate font-medium text-sm"
           >
             {{ selectedPath.label }}
-            <span class="text-info text-s-12 leading-[16px]">
+            <span class="text-fg-subtle text-s-12 leading-[16px]">
               - {{ selectedPath.path }}</span
             >
           </p>
@@ -38,7 +38,7 @@
             <!--PATH LIST-->
             <div v-if="!showAddPath">
               <!-- Seacrh -->
-              <div class="sticky top-0 bg-white z-10 pt-2">
+              <div class="sticky top-0 bg-surface z-10 pt-2">
                 <div class="mb-1 flex items-center gap-2">
                   <app-search-input
                     v-model="searchInput"
@@ -51,7 +51,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-grey-10 border-0 w-full" />
+                <hr class="h-px bg-surface-strong border-0 w-full" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -63,13 +63,13 @@
                 >
                   <div class="flex justify-between items-center w-full">
                     <p>{{ path.label }}</p>
-                    <p class="text-info">{{ path.path }}</p>
+                    <p class="text-fg-subtle">{{ path.path }}</p>
                   </div>
                 </button>
               </div>
               <!-- Seacrh not found-->
               <div v-else>
-                <div class="flex justify-center mt-10 h-[400px] text-info">
+                <div class="flex justify-center mt-10 h-[400px] text-fg-subtle">
                   <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
@@ -92,7 +92,7 @@
                   $t('common.add')
                 }}</app-base-button>
                 <app-btn-text
-                  class="text-primary mt-4"
+                  class="text-brand mt-4"
                   is-large
                   @click="setShowAddPath(false)"
                   >{{ $t('common.cancel') }}</app-btn-text

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
+  <div class="flex flex-col mb-10 w-full divide-y divide-line">
     <app-asset-info-header
       :is-loading="isLoading"
       :has-data="tokenData !== null"

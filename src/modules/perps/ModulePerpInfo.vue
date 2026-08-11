@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full divide-y divide-grey-10">
+  <div class="flex flex-col w-full divide-y divide-line">
     <!-- Header -->
     <div class="pb-3 xs:pb-5">
       <div
@@ -52,7 +52,7 @@
             </div>
           </div>
           <p
-            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-fg-subtle"
           >
             {{ $t('perps.info.perpetual-label') }}
           </p>
@@ -102,11 +102,11 @@
         />
         <div
           v-else
-          class="w-full bg-surface h-full rounded-lg"
+          class="w-full bg-surface-strong h-full rounded-lg"
           :class="{ 'animate-pulse': chartLoading }"
         >
           <div class="flex flex-col items-center h-full justify-center gap-2">
-            <p v-if="!chartLoading" class="text-s-14 text-info">
+            <p v-if="!chartLoading" class="text-s-14 text-fg-subtle">
               {{ $t('perps.info.no-chart-data') }}
             </p>
           </div>
@@ -117,7 +117,7 @@
         <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.order.price-label') }}
             </p>
@@ -127,7 +127,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.positions.mark-price-label') }}
             </p>
@@ -137,7 +137,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.volume-24h-label') }}
             </p>
@@ -147,7 +147,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.open-interest-label') }}
             </p>
@@ -157,7 +157,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.funding-countdown-label') }}
             </p>
@@ -169,7 +169,7 @@
                     : '—'
                 }}
               </span>
-              <span v-if="fundingCountdown" class="text-info text-s-12">
+              <span v-if="fundingCountdown" class="text-fg-subtle text-s-12">
                 {{ $t('perps.info.in-label') }} {{ fundingCountdown }}
               </span>
             </p>
@@ -181,7 +181,7 @@
     <div v-if="isWalletConnected && marketPosition" class="py-6">
       <!-- Position Info -->
       <div
-        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6"
+        class="flex flex-col items-start gap-3 pt-6 bg-page rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6"
       >
         <div
           class="flex flex-wrap items-center justify-between xs:justify-start px-2 gap-x-3 gap-y-1 w-full"
@@ -197,7 +197,7 @@
                 marketPosition.direction === 'long'
                   ? 'text-success'
                   : 'text-error',
-                ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
+                ' capitalize bg-surface-strong px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
               ]"
             >
               {{
@@ -221,7 +221,7 @@
           >
             <template #select-button="{ toggleSelect }">
               <button
-                class="hidden xs:block rounded-full bg-white py-2 px-4 shadow-button text-s-14 font-medium"
+                class="hidden xs:block rounded-full bg-surface py-2 px-4 shadow-button text-s-14 font-medium"
                 @click="toggleSelect"
               >
                 <div class="flex items-center">
@@ -230,7 +230,7 @@
                 </div>
               </button>
               <app-btn-icon
-                class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
+                class="block xs:hidden ml-auto bg-surface shadow-button shadow-button-elevated"
                 :label="$t('perps.info.manage-position-label')"
                 height="h-7 xs:h-8"
                 width="w-7 xs:w-8"
@@ -252,7 +252,7 @@
         >
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.positions.value-label') }}
             </p>
@@ -262,7 +262,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.upnl-label') }}
             </p>
@@ -275,7 +275,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.liquidation-label') }}
             </p>
@@ -285,7 +285,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.quantity-label') }}
             </p>
@@ -307,11 +307,11 @@
         <transition name="fade" mode="out-in">
           <div
             v-if="showPositionMore"
-            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-grey-10 pt-3 -mt-2"
+            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-line pt-3 -mt-2"
           >
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.roe-label') }}
               </p>
@@ -326,7 +326,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.positions.entry-price-label') }}
               </p>
@@ -336,7 +336,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.positions.mark-price-label') }}
               </p>
@@ -347,7 +347,7 @@
 
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.balance.used-margin-label') }}
               </p>
@@ -358,7 +358,7 @@
 
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.bankruptcy-label') }}
               </p>
@@ -368,7 +368,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.maint-margin-label') }}
               </p>
@@ -378,7 +378,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.funding-label') }}
               </p>
@@ -389,7 +389,7 @@
 
             <div v-if="marketPosition.takeProfitTriggerPrice">
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.confirm.take-profit') }}
               </p>
@@ -399,7 +399,7 @@
             </div>
             <div v-if="marketPosition.stopLossTriggerPrice">
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.confirm.stop-loss') }}
               </p>
@@ -412,7 +412,7 @@
       </div>
       <!-- Market Position Info Tabs -->
       <div
-        class="flex flex-col items-start gap-3 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
+        class="flex flex-col items-start gap-3 bg-page rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
         <div class="hidden lg:flex lg:items-center">
           <app-btn-group
@@ -426,7 +426,7 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'orders' && openOrdersCountForMarket > 0"
-                  class="ml-1 text-info text-s-12"
+                  class="ml-1 text-fg-subtle text-s-12"
                 >
                   ·
                   {{
@@ -447,9 +447,9 @@
           class="lg:hidden sm:mx-2 w-full sm:w-auto"
         >
           <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1">
+            <div class="bg-surface-strong rounded-full p-1">
               <button
-                class="rounded-full bg-white py-3 w-full sm:w-auto min-w-[180px] px-5 shadow-button"
+                class="rounded-full bg-surface py-3 w-full sm:w-auto min-w-[180px] px-5 shadow-button"
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
@@ -460,7 +460,7 @@
                         activeInfoTab === 'orders' &&
                         openOrdersCountForMarket > 0
                       "
-                      class="ml-1 text-info text-s-12"
+                      class="ml-1 text-fg-subtle text-s-12"
                     >
                       ·
                       {{
@@ -496,7 +496,7 @@
                       v-if="
                         data.value === 'pending' && openOrdersCountForMarket > 0
                       "
-                      class="ml-1 text-info text-s-11"
+                      class="ml-1 text-fg-subtle text-s-11"
                     >
                       ·
                       {{
@@ -518,7 +518,7 @@
               v-else-if="
                 filteredMarketOrders.length === 0 && ordersCurrentPage === 0
               "
-              class="text-center py-8 text-info text-s-14"
+              class="text-center py-8 text-fg-subtle text-s-14"
             >
               {{ $t('perps.info.no-orders-for', { symbol: baseCurrency }) }}
             </div>
@@ -529,7 +529,7 @@
             >
               <thead>
                 <tr
-                  class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                  class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold border-b border-line"
                 >
                   <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                     {{ $t('perps.confirm.side-label') }}
@@ -567,7 +567,7 @@
                 >
                   <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-info text-s-12 mb-[2px]">
+                    <p class="text-fg-subtle text-s-12 mb-[2px]">
                       {{ formatDate(order.createdAt) }}
                     </p>
                     <p
@@ -589,14 +589,14 @@
                   <td class="px-1 py-3 hidden 2xl:table-cell">
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface-strong',
                         order.status === 'open' || order.status === 'pending'
-                          ? 'text-primary '
+                          ? 'text-brand '
                           : order.status === 'fullyfilled'
                             ? ' text-success'
                             : order.status === 'canceled' ||
                                 order.status === 'untriggered'
-                              ? ' text-info'
+                              ? ' text-fg-subtle'
                               : '',
                       ]"
                     >
@@ -611,14 +611,14 @@
 
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface-strong',
                         order.status === 'open' || order.status === 'pending'
-                          ? 'text-primary '
+                          ? 'text-brand '
                           : order.status === 'fullyfilled'
                             ? ' text-success'
                             : order.status === 'canceled' ||
                                 order.status === 'untriggered'
-                              ? ' text-info'
+                              ? ' text-fg-subtle'
                               : '',
                       ]"
                     >
@@ -634,7 +634,7 @@
                     class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
                   >
                     <p>{{ order.filledSize }} {{ baseCurrency }}</p>
-                    <p class="text-s-12 text-info">
+                    <p class="text-s-12 text-fg-subtle">
                       {{
                         $t('perps.positions.out-of', {
                           size: order.size,
@@ -668,7 +668,7 @@
                         </template>
                         <template #menu-content="{ toggleMenu }">
                           <div
-                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                            class="px-2 py-3 max-w-full bg-surface rounded-xl min-w-[240px]"
                           >
                             <ul>
                               <li
@@ -743,7 +743,7 @@
             />
             <div
               v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
-              class="text-center py-6 text-info text-s-14"
+              class="text-center py-6 text-fg-subtle text-s-14"
             >
               {{ $t('perps.info.no-fills-for', { symbol: baseCurrency }) }}
             </div>
@@ -751,7 +751,7 @@
               <table ref="fillsTable" class="w-full text-s-14 table-fixed">
                 <thead>
                   <tr
-                    class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                    class="text-left text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold border-b border-line"
                   >
                     <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                       {{ $t('perps.positions.direction-header') }}
@@ -785,7 +785,7 @@
                     @click="openFillDialog(fill)"
                   >
                     <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                      <p class="text-s-12 text-info mb-1">
+                      <p class="text-s-12 text-fg-subtle mb-1">
                         {{ formatDate(fill.time) }}
                       </p>
                       <p
@@ -793,7 +793,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-success'
                             : 'text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
+                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface-strong -ml-1',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -818,7 +818,7 @@
                       <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                         {{ formatPnl(fill.pnl) }}
                       </span>
-                      <span v-else class="text-info">—</span>
+                      <span v-else class="text-fg-subtle">—</span>
                     </td>
                     <!-- Actions -->
                     <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
@@ -859,7 +859,7 @@
       <h3 class="text-s-20 font-bold mb-3">
         {{ $t('perps.info.about-symbol', { symbol: baseCurrency }) }}
       </h3>
-      <p class="text-s-14 text-info leading-relaxed">
+      <p class="text-s-14 text-fg-subtle leading-relaxed">
         {{ stockDescription }}
       </p>
     </div>
@@ -872,7 +872,7 @@
       <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.asset-name-label') }}
           </p>
@@ -880,7 +880,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.ticker-label') }}
           </p>
@@ -888,7 +888,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.category-label') }}
           </p>
@@ -896,7 +896,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.high-24h-label') }}
           </p>
@@ -906,7 +906,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.low-24h-label') }}
           </p>

@@ -1,9 +1,9 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-surface p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput || isOpenSelectToken,
+      'ring-2 ring-brand': inFocusInput || isOpenSelectToken,
     }"
     @click="setInFocusInput"
   >
@@ -32,14 +32,14 @@
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
-          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+          class="h-5 flex bg-surface-strong rounded-full w-1/2"
         ></div>
         <div v-else class="flex justify-between items-center gap-2">
           <div
             :class="[
               !!error && !isOpenSelectToken && !isPristine
                 ? 'text-error'
-                : 'text-info',
+                : 'text-fg-subtle',
               'text-s-14',
             ]"
           >
@@ -47,11 +47,11 @@
           </div>
           <div
             v-if="isWalletConnected"
-            class="flex items-center gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
+            class="flex items-center gap-2 text-s-12 leading-p-120 text-fg-subtle font-medium whitespace-nowrap"
           >
             <div>
               {{ $t('common.balance') }}:
-              <span class="text-black">{{ balance }}</span>
+              <span class="text-fg">{{ balance }}</span>
             </div>
             <slot name="balance-action" />
           </div>

@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="pb-6 pt-4">
-        <div class="bg-mewBg rounded-2xl divide-y divide-grey-outline p-2">
+        <div class="bg-brand-subtle rounded-2xl divide-y divide-line-strong p-2">
           <div
             v-for="row in rows"
             :key="row.label"
@@ -39,7 +39,7 @@
           >
             <div class="flex items-center gap-1">
               <span
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-s-11 uppercase text-fg-subtle tracking-sp-06 font-bold"
                 >{{ row.label }}</span
               >
               <app-tooltip
@@ -55,7 +55,7 @@
         </div>
         <button
           v-if="isCancellable"
-          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
+          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-fg-on-fill bg-error disabled:opacity-50"
           :disabled="cancelling"
           @click="$emit('cancel', order)"
         >
@@ -66,7 +66,7 @@
           }}
         </button>
         <app-btn-text
-          class="w-full mt-2 text-primary"
+          class="w-full mt-2 text-brand"
           is-large
           @click="$emit('close')"
           >{{ $t('perps.trade.tab-close') }}</app-btn-text
@@ -193,10 +193,10 @@ const rows = computed(() => {
       value: orderStatusLabels.value[props.order.status] ?? props.order.status,
       colorClass:
         props.order.status === 'open' || props.order.status === 'pending'
-          ? 'text-primary'
+          ? 'text-brand'
           : props.order.status === 'fullyfilled'
             ? 'text-success'
-            : 'text-info',
+            : 'text-fg-subtle',
     },
     {
       label: t('perps.order.price-label'),

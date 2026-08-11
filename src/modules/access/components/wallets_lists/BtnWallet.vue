@@ -1,6 +1,6 @@
 <template>
   <button
-    class="flex flex-col gap-2 justify-between bg-white p-2 rounded-20 hoverNoBG cursor-pointer shadow-button"
+    class="flex flex-col gap-2 justify-between bg-surface p-2 rounded-20 hoverNoBG cursor-pointer shadow-button"
     aria-labelledby="wallet-name"
     @click="clickDefaultWallet(wallet)"
   >

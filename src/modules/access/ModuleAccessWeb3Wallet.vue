@@ -20,7 +20,7 @@
             <p class="text-s-17 font-semibold text-center mb-2 text-error">
               {{ $t('web3_wallet.connection_failed') }}
             </p>
-            <p class="text-info text-s-14 text-center mb-6">
+            <p class="text-fg-subtle text-s-14 text-center mb-6">
               {{ web3ConnectionError }}
             </p>
             <app-base-button
@@ -44,13 +44,13 @@
               }}
             </p>
             <!-- Confirm Message -->
-            <p class="text-info text-center mb-6">
+            <p class="text-fg-subtle text-center mb-6">
               {{ $t('web3_wallet.confirm_in_extension') }}
             </p>
             <!-- Loading Spinner -->
             <svg
               aria-hidden="true"
-              class="w-8 h-8 text-primary animate-spin fill-white mb-6"
+              class="w-8 h-8 text-brand animate-spin fill-surface mb-6"
               viewBox="0 0 100 101"
               width="32"
               height="32"

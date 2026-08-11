@@ -5,12 +5,12 @@
         <div class="flex items-end justify-between mb-4 px-4">
           <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
           <app-btn-text
-            class="text-primary text-s-15 pb-1"
+            class="text-brand text-s-15 pb-1"
             @click="resetSendModule"
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
-        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+        <div class="p-5 rounded-20 bg-brand-subtle mb-6 flex flex-col gap-4">
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelectedContract"
@@ -22,7 +22,7 @@
               <div v-if="isWalletConnected && !isWatchOnly && tokenSelected && isInternalWallet()">
                 <button
                   type="button"
-                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-surface hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                   @click="setMaxAmount"
                 >
                   {{ $t('common.max') }}

@@ -39,7 +39,7 @@
         <div
           v-if="isOpen"
           :class="[
-            'cursor-default  w-[100%] max-w-[1384px] bg-white rounded-l-16 lg:rounded-l-32 h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto mew-scrollbar overflow-hidden relative',
+            'cursor-default  w-[100%] max-w-[1384px] bg-surface rounded-l-16 lg:rounded-l-32 h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto mew-scrollbar overflow-hidden relative',
             containerClass,
           ]"
           @click.stop

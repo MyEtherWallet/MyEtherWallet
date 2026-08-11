@@ -23,7 +23,7 @@
           v-for="s in seriesOptions"
           :key="s.key"
           class="flex p items-center gap-1.5 rounded-full px-4 py-1.5 text-s-11 xs:text-s-12 font-medium transition-colors hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-          :class="activeSeries.has(s.key) ? 'bg-mewBg ' : 'bg-white'"
+          :class="activeSeries.has(s.key) ? 'bg-brand-subtle ' : 'bg-surface'"
           @click="toggleSeries(s.key)"
         >
           <span
@@ -37,7 +37,7 @@
     </div>
     <div
       v-if="graphLoading"
-      class="flex-1 bg-grey-10 rounded-xl animate-pulse mx-4 mb-2 min-h-[150px]"
+      class="flex-1 bg-surface-strong rounded-xl animate-pulse mx-4 mb-2 min-h-[150px]"
     ></div>
     <HistoryChart
       v-else-if="chartPointsBalance.length > 0"
@@ -50,7 +50,7 @@
       :series-labels="tooltipLabels"
       class="h-full !shrink -mx-4"
     />
-    <div v-else class="text-center py-8 text-info text-s-14">
+    <div v-else class="text-center py-8 text-fg-subtle text-s-14">
       {{ $t('perps.portfolio.no-history') }}
     </div>
   </app-sheet>
