@@ -78,19 +78,34 @@ vi.mock('@/modules/home/components/HeroBanner.vue', () => ({
   default: { template: '<div data-test="hero-banner" />' },
 }))
 vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
-  default: { template: '<div data-test="hero-watchlist-banner" />' },
+  default: {
+    emits: ['begin'],
+    template:
+      '<button data-test="hero-watchlist-banner" @click="$emit(\'begin\')" />',
+  },
+}))
+vi.mock('@/modules/home/components/HomeWatchlistTable.vue', () => ({
+  default: { template: '<div data-test="home-watchlist-table" />' },
+}))
+vi.mock('@/modules/home/components/HomeWatchlistOnboardingDialog.vue', () => ({
+  default: {
+    props: ['isOpen'],
+    template: '<div data-test="onboarding-dialog" :data-open="isOpen" />',
+  },
 }))
 
 // watchlistTableStore is consumed via storeToRefs → mock as a real Pinia setup
 // store with module-level refs the tests can mutate.
 const watchListedTokens = ref<string[]>([])
 const watchListedStocks = ref<string[]>([])
+const watchListedPerps = ref<string[]>([])
 vi.mock('@/stores/watchlistTableStore', async () => {
   const { defineStore } = await import('pinia')
   return {
     useWatchlistStore: defineStore('useWatchlistStore', () => ({
       watchListedTokens,
       watchListedStocks,
+      watchListedPerps,
     })),
   }
 })
@@ -105,6 +120,7 @@ describe('HomeHero (MEW-2094)', () => {
     fetchTrending.mockClear()
     watchListedTokens.value = []
     watchListedStocks.value = []
+    watchListedPerps.value = []
   })
 
   it('renders the portfolio card and two trending cards', () => {
@@ -132,16 +148,34 @@ describe('HomeHero (MEW-2094)', () => {
     expect(fetchTrending).toHaveBeenCalledTimes(1)
   })
 
-  it('shows the watchlist banner when the watchlist is empty', () => {
-    expect(
-      mountHero().find('[data-test="hero-watchlist-banner"]').exists(),
-    ).toBe(true)
+  it('shows the watchlist banner (and no table) when the watchlist is empty', () => {
+    const w = mountHero()
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(true)
+    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
   })
 
-  it('hides the watchlist banner once the watchlist has items', () => {
+  it('shows the table instead of the banner once any bucket has items', () => {
     watchListedStocks.value = ['AAPL']
-    expect(
-      mountHero().find('[data-test="hero-watchlist-banner"]').exists(),
-    ).toBe(false)
+    const w = mountHero()
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
+    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
+  })
+
+  it('treats a perps-only watchlist as non-empty', () => {
+    watchListedPerps.value = ['BTC']
+    const w = mountHero()
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
+    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
+  })
+
+  it('opens the onboarding dialog when the banner emits begin', async () => {
+    const w = mountHero()
+    expect(w.get('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
+      'false',
+    )
+    await w.get('[data-test="hero-watchlist-banner"]').trigger('click')
+    expect(w.get('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
+      'true',
+    )
   })
 })

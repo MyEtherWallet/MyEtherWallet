@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useStocksStore } from '@/stores/stocksStore'
@@ -9,6 +9,8 @@ import HeroPortfolioCard from '@/modules/home/components/HeroPortfolioCard.vue'
 import HeroTrendingCard from '@/modules/home/components/HeroTrendingCard.vue'
 import HeroBanner from '@/modules/home/components/HeroBanner.vue'
 import HeroWatchlistBanner from '@/modules/home/components/HeroWatchlistBanner.vue'
+import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
+import HomeWatchlistOnboardingDialog from '@/modules/home/components/HomeWatchlistOnboardingDialog.vue'
 import type { TrendingRowItem } from '@/modules/home/components/heroTrending'
 import {
   ROUTES_MAIN,
@@ -25,16 +27,22 @@ const SHOW_HERO_TRADE_BANNER = true
 const { t } = useI18n()
 
 // "Build your watchlist" banner, shown below the cards only while the user's
-// watchlist is empty (first-time onboarding).
+// watchlist is empty (first-time onboarding). Once it has items, the table
+// replaces the banner.
 const watchlistStore = useWatchlistStore()
-const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const { watchListedTokens, watchListedStocks, watchListedPerps } =
+  storeToRefs(watchlistStore)
 const isWatchlistEmpty = computed(
-  () => !watchListedTokens.value.length && !watchListedStocks.value.length,
+  () =>
+    !watchListedTokens.value.length &&
+    !watchListedStocks.value.length &&
+    !watchListedPerps.value.length,
 )
 
-// The onboarding flow does not exist yet — placeholder until it's defined.
+// Opens the build-your-watchlist onboarding wizard.
+const isOnboardingOpen = ref(false)
 const onWatchlistBegin = () => {
-  /* TODO(watchlist): start the build-your-watchlist onboarding flow */
+  isOnboardingOpen.value = true
 }
 
 // Card 2 — stocks: reuse the overview `trending` already fetched by ViewHome.
@@ -112,5 +120,7 @@ onMounted(fetchTrending)
       v-if="isWatchlistEmpty"
       @begin="onWatchlistBegin"
     />
+    <HomeWatchlistTable v-else />
+    <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
   </div>
 </template>
