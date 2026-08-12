@@ -1,4 +1,4 @@
-import { computed, ref, shallowRef, watch, type Ref, type ComputedRef } from 'vue'
+import { computed, ref, type Ref, type ComputedRef } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -133,28 +133,11 @@ export function useWatchlistRows(): {
     isPendingAllWatchlist,
   } = useFetchWatchlist(filterChain)
 
-  // Perps: lazily attach the singleton only when there is a perp to show.
-  const perpsContracts = shallowRef<Contract[]>([])
-  let perpsWired = false
-  const wirePerps = () => {
-    if (perpsWired) return
-    perpsWired = true
-    const { contracts } = usePerpsContracts()
-    watch(
-      contracts,
-      v => {
-        perpsContracts.value = v
-      },
-      { immediate: true },
-    )
-  }
-  watch(
-    watchListedPerps,
-    list => {
-      if (list.length) wirePerps()
-    },
-    { immediate: true },
-  )
+  // Perps contracts singleton. Must be acquired during setup (usePerpsContracts
+  // → inject() via the WS lifecycle); on non-perps routes it only fetches the
+  // contracts snapshot and never opens a socket. The rows computed filters it
+  // down to the watchlisted perps.
+  const { contracts: perpsContracts } = usePerpsContracts()
 
   const rows = computed<WatchlistRow[]>(() => {
     // Filter fetched data by current store membership so removing a row (star)

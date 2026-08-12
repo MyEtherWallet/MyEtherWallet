@@ -107,7 +107,6 @@ export const dedupeItems = (items: AssetPickerItem[]): AssetPickerItem[] => {
 export function useAssetPicker(
   tab: Ref<AssetPickerTab>,
   query: Ref<string>,
-  enabled: Ref<boolean>,
 ): { items: ComputedRef<AssetPickerItem[]>; isLoading: Ref<boolean> } {
   const { useMEWFetch } = useFetchMewApi()
 
@@ -128,7 +127,6 @@ export function useAssetPicker(
   }
 
   const loadServer = async () => {
-    if (!enabled.value) return
     if (tab.value === 'perps') {
       serverItems.value = []
       return
@@ -155,23 +153,15 @@ export function useAssetPicker(
   }
   const debouncedLoad = useDebounceFn(loadServer, 300)
 
-  // Perps: lazily attach the live contracts singleton only when a perps/all tab
-  // is used, then filter reactively.
-  let perpsContracts: Ref<Contract[]> | null = null
-  let perpsMarkets: Ref<TradingPair[]> | null = null
-  const perpsHolder = ref(0) // bump to make `items` recompute after lazy wire
-  const ensurePerps = () => {
-    if (perpsContracts) return
-    perpsContracts = usePerpsContracts().contracts
-    perpsMarkets = usePerpsMarkets().markets
-    perpsHolder.value++
-  }
+  // Perps contracts/markets singletons. Acquired during setup (they inject()
+  // the WS lifecycle); on non-perps routes this only fetches snapshots, no
+  // socket. This composable is only instantiated when the modal is open (the
+  // dialog is mounted on demand), so nothing runs while it's closed.
+  const { contracts: perpsContracts } = usePerpsContracts()
+  const { markets: perpsMarkets } = usePerpsMarkets()
 
   const perpsItems = computed<AssetPickerItem[]>(() => {
-    void perpsHolder.value
-    if (!enabled.value) return []
     if (tab.value !== 'perps' && tab.value !== 'all') return []
-    if (!perpsContracts || !perpsMarkets) return []
     const marketMap = new Map(perpsMarkets.value.map(p => [p.market, p]))
     return perpsContracts.value
       .filter(c => !c.disabled)
@@ -186,25 +176,9 @@ export function useAssetPicker(
     return serverItems.value
   })
 
-  // Tab switch loads immediately; query typing is debounced. Nothing runs
-  // until the modal is opened (`enabled`), avoiding a fetch while it's closed.
-  watch(tab, t => {
-    if (!enabled.value) return
-    if (t === 'perps' || t === 'all') ensurePerps()
-    loadServer()
-  })
-  watch(query, () => {
-    if (enabled.value) debouncedLoad()
-  })
-  watch(
-    enabled,
-    on => {
-      if (!on) return
-      if (tab.value === 'perps' || tab.value === 'all') ensurePerps()
-      loadServer()
-    },
-    { immediate: true },
-  )
+  // Tab switch loads immediately; query typing is debounced.
+  watch(tab, loadServer, { immediate: true })
+  watch(query, debouncedLoad)
 
   return { items, isLoading }
 }

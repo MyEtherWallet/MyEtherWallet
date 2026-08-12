@@ -103,11 +103,10 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     })
   })
 
-  it('Add new asset opens the add-to-watchlist dialog', async () => {
+  it('Add new asset opens the add-to-watchlist dialog on demand', async () => {
     const w = mountTable()
-    expect(w.get('[data-test="add-dialog"]').attributes('data-open')).toBe(
-      'false',
-    )
+    // Dialog is mounted only when opened (v-if), so it starts absent.
+    expect(w.find('[data-test="add-dialog"]').exists()).toBe(false)
     await w.get('[data-test="watchlist-add-new"]').trigger('click')
     expect(w.get('[data-test="add-dialog"]').attributes('data-open')).toBe(
       'true',

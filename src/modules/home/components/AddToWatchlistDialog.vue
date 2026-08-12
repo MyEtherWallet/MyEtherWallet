@@ -22,7 +22,7 @@ const TABS: { id: AssetPickerTab; labelKey: string }[] = [
 
 const tab = ref<AssetPickerTab>('all')
 const query = ref('')
-const { items, isLoading } = useAssetPicker(tab, query, isOpen)
+const { items, isLoading } = useAssetPicker(tab, query)
 </script>
 
 <template>
@@ -70,8 +70,8 @@ const { items, isLoading } = useAssetPicker(tab, query, isOpen)
           </button>
         </div>
 
-        <!-- List -->
-        <div class="mew-scrollbar mt-2 min-h-[240px] flex-1 overflow-y-auto">
+        <!-- List (pr keeps the star off the scrollbar) -->
+        <div class="mew-scrollbar mt-2 min-h-[240px] flex-1 overflow-y-auto pr-2">
           <div
             v-if="isLoading"
             data-test="picker-loading"

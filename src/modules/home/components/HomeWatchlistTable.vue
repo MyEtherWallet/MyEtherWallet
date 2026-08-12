@@ -177,6 +177,6 @@ const trade = (row: WatchlistRow) => {
       </li>
     </ul>
 
-    <AddToWatchlistDialog v-model:is-open="isAddOpen" />
+    <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
   </section>
 </template>
