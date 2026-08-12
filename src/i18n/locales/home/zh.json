@@ -26,7 +26,57 @@
       "watchlist": {
         "title": "创建您的关注列表",
         "subtitle": "根据您的兴趣查找要关注的资产",
-        "begin": "开始"
+        "begin": "开始",
+        "onboarding": {
+          "continue": "继续",
+          "markets": {
+            "subtitle": "您对哪些资产感兴趣？",
+            "hint": "您可以选择多个选项"
+          },
+          "industries": {
+            "subtitle": "您对哪些行业感兴趣？"
+          },
+          "assets": {
+            "title": "为您找到的资产",
+            "subtitle": "以下是根据您的兴趣推荐关注的资产。",
+            "loadingTitle": "正在查找资产",
+            "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
+            "done": "完成",
+            "selected": "已选择 {count} 项资产"
+          },
+          "marketLabels": {
+            "stocks": "股票",
+            "crypto": "加密货币",
+            "perps": "永续合约"
+          },
+          "industryLabels": {
+            "commodities": "大宗商品",
+            "equities": "股票",
+            "tech": "科技",
+            "ai": "人工智能",
+            "hardware": "硬件",
+            "gaming": "游戏",
+            "transport": "交通运输",
+            "software": "软件",
+            "construction": "建筑",
+            "privacy": "隐私",
+            "infrastructure": "基础设施",
+            "etfs": "ETF"
+          }
+        },
+        "table": {
+          "title": "关注列表",
+          "subtitle": "关注您感兴趣的资产",
+          "addNew": "添加资产",
+          "trade": "交易",
+          "remove": "从关注列表移除",
+          "columns": {
+            "asset": "资产名称",
+            "marketValue": "市值",
+            "price": "价格",
+            "trend": "趋势"
+          }
+        }
       }
     },
     "offers": {

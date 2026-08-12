@@ -26,7 +26,57 @@
       "watchlist": {
         "title": "Arma tu lista de seguimiento",
         "subtitle": "Encuentra activos para seguir según tus intereses",
-        "begin": "Empecemos"
+        "begin": "Empecemos",
+        "onboarding": {
+          "continue": "Continuar",
+          "markets": {
+            "subtitle": "¿Qué activos te interesan?",
+            "hint": "Puedes seleccionar más de una opción"
+          },
+          "industries": {
+            "subtitle": "¿Qué industrias te interesan?"
+          },
+          "assets": {
+            "title": "Encontramos activos para ti",
+            "subtitle": "Estos son algunos activos que podrías seguir según tus intereses.",
+            "loadingTitle": "Buscando activos",
+            "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
+            "done": "Listo",
+            "selected": "{count} activos seleccionados"
+          },
+          "marketLabels": {
+            "stocks": "Acciones",
+            "crypto": "Cripto",
+            "perps": "Perpetuos"
+          },
+          "industryLabels": {
+            "commodities": "Materias primas",
+            "equities": "Renta variable",
+            "tech": "Tecnología",
+            "ai": "Inteligencia artificial",
+            "hardware": "Hardware",
+            "gaming": "Videojuegos",
+            "transport": "Transporte",
+            "software": "Software",
+            "construction": "Construcción",
+            "privacy": "Privacidad",
+            "infrastructure": "Infraestructura",
+            "etfs": "ETFs"
+          }
+        },
+        "table": {
+          "title": "Lista de seguimiento",
+          "subtitle": "Sigue los activos que te interesan",
+          "addNew": "Agregar activo",
+          "trade": "Operar",
+          "remove": "Quitar de la lista",
+          "columns": {
+            "asset": "Nombre del activo",
+            "marketValue": "Valor de mercado",
+            "price": "Precio",
+            "trend": "Tendencia"
+          }
+        }
       }
     },
     "offers": {
