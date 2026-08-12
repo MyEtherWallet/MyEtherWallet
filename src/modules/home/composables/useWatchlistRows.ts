@@ -116,7 +116,8 @@ export function useWatchlistRows(): {
   refresh: () => void
 } {
   const watchlistStore = useWatchlistStore()
-  const { watchListedPerps } = storeToRefs(watchlistStore)
+  const { watchListedTokens, watchListedStocks, watchListedPerps } =
+    storeToRefs(watchlistStore)
   const { formatFiat, formatFiatCompact } = useCurrency()
 
   const fmt: RowFormatters = {
@@ -156,13 +157,17 @@ export function useWatchlistRows(): {
   )
 
   const rows = computed<WatchlistRow[]>(() => {
-    const tokenRows = (tokensWatchlistData.value ?? []).map(t =>
-      mapTokenRow(t, fmt),
-    )
-    const stockRows = (stocksWatchlistData.value ?? []).map(s =>
-      mapStockRow(s, fmt),
-    )
+    // Filter fetched data by current store membership so removing a row (star)
+    // drops it immediately even before the cached fetch data refreshes.
+    const watchedTokens = new Set(watchListedTokens.value)
+    const watchedStocks = new Set(watchListedStocks.value)
     const watchedPerps = new Set(watchListedPerps.value)
+    const tokenRows = (tokensWatchlistData.value ?? [])
+      .filter(t => watchedTokens.has(t.coinId))
+      .map(t => mapTokenRow(t, fmt))
+    const stockRows = (stocksWatchlistData.value ?? [])
+      .filter(s => watchedStocks.has(s.primaryMarket.symbol))
+      .map(s => mapStockRow(s, fmt))
     const perpRows = perpsContracts.value
       .filter(c => !c.disabled && watchedPerps.has(c.baseCurrency))
       .map(c => mapPerpRow(c, fmt))
