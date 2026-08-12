@@ -148,8 +148,8 @@ describe('HomeHero (MEW-2094)', () => {
     expect(w.findAll('[data-test="trending"]').length).toBe(2)
   })
 
-  it('shows the promo banner above the cards', () => {
-    expect(mountHero().find('[data-test="hero-banner"]').exists()).toBe(true)
+  it('hides the promo banner while the flag is off', () => {
+    expect(mountHero().find('[data-test="hero-banner"]').exists()).toBe(false)
   })
 
   it('caps the stocks card at the top 5 trending items', () => {
@@ -167,47 +167,13 @@ describe('HomeHero (MEW-2094)', () => {
     expect(fetchTrending).toHaveBeenCalledTimes(1)
   })
 
-  it('shows the watchlist banner (and no table) when the watchlist is empty', () => {
-    const w = mountHero()
-    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(true)
-    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
-  })
-
-  it('shows the table once the watchlist has renderable rows', () => {
+  it('hides the whole watchlist section while the flag is off', () => {
+    // Even with items in the store, nothing watchlist-related renders.
     watchListedStocks.value = ['AAPL']
     watchlistRows.value = [{ key: 'stock-AAPL' }]
     const w = mountHero()
     expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
-    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
-  })
-
-  it('keeps the table (not the banner) while rows are still loading', () => {
-    watchListedStocks.value = ['AAPL']
-    watchlistRows.value = []
-    isLoadingWatchlist.value = true
-    const w = mountHero()
-    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
-    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
-  })
-
-  it('falls back to the banner when the store has items but no row resolves', () => {
-    // e.g. a watchlisted id that the API never returns → empty table would be weird.
-    watchListedStocks.value = ['AAPL']
-    watchlistRows.value = []
-    isLoadingWatchlist.value = false
-    const w = mountHero()
     expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
-    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(true)
-  })
-
-  it('opens the onboarding dialog when the banner emits begin', async () => {
-    const w = mountHero()
-    expect(w.get('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'false',
-    )
-    await w.get('[data-test="hero-watchlist-banner"]').trigger('click')
-    expect(w.get('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'true',
-    )
+    expect(w.find('[data-test="onboarding-dialog"]').exists()).toBe(false)
   })
 })

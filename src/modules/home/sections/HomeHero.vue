@@ -19,17 +19,18 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 
-// Promo banner above the cards. Visible with placeholder copy for now; the
-// final copy and whether it wires to an external campaign/service are still
-// TBD. Flip to `false` (or wire to a real feature flag) when it needs to be
-// hidden.
-const SHOW_HERO_TRADE_BANNER = true
+// Feature flags — flip to `true` to re-enable on the home page.
+// Promo "Trade and get 5 USDC" banner above the cards (copy/campaign still TBD).
+const SHOW_HERO_TRADE_BANNER: boolean = false
+// Build-your-watchlist banner + table + add-to-watchlist modal.
+const SHOW_WATCHLIST: boolean = false
 
 const { t } = useI18n()
 
 // "Build your watchlist" banner, shown below the cards only while the user's
 // watchlist is empty (first-time onboarding). Once it has items, the table
-// replaces the banner.
+// replaces the banner. Only wired when the flag is on so it doesn't fetch or
+// initialise perps while hidden.
 const watchlistStore = useWatchlistStore()
 const { watchListedTokens, watchListedStocks, watchListedPerps } =
   storeToRefs(watchlistStore)
@@ -40,20 +41,17 @@ const isWatchlistEmpty = computed(
     !watchListedPerps.value.length,
 )
 
-// Rows for the table. Show the table only when there is actually something to
-// render (or it's still loading) — otherwise fall back to the banner. This
-// covers both "removed everything" and watchlisted ids that never resolve to a
-// row (e.g. an unresolved symbol), which would otherwise leave an empty table.
-const {
-  rows: watchlistRows,
-  isLoading: isLoadingWatchlist,
-  refresh: refreshWatchlist,
-} = useWatchlistRows()
-refreshWatchlist()
+const watchlist = SHOW_WATCHLIST ? useWatchlistRows() : null
+watchlist?.refresh()
+const watchlistRows = computed(() => watchlist?.rows.value ?? [])
+// Show the table only when there is actually something to render (or it's still
+// loading) — otherwise fall back to the banner. This covers both "removed
+// everything" and watchlisted ids that never resolve to a row.
 const showWatchlistTable = computed(
   () =>
+    SHOW_WATCHLIST &&
     !isWatchlistEmpty.value &&
-    (isLoadingWatchlist.value || watchlistRows.value.length > 0),
+    ((watchlist?.isLoading.value ?? false) || watchlistRows.value.length > 0),
 )
 
 // Opens the build-your-watchlist onboarding wizard.
@@ -133,11 +131,13 @@ onMounted(fetchTrending)
         :is-loading="isLoadingCrypto"
       />
     </div>
-    <HeroWatchlistBanner
-      v-if="!showWatchlistTable"
-      @begin="onWatchlistBegin"
-    />
-    <HomeWatchlistTable v-else :rows="watchlistRows" />
-    <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
+    <template v-if="SHOW_WATCHLIST">
+      <HeroWatchlistBanner
+        v-if="!showWatchlistTable"
+        @begin="onWatchlistBegin"
+      />
+      <HomeWatchlistTable v-else :rows="watchlistRows" />
+      <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
+    </template>
   </div>
 </template>
