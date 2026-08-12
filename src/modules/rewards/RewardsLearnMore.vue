@@ -174,14 +174,14 @@ const infoItems = computed(() => [
       min: minSpendTrade.value || MIN_TRADE_AMOUNT,
     }),
   },
-  {
-    icon: 'trade',
-    text: t('rewards.earn_rewards_description', {
-      trade_count: 10,
-      trade_minimum: 25,
-      reward_amount: 5,
-    }),
-  },
+  // {
+  //   icon: 'trade',
+  //   text: t('rewards.earn_rewards_description', {
+  //     trade_count: 10,
+  //     trade_minimum: 25,
+  //     reward_amount: 5,
+  //   }),
+  // },
   {
     icon: 'trade',
     text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
