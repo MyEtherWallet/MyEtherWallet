@@ -1,5 +1,6 @@
 // src/composables/useAccountBalances.ts
-import { ref, type Ref } from 'vue'
+import { ref } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 import { formatUnits } from 'viem'
@@ -10,7 +11,6 @@ export interface AccountBalance {
 }
 
 export interface BalanceEntry {
-  id: string
   chainName: string
   address: string
   /** Native-currency fiat price for the active chain — the /balances response returns
@@ -21,9 +21,30 @@ export interface BalanceEntry {
 /** The MEW API's sentinel contract for a chain's native currency (ETH, BNB, …). */
 const NATIVE_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
+const STORAGE_KEY = 'multiAddressBalances'
+
+/** Cache key: per chain (name) + address so a balance persists across popup opens,
+ *  page reloads and network switches. Lower-cased for stable matching. */
+const cacheKey = (chainName: string, address: string): string =>
+  `${chainName.toLowerCase()}:${address.toLowerCase()}`
+
+/**
+ * Per-address balance cache for the Manage Accounts popup.
+ *
+ * The cache is persisted to localStorage and keyed by (chainName, address). Only
+ * the *active* account's balance is live (it comes from walletStore); every other
+ * saved address is read from this cache and is only fetched when it isn't cached
+ * yet (`fetchMissing`) or on an explicit per-row refresh (`refreshOne`). This
+ * avoids re-pulling every address from the API on each popup open / reload.
+ */
 export function useAccountBalances() {
-  const balances: Ref<Record<string, AccountBalance>> = ref({})
+  const cache = useLocalStorage<Record<string, AccountBalance>>(STORAGE_KEY, {})
   const isLoading = ref(false)
+
+  const cached = (
+    chainName: string,
+    address: string,
+  ): AccountBalance | undefined => cache.value[cacheKey(chainName, address)]
 
   const fetchOne = async (entry: BalanceEntry): Promise<AccountBalance> => {
     try {
@@ -58,28 +79,45 @@ export function useAccountBalances() {
     }
   }
 
-  const fetchFor = async (entries: BalanceEntry[]): Promise<void> => {
+  /** Fetch only the entries not already cached for their chain, then cache them.
+   *  Already-cached addresses are never re-fetched here — that's the API saving. */
+  const fetchMissing = async (entries: BalanceEntry[]): Promise<void> => {
+    const missing = entries.filter(
+      e => !cache.value[cacheKey(e.chainName, e.address)],
+    )
+    if (!missing.length) return
     isLoading.value = true
     try {
       const results = await Promise.all(
-        entries.map(async e => [e.id, await fetchOne(e)] as const),
+        missing.map(
+          async e =>
+            [cacheKey(e.chainName, e.address), await fetchOne(e)] as const,
+        ),
       )
-      // Reassign (rather than mutating keys in place) so the record reference
-      // changes and every dependent binding re-renders reliably.
-      balances.value = { ...balances.value, ...Object.fromEntries(results) }
+      // Reassign so the record reference changes and dependent bindings re-render.
+      cache.value = { ...cache.value, ...Object.fromEntries(results) }
     } finally {
       isLoading.value = false
     }
   }
 
+  /** Force a fresh fetch of one entry (per-row refresh / on save) and cache it. */
   const refreshOne = async (entry: BalanceEntry): Promise<void> => {
-    balances.value = { ...balances.value, [entry.id]: await fetchOne(entry) }
+    cache.value = {
+      ...cache.value,
+      [cacheKey(entry.chainName, entry.address)]: await fetchOne(entry),
+    }
   }
 
-  /** Drop all cached balances (e.g. on network change, since they're per-chain). */
-  const clear = (): void => {
-    balances.value = {}
+  /** Seed a known balance (e.g. the live active-account balance) into the cache so
+   *  it's available without a fetch once that address becomes non-active. */
+  const set = (
+    chainName: string,
+    address: string,
+    balance: AccountBalance,
+  ): void => {
+    cache.value = { ...cache.value, [cacheKey(chainName, address)]: balance }
   }
 
-  return { balances, isLoading, fetchFor, refreshOne, clear }
+  return { isLoading, cached, fetchMissing, refreshOne, set }
 }

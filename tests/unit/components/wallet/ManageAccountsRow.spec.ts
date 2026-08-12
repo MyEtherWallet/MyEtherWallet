@@ -35,11 +35,16 @@ const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
 interface FactoryProps {
   account?: Partial<SavedAccount>
   isActive?: boolean
+  balance?: { usdValue: number; tokenCount: number }
 }
 
 const factory = (props: FactoryProps = {}) =>
   mount(ManageAccountsRow, {
-    props: { account: acc(props.account), isActive: props.isActive ?? false },
+    props: {
+      account: acc(props.account),
+      isActive: props.isActive ?? false,
+      balance: props.balance,
+    },
     global: { stubs, mocks: { $t: (k: string) => k } },
   })
 
@@ -75,6 +80,16 @@ describe('ManageAccountsRow', () => {
     ).toBe(true)
     expect(
       factory({ account: { kind: 'watchOnly' } }).find('[data-test="row-connected"]').exists(),
+    ).toBe(false)
+  })
+
+  it('flags a non-active row balance as cached/outdated; the active (live) one is not', () => {
+    const balance = { usdValue: 5, tokenCount: 1 }
+    expect(
+      factory({ isActive: false, balance }).find('[data-test="row-stale-balance"]').exists(),
+    ).toBe(true)
+    expect(
+      factory({ isActive: true, balance }).find('[data-test="row-stale-balance"]').exists(),
     ).toBe(false)
   })
 

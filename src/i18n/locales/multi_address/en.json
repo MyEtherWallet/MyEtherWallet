@@ -22,6 +22,7 @@
     "duplicate_name": "That name is already in use",
     "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
     "cap_reached": "You can save up to 20 addresses",
+    "cached_balance": "This balance may be outdated. Use refresh to update it.",
     "extension_prompt": "To connect, open your extension and select the address shown above.",
     "network_title": "Networks",
     "network_search": "Search",

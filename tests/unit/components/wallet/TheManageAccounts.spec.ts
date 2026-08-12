@@ -6,7 +6,7 @@ const switchTo = vi.fn()
 const deleteAccount = vi.fn()
 const startAdd = vi.fn()
 const connectSaved = vi.fn()
-const fetchFor = vi.fn()
+const fetchMissing = vi.fn()
 const refreshOne = vi.fn()
 const renameAccount = vi.fn(() => ({ ok: true }))
 const tryAddAddress = vi.fn(() => ({ added: true }))
@@ -27,7 +27,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), isLoading: ref(false), fetchFor, refreshOne, clear: vi.fn() }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ isLoading: ref(false), cached: vi.fn(() => undefined), fetchMissing, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
@@ -171,16 +171,17 @@ describe('TheManageAccounts', () => {
     expect(w.findComponent({ name: 'ManageAccountsNetworkView' }).exists()).toBe(true)
   })
 
-  it('only fetches balances for accounts whose chain type matches the selected network', () => {
+  it('fetches only non-active addresses whose chain type matches (active is live; incompatible skipped)', () => {
     const original = store.allAccounts
     store.allAccounts = [
-      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
-      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' },
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' }, // active → live, excluded
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }, // non-active EVM → fetched
+      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' }, // skipped on EVM chain
     ]
     try {
       factory()
-      const entries = fetchFor.mock.calls.at(-1)?.[0] as Array<{ address: string }>
-      expect(entries.map(e => e.address)).toEqual(['0x1']) // BITCOIN address skipped on EVM chain
+      const entries = fetchMissing.mock.calls.at(-1)?.[0] as Array<{ address: string }>
+      expect(entries.map(e => e.address)).toEqual(['0x2'])
     } finally {
       store.allAccounts = original
     }

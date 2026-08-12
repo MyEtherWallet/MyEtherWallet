@@ -351,7 +351,7 @@ const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
-const { balances, isLoading, fetchFor, refreshOne, clear } = useAccountBalances()
+const { isLoading, cached, fetchMissing, refreshOne, set } = useAccountBalances()
 const walletStore = useWalletStore()
 const {
   walletAddress,
@@ -430,7 +430,7 @@ const activeBalance = computed<AccountBalance>(() => ({
 
 const balanceFor = (acc: SavedAccount): AccountBalance | undefined => {
   if (isActive(acc)) return activeBalance.value
-  return isCompatible(acc) ? balances.value[acc.id] : undefined
+  return isCompatible(acc) ? cached(chainName(), acc.address) : undefined
 }
 
 // Active row/card follow walletStore's own loading flag (covers connect, switch
@@ -447,26 +447,42 @@ const detectedMessage = ref('')
 
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
-const loadBalances = (): void => {
-  const entries = allAccounts.value.filter(isCompatible).map(a => ({
-    id: a.id,
-    chainName: chainName(),
-    address: a.address,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  }))
-  void fetchFor(entries)
+// Fetch balances only for saved addresses not already cached for this chain.
+// The active account is live (walletStore), so it's excluded — cached ones are
+// never re-pulled here, which is what avoids hammering the API on every open.
+const fetchMissingBalances = (): void => {
+  const entries = allAccounts.value
+    .filter(a => isCompatible(a) && !isActive(a))
+    .map(a => ({
+      chainName: chainName(),
+      address: a.address,
+      nativePrice: chainsStore.selectedChain?.price ?? 0,
+    }))
+  void fetchMissing(entries)
 }
 
-// Re-fetch every row's balance for the newly-selected network while the popup is
-// open. Cached balances are per-chain, so drop them first — that way the rows show
-// the loading skeleton (not a stale value) until the new network's data arrives.
+// On network change (while open) show the new chain's cached balances instantly
+// and fetch only the ones missing for that chain — no blanket clear/refetch.
 watch(
   () => chainsStore.selectedChain?.name,
   () => {
     if (!openDialog.value) return
-    clear()
-    loadBalances()
+    fetchMissingBalances()
   },
+)
+
+// Keep the live active balance in the cache so that when the user switches away,
+// that address still shows its last-known value without triggering a fetch.
+watch(
+  [
+    () => activeAccount.value?.address,
+    activeBalance,
+    () => chainsStore.selectedChain?.name,
+  ],
+  ([address, balance, name]) => {
+    if (address && name && !isLoadingBalances.value) set(name, address, balance)
+  },
+  { immediate: true },
 )
 
 watch(
@@ -478,7 +494,7 @@ watch(
       hasBackfilled.value = true
     }
     void analytics.trackMultiAddressEvent(MultiAddressEvent.OPENED)
-    loadBalances()
+    fetchMissingBalances()
   },
   { immediate: true },
 )
@@ -560,7 +576,6 @@ const refresh = (acc: SavedAccount): void => {
     return
   }
   void refreshOne({
-    id: acc.id,
     chainName: chainName(),
     address: acc.address,
     nativePrice: chainsStore.selectedChain?.price ?? 0,
@@ -592,6 +607,13 @@ const saveDetected = (): void => {
     return
   }
   detectedMessage.value = ''
+  // Pull + cache the newly-saved address once now, so it shows a balance right
+  // away and isn't re-fetched on later opens (it's non-active → cache-served).
+  void refreshOne({
+    chainName: chainName(),
+    address: detectedAddress.value,
+    nativePrice: chainsStore.selectedChain?.price ?? 0,
+  })
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DETECTED_SAVED)
   walletStore.clearDetectedAddress()
 }
