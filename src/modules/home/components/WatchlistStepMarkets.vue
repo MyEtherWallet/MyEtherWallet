@@ -2,9 +2,25 @@
 import { useI18n } from 'vue-i18n'
 import { ArrowRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { WATCHLIST_MARKETS } from './watchlistOnboarding'
+import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
+import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
+import stocks2 from '@/assets/images/watchlist/market-stocks-2.png'
+import stocks3 from '@/assets/images/watchlist/market-stocks-3.png'
+import crypto1 from '@/assets/images/watchlist/market-crypto-1.png'
+import crypto2 from '@/assets/images/watchlist/market-crypto-2.png'
+import crypto3 from '@/assets/images/watchlist/market-crypto-3.png'
+import perps1 from '@/assets/images/watchlist/market-perps-1.png'
+import perps2 from '@/assets/images/watchlist/market-perps-2.png'
+import perps3 from '@/assets/images/watchlist/market-perps-3.png'
 
 const { t } = useI18n()
+
+// Decorative overlapping logo clusters per market (exported from Figma).
+const MARKET_LOGOS: Record<WatchlistMarketId, string[]> = {
+  stocks: [stocks1, stocks2, stocks3],
+  crypto: [crypto1, crypto2, crypto3],
+  perps: [perps1, perps2, perps3],
+}
 
 // Selected market ids (multi-select). Continue enables with at least one.
 const selected = defineModel<string[]>({ required: true })
@@ -45,11 +61,16 @@ const toggle = (id: string) => {
         <span class="text-s-16 font-bold text-black">
           {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
         </span>
-        <!-- Decorative asset cluster (real per-market logos are a later polish). -->
+        <!-- Decorative asset cluster (Figma logos). -->
         <span class="flex items-center" aria-hidden="true">
-          <span class="size-6 rounded-full bg-[#dcdcdc]" />
-          <span class="-ml-2 size-6 rounded-full bg-[#cfcfcf]" />
-          <span class="-ml-2 size-6 rounded-full bg-[#c2c2c2]" />
+          <img
+            v-for="(logo, i) in MARKET_LOGOS[market.id]"
+            :key="i"
+            :src="logo"
+            alt=""
+            class="size-8"
+            :class="{ '-ml-2': i > 0 }"
+          />
         </span>
       </button>
     </div>
