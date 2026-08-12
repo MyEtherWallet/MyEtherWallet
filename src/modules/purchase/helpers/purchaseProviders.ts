@@ -8,7 +8,7 @@ import applePayLogo from '@/assets/images/buy/icon-apple-pay.svg'
 import googlePayLogo from '@/assets/images/buy/icon-google-pay-logo.svg'
 import pixLogo from '@/assets/images/buy/icon-pix-logo.svg'
 import paypalLogo from '@/assets/images/buy/icon-paypal-logo.svg'
-import venmoLogo from '@/assets/images/buy/icon-paypal-logo.svg'
+import venmoLogo from '@/assets/images/buy/icon-venmo-logo.svg'
 import bankLogo from '@/assets/images/buy/icon-bank.svg'
 import i18n from '@/i18n'
 
