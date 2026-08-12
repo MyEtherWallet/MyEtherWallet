@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -15,21 +14,19 @@ import TableSparkline from '@/components/TableSparkline.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import {
-  useWatchlistRows,
-  type WatchlistRow,
-} from '@/modules/home/composables/useWatchlistRows'
+import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
+
+// Rows are owned by HomeHero (so it can fall back to the banner when there are
+// none to show); this component just renders + handles per-row actions.
+defineProps<{ rows: WatchlistRow[] }>()
 
 const { t } = useI18n()
 const router = useRouter()
 
 const watchlistStore = useWatchlistStore()
-const { rows, refresh } = useWatchlistRows()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
-
-onMounted(refresh)
 
 const changeLabel = (change: number) =>
   formatPercentageValue(Math.abs(change)).value

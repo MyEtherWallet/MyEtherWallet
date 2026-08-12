@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useCryptoTrending } from '@/modules/home/composables/useCryptoTrending'
+import { useWatchlistRows } from '@/modules/home/composables/useWatchlistRows'
 import HeroPortfolioCard from '@/modules/home/components/HeroPortfolioCard.vue'
 import HeroTrendingCard from '@/modules/home/components/HeroTrendingCard.vue'
 import HeroBanner from '@/modules/home/components/HeroBanner.vue'
@@ -37,6 +38,22 @@ const isWatchlistEmpty = computed(
     !watchListedTokens.value.length &&
     !watchListedStocks.value.length &&
     !watchListedPerps.value.length,
+)
+
+// Rows for the table. Show the table only when there is actually something to
+// render (or it's still loading) — otherwise fall back to the banner. This
+// covers both "removed everything" and watchlisted ids that never resolve to a
+// row (e.g. an unresolved symbol), which would otherwise leave an empty table.
+const {
+  rows: watchlistRows,
+  isLoading: isLoadingWatchlist,
+  refresh: refreshWatchlist,
+} = useWatchlistRows()
+refreshWatchlist()
+const showWatchlistTable = computed(
+  () =>
+    !isWatchlistEmpty.value &&
+    (isLoadingWatchlist.value || watchlistRows.value.length > 0),
 )
 
 // Opens the build-your-watchlist onboarding wizard.
@@ -117,10 +134,10 @@ onMounted(fetchTrending)
       />
     </div>
     <HeroWatchlistBanner
-      v-if="isWatchlistEmpty"
+      v-if="!showWatchlistTable"
       @begin="onWatchlistBegin"
     />
-    <HomeWatchlistTable v-else />
+    <HomeWatchlistTable v-else :rows="watchlistRows" />
     <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
   </div>
 </template>

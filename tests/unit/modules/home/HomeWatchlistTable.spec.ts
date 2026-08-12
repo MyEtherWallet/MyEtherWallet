@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
@@ -36,11 +35,6 @@ const ROWS: WatchlistRow[] = [
   },
 ]
 
-const refresh = vi.fn()
-vi.mock('@/modules/home/composables/useWatchlistRows', () => ({
-  useWatchlistRows: () => ({ rows: ref(ROWS), refresh }),
-}))
-
 const push = vi.fn()
 vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
 
@@ -66,21 +60,18 @@ const i18n = createI18n({
   messages: { en: {} },
 })
 
-const mountTable = () =>
-  mount(HomeWatchlistTable, { global: { plugins: [i18n] } })
+const mountTable = (rows: WatchlistRow[] = ROWS) =>
+  mount(HomeWatchlistTable, { props: { rows }, global: { plugins: [i18n] } })
 
 describe('HomeWatchlistTable (MEW-2130)', () => {
   beforeEach(() => {
     localStorage.clear()
     setActivePinia(createPinia())
     push.mockClear()
-    refresh.mockClear()
   })
 
-  it('renders one row per watchlist item and refreshes on mount', () => {
-    const w = mountTable()
-    expect(w.findAll('[data-test="watchlist-row"]').length).toBe(2)
-    expect(refresh).toHaveBeenCalledTimes(1)
+  it('renders one row per provided watchlist row', () => {
+    expect(mountTable().findAll('[data-test="watchlist-row"]').length).toBe(2)
   })
 
   it('star removes the item from the matching store bucket', async () => {

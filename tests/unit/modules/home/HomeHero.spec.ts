@@ -85,7 +85,23 @@ vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
   },
 }))
 vi.mock('@/modules/home/components/HomeWatchlistTable.vue', () => ({
-  default: { template: '<div data-test="home-watchlist-table" />' },
+  default: {
+    props: ['rows'],
+    template: '<div data-test="home-watchlist-table" />',
+  },
+}))
+
+// useWatchlistRows pulls the perps SDK / currency store — mock it with
+// controllable refs so the gate (table vs banner) can be exercised.
+const watchlistRows = ref<unknown[]>([])
+const isLoadingWatchlist = ref(false)
+const refreshWatchlist = vi.fn()
+vi.mock('@/modules/home/composables/useWatchlistRows', () => ({
+  useWatchlistRows: () => ({
+    rows: watchlistRows,
+    isLoading: isLoadingWatchlist,
+    refresh: refreshWatchlist,
+  }),
 }))
 vi.mock('@/modules/home/components/HomeWatchlistOnboardingDialog.vue', () => ({
   default: {
@@ -118,9 +134,12 @@ describe('HomeHero (MEW-2094)', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     fetchTrending.mockClear()
+    refreshWatchlist.mockClear()
     watchListedTokens.value = []
     watchListedStocks.value = []
     watchListedPerps.value = []
+    watchlistRows.value = []
+    isLoadingWatchlist.value = false
   })
 
   it('renders the portfolio card and two trending cards', () => {
@@ -154,18 +173,31 @@ describe('HomeHero (MEW-2094)', () => {
     expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
   })
 
-  it('shows the table instead of the banner once any bucket has items', () => {
+  it('shows the table once the watchlist has renderable rows', () => {
     watchListedStocks.value = ['AAPL']
+    watchlistRows.value = [{ key: 'stock-AAPL' }]
     const w = mountHero()
     expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
     expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
   })
 
-  it('treats a perps-only watchlist as non-empty', () => {
-    watchListedPerps.value = ['BTC']
+  it('keeps the table (not the banner) while rows are still loading', () => {
+    watchListedStocks.value = ['AAPL']
+    watchlistRows.value = []
+    isLoadingWatchlist.value = true
     const w = mountHero()
-    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
     expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(true)
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
+  })
+
+  it('falls back to the banner when the store has items but no row resolves', () => {
+    // e.g. a watchlisted id that the API never returns → empty table would be weird.
+    watchListedStocks.value = ['AAPL']
+    watchlistRows.value = []
+    isLoadingWatchlist.value = false
+    const w = mountHero()
+    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(true)
   })
 
   it('opens the onboarding dialog when the banner emits begin', async () => {
