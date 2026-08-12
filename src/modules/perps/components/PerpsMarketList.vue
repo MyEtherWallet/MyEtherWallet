@@ -891,10 +891,10 @@ interface FilterOption {
 
 const filterOptions = computed<FilterOption[]>(() => [
   { label: t('perps.market-list.filter-all'), value: 'all' },
+  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
   { label: t('perps.market-list.filter-stocks'), value: 'stocks' },
   { label: t('perps.market-list.filter-commodities'), value: 'commodities' },
   { label: t('perps.market-list.filter-indices'), value: 'indices' },
-  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
 ])
 
 // Track the filter by value, not by object: labels are locale-dependent and
