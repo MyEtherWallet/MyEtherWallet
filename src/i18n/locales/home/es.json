@@ -76,6 +76,18 @@
             "price": "Precio",
             "trend": "Tendencia"
           }
+        },
+        "addModal": {
+          "title": "Agregar a la lista",
+          "subtitle": "Busca y agrega los activos que te interesan",
+          "searchPlaceholder": "Buscar",
+          "empty": "No se encontraron activos",
+          "tabs": {
+            "all": "Todos",
+            "stocks": "Acciones",
+            "crypto": "Cripto",
+            "perps": "Perpetuos"
+          }
         }
       }
     },

@@ -76,6 +76,18 @@
             "price": "价格",
             "trend": "趋势"
           }
+        },
+        "addModal": {
+          "title": "添加到关注列表",
+          "subtitle": "搜索并添加您感兴趣的资产",
+          "searchPlaceholder": "搜索",
+          "empty": "未找到资产",
+          "tabs": {
+            "all": "全部",
+            "stocks": "股票",
+            "crypto": "加密货币",
+            "perps": "永续合约"
+          }
         }
       }
     },

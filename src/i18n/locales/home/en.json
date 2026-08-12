@@ -76,6 +76,18 @@
             "price": "Price",
             "trend": "Trend"
           }
+        },
+        "addModal": {
+          "title": "Add to watchlist",
+          "subtitle": "Search and add assets you are interested in",
+          "searchPlaceholder": "Search",
+          "empty": "No assets found",
+          "tabs": {
+            "all": "All",
+            "stocks": "Stocks",
+            "crypto": "Crypto",
+            "perps": "Perpetuals"
+          }
         }
       }
     },

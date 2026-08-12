@@ -48,6 +48,14 @@ vi.mock('@/components/AppTokenSymbol.vue', () => ({
 vi.mock('@/components/TableSparkline.vue', () => ({
   default: { template: '<span data-test="sparkline" />' },
 }))
+// The add-to-watchlist dialog pulls the asset-picker (perps SDK) — stub it and
+// expose its open state.
+vi.mock('@/modules/home/components/AddToWatchlistDialog.vue', () => ({
+  default: {
+    props: ['isOpen'],
+    template: '<div data-test="add-dialog" :data-open="isOpen" />',
+  },
+}))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -95,9 +103,15 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     })
   })
 
-  it('Add new asset is a placeholder that does not navigate', async () => {
+  it('Add new asset opens the add-to-watchlist dialog', async () => {
     const w = mountTable()
+    expect(w.get('[data-test="add-dialog"]').attributes('data-open')).toBe(
+      'false',
+    )
     await w.get('[data-test="watchlist-add-new"]').trigger('click')
+    expect(w.get('[data-test="add-dialog"]').attributes('data-open')).toBe(
+      'true',
+    )
     expect(push).not.toHaveBeenCalled()
   })
 })

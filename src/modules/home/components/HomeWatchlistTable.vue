@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -11,6 +12,7 @@ import {
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
+import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -22,6 +24,8 @@ defineProps<{ rows: WatchlistRow[] }>()
 
 const { t } = useI18n()
 const router = useRouter()
+
+const isAddOpen = ref(false)
 
 const watchlistStore = useWatchlistStore()
 
@@ -65,6 +69,7 @@ const trade = (row: WatchlistRow) => {
         type="button"
         data-test="watchlist-add-new"
         class="flex shrink-0 items-center gap-1 rounded-full bg-[#f5f5f5] px-4 py-2 text-s-14 font-medium text-primary"
+        @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addNew') }}
         <PlusIcon class="size-4" />
@@ -171,5 +176,7 @@ const trade = (row: WatchlistRow) => {
         </button>
       </li>
     </ul>
+
+    <AddToWatchlistDialog v-model:is-open="isAddOpen" />
   </section>
 </template>
