@@ -57,12 +57,13 @@ watch(isOpen, open => {
 <template>
   <AppDialog
     v-model:is-open="isOpen"
-    has-content-gutter
     class="sm:mx-auto sm:w-full sm:max-w-[480px]"
     data-test="watchlist-onboarding-dialog"
   >
     <template #content>
-      <div class="pb-6 pt-2">
+      <!-- Figma modal: 24px padding on all sides (the close button sits at 16px,
+           matching AppDialog's absolute top-4/right-4). -->
+      <div class="p-6">
         <WatchlistStepMarkets
           v-if="activeStep === 0"
           v-model="selectedMarkets"
