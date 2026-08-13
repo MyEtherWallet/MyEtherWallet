@@ -114,22 +114,30 @@ onMounted(fetchTrending)
 <template>
   <div data-test="home-hero" class="flex flex-col gap-6">
     <HeroBanner v-if="SHOW_HERO_TRADE_BANNER" />
-    <div
-      class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
-    >
-      <HeroPortfolioCard />
-      <HeroTrendingCard
-        :title="t('homePage.hero.trendingStocks')"
-        :see-all-to="{ name: ROUTES_MAIN.STOCKS.NAME }"
-        :items="stockItems"
-        :is-loading="isLoadingOverview"
-      />
-      <HeroTrendingCard
-        :title="t('homePage.hero.trendingCrypto')"
-        :see-all-to="{ name: ROUTES_MAIN.CRYPTO.NAME }"
-        :items="cryptoItems"
-        :is-loading="isLoadingCrypto"
-      />
+    <!-- Container-query layout so the Hero reflows on the AVAILABLE width (which
+         shrinks when the wallet side panel opens), not the viewport:
+         - wide: 3 columns (balance 2fr + the two trending 1fr each),
+         - medium (side panel open / smaller screens): balance full-width on top,
+           the two trending side-by-side in a row below,
+         - narrow: fully stacked. -->
+    <div class="@container">
+      <div
+        class="grid grid-cols-1 gap-6 @xl:grid-cols-2 @5xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
+      >
+        <HeroPortfolioCard class="@xl:col-span-2 @5xl:col-span-1" />
+        <HeroTrendingCard
+          :title="t('homePage.hero.trendingStocks')"
+          :see-all-to="{ name: ROUTES_MAIN.STOCKS.NAME }"
+          :items="stockItems"
+          :is-loading="isLoadingOverview"
+        />
+        <HeroTrendingCard
+          :title="t('homePage.hero.trendingCrypto')"
+          :see-all-to="{ name: ROUTES_MAIN.CRYPTO.NAME }"
+          :items="cryptoItems"
+          :is-loading="isLoadingCrypto"
+        />
+      </div>
     </div>
     <template v-if="SHOW_WATCHLIST">
       <HeroWatchlistBanner
