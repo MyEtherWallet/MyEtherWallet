@@ -17,7 +17,7 @@ defineEmits<{ 'update:modelValue': [index: number] }>()
       role="tab"
       :aria-selected="modelValue === index"
       data-test="tab-bar-item"
-      class="relative pb-3 text-s-16 transition-colors"
+      class="relative pb-2 text-s-16 leading-[22px] transition-colors"
       :class="
         modelValue === index
           ? 'font-semibold text-black'
