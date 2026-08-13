@@ -264,6 +264,7 @@ describe('marketingVariantStore', () => {
   describe('dismissal', () => {
     it('ends the campaign on explicit dismiss', async () => {
       stubFetch([A, B])
+      rollB()
       const store = useMarketingVariantStore()
       await store.load()
       store.markShown()
@@ -273,21 +274,50 @@ describe('marketingVariantStore', () => {
       expect(store.canShow).toBe(false)
       expect(trackMarketingAbTestEvent).toHaveBeenCalledWith(
         'Marketing_AB_Tooltip_Dismissed',
-        expect.objectContaining({ documentId: expect.any(String) }),
+        expect.objectContaining({ variant: 'B', documentId: 'doc-b' }),
       )
     })
 
     it('ends the campaign when the CTA is taken', async () => {
       stubFetch([A, B])
+      rollA()
       const store = useMarketingVariantStore()
       await store.load()
       store.markShown()
       store.trackCtaClick()
 
       expect(store.dismissed).toBe(true)
+      // The arm must ride along on the CTA event — without it the click can't
+      // be attributed to a bucket and the test measures nothing.
       expect(trackMarketingAbTestEvent).toHaveBeenCalledWith(
         'Marketing_AB_Tooltip_Clicked_CTA',
-        expect.objectContaining({ documentId: expect.any(String) }),
+        {
+          variant: 'A',
+          documentId: 'doc-a',
+          title: 'A Version Test',
+          tokenId: 'nflxon',
+        },
+      )
+    })
+
+    // The B arm is where an attribution bug would hide: the arm is re-derived
+    // from the persisted bucket here rather than passed in from `markShown`.
+    it('attributes a CTA click to the B arm and its entry', async () => {
+      stubFetch([A, B])
+      rollB()
+      const store = useMarketingVariantStore()
+      await store.load()
+      store.markShown()
+      store.trackCtaClick()
+
+      expect(trackMarketingAbTestEvent).toHaveBeenCalledWith(
+        'Marketing_AB_Tooltip_Clicked_CTA',
+        {
+          variant: 'B',
+          documentId: 'doc-b',
+          title: 'B Test Version',
+          tokenId: 'HDon',
+        },
       )
     })
 

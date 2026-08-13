@@ -11,7 +11,7 @@
       <div
         v-if="visible"
         :style="isAnchored ? anchoredStyle : undefined"
-        class="fixed z-[200] w-[360px] min-h-[144px] bg-white rounded-20 shadow-[0px_8px_12px_-4px_rgba(0,0,0,0.32)] p-4"
+        class="fixed z-[200] w-[360px] min-h-[144px] bg-white rounded-20 shadow-[0px_16px_36px_-6px_rgba(0,0,0,0.45)] p-4"
         :class="
           isAnchored
             ? 'origin-right'
@@ -24,7 +24,7 @@
              anchored placement has something to point at. -->
         <svg
           v-if="isAnchored"
-          class="absolute top-1/2 -right-[14px] -translate-y-1/2 drop-shadow-[2px_2px_1px_rgba(0,0,0,0.18)]"
+          class="absolute top-1/2 -right-[14px] -translate-y-1/2 drop-shadow-[3px_2px_3px_rgba(0,0,0,0.28)]"
           width="14"
           height="20"
           viewBox="0 0 14 20"
