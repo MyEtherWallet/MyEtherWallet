@@ -41,7 +41,7 @@ const dateLabel = computed(
       </div>
       <p
         data-test="news-title"
-        class="line-clamp-2 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black group-hover:text-primary group-hover:underline"
+        class="w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black group-hover:text-primary group-hover:underline"
       >
         {{ title }}
       </p>
