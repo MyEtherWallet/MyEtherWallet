@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useRouter, type RouteLocationRaw } from 'vue-router'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppTokenListRow from '@/components/AppTokenListRow.vue'
 import { useCurrency } from '@/composables/useCurrency'
 import type { TrendingRowItem } from './heroTrending'
@@ -30,17 +29,16 @@ const { formatFiat } = useCurrency()
       <button
         type="button"
         data-test="trending-see-all"
-        class="flex items-center gap-2"
+        class="group flex items-center"
         @click="router.push(seeAllTo)"
       >
         <span
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black transition-colors group-hover:text-primary"
         >
           {{ title }}
         </span>
-        <ChevronRightIcon class="size-4 text-black" />
       </button>
-      <span class="text-s-12 leading-[18px] text-[#575757]">
+      <span class="text-s-14 leading-5 text-[#575757]">
         {{ t('homePage.hero.last24h') }}
       </span>
     </div>
@@ -56,10 +54,10 @@ const { formatFiat } = useCurrency()
         >
           <div class="size-8 shrink-0 animate-pulse rounded-full bg-[#f0f0f0]" />
           <div class="flex min-w-0 flex-1 flex-col gap-1">
-            <div class="h-3.5 w-16 animate-pulse rounded bg-[#f0f0f0]" />
-            <div class="h-3 w-24 animate-pulse rounded bg-[#f0f0f0]" />
+            <div class="h-4 w-16 animate-pulse rounded bg-[#f0f0f0]" />
+            <div class="h-3.5 w-24 animate-pulse rounded bg-[#f0f0f0]" />
           </div>
-          <div class="h-3.5 w-12 animate-pulse rounded bg-[#f0f0f0]" />
+          <div class="h-4 w-12 animate-pulse rounded bg-[#f0f0f0]" />
         </div>
       </template>
 

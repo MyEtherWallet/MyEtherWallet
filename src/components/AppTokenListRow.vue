@@ -47,19 +47,21 @@ const changeText = computed(() =>
       <AppTokenSymbol
         :symbol="symbol"
         :is-stock="isStock"
-        class="!text-s-14 !font-semibold tracking-[-0.28px] text-black"
+        class="!text-s-16 !font-semibold tracking-[-0.32px] text-black"
       />
-      <span v-if="name" class="truncate text-s-12 leading-[18px] text-[#575757]">
+      <span v-if="name" class="truncate text-s-14 leading-5 text-[#575757]">
         {{ name }}
       </span>
     </div>
     <div class="flex shrink-0 flex-col items-end text-right">
-      <p class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black">
+      <p
+        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+      >
         {{ priceDisplay }}
       </p>
       <p
         v-if="change != null"
-        class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
+        class="text-s-14 font-normal leading-5 tracking-[-0.28px]"
         :class="changeColor"
         data-test="token-list-row-change"
       >
