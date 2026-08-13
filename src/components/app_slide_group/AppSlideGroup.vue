@@ -88,8 +88,16 @@
 import AppSlideItem from './AppSlideItem.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { computed, ref, useTemplateRef, type PropType } from 'vue'
-import { useElementBounding } from '@vueuse/core'
+import {
+  computed,
+  ref,
+  useTemplateRef,
+  onMounted,
+  nextTick,
+  watch,
+  type PropType,
+} from 'vue'
+import { useElementBounding, useScroll, useResizeObserver } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 const props = defineProps({
   totalItems: {
@@ -119,6 +127,26 @@ const scrollContainer = useTemplateRef('scrollContainer')
 
 const { width } = useElementBounding(scrollContainer)
 
+// Edge fades are driven by the actual scroll position (not item visibility):
+// a strict 1.0 intersection threshold meant the edge item never counted as
+// fully visible at the boundary, so the fade lingered with nothing left to
+// scroll. We recompute the edges on scroll AND on mount / resize / item-count
+// change — the last is essential because async-loaded items grow scrollWidth
+// without resizing the container, so a scroll-only signal would miss them.
+const { x: scrollX } = useScroll(scrollContainer)
+const atStart = ref(true)
+const atEnd = ref(true)
+const updateEdges = () => {
+  const el = scrollContainer.value
+  if (!el) return
+  atStart.value = el.scrollLeft <= 1
+  atEnd.value = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
+}
+watch(scrollX, updateEdges)
+watch(() => props.totalItems, () => nextTick(updateEdges))
+useResizeObserver(scrollContainer, updateEdges)
+onMounted(() => nextTick(updateEdges))
+
 const visibleItems = ref<Set<number>>(new Set<number>())
 
 const setVisibility = (itemIndex: number, isVisible: boolean) => {
@@ -133,12 +161,8 @@ const allIsVisible = computed(() => {
   return visibleItems.value.size === props.totalItems
 })
 
-const blurFront = computed(() => {
-  return !visibleItems.value.has(0)
-})
-const blurEnd = computed(() => {
-  return !visibleItems.value.has(props.totalItems - 1)
-})
+const blurFront = computed(() => !atStart.value)
+const blurEnd = computed(() => !atEnd.value)
 
 const scrollToNextGroup = () => {
   const scrollSize = new BigNumber(width.value).multipliedBy(0.8).toNumber()

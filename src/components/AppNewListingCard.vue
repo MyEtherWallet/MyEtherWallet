@@ -42,7 +42,7 @@ const changeText = computed(() =>
 <template>
   <div
     data-test="listing-card"
-    class="flex w-[300px] shrink-0 cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4"
+    class="flex w-[300px] shrink-0 cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4 transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
     @click="$emit('select')"
   >
     <!-- A. Header row -->
@@ -53,6 +53,8 @@ const changeText = computed(() =>
         :is-stock="isStock"
         width="size-10"
         height="size-10"
+        no-shadow
+        no-ring
         class="shrink-0"
       />
       <p
@@ -83,6 +85,7 @@ const changeText = computed(() =>
           name
         }}</span>
       </div>
+      <!-- Description drops to its own line when present (not wired yet). -->
       <p
         v-if="description"
         class="line-clamp-3 text-s-14 leading-5 text-[#575757]"
@@ -145,7 +148,7 @@ const changeText = computed(() =>
       v-if="tradeLabel"
       type="button"
       data-test="listing-trade"
-      class="flex h-10 w-full items-center justify-center rounded-3xl bg-[#d6edff] text-s-14 font-semibold tracking-[-0.28px] text-primary"
+      class="flex h-10 w-full items-center justify-center rounded-3xl bg-grey-5 text-s-14 font-semibold tracking-[-0.28px] text-primary transition-colors hover:bg-grey-10"
       @click.stop="$emit('trade')"
     >
       {{ tradeLabel }}
