@@ -230,7 +230,8 @@
                   <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p :class="subText">
+                  <!-- Only when the reward itself carries a deadline. -->
+                  <p v-if="hasRewardExpiry" :class="subText">
                     {{
                       $t('rwaRewards.hero_offer_expires', {
                         time: subExpiresText,
@@ -407,12 +408,14 @@ const {
   canRegisterTrade,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
-// The entry's own claim deadline when there is an entry; otherwise the season's
-// end from `info.info`, which is what bounds the offer when no reward has been
-// earned yet. Without the fallback the countdown renders as an empty string.
+// Strictly the reward's own claim deadline — never the season end. The two are
+// different deadlines, and `expiration_timestamp` is optional: the store reads
+// its absence as "never expires" (see `isClaimable`), so substituting the
+// season end would put a countdown on a reward that has none.
 const { text: subExpiresText } = useCountdown(
-  () => activeReward.value?.expiration_timestamp ?? seasonEnd.value,
+  () => activeReward.value?.expiration_timestamp,
 )
+const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
