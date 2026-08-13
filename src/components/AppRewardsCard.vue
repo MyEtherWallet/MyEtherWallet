@@ -37,7 +37,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     :to="props.to"
     :type="props.to ? undefined : 'button'"
     data-test="rewards-card"
-    class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left"
+    class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left transition-shadow hover:shadow-lg"
   >
     <!-- colored gradient background (per-card variant): the source images fade
          to white toward their bottom-left, so contain + right keeps the color a
@@ -70,9 +70,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
           {{ highlight }}
         </p>
       </div>
-      <span
-        class="flex shrink-0 items-center rounded-full p-2 transition-colors group-hover:bg-grey-5"
-      >
+      <span class="flex shrink-0 items-center p-2">
         <ChevronRightIcon class="size-6 text-primary" />
       </span>
     </div>
