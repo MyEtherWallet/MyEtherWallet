@@ -72,17 +72,19 @@ const newsDescription = (item: {
       {{ t('homePage.news.empty') }}
     </p>
     <template v-else>
-      <div class="grid gap-6 md:grid-cols-3">
-        <AppNewsCard
-          v-for="n in pageItems"
-          :key="n.articleUrl"
-          :title="n.title ?? ''"
-          :source="sourceFromUrl(n.articleUrl)"
-          :date="dateLabel(n.timestamp)"
-          :description="newsDescription(n)"
-          :ticker="n.tickers?.[0]"
-          :href="n.articleUrl"
-        />
+      <div class="@container">
+        <div class="grid grid-cols-1 gap-6 @2xl:grid-cols-2 @5xl:grid-cols-3">
+          <AppNewsCard
+            v-for="n in pageItems"
+            :key="n.articleUrl"
+            :title="n.title ?? ''"
+            :source="sourceFromUrl(n.articleUrl)"
+            :date="dateLabel(n.timestamp)"
+            :description="newsDescription(n)"
+            :ticker="n.tickers?.[0]"
+            :href="n.articleUrl"
+          />
+        </div>
       </div>
       <AppPagination
         v-if="total > PER_PAGE"

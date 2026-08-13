@@ -26,7 +26,7 @@ const onOfferClick = (offer: HomeOffer) => {
 </script>
 
 <template>
-  <div class="relative grid gap-6 md:grid-cols-3">
+  <div class="@container relative grid gap-6 md:grid-cols-3">
     <!-- peggy peeks out from behind the cards: it's the first (earliest-DOM)
          positioned child, so with no positive z-index the cards paint over its
          lower half, giving the "emerging from behind" look. -->
