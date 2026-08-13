@@ -1,4 +1,4 @@
-const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://mainnet.mewwallet.dev'
+const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://staging.mewwallet.dev'
 
 const configs = {
   WALLET_CONNECT_PROJECT_ID:
