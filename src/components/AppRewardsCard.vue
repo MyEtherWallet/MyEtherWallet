@@ -37,7 +37,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     :to="props.to"
     :type="props.to ? undefined : 'button'"
     data-test="rewards-card"
-    class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left transition-shadow hover:shadow-lg"
+    class="group relative flex h-[230px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
   >
     <!-- colored gradient background (per-card variant): the source images fade
          to white toward their bottom-left, so contain + right keeps the color a
