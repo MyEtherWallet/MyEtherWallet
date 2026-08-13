@@ -27,7 +27,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ cached: vi.fn(() => undefined), isStale: vi.fn(() => true), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
@@ -58,7 +58,7 @@ const stubs = {
   },
   ManageAccountsRow: {
     name: 'ManageAccountsRow',
-    props: ['account', 'isActive', 'balance', 'balanceLoading', 'stale', 'scrollRoot'],
+    props: ['account', 'isActive', 'balance', 'balanceLoading', 'scrollRoot'],
     template: '<div class="row" :data-id="account.id" :data-active="isActive" @click="$emit(\'rename\')"></div>',
   },
 }

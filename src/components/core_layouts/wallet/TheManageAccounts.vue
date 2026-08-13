@@ -127,7 +127,6 @@
                       :is-active="acc.id === activeAccount?.id"
                       :balance="balanceFor(acc)"
                       :balance-loading="balanceLoadingFor(acc)"
-                      :stale="isStaleFor(acc)"
                       :scroll-root="scrollContainer"
                       @visibility-change="onRowVisibility(acc, $event)"
                       @select="onSelect(acc)"
@@ -354,7 +353,7 @@ const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
-const { cached, isStale, loadingFor, fetchIfStale, refreshOne, set } =
+const { cached, loadingFor, fetchIfStale, refreshOne, set } =
   useAccountBalances()
 const scrollContainer = ref<HTMLElement | null>(null)
 const walletStore = useWalletStore()
@@ -444,11 +443,6 @@ const balanceLoadingFor = (acc: SavedAccount): boolean =>
   isActive(acc)
     ? isLoadingBalances.value
     : isCompatible(acc) && loadingFor(chainName(), acc.address)
-
-// Non-active rows show the "outdated" clock when their cached balance is missing
-// or older than the TTL; the active row is live, so it's never flagged.
-const isStaleFor = (acc: SavedAccount): boolean =>
-  !isActive(acc) && isCompatible(acc) && isStale(chainName(), acc.address)
 
 const openPaperWallet = ref(false)
 const paperTarget = ref<SavedAccount | null>(null)

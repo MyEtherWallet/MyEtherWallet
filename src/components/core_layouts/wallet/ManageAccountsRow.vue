@@ -52,7 +52,7 @@
 
     <div
       v-if="balanceLoading || balance"
-      class="flex items-center justify-end gap-1 flex-shrink-0 text-s-14"
+      class="text-right flex-shrink-0 text-s-14"
       :class="isActive ? 'text-black' : 'text-info'"
     >
       <!-- Active row skeletons whenever loading (stale-safe on switch); other rows
@@ -60,21 +60,7 @@
       <template v-if="balanceLoading && (isActive || !balance)">
         <span class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded" />
       </template>
-      <template v-else-if="balance">
-        <!-- Non-active balances are served from cache (only the active address is
-             live), so flag them as possibly-outdated with a hoverable clock icon.
-             The title lives on the wrapping span — a `title` attribute on an <svg>
-             does not surface a browser tooltip. -->
-        <span
-          v-if="!isActive && stale"
-          data-test="row-stale-balance"
-          :title="$t('multi_address.cached_balance')"
-          class="inline-flex shrink-0 cursor-help"
-        >
-          <clock-icon class="w-3.5 h-3.5 text-[#a5a5a5]" />
-        </span>
-        <span>${{ formatFiat(balance.usdValue) }}</span>
-      </template>
+      <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
     </div>
 
     <app-pop-up-menu
@@ -124,7 +110,7 @@
 import { ref, computed } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
-import { EyeIcon, ClockIcon } from '@heroicons/vue/16/solid'
+import { EyeIcon } from '@heroicons/vue/16/solid'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -138,8 +124,6 @@ const props = defineProps<{
   isActive: boolean
   balance?: AccountBalance
   balanceLoading?: boolean
-  /** Cache older than the TTL (or never fetched) → show the "outdated" clock. */
-  stale?: boolean
   /** Scroll container to observe against so viewport detection is accurate. */
   scrollRoot?: HTMLElement | null
 }>()
