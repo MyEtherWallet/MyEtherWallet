@@ -112,6 +112,13 @@ const onCta = () => {
   if (!visible.value) return
   visible.value = false
   marketing.trackCtaClick()
+  // Seed the trade form BEFORE opening the panel: ModuleTrade is mounted by
+  // `v-if="walletPanel === 'trade'"`, and its `restoreToToken()` reads this
+  // symbol on setup. Setting it afterwards would land on an already-defaulted
+  // form. Same order as ModuleAllStock and ViewStockInfo.
+  if (entry.value?.tokenId) {
+    walletMenu.setSelectedTradeTokenSymbol(entry.value.tokenId)
+  }
   walletMenu.openPanel('trade')
 }
 
