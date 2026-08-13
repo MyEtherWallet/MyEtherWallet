@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -46,10 +46,29 @@ const { refreshBalances } = useRefreshBalances()
 
 const openDepositDialog = ref(false)
 
-type State = 'notconnected' | 'loading' | 'noassets' | 'assets'
+// Track whether the first balance load has completed. Only the *first* load
+// shows the full-card skeleton; later refreshes keep the current layout and
+// skeleton just the amount (see below), so refreshing a no-assets account no
+// longer swaps to a separate loading screen.
+const hasLoadedOnce = ref(false)
+watch(isLoadingBalances, (loading, wasLoading) => {
+  if (wasLoading && !loading) hasLoadedOnce.value = true
+})
+
+// Keep the refresh icon spinning for a beat on click even if the fetch is
+// instant, plus for the whole duration of an actual load.
+const refreshing = ref(false)
+const isRefreshing = computed(() => refreshing.value || isLoadingBalances.value)
+const onRefresh = () => {
+  refreshing.value = true
+  refreshBalances()
+  setTimeout(() => (refreshing.value = false), 800)
+}
+
+type State = 'notconnected' | 'initialLoading' | 'noassets' | 'assets'
 const state = computed<State>(() => {
   if (!isWalletConnected.value) return 'notconnected'
-  if (isLoadingBalances.value) return 'loading'
+  if (isLoadingBalances.value && !hasLoadedOnce.value) return 'initialLoading'
   if (!hasBalances.value) return 'noassets'
   return 'assets'
 })
@@ -115,7 +134,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
       <!-- Eye + refresh: top-right icon cluster -->
       <div class="absolute right-3 top-3 flex items-center gap-1 text-black">
         <button
-          v-if="state !== 'noassets'"
+          v-if="state === 'assets'"
           type="button"
           data-test="hero-eye"
           :aria-label="t('homePage.hero.toggleBalance')"
@@ -129,9 +148,12 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           data-test="hero-refresh"
           :aria-label="t('refresh_balance')"
           class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
-          @click="refreshBalances"
+          @click="onRefresh"
         >
-          <ArrowPathIcon class="size-6" />
+          <ArrowPathIcon
+            class="size-6"
+            :class="{ 'animate-spin': isRefreshing }"
+          />
         </button>
       </div>
 
@@ -139,7 +161,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
       <div class="flex w-full flex-col gap-4">
         <!-- Address chip -->
         <div class="flex items-center gap-1">
-          <template v-if="state === 'loading'">
+          <template v-if="state === 'initialLoading'">
             <div class="size-5 shrink-0 animate-pulse rounded-md bg-[#e6e6e6]" />
             <div class="h-5 w-[101px] animate-pulse rounded-md bg-[#e6e6e6]" />
             <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
@@ -154,8 +176,11 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
               {{ truncateAddress(walletAddress ?? '') }}
             </span>
             <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
-            <span class="text-s-16 leading-[22px] text-[#575757]">
-              {{ selectedChain?.name }}
+            <span
+              class="text-s-16 leading-[22px] text-[#575757]"
+              data-test="hero-network"
+            >
+              {{ selectedChain?.nameLong }}
             </span>
           </template>
         </div>
@@ -173,7 +198,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           </p>
         </template>
         <h2
-          v-else-if="state === 'loading'"
+          v-else-if="state === 'initialLoading'"
           class="max-w-[325px] text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
         >
           {{ t('homePage.hero.ownTotal') }}
@@ -187,9 +212,20 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           data-test="hero-portfolio-assets"
         >
           {{ t('homePage.hero.ownTotal') }}
-          <span :class="hideBalances ? 'text-[#a5a5a5]' : 'text-primary'">{{
-            totalText
-          }}</span>
+          <!-- Refresh with existing assets: skeleton only the amount, keep the
+               layout (no whole-card swap). `whitespace-nowrap` keeps the masked
+               value from wrapping onto its own line in hidden mode. -->
+          <span
+            v-if="isLoadingBalances"
+            data-test="hero-amount-skeleton"
+            class="ml-2 inline-block h-[46px] w-32 animate-pulse rounded-lg bg-[#e6e6e6] align-middle"
+          />
+          <span
+            v-else
+            class="whitespace-nowrap"
+            :class="hideBalances ? 'text-[#a5a5a5]' : 'text-primary'"
+            >{{ totalText }}</span
+          >
         </h2>
       </div>
 
@@ -218,9 +254,9 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         </button>
       </div>
 
-      <!-- LOADING / ASSETS: today % + go to portfolio -->
+      <!-- INITIAL LOADING / ASSETS: today % + go to portfolio -->
       <div v-else class="flex w-full items-end justify-between">
-        <div v-if="state === 'loading'" class="flex items-center gap-1">
+        <div v-if="state === 'initialLoading'" class="flex items-center gap-1">
           <div class="size-[22px] animate-pulse rounded-md bg-[#e6e6e6]" />
           <div class="h-[22px] w-[85px] animate-pulse rounded-md bg-[#e6e6e6]" />
         </div>

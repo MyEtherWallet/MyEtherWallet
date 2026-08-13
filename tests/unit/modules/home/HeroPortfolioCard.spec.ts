@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
@@ -34,7 +34,8 @@ vi.mock('@/stores/chainsStore', async () => {
   const { ref: r } = await import('vue')
   return {
     useChainsStore: defineStore('chains', () => ({
-      selectedChain: r({ name: 'Ethereum' }),
+      // `name` is the caps identifier; `nameLong` is the display name.
+      selectedChain: r({ name: 'ETHEREUM', nameLong: 'Ethereum' }),
     })),
   }
 })
@@ -163,6 +164,55 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     expect(w.get('[data-test="hero-address"]').text()).toContain('0x71C8')
     await w.get('[data-test="hero-go-portfolio"]').trigger('click')
     expect(push).toHaveBeenCalledWith({ name: 'Portfolio' })
+  })
+
+  it('shows the long (non-caps) network name — MEW-2150 A', () => {
+    setWallet({ isWalletConnected: true, hasBalances: true })
+    const network = mountCard().get('[data-test="hero-network"]')
+    expect(network.text()).toBe('Ethereum')
+    expect(network.text()).not.toBe('ETHEREUM')
+  })
+
+  it('spins the refresh icon and refetches on click — MEW-2150 C', async () => {
+    setWallet({ isWalletConnected: true, hasBalances: false })
+    const w = mountCard()
+    await w.get('[data-test="hero-refresh"]').trigger('click')
+    expect(refreshBalances).toHaveBeenCalledTimes(1)
+    expect(w.get('[data-test="hero-refresh"] svg').classes()).toContain(
+      'animate-spin',
+    )
+  })
+
+  it('keeps the no-assets layout on refresh instead of a full skeleton swap — MEW-2150 C', async () => {
+    // First load: full skeleton is fine.
+    setWallet({ isWalletConnected: true, isLoadingBalances: true })
+    const w = mountCard()
+    expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(false)
+    // First load completes with no assets.
+    setWallet({ isLoadingBalances: false, hasBalances: false })
+    await nextTick()
+    expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(true)
+    // Refresh: stays on the no-assets layout (no separate loading screen).
+    setWallet({ isLoadingBalances: true })
+    await nextTick()
+    expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(true)
+  })
+
+  it('skeletons only the amount on an assets refresh — MEW-2150 C', async () => {
+    setWallet({ isWalletConnected: true, isLoadingBalances: true })
+    const w = mountCard()
+    setWallet({
+      isLoadingBalances: false,
+      hasBalances: true,
+      walletAddress: '0x71C8000000000000000000000000000000000389a',
+    })
+    await nextTick()
+    expect(w.find('[data-test="hero-amount-skeleton"]').exists()).toBe(false)
+    // Refresh: card layout stays, only the amount becomes a skeleton.
+    setWallet({ isLoadingBalances: true })
+    await nextTick()
+    expect(w.find('[data-test="hero-portfolio-assets"]').exists()).toBe(true)
+    expect(w.find('[data-test="hero-amount-skeleton"]').exists()).toBe(true)
   })
 
   it('masks total and percent when the eye toggles hideBalances', async () => {
