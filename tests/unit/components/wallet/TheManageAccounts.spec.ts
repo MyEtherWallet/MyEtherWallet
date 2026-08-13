@@ -6,7 +6,7 @@ const switchTo = vi.fn()
 const deleteAccount = vi.fn()
 const startAdd = vi.fn()
 const connectSaved = vi.fn()
-const fetchMissing = vi.fn()
+const fetchIfStale = vi.fn()
 const refreshOne = vi.fn()
 const renameAccount = vi.fn(() => ({ ok: true }))
 const tryAddAddress = vi.fn(() => ({ added: true }))
@@ -27,7 +27,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ isLoading: ref(false), cached: vi.fn(() => undefined), fetchMissing, refreshOne, set: vi.fn() }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ cached: vi.fn(() => undefined), isStale: vi.fn(() => true), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
@@ -57,7 +57,8 @@ const stubs = {
     template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /><button data-test="card-connect-btn" @click.stop="$emit(\'connect\')" /></div>',
   },
   ManageAccountsRow: {
-    props: ['account', 'isActive'],
+    name: 'ManageAccountsRow',
+    props: ['account', 'isActive', 'balance', 'balanceLoading', 'stale', 'scrollRoot'],
     template: '<div class="row" :data-id="account.id" :data-active="isActive" @click="$emit(\'rename\')"></div>',
   },
 }
@@ -171,19 +172,26 @@ describe('TheManageAccounts', () => {
     expect(w.findComponent({ name: 'ManageAccountsNetworkView' }).exists()).toBe(true)
   })
 
-  it('fetches only non-active addresses whose chain type matches (active is live; incompatible skipped)', () => {
+  it('fetches a visible non-active address (debounced); active is live and incompatible is skipped', () => {
+    vi.useFakeTimers()
     const original = store.allAccounts
     store.allAccounts = [
       { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' }, // active → live, excluded
       { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }, // non-active EVM → fetched
-      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' }, // skipped on EVM chain
+      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' }, // incompatible on EVM chain
     ]
     try {
-      factory()
-      const entries = fetchMissing.mock.calls.at(-1)?.[0] as Array<{ address: string }>
-      expect(entries.map(e => e.address)).toEqual(['0x2'])
+      const w = factory()
+      // Every row reports itself visible; only the compatible, non-active one fetches.
+      w.findAllComponents({ name: 'ManageAccountsRow' }).forEach(r =>
+        r.vm.$emit('visibility-change', true),
+      )
+      vi.advanceTimersByTime(300) // flush the debounce
+      const addrs = fetchIfStale.mock.calls.map(c => (c[0] as { address: string }).address)
+      expect(addrs).toEqual(['0x2'])
     } finally {
       store.allAccounts = original
+      vi.useRealTimers()
     }
   })
 })

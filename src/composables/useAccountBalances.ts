@@ -10,6 +10,11 @@ export interface AccountBalance {
   tokenCount: number
 }
 
+/** Cached shape: the balance plus when it was fetched, for TTL/staleness checks. */
+interface CachedBalance extends AccountBalance {
+  fetchedAt: number
+}
+
 export interface BalanceEntry {
   chainName: string
   address: string
@@ -17,6 +22,9 @@ export interface BalanceEntry {
    *  price: null for the native token, so callers pass the chain's price to value it. */
   nativePrice?: number
 }
+
+/** How long a cached balance is considered fresh before a visible row re-fetches it. */
+export const BALANCE_TTL_MS = 2 * 60 * 1000
 
 /** The MEW API's sentinel contract for a chain's native currency (ETH, BNB, …). */
 const NATIVE_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -31,20 +39,39 @@ const cacheKey = (chainName: string, address: string): string =>
 /**
  * Per-address balance cache for the Manage Accounts popup.
  *
- * The cache is persisted to localStorage and keyed by (chainName, address). Only
- * the *active* account's balance is live (it comes from walletStore); every other
- * saved address is read from this cache and is only fetched when it isn't cached
- * yet (`fetchMissing`) or on an explicit per-row refresh (`refreshOne`). This
- * avoids re-pulling every address from the API on each popup open / reload.
+ * Balances are persisted to localStorage and keyed by (chainName, address). The
+ * active account is live (walletStore); every other saved address is fetched only
+ * when it becomes visible in the popup viewport AND is missing or older than the
+ * TTL (`fetchIfStale`), or on an explicit per-row refresh (`refreshOne`). This
+ * bounds fetching to what the user is actually looking at.
  */
 export function useAccountBalances() {
-  const cache = useLocalStorage<Record<string, AccountBalance>>(STORAGE_KEY, {})
-  const isLoading = ref(false)
+  const cache = useLocalStorage<Record<string, CachedBalance>>(STORAGE_KEY, {})
+  // Keys currently being fetched, so a row re-entering the viewport (or a network
+  // re-trigger) doesn't fire a duplicate request. Reassigned (not mutated) so
+  // `loadingFor` reads stay reactive.
+  const inFlight = ref<Set<string>>(new Set())
 
   const cached = (
     chainName: string,
     address: string,
-  ): AccountBalance | undefined => cache.value[cacheKey(chainName, address)]
+  ): AccountBalance | undefined => {
+    const e = cache.value[cacheKey(chainName, address)]
+    return e ? { usdValue: e.usdValue, tokenCount: e.tokenCount } : undefined
+  }
+
+  /** True when the address has no cached balance or its cache is older than `ttl`. */
+  const isStale = (
+    chainName: string,
+    address: string,
+    ttl: number = BALANCE_TTL_MS,
+  ): boolean => {
+    const e = cache.value[cacheKey(chainName, address)]
+    return !e || Date.now() - e.fetchedAt >= ttl
+  }
+
+  const loadingFor = (chainName: string, address: string): boolean =>
+    inFlight.value.has(cacheKey(chainName, address))
 
   const fetchOne = async (entry: BalanceEntry): Promise<AccountBalance> => {
     try {
@@ -79,34 +106,37 @@ export function useAccountBalances() {
     }
   }
 
-  /** Fetch only the entries not already cached for their chain, then cache them.
-   *  Already-cached addresses are never re-fetched here — that's the API saving. */
-  const fetchMissing = async (entries: BalanceEntry[]): Promise<void> => {
-    const missing = entries.filter(
-      e => !cache.value[cacheKey(e.chainName, e.address)],
-    )
-    if (!missing.length) return
-    isLoading.value = true
+  const store = (key: string, balance: AccountBalance): void => {
+    cache.value = { ...cache.value, [key]: { ...balance, fetchedAt: Date.now() } }
+  }
+
+  /** Fetch one entry with in-flight dedupe, writing the result (and timestamp) to
+   *  the cache. Shared by `fetchIfStale` (TTL-gated) and `refreshOne` (forced). */
+  const runFetch = async (entry: BalanceEntry): Promise<void> => {
+    const key = cacheKey(entry.chainName, entry.address)
+    if (inFlight.value.has(key)) return
+    inFlight.value = new Set(inFlight.value).add(key)
     try {
-      const results = await Promise.all(
-        missing.map(
-          async e =>
-            [cacheKey(e.chainName, e.address), await fetchOne(e)] as const,
-        ),
-      )
-      // Reassign so the record reference changes and dependent bindings re-render.
-      cache.value = { ...cache.value, ...Object.fromEntries(results) }
+      store(key, await fetchOne(entry))
     } finally {
-      isLoading.value = false
+      const next = new Set(inFlight.value)
+      next.delete(key)
+      inFlight.value = next
     }
+  }
+
+  /** Fetch only when the entry is missing or older than `ttl` (viewport-driven). */
+  const fetchIfStale = async (
+    entry: BalanceEntry,
+    ttl: number = BALANCE_TTL_MS,
+  ): Promise<void> => {
+    if (!isStale(entry.chainName, entry.address, ttl)) return
+    await runFetch(entry)
   }
 
   /** Force a fresh fetch of one entry (per-row refresh / on save) and cache it. */
   const refreshOne = async (entry: BalanceEntry): Promise<void> => {
-    cache.value = {
-      ...cache.value,
-      [cacheKey(entry.chainName, entry.address)]: await fetchOne(entry),
-    }
+    await runFetch(entry)
   }
 
   /** Seed a known balance (e.g. the live active-account balance) into the cache so
@@ -116,8 +146,8 @@ export function useAccountBalances() {
     address: string,
     balance: AccountBalance,
   ): void => {
-    cache.value = { ...cache.value, [cacheKey(chainName, address)]: balance }
+    store(cacheKey(chainName, address), balance)
   }
 
-  return { isLoading, cached, fetchMissing, refreshOne, set }
+  return { cached, isStale, loadingFor, fetchIfStale, refreshOne, set }
 }

@@ -113,7 +113,7 @@
 
               <!-- Section 2: all-accounts list -->
               <div class="relative flex-1 min-h-0">
-                <div class="h-full overflow-y-auto px-2">
+                <div ref="scrollContainer" class="h-full overflow-y-auto px-2">
                   <div class="p-4">
                     <p class="text-s-14 text-[#575757]">
                       {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
@@ -127,6 +127,9 @@
                       :is-active="acc.id === activeAccount?.id"
                       :balance="balanceFor(acc)"
                       :balance-loading="balanceLoadingFor(acc)"
+                      :stale="isStaleFor(acc)"
+                      :scroll-root="scrollContainer"
+                      @visibility-change="onRowVisibility(acc, $event)"
                       @select="onSelect(acc)"
                       @copy="copy(acc.address)"
                       @refresh="refresh(acc)"
@@ -236,7 +239,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, type CSSProperties } from 'vue'
+import { ref, computed, watch, nextTick, onUnmounted, type CSSProperties } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -351,7 +354,9 @@ const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
-const { isLoading, cached, fetchMissing, refreshOne, set } = useAccountBalances()
+const { cached, isStale, loadingFor, fetchIfStale, refreshOne, set } =
+  useAccountBalances()
+const scrollContainer = ref<HTMLElement | null>(null)
 const walletStore = useWalletStore()
 const {
   walletAddress,
@@ -433,10 +438,17 @@ const balanceFor = (acc: SavedAccount): AccountBalance | undefined => {
   return isCompatible(acc) ? cached(chainName(), acc.address) : undefined
 }
 
-// Active row/card follow walletStore's own loading flag (covers connect, switch
-// and network change); other rows follow the per-address fetch.
+// The active row/card follows walletStore's own loading flag; every other row
+// follows its own per-address (viewport) fetch.
 const balanceLoadingFor = (acc: SavedAccount): boolean =>
-  isActive(acc) ? isLoadingBalances.value : isLoading.value && isCompatible(acc)
+  isActive(acc)
+    ? isLoadingBalances.value
+    : isCompatible(acc) && loadingFor(chainName(), acc.address)
+
+// Non-active rows show the "outdated" clock when their cached balance is missing
+// or older than the TTL; the active row is live, so it's never flagged.
+const isStaleFor = (acc: SavedAccount): boolean =>
+  !isActive(acc) && isCompatible(acc) && isStale(chainName(), acc.address)
 
 const openPaperWallet = ref(false)
 const paperTarget = ref<SavedAccount | null>(null)
@@ -447,29 +459,63 @@ const detectedMessage = ref('')
 
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
-// Fetch balances only for saved addresses not already cached for this chain.
-// The active account is live (walletStore), so it's excluded — cached ones are
-// never re-pulled here, which is what avoids hammering the API on every open.
-const fetchMissingBalances = (): void => {
-  const entries = allAccounts.value
-    .filter(a => isCompatible(a) && !isActive(a))
-    .map(a => ({
-      chainName: chainName(),
-      address: a.address,
-      nativePrice: chainsStore.selectedChain?.price ?? 0,
-    }))
-  void fetchMissing(entries)
+// Viewport-driven fetching: a saved address's balance is (re)fetched only while
+// it is visible in the popup list AND missing/older than the TTL. Rows report
+// their visibility; we debounce so a quick scroll-past doesn't fire a request,
+// while dedupe + TTL live in the composable.
+const VISIBLE_FETCH_DEBOUNCE_MS = 250
+const visibleAddresses = ref<Set<string>>(new Set())
+const fetchTimers = new Map<string, ReturnType<typeof setTimeout>>()
+
+const scheduleFetch = (acc: SavedAccount): void => {
+  if (isActive(acc) || !isCompatible(acc)) return
+  const addr = acc.address
+  clearTimeout(fetchTimers.get(addr))
+  fetchTimers.set(
+    addr,
+    setTimeout(() => {
+      fetchTimers.delete(addr)
+      if (!openDialog.value || !visibleAddresses.value.has(addr)) return
+      void fetchIfStale({
+        chainName: chainName(),
+        address: addr,
+        nativePrice: chainsStore.selectedChain?.price ?? 0,
+      })
+    }, VISIBLE_FETCH_DEBOUNCE_MS),
+  )
 }
 
-// On network change (while open) show the new chain's cached balances instantly
-// and fetch only the ones missing for that chain — no blanket clear/refetch.
+const onRowVisibility = (acc: SavedAccount, visible: boolean): void => {
+  const addr = acc.address
+  const next = new Set(visibleAddresses.value)
+  if (visible) {
+    next.add(addr)
+    visibleAddresses.value = next
+    scheduleFetch(acc)
+  } else {
+    next.delete(addr)
+    visibleAddresses.value = next
+    clearTimeout(fetchTimers.get(addr))
+    fetchTimers.delete(addr)
+  }
+}
+
+// The cache is keyed per chain, so a network switch invalidates what's on screen
+// (IntersectionObserver won't re-fire since the rows didn't move) — re-fetch the
+// currently-visible rows for the newly-selected chain.
 watch(
   () => chainsStore.selectedChain?.name,
   () => {
     if (!openDialog.value) return
-    fetchMissingBalances()
+    for (const acc of allAccounts.value)
+      if (visibleAddresses.value.has(acc.address)) scheduleFetch(acc)
   },
 )
+
+onUnmounted(() => {
+  for (const t of fetchTimers.values()) clearTimeout(t)
+  fetchTimers.clear()
+})
 
 // Keep the live active balance in the cache so that when the user switches away,
 // that address still shows its last-known value without triggering a fetch.
@@ -494,7 +540,6 @@ watch(
       hasBackfilled.value = true
     }
     void analytics.trackMultiAddressEvent(MultiAddressEvent.OPENED)
-    fetchMissingBalances()
   },
   { immediate: true },
 )

@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="rowRef"
     class="flex items-center gap-3 pl-4 pr-2 py-4 rounded-16 transition-colors"
     :class="isActive ? 'bg-surface-hover' : 'hover:bg-grey-5'"
   >
@@ -65,7 +66,7 @@
              The title lives on the wrapping span — a `title` attribute on an <svg>
              does not surface a browser tooltip. -->
         <span
-          v-if="!isActive"
+          v-if="!isActive && stale"
           data-test="row-stale-balance"
           :title="$t('multi_address.cached_balance')"
           class="inline-flex shrink-0 cursor-help"
@@ -120,7 +121,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useIntersectionObserver } from '@vueuse/core'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { EyeIcon, ClockIcon } from '@heroicons/vue/16/solid'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
@@ -131,14 +133,18 @@ import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
 
-defineProps<{
+const props = defineProps<{
   account: SavedAccount
   isActive: boolean
   balance?: AccountBalance
   balanceLoading?: boolean
+  /** Cache older than the TTL (or never fetched) → show the "outdated" clock. */
+  stale?: boolean
+  /** Scroll container to observe against so viewport detection is accurate. */
+  scrollRoot?: HTMLElement | null
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   select: []
   copy: []
   refresh: []
@@ -147,9 +153,20 @@ defineEmits<{
   disconnect: []
   rename: []
   delete: []
+  'visibility-change': [visible: boolean]
 }>()
 
 const confirmingDelete = ref(false)
+
+// Report when this row enters/leaves the popup's scroll viewport so the parent
+// can lazily (re)fetch its balance. rootMargin prefetches just-below-fold rows.
+const rowRef = ref<HTMLElement | null>(null)
+const scrollRootRef = computed(() => props.scrollRoot ?? undefined)
+useIntersectionObserver(
+  rowRef,
+  ([entry]) => emit('visibility-change', entry?.isIntersecting ?? false),
+  { root: scrollRootRef, rootMargin: '100px' },
+)
 
 const onRemove = (): void => {
   confirmingDelete.value = true

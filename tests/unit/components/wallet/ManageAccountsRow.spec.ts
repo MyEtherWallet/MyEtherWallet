@@ -36,6 +36,7 @@ interface FactoryProps {
   account?: Partial<SavedAccount>
   isActive?: boolean
   balance?: { usdValue: number; tokenCount: number }
+  stale?: boolean
 }
 
 const factory = (props: FactoryProps = {}) =>
@@ -44,6 +45,7 @@ const factory = (props: FactoryProps = {}) =>
       account: acc(props.account),
       isActive: props.isActive ?? false,
       balance: props.balance,
+      stale: props.stale ?? false,
     },
     global: { stubs, mocks: { $t: (k: string) => k } },
   })
@@ -83,13 +85,19 @@ describe('ManageAccountsRow', () => {
     ).toBe(false)
   })
 
-  it('flags a non-active row balance as cached/outdated; the active (live) one is not', () => {
+  it('flags a stale non-active balance with the clock; fresh or active rows are not flagged', () => {
     const balance = { usdValue: 5, tokenCount: 1 }
+    // non-active + stale → clock shown
     expect(
-      factory({ isActive: false, balance }).find('[data-test="row-stale-balance"]').exists(),
+      factory({ isActive: false, balance, stale: true }).find('[data-test="row-stale-balance"]').exists(),
     ).toBe(true)
+    // non-active but fresh → no clock
     expect(
-      factory({ isActive: true, balance }).find('[data-test="row-stale-balance"]').exists(),
+      factory({ isActive: false, balance, stale: false }).find('[data-test="row-stale-balance"]').exists(),
+    ).toBe(false)
+    // active (live) → never flagged even if stale
+    expect(
+      factory({ isActive: true, balance, stale: true }).find('[data-test="row-stale-balance"]').exists(),
     ).toBe(false)
   })
 
