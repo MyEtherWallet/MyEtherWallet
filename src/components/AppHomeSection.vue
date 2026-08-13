@@ -11,11 +11,14 @@ defineProps<{ title?: string; subtitle?: string }>()
       <div>
         <h2
           data-test="section-title"
-          class="text-s-20 font-bold tracking-[-0.4px] text-black"
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
         >
           {{ title }}
         </h2>
-        <p v-if="subtitle" class="mt-2 text-s-16 text-[#575757]">
+        <p
+          v-if="subtitle"
+          class="mt-2 text-s-16 leading-[22px] text-[#575757]"
+        >
           {{ subtitle }}
         </p>
       </div>
