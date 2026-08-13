@@ -121,6 +121,25 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     () => !dismissed.value && !shownThisSession.value && !!variantEntries.value,
   )
 
+  /**
+   * Analytics must never be able to suppress the UI.
+   *
+   * `_track` catches its own failures, but the `setX` user-property methods
+   * call `amplitude.identify()` unguarded. That throws when the SDK is not
+   * initialised yet (init is deferred to `router.isReady()`) or when a private
+   * window's tracking protection blocks it — conditions that hold in a
+   * production build but not against the local `dev` key. Unguarded, the throw
+   * propagated out of `markShown` after `shownThisSession` was already set,
+   * so the tooltip stayed hidden for the whole session with no retry.
+   */
+  const report = (send: () => void) => {
+    try {
+      send()
+    } catch {
+      // Reporting is best-effort; never let it break the render path.
+    }
+  }
+
   const payloadFor = (arm: MarketingVariant, entry: MarketingEntry) => ({
     variant: arm,
     documentId: entry.documentId,
@@ -145,11 +164,13 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     const arm = assignVariant()
     const entry = byVariant[arm]
     shownThisSession.value = true
-    analytics.setMarketingVariant(arm)
-    analytics.trackMarketingAbTestEvent(
-      MarketingAbTestEvent.SHOWN,
-      payloadFor(arm, entry),
-    )
+    report(() => {
+      analytics.setMarketingVariant(arm)
+      analytics.trackMarketingAbTestEvent(
+        MarketingAbTestEvent.SHOWN,
+        payloadFor(arm, entry),
+      )
+    })
     return { variant: arm, entry }
   }
 
@@ -157,9 +178,11 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     const byVariant = variantEntries.value
     const arm = variant.value === 'B' ? 'B' : 'A'
     if (byVariant) {
-      analytics.trackMarketingAbTestEvent(
-        MarketingAbTestEvent.DISMISSED,
-        payloadFor(arm, byVariant[arm]),
+      report(() =>
+        analytics.trackMarketingAbTestEvent(
+          MarketingAbTestEvent.DISMISSED,
+          payloadFor(arm, byVariant[arm]),
+        ),
       )
     }
     dismissed.value = true
@@ -169,9 +192,13 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     const byVariant = variantEntries.value
     const arm = variant.value === 'B' ? 'B' : 'A'
     if (byVariant) {
-      analytics.trackMarketingAbTestEvent(
-        MarketingAbTestEvent.CLICKED_CTA,
-        payloadFor(arm, byVariant[arm]),
+      // Guarded for the same reason as the exposure: the caller opens the trade
+      // panel straight after this, and a throw here would swallow the click.
+      report(() =>
+        analytics.trackMarketingAbTestEvent(
+          MarketingAbTestEvent.CLICKED_CTA,
+          payloadFor(arm, byVariant[arm]),
+        ),
       )
     }
     // Acting on the offer ends the campaign for this user just as ✕ does.

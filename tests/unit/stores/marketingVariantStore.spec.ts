@@ -261,6 +261,52 @@ describe('marketingVariantStore', () => {
     })
   })
 
+  // Amplitude's `setX` methods call `identify()` unguarded, which throws when
+  // the SDK is not initialised yet or a private window blocks it — true in a
+  // production build, not against the local `dev` key. A throw must never
+  // reach the caller: it would abort the render after `shownThisSession` was
+  // set, hiding the tooltip for the session with no retry.
+  describe('analytics failures cannot suppress the tooltip', () => {
+    it('still returns the exposure when the user property throws', async () => {
+      setMarketingVariant.mockImplementationOnce(() => {
+        throw new Error('amplitude not initialised')
+      })
+      stubFetch([A, B])
+      rollA()
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      const shown = store.markShown()
+      expect(shown?.entry.documentId).toBe('doc-a')
+      expect(shown?.variant).toBe('A')
+    })
+
+    it('still returns the exposure when the event throws', async () => {
+      trackMarketingAbTestEvent.mockImplementationOnce(() => {
+        throw new Error('blocked by tracking protection')
+      })
+      stubFetch([A, B])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.markShown()).not.toBeNull()
+    })
+
+    // The CTA handler opens the trade panel right after this call.
+    it('still dismisses when the CTA event throws', async () => {
+      stubFetch([A, B])
+      const store = useMarketingVariantStore()
+      await store.load()
+      store.markShown()
+      trackMarketingAbTestEvent.mockImplementationOnce(() => {
+        throw new Error('blocked')
+      })
+
+      expect(() => store.trackCtaClick()).not.toThrow()
+      expect(store.dismissed).toBe(true)
+    })
+  })
+
   describe('dismissal', () => {
     it('ends the campaign on explicit dismiss', async () => {
       stubFetch([A, B])
