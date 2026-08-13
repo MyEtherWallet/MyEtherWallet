@@ -153,6 +153,12 @@ watch(
   { immediate: true },
 )
 
+// Seed the reward campaign's season data on first load. Runs after the watcher
+// above so a restored session has already started its address-scoped poll — the
+// store then skips this, since that poll returns the same season block plus the
+// wallet's buckets. Only a visitor with no wallet yet actually fetches here.
+holdingsStore.fetchCampaignInfo()
+
 // Logging in from a watch-only address keeps the same `walletAddress`, so the
 // watcher above never fires — refetch reward info on the unlock itself, so it
 // reflects the address that can actually claim.

@@ -410,8 +410,11 @@ const {
   canRegisterTrade,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
+// The entry's own claim deadline when there is an entry; otherwise the season's
+// end from `info.info`, which is what bounds the offer when no reward has been
+// earned yet. Without the fallback the countdown renders as an empty string.
 const { text: subExpiresText } = useCountdown(
-  () => activeReward.value?.expiration_timestamp,
+  () => activeReward.value?.expiration_timestamp ?? seasonEnd.value,
 )
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
