@@ -421,8 +421,11 @@ const chainsStore = useChainsStore()
 
 // Two saved-address groups, one per chain type. EVM and Bitcoin balances can't be
 // fetched cross-type, so the list is split: the active address's group is shown
-// first and expanded by default, the other collapsed. The connected address floats
-// to the top of its group (TransitionGroup animates the move to avoid a hard jump).
+// first and expanded by default, the other collapsed. The CONNECTED (signing)
+// address floats to the top of its group (TransitionGroup animates the move to
+// avoid a hard jump). Merely viewing/selecting a saved address is watch-only, so
+// it never becomes "signing" and the list order stays put — only connecting
+// reorders.
 const CHAIN_LABEL: Record<string, string> = { EVM: 'EVM', BITCOIN: 'Bitcoin' }
 const activeChainType = computed<ChainType | undefined>(
   () => chainsStore.selectedChain?.type as ChainType | undefined,
@@ -447,11 +450,10 @@ const groups = computed<AccountGroup[]>(() => {
     .map(type => ({
       type,
       label: CHAIN_LABEL[type] ?? type,
-      // Active (connected) address first; the rest keep insertion order.
+      // Connected (signing) address first; the rest keep insertion order. Keyed on
+      // `kind`, not on the active id, so viewing a watch-only address never floats it.
       accounts: [...buckets.get(type)!].sort(
-        (a, b) =>
-          Number(b.id === activeAccount.value?.id) -
-          Number(a.id === activeAccount.value?.id),
+        (a, b) => Number(b.kind === 'signing') - Number(a.kind === 'signing'),
       ),
       active: type === activeType,
     }))
