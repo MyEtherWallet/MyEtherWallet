@@ -10,25 +10,42 @@ import useBalanceHandler from '@/utils/balanceHandler'
  * and here — see FOLLOWUPS.md for the consolidation follow-up. Kept a thin
  * standalone composable rather than refactoring those two out of ticket scope.
  */
-export function useRefreshBalances(): { refreshBalances: () => void } {
+export interface RefreshBalancesOptions {
+  /**
+   * Skip toggling the shared `isLoadingBalances` flag so the refetch happens
+   * in place with no loading/skeleton flash. Used by the Hero card's 2-minute
+   * background poll ("updates every 2 min").
+   */
+  silent?: boolean
+}
+
+export function useRefreshBalances(): {
+  refreshBalances: (options?: RefreshBalancesOptions) => void
+} {
   const walletStore = useWalletStore()
   const { wallet, walletAddress } = storeToRefs(walletStore)
   const { setTokens, setIsLoadingBalances } = walletStore
 
-  const refreshBalances = () => {
+  const noop = () => {}
+
+  const refreshBalances = ({ silent = false }: RefreshBalancesOptions = {}) => {
     if (!walletAddress.value) {
-      setIsLoadingBalances(false)
+      if (!silent) setIsLoadingBalances(false)
       return
     }
-    setIsLoadingBalances(true)
+    if (!silent) setIsLoadingBalances(true)
     wallet.value
       ?.getBalance()
       .then(balances => {
-        useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+        useBalanceHandler(
+          balances,
+          setTokens,
+          silent ? noop : setIsLoadingBalances,
+        )
       })
       .catch((error: unknown) => {
         if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
-        setIsLoadingBalances(false)
+        if (!silent) setIsLoadingBalances(false)
       })
   }
 

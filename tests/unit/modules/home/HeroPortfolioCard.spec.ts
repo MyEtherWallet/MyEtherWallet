@@ -116,6 +116,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     openAccessDialog.mockClear()
     openCreateDialog.mockClear()
     openPanel.mockClear()
+    refreshBalances.mockClear()
     push.mockClear()
     change.value = {
       fiat: new BigNumber(4.5),
@@ -192,6 +193,25 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     expect(w.get('[data-test="hero-refresh"] svg').classes()).toContain(
       'animate-spin',
     )
+  })
+
+  it('silently refetches the balance every 2 minutes — MEW-1781', async () => {
+    vi.useFakeTimers()
+    setWallet({
+      isWalletConnected: true,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
+      walletAddress: '0x71C8000000000000000000000000000000000389a',
+    })
+    mountCard()
+    // Nothing on mount — the initial load is owned by App.vue.
+    expect(refreshBalances).not.toHaveBeenCalled()
+    // First poll after 2 minutes, in silent mode (no loading skeleton).
+    vi.advanceTimersByTime(120_000)
+    expect(refreshBalances).toHaveBeenCalledWith({ silent: true })
+    // And it keeps polling on the same cadence.
+    vi.advanceTimersByTime(120_000)
+    expect(refreshBalances).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
   })
 
   it('keeps the no-assets layout on refresh instead of a full skeleton swap — MEW-2150 C', async () => {

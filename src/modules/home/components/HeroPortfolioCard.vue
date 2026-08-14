@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useIntervalFn } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -72,6 +73,13 @@ const onRefresh = () => {
   refreshBalances()
   setTimeout(() => (refreshing.value = false), 800)
 }
+
+// Keep the balance fresh with a silent background refetch every 2 minutes
+// (matches the refresh tooltip copy). `silent` skips the loading skeleton so
+// the amount updates in place; useIntervalFn auto-clears on unmount and
+// refreshBalances no-ops while disconnected.
+const BALANCE_REFRESH_MS = 120_000
+useIntervalFn(() => refreshBalances({ silent: true }), BALANCE_REFRESH_MS)
 
 type State = 'notconnected' | 'initialLoading' | 'noassets' | 'assets'
 const state = computed<State>(() => {
