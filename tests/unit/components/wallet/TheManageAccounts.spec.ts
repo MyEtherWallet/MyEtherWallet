@@ -23,7 +23,7 @@ const store = {
   watchOnlyAddresses: { EVM: [], BITCOIN: [] },
   connectionOrder: [] as string[],
 }
-const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref('MetaMask'), totalFiatPortfolioValueBN: ref(130.23), tokens: ref([{}, {}]), isLoadingBalances: ref(false), setIsLoadingBalances: vi.fn(), refreshBalances: vi.fn(), walletAddress: '0xA000000000000000000000000000000000000001', isWatchOnly: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
+const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref('MetaMask'), totalFiatPortfolioValueBN: ref(130.23), tokens: ref([{}, {}]), isLoadingBalances: ref(false), setIsLoadingBalances: vi.fn(), refreshBalances: vi.fn(), walletAddress: ref('0xA000000000000000000000000000000000000001'), isWatchOnly: false, isWalletConnected: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
 
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
@@ -267,6 +267,32 @@ describe('TheManageAccounts', () => {
     } finally {
       store.allAccounts = original
       store.connectionOrder = []
+    }
+  })
+
+  it('shows the unsaved-address note when the connected address is over the cap', () => {
+    const origAddr = walletStore.walletAddress.value
+    walletStore.isWalletConnected = true
+    walletStore.isWatchOnly = false
+    walletStore.walletAddress.value = '0xNOTSAVED' // not in allAccounts (0x1 / 0x2)
+    try {
+      expect(factory().find('[data-test="over-cap-note"]').exists()).toBe(true)
+    } finally {
+      walletStore.walletAddress.value = origAddr
+      walletStore.isWalletConnected = false
+    }
+  })
+
+  it('hides the unsaved-address note when the connected address is saved', () => {
+    const origAddr = walletStore.walletAddress.value
+    walletStore.isWalletConnected = true
+    walletStore.isWatchOnly = false
+    walletStore.walletAddress.value = '0x1' // present in allAccounts
+    try {
+      expect(factory().find('[data-test="over-cap-note"]').exists()).toBe(false)
+    } finally {
+      walletStore.walletAddress.value = origAddr
+      walletStore.isWalletConnected = false
     }
   })
 

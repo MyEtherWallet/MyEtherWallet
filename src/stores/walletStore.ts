@@ -176,22 +176,36 @@ export const useWalletStore = defineStore('walletStore', () => {
     if (wallet.value) {
       const watchOnlyStore = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
+      const type = selectedChain.value!.type
       walletAddress.value = await wallet.value.getAddress()
       watchOnlyStore.addWallet(
         walletAddress.value,
         selectedChain.value!,
         wallet.value.getWalletType(),
-        selectedChain.value!.type,
+        type,
         walletName.value,
       )
-      // Only a real (signing) connection updates the connection-recency stack that
-      // floats the connected address to the top of its manage-accounts group and
-      // keeps it there. Watch-only views (address selection) must not reorder.
-      if (!isWatchOnly.value)
-        watchOnlyStore.recordConnection(
-          walletAddress.value,
-          selectedChain.value!.type,
-        )
+      // Watch-only views (address selection) must never reorder or warn.
+      if (isWatchOnly.value) return
+      const addr = walletAddress.value.toLowerCase()
+      const saved = (watchOnlyStore.watchOnlyAddresses[type] ?? []).some(
+        e => e.address.toLowerCase() === addr,
+      )
+      if (saved) {
+        // A real connection floats the address to the top of its manage-accounts
+        // group (connection-recency stack) and keeps it there.
+        watchOnlyStore.recordConnection(walletAddress.value, type)
+      } else {
+        // The address couldn't be saved → the 20-address cap was hit (addWallet
+        // silently drops it). Surface a persistent info toast, distinct from the
+        // connect-success toast, so the user knows it wasn't saved.
+        useToastStore().addToastMessage({
+          type: ToastType.Info,
+          text: i18n.global.t('multi_address.cap_toast_title'),
+          textSecondary: i18n.global.t('multi_address.cap_toast_description'),
+          isInfinite: true,
+        })
+      }
     }
   }
 

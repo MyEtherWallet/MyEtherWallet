@@ -108,6 +108,20 @@
                       {{ $t('multi_address.no_address_subtitle') }}
                     </p>
                   </div>
+                  <!-- Over-cap: the connected address couldn't be saved. Fused under
+                       the card inside the same rounded container. -->
+                  <div
+                    v-if="isOverCap"
+                    data-test="over-cap-note"
+                    class="flex flex-col items-center gap-1 px-5 pb-5 pt-1 text-center"
+                  >
+                    <p class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]">
+                      {{ $t('multi_address.cap_note_title') }}
+                    </p>
+                    <p class="text-s-14 text-[#575757] leading-5">
+                      {{ $t('multi_address.cap_note_description') }}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -384,6 +398,16 @@ const {
   tokens,
   isLoadingBalances,
 } = storeToRefs(walletStore)
+
+// Over the 20-address cap: a real (signing) connection whose address isn't in the
+// saved list (addWallet dropped it). The card still shows it via the activeAccount
+// fallback; this drives the "unsaved address" note fused under the card.
+const isOverCap = computed<boolean>(() => {
+  const addr = walletAddress.value?.toLowerCase()
+  if (!addr || walletStore.isWatchOnly || !walletStore.isWalletConnected)
+    return false
+  return !allAccounts.value.some(a => a.address.toLowerCase() === addr)
+})
 
 // The detected address comes from the currently-connected extension wallet, so
 // label it with that wallet's name/icon.
