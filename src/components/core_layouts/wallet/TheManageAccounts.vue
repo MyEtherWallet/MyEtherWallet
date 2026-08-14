@@ -138,9 +138,9 @@
                         <span class="text-s-14 text-[#575757] leading-5">
                           {{ $t('multi_address.saved_group', { type: group.label }) }} ({{ group.accounts.length }})
                         </span>
-                        <chevron-right-icon
+                        <chevron-down-icon
                           class="w-5 h-5 text-[#575757] flex-shrink-0 transition-transform duration-200"
-                          :class="{ 'rotate-90': !collapsed[group.type] }"
+                          :class="{ 'rotate-180': !collapsed[group.type] }"
                         />
                       </button>
                       <expand-transition>
@@ -275,7 +275,7 @@ import { ref, computed, watch, nextTick, onUnmounted, type CSSProperties } from 
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
