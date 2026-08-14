@@ -32,9 +32,16 @@ const {
   isWalletConnected,
   walletAddress,
   isLoadingBalances,
-  hasBalances,
+  totalFiatPortfolioValueBN,
   formattedTotalFiatPortfolioValue,
 } = storeToRefs(walletStore)
+
+// "assets" only when the portfolio is actually worth something. `hasBalances`
+// is true for dust / price-less tokens (balanceWei > 0 but $0 value), which is
+// why a chain like BNB showed "$0.00" instead of the empty state.
+const hasValue = computed(() =>
+  totalFiatPortfolioValueBN.value.isGreaterThan(0),
+)
 const { selectedChain } = storeToRefs(useChainsStore())
 const globalStore = useGlobalStore()
 const { hideBalances } = storeToRefs(globalStore)
@@ -70,24 +77,27 @@ type State = 'notconnected' | 'initialLoading' | 'noassets' | 'assets'
 const state = computed<State>(() => {
   if (!isWalletConnected.value) return 'notconnected'
   if (isLoadingBalances.value && !hasLoadedOnce.value) return 'initialLoading'
-  if (!hasBalances.value) return 'noassets'
+  if (!hasValue.value) return 'noassets'
   return 'assets'
 })
 
 const percentChange = computed(() => lastTwentyFourHours.value.percentChange)
 const isUp = computed(() => !percentChange.value.isNegative())
 
-const MASKED_FIAT = '$***.**'
-const MASKED_PERCENT = '*.**%'
+// Mask by replacing only the digits with `*`, preserving the string's length
+// and shape (symbol, separators). Same character count ⇒ same width ⇒ the
+// masked value wraps exactly like the real one (no extra line when hidden).
+const maskDigits = (value: string) => value.replace(/\d/g, '*')
 
 const totalText = computed(() =>
-  hideBalances.value ? MASKED_FIAT : formattedTotalFiatPortfolioValue.value,
-)
-const percentText = computed(() =>
   hideBalances.value
-    ? MASKED_PERCENT
-    : `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}%`,
+    ? maskDigits(formattedTotalFiatPortfolioValue.value)
+    : formattedTotalFiatPortfolioValue.value,
 )
+const percentText = computed(() => {
+  const shown = `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}%`
+  return hideBalances.value ? maskDigits(shown) : shown
+})
 
 const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
 </script>
@@ -100,7 +110,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
   >
     <!-- ============ NOT CONNECTED ============ -->
     <template v-if="state === 'notconnected'">
-      <div class="flex w-full flex-col gap-2" data-test="hero-portfolio-notconnected">
+      <div
+        class="flex w-full flex-col gap-2"
+        data-test="hero-portfolio-notconnected"
+      >
         <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
@@ -142,7 +155,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
           @click="toggleHideBalances"
         >
-          <component :is="hideBalances ? EyeSlashIcon : EyeIcon" class="size-6" />
+          <component
+            :is="hideBalances ? EyeSlashIcon : EyeIcon"
+            class="size-6"
+          />
         </button>
         <AppTooltip
           :text="t('homePage.hero.refreshTooltip')"
@@ -168,7 +184,9 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <!-- Address chip -->
         <div class="flex items-center gap-1">
           <template v-if="state === 'initialLoading'">
-            <div class="size-5 shrink-0 animate-pulse rounded-md bg-[#e6e6e6]" />
+            <div
+              class="size-5 shrink-0 animate-pulse rounded-md bg-[#e6e6e6]"
+            />
             <div class="h-5 w-[101px] animate-pulse rounded-md bg-[#e6e6e6]" />
             <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
             <div class="h-5 w-[72px] animate-pulse rounded-md bg-[#e6e6e6]" />
@@ -264,7 +282,9 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
       <div v-else class="flex w-full items-end justify-between">
         <div v-if="state === 'initialLoading'" class="flex items-center gap-1">
           <div class="size-[22px] animate-pulse rounded-md bg-[#e6e6e6]" />
-          <div class="h-[22px] w-[85px] animate-pulse rounded-md bg-[#e6e6e6]" />
+          <div
+            class="h-[22px] w-[85px] animate-pulse rounded-md bg-[#e6e6e6]"
+          />
         </div>
         <div
           v-else
@@ -275,12 +295,20 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
             :is="isUp ? ArrowUpIcon : ArrowDownIcon"
             class="size-[22px]"
             :class="
-              hideBalances ? 'text-[#a5a5a5]' : isUp ? 'text-success' : 'text-error'
+              hideBalances
+                ? 'text-[#a5a5a5]'
+                : isUp
+                  ? 'text-success'
+                  : 'text-error'
             "
           />
           <span
             :class="
-              hideBalances ? 'text-[#a5a5a5]' : isUp ? 'text-success' : 'text-error'
+              hideBalances
+                ? 'text-[#a5a5a5]'
+                : isUp
+                  ? 'text-success'
+                  : 'text-error'
             "
             >{{ percentText }}</span
           >

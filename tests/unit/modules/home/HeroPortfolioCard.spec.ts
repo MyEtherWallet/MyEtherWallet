@@ -24,7 +24,7 @@ vi.mock('@/stores/walletStore', async () => {
       isWalletConnected: r(false),
       walletAddress: r<string | null>(null),
       isLoadingBalances: r(false),
-      hasBalances: r(false),
+      totalFiatPortfolioValueBN: r(new BigNumber(0)),
       formattedTotalFiatPortfolioValue: r('$64.12'),
     })),
   }
@@ -146,7 +146,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     setWallet({
       isWalletConnected: true,
       isLoadingBalances: false,
-      hasBalances: false,
+      totalFiatPortfolioValueBN: new BigNumber(0),
     })
     const w = mountCard()
     expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(true)
@@ -159,7 +159,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     setWallet({
       isWalletConnected: true,
       isLoadingBalances: false,
-      hasBalances: true,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
       walletAddress: '0x71C8000000000000000000000000000000000389a',
     })
     const w = mountCard()
@@ -172,14 +172,20 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
   })
 
   it('shows the long (non-caps) network name — MEW-2150 A', () => {
-    setWallet({ isWalletConnected: true, hasBalances: true })
+    setWallet({
+      isWalletConnected: true,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
+    })
     const network = mountCard().get('[data-test="hero-network"]')
     expect(network.text()).toBe('Ethereum')
     expect(network.text()).not.toBe('ETHEREUM')
   })
 
   it('spins the refresh icon and refetches on click — MEW-2150 C', async () => {
-    setWallet({ isWalletConnected: true, hasBalances: false })
+    setWallet({
+      isWalletConnected: true,
+      totalFiatPortfolioValueBN: new BigNumber(0),
+    })
     const w = mountCard()
     await w.get('[data-test="hero-refresh"]').trigger('click')
     expect(refreshBalances).toHaveBeenCalledTimes(1)
@@ -194,7 +200,10 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     const w = mountCard()
     expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(false)
     // First load completes with no assets.
-    setWallet({ isLoadingBalances: false, hasBalances: false })
+    setWallet({
+      isLoadingBalances: false,
+      totalFiatPortfolioValueBN: new BigNumber(0),
+    })
     await nextTick()
     expect(w.find('[data-test="hero-portfolio-noassets"]').exists()).toBe(true)
     // Refresh: stays on the no-assets layout (no separate loading screen).
@@ -208,7 +217,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     const w = mountCard()
     setWallet({
       isLoadingBalances: false,
-      hasBalances: true,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
       walletAddress: '0x71C8000000000000000000000000000000000389a',
     })
     await nextTick()
@@ -224,7 +233,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     setWallet({
       isWalletConnected: true,
       isLoadingBalances: false,
-      hasBalances: true,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
       walletAddress: '0x71C8000000000000000000000000000000000389a',
     })
     const w = mountCard()
@@ -233,7 +242,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     )
     await w.get('[data-test="hero-eye"]').trigger('click')
     const text = w.get('[data-test="hero-portfolio-assets"]').text()
-    expect(text).toContain('$***.**')
+    expect(text).toContain('$**.**')
     expect(text).not.toContain('$64.12')
     expect(w.get('[data-test="hero-today"]').text()).toContain('*.**%')
   })
