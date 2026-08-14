@@ -37,7 +37,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     :to="props.to"
     :type="props.to ? undefined : 'button'"
     data-test="rewards-card"
-    class="group relative flex h-[180px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] @7xl:h-[230px]"
+    class="group relative flex h-[180px] w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl bg-white p-5 text-left transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] @min-[1296px]:h-[230px]"
   >
     <!-- colored gradient background (per-card variant): the source images fade
          to white toward their bottom-left, so contain + right keeps the color a
@@ -64,7 +64,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     <div class="relative flex items-end gap-4">
       <!-- Compact (mobile / side-panel-open) headline; full size on wide layout. -->
       <div
-        class="flex min-w-0 flex-1 flex-col gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px] @7xl:text-s-28 @7xl:leading-8 @7xl:tracking-[-0.84px]"
+        class="flex min-w-0 flex-1 flex-col gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px] @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
       >
         <p data-test="rewards-title" class="text-black">{{ title }}</p>
         <p v-if="highlight" data-test="rewards-highlight" class="text-primary">

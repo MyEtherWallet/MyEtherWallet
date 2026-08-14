@@ -73,7 +73,9 @@ const newsDescription = (item: {
     </p>
     <template v-else>
       <div class="@container">
-        <div class="grid grid-cols-1 gap-6 @2xl:grid-cols-2 @5xl:grid-cols-3">
+        <div
+          class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1136px]:grid-cols-3"
+        >
           <AppNewsCard
             v-for="n in pageItems"
             :key="n.articleUrl"

@@ -121,10 +121,16 @@ onMounted(fetchTrending)
            the two trending side-by-side in a row below,
          - narrow: fully stacked. -->
     <div class="@container">
+      <!-- Jumps map to viewport ~768 / ~1440 (container = viewport − ~144px of
+           rail + section padding): stacked → balance-top + 2 trending (2 cols)
+           → 3 columns. The side panel shrinks the container, so it collapses
+           early when open. -->
       <div
-        class="grid grid-cols-1 gap-6 @xl:grid-cols-2 @5xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
+        class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1296px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
       >
-        <HeroPortfolioCard class="@xl:col-span-2 @5xl:col-span-1" />
+        <HeroPortfolioCard
+          class="@min-[624px]:col-span-2 @min-[1296px]:col-span-1"
+        />
         <HeroTrendingCard
           :title="t('homePage.hero.trendingStocks')"
           :see-all-to="{ name: ROUTES_MAIN.STOCKS.NAME }"
