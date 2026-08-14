@@ -13,6 +13,7 @@
       "makeDeposit": "Make a deposit",
       "buyCrypto": "Buy crypto",
       "toggleBalance": "Toggle balance visibility",
+      "refreshTooltip": "Refresh balance (updates every 2 min)",
       "trendingStocks": "Trending stocks",
       "trendingCrypto": "Trending crypto",
       "last24h": "Last 24h",

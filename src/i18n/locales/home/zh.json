@@ -13,6 +13,7 @@
       "makeDeposit": "存入",
       "buyCrypto": "购买加密货币",
       "toggleBalance": "切换余额显示",
+      "refreshTooltip": "刷新余额（每 2 分钟更新）",
       "trendingStocks": "热门股票",
       "trendingCrypto": "热门加密货币",
       "last24h": "最近 24 小时",

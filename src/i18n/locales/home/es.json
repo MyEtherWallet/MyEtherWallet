@@ -13,6 +13,7 @@
       "makeDeposit": "Hacer un depósito",
       "buyCrypto": "Comprar cripto",
       "toggleBalance": "Mostrar u ocultar saldo",
+      "refreshTooltip": "Actualizar saldo (se actualiza cada 2 min)",
       "trendingStocks": "Acciones en tendencia",
       "trendingCrypto": "Cripto en tendencia",
       "last24h": "Últimas 24h",

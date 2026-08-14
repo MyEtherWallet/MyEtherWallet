@@ -22,6 +22,7 @@ import { truncateAddress } from '@/utils/filters'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -143,18 +144,23 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         >
           <component :is="hideBalances ? EyeSlashIcon : EyeIcon" class="size-6" />
         </button>
-        <button
-          type="button"
-          data-test="hero-refresh"
-          :aria-label="t('refresh_balance')"
-          class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
-          @click="onRefresh"
+        <AppTooltip
+          :text="t('homePage.hero.refreshTooltip')"
+          position="bottom-left"
         >
-          <ArrowPathIcon
-            class="size-6"
-            :class="{ 'animate-spin': isRefreshing }"
-          />
-        </button>
+          <button
+            type="button"
+            data-test="hero-refresh"
+            :aria-label="t('refresh_balance')"
+            class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
+            @click="onRefresh"
+          >
+            <ArrowPathIcon
+              class="size-6"
+              :class="{ 'animate-spin': isRefreshing }"
+            />
+          </button>
+        </AppTooltip>
       </div>
 
       <!-- Top group: chip + headline/subtitle -->
