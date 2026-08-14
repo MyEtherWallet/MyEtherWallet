@@ -97,7 +97,7 @@
       "subtitle": "¡Gana recompensas por usar MEW!",
       "category": { "trade": "Trading", "buy": "Comprar", "hold": "Mantener" },
       "items": {
-        "trade": { "title": "Opera +$250", "highlight": "Gana 5 USDC" },
+        "trade": { "title": "Opera +$500", "highlight": "Gana 5 USDC" },
         "buy": { "title": "Compra cripto", "highlight": "Cero comisiones MEW" },
         "hold": { "title": "Opera y mantén", "highlight": "Gana 10 USDC" }
       }
