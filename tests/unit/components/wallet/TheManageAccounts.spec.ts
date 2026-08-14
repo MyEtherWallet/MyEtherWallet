@@ -216,9 +216,9 @@ describe('TheManageAccounts', () => {
     }
   })
 
-  it('floats the active address to the top of its group', () => {
+  it('floats the connected (signing) address to the top of its group', () => {
     const original = store.allAccounts
-    // Active account (EVM:0x1) is saved LAST; it must still render first.
+    // Connected account (EVM:0x1) is saved LAST; it must still render first.
     store.allAccounts = [
       { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
       { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
@@ -228,6 +228,25 @@ describe('TheManageAccounts', () => {
       expect(rows[0].attributes('data-id')).toBe('EVM:0x1')
     } finally {
       store.allAccounts = original
+    }
+  })
+
+  it('does NOT reorder when the active address is only viewed (watch-only)', () => {
+    const original = store.allAccounts
+    const originalActive = store.activeAccount
+    // The active address (EVM:0x2) is watch-only (selected/viewed, not connected):
+    // nothing is "signing", so insertion order must be preserved — 0x1 stays first.
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+    ]
+    store.activeAccount = store.allAccounts[1] // EVM:0x2 active but watch-only
+    try {
+      const rows = factory().findAll('[data-test="group-body-EVM"] .row')
+      expect(rows.map(r => r.attributes('data-id'))).toEqual(['EVM:0x1', 'EVM:0x2'])
+    } finally {
+      store.allAccounts = original
+      store.activeAccount = originalActive
     }
   })
 
