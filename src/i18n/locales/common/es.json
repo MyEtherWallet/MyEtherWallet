@@ -299,7 +299,7 @@
     "title": "Seleccionar red",
     "search_placeholder": "Buscar por nombre",
     "incompatible_tooltip": "Para acceder a estas redes, usa otra billetera o instala la extensión de navegador Enkrypt",
-    "incompatible_title": "Redes incompatibles con tu billetera"
+    "incompatible_title": "Redes incompatibles con tu dirección"
   },
   "search": {
     "placeholder": "Buscar acciones, cripto",
