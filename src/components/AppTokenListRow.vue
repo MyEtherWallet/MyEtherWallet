@@ -41,6 +41,7 @@ const changeText = computed(() =>
       :is-stock="isStock"
       width="size-8"
       height="size-8"
+      no-ring
       class="shrink-0"
     />
     <div class="flex min-w-0 flex-1 flex-col">
