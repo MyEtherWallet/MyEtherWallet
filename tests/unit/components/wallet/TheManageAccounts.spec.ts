@@ -216,17 +216,16 @@ describe('TheManageAccounts', () => {
     }
   })
 
-  it('keeps rows in saved (insertion) order — never reorders, even the connected one', () => {
+  it('floats the active address to the top of its group', () => {
     const original = store.allAccounts
-    // The connected (signing) address is saved LAST; it must STAY last (the popup
-    // scrolls to it instead of floating it to the top).
+    // Active account (EVM:0x1) is saved LAST; it must still render first.
     store.allAccounts = [
       { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
       { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
     ]
     try {
       const rows = factory().findAll('[data-test="group-body-EVM"] .row')
-      expect(rows.map(r => r.attributes('data-id'))).toEqual(['EVM:0x2', 'EVM:0x1'])
+      expect(rows[0].attributes('data-id')).toBe('EVM:0x1')
     } finally {
       store.allAccounts = original
     }
