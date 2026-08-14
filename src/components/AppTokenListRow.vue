@@ -32,7 +32,7 @@ const changeText = computed(() =>
 <template>
   <div
     data-test="token-list-row"
-    class="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 transition-colors hover:bg-[#f7f7f7]"
+    class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
     @click="$emit('select')"
   >
     <AppTokenLogo
