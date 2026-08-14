@@ -22,6 +22,7 @@ const store = {
   renameAccount, tryAddAddress, backfill,
   watchOnlyAddresses: { EVM: [], BITCOIN: [] },
   connectionOrder: [] as string[],
+  isAtCap: false,
 }
 const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref('MetaMask'), totalFiatPortfolioValueBN: ref(130.23), tokens: ref([{}, {}]), isLoadingBalances: ref(false), setIsLoadingBalances: vi.fn(), refreshBalances: vi.fn(), walletAddress: ref('0xA000000000000000000000000000000000000001'), isWatchOnly: false, isWalletConnected: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
 
@@ -140,6 +141,16 @@ describe('TheManageAccounts', () => {
 
   it('hides the detected footer when there is no detected address', () => {
     expect(factory().find('[data-test="save-detected"]').exists()).toBe(false)
+  })
+
+  it('hides the detected footer when already at the address cap', () => {
+    walletStore.detectedAddress.value = '0x9a8b'
+    store.isAtCap = true
+    try {
+      expect(factory().find('[data-test="save-detected"]').exists()).toBe(false)
+    } finally {
+      store.isAtCap = false
+    }
   })
 
   it('hides the detected footer when the detected address is already saved', () => {

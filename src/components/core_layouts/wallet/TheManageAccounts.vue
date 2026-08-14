@@ -184,7 +184,9 @@
 
               <!-- Section 3: detected footer + connect-another -->
               <div class="shrink-0 p-4">
-                <div v-if="detectedAddress && !detectedIsSaved" class="mb-4 flex items-center gap-2 px-2">
+                <!-- Hide the "save this address?" prompt at the cap: saving would
+                     fail, so the prompt makes no sense there. -->
+                <div v-if="detectedAddress && !detectedIsSaved && !watchOnlyStore.isAtCap" class="mb-4 flex items-center gap-2 px-2">
                   <div class="flex-1 min-w-0">
                     <p class="text-s-12 text-[#575757] leading-[18px]">
                       {{ $t('multi_address.detected_wallet', { wallet: detectedWalletName }) }}

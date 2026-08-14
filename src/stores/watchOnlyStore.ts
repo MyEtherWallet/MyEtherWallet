@@ -17,6 +17,7 @@ import {
   isNameUnique,
   backfillNames,
   toSavedAccount,
+  SAVED_ACCOUNTS_CAP,
   type RecentAddress,
   type PersistedEntry,
   type SavedAccount,
@@ -111,7 +112,9 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   )
 
   const isAtCap = computed<boolean>(
-    () => Object.values(watchOnlyAddresses.value).flat().length >= 20,
+    () =>
+      Object.values(watchOnlyAddresses.value).flat().length >=
+      SAVED_ACCOUNTS_CAP,
   )
 
   const makeEntry = (
