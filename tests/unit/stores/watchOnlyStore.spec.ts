@@ -116,4 +116,15 @@ describe('watchOnlyStore (extended)', () => {
     s.backfill()
     expect(s.watchOnlyAddresses.EVM[0].addressName).toBe('Address 1')
   })
+
+  it('recordConnection pushes newest-first and dedupes (connection-recency stack)', () => {
+    const s = useWatchOnlyStore()
+    s.recordConnection('0xAAA', 'EVM')
+    s.recordConnection('0xBBB', 'EVM')
+    // Newest connection (BBB) is first; the previous one is pushed below.
+    expect(s.connectionOrder).toEqual(['EVM:0xbbb', 'EVM:0xaaa'])
+    // Re-connecting an existing address moves it back to the top (no duplicate).
+    s.recordConnection('0xAAA', 'EVM')
+    expect(s.connectionOrder).toEqual(['EVM:0xaaa', 'EVM:0xbbb'])
+  })
 })

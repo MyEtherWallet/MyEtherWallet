@@ -421,11 +421,11 @@ const chainsStore = useChainsStore()
 
 // Two saved-address groups, one per chain type. EVM and Bitcoin balances can't be
 // fetched cross-type, so the list is split: the active address's group is shown
-// first and expanded by default, the other collapsed. The CONNECTED (signing)
-// address floats to the top of its group (TransitionGroup animates the move to
-// avoid a hard jump). Merely viewing/selecting a saved address is watch-only, so
-// it never becomes "signing" and the list order stays put — only connecting
-// reorders.
+// first and expanded by default, the other collapsed. Within a group, rows are
+// ordered by CONNECTION RECENCY — the most-recently-connected address floats to the
+// top and STAYS there (selecting/viewing or disconnecting never moves it); a NEW
+// connection pushes it down like a stack. Never-connected addresses keep their
+// saved (insertion) order below. TransitionGroup animates the move.
 const CHAIN_LABEL: Record<string, string> = { EVM: 'EVM', BITCOIN: 'Bitcoin' }
 const activeChainType = computed<ChainType | undefined>(
   () => chainsStore.selectedChain?.type as ChainType | undefined,
@@ -434,10 +434,14 @@ type AccountGroup = {
   type: string
   label: string
   accounts: SavedAccount[]
-  active: boolean
 }
 const groups = computed<AccountGroup[]>(() => {
   const activeType = activeChainType.value ?? 'EVM'
+  const connOrder = watchOnlyStore.connectionOrder
+  const rank = (acc: SavedAccount): number => {
+    const i = connOrder.indexOf(acc.id)
+    return i === -1 ? connOrder.length : i
+  }
   const buckets = new Map<string, SavedAccount[]>()
   for (const acc of allAccounts.value) {
     const arr = buckets.get(acc.chainType) ?? []
@@ -450,12 +454,9 @@ const groups = computed<AccountGroup[]>(() => {
     .map(type => ({
       type,
       label: CHAIN_LABEL[type] ?? type,
-      // Connected (signing) address first; the rest keep insertion order. Keyed on
-      // `kind`, not on the active id, so viewing a watch-only address never floats it.
-      accounts: [...buckets.get(type)!].sort(
-        (a, b) => Number(b.kind === 'signing') - Number(a.kind === 'signing'),
-      ),
-      active: type === activeType,
+      // Stable sort: connected addresses ranked by recency (index 0 = most recent
+      // = top); never-connected share the trailing rank so they keep insertion order.
+      accounts: [...buckets.get(type)!].sort((a, b) => rank(a) - rank(b)),
     }))
 })
 

@@ -21,6 +21,7 @@ const store = {
   ],
   renameAccount, tryAddAddress, backfill,
   watchOnlyAddresses: { EVM: [], BITCOIN: [] },
+  connectionOrder: [] as string[],
 }
 const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref('MetaMask'), totalFiatPortfolioValueBN: ref(130.23), tokens: ref([{}, {}]), isLoadingBalances: ref(false), setIsLoadingBalances: vi.fn(), refreshBalances: vi.fn(), walletAddress: '0xA000000000000000000000000000000000000001', isWatchOnly: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
 
@@ -216,37 +217,56 @@ describe('TheManageAccounts', () => {
     }
   })
 
-  it('floats the connected (signing) address to the top of its group', () => {
+  it('floats the most-recently-connected address to the top of its group', () => {
     const original = store.allAccounts
-    // Connected account (EVM:0x1) is saved LAST; it must still render first.
+    // EVM:0x1 is saved LAST but was the last connection → it must render first.
     store.allAccounts = [
       { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
       { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
     ]
+    store.connectionOrder = ['EVM:0x1']
     try {
       const rows = factory().findAll('[data-test="group-body-EVM"] .row')
       expect(rows[0].attributes('data-id')).toBe('EVM:0x1')
     } finally {
       store.allAccounts = original
+      store.connectionOrder = []
     }
   })
 
-  it('does NOT reorder when the active address is only viewed (watch-only)', () => {
+  it('keeps a connected address at the top after selecting/viewing another (no reorder on select)', () => {
     const original = store.allAccounts
-    const originalActive = store.activeAccount
-    // The active address (EVM:0x2) is watch-only (selected/viewed, not connected):
-    // nothing is "signing", so insertion order must be preserved — 0x1 stays first.
+    // EVM:0x1 was connected (in the order stack) then EVM:0x2 is merely viewed; the
+    // view is watch-only and never enters the stack, so 0x1 stays first.
     store.allAccounts = [
       { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
       { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
     ]
-    store.activeAccount = store.allAccounts[1] // EVM:0x2 active but watch-only
+    store.connectionOrder = ['EVM:0x1'] // 0x1 connected earlier; 0x2 only viewed
     try {
       const rows = factory().findAll('[data-test="group-body-EVM"] .row')
       expect(rows.map(r => r.attributes('data-id'))).toEqual(['EVM:0x1', 'EVM:0x2'])
     } finally {
       store.allAccounts = original
-      store.activeAccount = originalActive
+      store.connectionOrder = []
+    }
+  })
+
+  it('stacks connections newest-first, pushing the previous one down', () => {
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+      { id: 'EVM:0x3', address: '0x3', addressName: 'A3', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+    ]
+    // Connected 0x1 first, then 0x2 (newest) → [0x2, 0x1, then never-connected 0x3].
+    store.connectionOrder = ['EVM:0x2', 'EVM:0x1']
+    try {
+      const rows = factory().findAll('[data-test="group-body-EVM"] .row')
+      expect(rows.map(r => r.attributes('data-id'))).toEqual(['EVM:0x2', 'EVM:0x1', 'EVM:0x3'])
+    } finally {
+      store.allAccounts = original
+      store.connectionOrder = []
     }
   })
 

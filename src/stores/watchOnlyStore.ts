@@ -30,6 +30,16 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     { mergeDefaults: true },
   )
 
+  // Most-recently-CONNECTED address ids, newest first. Connecting an address pushes
+  // it to the front (a stack); selecting/viewing or disconnecting never touches it,
+  // so a connected address keeps its position until a NEW connection pushes it down.
+  // Persisted so the order survives reloads.
+  const connectionOrder = useLocalStorage<string[]>('connectionOrder', [])
+  const recordConnection = (address: string, type: ChainType): void => {
+    const id = buildId(type, address)
+    connectionOrder.value = [id, ...connectionOrder.value.filter(x => x !== id)]
+  }
+
   const walletStore = useWalletStore()
   const chainsStore = useChainsStore()
 
@@ -196,6 +206,8 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
 
   return {
     watchOnlyAddresses,
+    connectionOrder,
+    recordConnection,
     addWallet,
     tryAddAddress,
     removeWallet,

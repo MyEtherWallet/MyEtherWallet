@@ -174,16 +174,24 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
-      const { addWallet: _addWallet } = useWatchOnlyStore()
+      const watchOnlyStore = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
-      _addWallet(
+      watchOnlyStore.addWallet(
         walletAddress.value,
         selectedChain.value!,
         wallet.value.getWalletType(),
         selectedChain.value!.type,
         walletName.value,
       )
+      // Only a real (signing) connection updates the connection-recency stack that
+      // floats the connected address to the top of its manage-accounts group and
+      // keeps it there. Watch-only views (address selection) must not reorder.
+      if (!isWatchOnly.value)
+        watchOnlyStore.recordConnection(
+          walletAddress.value,
+          selectedChain.value!.type,
+        )
     }
   }
 
