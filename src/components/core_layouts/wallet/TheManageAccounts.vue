@@ -114,30 +114,49 @@
               <!-- Section 2: all-accounts list -->
               <div class="relative flex-1 min-h-0">
                 <div ref="scrollContainer" class="h-full overflow-y-auto px-2">
-                  <div class="p-4">
-                    <p class="text-s-14 text-[#575757]">
-                      {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
-                    </p>
-                  </div>
-                  <template v-if="allAccounts.length">
-                    <manage-accounts-row
-                      v-for="acc in allAccounts"
-                      :key="acc.id"
-                      :account="acc"
-                      :is-active="acc.id === activeAccount?.id"
-                      :balance="balanceFor(acc)"
-                      :balance-loading="balanceLoadingFor(acc)"
-                      :scroll-root="scrollContainer"
-                      @visibility-change="onRowVisibility(acc, $event)"
-                      @select="onSelect(acc)"
-                      @copy="copy(acc.address)"
-                      @refresh="refresh(acc)"
-                      @rename="onRenameRequest(acc)"
-                      @paper="onPaper(acc)"
-                      @explorer="openExplorer(acc)"
-                      @disconnect="onDisconnect"
-                      @delete="onDelete(acc)"
-                    />
+                  <template v-if="groups.length">
+                    <div v-for="group in groups" :key="group.type" class="pt-2">
+                      <button
+                        :data-test="`group-header-${group.type}`"
+                        class="flex items-center justify-between w-full px-4 py-3 text-left"
+                        @click="toggleGroup(group.type)"
+                      >
+                        <span class="text-s-14 text-[#575757] leading-5">
+                          {{ $t('multi_address.saved_group', { type: group.label }) }} ({{ group.accounts.length }})
+                        </span>
+                        <chevron-right-icon
+                          class="w-5 h-5 text-[#575757] flex-shrink-0 transition-transform duration-200"
+                          :class="{ 'rotate-90': !collapsed[group.type] }"
+                        />
+                      </button>
+                      <expand-transition>
+                        <div
+                          v-if="!collapsed[group.type]"
+                          :data-test="`group-body-${group.type}`"
+                        >
+                          <transition-group tag="div" name="acct-row">
+                            <manage-accounts-row
+                              v-for="acc in group.accounts"
+                              :key="acc.id"
+                              :account="acc"
+                              :is-active="acc.id === activeAccount?.id"
+                              :balance="balanceFor(acc)"
+                              :balance-loading="balanceLoadingFor(acc)"
+                              :scroll-root="scrollContainer"
+                              @visibility-change="onRowVisibility(acc, $event)"
+                              @select="onSelect(acc)"
+                              @copy="copy(acc.address)"
+                              @refresh="refresh(acc)"
+                              @rename="onRenameRequest(acc)"
+                              @paper="onPaper(acc)"
+                              @explorer="openExplorer(acc)"
+                              @disconnect="onDisconnect"
+                              @delete="onDelete(acc)"
+                            />
+                          </transition-group>
+                        </div>
+                      </expand-transition>
+                    </div>
                   </template>
                   <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
                   <div class="pb-10" />
@@ -250,6 +269,7 @@ import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAc
 import ManageAccountsConnectAddressView from '@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
+import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
@@ -346,10 +366,9 @@ watch(openDialog, val => {
 const watchOnlyStore = useWatchOnlyStore()
 const { refreshDetectedAddress } = useDetectedAddress()
 const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
-// Stable, insertion-ordered list (active is highlighted in place, never moved to the
-// top) so selecting an address does NOT reorder the list.
+// All saved addresses across chain types (insertion order preserved per bucket).
+// The template splits them into collapsible per-chain-type groups; see `groups`.
 const allAccounts = computed<SavedAccount[]>(() => watchOnlyStore.allAccounts)
-const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
@@ -399,6 +418,60 @@ watch(walletAddress, async () => {
   posTick.value += 1
 })
 const chainsStore = useChainsStore()
+
+// Two saved-address groups, one per chain type. EVM and Bitcoin balances can't be
+// fetched cross-type, so the list is split: the active address's group is shown
+// first and expanded by default, the other collapsed. The connected address floats
+// to the top of its group (TransitionGroup animates the move to avoid a hard jump).
+const CHAIN_LABEL: Record<string, string> = { EVM: 'EVM', BITCOIN: 'Bitcoin' }
+const activeChainType = computed<ChainType | undefined>(
+  () => chainsStore.selectedChain?.type as ChainType | undefined,
+)
+type AccountGroup = {
+  type: string
+  label: string
+  accounts: SavedAccount[]
+  active: boolean
+}
+const groups = computed<AccountGroup[]>(() => {
+  const activeType = activeChainType.value ?? 'EVM'
+  const buckets = new Map<string, SavedAccount[]>()
+  for (const acc of allAccounts.value) {
+    const arr = buckets.get(acc.chainType) ?? []
+    arr.push(acc)
+    buckets.set(acc.chainType, arr)
+  }
+  const order = activeType === 'BITCOIN' ? ['BITCOIN', 'EVM'] : ['EVM', 'BITCOIN']
+  return order
+    .filter(type => (buckets.get(type)?.length ?? 0) > 0)
+    .map(type => ({
+      type,
+      label: CHAIN_LABEL[type] ?? type,
+      // Active (connected) address first; the rest keep insertion order.
+      accounts: [...buckets.get(type)!].sort(
+        (a, b) =>
+          Number(b.id === activeAccount.value?.id) -
+          Number(a.id === activeAccount.value?.id),
+      ),
+      active: type === activeType,
+    }))
+})
+
+// Collapse state per group. Defaults are (re)applied whenever the popup opens or
+// the active chain type changes: active group expanded, the other collapsed.
+const collapsed = ref<Record<string, boolean>>({ EVM: false, BITCOIN: true })
+watch(
+  [openDialog, activeChainType],
+  ([open]) => {
+    if (!open) return
+    const active = activeChainType.value ?? 'EVM'
+    collapsed.value = { EVM: active !== 'EVM', BITCOIN: active !== 'BITCOIN' }
+  },
+  { immediate: true },
+)
+const toggleGroup = (type: string): void => {
+  collapsed.value = { ...collapsed.value, [type]: !collapsed.value[type] }
+}
 
 // Experiment: show the "connect address" prompt as an in-popup slide panel
 // (mirrors the ModuleAccessConnectAddress modal) instead of the dialog modal.
@@ -667,3 +740,21 @@ onClickOutside(popupRef, () => { openDialog.value = false }, {
   ignore: [anchorRef, '.app-popup-menu-floating'],
 })
 </script>
+
+<style scoped>
+/* FLIP move when the connected address floats to the top of its group, and a
+   light fade when a row is added/removed (save / delete). */
+.acct-row-move {
+  transition: transform 300ms cubic-bezier(0.25, 0.1, 0, 1);
+}
+.acct-row-enter-active,
+.acct-row-leave-active {
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+.acct-row-enter-from,
+.acct-row-leave-to {
+  opacity: 0;
+}
+</style>

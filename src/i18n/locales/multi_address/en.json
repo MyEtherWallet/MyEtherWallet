@@ -4,6 +4,7 @@
     "active": "Active",
     "saved": "Saved addresses",
     "your_addresses": "Your addresses",
+    "saved_group": "Saved {type} addresses",
     "add": "Add address",
     "connect_another": "Connect another wallet",
     "disconnect": "Disconnect",

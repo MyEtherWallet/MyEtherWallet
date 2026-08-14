@@ -172,6 +172,65 @@ describe('TheManageAccounts', () => {
     expect(w.findComponent({ name: 'ManageAccountsNetworkView' }).exists()).toBe(true)
   })
 
+  it('groups saved addresses by chain type; active group expanded, other collapsed', () => {
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' },
+    ]
+    try {
+      const w = factory()
+      // Selected chain is EVM → EVM is the active group (first + expanded).
+      // ($t is stubbed to echo the key, so assert on the per-group data-test +
+      // count rather than the interpolated label.)
+      expect(w.find('[data-test="group-header-EVM"]').exists()).toBe(true)
+      expect(w.find('[data-test="group-header-EVM"]').text()).toContain('(1)')
+      expect(w.find('[data-test="group-header-BITCOIN"]').exists()).toBe(true)
+      expect(w.find('[data-test="group-body-EVM"]').exists()).toBe(true)
+      expect(w.find('[data-test="group-body-BITCOIN"]').exists()).toBe(false)
+    } finally {
+      store.allAccounts = original
+    }
+  })
+
+  it('does not render a group with no saved addresses', () => {
+    // Default store has only EVM accounts → the Bitcoin group is absent entirely.
+    const w = factory()
+    expect(w.find('[data-test="group-header-EVM"]').exists()).toBe(true)
+    expect(w.find('[data-test="group-header-BITCOIN"]').exists()).toBe(false)
+  })
+
+  it('expands a collapsed group when its header is clicked', async () => {
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' },
+    ]
+    try {
+      const w = factory()
+      expect(w.find('[data-test="group-body-BITCOIN"]').exists()).toBe(false)
+      await w.get('[data-test="group-header-BITCOIN"]').trigger('click')
+      expect(w.find('[data-test="group-body-BITCOIN"]').exists()).toBe(true)
+    } finally {
+      store.allAccounts = original
+    }
+  })
+
+  it('floats the active address to the top of its group', () => {
+    const original = store.allAccounts
+    // Active account (EVM:0x1) is saved LAST; it must still render first.
+    store.allAccounts = [
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+    ]
+    try {
+      const rows = factory().findAll('[data-test="group-body-EVM"] .row')
+      expect(rows[0].attributes('data-id')).toBe('EVM:0x1')
+    } finally {
+      store.allAccounts = original
+    }
+  })
+
   it('fetches a visible non-active address (debounced); active is live and incompatible is skipped', () => {
     vi.useFakeTimers()
     const original = store.allAccounts
