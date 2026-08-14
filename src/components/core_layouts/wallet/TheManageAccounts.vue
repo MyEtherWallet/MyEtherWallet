@@ -134,26 +134,25 @@
                           v-if="!collapsed[group.type]"
                           :data-test="`group-body-${group.type}`"
                         >
-                          <transition-group tag="div" name="acct-row">
-                            <manage-accounts-row
-                              v-for="acc in group.accounts"
-                              :key="acc.id"
-                              :account="acc"
-                              :is-active="acc.id === activeAccount?.id"
-                              :balance="balanceFor(acc)"
-                              :balance-loading="balanceLoadingFor(acc)"
-                              :scroll-root="scrollContainer"
-                              @visibility-change="onRowVisibility(acc, $event)"
-                              @select="onSelect(acc)"
-                              @copy="copy(acc.address)"
-                              @refresh="refresh(acc)"
-                              @rename="onRenameRequest(acc)"
-                              @paper="onPaper(acc)"
-                              @explorer="openExplorer(acc)"
-                              @disconnect="onDisconnect"
-                              @delete="onDelete(acc)"
-                            />
-                          </transition-group>
+                          <manage-accounts-row
+                            v-for="acc in group.accounts"
+                            :key="acc.id"
+                            :data-connected-row="acc.kind === 'signing' || undefined"
+                            :account="acc"
+                            :is-active="acc.id === activeAccount?.id"
+                            :balance="balanceFor(acc)"
+                            :balance-loading="balanceLoadingFor(acc)"
+                            :scroll-root="scrollContainer"
+                            @visibility-change="onRowVisibility(acc, $event)"
+                            @select="onSelect(acc)"
+                            @copy="copy(acc.address)"
+                            @refresh="refresh(acc)"
+                            @rename="onRenameRequest(acc)"
+                            @paper="onPaper(acc)"
+                            @explorer="openExplorer(acc)"
+                            @disconnect="onDisconnect"
+                            @delete="onDelete(acc)"
+                          />
                         </div>
                       </expand-transition>
                     </div>
@@ -421,11 +420,9 @@ const chainsStore = useChainsStore()
 
 // Two saved-address groups, one per chain type. EVM and Bitcoin balances can't be
 // fetched cross-type, so the list is split: the active address's group is shown
-// first and expanded by default, the other collapsed. The CONNECTED (signing)
-// address floats to the top of its group (TransitionGroup animates the move to
-// avoid a hard jump). Merely viewing/selecting a saved address is watch-only, so
-// it never becomes "signing" and the list order stays put — only connecting
-// reorders.
+// first and expanded by default, the other collapsed. Rows keep their saved
+// (insertion) order — the connected address is never moved; instead the list
+// scrolls to bring it to the top of the viewport (see scrollConnectedIntoView).
 const CHAIN_LABEL: Record<string, string> = { EVM: 'EVM', BITCOIN: 'Bitcoin' }
 const activeChainType = computed<ChainType | undefined>(
   () => chainsStore.selectedChain?.type as ChainType | undefined,
@@ -434,7 +431,6 @@ type AccountGroup = {
   type: string
   label: string
   accounts: SavedAccount[]
-  active: boolean
 }
 const groups = computed<AccountGroup[]>(() => {
   const activeType = activeChainType.value ?? 'EVM'
@@ -450,12 +446,7 @@ const groups = computed<AccountGroup[]>(() => {
     .map(type => ({
       type,
       label: CHAIN_LABEL[type] ?? type,
-      // Connected (signing) address first; the rest keep insertion order. Keyed on
-      // `kind`, not on the active id, so viewing a watch-only address never floats it.
-      accounts: [...buckets.get(type)!].sort(
-        (a, b) => Number(b.kind === 'signing') - Number(a.kind === 'signing'),
-      ),
-      active: type === activeType,
+      accounts: buckets.get(type)!,
     }))
 })
 
@@ -474,6 +465,30 @@ watch(
 const toggleGroup = (type: string): void => {
   collapsed.value = { ...collapsed.value, [type]: !collapsed.value[type] }
 }
+
+// Rather than reordering rows, scroll the connected (signing) address to the top
+// of the list viewport when the popup opens or the connection changes. Only the
+// connected address is marked in the DOM (data-connected-row); viewing a saved
+// address is watch-only, so nothing scrolls on mere selection.
+const connectedId = computed<string | null>(
+  () => allAccounts.value.find(a => a.kind === 'signing')?.id ?? null,
+)
+const scrollConnectedIntoView = async (): Promise<void> => {
+  await nextTick()
+  const container = scrollContainer.value
+  const el = container?.querySelector<HTMLElement>('[data-connected-row]')
+  if (!container || !el) return
+  const delta =
+    el.getBoundingClientRect().top - container.getBoundingClientRect().top
+  container.scrollTo?.({ top: container.scrollTop + delta, behavior: 'smooth' })
+}
+watch(
+  [openDialog, connectedId],
+  ([open]) => {
+    if (open) void scrollConnectedIntoView()
+  },
+  { flush: 'post' },
+)
 
 // Experiment: show the "connect address" prompt as an in-popup slide panel
 // (mirrors the ModuleAccessConnectAddress modal) instead of the dialog modal.
@@ -742,21 +757,3 @@ onClickOutside(popupRef, () => { openDialog.value = false }, {
   ignore: [anchorRef, '.app-popup-menu-floating'],
 })
 </script>
-
-<style scoped>
-/* FLIP move when the connected address floats to the top of its group, and a
-   light fade when a row is added/removed (save / delete). */
-.acct-row-move {
-  transition: transform 300ms cubic-bezier(0.25, 0.1, 0, 1);
-}
-.acct-row-enter-active,
-.acct-row-leave-active {
-  transition:
-    opacity 200ms ease,
-    transform 200ms ease;
-}
-.acct-row-enter-from,
-.acct-row-leave-to {
-  opacity: 0;
-}
-</style>
