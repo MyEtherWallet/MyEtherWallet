@@ -1,4 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type {
+  CryptoOverviewChain,
+  CryptoOverviewNativeChain,
+} from '@/mew_api/types'
 
 // Ethereum is the only swap-supported chain in these tests.
 const chainHasSwapSupport = vi.fn((name: string) => name === 'Ethereum')
@@ -31,17 +35,34 @@ vi.mock('@/stores/walletStore', () => ({
 
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 
+const contract = (
+  chainName: string,
+  contractAddr: string,
+): CryptoOverviewChain => ({
+  chainName,
+  chainNameLong: chainName,
+  chainType: 'EVM',
+  chainIconUrl: '',
+  contract: contractAddr,
+  decimals: 18,
+})
+const native = (chainName: string): CryptoOverviewNativeChain => ({
+  chainName,
+  chainNameLong: chainName,
+  chainType: 'EVM',
+  chainIconUrl: '',
+  decimals: 18,
+})
+
 describe('useNewListingSwap', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     selectedChain = { name: 'Ethereum' }
   })
 
-  it('primes swap with the contract on the selected chain, then opens Swap', async () => {
+  it('primes swap with the contract on the selected chain, then opens Swap', () => {
     const { openSwapForToken } = useNewListingSwap()
-    openSwapForToken('BTC', 'Bitcoin', [
-      { chainName: 'Ethereum', contract: '0xABC' },
-    ])
+    openSwapForToken('BTC', 'Bitcoin', [contract('Ethereum', '0xABC')], [])
 
     expect(storeSwapValues).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -56,50 +77,53 @@ describe('useNewListingSwap', () => {
     expect(openPanel).toHaveBeenCalledWith('swap')
   })
 
-  it('uses the native sentinel when the chain contract is null', () => {
+  it('uses the native sentinel when the coin is native to the current chain', () => {
     const { openSwapForToken } = useNewListingSwap()
-    openSwapForToken('ETH', 'Ether', [{ chainName: 'Ethereum', contract: null }])
+    openSwapForToken('ETH', 'Ether', [], [native('Ethereum')])
 
     expect(storeSwapValues).toHaveBeenCalledWith(
       expect.objectContaining({
         toToken: expect.objectContaining({
           address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         }),
-      }),
-    )
-  })
-
-  it('falls back to the first swap-supported chain when the selected one is not', () => {
-    selectedChain = { name: 'Polygon' } // not swap-supported here
-    const { openSwapForToken } = useNewListingSwap()
-    openSwapForToken('TOK', 'Token', [
-      { chainName: 'Polygon', contract: '0x111' },
-      { chainName: 'Ethereum', contract: '0x222' },
-    ])
-
-    expect(storeSwapValues).toHaveBeenCalledWith(
-      expect.objectContaining({
-        toToken: expect.objectContaining({ address: '0x222' }),
         toChain: { name: 'Ethereum' },
       }),
     )
   })
 
-  it('still opens Swap (without priming) when no chain supports swap', () => {
+  it('opens Swap without priming when the coin is not a contract on the current chain', () => {
+    // Coin lives on Polygon, current chain is Ethereum → no current-chain
+    // address to prime with (mirrors the table swapBtn), but Swap still opens.
     const { openSwapForToken } = useNewListingSwap()
-    openSwapForToken('TOK', 'Token', [{ chainName: 'Polygon', contract: '0x111' }])
+    openSwapForToken('TOK', 'Token', [contract('Polygon', '0x111')], [])
 
     expect(storeSwapValues).not.toHaveBeenCalled()
     expect(openPanel).toHaveBeenCalledWith('swap')
   })
 
-  it('still opens Swap when supportedChains is missing or empty', () => {
+  it('still opens Swap (without priming) when there are no chains', () => {
     const { openSwapForToken } = useNewListingSwap()
     openSwapForToken('TOK', 'Token')
-    openSwapForToken('TOK', 'Token', [])
+    openSwapForToken('TOK', 'Token', [], [])
 
     expect(storeSwapValues).not.toHaveBeenCalled()
     expect(openPanel).toHaveBeenCalledTimes(2)
     expect(openPanel).toHaveBeenCalledWith('swap')
+  })
+
+  it('bridges in from the native swap-capable chain, then opens Bridge', () => {
+    const { openBridgeForToken } = useNewListingSwap()
+    openBridgeForToken('TOK', 'Token', [native('Ethereum')])
+
+    expect(storeSwapValues).toHaveBeenCalledWith(
+      expect.objectContaining({
+        toToken: expect.objectContaining({
+          address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          symbol: 'TOK',
+        }),
+        toChain: { name: 'Ethereum' },
+      }),
+    )
+    expect(openPanel).toHaveBeenCalledWith('bridge')
   })
 })

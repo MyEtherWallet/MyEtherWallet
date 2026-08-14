@@ -68,6 +68,32 @@ describe('AppNewListingCard', () => {
     expect(w.emitted('select')).toBeUndefined()
   })
 
+  it('renders the trade CTA enabled by default', () => {
+    const w = mountIt()
+    expect(
+      w.get('[data-test="listing-trade"]').attributes('disabled'),
+    ).toBeUndefined()
+  })
+
+  it('renders the trade CTA disabled when tradeDisabled is set', () => {
+    const w = mountIt({ tradeDisabled: true })
+    expect(
+      w.get('[data-test="listing-trade"]').attributes('disabled'),
+    ).toBeDefined()
+  })
+
+  it('always reserves the description block so cards stay the same height', () => {
+    // Present whether or not a description is passed — keeps cards aligned.
+    expect(mountIt().find('[data-test="listing-description"]').exists()).toBe(
+      true,
+    )
+    expect(
+      mountIt({ description: undefined })
+        .find('[data-test="listing-description"]')
+        .exists(),
+    ).toBe(true)
+  })
+
   it('emits select when the card root is clicked', async () => {
     const w = mountIt()
     await w.get('[data-test="listing-card"]').trigger('click')

@@ -206,7 +206,10 @@ onFetchResponse(() => {
           // ondo stock gainers carry no crypto market data.
           totalVolume: null,
           marketCap: null,
-          supportedChains: [],
+          chains: [],
+          nativeChains: [],
+          description: null,
+          descriptionSource: null,
         }
       },
     )

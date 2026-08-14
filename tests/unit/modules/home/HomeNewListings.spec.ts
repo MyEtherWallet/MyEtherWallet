@@ -77,8 +77,10 @@ vi.mock('vue-router', () => ({
   useRouter: () => ({ push }),
 }))
 
-// Crypto tab data — the `newCoins` from the crypto overview composable.
-const newCoins = ref([
+// Crypto tab data — the `newCoins` from the crypto overview composable. Typed
+// loosely so tests can add the coin's chain split (chains/nativeChains) without
+// spelling out the full generated payload shape.
+const newCoins = ref<Record<string, unknown>[]>([
   {
     coinId: 'btc',
     name: 'Bitcoin',
@@ -96,7 +98,8 @@ vi.mock('@/modules/home/composables/useCryptoNewCoins', () => ({
 
 // The CTA resolution (swap/bridge/none) is exercised in useNewListingCta.spec;
 // here we only assert HomeNewListings delegates to it with the coin's
-// symbol/name/supportedChains. `resolve` returns 'swap' so a CTA button renders.
+// symbol/name/chains/nativeChains. `resolve` returns 'swap' so an enabled CTA
+// button renders.
 const runCta = vi.fn()
 vi.mock('@/modules/home/composables/useNewListingCta', () => ({
   useNewListingCta: () => ({ resolve: () => 'swap', run: runCta }),
@@ -224,21 +227,23 @@ describe('HomeNewListings', () => {
       .get('[data-test="listing-trade"]')
       .trigger('click')
     // Crypto delegates to useNewListingCta with the coin's symbol/name plus the
-    // payload's supportedChains (undefined here) — never the trade-symbol path.
+    // payload's chains/nativeChains (undefined here) — never the trade path.
     expect(runCta).toHaveBeenCalledWith({
       symbol: 'BTC',
       name: 'Bitcoin',
-      supportedChains: undefined,
+      chains: undefined,
+      nativeChains: undefined,
     })
     expect(setSelectedTradeTokenSymbol).not.toHaveBeenCalled()
   })
 
-  it('forwards supportedChains to the CTA when the payload carries them', async () => {
+  it('forwards chains/nativeChains to the CTA when the payload carries them', async () => {
     runCta.mockClear()
     const chains = [{ chainName: 'Ethereum', contract: '0xABC' }]
+    const nativeChains = [{ chainName: 'Solana' }]
     const original = newCoins.value
-    // BE sends supportedChains on newCoins (same shape as the stocks response).
-    newCoins.value = [{ ...original[0], supportedChains: chains } as any]
+    // BE sends the coin's chain split on newCoins.
+    newCoins.value = [{ ...original[0], chains, nativeChains }]
     const w = mountIt()
     await w.get('[data-test="tab-switch"]').trigger('click') // crypto
     await w
@@ -248,7 +253,8 @@ describe('HomeNewListings', () => {
     expect(runCta).toHaveBeenCalledWith({
       symbol: 'BTC',
       name: 'Bitcoin',
-      supportedChains: chains,
+      chains,
+      nativeChains,
     })
     newCoins.value = original
   })

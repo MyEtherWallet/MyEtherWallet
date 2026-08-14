@@ -21,6 +21,9 @@ interface Props {
   volume?: string
   favorite?: boolean
   tradeLabel?: string
+  /** Renders the CTA disabled (e.g. crypto coin with no swap/bridge path) so
+   *  the card keeps a button instead of an empty gap. */
+  tradeDisabled?: boolean
 }
 
 const props = defineProps<Props>()
@@ -85,10 +88,11 @@ const changeText = computed(() =>
           name
         }}</span>
       </div>
-      <!-- Description drops to its own line when present (not wired yet). -->
+      <!-- Description reserves a fixed 3-line block whether present, short, or
+           absent, so every card stays the same height regardless of content. -->
       <p
-        v-if="description"
-        class="line-clamp-3 text-s-14 leading-5 text-[#575757]"
+        class="line-clamp-3 h-[60px] text-s-14 leading-5 text-[#575757]"
+        data-test="listing-description"
       >
         {{ description }}
       </p>
@@ -142,13 +146,14 @@ const changeText = computed(() =>
       </div>
     </div>
 
-    <!-- D. Trade button. When there's no CTA for this listing we keep an
-         equal-height spacer so every card stays the same height. -->
+    <!-- D. Trade button. Always rendered (disabled when the listing has no
+         swap/bridge path) so every card keeps the same height with no gap. -->
     <button
       v-if="tradeLabel"
       type="button"
       data-test="listing-trade"
-      class="flex h-10 w-full items-center justify-center rounded-3xl bg-grey-5 text-s-14 font-semibold tracking-[-0.28px] text-primary transition-colors hover:bg-grey-10"
+      :disabled="tradeDisabled"
+      class="flex h-10 w-full items-center justify-center rounded-3xl bg-grey-5 text-s-14 font-semibold tracking-[-0.28px] text-primary transition-colors hover:bg-grey-10 disabled:cursor-not-allowed disabled:text-[#a5a5a5] disabled:hover:bg-grey-5"
       @click.stop="$emit('trade')"
     >
       {{ tradeLabel }}

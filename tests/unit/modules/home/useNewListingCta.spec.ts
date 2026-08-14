@@ -1,10 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type {
+  CryptoOverviewChain,
+  CryptoOverviewNativeChain,
+} from '@/mew_api/types'
 
 // Drive the chain state and avoid pulling in the wallet/Ledger store chain.
-const chain = {
-  selected: 'Ethereum' as string | undefined,
+const chain: {
+  selected: string | undefined
+  currentSwap: boolean
+  swapSupported: (name: string) => boolean
+} = {
+  selected: 'Ethereum',
   currentSwap: true,
-  swapSupported: (_name: string) => true,
+  swapSupported: () => true,
 }
 vi.mock('@/stores/chainsStore', () => ({
   useChainsStore: () => ({
@@ -22,7 +30,27 @@ vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
 
 import { useNewListingCta } from '@/modules/home/composables/useNewListingCta'
 
-const on = (chainName: string) => [{ chainName, contract: '0x' }]
+// A contract chain (coin lives as a token there) and a native chain (coin is
+// the chain's own currency there) — the two arrays the table CTA keys off.
+const contractOn = (chainName: string): CryptoOverviewChain[] => [
+  {
+    chainName,
+    chainNameLong: chainName,
+    chainType: 'EVM',
+    chainIconUrl: '',
+    contract: '0x',
+    decimals: 18,
+  },
+]
+const nativeOn = (chainName: string): CryptoOverviewNativeChain[] => [
+  {
+    chainName,
+    chainNameLong: chainName,
+    chainType: 'EVM',
+    chainIconUrl: '',
+    decimals: 18,
+  },
+]
 
 describe('useNewListingCta', () => {
   beforeEach(() => {
@@ -33,29 +61,56 @@ describe('useNewListingCta', () => {
     openBridgeForToken.mockClear()
   })
 
-  it("returns 'none' with no supported chains", () => {
+  it("returns 'none' with no chains", () => {
     const { resolve } = useNewListingCta()
-    expect(resolve({ symbol: 'X', name: 'X', supportedChains: [] })).toBe('none')
+    expect(
+      resolve({ symbol: 'X', name: 'X', chains: [], nativeChains: [] }),
+    ).toBe('none')
     expect(resolve({ symbol: 'X', name: 'X' })).toBe('none')
   })
 
-  it("returns 'swap' on a swap-capable current chain", () => {
+  it("returns 'swap' when the coin is a contract on the current chain", () => {
     expect(
-      useNewListingCta().resolve({ symbol: 'X', name: 'X', supportedChains: on('Ethereum') }),
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: contractOn('Ethereum'),
+      }),
     ).toBe('swap')
   })
 
-  it("returns 'bridge' when off the current chain but with a swap-capable home chain", () => {
+  it("returns 'swap' when the coin is native to the current chain", () => {
+    expect(
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: [],
+        nativeChains: nativeOn('Ethereum'),
+      }),
+    ).toBe('swap')
+  })
+
+  it("returns 'bridge' when native to another swap-capable chain, not on the current one", () => {
     chain.swapSupported = name => name === 'Solana'
     expect(
-      useNewListingCta().resolve({ symbol: 'X', name: 'X', supportedChains: on('Solana') }),
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: [],
+        nativeChains: nativeOn('Solana'),
+      }),
     ).toBe('bridge')
   })
 
-  it("returns 'none' when the coin's chains don't support swap", () => {
+  it("returns 'none' when the native chain doesn't support swap", () => {
     chain.swapSupported = () => false
     expect(
-      useNewListingCta().resolve({ symbol: 'X', name: 'X', supportedChains: on('Solana') }),
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: [],
+        nativeChains: nativeOn('Solana'),
+      }),
     ).toBe('none')
   })
 
@@ -63,22 +118,45 @@ describe('useNewListingCta', () => {
     chain.currentSwap = false
     chain.swapSupported = () => false
     expect(
-      useNewListingCta().resolve({ symbol: 'X', name: 'X', supportedChains: on('Ethereum') }),
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: contractOn('Ethereum'),
+      }),
     ).toBe('none')
   })
 
-  it('run dispatches swap for a swap CTA', () => {
-    const token = { symbol: 'X', name: 'X', supportedChains: on('Ethereum') }
+  it('run dispatches swap for a swap CTA, forwarding both chain arrays', () => {
+    const token = {
+      symbol: 'X',
+      name: 'X',
+      chains: contractOn('Ethereum'),
+      nativeChains: [],
+    }
     useNewListingCta().run(token)
-    expect(openSwapForToken).toHaveBeenCalledWith('X', 'X', token.supportedChains)
+    expect(openSwapForToken).toHaveBeenCalledWith(
+      'X',
+      'X',
+      token.chains,
+      token.nativeChains,
+    )
     expect(openBridgeForToken).not.toHaveBeenCalled()
   })
 
   it('run dispatches bridge for a bridge CTA', () => {
     chain.swapSupported = name => name === 'Solana'
-    const token = { symbol: 'X', name: 'X', supportedChains: on('Solana') }
+    const token = {
+      symbol: 'X',
+      name: 'X',
+      chains: [],
+      nativeChains: nativeOn('Solana'),
+    }
     useNewListingCta().run(token)
-    expect(openBridgeForToken).toHaveBeenCalledWith('X', 'X', token.supportedChains)
+    expect(openBridgeForToken).toHaveBeenCalledWith(
+      'X',
+      'X',
+      token.nativeChains,
+    )
     expect(openSwapForToken).not.toHaveBeenCalled()
   })
 })

@@ -3,10 +3,7 @@ import { computed, ref, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter, type RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
-import {
-  useWalletMenuStore,
-  type WalletPanel,
-} from '@/stores/walletMenuStore'
+import { useWalletMenuStore, type WalletPanel } from '@/stores/walletMenuStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useCurrency } from '@/composables/useCurrency'
 import {
@@ -14,8 +11,11 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import { useCryptoNewCoins } from '../composables/useCryptoNewCoins'
-import { type ListingSupportedChain } from '../composables/useNewListingSwap'
 import { useNewListingCta } from '../composables/useNewListingCta'
+import type {
+  CryptoOverviewChain,
+  CryptoOverviewNativeChain,
+} from '@/mew_api/types'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import AppNewListingCard from '@/components/AppNewListingCard.vue'
@@ -36,10 +36,13 @@ interface ListingCardItem {
   isStock: boolean
   tradePanel: WalletPanel
   ctaLabel: string
+  // Crypto with no swap/bridge path → button shown disabled instead of hidden.
+  tradeDisabled: boolean
   to: RouteLocationRaw
-  // Crypto only: on-chain chains from the overview payload, when present. Absent
-  // (undefined) → useNewListingSwap looks the coin up by id instead.
-  supportedChains?: ListingSupportedChain[]
+  // Crypto only: the coin's chain split from the overview payload — `chains`
+  // (contract chains) + `nativeChains` (native-currency chains). Drive the CTA.
+  chains?: CryptoOverviewChain[]
+  nativeChains?: CryptoOverviewNativeChain[]
 }
 
 const { t } = useI18n()
@@ -51,16 +54,23 @@ const { formatFiat, formatFiatCompact } = useCurrency()
 const { newCoins, fetchNewCoins } = useCryptoNewCoins()
 const { resolve: resolveCta, run: runCta } = useNewListingCta()
 
-// Crypto CTA mirrors the crypto page: Swap / Bridge / (none = no button).
-const cryptoCtaLabel = (
+// Crypto CTA mirrors the crypto page (Swap / Bridge), but never hides the
+// button: an unsupported coin ('none') shows Swap disabled so cards keep an
+// equal footer. Returns the label + whether it should render disabled.
+const cryptoCta = (
   symbol: string,
   name: string,
-  supportedChains?: ListingSupportedChain[],
-): string => {
-  const kind = resolveCta({ symbol, name, supportedChains })
-  if (kind === 'swap') return t('homePage.listings.swap')
-  if (kind === 'bridge') return t('homePage.listings.bridge')
-  return ''
+  chains?: CryptoOverviewChain[],
+  nativeChains?: CryptoOverviewNativeChain[],
+): { label: string; disabled: boolean } => {
+  const kind = resolveCta({ symbol, name, chains, nativeChains })
+  return {
+    label:
+      kind === 'bridge'
+        ? t('homePage.listings.bridge')
+        : t('homePage.listings.swap'),
+    disabled: kind === 'none',
+  }
 }
 
 // Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
@@ -89,9 +99,9 @@ const stockItems = computed<ListingCardItem[]>(() =>
     price: item.primaryMarket.price
       ? formatFiat(item.primaryMarket.price).display
       : undefined,
-    // data gap: newlyAdded has no description field (src/mew_api/schema.ts) —
-    // card renders without one until a source exists.
-    description: undefined,
+    // `description` is null until the scraping jobs generate one — card hides
+    // its description line while absent.
+    description: item.description ?? undefined,
     marketCap: item.underlyingMarket.marketCap
       ? formatFiatCompact(item.underlyingMarket.marketCap).display
       : '-',
@@ -107,6 +117,8 @@ const stockItems = computed<ListingCardItem[]>(() =>
     isStock: true,
     tradePanel: 'trade',
     ctaLabel: t('homePage.listings.trade'),
+    // Stocks always open the Trade panel — the CTA is never disabled.
+    tradeDisabled: false,
     to: {
       name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: { symbol: item.primaryMarket.symbol },
@@ -118,36 +130,48 @@ const stockItems = computed<ListingCardItem[]>(() =>
 // 24h volume). Ondo-backed coins link to the stock page; the rest to the token
 // page.
 const cryptoItems = computed<ListingCardItem[]>(() =>
-  newCoins.value.map(item => ({
-    key: item.coinId,
-    name: item.name,
-    symbol: item.symbol,
-    price: formatFiat(item.price).display,
-    description: undefined,
-    marketCap:
-      item.marketCap != null ? formatFiatCompact(item.marketCap).display : '-',
-    change: item.priceChangePercentage24h,
-    volume:
-      item.totalVolume != null
-        ? formatFiatCompact(item.totalVolume).display
-        : '-',
-    logo: item.logoUrl ?? undefined,
-    favorite: watchlistStore.isWatchListed(item.coinId),
-    favoriteId: item.coinId,
-    isStock: false,
-    tradePanel: 'swap',
-    ctaLabel: cryptoCtaLabel(item.symbol, item.name, item.supportedChains),
-    supportedChains: item.supportedChains,
-    to: item.ondo
-      ? {
-          name: STOCK_INFO_ROUTE_NAMES.crypto,
-          params: { symbol: item.ondo.primaryMarket.symbol },
-        }
-      : {
-          name: TOKEN_INFO_ROUTE_NAMES.crypto,
-          params: { tokenId: item.coinId },
-        },
-  })),
+  newCoins.value.map(item => {
+    const cta = cryptoCta(
+      item.symbol,
+      item.name,
+      item.chains,
+      item.nativeChains,
+    )
+    return {
+      key: item.coinId,
+      name: item.name,
+      symbol: item.symbol,
+      price: formatFiat(item.price).display,
+      description: item.description ?? undefined,
+      marketCap:
+        item.marketCap != null
+          ? formatFiatCompact(item.marketCap).display
+          : '-',
+      change: item.priceChangePercentage24h,
+      volume:
+        item.totalVolume != null
+          ? formatFiatCompact(item.totalVolume).display
+          : '-',
+      logo: item.logoUrl ?? undefined,
+      favorite: watchlistStore.isWatchListed(item.coinId),
+      favoriteId: item.coinId,
+      isStock: false,
+      tradePanel: 'swap',
+      ctaLabel: cta.label,
+      tradeDisabled: cta.disabled,
+      chains: item.chains,
+      nativeChains: item.nativeChains,
+      to: item.ondo
+        ? {
+            name: STOCK_INFO_ROUTE_NAMES.crypto,
+            params: { symbol: item.ondo.primaryMarket.symbol },
+          }
+        : {
+            name: TOKEN_INFO_ROUTE_NAMES.crypto,
+            params: { tokenId: item.coinId },
+          },
+    }
+  }),
 )
 
 const items = computed<ListingCardItem[]>(() =>
@@ -159,8 +183,9 @@ const items = computed<ListingCardItem[]>(() =>
 //   selectedTradeTokenSymbol — set that first (same as ViewStockInfo / the
 //   stocks & balance tables).
 // - Crypto runs the resolved CTA (swap or bridge) via useNewListingCta, which
-//   primes the wallet drawer from the payload's supportedChains and opens the
-//   matching panel. Cards that resolve to "none" render without a CTA button.
+//   primes the wallet drawer from the coin's chains/nativeChains and opens the
+//   matching panel. 'none' cards render Swap disabled, so onTrade never fires
+//   for them.
 const onTrade = (it: ListingCardItem) => {
   if (it.isStock) {
     walletMenu.setSelectedTradeTokenSymbol(it.symbol)
@@ -169,7 +194,8 @@ const onTrade = (it: ListingCardItem) => {
     runCta({
       symbol: it.symbol,
       name: it.name ?? '',
-      supportedChains: it.supportedChains,
+      chains: it.chains,
+      nativeChains: it.nativeChains,
     })
   }
 }
@@ -180,11 +206,7 @@ const onTrade = (it: ListingCardItem) => {
     <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
     <div class="relative mt-6">
       <AppSlideGroup ref="slideGroup" :total-items="items.length" edge-nav>
-        <template
-          v-for="(it, index) in items"
-          :key="it.key"
-          #[`item-${index}`]
-        >
+        <template v-for="(it, index) in items" :key="it.key" #[`item-${index}`]>
           <AppNewListingCard
             :logo="it.logo"
             :symbol="it.symbol"
@@ -200,6 +222,7 @@ const onTrade = (it: ListingCardItem) => {
             :volume="it.volume"
             :favorite="it.favorite"
             :trade-label="it.ctaLabel"
+            :trade-disabled="it.tradeDisabled"
             @select="router.push(it.to)"
             @trade="onTrade(it)"
             @toggle-favorite="
