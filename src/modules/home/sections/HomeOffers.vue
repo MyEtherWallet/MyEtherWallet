@@ -26,26 +26,32 @@ const onOfferClick = (offer: HomeOffer) => {
 </script>
 
 <template>
-  <div class="@container relative grid gap-6 md:grid-cols-3">
-    <!-- peggy peeks out from behind the cards: it's the first (earliest-DOM)
-         positioned child, so with no positive z-index the cards paint over its
-         lower half, giving the "emerging from behind" look. -->
-    <img
-      :src="peggyAstronaut"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute -top-[116px] right-6 hidden h-[120px] w-auto -scale-x-100 md:block"
-    />
-    <AppRewardsCard
-      v-for="o in offers"
-      :key="o.id"
-      :category="t(o.categoryKey)"
-      :icon="o.icon"
-      :title="t(o.titleKey)"
-      :highlight="t(o.highlightKey)"
-      :gradient="o.gradient"
-      @click="onOfferClick(o)"
-    />
+  <!-- Container-query layout so the cards reflow on the AVAILABLE width (which
+       shrinks when the wallet side panel opens): a single stacked column until
+       ~1280 viewport (container ~1136), then all three side-by-side. -->
+  <div class="@container">
+    <div class="relative grid grid-cols-1 gap-6 @min-[1136px]:grid-cols-3">
+      <!-- peggy peeks out from behind the cards: it's the first (earliest-DOM)
+           positioned child, so with no positive z-index the cards paint over its
+           lower half, giving the "emerging from behind" look. Only shown in the
+           multi-column layout. -->
+      <img
+        :src="peggyAstronaut"
+        alt=""
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-[116px] right-6 hidden h-[120px] w-auto -scale-x-100 @min-[1136px]:block"
+      />
+      <AppRewardsCard
+        v-for="o in offers"
+        :key="o.id"
+        :category="t(o.categoryKey)"
+        :icon="o.icon"
+        :title="t(o.titleKey)"
+        :highlight="t(o.highlightKey)"
+        :gradient="o.gradient"
+        @click="onOfferClick(o)"
+      />
+    </div>
   </div>
   <RwaTradeInfoModal v-if="isTradeInfoOpen" v-model:is-open="isTradeInfoOpen" />
 </template>
