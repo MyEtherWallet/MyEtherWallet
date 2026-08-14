@@ -5,12 +5,18 @@ const walletStore = {
   setWallet: vi.fn(),
   disconnectWallet: vi.fn(),
   walletAddress: '0xactive',
+  isWatchOnly: false,
+  isWalletConnected: true,
+  walletName: 'MetaMask',
+  wallet: { getWalletType: () => 'INJECTED' },
 }
 const watchOnly = {
   activeId: 'EVM:0xactive',
   removeWallet: vi.fn(),
   allAccounts: [] as any[],
   watchOnlyAddresses: { EVM: [], BITCOIN: [] } as any,
+  tryAddAddress: vi.fn(() => ({ added: true })),
+  recordConnection: vi.fn(),
 }
 const chainsStore = {
   selectedChain: { type: 'EVM', name: 'ETH' },
@@ -50,6 +56,10 @@ const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
 beforeEach(() => {
   vi.clearAllMocks()
   watchOnly.activeId = 'EVM:0xactive'
+  watchOnly.watchOnlyAddresses = { EVM: [], BITCOIN: [] }
+  walletStore.walletAddress = '0xactive'
+  walletStore.isWatchOnly = false
+  walletStore.isWalletConnected = true
 })
 
 describe('useAccountSwitch', () => {
@@ -84,5 +94,25 @@ describe('useAccountSwitch', () => {
     watchOnly.watchOnlyAddresses = { EVM: [], BITCOIN: [] }
     await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xactive', address: '0xactive' }))
     expect(walletStore.disconnectWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('deleteAccount auto-saves the connected over-cap address when a non-active address is deleted', async () => {
+    // The connected address (0xactive) is NOT in the saved list — it was dropped
+    // earlier because the cap was full. Deleting another address frees a slot.
+    watchOnly.watchOnlyAddresses = { EVM: [], BITCOIN: [] }
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xother', address: '0xother' }))
+    expect(watchOnly.tryAddAddress).toHaveBeenCalledWith(
+      '0xactive', expect.anything(), 'INJECTED', 'EVM', 'MetaMask',
+    )
+    expect(watchOnly.recordConnection).toHaveBeenCalledWith('0xactive', 'EVM')
+  })
+
+  it('deleteAccount does not re-save when the connected address is already saved', async () => {
+    watchOnly.watchOnlyAddresses = {
+      EVM: [{ address: '0xactive', walletName: 'W', chain: { type: 'EVM', name: 'ETH' }, type: 'EVM', walletType: 'INJECTED', addressName: 'A' }],
+      BITCOIN: [],
+    }
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xother', address: '0xother' }))
+    expect(watchOnly.tryAddAddress).not.toHaveBeenCalled()
   })
 })

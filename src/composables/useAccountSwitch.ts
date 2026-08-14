@@ -62,10 +62,41 @@ export function useAccountSwitch() {
     )
   }
 
+  // After a deletion frees a cap slot, persist the connected address if it couldn't
+  // be saved earlier because the cap was full (the over-cap "unsaved" connection).
+  const saveConnectedIfUnsaved = (): void => {
+    const address = walletStore.walletAddress
+    const type = chainsStore.selectedChain?.type as ChainType | undefined
+    if (
+      !address ||
+      !type ||
+      walletStore.isWatchOnly ||
+      !walletStore.isWalletConnected
+    )
+      return
+    const alreadySaved = (watchOnlyStore.watchOnlyAddresses[type] ?? []).some(
+      (e: PersistedEntry) => e.address.toLowerCase() === address.toLowerCase(),
+    )
+    if (alreadySaved) return
+    const res = watchOnlyStore.tryAddAddress(
+      address,
+      chainsStore.selectedChain as Chain,
+      walletStore.wallet?.getWalletType() ?? '',
+      type,
+      walletStore.walletName,
+    )
+    if (res.added) watchOnlyStore.recordConnection(address, type)
+  }
+
   const deleteAccount = async (account: SavedAccount): Promise<void> => {
     const wasActive = account.id === watchOnlyStore.activeId
     watchOnlyStore.removeWallet(account.address, { type: account.chainType } as Chain)
-    if (!wasActive) return
+    if (!wasActive) {
+      // Deleting a non-active address just freed a slot — save the connected
+      // (over-cap) address that we couldn't persist before, if any.
+      saveConnectedIfUnsaved()
+      return
+    }
     const next: PersistedEntry | null = promoteNext(
       watchOnlyStore.watchOnlyAddresses,
       account.chainType,
