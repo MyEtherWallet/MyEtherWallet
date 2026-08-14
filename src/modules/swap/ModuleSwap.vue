@@ -7,11 +7,13 @@
     >
       <div class="w-full max-w-[500px] relative">
         <!-- <rewards-small-banner
-          :class="blurClass"
+          :class="blockedClass"
           :location="'small-banner-swap'"
         /> -->
 
-        <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
+        <!-- Header stays at full opacity when blocked: only the form below the
+             unavailable card is dimmed. -->
+        <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">
             {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
@@ -22,7 +24,40 @@
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
-        <div :class="['relative transition-all duration-300', blurClass]">
+        <!-- Network Not Supported -->
+        <app-unavailable-card
+          v-if="swapLoaded && !supportedNetwork"
+          class="mb-3"
+          :title="$t('swap.network-not-supported')"
+          :description="
+            isSwapView
+              ? $t('swap.swapping-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              : $t('swap.bridging-not-available', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+          "
+        >
+          <template #action>
+            <select-chain-for-app
+              :passed-chains="fromChains"
+              :preselected-chain="defualtChainWhenNetworkUnsupported"
+              :can-store="false"
+              id="SWAP:NetworkNotSupported"
+              class="w-full"
+              @update:selected-chain="switchGlobalNetwork"
+            />
+          </template>
+        </app-unavailable-card>
+
+        <div :class="['relative transition-all duration-300', blockedClass]">
           <!-- From Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p
@@ -131,55 +166,12 @@
             />
           </div>
         </div>
-
-        <!-- Network Not Supported Banner - Centered Overlay -->
-        <div
-          v-if="swapLoaded && !supportedNetwork"
-          class="absolute flex top-[100px] z-20 pointer-events-none"
-        >
-          <div
-            class="w-full max-w-[380px] px-5 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('swap.network-not-supported') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{
-                isSwapView
-                  ? $t('swap.swapping-not-available', {
-                      network:
-                        selectedChain?.nameLong ||
-                        selectedChain?.name ||
-                        $t('common.network'),
-                    })
-                  : $t('swap.bridging-not-available', {
-                      network:
-                        selectedChain?.nameLong ||
-                        selectedChain?.name ||
-                        $t('common.network'),
-                    })
-              }}
-            </p>
-
-            <select-chain-for-app
-              :passed-chains="fromChains"
-              :preselected-chain="defualtChainWhenNetworkUnsupported"
-              :can-store="false"
-              id="SWAP:NetworkNotSupported"
-              class="mt-4"
-              @update:selected-chain="switchGlobalNetwork"
-            />
-          </div>
-        </div>
       </div>
 
       <!-- Error Display -->
       <div
         v-if="!isLoading && priceImpactTooHigh"
-        :class="blurClass"
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
@@ -190,7 +182,7 @@
       </div>
       <div
         v-if="!isLoading && generalError"
-        :class="blurClass"
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
@@ -199,12 +191,12 @@
       </div>
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
-        :class="['mx-auto w-full max-w-[340px]', blurClass]"
+        :class="['mx-auto w-full max-w-[340px]', blockedClass]"
         @click="connectWalletForSwap"
       >
         {{ t('connect_wallet') }}</app-base-button
       >
-      <div v-else :class="['w-full max-w-[340px]', blurClass]">
+      <div v-else :class="['w-full max-w-[340px]', blockedClass]">
         <transition name="fade" mode="out-in">
           <app-no-chain-balance
             v-if="!hasChainBalance"
@@ -228,7 +220,7 @@
         :title="t('swap.need-help-swapping')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
-        :class="blurClass"
+        :class="blockedClass"
       />
     </div>
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
@@ -265,7 +257,7 @@ import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
-import { ArrowDownIcon, ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -279,6 +271,8 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -308,6 +302,7 @@ import {
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
 import { formatUnits, parseUnits } from 'viem'
+import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
 import dataTxAction from '@/utils/dataTxAction'
 import {
   type Chain,
@@ -337,6 +332,8 @@ import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
+// Fallback token precision when a token omits `decimals` (ETH/most ERC20 = 18).
+const DEFAULT_TOKEN_DECIMALS = 18
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
@@ -490,11 +487,11 @@ const defualtChainWhenNetworkUnsupported = computed(() => {
   )
 })
 
-const blurClass = computed(() => {
-  return swapLoaded && !supportedNetwork.value
-    ? 'blur-sm pointer-events-none opacity-60'
-    : ''
-})
+// Matches the unavailable card's own condition, so the form is never dimmed
+// without the card present to explain why.
+const { blockedClass } = useBlockedContent(
+  () => swapLoaded.value && !supportedNetwork.value,
+)
 
 const toAddress = computed(() => {
   if (selectedToChain.value?.name === selectedChain.value?.name)
@@ -518,7 +515,7 @@ const fromAmountError = computed(() => {
   if (!fromTokenSelected.value) return ''
 
   // Validate Decimals
-  const decimals = fromTokenSelected.value.decimals || 18
+  const decimals = fromTokenSelected.value.decimals ?? DEFAULT_TOKEN_DECIMALS
   if (BigNumber(fromAmount.value).toFixed().split('.')[1]?.length > decimals) {
     return t('swap.error.too-many-decimals')
   }
@@ -562,7 +559,11 @@ const fromAmountError = computed(() => {
     const max = BigInt(
       selectedQuote.value.minMax?.maximumFrom.toString() || '0',
     )
-    if (baseAmount < min) return t('swap.error.minimum-amount')
+    if (baseAmount < min)
+      return t('swap.error.minimum-amount', {
+        amount: smallestMinFromDisplay([min], decimals),
+        symbol: fromTokenSelected.value.symbol,
+      })
     if (baseAmount > max) return t('swap.error.maximum-amount')
   }
 
@@ -1075,7 +1076,8 @@ const fetchQuotes = async () => {
     })
 
     if (quotes && quotes.length > 0) {
-      const fromDecimals = fromTokenSelected.value?.decimals || 18
+      const fromDecimals =
+        fromTokenSelected.value?.decimals ?? DEFAULT_TOKEN_DECIMALS
       const fromAmountBase = parseUnits(fromAmount.value, fromDecimals)
 
       providers.value = quotes
@@ -1091,10 +1093,17 @@ const fetchQuotes = async () => {
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
-        // if no providers were selected after filter minimum
-        // fromValue is probably too low
+        // No provider's minimum was met. Tell the user the actual minimum
+        // required (smallest across the returned quotes, in the from-token's
+        // units) instead of a bare "amount too low" (MEW-2109).
         if (quotes.length > 0) {
-          generalError.value = t('swap.error.minimum-amount')
+          generalError.value = t('swap.error.minimum-amount', {
+            amount: smallestMinFromDisplay(
+              quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+              fromDecimals,
+            ),
+            symbol: fromTokenSelected.value?.symbol,
+          })
         }
         const event = bestSwapLoadingOpen.value
           ? SwapEventError.OFFER_ERROR

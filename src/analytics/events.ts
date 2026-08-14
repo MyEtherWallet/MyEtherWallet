@@ -440,6 +440,23 @@ export const PerpsManageEvent = {
 export type PerpsManageEvent =
   (typeof PerpsManageEvent)[keyof typeof PerpsManageEvent]
 
+// =============================================================================
+// PERPS RESTRICTED (region-blocked surfaces)
+// =============================================================================
+
+// Deliberately only the Learn More click. A "restricted view" event would
+// duplicate an existing signal: `isRegionRestricted` is already set as a user
+// property, so any perps page view can be segmented on it without a new event.
+export const PerpsRestrictedEvent = {
+  LEARN_MORE: 'Perps_Restricted_Clicked_Learn_More',
+} as const
+export type PerpsRestrictedEvent =
+  (typeof PerpsRestrictedEvent)[keyof typeof PerpsRestrictedEvent]
+
+export type PerpsRestrictedPayload = {
+  source: PerpsEventSource
+}
+
 export const PerpsNewPositionAction = {
   MANAGE_LONG: 'Manage Long',
   MANAGE_SHORT: 'Manage Short',

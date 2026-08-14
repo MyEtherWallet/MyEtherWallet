@@ -66,10 +66,7 @@
       />
 
       <!-- Error -->
-      <div
-        v-else-if="contractsError"
-        class="text-center py-8 text-error text-s-14"
-      >
+      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
         {{ contractsError }}
       </div>
 
@@ -553,10 +550,16 @@
                     </app-pop-up-menu>
                   </template>
                   <template v-else>
+                    <!--
+                      Disabled in restricted regions: there is no order to place,
+                      so the action is dead rather than redirected. Users reach
+                      the explanatory card via the Perps action-bar button.
+                    -->
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -571,6 +574,7 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -666,6 +670,7 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
@@ -688,6 +693,7 @@ import type {
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
+const { isPerpsRestricted } = usePerpsRestriction()
 const { isWatchOnly } = storeToRefs(walletStore)
 
 const watchlistStore = useWatchlistStore()

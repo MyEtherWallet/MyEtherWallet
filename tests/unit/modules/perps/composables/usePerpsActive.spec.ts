@@ -8,7 +8,7 @@ vi.mock('vue-router', () => ({
 }))
 
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { usePerpsActive } from '../usePerpsActive'
+import { usePerpsActive } from '@/modules/perps/composables/usePerpsActive'
 
 describe('usePerpsActive', () => {
   beforeEach(() => {
