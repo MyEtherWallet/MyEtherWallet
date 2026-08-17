@@ -116,10 +116,14 @@ import {
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
+import {
+  getLocalizedWalletError,
+  isTransientTrezorError,
+} from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import HWwallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
+import { getTrezorManager } from '@/providers/hw/trezorManager'
 import type { HWManager } from '@/providers/hw/types'
 import {
   getLedgerWebUSBTransport,
@@ -140,6 +144,7 @@ import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { isTrezorSupported } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
@@ -171,8 +176,13 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 const accessStore = useAccessStore()
 const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
 
+// Reuse one Trezor manager for the whole session: creating a fresh manager on
+// every connect / chain / derivation change re-ran the process-wide
+// `TrezorConnect.init()`, which threw "TrezorConnect has been already
+// initialized" and poisoned the cached provider (MEW-2042). Ledger keeps a
+// fresh manager per connection.
 const createHwManager = (): HWManager =>
-  currentView.value === 'ledger' ? new LedgerManager() : new HWwallet()
+  currentView.value === 'ledger' ? new LedgerManager() : getTrezorManager()
 
 // Wallet instance
 let hwWalletInstance: HWManager | null = createHwManager()
@@ -294,6 +304,18 @@ const backStep = () => {
 const connectingWallet = ref(false)
 
 const unlockWallet = async () => {
+  // Gate Trezor on browser capability: @enkryptcom/hw-wallets `getTrezorConnect`
+  // references the bare `chrome` global, which is undefined on non-Chromium
+  // browsers (e.g. iOS Safari) and throws an uncaught ReferenceError. Fail
+  // gracefully with a friendly message instead. See MEW-2041.
+  if (currentView.value === 'trezor' && !isTrezorSupported()) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('access_wallet_trezor.not_supported'),
+    })
+    return
+  }
+
   connectingWallet.value = true
   const networkName = chainToEnum[
     selectedChain.value?.name as string
@@ -338,10 +360,14 @@ const unlockWallet = async () => {
     loadList()
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)
+    const isNoDerivationPaths =
+      errorMessage === 'No supported derivation paths found for this wallet'
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: isNoDerivationPaths
+        ? t('access.no_supported_derivation_paths')
+        : errorMessage,
     })
     // Don't report expected user errors to Sentry
     if (!errorMessage.includes('Make sure you have')) {
@@ -364,13 +390,45 @@ onMounted(async () => {
   }
 })
 
+// User dismissing the WebUSB/BLE device picker is an expected action, not an
+// error. WebUSB surfaces it as TransportOpenUserCancelled / "No device selected"
+// (or a DOMException NotFoundError); the BLE flow surfaces it as a generic
+// "...was cancelled" message. Detect all of these so we don't toast or report
+// the cancellation to Sentry as noise.
+const isUserCancelledTransport = (e: unknown): boolean => {
+  const name = (e as { name?: string })?.name
+  const message = e instanceof Error ? e.message : String(e ?? '')
+  return (
+    name === 'TransportOpenUserCancelled' ||
+    name === 'NotFoundError' ||
+    /no device selected|was cancelled|user cancel(l)?ed/i.test(message)
+  )
+}
+
+const openTransport = async (getTransport: () => Promise<unknown>) => {
+  try {
+    await getTransport()
+    return true
+  } catch (e) {
+    if (isUserCancelledTransport(e)) return false
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('error_connecting'),
+      textSecondary: errorMessage,
+    })
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    return false
+  }
+}
+
 const connectViaUSB = async () => {
-  await getLedgerWebUSBTransport()
+  if (!(await openTransport(getLedgerWebUSBTransport))) return
   return unlockWallet()
 }
 
 const connectViaBluetooth = async () => {
-  await getLedgerBLETransport()
+  if (!(await openTransport(getLedgerBLETransport))) return
   return unlockWallet()
 }
 
@@ -452,10 +510,16 @@ const loadList = async (page: number = 0) => {
     if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Something went wrong',
-      textSecondary: e instanceof Error ? e.message : String(e),
+      text: t('common.something_went_wrong'),
+      textSecondary:
+        getLocalizedWalletError(e instanceof Error ? e.message : String(e)) ??
+        (e instanceof Error ? e.message : String(e)),
     })
-    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    // Skip Sentry for the known transient Trezor connect state (APP-MEW-WEB-P5):
+    // the popup returns success with an empty payload and retrying works.
+    if (!isTransientTrezorError(e)) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
   } finally {
     if (generation === loadListGeneration) {
       isLoadingWalletList.value = false
@@ -566,7 +630,15 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
 const { closeAccessDialog } = useAccessStore()
 
 const access = async () => {
-  const wallet = walletList.value[selectedIndex.value]?.walletInstance
+  // `selectedIndex` holds the derivation index (set by SelectAddressList from
+  // `walletList[i].index`), not the array position. On page 2+ those differ, so
+  // indexing the array directly returned undefined and crashed in
+  // markRaw(undefined). Look the entry up by its derivation index and bail out
+  // if none matches.
+  const wallet = walletList.value.find(
+    item => item.index === selectedIndex.value,
+  )?.walletInstance
+  if (!wallet) return
   isUnlockingWallet.value = true
 
   setWallet(

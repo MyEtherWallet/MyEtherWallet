@@ -58,7 +58,7 @@ import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoChart from './components/token_info/TokenInfoChart.vue'
 import { computed, ref, watch } from 'vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -77,6 +77,7 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   tokenId: {
@@ -401,7 +402,7 @@ const toggleWatchlist = () => {
 const shareText = computed(() => {
   const ticker = tokenData.value?.symbol?.toUpperCase() ?? ''
   const price = tokenData.value?.currentPrice
-    ? `$${formatFiatValue(tokenData.value.currentPrice).value}`
+    ? formatFiat(tokenData.value.currentPrice).display
     : ''
   return t('common.share_message', { ticker, price })
 })

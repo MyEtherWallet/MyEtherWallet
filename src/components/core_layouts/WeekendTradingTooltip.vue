@@ -44,19 +44,22 @@
 
         <!-- Headline -->
         <p class="text-s-14 font-semibold leading-[1.3] mb-1">
-          Weekend stock trading
+          {{ $t('trade.weekend.tooltip_headline') }}
         </p>
 
         <!-- Body -->
         <p class="text-s-12 text-info leading-[1.4]">
-          SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon are now open for 24/7
-          trading.
+          {{
+            $t('trade.weekend.tooltip_body', {
+              tickers: 'AMZNon, MSTRon, COINon, ORCLon, TQQQon',
+            })
+          }}
         </p>
 
         <!-- Dismiss button -->
         <button
           class="absolute top-2 right-2 p-1 rounded-full hoverNoBG"
-          aria-label="Dismiss tooltip"
+          :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="dismiss"
         >
           <XMarkIcon class="w-4 h-4 text-info" />
@@ -71,18 +74,19 @@ import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
-import { useMarketStatus } from '@/modules/trade/composables'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
-import nvda from '@/assets/images/weekend-trading/nvda.png'
-import qqq from '@/assets/images/weekend-trading/qqq.png'
-import googl from '@/assets/images/weekend-trading/googl.png'
-import spy from '@/assets/images/weekend-trading/spy.png'
-import tsla from '@/assets/images/weekend-trading/tsla.png'
-import crcl from '@/assets/images/weekend-trading/crcl.png'
+import amzn from '@/assets/images/weekend-trading/amzn.png'
+import coin from '@/assets/images/weekend-trading/coin.png'
+import mstr from '@/assets/images/weekend-trading/mstr.png'
+import orcl from '@/assets/images/weekend-trading/orcl.png'
+import tqqq from '@/assets/images/weekend-trading/tqqq.png'
 
-const tokenIcons = [nvda, qqq, googl, spy, tsla, crcl]
+const tokenIcons = [amzn, coin, mstr, orcl, tqqq]
 
 const props = defineProps<{
   anchor: HTMLElement | null
@@ -91,13 +95,35 @@ const props = defineProps<{
 const announcement = useWeekendTradingAnnouncementStore()
 const { shouldShowTooltip } = storeToRefs(announcement)
 
+// Sequenced behind the RWA "Trade & Hold" campaign with no waiting period:
+//
+//  - never saw the campaign, dismissed the announcement → straight away
+//  - never saw it, took "Go to offer" → once the offer modal is closed
+//  - already saw the campaign in an earlier session → straight away
+//
+// `followupUnlocked` covers the first and third; the modal refs below cover the
+// second, since "Go to offer" closes the announcement (which unlocks) and opens
+// the offer modal in the same click.
+const { followupUnlocked: rwaCampaignDone, isTradeInfoOpen } = storeToRefs(
+  useRwaAnnouncementStore(),
+)
+
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
-const { isTradingRestrictedInRegion } = useMarketStatus()
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+
+// The offer modal behind "Go to offer" (and the Hold card's "More info").
+const { isModalOpen: isRwaOfferModalOpen } = storeToRefs(useHoldingsStore())
+
+// True while any Trade & Hold modal is on screen. The announcement itself isn't
+// here: closing it is what unlocks the tooltip, so it can never still be open.
+const rwaModalOpen = computed(
+  () => isRwaOfferModalOpen.value || isTradeInfoOpen.value,
+)
 
 const visible = ref(false)
 const anchorRect = ref<DOMRect | null>(null)
@@ -120,8 +146,13 @@ const tooltipStyle = computed(() => {
 
 const tryShow = async () => {
   if (isTradingRestrictedInRegion.value) return
+  if (!rwaCampaignDone.value) return
+  if (rwaModalOpen.value) return
   if (!shouldShowTooltip.value || !props.anchor) return
   await nextTick()
+  // Re-checked after the tick: "Go to offer" unlocks and opens the offer modal
+  // in one click, and the two land in either order.
+  if (rwaModalOpen.value) return
   anchorRect.value = props.anchor.getBoundingClientRect()
   if (visible.value) return // already showing
   visible.value = true
@@ -163,6 +194,8 @@ watch(
     isWalletConnected,
     () => props.anchor,
     isTradingRestrictedInRegion,
+    rwaCampaignDone,
+    rwaModalOpen,
   ],
   () => tryShow(),
   { immediate: true },

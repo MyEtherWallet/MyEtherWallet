@@ -88,7 +88,7 @@
       <template v-if="incompatibleNetworks.length">
         <li class="px-1 pt-5 pb-1">
           <p class="text-s-14 font-medium text-info">
-            Networks incompatible with your wallet
+            {{ $t('select_chain.incompatible_title') }}
           </p>
         </li>
         <li
@@ -109,7 +109,9 @@
       </template>
 
       <li
-        v-if="compatibleNetworks.length === 0 && incompatibleNetworks.length === 0"
+        v-if="
+          compatibleNetworks.length === 0 && incompatibleNetworks.length === 0
+        "
         class="text-info text-s-14 text-center py-10"
       >
         {{ $t('common.not_found.chains') }}
@@ -155,17 +157,23 @@ const compatibleNetworks = computed<BuyNetwork[]>(() => {
     : props.networks
   if (!term) return base
   return base.filter(
-    n => n.name.toLowerCase().includes(term) || n.chain.toLowerCase().includes(term),
+    n =>
+      n.name.toLowerCase().includes(term) ||
+      n.chain.toLowerCase().includes(term),
   )
 })
 
 const incompatibleNetworks = computed<BuyNetwork[]>(() => {
   if (!props.incompatibleChains?.length) return []
   const term = searchInput.value.trim().toLowerCase()
-  const base = props.networks.filter(n => props.incompatibleChains!.includes(n.chain))
+  const base = props.networks.filter(n =>
+    props.incompatibleChains!.includes(n.chain),
+  )
   if (!term) return base
   return base.filter(
-    n => n.name.toLowerCase().includes(term) || n.chain.toLowerCase().includes(term),
+    n =>
+      n.name.toLowerCase().includes(term) ||
+      n.chain.toLowerCase().includes(term),
   )
 })
 </script>

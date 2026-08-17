@@ -16,43 +16,43 @@
             is-stock
             class="text-s-20 xs:text-s-24 leading-p-150 mr-1 !font-bold"
           />
-          Price
+          {{ $t('stocks.price') }}
         </h2>
         <div
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              Open
+              {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.open24h
-                  ? `$${formatFiatValue(data.primaryMarket.open24h).value}`
+                  ? formatFiat(data.primaryMarket.open24h).display
                   : '-'
               }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h High
+              {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.high24h
-                  ? `$${formatFiatValue(data.primaryMarket.high24h).value}`
+                  ? formatFiat(data.primaryMarket.high24h).display
                   : '-'
               }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h Low
+              {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.low24h
-                  ? `$${formatFiatValue(data.primaryMarket.low24h).value}`
+                  ? formatFiat(data.primaryMarket.low24h).display
                   : '-'
               }}
             </p>
@@ -63,43 +63,43 @@
         <h3
           class="basis-full xs:basis-auto font-bold text-s-17 leading-p-150 mb-6"
         >
-          Underlying Asset
+          {{ $t('stocks.underlying_asset') }}
         </h3>
         <div
           class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              Open
+              {{ $t('stocks.open') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
                 data?.underlyingMarket?.open24h
-                  ? `$${formatFiatValue(data.underlyingMarket.open24h).value}`
+                  ? formatFiat(data.underlyingMarket.open24h).display
                   : '-'
               }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h High
+              {{ $t('stocks.twenty_four_h_high') }}
             </p>
             <p class="text-s-16 font-medium capitalize">
               {{
                 data?.underlyingMarket?.high24h
-                  ? `$${formatFiatValue(data.underlyingMarket.high24h).value}`
+                  ? formatFiat(data.underlyingMarket.high24h).display
                   : '-'
               }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
-              24h Low
+              {{ $t('stocks.twenty_four_h_low') }}
             </p>
             <p class="text-s-16 font-medium">
               {{
                 data?.underlyingMarket?.low24h
-                  ? `$${formatFiatValue(data.underlyingMarket.low24h).value}`
+                  ? formatFiat(data.underlyingMarket.low24h).display
                   : '-'
               }}
             </p>
@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
@@ -121,6 +121,8 @@ interface Props {
   data: GetWebStocksInfoSummaryResponse
 }
 defineProps<Props>()
+
+const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

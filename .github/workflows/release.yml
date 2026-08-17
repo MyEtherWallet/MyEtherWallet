@@ -51,4 +51,21 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           TAG="v$VERSION"
-          gh release edit "$TAG" --draft=false
+
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            # A draft already exists (PR came through feat/v7-develop) — publish it.
+            gh release edit "$TAG" --draft=false
+          else
+            # PR was merged directly into feat/v7 from another branch — usually a
+            # hotfix. No draft was ever created, so draft one with generated notes.
+            gh api repos/${{ github.repository }}/releases/generate-notes \
+              -f tag_name="$TAG" \
+              -f target_commitish="feat/v7" \
+              --jq .body > release-notes.md
+
+            gh release create "$TAG" \
+              --draft \
+              --target feat/v7 \
+              --notes-file release-notes.md \
+              --title "$TAG"
+          fi

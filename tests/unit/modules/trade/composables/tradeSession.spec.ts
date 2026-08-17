@@ -98,4 +98,69 @@ describe('getSessionDisabledAddresses', () => {
     const assets = [asset({ sessions: ['regular'], address: '0xAaA' })]
     expect(getSessionDisabledAddresses(assets, null).has('0xaaa')).toBe(true)
   })
+
+  // Regression: Sentry APP-MEW-WEB-1CE — the Ondo assets API can return an
+  // array containing a null element; reading `.tradable` off it threw
+  // "Cannot read properties of null (reading 'tradable')" and crashed <ModuleTrade>.
+  it('skips null asset elements without throwing and still processes valid ones', () => {
+    const assets = [
+      null,
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+    ] as unknown as TradableAsset[]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'regular')
+    }).not.toThrow()
+    expect(disabled?.has('0xaaa')).toBe(true)
+  })
+
+  it('skips non-null malformed assets (missing addresses) and still processes valid ones', () => {
+    const assets = [
+      { tradable: false } as unknown as TradableAsset, // no addresses array
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+    ]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'regular')
+    }).not.toThrow()
+    expect(disabled?.has('0xaaa')).toBe(true)
+  })
+
+  it('skips malformed address members (null / non-string) without throwing', () => {
+    const assets = [
+      // paused asset whose addresses array has a null member and a
+      // non-string address alongside one valid string address
+      {
+        symbol: 'M',
+        tradable: false,
+        pause: null,
+        primaryMarket: { price: '1', sharesMultiplier: '1' },
+        underlyingMarket: { name: 'x', price: '1' },
+        addresses: [
+          null,
+          { chainName: 'ETHEREUM', address: 123 },
+          { chainName: 'ETHEREUM', address: '0xVaLiD' },
+        ],
+      } as unknown as TradableAsset,
+    ]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'regular')
+    }).not.toThrow()
+    expect(disabled?.has('0xvalid')).toBe(true)
+    expect(disabled?.size).toBe(1) // null + non-string members ignored
+  })
+
+  it('skips null asset elements during offhours and still disables valid paused assets', () => {
+    const assets = [
+      null,
+      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+    ] as unknown as TradableAsset[]
+    let disabled: Set<string> | undefined
+    expect(() => {
+      disabled = getSessionDisabledAddresses(assets, 'offhours')
+    }).not.toThrow()
+    // Paused asset that does not opt into offhours must still be disabled.
+    expect(disabled?.has('0xaaa')).toBe(true)
+  })
 })

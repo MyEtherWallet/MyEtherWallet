@@ -48,7 +48,7 @@
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie
-                  :address="walletAddress || ''"
+                  :address="displayAddress"
                   class="flex-none rounded-full"
                   :size="9"
                 />
@@ -56,7 +56,7 @@
                 <div
                   class="ml-4 text-s-20 font-medium text-wrap break-all tracking-sp-06"
                 >
-                  {{ walletAddress }}
+                  {{ displayAddress }}
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
-import { watch, nextTick } from 'vue'
+import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
 import {
@@ -128,6 +128,12 @@ const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
+/** Optional explicit address; defaults to the connected wallet (home card use). */
+const props = defineProps<{ address?: string }>()
+const displayAddress = computed<string>(
+  () => props.address || walletAddress.value || '',
+)
 /**
  * @isOpen - v-model controls the state of the dialog.
  */
@@ -150,9 +156,9 @@ const setIsOpen = (_value: boolean = false) => {
 const { qrCode, isLoadingQRCode, setQRCode } = useQR()
 
 watch(
-  () => [walletAddress.value, isOpen.value, qrCode.value],
+  () => [displayAddress.value, isOpen.value, qrCode.value],
   () => {
-    if (isOpen.value) setQRCode(walletAddress.value || undefined)
+    if (isOpen.value) setQRCode(displayAddress.value || undefined)
   },
 )
 const print = async () => {

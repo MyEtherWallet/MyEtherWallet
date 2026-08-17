@@ -1,7 +1,7 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-grey-5"
     >
       <div
         class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"
@@ -13,12 +13,12 @@
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
-          placeholder="table options"
+          :placeholder="$t('common.action_menu')"
           location="right"
         >
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
-              label="table options"
+              :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
               height="h-7"
               width="w-7"
@@ -32,7 +32,9 @@
                 class="flex items-center w-full p-2 hoverBGWhite rounded-12 text-s-14"
                 @click.stop="[toggleShowBalance(), toggleMenu()]"
               >
-                <span class="grow text-left">Hide tokens with no value</span>
+                <span class="grow text-left">{{
+                  $t('portfolio.table.hide_no_value')
+                }}</span>
                 <span
                   class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
                   :class="
@@ -323,7 +325,7 @@
             >
               {{
                 token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
+                  ? formatFiat(token.market_cap).display
                   : '-'
               }}
             </td>
@@ -331,7 +333,7 @@
             <td
               class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
             >
-              {{ token.price ? `$${formatFiatValue(token.price).value}` : '-' }}
+              {{ token.price ? formatFiat(token.price).display : '-' }}
             </td>
             <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
@@ -488,20 +490,26 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:flex flex-row gap-2 justify-end"
+                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
                   size="small"
                   @click="tradeBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('portfolio.table.trade') }}
                 </app-base-button>
                 <app-base-button
                   v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{
+                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                  }"
                   >{{ $t('common.swap') }}
                 </app-base-button>
                 <app-base-button
@@ -509,10 +517,10 @@
                   size="small"
                   @click="buyBtn(token)"
                   is-outline
-                  class="min-w-[60px]"
+                  class="w-full"
+                  :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
                 </app-base-button>
-                <div v-else class="w-[60px]"></div>
               </div>
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
@@ -693,10 +701,10 @@ import { truncate } from '@/utils/filters'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import {
-  formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
@@ -755,6 +763,8 @@ const customTokenStore = useCustomTokenStore()
 const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyableOnCompatibleChain } = purchaseStore
+
+const { formatFiat } = useCurrency()
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
 const {
@@ -836,7 +846,7 @@ const formatStock = (
     balance: '0',
     contract: '',
     fiatBalance: 0,
-    fiatBalanceFormatted: '$0.00',
+    fiatBalanceFormatted: formatFiat(0).display,
     ondo: {
       stockAlias: item.stockAlias,
       iconPngUrl: item.iconPngUrl,
@@ -934,7 +944,7 @@ const mapToDisplay = (token: TokenBalance): DisplayToken => {
   return {
     ...token,
     fiatBalance: fiat.toNumber(),
-    fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+    fiatBalanceFormatted: formatFiat(fiat).display,
   }
 }
 
@@ -968,7 +978,7 @@ const tokens = computed<DisplayToken[]>(() => {
           return {
             ...token,
             fiatBalance: 0,
-            fiatBalanceFormatted: '$0.00',
+            fiatBalanceFormatted: formatFiat(0).display,
             balanceWei: '0x',
             balance: '0',
             contract: '',
@@ -1023,7 +1033,7 @@ const tokens = computed<DisplayToken[]>(() => {
           balanceWei: extra.nativeValue,
           balance,
           fiatBalance: fiat.toNumber(),
-          fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+          fiatBalanceFormatted: formatFiat(fiat).display,
           price: extra.priceFiatPerNative || 0,
         } as DisplayToken
       }
@@ -1036,7 +1046,7 @@ const tokens = computed<DisplayToken[]>(() => {
         balanceWei: '0x',
         balance: '0',
         fiatBalance: 0,
-        fiatBalanceFormatted: '$0.00',
+        fiatBalanceFormatted: formatFiat(0).display,
       } as DisplayToken
     })
   } else if (props.view === 'stocks') {
@@ -1080,7 +1090,7 @@ const totalValue = computed(() => {
     (acc, t) => acc.plus(t.fiatBalance || 0),
     new BigNumber(0),
   )
-  return `$${formatFiatValue(sum).value}`
+  return formatFiat(sum).display
 })
 
 /** -------------------------------
@@ -1109,6 +1119,10 @@ const getCurrentViewableItemsIndex = computed(() =>
 /** -------------------------------
  * Navigation & Handlers
  -------------------------------*/
+// A token has a "primary" action (trade / swap) in the desktop actions cell.
+// Used so a lone button spans the full actions width and rows stay aligned.
+const hasPrimaryAction = (token: DisplayToken): boolean =>
+  token.ondo !== undefined || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'balance_table',
