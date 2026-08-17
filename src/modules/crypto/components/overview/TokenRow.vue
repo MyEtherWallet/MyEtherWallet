@@ -50,7 +50,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import type { CryptoOverviewToken } from '@/mew_api/types'
+import type { TokenRowItem } from '@/mew_api/types'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -60,7 +60,7 @@ import { computed } from 'vue'
 const { formatFiat } = useCurrency()
 
 const props = defineProps<{
-  token: CryptoOverviewToken
+  token: TokenRowItem
 }>()
 
 const name = computed(() => {

@@ -77,6 +77,20 @@ export type GetWebTrendingTokensResponseToken =
 export type CryptoOverview =
   components['schemas']['GetWebCryptoOverviewResponse']
 export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
+/**
+ * Fields shared by every token list row (overview, trending, synthetic Ondo
+ * gainers). Kept narrow so rows can be rendered from any of those payloads.
+ */
+export type TokenRowItem = Pick<
+  CryptoOverviewToken,
+  | 'coinId'
+  | 'name'
+  | 'symbol'
+  | 'price'
+  | 'priceChangePercentage24h'
+  | 'logoUrl'
+  | 'ondo'
+>
 
 /** --------------------------
  * Watchlist
@@ -130,6 +144,8 @@ export type WebTokenPriceChartInterval =
   components['schemas']['WebTokenPriceChartInterval']
 export type TokenSupportedChain = GetWebTokenInfo['supportedChains'][number]
 export type TokenChainBalance = GetWebTokenInfo['chainBalances'][number]
+export type GetWebTokenInfoDescriptionResponse =
+  components['schemas']['GetWebTokenInfoPageDescriptionResponse']
 
 /** --------------------------
  * Stocks Page
@@ -168,6 +184,9 @@ export type GetTradableAssetsResponse =
  --------------------------*/
 export type GetWebStocksInfoSummaryResponse =
   components['schemas']['GetWebStocksInfoSummaryResponse']
+
+export type GetWebStocksInfoDescriptionResponse =
+  components['schemas']['GetWebStocksInfoDescriptionResponse']
 
 export type GetWebStocksInfoPrimaryPriceChartResponse =
   components['schemas']['GetWebStocksInfoPrimaryPriceChartResponse']
