@@ -306,7 +306,7 @@
           </p>
           <div class="flex items-center py-1">
             <span
-              class="font-bold text-s-20 tracking-tight"
+              class="font-bold text-s-20 tracking-tight shrink-0"
               :class="[
                 !limitPrice || limitPrice === '' ? 'opacity-50' : '',
                 limitPriceHasError ? 'text-error' : '',
@@ -319,7 +319,7 @@
               inputmode="decimal"
               placeholder="0.00"
               :aria-label="$t('perps.confirm.limit-price')"
-              class="w-full font-bold text-s-20 tracking-tight outline-none bg-transparent"
+              class="w-full min-w-0 font-bold text-s-20 tracking-tight outline-none bg-transparent"
               :class="{ 'text-error': limitPriceHasError }"
               @keydown="
                 e => {
