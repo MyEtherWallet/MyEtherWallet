@@ -61,6 +61,7 @@ import {
 const walletStore = useWalletStore()
 const { isWalletUnlocked } = storeToRefs(walletStore)
 const holdingsStore = useHoldingsStore()
+const { canRegisterTrade } = storeToRefs(holdingsStore)
 const announcement = useRwaAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
@@ -95,6 +96,9 @@ onMounted(async () => {
 
 const openDialog = () => {
   if (isTradingRestrictedInRegion.value) return
+  // Don't announce an offer that can no longer be joined. Best-effort: reward
+  // info only loads for an unlocked wallet, so an unknown state still announces.
+  if (!canRegisterTrade.value) return
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()

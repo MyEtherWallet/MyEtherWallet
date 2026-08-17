@@ -13,18 +13,7 @@
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
       'rounded-full font-medium transition-colors hover:opacity-90 !box-border',
-      // computed breaks error style
-      theme === 'primary'
-        ? isOutline
-          ? 'border border-2 border-primary text-primary bg-transparent'
-          : 'text-white bg-primary'
-        : theme === 'error'
-          ? isOutline
-            ? 'border border-2 border-error text-error bg-transparent'
-            : 'text-white bg-error'
-          : isOutline
-            ? 'border border-2 border-grey-outline text-black bg-transparent'
-            : 'text-black bg-bgMuted',
+      themeStyle,
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -69,7 +58,7 @@
   </button>
 </template>
 <script setup lang="ts">
-import { type PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 
 enum BtnSize {
   SMALL = 'small',
@@ -99,9 +88,36 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'neutral'>,
+    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
     default: 'primary',
   },
+})
+
+const themeStyle = computed(() => {
+  if (props.theme === 'primary') {
+    if (props.isOutline)
+      return 'border border-2 border-primary text-primary bg-transparent'
+    return 'text-white bg-primary'
+  }
+
+  if (props.theme === 'success') {
+    if (props.isOutline)
+      return 'border border-2 border-success text-success bg-transparent'
+    return 'text-white bg-success'
+  }
+
+  if (props.theme === 'error') {
+    if (props.isOutline)
+      return 'border border-2 border-error text-error bg-transparent'
+    return 'text-white bg-error'
+  }
+  if (props.theme === 'neutral') {
+    if (props.isOutline)
+      return 'border border-2 border-grey-outline text-black bg-transparent'
+    return 'text-black bg-bgMuted'
+  }
+
+  return 'text-white bg-primary'
 })
 const emit = defineEmits(['click'])
 const onClick = () => {

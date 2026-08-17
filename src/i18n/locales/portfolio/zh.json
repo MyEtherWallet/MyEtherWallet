@@ -1,0 +1,98 @@
+{
+  "portfolio": {
+    "your_balances": "您的余额",
+    "balance_menu": "余额菜单",
+    "filter_all_tokens": "全部代币",
+    "filter_stocks": "股票",
+    "filter_earning_interest": "赚取收益",
+    "filter_custom": "自定义",
+    "filter_watchlist": "自选列表",
+    "no_balance": {
+      "title": "您还没有任何加密货币",
+      "description": "要开始交易和管理您的数字资产，您需要在投资组合中持有一些 {currencyName}。",
+      "buy": "购买",
+      "deposit": "存入"
+    },
+    "welcome": {
+      "title": "欢迎使用全新的 MEW Portfolio！",
+      "description": "现在，您可以在一个地方管理您的所有加密货币、代币化股票和 ETF，无需任何券商账户。",
+      "nostalgic": "希望您会喜欢全新的仪表板和各项功能。同时，如果您有些怀旧，仍然可以在{link}找到旧版 MEW。",
+      "here": "此处"
+    },
+    "overview": {
+      "title": "概览",
+      "tokenized_stocks": "代币化股票",
+      "stables": "稳定币",
+      "large_market_cap": "大市值",
+      "large_market_cap_tooltip": "市值超过 $10B 的代币，不包括代币化股票和稳定币。",
+      "altcoins": "其他币种"
+    },
+    "history": {
+      "title": "历史记录",
+      "tooltip": "基于当前代币持仓的估算值。",
+      "last_24h": "过去 24 小时",
+      "no_chart_data": "暂无图表数据"
+    },
+    "gains_and_losses": {
+      "title_stocks": "代币化股票盈亏",
+      "title_all": "全部盈亏",
+      "link_stocks": "全部代币化股票走势",
+      "link_all": "全部加密货币走势",
+      "empty_stocks": "您的投资组合中暂无任何代币化股票或 ETF。",
+      "page_of": "第 {current} / {total} 页",
+      "price_24h_header": "价格 / 24 小时",
+      "gain_loss_header": "盈利 / 亏损"
+    },
+    "table": {
+      "total_value": "总价值",
+      "token_header": "代币",
+      "market_cap_header": "市值",
+      "price_header": "价格",
+      "24h_header": "24 小时",
+      "balance_header": "余额",
+      "add_button": "+ 添加",
+      "hide_no_value": "隐藏无价值代币",
+      "add_to_watchlist": "加入自选",
+      "remove_from_watchlist": "移出自选",
+      "trade": "交易",
+      "empty_watchlist": "您还没有任何自选代币。",
+      "discover_more_tokens": "发现更多代币",
+      "empty_custom": "您还没有任何自定义代币。",
+      "add_custom_token": "+ 添加自定义代币",
+      "empty_stocks": "您的投资组合中暂无任何代币化股票或 ETF。",
+      "no_results": "未找到与“{query}”相关的结果。",
+      "results_of": "{count} / {total} 条结果",
+      "page_current": "{current}",
+      "page_of": "/",
+      "page_total": "{total}"
+    },
+    "custom_token": {
+      "add_title": "添加自定义代币",
+      "edit_title": "编辑自定义代币",
+      "delete_title": "删除自定义代币",
+      "token_address": "代币地址",
+      "token_name_placeholder": "代币名称",
+      "token_symbol_placeholder": "代币符号",
+      "token_decimals_placeholder": "代币小数位",
+      "add_button": "添加代币",
+      "save_button": "保存更改",
+      "delete_button": "删除代币",
+      "delete_confirm": "确定要删除“{name}”吗？如果改变主意，您可以重新添加此代币。",
+      "name_required": "代币名称为必填项",
+      "symbol_required": "代币符号为必填项",
+      "decimals_required": "小数位为必填项",
+      "decimals_range": "必须介于 0 到 36 之间",
+      "already_added": "此代币已添加。",
+      "fetch_failed": "获取代币详情失败。请检查地址。",
+      "toast_added": "自定义代币已添加",
+      "toast_updated": "自定义代币已更新",
+      "toast_deleted": "自定义代币已删除"
+    },
+    "connect_wallet": {
+      "title": "连接钱包以查看您的投资组合",
+      "description": "解锁您的钱包以使用全部功能。跨多条区块链管理您的加密资产：交易代币化股票和 ETF、兑换加密代币、质押等等。",
+      "connect_button": "连接钱包",
+      "or": "或"
+    }
+  }
+}

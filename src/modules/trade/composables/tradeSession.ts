@@ -2,9 +2,6 @@ import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 
-/** Inline message shown when the selected asset can't trade in the current session. */
-export const TRADING_PAUSED_SESSION_MESSAGE = 'Trading paused for this session'
-
 /**
  * Whether an asset's `tradableSessions` allows trading in the current session.
  * - `currentSession === null` (nothing tradable) -> false
@@ -40,10 +37,19 @@ export const getSessionDisabledAddresses = (
   if (!assets) return disabled
   const addAll = (asset: TradableAsset) => {
     for (const addr of asset.addresses) {
-      if (addr.address) disabled.add(addr.address.toLowerCase())
+      // Defensive: address members can be null or have a non-string `address`
+      // in malformed payloads; only lowercase real, non-empty strings.
+      if (typeof addr?.address === 'string' && addr.address)
+        disabled.add(addr.address.toLowerCase())
     }
   }
   for (const asset of assets) {
+    // Defensive: the Ondo assets API has been observed returning null/malformed
+    // elements (Sentry APP-MEW-WEB-1CE). Skip anything that is not a shaped
+    // asset with an addresses array, so this pure utility never dereferences a
+    // bad entry, independent of upstream filtering.
+    if (!asset || !Array.isArray(asset.addresses)) continue
+
     // Off-hours override: an asset that EXPLICITLY lists `offhours` stays
     // tradable during off-hours even if globally paused. Must be an explicit
     // membership (not the missing-field fallback in isAssetTradableInSession)

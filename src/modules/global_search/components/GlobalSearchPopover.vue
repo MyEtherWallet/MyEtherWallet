@@ -19,6 +19,7 @@
           v-model="query"
           type="text"
           :placeholder="$t('search.placeholder')"
+          :aria-label="$t('search.placeholder')"
           class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
         />
         <button class="text-s-13 font-medium text-primary" @click="close">

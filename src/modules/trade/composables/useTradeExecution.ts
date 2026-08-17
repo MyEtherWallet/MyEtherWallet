@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia';
 import { ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
@@ -39,6 +40,23 @@ interface UseTradeExecutionOptions {
   selectedFromChain: Ref<Chain | undefined>
   currentQuote: Ref<QuoteData | null>
   needsApproval: Ref<boolean>
+  /**
+   * Regional block. Guarded in each action as well as in the UI because the
+   * store's flag starts `false` and is only corrected once the async geo check
+   * resolves — until then the panel is live for a restricted user, and the
+   * blocked styling that would stop the clicks is not applied yet.
+   *
+   * Only for gates with no on-chain consequence; anything that signs or submits
+   * uses `isTradingAllowedInRegion`, since this flag reads "allowed" during that
+   * same unresolved window.
+   */
+  isTradingRestrictedInRegion: Ref<boolean>
+  /**
+   * Regional eligibility resolved AND allowed — see the store. This is what
+   * gates approvals and order submission, so an unresolved check blocks rather
+   * than passes.
+   */
+  isTradingAllowedInRegion: Ref<boolean>
 }
 
 export function useTradeExecution(options: UseTradeExecutionOptions) {
@@ -51,6 +69,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     selectedFromChain,
     currentQuote,
     needsApproval,
+    isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
   } = options
 
   const { t } = useI18n()
@@ -58,6 +78,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const tradeOrdersStore = useTradeOrdersStore()
   const rewardsStore = useRewardsStore()
   const holdingsStore = useHoldingsStore()
+
+  const { minSpendTrade } = storeToRefs(rewardsStore)
 
   const isApproving = ref(false)
   const txProceeding = ref(false)
@@ -79,7 +101,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -98,14 +121,17 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       holdCampaignStatus: holdingsStore.status,
       qualifyingTradeAmount: reward?.qualifying_amount
         ? new BigNumber(reward.qualifying_amount)
-            .shiftedBy(-decimals)
-            .toString()
+          .shiftedBy(-decimals)
+          .toString()
         : undefined,
       qualifyingTradeToken: meta?.symbol,
       qualifiedSince: reward?.qualification_timestamp,
     }
   }
   const handleApprove = async () => {
+    // Resolved-and-allowed, not merely "not known to be restricted": this sends
+    // an on-chain approval, so an unresolved geo check must block it.
+    if (!isTradingAllowedInRegion.value) return
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
       return
     }
@@ -130,7 +156,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       toastStore.addToastMessage({
         text: t('trade.toast.approval-success'),
-        textSecondary: t('trade.toast.approval-success-secondary', { symbol: fromTokenSelected.value.symbol }),
+        textSecondary: t('trade.toast.approval-success-secondary', {
+          symbol: fromTokenSelected.value.symbol,
+        }),
         type: ToastType.Success,
       })
     } catch (e) {
@@ -181,6 +209,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   const openTradeModal = () => {
+    if (isTradingRestrictedInRegion.value) return
     if (!currentQuote.value) {
       toastStore.addToastMessage({
         text: t('trade.toast.quote-loading'),
@@ -193,6 +222,15 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   const confirmTrade = async () => {
+    // Last line of defence before an order is signed and submitted. Requires the
+    // geo check to have resolved as allowed — an unresolved check is not consent.
+    // Also closes the modal: if the check resolved against the user while it was
+    // already open, leaving it up would give them a Confirm button that silently
+    // does nothing.
+    if (!isTradingAllowedInRegion.value) {
+      quoteModalOpen.value = false
+      return
+    }
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
       return
     }
@@ -214,6 +252,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         decimals,
       ).toString()
 
+      // Rechecked here because the guard above ran before an await (the dynamic
+      // import), and the geo check can land against the user in that gap. This is
+      // the last point at which nothing has been signed yet.
+      if (!isTradingAllowedInRegion.value) {
+        quoteModalOpen.value = false
+        return
+      }
+
       const result = await fusion.submitOrder({
         fromTokenAddress: fromTokenSelected.value.address,
         toTokenAddress: toTokenSelected.value.address,
@@ -230,8 +276,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 100) {
-        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction('trade')
+      const minSpendBN = BigNumber(minSpendTrade.value);
+      const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
+      if (BigNumber(fromUsdValue).gt(minimumSpend)) {
+        const canEarn =
+          await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {
@@ -272,9 +321,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           ).toFixed(2)
           : undefined,
         toUsdValue: toTokenSelected.value.price
-          ? (parseFloat(expectedToAmount) * toTokenSelected.value.price).toFixed(
-            2,
-          )
+          ? (
+            parseFloat(expectedToAmount) * toTokenSelected.value.price
+          ).toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -307,13 +356,20 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       if (isDevMode) {
         console.error('Error submitting trade order:', e)
       } else {
-        captureException(e instanceof Error ? e : new Error(errorMessage), {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error submitting trade order',
-            errorMessage,
-          },
-        })
+        // Expected client errors (user rejection code 4001, 1inch 4xx: expired
+        // quote / illiquid pair / invalid order), flagged by
+        // OneInchFusion.submitOrder, are surfaced to the user via the toast
+        // below but are pure Sentry noise — skip capture. Genuine 5xx /
+        // network failures stay unflagged and are reported.
+        if (!(e as { expectedClientError?: boolean }).expectedClientError) {
+          captureException(e instanceof Error ? e : new Error(errorMessage), {
+            ...SENTRY_MODULE_TAGS.TRADE,
+            extra: {
+              title: 'TRADE: Error submitting trade order',
+              errorMessage,
+            },
+          })
+        }
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,

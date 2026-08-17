@@ -5,6 +5,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Doughnut } from 'vue-chartjs'
 import {
   Chart,
@@ -36,6 +37,8 @@ const props = defineProps({
 })
 Chart.register(ArcElement, Tooltip)
 
+const { t } = useI18n()
+
 const otherPercentage = computed(() => {
   const data = props.tokens.map(t => t.percentageNumber)
   return 100 - data.reduce((a, b) => a + b, 0)
@@ -46,7 +49,7 @@ const labels = computed(() => {
   if (otherPercentage.value <= 0) {
     return labels
   }
-  labels.push('Other')
+  labels.push(t('common.other'))
   return labels
 })
 const dataSet = computed(() => {

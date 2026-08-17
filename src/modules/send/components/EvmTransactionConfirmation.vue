@@ -17,7 +17,7 @@
               class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ $t('send.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
@@ -86,7 +86,7 @@
                   <span class="text-s-14 text-info">{{ toToken.symbol }}</span>
                 </p>
                 <p class="text-info text-s-14 font-medium">
-                  ${{ toAmountFiat }}
+                  {{ formatFiat(toAmountFiat).display }}
                 </p>
               </div>
             </div>
@@ -127,7 +127,7 @@
                 {{ formatFee }} {{ network?.currencyName }}
               </p>
               <p class="text-s-12 font-medium text-info mt-0.5">
-                ${{ networkFeeUSD }}
+                {{ formatFiat(networkFeeUSD).display }}
               </p>
             </div>
           </div>
@@ -265,6 +265,7 @@ import {
   formatFloatingPointValue,
   formatIntegerToString,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
@@ -275,7 +276,11 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  getLocalizedWalletError,
+} from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -302,6 +307,7 @@ const model = defineModel()
 const emit = defineEmits<{
   'tx-sent': [txHash: string]
 }>()
+const { formatFiat } = useCurrency()
 const chainsStore = useChainsStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -346,7 +352,7 @@ const { t } = useI18n()
 
 const sanitizeErrorMessage = (e: string) => {
   if (e.toLowerCase().includes('rejected'))
-    return 'User rejected the transaction'
+    return t('common.error.user_canceled_request')
   return e
 }
 
@@ -412,7 +418,7 @@ const confirmTransaction = async () => {
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
-          chainName: selectedChain.value?.nameLong || 'Unknown',
+          chainName: selectedChain.value?.nameLong || t('send.unknown_chain'),
           chainIcon: selectedChain.value?.icon,
           chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,
@@ -452,7 +458,7 @@ const confirmTransaction = async () => {
         toastStore.addToastMessage({
           type: ToastType.Error,
           text: t('send.toast.tx-send-failed'),
-          textSecondary: errorMessage,
+          textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
         captureException(e instanceof Error ? e : new Error(msg), {
@@ -491,7 +497,7 @@ const confirmTransaction = async () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
     captureException(
       e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),

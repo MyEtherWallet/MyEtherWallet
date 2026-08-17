@@ -35,7 +35,7 @@
             {{ transaction.symbol }}
           </p>
           <p v-if="transaction.usdValue" class="text-s-12 text-info">
-            ${{ formatFiatValue(transaction.usdValue).value }}
+            {{ formatFiat(transaction.usdValue).display }}
           </p>
         </div>
       </div>
@@ -104,7 +104,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(transaction.createdAt) }}
+            {{ formatNotificationDate(transaction.createdAt) }}
           </p>
         </div>
         <!-- Transaction -->
@@ -141,7 +141,7 @@
               v-if="transaction.networkFeeUSD"
               class="text-s-12 text-info ml-1"
             >
-              ${{ formatFiatValue(transaction.networkFeeUSD).value }}
+              {{ formatFiat(transaction.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -164,11 +164,12 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+const { formatFiat } = useCurrency()
 // Props
 const props = defineProps<{
   transaction: TransactionNotification
@@ -183,11 +184,6 @@ defineEmits<{
 const { isXsAndUp } = useAppBreakpoints()
 
 const showMoreDetails = ref(false)
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {

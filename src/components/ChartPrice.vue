@@ -19,14 +19,16 @@ import {
   type ChartData,
 } from 'chart.js'
 import {
-  formatFiatValue,
   formatIntegerValue,
   convertToThousand,
   OneThousand,
   OneMillion,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
+
+const { formatFiat, currencySymbol, rate } = useCurrency()
 
 const props = withDefaults(
   defineProps<{
@@ -218,7 +220,12 @@ const plugins = [
     },
   },
 ]
-const chartOptions = computed<ChartOptions<'line'>>(() => ({
+const chartOptions = computed<ChartOptions<'line'>>(() => {
+  // Reference the currency refs so this computed (and thus the chart) re-renders
+  // when the display currency changes. The callbacks below convert lazily.
+  void rate.value
+  void currencySymbol.value
+  return {
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -254,7 +261,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             label += ': '
           }
           if (context.parsed.y !== null) {
-            return '$' + formatFiatValue(context.parsed.y).value
+            return formatFiat(context.parsed.y).display
           }
           return label
         },
@@ -321,24 +328,26 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     },
   },
   elements: { line: { capBezierPoints: true } },
-}))
+  }
+})
 
 const formatChartValue = (_value: number) => {
-  const value = new BigNumber(_value)
-  if (value === undefined || value.isZero() || value.isNaN()) {
-    return '$0'
+  const symbol = currencySymbol.value
+  const value = new BigNumber(_value).multipliedBy(rate.value)
+  if (value.isZero() || value.isNaN()) {
+    return `${symbol}0`
   }
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return `$${formatIntegerValue(value).value}`
+    return `${symbol}${formatIntegerValue(value).value}`
   }
   if (value.isGreaterThanOrEqualTo(OneThousand)) {
-    return `$${convertToThousand(value).value}`
+    return `${symbol}${convertToThousand(value).value}`
   }
 
   if (value.isGreaterThanOrEqualTo(10)) {
-    return `$${value.toFormat(2, 1)}`
+    return `${symbol}${value.toFormat(2, 1)}`
   }
-  return `$${value.toPrecision(4, 1)}`
+  return `${symbol}${value.toPrecision(4, 1)}`
 }
 </script>
 

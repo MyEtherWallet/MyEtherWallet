@@ -35,19 +35,5 @@ export const getPurchaseTokenIcon = (
   return coinImages?.get(asset.coingecko_id) ?? asset.market_data?.icon
 }
 
-const fiatIconModules = import.meta.glob<string>(
-  '@/assets/images/fiat/*.svg',
-  { eager: true, query: '?url', import: 'default' },
-)
-
-const fiatIconMap: Record<string, string> = Object.fromEntries(
-  Object.entries(fiatIconModules).map(([path, url]) => {
-    const filename = path.split('/').pop() ?? ''
-    const code = filename.replace(/\.svg$/, '').toUpperCase()
-    return [code, url]
-  }),
-)
-
-export const getFiatIcon = (fiatCurrency: string): string | undefined => {
-  return fiatIconMap[fiatCurrency.toUpperCase()]
-}
+// Fiat flag icons live in a shared util so they can be reused app-wide.
+export { getFiatIcon } from '@/utils/fiatIcons'

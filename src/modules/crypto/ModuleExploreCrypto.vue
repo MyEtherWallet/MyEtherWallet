@@ -367,6 +367,12 @@
                   <p class="font-normal text-s-14 text-black">
                     {{ token.price }}
                   </p>
+                  <p
+                    class="text-s-12 font-normal xs:hidden"
+                    :class="getPercentClass(getActivePercent(token))"
+                  >
+                    {{ parsePercent(getActivePercent(token)) }}
+                  </p>
                 </td>
                 <!-- Actions -->
 
@@ -481,19 +487,38 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div class="hidden lg:flex flex-row gap-2 justify-end">
+                  <div
+                    class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
+                  >
+                    <!-- Buy first (inverted order for the Explore Tokens table) -->
+                    <app-base-button
+                      v-if="isBuyableOnCompatibleChain(token.coinId)"
+                      size="small"
+                      @click="buyBtn(token)"
+                      is-outline
+                      class="w-full"
+                      :class="{ 'col-start-2': !hasPrimaryAction(token) }"
+                      >{{ $t('common.buy') }}</app-base-button
+                    >
+                    <!-- Primary action: trade / bridge / swap -->
                     <app-base-button
                       v-if="token.ondo !== null"
                       size="small"
                       @click="tradeBtn(token)"
-                      class="min-w-[64px]"
+                      class="w-full"
+                      :class="{
+                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                      }"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
                     <app-base-button
                       v-else-if="getIsBridgeable(token)"
                       size="small"
                       @click="bridgeBtn(token)"
-                      class="min-w-[64px]"
+                      class="w-full"
+                      :class="{
+                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                      }"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
                     <app-base-button
@@ -504,19 +529,12 @@
                       "
                       size="small"
                       @click="swapBtn(token)"
-                      class="min-w-[64px]"
+                      class="w-full"
+                      :class="{
+                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                      }"
                       >{{ $t('common.swap') }}
                     </app-base-button>
-
-                    <app-base-button
-                      v-if="isBuyableOnCompatibleChain(token.coinId)"
-                      size="small"
-                      @click="buyBtn(token)"
-                      is-outline
-                      class="min-w-[60px]"
-                      >{{ $t('common.buy') }}</app-base-button
-                    >
-                    <div v-else class="w-[60px]"></div>
                   </div>
                 </td>
               </tr>
@@ -667,11 +685,8 @@ import type {
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import {
-  formatFiatValue,
-  formatIntegerValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
@@ -693,6 +708,7 @@ import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
@@ -805,6 +821,14 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
+// A token has a "primary" action (trade / bridge / swap) in the desktop actions
+// cell — mirrors the v-if/v-else-if chain in the template. Used to make a lone
+// button span the full actions width so rows stay vertically aligned.
+const hasPrimaryAction = (token: DisplayToken): boolean =>
+  token.ondo !== null ||
+  getIsBridgeable(token) ||
+  (currentChainhasSwapSupport.value &&
+    (token.chains.length > 0 || getTokenIsCurrentNative(token)))
 const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'crypto_table',
@@ -1084,13 +1108,10 @@ onMounted(() => {
 const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
   return {
     ...item,
-    // TODO: update this to convert price to user selected currency
-    price: item.price ? `$${formatFiatValue(item.price).value}` : '-',
-    marketCap: item.marketCap
-      ? `$${formatIntegerValue(item.marketCap).value}`
-      : '-',
+    price: item.price ? formatFiat(item.price).display : '-',
+    marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
     totalVolume: item.totalVolume
-      ? `$${formatIntegerValue(item.totalVolume).value}`
+      ? formatFiat(item.totalVolume).display
       : '-',
   }
 }
@@ -1104,7 +1125,7 @@ const formatStock = (
     symbol: item.primaryMarket.symbol,
     logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
     price: item.primaryMarket.price
-      ? `$${formatFiatValue(Number(item.primaryMarket.price)).value}`
+      ? formatFiat(Number(item.primaryMarket.price)).display
       : '-',
     priceChangePercentage1h: null,
     priceChangePercentage24h: item.primaryMarket.priceChangePercentage24h
@@ -1112,10 +1133,10 @@ const formatStock = (
       : null,
     priceChangePercentage7d: null,
     totalVolume: item.underlyingMarket.volume24h
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.volume24h)).value}`
+      ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
     marketCap: item.underlyingMarket.marketCap
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.marketCap)).value}`
+      ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
     nativeChains: [],
@@ -1137,8 +1158,9 @@ const formatStock = (
 
 const parseFormattedNumber = (value: string): number => {
   if (value === '-') return 0
-  // Remove $ and commas
-  const cleaned = value.replace(/[$,]/g, '')
+  // Strip any currency symbol/prefix and grouping separators, keeping only
+  // digits, decimal point, and the K/M/B/T magnitude suffixes.
+  const cleaned = value.replace(/[^\d.KMBT]/g, '')
   // Handle K, M, B, T suffixes from formatIntegerValue
   const multipliers: Record<string, number> = {
     K: 1e3,

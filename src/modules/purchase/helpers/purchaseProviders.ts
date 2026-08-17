@@ -9,6 +9,7 @@ import googlePayLogo from '@/assets/images/buy/icon-google-pay-logo.svg'
 import pixLogo from '@/assets/images/buy/icon-pix-logo.svg'
 import paypalLogo from '@/assets/images/buy/icon-paypal-logo.svg'
 import bankLogo from '@/assets/images/buy/icon-bank.svg'
+import i18n from '@/i18n'
 
 const providerLogoMap: Record<string, string> = {
   MOONPAY: moonpayLogo,
@@ -31,6 +32,8 @@ const APPLE_PAY: PaymentMethodIcon = { src: applePayLogo, alt: 'Apple Pay' }
 const GOOGLE_PAY: PaymentMethodIcon = { src: googlePayLogo, alt: 'Google Pay' }
 const PIX: PaymentMethodIcon = { src: pixLogo, alt: 'Pix' }
 const PAYPAL: PaymentMethodIcon = { src: paypalLogo, alt: 'PayPal' }
+// `alt` is resolved lazily inside `getPaymentMethodIcons` so it tracks the
+// active locale on each render rather than freezing at module load.
 const BANK: PaymentMethodIcon = { src: bankLogo, alt: 'Bank' }
 
 /**
@@ -50,7 +53,7 @@ export const getPaymentMethodIcons = (
   if (has('PIX')) icons.push(PIX)
   if (has('PAYPAL')) icons.push(PAYPAL)
   if (has('ACH') || has('ACH_BANK_ACCOUNT') || has('SEPA_OPEN_BANKING')) {
-    icons.push(BANK)
+    icons.push({ ...BANK, alt: i18n.global.t('purchase.bank') })
   }
   return icons
 }
