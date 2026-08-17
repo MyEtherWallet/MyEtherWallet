@@ -10,7 +10,7 @@
         >
           {{ amountLabel }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p v-if="subtitle" class="text-s-12 leading-[18px] text-[#575757]">
           {{ subtitle }}
         </p>
       </div>

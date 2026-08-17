@@ -7,6 +7,10 @@
     <!-- 24/7 announcement dialog disabled; only the tooltip is used, gated to
          show 3 days after the RWA announcement is closed -->
     <!-- <weekend-trading-dialog v-if="isLoadingComplete" /> -->
+    <!-- Trade & Hold campaign announcement disabled. NOTE: this was the last
+         component calling `useMarketStatus().fetchTradingRestriction()`, which
+         is the only writer of `globalStore.isTradingRestrictedInRegion` — see
+         the comment in globalStore for what that means for readers. -->
     <!-- <rwa-announcement-dialog v-if="isLoadingComplete" /> -->
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
@@ -152,6 +156,12 @@ watch(
   },
   { immediate: true },
 )
+
+// Seed the reward campaign's season data on first load. Runs after the watcher
+// above so a restored session has already started its address-scoped poll — the
+// store then skips this, since that poll returns the same season block plus the
+// wallet's buckets. Only a visitor with no wallet yet actually fetches here.
+holdingsStore.fetchCampaignInfo()
 
 // Logging in from a watch-only address keeps the same `walletAddress`, so the
 // watcher above never fires — refetch reward info on the unlock itself, so it
