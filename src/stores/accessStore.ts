@@ -23,12 +23,23 @@ export const useAccessStore = defineStore('accessStore', () => {
   const isOpenAccessDialog = ref(false)
 
   const openAccessDialog = () => {
+    // Reset any leftover state from a previous session so the chooser always
+    // opens clean — otherwise a stale connecting/view state can show through.
+    currentView.value = 'default'
+    clickedWeb3Wallet.value = undefined
+    clickedWalletConnect.value = undefined
+    web3ConnectionError.value = null
     isOpenAccessDialog.value = true
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SHOWN)
   }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
+    clickedWeb3Wallet.value = undefined
+    clickedWalletConnect.value = undefined
+    web3ConnectionError.value = null
+    expectNewAddress.value = false
+    intendedAddress.value = null
   }
 
   const currentView = ref<WalletView>('default')
@@ -76,6 +87,56 @@ export const useAccessStore = defineStore('accessStore', () => {
   })
 
   /**------------------------
+   * "Address already saved" step (extension connect)
+   * Set when a connecting extension wallet's active address is already saved,
+   * so the flow shows an informational modal instead of a silent no-op.
+   -------------------------*/
+  const addressSavedInfo = ref<{
+    address: string
+    addressName: string
+    walletName: string
+    walletIcon: string
+    config: WalletConfig
+  } | null>(null)
+  const setAddressSavedInfo = (
+    info: typeof addressSavedInfo.value,
+  ): void => {
+    addressSavedInfo.value = info
+  }
+  const clearAddressSavedInfo = (): void => {
+    addressSavedInfo.value = null
+  }
+  // True only while adding a *new* address ("Connect another"): a duplicate then
+  // means "already saved". Connecting a specific saved address (upgrade
+  // watch-only → signing) leaves this false so it connects instead of warning.
+  const expectNewAddress = ref(false)
+  const setExpectNewAddress = (v: boolean): void => {
+    expectNewAddress.value = v
+  }
+
+  // The specific address the user is trying to connect ("Connect address"). An
+  // extension only connects its active account, so if it differs we must prompt
+  // the user to select this address in the extension.
+  const intendedAddress = ref<string | null>(null)
+  const setIntendedAddress = (addr: string | null): void => {
+    intendedAddress.value = addr
+  }
+  const connectAddressInfo = ref<{
+    address: string
+    walletName: string
+    walletIcon: string
+    config: WalletConfig
+  } | null>(null)
+  const setConnectAddressInfo = (
+    info: typeof connectAddressInfo.value,
+  ): void => {
+    connectAddressInfo.value = info
+  }
+  const clearConnectAddressInfo = (): void => {
+    connectAddressInfo.value = null
+  }
+
+  /**------------------------
    * Selected Chain
    -------------------------*/
   const selectedChain = ref<Chain | null>(null)
@@ -110,5 +171,15 @@ export const useAccessStore = defineStore('accessStore', () => {
     isEvmChain,
     isBitcoinChain,
     setSelectedChain,
+    addressSavedInfo,
+    setAddressSavedInfo,
+    clearAddressSavedInfo,
+    expectNewAddress,
+    setExpectNewAddress,
+    intendedAddress,
+    setIntendedAddress,
+    connectAddressInfo,
+    setConnectAddressInfo,
+    clearConnectAddressInfo,
   }
 })

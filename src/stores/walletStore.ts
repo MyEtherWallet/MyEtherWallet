@@ -1,4 +1,5 @@
 import { ref, type Ref, computed, watch, reactive } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -28,6 +29,7 @@ import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
 import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 import i18n from '@/i18n'
 
 const PARTNER = 'ondo-finance'
@@ -42,8 +44,21 @@ export const useWalletStore = defineStore('walletStore', () => {
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
   const isWatchOnly = ref(false)
+  const detectedAddress = ref<string | null>(null)
+  const setDetectedAddress = (addr: string | null): void => {
+    detectedAddress.value = addr
+  }
+  const clearDetectedAddress = (): void => {
+    detectedAddress.value = null
+  }
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
+  // Remember the last active address per chain type so a reload restores the
+  // address that was active, not just the last one added to the list.
+  const lastActiveAddress = useLocalStorage<Record<string, string>>(
+    'lastActiveAddress',
+    {},
+  )
   const userProperties = reactive<UserProperties>({})
   const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
   const stocksStore = useStocksStore()
@@ -57,7 +72,15 @@ export const useWalletStore = defineStore('walletStore', () => {
     _walletType: WalletConfigType,
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
-    const isRestricted = await checkAddressRestriction(_address)
+    // A failed restriction check (network hiccup, unsupported address format)
+    // must not abort the connection and leave the user with no wallet — treat an
+    // error as not-restricted. A genuine restriction still redirects to /blocked.
+    let isRestricted = false
+    try {
+      isRestricted = await checkAddressRestriction(_address)
+    } catch {
+      isRestricted = false
+    }
     const tradingRestricted = isTradingRestrictedInRegion.value
     const canTrade = !tradingRestricted && !isRestricted
     userProperties.canTrade = canTrade
@@ -91,8 +114,8 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const setWatchOnlyIfExist = () => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
-    const currentRecentAddressList =
-      watchOnlyAddresses[selectedChain.value?.type || 'EVM']
+    const type = selectedChain.value?.type || 'EVM'
+    const currentRecentAddressList = watchOnlyAddresses[type]
     // Skip stale entries whose address format does not match their chain type
     // (e.g. legacy localStorage with an EVM `0x` address under BITCOIN), which
     // would otherwise rebuild a wallet that hits an invalid balance endpoint
@@ -101,22 +124,25 @@ export const useWalletStore = defineStore('walletStore', () => {
       item =>
         !isAddressChainTypeMismatch(item.address, item.type, item.chain.name),
     )
-    const latest = validEntries[validEntries.length - 1]
-    if (latest) {
+    if (validEntries.length > 0) {
+      // Restore the address that was active before reload; fall back to the most
+      // recently added one if the remembered address is no longer saved.
+      const remembered = lastActiveAddress.value[type]
+      const entry =
+        validEntries.find(
+          e => e.address.toLowerCase() === remembered?.toLowerCase(),
+        ) ?? validEntries[validEntries.length - 1]
       const newWallet = new WatchOnlyWallet(
-        latest.address,
-        latest.chain,
-        latest.walletType as WalletType,
-        latest.type,
-        latest.walletName,
+        entry.address,
+        entry.chain,
+        entry.walletType as WalletType,
+        entry.type,
+        entry.walletName,
       )
-      wallet.value = null
-      walletAddress.value = null
-      setWallet(
-        newWallet,
-        latest.walletName,
-        latest.walletType as WalletConfigType,
-      )
+      // Don't null the wallet first: setWallet replaces it once ready. Nulling
+      // here briefly flips isWalletConnected to false, which unmounts the header
+      // address menu (v-if) and tears the popup down mid-switch.
+      setWallet(newWallet, entry.walletName, entry.walletType as WalletConfigType)
     } else {
       wallet.value = null
       walletAddress.value = null
@@ -148,16 +174,38 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
-      const { addWallet: _addWallet } = useWatchOnlyStore()
+      const watchOnlyStore = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
+      const type = selectedChain.value!.type
       walletAddress.value = await wallet.value.getAddress()
-      _addWallet(
+      watchOnlyStore.addWallet(
         walletAddress.value,
         selectedChain.value!,
         wallet.value.getWalletType(),
-        selectedChain.value!.type,
+        type,
         walletName.value,
       )
+      // Watch-only views (address selection) must never reorder or warn.
+      if (isWatchOnly.value) return
+      const addr = walletAddress.value.toLowerCase()
+      const saved = (watchOnlyStore.watchOnlyAddresses[type] ?? []).some(
+        e => e.address.toLowerCase() === addr,
+      )
+      if (saved) {
+        // A real connection floats the address to the top of its manage-accounts
+        // group (connection-recency stack) and keeps it there.
+        watchOnlyStore.recordConnection(walletAddress.value, type)
+      } else {
+        // The address couldn't be saved → the 20-address cap was hit (addWallet
+        // silently drops it). Surface a persistent info toast, distinct from the
+        // connect-success toast, so the user knows it wasn't saved.
+        useToastStore().addToastMessage({
+          type: ToastType.Info,
+          text: i18n.global.t('multi_address.cap_toast_title'),
+          textSecondary: i18n.global.t('multi_address.cap_toast_description'),
+          isInfinite: true,
+        })
+      }
     }
   }
 
@@ -169,6 +217,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
   const chainStore = useChainsStore()
   const { selectedChain, isEvmChain } = storeToRefs(chainStore)
+
+  // Persist the active address per chain type on every (non-null) change so a
+  // reload can restore the same one. Guarded against the transient null set in
+  // setWatchOnlyIfExist.
+  watch(walletAddress, addr => {
+    if (addr) lastActiveAddress.value[selectedChain.value?.type || 'EVM'] = addr
+  })
 
   const hasChainBalance = computed(() => {
     const balanceBN = new BigNumber(balanceWei.value || '0')
@@ -531,8 +586,26 @@ export const useWalletStore = defineStore('walletStore', () => {
   /** -------------------------------
   * Stock Values
   -------------------------------*/
+
+  /**
+   * Re-fetch the connected wallet's balances (same logic as the home wallet
+   * card's refresh): flips the loading flag and updates tokens via setTokens.
+   */
+  const refreshBalances = async (): Promise<void> => {
+    if (!wallet.value) return
+    setIsLoadingBalances(true)
+    try {
+      const balances = await wallet.value.getBalance()
+      await useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    } catch (err) {
+      Sentry.captureException(err)
+      setIsLoadingBalances(false)
+    }
+  }
+
   return {
     wallet,
+    refreshBalances,
     walletAddress,
     walletName,
     setWatchOnlyIfExist,
@@ -562,6 +635,9 @@ export const useWalletStore = defineStore('walletStore', () => {
     formattedBalance,
     formattedBalanceFiat,
     isWatchOnly,
+    detectedAddress,
+    setDetectedAddress,
+    clearDetectedAddress,
     allTokens,
     hasMissingBalances,
     hasBalances,

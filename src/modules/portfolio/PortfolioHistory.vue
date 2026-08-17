@@ -122,11 +122,19 @@ const lastTwentyFourHours = computed<Change>(() => {
   }
 })
 
+const isEvmAddress = (address: string): boolean =>
+  /^0x[0-9a-fA-F]{40}$/.test(address)
+
 const fetchUrl = computed(() => {
-  if (selectedChain.value?.name && walletAddress.value) {
-    return `/v1/web/chains/${selectedChain.value.name}/addresses/${walletAddress.value}/7d-balances-back-projection`
-  }
-  return ''
+  const chain = selectedChain.value
+  const address = walletAddress.value
+  if (!chain?.name || !address) return ''
+  // Skip the request when the connected address doesn't belong to the selected
+  // chain type — e.g. an EVM (0x…) address while the BITCOIN network is
+  // selected in the multi-address flow. The API rejects the mismatch
+  // (INVALID_BTC_ADDRESS_FORMAT).
+  if ((chain.type === 'EVM') !== isEvmAddress(address)) return ''
+  return `/v1/web/chains/${chain.name}/addresses/${address}/7d-balances-back-projection`
 })
 
 const { data: dataPrices, isFetching } = useMEWFetch(fetchUrl, {

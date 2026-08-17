@@ -299,7 +299,7 @@
     "title": "选择网络",
     "search_placeholder": "按名称搜索",
     "incompatible_tooltip": "如需访问这些网络，请使用其他钱包或安装 Enkrypt 浏览器扩展",
-    "incompatible_title": "与您的钱包不兼容的网络"
+    "incompatible_title": "与您的地址不兼容的网络"
   },
   "search": {
     "placeholder": "搜索股票、加密货币",

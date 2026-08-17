@@ -305,7 +305,7 @@
     "title": "Select Network",
     "search_placeholder": "Search by Name",
     "incompatible_tooltip": "To access these networks, use a different wallet or install the Enkrypt browser extension",
-    "incompatible_title": "Networks incompatible with your wallet"
+    "incompatible_title": "Networks incompatible with your address"
   },
   "search": {
     "placeholder": "Search stocks, crypto",

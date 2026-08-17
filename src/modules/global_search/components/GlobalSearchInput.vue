@@ -9,7 +9,7 @@
       v-if="isCompact"
       type="button"
       :aria-label="$t('search.placeholder')"
-      class="w-9 h-9 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
+      class="w-10 h-10 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
       :class="isOpen ? 'bg-white' : 'bg-mewBg'"
       @click="open"
     >
@@ -17,7 +17,7 @@
     </button>
     <div
       v-else
-      class="flex items-center gap-2 px-4 py-2 rounded-full transition-colors duration-500"
+      class="flex items-center gap-2 h-10 px-4 rounded-full transition-colors duration-500"
       :class="isOpen ? 'bg-white' : 'bg-mewBg'"
     >
       <magnifying-glass-icon class="w-4 h-4 text-info" />
