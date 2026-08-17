@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
-    :class="isSearchOpen ? 'z-[201]' : 'z-10'"
+    :class="isHeaderOverlayOpen ? 'z-[201]' : 'z-10'"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -49,6 +49,7 @@
         </div>
         <app-select
           v-if="!showMobileMenu && !isLearnCollapsed"
+          v-model:open="isLearnOpen"
           :options="learnMenuList"
           :placeholder="$t('learn')"
           use-link
@@ -67,6 +68,7 @@
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
+          v-model:open="isMoreOpen"
           :options="moreMenuOptions"
           :placeholder="$t('common.more')"
           use-vue-router
@@ -194,6 +196,19 @@ const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 // surface reads it and none of them flash their restricted state.
 fetchTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
+
+/**
+ * The header is `fixed z-10`, i.e. its own stacking context, so a dropdown's
+ * internal z-index can't rise above the sibling trade drawer (z-[49..51]). When
+ * any header overlay is open we lift the whole header to z-[201] — the same
+ * trick already used for search — so the popover paints above the drawer
+ * instead of being clipped behind it (MEW-2113).
+ */
+const isMoreOpen = ref(false)
+const isLearnOpen = ref(false)
+const isHeaderOverlayOpen = computed<boolean>(
+  () => isSearchOpen.value || isMoreOpen.value || isLearnOpen.value,
+)
 
 /** ------------------------------
  * Wallet-restore skeleton
