@@ -16,15 +16,18 @@
         type="text"
         autoComplete="off"
         placeholder="0"
+        :aria-label="$t('common.amount')"
         v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
         @paste="onAmountPaste"
       />
-      <app-token-select
-        v-model:selected-token-contract="selectedToken"
-        @open:select-token="setIsOpenSelectToken"
-      />
+      <slot name="token-select">
+        <app-token-select
+          v-model:selected-token-contract="selectedToken"
+          @open:select-token="setIsOpenSelectToken"
+        />
+      </slot>
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
@@ -64,6 +67,7 @@
         </p>
       </transition>
     </div>
+    <slot name="footer" />
   </div>
 </template>
 
@@ -76,16 +80,16 @@ import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
   storeToRefs(walletStore)
+
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   validateInput: {
@@ -96,6 +100,10 @@ const props = defineProps({
   isPristine: {
     type: Boolean,
     default: false,
+  },
+  tokenObj: {
+    type: Object as PropType<TokenBalance | null>,
+    default: null,
   },
 })
 
@@ -114,6 +122,7 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
+  if (props.tokenObj) return props.tokenObj
   if (isLoading.value || !selectedToken.value) return null
   return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
@@ -124,7 +133,7 @@ const balanceFiat = computed(() => {
       BigNumber(amount.value || 0),
     ),
   )
-  return `$${formatFiatValue(_balance).value}`
+  return formatFiat(_balance).display
 })
 
 const balance = computed(() => {

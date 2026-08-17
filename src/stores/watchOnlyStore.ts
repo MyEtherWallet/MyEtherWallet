@@ -1,76 +1,225 @@
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
+import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import {
+  walletConfigs,
+  WalletConfigType,
+  type WalletConfig,
+} from '@/modules/access/common/walletConfigs'
 import type { Chain, ChainType } from '@/mew_api/types'
-
-interface AddressKeyValue {
-  address: string
-  walletName: string
-  chain: Chain
-  type: ChainType
-  walletType: string
-}
-
-interface RecentAddress {
-  [key: string]: AddressKeyValue[]
-}
+import {
+  buildId,
+  canAdd,
+  upsertEntry,
+  removeEntry,
+  isNameUnique,
+  backfillNames,
+  toSavedAccount,
+  SAVED_ACCOUNTS_CAP,
+  type RecentAddress,
+  type PersistedEntry,
+  type SavedAccount,
+} from '@/stores/saved_accounts/savedAccountsLogic'
+import { truncateAddress } from '@/utils/filters'
 
 export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const watchOnlyAddresses = useLocalStorage<RecentAddress>(
     'watchOnlyList',
-    {
-      EVM: [],
-      BITCOIN: [],
-    },
-    {
-      mergeDefaults: true,
-    },
+    { EVM: [], BITCOIN: [] },
+    { mergeDefaults: true },
   )
-  // Takes address to store, chain type to store under, and wallet name
-  // to allow easy opening for the popup
+
+  // Most-recently-CONNECTED address ids, newest first. Connecting an address pushes
+  // it to the front (a stack); selecting/viewing or disconnecting never touches it,
+  // so a connected address keeps its position until a NEW connection pushes it down.
+  // Persisted so the order survives reloads.
+  const connectionOrder = useLocalStorage<string[]>('connectionOrder', [])
+  const recordConnection = (address: string, type: ChainType): void => {
+    const id = buildId(type, address)
+    connectionOrder.value = [id, ...connectionOrder.value.filter(x => x !== id)]
+  }
+
+  const walletStore = useWalletStore()
+  const chainsStore = useChainsStore()
+
+  const configFor = (walletName: string) =>
+    Object.values(walletConfigs).find(
+      (c: WalletConfig) => c.name === walletName,
+    ) as WalletConfig | undefined
+
+  const view = (
+    entry: PersistedEntry,
+    kindOverride?: SavedAccount['kind'],
+  ): SavedAccount =>
+    toSavedAccount(entry, {
+      config: configFor(entry.walletName),
+      kindOverride,
+      fallbackConfigType: WalletConfigType.SOFTWARE,
+    })
+
+  const activeId = computed<string | null>(() => {
+    const address = walletStore.walletAddress
+    const chainType = chainsStore.selectedChain?.type as ChainType | undefined
+    if (!address || !chainType) return null
+    return buildId(chainType, address)
+  })
+
+  const allAccounts = computed<SavedAccount[]>(() =>
+    Object.values(watchOnlyAddresses.value)
+      .flat()
+      .map(e => {
+        const isActive = buildId(e.type, e.address) === activeId.value
+        // Only the active account can be "connected" (signing). Every other saved
+        // address is view-only, so a previously-connected address never keeps a
+        // connected indicator after switching — at most one address is connected.
+        return view(
+          e,
+          isActive && !walletStore.isWatchOnly ? 'signing' : 'watchOnly',
+        )
+      }),
+  )
+
+  const activeAccount = computed<SavedAccount | null>(() => {
+    const saved = allAccounts.value.find(a => a.id === activeId.value)
+    if (saved) return saved
+    // Cap edge case: the connected wallet may be over the saved-address cap, so
+    // addWallet dropped it and it isn't in the list. Surface it from the live
+    // wallet anyway so the popup shows the connected account instead of the
+    // misleading "no address for this network" empty state.
+    const address = walletStore.walletAddress
+    const chainType = chainsStore.selectedChain?.type as ChainType | undefined
+    if (!walletStore.isWalletConnected || !address || !chainType) return null
+    // Same chain-type guard as addWallet: never surface an EVM address under a
+    // Bitcoin network (or vice versa).
+    const looksEvm = address.toLowerCase().startsWith('0x')
+    if ((chainType === 'BITCOIN') === looksEvm) return null
+    return view(
+      makeEntry(
+        address,
+        chainsStore.selectedChain as Chain,
+        walletStore.wallet?.getWalletType() ?? '',
+        chainType,
+        walletStore.walletName,
+      ),
+      walletStore.isWatchOnly ? 'watchOnly' : 'signing',
+    )
+  })
+
+  const savedAccounts = computed<SavedAccount[]>(() =>
+    allAccounts.value.filter(a => a.id !== activeId.value),
+  )
+
+  const isAtCap = computed<boolean>(
+    () =>
+      Object.values(watchOnlyAddresses.value).flat().length >=
+      SAVED_ACCOUNTS_CAP,
+  )
+
+  const makeEntry = (
+    address: string,
+    chain: Chain,
+    walletType: string,
+    type: ChainType,
+    walletName: string,
+  ): PersistedEntry => ({
+    address,
+    walletName,
+    chain,
+    type,
+    walletType,
+    // Default the label to the truncated address (not "Address N") so it's
+    // recognizable and unique per address.
+    addressName: truncateAddress(address, 6, 4),
+  })
+
+  /** Auto-capture path (called by walletStore.setAddress on every connect). Void; silently caps. */
   const addWallet = (
     address: string,
     chain: Chain,
     walletType: string,
     type: ChainType,
     walletName: string,
-  ) => {
-    const addressKeyMap: AddressKeyValue = {
-      walletType,
-      walletName,
-      chain,
+  ): void => {
+    // Guard against a chain-type switch race storing an address in the wrong
+    // bucket (e.g. an EVM address landing under BITCOIN, creating a phantom
+    // duplicate). EVM addresses are 0x-prefixed; Bitcoin addresses are not.
+    const looksEvm = address.toLowerCase().startsWith('0x')
+    if ((type === 'BITCOIN') === looksEvm) return
+    const bucket = watchOnlyAddresses.value[type] ?? []
+    const prior = bucket.find(
+      e => e.address.toLowerCase() === address.toLowerCase(),
+    )
+    if (!prior && !canAdd(watchOnlyAddresses.value, type, address)) return
+    // Upsert IN PLACE (never reorder) so selecting/viewing an address keeps the popup
+    // list order stable. New entries append at the end; existing keep their position.
+    const entry: PersistedEntry = prior
+      ? { ...prior, walletName, walletType, chain } // preserve addressName + position
+      : makeEntry(address, chain, walletType, type, walletName)
+    watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
+  }
+
+  /** Explicit add (add-flow / save-detected). Reports the reason on failure. */
+  const tryAddAddress = (
+    address: string,
+    chain: Chain,
+    walletType: string,
+    type: ChainType,
+    walletName: string,
+  ): { added: boolean; reason?: 'cap' | 'duplicate' } => {
+    const exists = (watchOnlyAddresses.value[type] ?? []).some(
+      e => e.address.toLowerCase() === address.toLowerCase(),
+    )
+    if (exists) return { added: false, reason: 'duplicate' }
+    if (!canAdd(watchOnlyAddresses.value, type, address))
+      return { added: false, reason: 'cap' }
+    addWallet(address, chain, walletType, type, walletName)
+    return { added: true }
+  }
+
+  const removeWallet = (address: string, chain: Chain): void => {
+    watchOnlyAddresses.value = removeEntry(
+      watchOnlyAddresses.value,
+      chain.type as ChainType,
       address,
-      type,
-    }
+    )
+  }
 
-    if (watchOnlyAddresses.value[chain.type]) {
-      // Check if address already exists
-      const existingIndex = watchOnlyAddresses.value[chain.type].findIndex(
-        item => item.address === address,
+  const renameAccount = (
+    key: string,
+    name: string,
+  ): { ok: boolean; reason?: 'duplicate' } => {
+    if (!isNameUnique(watchOnlyAddresses.value, name, key))
+      return { ok: false, reason: 'duplicate' }
+    const next: RecentAddress = { ...watchOnlyAddresses.value }
+    for (const type of Object.keys(next)) {
+      next[type] = next[type].map(e =>
+        buildId(e.type, e.address) === key ? { ...e, addressName: name } : e,
       )
-
-      if (existingIndex !== -1) {
-        // Remove existing entry and add to front (end of array = most recent)
-        watchOnlyAddresses.value[chain.type].splice(existingIndex, 1)
-        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
-      } else {
-        // Remove oldest element if there are already 2 or more
-        if (watchOnlyAddresses.value[chain.type].length >= 2) {
-          watchOnlyAddresses.value[chain.type].shift()
-        }
-        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
-      }
-    } else {
-      watchOnlyAddresses.value[chain.type] = [addressKeyMap]
     }
+    watchOnlyAddresses.value = next
+    return { ok: true }
   }
 
-  const removeWallet = (address: string, chain: Chain) => {
-    if (watchOnlyAddresses.value[chain.type]) {
-      watchOnlyAddresses.value[chain.type] = watchOnlyAddresses.value[
-        chain.type
-      ].filter(item => item.address !== address)
-    }
+  /** One-shot: assign default names to legacy entries missing them. */
+  const backfill = (): void => {
+    watchOnlyAddresses.value = backfillNames(watchOnlyAddresses.value)
   }
 
-  return { addWallet, removeWallet, watchOnlyAddresses }
+  return {
+    watchOnlyAddresses,
+    connectionOrder,
+    recordConnection,
+    addWallet,
+    tryAddAddress,
+    removeWallet,
+    renameAccount,
+    backfill,
+    activeId,
+    activeAccount,
+    savedAccounts,
+    allAccounts,
+    isAtCap,
+  }
 })

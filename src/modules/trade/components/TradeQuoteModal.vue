@@ -2,7 +2,7 @@
   <app-dialog
     v-model:is-open="model"
     :title="$t('trade.quote_modal.title')"
-    class="sm:max-w-[460px] sm:mx-auto"
+    class="sm:max-w-[500px] sm:mx-auto sm:min-w-[460px]"
   >
     <template #content>
       <div class="mx-4 mb-1 pb-2">
@@ -72,55 +72,70 @@
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 flex-none"
                 />
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
 
           <!-- Quote Details -->
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
-              <span class="text-info">{{
-                $t('trade.quote_modal.estimated_amount')
-              }}</span>
-              <span class="font-medium flex items-center gap-1"
-                >{{ toAmountFormatted }}
-                <app-token-symbol
-                  :symbol="toToken?.symbol || 'UNKNOWN'"
-                  :address="
-                    toToken && chain
-                      ? { address: toToken.address, network: chain.name }
-                      : undefined
-                  "
-                  class="!text-s-14 !font-medium !leading-p-100"
+              <p class="text-info">
+                {{ $t('trade.quote_modal.estimated_amount') }}
+                <app-tooltip
+                  :text="$t('trade.quote_modal.limit_order_warning')"
+                  class="inline-flex align-middle"
                 />
-              </span>
+              </p>
+              <div>
+                <p class="font-medium flex items-center gap-1">
+                  {{ toAmountFormatted }}
+                  <app-token-symbol
+                    :symbol="toToken?.symbol || 'UNKNOWN'"
+                    :address="
+                      toToken && chain
+                        ? { address: toToken.address, network: chain.name }
+                        : undefined
+                    "
+                    class="!text-s-14 !font-medium !leading-p-100"
+                  />
+                </p>
+                <p class="text-info font-normal text-right text-s-12">
+                  ${{ toAmountFiat }}
+                </p>
+              </div>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
               <span class="text-info">{{
                 $t('trade.quote_modal.min_amount')
               }}</span>
-              <span class="font-medium flex items-center gap-1"
-                >{{ minAmountFormatted }}
-                <app-token-symbol
-                  :symbol="toToken?.symbol || 'UNKNOWN'"
-                  :address="
-                    toToken && chain
-                      ? { address: toToken.address, network: chain.name }
-                      : undefined
-                  "
-                  class="!text-s-14 !font-medium !leading-p-100"
-                />
-              </span>
+              <div>
+                <p class="font-medium flex items-center gap-1">
+                  {{ minAmountFormatted }}
+                  <app-token-symbol
+                    :symbol="toToken?.symbol || 'UNKNOWN'"
+                    :address="
+                      toToken && chain
+                        ? { address: toToken.address, network: chain.name }
+                        : undefined
+                    "
+                    class="!text-s-14 !font-medium !leading-p-100"
+                  />
+                </p>
+                <p class="text-info font-normal text-right text-s-12">
+                  ${{ minAmountFiat }}
+                </p>
+              </div>
             </div>
           </div>
-
-          <!-- Warning -->
-          <div class="mt-4 p-3 bg-warning-10 rounded-12 text-s-12 text-warning">
-            <p>
-              {{ $t('trade.quote_modal.limit_order_warning') }}
-            </p>
-          </div>
         </div>
+
+        <!-- Rewards eligibility banner -->
+        <rewards-trade-confirmation-banner
+          :trade-amount="toAmountFiat"
+          :is-cashout="isCashout ?? false"
+        />
 
         <!-- Actions -->
         <div class="flex flex-col gap-3 mt-4">
@@ -171,14 +186,16 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
+import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfirmationBanner.vue'
 import { formatUnits } from 'viem'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { analytics, TradeEvent } from '@/analytics'
+
+const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
@@ -192,6 +209,7 @@ const props = defineProps<{
   fromAmount: string
   loading?: boolean
   chain?: Chain
+  isCashout?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -221,7 +239,18 @@ const toAmountFiat = computed(() => {
   const formatted = formatUnits(amount, props.toToken.decimals || 18)
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
-  return formatFiatValue(fiat.toString()).value
+  return formatFiat(fiat.toString()).value
+})
+
+const minAmountFiat = computed(() => {
+  if (!props.quote?.endAmount || !props.toToken) return '0.00'
+  const formatted = formatUnits(
+    props.quote.endAmount,
+    props.toToken.decimals || 18,
+  )
+  const price = props.toToken.price || 0
+  const fiat = parseFloat(formatted) * price
+  return formatFiat(fiat.toString()).value
 })
 
 const isProcessing = ref(false)

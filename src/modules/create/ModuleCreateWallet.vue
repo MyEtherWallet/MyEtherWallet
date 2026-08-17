@@ -241,37 +241,43 @@
 
           <!-- Other Methods Section -->
           <div>
-            <h3 class="text-s-20 font-bold mb-3 px-4">{{ $t('create_wallet.other_wallet_methods') }}</h3>
+            <h3 class="text-s-20 font-bold mb-3 px-4">
+              {{ $t('create_wallet.other_wallet_methods') }}
+            </h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-2 pt-2">
               <!-- Hardware -->
               <button
                 type="button"
                 :aria-label="$t('create_wallet.buy_hardware_wallet')"
-                class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                class="flex flex-col text-left gap-4 lg:gap-6 p-4 lg:p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
-                <div class="w-1/3">
-                  <img
-                    :src="hardware"
-                    :alt="$t('create_wallet.hardware_wallet_alt')"
-                    class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <div class="lg:w-2/3 flex flex-col justify-between">
-                  <div>
-                    <h4 class="text-s-20 font-bold mb-2">{{ $t('create_wallet.hardware_wallet') }}</h4>
-                    <p class="text-info text-s-14 leading-p-150 mb-4">
-                      {{ $t('create_wallet.hardware_wallet_description') }}
-                    </p>
-                  </div>
-                  <div
-                    class="lg:-ml-2 flex items-center text-s-16 font-medium border-1 rounded-full px-4 py-1 size-max"
-                  >
-                    {{ $t('create_wallet.buy_hardware_wallet') }}
-                    <arrow-long-right-icon
-                      class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                <div class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6">
+                  <div class="lg:w-1/3">
+                    <img
+                      :src="hardware"
+                      :alt="$t('create_wallet.hardware_wallet_alt')"
+                      class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                     />
                   </div>
+                  <div class="lg:w-2/3 flex flex-col justify-between">
+                    <div>
+                      <h4 class="text-s-20 font-bold mb-2">
+                        {{ $t('create_wallet.hardware_wallet') }}
+                      </h4>
+                      <p class="text-info text-s-14 leading-p-150 mb-4">
+                        {{ $t('create_wallet.hardware_wallet_description') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
+                >
+                  {{ $t('create_wallet.buy_hardware_wallet') }}
+                  <arrow-long-right-icon
+                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  />
                 </div>
               </button>
 
@@ -279,7 +285,7 @@
               <button
                 type="button"
                 :aria-label="$t('create_wallet.create_software_wallet')"
-                class="relative flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                class="relative flex flex-col text-left gap-4 lg:gap-6 p-4 lg:p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
                 <div
@@ -287,32 +293,32 @@
                 >
                   {{ $t('create_wallet.not_recommended') }}
                 </div>
-                <div class="w-1/3 shrink-0">
-                  <img
-                    :src="software"
-                    :alt="$t('create_wallet.software_wallet_alt')"
-                    class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
-                  />
-                </div>
-                <div class="lg:w-2/3 flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-start justify-between gap-2 mb-2">
-                      <h4 class="text-s-20 font-bold leading-tight">
-                        {{ $t('create_wallet.software_wallet') }}
-                      </h4>
-                    </div>
-                    <p class="text-info text-s-14 leading-p-150 mb-4">
-                      {{ $t('create_wallet.software_wallet_description') }}
-                    </p>
-                  </div>
-                  <div
-                    class="lg:-ml-2 flex items-center font-medium text-s-16 border-1 rounded-full px-4 py-1 size-max w-fit"
-                  >
-                    {{ $t('create_wallet.create_software_wallet') }}
-                    <arrow-long-right-icon
-                      class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                <div class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6">
+                  <div class="lg:w-1/3">
+                    <img
+                      :src="software"
+                      :alt="$t('create_wallet.software_wallet_alt')"
+                      class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                     />
                   </div>
+                  <div class="lg:w-2/3 flex flex-col justify-between">
+                    <div>
+                      <h4 class="text-s-20 font-bold mb-2">
+                        {{ $t('create_wallet.software_wallet') }}
+                      </h4>
+                      <p class="text-info text-s-14 leading-p-150 mb-4">
+                        {{ $t('create_wallet.software_wallet_description') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
+                >
+                  {{ $t('create_wallet.create_software_wallet') }}
+                  <arrow-long-right-icon
+                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  />
                 </div>
               </button>
             </div>
@@ -424,8 +430,10 @@ const isOtherMethodsOpen = ref(false)
  -------------------------------*/
 const getTitle = computed(() => {
   if (currentView.value === 'default') return t('create_wallet.title')
-  if (currentView.value === 'buy') return t('create_wallet.buy_hardware_wallet_title')
-  if (currentView.value === 'mnemonic') return t('create_wallet.create_mnemonic_wallet_title')
+  if (currentView.value === 'buy')
+    return t('create_wallet.buy_hardware_wallet_title')
+  if (currentView.value === 'mnemonic')
+    return t('create_wallet.create_mnemonic_wallet_title')
   return t('create_wallet.title')
 })
 

@@ -59,10 +59,10 @@
               <button
                 type="button"
                 :class="[
-                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase transition-colors hoverNoBG',
+                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase border-2 transition-colors',
                   selectedIndex === index
-                    ? 'border-2 border-black'
-                    : 'border-2 border-transparent',
+                    ? 'border-black'
+                    : 'border-transparent hover:bg-transparent hover:border-grey-10',
                 ]"
                 @click="selectedIndex = index"
               >
@@ -144,17 +144,41 @@
             <div class="h-px bg-grey-10" />
           </div>
 
+          <!-- Quote freshness -->
+          <p
+            v-if="cooldownSeconds !== null"
+            class="text-error text-s-12 text-center -my-4"
+            aria-live="polite"
+          >
+            {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
+          </p>
+          <p
+            v-else-if="quoteExpired"
+            class="text-info text-s-12 text-center -my-4"
+            aria-live="polite"
+          >
+            {{ t('purchase.quote.expired_refreshing') }}
+          </p>
+          <p
+            v-else-if="quoteCountdown"
+            class="text-info text-s-12 text-center -my-4"
+          >
+            {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
+          </p>
+
           <!-- Continue CTA -->
-          <button
-            type="button"
-            class="h-12 w-full rounded-24 px-4 bg-primary text-white flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] hoverOpacityHasBG transition-colors"
+          <app-base-button
+            class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+            :disabled="quoteExpired"
             @click="onContinue"
           >
-            {{ t('purchase.select_provider.continue') }}
-            <arrow-top-right-on-square-icon
-              class="w-[22px] h-[22px] flex-none"
-            />
-          </button>
+            <span class="flex items-center justify-center gap-2">
+              {{ t('purchase.select_provider.continue') }}
+              <arrow-top-right-on-square-icon
+                class="w-[22px] h-[22px] flex-none"
+              />
+            </span>
+          </app-base-button>
           <p class="text-info text-s-12 text-center -mt-5">
             {{
               t('purchase.select_provider.redirect', {
@@ -173,6 +197,7 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
@@ -183,6 +208,12 @@ import {
   getPaymentMethodIcons,
 } from '../helpers/purchaseProviders'
 import type { BuyQuote } from '@/types/buyToken'
+import { analytics, BuyOfferEvent, BuyEventError } from '@/analytics'
+import type {
+  BuyPayloadShared,
+  BuyOfferPayloadShared,
+  ProviderName,
+} from '@/analytics'
 
 const props = defineProps<{
   quotes: BuyQuote[]
@@ -191,6 +222,10 @@ const props = defineProps<{
   cryptoCurrency: string
   isLoading: boolean
   error: string
+  analyticsPayload: BuyPayloadShared
+  quoteCountdown: string
+  quoteExpired: boolean
+  cooldownSeconds: number | null
 }>()
 
 const isOpen = defineModel('isOpen', { type: Boolean, required: true })
@@ -198,12 +233,68 @@ const isOpen = defineModel('isOpen', { type: Boolean, required: true })
 const { t } = useI18n()
 const selectedIndex = ref(0)
 
+// On a silent refresh, keep the provider the user selected; fall back to the
+// best-value quote when it is no longer offered (or on a fresh quote set).
 watch(
   () => props.quotes,
-  () => {
-    selectedIndex.value = 0
+  (quotes, oldQuotes) => {
+    const previous = oldQuotes?.[selectedIndex.value]?.provider
+    const index = previous
+      ? quotes.findIndex(q => q.provider === previous)
+      : -1
+    selectedIndex.value = index >= 0 ? index : 0
   },
 )
+
+const buildOfferPayload = (): BuyOfferPayloadShared => {
+  const rateOf = (name: string) =>
+    props.quotes.find(q => q.provider.toLowerCase() === name)?.crypto_amount
+  const best = props.quotes[0]
+  const selected = selectedQuote.value
+  return {
+    ...props.analyticsPayload,
+    MoonpayRate: rateOf('moonpay'),
+    SimplexRate: rateOf('simplex'),
+    TopperRate: rateOf('topper'),
+    CoinbaseRate: rateOf('coinbase'),
+    bestProviderRate: best?.provider.toLowerCase() ?? '',
+    selectedRate: selected?.crypto_amount ?? '',
+    selectedProvider: (selected?.provider.toLowerCase() ??
+      'moonpay') as ProviderName,
+  }
+}
+
+const offerShown = ref(false)
+const errorTracked = ref(false)
+const proceeded = ref(false)
+
+watch(
+  () => [isOpen.value, props.isLoading, props.quotes.length, props.error],
+  () => {
+    if (!isOpen.value || props.isLoading) return
+    if (props.quotes.length && !offerShown.value) {
+      offerShown.value = true
+      analytics.trackBuyEvent(BuyOfferEvent.OFFER_SHOWN, buildOfferPayload())
+    } else if (props.error && !errorTracked.value) {
+      errorTracked.value = true
+      analytics.trackBuyEventError(BuyEventError.OFFER_ERROR, {
+        ...props.analyticsPayload,
+        errorMsg: props.error,
+      })
+    }
+  },
+)
+
+watch(isOpen, (open, wasOpen) => {
+  if (wasOpen && !open) {
+    if (offerShown.value && !proceeded.value) {
+      analytics.trackBuyEvent(BuyOfferEvent.OFFER_CANCELED, buildOfferPayload())
+    }
+    offerShown.value = false
+    errorTracked.value = false
+    proceeded.value = false
+  }
+})
 
 const selectedQuote = computed(() =>
   props.quotes.length ? props.quotes[selectedIndex.value] : null,
@@ -223,7 +314,9 @@ const formattedFiatReceive = (quote: BuyQuote) => {
 }
 
 const onContinue = () => {
-  if (!selectedQuote.value?.url) return
+  if (props.quoteExpired || !selectedQuote.value?.url) return
+  proceeded.value = true
+  analytics.trackBuyEvent(BuyOfferEvent.OFFER_PROCEED, buildOfferPayload())
   window.open(selectedQuote.value.url, '_blank')
   isOpen.value = false
 }

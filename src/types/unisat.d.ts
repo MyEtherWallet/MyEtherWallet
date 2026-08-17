@@ -2,6 +2,7 @@
 export {}
 interface UnisatType {
   requestAccounts: () => Promise<string[]>
+  getAccounts: () => Promise<string[]>
   signPsbt: (
     psbt: string,
     options: { autoFinalized: boolean },

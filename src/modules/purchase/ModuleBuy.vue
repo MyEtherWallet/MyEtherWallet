@@ -1,6 +1,20 @@
 <template>
   <div class="relative flex flex-col h-full">
-    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.buy.network_not_supported')"
+      :description="
+        t('purchase.buy.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="mb-3"
+    />
+
+    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
       <purchase-token-select-card
         v-if="displayChain"
         :chain="displayChain"
@@ -22,23 +36,14 @@
         @blur="isInputFocused = false"
       />
 
-      <button
-        type="button"
-        :class="[
-          'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
-          ctaIsPrimary
-            ? 'bg-primary text-white hoverOpacityHasBG'
-            : 'bg-bgBase text-grey-50 cursor-not-allowed',
-        ]"
-        :disabled="ctaDisabled"
+      <app-base-button
+        class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+        :disabled="ctaDisabled && !ctaIsLoading"
+        :is-loading="ctaIsLoading"
         @click="onSubmit"
       >
-        <span
-          v-if="ctaIsLoading"
-          class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
-        />
-        <span v-else>{{ ctaLabel }}</span>
-      </button>
+        {{ ctaLabel }}
+      </app-base-button>
 
       <a
         href="https://help.myetherwallet.com/"
@@ -51,20 +56,6 @@
 
       <purchase-footer class="pt-2" />
     </div>
-
-    <purchase-unsupported-network
-      v-if="showUnsupportedNetwork"
-      :title="t('purchase.buy.network_not_supported')"
-      :description="
-        t('purchase.buy.network_not_available', {
-          network:
-            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
-        })
-      "
-      :chains="supportedNetworkChains"
-      :default-chain="defaultSupportedChain"
-      class="absolute inset-x-2 top-[88px] z-20"
-    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -89,8 +80,12 @@
       :fiat-amount="fiatAmount"
       :fiat-currency="selectedFiat"
       :crypto-currency="tokenSymbol"
-      :is-loading="isFetchingQuotes"
+      :is-loading="isFetchingQuotes && !buyQuotes.length"
       :error="buyQuotesError"
+      :analytics-payload="buyPayload"
+      :quote-countdown="quoteCountdown"
+      :quote-expired="quoteExpired"
+      :cooldown-seconds="quoteCooldownSeconds"
     />
   </div>
 </template>
@@ -108,6 +103,7 @@ import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -124,9 +120,13 @@ import {
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useQuoteCountdown } from './composables/useQuoteCountdown'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
+import { analytics, BuyEvent, BuyEventError } from '@/analytics'
+import type { BuyPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -139,9 +139,11 @@ const {
   buyQuotes,
   isFetchingQuotes,
   buyQuotesError,
+  buyQuotesExpiresAt,
   cryptoEstimate,
   isFetchingEstimate,
   exchangeRates,
+  rateLimitedUntil,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -184,9 +186,7 @@ const showUnsupportedNetwork = computed(
   () => !!purchaseInfo.value && !supportedNetwork.value,
 )
 
-const blurClass = computed(() =>
-  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
-)
+const { blockedClass } = useBlockedContent(showUnsupportedNetwork)
 
 const accessStore = useAccessStore()
 
@@ -247,6 +247,7 @@ const applyPreselectedToken = () => {
 onMounted(() => {
   fetchPurchaseInfo()
   applyPreselectedToken()
+  analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
 watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
@@ -291,14 +292,35 @@ const quickButtons = computed(() => {
     }))
   }
   return [
-    { label: 'Min', value: Math.round(MIN_USD * rate), usdValue: MIN_USD },
-    { label: 'Max', value: Math.round(MAX_USD * rate), usdValue: MAX_USD },
+    {
+      label: t('purchase.min'),
+      value: Math.round(MIN_USD * rate),
+      usdValue: MIN_USD,
+    },
+    {
+      label: t('purchase.max'),
+      value: Math.round(MAX_USD * rate),
+      usdValue: MAX_USD,
+    },
   ]
 })
 
 const formattedCryptoEstimate = computed(() => {
   if (!cryptoEstimate.value) return `0.00 ${tokenSymbol.value}`.trim()
   return `${formatFloatingPointValue(cryptoEstimate.value).value} ${tokenSymbol.value}`.trim()
+})
+
+const buyPayload = computed<BuyPayloadShared>(() => {
+  const rate = currencyRate.value
+  const amountUSD =
+    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+  return {
+    network: displayChain.value?.name,
+    token: tokenSymbol.value,
+    currency: selectedFiat.value,
+    amountUSD,
+    amountOriginalCurrency: fiatAmount.value,
+  }
 })
 
 const limitText = (value: number) =>
@@ -337,10 +359,6 @@ const amountHelper = computed(() =>
     : t('purchase.buy.error.min', { min: limitText(amountMinHint.value) }),
 )
 
-const ctaIsPrimary = computed(
-  () => !isReady.value || (amountIsValid.value && !hasNoQuotes.value),
-)
-
 const ctaDisabled = computed(
   () =>
     showUnsupportedNetwork.value ||
@@ -352,7 +370,10 @@ const ctaDisabled = computed(
 )
 
 const ctaIsLoading = computed(
-  () => isReady.value && amountIsValid.value && isFetchingQuotes.value,
+  () =>
+    isReady.value &&
+    amountIsValid.value &&
+    (isFetchingEstimate.value || isFetchingQuotes.value),
 )
 
 const ctaLabel = computed(() => {
@@ -373,6 +394,15 @@ const fetchEstimate = async () => {
     cryptoCurrency: tokenSymbol.value,
     chain: purchaseChainCode.value,
   })
+  if (!amountIsValid.value) return
+  if (cryptoEstimate.value) {
+    analytics.trackBuyEvent(BuyEvent.PRELIMINARY_SHOWN, buyPayload.value)
+  } else {
+    analytics.trackBuyEventError(BuyEventError.PRELIMINARY_ERROR, {
+      ...buyPayload.value,
+      errorMsg: 'no_quotes',
+    })
+  }
 }
 
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
@@ -434,6 +464,14 @@ watch(
   },
 )
 
+const buyQuoteParams = () => ({
+  address: walletAddress.value ?? '',
+  fiatCurrency: selectedFiat.value,
+  amount: fiatAmount.value,
+  cryptoCurrency: tokenSymbol.value,
+  chain: purchaseChainCode.value,
+})
+
 const onSubmit = async () => {
   if (showUnsupportedNetwork.value) return
   if (!isReady.value) {
@@ -442,15 +480,27 @@ const onSubmit = async () => {
   }
   if (!amountIsValid.value) return
 
+  analytics.trackBuyEvent(BuyEvent.CLICK_CONTINUE, buyPayload.value)
+
   clearBuyQuotes()
   showProviderModal.value = true
 
-  await fetchBuyQuotes({
-    address: walletAddress.value ?? '',
-    fiatCurrency: selectedFiat.value,
-    amount: fiatAmount.value,
-    cryptoCurrency: tokenSymbol.value,
-    chain: purchaseChainCode.value,
-  })
+  await fetchBuyQuotes(buyQuoteParams())
 }
+
+const {
+  isExpired: quoteExpired,
+  cooldownSecondsLeft: quoteCooldownSeconds,
+  countdownText: quoteCountdown,
+} = useQuoteCountdown({
+  expiresAt: buyQuotesExpiresAt,
+  rateLimitedUntil,
+  enabled: computed(
+    () => showProviderModal.value && buyQuotes.value.length > 0,
+  ),
+  onExpire: () => {
+    if (isFetchingQuotes.value) return
+    fetchBuyQuotes(buyQuoteParams(), { silent: true })
+  },
+})
 </script>

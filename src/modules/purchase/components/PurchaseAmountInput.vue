@@ -1,7 +1,9 @@
 <template>
   <div
     :class="[
-      isFocused ? 'bg-white border-grey-10' : 'bg-bgBase border-transparent',
+      isFocused
+        ? 'bg-white border-grey-10'
+        : 'bg-bgBase border-transparent has-[.amount-value:hover]:border-grey-10',
       'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
     ]"
   >
@@ -28,39 +30,45 @@
         :style="scaleStyle"
         class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
       >
-        <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
-          effectiveSymbol
-        }}</span>
-        <input
-          :id="inputId"
-          ref="inputEl"
-          :value="displayValue"
-          type="text"
-          inputmode="decimal"
-          aria-label="Amount"
-          class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
-          :style="{
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-            letterSpacing: 'inherit',
-            width: inputWidth,
-          }"
-          @keydown="onKeyDown"
-          @input="onInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
-        />
-        <span
-          v-if="amount === ''"
-          :class="isFocused ? 'text-grey-30' : 'text-black'"
-          aria-hidden="true"
-        >0</span>
-        <span
-          v-if="symbolPosition === 'suffix'"
-          aria-hidden="true"
-          class="ml-2"
-        >{{ effectiveSymbol }}</span>
+        <span class="amount-value flex items-center">
+          <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
+            effectiveSymbol
+          }}</span>
+          <input
+            :id="inputId"
+            ref="inputEl"
+            :value="displayValue"
+            type="text"
+            inputmode="decimal"
+            :aria-label="$t('common.amount')"
+            class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
+            :style="{
+              fontSize: 'inherit',
+              lineHeight: 'inherit',
+              letterSpacing: 'inherit',
+              width: inputWidth,
+            }"
+            @keydown="onKeyDown"
+            @input="onInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            @scroll="
+              (e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)
+            "
+          />
+          <span
+            v-if="amount === ''"
+            :class="isFocused ? 'text-grey-30' : 'text-black'"
+            aria-hidden="true"
+            >0</span
+          >
+          <span
+            v-if="symbolPosition === 'suffix'"
+            aria-hidden="true"
+            class="ml-2"
+            >{{ effectiveSymbol }}</span
+          >
+        </span>
       </label>
 
       <p
@@ -93,17 +101,15 @@
     </div>
 
     <!-- Balance row (Sell mode) -->
-    <p
-      v-if="balance"
-      class="text-s-12 text-info leading-[18px] text-center"
-    >
+    <p v-if="balance" class="text-s-12 text-info leading-[18px] text-center">
       {{ $t('purchase.sell.your_balance') }}
       <span
         :class="[
           'font-semibold tracking-[-0.24px]',
           balance.hasError ? 'text-error' : 'text-black',
         ]"
-      >{{ balance.value }}</span>
+        >{{ balance.value }}</span
+      >
       <span class="text-info"> ({{ balance.fiat }})</span>
     </p>
 
@@ -244,8 +250,7 @@ const presetFontStyle = computed(() => {
   const count = props.quickButtons.length
   const fallback = { fontSize: '11px', lineHeight: '15px' }
   if (!count || !presetRowWidth.value) return fallback
-  const perButton =
-    (presetRowWidth.value - PRESET_GAP_PX * (count - 1)) / count
+  const perButton = (presetRowWidth.value - PRESET_GAP_PX * (count - 1)) / count
   const available = perButton - PRESET_PADDING_PX
   const longest = props.quickButtons.reduce(
     (a, b) => (b.label.length > a.length ? b.label : a),
@@ -253,7 +258,9 @@ const presetFontStyle = computed(() => {
   )
   const size =
     PRESET_FONT_SIZES.find(
-      px => measureTextWidth(longest, `700 ${px}px "DM Sans", sans-serif`) <= available,
+      px =>
+        measureTextWidth(longest, `700 ${px}px "DM Sans", sans-serif`) <=
+        available,
     ) ?? PRESET_FONT_SIZES[PRESET_FONT_SIZES.length - 1]
   return { fontSize: `${size}px`, lineHeight: `${size + 4}px` }
 })
@@ -311,9 +318,15 @@ const onInput = async (event: Event) => {
   target.setSelectionRange(newCursor, newCursor)
 }
 
-const onSelectPreset = (btn: QuickButton) => {
+const onSelectPreset = async (btn: QuickButton) => {
   emit('update:amount', String(btn.value))
   emit('select-preset', btn.usdValue)
+  await nextTick()
+  const input = inputEl.value
+  if (!input) return
+  input.focus()
+  const cursorPosition = input.value.length
+  input.setSelectionRange(cursorPosition, cursorPosition)
 }
 
 const focus = () => inputEl.value?.focus()

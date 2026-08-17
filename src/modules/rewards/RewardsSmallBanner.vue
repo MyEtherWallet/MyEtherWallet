@@ -1,131 +1,61 @@
 <template>
-  <div v-if="!isBanned">
+  <!-- Every location except the swap one advertises the hold campaign ("Trade,
+       hold and get 10 USDC"), so those are hidden once it stops taking trades. -->
+  <div v-if="!isBanned && (isSwapLocation || canRegisterTrade)">
     <div
       class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
     >
       <div class="flex-1 min-w-0">
-        <p class="text-s-11 font-semibold text-black leading-tight">
-          {{
-            props.location === 'small-banner-swap' ? 'Swap $50+' : 'Trade $25+'
-          }}
-          on Ethereum and
-          <span class="text-primary"> Earn 5 USDC</span>
-        </p>
+        <div class="text-s-11 font-semibold text-black leading-tight">
+          <div v-if="props.location === 'small-banner-swap'">
+            {{ t('rewards.small_banner_swap_text') }}
+            <span class="text-primary">
+              {{ t('rewards.small_banner_swap_highlight') }}</span
+            >
+          </div>
+          <div v-else>
+            {{ t('rewards.small_banner_trade_text') }}
+            <span class="text-primary">
+              {{ t('rewards.small_banner_trade_highlight') }}</span
+            >
+            <br />
+            {{ t('rewards.small_banner_trade_sub') }}
+          </div>
+        </div>
       </div>
       <button
         class="flex items-center gap-1 text-s-14 text-black underline whitespace-nowrap hoverOpacity shrink-0"
       >
-        Learn more
+        {{ t('rewards.learn_more') }}
       </button>
     </div>
-    <rewards-learn-more
-      v-model:is-open="isLearnMoreOpen"
-      :location="props.location"
-      :swap-claimed="swapClaimed"
-      :swap-no-rewards="swapNoRewards"
-      :swap-remaining-pct="swapRemainingPct"
-      :swap-remaining-count="swapRemainingCount"
-      :swap-total="swapTotal"
-      :trade-claimed="tradeClaimed"
-      :trade-no-rewards="tradeNoRewards"
-      :trade-market-closed="tradeMarketClosed"
-      :trade-remaining-pct="tradeRemainingPct"
-      :trade-remaining-count="tradeRemainingCount"
-      :trade-total="tradeTotal"
-      :time-until-hour-reset="timeUntilRewardHourReset"
-      :time-until-swap-next-eligible="timeUntilSwapNextEligible"
-      :time-until-trade-next-eligible="timeUntilTradeNextEligible"
-      :time-until-market-open="timeUntilMarketOpen"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
-import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
+import { useHoldingsStore } from '@/stores/holdingsStore'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   location: 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
 }>()
 
 const rewardsStore = useRewardsStore()
-const {
-  eligibilityV2,
-  swapClaimed,
-  tradeClaimed,
-  swapNoRewards,
-  tradeNoRewards,
-  tradeMarketClosed,
-  swapTotal,
-  swapRemainingPct,
-  swapRemainingCount,
-  tradeTotal,
-  tradeRemainingPct,
-  tradeRemainingCount,
-  nextHourStart,
-  isBanned,
-} = storeToRefs(rewardsStore)
+const { isBanned } = storeToRefs(rewardsStore)
 
-const isLearnMoreOpen = ref(false)
-const timeUntilRewardHourReset = ref('--')
-const timeUntilSwapNextEligible = ref('--')
-const timeUntilTradeNextEligible = ref('--')
-let countdownTimer: ReturnType<typeof setInterval> | null = null
+const holdingsStore = useHoldingsStore()
+const { canRegisterTrade } = storeToRefs(holdingsStore)
 
-const { countdownText: timeUntilMarketOpen, fetchMarketStatus } =
-  useMarketStatus()
-
-function formatDiff(ms: number): string {
-  const d = Math.floor(ms / 86_400_000)
-  if (d > 0) return `${d} d`
-  const h = Math.floor(ms / 3_600_000)
-  if (h > 0) return `${h}h`
-  const m = Math.floor(ms / 60_000)
-  return `${m} min`
-}
-
-const updateCountdowns = () => {
-  const hourTarget = nextHourStart.value
-  timeUntilRewardHourReset.value = hourTarget
-    ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
-    : '--'
-
-  timeUntilSwapNextEligible.value = eligibilityV2.value?.swap.nextEligibleDate
-    ? formatDiff(
-        Math.max(
-          0,
-          new Date(eligibilityV2.value?.swap.nextEligibleDate).getTime() -
-            Date.now(),
-        ),
-      )
-    : '--'
-  timeUntilTradeNextEligible.value = eligibilityV2.value?.trade.nextEligibleDate
-    ? formatDiff(
-        Math.max(
-          0,
-          new Date(eligibilityV2.value?.trade.nextEligibleDate).getTime() -
-            Date.now(),
-        ),
-      )
-    : '--'
-}
-
-onMounted(() => {
-  fetchMarketStatus()
-  updateCountdowns()
-  countdownTimer = setInterval(updateCountdowns, 1000)
-})
-
-onUnmounted(() => {
-  if (countdownTimer) clearInterval(countdownTimer)
-})
+const isSwapLocation = computed(() => props.location === 'small-banner-swap')
 
 const onLearnMore = () => {
-  isLearnMoreOpen.value = true
+  holdingsStore.openModal()
 }
 </script>
 

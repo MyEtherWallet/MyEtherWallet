@@ -1,4 +1,5 @@
 import { computed, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type {
   Chain,
@@ -10,7 +11,6 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
-  TRADING_PAUSED_SESSION_MESSAGE,
 } from './tradeSession'
 
 // Individual asset type from the response arrays
@@ -40,6 +40,8 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     currentSession,
   } = options
 
+  const { t } = useI18n()
+
   // Check if selected from token is a tradable asset (stock token)
   const isSellingTradableAsset = computed(() => {
     if (!fromTokenSelected.value || !tradableAssets.value) return false
@@ -48,6 +50,17 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
     return tradableAssets.value.some(asset =>
       asset.addresses.some(addr => addr.address?.toLowerCase() === fromAddress),
+    )
+  })
+
+  // Check if the selected to token is a cash-out (supporting) asset, e.g. USDC
+  const isCashOutTradableAsset = computed(() => {
+    if (!toTokenSelected.value || !additionalBuyAssets.value) return false
+    const toAddress = toTokenSelected.value.address?.toLowerCase()
+    if (!toAddress) return false
+
+    return additionalBuyAssets.value.some(asset =>
+      asset.addresses.some(addr => addr.address?.toLowerCase() === toAddress),
     )
   })
 
@@ -130,13 +143,13 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
       //if asset is not tradable in current session, then return the session pause message
       if (!isAssetTradableInSession(info, currentSession.value)) {
-        return TRADING_PAUSED_SESSION_MESSAGE
+        return t('trade.trading_paused_session')
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
         return (
           info.pause?.reason?.message ||
-          `${token?.symbol} is currently not available for trading`
+          t('trade.error.token-not-available', { symbol: token?.symbol })
         )
       }
     }
@@ -205,6 +218,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
   return {
     isSellingTradableAsset,
+    isCashOutTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
     disabledTokenAddresses,

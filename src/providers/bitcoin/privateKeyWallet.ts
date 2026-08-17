@@ -60,6 +60,13 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
     return address!
   }
 
+  override async getPublicKey(): Promise<HexPrefixedString> {
+    const priv = ECPair.fromPrivateKey(this.privateKey, {
+      network: INFO_MAP[this.chainName].network,
+    })
+    return toHex(priv.publicKey) as HexPrefixedString
+  }
+
   override async SignMessage(options: {
     message: string
     options?: unknown

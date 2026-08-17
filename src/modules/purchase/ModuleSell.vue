@@ -1,6 +1,20 @@
 <template>
   <div class="relative flex flex-col h-full">
-    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.sell.network_not_supported')"
+      :description="
+        t('purchase.sell.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="mb-3"
+    />
+
+    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
     <purchase-token-select-card
       v-if="displayChain"
       :chain="displayChain"
@@ -71,23 +85,14 @@
       </div>
     </teleport>
 
-    <button
-      type="button"
-      :class="[
-        'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
-        ctaIsPrimary
-          ? 'bg-primary text-white hoverOpacityHasBG'
-          : 'bg-bgBase text-grey-50 cursor-not-allowed',
-      ]"
-      :disabled="ctaDisabled"
+    <app-base-button
+      class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+      :disabled="ctaDisabled && !ctaIsLoading"
+      :is-loading="ctaIsLoading"
       @click="onSubmit"
     >
-      <span
-        v-if="ctaIsLoading"
-        class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
-      />
-      <span v-else>{{ ctaLabel }}</span>
-    </button>
+      {{ ctaLabel }}
+    </app-base-button>
 
     <a
       href="https://help.myetherwallet.com/"
@@ -102,20 +107,6 @@
       <app-select-tx-fee ref="feeSelector" />
     </div>
     </div>
-
-    <purchase-unsupported-network
-      v-if="showUnsupportedNetwork"
-      :title="t('purchase.sell.network_not_supported')"
-      :description="
-        t('purchase.sell.network_not_available', {
-          network:
-            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
-        })
-      "
-      :chains="supportedNetworkChains"
-      :default-chain="defaultSupportedChain"
-      class="absolute inset-x-2 top-[88px] z-20"
-    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -139,8 +130,12 @@
       :quote="sellQuote"
       :crypto-amount="cryptoAmount"
       :crypto-symbol="tokenSymbol"
-      :is-loading="isFetchingSellQuote"
+      :is-loading="isFetchingSellQuote && !sellQuote"
       :error="sellQuoteError"
+      :analytics-payload="sellPayload"
+      :quote-countdown="quoteCountdown"
+      :quote-expired="quoteExpired"
+      :cooldown-seconds="quoteCooldownSeconds"
     />
   </div>
 </template>
@@ -158,6 +153,7 @@ import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import SellProviderModal from './components/SellProviderModal.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -173,9 +169,13 @@ import {
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useQuoteCountdown } from './composables/useQuoteCountdown'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
+import { analytics, SellEvent, SellEventError } from '@/analytics'
+import type { SellPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -188,7 +188,9 @@ const {
   sellQuote,
   isFetchingSellQuote,
   sellQuoteError,
+  sellQuoteExpiresAt,
   exchangeRates,
+  rateLimitedUntil,
 } = storeToRefs(purchaseStore)
 const { fetchPurchaseInfo, fetchSellQuote, clearSellQuote } = purchaseStore
 
@@ -232,9 +234,7 @@ const showUnsupportedNetwork = computed(
   () => !!purchaseInfo.value && !supportedNetwork.value,
 )
 
-const blurClass = computed(() =>
-  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
-)
+const { blockedClass } = useBlockedContent(showUnsupportedNetwork)
 
 const accessStore = useAccessStore()
 
@@ -274,6 +274,7 @@ const tokenSymbol = computed<string>(
 
 onMounted(() => {
   fetchPurchaseInfo()
+  analytics.trackSellEvent(SellEvent.SHOWN, sellPayload.value)
 })
 
 const currencyOptions = computed(() => Array.from(sellFiats.value.keys()))
@@ -444,34 +445,91 @@ const formattedFiatEstimate = computed(() => {
   return `${symbol}${formatFiatValue(amount).value}`
 })
 
+const sellPayload = computed<SellPayloadShared>(() => {
+  const price = tokenPrice.value
+  const rate = fiatRate.value
+  const amountUSD =
+    price > 0 ? (Number(cryptoAmount.value) * price).toFixed(2) : ''
+  const amountOriginalCurrency =
+    sellQuote.value?.fiat_amount ??
+    (price > 0 && rate
+      ? (Number(cryptoAmount.value) * price * rate).toFixed(2)
+      : '')
+  const fee = feeSelector.value
+  const networkFeeUSD =
+    fee?.hasFees && fee?.hasFiatEstimates
+      ? (fee.selectedFeeFiat as string).replace(/[^0-9.]/g, '') || undefined
+      : undefined
+  return {
+    network: displayChain.value?.name,
+    token: tokenSymbol.value,
+    currency: selectedFiat.value,
+    amountToken: cryptoAmount.value,
+    amountUSD,
+    amountOriginalCurrency,
+    networkFeeUSD,
+  }
+})
+
 const ESTIMATE_FALLBACK_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+const sellQuoteParams = () => ({
+  address: walletAddress.value || ESTIMATE_FALLBACK_ADDRESS,
+  fiatCurrency: selectedFiat.value,
+  amount: cryptoAmount.value,
+  cryptoCurrency: tokenSymbol.value,
+  chain: purchaseChainCode.value,
+})
 
 const fetchEstimate = async () => {
   if (isAmountEmpty.value || Number(cryptoAmount.value) <= 0) {
     clearSellQuote()
     return
   }
-  await fetchSellQuote({
-    address: walletAddress.value || ESTIMATE_FALLBACK_ADDRESS,
-    fiatCurrency: selectedFiat.value,
-    amount: cryptoAmount.value,
-    cryptoCurrency: tokenSymbol.value,
-    chain: purchaseChainCode.value,
-  })
+  await fetchSellQuote(sellQuoteParams())
+  if (!amountIsValid.value) return
+  if (sellQuote.value) {
+    analytics.trackSellEvent(SellEvent.PRELIMINARY_SHOWN, sellPayload.value)
+  } else {
+    analytics.trackSellEventError(SellEventError.PRELIMINARY_ERROR, {
+      ...sellPayload.value,
+      errorMsg: sellQuoteError.value || 'no_quote',
+    })
+  }
 }
 
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
 
 /* ------------------------------------------------------------------ *
- * CTA state
+ * Quote expiration — the sell estimate is the actual quote used for
+ * the Moonpay redirect, so it silently refreshes while it is on screen.
  * ------------------------------------------------------------------ */
 
-const ctaIsPrimary = computed(() => !isReady.value || amountIsValid.value)
+const {
+  isExpired: quoteExpired,
+  cooldownSecondsLeft: quoteCooldownSeconds,
+  countdownText: quoteCountdown,
+} = useQuoteCountdown({
+  expiresAt: sellQuoteExpiresAt,
+  rateLimitedUntil,
+  enabled: computed(() => !!sellQuote.value && amountIsValid.value),
+  onExpire: () => {
+    if (isFetchingSellQuote.value) return
+    fetchSellQuote(sellQuoteParams(), { silent: true })
+  },
+})
+
+/* ------------------------------------------------------------------ *
+ * CTA state
+ * ------------------------------------------------------------------ */
 
 const ctaDisabled = computed(
   () =>
     showUnsupportedNetwork.value ||
-    (isReady.value && (!amountIsValid.value || isFetchingSellQuote.value)),
+    (isReady.value &&
+      (!amountIsValid.value ||
+        isFetchingSellQuote.value ||
+        quoteExpired.value)),
 )
 
 const ctaIsLoading = computed(
@@ -480,6 +538,11 @@ const ctaIsLoading = computed(
 
 const ctaLabel = computed(() => {
   if (!isReady.value) return t('purchase.sell.connect_wallet')
+  if (quoteExpired.value && quoteCooldownSeconds.value !== null) {
+    return t('purchase.quote.rate_limited', {
+      seconds: quoteCooldownSeconds.value,
+    })
+  }
   if (amountIsValid.value) return t('purchase.sell.continue')
   return t('purchase.sell.enter_amount')
 })
@@ -537,6 +600,7 @@ const onSubmit = () => {
     return
   }
   if (!amountIsValid.value) return
+  analytics.trackSellEvent(SellEvent.CLICK_CONTINUE, sellPayload.value)
   showProviderModal.value = true
 }
 </script>

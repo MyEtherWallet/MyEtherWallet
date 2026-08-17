@@ -14,7 +14,6 @@ class Web3InjectedWallet extends BaseEvmWallet {
 
   constructor(provider: Eip6963Provider, chainId: string) {
     super(chainId)
-
     this.provider = provider
     this.address = '0x'
   }
@@ -79,6 +78,17 @@ class Web3InjectedWallet extends BaseEvmWallet {
 
   override async getAddress(): Promise<HexPrefixedString> {
     return this.address
+  }
+
+  async getLiveAddress(): Promise<string | null> {
+    try {
+      const accounts = (await this.provider.provider.request({
+        method: 'eth_accounts',
+      })) as string[]
+      return accounts?.[0] ?? null
+    } catch {
+      return null
+    }
   }
 
   override getWalletType(): WalletType {

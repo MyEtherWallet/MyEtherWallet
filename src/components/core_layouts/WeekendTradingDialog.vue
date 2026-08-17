@@ -21,30 +21,34 @@
             />
           </div>
           <h1 class="text-s-28 font-bold leading-8 tracking-tight">
-            Weekend stock trading:
-            <span class="text-primary">Unlocked!</span>
+            {{ $t('trade.weekend.dialog_headline') }}
+            <span class="text-primary">{{
+              $t('trade.weekend.dialog_headline_highlight')
+            }}</span>
           </h1>
         </div>
         <!-- Footer: body + actions (mt on mobile where height is auto and
              justify-between gives no gap; reset at xs+ where height is fixed) -->
         <div class="flex flex-col gap-5 mt-8 xs:mt-0">
           <p class="text-s-16 leading-[22px] text-info">
-            SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon are now open for 24/7
-            trading. Trade the news, trade the tweets, make your stock moves any
-            time.
+            {{
+              $t('trade.weekend.dialog_body', {
+                tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
+              })
+            }}
           </p>
           <div class="flex gap-2">
             <button
               class="flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold"
               @click="onTradeNow"
             >
-              Trade now
+              {{ $t('trade.weekend.trade_now') }}
             </button>
             <button
               class="flex-1 h-12 rounded-24 bg-grey-10 text-black text-s-16 font-semibold"
               @click="onGotIt"
             >
-              Got it
+              {{ $t('common.got_it') }}
             </button>
           </div>
         </div>
@@ -61,6 +65,8 @@ import AppDialog from '@/components/AppDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
@@ -79,8 +85,15 @@ const walletMenu = useWalletMenuStore()
 const announcement = useWeekendTradingAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 
-const { isTradingRestrictedInRegion, fetchTradingRestriction } =
-  useMarketStatus()
+// The 24/7 announcement is sequenced behind the RWA "Trade & Hold" announcement:
+// it never shows while that modal is open and only surfaces 3 days after it is
+// first closed.
+const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+  useRwaAnnouncementStore(),
+)
+
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+const { fetchTradingRestriction } = useMarketStatus()
 
 const isOpen = ref(false)
 
@@ -113,6 +126,8 @@ const openDialog = () => {
   // Defer behind the Welcome dialog so a brand-new user isn't shown two modals
   // at once. In dev the Welcome dialog never mounts, so don't require it there.
   if (isTradingRestrictedInRegion.value) return
+  // Wait until 3 days after the RWA announcement was closed.
+  if (!rwaCooldownElapsed.value) return
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()

@@ -108,7 +108,7 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">${{ fromAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ currencySymbol }}{{ fromAmountFiat }}</p>
                 </div>
               </div>
 
@@ -155,7 +155,7 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">${{ toAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ currencySymbol }}{{ toAmountFiat }}</p>
                 </div>
               </div>
             </div>
@@ -235,12 +235,11 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 
 const model = defineModel<boolean>('isOpen', { default: false })
 
@@ -284,13 +283,13 @@ const toAmountFormatted = computed(() => {
 const fromAmountFiat = computed(() => {
   const price = props.fromToken?.price ?? 0
   const amount = props.fromAmount ?? '0'
-  return formatFiatValue(BigNumber(amount).multipliedBy(price).toFixed(6)).value
+  return formatFiat(BigNumber(amount).multipliedBy(price).toFixed(6)).value
 })
 
 const toAmountFiat = computed(() => {
   const price = props.toToken?.price ?? 0
   const amount = props.toAmount ?? '0'
-  return formatFiatValue(BigNumber(amount).multipliedBy(price).toFixed(6)).value
+  return formatFiat(BigNumber(amount).multipliedBy(price).toFixed(6)).value
 })
 
 // Track notification status from store

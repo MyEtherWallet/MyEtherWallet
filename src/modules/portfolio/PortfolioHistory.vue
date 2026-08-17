@@ -19,9 +19,8 @@
         </p>
         <div v-if="!isLoadingBalances">
           <p class="text-s-20 font-semibold text-black leading-none mt-2">
-            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+' }}${{
-              formatFiatValue(lastTwentyFourHours.fiat.abs()).value
-            }}
+            {{ lastTwentyFourHours.fiat.isLessThan(0) ? '-' : '+'
+            }}{{ formatFiat(lastTwentyFourHours.fiat.abs()).display }}
           </p>
           <span
             class="text-s-11 leading-none"
@@ -74,14 +73,13 @@ import {
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { computed } from 'vue'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
 import configs from '@/configs.js'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
 const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)
@@ -152,19 +150,35 @@ const mappedToChain = computed(() => {
 // Anything else falls back to the legacy 7d back-projection endpoint below.
 const isSupportedChain = computed(() => Boolean(mappedToChain.value))
 
+const isEvmAddress = (address: string): boolean =>
+  /^0x[0-9a-fA-F]{40}$/.test(address)
+
+// Skip the request when the connected address doesn't belong to the selected
+// chain type — e.g. an EVM (0x…) address while the BITCOIN network is
+// selected in the multi-address flow. The API rejects the mismatch
+// (INVALID_BTC_ADDRESS_FORMAT).
+const addressMatchesChain = computed(() => {
+  const chain = selectedChain.value
+  const address = walletAddress.value
+  if (!chain?.name || !address) return false
+  return (chain.type === 'EVM') === isEvmAddress(address)
+})
+
 const balanceHistoryUrl = computed(() => {
-  if (isSupportedChain.value && walletAddress.value) {
-    return `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history?address=${walletAddress.value}&period=max&chain=${mappedToChain.value}`
+  const address = walletAddress.value
+  if (!isSupportedChain.value || !addressMatchesChain.value || !address) {
+    return ''
   }
-  return ''
+  return `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history?address=${address}&period=max&chain=${mappedToChain.value}`
 })
 
 // Fallback for unsupported networks: original 7d back-projection endpoint.
 const legacyHistoryUrl = computed(() => {
-  if (!isSupportedChain.value && selectedChain.value?.name && walletAddress.value) {
-    return `/v1/web/chains/${selectedChain.value.name}/addresses/${walletAddress.value}/7d-balances-back-projection`
-  }
-  return ''
+  const chain = selectedChain.value
+  const address = walletAddress.value
+  if (isSupportedChain.value || !addressMatchesChain.value) return ''
+  if (!chain?.name || !address) return ''
+  return `/v1/web/chains/${chain.name}/addresses/${address}/7d-balances-back-projection`
 })
 
 const { data: balanceHistory, isFetching: isFetchingBalanceHistory } =
