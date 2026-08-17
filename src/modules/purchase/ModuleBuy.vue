@@ -80,9 +80,12 @@
       :fiat-amount="fiatAmount"
       :fiat-currency="selectedFiat"
       :crypto-currency="tokenSymbol"
-      :is-loading="isFetchingQuotes"
+      :is-loading="isFetchingQuotes && !buyQuotes.length"
       :error="buyQuotesError"
       :analytics-payload="buyPayload"
+      :quote-countdown="quoteCountdown"
+      :quote-expired="quoteExpired"
+      :cooldown-seconds="quoteCooldownSeconds"
     />
   </div>
 </template>
@@ -117,6 +120,7 @@ import {
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useQuoteCountdown } from './composables/useQuoteCountdown'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
@@ -135,9 +139,11 @@ const {
   buyQuotes,
   isFetchingQuotes,
   buyQuotesError,
+  buyQuotesExpiresAt,
   cryptoEstimate,
   isFetchingEstimate,
   exchangeRates,
+  rateLimitedUntil,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -458,6 +464,14 @@ watch(
   },
 )
 
+const buyQuoteParams = () => ({
+  address: walletAddress.value ?? '',
+  fiatCurrency: selectedFiat.value,
+  amount: fiatAmount.value,
+  cryptoCurrency: tokenSymbol.value,
+  chain: purchaseChainCode.value,
+})
+
 const onSubmit = async () => {
   if (showUnsupportedNetwork.value) return
   if (!isReady.value) {
@@ -471,12 +485,22 @@ const onSubmit = async () => {
   clearBuyQuotes()
   showProviderModal.value = true
 
-  await fetchBuyQuotes({
-    address: walletAddress.value ?? '',
-    fiatCurrency: selectedFiat.value,
-    amount: fiatAmount.value,
-    cryptoCurrency: tokenSymbol.value,
-    chain: purchaseChainCode.value,
-  })
+  await fetchBuyQuotes(buyQuoteParams())
 }
+
+const {
+  isExpired: quoteExpired,
+  cooldownSecondsLeft: quoteCooldownSeconds,
+  countdownText: quoteCountdown,
+} = useQuoteCountdown({
+  expiresAt: buyQuotesExpiresAt,
+  rateLimitedUntil,
+  enabled: computed(
+    () => showProviderModal.value && buyQuotes.value.length > 0,
+  ),
+  onExpire: () => {
+    if (isFetchingQuotes.value) return
+    fetchBuyQuotes(buyQuoteParams(), { silent: true })
+  },
+})
 </script>

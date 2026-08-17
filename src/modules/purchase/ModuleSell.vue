@@ -130,9 +130,12 @@
       :quote="sellQuote"
       :crypto-amount="cryptoAmount"
       :crypto-symbol="tokenSymbol"
-      :is-loading="isFetchingSellQuote"
+      :is-loading="isFetchingSellQuote && !sellQuote"
       :error="sellQuoteError"
       :analytics-payload="sellPayload"
+      :quote-countdown="quoteCountdown"
+      :quote-expired="quoteExpired"
+      :cooldown-seconds="quoteCooldownSeconds"
     />
   </div>
 </template>
@@ -166,6 +169,7 @@ import {
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useQuoteCountdown } from './composables/useQuoteCountdown'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
@@ -184,7 +188,9 @@ const {
   sellQuote,
   isFetchingSellQuote,
   sellQuoteError,
+  sellQuoteExpiresAt,
   exchangeRates,
+  rateLimitedUntil,
 } = storeToRefs(purchaseStore)
 const { fetchPurchaseInfo, fetchSellQuote, clearSellQuote } = purchaseStore
 
@@ -467,18 +473,20 @@ const sellPayload = computed<SellPayloadShared>(() => {
 
 const ESTIMATE_FALLBACK_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+const sellQuoteParams = () => ({
+  address: walletAddress.value || ESTIMATE_FALLBACK_ADDRESS,
+  fiatCurrency: selectedFiat.value,
+  amount: cryptoAmount.value,
+  cryptoCurrency: tokenSymbol.value,
+  chain: purchaseChainCode.value,
+})
+
 const fetchEstimate = async () => {
   if (isAmountEmpty.value || Number(cryptoAmount.value) <= 0) {
     clearSellQuote()
     return
   }
-  await fetchSellQuote({
-    address: walletAddress.value || ESTIMATE_FALLBACK_ADDRESS,
-    fiatCurrency: selectedFiat.value,
-    amount: cryptoAmount.value,
-    cryptoCurrency: tokenSymbol.value,
-    chain: purchaseChainCode.value,
-  })
+  await fetchSellQuote(sellQuoteParams())
   if (!amountIsValid.value) return
   if (sellQuote.value) {
     analytics.trackSellEvent(SellEvent.PRELIMINARY_SHOWN, sellPayload.value)
@@ -493,13 +501,35 @@ const fetchEstimate = async () => {
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
 
 /* ------------------------------------------------------------------ *
+ * Quote expiration — the sell estimate is the actual quote used for
+ * the Moonpay redirect, so it silently refreshes while it is on screen.
+ * ------------------------------------------------------------------ */
+
+const {
+  isExpired: quoteExpired,
+  cooldownSecondsLeft: quoteCooldownSeconds,
+  countdownText: quoteCountdown,
+} = useQuoteCountdown({
+  expiresAt: sellQuoteExpiresAt,
+  rateLimitedUntil,
+  enabled: computed(() => !!sellQuote.value && amountIsValid.value),
+  onExpire: () => {
+    if (isFetchingSellQuote.value) return
+    fetchSellQuote(sellQuoteParams(), { silent: true })
+  },
+})
+
+/* ------------------------------------------------------------------ *
  * CTA state
  * ------------------------------------------------------------------ */
 
 const ctaDisabled = computed(
   () =>
     showUnsupportedNetwork.value ||
-    (isReady.value && (!amountIsValid.value || isFetchingSellQuote.value)),
+    (isReady.value &&
+      (!amountIsValid.value ||
+        isFetchingSellQuote.value ||
+        quoteExpired.value)),
 )
 
 const ctaIsLoading = computed(
@@ -508,6 +538,11 @@ const ctaIsLoading = computed(
 
 const ctaLabel = computed(() => {
   if (!isReady.value) return t('purchase.sell.connect_wallet')
+  if (quoteExpired.value && quoteCooldownSeconds.value !== null) {
+    return t('purchase.quote.rate_limited', {
+      seconds: quoteCooldownSeconds.value,
+    })
+  }
   if (amountIsValid.value) return t('purchase.sell.continue')
   return t('purchase.sell.enter_amount')
 })
