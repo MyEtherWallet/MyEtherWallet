@@ -24,6 +24,7 @@
         inputmode="decimal"
         autoComplete="off"
         placeholder="0.00"
+        :aria-label="displayTitle"
         :value="amount ?? ''"
         @input="handleInput"
         @focus="setInFocusInput"

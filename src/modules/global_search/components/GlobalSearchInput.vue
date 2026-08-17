@@ -25,6 +25,7 @@
         v-model="query"
         type="text"
         :placeholder="$t('search.placeholder')"
+        :aria-label="$t('search.placeholder')"
         class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
         @focus="open"
         @click="open"

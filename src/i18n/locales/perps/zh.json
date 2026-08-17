@@ -89,6 +89,8 @@
       "limit": "限价",
       "mid": "中间价",
       "margin-available": "可用保证金：",
+      "margin-amount-label": "保证金金额（美元）",
+      "size-percentage-label": "订单规模占可用保证金的百分比",
       "size": "数量",
       "new-size": "新数量",
       "est-liquidation": "预计强平价格",
