@@ -100,6 +100,7 @@
     "something_went_wrong": "Something went wrong",
     "network_change_failed": "Network change failed",
     "network_change_failed_description": "Check if your wallet supports the {network} network",
+    "network_switched": "Network switched to {network}",
     "and": "and",
     "deposit_title": "Your {chain} address",
     "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
@@ -305,7 +306,7 @@
     "title": "Select Network",
     "search_placeholder": "Search by Name",
     "incompatible_tooltip": "To access these networks, use a different wallet or install the Enkrypt browser extension",
-    "incompatible_title": "Networks incompatible with your wallet"
+    "incompatible_title": "Networks incompatible with your address"
   },
   "search": {
     "placeholder": "Search stocks, crypto",
