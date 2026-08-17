@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { ref, reactive } from 'vue'
+import { ref, reactive, unref } from 'vue'
 import type { Ref } from 'vue'
 import type { Contract, PerpsBalance, Position, TradingPair } from '@/modules/perps/sdk/types'
 
@@ -18,9 +18,28 @@ function mockT(key: string, params?: Record<string, unknown>): string {
   return params ? `${key}::${JSON.stringify(params)}` : key
 }
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({ t: vi.fn(mockT) }),
-}))
+// A shared `t` spy backed by a reactive `localeTick` ref that stands in for
+// vue-i18n's reactive locale: reading it inside `t` means any `computed` that
+// calls `t()` tracks it and re-evaluates on a locale switch — exactly how the
+// real vue-i18n `t` behaves. This is what lets MEW-2112 assert the long/short
+// toggle re-translates. The ref is created inside the (hoisted) factory, which
+// runs at require time when the top-level `ref` import is already initialized
+// (same trick as the usePerpsMarkets mock below).
+const i18nMock = vi.hoisted(
+  () =>
+    ({ localeTick: null, tSpy: null }) as {
+      localeTick: { value: number }
+      tSpy: ReturnType<typeof vi.fn>
+    },
+)
+vi.mock('vue-i18n', () => {
+  i18nMock.localeTick = ref(0)
+  i18nMock.tSpy = vi.fn((key: string, params?: Record<string, unknown>) => {
+    void i18nMock.localeTick.value
+    return mockT(key, params)
+  })
+  return { useI18n: () => ({ t: i18nMock.tSpy }) }
+})
 
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -236,10 +255,28 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
 
   it('builds orderSideButtons labels from the long/short i18n keys', () => {
     const form = usePerpsTradeForm()
-    expect(form.orderSideButtons).toEqual([
+    expect(unref(form.orderSideButtons)).toEqual([
       { label: 'perps.trade.long', value: 'buy' },
       { label: 'perps.trade.short', value: 'sell' },
     ])
+  })
+
+  it('re-translates the long/short toggle when the locale changes (MEW-2112)', () => {
+    const form = usePerpsTradeForm()
+    const labels = () => unref(form.orderSideButtons).map(b => b.label)
+    const longCalls = () =>
+      i18nMock.tSpy.mock.calls.filter(c => c[0] === 'perps.trade.long').length
+
+    expect(labels()).toEqual(['perps.trade.long', 'perps.trade.short'])
+    const before = longCalls()
+
+    // vue-i18n flips its reactive locale on a language switch.
+    i18nMock.localeTick.value++
+    labels() // consumer (the v-for) re-reads on re-render
+
+    // A `computed` re-invokes `t()` after the locale changes; the old plain
+    // array froze its labels at setup and never re-called `t` — that was the bug.
+    expect(longCalls()).toBeGreaterThan(before)
   })
 
   it('builds marketFilterTabs labels from i18n keys while keeping keys stable', () => {
