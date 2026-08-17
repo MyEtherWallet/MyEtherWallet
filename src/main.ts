@@ -22,6 +22,7 @@ import {
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
+  isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
   isTransactionReceiptTimeoutError,
@@ -88,6 +89,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||
