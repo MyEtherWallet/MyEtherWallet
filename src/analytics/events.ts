@@ -723,6 +723,28 @@ export type WeekendTradingAnnouncementEvent =
   (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
 
 // =============================================================================
+// MARKETING A/B TEST
+// =============================================================================
+
+export const MarketingAbTestEvent = {
+  SHOWN: 'Marketing_AB_Tooltip_Shown',
+  DISMISSED: 'Marketing_AB_Tooltip_Dismissed',
+  CLICKED_CTA: 'Marketing_AB_Tooltip_Clicked_CTA',
+} as const
+
+export type MarketingAbTestEvent =
+  (typeof MarketingAbTestEvent)[keyof typeof MarketingAbTestEvent]
+
+export type MarketingAbTestEventPayload = {
+  /** Which arm the user is bucketed into. */
+  variant: 'A' | 'B'
+  /** Stable Strapi id of the entry that was rendered. */
+  documentId: string
+  title: string
+  tokenId: string | null
+}
+
+// =============================================================================
 // REWARDS/ TRADE
 // =============================================================================
 

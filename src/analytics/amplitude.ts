@@ -103,6 +103,8 @@ import type {
   SellOfferPayload,
   SellEventError,
   SellErrorPayload,
+  MarketingAbTestEvent,
+  MarketingAbTestEventPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -184,6 +186,9 @@ export class Analytics {
     }
     if (properties.isRegionRestricted !== undefined) {
       identify.set('isRegionRestricted', properties.isRegionRestricted)
+    }
+    if (properties.marketingVariant !== undefined) {
+      identify.set('marketingVariant', properties.marketingVariant)
     }
 
     this.amplitude.identify(identify)
@@ -318,6 +323,21 @@ export class Analytics {
   setHoldCampaignStatus(status: string): void {
     const identify = new Identify()
     identify.set('holdCampaignStatus', status)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set the marketing A/B test arm user property.
+   *
+   * Set alongside the exposure event because events fired before the user has
+   * granted consent are dropped and never replayed, whereas user properties are
+   * re-pushed once consent arrives.
+   *
+   * @param variant   'A' or 'B'
+   */
+  setMarketingVariant(variant: string): void {
+    const identify = new Identify()
+    identify.set('marketingVariant', variant)
     this.amplitude.identify(identify)
   }
 
@@ -657,6 +677,20 @@ export class Analytics {
   readonly trackRewardsAndOffersEvent = (
     event: (typeof RerwadsAndOffersEvent)[keyof typeof RerwadsAndOffersEvent],
     payload: RerwadsAndOffersEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a marketing A/B test analytics event to Amplitude
+   *
+   * @param event     Type of MarketingAbTestEvent
+   * @param payload   Which variant was shown and the entry it came from
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackMarketingAbTestEvent = (
+    event: MarketingAbTestEvent,
+    payload: MarketingAbTestEventPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
