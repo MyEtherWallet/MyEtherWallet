@@ -7,7 +7,7 @@
     <!-- 24/7 announcement dialog disabled; only the tooltip is used, gated to
          show 3 days after the RWA announcement is closed -->
     <!-- <weekend-trading-dialog v-if="isLoadingComplete" /> -->
-    <rwa-announcement-dialog v-if="isLoadingComplete" />
+    <!-- <rwa-announcement-dialog v-if="isLoadingComplete" /> -->
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
@@ -33,7 +33,7 @@ import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 // import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
-import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
+// import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'

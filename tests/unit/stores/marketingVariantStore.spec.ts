@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import type { MarketingEntry } from '@/types/marketing'
 
@@ -19,12 +20,12 @@ vi.mock('@/analytics', () => ({
   },
 }))
 
-const { useMarketingVariantStore } = await import(
-  '@/stores/marketingVariantStore'
-)
+const { useMarketingVariantStore } =
+  await import('@/stores/marketingVariantStore')
 
 const VARIANT_KEY = 'mew-marketing-ab-variant'
 const DISMISSED_KEY = 'mew-marketing-ab-dismissed'
+const DISMISSED_AT_KEY = 'mew-marketing-ab-dismissed-at'
 
 const entry = (over: Partial<MarketingEntry> = {}): MarketingEntry => ({
   id: 1,
@@ -386,6 +387,186 @@ describe('marketingVariantStore', () => {
       expect(store.canShow).toBe(false)
       expect(store.dismissed).toBe(false)
       expect(localStorage.getItem(DISMISSED_KEY)).not.toBe('true')
+    })
+  })
+
+  // A dismissal answers the campaign that was running at the time, not the
+  // feature forever: when marketing schedules new material with a later
+  // `startAt`, the ✕ is cleared and the tooltip is forced back on.
+  describe('a newer campaign undoes an earlier dismissal', () => {
+    const NOW = new Date('2026-08-13T12:00:00Z').getTime()
+    beforeEach(() => {
+      vi.spyOn(Date, 'now').mockReturnValue(NOW)
+    })
+
+    it('clears the flag when a live entry started after the dismissal', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      localStorage.setItem(DISMISSED_AT_KEY, '2026-08-01T00:00:00.000Z')
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(false)
+      expect(store.canShow).toBe(true)
+    })
+
+    it('keeps the flag for the very campaign that was dismissed', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      localStorage.setItem(DISMISSED_AT_KEY, '2026-08-10T00:00:00.000Z')
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(true)
+      expect(store.canShow).toBe(false)
+    })
+
+    // Only `startAt` announces new material. An entry without one is
+    // indistinguishable from the one the user already said no to.
+    it('keeps the flag when no live entry is scheduled', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      localStorage.setItem(DISMISSED_AT_KEY, '2026-08-01T00:00:00.000Z')
+      stubFetch([A, B])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(true)
+    })
+
+    it('takes the newest start among several live entries', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      localStorage.setItem(DISMISSED_AT_KEY, '2026-08-05T00:00:00.000Z')
+      stubFetch([
+        entry({ documentId: 'old', startAt: '2026-08-01T00:00:00Z' }),
+        entry({ documentId: 'new', startAt: '2026-08-12T00:00:00Z' }),
+      ])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.latestStart).toBe(new Date('2026-08-12T00:00:00Z').getTime())
+      expect(store.dismissed).toBe(false)
+    })
+
+    // A future `startAt` is not live yet, so it must not clear the flag early —
+    // the reset lands on the first load once the campaign has actually opened.
+    it('waits for a scheduled campaign to open before clearing', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      localStorage.setItem(DISMISSED_AT_KEY, '2026-08-01T00:00:00.000Z')
+      stubFetch([entry({ startAt: '2026-09-01T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(true)
+    })
+
+    it('records the campaign start when the user dismisses', async () => {
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+      store.markShown()
+      store.trackDismiss()
+      // `useStorage` writes on flush, not on assignment.
+      await nextTick()
+
+      expect(localStorage.getItem(DISMISSED_AT_KEY)).toBe(
+        '2026-08-10T00:00:00.000Z',
+      )
+    })
+
+    // Nothing scheduled means nothing to anchor to, so the clock stands in:
+    // the user answered what was live at this moment, and only something
+    // starting later counts as new.
+    it('falls back to the clock for an unscheduled campaign', async () => {
+      stubFetch([A, B])
+      const store = useMarketingVariantStore()
+      await store.load()
+      store.markShown()
+      store.trackDismiss()
+      await nextTick()
+
+      expect(localStorage.getItem(DISMISSED_AT_KEY)).toBe(
+        new Date(NOW).toISOString(),
+      )
+    })
+
+    it('records the campaign on a CTA click too', async () => {
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+      store.markShown()
+      store.trackCtaClick()
+      await nextTick()
+
+      expect(localStorage.getItem(DISMISSED_AT_KEY)).toBe(
+        '2026-08-10T00:00:00.000Z',
+      )
+    })
+
+    // Users who dismissed before this marker shipped have no anchor, so their
+    // ✕ cannot be shown to have answered anything. Setting a `startAt` on the
+    // live entry is how marketing brings all of them back.
+    it('resurrects a dismissal that predates the marker', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(false)
+      expect(store.canShow).toBe(true)
+    })
+
+    // ...but only once. The next ✕ anchors them, and the same campaign must
+    // not come back on every load after that.
+    it('anchors a resurrected user on their next dismissal', async () => {
+      localStorage.setItem(DISMISSED_KEY, 'true')
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const first = useMarketingVariantStore()
+      await first.load()
+      first.markShown()
+      first.trackDismiss()
+      await nextTick()
+
+      setActivePinia(createPinia())
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const next = useMarketingVariantStore()
+      await next.load()
+
+      expect(next.dismissed).toBe(true)
+      expect(next.canShow).toBe(false)
+    })
+
+    it('leaves the marker alone for a user who never dismissed', async () => {
+      stubFetch([entry({ startAt: '2026-08-10T00:00:00Z' })])
+      const store = useMarketingVariantStore()
+      await store.load()
+
+      expect(store.dismissed).toBe(false)
+      expect(localStorage.getItem(DISMISSED_AT_KEY)).not.toMatch(/\d/)
+    })
+
+    // The end-to-end path marketing cares about: say no today, get the next
+    // announcement anyway.
+    it('shows the tooltip again in a later session for new material', async () => {
+      stubFetch([
+        entry({ documentId: 'first', startAt: '2026-08-01T00:00:00Z' }),
+      ])
+      const first = useMarketingVariantStore()
+      await first.load()
+      first.markShown()
+      first.trackDismiss()
+      expect(first.canShow).toBe(false)
+
+      // New session: fresh store, same persisted flags, newer campaign.
+      setActivePinia(createPinia())
+      stubFetch([
+        entry({ documentId: 'second', startAt: '2026-08-12T00:00:00Z' }),
+      ])
+      const next = useMarketingVariantStore()
+      await next.load()
+
+      expect(next.dismissed).toBe(false)
+      expect(next.canShow).toBe(true)
+      expect(next.markShown()?.entry.documentId).toBe('second')
     })
   })
 

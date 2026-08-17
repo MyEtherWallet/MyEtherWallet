@@ -16,6 +16,9 @@ const ENDPOINT = `${configs.STRAPI_CMS_API}/MEW-marketing?populate=image`
 
 const VARIANT_KEY = 'mew-marketing-ab-variant'
 const DISMISSED_KEY = 'mew-marketing-ab-dismissed'
+// Which campaign the dismissal above answered, as an ISO timestamp. See
+// `refreshDismissal`.
+const DISMISSED_AT_KEY = 'mew-marketing-ab-dismissed-at'
 
 /**
  * Marketing content is decoration: a CMS outage, a schema change or a blocked
@@ -31,20 +34,23 @@ const fetchEntries = (): Promise<MarketingEntry[]> => {
     .catch(() => [])
 }
 
+/** Epoch ms for an ISO timestamp, or null when absent or unparseable. */
+const toTime = (iso: string | null | undefined): number | null => {
+  if (!iso) return null
+  const time = new Date(iso).getTime()
+  return Number.isNaN(time) ? null : time
+}
+
 /**
  * Entries marketing has actually scheduled to run right now. `startAt`/`endAt`
  * are null when that end is unbounded.
  */
 const isLive = (entry: MarketingEntry, now: number): boolean => {
   if (!entry.isActive) return false
-  if (entry.startAt) {
-    const start = new Date(entry.startAt).getTime()
-    if (!Number.isNaN(start) && now < start) return false
-  }
-  if (entry.endAt) {
-    const end = new Date(entry.endAt).getTime()
-    if (!Number.isNaN(end) && now >= end) return false
-  }
+  const start = toTime(entry.startAt)
+  if (start !== null && now < start) return false
+  const end = toTime(entry.endAt)
+  if (end !== null && now >= end) return false
   return true
 }
 
@@ -63,16 +69,12 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     safeLocalStorage,
   )
   const dismissed = useStorage<boolean>(DISMISSED_KEY, false, safeLocalStorage)
+  // The campaign the dismissal above refers to, so a later one can undo it.
+  const dismissedAt = useStorage<string>(DISMISSED_AT_KEY, '', safeLocalStorage)
 
   // Deliberately NOT persisted: this is what makes the tooltip return next
   // session while `dismissed` is what ends it for good.
   const shownThisSession = ref(false)
-
-  const load = async () => {
-    if (hasLoaded.value) return
-    entries.value = await fetchEntries()
-    hasLoaded.value = true
-  }
 
   /** Live entries, in the order Strapi returned them. */
   const liveEntries = computed(() => {
@@ -81,19 +83,74 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
   })
 
   /**
+   * The newest `startAt` among the entries running now, or null when marketing
+   * left every live entry unscheduled.
+   */
+  const latestStart = computed<number | null>(() =>
+    liveEntries.value.reduce<number | null>((latest, entry) => {
+      const start = toTime(entry.startAt)
+      if (start === null) return latest
+      return latest === null || start > latest ? start : latest
+    }, null),
+  )
+
+  /**
+   * Dismissal is per campaign, not forever.
+   *
+   * `dismissedAt` records how far the user's ✕ reaches: every campaign that had
+   * already started when they dismissed. A live entry whose `startAt` is later
+   * than that is material they have never been offered, so the flag is cleared
+   * and the tooltip comes back — that is the whole point of marketing setting a
+   * `startAt` on a new entry.
+   *
+   * Entries with a null `startAt` carry no such signal and can never trigger a
+   * reset; an unscheduled campaign is dismissed for good, as before.
+   */
+  const refreshDismissal = () => {
+    const latest = latestStart.value
+    if (latest === null) return
+    const answered = toTime(dismissedAt.value)
+    // A missing marker is a dismissal from before this mechanism shipped, so
+    // there is nothing it can be shown to have answered — any scheduled entry
+    // counts as newer and wins. That is deliberate: it lets a `startAt` on the
+    // current entry resurrect everyone who has ever dismissed, once.
+    if (answered === null || latest > answered) dismissed.value = false
+  }
+
+  /**
+   * Close the book on everything running right now. Falls back to the clock for
+   * an unscheduled campaign: the user answered whatever was live at this
+   * moment, so only something starting later counts as new.
+   */
+  const recordDismissal = () => {
+    dismissed.value = true
+    dismissedAt.value = new Date(latestStart.value ?? Date.now()).toISOString()
+  }
+
+  const load = async () => {
+    if (hasLoaded.value) return
+    entries.value = await fetchEntries()
+    hasLoaded.value = true
+    // Entries are in, so `liveEntries` is settled — decide whether what is
+    // running now supersedes whatever the user dismissed.
+    refreshDismissal()
+  }
+
+  /**
    * A is the first live entry, B is the last.
    *
    * Positional by design (for now) — the CMS has no explicit variant field. A
    * single live entry makes both arms resolve to it, which is the right
    * degenerate behaviour: everyone sees the one thing marketing published.
    */
-  const variantEntries = computed<Record<MarketingVariant, MarketingEntry> | null>(
-    () => {
-      const live = liveEntries.value
-      if (live.length === 0) return null
-      return { A: live[0], B: live[live.length - 1] }
-    },
-  )
+  const variantEntries = computed<Record<
+    MarketingVariant,
+    MarketingEntry
+  > | null>(() => {
+    const live = liveEntries.value
+    if (live.length === 0) return null
+    return { A: live[0], B: live[live.length - 1] }
+  })
 
   /**
    * Bucket the user, once. Called at the moment of exposure rather than at
@@ -185,7 +242,7 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
         ),
       )
     }
-    dismissed.value = true
+    recordDismissal()
   }
 
   const trackCtaClick = () => {
@@ -202,7 +259,7 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
       )
     }
     // Acting on the offer ends the campaign for this user just as ✕ does.
-    dismissed.value = true
+    recordDismissal()
   }
 
   /** Hide for this session without ending the campaign. */
@@ -215,12 +272,15 @@ export const useMarketingVariantStore = defineStore('marketingVariant', () => {
     hasLoaded,
     variant,
     dismissed,
+    dismissedAt,
     shownThisSession,
     liveEntries,
+    latestStart,
     variantEntries,
     activeEntry,
     canShow,
     load,
+    refreshDismissal,
     assignVariant,
     markShown,
     trackDismiss,
