@@ -89,6 +89,8 @@
       "limit": "Límite",
       "mid": "Medio",
       "margin-available": "Margen disponible:",
+      "margin-amount-label": "Importe del margen en USD",
+      "size-percentage-label": "Tamaño de la orden como porcentaje del margen disponible",
       "size": "Tamaño",
       "new-size": "Nuevo tamaño",
       "est-liquidation": "Liquidación est.",
@@ -439,6 +441,15 @@
       "message-to-sign-label": "Mensaje para firmar",
       "hardware-confirm-hint": "También deberás confirmar en tu dispositivo.",
       "sign-button": "Firmar"
+    },
+    "restricted": {
+      "banner-notice": "La operación de perpetuos no está disponible en EE. UU.",
+      "learn-more": "Más información",
+      "panel-title": "Los perpetuos no están disponibles",
+      "panel-description": "Lamentablemente, operar con perpetuos no está permitido en tu jurisdicción actual."
+    },
+    "status": {
+      "unavailable": "Servicio temporalmente no disponible, vuelve a intentarlo más tarde."
     },
     "pagination": {
       "previous-page": "página anterior",

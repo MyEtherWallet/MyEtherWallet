@@ -6,10 +6,10 @@
   >
     <div class="flex items-start justify-between mb-auto px-5">
       <div class="flex items-center gap-1.5">
-        <h2 class="text-s-20 font-bold leading-none">{{ t('portfolio.history.title') }}</h2>
-        <app-tooltip
-          :text="t('portfolio.history.tooltip')"
-        />
+        <h2 class="text-s-20 font-bold leading-none">
+          {{ t('portfolio.history.title') }}
+        </h2>
+        <app-tooltip :text="t('portfolio.history.tooltip')" />
       </div>
       <div class="text-right">
         <p
@@ -50,7 +50,9 @@
       <div
         class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[140px] w-full"
       >
-        <p class="text-info text-center text-s-13">{{ t('portfolio.history.no_chart_data') }}</p>
+        <p class="text-info text-center text-s-13">
+          {{ t('portfolio.history.no_chart_data') }}
+        </p>
       </div>
     </div>
     <history-chart v-else :data="chartData" class="-ml-[3px]" />
@@ -64,12 +66,17 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import HistoryChart from './components/history/HistoryChart.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import {
+  useFetchMewWalletApi,
+  type PortfolioBalanceHistoryResponse,
+} from '@/composables/useFetchMewWalletApi'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { computed } from 'vue'
 import BigNumber from 'bignumber.js'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
+import configs from '@/configs.js'
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
@@ -77,6 +84,7 @@ const walletStore = useWalletStore()
 const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)
 const { selectedChain } = storeToRefs(useChainsStore())
+const { useMEWWalletFetch } = useFetchMewWalletApi()
 const { useMEWFetch } = useFetchMewApi()
 
 const getTokenBalance = (contract: string) => {
@@ -122,26 +130,92 @@ const lastTwentyFourHours = computed<Change>(() => {
   }
 })
 
-const fetchUrl = computed(() => {
-  if (selectedChain.value?.name && walletAddress.value) {
-    return `/v1/web/chains/${selectedChain.value.name}/addresses/${walletAddress.value}/7d-balances-back-projection`
-  }
-  return ''
+const CHAIN_TO_ZERION_MAP: Record<string, string> = {
+  ETHEREUM: 'ETH',
+  BSC: 'BSC',
+  BNB: 'BNB',
+  POLYGON: 'POLYGON',
+  ZKSYNC: 'ZKSYNC_MAINNET',
+  ARBITRUM: 'ARB',
+  BASE: 'BASE',
+  OPTIMISTIC_ETHEREUM: 'OP',
+  FANTOM: 'FTM',
+}
+
+const mappedToChain = computed(() => {
+  return CHAIN_TO_ZERION_MAP[selectedChain.value?.name ?? ''] || ''
 })
 
-const { data: dataPrices, isFetching } = useMEWFetch(fetchUrl, {
-  refetch: true,
+// Chains present in CHAIN_TO_ZERION_MAP use the new balance-history endpoint.
+// Anything else falls back to the legacy 7d back-projection endpoint below.
+const isSupportedChain = computed(() => Boolean(mappedToChain.value))
+
+const isEvmAddress = (address: string): boolean =>
+  /^0x[0-9a-fA-F]{40}$/.test(address)
+
+// Skip the request when the connected address doesn't belong to the selected
+// chain type — e.g. an EVM (0x…) address while the BITCOIN network is
+// selected in the multi-address flow. The API rejects the mismatch
+// (INVALID_BTC_ADDRESS_FORMAT).
+const addressMatchesChain = computed(() => {
+  const chain = selectedChain.value
+  const address = walletAddress.value
+  if (!chain?.name || !address) return false
+  return (chain.type === 'EVM') === isEvmAddress(address)
 })
+
+const balanceHistoryUrl = computed(() => {
+  const address = walletAddress.value
+  if (!isSupportedChain.value || !addressMatchesChain.value || !address) {
+    return ''
+  }
+  return `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history?address=${address}&period=max&chain=${mappedToChain.value}`
+})
+
+// Fallback for unsupported networks: original 7d back-projection endpoint.
+const legacyHistoryUrl = computed(() => {
+  const chain = selectedChain.value
+  const address = walletAddress.value
+  if (isSupportedChain.value || !addressMatchesChain.value) return ''
+  if (!chain?.name || !address) return ''
+  return `/v1/web/chains/${chain.name}/addresses/${address}/7d-balances-back-projection`
+})
+
+const { data: balanceHistory, isFetching: isFetchingBalanceHistory } =
+  useMEWWalletFetch(balanceHistoryUrl, {
+    refetch: true,
+  })
+    .get()
+    .json<PortfolioBalanceHistoryResponse>()
+
+const { data: legacyHistory, isFetching: isFetchingLegacy } = useMEWFetch(
+  legacyHistoryUrl,
+  {
+    refetch: true,
+  },
+)
   .get()
   .json<PortfolioHistoryResponse>()
 
+const isFetching = computed(
+  () => isFetchingBalanceHistory.value || isFetchingLegacy.value,
+)
+
 const chartData = computed(() => {
-  if (!dataPrices.value) return []
-  const { timestamps, values } = dataPrices.value
-  if (timestamps) {
-    return timestamps.map((timestamp, index) => ({
+  // Preferred: new balance-history response ([timestamp, value] tuples).
+  const balances = balanceHistory.value?.balances
+  if (balances) {
+    return balances.map(([timestamp, value]) => ({
+      timestamp: new Date(timestamp).getTime(),
+      value: Number(value),
+    }))
+  }
+  // Fallback: legacy response with parallel timestamps/values arrays.
+  const legacy = legacyHistory.value
+  if (legacy?.timestamps) {
+    return legacy.timestamps.map((timestamp, index) => ({
       timestamp,
-      value: values[index],
+      value: legacy.values[index],
     }))
   }
   return []

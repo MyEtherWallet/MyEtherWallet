@@ -60,9 +60,8 @@ async function fetchContracts() {
         contracts.value = data.result
       }
     }
-  } catch (e) {
-    contractsError.value =
-      e instanceof Error ? e.message : 'Failed to fetch contracts'
+  } catch {
+    contractsError.value = 'No markets found'
   } finally {
     contractsLoading.value = false
   }

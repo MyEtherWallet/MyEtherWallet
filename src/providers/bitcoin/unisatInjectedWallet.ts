@@ -61,6 +61,15 @@ class UnisatInjectWallet extends BaseBtcWallet {
     })
   }
 
+  async getLiveAddress(): Promise<string | null> {
+    try {
+      const accounts = await this.unisat.getAccounts()
+      return accounts?.[0] ?? null
+    } catch {
+      return null
+    }
+  }
+
   override async getPublicKey(): Promise<HexPrefixedString> {
     // Unisat returns the compressed public key as bare hex; normalize to the
     // 0x-prefixed form used across the app.

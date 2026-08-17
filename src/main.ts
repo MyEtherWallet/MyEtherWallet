@@ -14,6 +14,7 @@ import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
 import { analytics, initAnalytics } from './analytics'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
@@ -170,7 +171,17 @@ app.use(autoAnimatePlugin)
 // Initialize analytics only after the router's initial navigation has resolved,
 // so the first auto-captured Page Viewed event includes the active route.
 // (Right after app.use(router) the current route is still START_LOCATION.)
-void router.isReady().then(() => initAnalytics())
+//
+// The region check runs once here, on initial landing, so the
+// `isRegionRestricted` user property is reported no matter which page the user
+// entered on — not just the pages that consume the restriction themselves. It is
+// chained after init so the identify call is not buffered pre-initialization,
+// and it is a no-op for latency: the singleton dedupes with the earlier calls
+// from TheHeader and the perps route guard, whichever fires first.
+void router.isReady().then(async () => {
+  await initAnalytics()
+  void fetchTradingRestriction()
+})
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)

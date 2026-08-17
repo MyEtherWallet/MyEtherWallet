@@ -72,6 +72,8 @@ import type {
   PerpsManageEvent,
   PerpsManagePayload,
   PerpsNewPositionPayload,
+  PerpsRestrictedEvent,
+  PerpsRestrictedPayload,
   PerpsOrderEvent,
   PerpsOrderViewInfoPayload,
   PerpsOrderCancelClickedPayload,
@@ -81,6 +83,7 @@ import type {
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
   WeekendTradingAnnouncementEvent,
+  MultiAddressEvent,
   HoldRewardsBannerEvent,
   HoldRewardsMainCardEvent,
   HoldRewardsMainCardEventPayload,
@@ -385,6 +388,16 @@ export class Analytics {
     return this._track(event, {
       ...payload,
     })
+  }
+
+  /**
+   * Send a Multi Address analytics event to Amplitude
+   *
+   * @param event   Type of Multi Address event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackMultiAddressEvent = (event: MultiAddressEvent): Promise<void> => {
+    return this._track(event, {})
   }
 
   /**
@@ -916,6 +929,13 @@ export class Analytics {
   readonly trackPerpsNewPositionEvent = (
     event: typeof PerpsManageEvent.NEW_POSITION,
     payload: PerpsNewPositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsRestrictedEvent = (
+    event: typeof PerpsRestrictedEvent.LEARN_MORE,
+    payload: PerpsRestrictedPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

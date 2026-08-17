@@ -440,6 +440,23 @@ export const PerpsManageEvent = {
 export type PerpsManageEvent =
   (typeof PerpsManageEvent)[keyof typeof PerpsManageEvent]
 
+// =============================================================================
+// PERPS RESTRICTED (region-blocked surfaces)
+// =============================================================================
+
+// Deliberately only the Learn More click. A "restricted view" event would
+// duplicate an existing signal: `isRegionRestricted` is already set as a user
+// property, so any perps page view can be segmented on it without a new event.
+export const PerpsRestrictedEvent = {
+  LEARN_MORE: 'Perps_Restricted_Clicked_Learn_More',
+} as const
+export type PerpsRestrictedEvent =
+  (typeof PerpsRestrictedEvent)[keyof typeof PerpsRestrictedEvent]
+
+export type PerpsRestrictedPayload = {
+  source: PerpsEventSource
+}
+
 export const PerpsNewPositionAction = {
   MANAGE_LONG: 'Manage Long',
   MANAGE_SHORT: 'Manage Short',
@@ -674,6 +691,21 @@ export type ClickSortPayload = {
   sortOption: string
   isFromView?: boolean
 }
+
+// =============================================================================
+// MULTI ADDRESS (MEW-1840)
+// =============================================================================
+
+export const MultiAddressEvent = {
+  OPENED: 'multi_address_popup_opened',
+  SWITCHED: 'multi_address_switched',
+  ADD_STARTED: 'multi_address_add_started',
+  DELETED: 'multi_address_deleted',
+  RENAMED: 'multi_address_renamed',
+  DETECTED_SAVED: 'multi_address_detected_saved',
+} as const
+export type MultiAddressEvent =
+  (typeof MultiAddressEvent)[keyof typeof MultiAddressEvent]
 
 // =============================================================================
 // WEEKEND TRADING ANNOUNCEMENT (MEW-1958)

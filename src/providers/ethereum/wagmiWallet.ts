@@ -127,6 +127,15 @@ class WagmiWallet extends BaseEvmWallet {
     return this.address
   }
 
+  async getLiveAddress(): Promise<string | null> {
+    try {
+      const accounts = await this.connector.getAccounts()
+      return accounts?.[0] ?? null
+    } catch {
+      return null
+    }
+  }
+
   override getWalletType(): WalletType {
     return WalletType.WAGMI
   }

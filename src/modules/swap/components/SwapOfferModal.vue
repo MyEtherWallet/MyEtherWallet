@@ -262,7 +262,7 @@
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
-          :disabled="!!gasFeeError"
+          :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
         >
           {{ btnText }}
         </app-base-button>
@@ -524,6 +524,11 @@ watch(
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
+  // Guard against proceeding without a resolved quote: an empty quoteId would
+  // build a malformed unsigned-tx URL (…/multi-quotes//unsigned -> 404). The
+  // button is disabled in this state; this also ignores any stray click.
+  const quoteId = props.swapGasFeeQuote?.quoteId
+  if (!quoteId) return
   isProceeding.value = true
   loadingModel.value = true
   if (
@@ -532,7 +537,7 @@ const proceedWithSwap = () => {
   ) {
     showApproveMessage.value = true
   }
-  emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+  emits('update:proceedWithSwap', quoteId)
 }
 const declineSwap = () => {
   emits('update:declineSwap')

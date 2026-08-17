@@ -36,13 +36,67 @@ import type {
   MarketInfoData,
 } from './types'
 
+/**
+ * Thrown for any non-2xx response, carrying the HTTP status so callers can tell
+ * classes of failure apart — a 429 is a throttle to back off from, a 5xx is an
+ * outage worth surfacing. `message` is unchanged from the plain `Error` this
+ * replaced (the body's `error` field, else `HTTP <status>`), so callers that
+ * only read the message keep working.
+ */
+export class PerpsHttpError extends Error {
+  readonly status: number
+
+  constructor(status: number, message: string) {
+    super(message)
+    this.name = 'PerpsHttpError'
+    this.status = status
+  }
+}
+
+/**
+ * Thrown instead of issuing a request while the service is known to be down.
+ * Distinct from `PerpsHttpError` because no request was made and there is no
+ * status to report — nothing reached the network.
+ */
+export class PerpsServiceUnavailableError extends Error {
+  constructor() {
+    super('Perps service unavailable')
+    this.name = 'PerpsServiceUnavailableError'
+  }
+}
+
+/**
+ * The one path that stays reachable while the service is marked unavailable —
+ * it is how the outage is detected and, more importantly, how recovery is
+ * detected. Gating it would latch the outage forever.
+ */
+const STATUS_PATH = '/status'
+
 export class PerpsClient {
   private baseUrl: string
   private token: string | null = null
   private onUnauthorized: (() => void) | null = null
+  private serviceUnavailable = false
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
+  }
+
+  /**
+   * Marks the service up or down. While down, every request except `/status`
+   * fails immediately without touching the network — there is no point asking
+   * 30-odd endpoints for data the service has just said it cannot serve, and
+   * each one would otherwise add its own failed request, error toast and Sentry
+   * report to an outage the user has already been told about.
+   *
+   * Driven by `usePerpsStatus`, which owns the `/status` polling.
+   */
+  setServiceUnavailable(unavailable: boolean) {
+    this.serviceUnavailable = unavailable
+  }
+
+  isServiceUnavailable(): boolean {
+    return this.serviceUnavailable
   }
 
   setToken(token: string | null) {
@@ -58,6 +112,11 @@ export class PerpsClient {
   }
 
   private async request<T>(path: string, options?: RequestInit): Promise<T> {
+    // Single choke point for every endpoint on this client, so a new method
+    // cannot forget the gate.
+    if (this.serviceUnavailable && path !== STATUS_PATH) {
+      throw new PerpsServiceUnavailableError()
+    }
     const res = await fetch(`${this.baseUrl}${path}`, options)
     if (!res.ok) {
       if (res.status === 401 && this.onUnauthorized) {
@@ -70,7 +129,7 @@ export class PerpsClient {
       } catch {
         // ignore parse errors
       }
-      throw new Error(msg)
+      throw new PerpsHttpError(res.status, msg)
     }
     return res.json()
   }
@@ -115,7 +174,7 @@ export class PerpsClient {
   }
 
   async getStatus(): Promise<GenericResponse<StatusResult>> {
-    return this.request<GenericResponse<StatusResult>>('/status')
+    return this.request<GenericResponse<StatusResult>>(STATUS_PATH)
   }
 
   async getLoginChallenge(
