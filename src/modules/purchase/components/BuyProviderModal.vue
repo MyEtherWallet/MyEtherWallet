@@ -59,10 +59,10 @@
               <button
                 type="button"
                 :class="[
-                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase transition-colors hoverNoBG',
+                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase border-2 transition-colors',
                   selectedIndex === index
-                    ? 'border-2 border-black'
-                    : 'border-2 border-transparent',
+                    ? 'border-black'
+                    : 'border-transparent hover:bg-transparent hover:border-grey-10',
                 ]"
                 @click="selectedIndex = index"
               >
