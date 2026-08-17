@@ -438,6 +438,10 @@ const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const emit = defineEmits<{
   'update:selectedToken': [token: NewTokenInfo]
+  // Fired only on an explicit user pick from the list (not on programmatic
+  // defaulting like the networkName watcher below), so parents can react to
+  // genuine user selections without false positives.
+  'select:token': [token: NewTokenInfo]
   'open:selectToken': [isOpen: boolean]
 }>()
 
@@ -792,6 +796,7 @@ const setSelectedToken = (token: NewTokenInfo) => {
     isStock: false,
   })
   emit('update:selectedToken', token)
+  emit('select:token', token)
   showAllTokens.value = false
 }
 

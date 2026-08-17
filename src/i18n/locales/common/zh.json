@@ -98,6 +98,7 @@
     "something_went_wrong": "出了点问题",
     "network_change_failed": "网络切换失败",
     "network_change_failed_description": "请检查您的钱包是否支持 {network} 网络",
+    "network_switched": "已切换至 {network} 网络",
     "and": "和",
     "deposit_title": "您的 {chain} 地址",
     "deposit_description": "您可以将 {chain} 支持的任何代币存入此地址。",

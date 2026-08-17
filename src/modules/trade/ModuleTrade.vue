@@ -155,6 +155,7 @@
                 v-model:amount="fromAmount"
                 v-model:selected-token="fromTokenSelected!"
                 v-model:error="fromAmountError"
+                @select:token="onFromTokenSelected"
                 :external-loading="isLoading || !swapLoaded"
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
@@ -222,6 +223,7 @@
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
               v-model:error="toAmountError"
+              @select:token="onToTokenSelected"
               :external-loading="isLoadingQuote"
               :show-balance="false"
               :tokens="toTokenSantized"
@@ -402,6 +404,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { usePairStore } from '@/stores/pairStore'
+import { useToastStore } from '@/stores/toastStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
@@ -418,6 +421,7 @@ import {
 
 // Types
 import type { Chain } from '@/mew_api/types'
+import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 
 const { t } = useI18n()
@@ -431,6 +435,7 @@ const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
+const toastStore = useToastStore()
 
 // --- Refs from Stores ---
 const {
@@ -776,6 +781,32 @@ const setFromChain = (chain: Chain) => {
 
 const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
+}
+
+// MEW-1981: toast whenever the user switches a trade token via the picker.
+// Listen to `@select:token`, which the token-select child emits ONLY on an
+// explicit user pick — not on the programmatic defaulting it does on network
+// change (nor on setFromChain/resetForm ref assignments). That avoids a false
+// "Now trading…" toast on network switches. Use the emitted token for the side
+// that changed, read the other side from state; skip until both are set.
+const notifyTokensSwitched = (
+  from?: NewTokenInfo | null,
+  to?: NewTokenInfo | null,
+) => {
+  if (!from || !to) return
+  toastStore.addToastMessage({
+    text: t('trade.toast.tokens-switched', {
+      from: from.symbol,
+      to: to.symbol,
+    }),
+    type: ToastType.Success,
+  })
+}
+const onFromTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(token, toTokenSelected.value)
+}
+const onToTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(fromTokenSelected.value, token)
 }
 
 // const swapTokens = () => {

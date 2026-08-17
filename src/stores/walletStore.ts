@@ -231,6 +231,24 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
+    // MEW-1980: announce every global network switch. This watcher is the
+    // single point all switch sources funnel through (header selector, Buy,
+    // Sell, Swap, Trade). Guard on oldChain to skip the initial
+    // undefined→default hydration, and on the name to skip no-op re-sets.
+    const isNetworkSwitch = !!(
+      newChain &&
+      oldChain &&
+      newChain.name !== oldChain.name
+    )
+    const showNetworkSwitchedToast = () => {
+      if (!isNetworkSwitch || !newChain) return
+      useToastStore().addToastMessage({
+        text: i18n.global.t('common.network_switched', {
+          network: newChain.nameLong,
+        }),
+        type: ToastType.Success,
+      })
+    }
     if (newChain && newChain.type !== oldChain?.type) {
       setWatchOnlyIfExist()
     }
@@ -240,8 +258,9 @@ export const useWalletStore = defineStore('walletStore', () => {
           wallet.value as BaseEvmWallet
         ).changeNetwork(Number(newChain.chainID))
         if (!networkChangeStatus) {
-          const toastStore = useToastStore()
-          toastStore.addToastMessage({
+          // Wallet rejected the switch — show only the failure toast, never a
+          // contradictory "switched" success toast alongside it.
+          useToastStore().addToastMessage({
             text: i18n.global.t('common.network_change_failed'),
             textSecondary: i18n.global.t(
               'common.network_change_failed_description',
@@ -249,8 +268,15 @@ export const useWalletStore = defineStore('walletStore', () => {
             ),
             type: ToastType.Error,
           })
+          return
         }
       }
+      // EVM wallet switched successfully (or exposes no changeNetwork).
+      showNetworkSwitchedToast()
+    } else {
+      // Non-EVM chain, no connected wallet, or watch-only: the app-level switch
+      // always succeeds, so announce it immediately.
+      showNetworkSwitchedToast()
     }
   })
 
