@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isCoinNotFoundApiError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -402,5 +403,47 @@ describe('isRainbowKitNotFoundError', () => {
     expect(isRainbowKitNotFoundError(undefined)).toBe(false)
     expect(isRainbowKitNotFoundError({ message: 42 })).toBe(false)
     expect(isRainbowKitNotFoundError('something else')).toBe(false)
+  })
+})
+
+describe('isCoinNotFoundApiError', () => {
+  it('is true for the mew-api "CoinGecko coin not found" 400 message', () => {
+    // The exact production trigger (APP-MEW-WEB-1F3): GET
+    // /v1/web/token-price-chart/coins/CRYN replies 400 with this body
+    // message, which describeMewApiFetchError surfaces verbatim.
+    expect(
+      isCoinNotFoundApiError(new Error('CoinGecko coin not found: CRYN.')),
+    ).toBe(true)
+    expect(
+      isCoinNotFoundApiError({ message: 'CoinGecko coin not found: CRYN.' }),
+    ).toBe(true)
+  })
+
+  it('matches regardless of the token symbol or casing', () => {
+    expect(
+      isCoinNotFoundApiError(new Error('coingecko coin not found: FOO.')),
+    ).toBe(true)
+  })
+
+  it('is false for other mew-api 400s that happen to mention "not found"', () => {
+    expect(
+      isCoinNotFoundApiError(new Error('Address not found: 0x0.')),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isCoinNotFoundApiError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isCoinNotFoundApiError(null)).toBe(false)
+    expect(isCoinNotFoundApiError(undefined)).toBe(false)
+    expect(isCoinNotFoundApiError('CoinGecko coin not found: CRYN.')).toBe(
+      false,
+    )
   })
 })

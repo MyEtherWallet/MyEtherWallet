@@ -18,6 +18,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isCoinNotFoundApiError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -85,6 +86,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
+        isCoinNotFoundApiError(originalException) ||
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isProviderNotFoundError(originalException) ||
