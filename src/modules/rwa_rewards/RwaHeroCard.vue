@@ -68,7 +68,10 @@
 
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
+        <!-- A season that has already ended has nothing left to count down
+             to; the countdown would sit at "0 seconds". -->
         <p
+          v-if="!isCampaignEnded"
           class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -133,7 +136,7 @@
         class="relative z-10"
         variant="claim"
         :amount-label="$t('rwaRewards.reward_amount')"
-        :subtitle="$t('rwaRewards.sub_expires', { time: subExpiresText })"
+        :subtitle="subExpiresLabel"
         :claim-label="$t('rwaRewards.claim')"
         :loading="isClaiming"
         @claim="onClaim"
@@ -217,6 +220,7 @@
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
+          v-if="!isCampaignEnded"
           class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -321,6 +325,7 @@ const {
   isClaiming,
   isHoldOfferDismissed,
   isCampaignFull,
+  isCampaignEnded,
   isUnderReview,
   canRegisterTrade,
 } = storeToRefs(holdingsStore)
@@ -417,8 +422,18 @@ watch(
   { immediate: true },
 )
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
+// Strictly the reward's own claim deadline — never the season end. The two are
+// different deadlines, and `expiration_timestamp` is optional: the store reads
+// its absence as "never expires" (see `isClaimable`), so substituting the
+// season end would put a countdown on a reward that has none.
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
+)
+// Nothing to say when the reward carries no deadline.
+const subExpiresLabel = computed(() =>
+  activeReward.value?.expiration_timestamp
+    ? t('rwaRewards.sub_expires', { time: subExpiresText.value })
+    : '',
 )
 
 const HOLD_TOTAL = 14
