@@ -5,6 +5,9 @@
   "extends": "./tsconfig.app.json",
   // Stop excluding test files and directories
   "exclude": [],
+  // tsconfig.app.json only includes src/**, so the mirrored tests/unit tree needs
+  // adding here. tests/e2e is left out — Nightwatch owns it via nightwatch/tsconfig.json.
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "tests/unit/**/*"],
   "compilerOptions": {
     // Project
     "composite": true, // https://www.typescriptlang.org/tsconfig/#composite

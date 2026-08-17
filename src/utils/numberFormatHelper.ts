@@ -78,7 +78,7 @@ const formatIntegerToString = (_value: string | number | BigNumber): string => {
 
 /**
  * GROUP II: Formatted integers
- * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 million
+ * Converts an integer value to a FormattedNumber object, returns value in { millions, billions, trillions, quadrillions } if > 1 million
  * @param _value BigNumber || string || number}
  * @return {object} FormattedNumber
  */
@@ -370,6 +370,7 @@ const formatFiatValue = (
   options = { locale: 'en-US', currency: 'USD', rate: 1 },
 ): FormattedNumber => {
   const value = new BigNumber(_value)
+
   /**
    * Case I: value === 0
    * Return: "$0.00"
@@ -440,6 +441,82 @@ const formatFiatValue = (
 }
 
 /**
+ * GROUP VII: Fiat Values
+ * Converts a fiat value to a FormattedNumber
+ * Shows upto 6 decimal points or to the last decimal point on 0.0001 <= X < 0.01.
+ * Shows 2 decimal points or to the last decimal point on 0.01 <= X < 1,000,000.
+ * @param _value: BigNumber
+ * @returns Object FormattedNumber with value as formatted string and tooltipText
+ */
+const formatFiatValueAbsolute = (
+  _value: string | number | BigNumber,
+): FormattedNumber => {
+  const raw = new BigNumber(_value)
+  const isNegative = raw.isNegative() ? '-' : '' // Record whether value is negative
+  const value = raw.absoluteValue() // Get Absolute value
+
+  /**
+   * Case I: value === 0
+   * Return: "$0.00"
+   */
+  if (value === undefined || value.isZero() || value.isNaN()) {
+    return { value: '$0.00' }
+  }
+
+  /**
+   * Case II: value >= 1,000,000
+   * Return: formated integer value with tooltip
+   */
+  if (value.isGreaterThanOrEqualTo(OneMillion)) {
+    const formatted = formatIntegerValue(value)
+    formatted.value = `${isNegative}$${formatted.value}`
+    return { ...formatted }
+  }
+
+  /**
+   * Case II: value >= 1,000,000
+   * Return: formated integer value with tooltip
+   */
+  if (value.isGreaterThanOrEqualTo(OneThousand)) {
+    const formatted = convertToThousand(value)
+    formatted.value = `${isNegative}$${formatted.value}`
+
+    return { ...formatted }
+  }
+
+  /**
+   * Case V: value > 0.04
+   * Return: rounded number up to 2 decimal points,  no tooltip
+   */
+  if (value.isGreaterThanOrEqualTo(SmallFiatBreakpoint)) {
+    const formatted = getRoundNumber(value, 2, true)
+    formatted.value = `${isNegative}$${formatted.value}`
+
+    return { ...formatted }
+  }
+
+  /**
+   * Case VI: 0.0001  <= value < 0.01
+   * Return: rounded number up to 6 decimal points", no tooltip
+   */
+  if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
+    const formatted = getRoundNumber(value, 4)
+    formatted.value = `${isNegative}$${formatted.value}`
+
+    return { ...formatted }
+  }
+
+  /**
+   * Case V: value < 0.0001
+   * Return: string "< $0.0001" and tooltip with full value with tooltip
+   */
+  return {
+    value: `< ${isNegative}$${SmallNumberBreakpoint}`,
+    tooltipText: value.toFormat(),
+  }
+}
+
+/**
  * ---------------------------------
  * Helper Functions
  * Do not export then to use in formatting strings
@@ -498,14 +575,14 @@ const convertToTrillions = (value: BigNumber): FormattedNumber => {
 }
 
 /**
- * Helper function. returns Quadrillion in FormattedNumber object
+ * Helper function. Converts a value to Quadrillions in FormattedNumber object
  * @param {BigNumber} value - number to convert takes BigNumber || string || number
  * @return {object} - FormatterNumber
  */
 const convertToQuadrillion = (value: BigNumber): FormattedNumber => {
+  const result = value.dividedBy(OneQuadrillion)
   return {
-    value: '> 1Q',
-    unit: FormattedNumberUnit.Q,
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.Q}`,
     tooltipText: value.toFormat(),
   }
 }
@@ -551,4 +628,5 @@ export {
   formatBalanceEthValue,
   formatPercentageValue,
   formatGasValue,
+  formatFiatValueAbsolute,
 }

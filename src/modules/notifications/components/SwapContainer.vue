@@ -46,7 +46,7 @@
             />
           </p>
           <p v-if="swap.fromUsdValue" class="text-s-12 text-info">
-            ${{ swap.fromUsdValue }}
+            {{ formatFiat(swap.fromUsdValue).display }}
           </p>
         </div>
       </div>
@@ -73,7 +73,7 @@
             />
           </p>
           <p v-if="swap.toUsdValue" class="text-s-12 text-info">
-            ${{ swap.toUsdValue }}
+            {{ formatFiat(swap.toUsdValue).display }}
           </p>
         </div>
       </div>
@@ -126,7 +126,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(swap.createdAt) }}
+            {{ formatNotificationDate(swap.createdAt) }}
           </p>
         </div>
 
@@ -162,7 +162,7 @@
               {{ swap.fromChainSymbol }}
             </p>
             <p v-if="swap.networkFeeUSD" class="text-s-12 text-info ml-1">
-              ${{ formatFiatValue(swap.networkFeeUSD).value }}
+              {{ formatFiat(swap.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -185,10 +185,11 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatFiat } = useCurrency()
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
 const props = defineProps<{
@@ -202,12 +203,6 @@ defineEmits<{
 }>()
 
 const showMoreDetails = ref(false)
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
 
 // Truncate hash
 const truncateHash = (hash: string): string => {

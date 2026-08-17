@@ -103,7 +103,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       return ''
     }
     if (generalError.value === 'pathfinder error') {
-      return 'This token is unavailable to trade. Please choose another or try again later.'
+      return t('trade.error.token-unavailable')
     }
 
     const amountBN = BigNumber(fromAmount.value)
@@ -128,7 +128,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (tokenPrice > 0) {
       const usdValue = amountBN.times(tokenPrice)
       if (usdValue.lt(0.95)) {
-        return 'Minimum trade value is around $1.00'
+        return t('trade.error.minimum-trade-value')
       }
     }
 

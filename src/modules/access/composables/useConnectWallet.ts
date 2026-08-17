@@ -8,7 +8,7 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
-import { useProviderStore } from '@/stores/providerStore'
+import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -47,10 +47,29 @@ export const useConnectWallet = () => {
   const globalStore = useGlobalStore()
   const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
-  const _storeWallet = (
+  const _storeWallet = async (
     wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
     config: WalletConfig,
   ) => {
+    // Connecting an address that's already saved is allowed — e.g. accessing the
+    // same wallet from a different device/provider (Enkrypt → MetaMask). Let it
+    // through so walletStore.setAddress upserts/reuses the saved entry instead of
+    // blocking with an "already saved" step. (MEW-2133)
+    const address = await wallet.getAddress()
+    const walletIcon = typeof config.icon === 'string' ? config.icon : ''
+    // Connecting a *specific* saved address: an extension only connects its active
+    // account, so if that isn't the intended address, prompt the user to select it.
+    const intended = accessStore.intendedAddress
+    if (intended && address.toLowerCase() !== intended.toLowerCase()) {
+      accessStore.setConnectAddressInfo({
+        address: intended,
+        walletName: config.name,
+        walletIcon,
+        config,
+      })
+      accessStore.setCurrentView('default')
+      return
+    }
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
     setWallet(wallet, config.name, config.type[0])
@@ -63,8 +82,10 @@ export const useConnectWallet = () => {
     })
     accessStore.closeAccessDialog()
     toastStore.addToastMessage({
-      text: 'Wallet connected',
-      textSecondary: `You have successfully connected your ${config.name} wallet.`,
+      text: t('access_wallet.toast.wallet_connected'),
+      textSecondary: t('access_wallet.toast.wallet_connected_description', {
+        name: config.name,
+      }),
       type: ToastType.Success,
     })
   }
@@ -76,21 +97,47 @@ export const useConnectWallet = () => {
       const enkryptInjection = window.enkrypt?.providers?.bitcoin
       if (wallet.id === 'unisat' && !unisatInjection) {
         toastStore.addToastMessage({
-          text: 'Unisat not detected',
-          textSecondary: `Please install ${wallet.name} extension.`,
+          text: t('access_wallet.toast.wallet_not_detected', {
+            wallet: 'Unisat',
+          }),
+          textSecondary: t('access_wallet.toast.install_extension', {
+            name: wallet.name,
+          }),
           type: ToastType.Warning,
         })
         return
       } else if (wallet.id === 'enkrypt' && !enkryptInjection) {
         toastStore.addToastMessage({
-          text: 'Enkrypt not detected',
-          textSecondary: `Please install ${wallet.name} extension.`,
+          text: t('access_wallet.toast.wallet_not_detected', {
+            wallet: 'Enkrypt',
+          }),
+          textSecondary: t('access_wallet.toast.install_extension', {
+            name: wallet.name,
+          }),
+          type: ToastType.Warning,
+        })
+        return
+      }
+      // Resolve the injected provider that matches the selected wallet.
+      // Wallets other than Unisat / Enkrypt (e.g. SafePal) do not expose a
+      // supported Bitcoin injection, so bail out gracefully instead of
+      // dereferencing an undefined provider (MEW-2040).
+      const btcInjection =
+        wallet.id === 'unisat'
+          ? unisatInjection
+          : wallet.id === 'enkrypt'
+            ? enkryptInjection
+            : undefined
+      if (!btcInjection) {
+        toastStore.addToastMessage({
+          text: 'Wallet not supported for Bitcoin',
+          textSecondary: `${wallet.name} can't be used to connect to Bitcoin. Please select a different wallet.`,
           type: ToastType.Warning,
         })
         return
       }
       const unisatWallet = new UnisatInjectWallet(
-        wallet.id === 'unisat' ? unisatInjection! : enkryptInjection!,
+        btcInjection,
         selectedChain.value?.name ?? 'BITCOIN',
       )
 
@@ -104,7 +151,7 @@ export const useConnectWallet = () => {
         .then(res => {
           if (res) {
             try {
-              _storeWallet(unisatWallet, wallet)
+              void _storeWallet(unisatWallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -128,9 +175,7 @@ export const useConnectWallet = () => {
       return
     }
     const providerInjected = Eip6963Providers.value.find(
-      p =>
-        p.info.name.toLowerCase() === wallet.name.toLowerCase() ||
-        p.info.name.toLowerCase() === wallet.id.toLowerCase(),
+      p => p.info.name === wallet.name || p.info.name === wallet.id,
     )
 
     if (!providerInjected) {
@@ -145,16 +190,18 @@ export const useConnectWallet = () => {
           wallet.downloadUrls?.firefox
         const link = _haslink
           ? {
-            title: 'Click here to install',
+            title: t('access_wallet.toast.click_here_to_install'),
             url: _haslink,
           }
           : {
-            title: "Don't have a wallet?",
+            title: t('common.dont_have_wallet'),
             url: 'https://enkrypt.com',
           }
         toastStore.addToastMessage({
-          text: 'Web3 wallet not detected',
-          textSecondary: `Please install ${wallet.name} extension to connect or select a different wallet.`,
+          text: t('access_wallet.toast.web3_wallet_not_detected'),
+          textSecondary: t('access_wallet.toast.install_extension_or_select', {
+            name: wallet.name,
+          }),
           link: link,
           type: ToastType.Warning,
           isInfinite: true,
@@ -170,12 +217,15 @@ export const useConnectWallet = () => {
       accessStore.clearWeb3ConnectionError()
       accessStore.setClickedWeb3Wallet(wallet)
       accessStore.setCurrentView('web3_wallet')
-      web3Wallet
+      // Returned so callers (e.g. connectSaved) can await the full flow — the
+      // promise settles only after _storeWallet has run, i.e. once the address
+      // is connected or the connect-address prompt has been surfaced.
+      return web3Wallet
         .connect()
-        .then(res => {
+        .then(async res => {
           if (res) {
             try {
-              _storeWallet(web3Wallet, wallet)
+              await _storeWallet(web3Wallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -194,14 +244,12 @@ export const useConnectWallet = () => {
             err.message &&
             err.message.toLowerCase().includes('already pending')
           ) {
-            error =
-              'Request to connect already pending, please check your wallet extension'
+            error = t('access_wallet.toast.connect_request_pending')
           } else if (
             err.message &&
             err.message.toLowerCase().includes('unrecognized chain id')
           ) {
-            error =
-              'Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet.'
+            error = t('access_wallet.toast.network_not_supported')
           }
           accessStore.setWeb3ConnectionError(error)
           if (error === t('error_connecting')) {
@@ -227,15 +275,26 @@ export const useConnectWallet = () => {
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
-    connector?.onDisconnect()
-    connector?.emitter.on('message', msg => {
+    // No matching wagmi connector (e.g. wallet not installed / not registered).
+    // Surface a friendly, handled error instead of constructing a WagmiWallet
+    // with an undefined connector and dereferencing it on connect().
+    if (!connector) {
+      toastStore.addToastMessage({
+        text: 'Wallet not available',
+        textSecondary: `We couldn't connect to ${wallet.name}. Please select a different wallet or try again.`,
+        type: ToastType.Warning,
+      })
+      return
+    }
+    connector.onDisconnect()
+    connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
         accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
     const wagWallet = new WagmiWallet(
-      connector!,
+      connector,
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
@@ -244,10 +303,10 @@ export const useConnectWallet = () => {
       .then(res => {
         if (res) {
           try {
-            _storeWallet(wagWallet, wallet)
+            void _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
-              text: 'Could not connect to wallet',
+              text: t('access_wallet.toast.could_not_connect'),
               textSecondary:
                 error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
@@ -266,18 +325,11 @@ export const useConnectWallet = () => {
           err.message &&
           err.message.toLowerCase().includes('proposal expired')
         ) {
-          error = 'Connection timed out. Please try again.'
-          _type = ToastType.Info
-        }
-        if (
-          err.message &&
-          err.message.toLowerCase().includes('proposal expired')
-        ) {
-          error = 'Connection timed out. Please try again.'
+          error = t('access_wallet.toast.connection_timed_out')
           _type = ToastType.Info
         }
         toastStore.addToastMessage({
-          text: 'Could not connect to wallet',
+          text: t('access_wallet.toast.could_not_connect'),
           textSecondary: error,
           type: _type,
         })
@@ -295,10 +347,9 @@ export const useConnectWallet = () => {
 
     const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
     if (isWeb3) {
-      _connectWeb3(wallet)
-      return
+      return _connectWeb3(wallet)
     }
-    _connectWagmi(wallet)
+    return _connectWagmi(wallet)
   }
 
   const connect = async (wallet: WalletConfig) => {
@@ -319,12 +370,60 @@ export const useConnectWallet = () => {
       }
       accessStore.setCurrentView(wallet.walletViewType)
     } else {
-      connectWallet(wallet)
+      return connectWallet(wallet)
     }
   }
+  const _findInjected = (config: WalletConfig): Provider | undefined =>
+    Eip6963Providers.value.find(
+      p =>
+        p.info.name.toLowerCase() === config.name.toLowerCase() ||
+        p.info.name.toLowerCase() === config.id.toLowerCase(),
+    )
+
+  /** True when the wallet's injected (EIP-6963) provider is currently present,
+   *  i.e. connect() can reach it directly instead of falling back to
+   *  WalletConnect. */
+  const isInjectedAvailable = (config: WalletConfig): boolean =>
+    _findInjected(config) !== undefined
+
+  /** Open the extension's account-selection UI so the user can switch the active
+   *  address (EVM injected). Best-effort no-op if the provider isn't found. */
+  const openExtensionAccounts = async (config: WalletConfig): Promise<void> => {
+    const injected = _findInjected(config)
+    if (!injected) return
+    try {
+      await injected.provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }],
+      })
+    } catch {
+      /* user dismissed the extension prompt */
+    }
+  }
+
+  /** Re-run `cb` when the user switches account in the extension. Returns a
+   *  cleanup fn; no-op if the provider isn't found. */
+  const watchExtensionAccounts = (
+    config: WalletConfig,
+    cb: () => void,
+  ): (() => void) => {
+    const injected = _findInjected(config)
+    if (!injected) return () => {}
+    const handler = (): void => cb()
+    const p = injected.provider as {
+      on?: (e: string, h: (...a: unknown[]) => void) => void
+      removeListener?: (e: string, h: (...a: unknown[]) => void) => void
+    }
+    p.on?.('accountsChanged', handler)
+    return () => p.removeListener?.('accountsChanged', handler)
+  }
+
   return {
     wagmiWalletData,
     clickedWallet,
     connect,
+    openExtensionAccounts,
+    watchExtensionAccounts,
+    isInjectedAvailable,
   }
 }

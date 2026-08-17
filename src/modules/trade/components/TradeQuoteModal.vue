@@ -72,7 +72,9 @@
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 flex-none"
                 />
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
 
@@ -187,13 +189,13 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfirmationBanner.vue'
 import { formatUnits } from 'viem'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { analytics, TradeEvent } from '@/analytics'
+
+const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
@@ -237,7 +239,7 @@ const toAmountFiat = computed(() => {
   const formatted = formatUnits(amount, props.toToken.decimals || 18)
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
-  return formatFiatValue(fiat.toString()).value
+  return formatFiat(fiat.toString()).value
 })
 
 const minAmountFiat = computed(() => {
@@ -248,7 +250,7 @@ const minAmountFiat = computed(() => {
   )
   const price = props.toToken.price || 0
   const fiat = parseFloat(formatted) * price
-  return formatFiatValue(fiat.toString()).value
+  return formatFiat(fiat.toString()).value
 })
 
 const isProcessing = ref(false)

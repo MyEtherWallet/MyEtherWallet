@@ -12,7 +12,9 @@
       v-if="isLoaded"
       class="flex flex-row"
       :class="[
-        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start',
+        hasFullWidth
+          ? 'justify-stretch  overflow-auto no-scrollbar scrollbar-hide'
+          : 'flex-wrap justify-start',
         variant === 'outline' ? 'gap-2' : 'gap-1',
       ]"
     >
@@ -38,7 +40,7 @@
             ' !bg-black text-white':
               variant === 'outline' && areEqual(selected, btn),
           },
-          { 'w-full': hasFullWidth },
+          { 'w-full !min-w-fit': hasFullWidth },
           'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium  ',
 
           variant === 'outline' ? '' : '',

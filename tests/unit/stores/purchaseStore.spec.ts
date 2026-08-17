@@ -1,8 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { usePurchaseStore, QUOTE_TTL_MS } from '@/stores/purchaseStore'
-import type { FetchSellQuoteParams, SellQuote } from '@/types/buyToken'
+import type {
+  FetchSellQuoteParams,
+  SellQuote,
+  PurchaseInfo,
+} from '@/types/buyToken'
 
+// purchaseStore instantiates chainsStore and walletStore at setup. The real
+// walletStore transitively imports the wallet-provider chain (Ledger / hw
+// wallets), which is irrelevant to these tests and heavy to load under jsdom.
+// Stub both with minimal real Pinia setup stores so `storeToRefs` still works.
 vi.mock('@/stores/chainsStore', async () => {
   const { defineStore } = await vi.importActual<typeof import('pinia')>('pinia')
   const { ref } = await vi.importActual<typeof import('vue')>('vue')
@@ -212,7 +220,11 @@ describe('purchaseStore quote fetching', () => {
     const store = usePurchaseStore()
 
     const first = store.fetchBuyQuotes({ ...sellParams, iso: 'US' })
-    const second = store.fetchBuyQuotes({ ...sellParams, amount: '2', iso: 'US' })
+    const second = store.fetchBuyQuotes({
+      ...sellParams,
+      amount: '2',
+      iso: 'US',
+    })
 
     resolveSecond(jsonResponse([makeQuote('200')]))
     await second
@@ -221,5 +233,60 @@ describe('purchaseStore quote fetching', () => {
 
     expect(store.buyQuotes[0]?.fiat_amount).toBe('200')
     expect(store.isFetchingQuotes).toBe(false)
+  })
+})
+
+describe('purchaseStore.sellFiats', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('returns an empty map (no throw) when purchaseInfo is set but has no providers', () => {
+    const store = usePurchaseStore()
+    // Simulate a malformed / partial purchase API response where the object
+    // exists but `providers` is missing. This reproduces APP-MEW-WEB-1DZ:
+    // `purchaseInfo.value?.providers.find(...)` threw because the optional
+    // chain only guarded `purchaseInfo.value`, not `providers`.
+    store.purchaseInfo = { assets: [] } as unknown as PurchaseInfo
+    expect(() => store.sellFiats).not.toThrow()
+    expect(store.sellFiats.size).toBe(0)
+  })
+
+  it('returns an empty map when purchaseInfo is null', () => {
+    const store = usePurchaseStore()
+    store.purchaseInfo = null
+    expect(store.sellFiats.size).toBe(0)
+  })
+
+  it('collects sell-supported fiats from the MOONPAY provider', () => {
+    const store = usePurchaseStore()
+    store.purchaseInfo = {
+      assets: [],
+      providers: [
+        {
+          provider: 'MOONPAY',
+          isos_list: [],
+          isos: [],
+          fiats_list: [],
+          fiats: [
+            {
+              fiat_currency: 'USD',
+              limits: { min: 10, max: 1000 },
+              payment_methods: ['card'],
+              is_sell_supported: true,
+            },
+            {
+              fiat_currency: 'GBP',
+              limits: { min: 10, max: 1000 },
+              payment_methods: ['card'],
+              is_sell_supported: false,
+            },
+          ],
+        },
+      ],
+    } as PurchaseInfo
+    expect(store.sellFiats.size).toBe(1)
+    expect(store.sellFiats.has('USD')).toBe(true)
+    expect(store.sellFiats.has('GBP')).toBe(false)
   })
 })

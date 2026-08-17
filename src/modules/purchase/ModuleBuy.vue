@@ -1,6 +1,20 @@
 <template>
   <div class="relative flex flex-col h-full">
-    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.buy.network_not_supported')"
+      :description="
+        t('purchase.buy.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="mb-3"
+    />
+
+    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
       <purchase-token-select-card
         v-if="displayChain"
         :chain="displayChain"
@@ -42,20 +56,6 @@
 
       <purchase-footer class="pt-2" />
     </div>
-
-    <purchase-unsupported-network
-      v-if="showUnsupportedNetwork"
-      :title="t('purchase.buy.network_not_supported')"
-      :description="
-        t('purchase.buy.network_not_available', {
-          network:
-            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
-        })
-      "
-      :chains="supportedNetworkChains"
-      :default-chain="defaultSupportedChain"
-      class="absolute inset-x-2 top-[88px] z-20"
-    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -121,6 +121,7 @@ import {
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 import { useQuoteCountdown } from './composables/useQuoteCountdown'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
@@ -185,9 +186,7 @@ const showUnsupportedNetwork = computed(
   () => !!purchaseInfo.value && !supportedNetwork.value,
 )
 
-const blurClass = computed(() =>
-  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
-)
+const { blockedClass } = useBlockedContent(showUnsupportedNetwork)
 
 const accessStore = useAccessStore()
 
@@ -293,8 +292,16 @@ const quickButtons = computed(() => {
     }))
   }
   return [
-    { label: 'Min', value: Math.round(MIN_USD * rate), usdValue: MIN_USD },
-    { label: 'Max', value: Math.round(MAX_USD * rate), usdValue: MAX_USD },
+    {
+      label: t('purchase.min'),
+      value: Math.round(MIN_USD * rate),
+      usdValue: MIN_USD,
+    },
+    {
+      label: t('purchase.max'),
+      value: Math.round(MAX_USD * rate),
+      usdValue: MAX_USD,
+    },
   ]
 })
 
