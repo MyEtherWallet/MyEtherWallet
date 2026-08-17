@@ -141,7 +141,10 @@ vi.mock('@/modules/perps/composables/usePerpsToasts', () => ({
   usePerpsToasts: () => new Proxy({}, { get: () => vi.fn() }),
 }))
 
-import { usePerpsTradeForm } from '@/modules/perps/composables/usePerpsTradeForm'
+import {
+  usePerpsTradeForm,
+  triggerOrderPriceErrorKey,
+} from '@/modules/perps/composables/usePerpsTradeForm'
 
 describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
   beforeEach(() => {
@@ -431,5 +434,48 @@ describe('usePerpsTradeForm — cross-margin liquidation estimate', () => {
     expect(form.currentPrice.value).toBe(396.2)
     expect(form.positionSizeUsd.value).toBe(20)
     expect(form.estimatedLiquidation.value).toBeCloseTo(1869.4, 2)
+  })
+})
+
+// MEW-2075: the Ondo backend rejects an order whose SL/TP trigger price is on
+// the wrong side of the order price with a raw English sentence. Map that
+// family to a localized i18n key by leg (stop-loss / take-profit) and side
+// (buy / sell); unrelated messages fall through to null (raw message kept).
+describe('triggerOrderPriceErrorKey (MEW-2075)', () => {
+  it.each([
+    [
+      'stop loss trigger price must be less than order price for buy orders',
+      'perps.errors.sl-trigger-order-buy',
+    ],
+    [
+      'stop loss trigger price must be greater than order price for sell orders',
+      'perps.errors.sl-trigger-order-sell',
+    ],
+    [
+      'take profit trigger price must be greater than order price for buy orders',
+      'perps.errors.tp-trigger-order-buy',
+    ],
+    [
+      'take profit trigger price must be less than order price for sell orders',
+      'perps.errors.tp-trigger-order-sell',
+    ],
+  ])('maps %s → %s', (msg, key) => {
+    expect(triggerOrderPriceErrorKey(msg)).toBe(key)
+  })
+
+  it('is case-insensitive and tolerant of "stop-loss" hyphenation', () => {
+    expect(
+      triggerOrderPriceErrorKey(
+        'Stop-Loss Trigger Price must be LESS than Order Price for BUY orders',
+      ),
+    ).toBe('perps.errors.sl-trigger-order-buy')
+  })
+
+  it('returns null for unrelated backend errors', () => {
+    expect(triggerOrderPriceErrorKey('invalid nonce')).toBeNull()
+    expect(
+      triggerOrderPriceErrorKey('insufficient margin available'),
+    ).toBeNull()
+    expect(triggerOrderPriceErrorKey('')).toBeNull()
   })
 })

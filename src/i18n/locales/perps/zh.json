@@ -30,6 +30,8 @@
       "deposit-complete-title": "存款完成",
       "deposit-complete-detail": "{size} {coin} 已添加到你的交易账户",
       "withdrawal-complete-title": "提现完成",
+      "withdrawal-address-added-title": "提现地址已添加",
+      "withdrawal-address-added-detail": "你已授权 '{address}' 作为 Perps 账户的提现地址。提现前需等待 24 小时的冷却期。",
       "deposit-initiated-title": "存款已发起",
       "failed-to-credit-account-title": "账户入账失败",
       "deposit-canceled-title": "存款已取消",
@@ -71,7 +73,11 @@
       "tp-below-mark": "止盈必须低于标记价格",
       "sl-above-zero": "止损必须高于 0",
       "sl-below-mark": "止损必须低于标记价格",
-      "sl-above-mark": "止损必须高于标记价格"
+      "sl-above-mark": "止损必须高于标记价格",
+      "sl-trigger-order-buy": "止损触发价格必须低于买单的订单价格",
+      "sl-trigger-order-sell": "止损触发价格必须高于卖单的订单价格",
+      "tp-trigger-order-buy": "止盈触发价格必须高于买单的订单价格",
+      "tp-trigger-order-sell": "止盈触发价格必须低于卖单的订单价格"
     },
     "trade": {
       "perpetuals": "永续合约",
@@ -405,6 +411,7 @@
       "liquidation-risk-title": "强平风险",
       "liquidation-risk-text": "你有未平仓的仓位。提取资金将减少你的账户权益并提高你的有效杠杆，这可能会增加你的强平风险。",
       "withdraw-button": "提现",
+      "authorize-button": "授权提现",
       "amount-too-large": "数量过大",
       "amount-precision": "数量最多支持 {decimals} 位小数",
       "amount-exceeds-balance": "数量超过可用余额",
