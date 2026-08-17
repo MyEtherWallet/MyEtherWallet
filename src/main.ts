@@ -18,6 +18,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignPurchaseInfoForbidden,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -94,7 +95,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isTrezorHandshakeError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
-        isForeignStackOverflow(event)
+        isForeignStackOverflow(event) ||
+        // Purchase-info 403 from a region/wallet the fiat-purchase backend
+        // denies — expected, already-handled business rule, not an app bug
+        // (APP-MEW-WEB-1F5 / MEW-2173).
+        isBenignPurchaseInfoForbidden(event)
       )
         return null
       return event
