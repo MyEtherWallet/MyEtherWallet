@@ -8,7 +8,7 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
-import { useProviderStore } from '@/stores/providerStore'
+import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -47,10 +47,29 @@ export const useConnectWallet = () => {
   const globalStore = useGlobalStore()
   const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
-  const _storeWallet = (
+  const _storeWallet = async (
     wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
     config: WalletConfig,
   ) => {
+    // Connecting an address that's already saved is allowed — e.g. accessing the
+    // same wallet from a different device/provider (Enkrypt → MetaMask). Let it
+    // through so walletStore.setAddress upserts/reuses the saved entry instead of
+    // blocking with an "already saved" step. (MEW-2133)
+    const address = await wallet.getAddress()
+    const walletIcon = typeof config.icon === 'string' ? config.icon : ''
+    // Connecting a *specific* saved address: an extension only connects its active
+    // account, so if that isn't the intended address, prompt the user to select it.
+    const intended = accessStore.intendedAddress
+    if (intended && address.toLowerCase() !== intended.toLowerCase()) {
+      accessStore.setConnectAddressInfo({
+        address: intended,
+        walletName: config.name,
+        walletIcon,
+        config,
+      })
+      accessStore.setCurrentView('default')
+      return
+    }
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
     setWallet(wallet, config.name, config.type[0])
@@ -132,7 +151,7 @@ export const useConnectWallet = () => {
         .then(res => {
           if (res) {
             try {
-              _storeWallet(unisatWallet, wallet)
+              void _storeWallet(unisatWallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -198,12 +217,15 @@ export const useConnectWallet = () => {
       accessStore.clearWeb3ConnectionError()
       accessStore.setClickedWeb3Wallet(wallet)
       accessStore.setCurrentView('web3_wallet')
-      web3Wallet
+      // Returned so callers (e.g. connectSaved) can await the full flow — the
+      // promise settles only after _storeWallet has run, i.e. once the address
+      // is connected or the connect-address prompt has been surfaced.
+      return web3Wallet
         .connect()
-        .then(res => {
+        .then(async res => {
           if (res) {
             try {
-              _storeWallet(web3Wallet, wallet)
+              await _storeWallet(web3Wallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -281,7 +303,7 @@ export const useConnectWallet = () => {
       .then(res => {
         if (res) {
           try {
-            _storeWallet(wagWallet, wallet)
+            void _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
               text: t('access_wallet.toast.could_not_connect'),
@@ -325,10 +347,9 @@ export const useConnectWallet = () => {
 
     const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
     if (isWeb3) {
-      _connectWeb3(wallet)
-      return
+      return _connectWeb3(wallet)
     }
-    _connectWagmi(wallet)
+    return _connectWagmi(wallet)
   }
 
   const connect = async (wallet: WalletConfig) => {
@@ -349,12 +370,60 @@ export const useConnectWallet = () => {
       }
       accessStore.setCurrentView(wallet.walletViewType)
     } else {
-      connectWallet(wallet)
+      return connectWallet(wallet)
     }
   }
+  const _findInjected = (config: WalletConfig): Provider | undefined =>
+    Eip6963Providers.value.find(
+      p =>
+        p.info.name.toLowerCase() === config.name.toLowerCase() ||
+        p.info.name.toLowerCase() === config.id.toLowerCase(),
+    )
+
+  /** True when the wallet's injected (EIP-6963) provider is currently present,
+   *  i.e. connect() can reach it directly instead of falling back to
+   *  WalletConnect. */
+  const isInjectedAvailable = (config: WalletConfig): boolean =>
+    _findInjected(config) !== undefined
+
+  /** Open the extension's account-selection UI so the user can switch the active
+   *  address (EVM injected). Best-effort no-op if the provider isn't found. */
+  const openExtensionAccounts = async (config: WalletConfig): Promise<void> => {
+    const injected = _findInjected(config)
+    if (!injected) return
+    try {
+      await injected.provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }],
+      })
+    } catch {
+      /* user dismissed the extension prompt */
+    }
+  }
+
+  /** Re-run `cb` when the user switches account in the extension. Returns a
+   *  cleanup fn; no-op if the provider isn't found. */
+  const watchExtensionAccounts = (
+    config: WalletConfig,
+    cb: () => void,
+  ): (() => void) => {
+    const injected = _findInjected(config)
+    if (!injected) return () => {}
+    const handler = (): void => cb()
+    const p = injected.provider as {
+      on?: (e: string, h: (...a: unknown[]) => void) => void
+      removeListener?: (e: string, h: (...a: unknown[]) => void) => void
+    }
+    p.on?.('accountsChanged', handler)
+    return () => p.removeListener?.('accountsChanged', handler)
+  }
+
   return {
     wagmiWalletData,
     clickedWallet,
     connect,
+    openExtensionAccounts,
+    watchExtensionAccounts,
+    isInjectedAvailable,
   }
 }

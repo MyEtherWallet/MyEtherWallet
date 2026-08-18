@@ -54,6 +54,24 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
+// The Ondo backend rejects an order whose SL/TP trigger price sits on the wrong
+// side of the (limit) order price, surfacing a raw sentence like "stop loss
+// trigger price must be less than order price for buy orders". Map that family
+// to a localized descriptor so non-English users don't see the backend string
+// (MEW-2075). The comparison direction is implied by leg + side, so we classify
+// on those two and let each locale phrase the full sentence. Anything that
+// doesn't match a known leg/side combination falls through to the raw message.
+const TRIGGER_ORDER_PRICE_PATTERN =
+  /(stop[\s-]?loss|take[\s-]?profit)[\s\S]*?trigger\s+price[\s\S]*?order\s+price[\s\S]*?\b(buy|sell)\b/i
+
+export function triggerOrderPriceErrorKey(msg: string): string | null {
+  const match = msg.match(TRIGGER_ORDER_PRICE_PATTERN)
+  if (!match) return null
+  const leg = /stop/i.test(match[1]) ? 'sl' : 'tp'
+  const side = match[2].toLowerCase() === 'buy' ? 'buy' : 'sell'
+  return `perps.errors.${leg}-trigger-order-${side}`
+}
+
 
 const leverage = ref(20)
 // Add-mode staged leverage: the value the user picks in the leverage dialog
@@ -93,10 +111,13 @@ export function usePerpsTradeForm() {
 
   // ── State ──────────────────────────────────────────────────
 
-  const orderSideButtons: OrderSideButton[] = [
+  // `computed` (not a plain array) so the labels re-translate when the user
+  // switches language after the trade form has mounted. A plain array froze
+  // `t()` at setup and left Long/Short stuck in the initial locale (MEW-2112).
+  const orderSideButtons = computed<OrderSideButton[]>(() => [
     { label: t('perps.trade.long'), value: 'buy' },
     { label: t('perps.trade.short'), value: 'sell' },
-  ]
+  ])
 
   const orderSide = ref<OrderSide>(
     walletMenuStore.selectedTradeOrderSide ?? 'buy',
@@ -1541,8 +1562,10 @@ export function usePerpsTradeForm() {
           perpsToasts.toastTakeProfitInvalid()
         }
       }
-      const errorMessage =
-        SLIPPAGE_REJECTION_PATTERN.test(msg)
+      const triggerOrderPriceKey = triggerOrderPriceErrorKey(msg)
+      const errorMessage = triggerOrderPriceKey
+        ? t(triggerOrderPriceKey)
+        : SLIPPAGE_REJECTION_PATTERN.test(msg)
           ? SLIPPAGE_REJECTION_MESSAGE
           : error?.message || error?.toString() || t('perps.errors.order-failed')
       orderError.value = errorMessage

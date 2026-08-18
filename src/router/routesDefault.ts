@@ -20,16 +20,26 @@ const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
 const ViewPerps = () => import('@/views/ViewPerps.vue')
+const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
   {
+    // New public Home is the root; disconnected users land here.
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
-    component: PortfolioView,
+    component: ViewHome,
     meta: {
       noAuth: true,
     },
+  },
+  {
+    // The wallet portfolio moved off the root; requires a connected wallet
+    // (the guard bounces disconnected users to '/'). Its connect/create and
+    // token/stock-info children keep their own `noAuth` where they had it.
+    path: ROUTES_MAIN.PORTFOLIO.PATH,
+    name: ROUTES_MAIN.PORTFOLIO.NAME,
+    component: PortfolioView,
     children: [
       CREATE_ROUTES,
       ACCESS_ROUTES,

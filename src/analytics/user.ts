@@ -54,4 +54,6 @@ export type UserProperties = {
   canTrade?: boolean
   holdCampaignStatus?: string
   isRegionRestricted?: boolean
+  /** Marketing A/B test arm ('A' | 'B'), set on first exposure. */
+  marketingVariant?: string
 }

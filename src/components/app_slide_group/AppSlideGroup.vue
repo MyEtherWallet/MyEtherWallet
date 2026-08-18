@@ -4,9 +4,13 @@
       class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
       :class="{
         'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
-          blurFront,
+          blurFront && !edgeNav,
         'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
-          blurEnd,
+          blurEnd && !edgeNav,
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
+          blurFront && edgeNav,
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
+          blurEnd && edgeNav,
         'order-2': paginateLocation === 'top',
       }"
     >
@@ -18,7 +22,11 @@
           v-for="(item, index) in totalItems"
           :key="`scroll-item-${index}`"
           :id="`scroll-item-${index}`"
-          class="snap-start scroll-ml-6 w-[80%]"
+          :class="
+            edgeNav
+              ? 'w-full flex justify-center snap-center md:block md:w-[80%] md:justify-start md:snap-start md:scroll-ml-6'
+              : 'w-[80%] snap-start scroll-ml-6'
+          "
         >
           <app-slide-item
             :item-index="index"
@@ -28,15 +36,36 @@
           </app-slide-item>
         </div>
       </div>
+
+      <!-- Edge-centered circular nav buttons (opt-in via edgeNav) -->
+      <button
+        v-if="edgeNav && blurFront"
+        type="button"
+        :aria-label="$t('common.previous_page')"
+        class="absolute left-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+        @click="scrollToPreviousGroup"
+      >
+        <ChevronLeftIcon class="size-5" />
+      </button>
+      <button
+        v-if="edgeNav && blurEnd"
+        type="button"
+        :aria-label="$t('common.next_page')"
+        class="absolute right-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+        @click="scrollToNextGroup"
+      >
+        <ChevronRightIcon class="size-5" />
+      </button>
     </div>
     <div
+      v-if="!edgeNav || title"
       class="flex items-center justify-end"
       :class="[paginateLocation === 'top' ? 'order-1 mb-1' : '']"
     >
       <h2 v-if="title" class="text-s-20 font-bold ml-4 mr-auto">{{ title }}</h2>
 
       <app-btn-icon
-        v-if="!allIsVisible"
+        v-if="!allIsVisible && !edgeNav"
         :label="$t('common.previous_page')"
         class="ml-auto"
         @click="scrollToPreviousGroup"
@@ -44,7 +73,7 @@
         <ChevronLeftIcon class="w-4 h-4" />
       </app-btn-icon>
       <app-btn-icon
-        v-if="!allIsVisible"
+        v-if="!allIsVisible && !edgeNav"
         class="-mr-2"
         :label="$t('common.next_page')"
         @click="scrollToNextGroup"
@@ -59,8 +88,16 @@
 import AppSlideItem from './AppSlideItem.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { computed, ref, useTemplateRef, type PropType } from 'vue'
-import { useElementBounding } from '@vueuse/core'
+import {
+  computed,
+  ref,
+  useTemplateRef,
+  onMounted,
+  nextTick,
+  watch,
+  type PropType,
+} from 'vue'
+import { useElementBounding, useScroll, useResizeObserver } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 const props = defineProps({
   totalItems: {
@@ -76,11 +113,39 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  /**
+   * Opt-in: render circular edge-centered prev/next buttons (over the fades)
+   * instead of the default bottom-right icon buttons.
+   */
+  edgeNav: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const scrollContainer = useTemplateRef('scrollContainer')
 
 const { width } = useElementBounding(scrollContainer)
+
+// Edge fades are driven by the actual scroll position (not item visibility):
+// a strict 1.0 intersection threshold meant the edge item never counted as
+// fully visible at the boundary, so the fade lingered with nothing left to
+// scroll. We recompute the edges on scroll AND on mount / resize / item-count
+// change — the last is essential because async-loaded items grow scrollWidth
+// without resizing the container, so a scroll-only signal would miss them.
+const { x: scrollX } = useScroll(scrollContainer)
+const atStart = ref(true)
+const atEnd = ref(true)
+const updateEdges = () => {
+  const el = scrollContainer.value
+  if (!el) return
+  atStart.value = el.scrollLeft <= 1
+  atEnd.value = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
+}
+watch(scrollX, updateEdges)
+watch(() => props.totalItems, () => nextTick(updateEdges))
+useResizeObserver(scrollContainer, updateEdges)
+onMounted(() => nextTick(updateEdges))
 
 const visibleItems = ref<Set<number>>(new Set<number>())
 
@@ -96,12 +161,8 @@ const allIsVisible = computed(() => {
   return visibleItems.value.size === props.totalItems
 })
 
-const blurFront = computed(() => {
-  return !visibleItems.value.has(0)
-})
-const blurEnd = computed(() => {
-  return !visibleItems.value.has(props.totalItems - 1)
-})
+const blurFront = computed(() => !atStart.value)
+const blurEnd = computed(() => !atEnd.value)
 
 const scrollToNextGroup = () => {
   const scrollSize = new BigNumber(width.value).multipliedBy(0.8).toNumber()
@@ -112,4 +173,12 @@ const scrollToPreviousGroup = () => {
   const scrollSize = new BigNumber(width.value).multipliedBy(0.8).toNumber()
   scrollContainer.value?.scrollBy({ left: -scrollSize, behavior: 'smooth' })
 }
+
+// Reset the carousel to the first item — used by consumers when the underlying
+// item set changes (e.g. a tab switch) so the view doesn't stay mid-scroll.
+const scrollToStart = () => {
+  scrollContainer.value?.scrollTo({ left: 0, behavior: 'smooth' })
+}
+
+defineExpose({ scrollToStart })
 </script>

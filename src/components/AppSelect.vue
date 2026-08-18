@@ -189,9 +189,12 @@ const targetValue = ref<HTMLElement | null>(null)
  */
 const selected = defineModel<AppSelectOption>('selected', { required: false })
 /**
- * controls the open state of the select dropdown
+ * Open state of the dropdown, exposed as `v-model:open` so an ancestor can
+ * react to it. TheHeader uses this to lift its z-index while a header dropdown
+ * is open, otherwise the popover is clipped behind sibling drawers (MEW-2113).
+ * Defaults to false, so callers that don't bind `open` are unaffected.
  */
-const openSelect = ref(false)
+const openSelect = defineModel<boolean>('open', { default: false })
 
 /**
  * @method toggleSelect

@@ -1,0 +1,136 @@
+{
+  "homePage": {
+    "hero": {
+      "welcomeTitle": "欢迎使用 MEW 投资组合",
+      "welcomeSubtitle": "连接您的钱包，开始交易股票和加密货币",
+      "createWallet": "创建钱包",
+      "connectWallet": "连接钱包",
+      "ownTotal": "您共持有",
+      "today": "今日",
+      "goToPortfolio": "前往投资组合",
+      "noAssetsTitle": "您还没有任何资产",
+      "noAssetsSubtitle": "买入或存入以开始交易股票和加密货币",
+      "makeDeposit": "存入",
+      "buyCrypto": "购买加密货币",
+      "toggleBalance": "切换余额显示",
+      "refreshTooltip": "刷新余额（每 2 分钟更新）",
+      "trendingStocks": "热门股票",
+      "trendingCrypto": "热门加密货币",
+      "last24h": "最近 24 小时",
+      "empty": "暂无数据",
+      "banner": {
+        "title": "交易即得 5 USDC",
+        "subtitle": "每小时前 10 笔 $50+ 的交易可获得 10 USDC。",
+        "learnMore": "了解更多",
+        "tradeStocks": "交易股票"
+      },
+      "watchlist": {
+        "title": "创建您的关注列表",
+        "subtitle": "根据您的兴趣查找要关注的资产",
+        "begin": "开始",
+        "onboarding": {
+          "continue": "继续",
+          "markets": {
+            "subtitle": "您对哪些资产感兴趣？",
+            "hint": "您可以选择多个选项"
+          },
+          "industries": {
+            "subtitle": "您对哪些行业感兴趣？"
+          },
+          "assets": {
+            "title": "为您找到的资产",
+            "subtitle": "以下是根据您的兴趣推荐关注的资产。",
+            "loadingTitle": "正在查找资产",
+            "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
+            "done": "完成",
+            "selected": "已选择 {count} 项资产"
+          },
+          "marketLabels": {
+            "stocks": "股票",
+            "crypto": "加密货币",
+            "perps": "永续合约"
+          },
+          "industryLabels": {
+            "commodities": "大宗商品",
+            "equities": "股票",
+            "tech": "科技",
+            "ai": "人工智能",
+            "hardware": "硬件",
+            "gaming": "游戏",
+            "transport": "交通运输",
+            "software": "软件",
+            "construction": "建筑",
+            "privacy": "隐私",
+            "infrastructure": "基础设施",
+            "etfs": "ETF"
+          }
+        },
+        "table": {
+          "title": "关注列表",
+          "subtitle": "关注您感兴趣的资产",
+          "addNew": "添加资产",
+          "trade": "交易",
+          "remove": "从关注列表移除",
+          "columns": {
+            "asset": "资产名称",
+            "marketValue": "市值",
+            "price": "价格",
+            "trend": "趋势"
+          }
+        },
+        "addModal": {
+          "title": "添加到关注列表",
+          "subtitle": "搜索并添加您感兴趣的资产",
+          "searchPlaceholder": "搜索",
+          "empty": "未找到资产",
+          "tabs": {
+            "all": "全部",
+            "stocks": "股票",
+            "crypto": "加密货币",
+            "perps": "永续合约"
+          }
+        }
+      }
+    },
+    "offers": {
+      "title": "专属优惠",
+      "subtitle": "使用 MEW 即可获得奖励！",
+      "category": { "trade": "交易", "buy": "购买", "hold": "持有" },
+      "items": {
+        "trade": { "title": "交易 +$500", "highlight": "赚取 5 USDC" },
+        "buy": { "title": "购买加密货币", "highlight": "零 MEW 手续费" },
+        "hold": { "title": "交易并持有", "highlight": "赚取 10 USDC" }
+      }
+    },
+    "listings": {
+      "title": "新上市",
+      "subtitle": "发现市场上最新的股票和加密货币代币。",
+      "tab": { "stocks": "股票", "crypto": "加密货币" },
+      "stat": {
+        "marketCap": "市值",
+        "change24h": "24小时",
+        "volume24h": "24小时成交量"
+      },
+      "trade": "交易",
+      "swap": "兑换",
+      "bridge": "跨链",
+      "openStockPage": "打开股票页面",
+      "openCryptoPage": "打开加密页面"
+    },
+    "sectors": {
+      "title": "精选合集",
+      "subtitle": "在 MEW 独家探索不同的投资主题和合集。"
+    },
+    "news": {
+      "title": "市场资讯",
+      "subtitle": "实时掌握市场资讯动态。由 MEW 提供支持。",
+      "empty": "目前暂无相关资讯",
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{n} 天前",
+      "pagination": "显示第 {page} 页，共 {total} 页",
+      "readOnSource": "在 {source} 阅读全文",
+      "readMore": "阅读全文"
+    }
+  }
+}

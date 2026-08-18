@@ -557,7 +557,7 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
@@ -677,17 +677,35 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
+// Product-defined category tabs (MEW-2069). 'all' + 'watchlist' are the fixed
+// view modes; the rest are stock categories in the requested order, each sent
+// to the API as `?category=` (see fetchTableUrl). All values are supported
+// server-side (WebStocksTableCategory enum).
 const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
   { label: t('stocks.category_watchlist'), value: 'watchlist' },
-  { label: t('stocks.category_etf'), value: 'ETF' },
-  { label: t('stocks.category_stock'), value: 'STOCK' },
   { label: t('stocks.category_equities'), value: 'EQUITIES' },
-  { label: t('stocks.category_commodities'), value: 'COMMODITIES' },
-  { label: t('stocks.category_fixed_income'), value: 'FIXED_INCOME' },
+  { label: t('stocks.category_stock'), value: 'STOCK' },
+  { label: t('stocks.category_large_cap'), value: 'LARGE_CAP' },
+  { label: t('stocks.category_us'), value: 'US' },
+  { label: t('stocks.category_growth'), value: 'GROWTH' },
+  { label: t('stocks.category_technology'), value: 'TECHNOLOGY' },
+  { label: t('stocks.category_etf'), value: 'ETF' },
+  { label: t('stocks.category_value'), value: 'VALUE' },
+  { label: t('stocks.category_small_cap'), value: 'SMALL_CAP' },
+  { label: t('stocks.category_industrials'), value: 'INDUSTRIALS' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+// Deep-link: a home Industry Sectors tile opens /stocks?category=<value>.
+// Preselect the matching tab so the table opens on that filter.
+const route = useRoute()
+const initialCategory = route.query.category
+if (typeof initialCategory === 'string') {
+  const match = cryptoFilterOptions.value.find(o => o.value === initialCategory)
+  if (match) selectedCryptoFilter.value = match
+}
 
 watch(cryptoFilterOptions, options => {
   selectedCryptoFilter.value =
@@ -801,6 +819,8 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('search', searchInput.value)
   }
 
+  // Send the selected category for every view except "all" (watchlist uses its
+  // own fetch path, so it never reaches here).
   if (selectedCryptoFilter.value.value !== 'all') {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }
@@ -1066,6 +1086,19 @@ const getSparkLinePoints = (token: DisplayToken) => {
  * Token Link
  --------------------------------*/
 const router = useRouter()
+
+// Keep the URL `?category=` in sync with the selected tab so the filter is
+// shareable, survives a reload, and round-trips with the home Industry Sectors
+// deep-links (which are read on mount, above).
+watch(
+  () => selectedCryptoFilter.value.value,
+  value => {
+    const query = { ...route.query }
+    if (value === 'all') delete query.category
+    else query.category = value
+    router.replace({ query })
+  },
+)
 
 const onRowClick = (token: DisplayToken) => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
