@@ -1,6 +1,6 @@
 <template>
   <app-dialog
-    v-model:is-open="isOpenAccessDialog"
+    v-model:is-open="bigDialogOpen"
     :class="[
       'w-full max-h-[95vh]',
       currentView === 'mnemonic' ||
@@ -76,6 +76,9 @@
       </div>
     </template>
   </app-dialog>
+  <!-- Overlaid step: the extension's active address is already saved. (The
+       "select the intended address" prompt now lives in the address popup.) -->
+  <module-access-address-saved />
 </template>
 <script setup lang="ts">
 import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
@@ -96,6 +99,7 @@ import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
+import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -105,8 +109,25 @@ const { t } = useI18n()
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const { isOpenAccessDialog, currentView, clickedWeb3Wallet } =
-  storeToRefs(accessStore)
+const {
+  isOpenAccessDialog,
+  currentView,
+  clickedWeb3Wallet,
+  addressSavedInfo,
+  connectAddressInfo,
+} = storeToRefs(accessStore)
+
+// Hide the big chooser while an overlaid step modal is up so only it shows; keep
+// isOpenAccessDialog true so the modal's back button restores the chooser.
+const bigDialogOpen = computed<boolean>({
+  get: () =>
+    isOpenAccessDialog.value &&
+    !addressSavedInfo.value &&
+    !connectAddressInfo.value,
+  set: v => {
+    isOpenAccessDialog.value = v
+  },
+})
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')

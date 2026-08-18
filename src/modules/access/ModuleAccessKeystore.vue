@@ -35,6 +35,9 @@
                   ref="jsonInput"
                   type="file"
                   name="file"
+                  :aria-label="
+                    $t('access_wallet_keystore.select_keystore_file_title')
+                  "
                   style="display: none"
                   @change="uploadKeystoreFile"
                 />

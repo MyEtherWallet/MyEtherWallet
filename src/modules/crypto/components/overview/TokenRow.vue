@@ -50,6 +50,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import type { TokenRowItem } from '@/mew_api/types'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -59,24 +60,10 @@ import { computed } from 'vue'
 const { formatFiat } = useCurrency()
 
 // TokenRow renders any crypto-overview-shaped token (new coins, trending, ondo
-// gainers). It reads only the fields below, so the prop is typed to that shared
-// subset — the full CryptoOverviewToken (with market cap / volume /
-// supportedChains) and the narrower trending/gainers shapes all satisfy it.
-interface TokenRowToken {
-  coinId: string
-  name: string
-  symbol: string
-  logoUrl: string | null
-  price: number
-  priceChangePercentage24h: number
-  ondo: {
-    stockAlias?: string | null
-    primaryMarket: { symbol: string }
-  } | null
-}
-
+// gainers). It reads only the fields in TokenRowItem — the shared narrow subset
+// that the full CryptoOverviewToken and the trending/gainers shapes all satisfy.
 const props = defineProps<{
-  token: TokenRowToken
+  token: TokenRowItem
 }>()
 
 const name = computed(() => {

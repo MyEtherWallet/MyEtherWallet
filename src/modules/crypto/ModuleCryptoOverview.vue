@@ -168,7 +168,7 @@ import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ref } from 'vue'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import type { CryptoOverview, CryptoOverviewToken } from '@/mew_api/types'
+import type { CryptoOverview, TokenRowItem } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import { usePaginate } from '@/composables/usePaginate'
@@ -176,8 +176,8 @@ import { usePaginate } from '@/composables/usePaginate'
 const { useMEWFetch } = useFetchMewApi()
 const { formatFiat } = useCurrency()
 
-const newTokens = ref<CryptoOverviewToken[]>([])
-const gainersTokens = ref<CryptoOverviewToken[]>([])
+const newTokens = ref<TokenRowItem[]>([])
+const gainersTokens = ref<TokenRowItem[]>([])
 const fetchUrl = '/v1/web/overview'
 const {
   data,
@@ -189,7 +189,7 @@ onFetchResponse(() => {
   if (data.value) {
     newTokens.value = data.value.newCoins
     gainersTokens.value = data.value.ondoTopGainers.map(
-      (gainer): CryptoOverviewToken => {
+      (gainer): TokenRowItem => {
         return {
           coinId: 'ondo-' + gainer.primaryMarket.symbol,
           name: gainer.stockAlias || '',
@@ -203,13 +203,6 @@ onFetchResponse(() => {
             stockAlias: gainer.stockAlias,
             primaryMarket: gainer.primaryMarket,
           },
-          // ondo stock gainers carry no crypto market data.
-          totalVolume: null,
-          marketCap: null,
-          chains: [],
-          nativeChains: [],
-          description: null,
-          descriptionSource: null,
         }
       },
     )
@@ -222,7 +215,7 @@ const {
   nextPage: nextPageNewTokens,
   prevPage: prevPageNewTokens,
   totalPages: totalPagesNewTokens,
-} = usePaginate<CryptoOverviewToken>(newTokens, 3)
+} = usePaginate<TokenRowItem>(newTokens, 3)
 
 const {
   currentPage: currPageGainersTokens,
@@ -230,5 +223,5 @@ const {
   nextPage: nextPageGainersTokens,
   prevPage: prevPageGainerTokens,
   totalPages: totalPagesGainersTokens,
-} = usePaginate<CryptoOverviewToken>(gainersTokens, 3)
+} = usePaginate<TokenRowItem>(gainersTokens, 3)
 </script>

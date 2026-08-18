@@ -19,7 +19,12 @@
         />
 
         <div class="relative z-10 flex flex-col items-start gap-2">
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <!-- A season that has already ended has nothing left to count down
+               to; the countdown would sit at "0 seconds". -->
+          <p
+            v-if="!isCampaignEnded"
+            class="text-s-12 leading-[18px] text-[#575757]"
+          >
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
           </p>
           <p
@@ -48,6 +53,10 @@
                       >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
                     >
                   </p>
+                  <!-- The season is closed to new entries, so the CTA states
+                       the reason rather than inviting a trade that can no
+                       longer be registered. Same treatment as "Start again"
+                       in the lost branch below. -->
                   <div
                     v-if="
                       status === 'temporarilyPaused' ||
@@ -55,22 +64,9 @@
                       status === 'underReview' ||
                       status === 'campaignEnded'
                     "
-                    class="flex items-center w-full h-12 pr-5 justify-between rounded-full bg-[#e6e6e6]"
+                    class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                   >
-                    <div
-                      class="flex items-center justify-center shrink-0 w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px]"
-                    >
-                      {{ $t('rwaRewards.trade_now') }}
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
-                        >{{ disabledCtaLabel }}</span
-                      >
-                      <information-circle-icon
-                        class="w-[22px] h-[22px] text-[#575757] shrink-0"
-                      />
-                    </div>
+                    {{ disabledCtaLabel }}
                   </div>
                   <app-base-button
                     v-else-if="status === 'default'"
@@ -170,6 +166,7 @@
                       {{ disabledCtaLabel }}
                     </div>
                     <div
+                      v-if="!isCampaignEnded"
                       :class="expiresPill"
                       class="flex items-center justify-center"
                     >
@@ -233,7 +230,8 @@
                   <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p :class="subText">
+                  <!-- Only when the reward itself carries a deadline. -->
+                  <p v-if="hasRewardExpiry" :class="subText">
                     {{
                       $t('rwaRewards.hero_offer_expires', {
                         time: subExpiresText,
@@ -387,7 +385,6 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
@@ -406,13 +403,19 @@ const {
   info,
   isClaiming,
   isCampaignFull,
+  isCampaignEnded,
   isUnderReview,
   canRegisterTrade,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
+// Strictly the reward's own claim deadline — never the season end. The two are
+// different deadlines, and `expiration_timestamp` is optional: the store reads
+// its absence as "never expires" (see `isClaimable`), so substituting the
+// season end would put a countdown on a reward that has none.
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
 )
+const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,

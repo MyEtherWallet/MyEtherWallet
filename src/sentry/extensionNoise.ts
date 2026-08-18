@@ -54,6 +54,27 @@ export function isInvalidWalletAddressError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is the MetaMask SDK's AES-GCM socket-decryption failure
+ * (`Error: aes/gcm: invalid ghash tag`). It is an unhandled promise rejection
+ * thrown entirely inside the bundled MetaMask SDK's socket layer when it
+ * receives a message it can't decrypt with its current key material (a stale /
+ * expired MetaMask-mobile pairing session). No MEW code is in the stack and no
+ * user is affected — pure Sentry noise. Matched on the (unminified) thrown
+ * message AND a `metamask-sdk` stack frame so genuine app crypto errors are
+ * left untouched.
+ */
+export function isMetaMaskSdkDecryptError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof e.message === 'string' &&
+    e.message.includes('invalid ghash tag') &&
+    typeof e.stack === 'string' &&
+    e.stack.includes('metamask-sdk')
+  )
+}
+
+/**
  * Whether an error is a wagmi `ProviderNotFoundError` — thrown when a connector
  * calls `getProvider()` and no injected wallet is present (e.g. the user clicks
  * "Browser Wallet" with no extension installed). The connect flow already

@@ -108,12 +108,12 @@
                 class="w-12 h-12 text-black"
                 aria-hidden="true"
               />
-              <!--
-                Badge geometry is from the design: a 16px glyph, 4px of padding,
+              <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
                 from the dark globe behind it — drop it and the badge reads as a
                 blob welded onto the globe's edge.
               -->
+
               <span
                 class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
               >
@@ -155,6 +155,7 @@
                 v-model:amount="fromAmount"
                 v-model:selected-token="fromTokenSelected!"
                 v-model:error="fromAmountError"
+                @select:token="onFromTokenSelected"
                 :external-loading="isLoading || !swapLoaded"
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
@@ -222,6 +223,7 @@
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
               v-model:error="toAmountError"
+              @select:token="onToTokenSelected"
               :external-loading="isLoadingQuote"
               :show-balance="false"
               :tokens="toTokenSantized"
@@ -234,6 +236,93 @@
               sort-context="trade"
               class="mt-2"
             />
+          </div>
+        </div>
+
+        <!-- Market Closed Banner - Centered Overlay -->
+        <div
+          v-if="
+            !isLoading &&
+            marketStatus &&
+            !isTradingSessionOpen &&
+            isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
+          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <exclamation-circle-icon class="w-5 h-5 text-primary" />
+              <p class="text-primary font-medium text-s-16">
+                {{ $t('trade.market_closed') }}
+              </p>
+            </div>
+            <p class="text-info text-s-14 text-center mb-4">
+              {{ marketStatus.reason?.message }}
+            </p>
+            <div class="text-center">
+              <p
+                v-if="countdownText"
+                class="font-medium text-s-16 mb-1 tabular-nums"
+              >
+                {{ $t('trade.opens_in', { countdown: countdownText }) }}
+              </p>
+              <p class="text-grey-50 text-s-11 mt-1">
+                {{ formatNextOpen(marketStatus.nextOpen) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network Not Supported Banner - Centered Overlay -->
+        <div
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
+          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <exclamation-circle-icon class="w-5 h-5 text-warning" />
+              <p class="text-warning font-medium text-s-16">
+                {{ $t('trade.network_not_supported') }}
+              </p>
+            </div>
+            <p class="text-info text-s-14 text-center mb-4">
+              {{
+                $t('trade.trading_not_available_on', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              }}
+            </p>
+            <div class="flex flex-col items-center justify-center">
+              <div class="">
+                <button
+                  v-for="chain in supportedChainsList.reverse()"
+                  :key="chain.name"
+                  class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                  @click="switchToNetwork(chain)"
+                >
+                  <app-token-logo
+                    v-if="chain.icon"
+                    :url="chain.icon"
+                    :sumbol="chain.nameLong"
+                    width="w-5"
+                    height="h-5"
+                  />
+                  <span>{{ chain.nameLong || chain.name }}</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -257,6 +346,7 @@
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
@@ -402,6 +492,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { usePairStore } from '@/stores/pairStore'
+import { useToastStore } from '@/stores/toastStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
@@ -418,6 +509,7 @@ import {
 
 // Types
 import type { Chain } from '@/mew_api/types'
+import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 
 const { t } = useI18n()
@@ -431,6 +523,7 @@ const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
+const toastStore = useToastStore()
 
 // --- Refs from Stores ---
 const {
@@ -776,6 +869,32 @@ const setFromChain = (chain: Chain) => {
 
 const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
+}
+
+// MEW-1981: toast whenever the user switches a trade token via the picker.
+// Listen to `@select:token`, which the token-select child emits ONLY on an
+// explicit user pick — not on the programmatic defaulting it does on network
+// change (nor on setFromChain/resetForm ref assignments). That avoids a false
+// "Now trading…" toast on network switches. Use the emitted token for the side
+// that changed, read the other side from state; skip until both are set.
+const notifyTokensSwitched = (
+  from?: NewTokenInfo | null,
+  to?: NewTokenInfo | null,
+) => {
+  if (!from || !to) return
+  toastStore.addToastMessage({
+    text: t('trade.toast.tokens-switched', {
+      from: from.symbol,
+      to: to.symbol,
+    }),
+    type: ToastType.Success,
+  })
+}
+const onFromTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(token, toTokenSelected.value)
+}
+const onToTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(fromTokenSelected.value, token)
 }
 
 // const swapTokens = () => {
