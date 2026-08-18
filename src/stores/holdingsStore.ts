@@ -51,7 +51,7 @@ const mapAccessBlock = (status: number): RwaAccessBlock | null => {
 /**
  * The four per-wallet buckets, emptied. `/info` with no address answers with the
  * season block alone, so the buckets have to be filled in locally to keep the
- * payload one shape everywhere.
+ * payload one shape everywhere
  */
 const emptyBuckets = (): RwaBuckets => ({
   qualified: [],
