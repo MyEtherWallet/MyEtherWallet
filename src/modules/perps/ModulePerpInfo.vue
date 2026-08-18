@@ -64,8 +64,9 @@
     <div class="py-6">
       <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
         <app-btn-group
-          v-model:selected="selectedInterval"
-          :btn-list="isXS ? chartIntervals.slice(0, 2) : chartIntervals"
+          v-model:selected="selectedRange"
+          :disabled="chartLoading"
+          :btn-list="isXS ? chartRanges.slice(0, 3) : chartRanges"
           size="xs"
         >
           <template #btn-content="{ data }">
@@ -74,8 +75,8 @@
           <template #custom>
             <app-select
               v-if="isXS"
-              v-model:selected="selectedInterval"
-              :options="chartIntervals.slice(2)"
+              v-model:selected="selectedRange"
+              :options="chartRanges.slice(3)"
               position="-right-1"
               class="text-s-12"
             >
@@ -971,6 +972,7 @@ import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
+import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 
 import {
   ArrowTrendingDownIcon,
@@ -1623,39 +1625,79 @@ watch(selectedManageAction, action => {
 })
 
 // Chart
-const chartIntervals = [
-  { label: '1m', value: '1' },
-  { label: '5m', value: '5' },
-  { label: '1h', value: '60' },
-  { label: '4h', value: '240' },
-  { label: '1d', value: '1D' },
-  { label: '1w', value: '1W' },
-]
-const selectedInterval = ref(chartIntervals[2])
+// The selection is how far back the chart goes — same as the token and stock
+// charts elsewhere in the app. Each range pairs its window with a candle
+// resolution that keeps the bar count in a readable range.
+const DAY_SECS = 24 * 60 * 60
+
+interface ChartRange {
+  label: string
+  value: WebTokenPriceChartInterval
+  /** Candle resolution passed to the history endpoint. */
+  resolution: string
+  /** How far back from now the chart reaches, in seconds. */
+  windowSecs: number
+}
+
+const chartRanges = computed<ChartRange[]>(() => [
+  {
+    label: t('common.chart_1d'),
+    value: '1D',
+    resolution: '5',
+    windowSecs: DAY_SECS,
+  },
+  {
+    label: t('common.chart_7d'),
+    value: '7D',
+    resolution: '60',
+    windowSecs: 7 * DAY_SECS,
+  },
+  {
+    label: t('common.chart_1m'),
+    value: '1M',
+    resolution: '240',
+    windowSecs: 30 * DAY_SECS,
+  },
+  {
+    label: t('common.chart_3m'),
+    value: '3M',
+    resolution: '1D',
+    windowSecs: 90 * DAY_SECS,
+  },
+  {
+    label: t('common.chart_1y'),
+    value: '1Y',
+    resolution: '1W',
+    windowSecs: 365 * DAY_SECS,
+  },
+  {
+    // Markets are far younger than this, so the response is the full history.
+    label: t('common.chart_all'),
+    value: 'ALL',
+    resolution: '1W',
+    windowSecs: 10 * 365 * DAY_SECS,
+  },
+])
+
+const selectedRange = ref<ChartRange>(chartRanges.value[0])
+
+// Labels are locale-dependent, so re-resolve the selection when they change.
+watch(chartRanges, ranges => {
+  selectedRange.value =
+    ranges.find(r => r.value === selectedRange.value.value) ?? ranges[0]
+})
+
 const chartLoading = ref(false)
 const chartLabels = ref<number[]>([])
 const chartPoints = ref<number[]>([])
 
 const chartCache = new Map<string, { labels: number[]; points: number[] }>()
 
-const chartTimeFrame = computed(() => {
-  const v = selectedInterval.value.value
-  if (v === '1D') return '1D' as const
-  if (v === '1W') return '7D' as const
-  const mins = parseInt(v)
-  if (mins <= 60) return '1D' as const
-  if (mins <= 480) return '7D' as const
-  return '1M' as const
-})
-
-const getResolutionSeconds = (res: string): number => {
-  if (res === '1D') return 86400
-  if (res === '1W') return 604800
-  return parseInt(res) * 60
-}
+const chartTimeFrame = computed(() => selectedRange.value.value)
 
 const fetchChart = async () => {
-  const cacheKey = `${props.market}-${selectedInterval.value.value}`
+  const { value: range, resolution, windowSecs } = selectedRange.value
+  const cacheKey = `${props.market}-${range}`
   const cached = chartCache.get(cacheKey)
   if (cached) {
     chartLabels.value = cached.labels
@@ -1666,11 +1708,10 @@ const fetchChart = async () => {
   chartLoading.value = true
   try {
     const to = Math.floor(Date.now() / 1000)
-    const resSecs = getResolutionSeconds(selectedInterval.value.value)
-    const from = to - resSecs * 200
+    const from = to - windowSecs
     const data = await perpsClient.getHistory(
       props.market,
-      selectedInterval.value.value,
+      resolution,
       from,
       to,
     )
@@ -1691,7 +1732,7 @@ const fetchChart = async () => {
   }
 }
 
-watch(selectedInterval, fetchChart)
+watch(() => selectedRange.value.value, fetchChart)
 watch(() => props.market, fetchChart, { immediate: true })
 
 // Clear chart cache every 5 minutes
