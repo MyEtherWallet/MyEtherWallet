@@ -5,6 +5,18 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
 
+// Mock only useClipboard so we can assert the copy call; keep useIntervalFn
+// real (the 2-minute balance poll depends on it).
+const { copySpy } = vi.hoisted(() => ({ copySpy: vi.fn() }))
+vi.mock('@vueuse/core', async importOriginal => {
+  const actual = await importOriginal<typeof import('@vueuse/core')>()
+  const { ref: r } = await import('vue')
+  return {
+    ...actual,
+    useClipboard: () => ({ copy: copySpy, copied: r(false) }),
+  }
+})
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -117,6 +129,7 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     openCreateDialog.mockClear()
     openPanel.mockClear()
     refreshBalances.mockClear()
+    copySpy.mockClear()
     push.mockClear()
     change.value = {
       fiat: new BigNumber(4.5),
@@ -170,6 +183,20 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     expect(w.get('[data-test="hero-address"]').text()).toContain('0x71C8')
     await w.get('[data-test="hero-go-portfolio"]').trigger('click')
     expect(push).toHaveBeenCalledWith({ name: 'Portfolio' })
+  })
+
+  it('copies the full address when the address chip is clicked', async () => {
+    setWallet({
+      isWalletConnected: true,
+      isLoadingBalances: false,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
+      walletAddress: '0x71C8000000000000000000000000000000000389a',
+    })
+    const w = mountCard()
+    await w.get('[data-test="hero-address"]').trigger('click')
+    expect(copySpy).toHaveBeenCalledWith(
+      '0x71C8000000000000000000000000000000000389a',
+    )
   })
 
   it('shows the long (non-caps) network name — MEW-2150 A', () => {

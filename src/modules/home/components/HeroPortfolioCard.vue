@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useIntervalFn } from '@vueuse/core'
+import { useIntervalFn, useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -54,6 +54,11 @@ const { lastTwentyFourHours } = usePortfolio24hChange()
 const { refreshBalances } = useRefreshBalances()
 
 const openDepositDialog = ref(false)
+
+// Copy the full (untruncated) address from the hero address chip. `copied`
+// flips true for a beat so the tooltip can confirm the action.
+const { copy: copyToClipboard, copied: addressCopied } = useClipboard()
+const copyAddress = () => copyToClipboard(walletAddress.value ?? '')
 
 // Track whether the first balance load has completed. Only the *first* load
 // shows the full-card skeleton; later refreshes keep the current layout and
@@ -155,23 +160,29 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
     <template v-else>
       <!-- Eye + refresh: top-right icon cluster -->
       <div class="absolute right-3 top-3 flex items-center gap-1 text-black">
-        <button
-          v-if="state === 'assets'"
-          type="button"
-          data-test="hero-eye"
-          :aria-label="t('homePage.hero.toggleBalance')"
-          class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
-          @click="toggleHideBalances"
-        >
-          <component
-            :is="hideBalances ? EyeSlashIcon : EyeIcon"
-            class="size-6"
-          />
-        </button>
         <AppTooltip
-          :text="t('homePage.hero.refreshTooltip')"
-          position="bottom-left"
+          v-if="state === 'assets'"
+          :text="
+            hideBalances
+              ? t('homePage.hero.showBalance')
+              : t('homePage.hero.hideBalance')
+          "
+          position="middle"
         >
+          <button
+            type="button"
+            data-test="hero-eye"
+            :aria-label="t('homePage.hero.toggleBalance')"
+            class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
+            @click="toggleHideBalances"
+          >
+            <component
+              :is="hideBalances ? EyeSlashIcon : EyeIcon"
+              class="size-6"
+            />
+          </button>
+        </AppTooltip>
+        <AppTooltip :text="t('homePage.hero.refreshTooltip')" position="middle">
           <button
             type="button"
             data-test="hero-refresh"
@@ -201,12 +212,24 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           </template>
           <template v-else>
             <span class="size-2 shrink-0 rounded-full bg-success" />
-            <span
-              class="text-s-16 leading-[22px] text-[#575757]"
-              data-test="hero-address"
+            <AppTooltip
+              :text="
+                addressCopied
+                  ? t('homePage.hero.addressCopied')
+                  : t('homePage.hero.copyAddress')
+              "
+              position="middle"
             >
-              {{ truncateAddress(walletAddress ?? '') }}
-            </span>
+              <button
+                type="button"
+                data-test="hero-address"
+                :aria-label="t('homePage.hero.copyAddress')"
+                class="cursor-pointer text-s-16 leading-[22px] text-[#575757] transition-colors hover:text-primary"
+                @click="copyAddress"
+              >
+                {{ truncateAddress(walletAddress ?? '') }}
+              </button>
+            </AppTooltip>
             <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
             <span
               class="text-s-16 leading-[22px] text-[#575757]"
@@ -220,7 +243,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <!-- Headline -->
         <template v-if="state === 'noassets'">
           <h2
-            class="max-w-[318px] text-[40px] font-bold leading-[44px] tracking-[-1.2px] text-black"
+            class="max-w-[420px] whitespace-pre-line text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
             data-test="hero-portfolio-noassets"
           >
             {{ t('homePage.hero.noAssetsTitle') }}
