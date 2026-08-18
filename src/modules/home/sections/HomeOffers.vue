@@ -27,10 +27,10 @@ const onOfferClick = (offer: HomeOffer) => {
 
 <template>
   <!-- Container-query layout so the cards reflow on the AVAILABLE width (which
-       shrinks when the wallet side panel opens): a single stacked column until
-       ~1280 viewport (container ~1136), then all three side-by-side. -->
+       shrinks when the wallet side panel opens): stacked on mobile, then all
+       three side-by-side from ~768 viewport (container ~624) up. -->
   <div class="@container">
-    <div class="relative grid grid-cols-1 gap-6 @min-[1136px]:grid-cols-3">
+    <div class="relative grid grid-cols-1 gap-6 @min-[624px]:grid-cols-3">
       <!-- peggy peeks out from behind the cards: it's the first (earliest-DOM)
            positioned child, so with no positive z-index the cards paint over its
            lower half, giving the "emerging from behind" look. Only shown in the
@@ -39,7 +39,7 @@ const onOfferClick = (offer: HomeOffer) => {
         :src="peggyAstronaut"
         alt=""
         aria-hidden="true"
-        class="pointer-events-none absolute -top-[116px] right-6 hidden h-[120px] w-auto -scale-x-100 @min-[1136px]:block"
+        class="pointer-events-none absolute -top-[116px] right-6 hidden h-[120px] w-auto -scale-x-100 @min-[624px]:block"
       />
       <AppRewardsCard
         v-for="o in offers"
