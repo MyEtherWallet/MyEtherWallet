@@ -59,6 +59,9 @@ import { computed } from 'vue'
 
 const { formatFiat } = useCurrency()
 
+// TokenRow renders any crypto-overview-shaped token (new coins, trending, ondo
+// gainers). It reads only the fields in TokenRowItem — the shared narrow subset
+// that the full CryptoOverviewToken and the trending/gainers shapes all satisfy.
 const props = defineProps<{
   token: TokenRowItem
 }>()

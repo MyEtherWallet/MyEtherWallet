@@ -4,16 +4,19 @@
       width,
       height,
       'rounded-full flex-none relative box-border transition-colors duration-300 ease-in-out',
-      showIsStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-5',
+      noRing
+        ? ''
+        : showIsStock
+          ? 'p-[1.2px]  bg-stock-gradient'
+          : 'border border-grey-5',
     ]"
   >
     <div
       class="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center"
       :class="[
-        {
-          'bg-white shadow-token': image && !isLoading,
-        },
-        { 'bg-surface-light shadow-token': !image || isLoading },
+        { 'bg-white': image && !isLoading },
+        { 'bg-surface-light': !image || isLoading },
+        { 'shadow-token': !noShadow },
         { 'animate-pulse': isLoading },
       ]"
     >
@@ -71,6 +74,16 @@ const props = defineProps({
     default: false,
   },
   cover: {
+    type: Boolean,
+    default: false,
+  },
+  /** Drop the default token drop-shadow (e.g. flat cards). */
+  noShadow: {
+    type: Boolean,
+    default: false,
+  },
+  /** Drop the outer ring (stock gradient / grey border) — plain avatar. */
+  noRing: {
     type: Boolean,
     default: false,
   },

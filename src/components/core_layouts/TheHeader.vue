@@ -48,24 +48,6 @@
           </router-link>
         </div>
         <app-select
-          v-if="!showMobileMenu && !isLearnCollapsed"
-          v-model:open="isLearnOpen"
-          :options="learnMenuList"
-          :placeholder="$t('learn')"
-          use-link
-          has-on-Hover
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
-              @click="toggleSelect"
-            >
-              {{ $t('learn') }}
-              <chevron-down-icon class="w-4 h-4 ml-2" />
-            </button>
-          </template>
-        </app-select>
-        <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
           v-model:open="isMoreOpen"
@@ -205,9 +187,8 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
  * instead of being clipped behind it (MEW-2113).
  */
 const isMoreOpen = ref(false)
-const isLearnOpen = ref(false)
 const isHeaderOverlayOpen = computed<boolean>(
-  () => isSearchOpen.value || isMoreOpen.value || isLearnOpen.value,
+  () => isSearchOpen.value || isMoreOpen.value,
 )
 
 /** ------------------------------
@@ -238,25 +219,15 @@ const isRestoringWallet = ref(false)
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /**
- * Progressive "priority+" collapse of the desktop nav: as the viewport narrows
- * (but before it drops to the mobile hamburger at `xl-min`/1140px), the
- * right-most nav items fold into the "More" dropdown so the bar never squishes
- * into the global search. These thresholds are header-specific, not Tailwind
- * breakpoints. Learn folds in first (< 1255px), then Earn (< 1160px).
+ * Header-specific collapse thresholds (not Tailwind breakpoints) that shrink the
+ * network button and wallet CTAs as the viewport narrows, before the bar drops
+ * to the mobile hamburger at `xl-min`/1140px.
  */
 const headerCollapse = useBreakpoints({
-  earn: 1160,
-  learn: 1255,
   networkConnected: 1310,
   walletCta: 1500,
   network: 1555,
 })
-const isLearnCollapsed = computed<boolean>(
-  () => headerCollapse.smaller('learn').value,
-)
-const isEarnCollapsed = computed<boolean>(
-  () => headerCollapse.smaller('earn').value,
-)
 /**
  * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
  * "Connect") to save space before the network button collapses.
@@ -276,6 +247,11 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
+      title: t('common.portfolio'),
+      routeName: ROUTES_MAIN.PORTFOLIO.NAME,
+      iconID: ICON_IDS.PORTFOLIO,
+    },
+    {
       title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
@@ -289,11 +265,6 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       title: t('perpetuals'),
       routeName: ROUTES_MAIN.PERPS.NAME,
       iconID: ICON_IDS.PERPS,
-    },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
     },
   ]
   return items
@@ -321,15 +292,7 @@ const learnMenuList = computed<AppSelectOption[]>(() => [
   },
 ])
 
-const displayLinks = computed(() => {
-  // Earn folds into the "More" dropdown below its threshold.
-  if (isEarnCollapsed.value) {
-    return coreMenuList.value.filter(
-      item => item.routeName !== ROUTES_MAIN.EARN.NAME,
-    )
-  }
-  return coreMenuList.value
-})
+const displayLinks = computed(() => coreMenuList.value)
 
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]
@@ -340,26 +303,19 @@ const displayTools = computed<AppSelectOption[]>(() => {
 })
 
 /**
- * Options for the "More" dropdown. Nav items that have collapsed out of the bar
- * are prepended (Learn's external links first — kept at the top as requested —
- * then Earn), followed by the always-present tools.
+ * Options for the "More" dropdown: Learn's external links (kept at the top),
+ * then the tools. Learn no longer has its own top-bar dropdown, so its links
+ * are always folded in here.
  */
 const moreMenuOptions = computed<AppSelectOption[]>(() => {
-  const options: AppSelectOption[] = []
-  if (isLearnCollapsed.value) {
-    options.push(
-      ...learnMenuList.value.map(item => ({
-        label: item.label,
-        value: item.value,
-        external: true,
-      })),
-    )
-  }
-  if (isEarnCollapsed.value) {
-    options.push({ label: t('earn'), value: ROUTES_MAIN.EARN.NAME as string })
-  }
-  options.push(...displayTools.value)
-  return options
+  return [
+    ...learnMenuList.value.map(item => ({
+      label: item.label,
+      value: item.value,
+      external: true,
+    })),
+    ...displayTools.value,
+  ]
 })
 
 /**

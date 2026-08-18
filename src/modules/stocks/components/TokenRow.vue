@@ -71,12 +71,15 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import AppTooltip from '@/components/AppTooltip.vue'
-import type { StockOverviewItem } from '@/mew_api/types'
+import type { StockTrendingItem } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TableSparkline from '@/components/TableSparkline.vue'
 import { computed } from 'vue'
+// Serves both `trending` and `newlyAdded` rows; only new listings carry
+// description, so the row keys off the narrower trending shape (newlyAdded is
+// assignable to it) and never reads description.
 const props = defineProps<{
-  token: StockOverviewItem
+  token: StockTrendingItem
 }>()
 
 const { formatFiat } = useCurrency()
