@@ -68,10 +68,8 @@
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { StockOverviewItem } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
@@ -81,9 +79,11 @@ const props = defineProps<{
   token: StockOverviewItem
 }>()
 
+const { formatFiat } = useCurrency()
+
 const getPrice = computed(() => {
   return props.token.primaryMarket.price
-    ? `$${formatFiatValue(props.token.primaryMarket.price).value}`
+    ? formatFiat(props.token.primaryMarket.price).display
     : '-'
 })
 const getPriceChange = computed(() => {

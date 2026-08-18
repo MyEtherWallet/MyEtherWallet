@@ -65,7 +65,6 @@
             </button>
             <!-- Perps button -->
             <button
-              v-if="!isTradingRestrictedInRegion"
               @click="openPanel('perps')"
               :class="[
                 walletPanel === 'perps' && isOpenSideMenu
@@ -79,10 +78,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                {{ $t('perps') }}
+                {{ $t('common.perps') }}
               </p>
             </button>
             <!-- Bridge button -->
@@ -206,7 +206,7 @@
             <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
             <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
             <ModulePerpsTrade
-              v-else-if="walletPanel === 'perps' && !isTradingRestrictedInRegion"
+              v-else-if="walletPanel === 'perps'"
               key="perps-trade"
             />
             <ModulePurchase
@@ -257,7 +257,6 @@ import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
-import { useTradingRestriction } from '@/composables/useTradingRestriction'
 
 const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
@@ -275,7 +274,6 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
-const { isTradingRestrictedInRegion } = useTradingRestriction()
 
 onMounted(() => {
   if (

@@ -47,6 +47,41 @@ describe('weekendTradingAnnouncementStore', () => {
     expect(store.shouldShowTooltip).toBe(true)
   })
 
+  describe('tooltip revision reset', () => {
+    const SEEN_KEY = 'mew-weekend-trading-tooltip-seen'
+    const REVISION_KEY = 'mew-weekend-trading-tooltip-revision'
+
+    // Storage is seeded directly throughout: `useLocalStorage` flushes its
+    // writes on a microtask, so a value set through the store isn't in storage
+    // yet when the next store instance reads it.
+    it('clears a seen flag left by an earlier revision so the tooltip shows again', () => {
+      localStorage.setItem(SEEN_KEY, 'true')
+      const store = useWeekendTradingAnnouncementStore()
+      expect(store.tooltipSeen).toBe(false)
+      expect(store.shouldShowTooltip).toBe(true)
+    })
+
+    it('records the current revision when it resets', () => {
+      localStorage.setItem(SEEN_KEY, 'true')
+      const store = useWeekendTradingAnnouncementStore()
+      expect(store.tooltipRevisionSeen).toBeGreaterThan(0)
+    })
+
+    it('leaves a dismissal alone once the current revision is recorded', () => {
+      const current = useWeekendTradingAnnouncementStore().tooltipRevisionSeen
+
+      // As if the reset already ran on an earlier load and the user dismissed
+      // the tooltip after it.
+      localStorage.setItem(REVISION_KEY, String(current))
+      localStorage.setItem(SEEN_KEY, 'true')
+      setActivePinia(createPinia())
+
+      const reloaded = useWeekendTradingAnnouncementStore()
+      expect(reloaded.tooltipSeen).toBe(true)
+      expect(reloaded.shouldShowTooltip).toBe(false)
+    })
+  })
+
   it('markTooltipSeen turns shouldShowTooltip back to false', () => {
     const shownAt = 1_700_000_000_000
     const store = useWeekendTradingAnnouncementStore()

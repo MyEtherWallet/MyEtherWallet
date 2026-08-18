@@ -72,6 +72,8 @@ import type {
   PerpsManageEvent,
   PerpsManagePayload,
   PerpsNewPositionPayload,
+  PerpsRestrictedEvent,
+  PerpsRestrictedPayload,
   PerpsOrderEvent,
   PerpsOrderViewInfoPayload,
   PerpsOrderCancelClickedPayload,
@@ -227,6 +229,17 @@ export class Analytics {
   setNetwork(network: string): void {
     const identify = new Identify()
     identify.set('network', network)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set display currency user property
+   *
+   * @param currency   Currency code (e.g. USD, EUR)
+   */
+  setCurrency(currency: string): void {
+    const identify = new Identify()
+    identify.set('currency', currency)
     this.amplitude.identify(identify)
   }
 
@@ -905,6 +918,13 @@ export class Analytics {
   readonly trackPerpsNewPositionEvent = (
     event: typeof PerpsManageEvent.NEW_POSITION,
     payload: PerpsNewPositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsRestrictedEvent = (
+    event: typeof PerpsRestrictedEvent.LEARN_MORE,
+    payload: PerpsRestrictedPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

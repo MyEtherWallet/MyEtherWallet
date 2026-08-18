@@ -146,7 +146,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ fromTokenAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ formatFiat(fromTokenAmountFiat).display }}</p>
                 </div>
               </div>
 
@@ -203,7 +203,7 @@
                       class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">${{ toTokenAmountFiat }}</p>
+                  <p class="text-info text-s-14">{{ formatFiat(toTokenAmountFiat).display }}</p>
                 </div>
               </div>
             </div>
@@ -287,12 +287,11 @@ import {
   type NotificationBaseSwapBridge,
 } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const appLayoutStore = useAppLayoutStore()
@@ -382,11 +381,10 @@ const toTokenAmount = computed(() => {
   )
 })
 
+// Raw USD value (stored in notifications so containers can convert at display time).
 const toTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.toToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const toTokenIcon = computed(() => {
@@ -416,11 +414,10 @@ const fromTokenAmount = computed(() => {
     snapshot.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })
+// Raw USD value (stored in notifications so containers can convert at display time).
 const fromTokenAmountFiat = computed(() => {
   const price = snapshot.selectedQuote?.quote.options.fromToken.price ?? 0
-  return formatFiatValue(
-    BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6),
-  ).value
+  return BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6)
 })
 
 const fromTokenChain = computed(() => {

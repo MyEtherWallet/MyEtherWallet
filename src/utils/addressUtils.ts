@@ -6,6 +6,7 @@ import {
 } from '@ethereumjs/util'
 import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
+import type { ChainType } from '@/mew_api/types'
 
 const isAddress = (
   address: string,
@@ -58,4 +59,21 @@ const toChecksumAddress = (
   return toChecksumAddressWeb3(address)
 }
 
-export { isAddress, toChecksumAddress }
+/**
+ * Returns true when an address format is incompatible with a chain type —
+ * an EVM `0x` address on a BITCOIN chain, or a non-EVM address on an EVM chain.
+ * Persisting or building a wallet from such a pair yields invalid MEW API
+ * requests the backend 404s on (MEW-2043). Reuses the EVM address validator.
+ */
+const isAddressChainTypeMismatch = (
+  address: string,
+  chainType: ChainType,
+  chainName?: string,
+): boolean => {
+  const isEvmAddress = isAddress(address, chainName)
+  if (chainType === 'BITCOIN') return isEvmAddress
+  if (chainType === 'EVM') return !isEvmAddress
+  return false
+}
+
+export { isAddress, toChecksumAddress, isAddressChainTypeMismatch }

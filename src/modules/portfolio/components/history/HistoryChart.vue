@@ -44,7 +44,7 @@ import {
   type ChartOptions,
   type ChartData,
 } from 'chart.js'
-import { formatFiatValueAbsolute } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 interface DataPoint {
   timestamp: number
@@ -231,200 +231,213 @@ const yBounds = computed(() => {
   }
 })
 
-const chartOptions = computed<ChartOptions<'line'>>(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: 'index',
-    intersect: false,
-  },
-  hover: {
-    mode: 'index',
-    intersect: false,
-  },
-  plugins: {
-    tooltip: props.seriesLabels
-      ? {
-          enabled: false,
-          intersect: false,
-          external: function (context) {
-            const { tooltip, chart } = context
-            if (tooltip.opacity === 0) {
-              customTooltip.value = null
-              return
-            }
-            const dataIndex = tooltip.dataPoints?.[0]?.dataIndex
-            if (dataIndex == null) return
+const { formatFiat, rate, currencySymbol } = useCurrency()
 
-            const allData = [primaryData.value, topData.value, bottomData.value]
+const chartOptions = computed<ChartOptions<'line'>>(() => {
+  // Track currency refs so the chart re-renders when the display currency changes.
+  void rate.value
+  void currencySymbol.value
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    hover: {
+      mode: 'index',
+      intersect: false,
+    },
+    plugins: {
+      tooltip: props.seriesLabels
+        ? {
+            enabled: false,
+            intersect: false,
+            external: function (context) {
+              const { tooltip, chart } = context
+              if (tooltip.opacity === 0) {
+                customTooltip.value = null
+                return
+              }
+              const dataIndex = tooltip.dataPoints?.[0]?.dataIndex
+              if (dataIndex == null) return
 
-            const timestamp = allData
-              .map(series => series?.[dataIndex]?.timestamp)
-              .find(ts => ts != null)
-            let title = ''
-            if (timestamp != null) {
-              const date = new Date(timestamp)
-              if (!isNaN(date.getTime())) {
-                title = date.toLocaleString('en-US', {
-                  day: '2-digit',
-                  month: 'short',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
+              const allData = [
+                primaryData.value,
+                topData.value,
+                bottomData.value,
+              ]
+
+              const timestamp = allData
+                .map(series => series?.[dataIndex]?.timestamp)
+                .find(ts => ts != null)
+              let title = ''
+              if (timestamp != null) {
+                const date = new Date(timestamp)
+                if (!isNaN(date.getTime())) {
+                  title = date.toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                  })
+                }
+              }
+              const rows: TooltipState['rows'] = []
+              props.seriesLabels!.forEach((s, i) => {
+                const seriesData = allData[i]
+                if (!seriesData || seriesData.length === 0) return
+                const val = seriesData[dataIndex]?.value
+                if (val == null) return
+                rows.push({
+                  label: s.label,
+                  color: s.color,
+                  value: formatFiat(val).value,
                 })
-              }
-            }
-            const rows: TooltipState['rows'] = []
-            props.seriesLabels!.forEach((s, i) => {
-              const seriesData = allData[i]
-              if (!seriesData || seriesData.length === 0) return
-              const val = seriesData[dataIndex]?.value
-              if (val == null) return
-              rows.push({
-                label: s.label,
-                color: s.color,
-                value: formatFiatValueAbsolute(val).value,
               })
-            })
 
-            const chartRect = chart.canvas.getBoundingClientRect()
-            const wrapperEl = chart.canvas.parentElement
-            const wrapperRect = wrapperEl?.getBoundingClientRect()
-            const offsetLeft = wrapperRect
-              ? chartRect.left - wrapperRect.left
-              : 0
-            const offsetTop = wrapperRect ? chartRect.top - wrapperRect.top : 0
+              const chartRect = chart.canvas.getBoundingClientRect()
+              const wrapperEl = chart.canvas.parentElement
+              const wrapperRect = wrapperEl?.getBoundingClientRect()
+              const offsetLeft = wrapperRect
+                ? chartRect.left - wrapperRect.left
+                : 0
+              const offsetTop = wrapperRect
+                ? chartRect.top - wrapperRect.top
+                : 0
 
-            const estRowHeight = 22
-            const estTooltipHeight = 46 + rows.length * estRowHeight
-            const estTooltipWidth = tooltipEl.value?.offsetWidth ?? 200
-            const gap = 12
+              const estRowHeight = 22
+              const estTooltipHeight = 46 + rows.length * estRowHeight
+              const estTooltipWidth = tooltipEl.value?.offsetWidth ?? 200
+              const gap = 12
 
-            const caretX = tooltip.caretX
-            const caretY = tooltip.caretY
+              const caretX = tooltip.caretX
+              const caretY = tooltip.caretY
 
-            const placement: 'top' | 'bottom' =
-              caretY - estTooltipHeight - gap < 0 ? 'bottom' : 'top'
+              const placement: 'top' | 'bottom' =
+                caretY - estTooltipHeight - gap < 0 ? 'bottom' : 'top'
 
-            const wrapperWidth = wrapperRect?.width ?? chartRect.width
-            const halfWidth = estTooltipWidth / 2
-            const minLeft = halfWidth - offsetLeft + 4
-            const maxLeft = wrapperWidth - halfWidth - offsetLeft - 4
-            const clampedCaretX = Math.min(Math.max(caretX, minLeft), maxLeft)
+              const wrapperWidth = wrapperRect?.width ?? chartRect.width
+              const halfWidth = estTooltipWidth / 2
+              const minLeft = halfWidth - offsetLeft + 4
+              const maxLeft = wrapperWidth - halfWidth - offsetLeft - 4
+              const clampedCaretX = Math.min(Math.max(caretX, minLeft), maxLeft)
 
-            customTooltip.value = {
-              title,
-              rows,
-              placement,
-              style: {
-                left: clampedCaretX + offsetLeft + 'px',
-                top: caretY + offsetTop + 'px',
+              customTooltip.value = {
+                title,
+                rows,
+                placement,
+                style: {
+                  left: clampedCaretX + offsetLeft + 'px',
+                  top: caretY + offsetTop + 'px',
+                },
+              }
+            },
+          }
+        : {
+            filter: function (tooltipItem) {
+              return tooltipItem.datasetIndex !== 1
+            },
+            padding: 10,
+            backgroundColor: colors.tooltipBg,
+            boxPadding: 10,
+            bodySpacing: 3,
+            intersect: false,
+            titleSpacing: 3,
+            displayColors: false,
+            titleFont: {
+              size: 12,
+              fontFamily: 'Roboto , sans-serif',
+              weight: 'normal',
+            },
+            bodyFont: {
+              size: 16,
+              fontFamily: 'Roboto , sans-serif',
+            },
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || ''
+                if (label) {
+                  label += ': '
+                }
+                if (context.parsed.y !== null) {
+                  return formatFiat(context.parsed.y).display
+                }
+                return label
               },
-            }
-          },
-        }
-      : {
-          filter: function (tooltipItem) {
-            return tooltipItem.datasetIndex !== 1
-          },
-          padding: 10,
-          backgroundColor: colors.tooltipBg,
-          boxPadding: 10,
-          bodySpacing: 3,
-          intersect: false,
-          titleSpacing: 3,
-          displayColors: false,
-          titleFont: {
-            size: 12,
-            fontFamily: 'Roboto , sans-serif',
-            weight: 'normal',
-          },
-          bodyFont: {
-            size: 16,
-            fontFamily: 'Roboto , sans-serif',
-          },
-          callbacks: {
-            label: function (context) {
-              let label = context.dataset.label || ''
-              if (label) {
-                label += ': '
-              }
-              if (context.parsed.y !== null) {
-                return formatFiatValueAbsolute(context.parsed.y).value
-              }
-              return label
-            },
-            title: function (context) {
-              if (context.length === 0) {
-                return ''
-              }
-              const date = new Date(labels.value[context[0].dataIndex] || '')
-              return date.toLocaleDateString('en-US', {
-                minute: 'numeric',
-                hour: 'numeric',
-              })
+              title: function (context) {
+                if (context.length === 0) {
+                  return ''
+                }
+                const date = new Date(labels.value[context[0].dataIndex] || '')
+                return date.toLocaleDateString('en-US', {
+                  minute: 'numeric',
+                  hour: 'numeric',
+                })
+              },
             },
           },
-        },
-  },
-  scales: {
-    x: {
-      display: true,
-      ticks: {
-        font: {
-          size: 10,
-        },
-        maxTicksLimit: 4,
-        type: 'time',
-        align: 'start',
-        color: 'rgba(0, 0, 0, 0.65)',
-        callback: function (value, index) {
-          const date = new Date(labels.value[value as number])
-          const display = date.toLocaleDateString('en-US', {
-            day: 'numeric',
-            month: 'short',
-          })
-          if (index === 0) return `  ${display}`
-          return display
-        },
-      },
-      grid: {
-        display: false, // Set display to false to remove vertical grid lines
-      },
     },
-    y: {
-      display: props.dispalayYAxis ?? false,
-      ticks: {
-        count: 3,
-        callback: function (value) {
-          return formatFiatValueAbsolute(value).value
-        },
-        font: {
-          size: 10,
-        },
-        color: 'rgba(0, 0, 0, 0.65)',
-      },
-      afterBuildTicks: function (axis) {
-        if (!axis.ticks.some(t => t.value === 0)) {
-          axis.ticks.push({ value: 0 })
-          axis.ticks.sort((a, b) => a.value - b.value)
-        }
-      },
-      suggestedMin: yBounds.value.min,
-      suggestedMax: yBounds.value.max,
-      grid: {
+    scales: {
+      x: {
         display: true,
-        color: function (context) {
-          if (context.tick.value === 0) return 'rgba(0,0,0,0.1)'
-          return 'transparent'
+        ticks: {
+          font: {
+            size: 10,
+          },
+          maxTicksLimit: 4,
+          type: 'time',
+          align: 'start',
+          color: 'rgba(0, 0, 0, 0.65)',
+          callback: function (value, index) {
+            const date = new Date(labels.value[value as number])
+            const display = date.toLocaleDateString('en-US', {
+              day: 'numeric',
+              month: 'short',
+            })
+            if (index === 0) return `  ${display}`
+            return display
+          },
+        },
+        grid: {
+          display: false, // Set display to false to remove vertical grid lines
         },
       },
-      position: 'right',
+      y: {
+        display: props.dispalayYAxis ?? false,
+        ticks: {
+          count: 3,
+          callback: function (value) {
+            return formatFiat(value).display
+          },
+          font: {
+            size: 10,
+          },
+          color: 'rgba(0, 0, 0, 0.65)',
+        },
+        afterBuildTicks: function (axis) {
+          if (!axis.ticks.some(t => t.value === 0)) {
+            axis.ticks.push({ value: 0 })
+            axis.ticks.sort((a, b) => a.value - b.value)
+          }
+        },
+        suggestedMin: yBounds.value.min,
+        suggestedMax: yBounds.value.max,
+        grid: {
+          display: true,
+          color: function (context) {
+            if (context.tick.value === 0) return 'rgba(0,0,0,0.1)'
+            return 'transparent'
+          },
+        },
+        position: 'right',
+      },
     },
-  },
-  elements: { line: { capBezierPoints: true } },
-}))
+    elements: { line: { capBezierPoints: true } },
+  }
+})
 </script>
 
 <style scoped>

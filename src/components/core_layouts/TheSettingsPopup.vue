@@ -10,6 +10,18 @@
       <cog6-tooth-icon class="w-6 h-6" />
     </app-btn-icon>
 
+    <!-- Headless network selector (mobile): owns the chain dialog. It renders
+         in front of the settings popup (z above the popup's z-[2101]) so the
+         popup stays open behind it. -->
+    <select-chain-for-app
+      v-if="isXS"
+      v-model:dialog-open="networkOpen"
+      dialog-z-index-overlay="z-[2110]"
+      dialog-z-index-container="z-[2120]"
+    >
+      <template #network-button><span class="hidden" /></template>
+    </select-chain-for-app>
+
     <!-- Popup -->
     <teleport to="#app">
       <transition
@@ -58,19 +70,55 @@
                 <p class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-[#575757]">
                   {{ $t('settings.preferences') }}
                 </p>
-                <!-- TODO: Currency (pending team input on supported currencies list)
-                <div class="relative flex w-full h-6 justify-between items-center cursor-pointer group">
+                <!-- Network (mobile only — relocated here from the header below
+                     xs). The trigger lives here; the dialog is owned by the
+                     headless SelectChainForApp mounted outside the popup. -->
+                <div
+                  v-if="isXS"
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="openNetwork"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="relative flex items-center gap-2.5">
+                    <globe-alt-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                    <span class="text-s-16 font-normal leading-[22px] text-black capitalize">{{ $t('common.network') }}</span>
+                  </div>
+                  <div class="relative flex items-center gap-2 min-w-0">
+                    <img
+                      v-if="selectedChain?.icon"
+                      :src="selectedChain.icon"
+                      alt=""
+                      class="w-5 h-5 rounded-full object-contain flex-shrink-0"
+                      height="20"
+                      width="20"
+                    />
+                    <span class="text-s-14 font-normal leading-[20px] text-[#575757] truncate max-w-[120px]">{{ selectedChain?.nameLong }}</span>
+                    <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
+                  </div>
+                </div>
+                <!-- Currency -->
+                <div
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="view = 'currency'"
+                >
                   <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
                     <banknotes-icon class="w-5 h-5 text-primary flex-shrink-0" />
                     <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.currency') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">USD</span>
+                    <app-token-logo
+                      :url="getFiatIcon(selectedCurrency)"
+                      :symbol="selectedCurrency"
+                      cover
+                      width="w-5"
+                      height="h-5"
+                      class="flex-shrink-0"
+                    />
+                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedCurrency }}</span>
                     <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
                   </div>
                 </div>
-                -->
                 <!-- Language -->
                 <div
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
@@ -191,6 +239,75 @@
               </div>
             </div>
 
+            <!-- Currency selector panel -->
+            <div
+              ref="currencyPanelRef"
+              :inert="view !== 'currency'"
+              class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
+              :style="{
+                transform: view === 'currency' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'currency' ? 1 : 0,
+                transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <!-- Header: back + title -->
+              <div class="flex items-center gap-2">
+                <app-btn-icon
+                  :label="$t('common.back')"
+                  width="w-6"
+                  height="h-6"
+                  @click="view = 'main'"
+                >
+                  <chevron-left-icon class="w-5 h-5" />
+                </app-btn-icon>
+                <span class="text-s-16 font-bold leading-[22px] text-black">
+                  {{ $t('settings.select_currency') }}
+                </span>
+              </div>
+
+              <!-- Description -->
+              <p class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]">
+                {{ $t('settings.currency_description') }}
+              </p>
+
+              <!-- Currency options -->
+              <div
+                ref="currencyListRef"
+                class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2"
+              >
+                <div
+                  v-for="option in currencyOptions"
+                  :key="option.code"
+                  class="relative flex items-center justify-between gap-3 p-3 rounded-xl cursor-pointer group"
+                  :class="selectedCurrency === option.code ? 'bg-mewBg' : ''"
+                  @click="selectCurrency(option.code)"
+                >
+                  <div
+                    v-if="selectedCurrency !== option.code"
+                    class="absolute inset-0 rounded-xl bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  />
+                  <div class="relative flex items-center gap-2.5 min-w-0">
+                    <app-token-logo
+                      :url="getFiatIcon(option.code)"
+                      :symbol="option.code"
+                      cover
+                      width="w-6"
+                      height="h-6"
+                      class="flex-shrink-0"
+                    />
+                    <span class="text-s-14 font-semibold leading-[20px] text-black flex-shrink-0">{{ option.code }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-[#A5A5A5] truncate">{{ option.name }}</span>
+                  </div>
+                  <check-circle-icon
+                    class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                    :class="selectedCurrency === option.code
+                      ? 'text-primary'
+                      : 'text-[#D6D6D6] invisible group-hover:visible'"
+                  />
+                </div>
+              </div>
+            </div>
+
             <!-- Language selector panel -->
             <div
               ref="languagePanelRef"
@@ -267,21 +384,42 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon } from '@heroicons/vue/20/solid'
+import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon, GlobeAltIcon, BanknotesIcon } from '@heroicons/vue/20/solid'
 import { ChevronRightIcon, QuestionMarkCircleIcon } from '@heroicons/vue/16/solid'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
+import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
 const { isSettingsOpen } = storeToRefs(appLayoutStore)
+
+// Below xs the network selector lives inside this popup (see template).
+const { isXS } = useAppBreakpoints()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+/**
+ * Whether the mobile chain dialog is open. Tapping the network row opens it in
+ * front of the settings popup, which stays open behind it.
+ */
+const networkOpen = ref(false)
+const openNetwork = () => {
+  networkOpen.value = true
+}
 
 const analyticsStore = useAnalyticsStore()
 const analyticsEnabled = computed(() => analyticsStore.consent)
@@ -319,6 +457,21 @@ const selectLanguage = (code: string) => {
   view.value = 'main'
 }
 
+const currencyStore = useCurrencyStore()
+const { selectedCurrency } = storeToRefs(currencyStore)
+
+// Surface the currently selected currency at the top of the list.
+const currencyOptions = computed(() => {
+  const active = SUPPORTED_CURRENCIES.filter(c => c.code === selectedCurrency.value)
+  const rest = SUPPORTED_CURRENCIES.filter(c => c.code !== selectedCurrency.value)
+  return [...active, ...rest]
+})
+
+const selectCurrency = (code: string) => {
+  currencyStore.setCurrency(code)
+  view.value = 'main'
+}
+
 const FEE_MAP: Record<string, string> = {
   economy: 'ECONOMY',
   recommended: 'REGULAR',
@@ -332,7 +485,7 @@ const FEE_MAP_REVERSE: Record<string, string> = {
   FASTEST: 'highest',
 }
 
-const view = ref<'main' | 'fee' | 'language'>('main')
+const view = ref<'main' | 'fee' | 'currency' | 'language'>('main')
 const selectedFee = computed({
   get: () => FEE_MAP_REVERSE[defaultGasPriceType.value] ?? 'recommended',
   set: (val: string) => { defaultGasPriceType.value = FEE_MAP[val] as any },
@@ -353,19 +506,36 @@ const containerRef = ref<HTMLElement | null>(null)
 const popupRef = ref<HTMLElement | null>(null)
 const mainPanelRef = ref<HTMLElement | null>(null)
 const feePanelRef = ref<HTMLElement | null>(null)
+const currencyPanelRef = ref<HTMLElement | null>(null)
+const currencyListRef = ref<HTMLElement | null>(null)
 const languagePanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
-  const panelByView = { main: mainPanelRef, fee: feePanelRef, language: languagePanelRef }
-  const activeRef = panelByView[view.value].value
+  const panelByView = {
+    main: mainPanelRef.value,
+    fee: feePanelRef.value,
+    currency: currencyPanelRef.value,
+    language: languagePanelRef.value,
+  }
+  const activeRef = panelByView[view.value]
   if (activeRef) containerHeight.value = activeRef.scrollHeight
 }
 
-watch(isSettingsOpen, val => { if (val) nextTick(measureHeight) })
-watch(view, () => {
+watch(isSettingsOpen, val => {
+  if (val) {
+    currencyStore.ensureRates()
+    nextTick(measureHeight)
+  }
+})
+watch(view, val => {
   if (view.value !== 'language') languageQuery.value = ''
-  nextTick(measureHeight)
+  nextTick(() => {
+    measureHeight()
+    if (val === 'currency' && currencyListRef.value) {
+      currencyListRef.value.scrollTop = 0
+    }
+  })
 })
 watch(filteredLanguages, () => nextTick(measureHeight))
 
@@ -387,6 +557,10 @@ const togglePopup = () => {
 }
 
 onClickOutside(containerRef, () => {
+  // Keep the popup open while the chain dialog is layered in front of it —
+  // clicks inside that dialog (teleported to #app) would otherwise register as
+  // an outside click and close the settings popup behind it.
+  if (networkOpen.value) return
   if (isSettingsOpen.value) {
     isSettingsOpen.value = false
     view.value = 'main'

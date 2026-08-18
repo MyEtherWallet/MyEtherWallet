@@ -447,6 +447,15 @@
       "hardware-confirm-hint": "También deberás confirmar en tu dispositivo.",
       "sign-button": "Firmar"
     },
+    "restricted": {
+      "banner-notice": "La operación de perpetuos no está disponible en EE. UU.",
+      "learn-more": "Más información",
+      "panel-title": "Los perpetuos no están disponibles",
+      "panel-description": "Lamentablemente, operar con perpetuos no está permitido en tu jurisdicción actual."
+    },
+    "status": {
+      "unavailable": "Servicio temporalmente no disponible, vuelve a intentarlo más tarde."
+    },
     "pagination": {
       "previous-page": "página anterior",
       "next-page": "página siguiente",

@@ -66,10 +66,7 @@
       />
 
       <!-- Error -->
-      <div
-        v-else-if="contractsError"
-        class="text-center py-8 text-error text-s-14"
-      >
+      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
         {{ contractsError }}
       </div>
 
@@ -389,7 +386,9 @@
                                 ),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.change-leverage') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.change-leverage') }}
+                              </p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -398,7 +397,9 @@
                                 openPositionAdd(contract.market, 'add'),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.add-to-position') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.add-to-position') }}
+                              </p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -407,7 +408,9 @@
                                 openPositionAdd(contract.market, 'close'),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.close-position') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.close-position') }}
+                              </p>
                             </li>
                           </template>
                           <template v-else>
@@ -445,7 +448,9 @@
                             ]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <p>{{ $t('perps.market-list.view-market-info') }}</p>
+                            <p>
+                              {{ $t('perps.market-list.view-market-info') }}
+                            </p>
                           </li>
                         </ul>
                       </div>
@@ -502,7 +507,9 @@
                                 ),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.change-leverage') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.change-leverage') }}
+                              </p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -511,7 +518,9 @@
                                 openPositionAdd(contract.market, 'add'),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.add-to-position') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.add-to-position') }}
+                              </p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -520,7 +529,9 @@
                                 openPositionAdd(contract.market, 'close'),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.close-position') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.close-position') }}
+                              </p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -529,7 +540,9 @@
                                 emits('viewMarket', contract.market),
                               ]"
                             >
-                              <p>{{ $t('perps.market-list.view-market-info') }}</p>
+                              <p>
+                                {{ $t('perps.market-list.view-market-info') }}
+                              </p>
                             </li>
                           </ul>
                         </div>
@@ -537,10 +550,16 @@
                     </app-pop-up-menu>
                   </template>
                   <template v-else>
+                    <!--
+                      Disabled in restricted regions: there is no order to place,
+                      so the action is dead rather than redirected. Users reach
+                      the explanatory card via the Perps action-bar button.
+                    -->
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -555,6 +574,7 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -599,7 +619,7 @@
           <button
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"
             class="underline lg:mb-10"
-            @click="selectedFilter = filterOptions[0]"
+            @click="selectedFilterValue = 'all'"
           >
             {{ $t('perps.market-list.discover-markets') }}
             <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
@@ -650,6 +670,7 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
@@ -671,6 +692,7 @@ import type {
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
+const { isPerpsRestricted } = usePerpsRestriction()
 const { isWatchOnly } = storeToRefs(walletStore)
 
 const emits = defineEmits<{
@@ -705,9 +727,8 @@ const openLeverage = (
   const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
   leverageMaxLeverage.value = maxLev
   const parsedCurrent = parseInt(currentLeverage)
-  const initial = Number.isFinite(parsedCurrent) && parsedCurrent > 0
-    ? parsedCurrent
-    : maxLev
+  const initial =
+    Number.isFinite(parsedCurrent) && parsedCurrent > 0 ? parsedCurrent : maxLev
   tempLeverage.value = Math.min(initial, maxLev)
   leverageOldValue.value = tempLeverage.value
   leverageError.value = ''
@@ -736,9 +757,10 @@ const saveLeverage = async () => {
       payload,
     )
   } catch (e) {
-    leverageError.value = e instanceof Error
-      ? e.message
-      : t('perps.market-list.leverage-error-fallback')
+    leverageError.value =
+      e instanceof Error
+        ? e.message
+        : t('perps.market-list.leverage-error-fallback')
     perpsToasts.toastFailedToSetLeverage()
     const failPayload: PerpsChangeLeverageFailPayload = {
       ...payload,
@@ -809,7 +831,7 @@ function getPosition(market: string) {
   return positions.value.find(p => p.market === market) || null
 }
 
-const marketSkeletonColumns: SkeletonColumn[] = [
+const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
   { header: '', hidden: 'hidden xs:table-cell xs:w-10' },
   { header: t('perps.market-list.column-name') },
   { header: t('perps.market-list.column-price'), align: 'right' },
@@ -833,7 +855,7 @@ const marketSkeletonColumns: SkeletonColumn[] = [
     align: 'right',
     hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]',
   },
-]
+])
 
 const searchQuery = ref('')
 const watchlist = ref<Set<string>>(new Set())
@@ -872,15 +894,26 @@ interface FilterOption {
   value: string
 }
 
-const filterOptions: FilterOption[] = [
+const filterOptions = computed<FilterOption[]>(() => [
   { label: t('perps.market-list.filter-all'), value: 'all' },
   { label: t('perps.market-list.filter-stocks'), value: 'stocks' },
   { label: t('perps.market-list.filter-commodities'), value: 'commodities' },
   { label: t('perps.market-list.filter-indices'), value: 'indices' },
   { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
-]
+])
 
-const selectedFilter = ref<FilterOption>(filterOptions[0])
+// Track the filter by value, not by object: labels are locale-dependent and
+// AppBtnGroup/AppSelect compare the selection by structural equality.
+const selectedFilterValue = ref('all')
+
+const selectedFilter = computed<FilterOption>({
+  get: () =>
+    filterOptions.value.find(o => o.value === selectedFilterValue.value) ??
+    filterOptions.value[0],
+  set: option => {
+    selectedFilterValue.value = option.value
+  },
+})
 
 interface EnrichedContract extends Contract {
   displayName: string

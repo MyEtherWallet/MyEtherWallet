@@ -24,7 +24,7 @@
       "take-profit-removed-title": "Take Profit Removed",
       "failed-to-remove-sl-tp-title": "Failed to Remove Stop Loss / Take Profit",
       "failed-to-remove-order-title": "Failed to Remove Order",
-      "sl-tp-line": "{side} {netQuantity} PERPS: {base}{quote} at {price}",
+      "sl-tp-line": "{side} {netQuantity} PERPS: {base} at {price}",
       "liquidation-initiated": "Liquidation Initiated",
       "liquidation-initiated-detail": "Your account is temporarily locked and your open positions are being sold",
       "deposit-complete-title": "Deposit Complete",
@@ -430,6 +430,15 @@
       "message-to-sign-label": "Message to sign",
       "hardware-confirm-hint": "You will also need to confirm on your device.",
       "sign-button": "Sign"
+    },
+    "restricted": {
+      "banner-notice": "Perpetuals trading isn’t available in the US.",
+      "learn-more": "Learn more",
+      "panel-title": "Perpetuals aren’t available",
+      "panel-description": "Unfortunately, trading perpetuals isn’t allowed in your current jurisdiction."
+    },
+    "status": {
+      "unavailable": "Service temporarily unavailable, please try again later."
     },
     "order-status": {
       "open": "Open",

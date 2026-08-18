@@ -72,8 +72,8 @@ const mockPerpsState = vi.hoisted(
   () =>
     ({
       balance: { value: null } as Ref<PerpsBalance | null>,
-      positions: { value: [] } as Ref<Position[]>,
-      markets: { value: [] } as Ref<TradingPair[]>,
+      positions: { value: [] } as unknown as Ref<Position[]>,
+      markets: { value: [] } as unknown as Ref<TradingPair[]>,
     }) as const,
 )
 

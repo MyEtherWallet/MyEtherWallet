@@ -100,7 +100,7 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
             </div>
           </div>
           <app-pop-up-menu
@@ -262,7 +262,7 @@
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
-          :disabled="!!gasFeeError"
+          :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
         >
           {{ btnText }}
         </app-base-button>
@@ -299,16 +299,15 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 
 enum ProviderName {
   oneInch = 'oneInch',
@@ -471,7 +470,7 @@ const toAmountFormatted = computed(() => {
 const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
   const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
-  return formatFiatValue(value.toString()).value
+  return formatFiat(value.toString()).value
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
@@ -525,6 +524,11 @@ watch(
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
+  // Guard against proceeding without a resolved quote: an empty quoteId would
+  // build a malformed unsigned-tx URL (…/multi-quotes//unsigned -> 404). The
+  // button is disabled in this state; this also ignores any stray click.
+  const quoteId = props.swapGasFeeQuote?.quoteId
+  if (!quoteId) return
   isProceeding.value = true
   loadingModel.value = true
   if (
@@ -533,7 +537,7 @@ const proceedWithSwap = () => {
   ) {
     showApproveMessage.value = true
   }
-  emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+  emits('update:proceedWithSwap', quoteId)
 }
 const declineSwap = () => {
   emits('update:declineSwap')

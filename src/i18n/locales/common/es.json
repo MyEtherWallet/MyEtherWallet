@@ -3,6 +3,7 @@
     "search": "Buscar",
     "swap": "Cambio",
     "bridge": "Puente",
+    "perps": "Perps",
     "stocks": "Acciones",
     "crypto": "Cripto",
     "portfolio": "Portafolio",
@@ -53,6 +54,7 @@
       "user_canceled_request": "El usuario canceló la solicitud",
       "ledger_locked": "Tu Ledger está bloqueado. Desbloquéalo e inténtalo de nuevo.",
       "ledger_app_not_open": "Abre la aplicación de Ethereum en tu Ledger e inténtalo de nuevo.",
+      "trezor_read_failed": "No se pudo leer tu dirección desde Trezor. Reconecta el dispositivo e inténtalo de nuevo.",
       "method_not_implemented": "Método no implementado: {method}",
       "invalid_name": "Nombre no válido",
       "address_resolution_failed": "No se pudo resolver la dirección",
@@ -311,6 +313,5 @@
     "no_results_title": "No se encontraron coincidencias",
     "no_results_subtitle": "Prueba con otro símbolo o nombre."
   },
-  "perps": "Perps",
   "perpetuals": "Perpetuos"
 }
