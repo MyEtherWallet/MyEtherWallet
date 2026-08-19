@@ -596,9 +596,11 @@ const onRowVisibility = (acc: SavedAccount, visible: boolean): void => {
   }
 }
 
-// The cache is keyed per chain, so a network switch invalidates what's on screen
-// (IntersectionObserver won't re-fire since the rows didn't move) — re-fetch the
-// currently-visible rows for the newly-selected chain.
+// On a network switch the IntersectionObserver won't re-fire (rows don't move), so
+// re-evaluate the visible non-active rows. The cache/TTL is keyed per address, so
+// fresh balances are reused (no refetch — avoids rate-limiting the /balances API)
+// and only addresses whose TTL has expired refetch for the newly-selected chain.
+// The active address stays live via walletStore.
 watch(
   () => chainsStore.selectedChain?.name,
   () => {

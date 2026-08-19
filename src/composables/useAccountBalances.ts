@@ -31,10 +31,13 @@ const NATIVE_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 const STORAGE_KEY = 'multiAddressBalances'
 
-/** Cache key: per chain (name) + address so a balance persists across popup opens,
- *  page reloads and network switches. Lower-cased for stable matching. */
-const cacheKey = (chainName: string, address: string): string =>
-  `${chainName.toLowerCase()}:${address.toLowerCase()}`
+/** Cache key: per ADDRESS only (not per chain). A saved address is fetched at most
+ *  once per TTL regardless of the selected network — switching networks within the
+ *  TTL reuses the cached balance instead of refetching, which avoids rate-limiting
+ *  the /balances API when the user flips between networks. The selected chain still
+ *  drives the fetch URL, just not the cache identity. Lower-cased for stable matching. */
+const cacheKey = (_chainName: string, address: string): string =>
+  address.toLowerCase()
 
 /**
  * Per-address balance cache for the Manage Accounts popup.
