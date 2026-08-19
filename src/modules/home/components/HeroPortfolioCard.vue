@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useIntervalFn } from '@vueuse/core'
+import { useIntervalFn, useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -54,6 +54,11 @@ const { lastTwentyFourHours } = usePortfolio24hChange()
 const { refreshBalances } = useRefreshBalances()
 
 const openDepositDialog = ref(false)
+
+// Copy the full (untruncated) address from the hero address chip. `copied`
+// flips true for a beat so the tooltip can confirm the action.
+const { copy: copyToClipboard, copied: addressCopied } = useClipboard()
+const copyAddress = () => copyToClipboard(walletAddress.value ?? '')
 
 // Track whether the first balance load has completed. Only the *first* load
 // shows the full-card skeleton; later refreshes keep the current layout and
@@ -126,16 +131,18 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
         <h2
-          class="max-w-[411px] text-[40px] font-bold leading-[44px] tracking-[-1.2px]"
+          class="max-w-[411px] text-[28px] font-bold leading-[32px] tracking-[-0.84px] min-[768px]:text-[40px] min-[768px]:leading-[44px] min-[768px]:tracking-[-1.2px]"
         >
           {{ t('homePage.hero.welcomeSubtitle') }}
         </h2>
       </div>
-      <div class="flex w-full items-center justify-end gap-4">
+      <div
+        class="mt-16 flex w-full flex-col gap-2 min-[768px]:mt-0 min-[768px]:flex-row min-[768px]:items-center min-[768px]:justify-end min-[768px]:gap-4"
+      >
         <button
           type="button"
           data-test="hero-create"
-          class="hoverNoBG h-12 rounded-3xl px-6 text-s-16 font-semibold tracking-[-0.32px] text-white"
+          class="hoverNoBG h-12 w-full rounded-3xl px-6 text-s-16 font-semibold tracking-[-0.32px] text-white min-[768px]:w-auto"
           @click="openCreateDialog"
         >
           {{ t('homePage.hero.createWallet') }}
@@ -143,7 +150,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <button
           type="button"
           data-test="hero-connect"
-          class="h-12 rounded-3xl bg-white px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
+          class="h-12 w-full rounded-3xl bg-white px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary min-[768px]:w-auto"
           @click="openAccessDialog"
         >
           {{ t('homePage.hero.connectWallet') }}
@@ -155,23 +162,29 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
     <template v-else>
       <!-- Eye + refresh: top-right icon cluster -->
       <div class="absolute right-3 top-3 flex items-center gap-1 text-black">
-        <button
-          v-if="state === 'assets'"
-          type="button"
-          data-test="hero-eye"
-          :aria-label="t('homePage.hero.toggleBalance')"
-          class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
-          @click="toggleHideBalances"
-        >
-          <component
-            :is="hideBalances ? EyeSlashIcon : EyeIcon"
-            class="size-6"
-          />
-        </button>
         <AppTooltip
-          :text="t('homePage.hero.refreshTooltip')"
-          position="bottom-left"
+          v-if="state === 'assets'"
+          :text="
+            hideBalances
+              ? t('homePage.hero.showBalance')
+              : t('homePage.hero.hideBalance')
+          "
+          position="middle"
         >
+          <button
+            type="button"
+            data-test="hero-eye"
+            :aria-label="t('homePage.hero.toggleBalance')"
+            class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
+            @click="toggleHideBalances"
+          >
+            <component
+              :is="hideBalances ? EyeSlashIcon : EyeIcon"
+              class="size-6"
+            />
+          </button>
+        </AppTooltip>
+        <AppTooltip :text="t('homePage.hero.refreshTooltip')" position="middle">
           <button
             type="button"
             data-test="hero-refresh"
@@ -189,8 +202,9 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
 
       <!-- Top group: chip + headline/subtitle -->
       <div class="flex w-full flex-col gap-4">
-        <!-- Address chip -->
-        <div class="flex items-center gap-1">
+        <!-- Address chip. Compact (narrow card): the network wraps to its own
+             line and the bullet separator is hidden; inline from ~380px up. -->
+        <div class="flex flex-wrap items-center gap-1">
           <template v-if="state === 'initialLoading'">
             <div
               class="size-5 shrink-0 animate-pulse rounded-md bg-[#e6e6e6]"
@@ -201,15 +215,30 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           </template>
           <template v-else>
             <span class="size-2 shrink-0 rounded-full bg-success" />
-            <span
-              class="text-s-16 leading-[22px] text-[#575757]"
-              data-test="hero-address"
+            <AppTooltip
+              :text="
+                addressCopied
+                  ? t('homePage.hero.addressCopied')
+                  : t('homePage.hero.copyAddress')
+              "
+              position="middle"
             >
-              {{ truncateAddress(walletAddress ?? '') }}
-            </span>
-            <span class="text-s-16 leading-[22px] text-[#575757]">•</span>
+              <button
+                type="button"
+                data-test="hero-address"
+                :aria-label="t('homePage.hero.copyAddress')"
+                class="cursor-pointer text-s-16 leading-[22px] text-[#575757] transition-colors hover:text-primary"
+                @click="copyAddress"
+              >
+                {{ truncateAddress(walletAddress ?? '') }}
+              </button>
+            </AppTooltip>
             <span
-              class="text-s-16 leading-[22px] text-[#575757]"
+              class="hidden text-s-16 leading-[22px] text-[#575757] min-[768px]:inline"
+              >•</span
+            >
+            <span
+              class="basis-full text-s-16 leading-[22px] text-[#575757] min-[768px]:basis-auto"
               data-test="hero-network"
             >
               {{ selectedChain?.nameLong }}
@@ -220,7 +249,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <!-- Headline -->
         <template v-if="state === 'noassets'">
           <h2
-            class="max-w-[318px] text-[40px] font-bold leading-[44px] tracking-[-1.2px] text-black"
+            class="max-w-[420px] whitespace-pre-line text-[32px] font-bold leading-[36px] tracking-[-1.28px] text-black min-[768px]:text-[52px] min-[768px]:leading-[56px] min-[768px]:tracking-[-2.08px]"
             data-test="hero-portfolio-noassets"
           >
             {{ t('homePage.hero.noAssetsTitle') }}
@@ -231,16 +260,16 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         </template>
         <h2
           v-else-if="state === 'initialLoading'"
-          class="max-w-[325px] text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
+          class="max-w-[325px] text-[32px] font-bold leading-[36px] tracking-[-1.28px] text-black min-[768px]:text-[52px] min-[768px]:leading-[56px] min-[768px]:tracking-[-2.08px]"
         >
           {{ t('homePage.hero.ownTotal') }}
           <span
-            class="ml-2 inline-block h-[46px] w-32 animate-pulse rounded-lg bg-[#e6e6e6] align-middle"
+            class="ml-2 inline-block h-[30px] w-20 animate-pulse rounded-lg bg-[#e6e6e6] align-middle min-[768px]:h-[46px] min-[768px]:w-32"
           />
         </h2>
         <h2
           v-else
-          class="max-w-[325px] text-[52px] font-bold leading-[56px] tracking-[-2.08px] text-black"
+          class="max-w-[325px] text-[32px] font-bold leading-[36px] tracking-[-1.28px] text-black min-[768px]:text-[52px] min-[768px]:leading-[56px] min-[768px]:tracking-[-2.08px]"
           data-test="hero-portfolio-assets"
         >
           {{ t('homePage.hero.ownTotal') }}
@@ -250,7 +279,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           <span
             v-if="isLoadingBalances"
             data-test="hero-amount-skeleton"
-            class="ml-2 inline-block h-[46px] w-32 animate-pulse rounded-lg bg-[#e6e6e6] align-middle"
+            class="ml-2 inline-block h-[30px] w-20 animate-pulse rounded-lg bg-[#e6e6e6] align-middle min-[768px]:h-[46px] min-[768px]:w-32"
           />
           <span
             v-else
@@ -265,12 +294,12 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
       <!-- NO ASSETS: deposit / buy -->
       <div
         v-if="state === 'noassets'"
-        class="flex w-full items-center justify-end gap-2"
+        class="mt-16 flex w-full flex-col gap-2 min-[768px]:mt-0 min-[768px]:flex-row min-[768px]:items-center min-[768px]:justify-end"
       >
         <button
           type="button"
           data-test="hero-deposit"
-          class="h-12 rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
+          class="h-12 w-full rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary min-[768px]:w-auto"
           @click="openDepositDialog = true"
         >
           {{ t('homePage.hero.makeDeposit') }}
@@ -278,7 +307,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <button
           type="button"
           data-test="hero-buy"
-          class="flex h-12 items-center gap-2 rounded-3xl bg-primary px-6 text-s-16 font-semibold tracking-[-0.32px] text-white"
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-3xl bg-primary px-6 text-s-16 font-semibold tracking-[-0.32px] text-white min-[768px]:w-auto"
           @click="openPanel('purchase')"
         >
           {{ t('homePage.hero.buyCrypto') }}
@@ -287,7 +316,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
       </div>
 
       <!-- INITIAL LOADING / ASSETS: today % + go to portfolio -->
-      <div v-else class="flex w-full items-end justify-between">
+      <div
+        v-else
+        class="mt-16 flex w-full flex-col gap-3 min-[768px]:mt-0 min-[768px]:flex-row min-[768px]:items-end min-[768px]:justify-between min-[768px]:gap-0"
+      >
         <div v-if="state === 'initialLoading'" class="flex items-center gap-1">
           <div class="size-[22px] animate-pulse rounded-md bg-[#e6e6e6]" />
           <div
@@ -325,7 +357,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         <button
           type="button"
           data-test="hero-go-portfolio"
-          class="flex h-12 items-center gap-2 rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary"
+          class="flex h-12 w-full items-center justify-center gap-2 rounded-3xl bg-[#f5f5f5] px-6 text-s-16 font-semibold tracking-[-0.32px] text-primary min-[768px]:w-auto min-[768px]:justify-start"
           @click="goToPortfolio"
         >
           {{ t('homePage.hero.goToPortfolio') }}

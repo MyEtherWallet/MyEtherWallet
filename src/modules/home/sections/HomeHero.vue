@@ -121,15 +121,15 @@ onMounted(fetchTrending)
            the two trending side-by-side in a row below,
          - narrow: fully stacked. -->
     <div class="@container">
-      <!-- Jumps map to viewport ~768 / ~1440 (container = viewport − ~144px of
-           rail + section padding): stacked → balance-top + 2 trending (2 cols)
-           → 3 columns. The side panel shrinks the container, so it collapses
-           early when open. -->
+      <!-- Reflows on the AVAILABLE width: stacked → balance-top + 2 trending
+           (2 cols) at ~624 → all three in one line at ~1024. Threshold kept low
+           (1024) so the 3-column layout still fits once the side panel shrinks
+           the container (2fr balance ≈ 512px + two 1fr trending ≈ 256px each). -->
       <div
-        class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1296px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
+        class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1024px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
       >
         <HeroPortfolioCard
-          class="@min-[624px]:col-span-2 @min-[1296px]:col-span-1"
+          class="@min-[624px]:col-span-2 @min-[1024px]:col-span-1"
         />
         <HeroTrendingCard
           :title="t('homePage.hero.trendingStocks')"
