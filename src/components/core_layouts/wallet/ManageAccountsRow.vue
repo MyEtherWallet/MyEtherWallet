@@ -142,14 +142,15 @@ const emit = defineEmits<{
 
 const confirmingDelete = ref(false)
 
-// Report when this row enters/leaves the popup's scroll viewport so the parent
-// can lazily (re)fetch its balance. rootMargin prefetches just-below-fold rows.
+// Report when this row enters/leaves the popup's scroll viewport so the parent can
+// lazily (re)fetch its balance. No rootMargin: only rows actually in the viewport
+// count as visible, so we never fetch/poll rows that are off-screen.
 const rowRef = ref<HTMLElement | null>(null)
 const scrollRootRef = computed(() => props.scrollRoot ?? undefined)
 useIntersectionObserver(
   rowRef,
   ([entry]) => emit('visibility-change', entry?.isIntersecting ?? false),
-  { root: scrollRootRef, rootMargin: '100px' },
+  { root: scrollRootRef },
 )
 
 const onRemove = (): void => {
