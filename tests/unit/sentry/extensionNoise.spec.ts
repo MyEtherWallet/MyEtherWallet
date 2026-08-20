@@ -6,6 +6,7 @@ import {
 import {
   isExtensionOrProviderError,
   isForeignStackOverflow,
+  isIndexedDbMutationError,
   isInvalidWalletAddressError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
@@ -434,5 +435,60 @@ describe('isMetaMaskSdkDecryptError', () => {
     expect(isMetaMaskSdkDecryptError(null)).toBe(false)
     expect(isMetaMaskSdkDecryptError('aes/gcm: invalid ghash tag')).toBe(false)
     expect(isMetaMaskSdkDecryptError({})).toBe(false)
+  })
+})
+
+describe('isIndexedDbMutationError', () => {
+  it('is true for the production DOMException payload (Firefox idb-keyval write)', () => {
+    // APP-MEW-WEB-1GG: a wallet-SDK idb-keyval write rejects on Firefox with
+    // DOMException code 11 (InvalidStateError). Sentry hands beforeSend the
+    // original exception, robust to a serialized plain object carrying the
+    // browser-native name + code.
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        code: 11,
+        message:
+          'A mutation operation was attempted on a database that did not allow mutations.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true on the message alone when the numeric code is absent', () => {
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        message:
+          'A mutation operation was attempted on a database that did not allow mutations.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for an InvalidStateError that is not the IDB mutation failure', () => {
+    // A different code + non-matching message must NOT be dropped.
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        code: 7,
+        message: 'The object is in an invalid state.',
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isIndexedDbMutationError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isIndexedDbMutationError(null)).toBe(false)
+    expect(isIndexedDbMutationError(undefined)).toBe(false)
+    expect(isIndexedDbMutationError('InvalidStateError')).toBe(false)
   })
 })
