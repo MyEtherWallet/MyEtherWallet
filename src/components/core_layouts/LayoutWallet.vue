@@ -220,7 +220,12 @@
         </div>
       </div>
     </transition>
-    <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <!-- WeekendTradingTooltip is intentionally not mounted — the weekend
+         trading tooltip is disabled. Re-render it here with
+         `:anchor="tradeBtnRef"` to bring it back; the component and its
+         `shouldShowTooltip` gate in weekendTradingAnnouncementStore are
+         unchanged. The WeekendTradingDialog is unaffected. -->
+    <marketing-tooltip :anchor="tradeBtnRef" />
     <rwa-reward-modal />
   </div>
 </template>
@@ -252,7 +257,7 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

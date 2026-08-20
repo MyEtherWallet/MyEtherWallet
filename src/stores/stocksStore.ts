@@ -4,6 +4,7 @@ import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
   type StocksOverviewResponse,
   type StockOverviewItem,
+  type StockTrendingItem,
   type StockNewsItem,
   type StockTopMoverItem,
   type StockBannerItem,
@@ -35,7 +36,7 @@ export const useStocksStore = defineStore('stocksStore', () => {
   const recentNews = computed<StockNewsItem[]>(
     () => dataOverview.value?.recentNews || [],
   )
-  const trending = computed<StockOverviewItem[]>(
+  const trending = computed<StockTrendingItem[]>(
     () => dataOverview.value?.trending || [],
   )
   const topMovers = computed<StockTopMoverItem[]>(

@@ -1,0 +1,140 @@
+{
+  "homePage": {
+    "hero": {
+      "welcomeTitle": "Bienvenido a MEW",
+      "welcomeSubtitle": "Conecta tu wallet para empezar a operar acciones y cripto",
+      "createWallet": "Crear wallet",
+      "connectWallet": "Conectar wallet",
+      "ownTotal": "Tienes un total de",
+      "today": "hoy",
+      "goToPortfolio": "Ir al portafolio",
+      "noAssetsTitle": "Comencemos\neste viaje",
+      "noAssetsSubtitle": "Compra o deposita para empezar a operar acciones y cripto",
+      "makeDeposit": "Hacer un depósito",
+      "buyCrypto": "Comprar cripto",
+      "toggleBalance": "Mostrar u ocultar saldo",
+      "showBalance": "Mostrar saldo",
+      "hideBalance": "Ocultar saldo",
+      "copyAddress": "Copiar dirección",
+      "addressCopied": "¡Copiado!",
+      "refreshTooltip": "Actualizar saldo (se actualiza cada 2 min)",
+      "trendingStocks": "Acciones en tendencia",
+      "trendingCrypto": "Cripto en tendencia",
+      "last24h": "Últimas 24h",
+      "empty": "No hay datos disponibles",
+      "banner": {
+        "title": "Opera y gana 5 USDC",
+        "subtitle": "Las primeras 10 operaciones de $50+ cada hora reciben 10 USDC.",
+        "learnMore": "Saber más",
+        "tradeStocks": "Operar acciones"
+      },
+      "watchlist": {
+        "title": "Arma tu lista de seguimiento",
+        "subtitle": "Encuentra activos para seguir según tus intereses",
+        "begin": "Empecemos",
+        "onboarding": {
+          "continue": "Continuar",
+          "markets": {
+            "subtitle": "¿Qué activos te interesan?",
+            "hint": "Puedes seleccionar más de una opción"
+          },
+          "industries": {
+            "subtitle": "¿Qué industrias te interesan?"
+          },
+          "assets": {
+            "title": "Encontramos activos para ti",
+            "subtitle": "Estos son algunos activos que podrías seguir según tus intereses.",
+            "loadingTitle": "Buscando activos",
+            "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
+            "done": "Listo",
+            "selected": "{count} activos seleccionados"
+          },
+          "marketLabels": {
+            "stocks": "Acciones",
+            "crypto": "Cripto",
+            "perps": "Perpetuos"
+          },
+          "industryLabels": {
+            "commodities": "Materias primas",
+            "equities": "Renta variable",
+            "tech": "Tecnología",
+            "ai": "Inteligencia artificial",
+            "hardware": "Hardware",
+            "gaming": "Videojuegos",
+            "transport": "Transporte",
+            "software": "Software",
+            "construction": "Construcción",
+            "privacy": "Privacidad",
+            "infrastructure": "Infraestructura",
+            "etfs": "ETFs"
+          }
+        },
+        "table": {
+          "title": "Lista de seguimiento",
+          "subtitle": "Sigue los activos que te interesan",
+          "addNew": "Agregar activo",
+          "trade": "Operar",
+          "remove": "Quitar de la lista",
+          "columns": {
+            "asset": "Nombre del activo",
+            "marketValue": "Valor de mercado",
+            "price": "Precio",
+            "trend": "Tendencia"
+          }
+        },
+        "addModal": {
+          "title": "Agregar a la lista",
+          "subtitle": "Busca y agrega los activos que te interesan",
+          "searchPlaceholder": "Buscar",
+          "empty": "No se encontraron activos",
+          "tabs": {
+            "all": "Todos",
+            "stocks": "Acciones",
+            "crypto": "Cripto",
+            "perps": "Perpetuos"
+          }
+        }
+      }
+    },
+    "offers": {
+      "title": "Ofertas exclusivas",
+      "subtitle": "¡Gana recompensas por usar MEW!",
+      "category": { "trade": "Trading", "buy": "Comprar", "hold": "Mantener" },
+      "items": {
+        "trade": { "title": "Opera +$500", "highlight": "Gana 5 USDC" },
+        "buy": { "title": "Compra cripto", "highlight": "Cero comisiones MEW" },
+        "hold": { "title": "Opera y mantén", "highlight": "Gana 10 USDC" }
+      }
+    },
+    "listings": {
+      "title": "Nuevas cotizaciones",
+      "subtitle": "Descubre las últimas acciones y tokens de criptomonedas en el mercado.",
+      "tab": { "stocks": "Acciones", "crypto": "Cripto" },
+      "stat": {
+        "marketCap": "Cap. mercado",
+        "change24h": "24 h",
+        "volume24h": "Vol. 24 h"
+      },
+      "trade": "Operar",
+      "swap": "Intercambiar",
+      "bridge": "Bridge",
+      "openStockPage": "Abrir página de la acción",
+      "openCryptoPage": "Abrir página del token"
+    },
+    "sectors": {
+      "title": "Colecciones seleccionadas",
+      "subtitle": "Explora distintos temas de inversión y colecciones exclusivamente en MEW."
+    },
+    "news": {
+      "title": "Noticias del mercado",
+      "subtitle": "Mantente al tanto de las noticias del mercado en tiempo real. Con la tecnología de MEW.",
+      "empty": "No hay noticias disponibles por el momento",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "daysAgo": "hace {n} días",
+      "pagination": "Mostrando página {page} de {total}",
+      "readOnSource": "Lee el artículo completo en {source}",
+      "readMore": "Lee el artículo completo"
+    }
+  }
+}

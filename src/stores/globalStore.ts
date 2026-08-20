@@ -64,6 +64,19 @@ export const useGlobalStore = defineStore('global', () => {
   }
 
   /**--------------------
+   * BALANCE VISIBILITY
+   * Global, persisted amount-hide toggle (the "eye" on portfolio surfaces).
+   --------------------*/
+  const hideBalances = useStorage<boolean>(
+    'mew-hide-balances',
+    false,
+    safeLocalStorage,
+  )
+  const toggleHideBalances = () => {
+    hideBalances.value = !hideBalances.value
+  }
+
+  /**--------------------
    * TRADE
    --------------------*/
   const fetchedTradingThisSession = ref(false)
@@ -100,6 +113,8 @@ export const useGlobalStore = defineStore('global', () => {
     setSelectedNetwork,
     welcomeDialogDismissed,
     dismissWelcomeDialog,
+    hideBalances,
+    toggleHideBalances,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
     isTradingAllowedInRegion,

@@ -10,6 +10,7 @@ export const StoreConfigs = {
     recentlyViewedTokens: 'recently-viewed-tokens',
     watchListedTokens: 'watch-listed-tokens',
     watchListedStocks: 'watch-listed-stocks',
+    watchListedPerps: 'watch-listed-perps',
 
     // ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },

@@ -695,7 +695,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -995,9 +995,9 @@ const setSelectedChain = (chain: Chain) => {
 
 const cryptoFilterOptions = computed(() => [
   { label: t('crypto.all_tokens'), value: 'all' },
+  { label: t('crypto.watchlist'), value: 'watchlist' },
   { label: t('crypto.top_gainers'), value: 'topGainers' },
   { label: t('crypto.top_losers'), value: 'topLosers' },
-  { label: t('crypto.watchlist'), value: 'watchlist' },
   { label: t('crypto.stablecoins'), value: 'stablecoins' },
   { label: t('crypto.defi'), value: 'defi-index' },
   { label: t('crypto.meme'), value: 'meme-token' },
@@ -1005,6 +1005,15 @@ const cryptoFilterOptions = computed(() => [
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+// Deep-link: a home Industry Sectors tile opens /crypto?category=<value>.
+// Preselect the matching filter so the list opens on that category.
+const route = useRoute()
+const initialCategory = route.query.category
+if (typeof initialCategory === 'string') {
+  const match = cryptoFilterOptions.value.find(o => o.value === initialCategory)
+  if (match) selectedCryptoFilter.value = match
+}
 
 watch(cryptoFilterOptions, options => {
   selectedCryptoFilter.value =
@@ -1437,6 +1446,19 @@ const getSparkLinePoints = (token: DisplayToken) => {
  * Token Link
  --------------------------------*/
 const router = useRouter()
+
+// Keep the URL `?category=` in sync with the selected filter so it is shareable,
+// survives a reload, and round-trips with the home Industry Sectors deep-links
+// (which are read on mount, above).
+watch(
+  () => selectedCryptoFilter.value.value,
+  value => {
+    const query = { ...route.query }
+    if (value === 'all') delete query.category
+    else query.category = value
+    router.replace({ query })
+  },
+)
 
 const onRowClick = (token: DisplayToken) => {
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {

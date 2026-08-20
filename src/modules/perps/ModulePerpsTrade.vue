@@ -306,7 +306,7 @@
           </p>
           <div class="flex items-center py-1">
             <span
-              class="font-bold text-s-20 tracking-tight"
+              class="font-bold text-s-20 tracking-tight shrink-0"
               :class="[
                 !limitPrice || limitPrice === '' ? 'opacity-50' : '',
                 limitPriceHasError ? 'text-error' : '',
@@ -318,7 +318,8 @@
               type="text"
               inputmode="decimal"
               placeholder="0.00"
-              class="w-full font-bold text-s-20 tracking-tight outline-none bg-transparent"
+              :aria-label="$t('perps.confirm.limit-price')"
+              class="w-full min-w-0 font-bold text-s-20 tracking-tight outline-none bg-transparent"
               :class="{ 'text-error': limitPriceHasError }"
               @keydown="
                 e => {
@@ -413,6 +414,7 @@
                   min="0"
                   step="any"
                   placeholder="0.00"
+                  :aria-label="$t('perps.trade.margin-amount-label')"
                   class="font-bold text-s-28 bg-transparent outline-none w-full"
                   :class="{ 'text-error': marginPrecisionError }"
                   @keydown="
@@ -490,6 +492,7 @@
                 min="0"
                 max="100"
                 step="0.01"
+                :aria-label="$t('perps.trade.size-percentage-label')"
                 class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
                 :style="{
                   background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
@@ -639,6 +642,7 @@
                 min="0"
                 step="any"
                 placeholder="0.00"
+                :aria-label="$t('perps.close.close-amount-label')"
                 class="font-bold text-s-28 bg-transparent outline-none w-full"
                 :class="{ 'text-error': closeAmountPrecisionError }"
                 @keydown="
@@ -675,6 +679,7 @@
               min="0"
               max="100"
               step="0.01"
+              :aria-label="$t('perps.close.close-percentage-label')"
               class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
               :style="{
                 background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,

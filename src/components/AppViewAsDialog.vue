@@ -122,7 +122,7 @@ const closeDialog = () => {
 
     router.push({ name: parentRouteName })
   } else {
-    router.push({ name: ROUTES_MAIN.HOME.NAME })
+    router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
   }
 }
 onBeforeUnmount(() => {
