@@ -25,6 +25,7 @@ import {
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
+  isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
@@ -92,6 +93,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
+        isStorageQuotaExceededError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException) ||
