@@ -465,11 +465,13 @@ describe('isIndexedDbMutationError', () => {
   })
 
   it('is false for an InvalidStateError that is not the IDB mutation failure', () => {
-    // A different code + non-matching message must NOT be dropped.
+    // Every InvalidStateError carries code 11, so the code alone cannot gate
+    // the filter — an unrelated InvalidStateError (e.g. from another Web API)
+    // with a non-mutation message must NOT be dropped.
     expect(
       isIndexedDbMutationError({
         name: 'InvalidStateError',
-        code: 7,
+        code: 11,
         message: 'The object is in an invalid state.',
       }),
     ).toBe(false)

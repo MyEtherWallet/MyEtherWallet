@@ -197,16 +197,17 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
  * IndexedDB write to persist session state; on Firefox with private/restricted
  * storage the write fails and, being fire-and-forget, the rejection reaches the
  * global handler as unhandled, unactionable noise (0 users impacted —
- * APP-MEW-WEB-1GG / MEW-2176). Detected via the browser-native (non-minified)
- * DOMException `name` + numeric `code`, with the specific message as a fallback.
+ * APP-MEW-WEB-1GG / MEW-2176). Matched on the browser-native (non-minified)
+ * DOMException message: `name`/`code` alone can't be used because every
+ * `InvalidStateError` carries `code === 11`, so filtering on the code would
+ * suppress unrelated `InvalidStateError`s from other Web APIs.
  */
 export function isIndexedDbMutationError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
-  const e = err as { name?: unknown; code?: unknown; message?: unknown }
+  const e = err as { name?: unknown; message?: unknown }
   if (e.name !== 'InvalidStateError') return false
   return (
-    e.code === 11 ||
-    (typeof e.message === 'string' &&
-      e.message.includes('did not allow mutations'))
+    typeof e.message === 'string' &&
+    e.message.includes('did not allow mutations')
   )
 }
