@@ -1,0 +1,65 @@
+{
+  "multi_address": {
+    "title": "Manage accounts",
+    "active": "Active",
+    "saved": "Saved addresses",
+    "your_addresses": "Your addresses",
+    "saved_group": "Saved {type} addresses",
+    "add": "Add address",
+    "connect_another": "Connect another wallet",
+    "disconnect": "Disconnect",
+    "paper_wallet": "View Paper Wallet",
+    "empty": "No saved addresses yet",
+    "unlocked": "Unlocked",
+    "connected": "Connected",
+    "watch_only": "Watch only",
+    "watchonly": "Watchonly",
+    "connect_address": "Connect address",
+    "tokens": "tokens",
+    "copied": "Copied!",
+    "detected": "Detected address",
+    "detected_wallet": "Detected {wallet} address",
+    "save_address": "Save address",
+    "duplicate_name": "That name is already in use",
+    "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
+    "cap_reached": "You can save up to 20 addresses",
+    "cap_toast_title": "Wallet not saved",
+    "cap_toast_description": "You've hit the 20 address limit. Remove one to save this address.",
+    "cap_note_title": "Unsaved address",
+    "cap_note_description": "You've reached the maximum of 20 saved addresses, remove one to save this one.",
+    "extension_prompt": "To connect, open your extension and select the address shown above.",
+    "network_title": "Networks",
+    "network_search": "Search",
+    "no_address_title": "No address for this network",
+    "no_address_subtitle": "Connect or add an address to use this network, or pick another one.",
+    "no_address_pill": "No address",
+    "address_saved": {
+      "title_suffix": "is already saved",
+      "subtitle": "If you want to save a different address, please select it on {wallet} and try again.",
+      "open_wallet": "Open {wallet}",
+      "try_again": "Try again"
+    },
+    "connect_address_modal": {
+      "title": "Connect address",
+      "subtitle": "To connect, please open your {wallet} extension and select the following address:",
+      "open_wallet": "Open {wallet}",
+      "try_again": "Try again"
+    },
+    "rename": {
+      "title": "Rename address",
+      "subtitle": "Enter a new name and save",
+      "placeholder": "Type here...",
+      "save": "Save",
+      "duplicate": "Name already in use, please type a different one"
+    },
+    "menu": {
+      "rename": "Rename",
+      "copy": "Copy address",
+      "refresh": "Refresh balance",
+      "paper_wallet": "Open Paper wallet",
+      "explorer": "ブロックチェーンエクスプローラー",
+      "disconnect": "Disconnect",
+      "remove": "Remove"
+    }
+  }
+}
