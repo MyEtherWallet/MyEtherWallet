@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { EyeIcon } from '@heroicons/vue/16/solid'
@@ -152,6 +152,10 @@ useIntersectionObserver(
   ([entry]) => emit('visibility-change', entry?.isIntersecting ?? false),
   { root: scrollRootRef },
 )
+// The observer doesn't emit a final "not visible" when the row unmounts (e.g. its
+// group is collapsed), so report it explicitly — otherwise the address lingers in
+// the parent's visible set and keeps getting polled while off-screen.
+onBeforeUnmount(() => emit('visibility-change', false))
 
 const onRemove = (): void => {
   confirmingDelete.value = true
