@@ -186,3 +186,25 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
   }
   return false
 }
+
+/**
+ * Whether an error is a Web Bluetooth "GATT Server is disconnected"
+ * DOMException. Chrome throws this (`NetworkError`, code 19) whenever a GATT
+ * operation runs after the device has disconnected. The Ledger BLE transport
+ * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+ * fire-and-forgets `characteristic.stopNotifications()` after the device drops
+ * mid-handshake (powered off / out of range / Bluetooth toggled). Since that
+ * call is detached from any promise the app awaits, it surfaces as an unhandled
+ * rejection, and the connect flow already shows the user a "Failed to connect"
+ * toast — so it is external, unactionable Sentry noise. The frames are bundled
+ * into our own `/assets/index-*.js`, so denyUrls can't catch it; matched on the
+ * browser-native (minification-proof) message instead.
+ */
+export function isBluetoothGattDisconnectedError(err: unknown): boolean {
+  if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && /GATT Server is disconnected/i.test(message)
+  )
+}
