@@ -27,6 +27,7 @@ vi.mock('@/stores/tradeOrdersStore', () => ({
 vi.mock('@/stores/rewardsStore', () => ({
   useRewardsStore: () => ({
     checkAvailabilityAfterTransaction: vi.fn(async () => false),
+    minSpendTrade: ref('250'),
   }),
 }))
 
@@ -54,6 +55,7 @@ vi.mock('@/analytics', () => ({
     trackTradeEventError: mockTrackTradeEventError,
   },
   TradeEvent: {
+    PRELIMINARY_SHOWN: 'Trade_Preliminary_Rate_Shown',
     CLICK_APPROVE: 'Trade_Click_Approve',
     CLICK_TRADE: 'Trade_Click_Trade',
     OFFER_SHOWN: 'Trade_Offer_Shown',
@@ -62,6 +64,7 @@ vi.mock('@/analytics', () => ({
   TradeEventStatus: { INITIATED: 'Trade_Initiated' },
   TradeEventError: {
     PRELIMINARY_ERROR: 'Trade_Preliminary_Error',
+    OFFER_ERROR: 'Trade_Offer_Error',
     APPROVAL_ERROR: 'Trade_Approval_Error',
     SIGN_ERROR: 'Trade_Sign_Error',
   },
@@ -120,6 +123,7 @@ const makeQuoteHarness = async () => {
     hasPreQuoteError: computed(() => false),
     generalError,
     isLoadingQuote,
+    isReviewModalOpen: ref(false),
   })
   return { ...quote, toAmount, isLoadingQuote, generalError }
 }

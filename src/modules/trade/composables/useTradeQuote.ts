@@ -9,6 +9,7 @@ import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
+  TradeEvent,
   TradeEventError,
   type TradePayloadShared,
 } from '@/analytics'
@@ -41,6 +42,13 @@ interface UseTradeQuoteOptions {
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
   isLoadingQuote: Ref<boolean>
+  /**
+   * Whether the review modal is currently open. `fetchQuote` doubles as the
+   * refresh triggered by that modal's `expired` event, so a failure while it
+   * is up is an offer-stage error, not the sidebar's preliminary one — same
+   * distinction swap draws with `bestSwapLoadingOpen`.
+   */
+  isReviewModalOpen: Ref<boolean>
 }
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
@@ -58,6 +66,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     hasPreQuoteError,
     generalError,
     isLoadingQuote,
+    isReviewModalOpen,
   } = options
 
   const { t } = useI18n()
@@ -157,10 +166,15 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
         generalError.value = t('trade.error.no-quotes-returned')
         toAmount.value = '0'
-        analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-          ...getAnalyticsPayload(),
-          errorMsg: 'No quotes returned',
-        })
+        analytics.trackTradeEventError(
+          isReviewModalOpen.value
+            ? TradeEventError.OFFER_ERROR
+            : TradeEventError.PRELIMINARY_ERROR,
+          {
+            ...getAnalyticsPayload(),
+            errorMsg: 'No quotes returned',
+          },
+        )
         return
       }
 
@@ -172,6 +186,14 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       toAmount.value = formatFloatingPointValue(
         formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
       ).value
+
+      // Mirrors swap's PRELIMINARY_SHOWN: only for the sidebar's own quote,
+      // not the silent refresh the review modal triggers on expiry.
+      if (!isReviewModalOpen.value) {
+        analytics.trackTradeEvent(TradeEvent.PRELIMINARY_SHOWN, {
+          ...getAnalyticsPayload(),
+        })
+      }
 
       // Check if approval is required
       const approvalRequired = await fusion.isApprovalRequired(
@@ -185,10 +207,15 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
-      analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-        ...getAnalyticsPayload(),
-        errorMsg: rawMessage || 'Failed to fetch quote',
-      })
+      analytics.trackTradeEventError(
+        isReviewModalOpen.value
+          ? TradeEventError.OFFER_ERROR
+          : TradeEventError.PRELIMINARY_ERROR,
+        {
+          ...getAnalyticsPayload(),
+          errorMsg: rawMessage || 'Failed to fetch quote',
+        },
+      )
       if (isDevMode) {
         console.error('Error fetching quote:', e)
       } else if (!isTransientRpcError(e)) {

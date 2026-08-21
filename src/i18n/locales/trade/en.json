@@ -72,6 +72,7 @@
     },
     "toast": {
       "quote-loading": "Please wait for quote to load",
+      "tokens-switched": "Now trading {from} for {to}",
       "processing_trade": "Processing trade",
       "processing_note": "This can take a few minutes",
       "trade_completed": "Trade completed",
@@ -87,6 +88,7 @@
       "token-unavailable": "This token is unavailable to trade. Please choose another or try again later.",
       "minimum-trade-value": "Minimum trade value is around $1.00",
       "token-not-available": "{symbol} is currently not available for trading",
+      "insufficient-amount": "Amount is too low to trade right now. Try a larger amount.",
       "no-quotes-returned": "No quotes returned",
       "failed-to-fetch-quote": "Failed to fetch quote",
       "fusion-network-not-supported": "Fusion: network not supported",

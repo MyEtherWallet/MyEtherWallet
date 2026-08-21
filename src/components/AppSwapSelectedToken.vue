@@ -395,6 +395,9 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
+// The swap token type carries no stablecoin flag, so match by symbol against the
+// shared list to surface them regardless of the connected wallet.
+import { STABLECOIN_SYMBOLS } from '@/utils/tokenCategories'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
@@ -445,6 +448,10 @@ const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const emit = defineEmits<{
   'update:selectedToken': [token: NewTokenInfo]
+  // Fired only on an explicit user pick from the list (not on programmatic
+  // defaulting like the networkName watcher below), so parents can react to
+  // genuine user selections without false positives.
+  'select:token': [token: NewTokenInfo]
   'open:selectToken': [isOpen: boolean]
 }>()
 
@@ -712,27 +719,6 @@ const disabledGroupLabel = computed(
 // shown whenever the picker is open (including while the user is searching)
 const SUGGESTION_LIMIT = 6
 
-// Well-known stablecoin symbols. The swap token type carries no stablecoin flag,
-// so match by symbol to surface them regardless of the connected wallet.
-const STABLECOIN_SYMBOLS = new Set([
-  'USDT',
-  'USDC',
-  'DAI',
-  'USDE',
-  'USDS',
-  'PYUSD',
-  'FDUSD',
-  'TUSD',
-  'USDP',
-  'GUSD',
-  'FRAX',
-  'LUSD',
-  'USDD',
-  'BUSD',
-  'USDG',
-  'RLUSD',
-])
-
 // Stablecoins available on the current chain, most liquid (24H volume) first.
 const stablecoinResults = computed<TokenBalanceWithUsd[]>(() => {
   const stables = sortObjectArrayNumber(
@@ -802,6 +788,7 @@ const setSelectedToken = (token: NewTokenInfo) => {
     isStock: false,
   })
   emit('update:selectedToken', token)
+  emit('select:token', token)
   showAllTokens.value = false
 }
 

@@ -1,0 +1,137 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { ref, computed } from 'vue'
+
+// walletConfigs drags @enkryptcom/hw-wallets (ledger transport) into the
+// import graph via @/analytics; the transport does not resolve under vitest.
+vi.mock('@/modules/access/common/walletConfigs', () => ({
+  WalletConfigType: {},
+}))
+
+// Partial: `useTradeQuote` transitively pulls in `@/i18n`, which needs the
+// real `createI18n`. Only `useI18n` is stubbed, to keep `t()` outside a
+// component (useTradeQuote calls it at the top of its own setup-less function).
+vi.mock('vue-i18n', async importOriginal => ({
+  ...(await importOriginal<typeof import('vue-i18n')>()),
+  useI18n: () => ({ t: (key: string) => key }),
+}))
+
+const mockTrackTradeEvent = vi.fn()
+const mockTrackTradeEventError = vi.fn()
+vi.mock('@/analytics', () => ({
+  analytics: {
+    trackTradeEvent: mockTrackTradeEvent,
+    trackTradeEventError: mockTrackTradeEventError,
+  },
+  TradeEvent: { PRELIMINARY_SHOWN: 'Trade_Preliminary_Rate_Shown' },
+  TradeEventError: {
+    PRELIMINARY_ERROR: 'Trade_Preliminary_Rate_Error',
+    OFFER_ERROR: 'Trade_Offer_Error',
+  },
+}))
+
+vi.mock('@sentry/vue', () => ({ captureException: vi.fn() }))
+
+const mockGetQuote = vi.fn()
+vi.mock('@/modules/trade/providers/oneinch_fusion/oneInchFusion', () => ({
+  default: class {
+    getQuote = mockGetQuote
+    isApprovalRequired = vi.fn(async () => false)
+  },
+}))
+
+const TOKEN = {
+  symbol: 'AAPL',
+  address: '0x0000000000000000000000000000000000000001',
+  decimals: 18,
+  price: 100,
+  logoURI: '',
+}
+
+const makeHarness = async (isReviewModalOpenValue = false) => {
+  const { useTradeQuote } =
+    await import('@/modules/trade/composables/useTradeQuote')
+  const toAmount = ref('')
+  const isLoadingQuote = ref(false)
+  const generalError = ref('')
+  const isReviewModalOpen = ref(isReviewModalOpenValue)
+  const quote = useTradeQuote({
+    fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
+    toTokenSelected: ref({ ...TOKEN }) as never,
+    fromAmount: ref('100'),
+    toAmount,
+    walletAddress: ref('0xwallet'),
+    wallet: ref({}),
+    selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }) as never,
+    isMarketOpen: computed(() => true),
+    isSelectedAssetTradeable: computed(() => true),
+    isTradingAllowedInRegion: computed(() => true),
+    hasPreQuoteError: computed(() => false),
+    generalError,
+    isLoadingQuote,
+    isReviewModalOpen,
+  })
+  return { ...quote, isReviewModalOpen }
+}
+
+describe('useTradeQuote analytics', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('fires PRELIMINARY_SHOWN on a successful sidebar quote', async () => {
+    mockGetQuote.mockResolvedValue({ startAmount: 1n, avgAmount: 1n })
+    const { fetchQuote } = await makeHarness(false)
+
+    await fetchQuote()
+
+    expect(mockTrackTradeEvent).toHaveBeenCalledWith(
+      'Trade_Preliminary_Rate_Shown',
+      expect.anything(),
+    )
+  })
+
+  it('does not fire PRELIMINARY_SHOWN for the review modal refresh', async () => {
+    mockGetQuote.mockResolvedValue({ startAmount: 1n, avgAmount: 1n })
+    const { fetchQuote } = await makeHarness(true)
+
+    await fetchQuote()
+
+    expect(mockTrackTradeEvent).not.toHaveBeenCalled()
+  })
+
+  it('reports PRELIMINARY_ERROR for a sidebar quote failure', async () => {
+    mockGetQuote.mockRejectedValue(new Error('boom'))
+    const { fetchQuote } = await makeHarness(false)
+
+    await fetchQuote()
+
+    expect(mockTrackTradeEventError).toHaveBeenCalledWith(
+      'Trade_Preliminary_Rate_Error',
+      expect.anything(),
+    )
+  })
+
+  it('reports OFFER_ERROR for the same failure while the review modal is open', async () => {
+    mockGetQuote.mockRejectedValue(new Error('boom'))
+    const { fetchQuote } = await makeHarness(true)
+
+    await fetchQuote()
+
+    expect(mockTrackTradeEventError).toHaveBeenCalledWith(
+      'Trade_Offer_Error',
+      expect.anything(),
+    )
+  })
+
+  it('reports OFFER_ERROR when no quote comes back while the review modal is open', async () => {
+    mockGetQuote.mockResolvedValue(null)
+    const { fetchQuote } = await makeHarness(true)
+
+    await fetchQuote()
+
+    expect(mockTrackTradeEventError).toHaveBeenCalledWith(
+      'Trade_Offer_Error',
+      expect.anything(),
+    )
+  })
+})

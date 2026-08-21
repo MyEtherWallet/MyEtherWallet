@@ -40,7 +40,12 @@
     <!-- Price Stats -->
     <stock-info-price v-if="stockData" :data="stockData" />
     <!-- About -->
-    <stock-info-about v-if="stockData" :data="stockData" />
+    <stock-info-about
+      v-if="stockData"
+      :data="stockData"
+      :description="description"
+      :is-loading-description="isFetchingDescription"
+    />
 
     <!-- Underlying Asset Stats -->
 
@@ -71,6 +76,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useAssetDescription } from '@/composables/useAssetDescription'
 import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
@@ -158,6 +164,15 @@ onFetchResponse(() => {
 const isLoading = computed(() => {
   return !isLoadedData.value
 })
+
+/**--------------------
+ * Description
+ ---------------------*/
+const { description, isFetchingDescription } = useAssetDescription(
+  computed(() => props.symbol),
+  'stock',
+)
+
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 

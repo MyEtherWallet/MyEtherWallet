@@ -36,6 +36,12 @@
         @bridge-to-chain="setBridgeWalletStore"
       />
     </div>
+    <!-- About -->
+    <token-info-about
+      :description="description"
+      :symbol="tokenData?.symbol || undefined"
+      :is-loading="isFetchingDescription && !description"
+    />
     <!-- Market Data -->
     <token-info-market-data :is-loading="isLoading" :token-data="tokenData" />
     <!-- Supported Chains -->
@@ -54,6 +60,7 @@
 
 <script setup lang="ts">
 import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
+import TokenInfoAbout from './components/token_info/TokenInfoAbout.vue'
 import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue'
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoChart from './components/token_info/TokenInfoChart.vue'
@@ -63,6 +70,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useAssetDescription } from '@/composables/useAssetDescription'
 import { type GetWebTokenInfo, type TokenBalanceRaw } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
 import TokenInfoBalance from './components/token_info/TokenInfoBalance.vue'
@@ -260,6 +268,14 @@ onFetchResponse(() => {
   tokenLocalStore.value = fetchedTokenData.value
   isLoadedData.value = true
 })
+
+/** --------------------
+ * Description
+ --------------------*/
+const { description, isFetchingDescription } = useAssetDescription(
+  computed(() => props.tokenId),
+  'token',
+)
 
 /** --------------------
  * Balances

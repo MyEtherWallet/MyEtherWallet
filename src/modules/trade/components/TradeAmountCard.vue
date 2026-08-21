@@ -60,6 +60,7 @@
           :disabled-tokens="disabledTokens"
           :disabled-group-title="disabledGroupTitle"
           @open:select-token="setIsOpenSelectToken"
+          @select:token="emit('select:token', $event)"
         >
           <template
             #trigger="{ open, isLoading: tokenLoading, selectedToken: token }"
@@ -190,6 +191,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   percent: [pct: number]
+  'select:token': [token: NewTokenInfo]
 }>()
 
 const amount = defineModel<string>('amount', { required: true })

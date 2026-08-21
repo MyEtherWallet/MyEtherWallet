@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
-    :class="isSearchOpen ? 'z-[201]' : 'z-10'"
+    :class="isHeaderOverlayOpen ? 'z-[201]' : 'z-10'"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -48,25 +48,9 @@
           </router-link>
         </div>
         <app-select
-          v-if="!showMobileMenu && !isLearnCollapsed"
-          :options="learnMenuList"
-          :placeholder="$t('learn')"
-          use-link
-          has-on-Hover
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
-              @click="toggleSelect"
-            >
-              {{ $t('learn') }}
-              <chevron-down-icon class="w-4 h-4 ml-2" />
-            </button>
-          </template>
-        </app-select>
-        <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
+          v-model:open="isMoreOpen"
           :options="moreMenuOptions"
           :placeholder="$t('common.more')"
           use-vue-router
@@ -87,12 +71,19 @@
       <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
         <!-- GLOBAL SEARCH -->
         <module-global-search />
+        <the-address-menu v-if="isWalletConnected || hasAnySavedAccount" />
+        <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
+        <div
+          v-else-if="isRestoringWallet"
+          class="w-[160px] h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
+          aria-hidden="true"
+        />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
              can't escape and paint over the search overlay -->
         <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
-            v-if="!isWalletConnected"
+            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
             class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
@@ -109,7 +100,7 @@
           </router-link>
           <!-- Connect wallet button -->
           <router-link
-            v-if="!isWalletConnected"
+            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
             :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
             @click="
               analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
@@ -124,10 +115,6 @@
                 : $t('connect_wallet')
             }}
           </router-link>
-          <!-- Below xs the network selector moves into the settings popup -->
-          <the-current-network v-if="!isXS" :compact="isNetworkCollapsed" />
-          <!-- Address Menu -->
-          <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
           <the-notifications-popup v-if="isWalletConnected" />
         </div>
@@ -150,7 +137,6 @@
 import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
-import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
@@ -158,7 +144,7 @@ import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSe
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useBreakpoints } from '@vueuse/core'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   ROUTES_MAIN,
@@ -168,30 +154,63 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
-import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
-import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
-import type { Provider } from '@/stores/providerStore'
-import { WalletConfigType } from '@/modules/access/common/walletConfigs'
+import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
-const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
-const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
-const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
+const { isWalletConnected } = storeToRefs(store)
+const { setWatchOnlyIfExist } = store
+const { selectedChain } = storeToRefs(chainStore)
+const { refreshDetectedAddress } = useDetectedAddress()
+const watchOnlyStore = useWatchOnlyStore()
+const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 // The perps nav entry is no longer gated on region — perps renders a blocked
 // state instead of disappearing. The check is still kicked off here, on a
 // component mounted at app start, so it is resolved by the time any perps
 // surface reads it and none of them flash their restricted state.
 fetchTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
+
+/**
+ * The header is `fixed z-10`, i.e. its own stacking context, so a dropdown's
+ * internal z-index can't rise above the sibling trade drawer (z-[49..51]). When
+ * any header overlay is open we lift the whole header to z-[201] — the same
+ * trick already used for search — so the popover paints above the drawer
+ * instead of being clipped behind it (MEW-2113).
+ */
+const isMoreOpen = ref(false)
+const isHeaderOverlayOpen = computed<boolean>(
+  () => isSearchOpen.value || isMoreOpen.value,
+)
+
+/** ------------------------------
+ * Wallet-restore skeleton
+ * On reload the wallet is restored asynchronously in onMounted. While a saved
+ * address is being restored, show a trigger-sized skeleton instead of the
+ * create/connect buttons to avoid the flicker + layout shift.
+ ------------------------------*/
+const hasStoredWallet = computed<boolean>(
+  () =>
+    (watchOnlyStore.watchOnlyAddresses[selectedChain.value?.type ?? 'EVM']
+      ?.length ?? 0) > 0,
+)
+// Any saved account across chain types — keep the address menu mounted even when
+// nothing is connected for the current network, so switching to a network with no
+// address doesn't hide the trigger / tear the popup down.
+const hasAnySavedAccount = computed<boolean>(() =>
+  Object.values(watchOnlyStore.watchOnlyAddresses).some(
+    bucket => (bucket?.length ?? 0) > 0,
+  ),
+)
+const isRestoringWallet = ref(false)
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -200,36 +219,15 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /**
- * Progressive "priority+" collapse of the desktop nav: as the viewport narrows
- * (but before it drops to the mobile hamburger at `xl-min`/1140px), the
- * right-most nav items fold into the "More" dropdown so the bar never squishes
- * into the global search. These thresholds are header-specific, not Tailwind
- * breakpoints. Learn folds in first (< 1255px), then Earn (< 1160px).
+ * Header-specific collapse thresholds (not Tailwind breakpoints) that shrink the
+ * network button and wallet CTAs as the viewport narrows, before the bar drops
+ * to the mobile hamburger at `xl-min`/1140px.
  */
 const headerCollapse = useBreakpoints({
-  earn: 1160,
-  learn: 1255,
   networkConnected: 1310,
   walletCta: 1500,
   network: 1555,
 })
-const isLearnCollapsed = computed<boolean>(
-  () => headerCollapse.smaller('learn').value,
-)
-const isEarnCollapsed = computed<boolean>(
-  () => headerCollapse.smaller('earn').value,
-)
-/**
- * Collapse the network button to its icon-only mobile look before the bar runs
- * out of room. A disconnected header carries the extra Create/Connect wallet
- * buttons, so it runs out of room sooner (< 1555px); a connected header has more
- * space and only needs to collapse below 1310px.
- */
-const isNetworkCollapsed = computed<boolean>(() =>
-  isWalletConnected.value
-    ? headerCollapse.smaller('networkConnected').value
-    : headerCollapse.smaller('network').value,
-)
 /**
  * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
  * "Connect") to save space before the network button collapses.
@@ -249,6 +247,11 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
+      title: t('common.portfolio'),
+      routeName: ROUTES_MAIN.PORTFOLIO.NAME,
+      iconID: ICON_IDS.PORTFOLIO,
+    },
+    {
       title: t('common.stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
       iconID: ICON_IDS.STOCKS,
@@ -262,11 +265,6 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       title: t('perpetuals'),
       routeName: ROUTES_MAIN.PERPS.NAME,
       iconID: ICON_IDS.PERPS,
-    },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
     },
   ]
   return items
@@ -294,15 +292,7 @@ const learnMenuList = computed<AppSelectOption[]>(() => [
   },
 ])
 
-const displayLinks = computed(() => {
-  // Earn folds into the "More" dropdown below its threshold.
-  if (isEarnCollapsed.value) {
-    return coreMenuList.value.filter(
-      item => item.routeName !== ROUTES_MAIN.EARN.NAME,
-    )
-  }
-  return coreMenuList.value
-})
+const displayLinks = computed(() => coreMenuList.value)
 
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]
@@ -313,26 +303,19 @@ const displayTools = computed<AppSelectOption[]>(() => {
 })
 
 /**
- * Options for the "More" dropdown. Nav items that have collapsed out of the bar
- * are prepended (Learn's external links first — kept at the top as requested —
- * then Earn), followed by the always-present tools.
+ * Options for the "More" dropdown: Learn's external links (kept at the top),
+ * then the tools. Learn no longer has its own top-bar dropdown, so its links
+ * are always folded in here.
  */
 const moreMenuOptions = computed<AppSelectOption[]>(() => {
-  const options: AppSelectOption[] = []
-  if (isLearnCollapsed.value) {
-    options.push(
-      ...learnMenuList.value.map(item => ({
-        label: item.label,
-        value: item.value,
-        external: true,
-      })),
-    )
-  }
-  if (isEarnCollapsed.value) {
-    options.push({ label: t('earn'), value: ROUTES_MAIN.EARN.NAME as string })
-  }
-  options.push(...displayTools.value)
-  return options
+  return [
+    ...learnMenuList.value.map(item => ({
+      label: item.label,
+      value: item.value,
+      external: true,
+    })),
+    ...displayTools.value,
+  ]
 })
 
 /**
@@ -345,56 +328,43 @@ const selectedOption = ref<AppSelectOption>({
 })
 
 onMounted(() => {
+  // Expect a restore when storage has a saved address for the active chain type.
+  if (hasStoredWallet.value && !isWalletConnected.value) {
+    isRestoringWallet.value = true
+  }
   setWatchOnlyIfExist()
+  // Safety net: never leave the skeleton up indefinitely if the restore fails.
+  setTimeout(() => {
+    isRestoringWallet.value = false
+  }, 5000)
 })
 
-watch(
-  () => wallet.value,
-  newVal => {
-    if (newVal?.getWalletType() === WalletType.INJECTED) {
-      if (isEvmChain.value) {
-        const injectedInfo = wallet.value?.getProviderInstance?.() as Provider
-        injectedInfo?.provider.on(
-          'accountsChanged',
-          async (accounts: unknown) => {
-            if (accounts && (accounts as string[]).length === 0) {
-              disconnectWallet()
-              return
-            }
-            if (
-              (accounts as string[])[0] !== (await wallet.value?.getAddress())
-            ) {
-              const _wallet = wallet.value as Web3InjectedWallet
-              // The listener outlives the injected wallet: switching to a
-              // watch-only view (which inherits walletType INJECTED) or
-              // disconnecting leaves a wallet without updateAddress. Bail
-              // instead of crashing on a stale accountsChanged event.
-              if (typeof _wallet?.updateAddress !== 'function') return
-              _wallet.updateAddress(
-                (accounts as string[])[0] as HexPrefixedString,
-              )
-              setWallet(_wallet, '', WalletConfigType.EXTENSION)
-            }
-          },
-        )
-      } else if (isBitcoinChain.value) {
-        const unisatInfo =
-          wallet.value?.getProviderInstance?.() as typeof window.unisat
-        unisatInfo?.on('accountsChanged', async (accounts: unknown) => {
-          if (
-            (accounts as string[])[0] !== (await wallet.value?.getAddress())
-          ) {
-            const _wallet = wallet.value as Web3InjectedWallet
-            if (typeof _wallet?.updateAddress !== 'function') return
-            _wallet.updateAddress(
-              (accounts as string[])[0] as HexPrefixedString,
-            )
+// Stop restoring as soon as a wallet is connected; also reconcile the detected
+// address (the extension may already be on a different, unsaved account).
+watch(isWalletConnected, connected => {
+  if (connected) {
+    isRestoringWallet.value = false
+    void refreshDetectedAddress()
+  }
+})
 
-            setWallet(_wallet, '', WalletConfigType.EXTENSION)
-          }
-        })
-      }
-    }
-  },
-)
+// MEW-1840: detect an extension address that differs from the connected one so
+// the Manage Accounts popup can offer "Save address" — without auto-switching.
+// Provider-agnostic (works for Enkrypt-BTC/Unisat/EVM): re-query the live
+// address on the triggers below instead of relying on provider `accountsChanged`
+// events, whose API diverges across wallets.
+const onWindowFocus = (): void => {
+  void refreshDetectedAddress()
+}
+const onVisibilityChange = (): void => {
+  if (document.visibilityState === 'visible') void refreshDetectedAddress()
+}
+onMounted(() => {
+  window.addEventListener('focus', onWindowFocus)
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', onWindowFocus)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+})
 </script>

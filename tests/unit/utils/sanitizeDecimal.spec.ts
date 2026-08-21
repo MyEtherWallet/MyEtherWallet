@@ -12,9 +12,18 @@ describe('sanitizeDecimal', () => {
     expect(sanitizeDecimal(input)).toBe(expected)
   })
 
-  it('treats a single comma without a dot as the decimal separator', () => {
+  it('treats a single comma as the decimal separator only when it cannot be a 3-digit thousands group', () => {
     expect(sanitizeDecimal('1,5')).toBe('1.5')
     expect(sanitizeDecimal('0,0001')).toBe('0.0001')
+    expect(sanitizeDecimal('1,25')).toBe('1.25')
+  })
+
+  it('treats a single comma followed by exactly 3 digits as a thousands separator', () => {
+    // Genuinely ambiguous ("1,234" could mean 1234 or 1.234) — resolved in
+    // favor of thousands, since under-dividing a pasted amount by 1000 is the
+    // more dangerous silent failure for a trade input.
+    expect(sanitizeDecimal('1,234')).toBe('1234')
+    expect(sanitizeDecimal('12,345')).toBe('12345')
   })
 
   it('treats commas as thousands separators when a dot is present', () => {

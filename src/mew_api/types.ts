@@ -77,6 +77,25 @@ export type GetWebTrendingTokensResponseToken =
 export type CryptoOverview =
   components['schemas']['GetWebCryptoOverviewResponse']
 export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
+// A newCoins item's chain arrays: `chains` are the chains it's a contract on,
+// `nativeChains` the chains it's the native currency of (mirrors the tokens
+// table split the Explore-crypto CTA logic keys off).
+export type CryptoOverviewChain = components['schemas']['CoinChain']
+export type CryptoOverviewNativeChain = components['schemas']['CoinNativeChain']
+/**
+ * Fields shared by every token list row (overview, trending, synthetic Ondo
+ * gainers). Kept narrow so rows can be rendered from any of those payloads.
+ */
+export type TokenRowItem = Pick<
+  CryptoOverviewToken,
+  | 'coinId'
+  | 'name'
+  | 'symbol'
+  | 'price'
+  | 'priceChangePercentage24h'
+  | 'logoUrl'
+  | 'ondo'
+>
 
 /** --------------------------
  * Watchlist
@@ -130,6 +149,8 @@ export type WebTokenPriceChartInterval =
   components['schemas']['WebTokenPriceChartInterval']
 export type TokenSupportedChain = GetWebTokenInfo['supportedChains'][number]
 export type TokenChainBalance = GetWebTokenInfo['chainBalances'][number]
+export type GetWebTokenInfoDescriptionResponse =
+  components['schemas']['GetWebTokenInfoPageDescriptionResponse']
 
 /** --------------------------
  * Stocks Page
@@ -137,6 +158,10 @@ export type TokenChainBalance = GetWebTokenInfo['chainBalances'][number]
 export type StocksOverviewResponse =
   components['schemas']['GetWebStocksOverviewResponse']
 export type StockOverviewItem = StocksOverviewResponse['newlyAdded'][number]
+// `trending` diverges from `newlyAdded`: only new listings carry description,
+// so trending needs its own alias (it lacks the description/descriptionSource
+// fields StockOverviewItem now requires).
+export type StockTrendingItem = StocksOverviewResponse['trending'][number]
 export type StockNewsItem = StocksOverviewResponse['recentNews'][number]
 export type StockTopMoverItem = StocksOverviewResponse['topMovers'][number]
 export type StockBannerItem = StocksOverviewResponse['banner'][number]
@@ -168,6 +193,9 @@ export type GetTradableAssetsResponse =
  --------------------------*/
 export type GetWebStocksInfoSummaryResponse =
   components['schemas']['GetWebStocksInfoSummaryResponse']
+
+export type GetWebStocksInfoDescriptionResponse =
+  components['schemas']['GetWebStocksInfoDescriptionResponse']
 
 export type GetWebStocksInfoPrimaryPriceChartResponse =
   components['schemas']['GetWebStocksInfoPrimaryPriceChartResponse']

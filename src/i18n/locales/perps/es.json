@@ -30,6 +30,8 @@
       "deposit-complete-title": "Depósito completado",
       "deposit-complete-detail": "{size} {coin} añadido a tu cuenta de trading",
       "withdrawal-complete-title": "Retiro completado",
+      "withdrawal-address-added-title": "Se ha añadido la dirección de retiro",
+      "withdrawal-address-added-detail": "Has autorizado '{address}' como tu dirección de retiro para la cuenta de Perps. Hay un período de espera de 24 horas antes de que puedas retirar.",
       "deposit-initiated-title": "Depósito iniciado",
       "failed-to-credit-account-title": "No se pudo acreditar la cuenta",
       "deposit-canceled-title": "Depósito cancelado",
@@ -71,7 +73,11 @@
       "tp-below-mark": "Take Profit debe estar por debajo del precio de marca",
       "sl-above-zero": "Stop Loss debe estar por encima de 0",
       "sl-below-mark": "Stop Loss debe estar por debajo del precio de marca",
-      "sl-above-mark": "Stop Loss debe estar por encima del precio de marca"
+      "sl-above-mark": "Stop Loss debe estar por encima del precio de marca",
+      "sl-trigger-order-buy": "El precio de activación del Stop Loss debe ser menor que el precio de la orden para órdenes de compra",
+      "sl-trigger-order-sell": "El precio de activación del Stop Loss debe ser mayor que el precio de la orden para órdenes de venta",
+      "tp-trigger-order-buy": "El precio de activación del Take Profit debe ser mayor que el precio de la orden para órdenes de compra",
+      "tp-trigger-order-sell": "El precio de activación del Take Profit debe ser menor que el precio de la orden para órdenes de venta"
     },
     "trade": {
       "perpetuals": "Perpetuos",
@@ -89,6 +95,8 @@
       "limit": "Límite",
       "mid": "Medio",
       "margin-available": "Margen disponible:",
+      "margin-amount-label": "Importe del margen en USD",
+      "size-percentage-label": "Tamaño de la orden como porcentaje del margen disponible",
       "size": "Tamaño",
       "new-size": "Nuevo tamaño",
       "est-liquidation": "Liquidación est.",
@@ -403,6 +411,7 @@
       "liquidation-risk-title": "Riesgo de liquidación",
       "liquidation-risk-text": "Tienes posiciones abiertas. Retirar fondos reducirá el capital de tu cuenta y aumentará tu apalancamiento efectivo, lo que puede aumentar tu riesgo de liquidación.",
       "withdraw-button": "Retirar",
+      "authorize-button": "Autorizar retiros",
       "amount-too-large": "La cantidad es demasiado grande",
       "amount-precision": "La cantidad admite hasta {decimals} decimales",
       "amount-exceeds-balance": "La cantidad supera el saldo disponible",

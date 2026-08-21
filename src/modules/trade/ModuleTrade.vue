@@ -107,12 +107,12 @@
                 class="w-12 h-12 text-black"
                 aria-hidden="true"
               />
-              <!--
-                Badge geometry is from the design: a 16px glyph, 4px of padding,
+              <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
                 from the dark globe behind it — drop it and the badge reads as a
                 blob welded onto the globe's edge.
               -->
+
               <span
                 class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
               >
@@ -148,6 +148,7 @@
             :max-disabled="fromTokenSelected?.address === MAIN_TOKEN_CONTRACT"
             sort-context="trade"
             @percent="setPercentageAmount"
+            @select:token="onFromTokenSelected"
           />
 
           <!-- Swap Direction Button -->
@@ -176,6 +177,7 @@
             :disabled-tokens="disabledTokenAddresses"
             sort-context="trade"
             class="mt-3"
+            @select:token="onToTokenSelected"
           />
         </div>
       </div>
@@ -199,6 +201,7 @@
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
+        :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
@@ -353,6 +356,7 @@ import {
 
 // Types
 import type { Chain } from '@/mew_api/types'
+import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 
 const { t } = useI18n()
@@ -618,6 +622,11 @@ const {
 })
 
 // --- Trade Quote ---
+// `useTradeExecution` (below) is what actually knows whether the review modal
+// is open, but it needs `currentQuote` from this composable first — so this
+// starts false and a watch further down keeps it in sync once tradeFlowStep
+// exists, rather than reordering the two calls.
+const isReviewModalOpenForQuote = ref(false)
 const { currentQuote, quoteExpiresAt, needsApproval, fetchQuote, resetQuote } =
   useTradeQuote({
   fromTokenSelected,
@@ -633,6 +642,7 @@ const { currentQuote, quoteExpiresAt, needsApproval, fetchQuote, resetQuote } =
   hasPreQuoteError,
   generalError,
   isLoadingQuote,
+  isReviewModalOpen: isReviewModalOpenForQuote,
 })
 
 const ctaDisabledLabel = computed(() => {
@@ -675,6 +685,9 @@ const reviewModalOpen = computed({
   set: value => {
     if (!value) tradeFlowStep.value = 'idle'
   },
+})
+watch(reviewModalOpen, isOpen => {
+  isReviewModalOpenForQuote.value = isOpen
 })
 const progressModalOpen = computed({
   get: () => tradeFlowStep.value === 'processing',
@@ -761,6 +774,32 @@ const isTokenInList = (
     candidate =>
       candidate.address?.toLowerCase() === token.address?.toLowerCase(),
   )
+
+// MEW-1981: toast whenever the user switches a trade token via the picker.
+// Listen to `@select:token`, which the token-select child emits ONLY on an
+// explicit user pick — not on the programmatic defaulting it does on network
+// change (nor on setFromChain/resetForm ref assignments). That avoids a false
+// "Now trading…" toast on network switches. Use the emitted token for the side
+// that changed, read the other side from state; skip until both are set.
+const notifyTokensSwitched = (
+  from?: NewTokenInfo | null,
+  to?: NewTokenInfo | null,
+) => {
+  if (!from || !to) return
+  toastStore.addToastMessage({
+    text: t('trade.toast.tokens-switched', {
+      from: from.symbol,
+      to: to.symbol,
+    }),
+    type: ToastType.Success,
+  })
+}
+const onFromTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(token, toTokenSelected.value)
+}
+const onToTokenSelected = (token: NewTokenInfo) => {
+  notifyTokensSwitched(fromTokenSelected.value, token)
+}
 
 const swapTokens = () => {
   const previousFromToken = fromTokenSelected.value

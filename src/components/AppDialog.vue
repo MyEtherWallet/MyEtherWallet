@@ -112,7 +112,7 @@
  * </template>
  * </app-dialog>
  */
-import { shallowRef, watch, nextTick } from 'vue'
+import { shallowRef, watch, nextTick, onBeforeUnmount } from 'vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import { useDialogStore } from '@/stores/dialogStore'
 import { storeToRefs } from 'pinia'
@@ -224,4 +224,14 @@ watch(
   },
   { immediate: true },
 )
+
+// If the dialog is torn down while still open (e.g. a parent `v-if` flips —
+// TheAddressMenuDialog / TheDepositDialog when the wallet is removed), the
+// isOpen watcher never runs a closing pass, so the global inert flag stays set
+// and the whole app is left non-interactive. Release it on unmount.
+onBeforeUnmount(() => {
+  if (isOpen.value) {
+    isAreaHidden.value = false
+  }
+})
 </script>

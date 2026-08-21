@@ -27,6 +27,7 @@ import {
   SUPPORTED_CHAINS,
 } from './configs'
 import { Web3ProviderConnector } from './oneInchProvider'
+import { IsolatedAxiosConnector } from './oneInchHttpConnector'
 import type { AxiosError } from 'axios'
 import { isAxiosNetworkError } from '@/modules/trade/composables/transientRpcError'
 // NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
@@ -50,6 +51,35 @@ export type HardcodedTokenInfo = {
   decimals: number
   logoURI: string
   price: number
+}
+
+/** Error body shape returned by the Fusion API on 4xx. */
+type ErrorBody = {
+  error?: string
+  description?: string
+  statusCode?: number
+  code?: string
+}
+
+/** Fusion error codes that have localized user-facing copy. */
+const FUSION_ERROR_COPY: Record<string, string> = {
+  INSUFFICIENT_AMOUNT: 'trade.error.insufficient-amount',
+}
+
+/**
+ * User-facing message from a Fusion API error, or null when the error carries
+ * no response body (network failures, wallet errors, non-axios throws).
+ * Prefers localized copy for known machine-readable codes; falls back to
+ * 1inch's own `description`, which is English-only but specific.
+ */
+export const fusionErrorMessage = (e: unknown): string | null => {
+  const data =
+    e && typeof e === 'object' && 'response' in e
+      ? ((e as AxiosError).response?.data as ErrorBody | undefined)
+      : undefined
+  const localized = data?.code ? FUSION_ERROR_COPY[data.code] : undefined
+  if (localized) return i18n.global.t(localized)
+  return data?.description || null
 }
 
 const HARDCODED_ETH_TOKENS: Array<{ address: string; cgId: string }> = []
@@ -131,6 +161,10 @@ class OneInchFusion {
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
       blockchainProvider: this.web3Provider,
+      // Keeps 1inch traffic off the global axios instance, where Ledger's
+      // interceptor would rewrite the error and strip `response` — see the
+      // connector for the full story.
+      httpProvider: new IsolatedAxiosConnector(),
     })
   }
 
@@ -169,10 +203,7 @@ class OneInchFusion {
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
-      const response =
-        e && typeof e === 'object' && 'response' in e
-          ? ((e as AxiosError).response?.data as any)?.description || null
-          : null
+      const response = fusionErrorMessage(e)
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
@@ -256,8 +287,8 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
-      // Preserve the original message (the caller lowercases it for display)
-      // and keep the wallet/RPC `code`, then flag expected client errors —
+      // Preserve the most specific message available and the wallet/RPC
+      // `code`, then flag expected client errors —
       // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
       // pair / invalid order) — so the caller (confirmTrade) can surface them
       // to the user while skipping Sentry capture. The previous catch re-threw
@@ -270,14 +301,18 @@ class OneInchFusion {
         typeof e === 'object' && e !== null
           ? (e as Record<string, unknown>)
           : undefined
+      // The API's own message first: axios errors carry a generic "Request
+      // failed with status code N" in `.message`, while the useful text lives
+      // in the response body.
       const errorMessage =
-        e instanceof Error && e.message
+        fusionErrorMessage(e) ??
+        (e instanceof Error && e.message
           ? e.message
           : errObj && typeof errObj.details === 'string'
             ? errObj.details
             : typeof e === 'string'
               ? e
-              : i18n.global.t('trade.error.failed-submit-order-1inch')
+              : i18n.global.t('trade.error.failed-submit-order-1inch'))
       const error = new Error(errorMessage) as Error & {
         code?: number
         expectedClientError?: boolean

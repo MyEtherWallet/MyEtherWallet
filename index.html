@@ -16,36 +16,127 @@
   <link rel="canonical" href="https://app.myetherwallet.com/" />
   <meta property="og:description"
     content="Free, open-source, client-side Ethereum wallet. Enabling you to interact with the blockchain easily & securely." />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="MyEtherWallet.com: Your Key to Ethereum" />
+  <meta name="twitter:description"
+    content="Free, open-source, client-side Ethereum wallet. Enabling you to interact with the blockchain easily & securely." />
+  <meta name="twitter:image" content="https://www.myetherwallet.com/icons/icon192.png" />
   <meta name="twitter:site" content="@myetherwallet" />
   <meta name="twitter:creator" content="@myetherwallet" />
   <meta name="apple-mobile-web-app-title" content="MyEtherWallet.com: Your Key to Ethereum" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#0B2840" />
+  <meta name="author" content="MyEtherWallet Inc" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+  <!-- Freshness signal for AI crawlers. `__BUILD_DATE__` is replaced with the
+       build timestamp by the mew-geo-assets plugin in vite.config.ts. -->
+  <meta name="dateModified" content="__BUILD_DATE__" />
+  <!-- AI/LLM discovery surfaces -->
+  <link rel="alternate" type="application/rss+xml" title="MyEtherWallet blog (Medium)"
+    href="https://medium.com/feed/myetherwallet" />
+  <link rel="alternate" type="text/plain" title="llms.txt — AI index for MyEtherWallet" href="/llms.txt" />
   <link rel="preload" href="/fonts/DMSans/DMSans-400.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
   <link rel="preload" href="/fonts/DMSans/DMSans-500.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
   <link rel="preload" href="/fonts/DMSans/DMSans-700.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
   <link rel="icon prefetch" sizes="192x192" href="icons/icon192.png" as="image" />
   <link rel="shortcut icon prefetch" type="image/png" href="favicon.png" as="image" />
   <title>MyEtherWallet | MEW</title>
+  <!-- Styles for the no-script fallback block only. The app's stylesheet is imported
+       from src/main.ts, so with JavaScript disabled no CSS loads at all — these
+       inline rules keep the crawler-visible / no-JS content readable. -->
+  <style>
+    .mew-static {
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #0b2840;
+    }
+
+    .mew-static h1 {
+      font-size: 1.75rem;
+      line-height: 1.25;
+      margin: 0 0 0.75rem;
+    }
+
+    .mew-static h2 {
+      font-size: 1.25rem;
+      margin: 2rem 0 0.5rem;
+    }
+
+    .mew-static h3 {
+      font-size: 1rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .mew-static a {
+      color: #1976d2;
+    }
+
+    .mew-static ul {
+      padding-left: 1.25rem;
+    }
+
+    .mew-static .mew-static__notice {
+      border: 1px solid #f0b90b;
+      background: #fff8e1;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .mew-static .mew-static__meta {
+      font-size: 0.875rem;
+      color: #5b7183;
+    }
+  </style>
   <script type="application/ld+json">
       {
-        "@context": "http://schema.org",
+        "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "https://app.myetherwallet.com/#organization",
         "name": "MyEtherWallet",
+        "alternateName": "MEW",
         "legalName": "MyEtherWallet Inc",
         "url": "https://www.myetherwallet.com/",
+        "foundingDate": "2015",
+        "founder": [
+          { "@type": "Person", "name": "Kosala Hemachandra" },
+          { "@type": "Person", "name": "Taylor Monahan" }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Los Angeles",
+          "addressRegion": "CA",
+          "addressCountry": "US"
+        },
+        "knowsAbout": [
+          "Ethereum",
+          "self-custody cryptocurrency wallets",
+          "token swaps",
+          "ETH staking",
+          "perpetual futures",
+          "tokenized stocks",
+          "hardware wallets"
+        ],
         "contactPoint": [
           {
             "@type": "ContactPoint",
             "email": "support@myetherwallet.com",
-            "url": "https://myetherwallet.com",
-            "contactType": "customer service"
+            "url": "https://help.myetherwallet.com/en/",
+            "contactType": "customer support",
+            "availableLanguage": ["en", "es", "zh"]
           }
         ],
         "logo": "https://www.myetherwallet.com/images/icons/logo-mew.png",
         "description": "MyEtherWallet.com is a free, open-source, client-side interface for generating Ethereum wallets &amp; more. Interact with the Ethereum blockchain easily &amp; securely.",
         "sameAs": [
+          "https://www.wikidata.org/wiki/Q96438863",
+          "https://www.linkedin.com/company/myetherwallet",
+          "https://www.crunchbase.com/organization/myetherwallet",
           "https://www.myetherwallet.com/",
+          "https://www.mewwallet.com/",
           "https://www.enkrypt.com",
           "https://www.facebook.com/MyEtherWallet/",
           "https://twitter.com/myetherwallet",
@@ -59,15 +150,91 @@
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "https://app.myetherwallet.com/#website",
         "name": "MyEtherWallet",
+        "alternateName": "MEW",
         "url": "https://app.myetherwallet.com/",
-        "description": "Free, open-source, client-side Ethereum wallet: send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks."
+        "inLanguage": ["en", "es", "zh"],
+        "description": "Free, open-source, client-side Ethereum wallet: send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks.",
+        "publisher": { "@id": "https://app.myetherwallet.com/#organization" },
+        "dateModified": "__BUILD_DATE__",
+        "potentialAction": [
+          {
+            "@type": "ViewAction",
+            "name": "Swap tokens",
+            "target": "https://app.myetherwallet.com/swap"
+          },
+          {
+            "@type": "ViewAction",
+            "name": "Buy and sell crypto",
+            "target": "https://app.myetherwallet.com/buy-and-sell"
+          },
+          {
+            "@type": "ViewAction",
+            "name": "Stake ETH",
+            "target": "https://app.myetherwallet.com/earn"
+          },
+          {
+            "@type": "ViewAction",
+            "name": "Trade perpetuals",
+            "target": "https://app.myetherwallet.com/perps"
+          },
+          {
+            "@type": "ViewAction",
+            "name": "Trade tokenized stocks",
+            "target": "https://app.myetherwallet.com/stocks"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "@id": "https://app.myetherwallet.com/#webapp",
+        "name": "MyEtherWallet",
+        "alternateName": "MEW",
+        "url": "https://app.myetherwallet.com/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any modern web browser",
+        "browserRequirements": "Requires JavaScript.",
+        "inLanguage": ["en", "es", "zh"],
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "MyEtherWallet is free to use. Network gas fees and third-party provider fees still apply."
+        },
+        "description": "MyEtherWallet (MEW) is a free, open-source, self-custody web wallet for Ethereum, EVM networks, Bitcoin and Solana. Private keys never leave the browser and MEW never holds user funds.",
+        "featureList": [
+          "Create or import a self-custody wallet",
+          "Send and receive crypto and NFTs",
+          "Swap tokens across supported networks",
+          "Buy and sell crypto with fiat",
+          "Stake ETH (partial staking via Coinbase, liquid staking via Lido)",
+          "Trade perpetual futures",
+          "Trade tokenized stocks",
+          "Connect Ledger and Trezor hardware wallets",
+          "Connect via WalletConnect, the MEW mobile app or the Enkrypt extension",
+          "Sign and verify messages",
+          "Watch-only addresses and ENS name resolution"
+        ],
+        "permissions": "No account, email address or KYC required to create a wallet.",
+        "publisher": { "@id": "https://app.myetherwallet.com/#organization" },
+        "dateModified": "__BUILD_DATE__"
       }
     </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        "@id": "https://app.myetherwallet.com/#faq",
+        "name": "MyEtherWallet — crypto, wallet and staking FAQ",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://app.myetherwallet.com/#website" },
+        "publisher": { "@id": "https://app.myetherwallet.com/#organization" },
+        "dateModified": "__BUILD_DATE__",
         "mainEntity": [
           {
             "@type": "Question",
@@ -413,12 +580,98 @@
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
+  <!-- Static, non-JavaScript description of the app. This is the only substantive
+       prose in the raw HTML document, so it is what AI crawlers (GPTBot, ClaudeBot,
+       PerplexityBot, …) and no-JS visitors read. Keep it factual, front-loaded and
+       consistent with /llms.txt, /ai/summary.json and /ai/service.json. -->
   <noscript>
-    <div class="text-container">
-      <h1>Looks like you have Javascript disabled.</h1>
-      <p>MyEtherWallet needs Javascript to work properly.</p>
-      <h3>Please enable Javascript to get the best out of MyEtherWallet.</h3>
-      <p>Thank you!</p>
+    <div class="mew-static">
+      <h1>MyEtherWallet (MEW): free, open-source, self-custody crypto wallet</h1>
+      <p>
+        <strong>MyEtherWallet (MEW)</strong> is a free, open-source, client-side wallet for Ethereum, EVM-compatible
+        networks, Bitcoin and Solana. It runs entirely in your browser: private keys are generated and stored on your own
+        device, and MEW never holds, moves or has access to user funds. With MEW you can send and receive crypto and
+        NFTs, swap tokens, buy and sell with fiat, stake ETH, trade perpetual futures and trade tokenized stocks — all
+        without an account, an email address or KYC to create a wallet.
+      </p>
+      <p class="mew-static__notice">
+        <strong>JavaScript is required.</strong> The MEW app is a client-side application, so it needs JavaScript to
+        run. Please enable JavaScript and reload
+        <a href="https://app.myetherwallet.com/">app.myetherwallet.com</a> to use the wallet.
+      </p>
+
+      <h2>Key facts about MEW</h2>
+      <ul>
+        <li><strong>Founded in 2015</strong> — MEW is one of the oldest Ethereum wallets still in active development.</li>
+        <li><strong>30+ networks supported</strong>, including Ethereum, Arbitrum, Base, Optimism, Polygon, BNB Smart
+          Chain, Avalanche, zkSync Era, Linea, Scroll, Gnosis, Bitcoin and Solana.</li>
+        <li><strong>Non-custodial:</strong> 100% of keys stay client-side. MEW holds 0 user funds.</li>
+        <li><strong>$0 to use:</strong> creating and using a wallet is free; you pay only network gas fees and any
+          third-party provider fee.</li>
+        <li><strong>3 interface languages:</strong> English, Spanish and Chinese.</li>
+        <li><strong>Open source</strong> on <a href="https://github.com/MyEtherWallet">GitHub</a>.</li>
+      </ul>
+
+      <h2>What you can do in MEW</h2>
+      <ul>
+        <li><strong>Send and receive</strong> crypto, tokens and NFTs across supported networks.</li>
+        <li><strong>Swap</strong> tokens through aggregated decentralised exchange liquidity.</li>
+        <li><strong>Buy and sell</strong> crypto with fiat through integrated payment providers.</li>
+        <li><strong>Stake ETH</strong> — partial staking (no 32 ETH minimum, powered by Coinbase) and liquid staking
+          (powered by <a href="https://lido.fi/">Lido</a>), both without a lock-up period in MEW.</li>
+        <li><strong>Trade perpetual futures</strong> and <strong>tokenized stocks</strong>, 24 hours a day, 7 days a
+          week.</li>
+        <li><strong>Sign and verify messages</strong>, and track watch-only addresses.</li>
+      </ul>
+
+      <h2>Self-custody and security</h2>
+      <p>
+        MEW is a self-custody (non-custodial) wallet: your recovery phrase is your account. Because the interface is
+        client-side and open-source, no server ever receives your keys — which also means that a lost recovery phrase
+        cannot be reset by support. Never share a recovery phrase or private key with anyone, including people claiming
+        to be MEW staff, and always confirm you are on
+        <a href="https://app.myetherwallet.com/">app.myetherwallet.com</a> before entering wallet data.
+      </p>
+      <h3>Ways to connect</h3>
+      <p>
+        You can access a wallet with a recovery phrase or keystore file, with a
+        <a href="https://www.ledger.com/">Ledger</a> or <a href="https://trezor.io/">Trezor</a> hardware wallet, with the
+        MEW mobile app, with the <a href="https://www.enkrypt.com">Enkrypt</a> browser extension, or with any
+        <a href="https://walletconnect.network/">WalletConnect</a>-compatible wallet. Hardware wallets keep the private
+        key on a dedicated device, so it is never exposed to the browser.
+      </p>
+
+      <h2>How Ethereum staking works</h2>
+      <p>
+        Ethereum secures itself with <a href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/">Proof of
+        Stake</a>: validators pledge ETH and are rewarded for honestly attesting to transactions. Running a full
+        validator requires 32 ETH, which is why MEW offers partial staking for smaller amounts. Ethereum's move from
+        Proof of Work to Proof of Stake in 2022 cut the network's energy use by roughly
+        <strong>99.99%</strong>. Staking rewards and the full stake can be withdrawn at any time through MEW, though
+        some providers require a withdrawal request first.
+      </p>
+
+      <h2>Learn more and verify these claims</h2>
+      <ul>
+        <li><a href="https://help.myetherwallet.com/en/articles/5377591-myetherwallet-an-introduction">About
+            MyEtherWallet — an introduction</a> (MEW help centre)</li>
+        <li><a href="https://www.myetherwallet.com/team">The MEW team</a></li>
+        <li><a href="https://help.myetherwallet.com/en/">MEW help centre</a> — guides and troubleshooting</li>
+        <li><a href="https://ethereum.org/en/wallets/">ethereum.org: Ethereum wallets</a> — independent primer on
+          self-custody</li>
+        <li><a href="https://ethereum.org/en/staking/">ethereum.org: staking</a> — independent primer on ETH staking</li>
+        <li><a href="https://www.wikidata.org/wiki/Q96438863">MyEtherWallet on Wikidata (Q96438863)</a></li>
+        <li><a href="https://medium.com/myetherwallet">MEW blog</a>
+          (<a href="https://medium.com/feed/myetherwallet">RSS</a>)</li>
+        <li><a href="/llms.txt">/llms.txt</a>, <a href="/ai/summary.json">/ai/summary.json</a>,
+          <a href="/ai/service.json">/ai/service.json</a> and <a href="/ai/faq.json">/ai/faq.json</a> — machine-readable
+          summaries for AI agents</li>
+      </ul>
+      <p class="mew-static__meta">
+        Published by MyEtherWallet Inc. Support: <a href="mailto:support@myetherwallet.com">support@myetherwallet.com</a>.
+        Last updated <time datetime="__BUILD_DATE__">__BUILD_DAY__</time>. Nothing here is financial advice; crypto
+        assets are volatile and you should never risk more than you can afford to lose.
+      </p>
     </div>
   </noscript>
   <script>

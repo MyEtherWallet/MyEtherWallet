@@ -113,7 +113,7 @@
           :is-loading="authorizing"
           class="w-full"
           @click="submitAuthorize"
-          >Authorize Withdrawals</app-base-button
+          >{{ $t('perps.withdraw.authorize-button') }}</app-base-button
         >
       </div>
     </template>

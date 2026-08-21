@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
@@ -76,6 +77,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const rewardsStore = useRewardsStore()
   const holdingsStore = useHoldingsStore()
 
+  const { minSpendTrade } = storeToRefs(rewardsStore)
+
   const tradeFlowStep = ref<TradeFlowStep>('idle')
   // Reads the step through a call boundary so TS does not narrow it across
   // awaits — the modals mutate it concurrently while these functions run.
@@ -118,8 +121,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       holdCampaignStatus: holdingsStore.status,
       qualifyingTradeAmount: reward?.qualifying_amount
         ? new BigNumber(reward.qualifying_amount)
-            .shiftedBy(-decimals)
-            .toString()
+          .shiftedBy(-decimals)
+          .toString()
         : undefined,
       qualifyingTradeToken: meta?.symbol,
       qualifiedSince: reward?.qualification_timestamp,
@@ -288,7 +291,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 250) {
+      const minSpendBN = BigNumber(minSpendTrade.value);
+      const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
+      if (BigNumber(fromUsdValue).gt(minimumSpend)) {
         const canEarn =
           await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
@@ -305,8 +310,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const expectedToAmount = formatFloatingPointValue(
         formatUnits(
           currentQuote.value?.avgAmount ||
-            currentQuote.value?.startAmount ||
-            0n,
+          currentQuote.value?.startAmount ||
+          0n,
           toDecimals,
         ),
       ).value
@@ -327,13 +332,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fills: [],
         usdValue: fromTokenSelected.value.price
           ? (
-              parseFloat(fromAmount.value) * fromTokenSelected.value.price
-            ).toFixed(2)
+            parseFloat(fromAmount.value) * fromTokenSelected.value.price
+          ).toFixed(2)
           : undefined,
         toUsdValue: toTokenSelected.value.price
           ? (
-              parseFloat(expectedToAmount) * toTokenSelected.value.price
-            ).toFixed(2)
+            parseFloat(expectedToAmount) * toTokenSelected.value.price
+          ).toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -376,7 +381,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       }
 
       const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
+        ? (e as any).message
         : (e as any).details
           ? (e as any).details
           : typeof e === 'string'

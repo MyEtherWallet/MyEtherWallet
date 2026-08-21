@@ -72,6 +72,7 @@
     },
     "toast": {
       "quote-loading": "请等待报价加载",
+      "tokens-switched": "正在交易 {from} 兑换 {to}",
       "processing_trade": "正在处理交易",
       "processing_note": "这可能需要几分钟",
       "trade_completed": "交易完成",
@@ -84,6 +85,7 @@
       "token-unavailable": "该代币暂不可交易。请选择其他代币或稍后重试。",
       "minimum-trade-value": "最低交易金额约为 $1.00",
       "token-not-available": "{symbol} 当前不可交易",
+      "insufficient-amount": "当前金额过低，无法交易。请尝试更大的金额。",
       "no-quotes-returned": "未返回任何报价",
       "failed-to-fetch-quote": "获取报价失败",
       "fusion-network-not-supported": "Fusion：不支持的网络",
