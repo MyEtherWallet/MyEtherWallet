@@ -121,7 +121,7 @@ export const describeMewApiFetchError = (
   // keep the original as `cause`.
   const hasUsableError =
     ctx.error instanceof Error &&
-    ctx.error.message.length > 0 &&
+    ctx.error.message.trim().length > 0 &&
     ctx.error.message.trim() !== ctx.statusText?.trim()
   const error = hasUsableError ? (ctx.error as Error) : new Error(message)
   // When we synthesize a fresh Error for the message, keep the original as its

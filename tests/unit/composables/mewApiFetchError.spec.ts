@@ -190,6 +190,24 @@ describe('describeMewApiFetchError', () => {
     expect(captured.tags.mew_api_status).toBe('406')
   })
 
+  it('treats a whitespace-only error message as unusable and synthesizes the descriptive Error', () => {
+    // A whitespace-only message is as unusable as an empty one — reporting it
+    // verbatim would collapse back into the "No error message" issue.
+    const original = new Error('   ')
+    const captured = describeMewApiFetchError({
+      error: original,
+      data: null,
+      status: 500,
+      statusText: 'Internal Server Error',
+      url: 'https://mew-api-prod.ethvm.dev/v1/tokens',
+    })
+    expect(captured.error).not.toBe(original)
+    expect(captured.error.message).toBe(
+      'MEW API request failed with status 500',
+    )
+    expect((captured.error as { cause?: unknown }).cause).toBe(original)
+  })
+
   it('wraps the built message in a fresh Error but keeps the original as cause', () => {
     // Empty-message error: we build a descriptive message but must not discard
     // the original error's stack — preserve it via `cause` so Sentry can
