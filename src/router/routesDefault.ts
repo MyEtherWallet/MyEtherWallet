@@ -40,10 +40,18 @@ const DefaultRoutes = <RouteNameCollection>[
     // dialog from `type` (see ViewHome). Preserves the query; a missing/blank
     // type falls back to the default connect view.
     path: '/access',
-    redirect: to => ({
-      name: ROUTES_MAIN.HOME.NAME,
-      query: { ...to.query, type: (to.query.type as string) || 'default' },
-    }),
+    redirect: to => {
+      // `type` may be absent, an array (repeated param), or whitespace-only —
+      // ViewHome only acts on a valid string, so normalize to a trimmed
+      // non-empty string, falling back to the default connect view.
+      const raw = to.query.type
+      const type =
+        typeof raw === 'string' && raw.trim() ? raw.trim() : 'default'
+      return {
+        name: ROUTES_MAIN.HOME.NAME,
+        query: { ...to.query, type },
+      }
+    },
     meta: {
       noAuth: true,
     },

@@ -47,4 +47,25 @@ describe('/access route (MEW-2182)', () => {
       query: { type: 'ledger', ref: 'landing' },
     })
   })
+
+  it('falls back to default for a repeated (array) type param', () => {
+    expect(redirect({ query: { type: ['ledger', 'trezor'] } })).toEqual({
+      name: 'Home',
+      query: { type: 'default' },
+    })
+  })
+
+  it('falls back to default for a whitespace-only type', () => {
+    expect(redirect({ query: { type: '   ' } })).toEqual({
+      name: 'Home',
+      query: { type: 'default' },
+    })
+  })
+
+  it('trims surrounding whitespace from a valid type', () => {
+    expect(redirect({ query: { type: '  ledger  ' } })).toEqual({
+      name: 'Home',
+      query: { type: 'ledger' },
+    })
+  })
 })
