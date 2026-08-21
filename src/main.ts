@@ -19,6 +19,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isExpectedTradeClientError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -81,12 +82,19 @@ if (dsn && process.env.NODE_ENV === 'production') {
     // confirm within the timeout — a network condition the app already handles),
     // and the external "not found rainbowkit" rejection emitted by a wallet's
     // injected in-app-browser detection script (not app code — our bundle never
-    // throws it). These surface as serialized plain objects or bare strings with
-    // no parsed frames, so denyUrls can't catch them — inspect the original
-    // exception instead. Genuine app errors are unaffected.
+    // throws it). Also a global backstop for trade quote/order errors already
+    // flagged `expectedClientError` / `transientNetworkError` (1inch 4xx /
+    // network hiccups) — the per-call-site catch in useTradeQuote /
+    // useTradeExecution already skips its own captureException for these, but
+    // they kept reaching Sentry anyway (APP-MEW-WEB-1F8 / MEW-2180), so this
+    // drops them here too regardless of call site or build. These surface as
+    // serialized plain objects or bare strings with no parsed frames, so
+    // denyUrls can't catch them — inspect the original exception instead.
+    // Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
+        isExpectedTradeClientError(originalException) ||
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||

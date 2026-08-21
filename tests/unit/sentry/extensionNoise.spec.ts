@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isExpectedTradeClientError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -434,5 +435,59 @@ describe('isMetaMaskSdkDecryptError', () => {
     expect(isMetaMaskSdkDecryptError(null)).toBe(false)
     expect(isMetaMaskSdkDecryptError('aes/gcm: invalid ghash tag')).toBe(false)
     expect(isMetaMaskSdkDecryptError({})).toBe(false)
+  })
+})
+
+describe('isExpectedTradeClientError', () => {
+  it('is true for an OneInchFusion.getQuote 1inch 4xx error (expectedClientError)', () => {
+    // The exact shape OneInchFusion.getQuote throws for a 1inch Fusion 400
+    // (illiquid/unsupported pair, invalid params) — see APP-MEW-WEB-1F8.
+    const err = new Error('Bad Request') as Error & {
+      expectedClientError?: boolean
+    }
+    err.expectedClientError = true
+    expect(isExpectedTradeClientError(err)).toBe(true)
+  })
+
+  it('is true for a flagged transient axios network error', () => {
+    const err = new Error('Network Error') as Error & {
+      transientNetworkError?: boolean
+    }
+    err.transientNetworkError = true
+    expect(isExpectedTradeClientError(err)).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object)', () => {
+    expect(
+      isExpectedTradeClientError({
+        message: 'Bad Request',
+        expectedClientError: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('is false when the flag is explicitly false or absent', () => {
+    expect(
+      isExpectedTradeClientError(
+        Object.assign(new Error('Bad Request'), {
+          expectedClientError: false,
+        }),
+      ),
+    ).toBe(false)
+    expect(isExpectedTradeClientError(new Error('Some genuine 5xx failure'))).toBe(
+      false,
+    )
+  })
+
+  it('is false for a genuine app error carrying unrelated properties', () => {
+    expect(
+      isExpectedTradeClientError({ message: 'boom', code: 500 }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isExpectedTradeClientError(null)).toBe(false)
+    expect(isExpectedTradeClientError(undefined)).toBe(false)
+    expect(isExpectedTradeClientError('Bad Request')).toBe(false)
   })
 })
