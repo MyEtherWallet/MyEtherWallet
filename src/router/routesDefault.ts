@@ -34,6 +34,29 @@ const DefaultRoutes = <RouteNameCollection>[
     },
   },
   {
+    // The landing page deep-links to `/access?type=…` to prompt a wallet
+    // connect. The connect flow is now a dialog on Home (the standalone view
+    // lives at `/portfolio/access`), so send users to Home and let it open the
+    // dialog from `type` (see ViewHome). Preserves the query; a missing/blank
+    // type falls back to the default connect view.
+    path: '/access',
+    redirect: to => {
+      // `type` may be absent, an array (repeated param), or whitespace-only —
+      // ViewHome only acts on a valid string, so normalize to a trimmed
+      // non-empty string, falling back to the default connect view.
+      const raw = to.query.type
+      const type =
+        typeof raw === 'string' && raw.trim() ? raw.trim() : 'default'
+      return {
+        name: ROUTES_MAIN.HOME.NAME,
+        query: { ...to.query, type },
+      }
+    },
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
     // The wallet portfolio moved off the root; requires a connected wallet
     // (the guard bounces disconnected users to '/'). Its connect/create and
     // token/stock-info children keep their own `noAuth` where they had it.
