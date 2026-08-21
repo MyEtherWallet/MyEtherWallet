@@ -45,12 +45,30 @@ describe('buildMewApiErrorMessage', () => {
     ).toBe('Failed to fetch')
   })
 
-  it('falls back to statusText when it is non-empty and there is no body message', () => {
+  it('prefers the status-based message over an HTTP reason-phrase error (406)', () => {
+    // The production 406 shape: useFetch throws `new Error(response.statusText)`
+    // so error.message and statusText are both the generic reason phrase. The
+    // reason phrase is no more diagnosable than the status, so we prefer the
+    // descriptive status-based message.
+    expect(
+      buildMewApiErrorMessage({
+        error: new Error('Not Acceptable'),
+        data: null,
+        status: 406,
+        statusText: 'Not Acceptable',
+        url: 'https://mewwallet-api-prod.mewwallet.dev/v2/portfolio/balance-history',
+      }),
+    ).toBe('MEW API request failed with status 406')
+  })
+
+  it('falls back to statusText only when there is no status number and no body message', () => {
+    // statusText is the browser reason phrase; it is only useful when there is
+    // no numeric status to build the descriptive message from.
     expect(
       buildMewApiErrorMessage({
         error: new Error(''),
         data: null,
-        status: 503,
+        status: undefined,
         statusText: 'Service Unavailable',
         url: 'https://mew-api-prod.ethvm.dev/v1/tokens',
       }),
@@ -149,6 +167,27 @@ describe('describeMewApiFetchError', () => {
     expect(captured.error).toBe(original)
     expect(captured.fingerprint).toEqual(['mew-api-fetch-error', 'network'])
     expect(captured.tags.mew_api_status).toBe('network_error')
+  })
+
+  it('synthesizes a descriptive Error for an HTTP reason-phrase error (406) and keeps the original as cause', () => {
+    // Production 406 shape: useFetch throws `new Error("Not Acceptable")`, so
+    // the raw error message is just the reason phrase (=== statusText). Report a
+    // descriptive, status-fingerprinted error instead, preserving the original.
+    const original = new Error('Not Acceptable')
+    const captured = describeMewApiFetchError({
+      error: original,
+      data: null,
+      status: 406,
+      statusText: 'Not Acceptable',
+      url: 'https://mewwallet-api-prod.mewwallet.dev/v2/portfolio/balance-history',
+    })
+    expect(captured.error).not.toBe(original)
+    expect(captured.error.message).toBe(
+      'MEW API request failed with status 406',
+    )
+    expect((captured.error as { cause?: unknown }).cause).toBe(original)
+    expect(captured.fingerprint).toEqual(['mew-api-fetch-error', '406'])
+    expect(captured.tags.mew_api_status).toBe('406')
   })
 
   it('wraps the built message in a fresh Error but keeps the original as cause', () => {
