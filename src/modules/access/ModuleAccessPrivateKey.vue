@@ -118,7 +118,11 @@ const isValidPrivateKey = computed<boolean>(() => {
   }
 })
 
-const unlock = () => {
+const unlock = async () => {
+  // The connect button is disabled for empty/invalid input, but the input's
+  // `@keyup.enter` is not — bail on the same condition so pressing Enter with an
+  // invalid key can't build a wallet from bad bytes and crash (MEW-2185).
+  if (submitIsDisabled.value) return
   // TODO: remove hardcoded network id
   let wallet
   try {
@@ -135,7 +139,10 @@ const unlock = () => {
       })
     }
 
-    setWallet(
+    // Await the async setWallet so any getAddress()/restriction failure is
+    // caught here and surfaced as a toast, instead of escaping as an unhandled
+    // promise rejection (MEW-2185).
+    await setWallet(
       wallet as WalletInterface,
       'privateKey',
       walletConfigs.privateKey.type[0],
