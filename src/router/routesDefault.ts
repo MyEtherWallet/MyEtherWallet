@@ -32,29 +32,11 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
-  },
-  {
-    // The landing page deep-links to `/access?type=…` to prompt a wallet
-    // connect. The connect flow is now a dialog on Home (the standalone view
-    // lives at `/portfolio/access`), so send users to Home and let it open the
-    // dialog from `type` (see ViewHome). Preserves the query; a missing/blank
-    // type falls back to the default connect view.
-    path: '/access',
-    redirect: to => {
-      // `type` may be absent, an array (repeated param), or whitespace-only —
-      // ViewHome only acts on a valid string, so normalize to a trimmed
-      // non-empty string, falling back to the default connect view.
-      const raw = to.query.type
-      const type =
-        typeof raw === 'string' && raw.trim() ? raw.trim() : 'default'
-      return {
-        name: ROUTES_MAIN.HOME.NAME,
-        query: { ...to.query, type },
-      }
-    },
-    meta: {
-      noAuth: true,
-    },
+    // The connect-wallet flow lives at `/access` (a child of Home, not
+    // Portfolio) so the landing page deep-link `/access?type=…` resolves
+    // natively and opens the connect dialog over Home. ViewAccessWallet is a
+    // controller-only view (empty template) rendered into Home's router-view.
+    children: [ACCESS_ROUTES],
   },
   {
     // The wallet portfolio moved off the root; requires a connected wallet
@@ -65,7 +47,6 @@ const DefaultRoutes = <RouteNameCollection>[
     component: PortfolioView,
     children: [
       CREATE_ROUTES,
-      ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,
         ...TOKEN_INFO_ROUTE,
