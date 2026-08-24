@@ -186,3 +186,25 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
   }
   return false
 }
+
+/**
+ * Whether an error is a `@ledgerhq` `LockedDeviceError` — thrown by the Ledger
+ * transport (WebUSB / WebBLE) when the connected device is locked, i.e. the
+ * user hasn't entered their PIN or the device screensaver kicked in (APDU
+ * status `0x5515`). This is a hardware/user-state condition, not an app bug:
+ * the access/connect flow already catches it (`handled: yes`) and shows a
+ * friendly localized toast (`common.error.ledger_locked`), and the fix is
+ * entirely in the user's hands (unlock the device). So it is unactionable
+ * Sentry noise (APP-MEW-WEB-BH). Detected primarily via the `@ledgerhq`
+ * error `name` (set as a string literal, so it survives minification), with a
+ * message fallback for the `0x5515` / "locked device" shape in case the error
+ * was rethrown as a plain `Error`.
+ */
+export function isLockedDeviceError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: unknown; message?: unknown }
+  if (e.name === 'LockedDeviceError') return true
+  const message =
+    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  return message.includes('0x5515') || message.includes('locked device')
+}

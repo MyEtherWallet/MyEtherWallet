@@ -22,6 +22,7 @@ import {
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
+  isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
@@ -89,6 +90,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isExtensionOrProviderError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        // Ledger "locked device" (0x5515) — hardware/user-state error, already
+        // shown to the user as a toast; unactionable noise (APP-MEW-WEB-BH).
+        isLockedDeviceError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||

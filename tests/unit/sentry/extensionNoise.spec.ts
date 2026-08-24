@@ -7,6 +7,7 @@ import {
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
+  isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
@@ -434,5 +435,43 @@ describe('isMetaMaskSdkDecryptError', () => {
     expect(isMetaMaskSdkDecryptError(null)).toBe(false)
     expect(isMetaMaskSdkDecryptError('aes/gcm: invalid ghash tag')).toBe(false)
     expect(isMetaMaskSdkDecryptError({})).toBe(false)
+  })
+})
+
+describe('isLockedDeviceError', () => {
+  it('drops the @ledgerhq LockedDeviceError by name (APP-MEW-WEB-BH)', () => {
+    const err = new Error('Ledger device: Locked device (0x5515)')
+    err.name = 'LockedDeviceError'
+    expect(isLockedDeviceError(err)).toBe(true)
+  })
+
+  it('matches by name even without the 0x5515 message', () => {
+    expect(isLockedDeviceError({ name: 'LockedDeviceError' })).toBe(true)
+  })
+
+  it('matches the 0x5515 / "locked device" message shape on a plain Error', () => {
+    // Covers a rethrow that lost the original @ledgerhq error name.
+    expect(
+      isLockedDeviceError(new Error('Ledger device: Locked device (0x5515)')),
+    ).toBe(true)
+    expect(
+      isLockedDeviceError({ message: 'the LOCKED DEVICE needs unlocking' }),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine unrelated app error', () => {
+    expect(
+      isLockedDeviceError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(isLockedDeviceError({ name: 'TransportStatusError' })).toBe(false)
+  })
+
+  it('handles non-error inputs', () => {
+    expect(isLockedDeviceError(null)).toBe(false)
+    expect(isLockedDeviceError(undefined)).toBe(false)
+    expect(isLockedDeviceError('Locked device (0x5515)')).toBe(false)
+    expect(isLockedDeviceError({ message: 42 })).toBe(false)
   })
 })
