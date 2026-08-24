@@ -32,6 +32,11 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    // The connect-wallet flow lives at `/access` (a child of Home, not
+    // Portfolio) so the landing page deep-link `/access?type=…` resolves
+    // natively and opens the connect dialog over Home. ViewAccessWallet is a
+    // controller-only view (empty template) rendered into Home's router-view.
+    children: [ACCESS_ROUTES],
   },
   {
     // The wallet portfolio moved off the root; requires a connected wallet
@@ -42,7 +47,6 @@ const DefaultRoutes = <RouteNameCollection>[
     component: PortfolioView,
     children: [
       CREATE_ROUTES,
-      ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,
         ...TOKEN_INFO_ROUTE,

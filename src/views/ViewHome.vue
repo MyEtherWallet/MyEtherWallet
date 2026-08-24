@@ -9,4 +9,9 @@ onMounted(() => {
   stocksStore.fetchStockOverview()
 })
 </script>
-<template><ModuleHome /></template>
+<template>
+  <ModuleHome />
+  <!-- Mounts the /access child (ViewAccessWallet): opens the connect dialog
+       over Home for `/access?type=…`. Renders nothing itself. -->
+  <router-view />
+</template>
