@@ -53,10 +53,10 @@
       "duplicate": "Name already in use, please type a different one"
     },
     "remove": {
-      "title": "Remove address?",
-      "subtitle": "\"{name}\" will be removed from your saved addresses. You can add it again at any time.",
+      "title": "Remove {name}?",
+      "subtitle": "This will remove {name} from your saved addresses. You can add it again anytime by reconnecting it.",
       "confirm": "Remove address",
-      "cancel": "Cancel"
+      "cancel": "Close"
     },
     "menu": {
       "rename": "Rename",
