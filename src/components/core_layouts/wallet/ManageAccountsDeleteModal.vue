@@ -16,7 +16,7 @@
     <template #content>
       <!-- AppDialog's title wrapper already contributes pb-2 (8px); pt-10 here
            makes the total description↔buttons gap 48px per design. -->
-      <div class="flex items-center justify-end gap-2 px-6 pt-10 pb-6">
+      <div class="flex items-center justify-end gap-4 px-6 pt-10 pb-6">
         <button
           data-test="delete-modal-cancel"
           class="h-12 px-4 text-s-16 font-semibold text-black"
