@@ -68,7 +68,6 @@
       location="right"
       teleport
       menu-radius-class="rounded-16"
-      @update:open="open => { if (!open) confirmingDelete = false }"
     >
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
@@ -77,7 +76,6 @@
       </template>
       <template #menu-content="{ toggleMenu }">
         <manage-accounts-menu
-          v-if="!confirmingDelete"
           :kind="account.kind"
           :is-active="isActive"
           :toggle="toggleMenu"
@@ -87,20 +85,8 @@
           @paper="$emit('paper')"
           @explorer="$emit('explorer')"
           @disconnect="$emit('disconnect')"
-          @remove="onRemove"
+          @remove="$emit('delete')"
         />
-        <div v-else class="p-3 flex items-center gap-2">
-          <button
-            data-test="delete-confirm"
-            class="text-error text-s-12"
-            @click="$emit('delete'); confirmingDelete = false; toggleMenu()"
-          >
-            {{ $t('common.confirm') }}
-          </button>
-          <button data-test="delete-cancel" class="text-s-12" @click="confirmingDelete = false">
-            {{ $t('common.cancel') }}
-          </button>
-        </div>
       </template>
     </app-pop-up-menu>
   </div>
@@ -140,8 +126,6 @@ const emit = defineEmits<{
   'visibility-change': [visible: boolean]
 }>()
 
-const confirmingDelete = ref(false)
-
 // Report when this row enters/leaves the popup's scroll viewport so the parent
 // can lazily (re)fetch its balance. rootMargin prefetches just-below-fold rows.
 const rowRef = ref<HTMLElement | null>(null)
@@ -151,8 +135,4 @@ useIntersectionObserver(
   ([entry]) => emit('visibility-change', entry?.isIntersecting ?? false),
   { root: scrollRootRef, rootMargin: '100px' },
 )
-
-const onRemove = (): void => {
-  confirmingDelete.value = true
-}
 </script>
