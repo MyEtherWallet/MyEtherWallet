@@ -15,7 +15,8 @@
             :aria-label="
               $t('access_wallet_private_key.private_key_input_label')
             "
-            @keyup.enter="unlock"
+            @enter="unlock"
+            :submit-disabled="submitIsDisabled"
             :error-message="errorMessages"
           />
           <div class="flex align-center justify-center">
@@ -119,10 +120,6 @@ const isValidPrivateKey = computed<boolean>(() => {
 })
 
 const unlock = async () => {
-  // The connect button is disabled for empty/invalid input, but the input's
-  // `@keyup.enter` is not — bail on the same condition so pressing Enter with an
-  // invalid key can't build a wallet from bad bytes and crash (MEW-2185).
-  if (submitIsDisabled.value) return
   // TODO: remove hardcoded network id
   let wallet
   try {

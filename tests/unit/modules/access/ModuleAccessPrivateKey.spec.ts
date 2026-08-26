@@ -93,8 +93,8 @@ import ModuleAccessPrivateKey from '@/modules/access/ModuleAccessPrivateKey.vue'
 
 const AppInput = {
   name: 'AppInput',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
+  props: ['modelValue', 'submitDisabled'],
+  emits: ['update:modelValue', 'enter'],
   template:
     '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
 }
@@ -114,10 +114,14 @@ const factory = () =>
     global: { stubs, mocks: { $t: (k: string) => k } },
   })
 
-const pressEnter = async (w: ReturnType<typeof factory>, value: string) => {
-  const input = w.get('input')
-  await input.setValue(value)
-  await input.trigger('keyup', { key: 'Enter' })
+// Gate the Enter path the way AppInput does: the module drives it via the
+// `submit-disabled` prop it passes to the input. These tests assert that
+// wiring (invalid input => Enter is gated) — AppInput.spec.ts covers that the
+// input actually withholds the `enter` event when submit-disabled is true.
+const submitDisabledFor = async (value: string) => {
+  const w = factory()
+  await w.get('input').setValue(value)
+  return w.findComponent(AppInput).props('submitDisabled')
 }
 
 describe('ModuleAccessPrivateKey', () => {
@@ -127,23 +131,23 @@ describe('ModuleAccessPrivateKey', () => {
     h.isBitcoinChain.value = false
   })
 
-  it('does not build a wallet when Enter is pressed with an invalid key (MEW-2185)', async () => {
-    const w = factory()
-    await pressEnter(w, '0x1234') // valid hex but wrong length → invalid
-    expect(h.setWallet).not.toHaveBeenCalled()
+  it('gates the Enter key (submit-disabled) for an invalid key (MEW-2185)', async () => {
+    expect(await submitDisabledFor('0x1234')).toBe(true) // valid hex, wrong length
   })
 
-  it('does not build a wallet when Enter is pressed with an empty input', async () => {
-    const w = factory()
-    await pressEnter(w, '')
-    expect(h.setWallet).not.toHaveBeenCalled()
+  it('gates the Enter key (submit-disabled) for empty input', async () => {
+    expect(await submitDisabledFor('')).toBe(true)
   })
 
-  it('connects with setWallet when Enter is pressed with a valid key', async () => {
+  it('does not gate Enter for a valid key', async () => {
+    expect(await submitDisabledFor(VALID_KEY)).toBe(false)
+  })
+
+  it('connects with setWallet when the input emits `enter` with a valid key', async () => {
     const w = factory()
-    await pressEnter(w, VALID_KEY)
+    await w.get('input').setValue(VALID_KEY)
+    w.findComponent(AppInput).vm.$emit('enter')
     await Promise.resolve()
     expect(h.setWallet).toHaveBeenCalledTimes(1)
   })
-
 })
