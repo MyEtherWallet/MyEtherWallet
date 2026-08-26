@@ -57,7 +57,6 @@ const changeText = computed(() =>
         width="size-10"
         height="size-10"
         no-shadow
-        no-ring
         class="shrink-0"
       />
       <p
