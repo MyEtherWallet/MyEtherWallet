@@ -48,6 +48,10 @@
         v-else-if="listItem.iconID === ICON_IDS.STOCKS"
         class="w-5 h-5"
       />
+      <icon-perps
+        v-else-if="listItem.iconID === ICON_IDS.PERPS"
+        class="w-5 h-5"
+      />
     </div>
     <p class="capitalize">{{ listItem.title }}</p>
     <chevron-down-icon
@@ -69,6 +73,7 @@ import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
 import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
 import IconCrypto from '@/assets/icons/core_menu/icon-crypto.vue'
 import IconStocks from '@/assets/icons/core_menu/icon-stocks.vue'
+import IconPerps from '@/modules/perps/IconPerps.vue'
 import {
   BellIcon,
   CogIcon,

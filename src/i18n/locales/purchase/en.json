@@ -40,7 +40,10 @@
         "continue": "Continue"
       }
     },
-    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo",
+    "min": "Min",
+    "max": "Max",
+    "bank": "Bank",
     "select_token": {
       "title": "Tokens",
       "subtitle": "Select one from the list",
@@ -67,6 +70,11 @@
         "no_quotes": "No providers available for this selection. Try a different amount or currency."
       },
       "redirect": "You'll be redirected to {provider} to complete your purchase."
+    },
+    "quote": {
+      "updates_in": "Quote updates in {time}",
+      "expired_refreshing": "Quote expired — getting a new one…",
+      "rate_limited": "Too many requests — retry in {seconds}s"
     }
   }
 }

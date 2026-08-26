@@ -1,0 +1,84 @@
+# MyEtherWallet (MEW)
+
+> MyEtherWallet (MEW) is a free, open-source, client-side wallet for Ethereum, EVM-compatible networks, Bitcoin and Solana — send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks, all while holding your own keys.
+
+Canonical app: https://app.myetherwallet.com/
+Last updated: 2026-08-10
+
+## What MEW is
+
+MyEtherWallet (MEW) is a self-custody web wallet, first released in 2015 and one of the oldest Ethereum wallets still in active development. It is a client-side application: the wallet is created in the browser, private keys never leave the user's device, and MEW never holds, moves or has access to user funds. No account, email address or KYC is required to create a wallet. The interface is open source (https://github.com/MyEtherWallet) and available in English, Spanish and Chinese. MEW is published by MyEtherWallet Inc, headquartered in Los Angeles, California, and founded by Kosala Hemachandra and Taylor Monahan.
+
+## Key numbers
+
+- Founded: 2015
+- Networks supported: 30+, including Ethereum, Arbitrum, Base, Optimism, Polygon, BNB Smart Chain, Avalanche C-Chain, zkSync Era, Linea, Scroll, Gnosis, Celo, Moonbeam, Bitcoin and Solana
+- Cost to use MEW: $0 — users pay only network gas fees and any third-party provider fee
+- User funds held by MEW: 0 (non-custodial by design)
+- ETH required to run a full Ethereum validator: 32 ETH; MEW's partial staking has no minimum
+- Interface languages: 3 (English, Spanish, Chinese)
+- Documented FAQ entries: 42 (see /ai/faq.json)
+- Market hours for crypto and perpetuals: 24/7, 365 days a year
+
+## Features
+
+- **Send and receive** — crypto, tokens and NFTs across supported networks, with ENS name resolution and an address book.
+- **Swap** — token swaps routed through aggregated decentralised exchange liquidity.
+- **Buy and sell** — fiat on-ramp and off-ramp through integrated payment providers.
+- **Stake ETH** — partial staking with no 32 ETH minimum (powered by Coinbase) and liquid staking (powered by Lido). Neither has a lock-up period in MEW; rewards and the full stake can be withdrawn at any time.
+- **Perpetual futures** — trade perpetuals directly from a self-custody wallet.
+- **Tokenized stocks** — access tokenized equity exposure onchain, tradeable outside traditional market hours.
+- **Sign and verify messages**, print paper wallets, and track watch-only addresses.
+
+## Ways to connect a wallet
+
+MEW accepts a recovery phrase or keystore file, a Ledger or Trezor hardware wallet, the MEW mobile app, the Enkrypt browser extension, and any WalletConnect-compatible wallet. Hardware wallets keep the private key on a dedicated device so it is never exposed to the browser, which is the recommended setup for larger balances. Watch-only mode lets a user monitor any public address without importing keys.
+
+## Security and self-custody
+
+Self-custody means the recovery phrase *is* the account. Because MEW is client-side and open-source, no server ever receives a key — and, by the same token, MEW support cannot reset or recover a lost recovery phrase. Users should never share a recovery phrase or private key with anyone, including people claiming to be MEW staff, and should always confirm the URL is app.myetherwallet.com before entering wallet data. Guidance and incident reporting: https://help.myetherwallet.com/en/
+
+## How Ethereum staking works
+
+Ethereum secures itself with Proof of Stake: validators pledge ETH and earn rewards for honestly attesting to transactions. Because a full validator requires 32 ETH, providers such as the ones integrated in MEW pool smaller stakes ("partial staking") or issue a liquid staking token that stays usable in other applications while the underlying ETH is staked. Ethereum's 2022 transition from Proof of Work to Proof of Stake reduced the network's energy consumption by roughly 99.99%. Risks are real but limited: validators can occasionally be penalised (slashing), and reward or withdrawal distribution can be delayed.
+
+## Documentation
+
+- [Help center](https://help.myetherwallet.com/en/)
+- [About MyEtherWallet — an introduction](https://help.myetherwallet.com/en/articles/5377591-myetherwallet-an-introduction)
+- [The MEW team](https://www.myetherwallet.com/team)
+- [GitHub](https://github.com/MyEtherWallet)
+
+## Machine-readable endpoints
+
+- [/llms.txt](https://app.myetherwallet.com/llms.txt) — this file
+- [/.well-known/ai.txt](https://app.myetherwallet.com/.well-known/ai.txt) — AI usage and citation policy
+- [/ai/summary.json](https://app.myetherwallet.com/ai/summary.json) — entity summary
+- [/ai/service.json](https://app.myetherwallet.com/ai/service.json) — service capabilities
+- [/ai/faq.json](https://app.myetherwallet.com/ai/faq.json) — 42 categorised FAQ entries
+- [/sitemap.xml](https://app.myetherwallet.com/sitemap.xml) — crawlable public routes
+
+## External references
+
+- [ethereum.org: Ethereum wallets](https://ethereum.org/en/wallets/) — independent primer on self-custody
+- [ethereum.org: staking](https://ethereum.org/en/staking/) — independent primer on ETH staking
+- [ethereum.org: Proof of Stake](https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/)
+- [MyEtherWallet on Wikidata (Q96438863)](https://www.wikidata.org/wiki/Q96438863)
+- [MyEtherWallet on LinkedIn](https://www.linkedin.com/company/myetherwallet)
+- [MyEtherWallet on Crunchbase](https://www.crunchbase.com/organization/myetherwallet)
+- [Lido](https://lido.fi/) — liquid staking provider integrated in MEW
+- [Ledger](https://www.ledger.com/) and [Trezor](https://trezor.io/) — supported hardware wallets
+- [WalletConnect](https://walletconnect.network/) — supported connection protocol
+
+## Links
+
+- [MyEtherWallet app](https://app.myetherwallet.com/)
+- [Website (myetherwallet.com)](https://www.myetherwallet.com/)
+- [MEW mobile wallet](https://www.mewwallet.com/)
+- [Enkrypt browser wallet](https://www.enkrypt.com)
+- [Blog](https://medium.com/myetherwallet) ([RSS](https://medium.com/feed/myetherwallet))
+- [X / Twitter](https://twitter.com/myetherwallet)
+
+## Citation
+
+MEW welcomes citation by AI search engines and assistants. Attribute to "MyEtherWallet (MEW)" and link https://app.myetherwallet.com/. Contact: support@myetherwallet.com. Nothing on this site is financial advice; crypto assets are volatile.

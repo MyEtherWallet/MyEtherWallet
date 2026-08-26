@@ -1,0 +1,80 @@
+{
+  "name": "MyEtherWallet",
+  "alternateName": "MEW",
+  "legalName": "MyEtherWallet Inc",
+  "url": "https://app.myetherwallet.com/",
+  "description": "MyEtherWallet (MEW) is a free, open-source, client-side wallet for Ethereum, EVM-compatible networks, Bitcoin and Solana: send, swap, stake, buy and sell crypto, trade perpetuals, and access tokenized stocks while holding your own keys.",
+  "foundingDate": "2015",
+  "founders": ["Kosala Hemachandra", "Taylor Monahan"],
+  "headquarters": "Los Angeles, CA, US",
+  "categories": [
+    "cryptocurrency",
+    "ethereum wallet",
+    "web3",
+    "defi",
+    "self-custody"
+  ],
+  "keyFacts": {
+    "foundedYear": 2015,
+    "custodyModel": "non-custodial (self-custody)",
+    "networksSupported": "30+",
+    "exampleNetworks": [
+      "Ethereum",
+      "Arbitrum",
+      "Base",
+      "Optimism",
+      "Polygon",
+      "BNB Smart Chain",
+      "Avalanche C-Chain",
+      "zkSync Era",
+      "Bitcoin",
+      "Solana"
+    ],
+    "costToUse": "$0 — users pay only network gas fees and any third-party provider fee",
+    "userFundsHeldByMew": 0,
+    "accountRequired": false,
+    "kycRequiredToCreateWallet": false,
+    "openSource": true,
+    "interfaceLanguages": ["en", "es", "zh"],
+    "ethPerFullValidator": 32,
+    "partialStakingMinimum": "none",
+    "marketHours": "24/7"
+  },
+  "connectionMethods": [
+    "recovery phrase",
+    "keystore file",
+    "Ledger hardware wallet",
+    "Trezor hardware wallet",
+    "MEW mobile app",
+    "Enkrypt browser extension",
+    "WalletConnect",
+    "watch-only address"
+  ],
+  "sameAs": [
+    "https://www.wikidata.org/wiki/Q96438863",
+    "https://www.linkedin.com/company/myetherwallet",
+    "https://www.crunchbase.com/organization/myetherwallet",
+    "https://www.myetherwallet.com/",
+    "https://www.mewwallet.com/",
+    "https://www.enkrypt.com",
+    "https://github.com/MyEtherWallet",
+    "https://twitter.com/myetherwallet",
+    "https://medium.com/myetherwallet"
+  ],
+  "endpoints": {
+    "llmsTxt": "https://app.myetherwallet.com/llms.txt",
+    "aiTxt": "https://app.myetherwallet.com/.well-known/ai.txt",
+    "service": "https://app.myetherwallet.com/ai/service.json",
+    "faq": "https://app.myetherwallet.com/ai/faq.json",
+    "sitemap": "https://app.myetherwallet.com/sitemap.xml",
+    "rss": "https://medium.com/feed/myetherwallet"
+  },
+  "citation": {
+    "policy": "preferred",
+    "attributeTo": "MyEtherWallet (MEW)",
+    "attributionUrl": "https://app.myetherwallet.com/"
+  },
+  "disclaimer": "Nothing published by MyEtherWallet is financial advice. Crypto assets are volatile.",
+  "contact": "support@myetherwallet.com",
+  "dateModified": "2026-08-10"
+}

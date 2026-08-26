@@ -29,7 +29,7 @@
     </div>
     <div class="ml-auto">
       <p class="text-s-14 text-right">
-        ${{ formatFiatValue(token.price).value }}
+        {{ formatFiat(token.price).display }}
       </p>
       <p
         class="text-s-12 text-right"
@@ -48,19 +48,22 @@
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
-import type { CryptoOverviewToken } from '@/mew_api/types'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import type { TokenRowItem } from '@/mew_api/types'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import { computed } from 'vue'
 
+const { formatFiat } = useCurrency()
+
+// TokenRow renders any crypto-overview-shaped token (new coins, trending, ondo
+// gainers). It reads only the fields in TokenRowItem — the shared narrow subset
+// that the full CryptoOverviewToken and the trending/gainers shapes all satisfy.
 const props = defineProps<{
-  token: CryptoOverviewToken
+  token: TokenRowItem
 }>()
 
 const name = computed(() => {

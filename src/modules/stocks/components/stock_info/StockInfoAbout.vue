@@ -17,7 +17,7 @@
         <h2
           class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-4 flex items-center"
         >
-          About
+          {{ $t('stocks.about') }}
           <app-token-symbol
             v-if="data.primaryMarket"
             :symbol="data.primaryMarket?.symbol"
@@ -25,8 +25,13 @@
             class="!font-bold !text-s-20 xs:!text-s-24 leading-p-150 ml-1"
           />
         </h2>
-        <p class="text-s-14 text-info leading-p-150">
-          {{ data.description }}
+        <div v-if="isLoadingDescription && !displayedDescription" class="pt-1">
+          <div class="h-4 mb-2 animate-pulse bg-surface rounded-6 w-full"></div>
+          <div class="h-4 mb-2 animate-pulse bg-surface rounded-6 w-full"></div>
+          <div class="h-4 animate-pulse bg-surface rounded-6 w-2/3"></div>
+        </div>
+        <p v-else class="text-s-14 text-info leading-p-150">
+          {{ displayedDescription || '-' }}
         </p>
       </div>
       <div
@@ -39,7 +44,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-2"
           >
-            Category
+            {{ $t('stocks.category') }}
           </p>
           <div
             v-if="
@@ -67,7 +72,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
           >
-            Shares Per Token
+            {{ $t('stocks.shares_per_token') }}
           </p>
           <p
             class="text-s-16 font-medium"
@@ -86,7 +91,7 @@
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
           >
-            Total Holders
+            {{ $t('stocks.total_holders') }}
           </p>
           <p class="text-s-16 font-medium">
             {{
@@ -102,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {
   formatFloatingPointValue,
@@ -113,8 +119,17 @@ import { storeToRefs } from 'pinia'
 
 interface Props {
   data: GetWebStocksInfoSummaryResponse
+  /** Fetched from the dedicated description endpoint. */
+  description?: string | null
+  isLoadingDescription?: boolean
 }
-defineProps<Props>()
+const props = defineProps<Props>()
+
+// The summary payload still carries a description for assets the dedicated
+// endpoint has nothing for, so keep it as a fallback.
+const displayedDescription = computed(
+  () => props.description || props.data.description || '',
+)
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

@@ -2,12 +2,15 @@ import {
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
+  PERP_INFO_ROUTE_NAME,
 } from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { STOCK_INFO_ROUTE } from './routeStockInfo'
+import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -16,6 +19,8 @@ const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
+const ViewPerps = () => import('@/views/ViewPerps.vue')
+const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -33,12 +38,21 @@ const DefaultRoutes = <RouteNameCollection>[
       ]
     : []),
   {
+    // New public Home is the root; disconnected users land here.
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
-    component: PortfolioView,
+    component: ViewHome,
     meta: {
       noAuth: true,
     },
+  },
+  {
+    // The wallet portfolio moved off the root; requires a connected wallet
+    // (the guard bounces disconnected users to '/'). Its connect/create and
+    // token/stock-info children keep their own `noAuth` where they had it.
+    path: ROUTES_MAIN.PORTFOLIO.PATH,
+    name: ROUTES_MAIN.PORTFOLIO.NAME,
+    component: PortfolioView,
     children: [
       CREATE_ROUTES,
       ACCESS_ROUTES,
@@ -121,6 +135,28 @@ const DefaultRoutes = <RouteNameCollection>[
       {
         name: STOCK_INFO_ROUTE_NAMES.sign,
         ...STOCK_INFO_ROUTE,
+      },
+    ],
+  },
+  {
+    path: ROUTES_MAIN.PERPS.PATH,
+    name: ROUTES_MAIN.PERPS.NAME,
+    component: ViewPerps,
+    meta: {
+      noAuth: true,
+    },
+    beforeEnter: async (_to, _from, next) => {
+      // Perps stays reachable in restricted regions — the view renders a
+      // blocked state instead of redirecting away. The geo check is still
+      // awaited here so it is resolved before the first paint, otherwise a
+      // restricted user would briefly see a tradeable UI.
+      await fetchTradingRestriction()
+      next()
+    },
+    children: [
+      {
+        name: PERP_INFO_ROUTE_NAME,
+        ...PERP_INFO_ROUTE,
       },
     ],
   },

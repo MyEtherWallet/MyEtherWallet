@@ -73,6 +73,8 @@
       :selected-chain="selectedChain"
       :passed-chains="passedChains"
       :filter-by-selected-chain-type="canStore"
+      :z-index-overlay="dialogZIndexOverlay"
+      :z-index-container="dialogZIndexContainer"
       @update:chain="setSelectedChain"
     />
   </div>
@@ -104,6 +106,14 @@ const prop = defineProps({
   preselectedChain: {
     type: Object as () => Chain | null,
     default: null,
+  },
+  dialogZIndexOverlay: {
+    type: String,
+    default: 'z-[200]',
+  },
+  dialogZIndexContainer: {
+    type: String,
+    default: 'z-[201]',
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
@@ -190,7 +200,12 @@ onMounted(() => {
 /** -------------------------------
  * Dialog
  -------------------------------*/
-const openDialog = ref(false)
+/**
+ * Two-way open state so a parent can drive the dialog when the trigger lives
+ * elsewhere in the DOM (e.g. the mobile network row in the settings popup)
+ * while this component stays mounted to own the dialog.
+ */
+const openDialog = defineModel<boolean>('dialogOpen', { default: false })
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }

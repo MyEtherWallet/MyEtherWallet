@@ -21,7 +21,7 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.marketCap).value }}
+          {{ formatFiat(data.marketCap).display }}
           <span
             class="text-s-10 md:text-s-13 font-bold leading-p-150 ml-1"
             :class="{
@@ -59,7 +59,7 @@
           v-if="data && !isLoading"
           class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
-          ${{ formatFiatValue(data.volume24h).value }}
+          {{ formatFiat(data.volume24h).display }}
         </p>
         <div
           v-else
@@ -166,19 +166,18 @@ import OverviewContainer from './components/overview/OverviewContainer.vue'
 import TokenRow from './components/overview/TokenRow.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ref } from 'vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
-import type { CryptoOverview, CryptoOverviewToken } from '@/mew_api/types'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import type { CryptoOverview, TokenRowItem } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import { usePaginate } from '@/composables/usePaginate'
 
 const { useMEWFetch } = useFetchMewApi()
+const { formatFiat } = useCurrency()
 
-const newTokens = ref<CryptoOverviewToken[]>([])
-const gainersTokens = ref<CryptoOverviewToken[]>([])
+const newTokens = ref<TokenRowItem[]>([])
+const gainersTokens = ref<TokenRowItem[]>([])
 const fetchUrl = '/v1/web/overview'
 const {
   data,
@@ -190,7 +189,7 @@ onFetchResponse(() => {
   if (data.value) {
     newTokens.value = data.value.newCoins
     gainersTokens.value = data.value.ondoTopGainers.map(
-      (gainer): CryptoOverviewToken => {
+      (gainer): TokenRowItem => {
         return {
           coinId: 'ondo-' + gainer.primaryMarket.symbol,
           name: gainer.stockAlias || '',
@@ -216,7 +215,7 @@ const {
   nextPage: nextPageNewTokens,
   prevPage: prevPageNewTokens,
   totalPages: totalPagesNewTokens,
-} = usePaginate<CryptoOverviewToken>(newTokens, 3)
+} = usePaginate<TokenRowItem>(newTokens, 3)
 
 const {
   currentPage: currPageGainersTokens,
@@ -224,5 +223,5 @@ const {
   nextPage: nextPageGainersTokens,
   prevPage: prevPageGainerTokens,
   totalPages: totalPagesGainersTokens,
-} = usePaginate<CryptoOverviewToken>(gainersTokens, 3)
+} = usePaginate<TokenRowItem>(gainersTokens, 3)
 </script>

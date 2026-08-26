@@ -36,10 +36,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                Trade
+                {{ $t('common.trade') }}
               </p>
             </button>
             <!-- Swap button -->
@@ -55,10 +56,33 @@
               <icon-swap :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
+              </p>
+            </button>
+            <!-- Perps button -->
+            <button
+              @click="openPanel('perps')"
+              :class="[
+                walletPanel === 'perps' && isOpenSideMenu
+                  ? 'bg-mewBg'
+                  : 'hoverNoBG',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+              ]"
+            >
+              <icon-perps
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+              />
+              <p
+                :class="[
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                ]"
+              >
+                {{ $t('common.perps') }}
               </p>
             </button>
             <!-- Bridge button -->
@@ -76,10 +100,11 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                Bridge
+                {{ $t('common.bridge') }}
               </p>
             </button>
             <!-- Deposit button -->
@@ -95,7 +120,8 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -116,7 +142,8 @@
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -135,7 +162,8 @@
               <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -165,8 +193,8 @@
         class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
-          label="close side menu"
-          class="sm:hidden flex-none ml-3 rounded-12 hoverNoBG"
+          :label="$t('common.close_side_menu')"
+          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <ChevronDoubleRightIcon class="w-5 h-5" />
@@ -177,6 +205,10 @@
             <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
             <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
             <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+            <ModulePerpsTrade
+              v-else-if="walletPanel === 'perps'"
+              key="perps-trade"
+            />
             <ModulePurchase
               v-else-if="walletPanel === 'purchase'"
               key="purchase"
@@ -188,7 +220,12 @@
         </div>
       </div>
     </transition>
-    <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <!-- WeekendTradingTooltip is intentionally not mounted — the weekend
+         trading tooltip is disabled. Re-render it here with
+         `:anchor="tradeBtnRef"` to bring it back; the component and its
+         `shouldShowTooltip` gate in weekendTradingAnnouncementStore are
+         unchanged. The WeekendTradingDialog is unaffected. -->
+    <marketing-tooltip :anchor="tradeBtnRef" />
     <rwa-reward-modal />
   </div>
 </template>
@@ -203,9 +240,11 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
+import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
@@ -218,12 +257,21 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
+const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
+
+// Spanish labels are longer; shrink the side-menu action button text so they fit
+const actionTextSizeClass = computed(() =>
+  locale.value === 'es'
+    ? 'text-[7px] xs:text-s-8 text-wrap'
+    : 'text-s-9 xs:text-s-11',
+)
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
@@ -276,17 +324,12 @@ watch(isXLAndUp, newVal => {
 const openPanel = (panel: WalletPanel) => {
   walletMenu.openPanel(panel)
   analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-    button: panel as any,
+    button: panel,
   })
 }
 
 const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
-const comingSoon = computed(() => {
-  const map = new Map<string, string>()
-  return map.get(walletPanel.value)
-    ? `${map.get(walletPanel.value)} is coming soon`
-    : 'Coming Soon'
-})
+const comingSoon = computed(() => t('common.coming_soon'))
 </script>

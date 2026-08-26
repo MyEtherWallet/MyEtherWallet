@@ -1,0 +1,19 @@
+{
+  "sign_message": {
+    "enter_message_to_sign": "输入要签名的消息",
+    "signature_title": "签名",
+    "message_label": "消息：",
+    "signing_address_label": "签名地址：",
+    "signature_label": "签名：",
+    "copy_signature": "复制签名",
+    "signature_copied": "签名已复制到剪贴板",
+    "signature_copy_failed": "复制签名到剪贴板失败",
+    "signing_failed": "签名失败",
+    "enter_message_to_verify": "输入要验证的消息",
+    "signing_address": "签名地址",
+    "enter_signature_to_verify": "输入要验证的签名",
+    "message_signed_by": "消息 {message} 由 {address} 签名。",
+    "message_not_signed_by": "消息 {message} 并非由 {address} 签名。",
+    "verify_not_supported": "{chain} 不支持验证消息"
+  }
+}

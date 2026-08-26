@@ -126,7 +126,7 @@
             />
           </p>
           <p v-if="order.usdValue" class="text-s-12 text-info">
-            ${{ order.usdValue }}
+            {{ formatFiat(order.usdValue).display }}
           </p>
         </div>
       </div>
@@ -183,7 +183,7 @@
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
-            {{ formatTime(order.createdAt) }}
+            {{ formatNotificationDate(order.createdAt) }}
           </p>
         </div>
 
@@ -239,6 +239,8 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 // Props
 const props = defineProps<{
@@ -251,6 +253,8 @@ const props = defineProps<{
 defineEmits<{
   remove: [hash: string]
 }>()
+
+const { formatFiat } = useCurrency()
 
 const { t } = useI18n()
 
@@ -293,12 +297,6 @@ const formatCountdown = (seconds: number): string => {
   const mins = Math.floor(seconds / 60)
   const secs = seconds % 60
   return `${mins}:${secs.toString().padStart(2, '0')}`
-}
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
 // Truncate hash

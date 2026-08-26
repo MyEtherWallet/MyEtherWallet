@@ -47,6 +47,7 @@
         type="text"
         autoComplete="off"
         placeholder="0"
+        :aria-label="$t('common.amount')"
         v-model="amount"
         :readonly="readonly"
         @focus="setInFocusInput"
@@ -62,6 +63,7 @@
         :disabled-tokens="disabledTokens"
         :disabled-group-title="disabledGroupTitle"
         @open:select-token="setIsOpenSelectToken"
+        @select:token="emit('select:token', $event)"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
@@ -100,7 +102,7 @@
           </div>
           <div v-else class="text-s-12 text-info transition-colors h-5">
             {{ $t('common.price') }}:
-            <span>${{ tokenPrice }}</span>
+            <span>{{ currencySymbol }}{{ tokenPrice }}</span>
           </div>
         </div>
       </transition>
@@ -123,10 +125,8 @@ import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import {
-  formatFloatingPointValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type NewTokenInfo } from '@/composables/useSwap'
 import { useDebounceFn } from '@vueuse/core'
 import { useInFocusInput } from '@/composables/useInFocusInput'
@@ -134,6 +134,8 @@ import { useInFocusInput } from '@/composables/useInFocusInput'
 const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
   storeToRefs(walletStore)
+
+const { formatFiat, currencySymbol } = useCurrency()
 
 const props = defineProps({
   externalLoading: {
@@ -190,6 +192,12 @@ const amount = defineModel('amount', {
 
 const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 
+// Forwarded from the token-select child: fires only on an explicit user pick,
+// unlike v-model:selected-token which also updates on programmatic defaulting.
+const emit = defineEmits<{
+  'select:token': [token: NewTokenInfo]
+}>()
+
 const hasError = ref(false)
 const errorMessage = ref('')
 const error = defineModel('error', {
@@ -245,7 +253,7 @@ const isLoading = computed(() => {
 })
 
 const tokenPrice = computed(() => {
-  return formatFiatValue(selectedToken.value?.price || 0).value
+  return formatFiat(selectedToken.value?.price || 0).value
 })
 const balanceFiatOrError = computed(() => {
   // handles the case where toAmount has the ≈ sign
@@ -255,7 +263,7 @@ const balanceFiatOrError = computed(() => {
     !props.isFromView &&
     !props.isPristine
   ) {
-    return '$0.00'
+    return formatFiat(0).display
   }
   const numAmount =
     typeof amount.value === 'string'
@@ -265,15 +273,15 @@ const balanceFiatOrError = computed(() => {
     const val = BigNumber(selectedToken.value?.price || 0)
       .times(numAmount || 0)
       .toFixed(2)
-    const formattedVal = formatFiatValue(val).value
-    return `${props.isEstimate ? '≈ ' : ''}$ ${formattedVal}`
+    const formattedVal = formatFiat(val).display
+    return `${props.isEstimate ? '≈ ' : ''}${formattedVal}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(numAmount || 0),
     ),
   )
-  return `${props.isEstimate ? '≈ ' : ''}$ ${formatFiatValue(_balance).value}`
+  return `${props.isEstimate ? '≈ ' : ''}${formatFiat(_balance).display}`
 })
 
 const balance = computed(() => {

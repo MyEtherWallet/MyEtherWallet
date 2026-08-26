@@ -7,7 +7,11 @@
     <!-- 24/7 announcement dialog disabled; only the tooltip is used, gated to
          show 3 days after the RWA announcement is closed -->
     <!-- <weekend-trading-dialog v-if="isLoadingComplete" /> -->
-    <rwa-announcement-dialog v-if="isLoadingComplete" />
+    <!-- Trade & Hold campaign announcement disabled. NOTE: this was the last
+         component calling `useMarketStatus().fetchTradingRestriction()`, which
+         is the only writer of `globalStore.isTradingRestrictedInRegion` — see
+         the comment in globalStore for what that means for readers. -->
+    <!-- <rwa-announcement-dialog v-if="isLoadingComplete" /> -->
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
@@ -29,10 +33,11 @@ import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 // import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
-import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
+// import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'
@@ -70,12 +75,13 @@ const {
   wallet,
   walletAddress,
   isWalletConnected,
+  isWalletUnlocked,
   hasMissingBalances,
   userProperties,
 } = storeToRefs(store)
 const chainStore = useChainsStore()
 const holdingsStore = useHoldingsStore()
-const { initSwapper } = useSwap()
+useSwap()
 const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
@@ -99,27 +105,41 @@ const { isPending, start, stop } = useTimeoutFn(() => {
 }, 300000)
 
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
   stop()
-  wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-    if (hasMissingBalances.value) {
-      // Refetch balances after 5 minutes if there are missing balances
-      setTimeout(() => {
-        toastStore.addToastMessage({
-          text: 'Sit tight!',
-          textSecondary:
-            "We are processing more tokens in your wallet. We'll update your balances soon.",
-          type: ToastType.Info,
-          duration: 300000,
-        })
-      }, 2000)
-      if (isPending.value) {
-        stop()
+  wallet.value
+    ?.getBalance()
+    .then((balances: TokenBalancesRaw) => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+      if (hasMissingBalances.value) {
+        // Refetch balances after 5 minutes if there are missing balances
+        setTimeout(() => {
+          toastStore.addToastMessage({
+            text: t('common.processing_tokens_title'),
+            textSecondary: t('common.processing_tokens_description'),
+            type: ToastType.Info,
+            duration: 300000,
+          })
+        }, 2000)
+        if (isPending.value) {
+          stop()
+        }
+        start()
       }
-      start()
-    }
-  })
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+      // Keep the retry loop alive: a transient failure shouldn't permanently
+      // stop the timer when balances are still missing from a prior load.
+      if (hasMissingBalances.value) {
+        start()
+      }
+    })
 }
 
 watch(
@@ -136,6 +156,20 @@ watch(
   },
   { immediate: true },
 )
+
+// Seed the reward campaign's season data on first load. Runs after the watcher
+// above so a restored session has already started its address-scoped poll — the
+// store then skips this, since that poll returns the same season block plus the
+// wallet's buckets. Only a visitor with no wallet yet actually fetches here.
+holdingsStore.fetchCampaignInfo()
+
+// Logging in from a watch-only address keeps the same `walletAddress`, so the
+// watcher above never fires — refetch reward info on the unlock itself, so it
+// reflects the address that can actually claim.
+watch(isWalletUnlocked, unlocked => {
+  if (unlocked && walletAddress.value)
+    holdingsStore.fetchInfo(walletAddress.value)
+})
 
 const providerStore = useProviderStore()
 const { addProvider } = providerStore
@@ -172,6 +206,7 @@ watch(
  -------------------------------*/
 
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 // const showFeedbackToast = () => {
 //   setTimeout(() => {
@@ -200,7 +235,7 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId)
+      holdingsStore.register(order.hash, order.chainId, order.usdValue)
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
@@ -208,7 +243,6 @@ onMounted(() => {
     const provider = customEvent.detail
     addProvider(provider)
   })
-  initSwapper()
   if (configs.INTERCOM_APP_ID) {
     Intercom({
       app_id: configs.INTERCOM_APP_ID,

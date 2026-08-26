@@ -40,11 +40,11 @@ import AllocationDialog from './components/allocation/AllocationDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenAllocation } from '@/modules/portfolio/types'
+
+const { formatFiat } = useCurrency()
 
 const walletStore = useWalletStore()
 const {
@@ -94,7 +94,7 @@ const topTokens = computed<TokenAllocation[]>(() => {
       formattedPercentage: formatPercentageValue(percentage).value,
       percentageNumber: percentage.toNumber(),
       id: token.coinId,
-      usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
+      usdBalanceFormatted: formatFiat(tokenBalanceFiatBN).value,
       is_stock: token.ondo !== undefined,
       stock_alias: token.ondo?.stockAlias || undefined,
       stock_route: token.ondo?.primaryMarket.symbol || undefined,

@@ -28,17 +28,23 @@
           : isOutline
             ? 'border border-2 border-primary text-primary bg-transparent active:bg-blue-10'
             : 'text-white bg-primary active:brightness-95'
-        : theme === 'error'
+        : theme === 'success'
           ? isGhost
-            ? 'bg-transparent text-error hover:bg-error-10 active:bg-error-10'
+            ? 'bg-transparent text-success hover:bg-success/10 active:bg-success/10'
             : isOutline
-              ? 'border border-2 border-error text-error bg-transparent active:bg-error-10'
-              : 'text-white bg-error active:brightness-95'
-          : isGhost
-            ? 'bg-transparent text-black hover:bg-grey-5 active:bg-grey-10'
-            : isOutline
-              ? 'border border-2 border-grey-outline text-black bg-transparent active:bg-grey-5'
-              : 'text-black bg-bgMuted active:brightness-95',
+              ? 'border border-2 border-success text-success bg-transparent active:bg-success/10'
+              : 'text-white bg-success active:brightness-95'
+          : theme === 'error'
+            ? isGhost
+              ? 'bg-transparent text-error hover:bg-error-10 active:bg-error-10'
+              : isOutline
+                ? 'border border-2 border-error text-error bg-transparent active:bg-error-10'
+                : 'text-white bg-error active:brightness-95'
+            : isGhost
+              ? 'bg-transparent text-black hover:bg-grey-5 active:bg-grey-10'
+              : isOutline
+                ? 'border border-2 border-grey-outline text-black bg-transparent active:bg-grey-5'
+                : 'text-black bg-bgMuted active:brightness-95',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -59,9 +65,11 @@
               ? 'text-white/30  fill-white'
               : theme === 'error'
                 ? 'text-error/30 fill-error'
-                : theme === 'neutral'
-                  ? 'text-black/20 fill-black/60'
-                  : 'text-primary/30 fill-primary',
+                : theme === 'success'
+                  ? 'text-success/30 fill-success'
+                  : theme === 'neutral'
+                    ? 'text-black/20 fill-black/60'
+                    : 'text-primary/30 fill-primary',
           ]"
           viewBox="0 0 100 101"
           width="24"
@@ -133,10 +141,11 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'neutral'>,
+    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
     default: 'primary',
   },
 })
+
 const emit = defineEmits(['click'])
 const onClick = () => {
   if (!props.disabled && !props.isLoading) {

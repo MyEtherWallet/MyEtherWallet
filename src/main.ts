@@ -14,10 +14,21 @@ import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
 import { analytics, initAnalytics } from './analytics'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
-import { isExtensionOrProviderError } from '@/sentry/extensionNoise'
+import {
+  isExtensionOrProviderError,
+  isForeignStackOverflow,
+  isInvalidWalletAddressError,
+  isMetaMaskSdkDecryptError,
+  isProviderNotFoundError,
+  isRainbowKitNotFoundError,
+  isTransactionReceiptTimeoutError,
+  isTrezorHandshakeError,
+} from '@/sentry/extensionNoise'
+import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
 const app = createApp(App)
 
@@ -27,7 +38,7 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && process.env.NODE_ENV === 'production') {
   sentryInit({
     app,
     dsn,
@@ -41,16 +52,54 @@ if (dsn) {
       // auto-recovered by router.onError (reload once), so they are noise.
       'Unable to preload CSS',
       'Failed to fetch dynamically imported module',
+      // WalletConnect benign rejections when the user abandons the connection flow
+      'Proposal expired',
+      'Pairing expired',
+      'Request expired',
+      // Transient WalletConnect relay hiccup: the @walletconnect/core Subscriber
+      // fails to subscribe to a session topic over the relay WebSocket. The
+      // connect flow already handles it (user gets a "Could not connect" toast
+      // and can retry), so it is benign, unactionable network noise.
+      /Subscribing to \w+ failed, please try again/,
     ],
     // Drop errors thrown inside browser extensions (catches events that DO
-    // carry parsed extension frames).
-    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // carry parsed extension frames). `webkit-masked-url` is how iOS 16.4+
+    // WebKit exposes the source of extension / content-blocker / in-app-browser
+    // injected scripts.
+    denyUrls: [
+      /(?:chrome|moz|safari-web)-extension:\/\//i,
+      /webkit-masked-url:\/\//i,
+    ],
     // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
-    // "provider disconnected"). These surface as serialized plain objects with
+    // "provider disconnected"), viem InvalidAddressError (a wallet returned a
+    // malformed address on connect — already handled with a user toast), wagmi
+    // ProviderNotFoundError (user tried to connect a browser wallet with no
+    // injected provider — already handled with a user toast), and
+    // transient RPC/WebSocket drops (e.g. a mewapi wss node closing mid-request,
+    // surfacing as an unhandled "Connection is closed" rejection), viem
+    // WaitForTransactionReceiptTimeoutError (a submitted trade tx that did not
+    // confirm within the timeout — a network condition the app already handles),
+    // and the external "not found rainbowkit" rejection emitted by a wallet's
+    // injected in-app-browser detection script (not app code — our bundle never
+    // throws it). These surface as serialized plain objects or bare strings with
     // no parsed frames, so denyUrls can't catch them — inspect the original
     // exception instead. Genuine app errors are unaffected.
     beforeSend(event, hint) {
-      if (isExtensionOrProviderError(hint?.originalException)) return null
+      const originalException = hint?.originalException
+      if (
+        isExtensionOrProviderError(originalException) ||
+        isInvalidWalletAddressError(originalException) ||
+        isMetaMaskSdkDecryptError(originalException) ||
+        isProviderNotFoundError(originalException) ||
+        isRainbowKitNotFoundError(originalException) ||
+        isTransactionReceiptTimeoutError(originalException) ||
+        isTransientRpcError(originalException) ||
+        isTrezorHandshakeError(originalException) ||
+        // iOS injected-script "Maximum call stack" RangeErrors with no app
+        // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
+        isForeignStackOverflow(event)
+      )
+        return null
       return event
     },
     integrations: [
@@ -104,11 +153,10 @@ pinia.use(
           },
           purchase: null,
           chainsStore: {
-            ...state.chainsStore as | Record<string, unknown> | undefined,
+            ...(state.chainsStore as Record<string, unknown> | undefined),
             allChains: null, // too large to send
-            chains: null // too large to send
-
-          }
+            chains: null, // too large to send
+          },
         }
       }
       return state
@@ -125,7 +173,17 @@ app.use(autoAnimatePlugin)
 // Initialize analytics only after the router's initial navigation has resolved,
 // so the first auto-captured Page Viewed event includes the active route.
 // (Right after app.use(router) the current route is still START_LOCATION.)
-void router.isReady().then(() => initAnalytics())
+//
+// The region check runs once here, on initial landing, so the
+// `isRegionRestricted` user property is reported no matter which page the user
+// entered on — not just the pages that consume the restriction themselves. It is
+// chained after init so the identify call is not buffered pre-initialization,
+// and it is a no-op for latency: the singleton dedupes with the earlier calls
+// from TheHeader and the perps route guard, whichever fires first.
+void router.isReady().then(async () => {
+  await initAnalytics()
+  void fetchTradingRestriction()
+})
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)

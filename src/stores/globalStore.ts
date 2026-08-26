@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 import type { FeePriority } from '@/mew_api/types'
 import { analytics } from '@/analytics'
 import * as Sentry from '@sentry/vue'
+import { safeLocalStorage } from '@/utils/safeStorage'
 interface SelectedNetwork {
   selectedNetwork: string
 }
@@ -12,11 +13,12 @@ export const useGlobalStore = defineStore('global', () => {
   /** --------------------
  * NETWORK
  --------------------*/
-  const storage = useLocalStorage<SelectedNetwork>(
+  const storage = useStorage<SelectedNetwork>(
     'selectedNetwork',
     {
       selectedNetwork: 'ETHEREUM', // default network
     },
+    safeLocalStorage,
     { mergeDefaults: true },
   )
 
@@ -38,17 +40,40 @@ export const useGlobalStore = defineStore('global', () => {
     maxFeePerGas: '0',
   })
   const gasPriceType = ref<FeePriority>('REGULAR')
-  const defaultGasPriceType = useLocalStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR')
+  const defaultGasPriceType = useStorage<FeePriority>(
+    'mew-default-gas-price-type',
+    'REGULAR',
+    safeLocalStorage,
+  )
+
+  /**--------------------
+   * LANGUAGE
+   --------------------*/
+  const locale = useStorage<string>('mew-locale', 'en', safeLocalStorage)
 
   /**--------------------
    * WELCOME DIALOG
    --------------------*/
-  const welcomeDialogDismissed = useLocalStorage<boolean>(
+  const welcomeDialogDismissed = useStorage<boolean>(
     'mew-welcome-dialog-dismissed',
     false,
+    safeLocalStorage,
   )
   const dismissWelcomeDialog = () => {
     welcomeDialogDismissed.value = true
+  }
+
+  /**--------------------
+   * BALANCE VISIBILITY
+   * Global, persisted amount-hide toggle (the "eye" on portfolio surfaces).
+   --------------------*/
+  const hideBalances = useStorage<boolean>(
+    'mew-hide-balances',
+    false,
+    safeLocalStorage,
+  )
+  const toggleHideBalances = () => {
+    hideBalances.value = !hideBalances.value
   }
 
   /**--------------------
@@ -56,6 +81,28 @@ export const useGlobalStore = defineStore('global', () => {
    --------------------*/
   const fetchedTradingThisSession = ref(false)
   const isTradingRestrictedInRegion = ref(false)
+  const setIsTradingRestrictedInRegion = (restricted: boolean) => {
+    isTradingRestrictedInRegion.value = restricted
+    analytics.setIsRegionRestricted(restricted)
+  }
+
+  /**
+   * Regional eligibility, resolved. True only once the geo check has come back
+   * AND come back allowed.
+   *
+   * Anything that starts a trade must gate on this rather than on
+   * `!isTradingRestrictedInRegion`: that flag starts `false`, so "not checked
+   * yet" is indistinguishable from "allowed" and a gate written against it lets
+   * orders through during the check. `fetchedTradingThisSession` only flips on a
+   * successful fetch, so a failed check — which also sets restricted `true` —
+   * stays blocked here too.
+   *
+   * Use `isTradingRestrictedInRegion` for the UI, where showing the restriction
+   * notice before the check resolves would be the wrong default.
+   */
+  const isTradingAllowedInRegion = computed(
+    () => fetchedTradingThisSession.value && !isTradingRestrictedInRegion.value,
+  )
 
   return {
     isEIP1559SupportedNetwork,
@@ -66,7 +113,12 @@ export const useGlobalStore = defineStore('global', () => {
     setSelectedNetwork,
     welcomeDialogDismissed,
     dismissWelcomeDialog,
+    hideBalances,
+    toggleHideBalances,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
+    setIsTradingRestrictedInRegion,
+    locale,
   }
 })

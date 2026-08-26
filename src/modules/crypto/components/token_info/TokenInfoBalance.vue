@@ -46,7 +46,7 @@
           </div>
 
           <p class="xs:ml-3 font-normal text-s-14 xs:text-s-24 text-info">
-            ${{ getFormattedFiatValueForChain(currentBalance) }}
+            {{ currencySymbol }}{{ getFormattedFiatValueForChain(currentBalance) }}
           </p>
         </div>
       </div>
@@ -111,11 +111,17 @@
               </div>
 
               <p class="text-info text-s-12 capitalize truncate">
-                on {{ i.chainNameLong || i.chainName.toLowerCase() }}
+                {{
+                  $t('crypto.on_chain', {
+                    chain: i.chainNameLong || i.chainName.toLowerCase(),
+                  })
+                }}
               </p>
             </div>
             <div class="ml-auto sm:mr-10 text-right">
-              <p class="text-info text-s-14 font-medium">${{ i.fiatValue }}</p>
+              <p class="text-info text-s-14 font-medium">
+                {{ currencySymbol }}{{ i.fiatValue }}
+              </p>
             </div>
           </div>
           <app-base-button
@@ -147,10 +153,8 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 //utils
 import BigNumber from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { formatUnits } from 'viem'
 
 const props = defineProps({
@@ -195,6 +199,8 @@ const props = defineProps({
 /** --------------------
  * Stores
  --------------------*/
+const { formatFiat, currencySymbol } = useCurrency()
+
 const walletStore = useWalletStore()
 const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
 
@@ -309,7 +315,7 @@ const getFormattedFiatValueForChain = (balance: string) => {
   if (balance === 'N/A' || !props.currentPrice) return 'N/A'
   const price = new BigNumber(props.currentPrice)
   const fiat = new BigNumber(balance).multipliedBy(price)
-  return formatFiatValue(fiat).value
+  return formatFiat(fiat).value
 }
 const getChainIcon = (chainName: string): string | undefined => {
   return chainsStore.getChainIcon(chainName)

@@ -40,7 +40,7 @@
           v-if="sidebarIsOpen"
           id="default-sidebar"
           class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-white"
-          aria-label="Sidebar"
+          :aria-label="$t('common.sidebar')"
         >
           <div class="h-full px-3 py-4 overflow-y-auto bg-white">
             <div class="flex items-center justify-between mb-4">
@@ -204,7 +204,7 @@ const toolsMenuItem = computed<AppMenuListItem>(() => {
 // const otherMenuList = computed<AppMenuListItem[]>(() => {
 //   return [
 // {
-//   title: t('settings'),
+//   title: t('common.settings'),
 //   iconID: ICON_IDS.SETTINGS,
 // },
 //   ]

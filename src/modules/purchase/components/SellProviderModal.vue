@@ -82,9 +82,32 @@
             <div class="h-px bg-grey-10" />
           </div>
 
+          <!-- Quote freshness -->
+          <p
+            v-if="cooldownSeconds !== null"
+            class="text-error text-s-12 text-center -my-4"
+            aria-live="polite"
+          >
+            {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
+          </p>
+          <p
+            v-else-if="quoteExpired"
+            class="text-info text-s-12 text-center -my-4"
+            aria-live="polite"
+          >
+            {{ t('purchase.quote.expired_refreshing') }}
+          </p>
+          <p
+            v-else-if="quoteCountdown"
+            class="text-info text-s-12 text-center -my-4"
+          >
+            {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
+          </p>
+
           <!-- Continue CTA -->
           <app-base-button
             class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+            :disabled="quoteExpired"
             @click="onContinue"
           >
             <span class="flex items-center justify-center gap-2">
@@ -130,6 +153,9 @@ const props = defineProps<{
   isLoading: boolean
   error: string
   analyticsPayload: SellPayloadShared
+  quoteCountdown: string
+  quoteExpired: boolean
+  cooldownSeconds: number | null
 }>()
 
 const isOpen = defineModel('isOpen', { type: Boolean, required: true })
@@ -190,7 +216,7 @@ const providerLogo = computed(() =>
 )
 
 const onContinue = () => {
-  if (!props.quote?.url) return
+  if (props.quoteExpired || !props.quote?.url) return
   proceeded.value = true
   analytics.trackSellEvent(SellOfferEvent.OFFER_PROCEED, buildOfferPayload())
   window.open(props.quote.url, '_blank')

@@ -34,18 +34,30 @@
           class="p-1.5 min-w-[200px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
         >
           <div v-if="useVueRouter" class="grid grid-cols-1 gap-1">
-            <router-link
-              v-for="option in options"
-              :key="option.value"
-              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
-              active-class="bg-grey-5 !text-primary"
-              role="option"
-              :id="option.value"
-              :to="{ name: option.value }"
-              @click="selectOption(option)"
-            >
-              {{ option.label }}
-            </router-link>
+            <template v-for="option in options" :key="option.value">
+              <a
+                v-if="option.external"
+                class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+                role="option"
+                :id="option.value"
+                :href="option.value"
+                target="_blank"
+                @click="selectOption(option)"
+              >
+                {{ option.label }}
+              </a>
+              <router-link
+                v-else
+                class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+                active-class="bg-grey-5 !text-primary"
+                role="option"
+                :id="option.value"
+                :to="{ name: option.value }"
+                @click="selectOption(option)"
+              >
+                {{ option.label }}
+              </router-link>
+            </template>
           </div>
           <div v-else-if="useLink" class="grid grid-cols-1 gap-1">
             <a
@@ -70,7 +82,7 @@
                   'bg-grey-5 text-primary':
                     selected && option.value === selected.value,
                 },
-                'flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
+                'flex text-left items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
               ]"
               role="option"
               :id="option.value"
@@ -79,7 +91,7 @@
               {{ option.label }}
               <check-icon
                 v-if="selected && option.value === selected.value"
-                class="ml-auto w-4 h-4 text-primary"
+                class="ml-auto w-8 h-4 text-primary px-2 -mr-3"
               />
             </button>
           </div>
@@ -177,9 +189,12 @@ const targetValue = ref<HTMLElement | null>(null)
  */
 const selected = defineModel<AppSelectOption>('selected', { required: false })
 /**
- * controls the open state of the select dropdown
+ * Open state of the dropdown, exposed as `v-model:open` so an ancestor can
+ * react to it. TheHeader uses this to lift its z-index while a header dropdown
+ * is open, otherwise the popover is clipped behind sibling drawers (MEW-2113).
+ * Defaults to false, so callers that don't bind `open` are unaffected.
  */
-const openSelect = ref(false)
+const openSelect = defineModel<boolean>('open', { default: false })
 
 /**
  * @method toggleSelect

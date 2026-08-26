@@ -19,7 +19,12 @@
         />
 
         <div class="relative z-10 flex flex-col items-start gap-2">
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <!-- A season that has already ended has nothing left to count down
+               to; the countdown would sit at "0 seconds". -->
+          <p
+            v-if="!isCampaignEnded"
+            class="text-s-12 leading-[18px] text-[#575757]"
+          >
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
           </p>
           <p
@@ -48,27 +53,20 @@
                       >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
                     >
                   </p>
+                  <!-- The season is closed to new entries, so the CTA states
+                       the reason rather than inviting a trade that can no
+                       longer be registered. Same treatment as "Start again"
+                       in the lost branch below. -->
                   <div
                     v-if="
                       status === 'temporarilyPaused' ||
+                      status === 'campaignFull' ||
+                      status === 'underReview' ||
                       status === 'campaignEnded'
                     "
-                    class="flex items-center w-full h-12 pr-5 justify-between rounded-full bg-[#e6e6e6]"
+                    class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                   >
-                    <div
-                      class="flex items-center justify-center shrink-0 w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px]"
-                    >
-                      {{ $t('rwaRewards.trade_now') }}
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span
-                        class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
-                        >{{ disabledCtaLabel }}</span
-                      >
-                      <information-circle-icon
-                        class="w-[22px] h-[22px] text-[#575757] shrink-0"
-                      />
-                    </div>
+                    {{ disabledCtaLabel }}
                   </div>
                   <app-base-button
                     v-else-if="status === 'default'"
@@ -95,29 +93,6 @@
                   >
                 </p>
               </rwa-modal-step>
-              <div
-                v-if="showNotice"
-                class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
-              >
-                <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
-                <div class="flex flex-col gap-0.5 flex-1">
-                  <p :class="titleText">
-                    {{ noticeTitle }}
-                  </p>
-                  <p :class="bodyText">
-                    {{ noticeDesc }}
-                  </p>
-                </div>
-                <app-base-button
-                  v-if="status === 'banned'"
-                  theme="neutral"
-                  size="medium"
-                  class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
-                  @click="onContactSupport"
-                >
-                  {{ $t('rwaRewards.contact_support') }}
-                </app-base-button>
-              </div>
             </template>
 
             <!-- HOLDING -->
@@ -176,12 +151,22 @@
                   />
                   <div class="flex items-center gap-2 w-full">
                     <app-base-button
+                      v-if="canRegisterTrade"
                       class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
                       @click="onTrade"
                     >
                       {{ $t('rwaRewards.start_again') }}
                     </app-base-button>
+                    <!-- The season stopped taking new entries, so there is
+                         nothing to start again. -->
                     <div
+                      v-else
+                      class="flex flex-1 items-center justify-center h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                    >
+                      {{ disabledCtaLabel }}
+                    </div>
+                    <div
+                      v-if="!isCampaignEnded"
                       :class="expiresPill"
                       class="flex items-center justify-center"
                     >
@@ -245,7 +230,8 @@
                   <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p :class="subText">
+                  <!-- Only when the reward itself carries a deadline. -->
+                  <p v-if="hasRewardExpiry" :class="subText">
                     {{
                       $t('rwaRewards.hero_offer_expires', {
                         time: subExpiresText,
@@ -255,10 +241,15 @@
                 </div>
                 <app-base-button
                   size="medium"
-                  class="w-[120px] shrink-0 text-s-16 font-semibold tracking-[-0.32px]"
+                  :is-loading="isClaiming"
+                  class="min-w-[120px] shrink-0 whitespace-nowrap text-s-16 font-semibold tracking-[-0.32px]"
                   @click="onClaim"
                 >
-                  {{ $t('rwaRewards.claim') }}
+                  {{
+                    isWatchOnly
+                      ? $t('rwaRewards.login')
+                      : $t('rwaRewards.claim')
+                  }}
                 </app-base-button>
               </div>
 
@@ -332,6 +323,32 @@
                 </div>
               </div>
             </template>
+
+            <!-- Sits outside the status branches: a wallet under review keeps
+                 whichever progress view it had, with the review explained here. -->
+            <div
+              v-if="showNotice"
+              class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
+            >
+              <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
+              <div class="flex flex-col gap-0.5 flex-1">
+                <p :class="titleText">
+                  {{ noticeTitle }}
+                </p>
+                <p :class="bodyText">
+                  {{ noticeDesc }}
+                </p>
+              </div>
+              <app-base-button
+                v-if="status === 'banned' || isUnderReview"
+                theme="neutral"
+                size="medium"
+                class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
+                @click="onContactSupport"
+              >
+                {{ $t('rwaRewards.contact_support') }}
+              </app-base-button>
+            </div>
           </div>
 
           <div class="h-px bg-[#e6e6e6] w-full"></div>
@@ -363,10 +380,11 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
@@ -375,12 +393,29 @@ import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
-const { isModalOpen, seasonEnd, status, activeReward, info } =
-  storeToRefs(holdingsStore)
+const { isWatchOnly } = storeToRefs(useWalletStore())
+const { openAccessDialog } = useAccessStore()
+const {
+  isModalOpen,
+  seasonEnd,
+  status,
+  activeReward,
+  info,
+  isClaiming,
+  isCampaignFull,
+  isCampaignEnded,
+  isUnderReview,
+  canRegisterTrade,
+} = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
+// Strictly the reward's own claim deadline — never the season end. The two are
+// different deadlines, and `expiration_timestamp` is optional: the store reads
+// its absence as "never expires" (see `isClaimable`), so substituting the
+// season end would put a countdown on a reward that has none.
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
 )
+const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
@@ -398,10 +433,15 @@ const isOpen = computed({
     value ? holdingsStore.openModal() : holdingsStore.closeModal(),
 })
 
+// Deliberately keyed on `status`, not `isUnderReview`: a wallet under review
+// that still has an entry keeps its progress view, and only one with nothing to
+// show falls back to the disabled offer.
 const isDisabledCta = computed(
   () =>
     status.value === 'notEligible' ||
     status.value === 'temporarilyPaused' ||
+    status.value === 'campaignFull' ||
+    status.value === 'underReview' ||
     status.value === 'campaignEnded',
 )
 const isOffer = computed(
@@ -411,18 +451,25 @@ const isOffer = computed(
     status.value === 'banned',
 )
 const showNotice = computed(
-  () => status.value === 'notEligible' || status.value === 'banned',
+  () =>
+    status.value === 'notEligible' ||
+    status.value === 'banned' ||
+    isUnderReview.value,
 )
 const disabledCtaLabel = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.under_review')
   if (status.value === 'temporarilyPaused')
     return t('rwaRewards.temporarily_paused')
   if (status.value === 'campaignEnded') return t('rwaRewards.campaign_ended')
+  if (isCampaignFull.value) return t('rwaRewards.campaign_full')
   return t('rwaRewards.not_eligible')
 })
 const hasStep1Cta = computed(
   () =>
     status.value === 'default' ||
     status.value === 'temporarilyPaused' ||
+    status.value === 'campaignFull' ||
+    status.value === 'underReview' ||
     status.value === 'campaignEnded',
 )
 const WALLET_MIN_AGE_DAYS = 14
@@ -430,18 +477,20 @@ const eligibilityCutoff = computed(() => {
   const d = new Date(Date.now() - WALLET_MIN_AGE_DAYS * 86_400_000)
   return `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getDate()}`
 })
-const noticeTitle = computed(() =>
-  status.value === 'banned'
+const noticeTitle = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.modal_under_review_title')
+  return status.value === 'banned'
     ? t('rwaRewards.modal_banned_title')
-    : t('rwaRewards.modal_not_eligible_title'),
-)
-const noticeDesc = computed(() =>
-  status.value === 'banned'
+    : t('rwaRewards.modal_not_eligible_title')
+})
+const noticeDesc = computed(() => {
+  if (isUnderReview.value) return t('rwaRewards.modal_under_review_desc')
+  return status.value === 'banned'
     ? t('rwaRewards.modal_banned_desc')
     : t('rwaRewards.modal_not_eligible_desc', {
         date: eligibilityCutoff.value,
-      }),
-)
+      })
+})
 // Fire a reward-offer CTA event for an offer-modal action
 const trackCta = (cta: string) =>
   analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
@@ -527,8 +576,18 @@ const onTrade = () => {
   walletMenuStore.openPanel('trade')
   holdingsStore.closeModal()
 }
-const onClaim = () => {
+const onClaim = async () => {
+  // A watch-only address can't sign the claim — send the user to log in with a
+  // full wallet instead.
+  if (isWatchOnly.value) {
+    holdingsStore.closeModal()
+    openAccessDialog()
+    return
+  }
   trackCta('claim')
-  if (activeReward.value) holdingsStore.claim(activeReward.value)
+  const reward = activeReward.value
+  if (!reward || isClaiming.value) return
+  // Toasts (success/error) are emitted by holdingsStore.claim itself.
+  await holdingsStore.claim(reward)
 }
 </script>

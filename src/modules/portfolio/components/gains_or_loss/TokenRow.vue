@@ -32,7 +32,7 @@
         </div>
         <div class="col-span-1 flex flex-col items-start">
           <p class="text-s-14 font-normal">
-            ${{ formatFiatValue(token.price).value }}
+            {{ formatFiat(token.price).display }}
           </p>
           <div
             class="text-s-11 font-normal flex items-center gap-[2px]"
@@ -57,9 +57,8 @@
               'text-success': token.gainOrLoss.isGreaterThan(0),
             }"
           >
-            {{ token.gainOrLoss.isLessThan(0) ? '-' : '+' }}${{
-              formatFiatValue(token.gainOrLoss.abs()).value
-            }}
+            {{ token.gainOrLoss.isLessThan(0) ? '-' : '+'
+            }}{{ formatFiat(token.gainOrLoss.abs()).display }}
           </p>
         </div>
       </div>
@@ -70,16 +69,17 @@
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import { computed } from 'vue'
+
+const { formatFiat } = useCurrency()
+
 const props = defineProps<{
   token: TokenGainOrLoss
 }>()

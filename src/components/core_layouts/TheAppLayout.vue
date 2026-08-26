@@ -37,7 +37,16 @@
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
-          <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
+          <div
+            :class="[
+              'min-h-[600px]',
+              // The new Home's sections own their padding (AppHomeSection has
+              // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
+              // the hero's top padding stacks on the wrapper's. Other routes
+              // keep the shared page padding.
+              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
+            ]"
+          >
             <router-view />
           </div>
           <MewFooter
@@ -48,7 +57,7 @@
             :user-consent="analyticsStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
-            class="!px-3 !xs:px-5"
+            class="px-3 xs:px-5"
           />
           <div
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
@@ -59,7 +68,7 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              Old version of MEW Portfolio here
+              {{ t('common.old_version_link') }}
               <arrow-long-right-icon
                 class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
               />
@@ -75,9 +84,9 @@
 
 <script setup lang="ts">
 import { MewFooter } from '@myetherwallet/vue-common-components'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { inject, computed, ref } from 'vue'
+import { inject, computed, ref, watch } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -93,6 +102,7 @@ import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
+const { t } = useI18n()
 
 const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
@@ -112,9 +122,19 @@ const handleSetConsent = (consent: boolean) => {
 }
 
 const route = useRoute()
+const router = useRouter()
+
+// When the wallet is disconnected/removed, return the user to the public Home.
+// (Connecting does NOT auto-navigate — the user opens their portfolio manually
+// via the header logo or the hero CTA.)
+watch(isWalletConnected, connected => {
+  if (!connected) {
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
+  }
+})
 
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
+  if (route.name === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background '
   } else if (route.name === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
@@ -122,6 +142,10 @@ const backgroundClass = computed(() => {
     return ''
   }
 })
+
+// The Home page ('/') keeps the layout max-width but drops the shared
+// horizontal padding, so its sections own their padding.
+const isNewHome = computed(() => route.name === ROUTES_MAIN.HOME.NAME)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

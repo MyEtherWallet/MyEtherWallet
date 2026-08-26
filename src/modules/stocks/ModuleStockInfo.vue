@@ -40,7 +40,12 @@
     <!-- Price Stats -->
     <stock-info-price v-if="stockData" :data="stockData" />
     <!-- About -->
-    <stock-info-about v-if="stockData" :data="stockData" />
+    <stock-info-about
+      v-if="stockData"
+      :data="stockData"
+      :description="description"
+      :is-loading-description="isFetchingDescription"
+    />
 
     <!-- Underlying Asset Stats -->
 
@@ -71,6 +76,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useAssetDescription } from '@/composables/useAssetDescription'
 import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
@@ -78,7 +84,7 @@ import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
 import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -89,6 +95,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   symbol: {
@@ -157,6 +164,15 @@ onFetchResponse(() => {
 const isLoading = computed(() => {
   return !isLoadedData.value
 })
+
+/**--------------------
+ * Description
+ ---------------------*/
+const { description, isFetchingDescription } = useAssetDescription(
+  computed(() => props.symbol),
+  'stock',
+)
+
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
@@ -179,7 +195,7 @@ const existsOnCurrentChain = computed(() => {
 const shareText = computed(() => {
   const ticker = stockData.value?.stockAlias || props.symbol
   const price = stockData.value?.primaryMarket?.price
-    ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
+    ? formatFiat(stockData.value.primaryMarket.price).display
     : ''
   return t('common.share_message', { ticker, price })
 })
