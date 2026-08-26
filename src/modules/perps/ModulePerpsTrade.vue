@@ -766,14 +766,14 @@
           v-if="!activePosition || manageMode === 'add'"
           :disabled="submitDisabled"
           @click="showConfirmation"
-          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          :tone="orderSide === 'buy' ? 'success' : 'danger'"
           class="w-full mt-4 min-w-0"
         >
           <span class="block truncate">{{ getMainBtnText }}</span>
         </app-base-button>
         <app-base-button
           v-if="activePosition && manageMode === 'close'"
-          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          :tone="orderSide === 'buy' ? 'success' : 'danger'"
           :disabled="closeDisabled"
           @click="showCloseConfirmation"
           class="w-full mt-4 min-w-0"

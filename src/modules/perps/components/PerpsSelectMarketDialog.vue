@@ -67,7 +67,7 @@
 
         <!-- Filter Tabs -->
         <div class="px-4 mb-1">
-          <app-btn-group
+          <app-segmented-control
             :btn-list="filterTabs"
             :selected="filterTabs.find(t => t.key === activeFilter)"
             size="small"
@@ -75,7 +75,7 @@
             @on-update:selected="tab => $emit('update:activeFilter', tab.key)"
           >
             <template #btn-content="{ data }">{{ data.label }}</template>
-          </app-btn-group>
+          </app-segmented-control>
         </div>
         <hr class="border-t border-grey-5 mt-1 mx-4" />
 
@@ -153,7 +153,7 @@ import { useI18n } from 'vue-i18n'
 import { ArrowLongUpIcon, ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'

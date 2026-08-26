@@ -76,13 +76,14 @@
                 >
                   {{ $t('common.access_wallet') }}
                 </app-base-button>
-                <app-btn-text
+                <app-base-button
+                  type="link"
+                  size="large"
                   @click="backStep"
-                  is-large
                   class="mt-2 text-primary"
                 >
                   {{ $t('common.back') }}
-                </app-btn-text>
+                </app-base-button>
               </div>
             </div>
           </app-stepper>
@@ -102,7 +103,6 @@ import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'

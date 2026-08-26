@@ -47,12 +47,12 @@
                   @click="showAddAddress = true"
                 >
                   {{ $t('common.add') }}
-</app-base-button>
+                </app-base-button>
               </div>
             </div>
 
             <!-- Filters -->
-            <app-btn-group
+            <app-segmented-control
               v-model:selected="selectedListItem"
               :btn-list="addressList"
               class="mt-6 mb-4 px-4 sm:px-6"
@@ -62,7 +62,7 @@
               <template #btn-content="{ data }">
                 {{ data.name }}
               </template>
-            </app-btn-group>
+            </app-segmented-control>
             <div class="px-3 sm:px-5">
               <!-- Compatible -->
               <p
@@ -72,7 +72,9 @@
                 {{
                   selectedListItem.id === 'recent'
                     ? $t('address_book.recent_transactions')
-                    : $t('address_book.chain_addresses', { chain: network?.nameLong || selectedChain?.nameLong })
+                    : $t('address_book.chain_addresses', {
+                        chain: network?.nameLong || selectedChain?.nameLong,
+                      })
                 }}
               </p>
               <address-book-item
@@ -89,7 +91,11 @@
                 v-if="otherChainsAdrs.length"
                 class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
-                {{ $t('address_book.non_compatible', { chain: network?.nameLong || selectedChain?.nameLong }) }}
+                {{
+                  $t('address_book.non_compatible', {
+                    chain: network?.nameLong || selectedChain?.nameLong,
+                  })
+                }}
               </p>
               <address-book-item
                 v-for="adr in otherChainsAdrs"
@@ -147,7 +153,7 @@ import { ref, computed, watch, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
-import AppBtnGroup from '../AppBtnGroup.vue'
+import AppSegmentedControl from '../AppSegmentedControl.vue'
 import { storeToRefs } from 'pinia'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
 import AppDialog from '@components/AppDialog.vue'
