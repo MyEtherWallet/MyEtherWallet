@@ -97,7 +97,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
 
-  const fetchQuote = useDebounceFn(async () => {
+  const runQuote = async () => {
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
       toAmount.value = ''
@@ -137,7 +137,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       return
     }
 
-    isLoadingQuote.value = true
     generalError.value = ''
 
     try {
@@ -243,10 +242,26 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
           })
         }
       }
+    }
+  }
+
+  let quoteRunId = 0
+
+  const debouncedQuote = useDebounceFn(async () => {
+    const runId = quoteRunId
+    try {
+      await runQuote()
     } finally {
-      isLoadingQuote.value = false
+      if (runId === quoteRunId) isLoadingQuote.value = false
     }
   }, 500)
+
+  const fetchQuote = () => {
+    quoteRunId += 1
+    const amount = fromAmount.value
+    isLoadingQuote.value = amount !== '' && amount !== '0'
+    return debouncedQuote()
+  }
 
   const resetQuote = () => {
     currentQuote.value = null

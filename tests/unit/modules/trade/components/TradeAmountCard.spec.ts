@@ -41,6 +41,14 @@ describe('TradeAmountCard', () => {
     expect(card.find('.amount-value input').exists()).toBe(true)
   })
 
+  it('swaps the fiat value for a spinner while the quote loads', () => {
+    expect(mountCard().find('svg.animate-spin').exists()).toBe(false)
+
+    const card = mountCard({ fiatLoading: true })
+    expect(card.find('svg.animate-spin').exists()).toBe(true)
+    expect(card.text()).toContain('Balance')
+  })
+
   it('renders a read-only amount on the buy side', () => {
     const card = mountCard({ side: 'buy', amount: '2.4574' })
     expect(card.text()).toContain('Buy')

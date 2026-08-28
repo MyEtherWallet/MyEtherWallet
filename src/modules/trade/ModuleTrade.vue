@@ -141,6 +141,7 @@
             v-model:error="fromAmountError"
             side="sell"
             :external-loading="isLoading || !swapLoaded"
+            :fiat-loading="isLoadingQuote"
             :tokens="fromTokens"
             :show-balance="isWalletConnected"
             :network-name="selectedFromChain?.name"

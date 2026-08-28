@@ -51,13 +51,14 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
   const { useTradeQuote } =
     await import('@/modules/trade/composables/useTradeQuote')
   const toAmount = ref('')
+  const fromAmount = ref('100')
   const isLoadingQuote = ref(false)
   const generalError = ref('')
   const isReviewModalOpen = ref(isReviewModalOpenValue)
   const quote = useTradeQuote({
     fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
     toTokenSelected: ref({ ...TOKEN }) as never,
-    fromAmount: ref('100'),
+    fromAmount,
     toAmount,
     walletAddress: ref('0xwallet'),
     wallet: ref({}),
@@ -70,8 +71,50 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
     isLoadingQuote,
     isReviewModalOpen,
   })
-  return { ...quote, isReviewModalOpen }
+  return { ...quote, isReviewModalOpen, isLoadingQuote, fromAmount }
 }
+
+describe('useTradeQuote loading flag', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('raises the flag on the call, not after the debounce', async () => {
+    mockGetQuote.mockResolvedValue({ startAmount: 1n, avgAmount: 1n })
+    const { fetchQuote, isLoadingQuote } = await makeHarness()
+
+    const pending = fetchQuote()
+    expect(isLoadingQuote.value).toBe(true)
+
+    await pending
+    expect(isLoadingQuote.value).toBe(false)
+  })
+
+  it('does not raise the flag for an empty or zero amount', async () => {
+    const { fetchQuote, isLoadingQuote, fromAmount } = await makeHarness()
+
+    fromAmount.value = ''
+    await fetchQuote()
+    expect(isLoadingQuote.value).toBe(false)
+
+    fromAmount.value = '0'
+    await fetchQuote()
+    expect(isLoadingQuote.value).toBe(false)
+  })
+
+  it('lowers the flag when the run bails out before requesting', async () => {
+    mockGetQuote.mockResolvedValue({ startAmount: 1n, avgAmount: 1n })
+    const { fetchQuote, isLoadingQuote, fromAmount } = await makeHarness()
+
+    const pending = fetchQuote()
+    expect(isLoadingQuote.value).toBe(true)
+    fromAmount.value = ''
+
+    await pending
+    expect(isLoadingQuote.value).toBe(false)
+    expect(mockGetQuote).not.toHaveBeenCalled()
+  })
+})
 
 describe('useTradeQuote analytics', () => {
   beforeEach(() => {

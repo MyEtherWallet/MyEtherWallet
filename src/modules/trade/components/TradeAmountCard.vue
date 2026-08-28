@@ -112,7 +112,7 @@
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isLoading" class="text-black" />
+        <app-spinner v-if="isLoading || fiatLoading" class="text-black" />
         <p
           v-else
           :id="`trade-amount-message-${side}`"
@@ -178,6 +178,7 @@ const props = withDefaults(
     side: 'sell' | 'buy'
     tokens?: NewTokenInfo[] | null
     externalLoading?: boolean
+    fiatLoading?: boolean
     showBalance?: boolean
     isPristine?: boolean
     networkName?: string
@@ -189,6 +190,7 @@ const props = withDefaults(
   {
     tokens: () => [],
     externalLoading: false,
+    fiatLoading: false,
     showBalance: true,
     isPristine: false,
     networkName: undefined,
