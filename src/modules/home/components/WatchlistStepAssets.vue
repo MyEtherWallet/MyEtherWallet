@@ -247,7 +247,7 @@ const overflowNames = computed(() =>
             v-for="a in chipAssets"
             :key="a.id"
             data-test="selected-chip"
-            class="flex h-8 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-2"
+            class="flex h-8 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-3"
           >
             <AppTokenLogo
               :url="a.logoUrl"
