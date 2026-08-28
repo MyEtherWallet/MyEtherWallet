@@ -197,6 +197,7 @@ const overflowNames = computed(() =>
                   :is-stock="asset.type === 'stock'"
                   width="w-10"
                   height="h-10"
+                  no-shadow
                 />
                 <!-- Add/added badge overlapping the avatar (Figma). -->
                 <span
