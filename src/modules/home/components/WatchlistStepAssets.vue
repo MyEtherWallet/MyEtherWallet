@@ -248,12 +248,12 @@ const overflowNames = computed(() =>
       <div class="mt-8 flex shrink-0 items-center justify-between gap-4">
         <!-- Selected chips: up to 2, then a "+N more" chip whose tooltip lists
              the rest by symbol. -->
-        <div class="flex items-center gap-2">
+        <div class="flex min-w-0 items-center gap-2">
           <span
             v-for="a in chipAssets"
             :key="a.id"
             data-test="selected-chip"
-            class="flex h-8 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-3"
+            class="flex h-8 min-w-0 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-3"
           >
             <AppTokenLogo
               :url="a.logoUrl"
@@ -262,7 +262,9 @@ const overflowNames = computed(() =>
               width="w-6"
               height="h-6"
             />
-            <span class="text-s-12 font-semibold text-black">
+            <span
+              class="max-w-[80px] truncate text-s-12 font-semibold text-black"
+            >
               {{ a.symbol }}
             </span>
           </span>
@@ -270,10 +272,11 @@ const overflowNames = computed(() =>
             v-if="overflowAssets.length"
             :text="overflowNames"
             position="middle"
+            class="shrink-0"
           >
             <span
               data-test="selected-chip-more"
-              class="flex h-8 items-center rounded-full bg-[#f5f5f5] px-3 text-s-12 font-semibold text-black"
+              class="flex h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-[#f5f5f5] px-3 text-s-12 font-semibold text-black"
             >
               {{
                 t('homePage.hero.watchlist.onboarding.assets.moreCount', {
@@ -286,6 +289,7 @@ const overflowNames = computed(() =>
 
         <AppBaseButton
           data-test="assets-done"
+          class="shrink-0"
           :disabled="!selected.length"
           :style="
             !selected.length
