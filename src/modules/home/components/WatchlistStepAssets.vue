@@ -131,7 +131,7 @@ const toggle = (id: string) => {
         class="mt-6 rounded-full border border-[#e6e6e6]"
       />
 
-      <div class="mt-6 grid grid-cols-4 gap-2">
+      <div v-auto-animate class="mt-6 grid grid-cols-4 gap-2">
         <button
           v-for="asset in visibleAssets"
           :key="asset.id"

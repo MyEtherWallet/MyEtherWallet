@@ -68,4 +68,16 @@ export const MOCK_RECOMMENDED_ASSETS: RecommendedAsset[] = [
   { id: 'aapl', symbol: 'AAPLon', name: 'Apple', type: 'stock', watchlistId: 'AAPL' },
   { id: 'rddt', symbol: 'RDDTon', name: 'Reddit', type: 'stock', watchlistId: 'RDDT' },
   { id: 'abnb', symbol: 'ABNBon', name: 'Airbnb', type: 'stock', watchlistId: 'ABNB' },
+  { id: 'tsla', symbol: 'TSLAon', name: 'Tesla', type: 'stock', watchlistId: 'TSLA' }, // prettier-ignore
+  { id: 'msft', symbol: 'MSFTon', name: 'Microsoft', type: 'stock', watchlistId: 'MSFT' }, // prettier-ignore
+  { id: 'amzn', symbol: 'AMZNon', name: 'Amazon', type: 'stock', watchlistId: 'AMZN' }, // prettier-ignore
+  { id: 'googl', symbol: 'GOOGLon', name: 'Alphabet', type: 'stock', watchlistId: 'GOOGL' }, // prettier-ignore
+  { id: 'meta', symbol: 'METAon', name: 'Meta', type: 'stock', watchlistId: 'META' }, // prettier-ignore
+  { id: 'coin', symbol: 'COINon', name: 'Coinbase', type: 'stock', watchlistId: 'COIN' }, // prettier-ignore
+  { id: 'pltr', symbol: 'PLTRon', name: 'Palantir', type: 'stock', watchlistId: 'PLTR' }, // prettier-ignore
+  { id: 'sol', symbol: 'SOL', name: 'Solana', type: 'crypto', watchlistId: 'solana' },
+  { id: 'link', symbol: 'LINK', name: 'Chainlink', type: 'crypto', watchlistId: 'chainlink' }, // prettier-ignore
+  { id: 'uni', symbol: 'UNI', name: 'Uniswap', type: 'crypto', watchlistId: 'uniswap' }, // prettier-ignore
+  { id: 'dai', symbol: 'DAI', name: 'Dai', type: 'crypto', watchlistId: 'dai' },
+  { id: 'btc-perp', symbol: 'BTC', name: 'Bitcoin Perpetual', type: 'perp', watchlistId: 'BTC' }, // prettier-ignore
 ]
