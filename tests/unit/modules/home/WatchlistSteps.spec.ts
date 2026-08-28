@@ -7,6 +7,15 @@ vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span data-test="token-logo" />' },
 }))
 
+// AppTooltip relies on the v-element-hover directive + teleport; stub it and
+// expose its text so the "+N more" tooltip can be asserted.
+vi.mock('@/components/AppTooltip.vue', () => ({
+  default: {
+    props: ['text', 'position'],
+    template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
+  },
+}))
+
 import WatchlistStepMarkets from '@/modules/home/components/WatchlistStepMarkets.vue'
 import WatchlistStepIndustries from '@/modules/home/components/WatchlistStepIndustries.vue'
 import WatchlistStepAssets from '@/modules/home/components/WatchlistStepAssets.vue'
@@ -140,5 +149,32 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     await w.find('input').setValue('zzzz-no-such-asset')
     expect(w.find('[data-test="assets-empty"]').exists()).toBe(true)
     expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
+  })
+
+  it('caps footer chips at 2 and collapses the rest into a tooltip chip', () => {
+    const selectedIds = MOCK_RECOMMENDED_ASSETS.slice(0, 5).map(a => a.id)
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: selectedIds,
+    })
+    expect(w.findAll('[data-test="selected-chip"]').length).toBe(2)
+    const more = w.find('[data-test="selected-chip-more"]')
+    expect(more.exists()).toBe(true)
+    // Tooltip lists the 3 overflow symbols, comma-separated.
+    const names = MOCK_RECOMMENDED_ASSETS.slice(2, 5)
+      .map(a => a.symbol)
+      .join(', ')
+    expect(w.find('[data-test="tooltip"]').attributes('data-text')).toBe(names)
+  })
+
+  it('shows no overflow chip when 2 or fewer are selected', () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [MOCK_RECOMMENDED_ASSETS[0].id],
+    })
+    expect(w.findAll('[data-test="selected-chip"]').length).toBe(1)
+    expect(w.find('[data-test="selected-chip-more"]').exists()).toBe(false)
   })
 })

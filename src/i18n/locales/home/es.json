@@ -47,7 +47,8 @@
             "loadingTitle": "Buscando activos…",
             "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
             "done": "Listo",
-            "selected": "{count} activos seleccionados"
+            "selected": "{count} activos seleccionados",
+            "moreCount": "+{count} más"
           },
           "marketLabels": {
             "stocks": "Acciones",

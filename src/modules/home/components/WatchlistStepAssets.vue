@@ -13,6 +13,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import cluster1 from '@/assets/images/watchlist/market-stocks-1.png'
@@ -74,6 +75,18 @@ const toggle = (id: string) => {
     ? selected.value.filter(x => x !== id)
     : [...selected.value, id]
 }
+
+// Footer chips for the current selection: up to 2 shown, the rest collapsed
+// into a "+N more" chip whose tooltip lists their symbols.
+const MAX_CHIPS = 2
+const selectedAssets = computed(() =>
+  props.assets.filter(a => selected.value.includes(a.id)),
+)
+const chipAssets = computed(() => selectedAssets.value.slice(0, MAX_CHIPS))
+const overflowAssets = computed(() => selectedAssets.value.slice(MAX_CHIPS))
+const overflowNames = computed(() =>
+  overflowAssets.value.map(a => a.symbol).join(', '),
+)
 </script>
 
 <template>
@@ -225,7 +238,45 @@ const toggle = (id: string) => {
         </div>
       </div>
 
-      <div class="mt-2 flex shrink-0 items-center justify-end">
+      <div class="mt-2 flex shrink-0 items-center justify-between gap-4">
+        <!-- Selected chips: up to 2, then a "+N more" chip whose tooltip lists
+             the rest by symbol. -->
+        <div class="flex items-center gap-2">
+          <span
+            v-for="a in chipAssets"
+            :key="a.id"
+            data-test="selected-chip"
+            class="flex h-8 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-2"
+          >
+            <AppTokenLogo
+              :url="a.logoUrl"
+              :symbol="a.symbol"
+              :is-stock="a.type === 'stock'"
+              width="w-6"
+              height="h-6"
+            />
+            <span class="text-s-12 font-semibold text-black">
+              {{ a.symbol }}
+            </span>
+          </span>
+          <AppTooltip
+            v-if="overflowAssets.length"
+            :text="overflowNames"
+            position="middle"
+          >
+            <span
+              data-test="selected-chip-more"
+              class="flex h-8 items-center rounded-full bg-[#f5f5f5] px-3 text-s-12 font-semibold text-black"
+            >
+              {{
+                t('homePage.hero.watchlist.onboarding.assets.moreCount', {
+                  count: overflowAssets.length,
+                })
+              }}
+            </span>
+          </AppTooltip>
+        </div>
+
         <AppBaseButton
           data-test="assets-done"
           :disabled="!selected.length"

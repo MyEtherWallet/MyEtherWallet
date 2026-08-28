@@ -47,7 +47,8 @@
             "loadingTitle": "Finding assets…",
             "loadingSubtitle": "We are looking for assets that align with your interests",
             "done": "Done",
-            "selected": "{count} assets selected"
+            "selected": "{count} assets selected",
+            "moreCount": "+{count} more"
           },
           "marketLabels": {
             "stocks": "Stocks",

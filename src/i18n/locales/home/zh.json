@@ -47,7 +47,8 @@
             "loadingTitle": "正在查找资产…",
             "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
             "done": "完成",
-            "selected": "已选择 {count} 项资产"
+            "selected": "已选择 {count} 项资产",
+            "moreCount": "+{count} 更多"
           },
           "marketLabels": {
             "stocks": "股票",
