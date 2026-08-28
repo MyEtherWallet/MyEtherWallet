@@ -666,11 +666,12 @@ const onDeleteRequest = (acc: SavedAccount): void => {
   openDialog.value = false
   deleteOpen.value = true
 }
-const onDeleteConfirm = (): void => {
+const onDeleteConfirm = async (): Promise<void> => {
   const acc = deleteTarget.value
   if (!acc) return
+  // Record the event only after the address is actually removed.
+  await deleteAccount(acc)
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DELETED)
-  void deleteAccount(acc)
 }
 const onDisconnect = (): void => {
   // Keep the popup open so the user stays in the manage-accounts context.
