@@ -85,13 +85,13 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(w.find('[data-test="asset-card"]').exists()).toBe(false)
   })
 
-  it('caps the grid at 8 and reveals the rest via Show more', async () => {
+  it('caps the grid at 12 and reveals the rest via Show more', async () => {
     const w = mountWith(WatchlistStepAssets, {
       assets: MOCK_RECOMMENDED_ASSETS,
       isLoading: false,
       modelValue: [],
     })
-    expect(w.findAll('[data-test="asset-card"]').length).toBe(8)
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(12)
     await w.get('[data-test="assets-show-more"]').trigger('click')
     expect(w.findAll('[data-test="asset-card"]').length).toBe(
       MOCK_RECOMMENDED_ASSETS.length,

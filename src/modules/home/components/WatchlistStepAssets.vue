@@ -46,7 +46,7 @@ const LOADING_CLUSTER = [
 
 // Search + progressive reveal. A query shows all matches (no cap); otherwise the
 // first INITIAL_COUNT show and "Show more" reveals the rest.
-const INITIAL_COUNT = 8
+const INITIAL_COUNT = 12
 const query = ref('')
 const showAll = ref(false)
 
@@ -163,7 +163,7 @@ const overflowNames = computed(() =>
         />
         <div
           class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[height] duration-500 ease-out"
-          :class="showAll ? 'h-[520px]' : 'h-[340px]'"
+          :class="showAll ? 'h-[560px]' : 'h-[430px]'"
         >
           <!-- Empty search state. -->
           <div
@@ -298,7 +298,7 @@ const overflowNames = computed(() =>
           @click="$emit('done')"
         >
           <span class="flex items-center gap-2">
-            {{ t('homePage.hero.watchlist.onboarding.assets.done') }}
+            {{ t('homePage.hero.watchlist.onboarding.continue') }}
             <ChevronRightIcon class="size-5" />
           </span>
         </AppBaseButton>
