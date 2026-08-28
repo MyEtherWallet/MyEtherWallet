@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import { WATCHLIST_INDUSTRIES } from './watchlistOnboarding'
 
 const { t } = useI18n()
@@ -42,22 +43,16 @@ const toggle = (key: string) => {
     </div>
 
     <div class="mt-12 grid grid-cols-2 gap-3">
-      <button
+      <WatchlistSelectableCard
         v-for="key in WATCHLIST_INDUSTRIES"
         :key="key"
-        type="button"
         data-test="industry-pill"
-        :aria-pressed="selected.includes(key)"
-        class="rounded-2xl border-2 p-4 text-left text-s-16 font-medium transition-colors"
-        :class="
-          selected.includes(key)
-            ? 'border-black bg-white text-black'
-            : 'border-transparent bg-[#f5f5f5] text-black'
-        "
-        @click="toggle(key)"
+        :selected="selected.includes(key)"
+        class="p-4 text-s-16 font-medium text-black"
+        @toggle="toggle(key)"
       >
         {{ t(`homePage.hero.watchlist.onboarding.industryLabels.${key}`) }}
-      </button>
+      </WatchlistSelectableCard>
     </div>
 
     <div class="mt-12 flex justify-end">

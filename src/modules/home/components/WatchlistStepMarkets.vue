@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
 import stocks2 from '@/assets/images/watchlist/market-stocks-2.png'
@@ -44,19 +45,13 @@ const toggle = (id: string) => {
     </h2>
 
     <div class="mt-12 grid grid-cols-3 gap-3">
-      <button
+      <WatchlistSelectableCard
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
-        type="button"
         data-test="market-card"
-        :aria-pressed="selected.includes(market.id)"
-        class="relative flex h-[120px] flex-col justify-between rounded-2xl border-2 p-4 text-left transition-colors"
-        :class="
-          selected.includes(market.id)
-            ? 'border-black bg-white'
-            : 'border-transparent bg-[#f5f5f5]'
-        "
-        @click="toggle(market.id)"
+        :selected="selected.includes(market.id)"
+        class="relative flex h-[120px] flex-col justify-between p-4"
+        @toggle="toggle(market.id)"
       >
         <span class="text-s-16 font-semibold text-black">
           {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
@@ -75,7 +70,7 @@ const toggle = (id: string) => {
             ]"
           />
         </span>
-      </button>
+      </WatchlistSelectableCard>
     </div>
 
     <div class="mt-12 flex items-center justify-end">
