@@ -32,4 +32,18 @@ describe('ManageAccountsDeleteModal', () => {
     expect(w.emitted('confirm')).toBeUndefined()
     expect(w.emitted('update:isOpen')?.at(-1)).toEqual([false])
   })
+
+  it('truncates a ridiculously long name so the modal cannot overflow', () => {
+    const longName = 'a'.repeat(200)
+    const w = mount(ManageAccountsDeleteModal, {
+      props: { isOpen: true, accountName: longName },
+      global: {
+        stubs,
+        // Echo the interpolated name so we can assert what reaches the template.
+        mocks: { $t: (_k: string, p?: { name: string }) => p?.name ?? '' },
+      },
+    })
+    expect(w.text()).toContain('a'.repeat(32) + '...')
+    expect(w.text()).not.toContain(longName)
+  })
 })

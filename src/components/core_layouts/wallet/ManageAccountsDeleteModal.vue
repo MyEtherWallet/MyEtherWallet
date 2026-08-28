@@ -5,11 +5,11 @@
   >
     <template #title>
       <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
-        <h1 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
-          {{ $t('multi_address.remove.title', { name: accountName }) }}
+        <h1 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px] break-words">
+          {{ $t('multi_address.remove.title', { name: displayName }) }}
         </h1>
-        <p class="text-s-16 text-[#575757] leading-[22px]">
-          {{ $t('multi_address.remove.subtitle', { name: accountName }) }}
+        <p class="text-s-16 text-[#575757] leading-[22px] break-words">
+          {{ $t('multi_address.remove.subtitle', { name: displayName }) }}
         </p>
       </div>
     </template>
@@ -37,11 +37,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
+import { truncate } from '@/utils/filters'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
-defineProps<{ accountName?: string }>()
+const props = defineProps<{ accountName?: string }>()
 const emit = defineEmits<{ confirm: [] }>()
+
+// Cap absurdly long custom names so the modal stays readable; break-words on the
+// text then wraps whatever remains instead of overflowing the dialog.
+const displayName = computed(() => truncate(props.accountName ?? '', 32))
 
 const confirm = (): void => {
   emit('confirm')
