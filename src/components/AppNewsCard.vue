@@ -40,9 +40,9 @@ const dateLabel = computed(
   -->
   <div
     data-test="news-card"
-    class="group relative flex h-[280px] flex-col justify-between gap-4 overflow-hidden rounded-2xl bg-white p-6"
+    class="group relative isolate flex h-[280px] flex-col justify-between gap-4 overflow-hidden rounded-2xl bg-white p-6"
   >
-    <div class="flex w-full min-h-0 flex-col gap-2">
+    <div class="flex w-full min-h-0 flex-1 flex-col gap-2 overflow-hidden">
       <div class="flex items-center gap-1 text-s-14 leading-5 text-[#575757]">
         <span v-if="source">{{ source }}</span>
         <span v-if="source && dateLabel">•</span>
@@ -53,7 +53,7 @@ const dateLabel = computed(
         target="_blank"
         rel="noopener noreferrer"
         data-test="news-title"
-        class="w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-primary group-hover:underline"
+        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-primary group-hover:underline"
       >
         {{ title }}
       </a>
