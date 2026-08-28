@@ -108,8 +108,11 @@ const totalText = computed(() =>
     : formattedTotalFiatPortfolioValue.value,
 )
 const percentText = computed(() => {
-  // formatPercentageValue already suffixes '%' — don't append another (MEW-2215)
-  const shown = `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}`
+  // formatPercentageValue suffixes '%' for every case except an exact 0 (which
+  // returns '0'), so append '%' only when it's missing — never duplicate it (MEW-2215)
+  const formatted = formatPercentageValue(percentChange.value.abs()).value
+  const withUnit = formatted.endsWith('%') ? formatted : `${formatted}%`
+  const shown = `${isUp.value ? '+' : '-'}${withUnit}`
   return hideBalances.value ? maskDigits(shown) : shown
 })
 
