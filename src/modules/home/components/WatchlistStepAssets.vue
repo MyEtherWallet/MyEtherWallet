@@ -1,7 +1,16 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PlusIcon, CheckIcon } from '@heroicons/vue/20/solid'
+import {
+  PlusIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
+} from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import cluster1 from '@/assets/images/watchlist/market-stocks-1.png'
@@ -11,6 +20,16 @@ import cluster4 from '@/assets/images/watchlist/market-crypto-3.png'
 import cluster5 from '@/assets/images/watchlist/market-stocks-2.png'
 
 const { t } = useI18n()
+
+const props = defineProps<{
+  assets: RecommendedAsset[]
+  isLoading: boolean
+}>()
+
+// Selected asset ids. Done enables with at least one.
+const selected = defineModel<string[]>({ required: true })
+
+defineEmits<{ done: []; back: [] }>()
 
 // Decorative fading avatar cluster for the "Finding assets…" loading state
 // (Figma: symmetric, biggest + fully opaque in the centre, fading outward).
@@ -22,15 +41,31 @@ const LOADING_CLUSTER = [
   { src: cluster5, size: 'size-4', opacity: 'opacity-30' },
 ]
 
-defineProps<{
-  assets: RecommendedAsset[]
-  isLoading: boolean
-}>()
+// Search + progressive reveal. A query shows all matches (no cap); otherwise the
+// first INITIAL_COUNT show and "Show more" reveals the rest.
+const INITIAL_COUNT = 8
+const query = ref('')
+const showAll = ref(false)
 
-// Selected asset ids. Done enables with at least one.
-const selected = defineModel<string[]>({ required: true })
-
-defineEmits<{ done: [] }>()
+const filtered = computed(() => {
+  const q = query.value.trim().toLowerCase()
+  if (!q) return props.assets
+  return props.assets.filter(
+    a =>
+      a.symbol.toLowerCase().includes(q) || a.name.toLowerCase().includes(q),
+  )
+})
+const visibleAssets = computed(() =>
+  query.value.trim() || showAll.value
+    ? filtered.value
+    : filtered.value.slice(0, INITIAL_COUNT),
+)
+const hasMore = computed(
+  () =>
+    !query.value.trim() &&
+    !showAll.value &&
+    filtered.value.length > INITIAL_COUNT,
+)
 
 const toggle = (id: string) => {
   selected.value = selected.value.includes(id)
@@ -69,63 +104,105 @@ const toggle = (id: string) => {
 
     <!-- Results -->
     <div v-else>
-      <h2 class="text-s-24 font-bold text-black">
-        {{ t('homePage.hero.watchlist.onboarding.assets.title') }}
-      </h2>
-      <p class="mt-1 text-s-16 text-[#575757]">
-        {{ t('homePage.hero.watchlist.onboarding.assets.subtitle') }}
-      </p>
+      <!-- Header: back button + title + subtitle (close is provided by
+           AppDialog). -->
+      <div class="flex items-start gap-3">
+        <AppBtnIcon
+          :label="t('common.back')"
+          data-test="assets-back"
+          @click="$emit('back')"
+        >
+          <ChevronLeftIcon class="size-6" />
+        </AppBtnIcon>
+        <div>
+          <h2 class="text-s-20 font-bold text-black">
+            {{ t('homePage.hero.watchlist.onboarding.assets.title') }}
+          </h2>
+          <p class="mt-1 text-s-16 text-[#575757]">
+            {{ t('homePage.hero.watchlist.onboarding.assets.subtitle') }}
+          </p>
+        </div>
+      </div>
+
+      <AppSearchInput
+        v-model="query"
+        :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
+        bg-class="bg-white"
+        class="mt-6 rounded-full border border-[#e6e6e6]"
+      />
 
       <div class="mt-6 grid grid-cols-4 gap-2">
         <button
-          v-for="asset in assets"
+          v-for="asset in visibleAssets"
           :key="asset.id"
           type="button"
           data-test="asset-card"
           :aria-pressed="selected.includes(asset.id)"
-          class="relative flex h-[108px] flex-col items-center justify-center rounded-2xl border-2 transition-colors"
-          :class="
-            selected.includes(asset.id) ? 'border-black' : 'border-transparent'
-          "
+          class="flex h-[108px] flex-col items-center justify-center gap-2 rounded-2xl bg-white transition-colors"
           @click="toggle(asset.id)"
         >
-          <span
-            class="absolute left-2 top-3 flex size-5 items-center justify-center rounded-full"
-            :class="
-              selected.includes(asset.id)
-                ? 'bg-success text-white'
-                : 'bg-[#e6e6e6] text-black'
-            "
-            aria-hidden="true"
-          >
-            <CheckIcon v-if="selected.includes(asset.id)" class="size-4" />
-            <PlusIcon v-else class="size-4" />
+          <span class="relative">
+            <AppTokenLogo
+              :url="asset.logoUrl"
+              :symbol="asset.symbol"
+              :is-stock="asset.type === 'stock'"
+              width="w-10"
+              height="h-10"
+            />
+            <!-- Add/added badge overlapping the avatar (Figma). -->
+            <span
+              class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
+              :class="
+                selected.includes(asset.id)
+                  ? 'bg-success text-white'
+                  : 'bg-[#e6e6e6] text-black'
+              "
+              aria-hidden="true"
+            >
+              <CheckIcon v-if="selected.includes(asset.id)" class="size-3.5" />
+              <PlusIcon v-else class="size-3.5" />
+            </span>
           </span>
-          <AppTokenLogo
-            :url="asset.logoUrl"
-            :symbol="asset.symbol"
-            :is-stock="asset.type === 'stock'"
-            width="w-10"
-            height="h-10"
-          />
-          <span class="mt-2 text-s-14 text-black">{{ asset.symbol }}</span>
+          <span class="text-s-16 font-semibold text-black">
+            {{ asset.symbol }}
+          </span>
         </button>
       </div>
 
-      <div class="mt-4 flex items-center justify-end gap-4">
-        <span class="text-s-14 text-[#575757]">
-          {{
-            t('homePage.hero.watchlist.onboarding.assets.selected', {
-              count: selected.length,
-            })
-          }}
-        </span>
+      <!-- Show more divider (only while there is a hidden remainder). -->
+      <div v-if="hasMore" class="mt-6 flex items-center gap-5">
+        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <button
+          type="button"
+          data-test="assets-show-more"
+          class="flex items-center gap-1 text-s-14 font-semibold text-black"
+          @click="showAll = true"
+        >
+          {{ t('search.show_more') }}
+          <ChevronDownIcon class="size-4" />
+        </button>
+        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+      </div>
+
+      <div class="mt-6 flex items-center justify-end">
         <AppBaseButton
           data-test="assets-done"
           :disabled="!selected.length"
+          :style="
+            !selected.length
+              ? {
+                  backgroundColor: 'var(--color-primary) !important',
+                  opacity: 0.4,
+                  cursor: 'default',
+                }
+              : undefined
+          "
           @click="$emit('done')"
         >
-          {{ t('homePage.hero.watchlist.onboarding.assets.done') }}
+          <span class="flex items-center gap-2">
+            {{ t('homePage.hero.watchlist.onboarding.assets.done') }}
+            <ChevronRightIcon class="size-5" />
+          </span>
         </AppBaseButton>
       </div>
     </div>

@@ -87,6 +87,7 @@ watch(isOpen, open => {
           :assets="assets"
           :is-loading="isLoading"
           @done="finish"
+          @back="goToIndustries"
         />
       </div>
     </template>

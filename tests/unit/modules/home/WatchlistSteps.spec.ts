@@ -76,17 +76,28 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(w.find('[data-test="asset-card"]').exists()).toBe(false)
   })
 
-  it('renders one card per asset and gates Done on selection', async () => {
+  it('caps the grid at 8 and reveals the rest via Show more', async () => {
     const w = mountWith(WatchlistStepAssets, {
       assets: MOCK_RECOMMENDED_ASSETS,
       isLoading: false,
       modelValue: [],
     })
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(8)
+    await w.get('[data-test="assets-show-more"]').trigger('click')
     expect(w.findAll('[data-test="asset-card"]').length).toBe(
       MOCK_RECOMMENDED_ASSETS.length,
     )
+    expect(w.find('[data-test="assets-show-more"]').exists()).toBe(false)
+  })
+
+  it('gates Done on selection and emits done', async () => {
+    const empty = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
     expect(
-      w.get('[data-test="assets-done"]').attributes('disabled'),
+      empty.get('[data-test="assets-done"]').attributes('disabled'),
     ).toBeDefined()
 
     const withSel = mountWith(WatchlistStepAssets, {
@@ -96,5 +107,27 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     })
     await withSel.get('[data-test="assets-done"]').trigger('click')
     expect(withSel.emitted('done')).toHaveLength(1)
+  })
+
+  it('emits back from the header', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.get('[data-test="assets-back"]').trigger('click')
+    expect(w.emitted('back')).toHaveLength(1)
+  })
+
+  it('filters the grid by search query', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue(MOCK_RECOMMENDED_ASSETS[0].symbol)
+    const cards = w.findAll('[data-test="asset-card"]')
+    expect(cards.length).toBeGreaterThan(0)
+    expect(cards.length).toBeLessThan(MOCK_RECOMMENDED_ASSETS.length)
   })
 })
