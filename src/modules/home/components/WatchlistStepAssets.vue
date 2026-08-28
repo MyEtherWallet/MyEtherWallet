@@ -162,8 +162,8 @@ const overflowNames = computed(() =>
           aria-hidden="true"
         />
         <div
-          class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[max-height] duration-500 ease-out"
-          :class="showAll ? 'max-h-[520px]' : 'max-h-[340px]'"
+          class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[height] duration-500 ease-out"
+          :class="showAll ? 'h-[520px]' : 'h-[340px]'"
         >
           <!-- Empty search state. -->
           <div
