@@ -43,7 +43,7 @@ const toggle = (id: string) => {
       {{ t('homePage.hero.watchlist.onboarding.markets.subtitle') }}
     </h2>
 
-    <div class="mt-6 grid grid-cols-3 gap-3">
+    <div class="mt-12 grid grid-cols-3 gap-3">
       <button
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
