@@ -104,9 +104,10 @@ const toggle = (id: string) => {
       </div>
     </div>
 
-    <!-- Results: fixed-height column so the header, search and footer stay put
-         and only the token grid scrolls. -->
-    <div v-else class="flex h-[70vh] max-h-[640px] flex-col">
+    <!-- Results: column sized to content. The list area grows to a max height
+         (with a smooth transition) when "Show more" is used; header, search and
+         footer stay put and only the list scrolls once it is capped. -->
+    <div v-else class="flex flex-col">
       <!-- Header: back button + title + subtitle (close is provided by
            AppDialog). -->
       <div class="flex shrink-0 items-start gap-3">
@@ -134,12 +135,23 @@ const toggle = (id: string) => {
         class="mt-6 shrink-0 rounded-full border border-[#e6e6e6]"
       />
 
-      <!-- Scrollable token list with top/bottom white fades (same edge-fade
-           pattern as AppSlideGroup, rotated to vertical). Only this scrolls. -->
+      <!-- Token list: max-height grows with a smooth transition when "Show more"
+           reveals the rest; inner py compensates the top/bottom white fades so
+           the edge cards are never clipped (same fade idea as AppSlideGroup,
+           rotated to vertical). Only this part scrolls once capped. -->
       <div
-        class="relative mt-6 min-h-0 flex-1 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-[1] before:h-6 before:bg-gradient-to-b before:from-white before:to-transparent after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:z-[1] after:h-6 after:bg-gradient-to-t after:from-white after:to-transparent"
+        class="relative mt-2 overflow-hidden transition-[max-height] duration-500 ease-out"
+        :class="showAll ? 'max-h-[520px]' : 'max-h-[340px]'"
       >
-        <div class="mew-scrollbar h-full overflow-y-auto pr-1">
+        <div
+          class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-6 bg-gradient-to-b from-white to-transparent"
+          aria-hidden="true"
+        />
+        <div
+          class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-6 bg-gradient-to-t from-white to-transparent"
+          aria-hidden="true"
+        />
+        <div class="mew-scrollbar h-full overflow-y-auto py-6 pr-1">
           <!-- Empty search state. -->
           <div
             v-if="!visibleAssets.length"
@@ -213,7 +225,7 @@ const toggle = (id: string) => {
         </div>
       </div>
 
-      <div class="mt-6 flex shrink-0 items-center justify-end">
+      <div class="mt-2 flex shrink-0 items-center justify-end">
         <AppBaseButton
           data-test="assets-done"
           :disabled="!selected.length"
