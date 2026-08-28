@@ -68,8 +68,9 @@ watch(isOpen, open => {
   >
     <template #content>
       <!-- Figma modal: 24px padding on all sides (the close button sits at 16px,
-           matching AppDialog's absolute top-4/right-4). -->
-      <div class="p-6">
+           matching AppDialog's absolute top-4/right-4). v-auto-animate smoothly
+           animates the modal height as the active step swaps. -->
+      <div v-auto-animate class="p-6">
         <WatchlistStepMarkets
           v-if="activeStep === 0"
           v-model="selectedMarkets"
