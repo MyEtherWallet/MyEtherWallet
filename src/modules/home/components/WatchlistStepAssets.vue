@@ -163,7 +163,7 @@ const overflowNames = computed(() =>
         />
         <div
           class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[height] duration-500 ease-out"
-          :class="showAll ? 'h-[560px]' : 'h-[430px]'"
+          :class="showAll ? 'h-[560px]' : 'h-[364px]'"
         >
           <!-- Empty search state. -->
           <div
@@ -226,25 +226,26 @@ const overflowNames = computed(() =>
               </span>
             </WatchlistSelectableCard>
           </div>
-
-          <!-- Show more divider (only while there is a hidden remainder). -->
-          <div v-if="hasMore" class="mt-6 flex items-center gap-5">
-            <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
-            <button
-              type="button"
-              data-test="assets-show-more"
-              class="hoverNoBG flex items-center gap-1 rounded-full px-3 py-1 text-s-14 font-semibold text-black"
-              @click="showAll = true"
-            >
-              {{ t('search.show_more') }}
-              <ChevronDownIcon class="size-4" />
-            </button>
-            <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
-          </div>
         </div>
       </div>
 
-      <div class="mt-4 flex shrink-0 items-center justify-between gap-4">
+      <!-- Show more divider (only while there is a hidden remainder). Kept
+           outside the scroll area so its spacing to the footer is exact. -->
+      <div v-if="hasMore" class="mt-6 flex shrink-0 items-center gap-5">
+        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <button
+          type="button"
+          data-test="assets-show-more"
+          class="hoverNoBG flex items-center gap-1 rounded-full px-3 py-1 text-s-14 font-semibold text-black"
+          @click="showAll = true"
+        >
+          {{ t('search.show_more') }}
+          <ChevronDownIcon class="size-4" />
+        </button>
+        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+      </div>
+
+      <div class="mt-8 flex shrink-0 items-center justify-between gap-4">
         <!-- Selected chips: up to 2, then a "+N more" chip whose tooltip lists
              the rest by symbol. -->
         <div class="flex items-center gap-2">
