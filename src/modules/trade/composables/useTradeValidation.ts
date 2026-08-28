@@ -10,6 +10,16 @@ import Configs from '@/configs'
 
 const isDevMode = Configs.IS_DEV_MODE
 
+type FromAmountErrorCode =
+  | ''
+  | 'unavailable'
+  | 'invalid'
+  | 'decimals'
+  | 'minimum'
+  | 'balance'
+
+const NO_ERROR = { code: '' as const, message: '' }
+
 interface UseTradeValidationOptions {
   fromTokenSelected: Ref<NewTokenInfo | null>
   fromAmount: Ref<string>
@@ -93,26 +103,32 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   })
 
   // Computed error for from amount with balance validation
-  const fromAmountError = computed(() => {
+  const fromAmountErrorDetail = computed<{
+    code: FromAmountErrorCode
+    message: string
+  }>(() => {
     if (
       !fromTokenSelected.value ||
       !fromAmount.value ||
       fromAmount.value === '' ||
       fromAmount.value === '0'
     ) {
-      return ''
+      return NO_ERROR
     }
     if (generalError.value === 'pathfinder error') {
-      return t('trade.error.token-unavailable')
+      return {
+        code: 'unavailable',
+        message: t('trade.error.token-unavailable'),
+      }
     }
 
     const amountBN = BigNumber(fromAmount.value)
     if (amountBN.isNaN()) {
-      return t('swap.error.invalid-amount')
+      return { code: 'invalid', message: t('swap.error.invalid-amount') }
     }
 
     if (amountBN.lte(0)) {
-      return t('swap.error.more-than-zero')
+      return { code: 'invalid', message: t('swap.error.more-than-zero') }
     }
 
     const decimals = fromTokenSelected.value.decimals || 18
@@ -121,11 +137,14 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       : 0
     if (decimalPlaces > decimals) {
       const excessDecimals = decimalPlaces - decimals
-      return t(
-        'trade.error.remove_decimals',
-        { count: excessDecimals },
-        excessDecimals,
-      )
+      return {
+        code: 'decimals',
+        message: t(
+          'trade.error.remove_decimals',
+          { count: excessDecimals },
+          excessDecimals,
+        ),
+      }
     }
 
     // Minimum $0.95 value check
@@ -137,10 +156,13 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         const roundedMinAmount = minAmount.gte(1)
           ? minAmount.integerValue(BigNumber.ROUND_CEIL)
           : minAmount.precision(2, BigNumber.ROUND_CEIL)
-        return t('trade.error.minimum_amount', {
-          amount: roundedMinAmount.toFixed(),
-          symbol: fromTokenSelected.value.symbol,
-        })
+        return {
+          code: 'minimum',
+          message: t('trade.error.minimum_amount', {
+            amount: roundedMinAmount.toFixed(),
+            symbol: fromTokenSelected.value.symbol,
+          }),
+        }
       }
     }
 
@@ -151,7 +173,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
 
         if (tokenParams.baseBalance < baseAmount) {
-          return t('trade.error.not_enough_balance')
+          return {
+            code: 'balance',
+            message: t('trade.error.not_enough_balance'),
+          }
         }
       } catch (e) {
         if (isDevMode) {
@@ -169,8 +194,15 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       }
     }
 
-    return ''
+    return NO_ERROR
   })
+
+  const fromAmountError = computed(() => fromAmountErrorDetail.value.message)
+
+  // Only this error paints the balance red — see MEW-2228.
+  const isInsufficientBalanceError = computed(
+    () => fromAmountErrorDetail.value.code === 'balance',
+  )
 
   // Check if trade button should be disabled
   const isTradeDisabled = computed(
@@ -200,6 +232,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   return {
     hasPreQuoteError,
     fromAmountError,
+    isInsufficientBalanceError,
     isTradeDisabled,
     isSameTokenSelected,
   }

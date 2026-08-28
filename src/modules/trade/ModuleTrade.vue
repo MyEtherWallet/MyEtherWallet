@@ -142,6 +142,7 @@
             side="sell"
             :external-loading="isLoading || !swapLoaded"
             :fiat-loading="isLoadingQuote"
+            :balance-error="isInsufficientBalanceError"
             :tokens="fromTokens"
             :show-balance="isWalletConnected"
             :network-name="selectedFromChain?.name"
@@ -604,6 +605,7 @@ const isLoadingQuote = ref(false)
 const {
   hasPreQuoteError,
   fromAmountError,
+  isInsufficientBalanceError,
   isTradeDisabled,
   isSameTokenSelected,
 } = useTradeValidation({

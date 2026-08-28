@@ -128,7 +128,9 @@
         <p
           v-if="showBalance"
           :class="[
-            showError && side === 'sell' ? 'text-error' : 'text-info',
+            showError && side === 'sell' && errorIsBalance
+              ? 'text-error'
+              : 'text-info',
             'text-s-12 leading-[18px] whitespace-nowrap',
           ]"
         >
@@ -179,6 +181,7 @@ const props = withDefaults(
     tokens?: NewTokenInfo[] | null
     externalLoading?: boolean
     fiatLoading?: boolean
+    balanceError?: boolean
     showBalance?: boolean
     isPristine?: boolean
     networkName?: string
@@ -191,6 +194,7 @@ const props = withDefaults(
     tokens: () => [],
     externalLoading: false,
     fiatLoading: false,
+    balanceError: false,
     showBalance: true,
     isPristine: false,
     networkName: undefined,
@@ -224,18 +228,18 @@ const isLoading = computed(() => {
 
 const hasError = ref(false)
 const errorMessage = ref('')
+const errorIsBalance = ref(false)
 const showError = computed(
   () => hasError.value && !isOpenSelectToken.value && !props.isPristine,
 )
 
-const debouncedValidate = useDebounceFn(
-  () => {
-    hasError.value = error.value !== ''
-    errorMessage.value = error.value
-  },
-  1000,
-  { maxWait: 5000 },
-)
+const applyError = () => {
+  hasError.value = error.value !== ''
+  errorMessage.value = error.value
+  errorIsBalance.value = props.balanceError
+}
+
+const debouncedValidate = useDebounceFn(applyError, 1000, { maxWait: 5000 })
 
 watch(
   () => [amount.value, error.value],
@@ -336,8 +340,7 @@ const focusInput = () => {
 onClickOutside(activeCard, () => {
   startOutOfFocusTimeout()
   activeCard.value = null
-  hasError.value = error.value !== ''
-  errorMessage.value = error.value
+  applyError()
 })
 
 const checkIfNumber = (e: KeyboardEvent) => {

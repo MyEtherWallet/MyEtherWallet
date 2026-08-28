@@ -12,6 +12,7 @@ vi.mock('@/components/AppSwapSelectedToken.vue', () => ({
 }))
 
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { createPinia } from 'pinia'
 import i18n from '@/i18n'
 import TradeAmountCard from '@/modules/trade/components/TradeAmountCard.vue'
@@ -89,6 +90,28 @@ describe('TradeAmountCard', () => {
     await card.find('input').setValue('1.2.3abc')
     const updates = card.emitted('update:amount')!
     expect(updates[updates.length - 1]).toEqual(['1.23'])
+  })
+
+  it('paints the balance red only for the insufficient-balance error', async () => {
+    vi.useFakeTimers()
+    try {
+      const balanceRow = (card: ReturnType<typeof mountCard>) =>
+        card.findAll('p').find(row => row.text().startsWith('Balance'))!
+
+      const outOfBalance = mountCard({ balanceError: true })
+      await outOfBalance.setProps({ amount: '600', error: 'Not enough balance' })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(balanceRow(outOfBalance).classes()).toContain('text-error')
+
+      const belowMinimum = mountCard({ balanceError: false })
+      await belowMinimum.setProps({ amount: '3', error: 'Enter +5 USDC' })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(balanceRow(belowMinimum).classes()).toContain('text-info')
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('hides the balance row when showBalance is false', () => {
