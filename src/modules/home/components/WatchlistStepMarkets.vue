@@ -80,6 +80,7 @@ const toggle = (id: string) => {
 
     <div class="mt-12 flex items-center justify-end">
       <AppBaseButton
+        class="continue-btn"
         data-test="markets-continue"
         :disabled="!selected.length"
         @click="$emit('continue')"
@@ -92,3 +93,12 @@ const toggle = (id: string) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Figma: the disabled Continue keeps the brand fill and only dims to 40%,
+   overriding AppBaseButton's default grey disabled surface. */
+.continue-btn:disabled {
+  background-color: var(--color-primary) !important;
+  opacity: 0.4;
+}
+</style>
