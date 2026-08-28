@@ -152,16 +152,14 @@
             @select:token="onFromTokenSelected"
           />
 
-          <!-- Swap Direction Button -->
+          <!-- Swap Direction Indicator -->
           <div class="relative h-0 z-10 flex justify-center">
-            <button
-              type="button"
-              :aria-label="$t('trade.swap_from_to')"
-              class="absolute top-[6px] -translate-y-1/2 bg-bgBase border-4 border-white rounded-12 p-2.5 transition-colors hoverNoBG"
-              @click="swapTokens"
+            <div
+              aria-hidden="true"
+              class="absolute top-[6px] -translate-y-1/2 bg-bgBase border-4 border-white rounded-12 p-2.5"
             >
-              <arrows-up-down-icon class="w-5 h-5" />
-            </button>
+              <arrow-down-icon class="w-5 h-5" />
+            </div>
           </div>
 
           <!-- Buy Section -->
@@ -311,7 +309,7 @@
 import { ref, onBeforeMount, onBeforeUnmount, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { ArrowsUpDownIcon } from '@heroicons/vue/20/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
 // 16px variant: the badge glyph is drawn at 16px in the design, and the 24px
 // icon's strokes render muddy when scaled down that far.
@@ -766,16 +764,6 @@ const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
 }
 
-const isTokenInList = (
-  list: NewTokenInfo[],
-  token: NewTokenInfo | null,
-): token is NewTokenInfo =>
-  !!token &&
-  list.some(
-    candidate =>
-      candidate.address?.toLowerCase() === token.address?.toLowerCase(),
-  )
-
 // MEW-1981: toast whenever the user switches a trade token via the picker.
 // Listen to `@select:token`, which the token-select child emits ONLY on an
 // explicit user pick — not on the programmatic defaulting it does on network
@@ -802,23 +790,6 @@ const onToTokenSelected = (token: NewTokenInfo) => {
   notifyTokensSwitched(fromTokenSelected.value, token)
 }
 
-const swapTokens = () => {
-  const previousFromToken = fromTokenSelected.value
-  const previousToToken = toTokenSelected.value
-
-  fromTokenSelected.value = isTokenInList(fromTokens.value, previousToToken)
-    ? previousToToken
-    : getDefaultFromToken()
-  toTokenSelected.value = isTokenInList(
-    toTokenSantized.value,
-    previousFromToken,
-  )
-    ? previousFromToken
-    : (toTokenSantized.value[0] ?? null)
-  fromAmount.value = ''
-  toAmount.value = ''
-  resetQuote()
-}
 
 const setPercentageAmount = (percentage: number) => {
   if (!fromTokenSelected.value || !isWalletConnected.value) return
