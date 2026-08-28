@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/20/solid'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -131,7 +132,22 @@ const toggle = (id: string) => {
         class="mt-6 rounded-full border border-[#e6e6e6]"
       />
 
-      <div v-auto-animate class="mt-6 grid grid-cols-4 gap-2">
+      <!-- Empty search state. -->
+      <div
+        v-if="!visibleAssets.length"
+        data-test="assets-empty"
+        class="mt-4 flex flex-col items-center justify-center gap-1 py-6 text-center"
+      >
+        <MagnifyingGlassIcon class="mb-1 size-8 text-[#767676]" />
+        <p class="text-s-16 font-semibold text-black">
+          {{ t('search.no_results_title') }}
+        </p>
+        <p class="text-s-14 text-[#575757]">
+          {{ t('search.no_results_subtitle') }}
+        </p>
+      </div>
+
+      <div v-else v-auto-animate class="mt-6 grid grid-cols-4 gap-2">
         <button
           v-for="asset in visibleAssets"
           :key="asset.id"

@@ -130,4 +130,15 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(cards.length).toBeGreaterThan(0)
     expect(cards.length).toBeLessThan(MOCK_RECOMMENDED_ASSETS.length)
   })
+
+  it('shows the empty state when the search matches nothing', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue('zzzz-no-such-asset')
+    expect(w.find('[data-test="assets-empty"]').exists()).toBe(true)
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
+  })
 })
