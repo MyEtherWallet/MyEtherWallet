@@ -171,8 +171,8 @@ const overflowNames = computed(() =>
             data-test="assets-empty"
             class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
           >
-            <ExclamationCircleIcon class="size-8 text-[#575757]" />
-            <p class="mt-4 max-w-[300px] text-s-20 text-[#575757]">
+            <ExclamationCircleIcon class="size-6 text-[#575757]" />
+            <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
               {{ t('homePage.hero.watchlist.onboarding.assets.noResults') }}
             </p>
             <button
