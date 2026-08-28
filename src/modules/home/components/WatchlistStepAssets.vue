@@ -139,10 +139,7 @@ const toggle = (id: string) => {
            reveals the rest; inner py compensates the top/bottom white fades so
            the edge cards are never clipped (same fade idea as AppSlideGroup,
            rotated to vertical). Only this part scrolls once capped. -->
-      <div
-        class="relative mt-2 overflow-hidden transition-[max-height] duration-500 ease-out"
-        :class="showAll ? 'max-h-[520px]' : 'max-h-[340px]'"
-      >
+      <div class="relative mt-2">
         <div
           class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-6 bg-gradient-to-b from-white to-transparent"
           aria-hidden="true"
@@ -151,7 +148,10 @@ const toggle = (id: string) => {
           class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-6 bg-gradient-to-t from-white to-transparent"
           aria-hidden="true"
         />
-        <div class="mew-scrollbar h-full overflow-y-auto py-6 pr-1">
+        <div
+          class="mew-scrollbar overflow-y-auto py-6 pr-1 transition-[max-height] duration-500 ease-out"
+          :class="showAll ? 'max-h-[520px]' : 'max-h-[340px]'"
+        >
           <!-- Empty search state. -->
           <div
             v-if="!visibleAssets.length"
