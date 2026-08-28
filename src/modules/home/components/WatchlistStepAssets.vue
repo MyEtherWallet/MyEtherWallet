@@ -13,6 +13,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import cluster1 from '@/assets/images/watchlist/market-stocks-1.png'
 import cluster2 from '@/assets/images/watchlist/market-crypto-1.png'
@@ -103,11 +104,12 @@ const toggle = (id: string) => {
       </div>
     </div>
 
-    <!-- Results -->
-    <div v-else>
+    <!-- Results: fixed-height column so the header, search and footer stay put
+         and only the token grid scrolls. -->
+    <div v-else class="flex h-[70vh] max-h-[640px] flex-col">
       <!-- Header: back button + title + subtitle (close is provided by
            AppDialog). -->
-      <div class="flex items-start gap-3">
+      <div class="flex shrink-0 items-start gap-3">
         <AppBtnIcon
           :label="t('common.back')"
           data-test="assets-back"
@@ -129,78 +131,89 @@ const toggle = (id: string) => {
         v-model="query"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
         bg-class="bg-white"
-        class="mt-6 rounded-full border border-[#e6e6e6]"
+        class="mt-6 shrink-0 rounded-full border border-[#e6e6e6]"
       />
 
-      <!-- Empty search state. -->
+      <!-- Scrollable token list with top/bottom white fades (same edge-fade
+           pattern as AppSlideGroup, rotated to vertical). Only this scrolls. -->
       <div
-        v-if="!visibleAssets.length"
-        data-test="assets-empty"
-        class="mt-4 flex flex-col items-center justify-center gap-1 py-6 text-center"
+        class="relative mt-6 min-h-0 flex-1 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-[1] before:h-6 before:bg-gradient-to-b before:from-white before:to-transparent after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:z-[1] after:h-6 after:bg-gradient-to-t after:from-white after:to-transparent"
       >
-        <MagnifyingGlassIcon class="mb-1 size-8 text-[#767676]" />
-        <p class="text-s-16 font-semibold text-black">
-          {{ t('search.no_results_title') }}
-        </p>
-        <p class="text-s-14 text-[#575757]">
-          {{ t('search.no_results_subtitle') }}
-        </p>
-      </div>
+        <div class="mew-scrollbar h-full overflow-y-auto pr-1">
+          <!-- Empty search state. -->
+          <div
+            v-if="!visibleAssets.length"
+            data-test="assets-empty"
+            class="flex min-h-[160px] flex-col items-center justify-center gap-1 py-6 text-center"
+          >
+            <MagnifyingGlassIcon class="mb-1 size-8 text-[#767676]" />
+            <p class="text-s-16 font-semibold text-black">
+              {{ t('search.no_results_title') }}
+            </p>
+            <p class="text-s-14 text-[#575757]">
+              {{ t('search.no_results_subtitle') }}
+            </p>
+          </div>
 
-      <div v-else v-auto-animate class="mt-6 grid grid-cols-4 gap-2">
-        <button
-          v-for="asset in visibleAssets"
-          :key="asset.id"
-          type="button"
-          data-test="asset-card"
-          :aria-pressed="selected.includes(asset.id)"
-          class="flex h-[108px] flex-col items-center justify-center gap-2 rounded-2xl bg-white transition-colors"
-          @click="toggle(asset.id)"
-        >
-          <span class="relative">
-            <AppTokenLogo
-              :url="asset.logoUrl"
-              :symbol="asset.symbol"
-              :is-stock="asset.type === 'stock'"
-              width="w-10"
-              height="h-10"
-            />
-            <!-- Add/added badge overlapping the avatar (Figma). -->
-            <span
-              class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
-              :class="
-                selected.includes(asset.id)
-                  ? 'bg-success text-white'
-                  : 'bg-[#e6e6e6] text-black'
-              "
-              aria-hidden="true"
+          <div v-else v-auto-animate class="grid grid-cols-4 gap-2">
+            <WatchlistSelectableCard
+              v-for="asset in visibleAssets"
+              :key="asset.id"
+              data-test="asset-card"
+              :selected="selected.includes(asset.id)"
+              bg="bg-white"
+              class="flex h-[108px] flex-col items-center justify-center gap-2"
+              @toggle="toggle(asset.id)"
             >
-              <CheckIcon v-if="selected.includes(asset.id)" class="size-3.5" />
-              <PlusIcon v-else class="size-3.5" />
-            </span>
-          </span>
-          <span class="text-s-16 font-semibold text-black">
-            {{ asset.symbol }}
-          </span>
-        </button>
+              <span class="relative">
+                <AppTokenLogo
+                  :url="asset.logoUrl"
+                  :symbol="asset.symbol"
+                  :is-stock="asset.type === 'stock'"
+                  width="w-10"
+                  height="h-10"
+                />
+                <!-- Add/added badge overlapping the avatar (Figma). -->
+                <span
+                  class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
+                  :class="
+                    selected.includes(asset.id)
+                      ? 'bg-success text-white'
+                      : 'bg-[#e6e6e6] text-black'
+                  "
+                  aria-hidden="true"
+                >
+                  <CheckIcon
+                    v-if="selected.includes(asset.id)"
+                    class="size-3.5"
+                  />
+                  <PlusIcon v-else class="size-3.5" />
+                </span>
+              </span>
+              <span class="text-s-16 font-semibold text-black">
+                {{ asset.symbol }}
+              </span>
+            </WatchlistSelectableCard>
+          </div>
+
+          <!-- Show more divider (only while there is a hidden remainder). -->
+          <div v-if="hasMore" class="mt-6 flex items-center gap-5">
+            <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+            <button
+              type="button"
+              data-test="assets-show-more"
+              class="flex items-center gap-1 text-s-14 font-semibold text-black"
+              @click="showAll = true"
+            >
+              {{ t('search.show_more') }}
+              <ChevronDownIcon class="size-4" />
+            </button>
+            <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+          </div>
+        </div>
       </div>
 
-      <!-- Show more divider (only while there is a hidden remainder). -->
-      <div v-if="hasMore" class="mt-6 flex items-center gap-5">
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
-        <button
-          type="button"
-          data-test="assets-show-more"
-          class="flex items-center gap-1 text-s-14 font-semibold text-black"
-          @click="showAll = true"
-        >
-          {{ t('search.show_more') }}
-          <ChevronDownIcon class="size-4" />
-        </button>
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
-      </div>
-
-      <div class="mt-6 flex items-center justify-end">
+      <div class="mt-6 flex shrink-0 items-center justify-end">
         <AppBaseButton
           data-test="assets-done"
           :disabled="!selected.length"
