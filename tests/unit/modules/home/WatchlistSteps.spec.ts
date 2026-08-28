@@ -57,6 +57,12 @@ describe('WatchlistStepIndustries (MEW-2130)', () => {
     await w.findAll('[data-test="industry-pill"]')[0].trigger('click')
     expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['commodities'])
   })
+
+  it('emits back when the header back button is clicked', async () => {
+    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+    await w.get('[data-test="industries-back"]').trigger('click')
+    expect(w.emitted('back')).toHaveLength(1)
+  })
 })
 
 describe('WatchlistStepAssets (MEW-2130)', () => {

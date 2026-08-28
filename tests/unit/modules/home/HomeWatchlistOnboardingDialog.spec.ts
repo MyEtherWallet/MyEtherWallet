@@ -38,9 +38,10 @@ vi.mock('@/modules/home/components/WatchlistStepMarkets.vue', () => ({
 }))
 vi.mock('@/modules/home/components/WatchlistStepIndustries.vue', () => ({
   default: {
-    emits: ['continue', 'update:modelValue'],
+    emits: ['continue', 'back', 'update:modelValue'],
     template:
-      '<button data-test="s2" @click="$emit(\'continue\')">industries</button>',
+      '<div><button data-test="s2" @click="$emit(\'continue\')">industries</button>' +
+      '<button data-test="s2-back" @click="$emit(\'back\')">back</button></div>',
   },
 }))
 vi.mock('@/modules/home/components/WatchlistStepAssets.vue', () => ({
@@ -74,6 +75,14 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s2"]').trigger('click')
     expect(w.find('[data-test="done"]').exists()).toBe(true)
     expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+  })
+
+  it('back from industries returns to markets', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click')
+    expect(w.find('[data-test="s2"]').exists()).toBe(true)
+    await w.get('[data-test="s2-back"]').trigger('click')
+    expect(w.find('[data-test="s1"]').exists()).toBe(true)
   })
 
   it('done adds each selected asset to its matching bucket and closes', async () => {

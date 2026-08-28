@@ -28,6 +28,12 @@ const goToIndustries = () => {
   activeStep.value = 1
 }
 
+// Back from industries → markets. Selections are kept (refs untouched) so the
+// user sees their prior picks (AC: back preserves prior selections).
+const goToMarkets = () => {
+  activeStep.value = 0
+}
+
 const goToAssets = () => {
   activeStep.value = 2
   fetchRecommendations(selectedMarkets.value, selectedIndustries.value)
@@ -73,6 +79,7 @@ watch(isOpen, open => {
           v-else-if="activeStep === 1"
           v-model="selectedIndustries"
           @continue="goToAssets"
+          @back="goToMarkets"
         />
         <WatchlistStepAssets
           v-else
