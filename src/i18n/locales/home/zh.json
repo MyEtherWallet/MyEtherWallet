@@ -44,7 +44,7 @@
           "assets": {
             "title": "为您找到的资产",
             "subtitle": "以下是根据您的兴趣推荐关注的资产。",
-            "loadingTitle": "正在查找资产",
+            "loadingTitle": "正在查找资产…",
             "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
             "done": "完成",
             "selected": "已选择 {count} 项资产"

@@ -4,8 +4,23 @@ import { PlusIcon, CheckIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
+import cluster1 from '@/assets/images/watchlist/market-stocks-1.png'
+import cluster2 from '@/assets/images/watchlist/market-crypto-1.png'
+import cluster3 from '@/assets/images/watchlist/market-crypto-2.png'
+import cluster4 from '@/assets/images/watchlist/market-crypto-3.png'
+import cluster5 from '@/assets/images/watchlist/market-stocks-2.png'
 
 const { t } = useI18n()
+
+// Decorative fading avatar cluster for the "Finding assets…" loading state
+// (Figma: symmetric, biggest + fully opaque in the centre, fading outward).
+const LOADING_CLUSTER = [
+  { src: cluster1, size: 'size-4', opacity: 'opacity-30' },
+  { src: cluster2, size: 'size-8', opacity: 'opacity-60' },
+  { src: cluster3, size: 'size-12', opacity: 'opacity-100' },
+  { src: cluster4, size: 'size-8', opacity: 'opacity-60' },
+  { src: cluster5, size: 'size-4', opacity: 'opacity-30' },
+]
 
 defineProps<{
   assets: RecommendedAsset[]
@@ -26,22 +41,30 @@ const toggle = (id: string) => {
 
 <template>
   <div data-test="watchlist-step-assets">
-    <!-- Loading -->
+    <!-- Loading (Figma: fading avatar cluster + "Finding assets…"). -->
     <div
       v-if="isLoading"
       data-test="assets-loading"
-      class="flex min-h-[360px] flex-col items-center justify-center text-center"
+      class="flex min-h-[380px] flex-col items-center justify-center gap-8 text-center"
     >
-      <span
-        class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"
-        aria-hidden="true"
-      />
-      <p class="mt-6 text-s-20 font-bold text-black">
-        {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
-      </p>
-      <p class="mt-1 text-s-16 text-[#575757]">
-        {{ t('homePage.hero.watchlist.onboarding.assets.loadingSubtitle') }}
-      </p>
+      <div class="flex animate-pulse items-center" aria-hidden="true">
+        <img
+          v-for="(avatar, i) in LOADING_CLUSTER"
+          :key="i"
+          :src="avatar.src"
+          alt=""
+          class="rounded-full border-2 border-white object-contain"
+          :class="[avatar.size, avatar.opacity, i > 0 ? '-ml-2' : '']"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <p class="text-s-24 font-bold leading-[26px] text-black">
+          {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
+        </p>
+        <p class="text-s-16 text-[#575757]">
+          {{ t('homePage.hero.watchlist.onboarding.assets.loadingSubtitle') }}
+        </p>
+      </div>
     </div>
 
     <!-- Results -->

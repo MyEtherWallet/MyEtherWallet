@@ -14,6 +14,10 @@ import {
 const ENDPOINT_READY = false
 const RECOMMENDATIONS_ENDPOINT = '/v1/web/watchlist/recommendations'
 
+// ponytail: fake latency so the "Finding assets…" loading state is visible until
+// the real endpoint ships. Skipped under vitest so specs stay fast.
+const MOCK_DELAY_MS = import.meta.env.MODE === 'test' ? 0 : 1800
+
 /**
  * Recommended assets for the watchlist onboarding wizard (MEW-2130). POSTs the
  * user's selected markets + industries and returns a list to follow. Mockable
@@ -38,6 +42,7 @@ export function useRecommendedWatchlist(): {
     isLoading.value = true
     try {
       if (!ENDPOINT_READY) {
+        await new Promise(resolve => setTimeout(resolve, MOCK_DELAY_MS))
         assets.value = MOCK_RECOMMENDED_ASSETS
         return
       }

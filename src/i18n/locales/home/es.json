@@ -44,7 +44,7 @@
           "assets": {
             "title": "Encontramos activos para ti",
             "subtitle": "Estos son algunos activos que podrías seguir según tus intereses.",
-            "loadingTitle": "Buscando activos",
+            "loadingTitle": "Buscando activos…",
             "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
             "done": "Listo",
             "selected": "{count} activos seleccionados"

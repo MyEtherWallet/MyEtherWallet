@@ -44,7 +44,7 @@
           "assets": {
             "title": "We found assets for you",
             "subtitle": "Here are some assets you might want to follow based on your interests.",
-            "loadingTitle": "Finding assets",
+            "loadingTitle": "Finding assets…",
             "loadingSubtitle": "We are looking for assets that align with your interests",
             "done": "Done",
             "selected": "{count} assets selected"
