@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ArrowRightIcon } from '@heroicons/vue/20/solid'
+import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
@@ -36,21 +36,21 @@ const toggle = (id: string) => {
 
 <template>
   <div data-test="watchlist-step-markets">
-    <h2 class="text-s-24 font-bold text-black">
+    <p class="text-s-20 font-normal text-[#575757]">
       {{ t('homePage.hero.watchlist.title') }}
-    </h2>
-    <p class="mt-1 text-s-16 text-[#575757]">
-      {{ t('homePage.hero.watchlist.onboarding.markets.subtitle') }}
     </p>
+    <h2 class="mt-1 text-s-20 font-bold text-black">
+      {{ t('homePage.hero.watchlist.onboarding.markets.subtitle') }}
+    </h2>
 
-    <div class="mt-6 grid grid-cols-3 gap-4">
+    <div class="mt-6 grid grid-cols-3 gap-3">
       <button
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
         type="button"
         data-test="market-card"
         :aria-pressed="selected.includes(market.id)"
-        class="relative flex h-[128px] flex-col justify-between rounded-2xl border-2 p-4 text-left transition-colors"
+        class="relative flex h-[120px] flex-col justify-between rounded-2xl border-2 p-4 text-left transition-colors"
         :class="
           selected.includes(market.id)
             ? 'border-black bg-white'
@@ -58,27 +58,27 @@ const toggle = (id: string) => {
         "
         @click="toggle(market.id)"
       >
-        <span class="text-s-16 font-bold text-black">
+        <span class="text-s-16 font-semibold text-black">
           {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
         </span>
-        <!-- Decorative asset cluster (Figma logos). -->
+        <!-- Overlapping round asset avatars (Figma logos, 24px with card-bg ring). -->
         <span class="flex items-center" aria-hidden="true">
           <img
             v-for="(logo, i) in MARKET_LOGOS[market.id]"
             :key="i"
             :src="logo"
             alt=""
-            class="size-8"
-            :class="{ '-ml-2': i > 0 }"
+            class="size-6 rounded-full border"
+            :class="[
+              i > 0 ? '-ml-2' : '',
+              selected.includes(market.id) ? 'border-white' : 'border-[#f5f5f5]',
+            ]"
           />
         </span>
       </button>
     </div>
 
-    <div class="mt-8 flex items-center justify-between">
-      <span class="text-s-14 text-[#575757]">
-        {{ t('homePage.hero.watchlist.onboarding.markets.hint') }}
-      </span>
+    <div class="mt-8 flex items-center justify-end">
       <AppBaseButton
         data-test="markets-continue"
         :disabled="!selected.length"
@@ -86,7 +86,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <ArrowRightIcon class="size-5" />
+          <ChevronRightIcon class="size-5" />
         </span>
       </AppBaseButton>
     </div>
