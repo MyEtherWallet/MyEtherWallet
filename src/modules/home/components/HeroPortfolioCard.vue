@@ -108,7 +108,8 @@ const totalText = computed(() =>
     : formattedTotalFiatPortfolioValue.value,
 )
 const percentText = computed(() => {
-  const shown = `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}%`
+  // formatPercentageValue already suffixes '%' — don't append another (MEW-2215)
+  const shown = `${isUp.value ? '+' : '-'}${formatPercentageValue(percentChange.value.abs()).value}`
   return hideBalances.value ? maskDigits(shown) : shown
 })
 

@@ -185,6 +185,20 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     expect(push).toHaveBeenCalledWith({ name: 'Portfolio' })
   })
 
+  it('renders a single % on the today change — MEW-2215', () => {
+    // formatPercentageValue already suffixes '%', so the card must not append
+    // another one (regression: the change read '+7.56%%').
+    setWallet({
+      isWalletConnected: true,
+      isLoadingBalances: false,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
+      walletAddress: '0x71C8000000000000000000000000000000000389a',
+    })
+    const today = mountCard().get('[data-test="hero-today"]').text()
+    expect(today).toContain('7.56%')
+    expect(today).not.toContain('%%')
+  })
+
   it('copies the full address when the address chip is clicked', async () => {
     setWallet({
       isWalletConnected: true,
