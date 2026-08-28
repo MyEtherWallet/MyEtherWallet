@@ -1,10 +1,14 @@
 <script setup lang="ts">
 /**
  * Shared multi-select card used across the watchlist onboarding steps (markets,
- * industries). Owns the selection + hover styling; consumers pass their own
+ * industries, recommended assets). Owns the selection + hover styling (1px
+ * border: black when selected, grey-outline on hover); consumers pass their own
  * layout classes (they fall through onto the button) and content via the slot.
+ * `bg` sets the unselected background (selected is always white).
  */
-defineProps<{ selected: boolean }>()
+withDefaults(defineProps<{ selected: boolean; bg?: string }>(), {
+  bg: 'bg-[#f5f5f5]',
+})
 defineEmits<{ toggle: [] }>()
 </script>
 
@@ -15,8 +19,8 @@ defineEmits<{ toggle: [] }>()
     class="rounded-2xl border text-left transition-colors"
     :class="
       selected
-        ? 'border-black bg-white'
-        : 'border-transparent bg-[#f5f5f5] hover:border-grey-outline'
+        ? '!border-black bg-white'
+        : `border-transparent ${bg} hover:border-grey-outline`
     "
     @click="$emit('toggle')"
   >
