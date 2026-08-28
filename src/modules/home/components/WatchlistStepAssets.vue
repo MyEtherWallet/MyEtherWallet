@@ -152,17 +152,17 @@ const overflowNames = computed(() =>
            reveals the rest; inner py compensates the top/bottom white fades so
            the edge cards are never clipped (same fade idea as AppSlideGroup,
            rotated to vertical). Only this part scrolls once capped. -->
-      <div class="relative mt-2">
+      <div class="relative mt-4">
         <div
-          class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-6 bg-gradient-to-b from-white to-transparent"
+          class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-3 bg-gradient-to-b from-white to-transparent"
           aria-hidden="true"
         />
         <div
-          class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-6 bg-gradient-to-t from-white to-transparent"
+          class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
           aria-hidden="true"
         />
         <div
-          class="mew-scrollbar overflow-y-auto py-6 pr-1 transition-[max-height] duration-500 ease-out"
+          class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[max-height] duration-500 ease-out"
           :class="showAll ? 'max-h-[520px]' : 'max-h-[340px]'"
         >
           <!-- Empty search state. -->
@@ -239,7 +239,7 @@ const overflowNames = computed(() =>
         </div>
       </div>
 
-      <div class="mt-2 flex shrink-0 items-center justify-between gap-4">
+      <div class="mt-4 flex shrink-0 items-center justify-between gap-4">
         <!-- Selected chips: up to 2, then a "+N more" chip whose tooltip lists
              the rest by symbol. -->
         <div class="flex items-center gap-2">
