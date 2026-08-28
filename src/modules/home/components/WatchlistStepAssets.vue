@@ -233,7 +233,7 @@ const overflowNames = computed(() =>
             <button
               type="button"
               data-test="assets-show-more"
-              class="flex items-center gap-1 text-s-14 font-semibold text-black"
+              class="hoverNoBG flex items-center gap-1 rounded-full px-3 py-1 text-s-14 font-semibold text-black"
               @click="showAll = true"
             >
               {{ t('search.show_more') }}
