@@ -27,34 +27,6 @@
           class="mb-3"
         />
 
-        <!-- Market Closed -->
-        <app-unavailable-card
-          v-if="
-            !isLoading &&
-            marketStatus &&
-            !isTradingSessionOpen &&
-            isCurrentNetworkSupported
-          "
-          accent="primary"
-          class="mb-3"
-          :title="$t('trade.market_closed')"
-          :description="marketStatus.reason?.message"
-        >
-          <template #action>
-            <div class="text-center">
-              <p
-                v-if="countdownText"
-                class="font-medium text-s-16 mb-1 tabular-nums"
-              >
-                {{ $t('trade.opens_in', { countdown: countdownText }) }}
-              </p>
-              <p class="text-grey-50 text-s-11 mt-1">
-                {{ formatNextOpen(marketStatus.nextOpen) }}
-              </p>
-            </div>
-          </template>
-        </app-unavailable-card>
-
         <!-- Network Not Supported -->
         <app-unavailable-card
           v-if="!isLoading && !isCurrentNetworkSupported"
@@ -418,13 +390,10 @@ const isPristine = ref(true) // Track if form is in pristine (untouched/cleared)
 
 // --- Market Status ---
 const {
-  marketStatus,
   currentSession,
   isTradingSessionOpen,
   tradingRestrictedHelpUrl,
-  countdownText,
   fetchMarketStatus,
-  formatNextOpen,
 } = useMarketStatus({
   onMarketOpen: async () => {
     // Refresh tradable assets when market opens
@@ -648,6 +617,9 @@ const { currentQuote, quoteExpiresAt, needsApproval, fetchQuote, resetQuote } =
 })
 
 const ctaDisabledLabel = computed(() => {
+  if (!isTradingSessionOpen.value) {
+    return t('trade.market_status.paused')
+  }
   const parsedAmount = Number(fromAmount.value)
   if (fromAmount.value.trim() === '' || !parsedAmount) {
     return t('trade.enter_amount')
