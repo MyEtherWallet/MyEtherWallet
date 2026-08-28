@@ -48,7 +48,9 @@
             "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
             "done": "Listo",
             "selected": "{count} activos seleccionados",
-            "moreCount": "+{count} más"
+            "moreCount": "+{count} más",
+            "noResults": "No se encontraron activos con tu búsqueda, prueba buscar otro activo",
+            "clearSearch": "Limpiar búsqueda"
           },
           "marketLabels": {
             "stocks": "Acciones",

@@ -8,7 +8,7 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/20/solid'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -169,15 +169,20 @@ const overflowNames = computed(() =>
           <div
             v-if="!visibleAssets.length"
             data-test="assets-empty"
-            class="flex min-h-[160px] flex-col items-center justify-center gap-1 py-6 text-center"
+            class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
           >
-            <MagnifyingGlassIcon class="mb-1 size-8 text-[#767676]" />
-            <p class="text-s-16 font-semibold text-black">
-              {{ t('search.no_results_title') }}
+            <ExclamationCircleIcon class="size-8 text-[#575757]" />
+            <p class="mt-4 max-w-[300px] text-s-20 text-[#575757]">
+              {{ t('homePage.hero.watchlist.onboarding.assets.noResults') }}
             </p>
-            <p class="text-s-14 text-[#575757]">
-              {{ t('search.no_results_subtitle') }}
-            </p>
+            <button
+              type="button"
+              data-test="assets-clear-search"
+              class="mt-6 rounded-full bg-[#f5f5f5] px-6 py-3 text-s-16 font-semibold text-primary"
+              @click="query = ''"
+            >
+              {{ t('homePage.hero.watchlist.onboarding.assets.clearSearch') }}
+            </button>
           </div>
 
           <div v-else v-auto-animate class="grid grid-cols-4 gap-2">

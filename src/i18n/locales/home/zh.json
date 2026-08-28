@@ -48,7 +48,9 @@
             "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
             "done": "完成",
             "selected": "已选择 {count} 项资产",
-            "moreCount": "+{count} 更多"
+            "moreCount": "+{count} 更多",
+            "noResults": "未找到符合搜索的资产，请尝试搜索其他资产",
+            "clearSearch": "清除搜索"
           },
           "marketLabels": {
             "stocks": "股票",
