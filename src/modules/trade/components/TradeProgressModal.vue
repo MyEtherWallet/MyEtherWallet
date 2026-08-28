@@ -19,6 +19,7 @@
               :address="tokenAddress(fromToken)"
               width="w-10"
               height="h-10"
+              no-shadow
             />
           </div>
           <arrows-right-left-icon
@@ -35,6 +36,7 @@
               :address="tokenAddress(toToken)"
               width="w-10"
               height="h-10"
+              no-shadow
             />
           </div>
           <span
@@ -53,7 +55,7 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ title }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-[#575757]">
+          <p class="text-s-16 leading-[22px] text-info">
             {{ subtitle }}
           </p>
         </div>
@@ -68,7 +70,7 @@
 
         <p
           v-if="status === 'pending'"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-[#575757] whitespace-pre-line"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-info whitespace-pre-line"
         >
           {{ $t('trade.progress_modal.background_note') }}
         </p>

@@ -53,7 +53,7 @@
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
                   </p>
-                  <p class="text-s-14 leading-[20px] text-[#575757]">
+                  <p class="text-s-14 leading-[20px] text-info">
                     ≈ {{ currencySymbol }}{{ fromAmountFiat }}
                   </p>
                 </div>
@@ -63,10 +63,11 @@
                   :address="tokenAddress(fromToken)"
                   width="w-10"
                   height="h-10"
+                  no-shadow
                 />
               </div>
 
-              <div class="h-px w-full bg-[#d6d6d6]"></div>
+              <div class="h-px w-full bg-grey-divider"></div>
 
               <div class="flex items-center gap-3">
                 <div class="flex-1 flex flex-col">
@@ -75,7 +76,7 @@
                   >
                     {{ $t('trade.review_modal.you_receive') }}
                   </p>
-                  <p class="text-s-14 leading-[20px] text-[#575757]">
+                  <p class="text-s-14 leading-[20px] text-info">
                     {{ $t('trade.review_modal.value_estimated') }}
                   </p>
                 </div>
@@ -90,7 +91,7 @@
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
                   </p>
-                  <p class="text-s-14 leading-[20px] text-[#575757]">
+                  <p class="text-s-14 leading-[20px] text-info">
                     ≈ {{ currencySymbol }}{{ toAmountFiat }}
                   </p>
                 </div>
@@ -100,15 +101,16 @@
                   :address="tokenAddress(toToken)"
                   width="w-10"
                   height="h-10"
+                  no-shadow
                 />
               </div>
 
               <expand-transition>
                 <div v-if="isBreakdownOpen">
                   <div class="flex flex-col gap-4">
-                    <div class="h-px w-full bg-[#d6d6d6]"></div>
+                    <div class="h-px w-full bg-grey-divider"></div>
                     <div class="flex items-center gap-2">
-                      <p class="flex-1 text-s-16 leading-[22px] text-[#575757]">
+                      <p class="flex-1 text-s-16 leading-[22px] text-info">
                         {{ $t('trade.review_modal.min_receive') }}
                       </p>
                       <p
@@ -122,6 +124,7 @@
                         :address="tokenAddress(toToken)"
                         width="w-[18px]"
                         height="h-[18px]"
+                        no-shadow
                       />
                     </div>
                     <div
@@ -129,7 +132,7 @@
                       :key="row.label"
                       class="flex items-center gap-2"
                     >
-                      <p class="flex-1 text-s-16 leading-[22px] text-[#575757]">
+                      <p class="flex-1 text-s-16 leading-[22px] text-info">
                         {{ row.label }}
                       </p>
                       <p
@@ -186,7 +189,7 @@
             v-if="expiresAt"
             keypath="trade.review_modal.quote_refreshes_in"
             tag="p"
-            class="text-s-14 leading-[20px] text-[#575757]"
+            class="text-s-14 leading-[20px] text-info"
           >
             <template #time>
               <span

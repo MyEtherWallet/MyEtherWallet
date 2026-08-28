@@ -83,6 +83,7 @@
                   :sumbol="chain.nameLong"
                   width="w-5"
                   height="h-5"
+                  no-shadow
                 />
                 <span>{{ chain.nameLong || chain.name }}</span>
               </button>

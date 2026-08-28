@@ -31,6 +31,7 @@
         "
         width="w-7"
         height="h-7"
+        :no-shadow="noLogoShadow"
         class="mr-2"
       />
       <app-token-symbol
@@ -151,6 +152,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -187,6 +189,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -226,6 +229,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -311,6 +315,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -441,6 +446,12 @@ const props = defineProps({
   disabledGroupTitle: {
     type: String,
     required: false,
+  },
+  // Renders every token logo flat (no drop shadow). Opt-in so the flows that
+  // still want the shadow — Swap — keep it.
+  noLogoShadow: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -18,6 +18,7 @@
       :is-stock="toast.tradeStatus?.toTokenIsStock"
       width="w-6"
       height="h-6"
+      no-shadow
     />
 
     <div class="flex-1 min-w-0 flex flex-col gap-3">

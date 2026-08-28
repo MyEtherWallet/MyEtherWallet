@@ -59,6 +59,7 @@
           :sort-context="sortContext"
           :disabled-tokens="disabledTokens"
           :disabled-group-title="disabledGroupTitle"
+          no-logo-shadow
           @open:select-token="setIsOpenSelectToken"
           @select:token="emit('select:token', $event)"
         >
@@ -89,6 +90,7 @@
                 "
                 width="w-6"
                 height="h-6"
+                no-shadow
               />
               <span
                 class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px]"

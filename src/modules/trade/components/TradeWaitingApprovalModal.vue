@@ -12,7 +12,7 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ $t('trade.waiting_approval.title') }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-[#575757]">
+          <p class="text-s-16 leading-[22px] text-info">
             {{ $t('trade.waiting_approval.subtitle') }}
           </p>
         </div>
@@ -33,6 +33,7 @@
               v-else-if="walletAddress"
               :address="walletAddress"
               :size="10"
+              is-flat
               class="rounded-full overflow-hidden"
             />
           </div>
@@ -42,7 +43,7 @@
           <p class="font-semibold tracking-[-0.28px]">
             {{ $t('trade.waiting_approval.help_title') }}
           </p>
-          <p class="text-[#575757]">
+          <p class="text-info">
             {{ $t('trade.waiting_approval.help_text') }}
           </p>
         </div>
