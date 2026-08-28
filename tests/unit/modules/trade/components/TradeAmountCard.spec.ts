@@ -33,6 +33,14 @@ describe('TradeAmountCard', () => {
     expect(card.find('input').exists()).toBe(true)
   })
 
+  it('scopes the hover highlight to the amount value, not the whole card', () => {
+    const card = mountCard()
+    expect(card.classes()).toContain(
+      'has-[.amount-value:hover]:border-grey-subtle',
+    )
+    expect(card.find('.amount-value input').exists()).toBe(true)
+  })
+
   it('renders a read-only amount on the buy side', () => {
     const card = mountCard({ side: 'buy', amount: '2.4574' })
     expect(card.text()).toContain('Buy')

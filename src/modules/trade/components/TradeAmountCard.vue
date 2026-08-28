@@ -5,7 +5,7 @@
       isActive
         ? 'bg-white border-grey-10'
         : side === 'sell'
-          ? 'bg-bgBase border-transparent hover:border-grey-subtle'
+          ? 'bg-bgBase border-transparent has-[.amount-value:hover]:border-grey-subtle'
           : 'bg-bgBase border-transparent',
       side === 'sell' ? 'pb-6' : 'pb-4',
       'w-full rounded-20 flex flex-col gap-5 px-4 pt-4 border-1 transition-colors',
@@ -18,26 +18,34 @@
 
     <div class="w-full flex flex-col gap-2">
       <div class="w-full flex items-center justify-between gap-2">
-        <input
+        <div
           v-if="side === 'sell'"
           ref="amountDisplayElement"
-          :value="amount"
-          name="trade-amount-input"
-          type="text"
-          inputmode="decimal"
-          autocomplete="off"
-          placeholder="0"
-          :aria-invalid="showError"
-          :aria-describedby="`trade-amount-message-${side}`"
-          :class="[
-            amountColorClass,
-            amountSizeClass,
-            'min-w-0 grow bg-transparent text-s-32 font-bold leading-[36px] tracking-[-0.96px] placeholder:text-grey-subtle focus:outline-none focus:ring-0',
-          ]"
-          @focus="focusInput"
-          @keypress="checkIfNumber"
-          @input="onAmountInput"
-        />
+          class="min-w-0 grow"
+        >
+          <span class="amount-value inline-flex max-w-full">
+            <input
+              ref="amountInputElement"
+              :value="amount"
+              name="trade-amount-input"
+              type="text"
+              inputmode="decimal"
+              autocomplete="off"
+              placeholder="0"
+              :aria-invalid="showError"
+              :aria-describedby="`trade-amount-message-${side}`"
+              :style="{ width: inputWidth }"
+              :class="[
+                amountColorClass,
+                amountSizeClass,
+                'min-w-0 max-w-full bg-transparent text-s-32 font-bold leading-[36px] tracking-[-0.96px] placeholder:text-grey-subtle focus:outline-none focus:ring-0',
+              ]"
+              @focus="focusInput"
+              @keypress="checkIfNumber"
+              @input="onAmountInput"
+            />
+          </span>
+        </div>
         <p
           v-else
           ref="amountDisplayElement"
@@ -270,6 +278,7 @@ const amountColorClass = computed(() =>
 const cardEl = ref<HTMLElement | null>(null)
 const activeCard = ref<HTMLElement | null>(null)
 const amountDisplayElement = ref<HTMLElement | null>(null)
+const amountInputElement = ref<HTMLInputElement | null>(null)
 const { width: amountDisplayWidth } = useElementSize(amountDisplayElement)
 
 const AMOUNT_SCALES: ReadonlyArray<TextScale> = [
@@ -286,20 +295,27 @@ const AMOUNT_SCALE_CLASSES: Record<number, string> = {
   16: '!text-s-16 !tracking-[-0.48px]',
 }
 
-const { scale: amountScale } = useTextScaler(() => amount.value || '0', {
-  scales: AMOUNT_SCALES,
-  containerWidthPx: amountDisplayWidth,
-})
+const { scale: amountScale, measureWithScale } = useTextScaler(
+  () => amount.value || '0',
+  {
+    scales: AMOUNT_SCALES,
+    containerWidthPx: amountDisplayWidth,
+  },
+)
 
 const amountSizeClass = computed(
   () => AMOUNT_SCALE_CLASSES[amountScale.value.size] ?? '',
+)
+
+const inputWidth = computed(
+  () => `${Math.ceil(measureWithScale(amount.value || '0')) + 2}px`,
 )
 
 const {
   inFocusInput,
   setInFocusInput: setInFocusInputElement,
   startOutOfFocusTimeout,
-} = useInFocusInput(amountDisplayElement)
+} = useInFocusInput(amountInputElement)
 
 const isActive = computed(
   () =>
