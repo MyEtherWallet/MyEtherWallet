@@ -78,7 +78,7 @@ const toggle = (id: string) => {
       </button>
     </div>
 
-    <div class="mt-8 flex items-center justify-end">
+    <div class="mt-12 flex items-center justify-end">
       <AppBaseButton
         data-test="markets-continue"
         :disabled="!selected.length"
