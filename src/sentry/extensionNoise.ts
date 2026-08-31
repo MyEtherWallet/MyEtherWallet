@@ -186,3 +186,24 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
   }
   return false
 }
+
+/**
+ * Whether an error is the WalletConnect relay "Connection interrupted while
+ * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
+ * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects
+ * mid-(re)connect while it is subscribing to a session topic — an
+ * `onunhandledrejection` that reaches the global Sentry `beforeSend` with no MEW
+ * frame in the stack. The connect flow already handles it (the user can retry),
+ * so it is transient, unactionable network noise (APP-MEW-WEB-61 / MEW-2240).
+ * MEW code never throws this message, so matching on the library-specific
+ * message is safe. Distinct from the sibling `/Subscribing to \w+ failed/` and
+ * "connection is closed" shapes already suppressed elsewhere. Handles both the
+ * Error-object and bare-string payload shapes.
+ */
+export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+  const MESSAGE = 'Connection interrupted while trying to subscribe'
+  if (typeof err === 'string') return err.includes(MESSAGE)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && message.includes(MESSAGE)
+}
