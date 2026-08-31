@@ -32,6 +32,9 @@ const i18n = createI18n({
 const mountWith = (component: unknown, props: Record<string, unknown> = {}) =>
   mount(component as never, { props, global: { plugins: [i18n] } })
 
+// Assets search is debounced (10ms under test); wait past it for results.
+const settleSearch = () => new Promise(resolve => setTimeout(resolve, 30))
+
 describe('WatchlistStepMarkets (MEW-2130)', () => {
   it('renders one card per market and disables Continue with no selection', () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
@@ -140,6 +143,22 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(w.emitted('back')).toHaveLength(1)
   })
 
+  it('shows a skeleton grid while the search debounces, then the results', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue(MOCK_RECOMMENDED_ASSETS[0].symbol)
+    // Immediately after typing: skeleton, no result cards yet.
+    expect(w.find('[data-test="assets-skeleton"]').exists()).toBe(true)
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
+
+    await settleSearch()
+    expect(w.find('[data-test="assets-skeleton"]').exists()).toBe(false)
+    expect(w.findAll('[data-test="asset-card"]').length).toBeGreaterThan(0)
+  })
+
   it('filters the grid by search query', async () => {
     const w = mountWith(WatchlistStepAssets, {
       assets: MOCK_RECOMMENDED_ASSETS,
@@ -147,6 +166,7 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
       modelValue: [],
     })
     await w.find('input').setValue(MOCK_RECOMMENDED_ASSETS[0].symbol)
+    await settleSearch()
     const cards = w.findAll('[data-test="asset-card"]')
     expect(cards.length).toBeGreaterThan(0)
     expect(cards.length).toBeLessThan(MOCK_RECOMMENDED_ASSETS.length)
@@ -159,9 +179,11 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
       modelValue: [],
     })
     await w.find('input').setValue('zzzz-no-such-asset')
+    await settleSearch()
     expect(w.find('[data-test="assets-empty"]').exists()).toBe(true)
     expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
 
+    // Clearing the query settles instantly (no skeleton).
     await w.get('[data-test="assets-clear-search"]').trigger('click')
     expect(w.find('[data-test="assets-empty"]').exists()).toBe(false)
     expect(w.findAll('[data-test="asset-card"]').length).toBeGreaterThan(0)

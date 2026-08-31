@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   PlusIcon,
@@ -55,6 +55,24 @@ const hasMore = computed(
     !showAll.value &&
     filtered.value.length > INITIAL_COUNT,
 )
+
+// Search-loading: while the user is typing a query, show skeleton cards (Figma)
+// until results settle. The filter is client-side today, so a short debounce
+// stands in for the latency the backend search will have — the isSearching flag
+// is what that request will drive later.
+const SEARCH_DEBOUNCE_MS = import.meta.env.MODE === 'test' ? 10 : 450
+const isSearching = ref(false)
+let searchTimer: ReturnType<typeof setTimeout> | undefined
+watch(query, q => {
+  clearTimeout(searchTimer)
+  if (!q.trim()) {
+    isSearching.value = false
+    return
+  }
+  isSearching.value = true
+  searchTimer = setTimeout(() => (isSearching.value = false), SEARCH_DEBOUNCE_MS)
+})
+onBeforeUnmount(() => clearTimeout(searchTimer))
 
 const toggle = (id: string) => {
   selected.value = selected.value.includes(id)
@@ -141,9 +159,26 @@ const overflowNames = computed(() =>
           class="mew-scrollbar overflow-y-auto py-2 pr-1 transition-[height] duration-500 ease-out"
           :class="showAll ? 'h-[500px]' : 'h-[320px]'"
         >
+          <!-- Search skeleton (Figma): a full grid of placeholder cards while a
+               query's results settle. -->
+          <div
+            v-if="isSearching"
+            data-test="assets-skeleton"
+            class="grid grid-cols-4 gap-2"
+          >
+            <div
+              v-for="n in INITIAL_COUNT"
+              :key="n"
+              class="flex h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
+            >
+              <div class="size-10 animate-pulse rounded-full bg-[#f0f0f0]" />
+              <div class="h-[22px] w-16 animate-pulse rounded bg-[#f0f0f0]" />
+            </div>
+          </div>
+
           <!-- Empty search state. -->
           <div
-            v-if="!visibleAssets.length"
+            v-else-if="!visibleAssets.length"
             data-test="assets-empty"
             class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
           >
