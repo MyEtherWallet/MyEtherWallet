@@ -35,7 +35,7 @@ const mountWith = (component: unknown, props: Record<string, unknown> = {}) =>
 describe('WatchlistStepMarkets (MEW-2130)', () => {
   it('renders one card per market and disables Continue with no selection', () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
-    expect(w.findAll('[data-test="market-card"]').length).toBe(3)
+    expect(w.findAll('[data-test="market-card"]').length).toBe(2)
     expect(
       w.get('[data-test="markets-continue"]').attributes('disabled'),
     ).toBeDefined()
@@ -49,6 +49,12 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
     const enabled = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
     await enabled.get('[data-test="markets-continue"]').trigger('click')
     expect(enabled.emitted('continue')).toHaveLength(1)
+  })
+
+  it('emits skip from the Skip button regardless of selection', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
+    await w.get('[data-test="markets-skip"]').trigger('click')
+    expect(w.emitted('skip')).toHaveLength(1)
   })
 })
 
@@ -69,8 +75,14 @@ describe('WatchlistStepIndustries (MEW-2130)', () => {
 
   it('emits back when the header back button is clicked', async () => {
     const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
-    await w.get('[data-test="industries-back"]').trigger('click')
+    await w.get('[data-test="step-back"]').trigger('click')
     expect(w.emitted('back')).toHaveLength(1)
+  })
+
+  it('emits skip from the Skip button regardless of selection', async () => {
+    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+    await w.get('[data-test="industries-skip"]').trigger('click')
+    expect(w.emitted('skip')).toHaveLength(1)
   })
 })
 
@@ -124,7 +136,7 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
       isLoading: false,
       modelValue: [],
     })
-    await w.get('[data-test="assets-back"]').trigger('click')
+    await w.get('[data-test="step-back"]').trigger('click')
     expect(w.emitted('back')).toHaveLength(1)
   })
 

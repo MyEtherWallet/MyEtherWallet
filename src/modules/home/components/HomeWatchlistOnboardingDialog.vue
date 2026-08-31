@@ -6,6 +6,7 @@ import { useRecommendedWatchlist } from '@/modules/home/composables/useRecommend
 import WatchlistStepMarkets from './WatchlistStepMarkets.vue'
 import WatchlistStepIndustries from './WatchlistStepIndustries.vue'
 import WatchlistStepAssets from './WatchlistStepAssets.vue'
+import findingAssetsAnimation from '@/assets/images/watchlist/finding-assets.lottie?url'
 
 const isOpen = defineModel<boolean>('isOpen', { required: true })
 
@@ -39,6 +40,12 @@ const goToAssets = () => {
   fetchRecommendations(selectedMarkets.value, selectedIndustries.value)
 }
 
+// Close from the header X (the dialog owns isOpen; AppDialog's own close is
+// hidden so the header can render the button in-row).
+const close = () => {
+  isOpen.value = false
+}
+
 const finish = () => {
   for (const id of selectedAssetIds.value) {
     const asset = assets.value.find(a => a.id === id)
@@ -54,15 +61,19 @@ const finish = () => {
   isOpen.value = false
 }
 
-// Start every run fresh once the dialog closes (no back button by design).
+// Prefetch the loader animation on open so the assets step shows it instantly
+// (no white flash) — the markets/industries steps give it time to warm the
+// cache. Start every run fresh once the dialog closes.
 watch(isOpen, open => {
-  if (!open) reset()
+  if (open) fetch(findingAssetsAnimation).catch(() => {})
+  else reset()
 })
 </script>
 
 <template>
   <AppDialog
     v-model:is-open="isOpen"
+    hide-close
     class="sm:mx-auto sm:w-full sm:max-w-[480px]"
     data-test="watchlist-onboarding-dialog"
   >
@@ -75,12 +86,16 @@ watch(isOpen, open => {
           v-if="activeStep === 0"
           v-model="selectedMarkets"
           @continue="goToIndustries"
+          @skip="goToAssets"
+          @close="close"
         />
         <WatchlistStepIndustries
           v-else-if="activeStep === 1"
           v-model="selectedIndustries"
           @continue="goToAssets"
           @back="goToMarkets"
+          @skip="goToAssets"
+          @close="close"
         />
         <WatchlistStepAssets
           v-else
@@ -89,6 +104,7 @@ watch(isOpen, open => {
           :is-loading="isLoading"
           @done="finish"
           @back="goToIndustries"
+          @close="close"
         />
       </div>
     </template>

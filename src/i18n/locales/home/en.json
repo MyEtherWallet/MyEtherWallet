@@ -34,12 +34,16 @@
         "begin": "Let's begin",
         "onboarding": {
           "continue": "Continue",
+          "skip": "Skip",
+          "stepProgress": "Step {step} / {total}",
           "markets": {
             "subtitle": "What assets are you interested in?",
+            "description": "This will help personalize your watchlist. Skip if you already know what you want to follow.",
             "hint": "You can select more options"
           },
           "industries": {
-            "subtitle": "What industries do you like?"
+            "subtitle": "What industries do you like?",
+            "description": "Choose the industries you’d like to keep an eye on to further personalize your watchlist."
           },
           "assets": {
             "title": "We found assets for you",

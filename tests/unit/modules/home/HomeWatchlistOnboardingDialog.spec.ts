@@ -31,17 +31,19 @@ vi.mock('@/components/AppDialog.vue', () => ({
 // Step stubs: expose the events + a way to set the model.
 vi.mock('@/modules/home/components/WatchlistStepMarkets.vue', () => ({
   default: {
-    emits: ['continue', 'update:modelValue'],
+    emits: ['continue', 'skip', 'update:modelValue'],
     template:
-      '<button data-test="s1" @click="$emit(\'continue\')">markets</button>',
+      '<div><button data-test="s1" @click="$emit(\'continue\')">markets</button>' +
+      '<button data-test="s1-skip" @click="$emit(\'skip\')">skip</button></div>',
   },
 }))
 vi.mock('@/modules/home/components/WatchlistStepIndustries.vue', () => ({
   default: {
-    emits: ['continue', 'back', 'update:modelValue'],
+    emits: ['continue', 'back', 'skip', 'update:modelValue'],
     template:
       '<div><button data-test="s2" @click="$emit(\'continue\')">industries</button>' +
-      '<button data-test="s2-back" @click="$emit(\'back\')">back</button></div>',
+      '<button data-test="s2-back" @click="$emit(\'back\')">back</button>' +
+      '<button data-test="s2-skip" @click="$emit(\'skip\')">skip</button></div>',
   },
 }))
 vi.mock('@/modules/home/components/WatchlistStepAssets.vue', () => ({
@@ -73,6 +75,21 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s1"]').trigger('click')
     expect(w.find('[data-test="s2"]').exists()).toBe(true)
     await w.get('[data-test="s2"]').trigger('click')
+    expect(w.find('[data-test="done"]').exists()).toBe(true)
+    expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+  })
+
+  it('skip on markets jumps straight to assets and fetches recommendations', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1-skip"]').trigger('click')
+    expect(w.find('[data-test="done"]').exists()).toBe(true)
+    expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+  })
+
+  it('skip on industries advances to assets', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click')
+    await w.get('[data-test="s2-skip"]').trigger('click')
     expect(w.find('[data-test="done"]').exists()).toBe(true)
     expect(fetchRecommendations).toHaveBeenCalledTimes(1)
   })

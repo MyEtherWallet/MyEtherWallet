@@ -4,23 +4,19 @@ import { useI18n } from 'vue-i18n'
 import {
   PlusIcon,
   CheckIcon,
-  ChevronLeftIcon,
   ChevronRightIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/20/solid'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
+import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
-import cluster1 from '@/assets/images/watchlist/market-stocks-1.png'
-import cluster2 from '@/assets/images/watchlist/market-crypto-1.png'
-import cluster3 from '@/assets/images/watchlist/market-crypto-2.png'
-import cluster4 from '@/assets/images/watchlist/market-crypto-3.png'
-import cluster5 from '@/assets/images/watchlist/market-stocks-2.png'
+import findingAssetsAnimation from '@/assets/images/watchlist/finding-assets.lottie?url'
 
 const { t } = useI18n()
 
@@ -32,17 +28,7 @@ const props = defineProps<{
 // Selected asset ids. Done enables with at least one.
 const selected = defineModel<string[]>({ required: true })
 
-defineEmits<{ done: []; back: [] }>()
-
-// Decorative fading avatar cluster for the "Finding assets…" loading state
-// (Figma: symmetric, biggest + fully opaque in the centre, fading outward).
-const LOADING_CLUSTER = [
-  { src: cluster1, size: 'size-4', opacity: 'opacity-30' },
-  { src: cluster2, size: 'size-8', opacity: 'opacity-60' },
-  { src: cluster3, size: 'size-12', opacity: 'opacity-100' },
-  { src: cluster4, size: 'size-8', opacity: 'opacity-60' },
-  { src: cluster5, size: 'size-4', opacity: 'opacity-30' },
-]
+defineEmits<{ done: []; back: []; close: [] }>()
 
 // Search + progressive reveal. A query shows all matches (no cap); otherwise the
 // first INITIAL_COUNT show and "Show more" reveals the rest.
@@ -91,23 +77,23 @@ const overflowNames = computed(() =>
 
 <template>
   <div data-test="watchlist-step-assets">
-    <!-- Loading (Figma: fading avatar cluster + "Finding assets…"). -->
+    <!-- Loading: Lottie animation + "Finding assets…" (no header here by design). -->
     <div
       v-if="isLoading"
       data-test="assets-loading"
-      class="flex min-h-[380px] flex-col items-center justify-center gap-8 text-center"
+      class="flex min-h-[380px] flex-col items-center justify-center text-center"
     >
-      <div class="flex animate-pulse items-center" aria-hidden="true">
-        <img
-          v-for="(avatar, i) in LOADING_CLUSTER"
-          :key="i"
-          :src="avatar.src"
-          alt=""
-          class="rounded-full border-2 border-white object-contain"
-          :class="[avatar.size, avatar.opacity, i > 0 ? '-ml-2' : '']"
-        />
-      </div>
-      <div class="flex flex-col gap-2">
+      <DotLottieVue
+        :src="findingAssetsAnimation"
+        class="aspect-square w-[180px]"
+        autoplay
+        loop
+        role="img"
+        :aria-label="t('homePage.hero.watchlist.onboarding.assets.loadingTitle')"
+      />
+      <!-- The animation's artboard carries bottom padding; pull the copy up so it
+           sits close under the visible art instead of the box edge. -->
+      <div class="-mt-8 flex flex-col gap-2">
         <p class="text-s-24 font-bold leading-[26px] text-black">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
         </p>
@@ -121,38 +107,28 @@ const overflowNames = computed(() =>
          (with a smooth transition) when "Show more" is used; header, search and
          footer stay put and only the list scrolls once it is capped. -->
     <div v-else class="flex flex-col">
-      <!-- Header: back button + title + subtitle (close is provided by
-           AppDialog). -->
-      <div class="flex shrink-0 items-start gap-3">
-        <AppBtnIcon
-          :label="t('common.back')"
-          data-test="assets-back"
-          @click="$emit('back')"
-        >
-          <ChevronLeftIcon class="size-6" />
-        </AppBtnIcon>
-        <div>
-          <h2 class="text-s-20 font-bold text-black">
-            {{ t('homePage.hero.watchlist.onboarding.assets.title') }}
-          </h2>
-          <p class="mt-1 text-s-16 text-[#575757]">
-            {{ t('homePage.hero.watchlist.onboarding.assets.subtitle') }}
-          </p>
-        </div>
-      </div>
+      <WatchlistStepHeader
+        class="shrink-0"
+        :step="3"
+        show-back
+        :title="t('homePage.hero.watchlist.onboarding.assets.title')"
+        :description="t('homePage.hero.watchlist.onboarding.assets.subtitle')"
+        @back="$emit('back')"
+        @close="$emit('close')"
+      />
 
       <AppSearchInput
         v-model="query"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
         bg-class="bg-white"
-        class="mt-6 shrink-0 rounded-full border border-[#e6e6e6]"
+        class="mt-5 shrink-0 rounded-full border border-[#e6e6e6]"
       />
 
       <!-- Token list: max-height grows with a smooth transition when "Show more"
            reveals the rest; inner py compensates the top/bottom white fades so
            the edge cards are never clipped (same fade idea as AppSlideGroup,
            rotated to vertical). Only this part scrolls once capped. -->
-      <div class="relative mt-4">
+      <div class="relative mt-3">
         <div
           class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-3 bg-gradient-to-b from-white to-transparent"
           aria-hidden="true"
@@ -162,8 +138,8 @@ const overflowNames = computed(() =>
           aria-hidden="true"
         />
         <div
-          class="mew-scrollbar overflow-y-auto py-3 pr-1 transition-[height] duration-500 ease-out"
-          :class="showAll ? 'h-[560px]' : 'h-[364px]'"
+          class="mew-scrollbar overflow-y-auto py-2 pr-1 transition-[height] duration-500 ease-out"
+          :class="showAll ? 'h-[500px]' : 'h-[320px]'"
         >
           <!-- Empty search state. -->
           <div
@@ -192,7 +168,7 @@ const overflowNames = computed(() =>
               data-test="asset-card"
               :selected="selected.includes(asset.id)"
               bg="bg-white"
-              class="flex h-[108px] flex-col items-center justify-center gap-2"
+              class="flex h-[96px] flex-col items-center justify-center gap-2"
               @toggle="toggle(asset.id)"
             >
               <span class="relative">
@@ -245,7 +221,7 @@ const overflowNames = computed(() =>
         <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
       </div>
 
-      <div class="mt-8 flex shrink-0 items-center justify-between gap-4">
+      <div class="mt-6 flex shrink-0 items-center justify-between gap-4">
         <!-- Selected chips: up to 2, then a "+N more" chip whose tooltip lists
              the rest by symbol. -->
         <div class="flex min-w-0 items-center gap-2">

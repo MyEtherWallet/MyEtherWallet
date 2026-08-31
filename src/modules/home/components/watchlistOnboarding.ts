@@ -4,7 +4,7 @@
  * the offered options without touching component logic.
  */
 
-export type WatchlistMarketId = 'stocks' | 'crypto' | 'perps'
+export type WatchlistMarketId = 'stocks' | 'crypto'
 
 export interface WatchlistMarket {
   id: WatchlistMarketId
@@ -15,7 +15,6 @@ export interface WatchlistMarket {
 export const WATCHLIST_MARKETS: WatchlistMarket[] = [
   { id: 'stocks', labelKey: 'stocks' },
   { id: 'crypto', labelKey: 'crypto' },
-  { id: 'perps', labelKey: 'perps' },
 ]
 
 /**

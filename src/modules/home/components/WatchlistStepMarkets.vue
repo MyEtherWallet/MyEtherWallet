@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
@@ -10,9 +11,6 @@ import stocks3 from '@/assets/images/watchlist/market-stocks-3.png'
 import crypto1 from '@/assets/images/watchlist/market-crypto-1.png'
 import crypto2 from '@/assets/images/watchlist/market-crypto-2.png'
 import crypto3 from '@/assets/images/watchlist/market-crypto-3.png'
-import perps1 from '@/assets/images/watchlist/market-perps-1.png'
-import perps2 from '@/assets/images/watchlist/market-perps-2.png'
-import perps3 from '@/assets/images/watchlist/market-perps-3.png'
 
 const { t } = useI18n()
 
@@ -20,13 +18,12 @@ const { t } = useI18n()
 const MARKET_LOGOS: Record<WatchlistMarketId, string[]> = {
   stocks: [stocks1, stocks2, stocks3],
   crypto: [crypto1, crypto2, crypto3],
-  perps: [perps1, perps2, perps3],
 }
 
 // Selected market ids (multi-select). Continue enables with at least one.
 const selected = defineModel<string[]>({ required: true })
 
-defineEmits<{ continue: [] }>()
+defineEmits<{ continue: []; skip: []; close: [] }>()
 
 const toggle = (id: string) => {
   selected.value = selected.value.includes(id)
@@ -37,14 +34,14 @@ const toggle = (id: string) => {
 
 <template>
   <div data-test="watchlist-step-markets">
-    <p class="text-s-20 font-normal text-[#575757]">
-      {{ t('homePage.hero.watchlist.title') }}
-    </p>
-    <h2 class="mt-1 text-s-20 font-bold text-black">
-      {{ t('homePage.hero.watchlist.onboarding.markets.subtitle') }}
-    </h2>
+    <WatchlistStepHeader
+      :step="1"
+      :title="t('homePage.hero.watchlist.onboarding.markets.subtitle')"
+      :description="t('homePage.hero.watchlist.onboarding.markets.description')"
+      @close="$emit('close')"
+    />
 
-    <div class="mt-12 grid grid-cols-3 gap-3">
+    <div class="mt-6 grid grid-cols-2 gap-3">
       <WatchlistSelectableCard
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
@@ -73,7 +70,15 @@ const toggle = (id: string) => {
       </WatchlistSelectableCard>
     </div>
 
-    <div class="mt-12 flex items-center justify-end">
+    <div class="mt-6 flex items-center justify-end gap-4">
+      <button
+        type="button"
+        data-test="markets-skip"
+        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-primary"
+        @click="$emit('skip')"
+      >
+        {{ t('homePage.hero.watchlist.onboarding.skip') }}
+      </button>
       <AppBaseButton
         data-test="markets-continue"
         :disabled="!selected.length"
