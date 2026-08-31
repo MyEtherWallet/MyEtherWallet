@@ -25,6 +25,29 @@ export function isExtensionOrProviderError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is a Chrome "Extension context invalidated." rejection —
+ * thrown by an injected wallet provider (e.g. Rabby) when the extension's
+ * background context is torn down mid-session (the extension was updated,
+ * reloaded, or disabled while the dApp page stayed open). A pending request
+ * (e.g. `eth_requestAccounts` during connect) then rejects with a raw JSON-RPC
+ * object `{ code: -32603, message: "Extension context invalidated." }`. It is
+ * not app code and MEW can't fix it — the user just reloads so the fresh
+ * extension re-injects — and the connect flow already surfaces a "Failed to
+ * connect" error state, so it is unactionable Sentry noise (APP-MEW-WEB-1JD).
+ * Matched on the (Chrome-provided, un-minified) message, which the serialized
+ * plain-object payload carries at top level; the generic -32603 code alone is
+ * too broad to key on.
+ */
+export function isExtensionContextInvalidatedError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    message.toLowerCase().includes('extension context invalidated')
+  )
+}
+
+/**
  * Whether an error is the external "not found rainbowkit" rejection. It is
  * emitted by a wallet's injected in-app-browser detection script (observed on
  * mobile Safari / iOS in-app wallet browsers), never by app code or any bundled

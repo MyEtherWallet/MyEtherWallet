@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isInvalidWalletAddressError,
@@ -76,6 +77,54 @@ describe('isExtensionOrProviderError', () => {
     expect(isExtensionOrProviderError(undefined)).toBe(false)
     expect(isExtensionOrProviderError('chrome-extension://x')).toBe(false)
     expect(isExtensionOrProviderError(new Error('plain'))).toBe(false)
+  })
+})
+
+describe('isExtensionContextInvalidatedError', () => {
+  it('is true for the exact production payload (serialized JSON-RPC object)', () => {
+    // APP-MEW-WEB-1JD: the injected Rabby provider rejects a connect request
+    // with a raw object after its extension context was torn down.
+    expect(
+      isExtensionContextInvalidatedError({
+        code: -32603,
+        data: { originalError: {} },
+        message: 'Extension context invalidated.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for an Error-object payload and matches regardless of casing/surrounding text', () => {
+    expect(
+      isExtensionContextInvalidatedError(
+        new Error('Extension context invalidated.'),
+      ),
+    ).toBe(true)
+    expect(
+      isExtensionContextInvalidatedError(
+        new Error('Error: extension context invalidated'),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isExtensionContextInvalidatedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    // A different -32603 internal error must NOT be swept up by the code alone.
+    expect(
+      isExtensionContextInvalidatedError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isExtensionContextInvalidatedError(null)).toBe(false)
+    expect(isExtensionContextInvalidatedError(undefined)).toBe(false)
+    expect(
+      isExtensionContextInvalidatedError('Extension context invalidated.'),
+    ).toBe(false)
+    expect(isExtensionContextInvalidatedError({ message: 42 })).toBe(false)
   })
 })
 
