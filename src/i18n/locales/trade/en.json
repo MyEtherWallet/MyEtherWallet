@@ -129,6 +129,9 @@
     },
     "sell_label": "Sell",
     "buy_label": "Buy",
-    "enter_amount": "Enter amount"
+    "enter_amount": "Enter amount",
+    "select_asset": {
+      "title": "Select asset"
+    }
   }
 }

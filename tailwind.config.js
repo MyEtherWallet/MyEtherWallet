@@ -82,6 +82,7 @@ export default {
       success: 'rgba(5,192,165,1)',
       'success-600': '#01a08c',
       'orange-600': '#e27d00',
+      'neutral-200': '#e6e6e6',
       'neutral-500': '#767676',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',

@@ -17,6 +17,7 @@
         'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
+        inputClass,
       ]"
       :aria-label="placeholder || $t('common.search')"
       :placeholder="placeholder || $t('common.search')"
@@ -79,6 +80,14 @@ defineProps({
   size: {
     type: String as PropType<'default' | 'compact'>,
     default: 'default',
+  },
+  /**
+   * @inputClass Extra classes for the input itself, for designs whose type
+   * scale differs from the `size` presets.
+   */
+  inputClass: {
+    type: String,
+    default: '',
   },
 })
 

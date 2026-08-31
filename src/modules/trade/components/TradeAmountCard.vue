@@ -58,16 +58,13 @@
           {{ amount || '0' }}
         </p>
 
-        <app-swap-selected-token
+        <component
+          :is="side === 'sell' ? TradeSelectAssetModal : AppSwapSelectedToken"
           v-model:selected-token="selectedToken"
           :external-loading="isLoading"
           :chain-tokens="tokens || []"
-          :is-from-view="side === 'sell'"
           :network-name="networkName"
-          :sort-context="sortContext"
-          :disabled-tokens="disabledTokens"
-          :disabled-group-title="disabledGroupTitle"
-          no-logo-shadow
+          v-bind="side === 'sell' ? {} : legacyPickerProps"
           @open:select-token="setIsOpenSelectToken"
           @select:token="emit('select:token', $event)"
         >
@@ -108,7 +105,7 @@
               <chevron-right-icon class="w-5 h-5" />
             </button>
           </template>
-        </app-swap-selected-token>
+        </component>
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
@@ -166,6 +163,7 @@ import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
 import AppSpinner from '@/components/AppSpinner.vue'
 import AppSwapSelectedToken from '@/components/AppSwapSelectedToken.vue'
+import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -226,6 +224,14 @@ const isLoading = computed(() => {
   return props.externalLoading
 })
 
+const legacyPickerProps = computed(() => ({
+  isFromView: props.side === 'sell',
+  sortContext: props.sortContext,
+  disabledTokens: props.disabledTokens,
+  disabledGroupTitle: props.disabledGroupTitle,
+  noLogoShadow: true,
+}))
+
 const hasError = ref(false)
 const errorMessage = ref('')
 const errorIsBalance = ref(false)
@@ -263,8 +269,7 @@ const tokenBalanceRaw = computed(() =>
 
 const fiatText = computed(() => {
   const numAmount = (amount.value || '').replace(/[^0-9.]/g, '')
-  const price =
-    tokenBalanceRaw.value?.price || selectedToken.value?.price || 0
+  const price = tokenBalanceRaw.value?.price || selectedToken.value?.price || 0
   const value = BigNumber(price).times(numAmount || 0)
   const safeValue = value.isFinite() ? value : BigNumber(0)
   return `${currencySymbol.value}${formatFiat(safeValue.toFixed(2)).value}`

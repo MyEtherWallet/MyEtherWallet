@@ -129,6 +129,9 @@
     },
     "sell_label": "Vender",
     "buy_label": "Comprar",
-    "enter_amount": "Ingresa el monto"
+    "enter_amount": "Ingresa el monto",
+    "select_asset": {
+      "title": "Seleccionar activo"
+    }
   }
 }

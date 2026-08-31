@@ -129,6 +129,9 @@
     },
     "sell_label": "卖出",
     "buy_label": "买入",
-    "enter_amount": "输入金额"
+    "enter_amount": "输入金额",
+    "select_asset": {
+      "title": "选择资产"
+    }
   }
 }
