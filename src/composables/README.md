@@ -30,25 +30,51 @@ Feature-specific composition functions belong under
 
 ## Current inventory
 
-The inventory below describes the code before the Swap and Trade composable
-reorganization. It is a migration map, not an endorsement of every current
-location.
-
-| Location | Composition functions | Placement issues found by the audit |
+| Location | Composition functions | Open placement issues |
 | --- | --- | --- |
-| `src/composables/` | `useAddressInput`, `useAppBreakpoints`, `useAppTabs`, `useCurrency`, `useEmailSubscription`, `useFetchMewApi`, `useFetchWatchlist`, `useImageContrastTextColor`, `useInFocusInput`, `useMaxAmount`, `useNumericInput`, `usePaginate`, `useQR`, `useSwap`, `useTradingRestriction`, `useWalletList` | `mewApiFetchError.ts` and `swapInitError.ts` contain only pure helpers. `useSwap` and `useTradingRestriction` contain module-level reactive state. |
-| `modules/access/composables/` | `useConnectWallet` | None found. |
-| `modules/global_search/composables/` | `useGlobalSearch` | Contains module-level shared reactive state and should eventually be audited for Pinia ownership. |
-| `modules/perps/composables/` | `useCursorPaginate`, `usePerpsActive`, `usePerpsAuth`, `usePerpsBalance`, `usePerpsContracts`, `usePerpsDepositsWithdrawals`, `usePerpsFills`, `usePerpsMarkPrices`, `usePerpsMarkets`, `usePerpsOrders`, `usePerpsPortfolioGraph`, `usePerpsPortfolioSummary`, `usePerpsPositions`, `usePerpsToasts`, `usePerpsTradeForm` | Perps is explicitly outside this reorganization. `usePerpsWsLifecycle.ts` does not export a `use*` function, and several Perps files contain module-level reactive state; handle those in a separate audit. |
-| `modules/purchase/composables/` | `usePurchaseAmount`, `usePurchaseCompatibility`, `useTextScaler` | None found. |
-| `modules/trade/composables/` | `useMarketStatus`, `useTradeExecution`, `useTradeQuote`, `useTradeTokens`, `useTradeValidation` | Five pure-helper files are misplaced: `announcementSchedule.ts`, `expectedTradeError.ts`, `marketSession.ts`, `tradeSession.ts`, and `transientRpcError.ts`. The barrel omits `useTrade`. |
-| Outside a `composables/` directory | `modules/trade/useTrade.ts`, `modules/rwa_rewards/useCountdown.ts` | Both are module-specific composables and should move into their module's `composables/` directory. |
-| `modules/swap/` | None local | Swap behavior is concentrated in `ModuleSwap.vue` and the shared `useSwap` singleton-like composable. |
+| `src/composables/` | `useAccountBalances`, `useAccountSwitch`, `useAddAccount`, `useAddressInput`, `useAppBreakpoints`, `useAppTabs`, `useAssetDescription`, `useBlockedContent`, `useCurrency`, `useDetectedAddress`, `useEmailSubscription`, `useFetchMewApi`, `useFetchMewWalletApi`, `useFetchWatchlist`, `useFormPristine`, `useImageContrastTextColor`, `useInFocusInput`, `useMaxAmount`, `useNumericInput`, `usePaginate`, `usePortfolio24hChange`, `useQR`, `useRefreshBalances`, `useWalletList` | None. The pure-helper files moved out, and both module-level-state offenders are gone: `useSwap` became `stores/swapStore.ts`, `useTradingRestriction` was absorbed into `stores/globalStore.ts`. |
+| `modules/access/composables/` | `useConnectWallet` | None. |
+| `modules/global_search/composables/` | `useGlobalSearch` | None. State and fetching moved to `stores/globalSearchStore.ts`; what remains is the router-dependent half. |
+| `modules/perps/composables/` | `useCursorPaginate`, `usePerpsActive`, `usePerpsAuth`, `usePerpsBalance`, `usePerpsContracts`, `usePerpsDepositsWithdrawals`, `usePerpsFills`, `usePerpsMarkPrices`, `usePerpsMarkets`, `usePerpsOrders`, `usePerpsPortfolioGraph`, `usePerpsPortfolioSummary`, `usePerpsPositions`, `usePerpsRestriction`, `usePerpsStatus`, `usePerpsToasts`, `usePerpsTradeForm` | `usePerpsAuth` still holds ~16 module-level reactive declarations (token/session, plus the shared balance and portfolio-summary caches), and `usePerpsTradeForm` holds the `leverage` singleton. `usePerpsWsLifecycle.ts` still exports no `use*` function. |
+| `modules/purchase/composables/` | `usePurchaseAmount`, `usePurchaseCompatibility`, `useQuoteCountdown`, `useTextScaler` | None. |
+| `modules/swap/composables/` | `useSwapAnalytics`, `useSwapExecution`, `useSwapForm`, `useSwapGasFee`, `useSwapModule`, `useSwapQuote`, `useSwapTokens`, `useSwapValidation` | None. |
+| `modules/trade/composables/` | `useMarketStatus`, `useTrade`, `useTradeExecution`, `useTradeForm`, `useTradeModule`, `useTradeQuote`, `useTradeTokens`, `useTradeValidation` | None. The five pure helpers moved to `modules/trade/common/`. |
 
-## Phase 0 audit notes
+## State ownership status
 
-Verified on `feat/v7-develop` at `2fccbe3569` before beginning the
-reorganization:
+Where shared state that used to sit in module-level `ref()`s now lives. In every
+case the `use*` function was kept as a thin adapter, so call sites did not
+change:
+
+| Was | Now | Notes |
+| --- | --- | --- |
+| `useSwap` | `stores/swapStore.ts` | |
+| `useTradingRestriction` | `stores/globalStore.ts` | Two sources of truth with opposite defaults collapsed into one that fails closed. |
+| `useGlobalSearch` | `stores/globalSearchStore.ts` | Also stops two `useFetchMewApi()` instances being constructed at import time. |
+| `usePerpsStatus` | `stores/perpsStatusStore.ts` | The refcounted poll stays in the composable — it is per-consumer, keyed on `onScopeDispose`. |
+| `usePerpsMarkets` | `stores/perpsMarketsStore.ts` | |
+| `usePerpsContracts` | `stores/perpsContractsStore.ts` | Split from markets so a markets-only consumer does not also fetch contracts: a store is created on first use, and that is what makes the activation lazy. |
+| `usePerpsMarkPrices` | `stores/perpsMarkPricesStore.ts` | Split for the same reason. |
+| `usePerpsPositions` | `stores/perpsPositionsStore.ts` | |
+| `usePerpsPortfolioGraph` | `stores/perpsPortfolioStore.ts` | Named for the portfolio so `usePerpsAuth`'s balance and summary caches have a home when it is migrated. |
+
+Two things stay in the composable when the rest of a migration moves: anything
+needing a caller's setup context (`useRouter()`, and `ensurePerpsWsLifecycle()`,
+which reaches for `useRoute()`), and anything genuinely per-consumer.
+
+Store setup is the once-per-app scope these files were emulating with
+`effectScope(true)` plus an `initialized` flag, so those pairs were deleted
+rather than moved. `onPerpsAuthReset` registrations were *not* folded into token
+watchers: that callback exists so auth teardown wipes caches synchronously,
+without depending on watcher flush timing.
+
+Remaining: `usePerpsAuth` and the `usePerpsTradeForm` leverage singleton.
+
+## Phase 0 audit notes (historical)
+
+Recorded on `feat/v7-develop` at `2fccbe3569`, before the Swap and Trade
+reorganization. Kept as a record of that audit — several items below have since
+been addressed:
 
 - The identified pure helper files have no Vue reactivity and are not
   composables. The two module-specific composables are outside their expected
