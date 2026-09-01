@@ -34,6 +34,7 @@ vi.mock('@/modules/home/components/WatchlistStepMarkets.vue', () => ({
     emits: ['continue', 'skip', 'update:modelValue'],
     template:
       '<div><button data-test="s1" @click="$emit(\'continue\')">markets</button>' +
+      '<button data-test="s1-pick" @click="$emit(\'update:modelValue\', [\'crypto\'])">pick</button>' +
       '<button data-test="s1-skip" @click="$emit(\'skip\')">skip</button></div>',
   },
 }))
@@ -79,11 +80,22 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(fetchRecommendations).toHaveBeenCalledTimes(1)
   })
 
-  it('skip on markets jumps straight to assets and fetches recommendations', async () => {
+  it('skip on markets jumps straight to assets and discards the market picks', async () => {
     const w = mountDialog()
+    await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
     await w.get('[data-test="s1-skip"]').trigger('click')
     expect(w.find('[data-test="done"]').exists()).toBe(true)
+    // Skipping step 1 must NOT use the selection — fetch with empty markets.
     expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+    expect(fetchRecommendations).toHaveBeenCalledWith([], [])
+  })
+
+  it('continue on markets commits the picks used by the assets fetch', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
+    await w.get('[data-test="s1"]').trigger('click') // continue → industries
+    await w.get('[data-test="s2-skip"]').trigger('click') // skip industries, keep markets
+    expect(fetchRecommendations).toHaveBeenCalledWith(['crypto'], [])
   })
 
   it('skip on industries advances to assets', async () => {

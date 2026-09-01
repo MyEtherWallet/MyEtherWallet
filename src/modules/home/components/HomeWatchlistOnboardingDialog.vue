@@ -40,6 +40,14 @@ const goToAssets = () => {
   fetchRecommendations(selectedMarkets.value, selectedIndustries.value)
 }
 
+// Skipping step 1 discards its market picks — only Continue commits them. (The
+// refs are left untouched so the picks reappear if the user navigates back.)
+// Skipping step 2 keeps the markets, since step 1 was already accepted.
+const skipFromMarkets = () => {
+  activeStep.value = 2
+  fetchRecommendations([], [])
+}
+
 // Close from the header X (the dialog owns isOpen; AppDialog's own close is
 // hidden so the header can render the button in-row).
 const close = () => {
@@ -86,7 +94,7 @@ watch(isOpen, open => {
           v-if="activeStep === 0"
           v-model="selectedMarkets"
           @continue="goToIndustries"
-          @skip="goToAssets"
+          @skip="skipFromMarkets"
           @close="close"
         />
         <WatchlistStepIndustries
