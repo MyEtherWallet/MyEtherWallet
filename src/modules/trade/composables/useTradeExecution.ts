@@ -3,6 +3,7 @@ import { ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
@@ -345,8 +346,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         tag: SENTRY_MODULE_TAGS.TRADE,
         title: 'TRADE: Error submitting trade order',
         error: e instanceof Error ? e : new Error(errorMessage),
-        expected: !!(e as { expectedClientError?: boolean })
-          .expectedClientError,
+        expected: isExpectedClientError(e),
         extra: { errorMessage },
       })
       if (!isDevMode) {

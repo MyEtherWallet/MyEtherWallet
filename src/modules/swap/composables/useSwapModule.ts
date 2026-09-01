@@ -175,6 +175,7 @@ export function useSwapModule(): SwapModuleBindings {
   const {
     isWalletConnected,
     userAddress,
+    walletAddress,
     wallet,
     isWatchOnly,
     tokens,
@@ -277,9 +278,13 @@ export function useSwapModule(): SwapModuleBindings {
   )
 
   const toAddress = computed(() => {
+    // `walletAddress`, not `userAddress`: the latter falls back to the donation
+    // address so disconnected users can still be quoted, and this value is a
+    // funds destination. With no wallet there is no destination.
+    const ownAddress = walletAddress.value || ''
     if (selectedToChain.value?.name === selectedChain.value?.name)
-      return userAddress.value
-    if (!isCrossChain.value) return userAddress.value
+      return ownAddress
+    if (!isCrossChain.value) return ownAddress
     return userToAddress.value || ''
   })
 
@@ -552,8 +557,22 @@ export function useSwapModule(): SwapModuleBindings {
         const broadcast = txCtx.broadcastTransaction(
           signedTx?.signed as unknown as HexPrefixedString,
         )
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        if (isLast) lastTxPromise = broadcast
+        if (isLast) {
+          // The caller awaits this one and surfaces its hash.
+          lastTxPromise = broadcast
+        } else {
+          // Awaited so a rejection reaches `proceedWithSwap`'s try/catch instead
+          // of becoming an unhandled rejection while the loop moves on, and so
+          // the next transaction (the swap) is only submitted after this one (the
+          // approval) has been accepted.
+          //
+          // NOTE: acceptance is not confirmation — `broadcastTransaction`
+          // resolves when the node takes the transaction, not when it is mined.
+          // The delay below is the existing (crude) allowance for that; a proper
+          // fix awaits the receipt.
+          await broadcast
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
       }
     }
     return lastTxPromise
@@ -597,7 +616,10 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } catch (e: unknown) {
-      const errorMessage = getErrorMessage(e, t('swap.toast.tx-sign-failed')).toLowerCase()
+      const errorMessage = getErrorMessage(e, t('swap.toast.tx-sign-failed'))
+      // Lowercased only for the substring checks below — the original casing is
+      // what reaches the user, Sentry and analytics.
+      const normalizedError = errorMessage.toLowerCase()
 
       if (isUserRejectionError(e)) {
         toastStore.addToastMessage({
@@ -623,9 +645,9 @@ export function useSwapModule(): SwapModuleBindings {
           extra: { errorMessage },
         })
         if (
-          errorMessage.includes('rejected') ||
-          errorMessage.includes('denied') ||
-          errorMessage.includes('cancelled')
+          normalizedError.includes('rejected') ||
+          normalizedError.includes('denied') ||
+          normalizedError.includes('cancelled')
         ) {
           toastStore.addToastMessage({
             type: ToastType.Info,
@@ -1006,7 +1028,7 @@ export function useSwapModule(): SwapModuleBindings {
       // No token selected, no stored values - use default
       if (toTokens.value && allToTokensRaw.length > 0) {
         const allToTop =
-          toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.trending]
+          toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.top]
         const candidates = allToTop?.length ? allToTop : allToTokensRaw
         const sameNetworks = currentToChain.name === selectedChain.value?.name
 

@@ -14,8 +14,12 @@ export function isTransientSwapInitError(e: unknown): boolean {
   // across V8/Firefox/Safari, so this excludes unrelated SyntaxErrors that
   // would otherwise be retried and silently dropped from Sentry.
   if (e instanceof SyntaxError) return msg.includes('json')
+  // Explicit transport phrases only. A bare `includes('network')` also matched
+  // application bugs such as "Cannot read properties of undefined (reading
+  // 'network')", which were then retried and dropped from Sentry as expected.
   return (
-    msg.includes('network') ||
+    msg.includes('network error') ||
+    msg.includes('network request failed') ||
     msg.includes('failed to fetch') ||
     msg.includes('fetch failed') ||
     msg.includes('timeout') ||

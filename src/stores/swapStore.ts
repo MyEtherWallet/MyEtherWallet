@@ -98,6 +98,10 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
   const rawFromTokens = ref<TokenType[]>([])
   const rawToTokens = ref<ToTokenType | null>(null)
   const restrictedAddressesLower = ref<string[]>([])
+  // An empty `restrictedAddressesLower` is ambiguous on its own — it means both
+  // "nothing is restricted" and "we never got the list". Tracked separately so a
+  // failed fetch can fail closed instead of reading as a successful empty filter.
+  const restrictedAddressesLoaded = ref(false)
   let inflightInit: Promise<void> | null = null
 
   // Updates fromTokens with current wallet balances without re-fetching swaplists.
@@ -141,11 +145,17 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
       ? fromAllTokensToWalletTokens
       : allFromTokensWithBalance
 
-    if (isTradingRestrictedInRegion.value && restrictedAddressesLower.value.length > 0) {
-      finalFromTokens = finalFromTokens.filter(
-        token =>
-          !restrictedAddressesLower.value.includes(token.address.toLowerCase()),
-      )
+    if (isTradingRestrictedInRegion.value) {
+      // Without the list there is no way to tell which tokens to withhold, so
+      // withhold all of them.
+      finalFromTokens = restrictedAddressesLoaded.value
+        ? finalFromTokens.filter(
+            token =>
+              !restrictedAddressesLower.value.includes(
+                token.address.toLowerCase(),
+              ),
+          )
+        : []
     }
 
     fromTokens.value = finalFromTokens
@@ -153,10 +163,17 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
 
   const applyTradingRestrictionToToTokens = () => {
     if (!rawToTokens.value) return
-    if (
-      !isTradingRestrictedInRegion.value ||
-      restrictedAddressesLower.value.length === 0
-    ) {
+    if (!isTradingRestrictedInRegion.value) {
+      toTokens.value = rawToTokens.value
+      return
+    }
+    // Restricted region, but the list never arrived — serve nothing rather than
+    // everything.
+    if (!restrictedAddressesLoaded.value) {
+      toTokens.value = null
+      return
+    }
+    if (restrictedAddressesLower.value.length === 0) {
       toTokens.value = rawToTokens.value
       return
     }
@@ -219,11 +236,24 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
       rawFromTokens.value = allFromTokens.all
       rawToTokens.value = swapInstance.getToTokens()
 
-      // Check if trading is restricted and filter out restricted token addresses
-      const fetchedRestrictedAddresses = await getRestrictedTokenAddresses()
-      restrictedAddressesLower.value = fetchedRestrictedAddresses.map(addr =>
-        addr.toLowerCase(),
-      )
+      // Check if trading is restricted and filter out restricted token addresses.
+      // A failure here leaves `restrictedAddressesLoaded` false, which blocks
+      // both token lists while the region is restricted rather than serving them
+      // unfiltered.
+      try {
+        const fetchedRestrictedAddresses = await getRestrictedTokenAddresses()
+        restrictedAddressesLower.value = fetchedRestrictedAddresses.map(addr =>
+          addr.toLowerCase(),
+        )
+        restrictedAddressesLoaded.value = true
+      } catch (e) {
+        restrictedAddressesLoaded.value = false
+        reportModuleError({
+          tag: SENTRY_MODULE_TAGS.SWAP,
+          title: 'SWAP: restricted-address list fetch failed',
+          error: e,
+        })
+      }
 
       applyTradingRestrictionToToTokens()
 
@@ -263,14 +293,14 @@ export const useSwapStore = defineStore('swapStore', (): SwapStoreState => {
         text: t('common.something_went_wrong'),
         textSecondary: t('swap.error.initializing-swap-failed'),
       })
-      // Expected external flakiness (transient fetch / JSON parse of a non-JSON
-      // upstream body) is surfaced via the toast above but is pure Sentry noise
-      // — only report genuinely unexpected init failures.
+      // Transient flakiness is filtered by the retry branch above, so anything
+      // reaching here has already failed every attempt. A persistent outage of
+      // the swaplist endpoint breaks the whole swap feature, so it is reported
+      // unconditionally rather than classified as expected noise.
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.SWAP,
         title: 'SWAP: initSwapper failed',
         error: e,
-        expected: isTransientSwapInitError(e),
       })
     }
   }

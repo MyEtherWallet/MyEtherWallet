@@ -2,12 +2,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 
-const { swapperConstructor, getRestrictedTokenAddresses, initPromiseQueue } =
-  vi.hoisted(() => ({
-    swapperConstructor: vi.fn(),
-    getRestrictedTokenAddresses: vi.fn().mockResolvedValue([]),
-    initPromiseQueue: [] as Promise<void>[],
-  }))
+const {
+  swapperConstructor,
+  getRestrictedTokenAddresses,
+  initPromiseQueue,
+  getFromTokensMock,
+  reportModuleError,
+} = vi.hoisted(() => ({
+  swapperConstructor: vi.fn(),
+  getRestrictedTokenAddresses: vi.fn().mockResolvedValue([]),
+  initPromiseQueue: [] as Promise<void>[],
+  // Swappable per test so an attempt can be made to fail without pre-creating
+  // rejected promises that would sit unhandled between retries.
+  getFromTokensMock: vi.fn(),
+  reportModuleError: vi.fn(),
+}))
 
 vi.mock('@enkryptcom/swap', () => {
   class MockSwapper {
@@ -18,22 +27,7 @@ vi.mock('@enkryptcom/swap', () => {
     }
 
     getFromTokens() {
-      return {
-        all: [
-          {
-            address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-            symbol: 'ETH',
-            decimals: 18,
-            price: 0,
-          },
-          {
-            address: '0xabc',
-            symbol: 'ABC',
-            decimals: 18,
-            price: 2,
-          },
-        ],
-      }
+      return getFromTokensMock()
     }
 
     getToTokens() {
@@ -76,6 +70,8 @@ vi.mock('@/providers/ethereum/chainToEnum', () => ({
 vi.mock('@/modules/trade/providers/ondoHelpers', () => ({
   getRestrictedTokenAddresses,
 }))
+
+vi.mock('@/utils/reportModuleError', () => ({ reportModuleError }))
 
 vi.mock('@/i18n', () => ({
   default: { global: { t: (key: string) => key } },
@@ -151,11 +147,32 @@ const settleStore = async () => {
   await vi.waitFor(() => expect(useSwapStore().swapLoaded).toBe(true))
 }
 
+const defaultFromTokens = () => ({
+  all: [
+    {
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      symbol: 'ETH',
+      decimals: 18,
+      price: 0,
+    },
+    {
+      address: '0xabc',
+      symbol: 'ABC',
+      decimals: 18,
+      price: 2,
+    },
+  ],
+})
+
 describe('useSwapStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     swapperConstructor.mockClear()
     getRestrictedTokenAddresses.mockClear()
+    getRestrictedTokenAddresses.mockResolvedValue([])
+    getFromTokensMock.mockReset()
+    getFromTokensMock.mockImplementation(defaultFromTokens)
+    reportModuleError.mockClear()
     initPromiseQueue.length = 0
   })
 
@@ -258,5 +275,63 @@ describe('useSwapStore', () => {
       expect.objectContaining({ network: 'ETHEREUM' }),
       expect.objectContaining({ network: 'BSC' }),
     ])
+  })
+
+  // The retry branch filters transient flakiness, so anything that survives every
+  // attempt is a persistent outage of the swaplist endpoint — the whole swap
+  // feature is broken and it must not be classified as expected Sentry noise.
+  it('reports the failure to Sentry once init retries are exhausted', async () => {
+    const persistent = new Error('Network Error')
+    getFromTokensMock.mockImplementation(() => {
+      throw persistent
+    })
+    const chainsStore = useChainsStore()
+    chainsStore.allChains = [ethereum]
+    chainsStore.selectedChain = ethereum
+    const swapStore = useSwapStore()
+
+    await swapStore.initSwapper()
+
+    // The initial attempt plus SWAP_INIT_RETRIES retries.
+    expect(getFromTokensMock).toHaveBeenCalledTimes(3)
+    expect(reportModuleError).toHaveBeenCalledTimes(1)
+    const [options] = reportModuleError.mock.calls[0]
+    expect(options.error).toBe(persistent)
+    expect(options.expected).toBeUndefined()
+  }, 10_000)
+
+  // An empty address list used to mean both "nothing restricted" and "the fetch
+  // failed", so a failed fetch served the full token list in a restricted region.
+  it('withholds both token lists when the restricted-address fetch fails', async () => {
+    getRestrictedTokenAddresses.mockRejectedValue(new Error('list unavailable'))
+    const chainsStore = useChainsStore()
+    chainsStore.allChains = [ethereum]
+    chainsStore.selectedChain = ethereum
+    const swapStore = useSwapStore()
+
+    await settleStore()
+
+    // globalStore is mocked with isTradingRestrictedInRegion = true.
+    expect(swapStore.toTokens).toBeNull()
+    expect(swapStore.fromTokens).toEqual([])
+    expect(reportModuleError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'SWAP: restricted-address list fetch failed',
+      }),
+    )
+  })
+
+  it('filters normally once the restricted-address fetch succeeds', async () => {
+    getRestrictedTokenAddresses.mockResolvedValue([])
+    const chainsStore = useChainsStore()
+    chainsStore.allChains = [ethereum]
+    chainsStore.selectedChain = ethereum
+    const swapStore = useSwapStore()
+
+    await settleStore()
+
+    // An empty list is now a real answer: nothing is withheld.
+    expect(swapStore.toTokens).not.toBeNull()
+    expect(swapStore.fromTokens).not.toEqual([])
   })
 })

@@ -56,10 +56,17 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     )
   }
 
+  // `Math.trunc(Math.min(100, Math.max(0, NaN)))` is NaN, and `BigInt(NaN)`
+  // throws — so non-finite input has to be rejected before either use.
+  const normalizePercentage = (percentage: number): number =>
+    Number.isFinite(percentage)
+      ? Math.trunc(Math.min(100, Math.max(0, percentage)))
+      : 0
+
   const getMaxAmount = (percentage = selectedPercentage.value): string => {
     if (!isTokenSelected()) return ''
 
-    const boundedPercentage = Math.trunc(Math.min(100, Math.max(0, percentage)))
+    const boundedPercentage = normalizePercentage(percentage)
     const balance = (getBalance() * BigInt(boundedPercentage)) / 100n
     const fee = getEstimatedFee()
     const reservedFee = isNativeToken() && boundedPercentage === 100 ? fee : 0n
@@ -97,7 +104,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   }
 
   const setMaxAmount = (percentage = 100): void => {
-    const boundedPercentage = Math.trunc(Math.min(100, Math.max(0, percentage)))
+    const boundedPercentage = normalizePercentage(percentage)
     if (isMaxSelected.value && selectedPercentage.value === boundedPercentage) return
 
     markFormDirty()

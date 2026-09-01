@@ -38,6 +38,14 @@ const PARTNER = 'ondo-finance'
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
+  /**
+   * The address to quote *for*, falling back to the donation address so swap and
+   * trade can price a route before a wallet is connected.
+   *
+   * Quoting only. Never use this as a funds destination or as the signer — the
+   * fallback would silently target MEW's donation address. Read `walletAddress`
+   * for those, and handle the empty case explicitly.
+   */
   const userAddress = computed(
     () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
   )

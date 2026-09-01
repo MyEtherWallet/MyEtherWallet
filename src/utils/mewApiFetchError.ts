@@ -108,8 +108,12 @@ export const describeMewApiFetchError = (
   ctx: MewApiFetchErrorContext,
 ): MewApiCapturedError => {
   const message = buildMewApiErrorMessage(ctx)
+  // Trimmed to agree with `extractErrorMessage`, which treats a whitespace-only
+  // message as unusable. Without this, `new Error('   ')` is kept as-is and the
+  // computed fallback message is discarded — the blank-message problem this file
+  // exists to prevent.
   const hasUsableError =
-    ctx.error instanceof Error && ctx.error.message.length > 0
+    ctx.error instanceof Error && ctx.error.message.trim().length > 0
   const error = hasUsableError ? (ctx.error as Error) : new Error(message)
   // When we synthesize a fresh Error for the message, keep the original as its
   // `cause` so Sentry can still reconstruct the original stack. (The `cause`

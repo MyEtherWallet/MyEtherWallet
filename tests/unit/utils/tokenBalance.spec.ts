@@ -41,4 +41,24 @@ describe('hydrateTokenBalances', () => {
     expect(token).toMatchObject({ balance: '0', price: 2 })
     expect(Object.isFrozen(token)).toBe(true)
   })
+
+  it('falls back to the balance source price when the token has none', () => {
+    const [zeroPrice] = hydrateTokenBalances(
+      [{ address: '0xabc', price: 0, symbol: 'ABC' }],
+      {
+        balanceSources: [{ address: '0xabc', balance: '42', price: 5 }],
+        mainTokenAddress: MAIN_TOKEN,
+      },
+    )
+    expect(zeroPrice.price).toBe(5)
+
+    const [noPrice] = hydrateTokenBalances(
+      [{ address: '0xabc', symbol: 'ABC' }],
+      {
+        balanceSources: [{ address: '0xabc', balance: '42', price: 7 }],
+        mainTokenAddress: MAIN_TOKEN,
+      },
+    )
+    expect(noPrice.price).toBe(7)
+  })
 })

@@ -10,6 +10,10 @@ import {
   type TradePayloadShared,
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
+import {
+  isExpectedClientError,
+  isTransientNetworkError,
+} from '@/modules/trade/common/expectedTradeError'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
@@ -182,18 +186,14 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       // wss://nodes.mewapi.io), expected client errors (1inch 4xx, flagged by
       // OneInchFusion.getQuote), and transient axios "Network Error"s, where the
       // 1inch request never completed.
-      const { expectedClientError, transientNetworkError } = e as {
-        expectedClientError?: boolean
-        transientNetworkError?: boolean
-      }
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.TRADE,
         title: 'TRADE: Error fetching quote',
         error: e,
         expected:
           isTransientRpcError(e) ||
-          !!expectedClientError ||
-          !!transientNetworkError,
+          isExpectedClientError(e) ||
+          isTransientNetworkError(e),
         extra: { errorMessage: generalError.value },
       })
     } finally {

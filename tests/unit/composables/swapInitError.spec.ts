@@ -43,6 +43,19 @@ describe('isTransientSwapInitError', () => {
     ).toBe(false)
   })
 
+  // A bare `includes('network')` matched this, so a real application bug was
+  // retried and then suppressed from Sentry as expected noise.
+  it('is false for a property-access TypeError that merely mentions network', () => {
+    expect(
+      isTransientSwapInitError(
+        new TypeError("Cannot read properties of undefined (reading 'network')"),
+      ),
+    ).toBe(false)
+    expect(
+      isTransientSwapInitError(new TypeError('networkInfo is not a function')),
+    ).toBe(false)
+  })
+
   it('is false for non-Error values', () => {
     expect(isTransientSwapInitError('boom')).toBe(false)
     expect(isTransientSwapInitError(null)).toBe(false)

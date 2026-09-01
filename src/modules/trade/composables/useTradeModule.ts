@@ -1,4 +1,4 @@
-import { onBeforeMount, computed, watch } from 'vue'
+import { onBeforeMount, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 // Stores
@@ -348,8 +348,11 @@ export function useTradeModule() {
     // Clear current selections - they'll be repopulated when swapLoaded becomes true
     fromTokenSelected.value = null
     toTokenSelected.value = null
-    fromAmount.value = '0'
-    toAmount.value = '0'
+    // Empty, not '0' — matching `clearValues` and the `selectedChain` watcher.
+    // '0' renders a literal zero in the input and, because `useFormPristine`
+    // only treats '' as empty, marks the form dirty on a mere network switch.
+    fromAmount.value = ''
+    toAmount.value = ''
   }
 
   const switchToNetwork = (chain: Chain) => {
@@ -500,13 +503,15 @@ export function useTradeModule() {
     }
   })
 
-  // Sync trade pair to pairStore; detect manual user selection
+  // Sync trade pair to pairStore. Deliberately does NOT set
+  // `fromTokenManuallySelected`: this watcher cannot tell a user's pick from the
+  // programmatic assignments made by onBeforeMount, the `swapLoaded` watcher, the
+  // balance-refresh watcher and the `additionalBuyAssets` watcher. Marking those
+  // as manual left the flag permanently true after first load, which
+  // disabled highest-balance auto-selection for the rest of the session. The
+  // flag is set in `onFromTokenSelected` instead — the only user-driven path.
   watch(fromTokenSelected, token => {
     setTradeFromSymbol(token?.symbol ?? null)
-    // If the token changed and it wasn't a programmatic reset (null), treat as manual
-    if (token !== null) {
-      fromTokenManuallySelected.value = true
-    }
   })
 
   watch(toTokenSelected, token => {
@@ -515,6 +520,12 @@ export function useTradeModule() {
 
   // --- Lifecycle ---
   onBeforeMount(async () => {
+    // Let a pending chain change settle before initializing, exactly as
+    // `useSwapModule.initialize` does. The store's chain watcher resets
+    // `swapLoaded` on the pre-flush queue, so calling straight into
+    // `initSwapper()` here can observe the previous chain's `swapLoaded === true`
+    // and skip the reinitialization this mount needs.
+    await nextTick()
     // Initialize swap to get fromTokens and fetch market status
     await Promise.all([initSwapper(), loadTradableAssets()])
 
@@ -578,6 +589,9 @@ export function useTradeModule() {
     })
   }
   const onFromTokenSelected = (token: NewTokenInfo) => {
+    // The child emits `select:token` only on an explicit user pick, so this is
+    // the one place a selection can be attributed to the user.
+    fromTokenManuallySelected.value = true
     notifyTokensSwitched(token, toTokenSelected.value)
   }
   const onToTokenSelected = (token: NewTokenInfo) => {
