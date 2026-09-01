@@ -10,6 +10,7 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   ChevronDownIcon,
+  Bars2Icon,
 } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -20,7 +21,6 @@ import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
-import dragIcon from '@/assets/icons/drag-icon.svg'
 
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
 // none to show); this component renders + handles per-row actions, search,
@@ -239,7 +239,7 @@ const trade = (row: WatchlistRow) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <img :src="dragIcon" alt="" class="size-4" />
+            <Bars2Icon class="size-4 text-[#a5a5a5]" />
           </span>
 
           <!-- Star toggle (remove). -->
