@@ -19,6 +19,7 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import configs from '@/configs'
 
@@ -779,5 +780,51 @@ describe('isBenignPurchaseInfoForbidden', () => {
   it('is false for non-object inputs', () => {
     expect(isBenignPurchaseInfoForbidden(null)).toBe(false)
     expect(isBenignPurchaseInfoForbidden(undefined)).toBe(false)
+  })
+})
+
+describe('isWalletConnectSubscribeInterruptedError', () => {
+  const MSG = 'Connection interrupted while trying to subscribe'
+
+  it('drops the @walletconnect/core relay rejection (APP-MEW-WEB-61)', () => {
+    // The exact production trigger: the relay WebSocket disconnects mid-connect
+    // and the Relayer rejects with `new Error(...)`.
+    expect(isWalletConnectSubscribeInterruptedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with message)', () => {
+    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(isWalletConnectSubscribeInterruptedError(MSG)).toBe(true)
+    expect(isWalletConnectSubscribeInterruptedError(`Error: ${MSG}`)).toBe(true)
+  })
+
+  it('does NOT over-match the sibling "Subscribing to X failed" shape', () => {
+    expect(
+      isWalletConnectSubscribeInterruptedError(
+        new Error('Subscribing to abc123 failed, please try again'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isWalletConnectSubscribeInterruptedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectSubscribeInterruptedError(new Error('Connection is closed')),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isWalletConnectSubscribeInterruptedError(null)).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError(undefined)).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
   })
 })
