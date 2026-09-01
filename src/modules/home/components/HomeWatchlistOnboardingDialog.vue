@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useRecommendedWatchlist } from '@/modules/home/composables/useRecommendedWatchlist'
+import { sectors } from '@/modules/home/sectors'
 import WatchlistStepMarkets from './WatchlistStepMarkets.vue'
 import WatchlistStepIndustries from './WatchlistStepIndustries.vue'
 import WatchlistStepAssets from './WatchlistStepAssets.vue'
@@ -15,13 +16,22 @@ const { assets, isLoading, fetchRecommendations } = useRecommendedWatchlist()
 
 const activeStep = ref(0)
 const selectedMarkets = ref<string[]>([])
-const selectedIndustries = ref<string[]>([])
+// Curated-collection ids picked in step 2 (e.g. "crypto-stablecoins").
+const selectedCategoryIds = ref<string[]>([])
 const selectedAssetIds = ref<string[]>([])
+
+// Resolve the picked ids to the {market, filter} the recommendations fetch needs.
+const selectedCategories = computed(() =>
+  selectedCategoryIds.value
+    .map(id => sectors.find(s => s.id === id))
+    .filter((s): s is (typeof sectors)[number] => Boolean(s))
+    .map(s => ({ market: s.market, filter: s.filter })),
+)
 
 const reset = () => {
   activeStep.value = 0
   selectedMarkets.value = []
-  selectedIndustries.value = []
+  selectedCategoryIds.value = []
   selectedAssetIds.value = []
 }
 
@@ -35,17 +45,25 @@ const goToMarkets = () => {
   activeStep.value = 0
 }
 
+// Continue from step 2: fetch with the picked markets + curated collections.
 const goToAssets = () => {
   activeStep.value = 2
-  fetchRecommendations(selectedMarkets.value, selectedIndustries.value)
+  fetchRecommendations(selectedMarkets.value, selectedCategories.value)
 }
 
-// Skipping step 1 discards its market picks — only Continue commits them. (The
-// refs are left untouched so the picks reappear if the user navigates back.)
-// Skipping step 2 keeps the markets, since step 1 was already accepted.
+// Skipping step 1 discards its market picks — only Continue commits them (the
+// refs are left untouched so the picks reappear if the user navigates back), so
+// the assets step opens on the full, unfiltered crypto + stocks list.
 const skipFromMarkets = () => {
   activeStep.value = 2
   fetchRecommendations([], [])
+}
+
+// Skipping step 2 keeps the step-1 markets (already accepted) but drops the
+// category question — fetch those markets unfiltered.
+const skipFromIndustries = () => {
+  activeStep.value = 2
+  fetchRecommendations(selectedMarkets.value, [])
 }
 
 // Close from the header X (the dialog owns isOpen; AppDialog's own close is
@@ -99,10 +117,11 @@ watch(isOpen, open => {
         />
         <WatchlistStepIndustries
           v-else-if="activeStep === 1"
-          v-model="selectedIndustries"
+          v-model="selectedCategoryIds"
+          :markets="selectedMarkets"
           @continue="goToAssets"
           @back="goToMarkets"
-          @skip="goToAssets"
+          @skip="skipFromIndustries"
           @close="close"
         />
         <WatchlistStepAssets

@@ -2,9 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
-// AppTokenLogo imports the stocks store (Ledger SDK transitively). Stub it.
+// AppTokenLogo / AppTokenSymbol import the stocks store (Ledger SDK
+// transitively). Stub them.
 vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span data-test="token-logo" />' },
+}))
+vi.mock('@/components/AppTokenSymbol.vue', () => ({
+  default: { props: ['symbol', 'isStock'], template: '<span>{{ symbol }}</span>' },
 }))
 
 // AppTooltip relies on the v-element-hover directive + teleport; stub it and
@@ -62,28 +66,62 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
 })
 
 describe('WatchlistStepIndustries (MEW-2130)', () => {
-  it('renders every industry pill and gates Continue on selection', () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
-    expect(w.findAll('[data-test="industry-pill"]').length).toBe(12)
+  it('scopes the curated collections to the step-1 markets', () => {
+    // crypto → 6 crypto sectors, stocks → 10, both → 16 (from sectors.ts).
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['crypto'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(6)
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['stocks'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(10)
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['crypto', 'stocks'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(16)
+  })
+
+  it('gates Continue until a collection is picked', () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     expect(
       w.get('[data-test="industries-continue"]').attributes('disabled'),
     ).toBeDefined()
   })
 
-  it('emits selection toggle on pill click', async () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+  it('emits the sector id on pill click', async () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     await w.findAll('[data-test="industry-pill"]')[0].trigger('click')
-    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['commodities'])
+    // First crypto sector in sectors.ts is topGainers → id "crypto-topGainers".
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto-topGainers'])
   })
 
   it('emits back when the header back button is clicked', async () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     await w.get('[data-test="step-back"]').trigger('click')
     expect(w.emitted('back')).toHaveLength(1)
   })
 
   it('emits skip from the Skip button regardless of selection', async () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     await w.get('[data-test="industries-skip"]').trigger('click')
     expect(w.emitted('skip')).toHaveLength(1)
   })

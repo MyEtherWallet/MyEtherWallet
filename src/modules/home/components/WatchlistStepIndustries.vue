@@ -1,22 +1,36 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
-import { WATCHLIST_INDUSTRIES } from './watchlistOnboarding'
+import { sectors } from '@/modules/home/sectors'
 
 const { t } = useI18n()
 
-// Selected industry keys (multi-select). Continue enables with at least one.
+const props = defineProps<{
+  /** Markets picked in step 1 — scopes which curated collections to offer. */
+  markets: string[]
+}>()
+
+// Selected curated-collection ids (multi-select). Continue enables with ≥1.
 const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ continue: []; back: []; skip: []; close: [] }>()
 
-const toggle = (key: string) => {
-  selected.value = selected.value.includes(key)
-    ? selected.value.filter(x => x !== key)
-    : [...selected.value, key]
+// Reuse the "Curated Collections" categories (single source of truth), scoped to
+// the markets chosen in step 1 — both selected shows the combined list.
+const visibleSectors = computed(() =>
+  sectors.filter(
+    s => props.markets.length === 0 || props.markets.includes(s.market),
+  ),
+)
+
+const toggle = (id: string) => {
+  selected.value = selected.value.includes(id)
+    ? selected.value.filter(x => x !== id)
+    : [...selected.value, id]
 }
 </script>
 
@@ -33,14 +47,14 @@ const toggle = (key: string) => {
 
     <div class="mt-6 grid grid-cols-2 gap-3">
       <WatchlistSelectableCard
-        v-for="key in WATCHLIST_INDUSTRIES"
-        :key="key"
+        v-for="sector in visibleSectors"
+        :key="sector.id"
         data-test="industry-pill"
-        :selected="selected.includes(key)"
+        :selected="selected.includes(sector.id)"
         class="p-4 text-s-16 font-medium text-black"
-        @toggle="toggle(key)"
+        @toggle="toggle(sector.id)"
       >
-        {{ t(`homePage.hero.watchlist.onboarding.industryLabels.${key}`) }}
+        {{ t(sector.labelKey) }}
       </WatchlistSelectableCard>
     </div>
 

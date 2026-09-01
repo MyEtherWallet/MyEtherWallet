@@ -81,6 +81,53 @@ describe('useRecommendedWatchlist (MEW-2130)', () => {
     expect(ids(assets.value)).toEqual(['AAPL', 'ethereum', 'bitcoin'])
   })
 
+  it('crypto categories add &category= and fetch one page each', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations(
+      ['crypto'],
+      [
+        { market: 'crypto', filter: 'stablecoins' },
+        { market: 'crypto', filter: 'defi-index' },
+      ],
+    )
+    const cryptoCalls = calls.filter(u => u.includes('tokens-table'))
+    expect(cryptoCalls.length).toBe(2)
+    expect(cryptoCalls.some(u => u.includes('category=stablecoins'))).toBe(true)
+    expect(cryptoCalls.some(u => u.includes('category=defi-index'))).toBe(true)
+    expect(calls.some(u => u.includes('stocks'))).toBe(false)
+  })
+
+  it('routes each category to its matching table (crypto vs stocks)', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations(
+      ['crypto', 'stocks'],
+      [
+        { market: 'crypto', filter: 'meme-token' },
+        { market: 'stocks', filter: 'TECHNOLOGY' },
+      ],
+    )
+    expect(
+      calls.some(u => u.includes('tokens-table') && u.includes('category=meme-token')),
+    ).toBe(true)
+    expect(
+      calls.some(u => u.includes('stocks') && u.includes('category=TECHNOLOGY')),
+    ).toBe(true)
+  })
+
+  it('a picked market with no category is fetched unfiltered', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations(
+      ['crypto', 'stocks'],
+      [{ market: 'crypto', filter: 'stablecoins' }],
+    )
+    expect(
+      calls.some(u => u.includes('tokens-table') && u.includes('category=stablecoins')),
+    ).toBe(true)
+    const stockCall = calls.find(u => u.includes('stocks'))
+    expect(stockCall).toBeDefined()
+    expect(stockCall?.includes('category=')).toBe(false)
+  })
+
   it('flips isLoading true while fetching then false when done', async () => {
     const { isLoading, fetchRecommendations } = useRecommendedWatchlist()
     const pending = fetchRecommendations(['crypto'], [])

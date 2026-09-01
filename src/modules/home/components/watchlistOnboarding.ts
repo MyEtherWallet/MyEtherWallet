@@ -17,25 +17,8 @@ export const WATCHLIST_MARKETS: WatchlistMarket[] = [
   { id: 'crypto', labelKey: 'crypto' },
 ]
 
-/**
- * Offered industries. Each entry maps to an i18n key under
- * homePage.hero.watchlist.onboarding.industryLabels — edit this list (and the
- * locale files) to change what the grid shows.
- */
-export const WATCHLIST_INDUSTRIES: string[] = [
-  'commodities',
-  'equities',
-  'tech',
-  'ai',
-  'hardware',
-  'gaming',
-  'transport',
-  'software',
-  'construction',
-  'privacy',
-  'infrastructure',
-  'etfs',
-]
+// Step 2 offers the curated-collection categories from `@/modules/home/sectors`
+// (scoped to the markets picked in step 1) — no separate industries list.
 
 export type RecommendedAssetType = 'crypto' | 'stock' | 'perp'
 

@@ -12,6 +12,7 @@ import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
@@ -232,11 +233,11 @@ const overflowNames = computed(() =>
                   <PlusIcon v-else class="size-3.5" />
                 </span>
               </span>
-              <span
-                class="w-full truncate px-1 text-center text-s-16 font-semibold text-black"
-              >
-                {{ asset.name }}
-              </span>
+              <AppTokenSymbol
+                :symbol="asset.symbol"
+                :is-stock="asset.type === 'stock'"
+                class="max-w-full text-center text-s-16 font-semibold text-black"
+              />
             </WatchlistSelectableCard>
           </div>
         </div>
