@@ -44,13 +44,15 @@
                   :placeholder="$t('create_wallet.mnemonic.select_length')"
                 />
               </div>
-              <app-btn-text
+              <app-base-button
+                type="link"
+                size="small"
                 class="text-primary hoverOpacity"
                 @click="updateMnemonic"
               >
                 <arrow-path-icon class="inline w-5 h-5 mr-1" />
                 {{ $t('create_wallet.mnemonic.update') }}
-              </app-btn-text>
+              </app-base-button>
             </div>
             <div
               data-private
@@ -100,7 +102,7 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
+                  <app-segmented-control
                     v-model:selected="sampleOneSelected"
                     :btn-list="generatedVerifySamples[0].items"
                     :size="isMobile ? 'medium' : 'large'"
@@ -109,7 +111,7 @@
                     <template #btn-content="{ data }">
                       {{ data.label }}
                     </template>
-                  </app-btn-group>
+                  </app-segmented-control>
                 </div>
                 <!-- Second Sample -->
                 <div
@@ -126,7 +128,7 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
+                  <app-segmented-control
                     v-model:selected="sampleTwoSelected"
                     :btn-list="generatedVerifySamples[1].items"
                     :size="isMobile ? 'medium' : 'large'"
@@ -135,7 +137,7 @@
                     <template #btn-content="{ data }">
                       {{ data.label }}
                     </template>
-                  </app-btn-group>
+                  </app-segmented-control>
                 </div>
                 <!-- Third Sample -->
                 <div
@@ -152,7 +154,7 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
+                  <app-segmented-control
                     v-model:selected="sampleThreeSelected"
                     :btn-list="generatedVerifySamples[2].items"
                     :size="isMobile ? 'medium' : 'large'"
@@ -161,7 +163,7 @@
                     <template #btn-content="{ data }">
                       {{ data.label }}
                     </template>
-                  </app-btn-group>
+                  </app-segmented-control>
                 </div>
               </div>
               <div
@@ -175,7 +177,7 @@
                   {{ $t('common.next') }}
                 </app-base-button>
                 <app-base-button
-                  :is-outline="true"
+                  type="secondary"
                   class="w-full xs:w-auto xs:min-w-[180px]"
                   @click="activeStep = 0"
                 >
@@ -208,7 +210,10 @@
                 >
                   {{ $t('connect_wallet') }}
                 </app-base-button>
-                <app-btn-text
+                <app-base-button
+                  type="tertiary"
+                  surface="alternative"
+                  size="small"
                   class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
@@ -216,7 +221,7 @@
                   <arrow-long-right-icon
                     class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
                   />
-                </app-btn-text>
+                </app-base-button>
               </div>
             </div>
           </div>
@@ -231,8 +236,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'

@@ -3,10 +3,12 @@
     <div
       class="flex flex-col sm:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-3 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('crypto.explore_tokens') }}</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('crypto.explore_tokens') }}
+      </h1>
 
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
           size="large"
@@ -28,13 +30,15 @@
                   class="min-h-10 rounded-full hoverNoBG px-3 flex items-center gap-1"
                   @click="toggleSelect"
                 >
-                  <span class="font-medium text-s-17">{{ $t('common.more') }}</span>
+                  <span class="font-medium text-s-17">{{
+                    $t('common.more')
+                  }}</span>
                   <chevron-down-icon class="w-4 h-4" />
                 </button>
               </template>
             </app-select>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
 
       <app-select
@@ -495,7 +499,7 @@
                       v-if="isBuyableOnCompatibleChain(token.coinId)"
                       size="small"
                       @click="buyBtn(token)"
-                      is-outline
+                      type="secondary"
                       class="w-full"
                       :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                       >{{ $t('common.buy') }}</app-base-button
@@ -507,7 +511,9 @@
                       @click="tradeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
@@ -517,7 +523,9 @@
                       @click="bridgeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
@@ -531,7 +539,9 @@
                       @click="swapBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('common.swap') }}
                     </app-base-button>
@@ -563,7 +573,7 @@
             </button>
           </div>
           <!-- Loading State -->
-          <div v-if="isLoading" class="">
+          <div v-if="isLoading">
             <div
               v-for="n in Number(activeShownItems.value)"
               :key="n"
@@ -655,7 +665,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -711,8 +721,11 @@ const { t } = useI18n()
 const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+} = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
@@ -1119,9 +1132,7 @@ const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
     marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
-    totalVolume: item.totalVolume
-      ? formatFiat(item.totalVolume).display
-      : '-',
+    totalVolume: item.totalVolume ? formatFiat(item.totalVolume).display : '-',
   }
 }
 

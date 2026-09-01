@@ -2,7 +2,7 @@
   <div>
     <div class="space-y-3 overflow-scroll max-h-[500px]">
       <!-- Category Filter -->
-      <app-btn-group
+      <app-segmented-control
         v-model:selected="selectedCategory"
         :btn-list="categories"
         size="xs"
@@ -11,7 +11,7 @@
         <template #btn-content="{ data }">
           {{ $t(data.label) }}
         </template>
-      </app-btn-group>
+      </app-segmented-control>
 
       <div
         v-for="(item, index) in filteredNotifications"
@@ -60,13 +60,15 @@
       <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     </div>
     <div class="flex justify-center">
-      <app-btn-text
+      <app-base-button
+        type="link"
+        size="small"
         v-if="notificationsCount > 1"
         @click="deleteAllNotifications"
         class="text-primary text-s-14"
       >
         {{ $t('common.delete_all') }}
-      </app-btn-text>
+      </app-base-button>
     </div>
   </div>
 </template>
@@ -75,13 +77,13 @@
 import { ref, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 //Components
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import TransactionContainer from './components/TransactionContainer.vue'
 import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'

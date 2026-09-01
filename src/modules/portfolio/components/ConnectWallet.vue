@@ -30,8 +30,12 @@
         </app-base-button>
         <p>
           {{ t('portfolio.connect_wallet.or') }}
-          <app-btn-text @click="createWallet" class="underline"
-            >{{ t('common.create_new_wallet') }}</app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
+            @click="createWallet"
+            class="underline"
+            >{{ t('common.create_new_wallet') }}</app-base-button
           >
         </p>
       </div>
@@ -42,7 +46,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'

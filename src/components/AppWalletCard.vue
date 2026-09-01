@@ -16,7 +16,7 @@
         />
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
-          <div class="">
+          <div>
             <app-pop-up-menu
               :placeholder="t('common.wallet_menu')"
               location="left"

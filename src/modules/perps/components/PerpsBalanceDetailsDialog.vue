@@ -24,11 +24,12 @@
           </div>
         </div>
 
-        <app-btn-text
+        <app-base-button
+          type="link"
+          size="large"
           class="w-full mt-4 text-primary"
-          is-large
           @click="$emit('close')"
-          >{{ $t('perps.trade.tab-close') }}</app-btn-text
+          >{{ $t('perps.trade.tab-close') }}</app-base-button
         >
       </div>
     </template>
@@ -39,7 +40,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import {
   usePerpsBalance,
   usePerpsPortfolioSummary,

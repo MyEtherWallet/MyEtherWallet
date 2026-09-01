@@ -17,7 +17,9 @@
               {{ $t('trade.subtitle') }}
             </p>
           </div>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
             v-if="
               isTradingSessionOpen &&
               isCurrentNetworkSupported &&
@@ -25,7 +27,7 @@
             "
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
         <!-- Market Closed -->
@@ -305,7 +307,7 @@
               }}
             </p>
             <div class="flex flex-col items-center justify-center">
-              <div class="">
+              <div>
                 <button
                   v-for="chain in supportedChainsList.reverse()"
                   :key="chain.name"
@@ -473,7 +475,6 @@ import { parseUnits, formatUnits } from 'viem'
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'

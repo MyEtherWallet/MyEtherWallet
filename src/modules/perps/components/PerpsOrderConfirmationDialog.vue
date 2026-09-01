@@ -133,7 +133,7 @@
         <!-- Actions -->
         <div class="flex flex-col gap-1">
           <app-base-button
-            :theme="orderSide === 'buy' ? 'success' : 'error'"
+            :tone="orderSide === 'buy' ? 'success' : 'danger'"
             :disabled="
               isSubmitting ||
               !!orderError ||
@@ -145,12 +145,14 @@
             @click="$emit('confirm')"
             >{{ confirmButtonLabel }}</app-base-button
           >
-          <app-btn-text
+          <app-base-button
+            type="tertiary"
+            surface="alternative"
+            size="large"
             :disabled="isSubmitting"
             class="mx-auto w-full"
-            is-large
             @click="isOpen = false"
-            >{{ $t('perps.confirm.cancel') }}</app-btn-text
+            >{{ $t('perps.confirm.cancel') }}</app-base-button
           >
         </div>
       </div>
@@ -163,7 +165,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatUsd, formatUsdc } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'

@@ -341,7 +341,7 @@
               </div>
               <app-base-button
                 v-if="status === 'banned' || isUnderReview"
-                theme="neutral"
+                type="secondary"
                 size="medium"
                 class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
                 @click="onContactSupport"
@@ -415,7 +415,9 @@ const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
 )
-const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
+const hasRewardExpiry = computed(
+  () => !!activeReward.value?.expiration_timestamp,
+)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,

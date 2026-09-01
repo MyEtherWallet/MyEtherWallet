@@ -63,7 +63,7 @@
     <!-- Chart -->
     <div class="py-6">
       <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedInterval"
           :btn-list="isXS ? chartIntervals.slice(0, 2) : chartIntervals"
           size="xs"
@@ -90,7 +90,7 @@
               </template>
             </app-select>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
       <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
         <chart-price
@@ -294,8 +294,10 @@
             </p>
           </div>
         </div>
-        <app-btn-text
-          size="medium"
+        <app-base-button
+          type="tertiary"
+          surface="alternative"
+          size="small"
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}
@@ -303,7 +305,7 @@
             class="w-4 h-4 ml-1 inline-block align-middle"
             :class="{ 'rotate-180 ': showPositionMore }"
           />
-        </app-btn-text>
+        </app-base-button>
         <transition name="fade" mode="out-in">
           <div
             v-if="showPositionMore"
@@ -415,7 +417,7 @@
         class="flex flex-col items-start gap-3 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
         <div class="hidden lg:flex lg:items-center">
-          <app-btn-group
+          <app-segmented-control
             v-model:selected="activeInfoTabObj"
             :btn-list="infoTabs"
             size="medium"
@@ -437,7 +439,7 @@
                 </span>
               </span>
             </template>
-          </app-btn-group>
+          </app-segmented-control>
         </div>
         <app-select
           v-model:selected="activeInfoTabObj"
@@ -484,7 +486,7 @@
             key="position-orders"
           >
             <div class="mb-4 xs:pl-4">
-              <app-btn-group
+              <app-segmented-control
                 v-model:selected="selectedOrderFilter"
                 :btn-list="orderFilterTabs"
                 size="xs"
@@ -507,7 +509,7 @@
                     </span></span
                   >
                 </template>
-              </app-btn-group>
+              </app-segmented-control>
             </div>
             <app-table-skeleton
               v-if="ordersLoading && marketOrders.length === 0"
@@ -955,7 +957,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -969,7 +971,6 @@ import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vu
 import PerpsPagination from './components/PerpsPagination.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 
 import {
@@ -1200,7 +1201,7 @@ const orderFilterTabs = computed(() => [
 ])
 
 // Track the filter by value, not by object: labels are locale-dependent and
-// AppBtnGroup compares the selection by structural equality.
+// AppSegmentedControl compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
 const selectedOrderFilter = computed({
   get: () =>

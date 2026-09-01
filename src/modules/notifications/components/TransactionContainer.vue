@@ -57,7 +57,10 @@
       </div>
     </div>
     <div class="flex justify-space-between items-center">
-      <app-btn-text
+      <app-base-button
+        type="tertiary"
+        surface="alternative"
+        size="small"
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
@@ -68,7 +71,7 @@
             { 'rotate-180': showMoreDetails },
           ]"
         />
-      </app-btn-text>
+      </app-base-button>
       <!-- delete Button -->
       <app-btn-icon
         :label="$t('common.delete_notification')"
@@ -163,7 +166,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'

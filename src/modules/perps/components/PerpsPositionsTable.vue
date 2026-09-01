@@ -8,7 +8,7 @@
           {{ selectedTab.label }}
         </h1>
         <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-          <app-btn-group
+          <app-segmented-control
             v-model:selected="selectedTab"
             :btn-list="tabs"
             size="medium"
@@ -36,7 +36,7 @@
                 </span>
               </span>
             </template>
-          </app-btn-group>
+          </app-segmented-control>
         </div>
         <app-select
           v-model:selected="selectedTab"
@@ -248,7 +248,7 @@
                         size="small"
                         :disabled="isWatchOnly"
                         @click="toggleMenu"
-                        :theme="pos.direction === 'long' ? 'success' : 'error'"
+                        :tone="pos.direction === 'long' ? 'success' : 'danger'"
                       >
                         {{ $t('perps.positions.manage-label') }}
                       </AppBaseButton>
@@ -321,7 +321,7 @@
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
         <div class="mb-4 xs:pl-4">
-          <app-btn-group
+          <app-segmented-control
             v-model:selected="selectedOrderFilter"
             :btn-list="orderFilterTabs"
             size="xs"
@@ -342,7 +342,7 @@
                 </span></span
               >
             </template>
-          </app-btn-group>
+          </app-segmented-control>
         </div>
         <app-table-skeleton
           v-if="ordersLoading && orders.length === 0"
@@ -756,7 +756,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in paginatedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
@@ -883,7 +883,7 @@ import {
   ChevronRightIcon,
 } from '@heroicons/vue/24/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -1192,7 +1192,7 @@ const orderFilterTabs = computed(() => [
 ])
 
 // Track the filter by value, not by object: labels are locale-dependent and
-// AppBtnGroup compares the selection by structural equality.
+// AppSegmentedControl compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
 const selectedOrderFilter = computed({
   get: () =>
@@ -1417,7 +1417,7 @@ const tabs = computed(() => [
 ])
 
 // Track the tab by value, not by object: labels are locale-dependent and
-// AppBtnGroup/AppSelect compare the selection by structural equality.
+// AppSegmentedControl/AppSelect compare the selection by structural equality.
 const activeTab = ref('positions')
 const selectedTab = computed({
   get: () =>

@@ -57,7 +57,7 @@
           :days-left-label="daysLeftLabel"
         />
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onMoreInfo"
         >
@@ -111,7 +111,7 @@
             {{ $t('rwaRewards.trade_again') }}
           </app-base-button>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="text-s-16 font-semibold tracking-[-0.32px]"
             @click="onMoreInfo"
           >
@@ -161,7 +161,7 @@
           :subtitle="$t('rwaRewards.sub_sent')"
         />
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
@@ -188,7 +188,7 @@
           :subtitle="$t('rwaRewards.sub_closed')"
         />
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
@@ -208,7 +208,7 @@
           </p>
         </div>
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
           @click="onContactSupport"
         >
@@ -275,7 +275,7 @@
             {{ $t('rwaRewards.trade_now') }}
           </app-base-button>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             @click="onMoreInfo"
           >
