@@ -113,7 +113,7 @@
           :is-loading="authorizing"
           class="w-full"
           @click="submitAuthorize"
-          >Authorize Withdrawals</app-base-button
+          >{{ $t('perps.withdraw.authorize-button') }}</app-base-button
         >
       </div>
     </template>
@@ -135,8 +135,8 @@ import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { hasInvalidPrecision } from '../utils/formatters'
 import AppBlockie from '@/components/AppBlockie.vue'
-import { captureException } from '@sentry/vue'
-import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { useI18n } from 'vue-i18n'
 import { toChecksumAddress } from '@/utils/addressUtils'
 import {
@@ -237,11 +237,8 @@ async function refreshAddressBookStatus() {
     )
   } catch (e) {
     isAddressAuthorized.value = false
-    captureException(e, {
-      ...SENTRY_MODULE_TAGS.PERPS,
-      extra: {
-        title: 'PERPS: Error fetching address book',
-      },
+    capturePerps(PERPS_FEATURE.WITHDRAW, e, {
+      title: 'PERPS: Error fetching address book',
     })
   } finally {
     addressBookLoading.value = false
@@ -271,11 +268,8 @@ watch(
         accountRes?.result?.withdrawalFeeUSD ?? DEFAULT_WITHDRAWAL_FEE_USD
     } catch (e) {
       // Keep the default fee shown if the lookup fails.
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.PERPS,
-        extra: {
-          title: 'PERPS: Error fetching withdrawal fee',
-        },
+      capturePerps(PERPS_FEATURE.WITHDRAW, e, {
+        title: 'PERPS: Error fetching withdrawal fee',
       })
     }
   },
@@ -316,6 +310,9 @@ async function submitAuthorize() {
       PerpsWithdrawAuthorizeEvent.ERROR,
       { errorMessage: msg },
     )
+    capturePerps(PERPS_FEATURE.WITHDRAW, e, {
+      title: 'PERPS: Authorize withdrawal address failed',
+    })
   } finally {
     authorizing.value = false
   }
@@ -359,6 +356,10 @@ async function submitWithdraw() {
       withdrawAmount,
       token: 'USDC',
       errorMessage: msg,
+    })
+    capturePerps(PERPS_FEATURE.WITHDRAW, e, {
+      title: 'PERPS: Withdraw submit failed',
+      extra: { withdrawAmount, token: 'USDC' },
     })
   } finally {
     sending.value = false

@@ -28,6 +28,7 @@ import {
 } from './configs'
 import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
+import { isAxiosNetworkError } from '@/modules/trade/common/transientRpcError'
 // NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
 // in the caller (useTradeQuote) so expected 4xx client errors can be skipped.
 import type { WalletInterface } from '@/providers/common/walletInterface'
@@ -182,9 +183,16 @@ class OneInchFusion {
         response ||
           rawMessage ||
           i18n.global.t('trade.error.failed-fetch-quote-1inch'),
-      ) as Error & { expectedClientError?: boolean }
+      ) as Error & {
+        expectedClientError?: boolean
+        transientNetworkError?: boolean
+      }
       error.expectedClientError =
         typeof status === 'number' && status >= 400 && status < 500
+      // A transient axios "Network Error" (the 1inch request never completed —
+      // no response received) is environmental noise, already surfaced to the
+      // user; flag it so the caller skips Sentry reporting.
+      error.transientNetworkError = isAxiosNetworkError(e)
       throw error
     }
   }

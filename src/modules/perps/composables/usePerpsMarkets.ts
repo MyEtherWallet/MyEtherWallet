@@ -1,6 +1,8 @@
 import { ref, effectScope } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
@@ -21,6 +23,9 @@ async function fetchMarkets() {
   } catch (e) {
     marketsError.value =
       e instanceof Error ? e.message : 'Failed to fetch markets'
+    capturePerps(PERPS_FEATURE.MARKETS, e, {
+      title: 'PERPS: Error fetching markets',
+    })
   } finally {
     marketsLoading.value = false
   }
@@ -61,8 +66,10 @@ async function fetchContracts() {
       }
     }
   } catch (e) {
-    contractsError.value =
-      e instanceof Error ? e.message : 'Failed to fetch contracts'
+    contractsError.value = 'No markets found'
+    capturePerps(PERPS_FEATURE.MARKETS, e, {
+      title: 'PERPS: Error fetching contracts',
+    })
   } finally {
     contractsLoading.value = false
   }

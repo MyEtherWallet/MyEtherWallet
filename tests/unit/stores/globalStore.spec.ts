@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
 
 const { isTradingRestricted, reportModuleError, setIsRegionRestricted } =
@@ -14,6 +15,9 @@ vi.mock('@/modules/trade/providers/ondoHelpers', () => ({
 
 vi.mock('@/utils/reportModuleError', () => ({ reportModuleError }))
 
+// globalStore imports @/analytics and @sentry/vue; @/analytics transitively
+// resolves the hardware-wallet SDK, which is unavailable under jsdom. Stub both
+// so the store loads.
 vi.mock('@/analytics', () => ({
   analytics: {
     setNetwork: vi.fn(),
@@ -77,5 +81,49 @@ describe('globalStore trading restriction', () => {
     await expect(store.fetchTradingRestriction()).resolves.toBe(false)
     expect(store.isTradingRestrictedInRegion).toBe(false)
     expect(isTradingRestricted).toHaveBeenCalledTimes(2)
+  })
+
+  // The gate every trade entry point reads: only "checked AND allowed" opens it.
+  it('only reports trading allowed once a check has come back allowed', async () => {
+    isTradingRestricted.mockResolvedValueOnce(false)
+    const store = useGlobalStore()
+
+    expect(store.isTradingAllowedInRegion).toBe(false)
+
+    await store.fetchTradingRestriction()
+    expect(store.isTradingAllowedInRegion).toBe(true)
+  })
+
+  it('keeps trading blocked when the check fails', async () => {
+    isTradingRestricted.mockRejectedValueOnce(new Error('offline'))
+    const store = useGlobalStore()
+
+    await store.fetchTradingRestriction()
+    expect(store.isTradingAllowedInRegion).toBe(false)
+  })
+})
+
+describe('globalStore hideBalances (MEW-2094)', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+
+  it('defaults to false', () => {
+    expect(useGlobalStore().hideBalances).toBe(false)
+  })
+
+  it('toggleHideBalances flips the flag', () => {
+    const store = useGlobalStore()
+    store.toggleHideBalances()
+    expect(store.hideBalances).toBe(true)
+    store.toggleHideBalances()
+    expect(store.hideBalances).toBe(false)
+  })
+
+  it('persists to localStorage under mew-hide-balances', async () => {
+    useGlobalStore().toggleHideBalances()
+    await nextTick()
+    expect(localStorage.getItem('mew-hide-balances')).toBe('true')
   })
 })

@@ -440,6 +440,23 @@ export const PerpsManageEvent = {
 export type PerpsManageEvent =
   (typeof PerpsManageEvent)[keyof typeof PerpsManageEvent]
 
+// =============================================================================
+// PERPS RESTRICTED (region-blocked surfaces)
+// =============================================================================
+
+// Deliberately only the Learn More click. A "restricted view" event would
+// duplicate an existing signal: `isRegionRestricted` is already set as a user
+// property, so any perps page view can be segmented on it without a new event.
+export const PerpsRestrictedEvent = {
+  LEARN_MORE: 'Perps_Restricted_Clicked_Learn_More',
+} as const
+export type PerpsRestrictedEvent =
+  (typeof PerpsRestrictedEvent)[keyof typeof PerpsRestrictedEvent]
+
+export type PerpsRestrictedPayload = {
+  source: PerpsEventSource
+}
+
 export const PerpsNewPositionAction = {
   MANAGE_LONG: 'Manage Long',
   MANAGE_SHORT: 'Manage Short',
@@ -676,6 +693,21 @@ export type ClickSortPayload = {
 }
 
 // =============================================================================
+// MULTI ADDRESS (MEW-1840)
+// =============================================================================
+
+export const MultiAddressEvent = {
+  OPENED: 'multi_address_popup_opened',
+  SWITCHED: 'multi_address_switched',
+  ADD_STARTED: 'multi_address_add_started',
+  DELETED: 'multi_address_deleted',
+  RENAMED: 'multi_address_renamed',
+  DETECTED_SAVED: 'multi_address_detected_saved',
+} as const
+export type MultiAddressEvent =
+  (typeof MultiAddressEvent)[keyof typeof MultiAddressEvent]
+
+// =============================================================================
 // WEEKEND TRADING ANNOUNCEMENT (MEW-1958)
 // =============================================================================
 
@@ -689,6 +721,28 @@ export const WeekendTradingAnnouncementEvent = {
 
 export type WeekendTradingAnnouncementEvent =
   (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
+
+// =============================================================================
+// MARKETING A/B TEST
+// =============================================================================
+
+export const MarketingAbTestEvent = {
+  SHOWN: 'Marketing_AB_Tooltip_Shown',
+  DISMISSED: 'Marketing_AB_Tooltip_Dismissed',
+  CLICKED_CTA: 'Marketing_AB_Tooltip_Clicked_CTA',
+} as const
+
+export type MarketingAbTestEvent =
+  (typeof MarketingAbTestEvent)[keyof typeof MarketingAbTestEvent]
+
+export type MarketingAbTestEventPayload = {
+  /** Which arm the user is bucketed into. */
+  variant: 'A' | 'B'
+  /** Stable Strapi id of the entry that was rendered. */
+  documentId: string
+  title: string
+  tokenId: string | null
+}
 
 // =============================================================================
 // REWARDS/ TRADE
@@ -745,7 +799,10 @@ export type RerwadsAndOffersEventPayload = {
   location?:
   | 'main-banner'
   | 'main_card'
+  /** The offer detail modal. */
   | 'offers_card'
+  /** A card in the "Rewards & offers" carousel. */
+  | 'offers_carousel'
   | 'trade_confirmation'
   | 'info_modal'
 }

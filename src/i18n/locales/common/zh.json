@@ -54,6 +54,7 @@
       "user_canceled_request": "用户已取消请求",
       "ledger_locked": "您的 Ledger 已锁定。请解锁后重试。",
       "ledger_app_not_open": "请在您的 Ledger 上打开以太坊应用后重试。",
+      "trezor_read_failed": "无法从 Trezor 读取您的地址。请重新连接设备后重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",
@@ -97,6 +98,7 @@
     "something_went_wrong": "出了点问题",
     "network_change_failed": "网络切换失败",
     "network_change_failed_description": "请检查您的钱包是否支持 {network} 网络",
+    "network_switched": "已切换至 {network} 网络",
     "and": "和",
     "deposit_title": "您的 {chain} 地址",
     "deposit_description": "您可以将 {chain} 支持的任何代币存入此地址。",
@@ -298,7 +300,7 @@
     "title": "选择网络",
     "search_placeholder": "按名称搜索",
     "incompatible_tooltip": "如需访问这些网络，请使用其他钱包或安装 Enkrypt 浏览器扩展",
-    "incompatible_title": "与您的钱包不兼容的网络"
+    "incompatible_title": "与您的地址不兼容的网络"
   },
   "search": {
     "placeholder": "搜索股票、加密货币",

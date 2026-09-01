@@ -13,6 +13,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -114,7 +115,7 @@ interface SwapModuleBindings {
   isLoading: ComputedRef<boolean>
   fromChains: ComputedRef<Chain[]>
   defualtChainWhenNetworkUnsupported: ComputedRef<Chain | undefined>
-  blurClass: ComputedRef<string>
+  blockedClass: ComputedRef<string>
   toAddress: ComputedRef<string>
   toLoadingState: ComputedRef<boolean>
   fromLoadingState: ComputedRef<boolean>
@@ -269,11 +270,11 @@ export function useSwapModule(): SwapModuleBindings {
     )
   })
 
-  const blurClass = computed(() => {
-    return swapLoaded && !supportedNetwork.value
-      ? 'blur-sm pointer-events-none opacity-60'
-      : ''
-  })
+  // Matches the unavailable card's own condition, so the form is never dimmed
+  // without the card present to explain why.
+  const { blockedClass } = useBlockedContent(
+    () => swapLoaded.value && !supportedNetwork.value,
+  )
 
   const toAddress = computed(() => {
     if (selectedToChain.value?.name === selectedChain.value?.name)
@@ -1476,7 +1477,7 @@ export function useSwapModule(): SwapModuleBindings {
     isLoading,
     fromChains: swapTokensFeature.fromChains,
     defualtChainWhenNetworkUnsupported,
-    blurClass,
+    blockedClass,
     toAddress,
     toLoadingState,
     fromLoadingState,

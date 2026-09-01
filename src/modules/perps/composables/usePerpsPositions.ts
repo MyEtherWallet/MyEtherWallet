@@ -1,5 +1,7 @@
 import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
@@ -24,6 +26,9 @@ async function fetchPositions() {
     positions.value = res.result ?? []
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Failed to load positions'
+    capturePerps(PERPS_FEATURE.POSITION, e, {
+      title: 'PERPS: Error fetching positions',
+    })
   } finally {
     loading.value = false
     hasLoaded.value = true

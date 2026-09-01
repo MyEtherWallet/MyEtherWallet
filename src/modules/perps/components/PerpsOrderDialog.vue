@@ -85,6 +85,8 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import {
   formatUsdc,
   formatPrice,
@@ -160,9 +162,12 @@ watch(
       } else {
         fetchedFee.value = null
       }
-    } catch {
+    } catch (e) {
       if (token !== currentFetchToken.value) return
       fetchedFee.value = null
+      capturePerps(PERPS_FEATURE.ORDER, e, {
+        title: 'PERPS: Error fetching order detail',
+      })
     }
   },
   { immediate: true },

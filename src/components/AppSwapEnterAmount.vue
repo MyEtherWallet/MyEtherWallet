@@ -47,6 +47,7 @@
         type="text"
         autoComplete="off"
         placeholder="0"
+        :aria-label="$t('common.amount')"
         v-model="amount"
         :readonly="readonly"
         @focus="setInFocusInput"
@@ -62,6 +63,7 @@
         :disabled-tokens="disabledTokens"
         :disabled-group-title="disabledGroupTitle"
         @open:select-token="setIsOpenSelectToken"
+        @select:token="emit('select:token', $event)"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
@@ -189,6 +191,12 @@ const amount = defineModel('amount', {
 })
 
 const selectedToken = defineModel<NewTokenInfo>('selectedToken')
+
+// Forwarded from the token-select child: fires only on an explicit user pick,
+// unlike v-model:selected-token which also updates on programmatic defaulting.
+const emit = defineEmits<{
+  'select:token': [token: NewTokenInfo]
+}>()
 
 const hasError = ref(false)
 const errorMessage = ref('')

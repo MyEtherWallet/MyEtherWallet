@@ -65,7 +65,6 @@
             </button>
             <!-- Perps button -->
             <button
-              v-if="!isTradingRestrictedInRegion"
               @click="openPanel('perps')"
               :class="[
                 walletPanel === 'perps' && isOpenSideMenu
@@ -207,7 +206,7 @@
             <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
             <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
             <ModulePerpsTrade
-              v-else-if="walletPanel === 'perps' && !isTradingRestrictedInRegion"
+              v-else-if="walletPanel === 'perps'"
               key="perps-trade"
             />
             <ModulePurchase
@@ -221,7 +220,12 @@
         </div>
       </div>
     </transition>
-    <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <!-- WeekendTradingTooltip is intentionally not mounted — the weekend
+         trading tooltip is disabled. Re-render it here with
+         `:anchor="tradeBtnRef"` to bring it back; the component and its
+         `shouldShowTooltip` gate in weekendTradingAnnouncementStore are
+         unchanged. The WeekendTradingDialog is unaffected. -->
+    <marketing-tooltip :anchor="tradeBtnRef" />
     <rwa-reward-modal />
   </div>
 </template>
@@ -253,12 +257,11 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
-import { useGlobalStore } from '@/stores/globalStore'
 
 const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
@@ -276,7 +279,6 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 onMounted(() => {
   if (

@@ -1,5 +1,7 @@
 import { ref, computed, type Ref } from 'vue'
 import type { PaginatedResponse } from '../sdk/types'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 
 // Use for API collections with cursor pagination and stale-request cancellation.
 export function useCursorPaginate<T>(
@@ -27,7 +29,10 @@ export function useCursorPaginate<T>(
       items.value = res.result ?? []
       nextCursor.value = res.pageInfo?.nextCursor
       return true
-    } catch {
+    } catch (e) {
+      capturePerps(PERPS_FEATURE.HISTORY, e, {
+        title: 'PERPS: Error fetching paginated page',
+      })
       return false
     } finally {
       if (epoch === requestEpoch) loading.value = false

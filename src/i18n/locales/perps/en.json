@@ -30,6 +30,8 @@
       "deposit-complete-title": "Deposit Complete",
       "deposit-complete-detail": "{size} {coin} added to your Trading Account",
       "withdrawal-complete-title": "Withdrawal Complete",
+      "withdrawal-address-added-title": "Withdrawals Address has been added",
+      "withdrawal-address-added-detail": "You have authorized '{address}' as your withdrawal address for the Perps account. There is a 24 hour cooldown period, before you can withdraw.",
       "deposit-initiated-title": "Deposit Initiated",
       "failed-to-credit-account-title": "Failed to Credit Account",
       "deposit-canceled-title": "Deposit Canceled",
@@ -71,7 +73,11 @@
       "tp-below-mark": "Take Profit must be below mark price",
       "sl-above-zero": "Stop Loss must be above 0",
       "sl-below-mark": "Stop Loss must be below mark price",
-      "sl-above-mark": "Stop Loss must be above mark price"
+      "sl-above-mark": "Stop Loss must be above mark price",
+      "sl-trigger-order-buy": "Stop loss trigger price must be less than order price for buy orders",
+      "sl-trigger-order-sell": "Stop loss trigger price must be greater than order price for sell orders",
+      "tp-trigger-order-buy": "Take profit trigger price must be greater than order price for buy orders",
+      "tp-trigger-order-sell": "Take profit trigger price must be less than order price for sell orders"
     },
     "trade": {
       "perpetuals": "Perpetuals",
@@ -89,6 +95,8 @@
       "limit": "Limit",
       "mid": "Mid",
       "margin-available": "Margin available:",
+      "margin-amount-label": "Margin amount in USD",
+      "size-percentage-label": "Order size as a percentage of available margin",
       "size": "Size",
       "new-size": "New size",
       "est-liquidation": "Est. Liq",
@@ -291,6 +299,7 @@
       "liquidation-risk-title": "Liquidation Risk",
       "liquidation-risk-text": "You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk.",
       "withdraw-button": "Withdraw",
+      "authorize-button": "Authorize Withdrawals",
       "amount-too-large": "Amount is too large",
       "amount-precision": "Amount supports up to {decimals} decimal places",
       "amount-exceeds-balance": "Amount exceeds available balance",
@@ -423,6 +432,15 @@
       "message-to-sign-label": "Message to sign",
       "hardware-confirm-hint": "You will also need to confirm on your device.",
       "sign-button": "Sign"
+    },
+    "restricted": {
+      "banner-notice": "Perpetuals trading isn’t available in the US.",
+      "learn-more": "Learn more",
+      "panel-title": "Perpetuals aren’t available",
+      "panel-description": "Unfortunately, trading perpetuals isn’t allowed in your current jurisdiction."
+    },
+    "status": {
+      "unavailable": "Service temporarily unavailable, please try again later."
     },
     "order-status": {
       "open": "Open",

@@ -66,10 +66,7 @@
       />
 
       <!-- Error -->
-      <div
-        v-else-if="contractsError"
-        class="text-center py-8 text-error text-s-14"
-      >
+      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
         {{ contractsError }}
       </div>
 
@@ -553,10 +550,16 @@
                     </app-pop-up-menu>
                   </template>
                   <template v-else>
+                    <!--
+                      Disabled in restricted regions: there is no order to place,
+                      so the action is dead rather than redirected. Users reach
+                      the explanatory card via the Perps action-bar button.
+                    -->
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -571,6 +574,7 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
+                      :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
                           contract.market,
@@ -666,12 +670,16 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
 import {
   analytics,
@@ -687,7 +695,11 @@ import type {
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
+const { isPerpsRestricted } = usePerpsRestriction()
 const { isWatchOnly } = storeToRefs(walletStore)
+
+const watchlistStore = useWatchlistStore()
+const { watchListedPerps } = storeToRefs(watchlistStore)
 
 const emits = defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
@@ -764,6 +776,10 @@ const saveLeverage = async () => {
       PerpsChangeLeverageEvent.SUBMIT_FAIL,
       failPayload,
     )
+    capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+      title: 'PERPS: Set leverage failed',
+      extra: { market: leverageMarket.value, newLeverage: tempLeverage.value },
+    })
   } finally {
     isSavingLeverage.value = false
   }
@@ -852,7 +868,9 @@ const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
 ])
 
 const searchQuery = ref('')
-const watchlist = ref<Set<string>>(new Set())
+// Persisted + shared with the home watchlist via the store. Exposed as a Set so
+// the existing `watchlist.has(...)` template checks keep working unchanged.
+const watchlist = computed(() => new Set(watchListedPerps.value))
 
 enum SortValue {
   NAME = 'NAME',
@@ -875,12 +893,7 @@ function setHeaderSort(key: SortValue) {
 }
 
 function toggleWatchlist(symbol: string) {
-  if (watchlist.value.has(symbol)) {
-    watchlist.value.delete(symbol)
-  } else {
-    watchlist.value.add(symbol)
-  }
-  watchlist.value = new Set(watchlist.value)
+  watchlistStore.setWatchlistPerp(symbol)
 }
 
 interface FilterOption {
@@ -890,10 +903,10 @@ interface FilterOption {
 
 const filterOptions = computed<FilterOption[]>(() => [
   { label: t('perps.market-list.filter-all'), value: 'all' },
+  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
   { label: t('perps.market-list.filter-stocks'), value: 'stocks' },
   { label: t('perps.market-list.filter-commodities'), value: 'commodities' },
   { label: t('perps.market-list.filter-indices'), value: 'indices' },
-  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
 ])
 
 // Track the filter by value, not by object: labels are locale-dependent and

@@ -8,6 +8,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { usePairStore } from '@/stores/pairStore'
+import { useToastStore } from '@/stores/toastStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
@@ -20,7 +21,9 @@ import { useTradeQuote } from './useTradeQuote'
 import { useTradeExecution } from './useTradeExecution'
 import { useTradeForm } from './useTradeForm'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 import type { Chain } from '@/mew_api/types'
+import { ToastType } from '@/types/notification'
 
 export function useTradeModule() {
   const { t } = useI18n()
@@ -34,6 +37,7 @@ export function useTradeModule() {
   const chainsStore = useChainsStore()
   const accessStore = useAccessStore()
   const globalStore = useGlobalStore()
+  const toastStore = useToastStore()
 
   // --- Refs from Stores ---
   const {
@@ -47,7 +51,8 @@ export function useTradeModule() {
     hasChainBalance,
   } = storeToRefs(walletStore)
   const { selectedChain, chains } = storeToRefs(chainsStore)
-  const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
+  const { isTradingRestrictedInRegion, isTradingAllowedInRegion } =
+    storeToRefs(globalStore)
   const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
   // --- Use Trade Composable ---
@@ -263,6 +268,7 @@ export function useTradeModule() {
     wallet,
     isMarketOpen: isTradingSessionOpen,
     isSelectedAssetTradeable,
+    isTradingAllowedInRegion,
     hasPreQuoteError,
   })
 
@@ -282,6 +288,8 @@ export function useTradeModule() {
     wallet,
     currentQuote,
     needsApproval,
+    isTradingRestrictedInRegion,
+    isTradingAllowedInRegion,
   })
 
   // --- Methods ---
@@ -398,14 +406,21 @@ export function useTradeModule() {
     },
   )
 
-  watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
-    if (isSameTokenSelected.value) {
-      toAmount.value = '' // Reset same token error on any change
-      return
-    }
-    displayGeneralError.value = ''
-    fetchQuote()
-  })
+  // `isTradingAllowedInRegion` is a dependency so a quote requested while the geo
+  // check was still in flight — which `fetchQuote` refuses and leaves at '0' — is
+  // retried once the check resolves, instead of stranding the user on a zero
+  // quote until they retype.
+  watch(
+    [fromAmount, fromTokenSelected, toTokenSelected, isTradingAllowedInRegion],
+    () => {
+      if (isSameTokenSelected.value) {
+        toAmount.value = '' // Reset same token error on any change
+        return
+      }
+      displayGeneralError.value = ''
+      fetchQuote()
+    },
+  )
 
   watch(selectedChain, newChain => {
     if (
@@ -534,15 +549,40 @@ export function useTradeModule() {
     }
   })
 
-  const blurClass = computed(() => {
-    // Blur only when NO session is tradable (conventional closed AND off-hours
-    // closed). Off-hours open keeps the UI interactive with per-asset gating.
-    return !isTradingSessionOpen.value ||
+  // Blocked only when NO session is tradable (conventional closed AND off-hours
+  // closed). Off-hours open keeps the UI interactive with per-asset gating.
+  const { blockedClass } = useBlockedContent(
+    () =>
+      !isTradingSessionOpen.value ||
       !isCurrentNetworkSupported.value ||
-      isTradingRestrictedInRegion.value
-      ? 'blur-sm pointer-events-none opacity-60'
-      : ''
-  })
+      isTradingRestrictedInRegion.value,
+  )
+
+  // MEW-1981: toast whenever the user switches a trade token via the picker.
+  // Listen to `@select:token`, which the token-select child emits ONLY on an
+  // explicit user pick — not on the programmatic defaulting it does on network
+  // change (nor on setFromChain/clearValues ref assignments). That avoids a false
+  // "Now trading…" toast on network switches. Use the emitted token for the side
+  // that changed, read the other side from state; skip until both are set.
+  const notifyTokensSwitched = (
+    from?: NewTokenInfo | null,
+    to?: NewTokenInfo | null,
+  ) => {
+    if (!from || !to) return
+    toastStore.addToastMessage({
+      text: t('trade.toast.tokens-switched', {
+        from: from.symbol,
+        to: to.symbol,
+      }),
+      type: ToastType.Success,
+    })
+  }
+  const onFromTokenSelected = (token: NewTokenInfo) => {
+    notifyTokensSwitched(token, toTokenSelected.value)
+  }
+  const onToTokenSelected = (token: NewTokenInfo) => {
+    notifyTokensSwitched(fromTokenSelected.value, token)
+  }
 
   return {
     selectedChain,
@@ -593,6 +633,8 @@ export function useTradeModule() {
     switchToNetwork,
     setPercentageAmount,
     connectWalletForTrade,
-    blurClass,
+    blockedClass,
+    onFromTokenSelected,
+    onToTokenSelected,
   }
 }

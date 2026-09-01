@@ -54,6 +54,7 @@
       "user_canceled_request": "El usuario canceló la solicitud",
       "ledger_locked": "Tu Ledger está bloqueado. Desbloquéalo e inténtalo de nuevo.",
       "ledger_app_not_open": "Abre la aplicación de Ethereum en tu Ledger e inténtalo de nuevo.",
+      "trezor_read_failed": "No se pudo leer tu dirección desde Trezor. Reconecta el dispositivo e inténtalo de nuevo.",
       "method_not_implemented": "Método no implementado: {method}",
       "invalid_name": "Nombre no válido",
       "address_resolution_failed": "No se pudo resolver la dirección",
@@ -97,6 +98,7 @@
     "something_went_wrong": "Algo salió mal",
     "network_change_failed": "Error al cambiar de red",
     "network_change_failed_description": "Comprueba si tu billetera es compatible con la red {network}",
+    "network_switched": "Red cambiada a {network}",
     "and": "y",
     "deposit_title": "Tu dirección de {chain}",
     "deposit_description": "Puedes depositar cualquier token compatible con {chain} en esta dirección.",
@@ -298,7 +300,7 @@
     "title": "Seleccionar red",
     "search_placeholder": "Buscar por nombre",
     "incompatible_tooltip": "Para acceder a estas redes, usa otra billetera o instala la extensión de navegador Enkrypt",
-    "incompatible_title": "Redes incompatibles con tu billetera"
+    "incompatible_title": "Redes incompatibles con tu dirección"
   },
   "search": {
     "placeholder": "Buscar acciones, cripto",

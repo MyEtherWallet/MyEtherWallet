@@ -1,5 +1,7 @@
 import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
 import type { PortfolioGraphPoint } from '../sdk/types'
 
@@ -36,8 +38,11 @@ export function usePerpsPortfolioGraph() {
       const result = res.result ?? []
       _cache.value.set(_graphRange.value, result)
       _graphData.value = result
-    } catch {
+    } catch (e) {
       _graphData.value = []
+      capturePerps(PERPS_FEATURE.PORTFOLIO, e, {
+        title: 'PERPS: Error fetching portfolio graph',
+      })
     } finally {
       _graphLoading.value = false
     }

@@ -43,7 +43,11 @@ export const useGlobalStore = defineStore('global', () => {
     maxFeePerGas: '0',
   })
   const gasPriceType = ref<FeePriority>('REGULAR')
-  const defaultGasPriceType = useStorage<FeePriority>('mew-default-gas-price-type', 'REGULAR', safeLocalStorage)
+  const defaultGasPriceType = useStorage<FeePriority>(
+    'mew-default-gas-price-type',
+    'REGULAR',
+    safeLocalStorage,
+  )
 
   /**--------------------
    * LANGUAGE
@@ -60,6 +64,19 @@ export const useGlobalStore = defineStore('global', () => {
   )
   const dismissWelcomeDialog = () => {
     welcomeDialogDismissed.value = true
+  }
+
+  /**--------------------
+   * BALANCE VISIBILITY
+   * Global, persisted amount-hide toggle (the "eye" on portfolio surfaces).
+   --------------------*/
+  const hideBalances = useStorage<boolean>(
+    'mew-hide-balances',
+    false,
+    safeLocalStorage,
+  )
+  const toggleHideBalances = () => {
+    hideBalances.value = !hideBalances.value
   }
 
   /**--------------------
@@ -107,6 +124,23 @@ export const useGlobalStore = defineStore('global', () => {
     return request
   }
 
+  /**
+   * Regional eligibility, resolved. True only once the geo check has come back
+   * AND come back allowed.
+   *
+   * Anything that starts a trade must gate on this rather than on
+   * `!isTradingRestrictedInRegion`. Both start out blocked, but only this one
+   * stays blocked after a *failed* check: `fetchTradingRestriction` leaves
+   * `fetchedTradingThisSession` false on failure so the check can be retried,
+   * and a retry that also fails must not read as "allowed" in between.
+   *
+   * Use `isTradingRestrictedInRegion` for the UI, where showing the restriction
+   * notice before the check resolves would be the wrong default.
+   */
+  const isTradingAllowedInRegion = computed(
+    () => fetchedTradingThisSession.value && !isTradingRestrictedInRegion.value,
+  )
+
   return {
     isEIP1559SupportedNetwork,
     eip1559,
@@ -116,9 +150,12 @@ export const useGlobalStore = defineStore('global', () => {
     setSelectedNetwork,
     welcomeDialogDismissed,
     dismissWelcomeDialog,
+    hideBalances,
+    toggleHideBalances,
     fetchedTradingThisSession,
     isTradingRestrictedInRegion,
     fetchTradingRestriction,
+    isTradingAllowedInRegion,
     locale,
   }
 })

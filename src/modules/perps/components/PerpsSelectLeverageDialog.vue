@@ -41,6 +41,7 @@
                 min="1"
                 :max="maxLeverage"
                 step="1"
+                :aria-label="$t('perps.confirm.leverage')"
                 class="font-bold text-[40px] tracking-tight w-[50px] text-center bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
                 @change="
                   e => {
@@ -97,6 +98,7 @@
               min="1"
               :max="maxLeverage"
               step="1"
+              :aria-label="$t('perps.confirm.leverage')"
               class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
               :style="{
                 background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderFillPct}%, #e5e7eb ${sliderFillPct}%, #e5e7eb 100%)`,

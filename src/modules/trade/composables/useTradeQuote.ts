@@ -26,6 +26,15 @@ interface UseTradeQuoteOptions {
   wallet: Ref<WalletInterface | null>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
+  /**
+   * Regional eligibility resolved AND allowed — see the store.
+   *
+   * Guarded here as well as in the UI, and expressed as "allowed" rather than
+   * "not restricted" because the underlying flag starts `false`: gating on that
+   * would quote for a restricted user during the window before the async geo
+   * check resolves, which is exactly the window this guard exists for.
+   */
+  isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
 }
 
@@ -36,6 +45,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     wallet,
     isMarketOpen,
     isSelectedAssetTradeable,
+    isTradingAllowedInRegion,
     hasPreQuoteError,
   } = options
   const { fromTokenSelected, toTokenSelected, fromAmount, toAmount,
@@ -59,7 +69,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
     fromAmountUSD: (
-      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+      parseFloat(fromAmount.value || '0') *
+      (fromTokenSelected.value?.price || 0)
     ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
     toAmount: currentQuote.value?.endAmount?.toString() || '',
@@ -75,6 +86,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
     // Don't fetch quotes when market is closed
     if (!isMarketOpen.value) {
+      toAmount.value = '0'
+      return
+    }
+
+    // Only quote once the region is known to allow trading. Silent, like the
+    // gates above: the panel already renders the restriction notice, and this
+    // path has no user gesture behind it to answer anyway. The caller re-runs
+    // this when eligibility resolves, so a quote requested during the check is
+    // not lost — it just arrives a beat later.
+    if (!isTradingAllowedInRegion.value) {
       toAmount.value = '0'
       return
     }
@@ -156,14 +177,23 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         ...getAnalyticsPayload(),
         errorMsg: rawMessage || 'Failed to fetch quote',
       })
-      const isExpectedClientError = !!(
-        e as { expectedClientError?: boolean }
-      ).expectedClientError
+      // All three are surfaced to the user above and are pure Sentry noise:
+      // transient RPC/WebSocket drops (e.g. the allowance read over
+      // wss://nodes.mewapi.io), expected client errors (1inch 4xx, flagged by
+      // OneInchFusion.getQuote), and transient axios "Network Error"s, where the
+      // 1inch request never completed.
+      const { expectedClientError, transientNetworkError } = e as {
+        expectedClientError?: boolean
+        transientNetworkError?: boolean
+      }
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.TRADE,
         title: 'TRADE: Error fetching quote',
         error: e,
-        expected: isTransientRpcError(e) || isExpectedClientError,
+        expected:
+          isTransientRpcError(e) ||
+          !!expectedClientError ||
+          !!transientNetworkError,
         extra: { errorMessage: generalError.value },
       })
     } finally {

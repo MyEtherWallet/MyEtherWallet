@@ -72,6 +72,8 @@ import type {
   PerpsManageEvent,
   PerpsManagePayload,
   PerpsNewPositionPayload,
+  PerpsRestrictedEvent,
+  PerpsRestrictedPayload,
   PerpsOrderEvent,
   PerpsOrderViewInfoPayload,
   PerpsOrderCancelClickedPayload,
@@ -81,6 +83,7 @@ import type {
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
   WeekendTradingAnnouncementEvent,
+  MultiAddressEvent,
   HoldRewardsBannerEvent,
   HoldRewardsMainCardEvent,
   HoldRewardsMainCardEventPayload,
@@ -100,6 +103,8 @@ import type {
   SellOfferPayload,
   SellEventError,
   SellErrorPayload,
+  MarketingAbTestEvent,
+  MarketingAbTestEventPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -181,6 +186,9 @@ export class Analytics {
     }
     if (properties.isRegionRestricted !== undefined) {
       identify.set('isRegionRestricted', properties.isRegionRestricted)
+    }
+    if (properties.marketingVariant !== undefined) {
+      identify.set('marketingVariant', properties.marketingVariant)
     }
 
     this.amplitude.identify(identify)
@@ -319,6 +327,21 @@ export class Analytics {
   }
 
   /**
+   * Set the marketing A/B test arm user property.
+   *
+   * Set alongside the exposure event because events fired before the user has
+   * granted consent are dropped and never replayed, whereas user properties are
+   * re-pushed once consent arrives.
+   *
+   * @param variant   'A' or 'B'
+   */
+  setMarketingVariant(variant: string): void {
+    const identify = new Identify()
+    identify.set('marketingVariant', variant)
+    this.amplitude.identify(identify)
+  }
+
+  /**
    * Set region restricted user property
    *
    * @param isRestricted   Whether trading is restricted in the user's region
@@ -385,6 +408,16 @@ export class Analytics {
     return this._track(event, {
       ...payload,
     })
+  }
+
+  /**
+   * Send a Multi Address analytics event to Amplitude
+   *
+   * @param event   Type of Multi Address event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackMultiAddressEvent = (event: MultiAddressEvent): Promise<void> => {
+    return this._track(event, {})
   }
 
   /**
@@ -644,6 +677,20 @@ export class Analytics {
   readonly trackRewardsAndOffersEvent = (
     event: (typeof RerwadsAndOffersEvent)[keyof typeof RerwadsAndOffersEvent],
     payload: RerwadsAndOffersEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a marketing A/B test analytics event to Amplitude
+   *
+   * @param event     Type of MarketingAbTestEvent
+   * @param payload   Which variant was shown and the entry it came from
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackMarketingAbTestEvent = (
+    event: MarketingAbTestEvent,
+    payload: MarketingAbTestEventPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
@@ -916,6 +963,13 @@ export class Analytics {
   readonly trackPerpsNewPositionEvent = (
     event: typeof PerpsManageEvent.NEW_POSITION,
     payload: PerpsNewPositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsRestrictedEvent = (
+    event: typeof PerpsRestrictedEvent.LEARN_MORE,
+    payload: PerpsRestrictedPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

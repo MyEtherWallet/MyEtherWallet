@@ -9,6 +9,7 @@ import { analytics } from '@/analytics'
 import { ToastType } from '@/types/notification'
 import type {
   RwaAccessBlock,
+  RwaBuckets,
   RwaClaimErrorKey,
   RwaClaimPayload,
   RwaClaimResponse,
@@ -46,6 +47,18 @@ const mapAccessBlock = (status: number): RwaAccessBlock | null => {
       return null
   }
 }
+
+/**
+ * The four per-wallet buckets, emptied. `/info` with no address answers with the
+ * season block alone, so the buckets have to be filled in locally to keep the
+ * payload one shape everywhere
+ */
+const emptyBuckets = (): RwaBuckets => ({
+  qualified: [],
+  disqualified: [],
+  claimed: [],
+  pending: [],
+})
 
 // Map the claim endpoint's HTTP status to a translatable error key.
 const mapClaimError = (status: number): RwaClaimErrorKey => {
@@ -102,15 +115,27 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         const block = mapAccessBlock(res.status)
         if (block && address === currentAddress) {
           accessBlock.value = block
-          // Drop any earlier payload — keeping it would leave the offer looking
-          // live and joinable after the season closed to this wallet.
-          info.value = null
+          // Drop this wallet's buckets — keeping them would leave the offer
+          // looking live and joinable after the season closed to it. The season
+          // block survives: it describes the campaign, not the wallet, and is
+          // what the countdown and rules copy read. Nulling it here blanked the
+          // "Expires in" text as soon as a wallet with no entries connected.
+          const season = info.value?.info
+          info.value = season ? { ...emptyBuckets(), info: season } : null
         }
         throw new Error(`RWA info request failed: ${res.status}`)
       }
       const data = (await res.json()) as RwaInfoResponse
       if (address !== currentAddress) return
-      info.value = data
+      // Merge the season block rather than replacing it (same reason the claim
+      // response is merged below): the address-scoped route answers about the
+      // wallet, and a response that omits or thins the season block must not
+      // erase what the campaign-wide load already established.
+      info.value = {
+        ...emptyBuckets(),
+        ...data,
+        info: { ...info.value?.info, ...data.info },
+      }
       accessBlock.value = null
       error.value = null
     } catch {
@@ -118,6 +143,48 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         error.value = 'Failed to fetch RWA rewards'
     } finally {
       if (address === currentAddress) {
+        isLoading.value = false
+        hadInitialLoad.value = true
+      }
+    }
+  }
+
+  /**
+   * First-load `/info` with no address. The season block it returns — dates,
+   * qualification value, availability — is campaign-wide, so the countdown and
+   * threshold can be shown before a wallet is connected.
+   *
+   * Every guard here is against `currentAddress`: the moment an address-scoped
+   * fetch takes over it owns the state, because its response carries the same
+   * season block *plus* the wallet's own buckets. This one must never overwrite
+   * it, however the two responses interleave.
+   */
+  const fetchCampaignInfo = async () => {
+    if (currentAddress) return
+    isLoading.value = true
+    try {
+      const res = await fetch(`${BASE}/info`)
+      if (!res.ok) {
+        // With no address in the request, a refusal is season- or region-wide
+        // rather than a verdict on any one wallet.
+        const block = mapAccessBlock(res.status)
+        if (block && !currentAddress) {
+          accessBlock.value = block
+          info.value = null
+        }
+        throw new Error(`RWA campaign info request failed: ${res.status}`)
+      }
+      const data = (await res.json()) as RwaInfoResponse
+      if (currentAddress) return
+      // This route answers with the season block only — no buckets, since there
+      // is no wallet to scope them to.
+      info.value = { ...emptyBuckets(), ...data }
+      accessBlock.value = null
+      error.value = null
+    } catch {
+      if (!currentAddress) error.value = 'Failed to fetch RWA rewards'
+    } finally {
+      if (!currentAddress) {
         isLoading.value = false
         hadInitialLoad.value = true
       }
@@ -322,9 +389,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-        qualified.value.length +
-        claimed.value.length +
-        disqualified.value.length >
+      qualified.value.length +
+      claimed.value.length +
+      disqualified.value.length >
       0,
   )
 
@@ -442,6 +509,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isModalOpen,
     isClaiming,
     fetchInfo,
+    fetchCampaignInfo,
     register,
     claim,
     openModal,

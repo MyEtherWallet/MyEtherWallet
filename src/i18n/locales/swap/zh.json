@@ -27,7 +27,7 @@
       "more-than-zero": "数量必须大于 0。",
       "insufficient-balance-for-fees": "{symbol} 不足以支付网络费用。",
       "insufficient-native": "{symbol} 余额不足。",
-      "minimum-amount": "数量过低。",
+      "minimum-amount": "数量过低。最低数量为 {amount} {symbol}。",
       "maximum-amount": "数量过高。",
       "no-quotes": "所选代币对暂无可用报价",
       "fetching-quotes": "获取报价出错。请重试。",
