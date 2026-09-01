@@ -151,4 +151,10 @@ describe('ManageAccountsRow', () => {
     expect(w.emitted('refresh')).toHaveLength(1)
     expect(w.emitted('explorer')).toHaveLength(1)
   })
+
+  it('reports not-visible on unmount so a collapsed group stops being polled', () => {
+    const w = factory()
+    w.unmount()
+    expect(w.emitted('visibility-change')?.at(-1)).toEqual([false])
+  })
 })

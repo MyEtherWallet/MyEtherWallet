@@ -274,7 +274,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onUnmounted, type CSSProperties } from 'vue'
-import { onClickOutside, useWindowSize } from '@vueuse/core'
+import { onClickOutside, useWindowSize, useIntervalFn } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
@@ -292,6 +292,7 @@ import { useAccountSwitch } from '@/composables/useAccountSwitch'
 import { useAddAccount } from '@/composables/useAddAccount'
 import {
   useAccountBalances,
+  BALANCE_TTL_MS,
   type AccountBalance,
 } from '@/composables/useAccountBalances'
 import { useWalletStore } from '@/stores/walletStore'
@@ -539,12 +540,18 @@ const balanceFor = (acc: SavedAccount): AccountBalance | undefined => {
   return isCompatible(acc) ? cached(chainName(), acc.address) : undefined
 }
 
+// True from a network switch until its debounced refetch runs, so a visible
+// non-active row with no cached balance for the new chain shows the skeleton
+// immediately instead of flashing blank during the settle window.
+const chainSwitchPending = ref(false)
+
 // The active row/card follows walletStore's own loading flag; every other row
-// follows its own per-address (viewport) fetch.
+// follows its own per-address (viewport) fetch — plus the pending network switch.
 const balanceLoadingFor = (acc: SavedAccount): boolean =>
   isActive(acc)
     ? isLoadingBalances.value
-    : isCompatible(acc) && loadingFor(chainName(), acc.address)
+    : isCompatible(acc) &&
+      (loadingFor(chainName(), acc.address) || chainSwitchPending.value)
 
 const openPaperWallet = ref(false)
 const paperTarget = ref<SavedAccount | null>(null)
@@ -563,6 +570,19 @@ const VISIBLE_FETCH_DEBOUNCE_MS = 250
 const visibleAddresses = ref<Set<string>>(new Set())
 const fetchTimers = new Map<string, ReturnType<typeof setTimeout>>()
 
+// Fetch one row's balance now (no debounce), TTL-gated in the composable. Used by
+// the network-switch and while-open refresh so the loading state — and thus the row
+// skeleton — appears immediately for a chain that has no cached balance yet.
+const fetchVisibleNow = (acc: SavedAccount): void => {
+  if (isActive(acc) || !isCompatible(acc)) return
+  void fetchIfStale({
+    chainName: chainName(),
+    address: acc.address,
+    nativePrice: chainsStore.selectedChain?.price ?? 0,
+  })
+}
+
+// Debounced variant for scroll: a quick scroll-past shouldn't fire a request.
 const scheduleFetch = (acc: SavedAccount): void => {
   if (isActive(acc) || !isCompatible(acc)) return
   const addr = acc.address
@@ -572,11 +592,7 @@ const scheduleFetch = (acc: SavedAccount): void => {
     setTimeout(() => {
       fetchTimers.delete(addr)
       if (!openDialog.value || !visibleAddresses.value.has(addr)) return
-      void fetchIfStale({
-        chainName: chainName(),
-        address: addr,
-        nativePrice: chainsStore.selectedChain?.price ?? 0,
-      })
+      fetchVisibleNow(acc)
     }, VISIBLE_FETCH_DEBOUNCE_MS),
   )
 }
@@ -596,23 +612,51 @@ const onRowVisibility = (acc: SavedAccount, visible: boolean): void => {
   }
 }
 
+// Re-fetch every currently-visible, compatible, non-active row (TTL-gated in the
+// composable, so fresh entries are skipped).
+const refreshVisible = (): void => {
+  if (!openDialog.value) return
+  for (const acc of allAccounts.value)
+    if (visibleAddresses.value.has(acc.address)) fetchVisibleNow(acc)
+}
+
 // On a network switch the IntersectionObserver won't re-fire (rows don't move), so
-// re-evaluate the visible non-active rows. The cache/TTL is keyed per address, so
-// fresh balances are reused (no refetch — avoids rate-limiting the /balances API)
-// and only addresses whose TTL has expired refetch for the newly-selected chain.
-// The active address stays live via walletStore.
+// re-fetch the visible rows for the newly-selected chain. Debounced: each visible
+// row is one /balances call, so flipping quickly through several networks would
+// otherwise burst (N addresses × M networks) — instead we only fetch the chain the
+// user lands on. chainSwitchPending keeps the skeleton up during the settle, and
+// the per-(chain, address) cache makes revisiting a network within the TTL free.
+const NETWORK_SWITCH_DEBOUNCE_MS = 500
+let switchTimer: ReturnType<typeof setTimeout> | undefined
 watch(
   () => chainsStore.selectedChain?.name,
   () => {
     if (!openDialog.value) return
-    for (const acc of allAccounts.value)
-      if (visibleAddresses.value.has(acc.address)) scheduleFetch(acc)
+    chainSwitchPending.value = true
+    clearTimeout(switchTimer)
+    switchTimer = setTimeout(() => {
+      refreshVisible()
+      chainSwitchPending.value = false
+    }, NETWORK_SWITCH_DEBOUNCE_MS)
   },
 )
+
+// Keep balances fresh while the popup is open: every TTL, refetch the visible rows
+// whose cache has gone stale (fresh ones are skipped). Paused while the popup is
+// closed so there's no background polling.
+const { pause: pausePoll, resume: resumePoll } = useIntervalFn(
+  refreshVisible,
+  BALANCE_TTL_MS,
+  { immediate: false },
+)
+watch(openDialog, open => (open ? resumePoll() : pausePoll()), {
+  immediate: true,
+})
 
 onUnmounted(() => {
   for (const t of fetchTimers.values()) clearTimeout(t)
   fetchTimers.clear()
+  clearTimeout(switchTimer)
 })
 
 // Keep the live active balance in the cache so that when the user switches away,

@@ -168,6 +168,28 @@ export function isForeignStackOverflow(event: unknown): boolean {
 }
 
 /**
+ * Whether an error is a storage `QuotaExceededError` (DOMException code 22).
+ *
+ * On the Home route (wallet not connected) the wallet-connection stack
+ * (WalletConnect / wagmi core) persists session state to IndexedDB during
+ * bootstrap. That write is fire-and-forget inside the library, so when the
+ * browser's per-origin storage quota is exhausted (Firefox private mode, a
+ * near-full disk, or strict privacy settings) the IndexedDB transaction
+ * rejects with "The current transaction exceeded its quota limitations." and
+ * bubbles to the global `onunhandledrejection` handler with no first-party
+ * frames. Our own synchronous `localStorage` writes are already guarded by
+ * `safeLocalStorage` (they degrade to an in-memory map on quota), so a quota
+ * error reaching Sentry is always this external, unactionable async noise.
+ * Matched via the DOMException `name` / legacy `code` (both quota-exclusive),
+ * so it survives minification and the serialized plain-object payload shape.
+ */
+export function isStorageQuotaExceededError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: unknown; code?: unknown }
+  return e.name === 'QuotaExceededError' || e.code === 22
+}
+
+/**
  * Whether an error is a viem `WaitForTransactionReceiptTimeoutError` — thrown
  * when `waitForTransactionReceipt` times out because a submitted trade/swap tx
  * did not confirm within the timeout window (slow node, congestion, dropped tx,
