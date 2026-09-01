@@ -1,5 +1,7 @@
 import { ref, watchEffect, onUnmounted, type Ref } from 'vue'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { usePerpsAuth } from './usePerpsAuth'
 import { usePerpsMarkets } from './usePerpsMarkets'
 import { usePerpsToasts } from './usePerpsToasts'
@@ -225,9 +227,12 @@ export function usePerpsDepositsWithdrawals() {
       ])
       deposits.value = dRes.result ?? []
       withdrawals.value = wRes.result ?? []
-    } catch {
+    } catch (e) {
       deposits.value = []
       withdrawals.value = []
+      capturePerps(PERPS_FEATURE.HISTORY, e, {
+        title: 'PERPS: Error fetching deposits/withdrawals history',
+      })
     } finally {
       loading.value = false
     }

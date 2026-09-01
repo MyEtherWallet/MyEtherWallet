@@ -1,5 +1,7 @@
 import { ref, watch, effectScope } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
@@ -109,8 +111,11 @@ function resetPerpsData() {
   for (const fn of _dataResetHandlers) {
     try {
       fn()
-    } catch {
+    } catch (e) {
       // a failing reset handler must not block the others
+      capturePerps(PERPS_FEATURE.AUTH, e, {
+        title: 'PERPS: Auth data-reset handler failed',
+      })
     }
   }
 }
@@ -169,8 +174,11 @@ async function tryRestoreAuth(address: string, generation: number) {
       decryptedAccount = storedAccounts[i]
         ? await decrypt(storedAccounts[i], address)
         : null
-    } catch {
+    } catch (e) {
       accountFailed = true
+      capturePerps(PERPS_FEATURE.AUTH, e, {
+        title: 'PERPS: Auth account decrypt failed',
+      })
     }
     if (isStale()) return
     token.value = decryptedToken
@@ -402,6 +410,10 @@ export function usePerpsAuth() {
           errorMessage,
           walletType: walletTypeStr,
         })
+        capturePerps(PERPS_FEATURE.AUTH, e, {
+          title: 'PERPS: Sign-in failed',
+          extra: { source, walletType: walletTypeStr },
+        })
       }
     } finally {
       showSigningPrompt.value = false
@@ -500,8 +512,11 @@ export function usePerpsBalance() {
       try {
         const res = await perpsClient.getPerpsBalance()
         balance.value = res.result
-      } catch {
+      } catch (e) {
         balance.value = null
+        capturePerps(PERPS_FEATURE.PORTFOLIO, e, {
+          title: 'PERPS: Error fetching balance',
+        })
       } finally {
         loading.value = false
       }
@@ -597,8 +612,11 @@ export function usePerpsPortfolioSummary() {
       try {
         const res = await perpsClient.getPortfolioSummary()
         summary.value = res.result
-      } catch {
+      } catch (e) {
         summary.value = null
+        capturePerps(PERPS_FEATURE.PORTFOLIO, e, {
+          title: 'PERPS: Error fetching portfolio summary',
+        })
       } finally {
         loading.value = false
       }

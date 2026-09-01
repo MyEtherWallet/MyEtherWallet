@@ -29,7 +29,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ BALANCE_TTL_MS: 75000, useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
@@ -342,6 +342,37 @@ describe('TheManageAccounts', () => {
       vi.advanceTimersByTime(300) // flush the debounce
       const addrs = fetchIfStale.mock.calls.map(c => (c[0] as { address: string }).address)
       expect(addrs).toEqual(['0x2'])
+    } finally {
+      store.allAccounts = original
+      vi.useRealTimers()
+    }
+  })
+
+  it('polls visible non-active rows every TTL while open, and stops when closed', async () => {
+    vi.useFakeTimers()
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' }, // active → skipped
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }, // non-active → polled
+    ]
+    try {
+      const w = factory() // openDialog: true → poll running
+      w.findAllComponents({ name: 'ManageAccountsRow' }).forEach(r =>
+        r.vm.$emit('visibility-change', true),
+      )
+      vi.advanceTimersByTime(300) // flush the initial debounced fetch
+      fetchIfStale.mockClear()
+
+      vi.advanceTimersByTime(75000) // one TTL tick
+      const polled = fetchIfStale.mock.calls.map(c => (c[0] as { address: string }).address)
+      expect(polled).toContain('0x2')
+      expect(polled).not.toContain('0x1') // active stays live via walletStore
+
+      // Closing the popup stops the poll — no further fetches.
+      fetchIfStale.mockClear()
+      await w.setProps({ openDialog: false })
+      vi.advanceTimersByTime(75000 * 3)
+      expect(fetchIfStale).not.toHaveBeenCalled()
     } finally {
       store.allAccounts = original
       vi.useRealTimers()

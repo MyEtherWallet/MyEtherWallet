@@ -19,12 +19,19 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignPurchaseInfoForbidden,
+  isBluetoothGattDisconnectedError,
+  isCoinNotFoundApiError,
+  isExpectedTradeClientError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
+  isIndexedDbMutationError,
   isInvalidWalletAddressError,
+  isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
+  isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
@@ -81,23 +88,41 @@ if (dsn && process.env.NODE_ENV === 'production') {
     // confirm within the timeout — a network condition the app already handles),
     // and the external "not found rainbowkit" rejection emitted by a wallet's
     // injected in-app-browser detection script (not app code — our bundle never
-    // throws it). These surface as serialized plain objects or bare strings with
-    // no parsed frames, so denyUrls can't catch them — inspect the original
-    // exception instead. Genuine app errors are unaffected.
+    // throws it). Also a global backstop for trade quote/order errors already
+    // flagged `expectedClientError` / `transientNetworkError` (1inch 4xx /
+    // network hiccups) — the per-call-site catch in useTradeQuote /
+    // useTradeExecution already skips its own captureException for these, but
+    // they kept reaching Sentry anyway (APP-MEW-WEB-1F8 / MEW-2180), so this
+    // drops them here too regardless of call site or build. These surface as
+    // serialized plain objects or bare strings with no parsed frames, so
+    // denyUrls can't catch them — inspect the original exception instead.
+    // Genuine app errors are unaffected.
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
+        isBluetoothGattDisconnectedError(originalException) ||
+        isCoinNotFoundApiError(originalException) ||
+        isExpectedTradeClientError(originalException) ||
         isExtensionOrProviderError(originalException) ||
+        isIndexedDbMutationError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
+        // Ledger "locked device" (0x5515) — hardware/user-state error, already
+        // shown to the user as a toast; unactionable noise (APP-MEW-WEB-BH).
+        isLockedDeviceError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
+        isStorageQuotaExceededError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
-        isForeignStackOverflow(event)
+        isForeignStackOverflow(event) ||
+        // Purchase-info 403 from a region/wallet the fiat-purchase backend
+        // denies — expected, already-handled business rule, not an app bug
+        // (APP-MEW-WEB-1F5 / MEW-2173).
+        isBenignPurchaseInfoForbidden(event)
       )
         return null
       return event
