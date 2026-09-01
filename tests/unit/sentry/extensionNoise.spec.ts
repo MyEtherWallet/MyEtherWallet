@@ -10,6 +10,7 @@ import {
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
+  isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
@@ -142,6 +143,51 @@ describe('isProviderNotFoundError', () => {
     expect(isProviderNotFoundError(null)).toBe(false)
     expect(isProviderNotFoundError(undefined)).toBe(false)
     expect(isProviderNotFoundError('Provider not found.')).toBe(false)
+  })
+})
+
+describe('isStorageQuotaExceededError', () => {
+  it('is true for a real DOMException QuotaExceededError (async IndexedDB write)', () => {
+    // The exact production trigger: a third-party library's IndexedDB write
+    // rejects when the browser's per-origin quota is exhausted.
+    const err = new DOMException(
+      'The current transaction exceeded its quota limitations.',
+      'QuotaExceededError',
+    )
+    expect(isStorageQuotaExceededError(err)).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with name)', () => {
+    expect(
+      isStorageQuotaExceededError({
+        name: 'QuotaExceededError',
+        message: 'The current transaction exceeded its quota limitations.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true when only the legacy DOMException code 22 survives serialization', () => {
+    // Sentry tags this issue with `DOMException.code: 22` (QUOTA_EXCEEDED_ERR).
+    expect(isStorageQuotaExceededError({ code: 22, message: 'quota' })).toBe(
+      true,
+    )
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isStorageQuotaExceededError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isStorageQuotaExceededError({ name: 'SomeOtherError', code: 1 }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isStorageQuotaExceededError(null)).toBe(false)
+    expect(isStorageQuotaExceededError(undefined)).toBe(false)
+    expect(isStorageQuotaExceededError('QuotaExceededError')).toBe(false)
   })
 })
 
