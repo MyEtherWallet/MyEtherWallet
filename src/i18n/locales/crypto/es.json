@@ -1,11 +1,13 @@
 {
   "crypto": {
-    "explore_tokens": "Explorar tokens",
+    "explore_tokens": "Explorar cripto",
     "category_menu": "Menú de categorías",
+    "all_categories": "Todas las categorías",
     "search": "Buscar",
     "token": "TOKEN",
     "market_cap": "Capitalización de mercado",
     "volume": "Volumen",
+    "twenty_four_h_change": "Cambio 24 h",
     "price": "Precio",
     "results_count": "{current} de {total} resultados",
     "page_of": "{current} de {total}",
