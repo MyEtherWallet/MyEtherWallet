@@ -23,6 +23,53 @@ export const isAssetTradableInSession = (
 }
 
 /**
+ * Pause reasons the design maps to a tag + tooltip. The API carries the reason
+ * as a slug in `pause.reason.message` — it is NOT user-facing copy.
+ * `cash_dividend`, `earnings` and `stock_split` are confirmed against the live
+ * payload; the rest come from the design handoff and are pending confirmation
+ * from the backend.
+ */
+export const PAUSE_REASONS = [
+  'cash_dividend',
+  'stock_dividend',
+  'stock_split',
+  'merger',
+  'acquisition',
+  'spinoff',
+  'earnings',
+  'maintenance',
+] as const
+
+export type PauseReason = (typeof PAUSE_REASONS)[number]
+
+const isPauseReason = (value: string): value is PauseReason =>
+  (PAUSE_REASONS as readonly string[]).includes(value)
+
+/**
+ * The reason to surface for an asset whose pause window covers `now`, or null
+ * when there is nothing to show: no pause, a window that does not include
+ * `now` (the API also returns pauses scheduled for later), an unparseable
+ * window, or a slug the design does not map.
+ *
+ * `ASSET_PAUSED` and `ASSET_LIMITED` are treated the same — both block trading.
+ */
+export const getActivePauseReason = (
+  asset: Pick<TradableAsset, 'pause'> | null | undefined,
+  now: number,
+): PauseReason | null => {
+  const pause = asset?.pause
+  if (!pause) return null
+
+  const start = pause.start ? Date.parse(pause.start) : NaN
+  const end = pause.end ? Date.parse(pause.end) : NaN
+  if (Number.isNaN(start) || Number.isNaN(end)) return null
+  if (now < start || now > end) return null
+
+  const slug = pause.reason?.message?.trim().toLowerCase()
+  return slug && isPauseReason(slug) ? slug : null
+}
+
+/**
  * Addresses (lowercased) to render disabled under the "Trading paused for this
  * session" group. An asset is disabled when it is globally paused
  * (`tradable === false`) or not tradable in the current session — UNLESS, during

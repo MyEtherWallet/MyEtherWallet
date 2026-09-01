@@ -132,6 +132,40 @@
     "enter_amount": "Ingresa el monto",
     "select_asset": {
       "title": "Seleccionar activo"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "Dividendo en efectivo",
+        "tooltip": "Este activo no está disponible temporalmente por un dividendo en efectivo."
+      },
+      "stock_dividend": {
+        "tag": "Dividendo en acciones",
+        "tooltip": "Este activo no está disponible temporalmente por un dividendo en acciones."
+      },
+      "stock_split": {
+        "tag": "Split de acciones",
+        "tooltip": "Este activo no está disponible temporalmente por un split de acciones."
+      },
+      "merger": {
+        "tag": "Fusión",
+        "tooltip": "Este activo no está disponible temporalmente por una fusión."
+      },
+      "acquisition": {
+        "tag": "Adquisición",
+        "tooltip": "Este activo no está disponible temporalmente por una adquisición."
+      },
+      "spinoff": {
+        "tag": "Escisión",
+        "tooltip": "Este activo no está disponible temporalmente por una escisión."
+      },
+      "earnings": {
+        "tag": "Resultados",
+        "tooltip": "Este activo no está disponible temporalmente por la publicación de resultados."
+      },
+      "maintenance": {
+        "tag": "En mantenimiento",
+        "tooltip": "Este activo no está disponible temporalmente porque está en mantenimiento."
+      }
     }
   }
 }

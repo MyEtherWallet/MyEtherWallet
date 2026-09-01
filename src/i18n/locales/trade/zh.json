@@ -132,6 +132,40 @@
     "enter_amount": "输入金额",
     "select_asset": {
       "title": "选择资产"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "现金分红",
+        "tooltip": "由于现金分红，该资产暂时不可用。"
+      },
+      "stock_dividend": {
+        "tag": "股票股利",
+        "tooltip": "由于股票股利，该资产暂时不可用。"
+      },
+      "stock_split": {
+        "tag": "股票拆分",
+        "tooltip": "由于股票拆分，该资产暂时不可用。"
+      },
+      "merger": {
+        "tag": "合并",
+        "tooltip": "由于合并，该资产暂时不可用。"
+      },
+      "acquisition": {
+        "tag": "收购",
+        "tooltip": "由于收购，该资产暂时不可用。"
+      },
+      "spinoff": {
+        "tag": "分拆",
+        "tooltip": "由于分拆，该资产暂时不可用。"
+      },
+      "earnings": {
+        "tag": "财报",
+        "tooltip": "由于财报发布，该资产暂时不可用。"
+      },
+      "maintenance": {
+        "tag": "维护中",
+        "tooltip": "该资产正在维护，暂时不可用。"
+      }
     }
   }
 }

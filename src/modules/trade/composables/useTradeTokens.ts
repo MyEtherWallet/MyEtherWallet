@@ -11,6 +11,7 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
+  getActivePauseReason,
 } from './tradeSession'
 
 // Individual asset type from the response arrays
@@ -147,10 +148,12 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
-        return (
-          info.pause?.reason?.message ||
-          t('trade.error.token-not-available', { symbol: token?.symbol })
-        )
+        // `pause.reason.message` is a slug, not copy: only translate it while
+        // its window covers now, otherwise the reason doesn't apply yet.
+        const reason = getActivePauseReason(info, Date.now())
+        return reason
+          ? t(`trade.pause_reason.${reason}.tooltip`)
+          : t('trade.error.token-not-available', { symbol: token?.symbol })
       }
     }
     return ''

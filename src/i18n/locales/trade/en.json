@@ -132,6 +132,40 @@
     "enter_amount": "Enter amount",
     "select_asset": {
       "title": "Select asset"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "Cash dividend",
+        "tooltip": "This asset is temporarily unavailable due to a cash dividend."
+      },
+      "stock_dividend": {
+        "tag": "Stock dividend",
+        "tooltip": "This asset is temporarily unavailable due to a stock dividend."
+      },
+      "stock_split": {
+        "tag": "Stock split",
+        "tooltip": "This asset is temporarily unavailable due to a stock split."
+      },
+      "merger": {
+        "tag": "Merger",
+        "tooltip": "This asset is temporarily unavailable due to a merger."
+      },
+      "acquisition": {
+        "tag": "Acquisition",
+        "tooltip": "This asset is temporarily unavailable due to an acquisition."
+      },
+      "spinoff": {
+        "tag": "Spinoff",
+        "tooltip": "This asset is temporarily unavailable due to a spinoff."
+      },
+      "earnings": {
+        "tag": "Earnings",
+        "tooltip": "This asset is temporarily unavailable due to an earnings event."
+      },
+      "maintenance": {
+        "tag": "In maintenance",
+        "tooltip": "This asset is temporarily unavailable while it’s undergoing maintenance."
+      }
     }
   }
 }
