@@ -46,8 +46,8 @@
             "description": "Choose the industries you’d like to keep an eye on to further personalize your watchlist."
           },
           "assets": {
-            "title": "We found assets for you",
-            "subtitle": "Here are some assets you might want to follow based on your interests.",
+            "title": "Choose assets to follow",
+            "subtitle": "Here are some assets you might want to follow",
             "loadingTitle": "Finding assets…",
             "loadingSubtitle": "We are looking for assets that align with your interests",
             "done": "Done",
