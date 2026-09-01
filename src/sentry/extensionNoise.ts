@@ -208,3 +208,28 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
   }
   return false
 }
+
+/**
+ * Whether an error is an IndexedDB `InvalidStateError` (DOMException code 11 —
+ * "A mutation operation was attempted on a database that did not allow
+ * mutations"). This comes from `idb-keyval` write operations (`set`/`del` in a
+ * `readwrite` transaction), which MEW never calls directly — it is only bundled
+ * by the wallet SDKs (`@coinbase/wallet-sdk`, `@base-org/account`, `porto`,
+ * WalletConnect `keyvaluestorage`). On boot those connectors fire-and-forget an
+ * IndexedDB write to persist session state; on Firefox with private/restricted
+ * storage the write fails and, being fire-and-forget, the rejection reaches the
+ * global handler as unhandled, unactionable noise (0 users impacted —
+ * APP-MEW-WEB-1GG / MEW-2176). Matched on the browser-native (non-minified)
+ * DOMException message: `name`/`code` alone can't be used because every
+ * `InvalidStateError` carries `code === 11`, so filtering on the code would
+ * suppress unrelated `InvalidStateError`s from other Web APIs.
+ */
+export function isIndexedDbMutationError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: unknown; message?: unknown }
+  if (e.name !== 'InvalidStateError') return false
+  return (
+    typeof e.message === 'string' &&
+    e.message.includes('did not allow mutations')
+  )
+}

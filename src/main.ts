@@ -21,6 +21,7 @@ import configs from '@/configs'
 import {
   isExtensionOrProviderError,
   isForeignStackOverflow,
+  isIndexedDbMutationError,
   isInvalidWalletAddressError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
@@ -89,6 +90,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       const originalException = hint?.originalException
       if (
         isExtensionOrProviderError(originalException) ||
+        isIndexedDbMutationError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
