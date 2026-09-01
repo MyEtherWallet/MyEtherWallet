@@ -232,8 +232,10 @@ const overflowNames = computed(() =>
                   <PlusIcon v-else class="size-3.5" />
                 </span>
               </span>
-              <span class="text-s-16 font-semibold text-black">
-                {{ asset.symbol }}
+              <span
+                class="w-full truncate px-1 text-center text-s-16 font-semibold text-black"
+              >
+                {{ asset.name }}
               </span>
             </WatchlistSelectableCard>
           </div>
