@@ -1271,6 +1271,11 @@ watch(
 const getActivePercent = (token: DisplayToken) => token.priceChangePercentage24h
 
 const getSparkLinePoints = (token: DisplayToken) => {
+  // Stocks store their 24h series directly in `sparklineIn7d` (see formatStock),
+  // so return it whole rather than slicing a 7d series down to ~24h.
+  if (token.ondo !== null) {
+    return token.sparklineIn7d || []
+  }
   if (token.sparklineIn7d && token.sparklineIn7d.length > 0) {
     // Last 24h slice of the 7d sparkline (7 days of points → ~1 day).
     const totalPoints = token.sparklineIn7d.length / 7
