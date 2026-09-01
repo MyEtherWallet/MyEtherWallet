@@ -20,6 +20,7 @@ import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
   isBluetoothGattDisconnectedError,
+  isCoinNotFoundApiError,
   isExpectedTradeClientError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
@@ -99,6 +100,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
       const originalException = hint?.originalException
       if (
         isBluetoothGattDisconnectedError(originalException) ||
+        isCoinNotFoundApiError(originalException) ||
         isExpectedTradeClientError(originalException) ||
         isExtensionOrProviderError(originalException) ||
         isIndexedDbMutationError(originalException) ||

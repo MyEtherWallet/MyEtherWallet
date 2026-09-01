@@ -296,3 +296,23 @@ export function isLockedDeviceError(err: unknown): boolean {
     typeof e.message === 'string' ? e.message.toLowerCase() : ''
   return message.includes('0x5515') || message.includes('locked device')
 }
+
+/**
+ * Whether an error is mew-api's "CoinGecko coin not found" 400 — returned
+ * when a user navigates directly to (or shares) a `/token/<symbol>` URL for a
+ * symbol CoinGecko doesn't list (typo, delisted, or never-listed token).
+ * `TokenInfoChart.vue`'s `onFetchError` already handles it by rendering
+ * "No data available", so it is expected, unactionable Sentry noise, not an
+ * app bug (APP-MEW-WEB-1F3 / MEW-2172). `useFetchMewApi`'s shared
+ * `onFetchError` surfaces the mew-api response body message verbatim as the
+ * Error message (see `describeMewApiFetchError`), so match on that exact
+ * prefix rather than the HTTP status — other mew-api 400s on other endpoints
+ * are unrelated and should keep reporting.
+ */
+export function isCoinNotFoundApiError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && /^CoinGecko coin not found:/i.test(message)
+  )
+}
