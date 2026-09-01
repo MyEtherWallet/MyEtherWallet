@@ -1,11 +1,8 @@
 import { computed, getCurrentScope, onScopeDispose, ref } from 'vue'
-import { captureException } from '@sentry/vue'
-import Configs from '@/configs'
-import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { perpsClient } from '../configs'
 import { PerpsHttpError } from '../sdk/client'
-
-const isDevMode = Configs.IS_DEV_MODE
 
 /**
  * `/status` is unauthenticated and returns a single field, so polling it is
@@ -62,18 +59,10 @@ export async function fetchPerpsStatus(): Promise<number | null> {
     statusCode.value = 200
   } catch (e) {
     statusCode.value = e instanceof PerpsHttpError ? e.status : null
-    if (isDevMode) {
-      console.error('Failed to fetch perps status:', e)
-    } else {
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.PERPS,
-        extra: {
-          title: 'PERPS: Error fetching service status',
-          httpStatus: statusCode.value,
-          errorMessage: (e as Error).message || 'Unknown error',
-        },
-      })
-    }
+    capturePerps(PERPS_FEATURE.STATUS, e, {
+      title: 'PERPS: Error fetching service status',
+      extra: { httpStatus: statusCode.value },
+    })
   } finally {
     isLoadingStatus.value = false
   }

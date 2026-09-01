@@ -673,6 +673,8 @@ import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
 import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
@@ -774,6 +776,10 @@ const saveLeverage = async () => {
       PerpsChangeLeverageEvent.SUBMIT_FAIL,
       failPayload,
     )
+    capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+      title: 'PERPS: Set leverage failed',
+      extra: { market: leverageMarket.value, newLeverage: tempLeverage.value },
+    })
   } finally {
     isSavingLeverage.value = false
   }

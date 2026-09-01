@@ -921,6 +921,8 @@ import {
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 import { useWalletStore } from '@/stores/walletStore'
@@ -985,6 +987,10 @@ const saveLeverage = async () => {
       PerpsChangeLeverageEvent.SUBMIT_FAIL,
       failPayload,
     )
+    capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+      title: 'PERPS: Set leverage failed',
+      extra: { market: fullMarketName.value, newLeverage: localLeverage.value },
+    })
   } finally {
     isSavingLeverage.value = false
   }
@@ -1302,7 +1308,9 @@ async function cancelOrder(order: ApiOrder) {
     showOrderDialog.value = false
     await refetchOrders()
   } catch (e) {
-    console.error('Failed to cancel order:', e)
+    capturePerps(PERPS_FEATURE.ORDER, e, {
+      title: 'PERPS: Cancel order failed',
+    })
     const errorMessage = e instanceof Error ? e.message : String(e)
     void analytics.trackPerpsOrderCancelErrorEvent(
       PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
