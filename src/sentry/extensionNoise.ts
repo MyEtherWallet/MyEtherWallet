@@ -1,3 +1,5 @@
+import configs from '@/configs'
+
 // Benign EIP-1193 provider error codes. These originate from the user's wallet
 // (injected extension provider), not from app code, and are pure Sentry noise:
 //  4001  user rejected the request
@@ -314,5 +316,31 @@ export function isCoinNotFoundApiError(err: unknown): boolean {
   const message = (err as { message?: unknown }).message
   return (
     typeof message === 'string' && /^CoinGecko coin not found:/i.test(message)
+  )
+}
+
+/**
+ * Whether a Sentry event is the MEW purchase-info endpoint
+ * (`configs.MEW_PURCHASE_API`, e.g. `/v5/purchase/info`) answering 403.
+ *
+ * The purchase backend returns 403 when fiat purchase is unavailable to the
+ * caller's region/wallet (a business rule, not an app bug). `fetchPurchaseInfo`
+ * (`src/stores/purchaseStore.ts`) already handles the failure silently — Buy/
+ * Sell just render with no assets — so every occurrence reaching Sentry via the
+ * shared `useFetchMewApi` error reporter is unactionable noise
+ * (APP-MEW-WEB-1F5 / MEW-2173).
+ *
+ * Matched on the event's `mew_api_url` / `mew_api_status` tags (set by
+ * `describeMewApiFetchError`), not the message, so it drops only this exact
+ * endpoint + status pair — a 403 from any other MEW API route is still
+ * reported.
+ */
+export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  if (!tags) return false
+  return (
+    tags.mew_api_url === configs.MEW_PURCHASE_API &&
+    tags.mew_api_status === '403'
   )
 }

@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
   isExpectedTradeClientError,
@@ -19,6 +20,7 @@ import {
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
 } from '@/sentry/extensionNoise'
+import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
   it('is true for the EIP-1193 4900 "disconnected" rejection from an extension', () => {
@@ -730,5 +732,52 @@ describe('isCoinNotFoundApiError', () => {
     expect(isCoinNotFoundApiError('CoinGecko coin not found: CRYN.')).toBe(
       false,
     )
+  })
+})
+
+describe('isBenignPurchaseInfoForbidden', () => {
+  it('is true for the production tag pair: purchase/info + 403', () => {
+    // The exact production shape: tags set by describeMewApiFetchError in the
+    // shared useFetchMewApi onFetchError handler.
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: configs.MEW_PURCHASE_API,
+          mew_api_status: '403',
+        },
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for a different status on the same endpoint', () => {
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: configs.MEW_PURCHASE_API,
+          mew_api_status: '500',
+        },
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for a 403 on a different MEW API endpoint (not swallowed)', () => {
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: `${configs.MEW_API_URL}/v1/some/other/route`,
+          mew_api_status: '403',
+        },
+      }),
+    ).toBe(false)
+  })
+
+  it('is false when tags are missing or the event has no tags', () => {
+    expect(isBenignPurchaseInfoForbidden({})).toBe(false)
+    expect(isBenignPurchaseInfoForbidden({ tags: {} })).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isBenignPurchaseInfoForbidden(null)).toBe(false)
+    expect(isBenignPurchaseInfoForbidden(undefined)).toBe(false)
   })
 })
