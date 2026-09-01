@@ -184,7 +184,6 @@ const trade = (row: WatchlistRow) => {
     <div
       class="mt-4 flex items-center gap-2 px-2 pb-2 text-s-11 uppercase tracking-wide text-[#575757]"
     >
-      <span class="w-4 shrink-0" aria-hidden="true" />
       <span class="w-5 shrink-0" aria-hidden="true" />
       <span class="min-w-0 flex-1">
         {{ t('homePage.hero.watchlist.table.columns.token') }}
@@ -227,15 +226,18 @@ const trade = (row: WatchlistRow) => {
       <template #item="{ element: row }">
         <li
           data-test="watchlist-row"
-          class="group flex items-center gap-2 rounded-xl px-2 py-3 transition-colors hover:bg-[#f5f5f5]"
+          class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-[#f5f5f5]"
+          :class="{ 'hover:pl-7': !dragDisabled }"
         >
-          <!-- Drag handle (appears on hover; hidden while filtering). -->
+          <!-- Drag handle: no reserved space — it fades in on hover (the row's
+               left padding animates to make room) and stays inert until then so
+               it never intercepts the star. Hidden entirely while filtering. -->
           <span
-            class="drag-handle flex w-4 shrink-0 justify-center"
+            class="drag-handle absolute left-1 top-1/2 flex -translate-y-1/2 pointer-events-none opacity-0 transition-opacity"
             :class="
               dragDisabled
-                ? 'invisible'
-                : 'cursor-grab opacity-0 group-hover:opacity-100 active:cursor-grabbing'
+                ? ''
+                : 'cursor-grab group-hover:pointer-events-auto group-hover:opacity-100 active:cursor-grabbing'
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
