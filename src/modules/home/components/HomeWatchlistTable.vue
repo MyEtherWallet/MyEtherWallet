@@ -247,7 +247,7 @@ const trade = (row: WatchlistRow) => {
       <template #item="{ element: row }">
         <li
           data-test="watchlist-row"
-          class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-[#f5f5f5]"
+          class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
           :class="{ 'min-[780px]:hover:pl-7': !dragDisabled }"
         >
           <!-- Mobile: the handle is always visible (fixed) so touch users can
