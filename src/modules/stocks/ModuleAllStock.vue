@@ -74,7 +74,7 @@
                 </th>
                 <!-- Market Cap -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -100,7 +100,7 @@
                 </th>
                 <!-- Volume -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -125,14 +125,14 @@
                   </div>
                 </th>
                 <!-- 24H Change -->
-                <th class="hidden xl:table-cell px-1 pb-4">
+                <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
                   <div class="text-right font-bold">
                     {{ $t('stocks.twenty_four_h_change') }}
                   </div>
                 </th>
                 <!-- Price -->
                 <th
-                  class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors hidden md:table-cell"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -163,7 +163,7 @@
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
-                class="h-14 hoverBGWhite cursor-pointer"
+                class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
                 @click="onRowClick(token)"
               >
                 <!-- Watchlist -->
@@ -245,7 +245,7 @@
                 </td>
                 <!-- 24H Change -->
                 <td class="hidden xl:table-cell px-1 py-1 text-right">
-                  <div class="flex flex-col items-end justify-center py-2 pr-2">
+                  <div class="flex flex-col items-end justify-center py-2">
                     <p
                       class="text-s-13 font-normal mb-1"
                       :class="getPercentClass(getActivePercent(token))"

@@ -91,7 +91,7 @@
               </th>
               <!-- Market Cap -->
               <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 @click="setHeaderSort(SortValue.MARKET_CAP)"
               >
                 <div
@@ -119,7 +119,7 @@
               </th>
               <!-- Volume -->
               <th
-                class="hidden xl:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                class="hidden xl:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 @click="setHeaderSort(SortValue.VOLUME)"
               >
                 <div
@@ -146,14 +146,14 @@
                 </div>
               </th>
               <!-- 24H Change -->
-              <th class="hidden xl:table-cell px-1 pb-4">
+              <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
                 <div class="text-right font-bold">
                   {{ $t('perps.market-list.column-24h-change') }}
                 </div>
               </th>
               <!-- Price -->
               <th
-                class="hidden md:table-cell cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+                class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 @click="setHeaderSort(SortValue.PRICE)"
               >
                 <div
@@ -188,7 +188,7 @@
             <tr
               v-for="contract in paginatedContracts"
               :key="contract.market"
-              class="h-14 hoverBGWhite cursor-pointer"
+              class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
               @click="$emit('viewMarket', contract.market)"
             >
               <!-- Watchlist -->
@@ -570,7 +570,7 @@
           <span class="text-info">
             {{
               $t('common.showing_page', {
-                current: currentPage,
+                current: currentPage + 1,
                 total: totalPages,
               })
             }}
@@ -580,7 +580,7 @@
               class="bg-grey-5"
               height="h-10"
               width="w-10"
-              :disabled="currentPage === 1"
+              :disabled="currentPage === 0"
               :label="$t('common.previous_page')"
               @click="prevPage"
             >
@@ -590,7 +590,7 @@
               class="bg-grey-5"
               height="h-10"
               width="w-10"
-              :disabled="currentPage >= totalPages"
+              :disabled="currentPage >= totalPages - 1"
               :label="$t('common.next_page')"
               @click="nextPage"
             >
