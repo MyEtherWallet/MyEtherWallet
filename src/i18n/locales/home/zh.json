@@ -34,16 +34,20 @@
         "begin": "开始",
         "onboarding": {
           "continue": "继续",
+          "skip": "跳过",
+          "stepProgress": "步骤 {step} / {total}",
           "markets": {
             "subtitle": "您对哪些资产感兴趣？",
+            "description": "这将帮助个性化您的关注列表。如果您已经知道想关注什么，可以跳过。",
             "hint": "您可以选择多个选项"
           },
           "industries": {
-            "subtitle": "您喜欢哪些行业？"
+            "subtitle": "您喜欢哪些行业？",
+            "description": "选择您想关注的行业，以进一步个性化您的关注列表。"
           },
           "assets": {
-            "title": "为您找到的资产",
-            "subtitle": "以下是根据您的兴趣推荐关注的资产。",
+            "title": "选择要关注的资产",
+            "subtitle": "以下是一些您可能想关注的资产",
             "loadingTitle": "正在查找资产…",
             "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
             "done": "完成",

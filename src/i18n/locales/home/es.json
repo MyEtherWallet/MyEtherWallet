@@ -34,16 +34,20 @@
         "begin": "Empecemos",
         "onboarding": {
           "continue": "Continuar",
+          "skip": "Omitir",
+          "stepProgress": "Paso {step} / {total}",
           "markets": {
             "subtitle": "¿Qué activos te interesan?",
+            "description": "Esto ayudará a personalizar tu lista de seguimiento. Omite si ya sabes qué quieres seguir.",
             "hint": "Puedes seleccionar más de una opción"
           },
           "industries": {
-            "subtitle": "¿Qué industrias te gustan?"
+            "subtitle": "¿Qué industrias te gustan?",
+            "description": "Elige las industrias que quieres seguir de cerca para personalizar aún más tu lista de seguimiento."
           },
           "assets": {
-            "title": "Encontramos activos para ti",
-            "subtitle": "Estos son algunos activos que podrías seguir según tus intereses.",
+            "title": "Elige los activos que quieres seguir",
+            "subtitle": "Estos son algunos activos que podrías seguir",
             "loadingTitle": "Buscando activos…",
             "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
             "done": "Listo",
