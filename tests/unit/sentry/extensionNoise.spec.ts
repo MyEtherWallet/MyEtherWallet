@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBluetoothGattDisconnectedError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isIndexedDbMutationError,
@@ -450,6 +451,60 @@ describe('isRainbowKitNotFoundError', () => {
     expect(isRainbowKitNotFoundError(undefined)).toBe(false)
     expect(isRainbowKitNotFoundError({ message: 42 })).toBe(false)
     expect(isRainbowKitNotFoundError('something else')).toBe(false)
+  })
+})
+
+describe('isBluetoothGattDisconnectedError', () => {
+  it('is true for the exact Chrome DOMException from the Ledger BLE teardown', () => {
+    // The exact production trigger (APP-MEW-WEB-1AY): the Ledger BLE transport
+    // fire-and-forgets stopNotifications() after the GATT server disconnected.
+    expect(
+      isBluetoothGattDisconnectedError({
+        name: 'NetworkError',
+        code: 19,
+        message:
+          "Failed to execute 'stopNotifications' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.",
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for a real DOMException instance', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        new Error(
+          "Failed to execute 'readValue' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected.",
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        'NetworkError: GATT Server is disconnected. Cannot perform GATT operations.',
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    // A different BLE error we do NOT want to blanket-suppress.
+    expect(
+      isBluetoothGattDisconnectedError(
+        new Error('GATT operation already in progress'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isBluetoothGattDisconnectedError(null)).toBe(false)
+    expect(isBluetoothGattDisconnectedError(undefined)).toBe(false)
+    expect(isBluetoothGattDisconnectedError({ message: 42 })).toBe(false)
+    expect(isBluetoothGattDisconnectedError('something else')).toBe(false)
   })
 })
 

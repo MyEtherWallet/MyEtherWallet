@@ -19,6 +19,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBluetoothGattDisconnectedError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isIndexedDbMutationError,
@@ -89,6 +90,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
     beforeSend(event, hint) {
       const originalException = hint?.originalException
       if (
+        isBluetoothGattDisconnectedError(originalException) ||
         isExtensionOrProviderError(originalException) ||
         isIndexedDbMutationError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
