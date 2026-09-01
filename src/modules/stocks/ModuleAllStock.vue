@@ -154,7 +154,7 @@
                 </th>
                 <!-- Actions -->
                 <th
-                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
+                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[120px]"
                 ></th>
               </tr>
             </thead>
@@ -314,11 +314,11 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div class="hidden lg:grid w-full max-w-[160px] ml-auto">
+                  <div class="hidden lg:flex justify-end">
                     <app-base-button
                       size="small"
+                      is-outline
                       @click="tradeBtn(token)"
-                      class="w-full"
                       >{{ $t('stocks.trade') }}
                     </app-base-button>
                   </div>
