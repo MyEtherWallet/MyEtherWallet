@@ -78,15 +78,18 @@
         },
         "table": {
           "title": "Watchlist",
-          "subtitle": "Follow the assets you are interested in",
-          "addNew": "Add new asset",
+          "addAsset": "Add asset",
           "trade": "Trade",
+          "swap": "Swap",
           "remove": "Remove from watchlist",
+          "dragLabel": "Drag to reorder",
+          "showMore": "Show {count} more",
           "columns": {
-            "asset": "Asset name",
-            "marketValue": "Market value",
-            "price": "Price",
-            "trend": "Trend"
+            "token": "Token",
+            "marketCap": "Market cap",
+            "volume": "Volume",
+            "change24h": "24h Change",
+            "price": "Price"
           }
         },
         "addModal": {

@@ -78,15 +78,18 @@
         },
         "table": {
           "title": "关注列表",
-          "subtitle": "关注您感兴趣的资产",
-          "addNew": "添加资产",
+          "addAsset": "添加资产",
           "trade": "交易",
+          "swap": "兑换",
           "remove": "从关注列表移除",
+          "dragLabel": "拖动以重新排序",
+          "showMore": "显示另外 {count} 个",
           "columns": {
-            "asset": "资产名称",
-            "marketValue": "市值",
-            "price": "价格",
-            "trend": "趋势"
+            "token": "代币",
+            "marketCap": "市值",
+            "volume": "成交量",
+            "change24h": "24小时涨跌",
+            "price": "价格"
           }
         },
         "addModal": {

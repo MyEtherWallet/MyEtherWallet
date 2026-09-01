@@ -78,15 +78,18 @@
         },
         "table": {
           "title": "Lista de seguimiento",
-          "subtitle": "Sigue los activos que te interesan",
-          "addNew": "Agregar activo",
+          "addAsset": "Agregar activo",
           "trade": "Operar",
+          "swap": "Intercambiar",
           "remove": "Quitar de la lista",
+          "dragLabel": "Arrastra para reordenar",
+          "showMore": "Ver {count} más",
           "columns": {
-            "asset": "Nombre del activo",
-            "marketValue": "Valor de mercado",
-            "price": "Precio",
-            "trend": "Tendencia"
+            "token": "Token",
+            "marketCap": "Cap. de mercado",
+            "volume": "Volumen",
+            "change24h": "Cambio 24h",
+            "price": "Precio"
           }
         },
         "addModal": {
