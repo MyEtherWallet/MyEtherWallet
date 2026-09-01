@@ -190,6 +190,27 @@ export function isStorageQuotaExceededError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is a trade quote/order failure already flagged as an
+ * expected 1inch 4xx client error or a transient axios network hiccup.
+ * `OneInchFusion.getQuote` / `submitOrder` (oneInchFusion.ts) set
+ * `expectedClientError` / `transientNetworkError` on the thrown error
+ * specifically so the per-call-site catch (`useTradeQuote`,
+ * `useTradeExecution`) can skip its own `captureException` — but that is a
+ * single, per-call-site check. This is a global backstop at the Sentry
+ * ingestion boundary: if either flag reaches `beforeSend` uncaught by that
+ * local check (APP-MEW-WEB-1F8 kept recurring across releases despite the
+ * flag being set), drop it here too instead of letting it through as noise.
+ */
+export function isExpectedTradeClientError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as {
+    expectedClientError?: unknown
+    transientNetworkError?: unknown
+  }
+  return e.expectedClientError === true || e.transientNetworkError === true
+}
+
+/**
  * Whether an error is a viem `WaitForTransactionReceiptTimeoutError` — thrown
  * when `waitForTransactionReceipt` times out because a submitted trade/swap tx
  * did not confirm within the timeout window (slow node, congestion, dropped tx,
