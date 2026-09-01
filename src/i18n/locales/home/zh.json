@@ -78,6 +78,7 @@
         },
         "table": {
           "title": "关注列表",
+          "moreActions": "更多操作",
           "addAsset": "添加资产",
           "allCategories": "所有类别",
           "trade": "交易",

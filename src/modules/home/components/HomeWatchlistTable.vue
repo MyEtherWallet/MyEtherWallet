@@ -11,6 +11,7 @@ import {
   ArrowDownIcon,
   ChevronDownIcon,
   Bars2Icon,
+  EllipsisVerticalIcon,
 } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -35,6 +36,8 @@ const query = ref('')
 const category = ref<'all' | 'stocks' | 'crypto'>('all')
 const isCategoryOpen = ref(false)
 const expanded = ref(false)
+// Row key whose compact (<780px) kebab action menu is open.
+const openMenuKey = ref<string | null>(null)
 const INITIAL_COUNT = 5
 
 const CATEGORIES = [
@@ -188,19 +191,19 @@ const trade = (row: WatchlistRow) => {
       <span class="min-w-0 flex-1">
         {{ t('homePage.hero.watchlist.table.columns.token') }}
       </span>
-      <span class="hidden w-[130px] lg:block">
+      <span class="hidden w-[130px] min-[780px]:block">
         {{ t('homePage.hero.watchlist.table.columns.marketCap') }}
       </span>
-      <span class="hidden w-[130px] lg:block">
+      <span class="hidden w-[130px] xl:block">
         {{ t('homePage.hero.watchlist.table.columns.volume') }}
       </span>
-      <span class="hidden w-[130px] lg:block">
+      <span class="hidden w-[130px] xl:block">
         {{ t('homePage.hero.watchlist.table.columns.change24h') }}
       </span>
       <span class="w-[100px]">
         {{ t('homePage.hero.watchlist.table.columns.price') }}
       </span>
-      <span class="w-[96px] shrink-0" aria-hidden="true" />
+      <span class="w-8 shrink-0 min-[780px]:w-[96px]" aria-hidden="true" />
     </div>
 
     <!-- Empty (search / category with no match). -->
@@ -291,9 +294,9 @@ const trade = (row: WatchlistRow) => {
             </template>
           </div>
 
-          <!-- Market cap -->
+          <!-- Market cap (≥780px) -->
           <span
-            class="hidden w-[130px] text-s-16 font-semibold text-black lg:block"
+            class="hidden w-[130px] text-s-16 font-semibold text-black min-[780px]:block"
           >
             <span
               v-if="row.loading"
@@ -302,9 +305,9 @@ const trade = (row: WatchlistRow) => {
             <template v-else>{{ row.marketCapDisplay || '—' }}</template>
           </span>
 
-          <!-- Volume -->
+          <!-- Volume (≥1280px) -->
           <span
-            class="hidden w-[130px] text-s-16 font-semibold text-black lg:block"
+            class="hidden w-[130px] text-s-16 font-semibold text-black xl:block"
           >
             <span
               v-if="row.loading"
@@ -313,8 +316,8 @@ const trade = (row: WatchlistRow) => {
             <template v-else>{{ row.volumeDisplay || '—' }}</template>
           </span>
 
-          <!-- 24h change (% + arrow, sparkline below) -->
-          <div class="hidden w-[130px] flex-col gap-1 lg:flex">
+          <!-- 24h change column (≥1280px): % + arrow, sparkline below -->
+          <div class="hidden w-[130px] flex-col gap-1 xl:flex">
             <span
               v-if="row.loading"
               class="h-4 w-20 animate-pulse rounded bg-[#f0f0f0]"
@@ -340,30 +343,93 @@ const trade = (row: WatchlistRow) => {
             </template>
           </div>
 
-          <!-- Price -->
-          <span class="w-[100px] text-s-16 font-semibold text-black">
+          <!-- Price — carries the 24h change inline below 1280px (no separate
+               change column there). -->
+          <div class="flex w-[100px] flex-col">
             <span
               v-if="row.loading"
               class="inline-block h-4 w-12 animate-pulse rounded bg-[#f0f0f0]"
             />
-            <template v-else>{{ row.priceDisplay }}</template>
-          </span>
+            <template v-else>
+              <span class="text-s-16 font-semibold text-black">
+                {{ row.priceDisplay }}
+              </span>
+              <span
+                class="flex items-center gap-0.5 text-s-12 font-semibold xl:hidden"
+                :class="row.change < 0 ? 'text-error' : 'text-success'"
+              >
+                {{ changeLabel(row.change) }}
+                <ArrowDownIcon v-if="row.change < 0" class="size-3" />
+                <ArrowUpIcon v-else class="size-3" />
+              </span>
+            </template>
+          </div>
 
-          <!-- Trade / Swap -->
-          <div class="flex w-[96px] shrink-0 justify-end">
+          <!-- Actions: a Trade/Swap button (≥780px), a kebab menu below. -->
+          <div
+            class="flex w-8 shrink-0 justify-end min-[780px]:w-[96px]"
+          >
             <span
               v-if="row.loading"
-              class="h-9 w-[96px] animate-pulse rounded-full bg-[#f0f0f0]"
+              class="h-9 w-8 animate-pulse rounded-full bg-[#f0f0f0] min-[780px]:w-[96px]"
             />
-            <button
-              v-else
-              type="button"
-              data-test="watchlist-trade"
-              class="w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary"
-              @click="trade(row)"
-            >
-              {{ t(actionKey(row)) }}
-            </button>
+            <template v-else>
+              <button
+                type="button"
+                data-test="watchlist-trade"
+                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary min-[780px]:block"
+                @click="trade(row)"
+              >
+                {{ t(actionKey(row)) }}
+              </button>
+              <div class="relative min-[780px]:hidden">
+                <button
+                  type="button"
+                  data-test="watchlist-menu"
+                  :aria-label="t('homePage.hero.watchlist.table.moreActions')"
+                  class="hoverNoBG flex size-8 items-center justify-center rounded-full text-[#575757]"
+                  @click="openMenuKey = openMenuKey === row.key ? null : row.key"
+                >
+                  <EllipsisVerticalIcon class="size-5" />
+                </button>
+                <template v-if="openMenuKey === row.key">
+                  <div
+                    class="fixed inset-0 z-10"
+                    aria-hidden="true"
+                    @click="openMenuKey = null"
+                  />
+                  <ul
+                    class="absolute right-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-grey-outline/40 bg-white py-1 shadow-lg"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        data-test="watchlist-menu-trade"
+                        class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-black"
+                        @click="
+                          trade(row);
+                          openMenuKey = null;
+                        "
+                      >
+                        {{ t(actionKey(row)) }}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-error"
+                        @click="
+                          remove(row);
+                          openMenuKey = null;
+                        "
+                      >
+                        {{ t('homePage.hero.watchlist.table.remove') }}
+                      </button>
+                    </li>
+                  </ul>
+                </template>
+              </div>
+            </template>
           </div>
         </li>
       </template>

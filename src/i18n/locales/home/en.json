@@ -78,6 +78,7 @@
         },
         "table": {
           "title": "Watchlist",
+          "moreActions": "More actions",
           "addAsset": "Add asset",
           "allCategories": "All categories",
           "trade": "Trade",
