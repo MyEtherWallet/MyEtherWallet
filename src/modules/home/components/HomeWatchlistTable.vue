@@ -233,7 +233,7 @@ const trade = (row: WatchlistRow) => {
                left padding animates to make room) and stays inert until then so
                it never intercepts the star. Hidden entirely while filtering. -->
           <span
-            class="drag-handle absolute left-1 top-1/2 flex -translate-y-1/2 pointer-events-none opacity-0 transition-opacity"
+            class="drag-handle absolute left-2 top-1/2 flex -translate-y-1/2 pointer-events-none opacity-0 transition-opacity"
             :class="
               dragDisabled
                 ? ''
