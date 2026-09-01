@@ -116,22 +116,10 @@ describe('ManageAccountsRow', () => {
     expect(w.emitted('rename')![0]).toEqual([])
   })
 
-  it('emits delete only after inline confirm', async () => {
+  it('emits delete when Remove is clicked (confirmation happens in a modal)', async () => {
     const w = factory()
     await w.get('[data-test="menu-remove"]').trigger('click')
-    expect(w.emitted('delete')).toBeUndefined()
-    await w.get('[data-test="delete-confirm"]').trigger('click')
     expect(w.emitted('delete')).toHaveLength(1)
-  })
-
-  it('resets the delete confirm when the menu closes (e.g. outside click)', async () => {
-    const w = factory()
-    await w.get('[data-test="menu-remove"]').trigger('click') // confirmingDelete = true
-    expect(w.find('[data-test="delete-confirm"]').exists()).toBe(true)
-    // AppPopUpMenu closing (outside click) surfaces update:open=false
-    w.findComponent({ name: 'AppPopUpMenu' }).vm.$emit('update:open', false)
-    await w.vm.$nextTick()
-    expect(w.find('[data-test="delete-confirm"]').exists()).toBe(false)
   })
 
   it('shows Disconnect only for a signing (connected) row and emits disconnect', async () => {

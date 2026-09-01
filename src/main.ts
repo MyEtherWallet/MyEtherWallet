@@ -34,6 +34,7 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
@@ -116,6 +117,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isTransactionReceiptTimeoutError(originalException) ||
         isTransientRpcError(originalException) ||
         isTrezorHandshakeError(originalException) ||
+        // WalletConnect relay "Connection interrupted while trying to subscribe"
+        // — a transient relay-WebSocket drop thrown inside @walletconnect/core,
+        // no app frame, already handled by the connect flow (APP-MEW-WEB-61 /
+        // MEW-2240).
+        isWalletConnectSubscribeInterruptedError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||

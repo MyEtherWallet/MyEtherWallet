@@ -95,7 +95,7 @@
                     @paper="onPaper(activeAccount)"
                     @explorer="openExplorer(activeAccount)"
                     @disconnect="onDisconnect"
-                    @delete="onDelete(activeAccount)"
+                    @delete="onDeleteRequest(activeAccount)"
                     @connect="onConnect"
                   />
                   <!-- No connected address for the selected network: keep the popup
@@ -165,7 +165,7 @@
                               @paper="onPaper(acc)"
                               @explorer="openExplorer(acc)"
                               @disconnect="onDisconnect"
-                              @delete="onDelete(acc)"
+                              @delete="onDeleteRequest(acc)"
                             />
                           </transition-group>
                         </div>
@@ -270,6 +270,11 @@
       :name-taken="isRenameNameTaken"
       @save="onRenameSave"
     />
+    <manage-accounts-delete-modal
+      v-model:is-open="deleteOpen"
+      :account-name="deleteTarget?.addressName"
+      @confirm="onDeleteConfirm"
+    />
   </teleport>
 </template>
 <script setup lang="ts">
@@ -285,6 +290,7 @@ import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAc
 import ManageAccountsConnectAddressView from '@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
+import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAccountsDeleteModal.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useDetectedAddress } from '@/composables/useDetectedAddress'
@@ -557,6 +563,8 @@ const openPaperWallet = ref(false)
 const paperTarget = ref<SavedAccount | null>(null)
 const renameOpen = ref(false)
 const renameTarget = ref<SavedAccount | null>(null)
+const deleteOpen = ref(false)
+const deleteTarget = ref<SavedAccount | null>(null)
 const hasBackfilled = ref(false)
 const detectedMessage = ref('')
 
@@ -695,9 +703,19 @@ const onSelect = (acc: SavedAccount): void => {
   // View the address (read-only) and update the active card; keep the popup open.
   void switchTo(acc)
 }
-const onDelete = (acc: SavedAccount): void => {
+// Delete opens a confirmation modal (Figma 8304-7964): close the popup, then open
+// the modal for the chosen account. Confirming removes the address.
+const onDeleteRequest = (acc: SavedAccount): void => {
+  deleteTarget.value = acc
+  openDialog.value = false
+  deleteOpen.value = true
+}
+const onDeleteConfirm = async (): Promise<void> => {
+  const acc = deleteTarget.value
+  if (!acc) return
+  // Record the event only after the address is actually removed.
+  await deleteAccount(acc)
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DELETED)
-  void deleteAccount(acc)
 }
 const onDisconnect = (): void => {
   // Keep the popup open so the user stays in the manage-accounts context.

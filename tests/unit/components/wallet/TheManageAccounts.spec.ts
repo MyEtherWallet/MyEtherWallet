@@ -53,6 +53,11 @@ const stubs = {
     props: ['isOpen', 'currentName'],
     template: '<div data-test="rename-modal" :data-open="isOpen" @click="$emit(\'save\', \'Renamed\')" />',
   },
+  ManageAccountsDeleteModal: {
+    name: 'ManageAccountsDeleteModal',
+    props: ['isOpen', 'accountName'],
+    template: '<div data-test="delete-modal" :data-open="isOpen" @click="$emit(\'confirm\')" />',
+  },
   ManageAccountsCard: {
     name: 'ManageAccountsCard',
     props: ['account', 'balance'],
@@ -99,6 +104,19 @@ describe('TheManageAccounts', () => {
     expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
     await w.get('[data-test="rename-modal"]').trigger('click') // stub emits save
     expect(renameAccount).toHaveBeenCalled()
+  })
+
+  it('opens the delete modal on a row delete request, closes the popup, and confirming calls deleteAccount', async () => {
+    const w = factory()
+    w.findAllComponents({ name: 'ManageAccountsRow' })[0].vm.$emit('delete')
+    await w.vm.$nextTick()
+    // The confirmation lives in a modal; the popup closes so it isn't behind it.
+    expect(w.get('[data-test="delete-modal"]').attributes('data-open')).toBe('true')
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    // Nothing removed until the user confirms in the modal.
+    expect(deleteAccount).not.toHaveBeenCalled()
+    await w.get('[data-test="delete-modal"]').trigger('click') // stub emits confirm
+    expect(deleteAccount).toHaveBeenCalledTimes(1)
   })
 
   it('disconnects the wallet but keeps the popup open when the card emits disconnect', async () => {
