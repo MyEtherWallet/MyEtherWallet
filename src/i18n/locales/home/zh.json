@@ -79,6 +79,7 @@
         "table": {
           "title": "关注列表",
           "addAsset": "添加资产",
+          "allCategories": "所有类别",
           "trade": "交易",
           "swap": "兑换",
           "remove": "从关注列表移除",

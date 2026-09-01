@@ -79,6 +79,7 @@
         "table": {
           "title": "Watchlist",
           "addAsset": "Add asset",
+          "allCategories": "All categories",
           "trade": "Trade",
           "swap": "Swap",
           "remove": "Remove from watchlist",

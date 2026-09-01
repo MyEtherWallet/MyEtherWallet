@@ -79,6 +79,7 @@
         "table": {
           "title": "Lista de seguimiento",
           "addAsset": "Agregar activo",
+          "allCategories": "Todas las categorías",
           "trade": "Operar",
           "swap": "Intercambiar",
           "remove": "Quitar de la lista",

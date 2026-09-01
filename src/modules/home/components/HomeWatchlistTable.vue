@@ -38,7 +38,7 @@ const expanded = ref(false)
 const INITIAL_COUNT = 5
 
 const CATEGORIES = [
-  { value: 'all', labelKey: 'homePage.hero.watchlist.addModal.tabs.all' },
+  { value: 'all', labelKey: 'homePage.hero.watchlist.table.allCategories' },
   { value: 'stocks', labelKey: 'homePage.hero.watchlist.addModal.tabs.stocks' },
   { value: 'crypto', labelKey: 'homePage.hero.watchlist.addModal.tabs.crypto' },
 ] as const
