@@ -16,7 +16,7 @@ vi.mock('@/composables/useCurrency', () => ({
   }),
 }))
 
-const { mapTokenRow, mapStockRow, mapPerpRow } = await import(
+const { mapTokenRow, mapStockRow, mapPerpRow, placeholderRow } = await import(
   '@/modules/home/composables/useWatchlistRows'
 )
 const { TOKEN_INFO_ROUTE_NAMES, STOCK_INFO_ROUTE_NAMES, PERP_INFO_ROUTE_NAME } =
@@ -123,5 +123,19 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
       name: PERP_INFO_ROUTE_NAME,
       params: { market: 'BTC-USD' },
     })
+  })
+
+  it('placeholderRow keeps the loaded row key so it hydrates in place', () => {
+    // Same key as mapTokenRow(coinId=ethereum) → Vue reuses the DOM node.
+    const p = placeholderRow('crypto', 'ethereum')
+    expect(p.key).toBe('token-ethereum')
+    expect(p).toMatchObject({
+      loading: true,
+      isStock: false,
+      removeType: 'crypto',
+      removeId: 'ethereum',
+    })
+    expect(placeholderRow('stock', 'AAPL').key).toBe('stock-AAPL')
+    expect(placeholderRow('perp', 'BTC').key).toBe('perp-BTC')
   })
 })

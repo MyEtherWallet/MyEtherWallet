@@ -113,60 +113,90 @@ const trade = (row: WatchlistRow) => {
           >
             <StarSolidIcon class="size-5" />
           </button>
-          <AppTokenLogo
-            :url="row.logoUrl"
-            :symbol="row.symbol"
-            :is-stock="row.isStock"
-            width="w-8"
-            height="h-8"
-          />
-          <div class="min-w-0">
-            <AppTokenSymbol
+          <template v-if="row.loading">
+            <span
+              class="size-8 shrink-0 animate-pulse rounded-full bg-[#f0f0f0]"
+            />
+            <div class="min-w-0 space-y-1.5">
+              <span class="block h-3.5 w-16 animate-pulse rounded bg-[#f0f0f0]" />
+              <span class="block h-3 w-24 animate-pulse rounded bg-[#f0f0f0]" />
+            </div>
+          </template>
+          <template v-else>
+            <AppTokenLogo
+              :url="row.logoUrl"
               :symbol="row.symbol"
               :is-stock="row.isStock"
-              class="block truncate text-s-14 font-bold text-black"
+              width="w-8"
+              height="h-8"
             />
-            <span class="block truncate text-s-12 text-[#575757]">
-              {{ row.name }}
-            </span>
-          </div>
+            <div class="min-w-0">
+              <AppTokenSymbol
+                :symbol="row.symbol"
+                :is-stock="row.isStock"
+                class="block truncate text-s-14 font-bold text-black"
+              />
+              <span class="block truncate text-s-12 text-[#575757]">
+                {{ row.name }}
+              </span>
+            </div>
+          </template>
         </div>
 
         <!-- Market value -->
         <span
           class="hidden w-[120px] text-right text-s-14 font-medium text-black lg:block"
         >
-          {{ row.marketValueDisplay }}
+          <span
+            v-if="row.loading"
+            class="inline-block h-3.5 w-16 animate-pulse rounded bg-[#f0f0f0]"
+          />
+          <template v-else>{{ row.marketValueDisplay }}</template>
         </span>
 
         <!-- Price -->
         <span class="w-[100px] text-right text-s-14 font-medium text-black">
-          {{ row.priceDisplay }}
+          <span
+            v-if="row.loading"
+            class="inline-block h-3.5 w-12 animate-pulse rounded bg-[#f0f0f0]"
+          />
+          <template v-else>{{ row.priceDisplay }}</template>
         </span>
 
         <!-- Trend -->
         <div class="hidden w-[140px] items-center justify-end gap-2 lg:flex">
           <span
-            class="flex items-center gap-0.5 text-s-12"
-            :class="row.change < 0 ? 'text-error' : 'text-success'"
-          >
-            {{ changeLabel(row.change) }}
-            <ArrowDownIcon v-if="row.change < 0" class="size-3.5" />
-            <ArrowUpIcon v-else class="size-3.5" />
-          </span>
-          <TableSparkline
-            v-if="row.sparkline.length"
-            :points="row.sparkline"
-            :percent-change="row.change"
-            :width="56"
-            :height="28"
-            :max-points="40"
-            fill
+            v-if="row.loading"
+            class="h-3.5 w-20 animate-pulse rounded bg-[#f0f0f0]"
           />
+          <template v-else>
+            <span
+              class="flex items-center gap-0.5 text-s-12"
+              :class="row.change < 0 ? 'text-error' : 'text-success'"
+            >
+              {{ changeLabel(row.change) }}
+              <ArrowDownIcon v-if="row.change < 0" class="size-3.5" />
+              <ArrowUpIcon v-else class="size-3.5" />
+            </span>
+            <TableSparkline
+              v-if="row.sparkline.length"
+              :points="row.sparkline"
+              :percent-change="row.change"
+              :width="56"
+              :height="28"
+              :max-points="40"
+              fill
+            />
+          </template>
         </div>
 
         <!-- Trade -->
+        <span
+          v-if="row.loading"
+          class="h-9 w-[88px] shrink-0 animate-pulse rounded-full bg-[#f0f0f0]"
+        />
         <button
+          v-else
           type="button"
           data-test="watchlist-trade"
           class="w-[88px] shrink-0 rounded-full bg-[#f5f5f5] py-2 text-s-14 font-medium text-primary"

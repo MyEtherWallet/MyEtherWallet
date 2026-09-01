@@ -36,6 +36,9 @@ export interface WatchlistRow {
   /** How to remove this row from the watchlist. */
   removeType: WatchlistRowType
   removeId: string
+  /** True while the row exists in the store but its market data is still loading
+   * (optimistic row) — the table renders a skeleton for it. */
+  loading?: boolean
 }
 
 /** Currency formatters injected into the pure mappers (keeps them testable). */
@@ -83,6 +86,37 @@ export const mapStockRow = (
   tradeSymbol: s.primaryMarket.symbol,
   removeType: 'stock',
   removeId: s.primaryMarket.symbol,
+})
+
+/**
+ * Optimistic placeholder for a watchlisted id whose market data hasn't loaded
+ * yet. Its `key` matches the eventual loaded row so Vue reuses the DOM node
+ * (the skeleton hydrates in place, no flicker). Only the id-derived fields and
+ * the remove action are known; the rest render as skeletons.
+ */
+export const placeholderRow = (
+  type: WatchlistRowType,
+  id: string,
+): WatchlistRow => ({
+  key: `${type === 'crypto' ? 'token' : type}-${id}`,
+  logoUrl: undefined,
+  symbol: type === 'crypto' ? '' : id,
+  name: '',
+  isStock: type === 'stock',
+  priceDisplay: '',
+  change: 0,
+  marketValueDisplay: '',
+  sparkline: [],
+  route:
+    type === 'stock'
+      ? { name: STOCK_INFO_ROUTE_NAMES.home, params: { symbol: id } }
+      : type === 'perp'
+        ? { name: PERP_INFO_ROUTE_NAME, params: { market: id } }
+        : { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: id } },
+  tradeSymbol: id,
+  removeType: type,
+  removeId: id,
+  loading: true,
 })
 
 export const mapPerpRow = (
@@ -140,20 +174,32 @@ export function useWatchlistRows(): {
   const { contracts: perpsContracts } = usePerpsContracts()
 
   const rows = computed<WatchlistRow[]>(() => {
-    // Filter fetched data by current store membership so removing a row (star)
-    // drops it immediately even before the cached fetch data refreshes.
-    const watchedTokens = new Set(watchListedTokens.value)
-    const watchedStocks = new Set(watchListedStocks.value)
-    const watchedPerps = new Set(watchListedPerps.value)
-    const tokenRows = (tokensWatchlistData.value ?? [])
-      .filter(t => watchedTokens.has(t.coinId))
-      .map(t => mapTokenRow(t, fmt))
-    const stockRows = (stocksWatchlistData.value ?? [])
-      .filter(s => watchedStocks.has(s.primaryMarket.symbol))
-      .map(s => mapStockRow(s, fmt))
-    const perpRows = perpsContracts.value
-      .filter(c => !c.disabled && watchedPerps.has(c.baseCurrency))
-      .map(c => mapPerpRow(c, fmt))
+    // Store membership (localStorage) is the source of truth: emit one row per
+    // watchlisted id right away so a just-added item shows instantly, using the
+    // fetched market data when it's there and a loading placeholder until then.
+    // Removing a row (star) drops it immediately since it leaves the store list.
+    const tokenById = new Map(
+      (tokensWatchlistData.value ?? []).map(t => [t.coinId, t]),
+    )
+    const stockBySymbol = new Map(
+      (stocksWatchlistData.value ?? []).map(s => [s.primaryMarket.symbol, s]),
+    )
+    const perpByBase = new Map(
+      perpsContracts.value.filter(c => !c.disabled).map(c => [c.baseCurrency, c]),
+    )
+
+    const stockRows = watchListedStocks.value.map(sym => {
+      const s = stockBySymbol.get(sym)
+      return s ? mapStockRow(s, fmt) : placeholderRow('stock', sym)
+    })
+    const tokenRows = watchListedTokens.value.map(id => {
+      const t = tokenById.get(id)
+      return t ? mapTokenRow(t, fmt) : placeholderRow('crypto', id)
+    })
+    const perpRows = watchListedPerps.value.map(base => {
+      const c = perpByBase.get(base)
+      return c ? mapPerpRow(c, fmt) : placeholderRow('perp', base)
+    })
     return [...stockRows, ...tokenRows, ...perpRows]
   })
 

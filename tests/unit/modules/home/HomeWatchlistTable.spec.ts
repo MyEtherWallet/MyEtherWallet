@@ -103,6 +103,30 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     })
   })
 
+  it('renders a loading row as a skeleton (star kept, no trade button)', () => {
+    const loadingRow: WatchlistRow = {
+      key: 'token-solana',
+      symbol: '',
+      name: '',
+      isStock: false,
+      priceDisplay: '',
+      change: 0,
+      marketValueDisplay: '',
+      sparkline: [],
+      route: { name: 'token-info-home', params: { tokenId: 'solana' } },
+      tradeSymbol: 'solana',
+      removeType: 'crypto',
+      removeId: 'solana',
+      loading: true,
+    }
+    const w = mountTable([loadingRow])
+    // The row is present and its star (remove) still works, but the trade
+    // button is replaced by a skeleton until data loads.
+    expect(w.findAll('[data-test="watchlist-row"]').length).toBe(1)
+    expect(w.find('[data-test="watchlist-remove"]').exists()).toBe(true)
+    expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
+  })
+
   it('Add new asset opens the add-to-watchlist dialog on demand', async () => {
     const w = mountTable()
     // Dialog is mounted only when opened (v-if), so it starts absent.
