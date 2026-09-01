@@ -23,6 +23,7 @@ import {
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
   isExpectedTradeClientError,
+  isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
   isIndexedDbMutationError,
@@ -104,6 +105,7 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isBluetoothGattDisconnectedError(originalException) ||
         isCoinNotFoundApiError(originalException) ||
         isExpectedTradeClientError(originalException) ||
+        isExtensionContextInvalidatedError(originalException) ||
         isExtensionOrProviderError(originalException) ||
         isIndexedDbMutationError(originalException) ||
         isInvalidWalletAddressError(originalException) ||
