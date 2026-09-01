@@ -52,7 +52,7 @@
     "under_review": "Under review",
     "under_review_tooltip": "Your rewards status is being reviewed. You can still see your progress, but new trades can't be registered until the review finishes",
     "modal_not_eligible_title": "You're not eligible",
-    "modal_not_eligible_desc": "Only wallets created before {date} can participate",
+    "modal_not_eligible_desc": "Your wallet is not eligible to participate in this campaign",
     "modal_banned_title": "You're banned",
     "modal_banned_desc": "Created too many wallets",
     "modal_under_review_title": "Your status is under review",
