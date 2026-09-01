@@ -6,7 +6,7 @@
       :share-text="shareText"
       :is-watchlisted="isWatchlisted"
       :icon-url="stockData?.iconPngUrl || stockData?.iconSvgUrl || undefined"
-      :symbol="stockData?.stockAlias || symbol"
+      :symbol="stockData?.primaryMarket?.symbol || symbol"
       :name="stockData?.stockAlias || ''"
       :current-price="stockData?.primaryMarket?.price ?? null"
       :price-change-percentage="

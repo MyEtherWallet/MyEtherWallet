@@ -329,6 +329,7 @@ import configs from '@/configs'
 import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
@@ -1017,10 +1018,12 @@ const swapForEvm = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || t('swap.error.fetching-gas-fees')
-    // "Pair not available" is an expected, user-facing condition (the selected
-    // pair has no route/quote). Keep the throw so generalError + analytics are
-    // handled here as designed, but skip the Sentry report to avoid noise.
-    const isPairNotAvailable = e?.message === t('swap.error.pair-not-available')
+    // Expected, user-facing swap conditions (no route/quote, thin liquidity,
+    // slippage / on-chain revert) surface via generalError; skip the Sentry
+    // report to avoid noise. See Sentry APP-MEW-WEB-EV.
+    const isExpectedError =
+      e?.message === t('swap.error.pair-not-available') ||
+      isExpectedSwapQuoteError(e?.message)
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -1028,7 +1031,7 @@ const swapForEvm = async () => {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      if (!isPairNotAvailable) {
+      if (!isExpectedError) {
         captureException(e, {
           ...SENTRY_MODULE_TAGS.SWAP,
           extra: {
@@ -1525,7 +1528,7 @@ watch(
       generalError.value = err?.message || 'Error fetching gas fees'
       const isExpectedQuoteError =
         err?.message === t('swap.error.pair-not-available') ||
-        /insufficient funds/i.test(err?.message ?? '')
+        isExpectedSwapQuoteError(err?.message)
       if (isDevMode) {
         console.error('Error fetching gas fees:', err)
       } else {
