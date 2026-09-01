@@ -52,7 +52,7 @@
     "under_review": "审核中",
     "under_review_tooltip": "您的奖励状态正在审核中。您仍可查看进度，但在审核完成之前无法登记新的交易",
     "modal_not_eligible_title": "您不符合资格",
-    "modal_not_eligible_desc": "只有在 {date} 之前创建的钱包才能参与",
+    "modal_not_eligible_desc": "您的钱包不符合参与此活动的资格",
     "modal_banned_title": "您已被禁止",
     "modal_banned_desc": "创建的钱包过多",
     "modal_under_review_title": "您的状态正在审核中",

@@ -52,7 +52,7 @@
     "under_review": "En revisión",
     "under_review_tooltip": "El estado de tus recompensas está en revisión. Puedes seguir viendo tu progreso, pero no se pueden registrar nuevas operaciones hasta que finalice la revisión",
     "modal_not_eligible_title": "No eres elegible",
-    "modal_not_eligible_desc": "Solo pueden participar las billeteras creadas antes del {date}",
+    "modal_not_eligible_desc": "Tu billetera no es elegible para participar en esta campaña",
     "modal_banned_title": "Estás vetado",
     "modal_banned_desc": "Creaste demasiadas billeteras",
     "modal_under_review_title": "Tu estado está en revisión",

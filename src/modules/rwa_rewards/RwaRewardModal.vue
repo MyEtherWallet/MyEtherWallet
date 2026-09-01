@@ -405,6 +405,7 @@ const {
   isCampaignFull,
   isCampaignEnded,
   isUnderReview,
+  isRegionBlocked,
   canRegisterTrade,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
@@ -472,24 +473,21 @@ const hasStep1Cta = computed(
     status.value === 'underReview' ||
     status.value === 'campaignEnded',
 )
-const WALLET_MIN_AGE_DAYS = 14
-const eligibilityCutoff = computed(() => {
-  const d = new Date(Date.now() - WALLET_MIN_AGE_DAYS * 86_400_000)
-  return `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getDate()}`
-})
 const noticeTitle = computed(() => {
   if (isUnderReview.value) return t('rwaRewards.modal_under_review_title')
-  return status.value === 'banned'
-    ? t('rwaRewards.modal_banned_title')
+  if (status.value === 'banned') return t('rwaRewards.modal_banned_title')
+  // A bare `Forbidden` is the season refusing the region, so say that rather
+  // than passing a jurisdiction block off as a verdict on the wallet.
+  return isRegionBlocked.value
+    ? t('trade.trading_not_available')
     : t('rwaRewards.modal_not_eligible_title')
 })
 const noticeDesc = computed(() => {
   if (isUnderReview.value) return t('rwaRewards.modal_under_review_desc')
-  return status.value === 'banned'
-    ? t('rwaRewards.modal_banned_desc')
-    : t('rwaRewards.modal_not_eligible_desc', {
-        date: eligibilityCutoff.value,
-      })
+  if (status.value === 'banned') return t('rwaRewards.modal_banned_desc')
+  return isRegionBlocked.value
+    ? t('trade.trading_restricted')
+    : t('rwaRewards.modal_not_eligible_desc')
 })
 // Fire a reward-offer CTA event for an offer-modal action
 const trackCta = (cta: string) =>
