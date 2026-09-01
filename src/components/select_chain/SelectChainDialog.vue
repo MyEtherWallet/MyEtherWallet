@@ -255,7 +255,13 @@ const searchResults = computed<Chain[]>(() => {
     const currentChainType =
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
     chainsToSearch = currentChainType
-      ? _chains.filter(chain => chain.type === currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type === currentChainType ||
+            // Keep the "All networks" option regardless of the current chain
+            // type so has-all callers never lose it (its type is EVM).
+            (prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : _chains
   } else {
     chainsToSearch = _chains
@@ -306,7 +312,13 @@ const notSupportedChains = computed<Chain[]>(() => {
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
 
     const _otherChains = currentChainType
-      ? _chains.filter(chain => chain.type !== currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type !== currentChainType &&
+            // "All networks" stays in the compatible list (see searchResults),
+            // so never surface it under the incompatible section.
+            !(prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : []
 
     if (!searchInput.value || searchInput.value === '') {
