@@ -318,6 +318,7 @@
                     <app-base-button
                       size="small"
                       theme="secondary"
+                      class="!px-3 !py-2"
                       @click="tradeBtn(token)"
                       >{{ $t('stocks.trade') }}
                     </app-base-button>
