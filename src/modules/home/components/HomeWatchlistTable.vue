@@ -11,7 +11,7 @@ import {
   ArrowDownIcon,
   ChevronDownIcon,
   Bars2Icon,
-  EllipsisVerticalIcon,
+  EllipsisHorizontalIcon,
 } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -122,20 +122,36 @@ const trade = (row: WatchlistRow) => {
 
 <template>
   <section data-test="home-watchlist-table" class="rounded-2xl bg-white p-6">
-    <h2 class="text-s-20 font-bold text-black">
-      {{ t('homePage.hero.watchlist.table.title') }}
-    </h2>
+    <!-- Header: title + Add asset (Add asset sits by the title on mobile). -->
+    <div class="flex items-center gap-4">
+      <h2 class="min-w-0 flex-1 text-s-20 font-bold text-black">
+        {{ t('homePage.hero.watchlist.table.title') }}
+      </h2>
+      <button
+        type="button"
+        data-test="watchlist-add-new-mobile"
+        class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:hidden"
+        @click="isAddOpen = true"
+      >
+        {{ t('homePage.hero.watchlist.table.addAsset') }}
+        <PlusIcon class="size-[18px]" />
+      </button>
+    </div>
 
-    <!-- Toolbar: search + category filter (left), add asset (right). -->
-    <div class="mt-6 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
+    <!-- Toolbar: search + category stacked on mobile; Add asset (desktop). -->
+    <div
+      class="mt-4 flex flex-col gap-2 min-[780px]:mt-6 min-[780px]:flex-row min-[780px]:items-center min-[780px]:justify-between"
+    >
+      <div
+        class="flex flex-col gap-2 min-[780px]:flex-row min-[780px]:items-center"
+      >
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-[#f5f5f5]"
-          class="w-[200px] rounded-full sm:w-[240px]"
+          class="w-full rounded-full min-[780px]:w-[240px]"
         />
-        <div class="relative shrink-0">
+        <div class="relative shrink-0 self-start">
           <button
             type="button"
             data-test="watchlist-category"
@@ -173,7 +189,7 @@ const trade = (row: WatchlistRow) => {
       <button
         type="button"
         data-test="watchlist-add-new"
-        class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white"
+        class="hidden h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:flex"
         @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addAsset') }}
@@ -187,6 +203,8 @@ const trade = (row: WatchlistRow) => {
     <div
       class="mt-4 flex items-center gap-2 px-2 pb-2 text-s-11 uppercase tracking-wide text-[#575757]"
     >
+      <!-- Mobile reserves the always-on drag handle; desktop reveals it on hover. -->
+      <span class="w-4 shrink-0 min-[780px]:hidden" aria-hidden="true" />
       <span class="w-5 shrink-0" aria-hidden="true" />
       <span class="min-w-0 flex-1">
         {{ t('homePage.hero.watchlist.table.columns.token') }}
@@ -230,13 +248,21 @@ const trade = (row: WatchlistRow) => {
         <li
           data-test="watchlist-row"
           class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-[#f5f5f5]"
-          :class="{ 'hover:pl-7': !dragDisabled }"
+          :class="{ 'min-[780px]:hover:pl-7': !dragDisabled }"
         >
-          <!-- Drag handle: no reserved space — it fades in on hover (the row's
-               left padding animates to make room) and stays inert until then so
-               it never intercepts the star. Hidden entirely while filtering. -->
+          <!-- Mobile: the handle is always visible (fixed) so touch users can
+               reorder. Desktop: it fades in on hover and the row's left padding
+               animates to make room (no reserved space, never intercepts the
+               star). Hidden entirely while filtering. -->
           <span
-            class="drag-handle absolute left-2 top-1/2 flex -translate-y-1/2 pointer-events-none opacity-0 transition-opacity"
+            class="drag-handle flex w-4 shrink-0 items-center justify-center min-[780px]:hidden"
+            :class="dragDisabled ? 'invisible' : 'cursor-grab active:cursor-grabbing'"
+            :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
+          >
+            <Bars2Icon class="size-4 text-[#a5a5a5]" />
+          </span>
+          <span
+            class="drag-handle absolute left-2 top-1/2 hidden -translate-y-1/2 pointer-events-none opacity-0 transition-opacity min-[780px]:flex"
             :class="
               dragDisabled
                 ? ''
@@ -344,8 +370,8 @@ const trade = (row: WatchlistRow) => {
           </div>
 
           <!-- Price — carries the 24h change inline below 1280px (no separate
-               change column there). -->
-          <div class="flex w-[100px] flex-col">
+               change column there); right-aligned on mobile per Figma. -->
+          <div class="flex w-[100px] flex-col items-end min-[780px]:items-start">
             <span
               v-if="row.loading"
               class="inline-block h-4 w-12 animate-pulse rounded bg-[#f0f0f0]"
@@ -390,7 +416,7 @@ const trade = (row: WatchlistRow) => {
                   class="hoverNoBG flex size-8 items-center justify-center rounded-full text-[#575757]"
                   @click="openMenuKey = openMenuKey === row.key ? null : row.key"
                 >
-                  <EllipsisVerticalIcon class="size-5" />
+                  <EllipsisHorizontalIcon class="size-5" />
                 </button>
                 <template v-if="openMenuKey === row.key">
                   <div
@@ -423,7 +449,7 @@ const trade = (row: WatchlistRow) => {
                           openMenuKey = null;
                         "
                       >
-                        {{ t('homePage.hero.watchlist.table.remove') }}
+                        {{ t('homePage.hero.watchlist.table.removeShort') }}
                       </button>
                     </li>
                   </ul>

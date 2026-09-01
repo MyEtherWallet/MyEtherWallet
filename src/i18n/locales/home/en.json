@@ -84,6 +84,7 @@
           "trade": "Trade",
           "swap": "Swap",
           "remove": "Remove from watchlist",
+          "removeShort": "Remove",
           "dragLabel": "Drag to reorder",
           "showMore": "Show {count} more",
           "columns": {

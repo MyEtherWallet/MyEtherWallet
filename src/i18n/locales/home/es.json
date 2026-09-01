@@ -84,6 +84,7 @@
           "trade": "Operar",
           "swap": "Intercambiar",
           "remove": "Quitar de la lista",
+          "removeShort": "Quitar",
           "dragLabel": "Arrastra para reordenar",
           "showMore": "Ver {count} más",
           "columns": {

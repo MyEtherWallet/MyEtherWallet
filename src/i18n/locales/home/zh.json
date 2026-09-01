@@ -84,6 +84,7 @@
           "trade": "交易",
           "swap": "兑换",
           "remove": "从关注列表移除",
+          "removeShort": "移除",
           "dragLabel": "拖动以重新排序",
           "showMore": "显示另外 {count} 个",
           "columns": {
