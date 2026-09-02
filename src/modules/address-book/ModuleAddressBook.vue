@@ -37,7 +37,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { isObject, throttle } from 'lodash';
+import { debounce, isObject } from 'lodash';
 import WAValidator from 'multicoin-address-validator';
 // import { getAddressInfo } from '@kleros/address-tags-sdk';
 
@@ -46,7 +46,7 @@ import Resolver from '@/modules/name-resolver/index';
 import { ERROR, Toast } from '../toast/handler/handlerToast';
 import { ROOTSTOCK } from '@/utils/networks/types';
 
-const USER_INPUT_TYPES = {
+export const USER_INPUT_TYPES = {
   typed: 'TYPED',
   selected: 'SELECTED',
   resolved: 'RESOLVED'
@@ -91,6 +91,10 @@ export default {
       isValidAddress: false,
       loadedAddressValidation: false,
       nametag: '',
+      // Incremented whenever the input, the network or the resolver changes.
+      // A resolution may only write back if its generation is still current,
+      // otherwise a slow lookup could overwrite a newer recipient.
+      resolveGeneration: 0,
       footer: {
         text: 'Need help?',
         linkTitle: 'Contact support',
@@ -174,20 +178,46 @@ export default {
   },
   watch: {
     web3() {
+      this.invalidateResolutions();
       if (this.network.type.ensEnkryptType) {
         this.nameResolver = new Resolver(this.network);
       } else {
         this.nameResolver = null;
       }
     },
+    // A network change can arrive without `web3` being replaced, so it needs
+    // its own invalidation: a resolution answered for the previous chain must
+    // not land against the new one.
+    'network.type.chainID'() {
+      this.invalidateResolutions();
+    },
+    // Switching accounts changes what a reverse lookup describes.
+    address() {
+      this.invalidateResolutions();
+    },
+    $route() {
+      this.invalidateResolutions();
+    },
     inputAddr(newVal) {
       this.nametag = '';
+      this.invalidateResolutions();
       if (isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       } else {
         this.resolveName();
       }
     }
+  },
+  created() {
+    // Debounced per instance rather than on `methods`: Vue binds a single
+    // shared function object to every instance, so declaring these on
+    // `methods` would let two address inputs on the same page (see
+    // ModuleSwap) share timer state and each other's pending results.
+    this.resolveAddress = debounce(this.resolveAddressNow, 300);
+    this.resolveName = debounce(this.resolveNameNow, 500);
+  },
+  beforeDestroy() {
+    this.invalidateResolutions();
   },
   mounted() {
     if (this.isOfflineApp) {
@@ -212,10 +242,23 @@ export default {
   },
   methods: {
     /**
+     * Abandons every name resolution that is currently pending or queued.
+     * Called whenever the input, the network or the resolver changes so that
+     * an in-flight lookup can no longer write back a result belonging to an
+     * input the user has since replaced.
+     * @returns {number} the generation callers must still match to write back
+     */
+    invalidateResolutions() {
+      this.resolveName?.cancel?.();
+      this.resolveAddress?.cancel?.();
+      return ++this.resolveGeneration;
+    },
+    /**
      * Checks if address is valid
      * and sets the address value
      */
     async setAddress(value, inputType) {
+      this.invalidateResolutions();
       if (typeof value === 'string') {
         if (
           this.currency.toLowerCase() ===
@@ -311,6 +354,7 @@ export default {
     // is used from the parent context
     // eslint-disable-next-line
     clear() {
+      this.invalidateResolutions();
       this.addMode = false;
       this.resolvedAddr = '';
       this.inputAddr = '';
@@ -341,46 +385,81 @@ export default {
       this.addMode = !this.addMode;
     },
     /**
-     * Resolves address and @returns name
+     * Everything a resolution must still agree with before it may write back.
+     * Captured before the await, re-checked after it.
      */
-    resolveAddress: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          // Ethers.js rejects Rootstock checksummed address so use lowercase address.
-          const inputAddress =
-            this.network.type.chainID === ROOTSTOCK.chainID
-              ? this.inputAddr.toLowerCase()
-              : this.inputAddr;
-          const reverseName = await this.nameResolver.resolveAddress(
-            inputAddress
-          );
+    resolutionContext() {
+      return {
+        generation: this.resolveGeneration,
+        resolver: this.nameResolver,
+        input: this.inputAddr,
+        chainID: this.network.type.chainID,
+        account: this.address
+      };
+    },
+    /**
+     * True while the resolution started in `ctx` is still the one the user is
+     * waiting on: same input, same account, same chain, same resolver, and no
+     * newer request issued since.
+     */
+    isCurrentResolution(ctx) {
+      const now = this.resolutionContext();
+      return (
+        ctx.generation === now.generation &&
+        ctx.resolver === now.resolver &&
+        ctx.input === now.input &&
+        ctx.chainID === now.chainID &&
+        ctx.account === now.account
+      );
+    },
+    /**
+     * Resolves address and @returns name
+     * Debounced per instance in created() as `resolveAddress`.
+     */
+    async resolveAddressNow() {
+      if (!this.nameResolver) return;
+      // Bind this lookup to the state that started it, so a slow reverse
+      // lookup cannot label a newer recipient.
+      const ctx = this.resolutionContext();
+      try {
+        // Ethers.js rejects Rootstock checksummed address so use lowercase address.
+        const inputAddress =
+          ctx.chainID === ROOTSTOCK.chainID ? ctx.input.toLowerCase() : ctx.input;
+        const reverseName = await ctx.resolver.resolveAddress(inputAddress);
+        if (!this.isCurrentResolution(ctx)) return;
 
-          this.resolvedAddr = reverseName?.name ? reverseName.name : '';
-        } catch (e) {
-          Toast(e, {}, ERROR);
-        }
+        this.resolvedAddr = reverseName?.name ? reverseName.name : '';
+      } catch (e) {
+        if (!this.isCurrentResolution(ctx)) return;
+        Toast(e, {}, ERROR);
       }
-    }, 300),
+    },
     /**
      * Resolves name and @returns address
+     * Debounced per instance in created() as `resolveName`.
      */
-    resolveName: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          await this.nameResolver.resolveName(this.inputAddr).then(addr => {
-            this.resolvedAddr = addr;
-            this.isValidAddress = true;
-            this.loadedAddressValidation = true;
-            this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
-              type: USER_INPUT_TYPES.resolved,
-              value: this.inputAddr
-            });
-          });
-        } catch (e) {
-          this.loadedAddressValidation = true;
-        }
+    async resolveNameNow() {
+      if (!this.nameResolver) return;
+      // Bind this lookup to the state that started it. Without this an
+      // attacker-controlled resolver could stall its answer and overwrite a
+      // recipient the user has already corrected.
+      const ctx = this.resolutionContext();
+      try {
+        const addr = await ctx.resolver.resolveName(ctx.input);
+        if (!this.isCurrentResolution(ctx)) return;
+
+        this.resolvedAddr = addr;
+        this.isValidAddress = true;
+        this.loadedAddressValidation = true;
+        this.$emit('setAddress', this.resolvedAddr, this.isValidAddress, {
+          type: USER_INPUT_TYPES.resolved,
+          value: ctx.input
+        });
+      } catch (e) {
+        if (!this.isCurrentResolution(ctx)) return;
+        this.loadedAddressValidation = true;
       }
-    }, 500)
+    }
   }
 };
 </script>
