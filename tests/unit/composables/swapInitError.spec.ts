@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isTransientSwapInitError } from '@/composables/swapInitError'
+import { isTransientSwapInitError } from '@/utils/swapInitError'
 
 describe('isTransientSwapInitError', () => {
   it('is true for a JSON-parse SyntaxError (SDK parsed a non-JSON upstream body)', () => {
@@ -61,6 +61,19 @@ describe('isTransientSwapInitError', () => {
       isTransientSwapInitError(
         new TypeError("Cannot read properties of undefined (reading 'all')"),
       ),
+    ).toBe(false)
+  })
+
+  // A bare `includes('network')` matched this, so a real application bug was
+  // retried and then suppressed from Sentry as expected noise.
+  it('is false for a property-access TypeError that merely mentions network', () => {
+    expect(
+      isTransientSwapInitError(
+        new TypeError("Cannot read properties of undefined (reading 'network')"),
+      ),
+    ).toBe(false)
+    expect(
+      isTransientSwapInitError(new TypeError('networkInfo is not a function')),
     ).toBe(false)
   })
 

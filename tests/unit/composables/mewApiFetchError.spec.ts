@@ -3,7 +3,7 @@ import {
   buildMewApiErrorMessage,
   buildMewApiErrorFingerprint,
   describeMewApiFetchError,
-} from '@/composables/mewApiFetchError'
+} from '@/utils/mewApiFetchError'
 
 describe('buildMewApiErrorMessage', () => {
   it('never returns an empty message for an HTTP/2 non-OK response (the "No error message" bug)', () => {

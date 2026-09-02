@@ -14,7 +14,7 @@ import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
 import { analytics, initAnalytics } from './analytics'
-import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
@@ -37,7 +37,7 @@ import {
   isTrezorHandshakeError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
+import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 
 const app = createApp(App)
 
@@ -211,11 +211,11 @@ app.use(autoAnimatePlugin)
 // `isRegionRestricted` user property is reported no matter which page the user
 // entered on — not just the pages that consume the restriction themselves. It is
 // chained after init so the identify call is not buffered pre-initialization,
-// and it is a no-op for latency: the singleton dedupes with the earlier calls
-// from TheHeader and the perps route guard, whichever fires first.
+// and it is a no-op for latency: the store dedupes with the earlier calls from
+// TheHeader and the perps route guard, whichever fires first.
 void router.isReady().then(async () => {
   await initAnalytics()
-  void fetchTradingRestriction()
+  void useGlobalStore().fetchTradingRestriction()
 })
 
 // Provide analytics for legacy inject() usage in Vue components

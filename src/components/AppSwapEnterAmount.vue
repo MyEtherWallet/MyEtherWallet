@@ -127,7 +127,7 @@ import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import { type NewTokenInfo } from '@/composables/useSwap'
+import { type NewTokenInfo } from '@/stores/swapStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 

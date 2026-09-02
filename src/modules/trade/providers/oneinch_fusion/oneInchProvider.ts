@@ -1,13 +1,13 @@
 import { type EIP712TypedData } from '@1inch/limit-order-sdk'
 import { type BlockchainProviderConnector } from '@1inch/fusion-sdk'
-import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { PublicClient } from 'viem'
 
 export type EthereumProvider = { request(...args: unknown[]): Promise<unknown> }
 
 export class Web3ProviderConnector implements BlockchainProviderConnector {
   constructor(
-    protected readonly wallet: BaseEvmWallet,
+    protected readonly wallet: WalletInterface,
     protected readonly publicClient: PublicClient,
   ) {}
 
@@ -15,7 +15,10 @@ export class Web3ProviderConnector implements BlockchainProviderConnector {
     walletAddress: string,
     typedData: EIP712TypedData,
   ): Promise<string> {
-    return this.wallet.SignTypedMessage(typedData) as Promise<string>
+    if (!this.wallet.SignTypedMessage) {
+      throw new Error('The connected wallet cannot sign typed messages')
+    }
+    return this.wallet.SignTypedMessage(typedData)
   }
 
   async ethCall(contractAddress: string, callData: string): Promise<string> {

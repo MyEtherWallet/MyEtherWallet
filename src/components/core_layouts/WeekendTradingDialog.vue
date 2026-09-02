@@ -67,7 +67,6 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
@@ -92,8 +91,9 @@ const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
   useRwaAnnouncementStore(),
 )
 
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
-const { fetchTradingRestriction } = useMarketStatus()
+const globalStore = useGlobalStore()
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
+const { fetchTradingRestriction } = globalStore
 
 const isOpen = ref(false)
 

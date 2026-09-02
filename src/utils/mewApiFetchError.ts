@@ -114,11 +114,16 @@ export const describeMewApiFetchError = (
   ctx: MewApiFetchErrorContext,
 ): MewApiCapturedError => {
   const message = buildMewApiErrorMessage(ctx)
-  // A raw error whose message is just the HTTP reason phrase (message ===
-  // statusText, e.g. "Not Acceptable") is not usable: reporting it verbatim
-  // collapses every failure of that status into the generic reason phrase. In
-  // that case synthesize a fresh Error from the descriptive built message and
-  // keep the original as `cause`.
+  // Two ways a raw error message is unusable, both of which must fall back to
+  // the computed message (keeping the original as `cause`):
+  //
+  // - Whitespace-only: trimmed here to agree with `extractErrorMessage`, which
+  //   already treats it as unusable. Otherwise `new Error('   ')` is kept as-is
+  //   and the fallback is discarded — the blank-message problem this file exists
+  //   to prevent.
+  // - Just the HTTP reason phrase (message === statusText, e.g. "Not
+  //   Acceptable"): reporting it verbatim collapses every failure of that status
+  //   into the generic reason phrase.
   const hasUsableError =
     ctx.error instanceof Error &&
     ctx.error.message.trim().length > 0 &&

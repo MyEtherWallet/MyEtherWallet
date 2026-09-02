@@ -2,9 +2,11 @@ import { describe, it, expect, vi } from 'vitest'
 import type { RouteRecordRaw } from 'vue-router'
 
 // routesDefault pulls this in at module load; stub it so importing the routes
-// doesn't drag in the trading-restriction composable and its deps.
-vi.mock('@/composables/useTradingRestriction', () => ({
-  fetchTradingRestriction: vi.fn(),
+// doesn't drag in globalStore's analytics / hw-wallet chain. The geo check moved
+// from `useTradingRestriction` into globalStore, so the store is what needs
+// stubbing now — this spec only reads route metadata and never runs the guard.
+vi.mock('@/stores/globalStore', () => ({
+  useGlobalStore: () => ({ fetchTradingRestriction: vi.fn() }),
 }))
 // routesAccess/routesCreate import walletConfigs, which transitively loads the
 // Ledger hw-wallet module (fails under jsdom) — stub the lists they need.

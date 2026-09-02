@@ -16,29 +16,37 @@ const _getMarketStatus = (): Promise<GetWebSwapOndoMarketStatusResponse> => {
 
 const getMarketStatus = throttle(_getMarketStatus, 1000)
 
-const getRestrictedTokenAddresses = (): Promise<string[]> => {
-  return fetch(
+/**
+ * The restricted-RWA address list, and **rejects** when it could not be fetched.
+ * An empty array previously stood for both "nothing is restricted" and "the
+ * fetch failed", which let a failed fetch read as a successful empty filter and
+ * expose restricted tokens in a restricted region.
+ */
+const getRestrictedTokenAddresses = async (): Promise<string[]> => {
+  const res = await fetch(
     `https://raw.githubusercontent.com/enkryptcom/dynamic-data/refs/heads/main/configs/filtered-rwa-addresses.json`,
   )
-    .then(res => {
-      if (!res.ok) return []
-      return res.json() as Promise<string[]>
-    })
-    .catch(() => [])
+  if (!res.ok) {
+    throw new Error(`restricted-address list fetch failed: ${res.status}`)
+  }
+  return (await res.json()) as string[]
 }
 
+/**
+ * Resolves to the region's verdict, and **rejects** when the check could not be
+ * made. It deliberately does not convert failures into `true`: the caller
+ * (`globalStore.fetchTradingRestriction`) already fails closed on rejection, and
+ * it can only report the failure to Sentry and allow a later retry if it can
+ * tell a real "restricted" answer apart from an unreachable endpoint.
+ */
 const isTradingRestricted = async (): Promise<boolean> => {
   if (configs.TRADING_RESTRICTION === 'off') return false
-  return fetch(`https://partners.mewapi.io/o/ipcomply/web`)
-    .then(async res => {
-      if (!res.ok) return true
-      else {
-        const json: { isRWARestricted: boolean } = await res.json()
-        return json.isRWARestricted
-      }
-    })
-    .catch(() => true
-    )
+  const res = await fetch(`https://partners.mewapi.io/o/ipcomply/web`)
+  if (!res.ok) {
+    throw new Error(`ipcomply check failed: ${res.status}`)
+  }
+  const json: { isRWARestricted: boolean } = await res.json()
+  return json.isRWARestricted
 }
 
 const checkAddressRestriction = async (address: string): Promise<boolean> => {

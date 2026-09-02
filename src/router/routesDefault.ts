@@ -10,7 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
-import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -142,7 +142,7 @@ const DefaultRoutes = <RouteNameCollection>[
       // blocked state instead of redirecting away. The geo check is still
       // awaited here so it is resolved before the first paint, otherwise a
       // restricted user would briefly see a tradeable UI.
-      await fetchTradingRestriction()
+      await useGlobalStore().fetchTradingRestriction()
       next()
     },
     children: [

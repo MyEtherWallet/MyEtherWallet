@@ -155,7 +155,7 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
-import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
@@ -176,7 +176,7 @@ const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 // state instead of disappearing. The check is still kicked off here, on a
 // component mounted at app start, so it is resolved by the time any perps
 // surface reads it and none of them flash their restricted state.
-fetchTradingRestriction()
+useGlobalStore().fetchTradingRestriction()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /**
