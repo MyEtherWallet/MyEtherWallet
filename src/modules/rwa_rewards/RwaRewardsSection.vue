@@ -124,6 +124,7 @@ const {
   isCampaignEnded,
   isUnderReview,
   isClaiming,
+  qualificationAmount,
 } = storeToRefs(holdingsStore)
 const { isWatchOnly } = storeToRefs(useWalletStore())
 const { openAccessDialog } = useAccessStore()
@@ -206,7 +207,7 @@ const holdCardStatus = computed<
 const holdCardDescription = computed(() =>
   holdCardStatus.value === 'full'
     ? t('rwaRewards.maxed_out_description')
-    : t('rwaRewards.hold_description'),
+    : t('rwaRewards.hold_description', { amount: qualificationAmount.value }),
 )
 
 // `id` is the stable value reported to analytics; the label is localized and

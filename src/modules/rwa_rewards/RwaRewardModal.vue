@@ -48,7 +48,11 @@
                   :class="{ 'pb-5': hasStep1Cta }"
                 >
                   <p :class="stepText" class="h-6 mb-[14px]">
-                    {{ $t('rwaRewards.modal_step1') }}
+                    {{
+                      $t('rwaRewards.modal_step1', {
+                        amount: qualificationAmount,
+                      })
+                    }}
                     <span :class="boldText"
                       >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
                     >
@@ -407,6 +411,7 @@ const {
   isUnderReview,
   isRegionBlocked,
   canRegisterTrade,
+  qualificationAmount,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
@@ -416,7 +421,9 @@ const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
 )
-const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
+const hasRewardExpiry = computed(
+  () => !!activeReward.value?.expiration_timestamp,
+)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
@@ -528,7 +535,7 @@ const campaignEndText = computed(() => {
 })
 
 const offerRules = computed(() => [
-  t('rwaRewards.offer_rule_1'),
+  t('rwaRewards.offer_rule_1', { amount: qualificationAmount.value }),
   t('rwaRewards.offer_rule_2'),
   t('rwaRewards.offer_rule_3'),
   t('rwaRewards.offer_rule_4'),

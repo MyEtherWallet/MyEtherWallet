@@ -328,6 +328,7 @@ const {
   isCampaignEnded,
   isUnderReview,
   canRegisterTrade,
+  qualificationAmount,
 } = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
@@ -455,16 +456,22 @@ const daysLeftLabel = computed(() => {
   })
 })
 
-const steps: { n: number; pre: string; bold: string; post?: string }[] = [
+// Computed, not a plain array: the qualification amount arrives with `/info` after
+// setup runs, and a once-evaluated array would keep showing the pre-load placeholder.
+const steps = computed<
+  { n: number; pre: string; bold: string; post?: string }[]
+>(() => [
   {
     n: 1,
     pre: t('rwaRewards.hero_step1'),
     bold: t('rwaRewards.hero_step1_bold'),
-    post: t('rwaRewards.hero_step1_post'),
+    post: t('rwaRewards.hero_step1_post', {
+      amount: qualificationAmount.value,
+    }),
   },
   {
     n: 2,
-    pre: t('rwaRewards.hero_step2'),
+    pre: t('rwaRewards.hero_step2', { amount: qualificationAmount.value }),
     bold: t('rwaRewards.hero_step2_bold'),
   },
   {
@@ -472,5 +479,5 @@ const steps: { n: number; pre: string; bold: string; post?: string }[] = [
     pre: t('rwaRewards.hero_step3'),
     bold: t('rwaRewards.hero_step3_bold'),
   },
-]
+])
 </script>
