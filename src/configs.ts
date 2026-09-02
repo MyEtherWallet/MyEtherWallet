@@ -1,4 +1,4 @@
-const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://staging.mewwallet.dev'
+const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
 // Strapi serves uploads from the host root (`/uploads/...`), not from `/api`,
 // so the host is the shared constant and the API path hangs off it.
@@ -28,7 +28,7 @@ const configs = {
   MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
-  RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season1`,
+  RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,
   MEW_MOBILE_DOWNLOAD_URL: 'https://download.mewwallet.com',
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
