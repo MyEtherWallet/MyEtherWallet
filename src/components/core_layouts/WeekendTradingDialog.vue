@@ -68,7 +68,6 @@ import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnou
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
-import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
 import qqq from '@/assets/images/weekend-trading/qqq.png'
 import googl from '@/assets/images/weekend-trading/googl.png'
@@ -110,11 +109,9 @@ onMounted(async () => {
   await fetchTradingRestriction()
   if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
-    if (
-      !isWalletUnlocked.value &&
-      (route.name === ROUTES_ACCESS.ACCESS.NAME ||
-        route.name === ROUTES_CREATE_WALLET.CREATE_WALLET.NAME)
-    ) {
+    // Only overlay records carry `meta.walletFlow`, and there is one per host page, so
+    // this replaces two now-insufficient fixed-name comparisons.
+    if (!isWalletUnlocked.value && route.meta.walletFlow) {
       showAfter.value = true
     } else {
       openDialog()

@@ -93,6 +93,7 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { pageRouteName } from '@/router/routeHierarchy'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
@@ -133,10 +134,14 @@ watch(isWalletConnected, connected => {
   }
 })
 
+// pageRouteName, not route.name: the connect/create overlays are children of every
+// page, so a bare route.name stops matching while one is open and the page underneath
+// would visibly reflow behind the modal.
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
+  const page = pageRouteName(route)
+  if (page === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background '
-  } else if (route.name === ROUTES_MAIN.EARN.NAME) {
+  } else if (page === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
   } else {
     return ''
@@ -145,7 +150,7 @@ const backgroundClass = computed(() => {
 
 // The Home page ('/') keeps the layout max-width but drops the shared
 // horizontal padding, so its sections own their padding.
-const isNewHome = computed(() => route.name === ROUTES_MAIN.HOME.NAME)
+const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import DefaultRoutes from './routesDefault'
+import { pageRouteName } from './routeHierarchy'
 
 // A persisted watch-only address restores into a wallet asynchronously (on the
 // chains-load), which happens after this guard runs on a fresh load. Treat it
@@ -20,9 +21,18 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
-    } else {
-      return { top: 0, left: 0, behavior: 'smooth' }
     }
+    // Opening or cancelling the connect/create overlay doesn't change the page
+    // underneath, so don't scroll it — otherwise "return the user where they were"
+    // still loses their scroll position.
+    if (
+      (to.meta.walletFlow || from.meta.walletFlow) &&
+      pageRouteName(to) &&
+      pageRouteName(to) === pageRouteName(from)
+    ) {
+      return false
+    }
+    return { top: 0, left: 0, behavior: 'smooth' }
   },
 })
 
