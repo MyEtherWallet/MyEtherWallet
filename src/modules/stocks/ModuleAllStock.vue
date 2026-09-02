@@ -23,6 +23,7 @@
           v-model:selected="selectedCryptoFilter"
           :options="cryptoFilterOptions"
           position="left-0"
+          :max-visible-items="7"
         >
           <template #select-button="{ toggleSelect }">
             <button
