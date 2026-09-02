@@ -1,5 +1,5 @@
 import { bytesToHex } from 'web3-utils'
-import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
 import { fromRpcSig, hexToBytes } from '@ethereumjs/util'
@@ -51,13 +51,25 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
     try {
-      const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
-      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-        hexToBytes(serializedTx),
-        { common },
-      )
+      const bytes = hexToBytes(serializedTx)
+      // Non-EIP-1559 chains (e.g. Rootstock) return a legacy type-0 tx whose
+      // first byte is an RLP list prefix, which the EIP-1559 class rejects;
+      // try 1559 first, then fall back to LegacyTransaction.
+      let tx: FeeMarketEIP1559Transaction | LegacyTransaction
+      try {
+        tx = FeeMarketEIP1559Transaction.fromSerializedTx(bytes, {
+          common: commonGenerator(BigInt(this.chainId), Hardfork.London),
+        })
+      } catch {
+        tx = LegacyTransaction.fromSerializedTx(bytes, {
+          common: commonGenerator(BigInt(this.chainId), Hardfork.Berlin),
+        })
+      }
       const walletSig = (await this.hwWalletInstance.signTransaction({
-        transaction: tx,
+        // The Trezor signer (@enkryptcom/hw-wallets) accepts a LegacyTransaction;
+        // the cast only works around the narrower Eth type on the LedgerManager
+        // arm of the HWManager union.
+        transaction: tx as FeeMarketEIP1559Transaction,
         networkName: this.networkName as NetworkNames,
         pathIndex: this.index,
         pathType: {
