@@ -7,7 +7,7 @@ import type {
   CryptoOverviewChain,
   CryptoOverviewNativeChain,
 } from '@/mew_api/types'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 
 /**
  * Opens Swap / Bridge for a crypto new-listing coin, mirroring the crypto

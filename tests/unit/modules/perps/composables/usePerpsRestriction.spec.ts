@@ -1,42 +1,48 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
 
-const HELP_URL = 'https://help.example.test/restrictions'
-
-// Implementation is swapped per test rather than using mockResolvedValue, whose
-// vitest typings infer `never` for this signature.
-const isTradingRestricted = vi.fn(
-  (): Promise<boolean> => Promise.resolve(false),
-)
+// Hoisted so the mock factories below (which vitest lifts above this file's
+// top-level statements) can reference them.
+const { HELP_URL, isTradingRestricted } = vi.hoisted(() => ({
+  HELP_URL: 'https://help.example.test/restrictions',
+  // Implementation is swapped per test rather than using mockResolvedValue,
+  // whose vitest typings infer `never` for this signature.
+  isTradingRestricted: vi.fn((): Promise<boolean> => Promise.resolve(false)),
+}))
 
 vi.mock('@/modules/trade/providers/ondoHelpers', () => ({
   isTradingRestricted: () => isTradingRestricted(),
   TRADING_RESTRICTED_HELP_URL: HELP_URL,
 }))
 
+// globalStore (which now owns the geo check) pulls in analytics and Sentry;
+// @/analytics transitively resolves the hardware-wallet SDK, unavailable here.
+vi.mock('@/analytics', () => ({
+  analytics: { setNetwork: vi.fn(), setIsRegionRestricted: vi.fn() },
+}))
+vi.mock('@sentry/vue', () => ({ setTag: vi.fn() }))
+vi.mock('@/utils/reportModuleError', () => ({ reportModuleError: vi.fn() }))
+
 const resolvesTo = (value: boolean) =>
   isTradingRestricted.mockImplementation(() => Promise.resolve(value))
 
-// The geo check lives in module scope and caches its promise for the session, so
-// every case needs a freshly imported module graph.
-const freshImport = async () => {
-  vi.resetModules()
-  return import('@/modules/perps/composables/usePerpsRestriction')
-}
+import {
+  usePerpsRestriction,
+  resolvePerpsRestricted,
+} from '@/modules/perps/composables/usePerpsRestriction'
 
 describe('usePerpsRestriction', () => {
+  // The geo check and its dedupe live in the store, so each case needs a fresh
+  // pinia rather than a fresh module graph.
   beforeEach(() => {
+    setActivePinia(createPinia())
     isTradingRestricted.mockReset()
     resolvesTo(false)
   })
 
-  afterEach(() => {
-    vi.resetModules()
-  })
-
-  it('starts restricted before the geo check resolves', async () => {
+  it('starts restricted before the geo check resolves', () => {
     // Never settles: this is the pre-resolution window.
     isTradingRestricted.mockImplementation(() => new Promise<boolean>(() => {}))
-    const { usePerpsRestriction } = await freshImport()
 
     const { isPerpsRestricted } = usePerpsRestriction()
 
@@ -47,7 +53,6 @@ describe('usePerpsRestriction', () => {
 
   it('clears the restriction once the check reports the region is allowed', async () => {
     resolvesTo(false)
-    const { usePerpsRestriction, resolvePerpsRestricted } = await freshImport()
 
     const { isPerpsRestricted } = usePerpsRestriction()
     await resolvePerpsRestricted()
@@ -57,7 +62,6 @@ describe('usePerpsRestriction', () => {
 
   it('stays restricted when the check reports the region is blocked', async () => {
     resolvesTo(true)
-    const { usePerpsRestriction, resolvePerpsRestricted } = await freshImport()
 
     const { isPerpsRestricted } = usePerpsRestriction()
     await resolvePerpsRestricted()
@@ -69,23 +73,14 @@ describe('usePerpsRestriction', () => {
     isTradingRestricted.mockImplementation(() =>
       Promise.reject(new Error('network down')),
     )
-    // The composable logs the failure in dev mode; expected here, so keep it
-    // out of the suite output.
-    const consoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => undefined)
-    const { usePerpsRestriction, resolvePerpsRestricted } = await freshImport()
 
     const { isPerpsRestricted } = usePerpsRestriction()
     await resolvePerpsRestricted()
 
     expect(isPerpsRestricted.value).toBe(true)
-    consoleError.mockRestore()
   })
 
-  it('exposes the help url used by the Learn more links', async () => {
-    const { usePerpsRestriction } = await freshImport()
-
+  it('exposes the help url used by the Learn more links', () => {
     expect(usePerpsRestriction().perpsHelpUrl).toBe(HELP_URL)
   })
 
@@ -96,22 +91,18 @@ describe('usePerpsRestriction', () => {
     // address change, stranding them signed out for the whole session.
     it('resolves to the real value rather than the fail-closed default', async () => {
       resolvesTo(false)
-      const { resolvePerpsRestricted } = await freshImport()
 
       await expect(resolvePerpsRestricted()).resolves.toBe(false)
     })
 
     it('resolves to true when blocked', async () => {
       resolvesTo(true)
-      const { resolvePerpsRestricted } = await freshImport()
 
       await expect(resolvePerpsRestricted()).resolves.toBe(true)
     })
 
     it('hits the network once per session no matter how many callers await it', async () => {
       resolvesTo(false)
-      const { usePerpsRestriction, resolvePerpsRestricted } =
-        await freshImport()
 
       usePerpsRestriction()
       usePerpsRestriction()

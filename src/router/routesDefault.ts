@@ -10,7 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
-import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -34,12 +34,17 @@ const DefaultRoutes = <RouteNameCollection>[
     },
   },
   {
-    // The wallet portfolio moved off the root; requires a connected wallet
-    // (the guard bounces disconnected users to '/'). Its connect/create and
-    // token/stock-info children keep their own `noAuth` where they had it.
+    // The wallet portfolio moved off the root. It stays reachable without a
+    // wallet (`noAuth`) so disconnected users get its connect-wallet state
+    // (ViewPortfolio renders <connect-wallet> when !isWalletConnected) instead
+    // of being bounced to Home. Its connect/create and token/stock-info
+    // children inherit `noAuth` — all are meant to be reachable disconnected.
     path: ROUTES_MAIN.PORTFOLIO.PATH,
     name: ROUTES_MAIN.PORTFOLIO.NAME,
     component: PortfolioView,
+    meta: {
+      noAuth: true,
+    },
     children: [
       CREATE_ROUTES,
       ACCESS_ROUTES,
@@ -137,7 +142,7 @@ const DefaultRoutes = <RouteNameCollection>[
       // blocked state instead of redirecting away. The geo check is still
       // awaited here so it is resolved before the first paint, otherwise a
       // restricted user would briefly see a tradeable UI.
-      await fetchTradingRestriction()
+      await useGlobalStore().fetchTradingRestriction()
       next()
     },
     children: [

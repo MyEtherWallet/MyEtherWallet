@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   isTooltipDue,
   FIVE_DAYS_MS,
-} from '@/modules/trade/composables/announcementSchedule'
+} from '@/modules/trade/common/announcementSchedule'
 
 const BASE = 1_700_000_000_000
 

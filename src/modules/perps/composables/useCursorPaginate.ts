@@ -3,6 +3,7 @@ import type { PaginatedResponse } from '../sdk/types'
 import { capturePerps } from '../sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
 
+// Use for API collections with cursor pagination and stale-request cancellation.
 export function useCursorPaginate<T>(
   fetcher: (opts: {
     limit: number

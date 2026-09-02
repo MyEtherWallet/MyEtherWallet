@@ -49,6 +49,24 @@ const mapAccessBlock = (status: number): RwaAccessBlock | null => {
 }
 
 /**
+ * Whether a 403 refused the whole region rather than this wallet. `/info` and
+ * `/register` answer a bare `Forbidden` when the region is blocked; a verdict on
+ * the wallet itself (a ban) names itself in `msg`. Only a bare `Forbidden` may be
+ * explained to the user as a jurisdiction problem.
+ */
+const isForbiddenByRegion = async (res: Response): Promise<boolean> => {
+  if (res.status !== 403) return false
+  try {
+    const { msg } = (await res.json()) as { msg?: string }
+    return typeof msg === 'string' && msg.trim().toLowerCase() === 'forbidden'
+  } catch {
+    // No body, or not JSON: nothing more specific than the status, and a
+    // jurisdiction claim we can't back up is worse than a vague one.
+    return false
+  }
+}
+
+/**
  * The four per-wallet buckets, emptied. `/info` with no address answers with the
  * season block alone, so the buckets have to be filled in locally to keep the
  * payload one shape everywhere
@@ -105,6 +123,11 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   // Null means open (or only a transient failure, which is not the same thing).
   const accessBlock = ref<RwaAccessBlock | null>(null)
 
+  // True when the refusal above was a bare `Forbidden` — the region is blocked,
+  // not this wallet. The status stays `notEligible` either way; only the copy
+  // shown to the user differs.
+  const isRegionBlocked = ref(false)
+
   const fetchInfo = async (address: string) => {
     if (!address) return
     currentAddress = address
@@ -113,8 +136,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       const res = await fetch(`${BASE}/info?address=${address}`)
       if (!res.ok) {
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block && address === currentAddress) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           // Drop this wallet's buckets — keeping them would leave the offer
           // looking live and joinable after the season closed to it. The season
           // block survives: it describes the campaign, not the wallet, and is
@@ -137,6 +162,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         info: { ...info.value?.info, ...data.info },
       }
       accessBlock.value = null
+      isRegionBlocked.value = false
       error.value = null
     } catch {
       if (address === currentAddress)
@@ -168,8 +194,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         // With no address in the request, a refusal is season- or region-wide
         // rather than a verdict on any one wallet.
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block && !currentAddress) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           info.value = null
         }
         throw new Error(`RWA campaign info request failed: ${res.status}`)
@@ -180,6 +208,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       // is no wallet to scope them to.
       info.value = { ...emptyBuckets(), ...data }
       accessBlock.value = null
+      isRegionBlocked.value = false
       error.value = null
     } catch {
       if (!currentAddress) error.value = 'Failed to fetch RWA rewards'
@@ -235,8 +264,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         // 423 (kill-switch) and 404 (registration window closed) mean the season
         // stopped taking entries between our last `/info` and this trade.
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           fetchInfo(currentAddress)
           addToastMessage({
             text: i18n.global.t('rwaRewards.register_unavailable'),
@@ -527,6 +558,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isCampaignFull,
     isCampaignEnded,
     isUnderReview,
+    isRegionBlocked,
     canRegisterTrade,
     isHoldOfferDismissed,
     seasonEnd,
