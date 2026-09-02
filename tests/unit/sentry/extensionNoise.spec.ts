@@ -7,6 +7,7 @@ import {
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -76,9 +77,9 @@ describe('isExtensionOrProviderError', () => {
   })
 
   it('is false for non-benign provider-looking codes (e.g. -32603 internal)', () => {
-    expect(isExtensionOrProviderError({ code: -32603, message: 'Internal' })).toBe(
-      false,
-    )
+    expect(
+      isExtensionOrProviderError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
   })
 
   it('is false for non-object inputs', () => {
@@ -191,9 +192,9 @@ describe('isProviderNotFoundError', () => {
 
   it('is false for a genuine app error', () => {
     expect(isProviderNotFoundError(new Error('boom'))).toBe(false)
-    expect(
-      isProviderNotFoundError({ name: 'TypeError', message: 'x' }),
-    ).toBe(false)
+    expect(isProviderNotFoundError({ name: 'TypeError', message: 'x' })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -271,7 +272,9 @@ describe('isTrezorHandshakeError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(false)
+    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -479,9 +482,9 @@ describe('isRainbowKitNotFoundError', () => {
     expect(isRainbowKitNotFoundError(new Error('not found rainbowkit'))).toBe(
       true,
     )
-    expect(
-      isRainbowKitNotFoundError({ message: 'not found rainbowkit' }),
-    ).toBe(true)
+    expect(isRainbowKitNotFoundError({ message: 'not found rainbowkit' })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -583,7 +586,8 @@ describe('isMetaMaskSdkDecryptError', () => {
 
   it('ignores an unrelated metamask-sdk error', () => {
     const err = new Error('some other failure')
-    err.stack = 'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
+    err.stack =
+      'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
     expect(isMetaMaskSdkDecryptError(err)).toBe(false)
   })
 
@@ -639,9 +643,9 @@ describe('isIndexedDbMutationError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(
-      isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 }),
-    ).toBe(false)
+    expect(isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -687,15 +691,15 @@ describe('isExpectedTradeClientError', () => {
         }),
       ),
     ).toBe(false)
-    expect(isExpectedTradeClientError(new Error('Some genuine 5xx failure'))).toBe(
-      false,
-    )
+    expect(
+      isExpectedTradeClientError(new Error('Some genuine 5xx failure')),
+    ).toBe(false)
   })
 
   it('is false for a genuine app error carrying unrelated properties', () => {
-    expect(
-      isExpectedTradeClientError({ message: 'boom', code: 500 }),
-    ).toBe(false)
+    expect(isExpectedTradeClientError({ message: 'boom', code: 500 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -763,9 +767,9 @@ describe('isCoinNotFoundApiError', () => {
   })
 
   it('is false for other mew-api 400s that happen to mention "not found"', () => {
-    expect(
-      isCoinNotFoundApiError(new Error('Address not found: 0x0.')),
-    ).toBe(false)
+    expect(isCoinNotFoundApiError(new Error('Address not found: 0x0.'))).toBe(
+      false,
+    )
   })
 
   it('is false for a genuine app error', () => {
@@ -842,7 +846,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
   })
 
   it('is true for the serialized production payload (plain object with message)', () => {
-    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -865,7 +871,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
       ),
     ).toBe(false)
     expect(
-      isWalletConnectSubscribeInterruptedError(new Error('Connection is closed')),
+      isWalletConnectSubscribeInterruptedError(
+        new Error('Connection is closed'),
+      ),
     ).toBe(false)
   })
 
@@ -873,7 +881,110 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError(null)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError(undefined)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(
+      false,
+    )
+    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
+      false,
+    )
+  })
+})
+
+describe('isEip6963NullProviderError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index-DnJdQRhG.js'
+
+  it('is true for the mipd requestProviders null-detail crash (APP-MEW-WEB-1JM)', () => {
+    // A browser extension dispatched `eip6963:announceProvider` with a null
+    // `detail`; mipd's requestProviders callback derefs `he.info`.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:13033\n` +
+          `    at de (${BUNDLE}:296:12977)\n` +
+          `    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the "destructure property info" message variant (APP-MEW-WEB-1JM)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message:
+          "Cannot destructure property 'info' of 'object null' as it is null.",
+        stack:
+          `TypeError\n    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the wagmi getProviders enumeration crash (APP-MEW-WEB-1JN)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:19605\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)\n` +
+          `    at createConfig (${BUNDLE}:296:19334)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the first-party providerStore.addProvider crash (APP-MEW-WEB-1JG)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:3925:205839\n` +
+          `    at Array.find (<anonymous>)\n` +
+          `    at Proxy.addProvider (${BUNDLE}:3925:205812)\n` +
+          `    at ${BUNDLE}:3983:107689`, // App.vue announceProvider listener
+      }),
+    ).toBe(true)
+  })
+
+  it('does NOT match an unrelated null-`info` deref in app code (no discovery frame)', () => {
+    // Same message, but the stack is ordinary app code — must keep reporting.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at renderTokenInfo (${BUNDLE}:3981:833633)\n` +
+          `    at setup (${BUNDLE}:7:64256)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('does NOT match a different null-deref even on a discovery frame', () => {
+    // A null-`uuid` read (not `info`) in the same area is a different bug.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'uuid')",
+        stack: `TypeError\n    at requestProviders (${BUNDLE}:296:12792)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('fails open when there is no stack (never suppresses on message alone)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isEip6963NullProviderError(null)).toBe(false)
+    expect(isEip6963NullProviderError(undefined)).toBe(false)
+    expect(isEip6963NullProviderError({})).toBe(false)
+    expect(isEip6963NullProviderError('boom')).toBe(false)
+    expect(isEip6963NullProviderError({ message: 42 })).toBe(false)
   })
 })
