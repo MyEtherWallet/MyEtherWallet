@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
-} from '@/modules/trade/composables/tradeSession'
+} from '@/modules/trade/common/tradeSession'
 import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]

@@ -90,50 +90,56 @@ const TOKEN = {
   logoURI: '',
 }
 
-// Mirrors the store: the restriction flag starts `false`, so "allowed" is only
-// true once the geo check has RESOLVED and come back unrestricted. Keeping the
-// derivation here rather than a second free ref stops the cases from expressing
-// a combination the store cannot produce.
+// Mirrors the store: "allowed" is only true once the geo check has RESOLVED and
+// come back unrestricted. Keeping the derivation here rather than a second free
+// ref stops the cases from expressing a combination the store cannot produce.
 const isTradingRestrictedInRegion = ref(false)
 const hasResolvedRegion = ref(true)
 const isTradingAllowedInRegion = computed(
   () => hasResolvedRegion.value && !isTradingRestrictedInRegion.value,
 )
 
+// A real trade form, primed to a quotable state — both composables read their
+// inputs from it rather than from loose refs.
+const makeForm = async () => {
+  const { useTradeForm } =
+    await import('@/modules/trade/composables/useTradeForm')
+  const form = useTradeForm({ chainID: '1', name: 'ETHEREUM' } as never)
+  form.fromTokenSelected.value = { ...TOKEN, symbol: 'USDC' } as never
+  form.toTokenSelected.value = { ...TOKEN } as never
+  form.fromAmount.value = '100'
+  return form
+}
+
 const makeQuoteHarness = async () => {
   const { useTradeQuote } =
     await import('@/modules/trade/composables/useTradeQuote')
-  const toAmount = ref('')
-  const isLoadingQuote = ref(false)
-  const generalError = ref('')
+  const form = await makeForm()
   const quote = useTradeQuote({
-    fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
-    toTokenSelected: ref({ ...TOKEN }) as never,
-    fromAmount: ref('100'),
-    toAmount,
+    form,
     walletAddress: ref('0xwallet'),
-    wallet: ref({}),
-    selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }) as never,
+    wallet: ref({}) as never,
     isMarketOpen: computed(() => true),
     isSelectedAssetTradeable: computed(() => true),
     isTradingAllowedInRegion,
     hasPreQuoteError: computed(() => false),
-    generalError,
-    isLoadingQuote,
   })
-  return { ...quote, toAmount, isLoadingQuote, generalError }
+  return {
+    ...quote,
+    toAmount: form.toAmount,
+    isLoadingQuote: form.isLoadingQuote,
+    generalError: form.generalError,
+  }
 }
 
 const makeExecutionHarness = async () => {
   const { useTradeExecution } =
     await import('@/modules/trade/composables/useTradeExecution')
+  const form = await makeForm()
   return useTradeExecution({
-    fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
-    toTokenSelected: ref({ ...TOKEN }) as never,
-    fromAmount: ref('100'),
+    form,
     walletAddress: ref('0xwallet'),
-    wallet: ref({}),
-    selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }) as never,
+    wallet: ref({}) as never,
     currentQuote: ref({ startAmount: 1n, endAmount: 1n, avgAmount: 1n }),
     needsApproval: ref(true),
     isTradingRestrictedInRegion,
