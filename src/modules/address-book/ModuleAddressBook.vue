@@ -424,7 +424,9 @@ export default {
       try {
         // Ethers.js rejects Rootstock checksummed address so use lowercase address.
         const inputAddress =
-          ctx.chainID === ROOTSTOCK.chainID ? ctx.input.toLowerCase() : ctx.input;
+          ctx.chainID === ROOTSTOCK.chainID
+            ? ctx.input.toLowerCase()
+            : ctx.input;
         const reverseName = await ctx.resolver.resolveAddress(inputAddress);
         if (!this.isCurrentResolution(ctx)) return;
 

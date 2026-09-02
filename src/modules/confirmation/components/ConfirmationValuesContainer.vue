@@ -97,7 +97,9 @@
             -->
           <div class="pl-2">
             <div class="mew-caption textLight--text font-weight-medium">
-              {{ item.label ? item.label : item.amount ? 'Sending' : 'To Address' }}
+              {{
+                item.label ? item.label : item.amount ? 'Sending' : 'To Address'
+              }}
             </div>
             <!--
             =====================================================================================
