@@ -1,3 +1,5 @@
+import configs from '@/configs'
+
 // Benign EIP-1193 provider error codes. These originate from the user's wallet
 // (injected extension provider), not from app code, and are pure Sentry noise:
 //  4001  user rejected the request
@@ -22,6 +24,29 @@ export function isExtensionOrProviderError(err: unknown): boolean {
     return true
   }
   return typeof e.stack === 'string' && EXTENSION_URL.test(e.stack)
+}
+
+/**
+ * Whether an error is a Chrome "Extension context invalidated." rejection —
+ * thrown by an injected wallet provider (e.g. Rabby) when the extension's
+ * background context is torn down mid-session (the extension was updated,
+ * reloaded, or disabled while the dApp page stayed open). A pending request
+ * (e.g. `eth_requestAccounts` during connect) then rejects with a raw JSON-RPC
+ * object `{ code: -32603, message: "Extension context invalidated." }`. It is
+ * not app code and MEW can't fix it — the user just reloads so the fresh
+ * extension re-injects — and the connect flow already surfaces a "Failed to
+ * connect" error state, so it is unactionable Sentry noise (APP-MEW-WEB-1JD).
+ * Matched on the (Chrome-provided, un-minified) message, which the serialized
+ * plain-object payload carries at top level; the generic -32603 code alone is
+ * too broad to key on.
+ */
+export function isExtensionContextInvalidatedError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    message.toLowerCase().includes('extension context invalidated')
+  )
 }
 
 /**
@@ -190,6 +215,27 @@ export function isStorageQuotaExceededError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is a trade quote/order failure already flagged as an
+ * expected 1inch 4xx client error or a transient axios network hiccup.
+ * `OneInchFusion.getQuote` / `submitOrder` (oneInchFusion.ts) set
+ * `expectedClientError` / `transientNetworkError` on the thrown error
+ * specifically so the per-call-site catch (`useTradeQuote`,
+ * `useTradeExecution`) can skip its own `captureException` — but that is a
+ * single, per-call-site check. This is a global backstop at the Sentry
+ * ingestion boundary: if either flag reaches `beforeSend` uncaught by that
+ * local check (APP-MEW-WEB-1F8 kept recurring across releases despite the
+ * flag being set), drop it here too instead of letting it through as noise.
+ */
+export function isExpectedTradeClientError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as {
+    expectedClientError?: unknown
+    transientNetworkError?: unknown
+  }
+  return e.expectedClientError === true || e.transientNetworkError === true
+}
+
+/**
  * Whether an error is a viem `WaitForTransactionReceiptTimeoutError` — thrown
  * when `waitForTransactionReceipt` times out because a submitted trade/swap tx
  * did not confirm within the timeout window (slow node, congestion, dropped tx,
@@ -207,4 +253,138 @@ export function isTransactionReceiptTimeoutError(err: unknown): boolean {
     cur = e.cause
   }
   return false
+}
+
+/**
+ * Whether an error is an IndexedDB `InvalidStateError` (DOMException code 11 —
+ * "A mutation operation was attempted on a database that did not allow
+ * mutations"). This comes from `idb-keyval` write operations (`set`/`del` in a
+ * `readwrite` transaction), which MEW never calls directly — it is only bundled
+ * by the wallet SDKs (`@coinbase/wallet-sdk`, `@base-org/account`, `porto`,
+ * WalletConnect `keyvaluestorage`). On boot those connectors fire-and-forget an
+ * IndexedDB write to persist session state; on Firefox with private/restricted
+ * storage the write fails and, being fire-and-forget, the rejection reaches the
+ * global handler as unhandled, unactionable noise (0 users impacted —
+ * APP-MEW-WEB-1GG / MEW-2176). Matched on the browser-native (non-minified)
+ * DOMException message: `name`/`code` alone can't be used because every
+ * `InvalidStateError` carries `code === 11`, so filtering on the code would
+ * suppress unrelated `InvalidStateError`s from other Web APIs.
+ */
+export function isIndexedDbMutationError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: unknown; message?: unknown }
+  if (e.name !== 'InvalidStateError') return false
+  return (
+    typeof e.message === 'string' &&
+    e.message.includes('did not allow mutations')
+  )
+}
+/* Whether an error is a Web Bluetooth "GATT Server is disconnected"
+  * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
+  * operation runs after the device has disconnected.The Ledger BLE transport
+  * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+  * fire - and - forgets`characteristic.stopNotifications()` after the device drops
+  * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
+  * call is detached from any promise the app awaits, it surfaces as an unhandled
+  * rejection, and the connect flow already shows the user a "Failed to connect"
+  * toast — so it is external, unactionable Sentry noise.The frames are bundled
+  * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
+  * browser - native(minification - proof) message instead.
+ */
+export function isBluetoothGattDisconnectedError(err: unknown): boolean {
+  if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && /GATT Server is disconnected/i.test(message)
+  )
+}
+
+/**
+ * Whether an error is a `@ledgerhq` `LockedDeviceError` — thrown by the Ledger
+ * transport (WebUSB / WebBLE) when the connected device is locked, i.e. the
+ * user hasn't entered their PIN or the device screensaver kicked in (APDU
+ * status `0x5515`). This is a hardware/user-state condition, not an app bug:
+ * the access/connect flow already catches it (`handled: yes`) and shows a
+ * friendly localized toast (`common.error.ledger_locked`), and the fix is
+ * entirely in the user's hands (unlock the device). So it is unactionable
+ * Sentry noise (APP-MEW-WEB-BH). Detected primarily via the `@ledgerhq`
+ * error `name` (set as a string literal, so it survives minification), with a
+ * message fallback for the `0x5515` / "locked device" shape in case the error
+ * was rethrown as a plain `Error`.
+ */
+export function isLockedDeviceError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { name?: unknown; message?: unknown }
+  if (e.name === 'LockedDeviceError') return true
+  const message =
+    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  return message.includes('0x5515') || message.includes('locked device')
+}
+
+/**
+ * Whether an error is mew-api's "CoinGecko coin not found" 400 — returned
+ * when a user navigates directly to (or shares) a `/token/<symbol>` URL for a
+ * symbol CoinGecko doesn't list (typo, delisted, or never-listed token).
+ * `TokenInfoChart.vue`'s `onFetchError` already handles it by rendering
+ * "No data available", so it is expected, unactionable Sentry noise, not an
+ * app bug (APP-MEW-WEB-1F3 / MEW-2172). `useFetchMewApi`'s shared
+ * `onFetchError` surfaces the mew-api response body message verbatim as the
+ * Error message (see `describeMewApiFetchError`), so match on that exact
+ * prefix rather than the HTTP status — other mew-api 400s on other endpoints
+ * are unrelated and should keep reporting.
+ */
+export function isCoinNotFoundApiError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && /^CoinGecko coin not found:/i.test(message)
+  )
+}
+
+/**
+ * Whether a Sentry event is the MEW purchase-info endpoint
+ * (`configs.MEW_PURCHASE_API`, e.g. `/v5/purchase/info`) answering 403.
+ *
+ * The purchase backend returns 403 when fiat purchase is unavailable to the
+ * caller's region/wallet (a business rule, not an app bug). `fetchPurchaseInfo`
+ * (`src/stores/purchaseStore.ts`) already handles the failure silently — Buy/
+ * Sell just render with no assets — so every occurrence reaching Sentry via the
+ * shared `useFetchMewApi` error reporter is unactionable noise
+ * (APP-MEW-WEB-1F5 / MEW-2173).
+ *
+ * Matched on the event's `mew_api_url` / `mew_api_status` tags (set by
+ * `describeMewApiFetchError`), not the message, so it drops only this exact
+ * endpoint + status pair — a 403 from any other MEW API route is still
+ * reported.
+ */
+export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  if (!tags) return false
+  return (
+    tags.mew_api_url === configs.MEW_PURCHASE_API &&
+    tags.mew_api_status === '403'
+  )
+}
+
+/**
+ * Whether an error is the WalletConnect relay "Connection interrupted while
+ * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
+ * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects
+ * mid-(re)connect while it is subscribing to a session topic — an
+ * `onunhandledrejection` that reaches the global Sentry `beforeSend` with no MEW
+ * frame in the stack. The connect flow already handles it (the user can retry),
+ * so it is transient, unactionable network noise (APP-MEW-WEB-61 / MEW-2240).
+ * MEW code never throws this message, so matching on the library-specific
+ * message is safe. Distinct from the sibling `/Subscribing to \w+ failed/` and
+ * "connection is closed" shapes already suppressed elsewhere. Handles both the
+ * Error-object and bare-string payload shapes.
+ */
+export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+  const MESSAGE = 'Connection interrupted while trying to subscribe'
+  if (typeof err === 'string') return err.includes(MESSAGE)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && message.includes(MESSAGE)
 }

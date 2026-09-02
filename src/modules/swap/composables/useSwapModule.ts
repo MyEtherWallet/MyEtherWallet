@@ -13,6 +13,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -797,10 +798,12 @@ export function useSwapModule(): SwapModuleBindings {
     } catch (e: unknown) {
       const errorMessage = getErrorMessage(e, t('swap.error.fetching-gas-fees'))
       generalError.value = errorMessage
-      // "Pair not available" is an expected, user-facing condition (the selected
-      // pair has no route/quote). Keep the throw so generalError + analytics are
-      // handled here as designed, but skip the Sentry report to avoid noise.
-      const isPairNotAvailable = errorMessage === t('swap.error.pair-not-available')
+      // Expected, user-facing swap conditions (no route/quote, thin liquidity,
+      // slippage / on-chain revert) surface via generalError; skip the Sentry
+      // report to avoid noise. See Sentry APP-MEW-WEB-EV.
+      const isExpectedError =
+        errorMessage === t('swap.error.pair-not-available') ||
+        isExpectedSwapQuoteError(errorMessage)
       if (!isDevMode) {
         analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
           ...analyticsPayload,
@@ -811,7 +814,7 @@ export function useSwapModule(): SwapModuleBindings {
         tag: SENTRY_MODULE_TAGS.SWAP,
         title: 'SWAP: Error fetching gas fees',
         error: e,
-        expected: isPairNotAvailable,
+        expected: isExpectedError,
         extra: { errorMessage: generalError.value },
       })
     } finally {
@@ -1300,7 +1303,7 @@ export function useSwapModule(): SwapModuleBindings {
         generalError.value = errorMessage
         const isExpectedQuoteError =
           errorMessage === t('swap.error.pair-not-available') ||
-          /insufficient funds/i.test(errorMessage)
+          isExpectedSwapQuoteError(errorMessage)
         if (!isDevMode) {
           analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
             ...analyticsPayload,

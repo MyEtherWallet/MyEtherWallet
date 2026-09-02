@@ -29,7 +29,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), walletName: ref
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ BALANCE_TTL_MS: 75000, useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
@@ -52,6 +52,11 @@ const stubs = {
     name: 'ManageAccountsRenameModal',
     props: ['isOpen', 'currentName'],
     template: '<div data-test="rename-modal" :data-open="isOpen" @click="$emit(\'save\', \'Renamed\')" />',
+  },
+  ManageAccountsDeleteModal: {
+    name: 'ManageAccountsDeleteModal',
+    props: ['isOpen', 'accountName'],
+    template: '<div data-test="delete-modal" :data-open="isOpen" @click="$emit(\'confirm\')" />',
   },
   ManageAccountsCard: {
     name: 'ManageAccountsCard',
@@ -99,6 +104,19 @@ describe('TheManageAccounts', () => {
     expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
     await w.get('[data-test="rename-modal"]').trigger('click') // stub emits save
     expect(renameAccount).toHaveBeenCalled()
+  })
+
+  it('opens the delete modal on a row delete request, closes the popup, and confirming calls deleteAccount', async () => {
+    const w = factory()
+    w.findAllComponents({ name: 'ManageAccountsRow' })[0].vm.$emit('delete')
+    await w.vm.$nextTick()
+    // The confirmation lives in a modal; the popup closes so it isn't behind it.
+    expect(w.get('[data-test="delete-modal"]').attributes('data-open')).toBe('true')
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    // Nothing removed until the user confirms in the modal.
+    expect(deleteAccount).not.toHaveBeenCalled()
+    await w.get('[data-test="delete-modal"]').trigger('click') // stub emits confirm
+    expect(deleteAccount).toHaveBeenCalledTimes(1)
   })
 
   it('disconnects the wallet but keeps the popup open when the card emits disconnect', async () => {
@@ -324,6 +342,37 @@ describe('TheManageAccounts', () => {
       vi.advanceTimersByTime(300) // flush the debounce
       const addrs = fetchIfStale.mock.calls.map(c => (c[0] as { address: string }).address)
       expect(addrs).toEqual(['0x2'])
+    } finally {
+      store.allAccounts = original
+      vi.useRealTimers()
+    }
+  })
+
+  it('polls visible non-active rows every TTL while open, and stops when closed', async () => {
+    vi.useFakeTimers()
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' }, // active → skipped
+      { id: 'EVM:0x2', address: '0x2', addressName: 'A2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }, // non-active → polled
+    ]
+    try {
+      const w = factory() // openDialog: true → poll running
+      w.findAllComponents({ name: 'ManageAccountsRow' }).forEach(r =>
+        r.vm.$emit('visibility-change', true),
+      )
+      vi.advanceTimersByTime(300) // flush the initial debounced fetch
+      fetchIfStale.mockClear()
+
+      vi.advanceTimersByTime(75000) // one TTL tick
+      const polled = fetchIfStale.mock.calls.map(c => (c[0] as { address: string }).address)
+      expect(polled).toContain('0x2')
+      expect(polled).not.toContain('0x1') // active stays live via walletStore
+
+      // Closing the popup stops the poll — no further fetches.
+      fetchIfStale.mockClear()
+      await w.setProps({ openDialog: false })
+      vi.advanceTimersByTime(75000 * 3)
+      expect(fetchIfStale).not.toHaveBeenCalled()
     } finally {
       store.allAccounts = original
       vi.useRealTimers()

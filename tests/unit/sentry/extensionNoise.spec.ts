@@ -4,16 +4,25 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignPurchaseInfoForbidden,
+  isBluetoothGattDisconnectedError,
+  isCoinNotFoundApiError,
+  isExpectedTradeClientError,
+  isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
   isForeignStackOverflow,
+  isIndexedDbMutationError,
   isInvalidWalletAddressError,
+  isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
+import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
   it('is true for the EIP-1193 4900 "disconnected" rejection from an extension', () => {
@@ -77,6 +86,54 @@ describe('isExtensionOrProviderError', () => {
     expect(isExtensionOrProviderError(undefined)).toBe(false)
     expect(isExtensionOrProviderError('chrome-extension://x')).toBe(false)
     expect(isExtensionOrProviderError(new Error('plain'))).toBe(false)
+  })
+})
+
+describe('isExtensionContextInvalidatedError', () => {
+  it('is true for the exact production payload (serialized JSON-RPC object)', () => {
+    // APP-MEW-WEB-1JD: the injected Rabby provider rejects a connect request
+    // with a raw object after its extension context was torn down.
+    expect(
+      isExtensionContextInvalidatedError({
+        code: -32603,
+        data: { originalError: {} },
+        message: 'Extension context invalidated.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for an Error-object payload and matches regardless of casing/surrounding text', () => {
+    expect(
+      isExtensionContextInvalidatedError(
+        new Error('Extension context invalidated.'),
+      ),
+    ).toBe(true)
+    expect(
+      isExtensionContextInvalidatedError(
+        new Error('Error: extension context invalidated'),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isExtensionContextInvalidatedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    // A different -32603 internal error must NOT be swept up by the code alone.
+    expect(
+      isExtensionContextInvalidatedError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isExtensionContextInvalidatedError(null)).toBe(false)
+    expect(isExtensionContextInvalidatedError(undefined)).toBe(false)
+    expect(
+      isExtensionContextInvalidatedError('Extension context invalidated.'),
+    ).toBe(false)
+    expect(isExtensionContextInvalidatedError({ message: 42 })).toBe(false)
   })
 })
 
@@ -452,6 +509,60 @@ describe('isRainbowKitNotFoundError', () => {
   })
 })
 
+describe('isBluetoothGattDisconnectedError', () => {
+  it('is true for the exact Chrome DOMException from the Ledger BLE teardown', () => {
+    // The exact production trigger (APP-MEW-WEB-1AY): the Ledger BLE transport
+    // fire-and-forgets stopNotifications() after the GATT server disconnected.
+    expect(
+      isBluetoothGattDisconnectedError({
+        name: 'NetworkError',
+        code: 19,
+        message:
+          "Failed to execute 'stopNotifications' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected. Cannot perform GATT operations. (Re)connect first with `device.gatt.connect`.",
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for a real DOMException instance', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        new Error(
+          "Failed to execute 'readValue' on 'BluetoothRemoteGATTCharacteristic': GATT Server is disconnected.",
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        'NetworkError: GATT Server is disconnected. Cannot perform GATT operations.',
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isBluetoothGattDisconnectedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    // A different BLE error we do NOT want to blanket-suppress.
+    expect(
+      isBluetoothGattDisconnectedError(
+        new Error('GATT operation already in progress'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isBluetoothGattDisconnectedError(null)).toBe(false)
+    expect(isBluetoothGattDisconnectedError(undefined)).toBe(false)
+    expect(isBluetoothGattDisconnectedError({ message: 42 })).toBe(false)
+    expect(isBluetoothGattDisconnectedError('something else')).toBe(false)
+  })
+})
+
 describe('isMetaMaskSdkDecryptError', () => {
   it('drops the MetaMask SDK AES-GCM decrypt rejection (APP-MEW-WEB-CQ)', () => {
     const err = new Error('aes/gcm: invalid ghash tag')
@@ -480,5 +591,289 @@ describe('isMetaMaskSdkDecryptError', () => {
     expect(isMetaMaskSdkDecryptError(null)).toBe(false)
     expect(isMetaMaskSdkDecryptError('aes/gcm: invalid ghash tag')).toBe(false)
     expect(isMetaMaskSdkDecryptError({})).toBe(false)
+  })
+})
+
+describe('isIndexedDbMutationError', () => {
+  it('is true for the production DOMException payload (Firefox idb-keyval write)', () => {
+    // APP-MEW-WEB-1GG: a wallet-SDK idb-keyval write rejects on Firefox with
+    // DOMException code 11 (InvalidStateError). Sentry hands beforeSend the
+    // original exception, robust to a serialized plain object carrying the
+    // browser-native name + code.
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        code: 11,
+        message:
+          'A mutation operation was attempted on a database that did not allow mutations.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is true on the message alone when the numeric code is absent', () => {
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        message:
+          'A mutation operation was attempted on a database that did not allow mutations.',
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for an InvalidStateError that is not the IDB mutation failure', () => {
+    // Every InvalidStateError carries code 11, so the code alone cannot gate
+    // the filter — an unrelated InvalidStateError (e.g. from another Web API)
+    // with a non-mutation message must NOT be dropped.
+    expect(
+      isIndexedDbMutationError({
+        name: 'InvalidStateError',
+        code: 11,
+        message: 'The object is in an invalid state.',
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isIndexedDbMutationError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isIndexedDbMutationError(null)).toBe(false)
+    expect(isIndexedDbMutationError(undefined)).toBe(false)
+    expect(isIndexedDbMutationError('InvalidStateError')).toBe(false)
+  })
+})
+
+describe('isExpectedTradeClientError', () => {
+  it('is true for an OneInchFusion.getQuote 1inch 4xx error (expectedClientError)', () => {
+    // The exact shape OneInchFusion.getQuote throws for a 1inch Fusion 400
+    // (illiquid/unsupported pair, invalid params) — see APP-MEW-WEB-1F8.
+    const err = new Error('Bad Request') as Error & {
+      expectedClientError?: boolean
+    }
+    err.expectedClientError = true
+    expect(isExpectedTradeClientError(err)).toBe(true)
+  })
+
+  it('is true for a flagged transient axios network error', () => {
+    const err = new Error('Network Error') as Error & {
+      transientNetworkError?: boolean
+    }
+    err.transientNetworkError = true
+    expect(isExpectedTradeClientError(err)).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object)', () => {
+    expect(
+      isExpectedTradeClientError({
+        message: 'Bad Request',
+        expectedClientError: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('is false when the flag is explicitly false or absent', () => {
+    expect(
+      isExpectedTradeClientError(
+        Object.assign(new Error('Bad Request'), {
+          expectedClientError: false,
+        }),
+      ),
+    ).toBe(false)
+    expect(isExpectedTradeClientError(new Error('Some genuine 5xx failure'))).toBe(
+      false,
+    )
+  })
+
+  it('is false for a genuine app error carrying unrelated properties', () => {
+    expect(
+      isExpectedTradeClientError({ message: 'boom', code: 500 }),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isExpectedTradeClientError(null)).toBe(false)
+    expect(isExpectedTradeClientError(undefined)).toBe(false)
+    expect(isExpectedTradeClientError('Bad Request')).toBe(false)
+  })
+})
+
+describe('isLockedDeviceError', () => {
+  it('drops the @ledgerhq LockedDeviceError by name (APP-MEW-WEB-BH)', () => {
+    const err = new Error('Ledger device: Locked device (0x5515)')
+    err.name = 'LockedDeviceError'
+    expect(isLockedDeviceError(err)).toBe(true)
+  })
+
+  it('matches by name even without the 0x5515 message', () => {
+    expect(isLockedDeviceError({ name: 'LockedDeviceError' })).toBe(true)
+  })
+
+  it('matches the 0x5515 / "locked device" message shape on a plain Error', () => {
+    // Covers a rethrow that lost the original @ledgerhq error name.
+    expect(
+      isLockedDeviceError(new Error('Ledger device: Locked device (0x5515)')),
+    ).toBe(true)
+    expect(
+      isLockedDeviceError({ message: 'the LOCKED DEVICE needs unlocking' }),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine unrelated app error', () => {
+    expect(
+      isLockedDeviceError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(isLockedDeviceError({ name: 'TransportStatusError' })).toBe(false)
+  })
+
+  it('handles non-error inputs', () => {
+    expect(isLockedDeviceError(null)).toBe(false)
+    expect(isLockedDeviceError(undefined)).toBe(false)
+    expect(isLockedDeviceError('Locked device (0x5515)')).toBe(false)
+    expect(isLockedDeviceError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isCoinNotFoundApiError', () => {
+  it('is true for the mew-api "CoinGecko coin not found" 400 message', () => {
+    // The exact production trigger (APP-MEW-WEB-1F3): GET
+    // /v1/web/token-price-chart/coins/CRYN replies 400 with this body
+    // message, which describeMewApiFetchError surfaces verbatim.
+    expect(
+      isCoinNotFoundApiError(new Error('CoinGecko coin not found: CRYN.')),
+    ).toBe(true)
+    expect(
+      isCoinNotFoundApiError({ message: 'CoinGecko coin not found: CRYN.' }),
+    ).toBe(true)
+  })
+
+  it('matches regardless of the token symbol or casing', () => {
+    expect(
+      isCoinNotFoundApiError(new Error('coingecko coin not found: FOO.')),
+    ).toBe(true)
+  })
+
+  it('is false for other mew-api 400s that happen to mention "not found"', () => {
+    expect(
+      isCoinNotFoundApiError(new Error('Address not found: 0x0.')),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isCoinNotFoundApiError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isCoinNotFoundApiError(null)).toBe(false)
+    expect(isCoinNotFoundApiError(undefined)).toBe(false)
+    expect(isCoinNotFoundApiError('CoinGecko coin not found: CRYN.')).toBe(
+      false,
+    )
+  })
+})
+
+describe('isBenignPurchaseInfoForbidden', () => {
+  it('is true for the production tag pair: purchase/info + 403', () => {
+    // The exact production shape: tags set by describeMewApiFetchError in the
+    // shared useFetchMewApi onFetchError handler.
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: configs.MEW_PURCHASE_API,
+          mew_api_status: '403',
+        },
+      }),
+    ).toBe(true)
+  })
+
+  it('is false for a different status on the same endpoint', () => {
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: configs.MEW_PURCHASE_API,
+          mew_api_status: '500',
+        },
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for a 403 on a different MEW API endpoint (not swallowed)', () => {
+    expect(
+      isBenignPurchaseInfoForbidden({
+        tags: {
+          mew_api_url: `${configs.MEW_API_URL}/v1/some/other/route`,
+          mew_api_status: '403',
+        },
+      }),
+    ).toBe(false)
+  })
+
+  it('is false when tags are missing or the event has no tags', () => {
+    expect(isBenignPurchaseInfoForbidden({})).toBe(false)
+    expect(isBenignPurchaseInfoForbidden({ tags: {} })).toBe(false)
+  })
+
+  it('is false for non-object inputs', () => {
+    expect(isBenignPurchaseInfoForbidden(null)).toBe(false)
+    expect(isBenignPurchaseInfoForbidden(undefined)).toBe(false)
+  })
+})
+
+describe('isWalletConnectSubscribeInterruptedError', () => {
+  const MSG = 'Connection interrupted while trying to subscribe'
+
+  it('drops the @walletconnect/core relay rejection (APP-MEW-WEB-61)', () => {
+    // The exact production trigger: the relay WebSocket disconnects mid-connect
+    // and the Relayer rejects with `new Error(...)`.
+    expect(isWalletConnectSubscribeInterruptedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with message)', () => {
+    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(isWalletConnectSubscribeInterruptedError(MSG)).toBe(true)
+    expect(isWalletConnectSubscribeInterruptedError(`Error: ${MSG}`)).toBe(true)
+  })
+
+  it('does NOT over-match the sibling "Subscribing to X failed" shape', () => {
+    expect(
+      isWalletConnectSubscribeInterruptedError(
+        new Error('Subscribing to abc123 failed, please try again'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error', () => {
+    expect(
+      isWalletConnectSubscribeInterruptedError(
+        new TypeError("Cannot read properties of undefined (reading 'x')"),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectSubscribeInterruptedError(new Error('Connection is closed')),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isWalletConnectSubscribeInterruptedError(null)).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError(undefined)).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
   })
 })

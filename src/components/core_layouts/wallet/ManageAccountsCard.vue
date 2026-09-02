@@ -56,7 +56,6 @@
           location="right"
           teleport
           menu-radius-class="rounded-16"
-          @update:open="open => { if (!open) confirmingDelete = false }"
         >
           <template #menu-button="{ toggleMenu }">
             <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors" @click="toggleMenu">
@@ -65,7 +64,6 @@
           </template>
           <template #menu-content="{ toggleMenu }">
             <manage-accounts-menu
-              v-if="!confirmingDelete"
               :kind="account.kind"
               :is-active="true"
               :toggle="toggleMenu"
@@ -75,20 +73,8 @@
               @paper="$emit('paper')"
               @explorer="$emit('explorer')"
               @disconnect="$emit('disconnect')"
-              @remove="onRemove"
+              @remove="$emit('delete')"
             />
-            <div v-else class="p-3 flex items-center gap-2">
-              <button
-                data-test="delete-confirm"
-                class="text-error text-s-12"
-                @click="$emit('delete'); confirmingDelete = false; toggleMenu()"
-              >
-                {{ $t('common.confirm') }}
-              </button>
-              <button data-test="delete-cancel" class="text-s-12" @click="confirmingDelete = false">
-                {{ $t('common.cancel') }}
-              </button>
-            </div>
           </template>
         </app-pop-up-menu>
       </div>
@@ -165,8 +151,6 @@ const emit = defineEmits<{
   connect: []
 }>()
 
-const confirmingDelete = ref(false)
-
 // Action feedback: spin the sync icon briefly, swap copy → check briefly.
 const spinning = ref(false)
 const copied = ref(false)
@@ -180,10 +164,6 @@ const onCopy = (): void => {
   emit('copy')
   copied.value = true
   setTimeout(() => (copied.value = false), 1500)
-}
-
-const onRemove = (): void => {
-  confirmingDelete.value = true
 }
 
 const mewCardUrl = computed(
