@@ -58,13 +58,13 @@
           {{ amount || '0' }}
         </p>
 
-        <component
-          :is="side === 'sell' ? TradeSelectAssetModal : AppSwapSelectedToken"
+        <trade-select-asset-modal
           v-model:selected-token="selectedToken"
+          :side="side"
           :external-loading="isLoading"
           :chain-tokens="tokens || []"
           :network-name="networkName"
-          v-bind="side === 'sell' ? {} : legacyPickerProps"
+          :disabled-tokens="disabledTokens"
           @open:select-token="setIsOpenSelectToken"
           @select:token="emit('select:token', $event)"
         >
@@ -105,7 +105,7 @@
               <chevron-right-icon class="w-5 h-5" />
             </button>
           </template>
-        </component>
+        </trade-select-asset-modal>
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
@@ -162,7 +162,6 @@ import BigNumber from 'bignumber.js'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
 import AppSpinner from '@/components/AppSpinner.vue'
-import AppSwapSelectedToken from '@/components/AppSwapSelectedToken.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
@@ -183,9 +182,7 @@ const props = withDefaults(
     showBalance?: boolean
     isPristine?: boolean
     networkName?: string
-    sortContext?: 'trade' | 'swap'
     disabledTokens?: string[]
-    disabledGroupTitle?: string
     maxDisabled?: boolean
   }>(),
   {
@@ -196,9 +193,7 @@ const props = withDefaults(
     showBalance: true,
     isPristine: false,
     networkName: undefined,
-    sortContext: undefined,
     disabledTokens: () => [],
-    disabledGroupTitle: undefined,
     maxDisabled: false,
   },
 )
@@ -223,14 +218,6 @@ const isLoading = computed(() => {
   }
   return props.externalLoading
 })
-
-const legacyPickerProps = computed(() => ({
-  isFromView: props.side === 'sell',
-  sortContext: props.sortContext,
-  disabledTokens: props.disabledTokens,
-  disabledGroupTitle: props.disabledGroupTitle,
-  noLogoShadow: true,
-}))
 
 const hasError = ref(false)
 const errorMessage = ref('')

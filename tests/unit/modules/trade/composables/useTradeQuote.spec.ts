@@ -54,6 +54,7 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
   const fromAmount = ref('100')
   const isLoadingQuote = ref(false)
   const generalError = ref('')
+  const isPairUnavailable = ref(false)
   const isReviewModalOpen = ref(isReviewModalOpenValue)
   const quote = useTradeQuote({
     fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
@@ -68,10 +69,17 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
     isTradingAllowedInRegion: computed(() => true),
     hasPreQuoteError: computed(() => false),
     generalError,
+    isPairUnavailable,
     isLoadingQuote,
     isReviewModalOpen,
   })
-  return { ...quote, isReviewModalOpen, isLoadingQuote, fromAmount }
+  return {
+    ...quote,
+    isReviewModalOpen,
+    isLoadingQuote,
+    fromAmount,
+    isPairUnavailable,
+  }
 }
 
 describe('useTradeQuote loading flag', () => {
@@ -152,6 +160,27 @@ describe('useTradeQuote analytics', () => {
       'Trade_Preliminary_Rate_Error',
       expect.anything(),
     )
+  })
+
+  it('flags the pair as unavailable on a 1inch client error', async () => {
+    const clientError = Object.assign(new Error('cannot fetch price'), {
+      expectedClientError: true,
+    })
+    mockGetQuote.mockRejectedValue(clientError)
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false)
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(true)
+  })
+
+  it('leaves the pair flag down on a server or network failure', async () => {
+    mockGetQuote.mockRejectedValue(new Error('boom'))
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false)
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(false)
   })
 
   it('reports OFFER_ERROR for the same failure while the review modal is open', async () => {

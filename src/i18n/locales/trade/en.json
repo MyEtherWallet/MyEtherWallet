@@ -131,7 +131,9 @@
     "buy_label": "Buy",
     "enter_amount": "Enter amount",
     "select_asset": {
-      "title": "Select asset"
+      "title": "Select asset",
+      "subtitle": "Some might be temporarily unavailable",
+      "available_in": "Assets available in {marketStatus}"
     },
     "pause_reason": {
       "cash_dividend": {
@@ -166,6 +168,18 @@
         "tag": "In maintenance",
         "tooltip": "This asset is temporarily unavailable while it’s undergoing maintenance."
       }
+    },
+    "approve_spending": {
+      "title": "Approve {symbol} spending",
+      "subtitle": "To continue with your trade, you must allow MEW to spend {symbol} in {wallet}.",
+      "network_fee": "Est. network fee",
+      "network_fee_tooltip": "A small network fee is required to sign this approval",
+      "cta": "Approve in {wallet}",
+      "your_wallet": "your wallet"
+    },
+    "pair_unavailable": {
+      "cta": "Token pair not available",
+      "notice": "This token pair can't be traded right now. Please change it or try again later."
     }
   }
 }

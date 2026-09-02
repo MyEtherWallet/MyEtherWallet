@@ -29,6 +29,7 @@ interface UseTradeValidationOptions {
   isSelectedAssetTradeable: ComputedRef<boolean>
   supportedNetwork: ComputedRef<boolean>
   isLoadingQuote: Ref<boolean>
+  isPairUnavailable: Ref<boolean>
   generalError: Ref<string>
   toTokenSelected: Ref<NewTokenInfo | null>
 }
@@ -43,6 +44,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     isSelectedAssetTradeable,
     supportedNetwork,
     isLoadingQuote,
+    isPairUnavailable,
     generalError,
     toTokenSelected,
   } = options
@@ -218,7 +220,8 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         toAmount.value !== '0'
       ) ||
       isLoadingQuote.value ||
-      isSameTokenSelected.value,
+      isSameTokenSelected.value ||
+      isPairUnavailable.value,
   )
 
   const isSameTokenSelected = computed(() => {

@@ -41,6 +41,7 @@ interface UseTradeQuoteOptions {
   isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
   generalError: Ref<string>
+  isPairUnavailable: Ref<boolean>
   isLoadingQuote: Ref<boolean>
   /**
    * Whether the review modal is currently open. `fetchQuote` doubles as the
@@ -65,6 +66,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     isTradingAllowedInRegion,
     hasPreQuoteError,
     generalError,
+    isPairUnavailable,
     isLoadingQuote,
     isReviewModalOpen,
   } = options
@@ -138,6 +140,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
 
     generalError.value = ''
+    isPairUnavailable.value = false
 
     try {
       const { default: OneInchFusion } =
@@ -204,6 +207,8 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
+      isPairUnavailable.value = !!(e as { expectedClientError?: boolean })
+        .expectedClientError
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(
@@ -267,6 +272,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     currentQuote.value = null
     quoteExpiresAt.value = null
     needsApproval.value = false
+    isPairUnavailable.value = false
   }
 
   return {

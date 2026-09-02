@@ -109,6 +109,7 @@ const makeQuoteHarness = async () => {
   const toAmount = ref('')
   const isLoadingQuote = ref(false)
   const generalError = ref('')
+  const isPairUnavailable = ref(false)
   const quote = useTradeQuote({
     fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
     toTokenSelected: ref({ ...TOKEN }) as never,
@@ -122,10 +123,11 @@ const makeQuoteHarness = async () => {
     isTradingAllowedInRegion,
     hasPreQuoteError: computed(() => false),
     generalError,
+    isPairUnavailable,
     isLoadingQuote,
     isReviewModalOpen: ref(false),
   })
-  return { ...quote, toAmount, isLoadingQuote, generalError }
+  return { ...quote, toAmount, isLoadingQuote, generalError, isPairUnavailable }
 }
 
 const makeExecutionHarness = async (needsApprovalValue = true) => {
@@ -298,11 +300,23 @@ describe('trade actions where trading is permitted', () => {
     expect(mockGetQuote).toHaveBeenCalledTimes(1)
   })
 
-  it('startTradeFlow still sends the approval and chains into review', async () => {
+  it('startTradeFlow stops at the approval intro without signing', async () => {
     mockSetApproval.mockResolvedValue(undefined)
     const { startTradeFlow, tradeFlowStep } = await makeExecutionHarness()
 
     await startTradeFlow()
+
+    expect(mockSetApproval).not.toHaveBeenCalled()
+    expect(tradeFlowStep.value).toBe('approvalIntro')
+  })
+
+  it('confirmApproval still sends the approval and chains into review', async () => {
+    mockSetApproval.mockResolvedValue(undefined)
+    const { startTradeFlow, confirmApproval, tradeFlowStep } =
+      await makeExecutionHarness()
+
+    await startTradeFlow()
+    await confirmApproval()
 
     expect(mockSetApproval).toHaveBeenCalledTimes(1)
     expect(tradeFlowStep.value).toBe('review')

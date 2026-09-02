@@ -131,7 +131,9 @@
     "buy_label": "买入",
     "enter_amount": "输入金额",
     "select_asset": {
-      "title": "选择资产"
+      "title": "选择资产",
+      "subtitle": "部分资产可能暂时不可用",
+      "available_in": "{marketStatus} 可用资产"
     },
     "pause_reason": {
       "cash_dividend": {
@@ -166,6 +168,18 @@
         "tag": "维护中",
         "tooltip": "该资产正在维护，暂时不可用。"
       }
+    },
+    "approve_spending": {
+      "title": "批准 {symbol} 支出",
+      "subtitle": "要继续交易，你必须在 {wallet} 中允许 MEW 使用 {symbol}。",
+      "network_fee": "预估网络费",
+      "network_fee_tooltip": "签署此批准需要支付少量网络费",
+      "cta": "在 {wallet} 中批准",
+      "your_wallet": "你的钱包"
+    },
+    "pair_unavailable": {
+      "cta": "交易对不可用",
+      "notice": "该交易对目前无法交易。请更换交易对或稍后再试。"
     }
   }
 }

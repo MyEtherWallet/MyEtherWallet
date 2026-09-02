@@ -24,12 +24,7 @@
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
-    <div
-      :class="[
-        'absolute right-3 flex align-center',
-        size === 'compact' ? 'top-2.5' : 'top-1',
-      ]"
-    >
+    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
       <app-btn-icon
         @click="clearInputValue"
         :class="[
@@ -81,10 +76,6 @@ defineProps({
     type: String as PropType<'default' | 'compact'>,
     default: 'default',
   },
-  /**
-   * @inputClass Extra classes for the input itself, for designs whose type
-   * scale differs from the `size` presets.
-   */
   inputClass: {
     type: String,
     default: '',

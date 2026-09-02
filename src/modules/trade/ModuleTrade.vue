@@ -121,7 +121,6 @@
             :is-pristine="isPristine"
             :disabled-tokens="disabledTokenAddresses"
             :max-disabled="fromTokenSelected?.address === MAIN_TOKEN_CONTRACT"
-            sort-context="trade"
             @percent="setPercentageAmount"
             @select:token="onFromTokenSelected"
           />
@@ -148,7 +147,6 @@
             :network-name="selectedFromChain?.name"
             :is-pristine="isPristine"
             :disabled-tokens="disabledTokenAddresses"
-            sort-context="trade"
             class="mt-3"
             @select:token="onToTokenSelected"
           />
@@ -157,7 +155,7 @@
 
       <!-- Error Display -->
       <div
-        v-if="!isLoading && displayGeneralError"
+        v-if="!isLoading && displayGeneralError && !isPairUnavailable"
         :class="blockedClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
@@ -234,6 +232,18 @@
               {{ $t('trade.review_trade') }}
             </app-base-button>
           </transition>
+
+          <div
+            v-if="isPairUnavailable"
+            class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
+          >
+            <exclamation-triangle-icon
+              class="w-5 h-5 flex-none text-orange-600"
+            />
+            <p class="text-s-14 leading-[20px] text-black">
+              {{ $t('trade.pair_unavailable.notice') }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -274,6 +284,15 @@
       :to-token="toTokenSelected"
     />
 
+    <!-- Approve Spending Modal -->
+    <trade-approve-spending-modal
+      v-model:is-open="approvalIntroOpen"
+      :token-symbol="fromTokenSelected?.symbol"
+      :token-address="fromTokenSelected?.address"
+      :chain-id="selectedFromChain?.chainID"
+      @approve="confirmApproval"
+    />
+
     <!-- Waiting Approval Modal -->
     <trade-waiting-approval-modal v-model:is-open="waitingApprovalOpen" />
   </div>
@@ -288,6 +307,7 @@ import { GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
 // 16px variant: the badge glyph is drawn at 16px in the design, and the 24px
 // icon's strokes render muddy when scaled down that far.
 import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
@@ -297,6 +317,7 @@ import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
 import TradeReviewModal from './components/TradeReviewModal.vue'
 import TradeProgressModal from './components/TradeProgressModal.vue'
 import TradeWaitingApprovalModal from './components/TradeWaitingApprovalModal.vue'
+import TradeApproveSpendingModal from './components/TradeApproveSpendingModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
@@ -385,6 +406,7 @@ const toTokenSelected = ref<NewTokenInfo | null>(null)
 const fromAmount = ref<string>('')
 const toAmount = ref<string>('')
 const generalError = ref<string>('')
+const isPairUnavailable = ref<boolean>(false)
 const toAmountError = ref<string>('')
 const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
@@ -588,6 +610,7 @@ const {
   isSelectedAssetTradeable,
   supportedNetwork,
   isLoadingQuote,
+  isPairUnavailable,
   generalError,
   toTokenSelected,
 })
@@ -600,25 +623,29 @@ const {
 const isReviewModalOpenForQuote = ref(false)
 const { currentQuote, quoteExpiresAt, needsApproval, fetchQuote, resetQuote } =
   useTradeQuote({
-  fromTokenSelected,
-  toTokenSelected,
-  fromAmount,
-  toAmount,
-  walletAddress: userAddress,
-  wallet,
-  selectedFromChain,
-  isMarketOpen: isTradingSessionOpen,
-  isSelectedAssetTradeable,
-  isTradingAllowedInRegion,
-  hasPreQuoteError,
-  generalError,
-  isLoadingQuote,
-  isReviewModalOpen: isReviewModalOpenForQuote,
-})
+    fromTokenSelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    walletAddress: userAddress,
+    wallet,
+    selectedFromChain,
+    isMarketOpen: isTradingSessionOpen,
+    isSelectedAssetTradeable,
+    isTradingAllowedInRegion,
+    hasPreQuoteError,
+    generalError,
+    isPairUnavailable,
+    isLoadingQuote,
+    isReviewModalOpen: isReviewModalOpenForQuote,
+  })
 
 const ctaDisabledLabel = computed(() => {
   if (!isTradingSessionOpen.value) {
     return t('trade.market_status.paused')
+  }
+  if (isPairUnavailable.value) {
+    return t('trade.pair_unavailable.cta')
   }
   const parsedAmount = Number(fromAmount.value)
   if (fromAmount.value.trim() === '' || !parsedAmount) {
@@ -634,6 +661,7 @@ const {
   txProceeding,
   orderHash,
   startTradeFlow,
+  confirmApproval,
   confirmTrade,
 } = useTradeExecution({
   fromTokenSelected,
@@ -650,6 +678,13 @@ const {
 
 const waitingApprovalOpen = computed({
   get: () => tradeFlowStep.value === 'approving',
+  set: value => {
+    if (!value) tradeFlowStep.value = 'idle'
+  },
+})
+
+const approvalIntroOpen = computed({
+  get: () => tradeFlowStep.value === 'approvalIntro',
   set: value => {
     if (!value) tradeFlowStep.value = 'idle'
   },
@@ -765,7 +800,6 @@ const onToTokenSelected = (token: NewTokenInfo) => {
   notifyTokensSwitched(fromTokenSelected.value, token)
 }
 
-
 const setPercentageAmount = (percentage: number) => {
   if (!fromTokenSelected.value || !isWalletConnected.value) return
 
@@ -880,17 +914,14 @@ watch(selectedChain, newChain => {
 })
 
 // Watch for swap loaded to set default tokens after chain change
-watch(
-  [() => swapLoaded.value, () => fromTokens.value],
-  ([loaded]) => {
-    if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
-      fromTokenSelected.value = getDefaultFromToken()
-    }
-    if (loaded && !toTokenSelected.value) {
-      restoreToToken()
-    }
-  },
-)
+watch([() => swapLoaded.value, () => fromTokens.value], ([loaded]) => {
+  if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
+    fromTokenSelected.value = getDefaultFromToken()
+  }
+  if (loaded && !toTokenSelected.value) {
+    restoreToToken()
+  }
+})
 
 // Watch for fromTokens to update selected token with fresh data (e.g., after wallet connection)
 watch(

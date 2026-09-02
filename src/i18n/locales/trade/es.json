@@ -131,7 +131,9 @@
     "buy_label": "Comprar",
     "enter_amount": "Ingresa el monto",
     "select_asset": {
-      "title": "Seleccionar activo"
+      "title": "Seleccionar activo",
+      "subtitle": "Algunos pueden no estar disponibles temporalmente",
+      "available_in": "Activos disponibles en {marketStatus}"
     },
     "pause_reason": {
       "cash_dividend": {
@@ -166,6 +168,18 @@
         "tag": "En mantenimiento",
         "tooltip": "Este activo no está disponible temporalmente porque está en mantenimiento."
       }
+    },
+    "approve_spending": {
+      "title": "Autorizar el gasto de {symbol}",
+      "subtitle": "Para continuar con tu operación, tenés que permitir que MEW gaste {symbol} en {wallet}.",
+      "network_fee": "Comisión de red est.",
+      "network_fee_tooltip": "Se necesita una pequeña comisión de red para firmar esta autorización",
+      "cta": "Autorizar en {wallet}",
+      "your_wallet": "tu billetera"
+    },
+    "pair_unavailable": {
+      "cta": "Par no disponible",
+      "notice": "Este par no se puede operar en este momento. Cambialo o probá de nuevo más tarde."
     }
   }
 }
