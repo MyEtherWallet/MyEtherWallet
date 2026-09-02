@@ -280,16 +280,16 @@ export function isIndexedDbMutationError(err: unknown): boolean {
   )
 }
 /* Whether an error is a Web Bluetooth "GATT Server is disconnected"
-  * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
-  * operation runs after the device has disconnected.The Ledger BLE transport
-  * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
-  * fire - and - forgets`characteristic.stopNotifications()` after the device drops
-  * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
-  * call is detached from any promise the app awaits, it surfaces as an unhandled
-  * rejection, and the connect flow already shows the user a "Failed to connect"
-  * toast — so it is external, unactionable Sentry noise.The frames are bundled
-  * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
-  * browser - native(minification - proof) message instead.
+ * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
+ * operation runs after the device has disconnected.The Ledger BLE transport
+ * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+ * fire - and - forgets`characteristic.stopNotifications()` after the device drops
+ * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
+ * call is detached from any promise the app awaits, it surfaces as an unhandled
+ * rejection, and the connect flow already shows the user a "Failed to connect"
+ * toast — so it is external, unactionable Sentry noise.The frames are bundled
+ * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
+ * browser - native(minification - proof) message instead.
  */
 export function isBluetoothGattDisconnectedError(err: unknown): boolean {
   if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
@@ -317,8 +317,7 @@ export function isLockedDeviceError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
   const e = err as { name?: unknown; message?: unknown }
   if (e.name === 'LockedDeviceError') return true
-  const message =
-    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  const message = typeof e.message === 'string' ? e.message.toLowerCase() : ''
   return message.includes('0x5515') || message.includes('locked device')
 }
 
@@ -381,10 +380,53 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
  * "connection is closed" shapes already suppressed elsewhere. Handles both the
  * Error-object and bare-string payload shapes.
  */
-export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+export function isWalletConnectSubscribeInterruptedError(
+  err: unknown,
+): boolean {
   const MESSAGE = 'Connection interrupted while trying to subscribe'
   if (typeof err === 'string') return err.includes(MESSAGE)
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message
   return typeof message === 'string' && message.includes(MESSAGE)
+}
+
+// The null-`info` deref message, in both shapes the crash surfaces as: the
+// `he.info` read (`Cannot read properties of null (reading 'info')`) and the
+// `({ info }) =>` destructure (`Cannot destructure property 'info' of ...`).
+const NULL_INFO_MESSAGE =
+  /cannot read properties of null \(reading 'info'\)|cannot destructure property 'info' of/i
+// An EIP-6963 provider-discovery frame — retained (non-mangled) in the minified
+// bundle: the bundled `mipd` store (`requestProviders`, `createStore`), wagmi's
+// connector enumeration (`getProviders`), the `eip6963:announceProvider`
+// listeners, and MEW's own `providerStore.addProvider`.
+const EIP6963_DISCOVERY_FRAME =
+  /requestProviders|createStore|getProviders|announceProvider|eip6963|addProvider/i
+
+/**
+ * Whether an error is the EIP-6963 `announceProvider` null-`detail` crash.
+ *
+ * A browser wallet extension announces itself by dispatching an
+ * `eip6963:announceProvider` CustomEvent whose `detail` should be
+ * `{ info, provider }`. A buggy or hostile extension can dispatch it with a
+ * null (or null-`info`) `detail`. Three independent listeners then read `.info`
+ * off it and throw: MEW's own `providerStore.addProvider` (the `App.vue`
+ * listener), and — via `generateConfig` → wagmi `createConfig` — the bundled
+ * `mipd` store's `requestProviders` callback and wagmi's `getProviders()`
+ * enumeration (APP-MEW-WEB-1JG / 1JM / 1JN). None is an app logic bug: the
+ * announced payload is untrusted third-party extension input, and MEW cannot
+ * correct it at the mipd/wagmi layer without a dependency bump. So all three are
+ * external, unactionable Sentry noise.
+ *
+ * Matched on the browser-native (minification-proof) null-`info` message AND an
+ * EIP-6963 provider-discovery frame in the stack, so an unrelated `.info`
+ * null-deref elsewhere in the app keeps reporting. Fails open when no stack is
+ * present (never suppresses on the message alone).
+ */
+export function isEip6963NullProviderError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  if (typeof e.message !== 'string' || !NULL_INFO_MESSAGE.test(e.message)) {
+    return false
+  }
+  return typeof e.stack === 'string' && EIP6963_DISCOVERY_FRAME.test(e.stack)
 }
