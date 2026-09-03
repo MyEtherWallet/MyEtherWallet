@@ -28,13 +28,18 @@
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
+        <!-- Unavailable cards, one at a time by precedence: a region
+             restriction can't be fixed by switching networks or waiting for
+             the market, so it outranks both; an unsupported network outranks
+             the market schedule. -->
         <!-- Market Closed -->
         <app-unavailable-card
           v-if="
             !isLoading &&
             marketStatus &&
             !isTradingSessionOpen &&
-            isCurrentNetworkSupported
+            isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
           "
           accent="primary"
           class="mb-3"
@@ -58,7 +63,11 @@
 
         <!-- Network Not Supported -->
         <app-unavailable-card
-          v-if="!isLoading && !isCurrentNetworkSupported"
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
           class="mb-3"
           :title="$t('trade.network_not_supported')"
           :description="
@@ -93,11 +102,7 @@
 
         <!-- Trading Restricted -->
         <app-unavailable-card
-          v-if="
-            !isLoading &&
-            isTradingRestrictedInRegion &&
-            isCurrentNetworkSupported
-          "
+          v-if="!isLoading && isTradingRestrictedInRegion"
           class="mb-3"
           :title="$t('trade.trading_not_available')"
           :description="$t('trade.trading_restricted')"
