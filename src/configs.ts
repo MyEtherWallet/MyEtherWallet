@@ -1,4 +1,4 @@
-const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://staging.mewwallet.dev'
+const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
 // Strapi serves uploads from the host root (`/uploads/...`), not from `/api`,
 // so the host is the shared constant and the API path hangs off it.
@@ -13,7 +13,7 @@ const configs = {
   MEW_PURCHASE_API: `${mewWalletUrl}/v5/purchase/info`,
   MEW_EXCHANGE_RATES_API: `${mewWalletUrl}/v2/prices/exchange-rates`,
   MEW_EMAIL: `${mewWalletUrl}/email-web`,
-  IS_DEV_MODE: import.meta.env.DEV,
+  IS_DEV_MODE: false,
   MEW_DONATION_ADDRESS: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   POPULAR_CHAINS: [
     'ETHEREUM',
@@ -28,7 +28,7 @@ const configs = {
   MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
-  RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season1`,
+  RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,
   MEW_MOBILE_DOWNLOAD_URL: 'https://download.mewwallet.com',
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
@@ -37,7 +37,8 @@ const configs = {
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
-  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off'
+  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
+  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
 }
 
 export default configs

@@ -9,9 +9,9 @@ onMounted(() => {
   stocksStore.fetchStockOverview()
 })
 </script>
+<!-- The outlet hosts the connect/create overlay routes ('/access', '/create'), whose
+     views render nothing themselves — the dialogs are mounted globally in App.vue. -->
 <template>
   <ModuleHome />
-  <!-- Mounts the /access child (ViewAccessWallet): opens the connect dialog
-       over Home for `/access?type=…`. Renders nothing itself. -->
   <router-view />
 </template>

@@ -8,6 +8,8 @@ import type {
   WsOutboundFrame,
 } from './wsTypes'
 import { perpsWsUrl } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 
 const PRIVATE_CHANNELS = new Set<WsChannel>([
   'balancePerps',
@@ -227,7 +229,10 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     let frame: WsInboundFrame
     try {
       frame = JSON.parse(raw) as WsInboundFrame
-    } catch {
+    } catch (e) {
+      capturePerps(PERPS_FEATURE.TRANSPORT, e, {
+        title: 'PERPS: WS frame parse failed',
+      })
       return
     }
     if (frame.type === 'loggedIn') {

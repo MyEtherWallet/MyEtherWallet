@@ -260,6 +260,7 @@ import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.
 import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
+import { pageRouteName } from '@/router/routeHierarchy'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
@@ -279,14 +280,17 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
+// The connect/create overlays nest under the info routes, so compare against the
+// deepest PAGE record rather than route.name (which would be e.g. the access route).
+const page = computed(() => pageRouteName(route))
 
 onMounted(() => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home ||
-    route.name === STOCK_INFO_ROUTE_NAMES.stocks ||
-    route.name === STOCK_INFO_ROUTE_NAMES.home ||
-    route.name === STOCK_INFO_ROUTE_NAMES.crypto
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home ||
+    page.value === STOCK_INFO_ROUTE_NAMES.stocks ||
+    page.value === STOCK_INFO_ROUTE_NAMES.home ||
+    page.value === STOCK_INFO_ROUTE_NAMES.crypto
   ) {
     if (isXLAndUp.value) {
       walletMenu.setIsOpenSideMenu(true)
@@ -297,8 +301,8 @@ onMounted(() => {
 })
 watch(isMDAndUp, newVal => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home
   ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)
@@ -310,8 +314,8 @@ watch(isMDAndUp, newVal => {
 
 watch(isXLAndUp, newVal => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home
   ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)

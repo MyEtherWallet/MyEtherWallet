@@ -3,12 +3,10 @@ import { ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
-import type { NewTokenInfo } from '@/composables/useSwap'
-import type { Chain } from '@/mew_api/types'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -21,9 +19,22 @@ import Configs from '@/configs'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { isUserRejectionError } from '@/utils/walletUtils'
+import { reportModuleError } from '@/utils/reportModuleError'
 import BigNumber from 'bignumber.js'
+import type { WalletInterface } from '@/providers/common/walletInterface'
+import type { TradeForm } from './useTradeForm'
 
 const isDevMode = Configs.IS_DEV_MODE
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && error.message) return error.message
+  if (typeof error === 'string') return error
+  if (error && typeof error === 'object') {
+    if ('message' in error && typeof error.message === 'string') return error.message
+    if ('details' in error && typeof error.details === 'string') return error.details
+  }
+  return fallback
+}
 
 interface QuoteData {
   startAmount: bigint
@@ -32,12 +43,9 @@ interface QuoteData {
 }
 
 interface UseTradeExecutionOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
+  form: TradeForm
   walletAddress: Ref<string | null | undefined>
-  wallet: Ref<any>
-  selectedFromChain: Ref<Chain | undefined>
+  wallet: Ref<WalletInterface | null>
   currentQuote: Ref<QuoteData | null>
   needsApproval: Ref<boolean>
   /**
@@ -61,17 +69,15 @@ interface UseTradeExecutionOptions {
 
 export function useTradeExecution(options: UseTradeExecutionOptions) {
   const {
-    fromTokenSelected,
-    toTokenSelected,
-    fromAmount,
+    form,
     walletAddress,
     wallet,
-    selectedFromChain,
     currentQuote,
     needsApproval,
     isTradingRestrictedInRegion,
     isTradingAllowedInRegion,
   } = options
+  const { fromTokenSelected, toTokenSelected, fromAmount, selectedFromChain } = form
 
   const { t } = useI18n()
   const toastStore = useToastStore()
@@ -174,29 +180,18 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
-        : (e as any).details
-          ? (e as any).details
-          : typeof e === 'string'
-            ? e
-            : t('trade.error.approval-failed')
+      const errorMessage = getErrorMessage(e, t('trade.error.approval-failed')).toLowerCase()
 
       analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
         ...getAnalyticsPayload(),
         errorMsg: errorMessage,
       })
-      if (isDevMode) {
-        console.error('Error approving token:', e)
-      } else {
-        captureException(e instanceof Error ? e : new Error(errorMessage), {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error approving token',
-            errorMessage,
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error approving token',
+        error: e instanceof Error ? e : new Error(errorMessage),
+        extra: { errorMessage },
+      })
 
       toastStore.addToastMessage({
         text: t('trade.error.approval-failed'),
@@ -345,31 +340,16 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
-        : (e as any).details
-          ? (e as any).details
-          : typeof e === 'string'
-            ? e
-            : t('trade.error.submit-failed')
+      const errorMessage = getErrorMessage(e, t('trade.error.submit-failed')).toLowerCase()
 
-      if (isDevMode) {
-        console.error('Error submitting trade order:', e)
-      } else {
-        // Expected client errors (user rejection code 4001, 1inch 4xx: expired
-        // quote / illiquid pair / invalid order), flagged by
-        // OneInchFusion.submitOrder, are surfaced to the user via the toast
-        // below but are pure Sentry noise — skip capture. Genuine 5xx /
-        // network failures stay unflagged and are reported.
-        if (!(e as { expectedClientError?: boolean }).expectedClientError) {
-          captureException(e instanceof Error ? e : new Error(errorMessage), {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error submitting trade order',
-              errorMessage,
-            },
-          })
-        }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error submitting trade order',
+        error: e instanceof Error ? e : new Error(errorMessage),
+        expected: isExpectedClientError(e),
+        extra: { errorMessage },
+      })
+      if (!isDevMode) {
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
           errorMsg: errorMessage,

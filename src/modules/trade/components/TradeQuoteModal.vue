@@ -191,7 +191,7 @@ import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfir
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 import { analytics, TradeEvent } from '@/analytics'
 

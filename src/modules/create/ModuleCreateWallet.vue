@@ -389,6 +389,7 @@ import { ArrowLeftIcon, ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+import { useWalletFlowUrlSync } from '@/composables/useWalletFlowRoute'
 
 import mewRating from '@/assets/images/create/rating-mobile.webp'
 import mewMobile from '@/assets/images/create/mewweb-logo.svg'
@@ -422,6 +423,10 @@ const { isOpenCreateDialog, currentView } = storeToRefs(createStore)
 const closeCreate = () => {
   createStore.setCurrentView('default')
 }
+
+// Mirrors ModuleAccessWallet: callers open this dialog by store flag, so sync the URL
+// from the one component that owns it rather than at every call site.
+useWalletFlowUrlSync(isOpenCreateDialog, 'create', currentView)
 
 const isOtherMethodsOpen = ref(false)
 

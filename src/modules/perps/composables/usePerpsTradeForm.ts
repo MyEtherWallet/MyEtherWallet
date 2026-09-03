@@ -20,6 +20,8 @@ import type {
 } from '@/analytics'
 import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { usePerpsAuth, usePerpsBalance } from './usePerpsAuth'
 import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
@@ -706,6 +708,10 @@ export function usePerpsTradeForm() {
         PerpsClosePositionEvent.SUBMIT_FAIL,
         failPayload,
       )
+      capturePerps(PERPS_FEATURE.POSITION, e, {
+        title: 'PERPS: Close position failed',
+        extra: { market: fullMarketName.value },
+      })
     } finally {
       isClosing.value = false
     }
@@ -1136,6 +1142,13 @@ export function usePerpsTradeForm() {
         PerpsChangeLeverageEvent.SUBMIT_FAIL,
         failPayload,
       )
+      capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+        title: 'PERPS: Set leverage failed',
+        extra: {
+          market: fullMarketName.value,
+          newLeverage: tempLeverage.value,
+        },
+      })
     } finally {
       isSavingLeverage.value = false
     }
@@ -1156,7 +1169,10 @@ export function usePerpsTradeForm() {
         leverage.value = Math.min(parsed, marketMaxLeverage.value)
       }
     } catch (e) {
-      console.error('Failed to fetch leverage:', e)
+      capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+        title: 'PERPS: Error fetching leverage',
+        extra: { market: fullMarketName.value },
+      })
     } finally {
       isFetchingLeverage.value = false
     }
@@ -1171,7 +1187,10 @@ export function usePerpsTradeForm() {
         setPercentage(10)
       }
     } catch (e) {
-      console.error('Failed to fetch max order size:', e)
+      capturePerps(PERPS_FEATURE.ORDER, e, {
+        title: 'PERPS: Error fetching max order size',
+        extra: { market: fullMarketName.value },
+      })
     }
   }
 
@@ -1578,6 +1597,14 @@ export function usePerpsTradeForm() {
         PerpsTradeOrderEvent.SUBMIT_FAIL,
         failPayload,
       )
+      capturePerps(PERPS_FEATURE.ORDER, error, {
+        title: 'PERPS: Order creation failed',
+        extra: {
+          market: fullMarketName.value,
+          orderType: orderType.value,
+          side: orderSide.value,
+        },
+      })
     } finally {
       isSubmitting.value = false
     }

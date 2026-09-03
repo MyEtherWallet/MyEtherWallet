@@ -257,6 +257,8 @@ import {
   IS_PERPS_LIVE,
 } from '../configs'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { Contract } from 'web3-eth-contract'
@@ -523,6 +525,9 @@ const fetchDepositAddress = async () => {
   } catch (e) {
     error.value =
       e instanceof Error ? e.message : t('perps.deposit.fetch-address-failed')
+    capturePerps(PERPS_FEATURE.DEPOSIT, e, {
+      title: 'PERPS: Error fetching deposit address',
+    })
   } finally {
     loading.value = false
   }
@@ -565,6 +570,10 @@ const sendSandboxDeposit = async () => {
         errorMessage: msg,
       })
       perpsToasts.toastFailedToInitiateDeposit()
+      capturePerps(PERPS_FEATURE.DEPOSIT, e, {
+        title: 'PERPS: Sandbox deposit failed',
+        extra: { depositAmount, token: 'USDC' },
+      })
     }
   } finally {
     sending.value = false
@@ -661,6 +670,10 @@ const sendLiveDeposit = async () => {
         errorMessage: msg,
       })
       perpsToasts.toastFailedToCreditAccount()
+      capturePerps(PERPS_FEATURE.DEPOSIT, e, {
+        title: 'PERPS: Deposit transaction failed',
+        extra: { depositAmount, token: 'USDC' },
+      })
     }
   } finally {
     sending.value = false

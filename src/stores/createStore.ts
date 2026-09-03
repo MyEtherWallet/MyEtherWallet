@@ -19,6 +19,12 @@ export const useCreateStore = defineStore('createStore', () => {
     isOpenCreateDialog.value = true
     analytics.trackCreateWalletEvent(CreateWalletEvent.SHOWN)
   }
+  /** See accessStore.ensureAccessDialogOpen — same contract for the create dialog. */
+  const ensureCreateDialogOpen = () => {
+    if (isOpenCreateDialog.value) return
+    openCreateDialog()
+  }
+
   const closeCreateDialog = () => {
     isOpenCreateDialog.value = false
     currentView.value = 'default'
@@ -48,6 +54,7 @@ export const useCreateStore = defineStore('createStore', () => {
   return {
     isOpenCreateDialog,
     openCreateDialog,
+    ensureCreateDialogOpen,
     closeCreateDialog,
     currentView,
     setCurrentView,
