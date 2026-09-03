@@ -163,10 +163,12 @@ const onTradeInfo = () => {
   isTradeInfoOpen.value = true
 }
 
+// Null for a missing or unparseable date, so callers can drop the copy rather
+// than render a countdown of "0 days".
 const daysUntil = (ts?: string | null) => {
-  if (!ts) return 0
+  if (!ts) return null
   const ms = new Date(ts).getTime()
-  if (Number.isNaN(ms)) return 0
+  if (Number.isNaN(ms)) return null
   return Math.max(0, Math.ceil((ms - Date.now()) / 86_400_000))
 }
 
@@ -256,15 +258,15 @@ const onHoldPrimary = async () => {
 const holdCardStatusText = computed(() => {
   if (holdCardStatus.value === 'holding')
     return t('rwaRewards.hold_for_more_days', {
-      count: daysUntil(activeReward.value?.qualification_timestamp),
+      count: daysUntil(activeReward.value?.qualification_timestamp) ?? 0,
     })
   if (holdCardStatus.value === 'claimable')
     return t('rwaRewards.claim_your_reward')
   if (holdCardStatus.value === 'claimed') return t('rwaRewards.already_claimed')
   if (holdCardStatus.value === 'paused')
     return t('rwaRewards.temporarily_paused')
-  // Per design, the maxed-out card carries the "Campaign ended" badge — the web
-  // side of the campaign is over even though the season is still running.
+  // Per design, the maxed-out card carries the "Trading period ended" badge —
+  // the web side of the campaign is over even though the season is still running.
   if (holdCardStatus.value === 'full') return t('rwaRewards.campaign_ended')
   if (holdCardStatus.value === 'underReview')
     return t('rwaRewards.under_review')
@@ -273,7 +275,11 @@ const holdCardStatusText = computed(() => {
     return t('rwaRewards.modal_banned_title')
   if (holdCardStatus.value === 'notEligible')
     return t('rwaRewards.modal_not_eligible_title')
-  return t('rwaRewards.ends_in_days', { count: daysUntil(seasonEnd.value) })
+  // `/info` can come back without a season end. There is no countdown to show
+  // then, so the badge is left empty and the card hides it entirely.
+  const daysLeft = daysUntil(seasonEnd.value)
+  if (daysLeft === null) return ''
+  return t('rwaRewards.ends_in_days', { count: daysLeft })
 })
 </script>
 

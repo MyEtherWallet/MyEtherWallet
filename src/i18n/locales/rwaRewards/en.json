@@ -14,7 +14,7 @@
     "rewards_left_this_hour": "{count} rewards left this hour",
     "no_rewards_left_this_hour": "No rewards left this hour",
     "already_claimed": "Already claimed",
-    "campaign_ended": "Campaign ended",
+    "campaign_ended": "Trading period ended",
     "ends_in_days": "Campaign ends in {count} days",
     "hold_for_more_days": "Hold for {count} more days",
     "hero_offer_expires": "Expires in {time}",

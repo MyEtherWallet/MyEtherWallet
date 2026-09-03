@@ -20,9 +20,10 @@
 
         <div class="relative z-10 flex flex-col items-start gap-2">
           <!-- A season that has already ended has nothing left to count down
-               to; the countdown would sit at "0 seconds". -->
+               to; the countdown would sit at "0 seconds". An empty countdown
+               means `/info` returned no season end, so there is no date to show. -->
           <p
-            v-if="!isCampaignEnded"
+            v-if="!isCampaignEnded && expiresText"
             class="text-s-12 leading-[18px] text-[#575757]"
           >
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -170,7 +171,7 @@
                       {{ disabledCtaLabel }}
                     </div>
                     <div
-                      v-if="!isCampaignEnded"
+                      v-if="!isCampaignEnded && expiresText"
                       :class="expiresPill"
                       class="flex items-center justify-center"
                     >
@@ -541,7 +542,11 @@ const offerRules = computed(() => [
   t('rwaRewards.offer_rule_4'),
   t('rwaRewards.offer_rule_5'),
   t('rwaRewards.offer_rule_6'),
-  t('rwaRewards.offer_rule_7', { date: campaignEndText.value }),
+  // `/info` can come back without a season end, which would leave this rule
+  // reading "Campaign ends" with nothing after it — drop it instead.
+  ...(campaignEndText.value
+    ? [t('rwaRewards.offer_rule_7', { date: campaignEndText.value })]
+    : []),
 ])
 
 const HOLD_TOTAL = 14

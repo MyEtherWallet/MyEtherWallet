@@ -37,7 +37,8 @@ const configs = {
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
-  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off'
+  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
+  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
 }
 
 export default configs

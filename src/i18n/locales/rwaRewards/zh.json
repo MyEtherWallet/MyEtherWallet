@@ -14,7 +14,7 @@
     "rewards_left_this_hour": "本小时还剩 {count} 份奖励",
     "no_rewards_left_this_hour": "本小时已无剩余奖励",
     "already_claimed": "已领取",
-    "campaign_ended": "活动已结束",
+    "campaign_ended": "交易期已结束",
     "ends_in_days": "活动将在 {count} 天后结束",
     "hold_for_more_days": "再持有 {count} 天",
     "hero_offer_expires": "{time} 后到期",

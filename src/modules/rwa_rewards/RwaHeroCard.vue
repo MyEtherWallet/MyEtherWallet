@@ -69,9 +69,10 @@
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <!-- A season that has already ended has nothing left to count down
-             to; the countdown would sit at "0 seconds". -->
+             to; the countdown would sit at "0 seconds". An empty countdown
+             means `/info` returned no season end, so there is no date to show. -->
         <p
-          v-if="!isCampaignEnded"
+          v-if="!isCampaignEnded && expiresText"
           class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -220,7 +221,7 @@
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
-          v-if="!isCampaignEnded"
+          v-if="!isCampaignEnded && expiresText"
           class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}

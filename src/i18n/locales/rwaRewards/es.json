@@ -14,7 +14,7 @@
     "rewards_left_this_hour": "Quedan {count} recompensas esta hora",
     "no_rewards_left_this_hour": "No quedan recompensas esta hora",
     "already_claimed": "Ya reclamada",
-    "campaign_ended": "Campaña finalizada",
+    "campaign_ended": "Periodo de negociación finalizado",
     "ends_in_days": "La campaña termina en {count} días",
     "hold_for_more_days": "Mantén durante {count} días más",
     "hero_offer_expires": "Expira en {time}",
