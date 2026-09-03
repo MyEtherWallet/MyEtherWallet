@@ -563,9 +563,13 @@ type StatusNotificationType = 'transaction' | 'swap' | 'bridge'
 const updateNotificationStatus = (
   hash: string,
   type: StatusNotificationType,
-  apiStatus: { status: string },
+  apiStatus: { status?: string },
 ) => {
   if (!walletAddress.value) return
+  // The status endpoint can return an error/edge payload without a string
+  // `status` (fetch does not throw on non-2xx). Skip and keep polling instead
+  // of crashing on `undefined.toLowerCase()`.
+  if (typeof apiStatus?.status !== 'string') return
   const _status = apiStatus.status.toLowerCase()
   let newStatus: 'sent' | 'confirmed' | 'failed' = 'sent'
 

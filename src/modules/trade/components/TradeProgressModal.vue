@@ -105,7 +105,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { getTradeExplorerLink } from '@/modules/trade/composables/tradeExplorerLink'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 
 const { t } = useI18n()

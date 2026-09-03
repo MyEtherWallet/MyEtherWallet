@@ -43,6 +43,25 @@ export const isUserRejectionError = (error: unknown): boolean => {
 }
 
 /**
+ * Checks if an error means the account cannot cover gas, whether it surfaced
+ * from the wallet or from the gas estimation that precedes it.
+ *
+ * Matched on the message rather than a code, for two reasons: Enkrypt tags the
+ * wallet-side variant with EIP-1193 code 4001, so checking this before
+ * `isUserRejectionError` is what stops it being reported as a cancellation; and
+ * the node-side variant carries no code at all. `gas required exceeds
+ * allowance` is the estimation phrasing — the allowance there is the gas the
+ * balance can pay for, unrelated to an ERC20 allowance.
+ */
+export const isInsufficientFundsError = (error: unknown): boolean => {
+  const message = (error as { message?: string })?.message?.toLowerCase() ?? ''
+  return (
+    message.includes('insufficient funds') ||
+    message.includes('gas required exceeds allowance')
+  )
+}
+
+/**
  * Map a raw hardware-wallet (Ledger) error message to a friendly, localized
  * string. Hardware SDKs surface low-level messages such as
  * `ledger device: locked device (0x5515)` that get shown verbatim in toasts;
@@ -84,9 +103,15 @@ export const getLocalizedWalletError = (
 /**
  * A transient Trezor Connect failure: the popup/iframe returned `success`
  * with an empty payload, so `@enkryptcom/hw-wallets` runs an unguarded
- * `Buffer.from(undefined)` and throws a cryptic TypeError (or "popup failed
- * to open"). Retrying usually succeeds, so this is safe to surface as a
+ * conversion on the missing field and throws a cryptic TypeError (or "popup
+ * failed to open"). Retrying usually succeeds, so this is safe to surface as a
  * friendly "reconnect" message rather than reporting it as noise.
+ *
+ * Known empty-payload shapes:
+ *  - signMessage:     `Buffer.from(undefined)` → "The first argument must be
+ *    one of type string, Buffer, ..." (MEW-2080).
+ *  - signTransaction: `BigInt(result.payload.v)` where `v` is undefined →
+ *    "Cannot convert undefined to a BigInt" (APP-MEW-WEB-56 / MEW-2198).
  */
 export const isTransientTrezorError = (error: unknown): boolean => {
   const message = (
@@ -94,6 +119,7 @@ export const isTransientTrezorError = (error: unknown): boolean => {
   ).toLowerCase()
   return (
     message.includes('popup failed to open') ||
-    message.includes('the first argument must be one of type string, buffer')
+    message.includes('the first argument must be one of type string, buffer') ||
+    message.includes('cannot convert undefined to a bigint')
   )
 }

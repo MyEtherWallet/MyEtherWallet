@@ -4,6 +4,8 @@
       <ModuleStockInfo :symbol="symbol" />
     </template>
   </app-view-as-dialog>
+  <!-- Hosts the connect/create overlay routes — see ViewTokenInfo.vue. -->
+  <router-view />
 </template>
 
 <script setup lang="ts">

@@ -3,9 +3,6 @@ import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
-import type { NewTokenInfo } from '@/composables/useSwap'
-import type { Chain } from '@/mew_api/types'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -13,21 +10,27 @@ import {
   TradeEventError,
   type TradePayloadShared,
 } from '@/analytics'
-import Configs from '@/configs'
-import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
-
-const isDevMode = Configs.IS_DEV_MODE
+import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
+import {
+  isExpectedClientError,
+  isTransientNetworkError,
+} from '@/modules/trade/common/expectedTradeError'
+import { reportModuleError } from '@/utils/reportModuleError'
+import type { WalletInterface } from '@/providers/common/walletInterface'
+import type { TradeForm } from './useTradeForm'
 
 import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 
+export interface QuoteData {
+  startAmount: bigint
+  endAmount?: bigint
+  avgAmount?: bigint
+}
+
 interface UseTradeQuoteOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
-  toAmount: Ref<string>
+  form: TradeForm
   walletAddress: Ref<string | null | undefined>
-  wallet: Ref<any>
-  selectedFromChain: Ref<Chain | undefined>
+  wallet: Ref<WalletInterface | null>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   /**
@@ -40,9 +43,6 @@ interface UseTradeQuoteOptions {
    */
   isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
-  generalError: Ref<string>
-  isPairUnavailable: Ref<boolean>
-  isLoadingQuote: Ref<boolean>
   /**
    * Whether the review modal is currently open. `fetchQuote` doubles as the
    * refresh triggered by that modal's `expired` event, so a failure while it
@@ -54,22 +54,25 @@ interface UseTradeQuoteOptions {
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
   const {
-    fromTokenSelected,
-    toTokenSelected,
-    fromAmount,
-    toAmount,
+    form,
     walletAddress,
     wallet,
-    selectedFromChain,
     isMarketOpen,
     isSelectedAssetTradeable,
     isTradingAllowedInRegion,
     hasPreQuoteError,
-    generalError,
-    isPairUnavailable,
-    isLoadingQuote,
     isReviewModalOpen,
   } = options
+  const {
+    fromTokenSelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    selectedFromChain,
+    generalError,
+    isLoadingQuote,
+    isPairUnavailable,
+  } = form
 
   const { t } = useI18n()
 
@@ -133,6 +136,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       !fromAmount.value ||
       fromAmount.value === '0' ||
       !walletAddress.value ||
+      !wallet.value ||
       hasPreQuoteError.value
     ) {
       toAmount.value = '0'
@@ -220,33 +224,21 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
           errorMsg: rawMessage || 'Failed to fetch quote',
         },
       )
-      if (isDevMode) {
-        console.error('Error fetching quote:', e)
-      } else if (!isTransientRpcError(e)) {
-        // Transient RPC/WebSocket drops (e.g. the allowance read over
-        // wss://nodes.mewapi.io) are surfaced to the user above but are pure
-        // Sentry noise — only report genuine quote failures.
-        // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
-        // and transient axios "Network Error"s (the 1inch request never
-        // completed) are surfaced to the user above but are pure Sentry noise —
-        // skip them.
-        const isExpectedClientError = !!(e as { expectedClientError?: boolean })
-          .expectedClientError
-        const isTransientNetworkError = !!(
-          e as { transientNetworkError?: boolean }
-        ).transientNetworkError
-        if (isDevMode) {
-          console.error('Error fetching quote:', e)
-        } else if (!isExpectedClientError && !isTransientNetworkError) {
-          captureException(e, {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error fetching quote',
-              errorMessage: generalError.value,
-            },
-          })
-        }
-      }
+      // All three are surfaced to the user above and are pure Sentry noise:
+      // transient RPC/WebSocket drops (e.g. the allowance read over
+      // wss://nodes.mewapi.io), expected client errors (1inch 4xx, flagged by
+      // OneInchFusion.getQuote), and transient axios "Network Error"s, where the
+      // 1inch request never completed.
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error fetching quote',
+        error: e,
+        expected:
+          isTransientRpcError(e) ||
+          isExpectedClientError(e) ||
+          isTransientNetworkError(e),
+        extra: { errorMessage: generalError.value },
+      })
     }
   }
 

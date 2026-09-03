@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 
 const EMPTY_VALUE = '—'

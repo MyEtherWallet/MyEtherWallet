@@ -1,12 +1,9 @@
 import { ref, computed } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import { captureException } from '@sentry/vue'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
-import {
-  getMarketStatus,
-  isTradingRestricted,
-} from '@/modules/trade/providers/ondoHelpers'
-import { resolveCurrentSession } from '@/modules/trade/composables/marketSession'
+import { getMarketStatus } from '@/modules/trade/providers/ondoHelpers'
+import { resolveCurrentSession } from '@/modules/trade/common/marketSession'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 import i18n from '@/i18n'
@@ -21,8 +18,7 @@ const MAX_FAILURE_BACKOFF_MS = 300_000
 
 export const useMarketStatusStore = defineStore('marketStatus', () => {
   const globalStore = useGlobalStore()
-  const { fetchedTradingThisSession } = storeToRefs(globalStore)
-  const { setIsTradingRestrictedInRegion } = globalStore
+  const { fetchTradingRestriction } = globalStore
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref('')
@@ -137,7 +133,10 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     }
     const transitionAt = nextTransitionAt()
     const delay = transitionAt
-      ? Math.max(transitionAt + REFRESH_BUFFER_MS - Date.now(), MIN_REFRESH_DELAY_MS)
+      ? Math.max(
+          transitionAt + REFRESH_BUFFER_MS - Date.now(),
+          MIN_REFRESH_DELAY_MS,
+        )
       : MIN_REFRESH_DELAY_MS
     refreshTimeout = setTimeout(() => {
       fetchMarketStatus()
@@ -157,30 +156,6 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     if (visibilityListenerAttached) return
     document.addEventListener('visibilitychange', onVisibilityChange)
     visibilityListenerAttached = true
-  }
-
-  const fetchTradingRestriction = async () => {
-    if (fetchedTradingThisSession.value) {
-      return fetchedTradingThisSession.value
-    }
-    try {
-      const restricted = await isTradingRestricted()
-      setIsTradingRestrictedInRegion(restricted)
-      fetchedTradingThisSession.value = true
-    } catch (e) {
-      if (isDevMode) {
-        console.error('Failed to check trading restriction:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error checking trading restriction',
-            errorMessage: (e as Error).message || 'Unknown error',
-          },
-        })
-      }
-      setIsTradingRestrictedInRegion(true)
-    }
   }
 
   const fetchMarketStatus = async (): Promise<void> => {

@@ -56,21 +56,24 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
   const generalError = ref('')
   const isPairUnavailable = ref(false)
   const isReviewModalOpen = ref(isReviewModalOpenValue)
-  const quote = useTradeQuote({
-    fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }) as never,
-    toTokenSelected: ref({ ...TOKEN }) as never,
+  const form = {
+    fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }),
+    toTokenSelected: ref({ ...TOKEN }),
     fromAmount,
     toAmount,
+    selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }),
+    generalError,
+    isLoadingQuote,
+    isPairUnavailable,
+  } as never
+  const quote = useTradeQuote({
+    form,
     walletAddress: ref('0xwallet'),
-    wallet: ref({}),
-    selectedFromChain: ref({ chainID: '1', name: 'ETHEREUM' }) as never,
+    wallet: ref({}) as never,
     isMarketOpen: computed(() => true),
     isSelectedAssetTradeable: computed(() => true),
-    isTradingAllowedInRegion: computed(() => true),
+    isTradingAllowedInRegion: ref(true),
     hasPreQuoteError: computed(() => false),
-    generalError,
-    isPairUnavailable,
-    isLoadingQuote,
     isReviewModalOpen,
   })
   return {

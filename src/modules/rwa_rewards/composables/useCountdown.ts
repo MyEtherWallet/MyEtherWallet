@@ -20,8 +20,7 @@ export function useCountdown(
     const hours = Math.floor(minutes / 60)
     const days = Math.floor(hours / 24)
     const weeks = Math.floor(days / 7)
-    const unit = (n: number, key: string) =>
-      `${n} ${t(`rwaRewards.${key}`, n)}`
+    const unit = (n: number, key: string) => `${n} ${t(`rwaRewards.${key}`, n)}`
     if (weeks >= 1) return unit(weeks, 'unit_week')
     if (days >= 1) return unit(days, 'unit_day')
     if (hours >= 1) return unit(hours, 'unit_hour')

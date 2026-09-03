@@ -208,9 +208,9 @@ import {
 } from '@/utils/numberFormatHelper'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
-import { type NewTokenInfo } from '@/composables/useSwap'
+import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
-import { isPauseReason } from '../composables/tradeSession'
+import { isPauseReason } from '../common/tradeSession'
 
 interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber

@@ -3,7 +3,7 @@ import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
   getActivePauseReason,
-} from '@/modules/trade/composables/tradeSession'
+} from '@/modules/trade/common/tradeSession'
 import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]

@@ -1,6 +1,7 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMarketStatusStore } from '@/stores/marketStatusStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { TRADING_RESTRICTED_HELP_URL } from '../providers/ondoHelpers'
 
 interface UseMarketStatusOptions {
@@ -36,7 +37,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus: marketStatusStore.fetchMarketStatus,
-    fetchTradingRestriction: marketStatusStore.fetchTradingRestriction,
+    fetchTradingRestriction: useGlobalStore().fetchTradingRestriction,
     formatNextOpen: marketStatusStore.formatNextOpen,
   }
 }

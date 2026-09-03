@@ -101,6 +101,7 @@ import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
 import { computed, watch } from 'vue'
+import { useWalletFlowUrlSync } from '@/composables/useWalletFlowRoute'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -154,6 +155,10 @@ watch(
     }
   },
 )
+
+// Callers open this dialog by store flag, so the URL is synced from here — the one
+// component that owns it. See useWalletFlowUrlSync.
+useWalletFlowUrlSync(isOpenAccessDialog, 'access', currentView)
 
 /**-------------------------------
  * UI Elements

@@ -168,7 +168,7 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sanitizeDecimal } from '@/utils/sanitizeDecimal'
-import { type NewTokenInfo } from '@/composables/useSwap'
+import { type NewTokenInfo } from '@/stores/swapStore'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
 

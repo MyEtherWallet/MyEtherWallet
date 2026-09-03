@@ -65,7 +65,7 @@
       <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
         <app-btn-group
           v-model:selected="selectedInterval"
-          :btn-list="isXS ? chartIntervals.slice(0, 2) : chartIntervals"
+          :btn-list="isXS ? chartIntervals.slice(0, 3) : chartIntervals"
           size="xs"
         >
           <template #btn-content="{ data }">
@@ -75,7 +75,7 @@
             <app-select
               v-if="isXS"
               v-model:selected="selectedInterval"
-              :options="chartIntervals.slice(2)"
+              :options="chartIntervals.slice(3)"
               position="-right-1"
               class="text-s-12"
             >
@@ -971,6 +971,11 @@ import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
+import type { WebTokenPriceChartInterval } from '@/mew_api/types'
+import {
+  PERPS_CHART_INTERVALS,
+  getPerpsChartRange,
+} from './utils/chart'
 
 import {
   ArrowTrendingDownIcon,
@@ -978,6 +983,8 @@ import {
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
+import { capturePerps } from './sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
 import { useCursorPaginate } from './composables/useCursorPaginate'
 import {
   usePerpsMarkets,
@@ -1120,8 +1127,12 @@ const fetchPerpetualInfo = async () => {
   try {
     const res = await perpsClient.getPerpetualInfo(props.market)
     if (res.success) perpInfo.value = res.result
-  } catch {
+  } catch (e) {
     perpInfo.value = undefined
+    capturePerps(PERPS_FEATURE.MARKETS, e, {
+      title: 'PERPS: Error fetching perpetual info',
+      extra: { market: props.market },
+    })
   }
 }
 
@@ -1243,7 +1254,7 @@ async function fetchOpenOrdersCount() {
     openOrdersCountForMarket.value = pendingCount
     openOrdersCountIsCapped.value =
       !!res.pageInfo?.nextCursor && pendingCount >= OPEN_COUNT_LIMIT
-  } catch {
+  } catch (e) {
     if (
       seq !== openOrdersFetchSeq ||
       market !== props.market ||
@@ -1252,6 +1263,10 @@ async function fetchOpenOrdersCount() {
       return
     openOrdersCountForMarket.value = 0
     openOrdersCountIsCapped.value = false
+    capturePerps(PERPS_FEATURE.ORDER, e, {
+      title: 'PERPS: Error fetching open orders count',
+      extra: { market: props.market },
+    })
   }
 }
 
@@ -1325,7 +1340,9 @@ const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
     await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
     return true
   } catch (e) {
-    console.error('Failed to cancel order:', e)
+    capturePerps(PERPS_FEATURE.ORDER, e, {
+      title: 'PERPS: Cancel order failed',
+    })
     const errorMessage = e instanceof Error ? e.message : String(e)
     void analytics.trackPerpsOrderCancelErrorEvent(
       PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
@@ -1583,6 +1600,10 @@ const saveLeverage = async () => {
       PerpsChangeLeverageEvent.SUBMIT_FAIL,
       failPayload,
     )
+    capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+      title: 'PERPS: Set leverage failed',
+      extra: { market: props.market, newLeverage: tempLeverage.value },
+    })
   } finally {
     isSavingLeverage.value = false
   }
@@ -1622,37 +1643,31 @@ watch(selectedManageAction, action => {
   selectedManageAction.value = undefined
 })
 
-// Chart
-const chartIntervals = [
-  { label: '1m', value: '1' },
-  { label: '5m', value: '5' },
-  { label: '1h', value: '60' },
-  { label: '4h', value: '240' },
-  { label: '1d', value: '1D' },
-  { label: '1w', value: '1W' },
-]
-const selectedInterval = ref(chartIntervals[2])
+// Chart — lookback filters (1D/7D/1M/3M/1Y/ALL), matching the crypto/stocks
+// info charts. See ./utils/chart for the period → window/resolution mapping.
+interface ChartInterval {
+  label: string
+  value: WebTokenPriceChartInterval
+}
+const chartIntervals = computed<ChartInterval[]>(() =>
+  PERPS_CHART_INTERVALS.map(value => ({
+    label: t(`common.chart_${value.toLowerCase()}`),
+    value,
+  })),
+)
+const selectedInterval = ref<ChartInterval>(chartIntervals.value[0])
+watch(chartIntervals, options => {
+  selectedInterval.value =
+    options.find(opt => opt.value === selectedInterval.value.value) ||
+    options[0]
+})
 const chartLoading = ref(false)
 const chartLabels = ref<number[]>([])
 const chartPoints = ref<number[]>([])
 
 const chartCache = new Map<string, { labels: number[]; points: number[] }>()
 
-const chartTimeFrame = computed(() => {
-  const v = selectedInterval.value.value
-  if (v === '1D') return '1D' as const
-  if (v === '1W') return '7D' as const
-  const mins = parseInt(v)
-  if (mins <= 60) return '1D' as const
-  if (mins <= 480) return '7D' as const
-  return '1M' as const
-})
-
-const getResolutionSeconds = (res: string): number => {
-  if (res === '1D') return 86400
-  if (res === '1W') return 604800
-  return parseInt(res) * 60
-}
+const chartTimeFrame = computed(() => selectedInterval.value.value)
 
 const fetchChart = async () => {
   const cacheKey = `${props.market}-${selectedInterval.value.value}`
@@ -1665,12 +1680,12 @@ const fetchChart = async () => {
 
   chartLoading.value = true
   try {
-    const to = Math.floor(Date.now() / 1000)
-    const resSecs = getResolutionSeconds(selectedInterval.value.value)
-    const from = to - resSecs * 200
+    const { from, to, resolution } = getPerpsChartRange(
+      selectedInterval.value.value,
+    )
     const data = await perpsClient.getHistory(
       props.market,
-      selectedInterval.value.value,
+      resolution,
       from,
       to,
     )
@@ -1683,9 +1698,13 @@ const fetchChart = async () => {
       chartLabels.value = []
       chartPoints.value = []
     }
-  } catch {
+  } catch (e) {
     chartLabels.value = []
     chartPoints.value = []
+    capturePerps(PERPS_FEATURE.MARKETS, e, {
+      title: 'PERPS: Error fetching chart history',
+      extra: { market: props.market },
+    })
   } finally {
     chartLoading.value = false
   }

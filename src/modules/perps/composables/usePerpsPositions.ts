@@ -1,93 +1,26 @@
-import { ref, watch, effectScope } from 'vue'
-import { perpsClient } from '../configs'
-import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
-import { perpsWs } from '../sdk/ws'
+import { storeToRefs } from 'pinia'
+import { usePerpsPositionsStore } from '@/stores/perpsPositionsStore'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
-import type { Position } from '../sdk/types'
 
-const positions = ref<Position[]>([])
-const loading = ref(false)
-const hasLoaded = ref(false)
-const error = ref<string | null>(null)
-let initialized = false
-
-async function fetchPositions() {
-  const { token } = usePerpsAuth()
-  if (!token.value) {
-    positions.value = []
-    return
-  }
-  loading.value = true
-  error.value = null
-  try {
-    const res = await perpsClient.getPositions()
-    positions.value = res.result ?? []
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to load positions'
-  } finally {
-    loading.value = false
-    hasLoaded.value = true
-  }
-}
-
-function startWs() {
-  if (initialized) return
-  initialized = true
-  ensurePerpsWsLifecycle()
-  const { token, refreshKey } = usePerpsAuth()
-
-  onPerpsAuthReset(() => {
-    positions.value = []
-    hasLoaded.value = false
-  })
-
-  // Detached scope so these singleton watchers survive the unmount of the first
-  // component that calls usePerpsPositions() — otherwise they die on route/panel
-  // change and, guarded by `initialized`, never re-register, so an account
-  // switch A→B stops clearing/refetching and keeps showing A's positions.
-  effectScope(true).run(() => {
-    watch(token, (newToken, oldToken) => {
-      if (oldToken) {
-        positions.value = []
-        hasLoaded.value = false
-      }
-      if (newToken) void fetchPositions()
-    }, { immediate: true })
-
-    watch(refreshKey, () => {
-      if (token.value) void fetchPositions()
-    })
-
-    perpsWs.subscribe<Position>('positionsPerps', (rows) => {
-      // Ignore pushes while signed out / mid wallet-switch — see the balancePerps
-      // guard in usePerpsAuth: a stale frame for the previous account would
-      // otherwise repopulate positions we just cleared.
-      if (!token.value) return
-      positions.value = rows
-      hasLoaded.value = true
-    })
-  })
-}
-
-async function closePosition(pos: Position) {
-  const side = pos.direction === 'long' ? 'sell' : 'buy'
-  await perpsClient.createOrder({
-    market: pos.market,
-    type: 'market',
-    side,
-    size: pos.netQuantity,
-  })
-  await fetchPositions()
-}
-
+/**
+ * The account's open perps positions, from `perpsPositionsStore`. The first
+ * caller starts the fetch and the subscription, by virtue of being the one that
+ * creates the store.
+ *
+ * `ensurePerpsWsLifecycle()` stays here rather than in the store: it reaches for
+ * `useRoute()` and a Pinia store, so it has to run from a caller's setup context
+ * (see its own comment).
+ */
 export function usePerpsPositions() {
-  startWs()
+  ensurePerpsWsLifecycle()
+  const store = usePerpsPositionsStore()
+  const { positions, loading, hasLoaded, error } = storeToRefs(store)
   return {
     positions,
     loading,
     hasLoaded,
     error,
-    refetch: fetchPositions,
-    closePosition,
+    refetch: store.fetchPositions,
+    closePosition: store.closePosition,
   }
 }

@@ -49,8 +49,6 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useMarketStatus } from '@/modules/trade/composables'
-import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import overlayImg from '@/assets/images/rwa-rewards/tradeAndHoldFullscreenOverlayImg.png'
 import {
   analytics,
@@ -64,8 +62,9 @@ const holdingsStore = useHoldingsStore()
 const { canRegisterTrade } = storeToRefs(holdingsStore)
 const announcement = useRwaAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
-const { fetchTradingRestriction } = useMarketStatus()
+const globalStore = useGlobalStore()
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
+const { fetchTradingRestriction } = globalStore
 
 const isOpen = ref(false)
 const showAfter = ref(false)
@@ -82,11 +81,9 @@ onMounted(async () => {
   await fetchTradingRestriction()
   if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
-    if (
-      !isWalletUnlocked.value &&
-      (route.name === ROUTES_ACCESS.ACCESS.NAME ||
-        route.name === ROUTES_CREATE_WALLET.CREATE_WALLET.NAME)
-    ) {
+    // Only overlay records carry `meta.walletFlow`, and there is one per host page, so
+    // this replaces two now-insufficient fixed-name comparisons.
+    if (!isWalletUnlocked.value && route.meta.walletFlow) {
       showAfter.value = true
     } else {
       openDialog()

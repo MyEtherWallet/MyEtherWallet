@@ -70,6 +70,7 @@ import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { pageParentRouteName } from '@/router/routeHierarchy'
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const walletMenu = useWalletMenuStore()
@@ -116,14 +117,11 @@ const closeDialog = () => {
   isOpen.value = false
   hasShadow.value = true
   isOverflowHidden.value = false
-  if (route.matched.length > 1) {
-    // The parent route is the second to last item in the matched array
-    const parentRouteName = route.matched[route.matched.length - 2].name
-
-    router.push({ name: parentRouteName })
-  } else {
-    router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
-  }
+  // Not `matched[matched.length - 2]`: a connect/create overlay can be a child of this
+  // dialog's own record (e.g. /crypto/token/peaq-2/access), which would make that index
+  // the dialog itself. pageParentRouteName filters the overlay layer out first.
+  const parentRouteName = pageParentRouteName(route)
+  router.push({ name: parentRouteName ?? ROUTES_MAIN.PORTFOLIO.NAME })
 }
 onBeforeUnmount(() => {
   isOverflowHidden.value = false
