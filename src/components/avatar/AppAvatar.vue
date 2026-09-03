@@ -101,6 +101,15 @@ const badgeStyle = computed(() =>
     : {},
 )
 
+// Account "connected" ring overhangs the box (Figma ~box × 0.08 outside), so it
+// lives in the outer, non-clipping layer alongside badges.
+const showConnectedRing = computed(
+  () => props.type === 'account' && props.connected === true,
+)
+const connectedRingStyle = computed(() => ({
+  inset: `-${AVATAR_SIZES[props.size].box * 0.08}px`,
+}))
+
 // Single-badge rule (Figma guideline): warn in dev, render the first.
 watchEffect(() => {
   if (import.meta.env.DEV && activePositions.value.length > 1) {
@@ -126,5 +135,11 @@ watchEffect(() => {
     <div v-if="activePosition" class="absolute" :style="badgeStyle">
       <slot name="badge" />
     </div>
+
+    <span
+      v-if="showConnectedRing"
+      class="absolute rounded-full border-2 border-success pointer-events-none"
+      :style="connectedRingStyle"
+    />
   </div>
 </template>

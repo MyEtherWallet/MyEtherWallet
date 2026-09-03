@@ -9,6 +9,12 @@ vi.mock('@/stores/chainsStore', () => ({
   useChainsStore: () => ({ getChainIcon: () => undefined }),
 }))
 
+// blockies draws on a canvas — no 2d context in the test DOM. The account tests
+// care about the ring/wiring, not the pattern bytes.
+vi.mock('@/utils/blockies', () => ({
+  default: () => ({ toDataURL: () => 'data:image/png;base64,stub' }),
+}))
+
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AvatarStatusDot from '@/components/avatar/AvatarStatusDot.vue'
@@ -144,6 +150,24 @@ describe('AppAvatar', () => {
     expect(wrapper.find('.absolute').attributes('style')).toContain(
       `top: ${style.top}`,
     )
+  })
+
+  it('draws the connected ring only for a connected account', () => {
+    const connected = mount(AppAvatar, {
+      props: { type: 'account', address: '0xabc', connected: true },
+    })
+    expect(connected.find('.border-success').exists()).toBe(true)
+
+    const idle = mount(AppAvatar, {
+      props: { type: 'account', address: '0xabc' },
+    })
+    expect(idle.find('.border-success').exists()).toBe(false)
+
+    // The ring must live outside the clipping layer, or it gets clipped.
+    const initial = mount(AppAvatar, {
+      props: { type: 'initial', initial: 'A', connected: true },
+    })
+    expect(initial.find('.border-success').exists()).toBe(false)
   })
 
   it('warns in dev when more than one badge is active', () => {
