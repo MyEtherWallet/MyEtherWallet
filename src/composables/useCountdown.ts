@@ -1,10 +1,5 @@
 import { ref, computed, onScopeDispose } from 'vue'
 
-/**
- * Live countdown to a target instant. Ticks once per second and clamps at 0.
- * `remainingMs` is null while there is no (or an invalid) target, so callers
- * can distinguish "nothing to count" from "expired".
- */
 export function useCountdown(
   target: () => string | number | Date | null | undefined,
 ) {

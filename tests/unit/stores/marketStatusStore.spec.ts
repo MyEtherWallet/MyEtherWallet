@@ -53,9 +53,6 @@ afterEach(() => {
 })
 
 describe('useMarketStatusStore', () => {
-  // First in the file on purpose: visibilitychange listeners from store
-  // instances of earlier tests stay attached to the shared jsdom document
-  // and would also react to the dispatched event.
   it('refetches when the tab becomes visible with stale data', async () => {
     mockedGetMarketStatus.mockResolvedValue(make())
     const store = useMarketStatusStore()
@@ -149,11 +146,6 @@ describe('useMarketStatusStore', () => {
     expect(store.marketStatus?.marketStatus).toBe('regular')
   })
 
-  // The gap between two sessions. The snapshot still reports the session that
-  // just closed, while the next one opens minutes later — so unlike the case
-  // above, `nextTransitionAt` does find a future boundary and aiming at it
-  // would leave the stale state up for the whole gap. That is what had Trade
-  // quoting into a closed market and calling every pair unavailable.
   it('retries on a short delay when the reported session ended but the next boundary is ahead', async () => {
     mockedGetMarketStatus.mockResolvedValue(
       make({ nextClose: iso(-60_000), nextOpen: iso(6 * 60_000) }),

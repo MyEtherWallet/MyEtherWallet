@@ -326,7 +326,6 @@ export function useTradeModule() {
     isTradingAllowedInRegion,
   })
 
-  // --- Trade Flow ---
   const stepModel = (step: TradeFlowStep) =>
     computed({
       get: () => tradeFlowStep.value === step,
@@ -474,7 +473,6 @@ export function useTradeModule() {
 
   // --- Watchers ---
 
-  // Reset state when the progress modal is closed
   watch(
     () => progressModalOpen.value,
     isOpen => {

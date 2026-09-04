@@ -158,9 +158,6 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   ) => {
     subscribers.forEach(callback => callback(item, type))
   }
-  // Hash of the order currently shown in the trade progress modal — lets the
-  // toast layer skip the completed toast while the modal itself announces it.
-  // Session-only state, deliberately not persisted.
   const activeModalOrderHash = ref<string | null>(null)
 
   const tradeOrders = useLocalStorage<TradeOrdersByAddress>(

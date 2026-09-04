@@ -44,26 +44,13 @@ describe('isTrezorSupported', () => {
   })
 })
 
-// ---------------------------------------------------------------------------
-// isInsufficientFundsError
-//
-// A gas shortfall reaches the approval flow through two different paths, worded
-// differently and only one of them carrying a code. Both errors below are
-// verbatim captures from approving Ondo stock tokens with a near-empty account.
-// ---------------------------------------------------------------------------
-
 describe('isInsufficientFundsError', () => {
-  // Enkrypt refuses the send but tags it with EIP-1193 code 4001 — the code for
-  // a user rejection — putting the real reason in the message only, so
-  // `isUserRejectionError` claims it unless this check runs first.
   const walletError = {
     code: 4001,
     message:
       '8546: Returned error: Insufficient funds for gas * price + value: have 23219751748880 want 32859931864032',
   }
 
-  // viem's gas estimation, before the wallet ever opens. No code, and the
-  // "allowance" is the gas the balance can pay for, not an ERC20 allowance.
   const estimationError = {
     message:
       'execution reverted with reason: gas required exceeds allowance (31517). estimate gas arguments: from: 0x717ba71d4ea77d1b7c49a913c28c0bd538eecd41 maxfeepergas: 0.195115408 gwei nonce: 6 details: gas required exceeds allowance (31517) version: viem@2.44.0',

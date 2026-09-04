@@ -53,7 +53,6 @@ export type HardcodedTokenInfo = {
   price: number
 }
 
-/** Error body shape returned by the Fusion API on 4xx. */
 type ErrorBody = {
   error?: string
   description?: string
@@ -61,20 +60,11 @@ type ErrorBody = {
   code?: string
 }
 
-/** Fusion error codes that have localized user-facing copy. */
 const FUSION_ERROR_COPY: Record<string, string> = {
   INSUFFICIENT_AMOUNT: 'trade.error.insufficient-amount',
-  // Reached while the Ondo status still reports the session that just ended:
-  // 1inch knows the market is shut before our own status catches up.
   MARKET_CLOSED: 'trade.error.market-closed',
 }
 
-/**
- * User-facing message from a Fusion API error, or null when the error carries
- * no response body (network failures, wallet errors, non-axios throws).
- * Prefers localized copy for known machine-readable codes; falls back to
- * 1inch's own `description`, which is English-only but specific.
- */
 export const fusionErrorMessage = (e: unknown): string | null => {
   const data =
     e && typeof e === 'object' && 'response' in e
@@ -164,9 +154,6 @@ class OneInchFusion {
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
       blockchainProvider: this.web3Provider,
-      // Keeps 1inch traffic off the global axios instance, where Ledger's
-      // interceptor would rewrite the error and strip `response` — see the
-      // connector for the full story.
       httpProvider: new IsolatedAxiosConnector(),
     })
   }
@@ -303,8 +290,6 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
-      // Preserve the most specific message available and the wallet/RPC
-      // `code`, then flag expected client errors —
       // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
       // pair / invalid order) — so the caller (confirmTrade) can surface them
       // to the user while skipping Sentry capture. The previous catch re-threw
@@ -317,9 +302,6 @@ class OneInchFusion {
         typeof e === 'object' && e !== null
           ? (e as Record<string, unknown>)
           : undefined
-      // The API's own message first: axios errors carry a generic "Request
-      // failed with status code N" in `.message`, while the useful text lives
-      // in the response body.
       const errorMessage =
         fusionErrorMessage(e) ??
         (e instanceof Error && e.message

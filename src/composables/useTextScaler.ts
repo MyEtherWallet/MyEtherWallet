@@ -1,16 +1,6 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import { measureTextWidth } from '@/utils/measureText'
 
-/**
- * Picks a font scale from `scales` so that `text` fits within
- * `containerWidthPx`. Used by amount inputs (Buy/Sell, Trade) to keep the
- * typed value visible as it grows.
- *
- * Also exposes `measureWithScale`, a helper to measure an arbitrary string at
- * the currently active font size — used to size an `<input>` to the exact
- * width of its content.
- */
-
 export interface TextScale {
   size: number
   lineHeight: number

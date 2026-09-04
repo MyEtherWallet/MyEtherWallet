@@ -448,8 +448,6 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         ? TradeEventStatus.CANCELLED
         : TradeEventStatus.EXPIRED
     analytics.trackTradeEventStatus(event, analyticsPayload)
-    // Show error toast with trade info, unless the progress modal is already
-    // announcing this order's outcome.
     if (
       !isNotificationsOpen.value &&
       tradeOrdersStore.activeModalOrderHash !== hash

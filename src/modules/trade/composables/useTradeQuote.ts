@@ -45,18 +45,7 @@ interface UseTradeQuoteOptions {
    */
   isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
-  /**
-   * Whether the review modal is currently open. `fetchQuote` doubles as the
-   * refresh triggered by that modal's `expired` event, so a failure while it
-   * is up is an offer-stage error, not the sidebar's preliminary one — same
-   * distinction swap draws with `bestSwapLoadingOpen`.
-   */
   isReviewModalOpen: Ref<boolean>
-  /**
-   * Whether the market status is reporting a session whose boundary has already
-   * passed. A function because it depends on the clock: it has to be answered at
-   * the moment a quote fails, not when a dependency last changed.
-   */
   hasStaleMarketStatus: () => boolean
 }
 
@@ -113,11 +102,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
   })
 
   const runQuote = async () => {
-    // Cleared ahead of the guards below, not just on the path that quotes: both
-    // describe the last attempt, and every exit from here either makes a new
-    // attempt or abandons the one they described. Leaving them set outlived what
-    // they were about — the market closing mid-session stranded the notice and
-    // 1inch's "market is closed" on screen next to a "Market paused" button.
     isPairUnavailable.value = false
     isBelowMinimum.value = false
     generalError.value = ''
@@ -209,8 +193,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
       ).value
 
-      // Mirrors swap's PRELIMINARY_SHOWN: only for the sidebar's own quote,
-      // not the silent refresh the review modal triggers on expiry.
       if (!isReviewModalOpen.value) {
         analytics.trackTradeEvent(TradeEvent.PRELIMINARY_SHOWN, {
           ...getAnalyticsPayload(),
@@ -227,12 +209,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
-      // Only blame the pair while the market state is settled. Between sessions
-      // the upstream snapshot still reports the one that just ended, so we quote
-      // into a closed market and every pair 4xxs — claiming the pair is
-      // unavailable then is both wrong and indistinguishable from the real
-      // thing. Left unclaimed it falls through to the transient error below,
-      // and the next status refresh renders the paused state instead.
       isPairUnavailable.value =
         isPairUnavailableError(e) && !hasStaleMarketStatus()
       isBelowMinimum.value = isBelowMinimumError(e)

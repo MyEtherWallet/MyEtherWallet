@@ -19,9 +19,6 @@ describe('sanitizeDecimal', () => {
   })
 
   it('treats a single comma followed by exactly 3 digits as a thousands separator', () => {
-    // Genuinely ambiguous ("1,234" could mean 1234 or 1.234) — resolved in
-    // favor of thousands, since under-dividing a pasted amount by 1000 is the
-    // more dangerous silent failure for a trade input.
     expect(sanitizeDecimal('1,234')).toBe('1234')
     expect(sanitizeDecimal('12,345')).toBe('12345')
   })

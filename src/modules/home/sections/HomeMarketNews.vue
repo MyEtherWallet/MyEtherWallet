@@ -49,8 +49,6 @@ const dateLabel = (ts?: number): string => {
   })
 }
 
-// The BE returns `description`, but leaves it null when the provider gives
-// none; fall back to a placeholder pointing the reader to the source article.
 const newsDescription = (item: {
   description?: string | null
   articleUrl?: string

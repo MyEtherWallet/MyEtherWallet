@@ -101,8 +101,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const { minSpendTrade } = storeToRefs(rewardsStore)
 
   const tradeFlowStep = ref<TradeFlowStep>('idle')
-  // Reads the step through a call boundary so TS does not narrow it across
-  // awaits — the modals mutate it concurrently while these functions run.
   const stepIs = (step: TradeFlowStep) => tradeFlowStep.value === step
   const isApproving = computed(() => tradeFlowStep.value === 'approving')
   const txProceeding = ref(false)
@@ -158,8 +156,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
       return false
     }
-    // A second click while the first approval still awaits the wallet only
-    // reattaches the waiting modal — the in-flight call owns the continuation.
     if (approvalInFlight) {
       tradeFlowStep.value = 'approving'
       return false
@@ -186,8 +182,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       return true
     } catch (e) {
       tradeFlowStep.value = 'idle'
-      // Before the rejection check: wallets that tag this as code 4001 would
-      // otherwise be reported as the user declining.
       if (isInsufficientFundsError(e)) {
         toastStore.addToastMessage({
           text: t('common.not_enough_balance_to_cover_fee', {
@@ -287,9 +281,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
-    // Cleared before the step change: the progress modal resolves its state by
-    // hash, and a stale hash from a previous order would flash that order's
-    // final state while the new one is being signed.
     orderHash.value = ''
     tradeFlowStep.value = 'processing'
 
@@ -385,9 +376,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         toTokenAddress: toTokenSelected.value.address,
       })
 
-      // The user closed the progress modal while the wallet was still signing:
-      // the close handler ran before the hash existed, so the background toast
-      // it would have shown is fired here instead.
       if (stepIs('idle')) {
         toastStore.addToastMessage({
           id: `trade-processing-${result.hash}`,
@@ -399,9 +387,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         })
       }
     } catch (e) {
-      // Reopen the review modal only if the user is still in the flow — an
-      // early close of the progress modal must not resurrect it over a form
-      // that clearValues already reset.
       if (stepIs('processing')) {
         tradeFlowStep.value = 'review'
       }

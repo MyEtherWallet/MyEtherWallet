@@ -105,7 +105,6 @@
         </app-unavailable-card>
 
         <div :class="['relative transition-all duration-300', blockedClass]">
-          <!-- Sell Section -->
           <trade-amount-card
             v-if="supportedNetwork"
             v-model:amount="fromAmount"
@@ -125,7 +124,6 @@
             @select:token="onFromTokenSelected"
           />
 
-          <!-- Swap Direction Indicator -->
           <div class="relative h-0 z-10 flex justify-center">
             <div
               aria-hidden="true"
@@ -135,7 +133,6 @@
             </div>
           </div>
 
-          <!-- Buy Section -->
           <trade-amount-card
             v-model:amount="toAmount"
             v-model:selected-token="toTokenModel"
@@ -275,7 +272,6 @@
       @expired="refreshExpiredQuote"
     />
 
-    <!-- Trade Progress Modal -->
     <trade-progress-modal
       v-model:is-open="progressModalOpen"
       :order-hash="orderHash"
@@ -284,7 +280,6 @@
       :to-token="toTokenSelected"
     />
 
-    <!-- Approve Spending Modal -->
     <trade-approve-spending-modal
       v-model:is-open="approvalIntroOpen"
       :token-symbol="fromTokenSelected?.symbol"
@@ -293,7 +288,6 @@
       @approve="confirmApproval"
     />
 
-    <!-- Waiting Approval Modal -->
     <trade-waiting-approval-modal v-model:is-open="waitingApprovalOpen" />
   </div>
 </template>

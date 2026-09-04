@@ -17,36 +17,36 @@
       :aria-label="$t('select_token.title')"
       :disabled="isLoading || !selectedToken"
     >
-    <div
-      v-if="!isLoading && selectedToken"
-      class="flex flex-nowrap items-center"
-    >
-      <app-token-logo
-        :url="selectedToken.logoURI"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-        width="w-7"
-        height="h-7"
-        :no-shadow="noLogoShadow"
-        class="mr-2"
-      />
-      <app-token-symbol
-        v-if="!isLoading"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-      />
-      <div class="ml-1 min-w-4 h-4">
-        <chevron-down-icon v-if="!isLoading" class="text-info" />
+      <div
+        v-if="!isLoading && selectedToken"
+        class="flex flex-nowrap items-center"
+      >
+        <app-token-logo
+          :url="selectedToken.logoURI"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+          width="w-7"
+          height="h-7"
+          :no-shadow="noLogoShadow"
+          class="mr-2"
+        />
+        <app-token-symbol
+          v-if="!isLoading"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+        />
+        <div class="ml-1 min-w-4 h-4">
+          <chevron-down-icon v-if="!isLoading" class="text-info" />
+        </div>
       </div>
-    </div>
     </button>
   </slot>
   <app-dialog
@@ -447,8 +447,6 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  // Renders every token logo flat (no drop shadow). Opt-in so the flows that
-  // still want the shadow — Swap — keep it.
   noLogoShadow: {
     type: Boolean,
     default: false,

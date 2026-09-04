@@ -203,7 +203,6 @@ describe('trade actions in a restricted region', () => {
   })
 
   it('confirmTrade closes an already-open review modal rather than leaving a dead button', async () => {
-    // The geo check can resolve while the review modal is up, since the flag
     // starts `false` and is corrected asynchronously.
     const execution = await makeExecutionHarness()
     execution.tradeFlowStep.value = 'review'

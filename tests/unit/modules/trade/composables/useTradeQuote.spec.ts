@@ -1,15 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref, computed } from 'vue'
 
-// walletConfigs drags @enkryptcom/hw-wallets (ledger transport) into the
-// import graph via @/analytics; the transport does not resolve under vitest.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {},
 }))
 
-// Partial: `useTradeQuote` transitively pulls in `@/i18n`, which needs the
-// real `createI18n`. Only `useI18n` is stubbed, to keep `t()` outside a
-// component (useTradeQuote calls it at the top of its own setup-less function).
 vi.mock('vue-i18n', async importOriginal => ({
   ...(await importOriginal<typeof import('vue-i18n')>()),
   useI18n: () => ({ t: (key: string) => key }),
@@ -259,16 +254,6 @@ describe('useTradeQuote analytics', () => {
     )
   })
 })
-
-// ---------------------------------------------------------------------------
-// Session boundaries
-//
-// The upstream market status is served from a snapshot that trails real time,
-// so in the gap between two sessions it still reports the one that just ended.
-// Quoting into a market that is actually closed makes every pair fail with a
-// 1inch client error, which was reported to the user as the pair being
-// unavailable — for every token they tried.
-// ---------------------------------------------------------------------------
 
 describe('useTradeQuote across a session boundary', () => {
   beforeEach(() => {

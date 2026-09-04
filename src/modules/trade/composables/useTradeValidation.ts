@@ -193,7 +193,6 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
 
   const fromAmountError = computed(() => fromAmountErrorDetail.value.message)
 
-  // Only this error paints the balance red — see MEW-2228.
   const isInsufficientBalanceError = computed(
     () => fromAmountErrorDetail.value.code === 'balance',
   )

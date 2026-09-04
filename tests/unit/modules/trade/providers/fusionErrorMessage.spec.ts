@@ -1,7 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
 
-// walletConfigs drags @enkryptcom/hw-wallets (ledger transport) into the
-// import graph via @/analytics; the transport does not resolve under vitest.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {},
 }))
@@ -27,8 +25,6 @@ describe('fusionErrorMessage', () => {
     )
   })
 
-  // Verbatim body captured from Fusion in the gap between two Ondo sessions,
-  // while our own market status still reported the one that had just closed.
   it('localizes the closed market instead of showing 1inch’s own wording', () => {
     const message = fusionErrorMessage(
       axios400({

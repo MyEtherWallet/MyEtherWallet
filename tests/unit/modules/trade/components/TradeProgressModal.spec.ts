@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-// walletConfigs drags @enkryptcom/hw-wallets (ledger transport) into the
-// import graph via @/analytics; the transport does not resolve under vitest.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {},
 }))
@@ -19,7 +17,8 @@ import type { NewTokenInfo } from '@/composables/useSwap'
 
 const AppDialogStub = {
   props: { isOpen: { type: Boolean, default: false } },
-  template: '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
+  template:
+    '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
 }
 
 const ADDRESS = '0x717ba71d4ea77d1b7c49a913c28c0bd538eecd41'
@@ -94,7 +93,9 @@ describe('TradeProgressModal', () => {
     const modal = mountModal()
     expect(modal.text()).toContain('Processing trade...')
     expect(modal.text()).toContain('It may take a moment to complete the trade')
-    expect(modal.text()).toContain('The trade will be processed in the background')
+    expect(modal.text()).toContain(
+      'The trade will be processed in the background',
+    )
     expect(modal.find('a').exists()).toBe(false)
   })
 

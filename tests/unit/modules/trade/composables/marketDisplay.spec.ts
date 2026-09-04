@@ -7,8 +7,6 @@ import {
   SESSION_BOUNDS_ET,
 } from '@/modules/trade/composables/marketDisplay'
 
-// Reference geometry: 190px bar, 22px caps, 4px gaps, three equal 43.33px
-// segments. Percentages below are those pixel edges over 190.
 const PCT = {
   leftCapStart: 0,
   leftCapEnd: (22 / 190) * 100,

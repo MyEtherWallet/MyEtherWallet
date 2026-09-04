@@ -182,10 +182,6 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * @closeClass - position classes for the close button
-   * @type string
-   */
   closeClass: {
     type: String,
     default: 'top-4 right-4',

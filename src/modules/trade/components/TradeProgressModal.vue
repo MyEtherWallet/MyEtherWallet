@@ -142,15 +142,14 @@ const isFailed = computed(
 )
 const isSettled = computed(() => status.value === 'filled' || isFailed.value)
 
-// finalToAmount is stored already display-formatted by the notifications
-// poller — formatting it again would parse strings like "1,234.5" as NaN.
 const receivedText = computed(() => {
   if (!order.value?.finalToAmount) return ''
   return `${order.value.finalToAmount} ${order.value.toSymbol}`
 })
 
 const title = computed(() => {
-  if (status.value === 'filled') return t('trade.progress_modal.completed_title')
+  if (status.value === 'filled')
+    return t('trade.progress_modal.completed_title')
   if (isFailed.value) return t('trade.progress_modal.failed_title')
   return t('trade.progress_modal.processing_title')
 })

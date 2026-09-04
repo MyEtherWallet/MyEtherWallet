@@ -259,7 +259,6 @@ function mapTradableAssetsToTokens(
       const tokenPrice =
         parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
 
-      // TODO: drop the `?? '0'` once dev serves priceChangePercentage24h.
       const priceChange = parseFloat(
         asset.primaryMarket.priceChangePercentage24h ?? '0',
       )

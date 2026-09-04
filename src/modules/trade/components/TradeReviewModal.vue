@@ -16,10 +16,14 @@
       <div class="flex flex-col gap-6 p-6">
         <div class="flex flex-col gap-8">
           <div class="flex flex-col gap-3">
-            <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
+            <p
+              class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+            >
               {{ $t('trade.review_modal.trade_provider') }}
             </p>
-            <div class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-bgBase">
+            <div
+              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-bgBase"
+            >
               <img :src="oneInchLogo" alt="" class="w-6 h-6 rounded-full" />
               <span
                 class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px]"
@@ -176,10 +180,7 @@
             :disabled="loading || isQuoteExpired"
             @click="proceedWithTrade"
           >
-            <span
-              v-if="loading"
-              class="flex items-center gap-2 justify-center"
-            >
+            <span v-if="loading" class="flex items-center gap-2 justify-center">
               <app-spinner />
               <span>{{ $t('common.processing') }}</span>
             </span>
@@ -307,13 +308,14 @@ const fromAmountFiat = computed(() => {
   return formatFiat(fiat.toString()).value
 })
 
-const { minReceive, rate, txFee, priceImpact, maxSlippage } =
-  useTradeBreakdown({
+const { minReceive, rate, txFee, priceImpact, maxSlippage } = useTradeBreakdown(
+  {
     quote: computed(() => props.quote),
     fromToken: computed(() => props.fromToken),
     toToken: computed(() => props.toToken),
     fromAmount: computed(() => props.fromAmount),
-  })
+  },
+)
 
 const breakdownRows = computed(() => [
   { label: t('trade.review_modal.rate'), value: rate.value },

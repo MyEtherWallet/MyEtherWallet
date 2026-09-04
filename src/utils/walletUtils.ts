@@ -42,17 +42,6 @@ export const isUserRejectionError = (error: unknown): boolean => {
   )
 }
 
-/**
- * Checks if an error means the account cannot cover gas, whether it surfaced
- * from the wallet or from the gas estimation that precedes it.
- *
- * Matched on the message rather than a code, for two reasons: Enkrypt tags the
- * wallet-side variant with EIP-1193 code 4001, so checking this before
- * `isUserRejectionError` is what stops it being reported as a cancellation; and
- * the node-side variant carries no code at all. `gas required exceeds
- * allowance` is the estimation phrasing — the allowance there is the gas the
- * balance can pay for, unrelated to an ERC20 allowance.
- */
 export const isInsufficientFundsError = (error: unknown): boolean => {
   const message = (error as { message?: string })?.message?.toLowerCase() ?? ''
   return (

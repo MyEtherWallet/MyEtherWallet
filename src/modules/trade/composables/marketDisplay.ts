@@ -1,10 +1,5 @@
 export const ET_TIMEZONE = 'America/New_York'
 
-/**
- * Ondo GM session boundaries in minutes-of-day, Eastern Time (per Ondo docs:
- * premarket 4:01-9:29, regular 9:31-15:59, postmarket 16:01-19:59, overnight
- * 20:05-3:55). Overnight wraps midnight so it appears as two slots.
- */
 export const SESSION_BOUNDS_ET = {
   overnightEarly: { start: 0, end: 235 },
   premarket: { start: 241, end: 569 },
@@ -13,12 +8,6 @@ export const SESSION_BOUNDS_ET = {
   overnightLate: { start: 1205, end: 1440 },
 } as const
 
-/**
- * Schematic bar geometry from the design: a 190px reference bar with 22px
- * caps (overnight tails), 4px gaps and three equal middle segments. The
- * timeline renders segments with the same flex proportions, so percentages
- * computed against this reference hold at any rendered width.
- */
 const REFERENCE_BAR_WIDTH = 190
 const CAP_WIDTH = 22
 const SEGMENT_GAP = 4
@@ -59,12 +48,6 @@ const buildTimelineSlots = (): TimelineSlot[] => {
 
 const TIMELINE_SLOTS = buildTimelineSlots()
 
-/**
- * Position (0-100) of the "now" marker on the schematic bar for a given
- * ET minute-of-day. Inside a session the position interpolates linearly
- * within that session's slot; inside a transition gap it sits midway
- * between the surrounding slots.
- */
 export const computeTimelineMarkerPct = (etMinuteOfDay: number): number => {
   for (const slot of TIMELINE_SLOTS) {
     if (etMinuteOfDay >= slot.startMinute && etMinuteOfDay <= slot.endMinute) {
@@ -120,10 +103,6 @@ export type LocalSessionRanges = Record<
   string
 >
 
-/**
- * Session hour ranges converted from ET to the viewer's local time, for the
- * timeline hover tooltips (e.g. "5:01 AM → 10:29 AM" for a UTC-3 viewer).
- */
 export const buildLocalSessionRanges = (date: Date): LocalSessionRanges => {
   const localMinuteOfDay = date.getHours() * 60 + date.getMinutes()
   const etMinuteOfDay = getEtNowInfo(date).minuteOfDay

@@ -40,13 +40,10 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     resolveCurrentSession(marketStatus.value),
   )
 
-  // True when ANY session is tradable (conventional or off-hours). While the
-  // status is still loading (null) we stay optimistic to avoid a blur flash.
   const isTradingSessionOpen = computed(
     () => marketStatus.value === null || currentSession.value !== null,
   )
 
-  // The boundary that ends whatever state the status claims we are in.
   const activeBoundary = (): string | null | undefined => {
     const status = marketStatus.value
     if (!status) return null
@@ -55,14 +52,6 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     return status.nextOpen
   }
 
-  // The upstream status is served from a snapshot that can trail real time by a
-  // couple of minutes, so right after a session boundary it still reports the
-  // session we just left, with the boundary that ended it already in the past.
-  // Callers must not read a state this describes as settled: between sessions
-  // the market is closed while this still says it is open, and quotes fail.
-  // A function rather than a computed: it depends on the clock, not on state
-  // Vue can track, so a cached value would keep answering for a boundary that
-  // has since passed.
   const hasStaleBoundary = (): boolean => {
     const boundary = activeBoundary()
     if (!boundary) return false
@@ -118,8 +107,6 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     countdownText.value = ''
   }
 
-  // Earliest upcoming session boundary reported by the API (conventional or
-  // off-hours). Null when every reported timestamp is already in the past.
   const nextTransitionAt = (): number | null => {
     const status = marketStatus.value
     if (!status) return null
@@ -135,16 +122,11 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     return futureTimestamps.length ? Math.min(...futureTimestamps) : null
   }
 
-  // One timer aimed at the next boundary (+buffer so the backend is already
-  // past it). If the API still reports stale boundaries, retry on a short
-  // delay until it crosses over.
   const scheduleNextRefresh = () => {
     if (refreshTimeout) {
       clearTimeout(refreshTimeout)
       refreshTimeout = null
     }
-    // During an API outage, back off exponentially (up to 5 min) instead of
-    // hammering the endpoint every 10 seconds from every open tab.
     if (consecutiveFailures > 0) {
       const backoff = Math.min(
         MIN_REFRESH_DELAY_MS * 2 ** (consecutiveFailures - 1),
@@ -156,11 +138,6 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
       return
     }
     const transitionAt = nextTransitionAt()
-    // A passed boundary means the snapshot has not caught up yet. Retrying on
-    // the short delay is what makes "until it crosses over" true: aiming at
-    // `nextTransitionAt` instead would skip to the *following* session's
-    // boundary, leaving the stale state on screen for the whole gap between
-    // sessions — reported as every pair being unavailable.
     const delay =
       hasStaleBoundary() || !transitionAt
         ? MIN_REFRESH_DELAY_MS
@@ -212,8 +189,6 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         if (isDevMode) {
           console.error('Failed to fetch market status:', e)
         } else if (consecutiveFailures === 1) {
-          // Only the first failure of a streak is reported — an outage would
-          // otherwise produce one event per retry, per open tab.
           captureException(e, {
             ...SENTRY_MODULE_TAGS.TRADE,
             extra: {

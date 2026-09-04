@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-// walletConfigs drags @enkryptcom/hw-wallets (ledger transport) into the
-// import graph via @/analytics; the transport does not resolve under vitest.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {},
 }))

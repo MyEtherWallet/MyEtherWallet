@@ -22,15 +22,13 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-black underline"
-          >{{ $t('trade.market_status_popover.learn_more') }}</a>
+            >{{ $t('trade.market_status_popover.learn_more') }}</a
+          >
           {{ $t('trade.market_status_popover.learn_more_suffix') }}
         </p>
       </div>
       <div class="w-full border-t border-grey-10" />
-      <p
-        v-if="status === 'weekend'"
-        class="text-s-12 text-info leading-[18px]"
-      >
+      <p v-if="status === 'weekend'" class="text-s-12 text-info leading-[18px]">
         {{ nextOpenText }}
       </p>
       <trade-market-timeline
