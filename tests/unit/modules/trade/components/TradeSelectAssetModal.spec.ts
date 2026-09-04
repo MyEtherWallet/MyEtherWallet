@@ -69,8 +69,10 @@ describe('TradeSelectAssetModal (buy)', () => {
     expect(document.body.textContent).not.toContain('Unavailable assets')
   })
 
-  it('moves session-unavailable assets below a subtitle, keeping paused ones inline', async () => {
-    await mountOpenModal({ disabledTokens: [AAPL.address, ACN.address] })
+  it('moves session-unavailable assets below a subtitle, keeping tagged paused ones inline', async () => {
+    await mountOpenModal({
+      disabledTokens: [AAPL.address, ABT.address, ACN.address],
+    })
 
     expect(rowTickers()).toEqual(['abnbon', 'abton', 'aaplon', 'acnon'])
 

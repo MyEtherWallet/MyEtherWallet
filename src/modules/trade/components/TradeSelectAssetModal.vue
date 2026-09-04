@@ -336,6 +336,7 @@ const pauseReasonOf = (asset: DisplayAsset) =>
 
 const isSessionUnavailable = (asset: DisplayAsset) =>
   props.side === 'buy' &&
+  !pauseReasonOf(asset) &&
   disabledAddresses.value.has(asset.address?.toLowerCase())
 
 const isAssetPaused = (asset: DisplayAsset) =>
