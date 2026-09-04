@@ -15,6 +15,7 @@ export function useTradeForm(initialChain?: Chain) {
   const displayGeneralError = ref('')
   const isLoadingQuote = ref(false)
   const isPairUnavailable = ref(false)
+  const isBelowMinimum = ref(false)
   const {
     isPristine,
     reset: resetPristine,
@@ -33,6 +34,7 @@ export function useTradeForm(initialChain?: Chain) {
     displayGeneralError,
     isLoadingQuote,
     isPairUnavailable,
+    isBelowMinimum,
     isPristine,
     resetPristine,
     markDirty,

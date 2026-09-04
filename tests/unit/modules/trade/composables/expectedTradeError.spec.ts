@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   isExpectedTradeError,
+  isBelowMinimumError,
   isExpectedClientError,
   isPairUnavailableError,
   isTransientNetworkError,
@@ -115,6 +116,27 @@ describe('isPairUnavailableError', () => {
     expect(isPairUnavailableError(new Error('boom'))).toBe(false)
     expect(isPairUnavailableError(null)).toBe(false)
     expect(isPairUnavailableError('boom')).toBe(false)
+  })
+})
+
+describe('isBelowMinimumError', () => {
+  it('is true only for a flagged 1inch INSUFFICIENT_AMOUNT', () => {
+    expect(
+      isBelowMinimumError({
+        expectedClientError: true,
+        fusionCode: 'INSUFFICIENT_AMOUNT',
+      }),
+    ).toBe(true)
+    expect(
+      isBelowMinimumError({
+        expectedClientError: true,
+        fusionCode: 'MARKET_CLOSED',
+      }),
+    ).toBe(false)
+    expect(isBelowMinimumError({ fusionCode: 'INSUFFICIENT_AMOUNT' })).toBe(
+      false,
+    )
+    expect(isBelowMinimumError(null)).toBe(false)
   })
 })
 

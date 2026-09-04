@@ -12,6 +12,7 @@ import {
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
+  isBelowMinimumError,
   isExpectedClientError,
   isPairUnavailableError,
   isTransientNetworkError,
@@ -80,6 +81,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     generalError,
     isLoadingQuote,
     isPairUnavailable,
+    isBelowMinimum,
   } = form
 
   const { t } = useI18n()
@@ -117,6 +119,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     // they were about — the market closing mid-session stranded the notice and
     // 1inch's "market is closed" on screen next to a "Market paused" button.
     isPairUnavailable.value = false
+    isBelowMinimum.value = false
     generalError.value = ''
 
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
@@ -232,6 +235,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       // and the next status refresh renders the paused state instead.
       isPairUnavailable.value =
         isPairUnavailableError(e) && !hasStaleMarketStatus()
+      isBelowMinimum.value = isBelowMinimumError(e)
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(
@@ -284,6 +288,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     quoteExpiresAt.value = null
     needsApproval.value = false
     isPairUnavailable.value = false
+    isBelowMinimum.value = false
   }
 
   return {

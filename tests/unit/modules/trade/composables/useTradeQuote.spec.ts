@@ -58,6 +58,7 @@ const makeHarness = async (
   const isLoadingQuote = ref(false)
   const generalError = ref('')
   const isPairUnavailable = ref(false)
+  const isBelowMinimum = ref(false)
   const isReviewModalOpen = ref(isReviewModalOpenValue)
   const form = {
     fromTokenSelected: ref({ ...TOKEN, symbol: 'USDC' }),
@@ -68,6 +69,7 @@ const makeHarness = async (
     generalError,
     isLoadingQuote,
     isPairUnavailable,
+    isBelowMinimum,
   } as never
   const quote = useTradeQuote({
     form,
@@ -86,6 +88,7 @@ const makeHarness = async (
     isLoadingQuote,
     fromAmount,
     isPairUnavailable,
+    isBelowMinimum,
     generalError,
   }
 }
@@ -188,13 +191,24 @@ describe('useTradeQuote analytics', () => {
       { expectedClientError: true, fusionCode: 'INSUFFICIENT_AMOUNT' },
     )
     mockGetQuote.mockRejectedValue(lowAmountError)
-    const { fetchQuote, isPairUnavailable, generalError } =
+    const { fetchQuote, isPairUnavailable, isBelowMinimum, generalError } =
       await makeHarness(false)
 
     await fetchQuote()
 
     expect(isPairUnavailable.value).toBe(false)
+    expect(isBelowMinimum.value).toBe(true)
     expect(generalError.value).toBe('trade.error.insufficient-amount')
+  })
+
+  it('clears the below-minimum flag on the next quote attempt', async () => {
+    mockGetQuote.mockResolvedValue({ startAmount: 1n, avgAmount: 1n })
+    const { fetchQuote, isBelowMinimum } = await makeHarness(false)
+    isBelowMinimum.value = true
+
+    await fetchQuote()
+
+    expect(isBelowMinimum.value).toBe(false)
   })
 
   it('does not blame the pair on MARKET_CLOSED even with a fresh market status', async () => {

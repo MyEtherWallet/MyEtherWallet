@@ -91,7 +91,7 @@
       "native-transaction-failed": "原生交易失败",
       "failed-submit-order-1inch": "向 1inch 提交订单失败",
       "not_enough_balance": "余额不足",
-      "minimum_amount": "输入 +{amount} {symbol}",
+      "minimum_not_reached": "未达到最低金额",
       "remove_decimals": "请减少 {count} 位小数 | 请减少 {count} 位小数"
     },
     "market_status": {

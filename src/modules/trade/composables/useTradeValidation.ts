@@ -40,6 +40,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     toAmount,
     isLoadingQuote,
     isPairUnavailable,
+    isBelowMinimum,
     generalError,
     toTokenSelected,
   } = form
@@ -118,6 +119,12 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         message: t('trade.error.token-unavailable'),
       }
     }
+    if (isBelowMinimum.value) {
+      return {
+        code: 'minimum',
+        message: t('trade.error.minimum_not_reached'),
+      }
+    }
 
     const amountBN = BigNumber(fromAmount.value)
     if (amountBN.isNaN()) {
@@ -149,16 +156,9 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (tokenPrice > 0) {
       const usdValue = amountBN.times(tokenPrice)
       if (usdValue.lt(0.95)) {
-        const minAmount = BigNumber(0.95).div(tokenPrice)
-        const roundedMinAmount = minAmount.gte(1)
-          ? minAmount.integerValue(BigNumber.ROUND_CEIL)
-          : minAmount.precision(2, BigNumber.ROUND_CEIL)
         return {
           code: 'minimum',
-          message: t('trade.error.minimum_amount', {
-            amount: roundedMinAmount.toFixed(),
-            symbol: fromTokenSelected.value.symbol,
-          }),
+          message: t('trade.error.minimum_not_reached'),
         }
       }
     }

@@ -91,7 +91,7 @@
       "native-transaction-failed": "La transacción nativa falló",
       "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch",
       "not_enough_balance": "Saldo insuficiente",
-      "minimum_amount": "Ingresa +{amount} {symbol}",
+      "minimum_not_reached": "Mínimo no alcanzado",
       "remove_decimals": "Elimina {count} decimal | Elimina {count} decimales"
     },
     "market_status": {
