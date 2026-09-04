@@ -83,6 +83,7 @@
       "minimum-trade-value": "El valor mínimo de operación es de aproximadamente $1.00",
       "token-not-available": "{symbol} no está disponible para operar actualmente",
       "insufficient-amount": "El monto es demasiado bajo para operar en este momento. Prueba con un monto mayor.",
+      "market-closed": "El mercado está cerrado en este momento.",
       "no-quotes-returned": "No se recibieron cotizaciones",
       "failed-to-fetch-quote": "No se pudo obtener la cotización",
       "fusion-network-not-supported": "Fusion: red no compatible",

@@ -86,6 +86,7 @@
       "minimum-trade-value": "Minimum trade value is around $1.00",
       "token-not-available": "{symbol} is currently not available for trading",
       "insufficient-amount": "Amount is too low to trade right now. Try a larger amount.",
+      "market-closed": "The market is closed right now.",
       "no-quotes-returned": "No quotes returned",
       "failed-to-fetch-quote": "Failed to fetch quote",
       "fusion-network-not-supported": "Fusion: network not supported",

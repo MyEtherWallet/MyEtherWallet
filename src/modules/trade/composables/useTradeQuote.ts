@@ -110,12 +110,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
   })
 
   const runQuote = async () => {
-    // Cleared ahead of the guards below, not just on the path that quotes: the
-    // flag describes the last attempt, and every exit from here either makes a
-    // new attempt or abandons the one it described. Leaving it set outlived the
-    // pair it was about — the market closing mid-session stranded the notice on
-    // screen next to a "Market paused" button.
+    // Cleared ahead of the guards below, not just on the path that quotes: both
+    // describe the last attempt, and every exit from here either makes a new
+    // attempt or abandons the one they described. Leaving them set outlived what
+    // they were about — the market closing mid-session stranded the notice and
+    // 1inch's "market is closed" on screen next to a "Market paused" button.
     isPairUnavailable.value = false
+    generalError.value = ''
 
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
@@ -156,9 +157,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       toAmount.value = '0'
       return
     }
-
-    generalError.value = ''
-    isPairUnavailable.value = false
 
     try {
       const { default: OneInchFusion } =

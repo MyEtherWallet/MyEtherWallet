@@ -64,6 +64,9 @@ type ErrorBody = {
 /** Fusion error codes that have localized user-facing copy. */
 const FUSION_ERROR_COPY: Record<string, string> = {
   INSUFFICIENT_AMOUNT: 'trade.error.insufficient-amount',
+  // Reached while the Ondo status still reports the session that just ended:
+  // 1inch knows the market is shut before our own status catches up.
+  MARKET_CLOSED: 'trade.error.market-closed',
 }
 
 /**

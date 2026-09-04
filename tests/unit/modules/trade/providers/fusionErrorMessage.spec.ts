@@ -27,6 +27,20 @@ describe('fusionErrorMessage', () => {
     )
   })
 
+  // Verbatim body captured from Fusion in the gap between two Ondo sessions,
+  // while our own market status still reported the one that had just closed.
+  it('localizes the closed market instead of showing 1inch’s own wording', () => {
+    const message = fusionErrorMessage(
+      axios400({
+        error: 'Bad Request',
+        description: 'market is closed',
+        statusCode: 400,
+        code: 'MARKET_CLOSED',
+      }),
+    )
+    expect(message).toBe('The market is closed right now.')
+  })
+
   it('falls back to the API description for unknown codes', () => {
     const message = fusionErrorMessage(
       axios400({
