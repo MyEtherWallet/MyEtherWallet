@@ -46,7 +46,7 @@
         <div
           :class="[
             sectionHeader ? 'pb-[2px]' : 'pb-6',
-            'flex flex-none flex-col gap-6 bg-white px-6 pt-6',
+            'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
           ]"
         >
           <app-search-input
