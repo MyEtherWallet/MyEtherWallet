@@ -42,19 +42,6 @@ export type PaymentMethod =
   | 'pix'
   | 'visa'
 
-/** Wallet brand marks. SVG assets are a follow-up — everything resolves to `any` today. */
-export type WalletId =
-  | 'ledger'
-  | 'rainbow'
-  | 'walletconnect'
-  | 'metamask'
-  | 'rabby'
-  | 'phantom'
-  | 'coinbase'
-  | 'solflare'
-  | 'zerion'
-  | 'any'
-
 interface AvatarSizeSpec {
   /** Avatar box (px), width = height, perfect circle. */
   box: number

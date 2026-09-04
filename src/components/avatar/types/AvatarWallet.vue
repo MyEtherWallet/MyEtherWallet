@@ -1,43 +1,29 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AvatarRemoteImage from '../AvatarRemoteImage.vue'
-import type { AvatarSize, WalletId } from '../types'
-import ledger from '@/assets/icons/wallets/ledger.svg'
-import rainbow from '@/assets/icons/wallets/rainbow.svg'
-import walletconnect from '@/assets/icons/wallets/walletconnect.svg'
-import metamask from '@/assets/icons/wallets/metamask.svg'
-import rabby from '@/assets/icons/wallets/rabby.svg'
-import phantom from '@/assets/icons/wallets/phantom.svg'
-import coinbase from '@/assets/icons/wallets/coinbase.svg'
-import solflare from '@/assets/icons/wallets/solflare.svg'
-import zerion from '@/assets/icons/wallets/zerion.svg'
-import walletAny from '@/assets/icons/wallets/any.png'
+import { AVATAR_FALLBACK_TEXT_CLASS, type AvatarSize } from '../types'
 
-// _Wallets (166:15). Brand marks committed from Figma to src/assets/icons/wallets
-// (SVG, except the neutral `any` fallback which is raster in the source).
-const WALLET_MARKS: Record<WalletId, string> = {
-  ledger,
-  rainbow,
-  walletconnect,
-  metamask,
-  rabby,
-  phantom,
-  coinbase,
-  solflare,
-  zerion,
-  any: walletAny,
-}
-
+// _Wallets (166:15). The app already resolves wallet icons at runtime — a
+// committed .webp for the default wallets and the wagmi/RainbowKit connector's
+// iconUrl for the rest (see useWalletList.walletGetIcon). So this type is a thin
+// remote-image wrapper: pass the icon `url` you already have, not a committed
+// brand mark.
 const props = defineProps<{
   size: AvatarSize
-  walletId?: WalletId
+  url?: string | null
+  /** Optional fallback initials (e.g. the wallet name) when the url is missing. */
+  name?: string
 }>()
 
 defineOptions({ inheritAttrs: false })
 
-const url = computed(() => WALLET_MARKS[props.walletId ?? 'any'])
+const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>
 
 <template>
-  <AvatarRemoteImage :url="url" />
+  <AvatarRemoteImage
+    :url="url"
+    :fallback-text="name"
+    :fallback-text-class="fallbackTextClass"
+  />
 </template>

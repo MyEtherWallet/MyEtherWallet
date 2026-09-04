@@ -14,7 +14,6 @@ import {
   type AvatarBadgePosition,
   type AvatarSize,
   type AvatarType,
-  type WalletId,
 } from './types'
 
 /**
@@ -33,7 +32,6 @@ const props = withDefaults(
     badgeTopLeft?: boolean
     badgeBottomLeft?: boolean
     // Type-specific props, forwarded to the active child.
-    walletId?: WalletId
     symbol?: string
     url?: string | null
     chain?: string
@@ -41,6 +39,7 @@ const props = withDefaults(
     connected?: boolean
     address?: string
     background?: boolean
+    name?: string
   }>(),
   {
     size: 'm',
@@ -74,7 +73,6 @@ const showFallbackBg = computed(
 
 const forwardProps = computed(() => ({
   size: props.size,
-  walletId: props.walletId,
   symbol: props.symbol,
   url: props.url,
   chain: props.chain,
@@ -82,6 +80,7 @@ const forwardProps = computed(() => ({
   connected: props.connected,
   address: props.address,
   background: props.background,
+  name: props.name,
 }))
 
 const activePositions = computed(() => {

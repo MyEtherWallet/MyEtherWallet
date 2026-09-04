@@ -11,16 +11,19 @@ import type {
   AvatarStatus,
   AvatarType,
   PaymentMethod,
-  WalletId,
 } from '@/components/avatar/types'
 // Dev-only sample logos so the runtime-resolved types render a real example in
-// the gallery. In production these logos come from the APIs, not the repo.
+// the gallery. In production these come from the APIs / connectors, not the repo.
+// Wallet reuses an existing committed access icon (that's how the app ships the
+// default-wallet icons today).
 import sampleNetwork from '@/assets/icons/avatar_samples/network.svg'
 import sampleCrypto from '@/assets/icons/avatar_samples/crypto.svg'
 import sampleStocks from '@/assets/icons/avatar_samples/stocks.png'
 import samplePerps from '@/assets/icons/avatar_samples/perps.svg'
+import sampleWallet from '@/assets/images/access/ledger.webp'
 
 const SAMPLE_URLS: Partial<Record<AvatarType, string>> = {
+  wallet: sampleWallet,
   network: sampleNetwork,
   cryptoAsset: sampleCrypto,
   stocks: sampleStocks,
@@ -47,25 +50,11 @@ const PAYMENTS: PaymentMethod[] = [
   'pix',
   'visa',
 ]
-const WALLETS: WalletId[] = [
-  'ledger',
-  'rainbow',
-  'walletconnect',
-  'metamask',
-  'rabby',
-  'phantom',
-  'coinbase',
-  'solflare',
-  'zerion',
-  'any',
-]
-
 const SAMPLE = {
   address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
   symbol: 'AAPL',
   chain: 'Ethereum',
   initial: 'R',
-  walletId: 'ledger' as WalletId,
 }
 </script>
 
@@ -101,7 +90,6 @@ const SAMPLE = {
                   :symbol="SAMPLE.symbol"
                   :chain="SAMPLE.chain"
                   :initial="SAMPLE.initial"
-                  :wallet-id="SAMPLE.walletId"
                   :url="SAMPLE_URLS[t]"
                 >
                   <template v-if="t === 'icon'" #icon><PlusIcon /></template>
@@ -110,21 +98,6 @@ const SAMPLE = {
             </tr>
           </tbody>
         </table>
-      </div>
-    </section>
-
-    <!-- Wallet marks (real assets from Figma _Wallets 166:15) -->
-    <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Wallet marks</h2>
-      <div class="flex flex-wrap gap-4 items-center">
-        <div
-          v-for="w in WALLETS"
-          :key="w"
-          class="flex flex-col items-center gap-2"
-        >
-          <AppAvatar type="wallet" size="l" :wallet-id="w" />
-          <span class="text-s-12 text-info">{{ w }}</span>
-        </div>
       </div>
     </section>
 
