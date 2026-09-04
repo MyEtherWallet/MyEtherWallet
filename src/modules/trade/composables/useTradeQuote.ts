@@ -6,17 +6,22 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
+  TradeEvent,
   TradeEventError,
   type TradePayloadShared,
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
+  isBelowMinimumError,
   isExpectedClientError,
+  isPairUnavailableError,
   isTransientNetworkError,
 } from '@/modules/trade/common/expectedTradeError'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
+
+import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 
 export interface QuoteData {
   startAmount: bigint
@@ -40,6 +45,8 @@ interface UseTradeQuoteOptions {
    */
   isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
+  isReviewModalOpen: Ref<boolean>
+  hasStaleMarketStatus: () => boolean
 }
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
@@ -51,13 +58,25 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     isSelectedAssetTradeable,
     isTradingAllowedInRegion,
     hasPreQuoteError,
+    isReviewModalOpen,
+    hasStaleMarketStatus,
   } = options
-  const { fromTokenSelected, toTokenSelected, fromAmount, toAmount,
-    selectedFromChain, generalError, isLoadingQuote } = form
+  const {
+    fromTokenSelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    selectedFromChain,
+    generalError,
+    isLoadingQuote,
+    isPairUnavailable,
+    isBelowMinimum,
+  } = form
 
   const { t } = useI18n()
 
-  const currentQuote = ref<QuoteData | null>(null)
+  const currentQuote = ref<QuoteOutputType | null>(null)
+  const quoteExpiresAt = ref<number | null>(null)
   const needsApproval = ref(false)
 
   const getToAmountUSD = (): number => {
@@ -82,7 +101,11 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
 
-  const fetchQuote = useDebounceFn(async () => {
+  const runQuote = async () => {
+    isPairUnavailable.value = false
+    isBelowMinimum.value = false
+    generalError.value = ''
+
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
       toAmount.value = ''
@@ -123,9 +146,6 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       return
     }
 
-    isLoadingQuote.value = true
-    generalError.value = ''
-
     try {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
@@ -152,18 +172,32 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
         generalError.value = t('trade.error.no-quotes-returned')
         toAmount.value = '0'
-        analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-          ...getAnalyticsPayload(),
-          errorMsg: 'No quotes returned',
-        })
+        analytics.trackTradeEventError(
+          isReviewModalOpen.value
+            ? TradeEventError.OFFER_ERROR
+            : TradeEventError.PRELIMINARY_ERROR,
+          {
+            ...getAnalyticsPayload(),
+            errorMsg: 'No quotes returned',
+          },
+        )
         return
       }
 
       currentQuote.value = quote
+      quoteExpiresAt.value = quote.auctionDurationSeconds
+        ? Date.now() + quote.auctionDurationSeconds * 1000
+        : null
       const toDecimals = toTokenSelected.value.decimals || 18
       toAmount.value = formatFloatingPointValue(
         formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
       ).value
+
+      if (!isReviewModalOpen.value) {
+        analytics.trackTradeEvent(TradeEvent.PRELIMINARY_SHOWN, {
+          ...getAnalyticsPayload(),
+        })
+      }
 
       // Check if approval is required
       const approvalRequired = await fusion.isApprovalRequired(
@@ -175,12 +209,20 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
+      isPairUnavailable.value =
+        isPairUnavailableError(e) && !hasStaleMarketStatus()
+      isBelowMinimum.value = isBelowMinimumError(e)
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
-      analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-        ...getAnalyticsPayload(),
-        errorMsg: rawMessage || 'Failed to fetch quote',
-      })
+      analytics.trackTradeEventError(
+        isReviewModalOpen.value
+          ? TradeEventError.OFFER_ERROR
+          : TradeEventError.PRELIMINARY_ERROR,
+        {
+          ...getAnalyticsPayload(),
+          errorMsg: rawMessage || 'Failed to fetch quote',
+        },
+      )
       // All three are surfaced to the user above and are pure Sentry noise:
       // transient RPC/WebSocket drops (e.g. the allowance read over
       // wss://nodes.mewapi.io), expected client errors (1inch 4xx, flagged by
@@ -196,18 +238,38 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
           isTransientNetworkError(e),
         extra: { errorMessage: generalError.value },
       })
+    }
+  }
+
+  let quoteRunId = 0
+
+  const debouncedQuote = useDebounceFn(async () => {
+    const runId = quoteRunId
+    try {
+      await runQuote()
     } finally {
-      isLoadingQuote.value = false
+      if (runId === quoteRunId) isLoadingQuote.value = false
     }
   }, 500)
 
+  const fetchQuote = () => {
+    quoteRunId += 1
+    const amount = fromAmount.value
+    isLoadingQuote.value = amount !== '' && amount !== '0'
+    return debouncedQuote()
+  }
+
   const resetQuote = () => {
     currentQuote.value = null
+    quoteExpiresAt.value = null
     needsApproval.value = false
+    isPairUnavailable.value = false
+    isBelowMinimum.value = false
   }
 
   return {
     currentQuote,
+    quoteExpiresAt,
     needsApproval,
     fetchQuote,
     resetQuote,

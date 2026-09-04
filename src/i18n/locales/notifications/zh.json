@@ -36,7 +36,6 @@
     "empty_txs": "您的转账交易将显示在此处。",
     "empty_bridge": "您的代币跨链记录将显示在此处。",
     "empty_swap": "您的代币兑换记录将显示在此处。",
-    "toast_trade_filled": "交易订单已成交",
     "toast_trade_cancelled": "交易订单已取消",
     "toast_trade_expired": "交易订单已过期",
     "toast_transaction_successful": "交易成功",

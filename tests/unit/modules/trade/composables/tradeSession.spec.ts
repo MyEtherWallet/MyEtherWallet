@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
+  getActivePauseReason,
 } from '@/modules/trade/common/tradeSession'
 import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
@@ -20,7 +21,9 @@ const asset = (over: {
     primaryMarket: {
       price: '100',
       sharesMultiplier: '1',
-      ...(over.sessions !== undefined ? { tradableSessions: over.sessions } : {}),
+      ...(over.sessions !== undefined
+        ? { tradableSessions: over.sessions }
+        : {}),
     },
     underlyingMarket: { name: 'x', price: '100' },
     addresses: [
@@ -42,7 +45,10 @@ describe('isAssetTradableInSession', () => {
 
   it('is true when the session is in tradableSessions', () => {
     expect(
-      isAssetTradableInSession(asset({ sessions: ['regular', 'offhours'] }), 'offhours'),
+      isAssetTradableInSession(
+        asset({ sessions: ['regular', 'offhours'] }),
+        'offhours',
+      ),
     ).toBe(true)
   })
 
@@ -74,7 +80,12 @@ describe('getSessionDisabledAddresses', () => {
 
   it('disables globally paused assets (tradable === false)', () => {
     const assets = [
-      asset({ symbol: 'P', tradable: false, sessions: ['regular'], address: '0xPpP' }),
+      asset({
+        symbol: 'P',
+        tradable: false,
+        sessions: ['regular'],
+        address: '0xPpP',
+      }),
     ]
     const disabled = getSessionDisabledAddresses(assets, 'offhours')
     expect(disabled.has('0xppp')).toBe(true)
@@ -82,7 +93,12 @@ describe('getSessionDisabledAddresses', () => {
 
   it('off-hours override: paused asset that explicitly lists offhours stays enabled', () => {
     const assets = [
-      asset({ symbol: 'P', tradable: false, sessions: ['offhours'], address: '0xPpP' }),
+      asset({
+        symbol: 'P',
+        tradable: false,
+        sessions: ['offhours'],
+        address: '0xPpP',
+      }),
     ]
     const disabled = getSessionDisabledAddresses(assets, 'offhours')
     expect(disabled.has('0xppp')).toBe(false)
@@ -105,7 +121,12 @@ describe('getSessionDisabledAddresses', () => {
   it('skips null asset elements without throwing and still processes valid ones', () => {
     const assets = [
       null,
-      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+      asset({
+        symbol: 'A',
+        tradable: false,
+        sessions: ['regular'],
+        address: '0xAaA',
+      }),
     ] as unknown as TradableAsset[]
     let disabled: Set<string> | undefined
     expect(() => {
@@ -117,7 +138,12 @@ describe('getSessionDisabledAddresses', () => {
   it('skips non-null malformed assets (missing addresses) and still processes valid ones', () => {
     const assets = [
       { tradable: false } as unknown as TradableAsset, // no addresses array
-      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+      asset({
+        symbol: 'A',
+        tradable: false,
+        sessions: ['regular'],
+        address: '0xAaA',
+      }),
     ]
     let disabled: Set<string> | undefined
     expect(() => {
@@ -154,7 +180,12 @@ describe('getSessionDisabledAddresses', () => {
   it('skips null asset elements during offhours and still disables valid paused assets', () => {
     const assets = [
       null,
-      asset({ symbol: 'A', tradable: false, sessions: ['regular'], address: '0xAaA' }),
+      asset({
+        symbol: 'A',
+        tradable: false,
+        sessions: ['regular'],
+        address: '0xAaA',
+      }),
     ] as unknown as TradableAsset[]
     let disabled: Set<string> | undefined
     expect(() => {
@@ -162,5 +193,88 @@ describe('getSessionDisabledAddresses', () => {
     }).not.toThrow()
     // Paused asset that does not opt into offhours must still be disabled.
     expect(disabled?.has('0xaaa')).toBe(true)
+  })
+})
+
+describe('getActivePauseReason', () => {
+  const pause = (over: {
+    message?: string
+    code?: string
+    start?: string | null
+    end?: string | null
+  }) =>
+    ({
+      pause: {
+        status: 'upcoming',
+        type: 'scheduled',
+        reason: {
+          code: over.code ?? 'ASSET_PAUSED',
+          message: over.message ?? 'cash_dividend',
+        },
+        start: over.start === undefined ? '2026-09-03T23:52:00Z' : over.start,
+        end: over.end === undefined ? '2026-09-04T08:10:00Z' : over.end,
+      },
+    }) as unknown as TradableAsset
+
+  const INSIDE = Date.parse('2026-09-04T00:00:00Z')
+  const BEFORE = Date.parse('2026-09-01T00:00:00Z')
+  const AFTER = Date.parse('2026-09-05T00:00:00Z')
+
+  it('returns the reason while the window covers now', () => {
+    expect(getActivePauseReason(pause({}), INSIDE)).toBe('cash_dividend')
+  })
+
+  it('returns null before the window starts', () => {
+    expect(getActivePauseReason(pause({}), BEFORE)).toBeNull()
+  })
+
+  it('returns null after the window ends', () => {
+    expect(getActivePauseReason(pause({}), AFTER)).toBeNull()
+  })
+
+  it('includes both window bounds', () => {
+    const start = Date.parse('2026-09-03T23:52:00Z')
+    const end = Date.parse('2026-09-04T08:10:00Z')
+    expect(getActivePauseReason(pause({}), start)).toBe('cash_dividend')
+    expect(getActivePauseReason(pause({}), end)).toBe('cash_dividend')
+  })
+
+  it('treats ASSET_LIMITED like ASSET_PAUSED', () => {
+    expect(
+      getActivePauseReason(
+        pause({ code: 'ASSET_LIMITED', message: 'earnings' }),
+        INSIDE,
+      ),
+    ).toBe('earnings')
+  })
+
+  it('returns null for a slug the design does not map', () => {
+    expect(
+      getActivePauseReason(pause({ message: 'rocket_launch' }), INSIDE),
+    ).toBeNull()
+  })
+
+  it('normalizes casing and surrounding whitespace', () => {
+    expect(
+      getActivePauseReason(pause({ message: '  Stock_Split  ' }), INSIDE),
+    ).toBe('stock_split')
+  })
+
+  it('returns null when the asset has no pause (SHVon in the live payload)', () => {
+    expect(
+      getActivePauseReason({ pause: null } as TradableAsset, INSIDE),
+    ).toBeNull()
+  })
+
+  it('returns null for a missing or malformed window', () => {
+    expect(getActivePauseReason(pause({ start: null }), INSIDE)).toBeNull()
+    expect(
+      getActivePauseReason(pause({ end: 'not-a-date' }), INSIDE),
+    ).toBeNull()
+  })
+
+  it('returns null for null or undefined assets', () => {
+    expect(getActivePauseReason(null, INSIDE)).toBeNull()
+    expect(getActivePauseReason(undefined, INSIDE)).toBeNull()
   })
 })

@@ -4,18 +4,14 @@
     "subtitle": "买卖 Ondo 代币化股票",
     "you_are_selling": "您要卖出",
     "you_are_buying": "您要买入",
-    "swap_from_to": "切换买入/卖出股票",
-    "market_closed": "休市",
     "trading_paused_session": "本时段交易已暂停",
-    "opens_in": "{countdown} 后开盘",
     "opening_soon": "即将开盘…",
     "network_not_supported": "不支持的网络",
     "trading_not_available_on": "{network} 上暂不支持交易。请切换至受支持的网络。",
     "trading_not_available": "暂不可交易",
     "trading_restricted": "您所在的司法管辖区限制访问交易功能。",
     "learn_more": "了解更多",
-    "approving": "授权中…",
-    "trade_button": "交易",
+    "review_trade": "核对交易",
     "need_help": "交易遇到问题？",
     "tokens_not_tradable": "一个或多个代币当前不可交易。请稍后重试或选择其他代币。",
     "service_unavailable": "交易服务暂时不可用。请稍后重试。",
@@ -29,23 +25,41 @@
       "tooltip_body": "{tickers} 现已开放 24/7 全天候交易。",
       "dismiss_tooltip": "关闭提示"
     },
-    "quote_modal": {
-      "title": "交易报价",
-      "quote_from": "来自 1inch Fusion 的交易报价",
-      "for": "用",
-      "you_will_get": "可获得：",
-      "estimated_amount": "预计数量",
-      "min_amount": "最小数量",
-      "limit_order_warning": "这是一笔限价交易。最终数量可能会因市场状况略有变化。",
-      "confirm_trade": "确认交易"
+    "waiting_approval": {
+      "title": "等待批准...",
+      "subtitle": "请在钱包中批准以继续",
+      "help_title": "没有看到弹窗？",
+      "help_text": "请检查浏览器是否拦截了弹窗，或手动打开 MetaMask。"
     },
-    "initiated_modal": {
-      "title": "交易订单已提交",
-      "order_submitted": "您的交易订单已提交至 1inch Fusion 网络，订单正在成交中。",
-      "order_hash": "订单哈希",
-      "network": "网络",
-      "close_window_message": "您可以关闭此窗口，并",
-      "track_progress": "在通知中跟踪进度"
+    "review_modal": {
+      "title": "核对交易",
+      "trade_provider": "交易服务商",
+      "provider_1inch": "1 Inch Fusion",
+      "estimated_summary": "预估摘要",
+      "you_pay": "您将支付",
+      "you_receive": "您将获得",
+      "value_estimated": "（金额为估算值）",
+      "expand_breakdown": "展开明细",
+      "close_breakdown": "收起明细",
+      "min_receive": "最低获得数量",
+      "rate": "汇率",
+      "tx_fee": "交易费用",
+      "price_impact": "价格影响",
+      "max_slippage": "最大滑点",
+      "confirm_trade": "确认交易",
+      "quote_refreshes_in": "报价将在 {time} 后刷新"
+    },
+    "progress_modal": {
+      "processing_title": "正在处理交易...",
+      "processing_subtitle": "完成交易可能需要一些时间",
+      "close_screen": "关闭此页面",
+      "background_note": "关闭此页面后，\n交易将在后台继续处理",
+      "completed_title": "交易完成",
+      "received": "您收到了 {amount}",
+      "show_in_etherscan": "在 Etherscan 上查看",
+      "failed_title": "交易未完成",
+      "cancelled_subtitle": "订单已被取消",
+      "expired_subtitle": "订单已过期，未能成交"
     },
     "status": {
       "pending": "待处理",
@@ -54,10 +68,13 @@
       "expired": "已过期"
     },
     "toast": {
-      "approval-success": "授权成功！",
-      "approval-success-secondary": "您现在可以交易 {symbol} 了。",
       "quote-loading": "请等待报价加载",
-      "tokens-switched": "正在交易 {from} 兑换 {to}"
+      "tokens-switched": "正在交易 {from} 兑换 {to}",
+      "processing_trade": "正在处理交易",
+      "processing_note": "这可能需要几分钟",
+      "trade_completed": "交易完成",
+      "received_total": "您总共收到了 {amount}",
+      "explore_etherscan": "在 Etherscan 上浏览"
     },
     "error": {
       "approval-failed": "无法授权代币",
@@ -65,12 +82,106 @@
       "token-unavailable": "该代币暂不可交易。请选择其他代币或稍后重试。",
       "minimum-trade-value": "最低交易金额约为 $1.00",
       "token-not-available": "{symbol} 当前不可交易",
+      "insufficient-amount": "当前金额过低，无法交易。请尝试更大的金额。",
+      "market-closed": "市场当前已关闭。",
       "no-quotes-returned": "未返回任何报价",
       "failed-to-fetch-quote": "获取报价失败",
       "fusion-network-not-supported": "Fusion：不支持的网络",
       "failed-fetch-quote-1inch": "从 1inch 获取报价失败",
       "native-transaction-failed": "原生交易失败",
-      "failed-submit-order-1inch": "向 1inch 提交订单失败"
+      "failed-submit-order-1inch": "向 1inch 提交订单失败",
+      "not_enough_balance": "余额不足",
+      "minimum_not_reached": "未达到最低金额",
+      "remove_decimals": "请减少 {count} 位小数 | 请减少 {count} 位小数"
+    },
+    "market_status": {
+      "regular": "常规市场",
+      "premarket": "盘前",
+      "postmarket": "盘后",
+      "overnight": "夜盘",
+      "weekend": "周末",
+      "paused": "市场暂停",
+      "limited": "市场受限",
+      "info_label": "市场状态信息",
+      "until": "至 {time}",
+      "until_session": "{duration}后进入{session}",
+      "duration_minutes": "{minutes} 分钟",
+      "duration_hours": "{hours} 小时",
+      "duration_hours_minutes": "{hours} 小时 {minutes} 分钟"
+    },
+    "market_status_popover": {
+      "open_title": "市场已开盘。",
+      "open_body": "所有支持的股票均可交易。",
+      "premarket_title": "市场尚未开盘。",
+      "closed_title": "市场已收盘。",
+      "weekend_title": "市场周末休市。",
+      "paused_title": "市场已暂停。",
+      "paused_body": "常规市场即将开盘。",
+      "limited_body": "仅限符合条件的股票可交易。",
+      "learn_more": "了解更多",
+      "learn_more_suffix": "关于市场交易时间。",
+      "session_starts": "{session}将于{time}开始"
+    },
+    "market_timeline": {
+      "premarket": "盘前",
+      "regular": "常规市场",
+      "postmarket": "盘后",
+      "overnight": "夜盘"
+    },
+    "sell_label": "卖出",
+    "buy_label": "买入",
+    "enter_amount": "输入金额",
+    "select_asset": {
+      "title": "选择资产",
+      "subtitle": "部分资产可能暂时不可用",
+      "available_in": "{marketStatus} 可用资产",
+      "unavailable": "不可用资产"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "现金分红",
+        "tooltip": "由于现金分红，该资产暂时不可用。"
+      },
+      "stock_dividend": {
+        "tag": "股票股利",
+        "tooltip": "由于股票股利，该资产暂时不可用。"
+      },
+      "stock_split": {
+        "tag": "股票拆分",
+        "tooltip": "由于股票拆分，该资产暂时不可用。"
+      },
+      "merger": {
+        "tag": "合并",
+        "tooltip": "由于合并，该资产暂时不可用。"
+      },
+      "acquisition": {
+        "tag": "收购",
+        "tooltip": "由于收购，该资产暂时不可用。"
+      },
+      "spinoff": {
+        "tag": "分拆",
+        "tooltip": "由于分拆，该资产暂时不可用。"
+      },
+      "earnings": {
+        "tag": "财报",
+        "tooltip": "由于财报发布，该资产暂时不可用。"
+      },
+      "maintenance": {
+        "tag": "维护中",
+        "tooltip": "该资产正在维护，暂时不可用。"
+      }
+    },
+    "approve_spending": {
+      "title": "批准 {symbol} 支出",
+      "subtitle": "要继续交易，你必须在 {wallet} 中允许 MEW 使用 {symbol}。",
+      "network_fee": "预估网络费",
+      "network_fee_tooltip": "签署此批准需要支付少量网络费",
+      "cta": "在 {wallet} 中批准",
+      "your_wallet": "你的钱包"
+    },
+    "pair_unavailable": {
+      "cta": "交易对不可用",
+      "notice": "该交易对目前无法交易。请更换交易对或稍后再试。"
     }
   }
 }

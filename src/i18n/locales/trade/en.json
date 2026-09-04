@@ -4,18 +4,14 @@
     "subtitle": "Buy/Sell Ondo Tokenized Stocks",
     "you_are_selling": "You are selling",
     "you_are_buying": "You are buying",
-    "swap_from_to": "Swap From/To stocks",
-    "market_closed": "Market Closed",
     "trading_paused_session": "Trading paused for this session",
-    "opens_in": "Opens in {countdown}",
     "opening_soon": "Opening soon...",
     "network_not_supported": "Network Not Supported",
     "trading_not_available_on": "Trading is not available on {network}. Please switch to a supported network.",
     "trading_not_available": "Trading isn’t available",
     "trading_restricted": "Unfortunately, trading RWAs isn’t allowed in your current jurisdiction.",
     "learn_more": "Learn more",
-    "approving": "Approving...",
-    "trade_button": "Trade",
+    "review_trade": "Review trade",
     "need_help": "Need help trading?",
     "tokens_not_tradable": "One or more tokens are currently not tradable. Try again later or select different tokens.",
     "service_unavailable": "Trading service is temporarily unavailable. Please try again later.",
@@ -29,23 +25,41 @@
       "tooltip_body": "{tickers} are now open for 24/7 trading.",
       "dismiss_tooltip": "Dismiss tooltip"
     },
-    "quote_modal": {
-      "title": "Trade Quote",
-      "quote_from": "Trade Quote from 1inch Fusion",
-      "for": "For",
-      "you_will_get": "you will get:",
-      "estimated_amount": "Estimated Amount",
-      "min_amount": "Min Amount",
-      "limit_order_warning": "This is a limit order trade. The final amount may vary slightly based on market conditions.",
-      "confirm_trade": "Confirm Trade"
+    "waiting_approval": {
+      "title": "Waiting approval...",
+      "subtitle": "Approve in your wallet to continue",
+      "help_title": "Can't see the prompt?",
+      "help_text": "Check if your browser is blocking pop ups, or open MetaMask manually."
     },
-    "initiated_modal": {
-      "title": "Trade Order Submitted",
-      "order_submitted": "Your trade order has been submitted to the 1inch Fusion network. The order is being filled.",
-      "order_hash": "Order Hash",
-      "network": "Network",
-      "close_window_message": "You can close this window and",
-      "track_progress": "Track progress in notifications"
+    "review_modal": {
+      "title": "Review trade",
+      "trade_provider": "Trade provider",
+      "provider_1inch": "1 Inch Fusion",
+      "estimated_summary": "Estimated summary",
+      "you_pay": "You're paying",
+      "you_receive": "You'll receive",
+      "value_estimated": "(Value is estimated)",
+      "expand_breakdown": "Expand breakdown",
+      "close_breakdown": "Close breakdown",
+      "min_receive": "Minimum you'll receive",
+      "rate": "Rate",
+      "tx_fee": "Tx Fee",
+      "price_impact": "Price impact",
+      "max_slippage": "Max. slippage",
+      "confirm_trade": "Confirm trade",
+      "quote_refreshes_in": "Quote refreshes in {time}"
+    },
+    "progress_modal": {
+      "processing_title": "Processing trade...",
+      "processing_subtitle": "It may take a moment to complete the trade",
+      "close_screen": "Close this screen",
+      "background_note": "The trade will be processed in the background\nif you close this screen",
+      "completed_title": "Trade completed",
+      "received": "You received {amount}",
+      "show_in_etherscan": "Show in Etherscan",
+      "failed_title": "Trade not completed",
+      "cancelled_subtitle": "The order was cancelled",
+      "expired_subtitle": "The order expired without being filled"
     },
     "status": {
       "pending": "Pending",
@@ -54,23 +68,120 @@
       "expired": "Expired"
     },
     "toast": {
-      "approval-success": "Approval successful!",
-      "approval-success-secondary": "You can now trade {symbol}.",
       "quote-loading": "Please wait for quote to load",
-      "tokens-switched": "Now trading {from} for {to}"
+      "tokens-switched": "Now trading {from} for {to}",
+      "processing_trade": "Processing trade",
+      "processing_note": "This can take a few minutes",
+      "trade_completed": "Trade completed",
+      "received_total": "You received a total of {amount}",
+      "explore_etherscan": "Explore in Etherscan"
     },
     "error": {
+      "not_enough_balance": "Not enough balance",
+      "minimum_not_reached": "Minimum not reached",
+      "remove_decimals": "Remove {count} decimal | Remove {count} decimals",
       "approval-failed": "Could not approve token",
       "submit-failed": "Failed to submit trade order",
       "token-unavailable": "This token is unavailable to trade. Please choose another or try again later.",
       "minimum-trade-value": "Minimum trade value is around $1.00",
       "token-not-available": "{symbol} is currently not available for trading",
+      "insufficient-amount": "Amount is too low to trade right now. Try a larger amount.",
+      "market-closed": "The market is closed right now.",
       "no-quotes-returned": "No quotes returned",
       "failed-to-fetch-quote": "Failed to fetch quote",
       "fusion-network-not-supported": "Fusion: network not supported",
       "failed-fetch-quote-1inch": "Failed to fetch quote from 1inch",
       "native-transaction-failed": "Native Transaction Failed",
       "failed-submit-order-1inch": "Failed to submit order to 1inch"
+    },
+    "market_status": {
+      "regular": "Regular market",
+      "premarket": "Pre-Market",
+      "postmarket": "Post-Market",
+      "overnight": "Overnight",
+      "weekend": "Weekend",
+      "paused": "Market paused",
+      "limited": "Market limited",
+      "info_label": "Market status information",
+      "until": "Until {time}",
+      "until_session": "{duration} until {session}",
+      "duration_minutes": "{minutes} min",
+      "duration_hours": "{hours} h",
+      "duration_hours_minutes": "{hours} h {minutes} min"
+    },
+    "market_status_popover": {
+      "open_title": "The market is open.",
+      "open_body": "All supported stocks are available.",
+      "premarket_title": "The market hasn't opened yet.",
+      "closed_title": "The market has closed.",
+      "weekend_title": "The market is closed for the weekend.",
+      "paused_title": "The market is paused.",
+      "paused_body": "Regular market is about to open.",
+      "limited_body": "Only eligible stocks are available.",
+      "learn_more": "Learn more",
+      "learn_more_suffix": "about market hours.",
+      "session_starts": "{session} starts {time}"
+    },
+    "market_timeline": {
+      "premarket": "Pre-market",
+      "regular": "Regular market",
+      "postmarket": "Post-market",
+      "overnight": "Overnight"
+    },
+    "sell_label": "Sell",
+    "buy_label": "Buy",
+    "enter_amount": "Enter amount",
+    "select_asset": {
+      "title": "Select asset",
+      "subtitle": "Some might be temporarily unavailable",
+      "available_in": "Assets available in {marketStatus}",
+      "unavailable": "Unavailable assets"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "Cash dividend",
+        "tooltip": "This asset is temporarily unavailable due to a cash dividend."
+      },
+      "stock_dividend": {
+        "tag": "Stock dividend",
+        "tooltip": "This asset is temporarily unavailable due to a stock dividend."
+      },
+      "stock_split": {
+        "tag": "Stock split",
+        "tooltip": "This asset is temporarily unavailable due to a stock split."
+      },
+      "merger": {
+        "tag": "Merger",
+        "tooltip": "This asset is temporarily unavailable due to a merger."
+      },
+      "acquisition": {
+        "tag": "Acquisition",
+        "tooltip": "This asset is temporarily unavailable due to an acquisition."
+      },
+      "spinoff": {
+        "tag": "Spinoff",
+        "tooltip": "This asset is temporarily unavailable due to a spinoff."
+      },
+      "earnings": {
+        "tag": "Earnings",
+        "tooltip": "This asset is temporarily unavailable due to an earnings event."
+      },
+      "maintenance": {
+        "tag": "In maintenance",
+        "tooltip": "This asset is temporarily unavailable while it’s undergoing maintenance."
+      }
+    },
+    "approve_spending": {
+      "title": "Approve {symbol} spending",
+      "subtitle": "To continue with your trade, you must allow MEW to spend {symbol} in {wallet}.",
+      "network_fee": "Est. network fee",
+      "network_fee_tooltip": "A small network fee is required to sign this approval",
+      "cta": "Approve in {wallet}",
+      "your_wallet": "your wallet"
+    },
+    "pair_unavailable": {
+      "cta": "Token pair not available",
+      "notice": "This token pair can't be traded right now. Please change it or try again later."
     }
   }
 }

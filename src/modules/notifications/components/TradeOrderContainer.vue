@@ -231,7 +231,7 @@ import {
   ChevronDownIcon,
   TrashIcon,
 } from '@heroicons/vue/24/solid'
-import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/configs'
+import { getTradeExplorerLink } from '@/modules/trade/composables/tradeExplorerLink'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -285,11 +285,7 @@ const statusBadgeClass = computed(() => {
 
 const explorerLink = computed(() => {
   if (props.order.fills.length === 0) return ''
-  const chainConfig = SUPPORTED_CHAINS.find(
-    c => c.chainId === props.order.chainId,
-  )
-  const blockExplorer = chainConfig?.chain.blockExplorers?.default?.url || ''
-  return `${blockExplorer}/tx/${props.order.fills[0].txHash}`
+  return getTradeExplorerLink(props.order.chainId, props.order.fills[0].txHash)
 })
 
 // Format countdown time

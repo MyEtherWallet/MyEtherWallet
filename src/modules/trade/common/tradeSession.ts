@@ -22,6 +22,38 @@ export const isAssetTradableInSession = (
   return sessions.includes(currentSession)
 }
 
+export const PAUSE_REASONS = [
+  'cash_dividend',
+  'stock_dividend',
+  'stock_split',
+  'merger',
+  'acquisition',
+  'spinoff',
+  'earnings',
+  'maintenance',
+] as const
+
+export type PauseReason = (typeof PAUSE_REASONS)[number]
+
+export const isPauseReason = (value: string): value is PauseReason =>
+  (PAUSE_REASONS as readonly string[]).includes(value)
+
+export const getActivePauseReason = (
+  asset: Pick<TradableAsset, 'pause'> | null | undefined,
+  now: number,
+): PauseReason | null => {
+  const pause = asset?.pause
+  if (!pause) return null
+
+  const start = pause.start ? Date.parse(pause.start) : NaN
+  const end = pause.end ? Date.parse(pause.end) : NaN
+  if (Number.isNaN(start) || Number.isNaN(end)) return null
+  if (now < start || now > end) return null
+
+  const slug = pause.reason?.message?.trim().toLowerCase()
+  return slug && isPauseReason(slug) ? slug : null
+}
+
 /**
  * Addresses (lowercased) to render disabled under the "Trading paused for this
  * session" group. An asset is disabled when it is globally paused

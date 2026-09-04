@@ -8,6 +8,16 @@ import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { TradeForm } from './useTradeForm'
 
+type FromAmountErrorCode =
+  | ''
+  | 'unavailable'
+  | 'invalid'
+  | 'decimals'
+  | 'minimum'
+  | 'balance'
+
+const NO_ERROR = { code: '' as const, message: '' }
+
 interface UseTradeValidationOptions {
   form: TradeForm
   isWalletConnected: Ref<boolean>
@@ -24,8 +34,16 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     isSelectedAssetTradeable,
     supportedNetwork,
   } = options
-  const { fromTokenSelected, fromAmount, toAmount, isLoadingQuote,
-    generalError, toTokenSelected } = form
+  const {
+    fromTokenSelected,
+    fromAmount,
+    toAmount,
+    isLoadingQuote,
+    isPairUnavailable,
+    isBelowMinimum,
+    generalError,
+    toTokenSelected,
+  } = form
 
   const { t } = useI18n()
   const walletStore = useWalletStore()
@@ -83,26 +101,38 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   })
 
   // Computed error for from amount with balance validation
-  const fromAmountError = computed(() => {
+  const fromAmountErrorDetail = computed<{
+    code: FromAmountErrorCode
+    message: string
+  }>(() => {
     if (
       !fromTokenSelected.value ||
       !fromAmount.value ||
       fromAmount.value === '' ||
       fromAmount.value === '0'
     ) {
-      return ''
+      return NO_ERROR
     }
     if (generalError.value === 'pathfinder error') {
-      return t('trade.error.token-unavailable')
+      return {
+        code: 'unavailable',
+        message: t('trade.error.token-unavailable'),
+      }
+    }
+    if (isBelowMinimum.value) {
+      return {
+        code: 'minimum',
+        message: t('trade.error.minimum_not_reached'),
+      }
     }
 
     const amountBN = BigNumber(fromAmount.value)
     if (amountBN.isNaN()) {
-      return t('swap.error.invalid-amount')
+      return { code: 'invalid', message: t('swap.error.invalid-amount') }
     }
 
     if (amountBN.lte(0)) {
-      return t('swap.error.more-than-zero')
+      return { code: 'invalid', message: t('swap.error.more-than-zero') }
     }
 
     const decimals = fromTokenSelected.value.decimals || 18
@@ -110,7 +140,15 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       ? fromAmount.value.split('.')[1]?.length || 0
       : 0
     if (decimalPlaces > decimals) {
-      return t('swap.error.too-many-decimals')
+      const excessDecimals = decimalPlaces - decimals
+      return {
+        code: 'decimals',
+        message: t(
+          'trade.error.remove_decimals',
+          { count: excessDecimals },
+          excessDecimals,
+        ),
+      }
     }
 
     // Minimum $0.95 value check
@@ -118,7 +156,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (tokenPrice > 0) {
       const usdValue = amountBN.times(tokenPrice)
       if (usdValue.lt(0.95)) {
-        return t('trade.error.minimum-trade-value')
+        return {
+          code: 'minimum',
+          message: t('trade.error.minimum_not_reached'),
+        }
       }
     }
 
@@ -129,9 +170,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
 
         if (tokenParams.baseBalance < baseAmount) {
-          return t('swap.error.insufficient-native', {
-            symbol: fromTokenSelected.value.symbol,
-          })
+          return {
+            code: 'balance',
+            message: t('trade.error.not_enough_balance'),
+          }
         }
       } catch (e) {
         reportModuleError({
@@ -146,8 +188,14 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       }
     }
 
-    return ''
+    return NO_ERROR
   })
+
+  const fromAmountError = computed(() => fromAmountErrorDetail.value.message)
+
+  const isInsufficientBalanceError = computed(
+    () => fromAmountErrorDetail.value.code === 'balance',
+  )
 
   // Check if trade button should be disabled
   const isTradeDisabled = computed(
@@ -163,7 +211,8 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         toAmount.value !== '0'
       ) ||
       isLoadingQuote.value ||
-      isSameTokenSelected.value,
+      isSameTokenSelected.value ||
+      isPairUnavailable.value,
   )
 
   const isSameTokenSelected = computed(() => {
@@ -177,6 +226,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   return {
     hasPreQuoteError,
     fromAmountError,
+    isInsufficientBalanceError,
     isTradeDisabled,
     isSameTokenSelected,
   }

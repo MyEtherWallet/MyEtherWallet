@@ -1,4 +1,4 @@
-import { onBeforeMount, computed, watch, nextTick } from 'vue'
+import { onBeforeMount, computed, ref, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 // Stores
@@ -15,10 +15,11 @@ import { analytics, ConnectWalletEvent } from '@/analytics'
 import { useTrade } from './useTrade'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMarketStatus } from './useMarketStatus'
+import { useMarketStatusDisplay } from './useMarketStatusDisplay'
 import { useTradeTokens } from './useTradeTokens'
 import { useTradeValidation } from './useTradeValidation'
 import { useTradeQuote } from './useTradeQuote'
-import { useTradeExecution } from './useTradeExecution'
+import { useTradeExecution, type TradeFlowStep } from './useTradeExecution'
 import { useTradeForm } from './useTradeForm'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
@@ -27,6 +28,8 @@ import { ToastType } from '@/types/notification'
 
 export function useTradeModule() {
   const { t } = useI18n()
+
+  const showHelpLink = import.meta.env.DEV
 
   // --- Stores ---
   const pairStore = usePairStore()
@@ -74,9 +77,20 @@ export function useTradeModule() {
   // Initialize selectedFromChain immediately from the store to prevent defaulting to Ethereum
   const form = useTradeForm(chainsStore.selectedChain)
   const {
-    selectedFromChain, fromTokenSelected, fromTokenManuallySelected,
-    toTokenSelected, fromAmount, toAmount, generalError, toAmountError,
-    displayGeneralError, isLoadingQuote, isPristine, resetPristine, markDirty,
+    selectedFromChain,
+    fromTokenSelected,
+    fromTokenManuallySelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    generalError,
+    toAmountError,
+    displayGeneralError,
+    isLoadingQuote,
+    isPristine,
+    resetPristine,
+    markDirty,
+    isPairUnavailable,
   } = form
 
   // --- Market Status ---
@@ -84,6 +98,7 @@ export function useTradeModule() {
     marketStatus,
     currentSession,
     isTradingSessionOpen,
+    hasStaleMarketStatus,
     tradingRestrictedHelpUrl,
     countdownText,
     fetchMarketStatus,
@@ -210,7 +225,6 @@ export function useTradeModule() {
     )
   }
 
-
   watch(generalError, newVal => {
     if (newVal) {
       displayGeneralError.value = ''
@@ -245,10 +259,21 @@ export function useTradeModule() {
     currentSession,
   })
 
+  const {
+    pillStatus,
+    untilText,
+    nextOpenText,
+    dayLabel,
+    markerPct,
+    timeLabel,
+    sessionRanges,
+  } = useMarketStatusDisplay()
+
   // --- Trade Validation ---
   const {
     hasPreQuoteError,
     fromAmountError,
+    isInsufficientBalanceError,
     isTradeDisabled,
     isSameTokenSelected,
   } = useTradeValidation({
@@ -262,7 +287,15 @@ export function useTradeModule() {
   })
 
   // --- Trade Quote ---
-  const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
+  const isReviewModalOpenForQuote = ref(false)
+
+  const {
+    currentQuote,
+    quoteExpiresAt,
+    needsApproval,
+    fetchQuote,
+    resetQuote,
+  } = useTradeQuote({
     form,
     walletAddress: userAddress,
     wallet,
@@ -270,17 +303,18 @@ export function useTradeModule() {
     isSelectedAssetTradeable,
     isTradingAllowedInRegion,
     hasPreQuoteError,
+    isReviewModalOpen: isReviewModalOpenForQuote,
+    hasStaleMarketStatus,
   })
 
   // --- Trade Execution ---
   const {
+    tradeFlowStep,
     isApproving,
     txProceeding,
-    quoteModalOpen,
-    tradeInitiatedOpen,
     orderHash,
-    handleApprove,
-    openTradeModal,
+    startTradeFlow,
+    confirmApproval,
     confirmTrade,
   } = useTradeExecution({
     form,
@@ -290,6 +324,42 @@ export function useTradeModule() {
     needsApproval,
     isTradingRestrictedInRegion,
     isTradingAllowedInRegion,
+  })
+
+  const stepModel = (step: TradeFlowStep) =>
+    computed({
+      get: () => tradeFlowStep.value === step,
+      set: value => {
+        if (!value) tradeFlowStep.value = 'idle'
+      },
+    })
+
+  const approvalIntroOpen = stepModel('approvalIntro')
+  const waitingApprovalOpen = stepModel('approving')
+  const reviewModalOpen = stepModel('review')
+  const progressModalOpen = stepModel('processing')
+
+  watch(reviewModalOpen, isOpen => {
+    isReviewModalOpenForQuote.value = isOpen
+  })
+
+  const refreshExpiredQuote = () => {
+    if (txProceeding.value || isApproving.value) return
+    fetchQuote()
+  }
+
+  const ctaDisabledLabel = computed(() => {
+    if (!isTradingSessionOpen.value) {
+      return t('trade.market_status.paused')
+    }
+    if (isPairUnavailable.value) {
+      return t('trade.pair_unavailable.cta')
+    }
+    const parsedAmount = Number(fromAmount.value)
+    if (fromAmount.value.trim() === '' || !parsedAmount) {
+      return t('trade.enter_amount')
+    }
+    return t('trade.review_trade')
   })
 
   // --- Methods ---
@@ -380,10 +450,14 @@ export function useTradeModule() {
     getBalance: () => BigInt(selectedWalletToken.value?.balanceWei || '0'),
     getDecimals: () => fromTokenSelected.value?.decimals || 18,
     getEstimatedFee: () => 0n,
-    isNativeToken: () => fromTokenSelected.value?.address?.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase(),
+    isNativeToken: () =>
+      fromTokenSelected.value?.address?.toLowerCase() ===
+      MAIN_TOKEN_CONTRACT.toLowerCase(),
     isTokenSelected: () => !!fromTokenSelected.value && isWalletConnected.value,
     getAmount: () => fromAmount.value,
-    onAmountChange: value => { fromAmount.value = String(value) },
+    onAmountChange: value => {
+      fromAmount.value = String(value)
+    },
     markFormDirty: markDirty,
     resetFormPristine: resetPristine,
     getTokenIdentifier: () => fromTokenSelected.value?.address,
@@ -399,9 +473,8 @@ export function useTradeModule() {
 
   // --- Watchers ---
 
-  // Reset state when Trade Initiated Modal is closed
   watch(
-    () => tradeInitiatedOpen.value,
+    () => progressModalOpen.value,
     isOpen => {
       if (!isOpen) {
         clearValues()
@@ -636,11 +709,26 @@ export function useTradeModule() {
     needsApproval,
     isApproving,
     txProceeding,
-    quoteModalOpen,
-    tradeInitiatedOpen,
+    approvalIntroOpen,
+    waitingApprovalOpen,
+    reviewModalOpen,
+    progressModalOpen,
+    quoteExpiresAt,
+    refreshExpiredQuote,
+    ctaDisabledLabel,
+    showHelpLink,
+    isInsufficientBalanceError,
+    isPairUnavailable,
+    pillStatus,
+    untilText,
+    nextOpenText,
+    dayLabel,
+    markerPct,
+    timeLabel,
+    sessionRanges,
     orderHash,
-    handleApprove,
-    openTradeModal,
+    startTradeFlow,
+    confirmApproval,
     confirmTrade,
     clearValues,
     setFromChain,

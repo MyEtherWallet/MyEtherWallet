@@ -11,12 +11,19 @@ import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
+  getActivePauseReason,
+  type PauseReason,
 } from '../common/tradeSession'
 import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
+
+export interface TradeAssetToken extends NewTokenInfo {
+  priceChangePercentage24h?: number
+  pauseReason?: PauseReason | null
+}
 
 interface UseTradeTokensOptions {
   form: TradeForm
@@ -145,10 +152,10 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
-        return (
-          info.pause?.reason?.message ||
-          t('trade.error.token-not-available', { symbol: token?.symbol })
-        )
+        const reason = getActivePauseReason(info, Date.now())
+        return reason
+          ? t(`trade.pause_reason.${reason}.tooltip`)
+          : t('trade.error.token-not-available', { symbol: token?.symbol })
       }
     }
     return ''
@@ -183,6 +190,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       chainName,
       fromTokensMap,
       hardcodedTokensInfo.value,
+      Date.now(),
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -222,6 +230,7 @@ function mapTradableAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
+  now: number,
 ): NewTokenInfo[] {
   const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
     address: token.address,
@@ -250,6 +259,10 @@ function mapTradableAssetsToTokens(
       const tokenPrice =
         parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
 
+      const priceChange = parseFloat(
+        asset.primaryMarket.priceChangePercentage24h ?? '0',
+      )
+
       return {
         name: asset.stockAlias || asset.symbol,
         symbol: asset.symbol.toUpperCase(),
@@ -260,6 +273,10 @@ function mapTradableAssetsToTokens(
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
         price: tokenPrice,
+        priceChangePercentage24h: Number.isFinite(priceChange)
+          ? priceChange
+          : 0,
+        pauseReason: getActivePauseReason(asset, now),
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,

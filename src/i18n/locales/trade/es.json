@@ -4,18 +4,14 @@
     "subtitle": "Compra/vende acciones tokenizadas de Ondo",
     "you_are_selling": "Estás vendiendo",
     "you_are_buying": "Estás comprando",
-    "swap_from_to": "Intercambiar acciones de origen/destino",
-    "market_closed": "Mercado cerrado",
     "trading_paused_session": "Operaciones pausadas durante esta sesión",
-    "opens_in": "Abre en {countdown}",
     "opening_soon": "Abriendo pronto...",
     "network_not_supported": "Red no compatible",
     "trading_not_available_on": "Las operaciones no están disponibles en {network}. Cambia a una red compatible.",
     "trading_not_available": "Operaciones no disponibles",
     "trading_restricted": "El acceso a las operaciones está restringido en tu jurisdicción.",
     "learn_more": "Más información",
-    "approving": "Aprobando...",
-    "trade_button": "Operar",
+    "review_trade": "Revisar operación",
     "need_help": "¿Necesitas ayuda para operar?",
     "tokens_not_tradable": "Uno o más tokens no se pueden operar actualmente. Inténtalo más tarde o selecciona tokens diferentes.",
     "service_unavailable": "El servicio de operaciones no está disponible temporalmente. Inténtalo de nuevo más tarde.",
@@ -29,23 +25,41 @@
       "tooltip_body": "{tickers} ya están disponibles para operar 24/7.",
       "dismiss_tooltip": "Descartar aviso"
     },
-    "quote_modal": {
-      "title": "Cotización de la operación",
-      "quote_from": "Cotización de la operación de 1inch Fusion",
-      "for": "Por",
-      "you_will_get": "recibirás:",
-      "estimated_amount": "Cantidad estimada",
-      "min_amount": "Cantidad mínima",
-      "limit_order_warning": "Esta es una operación con orden límite. La cantidad final puede variar ligeramente según las condiciones del mercado.",
-      "confirm_trade": "Confirmar operación"
+    "waiting_approval": {
+      "title": "Esperando aprobación...",
+      "subtitle": "Aprueba en tu billetera para continuar",
+      "help_title": "¿No ves la ventana de confirmación?",
+      "help_text": "Revisa si tu navegador está bloqueando ventanas emergentes o abre MetaMask manualmente."
     },
-    "initiated_modal": {
-      "title": "Orden de operación enviada",
-      "order_submitted": "Tu orden de operación se ha enviado a la red de 1inch Fusion. La orden se está ejecutando.",
-      "order_hash": "Hash de la orden",
-      "network": "Red",
-      "close_window_message": "Puedes cerrar esta ventana y",
-      "track_progress": "Seguir el progreso en las notificaciones"
+    "review_modal": {
+      "title": "Revisar operación",
+      "trade_provider": "Proveedor de la operación",
+      "provider_1inch": "1 Inch Fusion",
+      "estimated_summary": "Resumen estimado",
+      "you_pay": "Estás pagando",
+      "you_receive": "Vas a recibir",
+      "value_estimated": "(El valor es estimado)",
+      "expand_breakdown": "Ver desglose",
+      "close_breakdown": "Ocultar desglose",
+      "min_receive": "Mínimo que recibirás",
+      "rate": "Tasa",
+      "tx_fee": "Comisión de transacción",
+      "price_impact": "Impacto en el precio",
+      "max_slippage": "Slippage máx.",
+      "confirm_trade": "Confirmar operación",
+      "quote_refreshes_in": "La cotización se actualiza en {time}"
+    },
+    "progress_modal": {
+      "processing_title": "Procesando operación...",
+      "processing_subtitle": "Puede tomar un momento completar la operación",
+      "close_screen": "Cerrar esta pantalla",
+      "background_note": "La operación se procesará en segundo plano\nsi cierras esta pantalla",
+      "completed_title": "Operación completada",
+      "received": "Recibiste {amount}",
+      "show_in_etherscan": "Ver en Etherscan",
+      "failed_title": "Operación no completada",
+      "cancelled_subtitle": "La orden fue cancelada",
+      "expired_subtitle": "La orden expiró sin completarse"
     },
     "status": {
       "pending": "Pendiente",
@@ -54,10 +68,13 @@
       "expired": "Expirada"
     },
     "toast": {
-      "approval-success": "¡Aprobación exitosa!",
-      "approval-success-secondary": "Ya puedes operar {symbol}.",
       "quote-loading": "Espera a que se cargue la cotización",
-      "tokens-switched": "Ahora operando {from} por {to}"
+      "tokens-switched": "Ahora operando {from} por {to}",
+      "processing_trade": "Procesando operación",
+      "processing_note": "Puede tomar unos minutos",
+      "trade_completed": "Operación completada",
+      "received_total": "Recibiste un total de {amount}",
+      "explore_etherscan": "Explorar en Etherscan"
     },
     "error": {
       "approval-failed": "No se pudo aprobar el token",
@@ -65,12 +82,106 @@
       "token-unavailable": "Este token no está disponible para operar. Elige otro o inténtalo de nuevo más tarde.",
       "minimum-trade-value": "El valor mínimo de operación es de aproximadamente $1.00",
       "token-not-available": "{symbol} no está disponible para operar actualmente",
+      "insufficient-amount": "El monto es demasiado bajo para operar en este momento. Prueba con un monto mayor.",
+      "market-closed": "El mercado está cerrado en este momento.",
       "no-quotes-returned": "No se recibieron cotizaciones",
       "failed-to-fetch-quote": "No se pudo obtener la cotización",
       "fusion-network-not-supported": "Fusion: red no compatible",
       "failed-fetch-quote-1inch": "No se pudo obtener la cotización de 1inch",
       "native-transaction-failed": "La transacción nativa falló",
-      "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch"
+      "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch",
+      "not_enough_balance": "Saldo insuficiente",
+      "minimum_not_reached": "Mínimo no alcanzado",
+      "remove_decimals": "Elimina {count} decimal | Elimina {count} decimales"
+    },
+    "market_status": {
+      "regular": "Mercado regular",
+      "premarket": "Pre-mercado",
+      "postmarket": "Post-mercado",
+      "overnight": "Nocturno",
+      "weekend": "Fin de semana",
+      "paused": "Mercado en pausa",
+      "limited": "Mercado limitado",
+      "info_label": "Información del estado del mercado",
+      "until": "Hasta {time}",
+      "until_session": "{duration} para {session}",
+      "duration_minutes": "{minutes} min",
+      "duration_hours": "{hours} h",
+      "duration_hours_minutes": "{hours} h {minutes} min"
+    },
+    "market_status_popover": {
+      "open_title": "El mercado está abierto.",
+      "open_body": "Todas las acciones soportadas están disponibles.",
+      "premarket_title": "El mercado aún no abrió.",
+      "closed_title": "El mercado cerró.",
+      "weekend_title": "El mercado está cerrado por el fin de semana.",
+      "paused_title": "El mercado está en pausa.",
+      "paused_body": "El mercado regular está por abrir.",
+      "limited_body": "Solo las acciones elegibles están disponibles.",
+      "learn_more": "Aprende más",
+      "learn_more_suffix": "sobre los horarios del mercado.",
+      "session_starts": "{session} comienza {time}"
+    },
+    "market_timeline": {
+      "premarket": "Pre-mercado",
+      "regular": "Mercado regular",
+      "postmarket": "Post-mercado",
+      "overnight": "Nocturno"
+    },
+    "sell_label": "Vender",
+    "buy_label": "Comprar",
+    "enter_amount": "Ingresa el monto",
+    "select_asset": {
+      "title": "Seleccionar activo",
+      "subtitle": "Algunos pueden no estar disponibles temporalmente",
+      "available_in": "Activos disponibles en {marketStatus}",
+      "unavailable": "Activos no disponibles"
+    },
+    "pause_reason": {
+      "cash_dividend": {
+        "tag": "Dividendo en efectivo",
+        "tooltip": "Este activo no está disponible temporalmente por un dividendo en efectivo."
+      },
+      "stock_dividend": {
+        "tag": "Dividendo en acciones",
+        "tooltip": "Este activo no está disponible temporalmente por un dividendo en acciones."
+      },
+      "stock_split": {
+        "tag": "Split de acciones",
+        "tooltip": "Este activo no está disponible temporalmente por un split de acciones."
+      },
+      "merger": {
+        "tag": "Fusión",
+        "tooltip": "Este activo no está disponible temporalmente por una fusión."
+      },
+      "acquisition": {
+        "tag": "Adquisición",
+        "tooltip": "Este activo no está disponible temporalmente por una adquisición."
+      },
+      "spinoff": {
+        "tag": "Escisión",
+        "tooltip": "Este activo no está disponible temporalmente por una escisión."
+      },
+      "earnings": {
+        "tag": "Resultados",
+        "tooltip": "Este activo no está disponible temporalmente por la publicación de resultados."
+      },
+      "maintenance": {
+        "tag": "En mantenimiento",
+        "tooltip": "Este activo no está disponible temporalmente porque está en mantenimiento."
+      }
+    },
+    "approve_spending": {
+      "title": "Autorizar el gasto de {symbol}",
+      "subtitle": "Para continuar con tu operación, tenés que permitir que MEW gaste {symbol} en {wallet}.",
+      "network_fee": "Comisión de red est.",
+      "network_fee_tooltip": "Se necesita una pequeña comisión de red para firmar esta autorización",
+      "cta": "Autorizar en {wallet}",
+      "your_wallet": "tu billetera"
+    },
+    "pair_unavailable": {
+      "cta": "Par no disponible",
+      "notice": "Este par no se puede operar en este momento. Cambialo o probá de nuevo más tarde."
     }
   }
 }

@@ -27,6 +27,7 @@ import {
   SUPPORTED_CHAINS,
 } from './configs'
 import { Web3ProviderConnector } from './oneInchProvider'
+import { IsolatedAxiosConnector } from './oneInchHttpConnector'
 import type { AxiosError } from 'axios'
 import { isAxiosNetworkError } from '@/modules/trade/common/transientRpcError'
 // NOTE: getQuote no longer reports to Sentry directly — reporting is centralized
@@ -50,6 +51,28 @@ export type HardcodedTokenInfo = {
   decimals: number
   logoURI: string
   price: number
+}
+
+type ErrorBody = {
+  error?: string
+  description?: string
+  statusCode?: number
+  code?: string
+}
+
+const FUSION_ERROR_COPY: Record<string, string> = {
+  INSUFFICIENT_AMOUNT: 'trade.error.insufficient-amount',
+  MARKET_CLOSED: 'trade.error.market-closed',
+}
+
+export const fusionErrorMessage = (e: unknown): string | null => {
+  const data =
+    e && typeof e === 'object' && 'response' in e
+      ? ((e as AxiosError).response?.data as ErrorBody | undefined)
+      : undefined
+  const localized = data?.code ? FUSION_ERROR_COPY[data.code] : undefined
+  if (localized) return i18n.global.t(localized)
+  return data?.description || null
 }
 
 const HARDCODED_ETH_TOKENS: Array<{ address: string; cgId: string }> = []
@@ -131,6 +154,7 @@ class OneInchFusion {
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
       blockchainProvider: this.web3Provider,
+      httpProvider: new IsolatedAxiosConnector(),
     })
   }
 
@@ -156,21 +180,23 @@ class OneInchFusion {
   async getQuote(config: QuoteInputType): Promise<QuoteOutputType> {
     try {
       const quote = await this.sdk.getQuote(getFusionParams(config))
+      const preset = quote.presets[quote.recommendedPreset]!
       return {
-        startAmount: quote.presets[quote.recommendedPreset]!.auctionStartAmount,
-        endAmount: quote.presets[quote.recommendedPreset]!.auctionEndAmount,
-        avgAmount:
-          (quote.presets[quote.recommendedPreset]!.auctionStartAmount +
-            quote.presets[quote.recommendedPreset]!.auctionEndAmount) /
-          2n,
+        startAmount: preset.auctionStartAmount,
+        endAmount: preset.auctionEndAmount,
+        avgAmount: (preset.auctionStartAmount + preset.auctionEndAmount) / 2n,
+        auctionDurationSeconds: Number(preset.auctionDuration),
+        slippage: quote.slippage,
+        tokenFee: preset.tokenFee,
+        marketReturn: quote.marketReturn,
+        usdPrices: quote.prices.usd,
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
-      const responseData =
-        e && typeof e === 'object' && 'response' in e
-          ? (e as AxiosError<{ description?: string }>).response?.data
-          : undefined
-      const response = responseData?.description || null
+      const fusionCode = (
+        (e as AxiosError).response?.data as ErrorBody | undefined
+      )?.code
+      const response = fusionErrorMessage(e)
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
 
@@ -186,9 +212,11 @@ class OneInchFusion {
       ) as Error & {
         expectedClientError?: boolean
         transientNetworkError?: boolean
+        fusionCode?: string
       }
       error.expectedClientError =
         typeof status === 'number' && status >= 400 && status < 500
+      error.fusionCode = fusionCode
       // A transient axios "Network Error" (the 1inch request never completed —
       // no response received) is environmental noise, already surfaced to the
       // user; flag it so the caller skips Sentry reporting.
@@ -262,8 +290,6 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
-      // Preserve the original message (the caller lowercases it for display)
-      // and keep the wallet/RPC `code`, then flag expected client errors —
       // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
       // pair / invalid order) — so the caller (confirmTrade) can surface them
       // to the user while skipping Sentry capture. The previous catch re-threw
@@ -277,13 +303,14 @@ class OneInchFusion {
           ? (e as Record<string, unknown>)
           : undefined
       const errorMessage =
-        e instanceof Error && e.message
+        fusionErrorMessage(e) ??
+        (e instanceof Error && e.message
           ? e.message
           : errObj && typeof errObj.details === 'string'
             ? errObj.details
             : typeof e === 'string'
               ? e
-              : i18n.global.t('trade.error.failed-submit-order-1inch')
+              : i18n.global.t('trade.error.failed-submit-order-1inch'))
       const error = new Error(errorMessage) as Error & {
         code?: number
         expectedClientError?: boolean

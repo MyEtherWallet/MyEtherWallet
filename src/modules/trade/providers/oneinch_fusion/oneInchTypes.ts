@@ -10,8 +10,11 @@ export interface QuoteOutputType {
   startAmount: bigint
   endAmount?: bigint
   avgAmount?: bigint
-  fee?: bigint
-  feeDecimals?: number
+  auctionDurationSeconds?: number
+  slippage?: number
+  tokenFee?: bigint
+  marketReturn?: bigint
+  usdPrices?: { fromToken: string; toToken: string }
 }
 
 export interface OrderStatusOutputType {

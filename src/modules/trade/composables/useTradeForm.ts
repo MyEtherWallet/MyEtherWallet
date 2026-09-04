@@ -14,12 +14,30 @@ export function useTradeForm(initialChain?: Chain) {
   const toAmountError = ref('')
   const displayGeneralError = ref('')
   const isLoadingQuote = ref(false)
-  const { isPristine, reset: resetPristine, markDirty } = useFormPristine([fromAmount])
+  const isPairUnavailable = ref(false)
+  const isBelowMinimum = ref(false)
+  const {
+    isPristine,
+    reset: resetPristine,
+    markDirty,
+  } = useFormPristine([fromAmount])
 
   return {
-    selectedFromChain, fromTokenSelected, fromTokenManuallySelected,
-    toTokenSelected, fromAmount, toAmount, generalError, toAmountError,
-    displayGeneralError, isLoadingQuote, isPristine, resetPristine, markDirty,
+    selectedFromChain,
+    fromTokenSelected,
+    fromTokenManuallySelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    generalError,
+    toAmountError,
+    displayGeneralError,
+    isLoadingQuote,
+    isPairUnavailable,
+    isBelowMinimum,
+    isPristine,
+    resetPristine,
+    markDirty,
   }
 }
 
