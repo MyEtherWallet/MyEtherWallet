@@ -46,6 +46,30 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     () => marketStatus.value === null || currentSession.value !== null,
   )
 
+  // The boundary that ends whatever state the status claims we are in.
+  const activeBoundary = (): string | null | undefined => {
+    const status = marketStatus.value
+    if (!status) return null
+    if (status.offhours?.isOpen) return status.offhours.nextClose
+    if (status.isOpen) return status.nextClose
+    return status.nextOpen
+  }
+
+  // The upstream status is served from a snapshot that can trail real time by a
+  // couple of minutes, so right after a session boundary it still reports the
+  // session we just left, with the boundary that ended it already in the past.
+  // Callers must not read a state this describes as settled: between sessions
+  // the market is closed while this still says it is open, and quotes fail.
+  // A function rather than a computed: it depends on the clock, not on state
+  // Vue can track, so a cached value would keep answering for a boundary that
+  // has since passed.
+  const hasStaleBoundary = (): boolean => {
+    const boundary = activeBoundary()
+    if (!boundary) return false
+    const time = new Date(boundary).getTime()
+    return Number.isFinite(time) && time <= Date.now()
+  }
+
   const updateCountdown = () => {
     if (!marketStatus.value?.nextOpen || isTradingSessionOpen.value) {
       countdownText.value = ''
@@ -132,12 +156,18 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
       return
     }
     const transitionAt = nextTransitionAt()
-    const delay = transitionAt
-      ? Math.max(
-          transitionAt + REFRESH_BUFFER_MS - Date.now(),
-          MIN_REFRESH_DELAY_MS,
-        )
-      : MIN_REFRESH_DELAY_MS
+    // A passed boundary means the snapshot has not caught up yet. Retrying on
+    // the short delay is what makes "until it crosses over" true: aiming at
+    // `nextTransitionAt` instead would skip to the *following* session's
+    // boundary, leaving the stale state on screen for the whole gap between
+    // sessions — reported as every pair being unavailable.
+    const delay =
+      hasStaleBoundary() || !transitionAt
+        ? MIN_REFRESH_DELAY_MS
+        : Math.max(
+            transitionAt + REFRESH_BUFFER_MS - Date.now(),
+            MIN_REFRESH_DELAY_MS,
+          )
     refreshTimeout = setTimeout(() => {
       fetchMarketStatus()
     }, delay)
@@ -225,6 +255,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     isOffHoursOpen,
     currentSession,
     isTradingSessionOpen,
+    hasStaleBoundary,
     fetchMarketStatus,
     fetchTradingRestriction,
     formatNextOpen,

@@ -98,6 +98,7 @@ export function useTradeModule() {
     marketStatus,
     currentSession,
     isTradingSessionOpen,
+    hasStaleMarketStatus,
     tradingRestrictedHelpUrl,
     countdownText,
     fetchMarketStatus,
@@ -303,6 +304,7 @@ export function useTradeModule() {
     isTradingAllowedInRegion,
     hasPreQuoteError,
     isReviewModalOpen: isReviewModalOpenForQuote,
+    hasStaleMarketStatus,
   })
 
   // --- Trade Execution ---

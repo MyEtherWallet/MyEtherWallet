@@ -50,6 +50,12 @@ interface UseTradeQuoteOptions {
    * distinction swap draws with `bestSwapLoadingOpen`.
    */
   isReviewModalOpen: Ref<boolean>
+  /**
+   * Whether the market status is reporting a session whose boundary has already
+   * passed. A function because it depends on the clock: it has to be answered at
+   * the moment a quote fails, not when a dependency last changed.
+   */
+  hasStaleMarketStatus: () => boolean
 }
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
@@ -62,6 +68,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     isTradingAllowedInRegion,
     hasPreQuoteError,
     isReviewModalOpen,
+    hasStaleMarketStatus,
   } = options
   const {
     fromTokenSelected,
@@ -103,6 +110,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
   })
 
   const runQuote = async () => {
+    // Cleared ahead of the guards below, not just on the path that quotes: the
+    // flag describes the last attempt, and every exit from here either makes a
+    // new attempt or abandons the one it described. Leaving it set outlived the
+    // pair it was about — the market closing mid-session stranded the notice on
+    // screen next to a "Market paused" button.
+    isPairUnavailable.value = false
+
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
       toAmount.value = ''
@@ -211,8 +225,15 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
-      isPairUnavailable.value = !!(e as { expectedClientError?: boolean })
-        .expectedClientError
+      // Only blame the pair while the market state is settled. Between sessions
+      // the upstream snapshot still reports the one that just ended, so we quote
+      // into a closed market and every pair 4xxs — claiming the pair is
+      // unavailable then is both wrong and indistinguishable from the real
+      // thing. Left unclaimed it falls through to the transient error below,
+      // and the next status refresh renders the paused state instead.
+      isPairUnavailable.value =
+        !!(e as { expectedClientError?: boolean }).expectedClientError &&
+        !hasStaleMarketStatus()
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(

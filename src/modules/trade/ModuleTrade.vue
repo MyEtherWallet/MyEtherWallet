@@ -234,7 +234,7 @@
           </transition>
 
           <div
-            v-if="isPairUnavailable"
+            v-if="isPairUnavailable && isTradingSessionOpen"
             class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
           >
             <exclamation-triangle-icon

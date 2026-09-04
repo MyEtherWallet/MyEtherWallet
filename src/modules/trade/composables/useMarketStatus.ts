@@ -34,6 +34,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     isOffHoursOpen,
     currentSession,
     isTradingSessionOpen,
+    hasStaleMarketStatus: marketStatusStore.hasStaleBoundary,
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus: marketStatusStore.fetchMarketStatus,

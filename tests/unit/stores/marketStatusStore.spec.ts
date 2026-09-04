@@ -149,6 +149,64 @@ describe('useMarketStatusStore', () => {
     expect(store.marketStatus?.marketStatus).toBe('regular')
   })
 
+  // The gap between two sessions. The snapshot still reports the session that
+  // just closed, while the next one opens minutes later — so unlike the case
+  // above, `nextTransitionAt` does find a future boundary and aiming at it
+  // would leave the stale state up for the whole gap. That is what had Trade
+  // quoting into a closed market and calling every pair unavailable.
+  it('retries on a short delay when the reported session ended but the next boundary is ahead', async () => {
+    mockedGetMarketStatus.mockResolvedValue(
+      make({ nextClose: iso(-60_000), nextOpen: iso(6 * 60_000) }),
+    )
+    const store = useMarketStatusStore()
+    await store.fetchMarketStatus()
+    const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
+
+    await vi.advanceTimersByTimeAsync(10_100)
+
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch + 1)
+  })
+
+  it('reports a stale boundary while the close it claims has already passed', async () => {
+    mockedGetMarketStatus.mockResolvedValue(make({ nextClose: iso(-60_000) }))
+    const store = useMarketStatusStore()
+    await store.fetchMarketStatus()
+
+    expect(store.hasStaleBoundary()).toBe(true)
+  })
+
+  it('reports no stale boundary while the close is still ahead', async () => {
+    mockedGetMarketStatus.mockResolvedValue(make({ nextClose: iso(60_000) }))
+    const store = useMarketStatusStore()
+    await store.fetchMarketStatus()
+
+    expect(store.hasStaleBoundary()).toBe(false)
+  })
+
+  it('reads the off-hours boundary while off-hours is the open session', async () => {
+    mockedGetMarketStatus.mockResolvedValue(
+      make({
+        isOpen: false,
+        nextOpen: iso(60 * 60_000),
+        offhours: {
+          isOpen: true,
+          nextOpen: iso(-60_000),
+          nextClose: iso(-30_000),
+        },
+      }),
+    )
+    const store = useMarketStatusStore()
+    await store.fetchMarketStatus()
+
+    expect(store.hasStaleBoundary()).toBe(true)
+  })
+
+  it('reports no stale boundary before any status has loaded', () => {
+    const store = useMarketStatusStore()
+
+    expect(store.hasStaleBoundary()).toBe(false)
+  })
+
   it('exposes the tradability computeds from the fetched status', async () => {
     mockedGetMarketStatus.mockResolvedValue(
       make({

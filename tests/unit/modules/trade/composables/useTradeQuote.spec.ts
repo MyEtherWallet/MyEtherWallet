@@ -47,7 +47,10 @@ const TOKEN = {
   logoURI: '',
 }
 
-const makeHarness = async (isReviewModalOpenValue = false) => {
+const makeHarness = async (
+  isReviewModalOpenValue = false,
+  { marketStatusStale = false, marketOpen = true } = {},
+) => {
   const { useTradeQuote } =
     await import('@/modules/trade/composables/useTradeQuote')
   const toAmount = ref('')
@@ -70,11 +73,12 @@ const makeHarness = async (isReviewModalOpenValue = false) => {
     form,
     walletAddress: ref('0xwallet'),
     wallet: ref({}) as never,
-    isMarketOpen: computed(() => true),
+    isMarketOpen: computed(() => marketOpen),
     isSelectedAssetTradeable: computed(() => true),
     isTradingAllowedInRegion: ref(true),
     hasPreQuoteError: computed(() => false),
     isReviewModalOpen,
+    hasStaleMarketStatus: () => marketStatusStale,
   })
   return {
     ...quote,
@@ -208,5 +212,59 @@ describe('useTradeQuote analytics', () => {
       'Trade_Offer_Error',
       expect.anything(),
     )
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Session boundaries
+//
+// The upstream market status is served from a snapshot that trails real time,
+// so in the gap between two sessions it still reports the one that just ended.
+// Quoting into a market that is actually closed makes every pair fail with a
+// 1inch client error, which was reported to the user as the pair being
+// unavailable — for every token they tried.
+// ---------------------------------------------------------------------------
+
+describe('useTradeQuote across a session boundary', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  const clientError = () =>
+    Object.assign(new Error('cannot fetch price'), {
+      expectedClientError: true,
+    })
+
+  it('does not blame the pair while the market status is stale', async () => {
+    mockGetQuote.mockRejectedValue(clientError())
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false, {
+      marketStatusStale: true,
+    })
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(false)
+  })
+
+  it('still blames the pair once the status has caught up', async () => {
+    mockGetQuote.mockRejectedValue(clientError())
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false, {
+      marketStatusStale: false,
+    })
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(true)
+  })
+
+  it('clears the flag when the market closes, instead of stranding the notice', async () => {
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false, {
+      marketOpen: false,
+    })
+    isPairUnavailable.value = true
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(false)
   })
 })
