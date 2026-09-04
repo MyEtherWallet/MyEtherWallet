@@ -83,6 +83,14 @@ describe('TradeSelectAssetModal (buy)', () => {
     expect(dialogText.match(/Unavailable assets/g)).toHaveLength(1)
   })
 
+  it('keeps every row at its fixed height even when the list overflows', async () => {
+    await mountOpenModal()
+
+    const rows = document.querySelectorAll('#app [role="dialog"] .h-\\[68px\\]')
+    expect(rows.length).toBeGreaterThan(0)
+    rows.forEach(row => expect(row.classList.contains('flex-none')).toBe(true))
+  })
+
   it('renders the ticker suffix without the stock gradient', async () => {
     await mountOpenModal()
 

@@ -81,7 +81,7 @@
               :class="[
                 isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
                 isSessionUnavailable(asset) ? 'opacity-30' : '',
-                'flex items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
+                'flex flex-none items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
               ]"
               @click="!isAssetPaused(asset) && selectAsset(asset)"
             >
