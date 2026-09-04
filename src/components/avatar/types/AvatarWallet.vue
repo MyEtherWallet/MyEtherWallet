@@ -2,15 +2,31 @@
 import { computed } from 'vue'
 import AvatarRemoteImage from '../AvatarRemoteImage.vue'
 import type { AvatarSize, WalletId } from '../types'
+import ledger from '@/assets/icons/wallets/ledger.svg'
+import rainbow from '@/assets/icons/wallets/rainbow.svg'
+import walletconnect from '@/assets/icons/wallets/walletconnect.svg'
+import metamaskstarknetsnap from '@/assets/icons/wallets/metamaskstarknetsnap.svg'
+import rabby from '@/assets/icons/wallets/rabby.svg'
+import phantom from '@/assets/icons/wallets/phantom.svg'
+import coinbase from '@/assets/icons/wallets/coinbase.svg'
+import solflare from '@/assets/icons/wallets/solflare.svg'
+import zerion from '@/assets/icons/wallets/zerion.svg'
+import walletAny from '@/assets/icons/wallets/any.png'
 
-// _Wallets (166:15): ledger, rainbow, walletconnect, metamaskstarknetsnap,
-// rabby, phantom, coinbase, solflare, zerion + `any` fallback.
-//
-// The brand-mark SVGs are NOT in the repo yet (src/assets/icons/wallets/). This
-// map is wired but empty, so every id resolves to the neutral `any` fallback
-// today. Follow-up: commit the optimized SVGs and fill this map. Figma MCP asset
-// URLs expire (~7 days) — commit the bytes, don't reference a remote URL.
-const WALLET_MARKS: Partial<Record<WalletId, string>> = {}
+// _Wallets (166:15). Brand marks committed from Figma to src/assets/icons/wallets
+// (SVG, except the neutral `any` fallback which is raster in the source).
+const WALLET_MARKS: Record<WalletId, string> = {
+  ledger,
+  rainbow,
+  walletconnect,
+  metamaskstarknetsnap,
+  rabby,
+  phantom,
+  coinbase,
+  solflare,
+  zerion,
+  any: walletAny,
+}
 
 const props = defineProps<{
   size: AvatarSize
@@ -19,7 +35,7 @@ const props = defineProps<{
 
 defineOptions({ inheritAttrs: false })
 
-const url = computed(() => WALLET_MARKS[props.walletId ?? 'any'] ?? null)
+const url = computed(() => WALLET_MARKS[props.walletId ?? 'any'])
 </script>
 
 <template>

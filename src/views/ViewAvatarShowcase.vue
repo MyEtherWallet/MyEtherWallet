@@ -11,6 +11,7 @@ import type {
   AvatarStatus,
   AvatarType,
   PaymentMethod,
+  WalletId,
 } from '@/components/avatar/types'
 
 const SIZES: AvatarSize[] = ['xs', 's', 'm', 'l', 'xl']
@@ -33,12 +34,25 @@ const PAYMENTS: PaymentMethod[] = [
   'pix',
   'visa',
 ]
+const WALLETS: WalletId[] = [
+  'ledger',
+  'rainbow',
+  'walletconnect',
+  'metamaskstarknetsnap',
+  'rabby',
+  'phantom',
+  'coinbase',
+  'solflare',
+  'zerion',
+  'any',
+]
 
 const SAMPLE = {
   address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
   symbol: 'AAPL',
   chain: 'Ethereum',
   initial: 'R',
+  walletId: 'ledger' as WalletId,
 }
 </script>
 
@@ -74,6 +88,7 @@ const SAMPLE = {
                   :symbol="SAMPLE.symbol"
                   :chain="SAMPLE.chain"
                   :initial="SAMPLE.initial"
+                  :wallet-id="SAMPLE.walletId"
                 >
                   <template v-if="t === 'icon'" #icon><PlusIcon /></template>
                 </AppAvatar>
@@ -81,6 +96,21 @@ const SAMPLE = {
             </tr>
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- Wallet marks (real assets from Figma _Wallets 166:15) -->
+    <section class="flex flex-col gap-4">
+      <h2 class="text-s-16 font-semibold">Wallet marks</h2>
+      <div class="flex flex-wrap gap-4 items-center">
+        <div
+          v-for="w in WALLETS"
+          :key="w"
+          class="flex flex-col items-center gap-2"
+        >
+          <AppAvatar type="wallet" size="l" :wallet-id="w" />
+          <span class="text-s-12 text-info">{{ w }}</span>
+        </div>
       </div>
     </section>
 
