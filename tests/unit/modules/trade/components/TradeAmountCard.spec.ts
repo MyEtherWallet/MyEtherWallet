@@ -99,7 +99,10 @@ describe('TradeAmountCard', () => {
         card.findAll('p').find(row => row.text().startsWith('Balance'))!
 
       const outOfBalance = mountCard({ balanceError: true })
-      await outOfBalance.setProps({ amount: '600', error: 'Not enough balance' })
+      await outOfBalance.setProps({
+        amount: '600',
+        error: 'Not enough balance',
+      })
       vi.advanceTimersByTime(1000)
       await nextTick()
       expect(balanceRow(outOfBalance).classes()).toContain('text-error')
@@ -109,6 +112,59 @@ describe('TradeAmountCard', () => {
       vi.advanceTimersByTime(1000)
       await nextTick()
       expect(balanceRow(belowMinimum).classes()).toContain('text-info')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('turns the balance red together with the message, not before the quote finishes', async () => {
+    vi.useFakeTimers()
+    try {
+      const card = mountCard({ balanceError: true, fiatLoading: true })
+      await card.setProps({ amount: '7.5', error: 'Not enough balance' })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+
+      const balanceRow = () =>
+        card.findAll('p').find(row => row.text().startsWith('Balance'))!
+      expect(card.find('svg.animate-spin').exists()).toBe(true)
+      expect(card.text()).not.toContain('Not enough balance')
+      expect(balanceRow().classes()).toContain('text-info')
+
+      await card.setProps({ fiatLoading: false })
+      expect(card.text()).toContain('Not enough balance')
+      expect(balanceRow().classes()).toContain('text-error')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps the spinner up until the error settles, instead of flashing the fiat value', async () => {
+    vi.useFakeTimers()
+    try {
+      const card = mountCard({ fiatLoading: true })
+      await card.setProps({ amount: '0.5', error: 'Enter +1 USDC' })
+      vi.advanceTimersByTime(500)
+      await card.setProps({ fiatLoading: false })
+
+      expect(card.find('svg.animate-spin').exists()).toBe(true)
+      expect(card.text()).not.toContain('$')
+
+      vi.advanceTimersByTime(500)
+      await nextTick()
+      expect(card.find('svg.animate-spin').exists()).toBe(false)
+      expect(card.text()).toContain('Enter +1 USDC')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('does not hold the spinner when the amount is cleared', async () => {
+    vi.useFakeTimers()
+    try {
+      const card = mountCard({ amount: '5' })
+      await card.setProps({ amount: '' })
+      expect(card.find('svg.animate-spin').exists()).toBe(false)
     } finally {
       vi.useRealTimers()
     }

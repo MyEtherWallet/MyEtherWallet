@@ -109,7 +109,7 @@
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isLoading || fiatLoading" class="text-black" />
+        <app-spinner v-if="isBusy" class="text-black" />
         <p
           v-else
           :id="`trade-amount-message-${side}`"
@@ -125,7 +125,7 @@
         <p
           v-if="showBalance"
           :class="[
-            showError && side === 'sell' && errorIsBalance
+            isErrorVisible && side === 'sell' && errorIsBalance
               ? 'text-error'
               : 'text-info',
             'text-s-12 leading-[18px] whitespace-nowrap',
@@ -222,14 +222,20 @@ const isLoading = computed(() => {
 const hasError = ref(false)
 const errorMessage = ref('')
 const errorIsBalance = ref(false)
+const isErrorPending = ref(false)
 const showError = computed(
   () => hasError.value && !isOpenSelectToken.value && !props.isPristine,
 )
+const isBusy = computed(
+  () => isLoading.value || props.fiatLoading || isErrorPending.value,
+)
+const isErrorVisible = computed(() => showError.value && !isBusy.value)
 
 const applyError = () => {
   hasError.value = error.value !== ''
   errorMessage.value = error.value
   errorIsBalance.value = props.balanceError
+  isErrorPending.value = false
 }
 
 const debouncedValidate = useDebounceFn(applyError, 1000, { maxWait: 5000 })
@@ -238,6 +244,7 @@ watch(
   () => [amount.value, error.value],
   () => {
     hasError.value = false
+    isErrorPending.value = amount.value !== '' && amount.value !== '0'
     debouncedValidate()
   },
 )
@@ -270,7 +277,7 @@ const balanceText = computed(() => {
 })
 
 const amountColorClass = computed(() =>
-  showError.value && !inFocusInput.value ? 'text-error' : 'text-black',
+  isErrorVisible.value && !inFocusInput.value ? 'text-error' : 'text-black',
 )
 
 const cardEl = ref<HTMLElement | null>(null)
