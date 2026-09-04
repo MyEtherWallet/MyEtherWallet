@@ -29,7 +29,11 @@
 
         <!-- Network Not Supported -->
         <app-unavailable-card
-          v-if="!isLoading && !isCurrentNetworkSupported"
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
           class="mb-3"
           :title="$t('trade.network_not_supported')"
           :description="
@@ -65,11 +69,7 @@
 
         <!-- Trading Restricted -->
         <app-unavailable-card
-          v-if="
-            !isLoading &&
-            isTradingRestrictedInRegion &&
-            isCurrentNetworkSupported
-          "
+          v-if="!isLoading && isTradingRestrictedInRegion"
           class="mb-3"
           :title="$t('trade.trading_not_available')"
           :description="$t('trade.trading_restricted')"

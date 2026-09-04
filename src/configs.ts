@@ -13,7 +13,7 @@ const configs = {
   MEW_PURCHASE_API: `${mewWalletUrl}/v5/purchase/info`,
   MEW_EXCHANGE_RATES_API: `${mewWalletUrl}/v2/prices/exchange-rates`,
   MEW_EMAIL: `${mewWalletUrl}/email-web`,
-  IS_DEV_MODE: import.meta.env.DEV,
+  IS_DEV_MODE: false,
   MEW_DONATION_ADDRESS: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   POPULAR_CHAINS: [
     'ETHEREUM',
@@ -37,7 +37,8 @@ const configs = {
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
-  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off'
+  TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
+  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
 }
 
 export default configs

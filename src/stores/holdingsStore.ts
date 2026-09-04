@@ -27,6 +27,13 @@ const POLL_INTERVAL = 30_000
 // The web wallet always claims from the `web` platform (no device-integrity gating).
 const PLATFORM = 'web'
 
+/**
+ * Placeholder for the qualification threshold shown before `/info` resolves. The
+ * server's `qualification_value` is authoritative the moment it arrives; this only
+ * keeps the offer copy from rendering a bare '$'. Keep it in step with the campaign.
+ */
+const DEFAULT_QUALIFICATION_USD = '250'
+
 // base64-encode a UTF-8 string (see src/utils/crypto.ts for the codebase convention).
 const toBase64 = (value: string) =>
   btoa(String.fromCharCode(...new TextEncoder().encode(value)))
@@ -420,9 +427,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-      qualified.value.length +
-      claimed.value.length +
-      disqualified.value.length >
+        qualified.value.length +
+        claimed.value.length +
+        disqualified.value.length >
       0,
   )
 
@@ -532,6 +539,31 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     () => info.value?.info?.qualification_value ?? null,
   )
 
+  /**
+   * Campaign qualification threshold in USD, parsed for comparisons. Null until `/info`
+   * lands or when the value is unusable — callers must not promise a reward on null.
+   */
+  const qualificationUsd = computed<number | null>(() => {
+    const parsed = new BigNumber(qualificationValue.value ?? '')
+    return parsed.isNaN() || parsed.lte(0) ? null : parsed.toNumber()
+  })
+
+  /**
+   * Display-ready threshold for offer copy, e.g. '250' — the `amount` in `${amount}`.
+   * BigNumber normalises the server's string, so '250.00' renders as '250'.
+   *
+   * `/info` is campaign-wide and fetched on app load, but the offer surfaces render on
+   * status (which has a pre-load default), so the copy can paint one frame before the
+   * value arrives. It falls back to the campaign's advertised amount rather than an
+   * empty '$' — the only place this number is still written by hand.
+   */
+  const qualificationAmount = computed<string>(() => {
+    const usd = qualificationUsd.value
+    return usd === null
+      ? DEFAULT_QUALIFICATION_USD
+      : new BigNumber(usd).toString()
+  })
+
   return {
     info,
     isLoading,
@@ -563,5 +595,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isHoldOfferDismissed,
     seasonEnd,
     qualificationValue,
+    qualificationUsd,
+    qualificationAmount,
   }
 })

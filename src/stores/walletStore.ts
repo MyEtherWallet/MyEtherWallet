@@ -78,7 +78,30 @@ export const useWalletStore = defineStore('walletStore', () => {
   /** -------------------------------
   * The Wallet
   -------------------------------*/
+  // setWallet calls still in flight. Bumped synchronously — before the first
+  // await — because the connect flows close the access dialog right after
+  // calling setWallet, and TheAppLayout's disconnect→Home redirect needs to tell
+  // "dialog closed after connecting" (a wallet lands shortly, don't redirect)
+  // from "dialog closed without connecting". A counter, not a boolean, so an
+  // overlapping restore (setWatchOnlyIfExist also lands here) can't clear the
+  // signal while a connection is still pending.
+  const connectInFlight = ref(0)
+  const isConnectingWallet = computed(() => connectInFlight.value > 0)
+
   const setWallet = async (
+    newWallet: WalletInterface,
+    _walletName: string = '',
+    _walletType: WalletConfigType,
+  ): Promise<void> => {
+    connectInFlight.value++
+    try {
+      await _setWallet(newWallet, _walletName, _walletType)
+    } finally {
+      connectInFlight.value--
+    }
+  }
+
+  const _setWallet = async (
     newWallet: WalletInterface,
     _walletName: string = '',
     _walletType: WalletConfigType,
@@ -154,7 +177,11 @@ export const useWalletStore = defineStore('walletStore', () => {
       // Don't null the wallet first: setWallet replaces it once ready. Nulling
       // here briefly flips isWalletConnected to false, which unmounts the header
       // address menu (v-if) and tears the popup down mid-switch.
-      setWallet(newWallet, entry.walletName, entry.walletType as WalletConfigType)
+      setWallet(
+        newWallet,
+        entry.walletName,
+        entry.walletType as WalletConfigType,
+      )
     } else {
       wallet.value = null
       walletAddress.value = null
@@ -588,7 +615,9 @@ export const useWalletStore = defineStore('walletStore', () => {
    * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
   const formattedTotalFiatPortfolioValue = computed<string>(() => {
-    const { symbol, converted } = toDisplayCurrency(totalFiatPortfolioValueBN.value)
+    const { symbol, converted } = toDisplayCurrency(
+      totalFiatPortfolioValueBN.value,
+    )
     return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
@@ -596,7 +625,9 @@ export const useWalletStore = defineStore('walletStore', () => {
    * @formattedStockFiatPortfolioValue - the total stock portfolio value in fiat, formatted .
    */
   const formattedStockFiatPortfolioValue = computed<string>(() => {
-    const { symbol, converted } = toDisplayCurrency(totalStockBalanceFiatBN.value)
+    const { symbol, converted } = toDisplayCurrency(
+      totalStockBalanceFiatBN.value,
+    )
     return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
@@ -648,6 +679,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     userAddress,
     walletName,
     setWatchOnlyIfExist,
+    isConnectingWallet,
     setWallet,
     disconnectWallet,
     setTokens,

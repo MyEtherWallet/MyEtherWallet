@@ -20,9 +20,10 @@
 
         <div class="relative z-10 flex flex-col items-start gap-2">
           <!-- A season that has already ended has nothing left to count down
-               to; the countdown would sit at "0 seconds". -->
+               to; the countdown would sit at "0 seconds". An empty countdown
+               means `/info` returned no season end, so there is no date to show. -->
           <p
-            v-if="!isCampaignEnded"
+            v-if="!isCampaignEnded && expiresText"
             class="text-s-12 leading-[18px] text-[#575757]"
           >
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -48,7 +49,11 @@
                   :class="{ 'pb-5': hasStep1Cta }"
                 >
                   <p :class="stepText" class="h-6 mb-[14px]">
-                    {{ $t('rwaRewards.modal_step1') }}
+                    {{
+                      $t('rwaRewards.modal_step1', {
+                        amount: qualificationAmount,
+                      })
+                    }}
                     <span :class="boldText"
                       >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
                     >
@@ -166,7 +171,7 @@
                       {{ disabledCtaLabel }}
                     </div>
                     <div
-                      v-if="!isCampaignEnded"
+                      v-if="!isCampaignEnded && expiresText"
                       :class="expiresPill"
                       class="flex items-center justify-center"
                     >
@@ -407,6 +412,7 @@ const {
   isUnderReview,
   isRegionBlocked,
   canRegisterTrade,
+  qualificationAmount,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
@@ -416,7 +422,9 @@ const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,
 )
-const hasRewardExpiry = computed(() => !!activeReward.value?.expiration_timestamp)
+const hasRewardExpiry = computed(
+  () => !!activeReward.value?.expiration_timestamp,
+)
 const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
@@ -528,13 +536,17 @@ const campaignEndText = computed(() => {
 })
 
 const offerRules = computed(() => [
-  t('rwaRewards.offer_rule_1'),
+  t('rwaRewards.offer_rule_1', { amount: qualificationAmount.value }),
   t('rwaRewards.offer_rule_2'),
   t('rwaRewards.offer_rule_3'),
   t('rwaRewards.offer_rule_4'),
   t('rwaRewards.offer_rule_5'),
   t('rwaRewards.offer_rule_6'),
-  t('rwaRewards.offer_rule_7', { date: campaignEndText.value }),
+  // `/info` can come back without a season end, which would leave this rule
+  // reading "Campaign ends" with nothing after it — drop it instead.
+  ...(campaignEndText.value
+    ? [t('rwaRewards.offer_rule_7', { date: campaignEndText.value })]
+    : []),
 ])
 
 const HOLD_TOTAL = 14

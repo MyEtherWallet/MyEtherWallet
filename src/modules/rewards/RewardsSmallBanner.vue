@@ -20,7 +20,11 @@
               {{ t('rewards.small_banner_trade_highlight') }}</span
             >
             <br />
-            {{ t('rewards.small_banner_trade_sub') }}
+            {{
+              t('rewards.small_banner_trade_sub', {
+                amount: qualificationAmount,
+              })
+            }}
           </div>
         </div>
       </div>
@@ -50,7 +54,7 @@ const rewardsStore = useRewardsStore()
 const { isBanned } = storeToRefs(rewardsStore)
 
 const holdingsStore = useHoldingsStore()
-const { canRegisterTrade } = storeToRefs(holdingsStore)
+const { canRegisterTrade, qualificationAmount } = storeToRefs(holdingsStore)
 
 const isSwapLocation = computed(() => props.location === 'small-banner-swap')
 
