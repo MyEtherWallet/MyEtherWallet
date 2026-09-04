@@ -6,6 +6,7 @@ import { PlusIcon, CheckIcon, BellIcon } from '@heroicons/vue/24/solid'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
+import { AVATAR_SIZES } from '@/components/avatar/types'
 import type {
   AvatarSize,
   AvatarStatus,
@@ -41,6 +42,18 @@ const TYPES: AvatarType[] = [
   'perpsAsset',
   'wallet',
 ]
+const TYPE_LABELS: Record<AvatarType, string> = {
+  wallet: 'Wallet',
+  stocks: 'Stocks',
+  network: 'Network',
+  perpsAsset: 'Perps Asset',
+  cryptoAsset: 'Crypto Asset',
+  icon: 'Icon',
+  account: 'Account',
+  initial: 'Initial',
+}
+const sizeLabel = (s: AvatarSize) =>
+  `${s.toUpperCase()} (${AVATAR_SIZES[s].box})`
 const STATUSES: AvatarStatus[] = ['error', 'warning', 'success', 'muted']
 const PAYMENTS: PaymentMethod[] = [
   'applePay',
@@ -64,24 +77,27 @@ const SAMPLE = {
 
     <!-- 40 Type × Size combinations -->
     <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Type × Size</h2>
       <div class="overflow-x-auto">
-        <table class="border-separate border-spacing-4">
+        <table class="border-separate border-spacing-x-12 border-spacing-y-10">
           <thead>
             <tr>
-              <th class="text-s-12 text-info text-left">type \ size</th>
+              <th></th>
               <th
                 v-for="s in SIZES"
                 :key="s"
-                class="text-s-12 text-info uppercase"
+                class="text-s-16 font-bold text-black text-center whitespace-nowrap"
               >
-                {{ s }}
+                {{ sizeLabel(s) }}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="t in TYPES" :key="t">
-              <td class="text-s-12 text-info pr-4">{{ t }}</td>
+              <td
+                class="text-s-16 font-bold text-black text-left whitespace-nowrap pr-8"
+              >
+                {{ TYPE_LABELS[t] }}
+              </td>
               <td v-for="s in SIZES" :key="s" class="text-center">
                 <AppAvatar
                   :type="t"
@@ -185,14 +201,7 @@ const SAMPLE = {
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Payment cards</h2>
       <div class="flex gap-4 items-center">
-        <div
-          v-for="m in PAYMENTS"
-          :key="m"
-          class="flex flex-col items-center gap-2"
-        >
-          <AppAvatarCard :method="m" />
-          <span class="text-s-12 text-info">{{ m }}</span>
-        </div>
+        <AppAvatarCard v-for="m in PAYMENTS" :key="m" :method="m" />
       </div>
     </section>
   </div>
