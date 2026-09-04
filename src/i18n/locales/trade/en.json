@@ -134,7 +134,8 @@
     "select_asset": {
       "title": "Select asset",
       "subtitle": "Some might be temporarily unavailable",
-      "available_in": "Assets available in {marketStatus}"
+      "available_in": "Assets available in {marketStatus}",
+      "unavailable": "Unavailable assets"
     },
     "pause_reason": {
       "cash_dividend": {

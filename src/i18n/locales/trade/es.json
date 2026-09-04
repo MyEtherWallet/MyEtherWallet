@@ -134,7 +134,8 @@
     "select_asset": {
       "title": "Seleccionar activo",
       "subtitle": "Algunos pueden no estar disponibles temporalmente",
-      "available_in": "Activos disponibles en {marketStatus}"
+      "available_in": "Activos disponibles en {marketStatus}",
+      "unavailable": "Activos no disponibles"
     },
     "pause_reason": {
       "cash_dividend": {

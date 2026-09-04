@@ -16,7 +16,7 @@
   >
     <template #title>
       <div
-        class="flex flex-col gap-1 items-center justify-center w-full min-h-[80px] p-6"
+        class="flex flex-col gap-1 items-center justify-center w-full min-h-[80px] px-6 pt-6 pb-4"
       >
         <h1
           id="dialogTitle"
@@ -26,7 +26,7 @@
         </h1>
         <p
           v-if="side === 'buy'"
-          class="text-s-16 leading-[22px] text-info text-center"
+          class="text-s-16 leading-[22px] text-[#575757] text-center"
         >
           {{ $t('trade.select_asset.subtitle') }}
         </p>
@@ -68,95 +68,105 @@
           ref="listContainer"
           class="flex flex-1 flex-col gap-[2px] overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
         >
-          <component
-            :is="isAssetPaused(asset) ? 'div' : 'button'"
-            v-for="asset in searchResults"
-            :key="asset.address"
-            :type="isAssetPaused(asset) ? undefined : 'button'"
-            :class="[
-              isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
-              'flex items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
-            ]"
-            @click="!isAssetPaused(asset) && selectAsset(asset)"
-          >
-            <div
+          <template v-for="asset in searchResults" :key="asset.address">
+            <p
+              v-if="asset === firstUnavailableAsset"
+              class="flex items-center px-3 py-2 mt-[22px] text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+            >
+              {{ $t('trade.select_asset.unavailable') }}
+            </p>
+            <component
+              :is="isAssetPaused(asset) ? 'div' : 'button'"
+              :type="isAssetPaused(asset) ? undefined : 'button'"
               :class="[
-                isAssetPaused(asset) ? 'opacity-40' : '',
-                'relative flex-none',
+                isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
+                isSessionUnavailable(asset) ? 'opacity-30' : '',
+                'flex items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
               ]"
+              @click="!isAssetPaused(asset) && selectAsset(asset)"
             >
-              <app-token-logo
-                :url="asset.logoURI"
-                :symbol="asset.symbol"
-                :address="tokenAddress(asset)"
-                :is-stock="side === 'buy'"
-                width="w-10"
-                height="h-10"
-                no-shadow
-                no-ring
-              />
-              <span
-                v-if="isSelected(asset)"
-                class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
-              >
-                <check-circle-icon class="w-6 h-6 flex-none text-black" />
-              </span>
-            </div>
-
-            <div
-              :class="[
-                isAssetPaused(asset) ? 'opacity-40' : '',
-                'flex flex-col items-start flex-1 min-w-0',
-              ]"
-            >
-              <app-token-symbol
-                :symbol="asset.symbol"
-                :address="tokenAddress(asset)"
-                :is-stock="side === 'buy'"
-                class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
-              />
-              <p class="text-s-14 leading-[20px] text-info truncate max-w-full">
-                {{ asset.name }}
-              </p>
-            </div>
-
-            <app-tooltip
-              v-if="pauseReasonOf(asset)"
-              :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
-              theme="dark"
-              position="right"
-              class="flex-none"
-            >
-              <span
-                class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
-              >
-                <span
-                  class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-orange-600"
-                >
-                  {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
-                </span>
-                <information-circle-icon
-                  class="w-[18px] h-[18px] text-orange-600"
-                />
-              </span>
-            </app-tooltip>
-
-            <div v-else class="flex flex-col items-end flex-none">
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-              >
-                {{ asset.fiatValueFormatted }}
-              </p>
-              <p
+              <div
                 :class="[
-                  side === 'buy' ? changeColor(asset) : 'text-info',
-                  'text-s-14 leading-[20px] whitespace-nowrap',
+                  isDimmed(asset) ? 'opacity-40' : '',
+                  'relative flex-none',
                 ]"
               >
-                {{ asset.secondaryLine }}
-              </p>
-            </div>
-          </component>
+                <app-token-logo
+                  :url="asset.logoURI"
+                  :symbol="asset.symbol"
+                  :address="tokenAddress(asset)"
+                  :is-stock="side === 'buy'"
+                  width="w-10"
+                  height="h-10"
+                  no-shadow
+                  no-ring
+                />
+                <span
+                  v-if="isSelected(asset)"
+                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
+                >
+                  <check-circle-icon class="w-6 h-6 flex-none text-black" />
+                </span>
+              </div>
+
+              <div
+                :class="[
+                  isDimmed(asset) ? 'opacity-40' : '',
+                  'flex flex-col items-start flex-1 min-w-0',
+                ]"
+              >
+                <app-token-symbol
+                  :symbol="asset.symbol"
+                  :address="tokenAddress(asset)"
+                  :is-stock="side === 'buy'"
+                  :has-gradient="false"
+                  class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
+                />
+                <p
+                  class="text-s-14 leading-[20px] text-[#575757] truncate max-w-full"
+                >
+                  {{ asset.name }}
+                </p>
+              </div>
+
+              <app-tooltip
+                v-if="pauseReasonOf(asset)"
+                :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
+                theme="dark"
+                position="right"
+                class="flex-none"
+              >
+                <span
+                  class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
+                >
+                  <span
+                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-orange-600"
+                  >
+                    {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
+                  </span>
+                  <information-circle-icon
+                    class="w-[18px] h-[18px] text-orange-600"
+                  />
+                </span>
+              </app-tooltip>
+
+              <div v-else class="flex flex-col items-end flex-none">
+                <p
+                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+                >
+                  {{ asset.fiatValueFormatted }}
+                </p>
+                <p
+                  :class="[
+                    side === 'buy' ? changeColor(asset) : 'text-[#575757]',
+                    'text-s-14 leading-[20px] whitespace-nowrap',
+                  ]"
+                >
+                  {{ asset.secondaryLine }}
+                </p>
+              </div>
+            </component>
+          </template>
 
           <p
             v-if="!searchResults.length"
@@ -315,11 +325,6 @@ const assets = computed<DisplayAsset[]>(() => {
     .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
 })
 
-const searchResults = computed<DisplayAsset[]>(() => {
-  if (!searchInput.value) return assets.value
-  return fuzzySearchByKeys(assets.value, ['name', 'symbol'], searchInput.value)
-})
-
 const disabledAddresses = computed(
   () => new Set(props.disabledTokens.map(address => address.toLowerCase())),
 )
@@ -329,9 +334,31 @@ const pauseReasonOf = (asset: DisplayAsset) =>
     ? asset.pauseReason
     : null
 
+const isSessionUnavailable = (asset: DisplayAsset) =>
+  props.side === 'buy' &&
+  disabledAddresses.value.has(asset.address?.toLowerCase())
+
 const isAssetPaused = (asset: DisplayAsset) =>
   !!pauseReasonOf(asset) ||
   disabledAddresses.value.has(asset.address?.toLowerCase())
+
+const isDimmed = (asset: DisplayAsset) =>
+  isAssetPaused(asset) && !isSessionUnavailable(asset)
+
+const searchResults = computed<DisplayAsset[]>(() => {
+  const matches = searchInput.value
+    ? fuzzySearchByKeys(assets.value, ['name', 'symbol'], searchInput.value)
+    : assets.value
+  if (props.side !== 'buy') return matches
+  return [
+    ...matches.filter(asset => !isSessionUnavailable(asset)),
+    ...matches.filter(isSessionUnavailable),
+  ]
+})
+
+const firstUnavailableAsset = computed(() =>
+  searchResults.value.find(isSessionUnavailable),
+)
 
 const changeColor = (asset: DisplayAsset) =>
   (asset.priceChangePercentage24h ?? 0) < 0 ? 'text-error' : 'text-success-600'

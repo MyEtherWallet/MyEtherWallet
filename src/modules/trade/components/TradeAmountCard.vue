@@ -97,11 +97,17 @@
                 height="h-6"
                 no-shadow
               />
-              <span
-                class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px]"
-              >
-                {{ token.symbol }}
-              </span>
+              <app-token-symbol
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+                :is-stock="side === 'buy'"
+                :has-gradient="false"
+                class="!text-s-14 !font-semibold leading-[20px] tracking-[-0.28px]"
+              />
               <chevron-right-icon class="w-5 h-5" />
             </button>
           </template>
@@ -164,6 +170,7 @@ import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
 import AppSpinner from '@/components/AppSpinner.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'

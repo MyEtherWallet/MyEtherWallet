@@ -134,7 +134,8 @@
     "select_asset": {
       "title": "选择资产",
       "subtitle": "部分资产可能暂时不可用",
-      "available_in": "{marketStatus} 可用资产"
+      "available_in": "{marketStatus} 可用资产",
+      "unavailable": "不可用资产"
     },
     "pause_reason": {
       "cash_dividend": {
