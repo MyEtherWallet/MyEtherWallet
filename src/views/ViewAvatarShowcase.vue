@@ -85,7 +85,7 @@ const SAMPLE = {
               <th
                 v-for="s in SIZES"
                 :key="s"
-                class="text-s-16 font-bold text-black text-center whitespace-nowrap"
+                class="text-s-16 font-semibold text-black text-center whitespace-nowrap"
               >
                 {{ sizeLabel(s) }}
               </th>
@@ -94,7 +94,7 @@ const SAMPLE = {
           <tbody>
             <tr v-for="t in TYPES" :key="t">
               <td
-                class="text-s-16 font-bold text-black text-left whitespace-nowrap pr-8"
+                class="text-s-16 font-semibold text-black text-left whitespace-nowrap pr-8"
               >
                 {{ TYPE_LABELS[t] }}
               </td>
