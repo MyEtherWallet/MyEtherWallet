@@ -255,7 +255,13 @@ const searchResults = computed<Chain[]>(() => {
     const currentChainType =
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
     chainsToSearch = currentChainType
-      ? _chains.filter(chain => chain.type === currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type === currentChainType ||
+            // Keep the "All networks" option regardless of the current chain
+            // type so has-all callers never lose it (its type is EVM).
+            (prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : _chains
   } else {
     chainsToSearch = _chains
@@ -263,14 +269,21 @@ const searchResults = computed<Chain[]>(() => {
 
   if (!searchInput.value || searchInput.value === '') {
     const sortedChains = sortChains(chainsToSearch)
-    if (!prop.selectedChain) {
-      return sortedChains
+    const ordered = prop.selectedChain
+      ? // Put selected chain first, then sorted chains (removing duplicate)
+        [
+          prop.selectedChain,
+          ...sortedChains.filter(c => c.name !== prop.selectedChain?.name),
+        ]
+      : sortedChains
+    // Pin the "All networks" option to the top when the caller opts in
+    // (has-all), so it stays first regardless of the current selection/sort.
+    if (prop.hasAll) {
+      const allName = ALL_CHAINS.value.name
+      const all = ordered.find(c => c.name === allName)
+      if (all) return [all, ...ordered.filter(c => c.name !== allName)]
     }
-    // Put selected chain first, then sorted chains (removing duplicate)
-    const filtered = sortedChains.filter(
-      c => c.name !== prop.selectedChain?.name,
-    )
-    return [prop.selectedChain, ...filtered]
+    return ordered
   }
   const beginsWith = chainsToSearch.filter(chain => {
     return chain.nameLong
@@ -299,7 +312,13 @@ const notSupportedChains = computed<Chain[]>(() => {
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
 
     const _otherChains = currentChainType
-      ? _chains.filter(chain => chain.type !== currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type !== currentChainType &&
+            // "All networks" stays in the compatible list (see searchResults),
+            // so never surface it under the incompatible section.
+            !(prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : []
 
     if (!searchInput.value || searchInput.value === '') {

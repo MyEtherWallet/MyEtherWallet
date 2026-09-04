@@ -1,10 +1,12 @@
 {
   "stocks": {
-    "all_stocks": "全部股票",
+    "all_stocks": "探索股票",
     "category_menu": "分类菜单",
+    "all_categories": "所有类别",
     "name": "名称",
     "price": "价格",
     "twenty_four_h": "24 小时",
+    "twenty_four_h_change": "24 小时涨跌",
     "twenty_four_h_volume": "24 小时交易量",
     "market_cap": "市值",
     "actions": "操作",
