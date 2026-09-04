@@ -5,7 +5,7 @@ import type { AvatarSize, WalletId } from '../types'
 import ledger from '@/assets/icons/wallets/ledger.svg'
 import rainbow from '@/assets/icons/wallets/rainbow.svg'
 import walletconnect from '@/assets/icons/wallets/walletconnect.svg'
-import metamaskstarknetsnap from '@/assets/icons/wallets/metamaskstarknetsnap.svg'
+import metamask from '@/assets/icons/wallets/metamask.svg'
 import rabby from '@/assets/icons/wallets/rabby.svg'
 import phantom from '@/assets/icons/wallets/phantom.svg'
 import coinbase from '@/assets/icons/wallets/coinbase.svg'
@@ -19,7 +19,7 @@ const WALLET_MARKS: Record<WalletId, string> = {
   ledger,
   rainbow,
   walletconnect,
-  metamaskstarknetsnap,
+  metamask,
   rabby,
   phantom,
   coinbase,

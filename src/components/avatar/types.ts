@@ -47,7 +47,7 @@ export type WalletId =
   | 'ledger'
   | 'rainbow'
   | 'walletconnect'
-  | 'metamaskstarknetsnap'
+  | 'metamask'
   | 'rabby'
   | 'phantom'
   | 'coinbase'

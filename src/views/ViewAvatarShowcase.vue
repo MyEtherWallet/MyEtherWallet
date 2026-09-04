@@ -13,6 +13,19 @@ import type {
   PaymentMethod,
   WalletId,
 } from '@/components/avatar/types'
+// Dev-only sample logos so the runtime-resolved types render a real example in
+// the gallery. In production these logos come from the APIs, not the repo.
+import sampleNetwork from '@/assets/icons/avatar_samples/network.svg'
+import sampleCrypto from '@/assets/icons/avatar_samples/crypto.svg'
+import sampleStocks from '@/assets/icons/avatar_samples/stocks.svg'
+import samplePerps from '@/assets/icons/avatar_samples/perps.svg'
+
+const SAMPLE_URLS: Partial<Record<AvatarType, string>> = {
+  network: sampleNetwork,
+  cryptoAsset: sampleCrypto,
+  stocks: sampleStocks,
+  perpsAsset: samplePerps,
+}
 
 const SIZES: AvatarSize[] = ['xs', 's', 'm', 'l', 'xl']
 const TYPES: AvatarType[] = [
@@ -38,7 +51,7 @@ const WALLETS: WalletId[] = [
   'ledger',
   'rainbow',
   'walletconnect',
-  'metamaskstarknetsnap',
+  'metamask',
   'rabby',
   'phantom',
   'coinbase',
@@ -89,6 +102,7 @@ const SAMPLE = {
                   :chain="SAMPLE.chain"
                   :initial="SAMPLE.initial"
                   :wallet-id="SAMPLE.walletId"
+                  :url="SAMPLE_URLS[t]"
                 >
                   <template v-if="t === 'icon'" #icon><PlusIcon /></template>
                 </AppAvatar>
