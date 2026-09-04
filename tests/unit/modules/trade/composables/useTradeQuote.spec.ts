@@ -86,6 +86,7 @@ const makeHarness = async (
     isLoadingQuote,
     fromAmount,
     isPairUnavailable,
+    generalError,
   }
 }
 
@@ -179,6 +180,36 @@ describe('useTradeQuote analytics', () => {
     await fetchQuote()
 
     expect(isPairUnavailable.value).toBe(true)
+  })
+
+  it('shows the low-amount copy instead of blaming the pair on INSUFFICIENT_AMOUNT', async () => {
+    const lowAmountError = Object.assign(
+      new Error('trade.error.insufficient-amount'),
+      { expectedClientError: true, fusionCode: 'INSUFFICIENT_AMOUNT' },
+    )
+    mockGetQuote.mockRejectedValue(lowAmountError)
+    const { fetchQuote, isPairUnavailable, generalError } =
+      await makeHarness(false)
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(false)
+    expect(generalError.value).toBe('trade.error.insufficient-amount')
+  })
+
+  it('does not blame the pair on MARKET_CLOSED even with a fresh market status', async () => {
+    const closedError = Object.assign(new Error('trade.error.market-closed'), {
+      expectedClientError: true,
+      fusionCode: 'MARKET_CLOSED',
+    })
+    mockGetQuote.mockRejectedValue(closedError)
+    const { fetchQuote, isPairUnavailable } = await makeHarness(false, {
+      marketStatusStale: false,
+    })
+
+    await fetchQuote()
+
+    expect(isPairUnavailable.value).toBe(false)
   })
 
   it('leaves the pair flag down on a server or network failure', async () => {

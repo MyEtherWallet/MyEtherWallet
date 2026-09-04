@@ -13,6 +13,7 @@ import {
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
   isExpectedClientError,
+  isPairUnavailableError,
   isTransientNetworkError,
 } from '@/modules/trade/common/expectedTradeError'
 import { reportModuleError } from '@/utils/reportModuleError'
@@ -230,8 +231,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       // thing. Left unclaimed it falls through to the transient error below,
       // and the next status refresh renders the paused state instead.
       isPairUnavailable.value =
-        !!(e as { expectedClientError?: boolean }).expectedClientError &&
-        !hasStaleMarketStatus()
+        isPairUnavailableError(e) && !hasStaleMarketStatus()
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(

@@ -41,6 +41,14 @@ export function isExpectedClientError(e: unknown): boolean {
   return !!(e as { expectedClientError?: boolean }).expectedClientError
 }
 
+const NON_PAIR_FUSION_CODES = new Set(['INSUFFICIENT_AMOUNT', 'MARKET_CLOSED'])
+
+export function isPairUnavailableError(e: unknown): boolean {
+  if (!isExpectedClientError(e)) return false
+  const code = (e as { fusionCode?: string }).fusionCode
+  return !code || !NON_PAIR_FUSION_CODES.has(code)
+}
+
 /**
  * Reads the `transientNetworkError` flag the 1inch provider attaches when the
  * request never completed (axios "Network Error"). Guarded for the same reason

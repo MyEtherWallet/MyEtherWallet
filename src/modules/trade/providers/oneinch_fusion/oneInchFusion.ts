@@ -206,6 +206,9 @@ class OneInchFusion {
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
+      const fusionCode = (
+        (e as AxiosError).response?.data as ErrorBody | undefined
+      )?.code
       const response = fusionErrorMessage(e)
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
@@ -222,9 +225,11 @@ class OneInchFusion {
       ) as Error & {
         expectedClientError?: boolean
         transientNetworkError?: boolean
+        fusionCode?: string
       }
       error.expectedClientError =
         typeof status === 'number' && status >= 400 && status < 500
+      error.fusionCode = fusionCode
       // A transient axios "Network Error" (the 1inch request never completed —
       // no response received) is environmental noise, already surfaced to the
       // user; flag it so the caller skips Sentry reporting.
