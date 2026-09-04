@@ -34,20 +34,27 @@
         "begin": "Empecemos",
         "onboarding": {
           "continue": "Continuar",
+          "skip": "Omitir",
+          "stepProgress": "Paso {step} / {total}",
           "markets": {
             "subtitle": "¿Qué activos te interesan?",
+            "description": "Esto ayudará a personalizar tu lista de seguimiento. Omite si ya sabes qué quieres seguir.",
             "hint": "Puedes seleccionar más de una opción"
           },
           "industries": {
-            "subtitle": "¿Qué industrias te interesan?"
+            "subtitle": "¿Qué industrias te gustan?",
+            "description": "Elige las industrias que quieres seguir de cerca para personalizar aún más tu lista de seguimiento."
           },
           "assets": {
-            "title": "Encontramos activos para ti",
-            "subtitle": "Estos son algunos activos que podrías seguir según tus intereses.",
-            "loadingTitle": "Buscando activos",
+            "title": "Elige los activos que quieres seguir",
+            "subtitle": "Estos son algunos activos que podrías seguir",
+            "loadingTitle": "Buscando activos…",
             "loadingSubtitle": "Estamos buscando activos que coincidan con tus intereses",
             "done": "Listo",
-            "selected": "{count} activos seleccionados"
+            "selected": "{count} activos seleccionados",
+            "moreCount": "+{count} más",
+            "noResults": "No se encontraron activos con tu búsqueda, prueba buscar otro activo",
+            "clearSearch": "Limpiar búsqueda"
           },
           "marketLabels": {
             "stocks": "Acciones",
@@ -71,15 +78,21 @@
         },
         "table": {
           "title": "Lista de seguimiento",
-          "subtitle": "Sigue los activos que te interesan",
-          "addNew": "Agregar activo",
+          "moreActions": "Más acciones",
+          "addAsset": "Agregar activo",
+          "allCategories": "Todas las categorías",
           "trade": "Operar",
+          "swap": "Intercambiar",
           "remove": "Quitar de la lista",
+          "removeShort": "Quitar",
+          "dragLabel": "Arrastra para reordenar",
+          "showMore": "Ver {count} más",
           "columns": {
-            "asset": "Nombre del activo",
-            "marketValue": "Valor de mercado",
-            "price": "Precio",
-            "trend": "Tendencia"
+            "token": "Token",
+            "marketCap": "Cap. de mercado",
+            "volume": "Volumen",
+            "change24h": "Cambio 24h",
+            "price": "Precio"
           }
         },
         "addModal": {

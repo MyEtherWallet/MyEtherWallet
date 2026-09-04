@@ -2,9 +2,22 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
-// AppTokenLogo imports the stocks store (Ledger SDK transitively). Stub it.
+// AppTokenLogo / AppTokenSymbol import the stocks store (Ledger SDK
+// transitively). Stub them.
 vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span data-test="token-logo" />' },
+}))
+vi.mock('@/components/AppTokenSymbol.vue', () => ({
+  default: { props: ['symbol', 'isStock'], template: '<span>{{ symbol }}</span>' },
+}))
+
+// AppTooltip relies on the v-element-hover directive + teleport; stub it and
+// expose its text so the "+N more" tooltip can be asserted.
+vi.mock('@/components/AppTooltip.vue', () => ({
+  default: {
+    props: ['text', 'position'],
+    template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
+  },
 }))
 
 import WatchlistStepMarkets from '@/modules/home/components/WatchlistStepMarkets.vue'
@@ -23,10 +36,13 @@ const i18n = createI18n({
 const mountWith = (component: unknown, props: Record<string, unknown> = {}) =>
   mount(component as never, { props, global: { plugins: [i18n] } })
 
+// Assets search is debounced (10ms under test); wait past it for results.
+const settleSearch = () => new Promise(resolve => setTimeout(resolve, 30))
+
 describe('WatchlistStepMarkets (MEW-2130)', () => {
   it('renders one card per market and disables Continue with no selection', () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
-    expect(w.findAll('[data-test="market-card"]').length).toBe(3)
+    expect(w.findAll('[data-test="market-card"]').length).toBe(2)
     expect(
       w.get('[data-test="markets-continue"]').attributes('disabled'),
     ).toBeDefined()
@@ -41,21 +57,73 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
     await enabled.get('[data-test="markets-continue"]').trigger('click')
     expect(enabled.emitted('continue')).toHaveLength(1)
   })
+
+  it('emits skip from the Skip button regardless of selection', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
+    await w.get('[data-test="markets-skip"]').trigger('click')
+    expect(w.emitted('skip')).toHaveLength(1)
+  })
 })
 
 describe('WatchlistStepIndustries (MEW-2130)', () => {
-  it('renders every industry pill and gates Continue on selection', () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
-    expect(w.findAll('[data-test="industry-pill"]').length).toBe(12)
+  it('scopes the curated collections to the step-1 markets', () => {
+    // crypto → 6 crypto sectors, stocks → 10, both → 16 (from sectors.ts).
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['crypto'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(6)
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['stocks'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(10)
+    expect(
+      mountWith(WatchlistStepIndustries, {
+        modelValue: [],
+        markets: ['crypto', 'stocks'],
+      }).findAll('[data-test="industry-pill"]').length,
+    ).toBe(16)
+  })
+
+  it('gates Continue until a collection is picked', () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     expect(
       w.get('[data-test="industries-continue"]').attributes('disabled'),
     ).toBeDefined()
   })
 
-  it('emits selection toggle on pill click', async () => {
-    const w = mountWith(WatchlistStepIndustries, { modelValue: [] })
+  it('emits the sector id on pill click', async () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
     await w.findAll('[data-test="industry-pill"]')[0].trigger('click')
-    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['commodities'])
+    // First crypto sector in sectors.ts is topGainers → id "crypto-topGainers".
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto-topGainers'])
+  })
+
+  it('emits back when the header back button is clicked', async () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
+    await w.get('[data-test="step-back"]').trigger('click')
+    expect(w.emitted('back')).toHaveLength(1)
+  })
+
+  it('emits skip from the Skip button regardless of selection', async () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      markets: ['crypto'],
+    })
+    await w.get('[data-test="industries-skip"]').trigger('click')
+    expect(w.emitted('skip')).toHaveLength(1)
   })
 })
 
@@ -70,17 +138,28 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(w.find('[data-test="asset-card"]').exists()).toBe(false)
   })
 
-  it('renders one card per asset and gates Done on selection', async () => {
+  it('caps the grid at 12 and reveals the rest via Show more', async () => {
     const w = mountWith(WatchlistStepAssets, {
       assets: MOCK_RECOMMENDED_ASSETS,
       isLoading: false,
       modelValue: [],
     })
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(12)
+    await w.get('[data-test="assets-show-more"]').trigger('click')
     expect(w.findAll('[data-test="asset-card"]').length).toBe(
       MOCK_RECOMMENDED_ASSETS.length,
     )
+    expect(w.find('[data-test="assets-show-more"]').exists()).toBe(false)
+  })
+
+  it('gates Done on selection and emits done', async () => {
+    const empty = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
     expect(
-      w.get('[data-test="assets-done"]').attributes('disabled'),
+      empty.get('[data-test="assets-done"]').attributes('disabled'),
     ).toBeDefined()
 
     const withSel = mountWith(WatchlistStepAssets, {
@@ -90,5 +169,88 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     })
     await withSel.get('[data-test="assets-done"]').trigger('click')
     expect(withSel.emitted('done')).toHaveLength(1)
+  })
+
+  it('emits back from the header', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.get('[data-test="step-back"]').trigger('click')
+    expect(w.emitted('back')).toHaveLength(1)
+  })
+
+  it('shows a skeleton grid while the search debounces, then the results', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue(MOCK_RECOMMENDED_ASSETS[0].symbol)
+    // Immediately after typing: skeleton, no result cards yet.
+    expect(w.find('[data-test="assets-skeleton"]').exists()).toBe(true)
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
+
+    await settleSearch()
+    expect(w.find('[data-test="assets-skeleton"]').exists()).toBe(false)
+    expect(w.findAll('[data-test="asset-card"]').length).toBeGreaterThan(0)
+  })
+
+  it('filters the grid by search query', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue(MOCK_RECOMMENDED_ASSETS[0].symbol)
+    await settleSearch()
+    const cards = w.findAll('[data-test="asset-card"]')
+    expect(cards.length).toBeGreaterThan(0)
+    expect(cards.length).toBeLessThan(MOCK_RECOMMENDED_ASSETS.length)
+  })
+
+  it('shows the empty state on no match and clears the search', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    await w.find('input').setValue('zzzz-no-such-asset')
+    await settleSearch()
+    expect(w.find('[data-test="assets-empty"]').exists()).toBe(true)
+    expect(w.findAll('[data-test="asset-card"]').length).toBe(0)
+
+    // Clearing the query settles instantly (no skeleton).
+    await w.get('[data-test="assets-clear-search"]').trigger('click')
+    expect(w.find('[data-test="assets-empty"]').exists()).toBe(false)
+    expect(w.findAll('[data-test="asset-card"]').length).toBeGreaterThan(0)
+  })
+
+  it('caps footer chips at 2 and collapses the rest into a tooltip chip', () => {
+    const selectedIds = MOCK_RECOMMENDED_ASSETS.slice(0, 5).map(a => a.id)
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: selectedIds,
+    })
+    expect(w.findAll('[data-test="selected-chip"]').length).toBe(2)
+    const more = w.find('[data-test="selected-chip-more"]')
+    expect(more.exists()).toBe(true)
+    // Tooltip lists the 3 overflow symbols, comma-separated.
+    const names = MOCK_RECOMMENDED_ASSETS.slice(2, 5)
+      .map(a => a.symbol)
+      .join(', ')
+    expect(w.find('[data-test="tooltip"]').attributes('data-text')).toBe(names)
+  })
+
+  it('shows no overflow chip when 2 or fewer are selected', () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [MOCK_RECOMMENDED_ASSETS[0].id],
+    })
+    expect(w.findAll('[data-test="selected-chip"]').length).toBe(1)
+    expect(w.find('[data-test="selected-chip-more"]').exists()).toBe(false)
   })
 })

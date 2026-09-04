@@ -28,7 +28,8 @@ export interface WatchlistRow {
   priceDisplay: string
   /** 24h change as a signed number (drives colour + sparkline hue). */
   change: number
-  marketValueDisplay: string
+  marketCapDisplay: string
+  volumeDisplay: string
   sparkline: number[]
   route: RouteLocationRaw
   /** Symbol handed to the trade side-panel. */
@@ -36,6 +37,9 @@ export interface WatchlistRow {
   /** How to remove this row from the watchlist. */
   removeType: WatchlistRowType
   removeId: string
+  /** True while the row exists in the store but its market data is still loading
+   * (optimistic row) — the table renders a skeleton for it. */
+  loading?: boolean
 }
 
 /** Currency formatters injected into the pure mappers (keeps them testable). */
@@ -55,7 +59,8 @@ export const mapTokenRow = (
   isStock: false,
   priceDisplay: fmt.fiat(t.price),
   change: t.priceChangePercentage24h ?? 0,
-  marketValueDisplay: fmt.compact(t.marketCap),
+  marketCapDisplay: fmt.compact(t.marketCap),
+  volumeDisplay: fmt.compact(t.totalVolume),
   sparkline: t.sparklineIn7d ?? [],
   route: { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: t.coinId } },
   tradeSymbol: t.symbol,
@@ -74,7 +79,8 @@ export const mapStockRow = (
   isStock: true,
   priceDisplay: fmt.fiat(s.primaryMarket.price),
   change: parseFloat(s.primaryMarket.priceChangePercentage24h) || 0,
-  marketValueDisplay: fmt.compact(s.underlyingMarket.marketCap),
+  marketCapDisplay: fmt.compact(s.underlyingMarket.marketCap),
+  volumeDisplay: fmt.compact(s.underlyingMarket.volume24h),
   sparkline: s.primaryMarket.sparkline24h ?? [],
   route: {
     name: STOCK_INFO_ROUTE_NAMES.home,
@@ -83,6 +89,38 @@ export const mapStockRow = (
   tradeSymbol: s.primaryMarket.symbol,
   removeType: 'stock',
   removeId: s.primaryMarket.symbol,
+})
+
+/**
+ * Optimistic placeholder for a watchlisted id whose market data hasn't loaded
+ * yet. Its `key` matches the eventual loaded row so Vue reuses the DOM node
+ * (the skeleton hydrates in place, no flicker). Only the id-derived fields and
+ * the remove action are known; the rest render as skeletons.
+ */
+export const placeholderRow = (
+  type: WatchlistRowType,
+  id: string,
+): WatchlistRow => ({
+  key: `${type === 'crypto' ? 'token' : type}-${id}`,
+  logoUrl: undefined,
+  symbol: type === 'crypto' ? '' : id,
+  name: '',
+  isStock: type === 'stock',
+  priceDisplay: '',
+  change: 0,
+  marketCapDisplay: '',
+  volumeDisplay: '',
+  sparkline: [],
+  route:
+    type === 'stock'
+      ? { name: STOCK_INFO_ROUTE_NAMES.home, params: { symbol: id } }
+      : type === 'perp'
+        ? { name: PERP_INFO_ROUTE_NAME, params: { market: id } }
+        : { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: id } },
+  tradeSymbol: id,
+  removeType: type,
+  removeId: id,
+  loading: true,
 })
 
 export const mapPerpRow = (
@@ -96,8 +134,9 @@ export const mapPerpRow = (
   isStock: false,
   priceDisplay: fmt.fiat(c.lastPrice),
   change: parseFloat(c.priceChangePercent ?? '0') || 0,
-  // Perps have no market cap — show USD volume in that column.
-  marketValueDisplay: fmt.compact(c.usdVolume),
+  // Perps have no market cap; volume is the USD volume.
+  marketCapDisplay: '',
+  volumeDisplay: fmt.compact(c.usdVolume),
   sparkline: (c.sparkline?.price ?? []).map(Number),
   route: { name: PERP_INFO_ROUTE_NAME, params: { market: c.market } },
   tradeSymbol: c.market,
@@ -116,7 +155,7 @@ export function useWatchlistRows(): {
   refresh: () => void
 } {
   const watchlistStore = useWatchlistStore()
-  const { watchListedTokens, watchListedStocks, watchListedPerps } =
+  const { watchListedTokens, watchListedStocks, watchListedPerps, watchlistOrder } =
     storeToRefs(watchlistStore)
   const { formatFiat, formatFiatCompact } = useCurrency()
 
@@ -140,21 +179,43 @@ export function useWatchlistRows(): {
   const { contracts: perpsContracts } = usePerpsContracts()
 
   const rows = computed<WatchlistRow[]>(() => {
-    // Filter fetched data by current store membership so removing a row (star)
-    // drops it immediately even before the cached fetch data refreshes.
-    const watchedTokens = new Set(watchListedTokens.value)
-    const watchedStocks = new Set(watchListedStocks.value)
-    const watchedPerps = new Set(watchListedPerps.value)
-    const tokenRows = (tokensWatchlistData.value ?? [])
-      .filter(t => watchedTokens.has(t.coinId))
-      .map(t => mapTokenRow(t, fmt))
-    const stockRows = (stocksWatchlistData.value ?? [])
-      .filter(s => watchedStocks.has(s.primaryMarket.symbol))
-      .map(s => mapStockRow(s, fmt))
-    const perpRows = perpsContracts.value
-      .filter(c => !c.disabled && watchedPerps.has(c.baseCurrency))
-      .map(c => mapPerpRow(c, fmt))
-    return [...stockRows, ...tokenRows, ...perpRows]
+    // Store membership (localStorage) is the source of truth: emit one row per
+    // watchlisted id right away so a just-added item shows instantly, using the
+    // fetched market data when it's there and a loading placeholder until then.
+    // Removing a row (star) drops it immediately since it leaves the store list.
+    const tokenById = new Map(
+      (tokensWatchlistData.value ?? []).map(t => [t.coinId, t]),
+    )
+    const stockBySymbol = new Map(
+      (stocksWatchlistData.value ?? []).map(s => [s.primaryMarket.symbol, s]),
+    )
+    const perpByBase = new Map(
+      perpsContracts.value.filter(c => !c.disabled).map(c => [c.baseCurrency, c]),
+    )
+
+    const stockRows = watchListedStocks.value.map(sym => {
+      const s = stockBySymbol.get(sym)
+      return s ? mapStockRow(s, fmt) : placeholderRow('stock', sym)
+    })
+    const tokenRows = watchListedTokens.value.map(id => {
+      const t = tokenById.get(id)
+      return t ? mapTokenRow(t, fmt) : placeholderRow('crypto', id)
+    })
+    const perpRows = watchListedPerps.value.map(base => {
+      const c = perpByBase.get(base)
+      return c ? mapPerpRow(c, fmt) : placeholderRow('perp', base)
+    })
+
+    // Apply the manual drag order (row keys); ids not yet ordered (just added)
+    // sort to the top so they're visible above the "Show more" fold. Array sort
+    // is stable, so unordered items keep their bucket order (stocks, tokens,
+    // perps) and the default (empty order) matches the pre-drag layout.
+    const orderIndex = new Map(watchlistOrder.value.map((k, i) => [k, i]))
+    const rank = (r: WatchlistRow) =>
+      orderIndex.has(r.key) ? (orderIndex.get(r.key) as number) : -1
+    return [...stockRows, ...tokenRows, ...perpRows].sort(
+      (a, b) => rank(a) - rank(b),
+    )
   })
 
   const refresh = () => fetchAllWatchlist()

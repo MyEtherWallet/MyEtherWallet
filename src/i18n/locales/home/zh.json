@@ -34,20 +34,27 @@
         "begin": "开始",
         "onboarding": {
           "continue": "继续",
+          "skip": "跳过",
+          "stepProgress": "步骤 {step} / {total}",
           "markets": {
             "subtitle": "您对哪些资产感兴趣？",
+            "description": "这将帮助个性化您的关注列表。如果您已经知道想关注什么，可以跳过。",
             "hint": "您可以选择多个选项"
           },
           "industries": {
-            "subtitle": "您对哪些行业感兴趣？"
+            "subtitle": "您喜欢哪些行业？",
+            "description": "选择您想关注的行业，以进一步个性化您的关注列表。"
           },
           "assets": {
-            "title": "为您找到的资产",
-            "subtitle": "以下是根据您的兴趣推荐关注的资产。",
-            "loadingTitle": "正在查找资产",
+            "title": "选择要关注的资产",
+            "subtitle": "以下是一些您可能想关注的资产",
+            "loadingTitle": "正在查找资产…",
             "loadingSubtitle": "我们正在寻找符合您兴趣的资产",
             "done": "完成",
-            "selected": "已选择 {count} 项资产"
+            "selected": "已选择 {count} 项资产",
+            "moreCount": "+{count} 更多",
+            "noResults": "未找到符合搜索的资产，请尝试搜索其他资产",
+            "clearSearch": "清除搜索"
           },
           "marketLabels": {
             "stocks": "股票",
@@ -71,15 +78,21 @@
         },
         "table": {
           "title": "关注列表",
-          "subtitle": "关注您感兴趣的资产",
-          "addNew": "添加资产",
+          "moreActions": "更多操作",
+          "addAsset": "添加资产",
+          "allCategories": "所有类别",
           "trade": "交易",
+          "swap": "兑换",
           "remove": "从关注列表移除",
+          "removeShort": "移除",
+          "dragLabel": "拖动以重新排序",
+          "showMore": "显示另外 {count} 个",
           "columns": {
-            "asset": "资产名称",
-            "marketValue": "市值",
-            "price": "价格",
-            "trend": "趋势"
+            "token": "代币",
+            "marketCap": "市值",
+            "volume": "成交量",
+            "change24h": "24小时涨跌",
+            "price": "价格"
           }
         },
         "addModal": {
