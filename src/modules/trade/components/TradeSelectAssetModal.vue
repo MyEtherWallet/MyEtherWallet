@@ -42,7 +42,7 @@
       </app-btn-icon>
     </template>
     <template #content>
-      <div class="relative flex h-full flex-col">
+      <div class="flex h-full flex-col">
         <div
           :class="[
             sectionHeader ? 'pb-[2px]' : 'pb-6',
@@ -65,7 +65,6 @@
         </div>
 
         <div
-          ref="listContainer"
           class="flex flex-1 flex-col gap-[2px] overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
         >
           <template v-for="asset in searchResults" :key="asset.address">
@@ -179,12 +178,6 @@
             }}
           </p>
         </div>
-        <div
-          :class="[
-            hasMoreBelow ? 'opacity-100' : 'opacity-0',
-            'absolute bottom-0 left-0 h-[118px] w-full bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity',
-          ]"
-        />
       </div>
     </template>
   </app-dialog>
@@ -192,7 +185,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useScroll } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
@@ -259,11 +251,6 @@ const { currentSession } = storeToRefs(useMarketStatusStore())
 
 const isOpen = ref(false)
 const searchInput = ref('')
-const listContainer = ref<HTMLElement | null>(null)
-const { arrivedState } = useScroll(listContainer, { offset: { bottom: 4 } })
-
-const hasMoreBelow = computed(() => !arrivedState.bottom)
-
 const openSelectAsset = () => {
   isOpen.value = true
 }
