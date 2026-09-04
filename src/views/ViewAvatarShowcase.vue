@@ -17,7 +17,7 @@ import type {
 // the gallery. In production these logos come from the APIs, not the repo.
 import sampleNetwork from '@/assets/icons/avatar_samples/network.svg'
 import sampleCrypto from '@/assets/icons/avatar_samples/crypto.svg'
-import sampleStocks from '@/assets/icons/avatar_samples/stocks.svg'
+import sampleStocks from '@/assets/icons/avatar_samples/stocks.png'
 import samplePerps from '@/assets/icons/avatar_samples/perps.svg'
 
 const SAMPLE_URLS: Partial<Record<AvatarType, string>> = {
