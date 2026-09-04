@@ -5,10 +5,12 @@
 import { PlusIcon, CheckIcon, BellIcon } from '@heroicons/vue/24/solid'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
 import type {
   AvatarSize,
   AvatarStatus,
   AvatarType,
+  PaymentMethod,
 } from '@/components/avatar/types'
 
 const SIZES: AvatarSize[] = ['xs', 's', 'm', 'l', 'xl']
@@ -23,6 +25,14 @@ const TYPES: AvatarType[] = [
   'wallet',
 ]
 const STATUSES: AvatarStatus[] = ['error', 'warning', 'success', 'muted']
+const PAYMENTS: PaymentMethod[] = [
+  'applePay',
+  'gPay',
+  'masterCard',
+  'paypal',
+  'pix',
+  'visa',
+]
 
 const SAMPLE = {
   address: '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8',
@@ -150,6 +160,21 @@ const SAMPLE = {
           <AppAvatar type="icon" size="xl">
             <template #icon><BellIcon /></template>
           </AppAvatar>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment cards (Avatar-Cards, node 520:3673) -->
+    <section class="flex flex-col gap-4">
+      <h2 class="text-s-16 font-semibold">Payment cards</h2>
+      <div class="flex gap-4 items-center">
+        <div
+          v-for="m in PAYMENTS"
+          :key="m"
+          class="flex flex-col items-center gap-2"
+        >
+          <AppAvatarCard :method="m" />
+          <span class="text-s-12 text-info">{{ m }}</span>
         </div>
       </div>
     </section>

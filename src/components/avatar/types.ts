@@ -30,6 +30,18 @@ export type AvatarStatus = 'error' | 'warning' | 'success' | 'muted'
  */
 export type AvatarBadgePosition = 'top' | 'bottom' | 'topLeft' | 'bottomLeft'
 
+/**
+ * Payment-method marks for AppAvatarCard (Avatar-Cards, node 520:3673). A
+ * rectangular card, separate from the circular Avatar system.
+ */
+export type PaymentMethod =
+  | 'applePay'
+  | 'gPay'
+  | 'masterCard'
+  | 'paypal'
+  | 'pix'
+  | 'visa'
+
 /** Wallet brand marks. SVG assets are a follow-up — everything resolves to `any` today. */
 export type WalletId =
   | 'ledger'

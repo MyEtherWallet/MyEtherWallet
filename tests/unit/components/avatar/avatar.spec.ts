@@ -17,6 +17,7 @@ vi.mock('@/utils/blockies', () => ({
 
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
 import AvatarStatusDot from '@/components/avatar/AvatarStatusDot.vue'
 import AvatarInitial from '@/components/avatar/types/AvatarInitial.vue'
 import AvatarIcon from '@/components/avatar/types/AvatarIcon.vue'
@@ -100,6 +101,22 @@ describe('AppAvatarBadge', () => {
       props: { type: 'status', size: 'm', status: 'success' },
     })
     expect(wrapper.findComponent(AvatarStatusDot).exists()).toBe(true)
+  })
+})
+
+describe('AppAvatarCard', () => {
+  it.each([
+    ['applePay', 'Apple Pay'],
+    ['gPay', 'Google Pay'],
+    ['masterCard', 'Mastercard'],
+    ['paypal', 'PayPal'],
+    ['pix', 'Pix'],
+    ['visa', 'Visa'],
+  ] as const)('%s renders its labelled mark', (method, label) => {
+    const wrapper = mount(AppAvatarCard, { props: { method } })
+    const img = wrapper.find('img')
+    expect(img.exists()).toBe(true)
+    expect(img.attributes('alt')).toBe(label)
   })
 })
 
