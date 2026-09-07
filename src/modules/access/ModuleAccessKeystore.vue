@@ -62,8 +62,9 @@
             />
             <app-input
               v-model="password"
+              surface="alternative"
               data-private
-              :placeholder="$t('access_wallet_keystore.enter_password')"
+              :label="$t('access_wallet_keystore.enter_password')"
               type="password"
               :error-message="errorPassword"
               is-required
