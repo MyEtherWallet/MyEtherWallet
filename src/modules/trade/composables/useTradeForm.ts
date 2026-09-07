@@ -7,6 +7,7 @@ export function useTradeForm(initialChain?: Chain) {
   const selectedFromChain = ref<Chain | undefined>(initialChain)
   const fromTokenSelected = ref<NewTokenInfo | null>(null)
   const fromTokenManuallySelected = ref(false)
+  const toTokenManuallySelected = ref(false)
   const toTokenSelected = ref<NewTokenInfo | null>(null)
   const fromAmount = ref('')
   const toAmount = ref('')
@@ -26,6 +27,7 @@ export function useTradeForm(initialChain?: Chain) {
     selectedFromChain,
     fromTokenSelected,
     fromTokenManuallySelected,
+    toTokenManuallySelected,
     toTokenSelected,
     fromAmount,
     toAmount,

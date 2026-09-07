@@ -1,4 +1,5 @@
 import { onBeforeMount, computed, ref, watch, nextTick } from 'vue'
+import { pickFirstAvailableToken } from '@/modules/trade/common/tradeSession'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 // Stores
@@ -91,6 +92,7 @@ export function useTradeModule() {
     resetPristine,
     markDirty,
     isPairUnavailable,
+    toTokenManuallySelected,
   } = form
 
   // --- Market Status ---
@@ -363,6 +365,12 @@ export function useTradeModule() {
   })
 
   // --- Methods ---
+  const getDefaultToToken = () =>
+    pickFirstAvailableToken(toTokens.value, disabledTokenAddresses.value)
+
+  const isToTokenAvailable = (token: NewTokenInfo) =>
+    !disabledTokenAddresses.value.includes(token.address.toLowerCase())
+
   const restoreToToken = () => {
     if (!toTokens.value.length) return
     const storedToSymbol = tradeToSymbol.value
@@ -372,28 +380,29 @@ export function useTradeModule() {
           t.symbol.toUpperCase() ===
           selectedTradeTokenSymbol.value!.toUpperCase(),
       )
-      toTokenSelected.value = matchingToken ?? toTokens.value[0] ?? null
+      toTokenSelected.value = matchingToken ?? getDefaultToToken()
     } else if (storedToSymbol) {
       const restoredTo =
         toTokens.value.find(
           (t: NewTokenInfo) =>
             t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
         ) ?? null
-      if (restoredTo) {
+      if (restoredTo && isToTokenAvailable(restoredTo)) {
         toTokenSelected.value = restoredTo
       } else {
-        const defaultTo = toTokens.value[0] ?? null
+        const defaultTo = getDefaultToToken()
         toTokenSelected.value = defaultTo
         setTradeToSymbol(defaultTo?.symbol ?? null)
       }
     } else {
-      toTokenSelected.value = toTokens.value[0] ?? null
+      toTokenSelected.value = getDefaultToToken()
     }
   }
 
   const clearValues = () => {
     resetPristine()
     fromTokenManuallySelected.value = false
+    toTokenManuallySelected.value = false
     fromAmount.value = ''
     toAmount.value = ''
     toAmountError.value = ''
@@ -406,13 +415,14 @@ export function useTradeModule() {
       fromTokenSelected.value = getDefaultFromToken()
     }
     if (toTokens.value.length > 0) {
-      toTokenSelected.value = toTokens.value[0] || null
+      toTokenSelected.value = getDefaultToToken()
     }
   }
 
   const setFromChain = (chain: Chain) => {
     selectedFromChain.value = chain
     fromTokenManuallySelected.value = false
+    toTokenManuallySelected.value = false
     // Update the global network - swapStore has a watcher that will reinitialize
     globalStore.setSelectedNetwork(chain.name)
     // Clear current selections - they'll be repopulated when swapLoaded becomes true
@@ -591,6 +601,18 @@ export function useTradeModule() {
     setTradeToSymbol(token?.symbol ?? null)
   })
 
+  watch(disabledTokenAddresses, () => {
+    const current = toTokenSelected.value
+    if (
+      !current ||
+      toTokenManuallySelected.value ||
+      selectedTradeTokenSymbol.value
+    )
+      return
+    if (!isToTokenAvailable(current))
+      toTokenSelected.value = getDefaultToToken()
+  })
+
   // --- Lifecycle ---
   onBeforeMount(async () => {
     // Let a pending chain change settle before initializing, exactly as
@@ -668,6 +690,7 @@ export function useTradeModule() {
     notifyTokensSwitched(token, toTokenSelected.value)
   }
   const onToTokenSelected = (token: NewTokenInfo) => {
+    toTokenManuallySelected.value = true
     notifyTokensSwitched(fromTokenSelected.value, token)
   }
 

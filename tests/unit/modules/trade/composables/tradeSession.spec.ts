@@ -3,6 +3,7 @@ import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
   getActivePauseReason,
+  pickFirstAvailableToken,
 } from '@/modules/trade/common/tradeSession'
 import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
@@ -276,5 +277,31 @@ describe('getActivePauseReason', () => {
   it('returns null for null or undefined assets', () => {
     expect(getActivePauseReason(null, INSIDE)).toBeNull()
     expect(getActivePauseReason(undefined, INSIDE)).toBeNull()
+  })
+})
+
+describe('pickFirstAvailableToken', () => {
+  const tokens = [
+    { symbol: 'AALON', address: '0xA' },
+    { symbol: 'AAONON', address: '0xB' },
+    { symbol: 'AAPLON', address: '0xC' },
+  ]
+
+  it('skips tokens disabled for the session and returns the first enabled one', () => {
+    expect(pickFirstAvailableToken(tokens, ['0xa', '0xb'])).toEqual(tokens[2])
+  })
+
+  it('returns the first token when nothing is disabled', () => {
+    expect(pickFirstAvailableToken(tokens, [])).toEqual(tokens[0])
+  })
+
+  it('falls back to the first token when every token is disabled', () => {
+    expect(pickFirstAvailableToken(tokens, ['0xa', '0xb', '0xc'])).toEqual(
+      tokens[0],
+    )
+  })
+
+  it('returns null for an empty list', () => {
+    expect(pickFirstAvailableToken([], ['0xa'])).toBeNull()
   })
 })

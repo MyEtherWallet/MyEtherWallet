@@ -106,3 +106,17 @@ export const getSessionDisabledAddresses = (
   }
   return disabled
 }
+
+export const pickFirstAvailableToken = <T extends { address?: string }>(
+  tokens: T[],
+  disabledAddresses: Iterable<string>,
+): T | null => {
+  const disabled = new Set(
+    Array.from(disabledAddresses, address => address.toLowerCase()),
+  )
+  return (
+    tokens.find(token => !disabled.has(token.address?.toLowerCase() ?? '')) ??
+    tokens[0] ??
+    null
+  )
+}
