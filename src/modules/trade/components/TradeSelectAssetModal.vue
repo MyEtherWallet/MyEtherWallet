@@ -70,7 +70,7 @@
           <template v-for="asset in searchResults" :key="asset.address">
             <p
               v-if="asset === firstUnavailableAsset"
-              class="flex items-center px-3 py-2 mt-[22px] text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+              class="sticky top-0 z-10 flex items-center px-3 py-2 mt-[22px] bg-white text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
             >
               {{ $t('trade.select_asset.unavailable') }}
             </p>

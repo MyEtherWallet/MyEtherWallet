@@ -83,6 +83,11 @@ describe('TradeSelectAssetModal (buy)', () => {
     expect(subtitleAt).toBeGreaterThan(dialogText.indexOf('abton'))
     expect(subtitleAt).toBeLessThan(dialogText.indexOf('aaplon'))
     expect(dialogText.match(/Unavailable assets/g)).toHaveLength(1)
+
+    const subtitle = [
+      ...document.querySelectorAll('#app [role="dialog"] p'),
+    ].find(p => p.textContent?.trim() === 'Unavailable assets')!
+    expect(subtitle.classList.contains('sticky')).toBe(true)
   })
 
   it('keeps every row at its fixed height even when the list overflows', async () => {
