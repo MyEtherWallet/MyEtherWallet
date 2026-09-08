@@ -27,6 +27,13 @@ const POLL_INTERVAL = 30_000
 // The web wallet always claims from the `web` platform (no device-integrity gating).
 const PLATFORM = 'web'
 
+/**
+ * Placeholder for the qualification threshold shown before `/info` resolves. The
+ * server's `qualification_value` is authoritative the moment it arrives; this only
+ * keeps the offer copy from rendering a bare '$'. Keep it in step with the campaign.
+ */
+const DEFAULT_QUALIFICATION_USD = '250'
+
 // base64-encode a UTF-8 string (see src/utils/crypto.ts for the codebase convention).
 const toBase64 = (value: string) =>
   btoa(String.fromCharCode(...new TextEncoder().encode(value)))
@@ -45,6 +52,24 @@ const mapAccessBlock = (status: number): RwaAccessBlock | null => {
       return 'temporarilyPaused'
     default:
       return null
+  }
+}
+
+/**
+ * Whether a 403 refused the whole region rather than this wallet. `/info` and
+ * `/register` answer a bare `Forbidden` when the region is blocked; a verdict on
+ * the wallet itself (a ban) names itself in `msg`. Only a bare `Forbidden` may be
+ * explained to the user as a jurisdiction problem.
+ */
+const isForbiddenByRegion = async (res: Response): Promise<boolean> => {
+  if (res.status !== 403) return false
+  try {
+    const { msg } = (await res.json()) as { msg?: string }
+    return typeof msg === 'string' && msg.trim().toLowerCase() === 'forbidden'
+  } catch {
+    // No body, or not JSON: nothing more specific than the status, and a
+    // jurisdiction claim we can't back up is worse than a vague one.
+    return false
   }
 }
 
@@ -105,6 +130,11 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   // Null means open (or only a transient failure, which is not the same thing).
   const accessBlock = ref<RwaAccessBlock | null>(null)
 
+  // True when the refusal above was a bare `Forbidden` — the region is blocked,
+  // not this wallet. The status stays `notEligible` either way; only the copy
+  // shown to the user differs.
+  const isRegionBlocked = ref(false)
+
   const fetchInfo = async (address: string) => {
     if (!address) return
     currentAddress = address
@@ -113,8 +143,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       const res = await fetch(`${BASE}/info?address=${address}`)
       if (!res.ok) {
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block && address === currentAddress) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           // Drop this wallet's buckets — keeping them would leave the offer
           // looking live and joinable after the season closed to it. The season
           // block survives: it describes the campaign, not the wallet, and is
@@ -137,6 +169,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         info: { ...info.value?.info, ...data.info },
       }
       accessBlock.value = null
+      isRegionBlocked.value = false
       error.value = null
     } catch {
       if (address === currentAddress)
@@ -168,8 +201,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         // With no address in the request, a refusal is season- or region-wide
         // rather than a verdict on any one wallet.
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block && !currentAddress) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           info.value = null
         }
         throw new Error(`RWA campaign info request failed: ${res.status}`)
@@ -180,6 +215,7 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       // is no wallet to scope them to.
       info.value = { ...emptyBuckets(), ...data }
       accessBlock.value = null
+      isRegionBlocked.value = false
       error.value = null
     } catch {
       if (!currentAddress) error.value = 'Failed to fetch RWA rewards'
@@ -235,8 +271,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         // 423 (kill-switch) and 404 (registration window closed) mean the season
         // stopped taking entries between our last `/info` and this trade.
         const block = mapAccessBlock(res.status)
+        const regionBlocked = await isForbiddenByRegion(res)
         if (block) {
           accessBlock.value = block
+          isRegionBlocked.value = regionBlocked
           fetchInfo(currentAddress)
           addToastMessage({
             text: i18n.global.t('rwaRewards.register_unavailable'),
@@ -389,9 +427,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-      qualified.value.length +
-      claimed.value.length +
-      disqualified.value.length >
+        qualified.value.length +
+        claimed.value.length +
+        disqualified.value.length >
       0,
   )
 
@@ -501,6 +539,31 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     () => info.value?.info?.qualification_value ?? null,
   )
 
+  /**
+   * Campaign qualification threshold in USD, parsed for comparisons. Null until `/info`
+   * lands or when the value is unusable — callers must not promise a reward on null.
+   */
+  const qualificationUsd = computed<number | null>(() => {
+    const parsed = new BigNumber(qualificationValue.value ?? '')
+    return parsed.isNaN() || parsed.lte(0) ? null : parsed.toNumber()
+  })
+
+  /**
+   * Display-ready threshold for offer copy, e.g. '250' — the `amount` in `${amount}`.
+   * BigNumber normalises the server's string, so '250.00' renders as '250'.
+   *
+   * `/info` is campaign-wide and fetched on app load, but the offer surfaces render on
+   * status (which has a pre-load default), so the copy can paint one frame before the
+   * value arrives. It falls back to the campaign's advertised amount rather than an
+   * empty '$' — the only place this number is still written by hand.
+   */
+  const qualificationAmount = computed<string>(() => {
+    const usd = qualificationUsd.value
+    return usd === null
+      ? DEFAULT_QUALIFICATION_USD
+      : new BigNumber(usd).toString()
+  })
+
   return {
     info,
     isLoading,
@@ -527,9 +590,12 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isCampaignFull,
     isCampaignEnded,
     isUnderReview,
+    isRegionBlocked,
     canRegisterTrade,
     isHoldOfferDismissed,
     seasonEnd,
     qualificationValue,
+    qualificationUsd,
+    qualificationAmount,
   }
 })

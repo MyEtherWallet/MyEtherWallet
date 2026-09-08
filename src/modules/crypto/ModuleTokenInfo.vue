@@ -79,7 +79,7 @@ import type { DisplayToken } from '../portfolio/components/balances/TableTokenBa
 import { useInputStore } from '@/stores/inputStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import type { Chain, TokenSupportedChain } from '@/mew_api/types'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'

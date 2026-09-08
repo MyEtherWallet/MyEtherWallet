@@ -93,15 +93,19 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { pageRouteName } from '@/router/routeHierarchy'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)
+const accessStore = useAccessStore()
+const { isOpenAccessDialog } = storeToRefs(accessStore)
 const { t } = useI18n()
 
 const analyticsStore = useAnalyticsStore()
@@ -127,16 +131,48 @@ const router = useRouter()
 // When the wallet is disconnected/removed, return the user to the public Home.
 // (Connecting does NOT auto-navigate — the user opens their portfolio manually
 // via the header logo or the hero CTA.)
+// Deferred while the connect dialog is open: switching there to a chain type
+// with no saved address (ETH → BTC to connect a first BTC wallet) nulls the
+// active wallet, and redirecting at that moment would unmount the /access route
+// view and tear the dialog down mid-flow. The disconnect is remembered instead
+// and applied when the dialog closes (below).
+let pendingDisconnectRedirect = false
 watch(isWalletConnected, connected => {
-  if (!connected) {
+  if (connected) {
+    pendingDisconnectRedirect = false
+    return
+  }
+  if (isOpenAccessDialog.value) {
+    pendingDisconnectRedirect = true
+  } else {
     router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 })
 
+// Apply a disconnect redirect deferred during the dialog. A connection made
+// through the dialog cancels it: setWallet bumps isConnectingWallet before the
+// flows close the dialog, so "in flight" is visible here even though the wallet
+// itself lands asynchronously. flush 'post' so this runs after ViewAccessWallet's
+// own close navigation back to the host page — issued second, the Home push wins.
+watch(
+  isOpenAccessDialog,
+  open => {
+    if (open || !pendingDisconnectRedirect) return
+    pendingDisconnectRedirect = false
+    if (isWalletConnected.value || isConnectingWallet.value) return
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
+  },
+  { flush: 'post' },
+)
+
+// pageRouteName, not route.name: the connect/create overlays are children of every
+// page, so a bare route.name stops matching while one is open and the page underneath
+// would visibly reflow behind the modal.
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
+  const page = pageRouteName(route)
+  if (page === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background '
-  } else if (route.name === ROUTES_MAIN.EARN.NAME) {
+  } else if (page === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
   } else {
     return ''
@@ -145,7 +181,7 @@ const backgroundClass = computed(() => {
 
 // The Home page ('/') keeps the layout max-width but drops the shared
 // horizontal padding, so its sections own their padding.
-const isNewHome = computed(() => route.name === ROUTES_MAIN.HOME.NAME)
+const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

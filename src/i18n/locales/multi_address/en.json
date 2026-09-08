@@ -52,6 +52,12 @@
       "save": "Save",
       "duplicate": "Name already in use, please type a different one"
     },
+    "remove": {
+      "title": "Remove {name}?",
+      "subtitle": "This will remove {name} from your saved addresses. You can add it again anytime by reconnecting it.",
+      "confirm": "Remove address",
+      "cancel": "Close"
+    },
     "menu": {
       "rename": "Rename",
       "copy": "Copy address",

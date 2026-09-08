@@ -53,7 +53,7 @@
     "small_banner_swap_highlight": "Earn 5 USDC",
     "small_banner_trade_text": "Trade, hold and get",
     "small_banner_trade_highlight": "10 USDC",
-    "small_banner_trade_sub": "Trade $100 to qualify",
+    "small_banner_trade_sub": "Trade ${amount} to qualify",
     "trade_qualifies": "This trade qualifies for rewards",
     "trade_not_eligible": "This trade isn't eligible for rewards",
     "cashout_not_qualify": "Cash out transactions don't qualify for rewards.",

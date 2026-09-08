@@ -1,7 +1,11 @@
-import { ROUTES_ACCESS } from './routeNames'
-import { type RouterOptions } from 'vue-router'
+import { WALLET_FLOW_ROUTES, walletFlowRouteName } from './routeNames'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
-import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import type {
+  RouteRecordRaw,
+  RouteLocationNormalized,
+  NavigationGuardNext,
+} from 'vue-router'
+
 const ViewAccessWallet = () => import('@/views/ViewAccessWallet.vue')
 
 const beforeRouteEnter = (
@@ -10,28 +14,40 @@ const beforeRouteEnter = (
   next: NavigationGuardNext,
 ) => {
   //NOTE: IF this will be changed, ensure onMounted in ViewAccessWallet is changed accordingly
+  const type = to.query.type
   if (
-    to.query.type &&
-    typeof to.query.type === 'string' &&
-    ACCESS_WALLET_VIEWS.includes(
-      to.query.type as (typeof ACCESS_WALLET_VIEWS)[number],
-    )
+    typeof type === 'string' &&
+    ACCESS_WALLET_VIEWS.includes(type as (typeof ACCESS_WALLET_VIEWS)[number])
   ) {
     next()
-  } else {
-    console.log(
-      'No or invalid wallet type provided, redirecting to default view',
-    )
-    next({ name: ROUTES_ACCESS.ACCESS.NAME, query: { type: 'default' } })
+    return
   }
+  if (typeof to.name !== 'string') {
+    next()
+    return
+  }
+  // Redirect to *this* record: there is one access route per host page, so there is no
+  // fixed 'Access' name to fall back to. `params` MUST be forwarded — a guard redirect
+  // is resolved against the CURRENT (from) location, not `to`, so a nested host's params
+  // (/crypto/token/:tokenId/access) are not inherited and the matcher would throw
+  // `Missing required param "tokenId"`. Other query keys are preserved so the host
+  // page's deep-link state survives the overlay.
+  next({
+    name: to.name,
+    params: to.params,
+    query: { ...to.query, type: 'default' },
+  })
 }
-type RouteOption = RouterOptions['routes'][0]
-export const ACCESS_ROUTES = <RouteOption>{
-  path: ROUTES_ACCESS.ACCESS.PATH,
-  name: ROUTES_ACCESS.ACCESS.NAME,
-  component: ViewAccessWallet,
-  beforeEnter: beforeRouteEnter,
-  meta: {
-    noAuth: true,
-  },
-}
+
+/** Connect-wallet overlay, mounted as a child of `hostRouteName`'s record. */
+export const accessRouteFor = (hostRouteName: string): RouteRecordRaw =>
+  ({
+    path: WALLET_FLOW_ROUTES.access.PATH,
+    name: walletFlowRouteName(hostRouteName, 'access'),
+    component: ViewAccessWallet,
+    beforeEnter: beforeRouteEnter,
+    // Kept explicitly rather than inherited: merged meta takes the deepest record's
+    // value, so this keeps the connect flow reachable if a page route ever becomes
+    // auth-gated — which is precisely when a user needs to connect.
+    meta: { noAuth: true, walletFlow: 'access' },
+  }) as RouteRecordRaw

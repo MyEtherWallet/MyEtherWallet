@@ -1,15 +1,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { effectScope } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 
-// Implementation is swapped per test rather than using mockResolvedValue, whose
-// vitest typings infer `never` for this signature.
-const getStatus = vi.fn(
-  (): Promise<{ success: boolean; result: { marketStatus: string } }> =>
-    Promise.resolve({ success: true, result: { marketStatus: 'open' } }),
-)
+// Hoisted so the mock factory below can reference them.
+const { getStatus, setServiceUnavailable } = vi.hoisted(() => ({
+  // Implementation is swapped per test rather than using mockResolvedValue,
+  // whose vitest typings infer `never` for this signature.
+  getStatus: vi.fn(
+    (): Promise<{ success: boolean; result: { marketStatus: string } }> =>
+      Promise.resolve({ success: true, result: { marketStatus: 'open' } }),
+  ),
+  setServiceUnavailable: vi.fn(),
+}))
 
 // Mocked so the spec never constructs the real client (and never hits the API).
-const setServiceUnavailable = vi.fn()
 vi.mock('@/modules/perps/configs', () => ({
   perpsClient: {
     getStatus: () => getStatus(),
@@ -18,35 +22,28 @@ vi.mock('@/modules/perps/configs', () => ({
   },
 }))
 
+import { PerpsHttpError } from '@/modules/perps/sdk/client'
+import {
+  usePerpsStatus,
+  fetchPerpsStatus,
+} from '@/modules/perps/composables/usePerpsStatus'
+
 const respondsOk = () =>
   getStatus.mockImplementation(() =>
     Promise.resolve({ success: true, result: { marketStatus: 'open' } }),
   )
 
-// Status lives in module scope and is shared across consumers, so every case
-// needs a freshly imported module graph.
-//
-// `PerpsHttpError` has to come from that same graph: the composable narrows with
-// `instanceof`, and a class imported at the top of this file would be a
-// different identity after `resetModules`, so every error would look like a
-// response-less failure. Hence `respondsWith` is handed back per import rather
-// than defined once at module scope.
-const freshImport = async () => {
-  vi.resetModules()
-  const { PerpsHttpError } = await import('@/modules/perps/sdk/client')
-  const mod = await import('@/modules/perps/composables/usePerpsStatus')
-  return {
-    ...mod,
-    /** What the real client does for a non-2xx: throw, carrying the status. */
-    respondsWith: (status: number) =>
-      getStatus.mockImplementation(() =>
-        Promise.reject(new PerpsHttpError(status, `HTTP ${status}`)),
-      ),
-  }
-}
+/** What the real client does for a non-2xx: throw, carrying the status. */
+const respondsWith = (status: number) =>
+  getStatus.mockImplementation(() =>
+    Promise.reject(new PerpsHttpError(status, `HTTP ${status}`)),
+  )
 
 describe('usePerpsStatus', () => {
+  // Status is shared across consumers and owned by `perpsStatusStore`, so a
+  // fresh pinia per case is all the isolation needed.
   beforeEach(() => {
+    setActivePinia(createPinia())
     getStatus.mockReset()
     setServiceUnavailable.mockClear()
     respondsOk()
@@ -54,11 +51,9 @@ describe('usePerpsStatus', () => {
 
   afterEach(() => {
     vi.useRealTimers()
-    vi.resetModules()
   })
 
-  it('reads as available before the first response, so the banner never flashes on load', async () => {
-    const { usePerpsStatus } = await freshImport()
+  it('reads as available before the first response, so the banner never flashes on load', () => {
     // Never settles: this is the pre-resolution window.
     getStatus.mockImplementation(() => new Promise(() => {}))
 
@@ -69,7 +64,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('stays available on 200', async () => {
-    const { usePerpsStatus, fetchPerpsStatus } = await freshImport()
     respondsOk()
     const { statusCode, isServiceUnavailable } = usePerpsStatus()
 
@@ -80,8 +74,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('stays available on 429 — a throttle means the service answered', async () => {
-    const { usePerpsStatus, fetchPerpsStatus, respondsWith } =
-      await freshImport()
     respondsWith(429)
     const { statusCode, isServiceUnavailable } = usePerpsStatus()
 
@@ -92,8 +84,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('reports unavailable on 500', async () => {
-    const { usePerpsStatus, fetchPerpsStatus, respondsWith } =
-      await freshImport()
     respondsWith(500)
     const { statusCode, isServiceUnavailable } = usePerpsStatus()
 
@@ -104,8 +94,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('reports unavailable for any other server error', async () => {
-    const { usePerpsStatus, fetchPerpsStatus, respondsWith } =
-      await freshImport()
     // 502/503 are the same outage class as the documented 500.
     respondsWith(503)
     const { isServiceUnavailable } = usePerpsStatus()
@@ -116,8 +104,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('stays available for a client error that is not a server outage', async () => {
-    const { usePerpsStatus, fetchPerpsStatus, respondsWith } =
-      await freshImport()
     respondsWith(404)
     const { isServiceUnavailable } = usePerpsStatus()
 
@@ -127,7 +113,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('stays available when the request never reaches a response', async () => {
-    const { usePerpsStatus, fetchPerpsStatus } = await freshImport()
     // Offline / DNS / CORS: no HTTP status, so nothing to substantiate an
     // outage notice with — this is the user's connection, not the service.
     getStatus.mockImplementation(() =>
@@ -142,8 +127,6 @@ describe('usePerpsStatus', () => {
   })
 
   it('clears the banner once the service recovers', async () => {
-    const { usePerpsStatus, fetchPerpsStatus, respondsWith } =
-      await freshImport()
     respondsWith(500)
     const { isServiceUnavailable } = usePerpsStatus()
     await fetchPerpsStatus()
@@ -157,7 +140,6 @@ describe('usePerpsStatus', () => {
 
   it('polls while a consumer is alive and stops once the scope is disposed', async () => {
     vi.useFakeTimers()
-    const { usePerpsStatus } = await freshImport()
 
     const scope = effectScope()
     scope.run(() => usePerpsStatus())
@@ -173,7 +155,6 @@ describe('usePerpsStatus', () => {
 
   it('shares one poll timer across concurrent consumers', async () => {
     vi.useFakeTimers()
-    const { usePerpsStatus } = await freshImport()
 
     const first = effectScope()
     const second = effectScope()
@@ -197,7 +178,6 @@ describe('usePerpsStatus', () => {
 
   describe('gating the rest of the perps client', () => {
     it('closes the gate on a 500, so no other endpoint is called', async () => {
-      const { fetchPerpsStatus, respondsWith } = await freshImport()
       respondsWith(500)
 
       await fetchPerpsStatus()
@@ -206,7 +186,6 @@ describe('usePerpsStatus', () => {
     })
 
     it('leaves the gate open on a 200', async () => {
-      const { fetchPerpsStatus } = await freshImport()
       respondsOk()
 
       await fetchPerpsStatus()
@@ -215,7 +194,6 @@ describe('usePerpsStatus', () => {
     })
 
     it('leaves the gate open on a 429 — a throttle is not an outage', async () => {
-      const { fetchPerpsStatus, respondsWith } = await freshImport()
       respondsWith(429)
 
       await fetchPerpsStatus()
@@ -224,7 +202,6 @@ describe('usePerpsStatus', () => {
     })
 
     it('leaves the gate open when the request never reached a response', async () => {
-      const { fetchPerpsStatus } = await freshImport()
       getStatus.mockImplementation(() =>
         Promise.reject(new Error('Failed to fetch')),
       )
@@ -237,7 +214,6 @@ describe('usePerpsStatus', () => {
     })
 
     it('reopens the gate on the poll after a recovery', async () => {
-      const { fetchPerpsStatus, respondsWith } = await freshImport()
       respondsWith(500)
       await fetchPerpsStatus()
       expect(setServiceUnavailable).toHaveBeenLastCalledWith(true)

@@ -40,7 +40,7 @@
         "continue": "继续"
       }
     },
-    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo",
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
     "min": "最低",
     "max": "最高",
     "bank": "银行",

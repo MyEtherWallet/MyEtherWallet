@@ -14,7 +14,6 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
@@ -354,10 +353,14 @@ export const useConnectWallet = () => {
 
   const connect = async (wallet: WalletConfig) => {
     if (wallet.walletViewType) {
-      if (route.name && route.name === ROUTES_ACCESS.ACCESS.NAME) {
+      // Stay on whichever access record is current (there is one per host page), just
+      // swapping the step in the query — pushing a fixed 'Access' name would yank the
+      // user from /stocks/access to /access mid-flow.
+      if (route.name && route.meta.walletFlow === 'access') {
         router.push({
-          name: ROUTES_ACCESS.ACCESS.NAME,
-          query: { type: wallet.walletViewType },
+          name: route.name,
+          params: route.params,
+          query: { ...route.query, type: wallet.walletViewType },
         })
       }
       if (wallet.walletViewType === 'wallet_connect') {

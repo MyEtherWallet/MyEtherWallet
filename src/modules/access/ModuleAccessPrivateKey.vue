@@ -16,7 +16,8 @@
             :aria-label="
               $t('access_wallet_private_key.private_key_input_label')
             "
-            @keyup.enter="unlock"
+            @enter="unlock"
+            :submit-disabled="submitIsDisabled"
             :error-message="errorMessages"
           />
           <div class="flex align-center justify-center">
@@ -119,7 +120,7 @@ const isValidPrivateKey = computed<boolean>(() => {
   }
 })
 
-const unlock = () => {
+const unlock = async () => {
   // TODO: remove hardcoded network id
   let wallet
   try {
@@ -136,7 +137,10 @@ const unlock = () => {
       })
     }
 
-    setWallet(
+    // Await the async setWallet so any getAddress()/restriction failure is
+    // caught here and surfaced as a toast, instead of escaping as an unhandled
+    // promise rejection (MEW-2185).
+    await setWallet(
       wallet as WalletInterface,
       'privateKey',
       walletConfigs.privateKey.type[0],

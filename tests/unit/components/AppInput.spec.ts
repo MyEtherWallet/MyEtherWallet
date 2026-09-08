@@ -173,3 +173,23 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('type')).toBe('text')
   })
 })
+
+describe('AppInput submit-on-Enter gate (MEW-2185)', () => {
+  it('emits `enter` on Enter when submitDisabled is false', async () => {
+    const w = mountInput({ submitDisabled: false })
+    await w.get('input').trigger('keyup', { key: 'Enter' })
+    expect(w.emitted('enter')).toHaveLength(1)
+  })
+
+  it('does not emit `enter` on Enter when submitDisabled is true', async () => {
+    const w = mountInput({ submitDisabled: true })
+    await w.get('input').trigger('keyup', { key: 'Enter' })
+    expect(w.emitted('enter')).toBeUndefined()
+  })
+
+  it('defaults submitDisabled to false (Enter emits)', async () => {
+    const w = mountInput()
+    await w.get('input').trigger('keyup', { key: 'Enter' })
+    expect(w.emitted('enter')).toHaveLength(1)
+  })
+})
