@@ -120,6 +120,15 @@ describe('AppAvatarCard', () => {
   })
 })
 
+describe('AvatarInitial', () => {
+  it('renders the first Unicode code point (astral-safe)', () => {
+    const wrapper = mount(AvatarInitial, {
+      props: { size: 'm', initial: '😀A' },
+    })
+    expect(wrapper.text()).toBe('😀')
+  })
+})
+
 describe('AppAvatar', () => {
   beforeEach(() => setActivePinia(createPinia()))
 

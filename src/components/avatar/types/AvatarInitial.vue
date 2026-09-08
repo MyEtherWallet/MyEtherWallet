@@ -20,7 +20,9 @@ const FONT: Record<AvatarSize, string> = {
 }
 
 const fontClass = computed(() => FONT[props.size])
-const char = computed(() => (props.initial ?? '').charAt(0))
+// Array.from reads the first Unicode code point, so an astral initial (e.g. an
+// emoji) isn't split into a lone surrogate half.
+const char = computed(() => Array.from(props.initial ?? '')[0] ?? '')
 </script>
 
 <template>
