@@ -18,22 +18,30 @@ const props = defineProps<{
 const isLoading = ref(true)
 const image = ref<string | null>(null)
 
+// Guards against a superseded request's callback: when `url` changes fast, an
+// older Image's onload/onerror can still fire and clobber the current result.
+let activeRequest = 0
+
 const resolve = () => {
-  if (!props.url) {
+  const url = props.url
+  const request = ++activeRequest
+  if (!url) {
     isLoading.value = false
     image.value = null
     return
   }
   const img = new Image()
-  img.src = props.url
   img.onload = () => {
+    if (request !== activeRequest) return
     isLoading.value = false
-    image.value = props.url ?? null
+    image.value = url
   }
   img.onerror = () => {
+    if (request !== activeRequest) return
     isLoading.value = false
     image.value = null
   }
+  img.src = url
 }
 
 onMounted(resolve)
