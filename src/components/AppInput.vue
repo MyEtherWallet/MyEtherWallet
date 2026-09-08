@@ -24,7 +24,7 @@
           :for="inputId"
           :class="
             isFloating
-              ? 'block text-xs leading-[18px] tracking-[-0.24px] text-t-subtle truncate'
+              ? 'block text-xs font-semibold leading-[18px] tracking-[-0.24px] text-t-subtle truncate'
               : 'sr-only'
           "
         >

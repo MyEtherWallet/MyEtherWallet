@@ -50,6 +50,8 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     const label = w.get('label')
     expect(label.classes()).not.toContain('sr-only')
     expect(label.classes()).toContain('text-t-subtle')
+    // Figma label/xs is DM Sans 600 (semibold).
+    expect(label.classes()).toContain('font-semibold')
   })
 
   it('Small never renders a visible label row, even when filled', () => {
