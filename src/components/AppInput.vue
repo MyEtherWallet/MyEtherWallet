@@ -53,6 +53,7 @@
 
       <div
         v-if="$slots.trailing || showClear || showReveal"
+        :inert="disabled || undefined"
         :class="[
           'flex items-center gap-1 shrink-0',
           { 'opacity-40 pointer-events-none': disabled },

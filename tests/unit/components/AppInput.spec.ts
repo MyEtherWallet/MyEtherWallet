@@ -106,6 +106,23 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('aria-invalid')).not.toBe('true')
   })
 
+  it('makes the trailing slot inert when disabled, interactive when enabled', () => {
+    const slots = { trailing: '<button aria-label="Paste">P</button>' }
+    const disabled = mount(AppInput, {
+      props: { label: 'Recipient', disabled: true, modelValue: 'v' },
+      slots,
+      global: { plugins: [i18n] },
+    })
+    expect(disabled.find('[inert]').exists()).toBe(true)
+
+    const enabled = mount(AppInput, {
+      props: { label: 'Recipient', modelValue: 'v' },
+      slots,
+      global: { plugins: [i18n] },
+    })
+    expect(enabled.find('[inert]').exists()).toBe(false)
+  })
+
   it('required + blur while empty raises the feedback row', async () => {
     vi.useFakeTimers()
     try {
