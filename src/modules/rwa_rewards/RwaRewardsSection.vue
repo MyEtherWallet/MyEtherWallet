@@ -125,6 +125,7 @@ const {
   isUnderReview,
   isClaiming,
   qualificationAmount,
+  isRoundTwoActive,
 } = storeToRefs(holdingsStore)
 const { isWatchOnly } = storeToRefs(useWalletStore())
 const { openAccessDialog } = useAccessStore()
@@ -197,6 +198,9 @@ const holdCardStatus = computed<
   if (status.value === 'campaignEnded') return 'ended'
   if (status.value === 'banned') return 'banned'
   if (status.value === 'notEligible') return 'notEligible'
+  // A finished round 2 (lost/expired) is terminal — no retry, no round 3 —
+  // and the first reward was already claimed, so that's the badge to keep.
+  if (isRoundTwoActive.value) return 'claimed'
   // A finished entry (lost/expired) keeps its own status, but the offer can
   // still be closed to new trades — surface why, rather than "ends in N days".
   if (!canRegisterTrade.value) return isCampaignEnded.value ? 'ended' : 'full'
@@ -219,6 +223,10 @@ const holdCardCta = computed(() => {
   // through the login it needs, so the offer never reads as unavailable.
   if (holdCardStatus.value === 'claimable')
     return { label: t('rwaRewards.claim'), id: 'claim' }
+  // One reward per customer per round: once claimed, the button says so
+  // rather than falling through to a dead "Trade".
+  if (holdCardStatus.value === 'claimed')
+    return { label: t('rwaRewards.sub_claimed'), id: 'claimed' }
   if (holdCardStatus.value === 'full')
     return { label: t('rwaRewards.continue'), id: 'continue_mew_mobile' }
   return { label: t('rwaRewards.trade'), id: 'trade' }
