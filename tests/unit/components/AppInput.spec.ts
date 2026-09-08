@@ -57,6 +57,25 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('label').classes()).toContain('sr-only')
   })
 
+  it('keeps an explicit placeholder visible while the Large label floats', async () => {
+    const w = mountInput({
+      size: 'large',
+      label: 'Amount',
+      placeholder: '0.00',
+      modelValue: '',
+    })
+    expect(w.get('input').attributes('placeholder')).toBe('0.00')
+    await w.setProps({ modelValue: '5' }) // label floats
+    expect(w.get('input').attributes('placeholder')).toBe('0.00')
+  })
+
+  it('clears the fallback placeholder once the Large label floats', async () => {
+    const w = mountInput({ size: 'large', label: 'Recipient', modelValue: '' })
+    expect(w.get('input').attributes('placeholder')).toBe('Recipient')
+    await w.setProps({ modelValue: 'x' })
+    expect(w.get('input').attributes('placeholder')).toBe('')
+  })
+
   it('maps surface to bg + resting border', () => {
     expect(field(mountInput({ surface: 'default' })).classes()).toContain(
       'bg-bgBase',

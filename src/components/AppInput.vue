@@ -192,8 +192,12 @@ const isFloating = computed(
 )
 const resolvedPlaceholder = computed(() => {
   const fallback = props.placeholder ?? props.label
-  // Hide the (duplicate) placeholder on Large once the label has floated.
-  return spec.value.showLabel && isFloating.value ? '' : fallback
+  // On Large, hide only the *fallback* placeholder (the one that duplicates the
+  // now-floated label). An explicit caller placeholder is real input guidance
+  // and stays visible while the label floats.
+  return spec.value.showLabel && isFloating.value && props.placeholder == null
+    ? ''
+    : fallback
 })
 
 /**------------------------
