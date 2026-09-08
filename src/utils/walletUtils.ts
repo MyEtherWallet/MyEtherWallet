@@ -84,9 +84,15 @@ export const getLocalizedWalletError = (
 /**
  * A transient Trezor Connect failure: the popup/iframe returned `success`
  * with an empty payload, so `@enkryptcom/hw-wallets` runs an unguarded
- * `Buffer.from(undefined)` and throws a cryptic TypeError (or "popup failed
- * to open"). Retrying usually succeeds, so this is safe to surface as a
+ * conversion on the missing field and throws a cryptic TypeError (or "popup
+ * failed to open"). Retrying usually succeeds, so this is safe to surface as a
  * friendly "reconnect" message rather than reporting it as noise.
+ *
+ * Known empty-payload shapes:
+ *  - signMessage:     `Buffer.from(undefined)` → "The first argument must be
+ *    one of type string, Buffer, ..." (MEW-2080).
+ *  - signTransaction: `BigInt(result.payload.v)` where `v` is undefined →
+ *    "Cannot convert undefined to a BigInt" (APP-MEW-WEB-56 / MEW-2198).
  */
 export const isTransientTrezorError = (error: unknown): boolean => {
   const message = (
@@ -94,6 +100,7 @@ export const isTransientTrezorError = (error: unknown): boolean => {
   ).toLowerCase()
   return (
     message.includes('popup failed to open') ||
-    message.includes('the first argument must be one of type string, buffer')
+    message.includes('the first argument must be one of type string, buffer') ||
+    message.includes('cannot convert undefined to a bigint')
   )
 }

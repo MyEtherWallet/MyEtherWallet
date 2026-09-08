@@ -9,6 +9,7 @@ import googlePayLogo from '@/assets/images/buy/icon-google-pay-logo.svg'
 import pixLogo from '@/assets/images/buy/icon-pix-logo.svg'
 import paypalLogo from '@/assets/images/buy/icon-paypal-logo.svg'
 import venmoLogo from '@/assets/images/buy/icon-venmo-logo.svg'
+import cashappLogo from '@/assets/images/buy/icon-cash-app-logo.png'
 import bankLogo from '@/assets/images/buy/icon-bank.svg'
 import i18n from '@/i18n'
 
@@ -17,7 +18,8 @@ const providerLogoMap: Record<string, string> = {
   SIMPLEX: simplexLogo,
   TOPPER: topperLogo,
   COINBASE: coinbaseLogo,
-  VENMO: venmoLogo
+  VENMO: venmoLogo,
+  CASH_APP: cashappLogo
 }
 
 export const getProviderLogo = (provider: string): string | undefined =>
@@ -35,6 +37,7 @@ const GOOGLE_PAY: PaymentMethodIcon = { src: googlePayLogo, alt: 'Google Pay' }
 const PIX: PaymentMethodIcon = { src: pixLogo, alt: 'Pix' }
 const PAYPAL: PaymentMethodIcon = { src: paypalLogo, alt: 'PayPal' }
 const VENMO: PaymentMethodIcon = { src: venmoLogo, alt: 'Venmo' }
+const CASH_APP: PaymentMethodIcon = { src: cashappLogo, alt: 'Cash App' }
 // `alt` is resolved lazily inside `getPaymentMethodIcons` so it tracks the
 // active locale on each render rather than freezing at module load.
 const BANK: PaymentMethodIcon = { src: bankLogo, alt: 'Bank' }
@@ -56,6 +59,7 @@ export const getPaymentMethodIcons = (
   if (has('PIX')) icons.push(PIX)
   if (has('PAYPAL')) icons.push(PAYPAL)
   if (has('VENMO')) icons.push(VENMO)
+  if (has('CASH_APP')) icons.push(CASH_APP)
   if (has('ACH') || has('ACH_BANK_ACCOUNT') || has('SEPA_OPEN_BANKING')) {
     icons.push({ ...BANK, alt: i18n.global.t('purchase.bank') })
   }
@@ -73,5 +77,6 @@ export const PAYMENT_METHOD_BANNER_ICONS: PaymentMethodIcon[] = [
   GOOGLE_PAY,
   PIX,
   PAYPAL,
-  VENMO
+  VENMO,
+  CASH_APP
 ]

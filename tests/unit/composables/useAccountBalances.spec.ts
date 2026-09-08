@@ -120,34 +120,34 @@ describe('useAccountBalances', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
-  it('persists the cache to localStorage (keyed by address only, lower-cased)', async () => {
+  it('persists the cache to localStorage (keyed by chain + address, lower-cased)', async () => {
     fetchMock.mockResolvedValue({ result: [{ balance: '1', decimals: 0, price: 8 }] })
     const { fetchIfStale } = useAccountBalances()
     await fetchIfStale({ chainName: 'ETH', address: '0xAbC' })
     await nextTick()
     const stored = JSON.parse(localStorage.getItem('multiAddressBalances') || '{}')
-    expect(stored['0xabc']).toMatchObject({ usdValue: 8, tokenCount: 1 })
+    expect(stored['eth:0xabc']).toMatchObject({ usdValue: 8, tokenCount: 1 })
   })
 
-  it('caches per address (not per chain): a network switch within the TTL is served from cache', async () => {
-    // Regression: previously the key was `${chain}:${address}`, so every network
-    // change was a cache miss → refetch (rate-limit risk). Now the same address is
-    // fetched at most once per TTL regardless of the selected network.
-    fetchMock.mockResolvedValue({ result: [{ balance: '1', decimals: 0, price: 5 }] })
+  it('caches per (chain, address): the same address on a different chain is a separate entry', async () => {
+    // Each chain keeps its own snapshot, so switching networks fetches that chain's
+    // balance and never returns another chain's value (MEW-2179).
+    fetchMock.mockResolvedValueOnce({ result: [{ balance: '1', decimals: 0, price: 5 }] }) // ETHEREUM → 5
+    fetchMock.mockResolvedValueOnce({ result: [{ balance: '2', decimals: 0, price: 5 }] }) // BSC → 10
     const { fetchIfStale, cached } = useAccountBalances()
     await fetchIfStale({ chainName: 'ETHEREUM', address: '0x1' })
-    expect(fetchMock).toHaveBeenCalledTimes(1)
-    // Same address, different chain, still within TTL → no second request.
-    await fetchIfStale({ chainName: 'BSC', address: '0x1' })
-    expect(fetchMock).toHaveBeenCalledTimes(1)
-    // The cached value is readable regardless of the chain name passed.
-    expect(cached('BSC', '0x1')).toEqual({ usdValue: 5, tokenCount: 1 })
-    // Past the TTL, a network switch does refetch (for the newly-selected chain).
-    vi.setSystemTime(BALANCE_TTL_MS + 1)
+    // Same address, different chain, within the TTL → still fetches (separate key).
     await fetchIfStale({ chainName: 'BSC', address: '0x1' })
     expect(fetchMock).toHaveBeenCalledTimes(2)
-    expect(fetchMock).toHaveBeenLastCalledWith(
-      '/balances/BSC/0x1/?noInjectErrors=false&sparklines=true',
-    )
+    // Each chain shows its own value; no cross-chain bleed.
+    expect(cached('ETHEREUM', '0x1')).toEqual({ usdValue: 5, tokenCount: 1 })
+    expect(cached('BSC', '0x1')).toEqual({ usdValue: 10, tokenCount: 1 })
+    // Re-querying the same (chain, address) within the TTL is served from cache.
+    await fetchIfStale({ chainName: 'ETHEREUM', address: '0x1' })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('uses a 75s TTL (MEW-2179)', () => {
+    expect(BALANCE_TTL_MS).toBe(75_000)
   })
 })

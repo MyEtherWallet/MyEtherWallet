@@ -88,6 +88,35 @@ export const useStocksStore = defineStore('stocksStore', () => {
     )
   }
 
+  // Match a news ticker to a tradable stock. News items only carry `tickers`
+  // (symbols) — no icon URL — so callers (e.g. Market News cards) resolve them
+  // via the tradable-assets list, fetched on app start. Tradable stocks are
+  // keyed by an Ondo-tokenized `symbol` ("AAPLon") while news tickers are the
+  // plain underlying ("AAPL"); match on the underlying by dropping the trailing
+  // "on" (and also accept an already tokenized ticker).
+  const matchStockByTicker = (ticker?: string) => {
+    if (!ticker) return undefined
+    const target = ticker.toUpperCase()
+    return stocksAddresses.value.find(stock => {
+      const sym = stock.symbol?.toUpperCase()
+      if (!sym) return false
+      const base = sym.endsWith('ON') ? sym.slice(0, -2) : sym
+      return base === target || sym === target
+    })
+  }
+
+  // Icon URL for a ticker, or undefined so the caller can fall back to the
+  // initials avatar.
+  const stockIconBySymbol = (ticker?: string): string | undefined => {
+    const match = matchStockByTicker(ticker)
+    return match?.iconPngUrl || match?.iconSvgUrl || undefined
+  }
+
+  // The tokenized tradable symbol ("AAPLon") for a plain ticker — the param the
+  // stock page route expects — or undefined when the stock isn't tradable.
+  const stockTradableSymbol = (ticker?: string): string | undefined =>
+    matchStockByTicker(ticker)?.symbol
+
   /**------------------------
    * Helper Methods
    -------------------------*/
@@ -139,6 +168,8 @@ export const useStocksStore = defineStore('stocksStore', () => {
     hasStocksAddressesData,
     // Helpers
     isStock,
+    stockIconBySymbol,
+    stockTradableSymbol,
     fetchMissingStockData,
     mapMissingStocksInfo,
   }

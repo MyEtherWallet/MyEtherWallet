@@ -1,6 +1,11 @@
 <template>
   <div class="inline-block">
-    <Line :data="chartData" :options="chartOptions" :plugins="plugins" />
+    <Line
+      :data="chartData"
+      :options="chartOptions"
+      :plugins="plugins"
+      :destroy-delay="CHART_DESTROY_DELAY_MS"
+    />
   </div>
 </template>
 
@@ -29,6 +34,16 @@ import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 
 const { formatFiat, currencySymbol, rate } = useCurrency()
+
+/**
+ * Defer Chart.js teardown so vue-chartjs's queued `nextTick(() => chart.update())`
+ * (scheduled when reactive data/options change) runs BEFORE `chart.destroy()`.
+ * Without a delay, destroy nulls `chart.canvas`, then the pending update walks the
+ * responsive-resize path and dereferences `null.ownerDocument` -> unhandled
+ * TypeError on teardown (timeframe toggle / route change), seen on Safari.
+ * See Sentry APP-MEW-WEB-1FZ.
+ */
+const CHART_DESTROY_DELAY_MS = 300
 
 const props = withDefaults(
   defineProps<{

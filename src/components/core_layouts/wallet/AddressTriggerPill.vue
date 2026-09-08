@@ -18,7 +18,7 @@
           :src="chainsStore.selectedChain.icon"
           alt=""
           aria-hidden="true"
-          class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-white object-cover bg-white"
+          class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-white object-contain bg-white"
         />
       </span>
       <span class="flex flex-col items-start flex-1 min-w-0 gap-0.5">

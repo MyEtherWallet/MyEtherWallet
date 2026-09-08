@@ -62,11 +62,9 @@ describe('ManageAccountsCard', () => {
     expect(w.emitted('rename')![0]).toEqual([])
   })
 
-  it('emits delete only after inline confirm', async () => {
+  it('emits delete when Remove is clicked (confirmation happens in a modal)', async () => {
     const w = factory()
     await w.get('[data-test="menu-remove"]').trigger('click')
-    expect(w.emitted('delete')).toBeUndefined()
-    await w.get('[data-test="delete-confirm"]').trigger('click')
     expect(w.emitted('delete')).toHaveLength(1)
   })
 

@@ -2,7 +2,7 @@ import { ref, type Ref } from 'vue'
 import { createFetch, useTimeoutPoll } from '@vueuse/core'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
-import { describeMewApiFetchError } from '@/composables/mewApiFetchError'
+import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 const isDevMode = import.meta.env.DEV

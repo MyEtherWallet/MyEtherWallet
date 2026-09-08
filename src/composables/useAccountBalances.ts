@@ -24,20 +24,20 @@ export interface BalanceEntry {
 }
 
 /** How long a cached balance is considered fresh before a visible row re-fetches it. */
-export const BALANCE_TTL_MS = 2 * 60 * 1000
+export const BALANCE_TTL_MS = 75 * 1000
 
 /** The MEW API's sentinel contract for a chain's native currency (ETH, BNB, …). */
 const NATIVE_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 const STORAGE_KEY = 'multiAddressBalances'
 
-/** Cache key: per ADDRESS only (not per chain). A saved address is fetched at most
- *  once per TTL regardless of the selected network — switching networks within the
- *  TTL reuses the cached balance instead of refetching, which avoids rate-limiting
- *  the /balances API when the user flips between networks. The selected chain still
- *  drives the fetch URL, just not the cache identity. Lower-cased for stable matching. */
-const cacheKey = (_chainName: string, address: string): string =>
-  address.toLowerCase()
+/** Cache key: per chain (name) + address, so each network keeps its own balance
+ *  snapshot and in-flight entry — the selected network's value is always shown,
+ *  never another chain's. Fetch traffic is bounded by the (short) TTL plus the
+ *  viewport/while-open refresh in the popup rather than by a shared cache identity.
+ *  Lower-cased for stable matching. */
+const cacheKey = (chainName: string, address: string): string =>
+  `${chainName.toLowerCase()}:${address.toLowerCase()}`
 
 /**
  * Per-address balance cache for the Manage Accounts popup.

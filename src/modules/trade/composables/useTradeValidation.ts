@@ -1,41 +1,31 @@
 import { computed, type Ref, type ComputedRef } from 'vue'
 import { parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import Configs from '@/configs'
-
-const isDevMode = Configs.IS_DEV_MODE
+import { reportModuleError } from '@/utils/reportModuleError'
+import type { TradeForm } from './useTradeForm'
 
 interface UseTradeValidationOptions {
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  fromAmount: Ref<string>
-  toAmount: Ref<string>
+  form: TradeForm
   isWalletConnected: Ref<boolean>
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   supportedNetwork: ComputedRef<boolean>
-  isLoadingQuote: Ref<boolean>
-  generalError: Ref<string>
-  toTokenSelected: Ref<NewTokenInfo | null>
 }
 
 export function useTradeValidation(options: UseTradeValidationOptions) {
   const {
-    fromTokenSelected,
-    fromAmount,
-    toAmount,
+    form,
     isWalletConnected,
     isMarketOpen,
     isSelectedAssetTradeable,
     supportedNetwork,
-    isLoadingQuote,
-    generalError,
-    toTokenSelected,
   } = options
+  const { fromTokenSelected, fromAmount, toAmount, isLoadingQuote,
+    generalError, toTokenSelected } = form
 
   const { t } = useI18n()
   const walletStore = useWalletStore()
@@ -144,18 +134,15 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
           })
         }
       } catch (e) {
-        if (isDevMode) {
-          console.error('Error parsing amount for balance check')
-        } else {
-          captureException(e, {
-            ...SENTRY_MODULE_TAGS.TRADE,
-            extra: {
-              title: 'TRADE: Error parsing amount for balance check',
-              amount: fromAmount.value,
-              tokenSymbol: fromTokenSelected.value.symbol,
-            },
-          })
-        }
+        reportModuleError({
+          tag: SENTRY_MODULE_TAGS.TRADE,
+          title: 'TRADE: Error parsing amount for balance check',
+          error: e,
+          extra: {
+            amount: fromAmount.value,
+            tokenSymbol: fromTokenSelected.value.symbol,
+          },
+        })
       }
     }
 

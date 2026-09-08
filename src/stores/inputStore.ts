@@ -1,4 +1,4 @@
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
