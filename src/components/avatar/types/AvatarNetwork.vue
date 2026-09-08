@@ -19,9 +19,14 @@ defineOptions({ inheritAttrs: false })
 
 const chainsStore = useChainsStore()
 
+// Look up against allChains, not getChainIcon: the store filters SOLANA out of
+// `chains`, so a Solana network avatar would otherwise never resolve its icon.
 const resolvedUrl = computed(
   () =>
-    props.url ?? (props.chain ? chainsStore.getChainIcon(props.chain) : null),
+    props.url ??
+    (props.chain
+      ? (chainsStore.allChains.find(c => c.name === props.chain)?.icon ?? null)
+      : null),
 )
 const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>

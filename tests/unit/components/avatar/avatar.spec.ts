@@ -3,10 +3,13 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 
 // chainsStore transitively loads the Ledger HW module (broken file in
-// node_modules), which fails suite load. AvatarNetwork only needs getChainIcon,
-// so stub the store to a minimal shape.
+// node_modules), which fails suite load. AvatarNetwork resolves icons from
+// allChains, so stub the store to a minimal shape. Solana is included because
+// the real store filters it out of `chains` (but keeps it in allChains).
 vi.mock('@/stores/chainsStore', () => ({
-  useChainsStore: () => ({ getChainIcon: () => undefined }),
+  useChainsStore: () => ({
+    allChains: [{ name: 'Solana', icon: 'sol-icon' }],
+  }),
 }))
 
 // blockies draws on a canvas — no 2d context in the test DOM. The account tests
@@ -21,6 +24,8 @@ import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
 import AvatarStatusDot from '@/components/avatar/AvatarStatusDot.vue'
 import AvatarInitial from '@/components/avatar/types/AvatarInitial.vue'
 import AvatarIcon from '@/components/avatar/types/AvatarIcon.vue'
+import AvatarNetwork from '@/components/avatar/types/AvatarNetwork.vue'
+import AvatarRemoteImage from '@/components/avatar/AvatarRemoteImage.vue'
 import {
   AVATAR_SIZES,
   badgeOffset,
@@ -117,6 +122,17 @@ describe('AppAvatarCard', () => {
     const img = wrapper.find('img')
     expect(img.exists()).toBe(true)
     expect(img.attributes('alt')).toBe(label)
+  })
+})
+
+describe('AvatarNetwork', () => {
+  it('resolves the icon from allChains (chains the store filters out of `chains`)', () => {
+    const wrapper = mount(AvatarNetwork, {
+      props: { size: 'm', chain: 'Solana' },
+    })
+    expect(wrapper.findComponent(AvatarRemoteImage).props('url')).toBe(
+      'sol-icon',
+    )
   })
 })
 
