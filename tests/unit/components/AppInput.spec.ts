@@ -101,6 +101,9 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('label').classes()).toContain('sr-only')
     expect(w.text()).not.toContain('Bad')
     expect(w.find('[aria-label="Clear"]').exists()).toBe(false)
+    // A disabled field must not announce an invalid state — there is no error
+    // text to describe it (feedback row + aria-describedby are suppressed).
+    expect(w.get('input').attributes('aria-invalid')).not.toBe('true')
   })
 
   it('required + blur while empty raises the feedback row', async () => {

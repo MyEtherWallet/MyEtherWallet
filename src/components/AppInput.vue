@@ -38,7 +38,7 @@
           :disabled="disabled"
           :placeholder="resolvedPlaceholder"
           :required="isRequired"
-          :aria-invalid="hasError"
+          :aria-invalid="!disabled && hasError"
           :aria-describedby="showFeedback ? feedbackId : undefined"
           :class="[
             'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-grey-subtle',
