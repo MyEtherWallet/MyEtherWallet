@@ -31,6 +31,7 @@ import {
   isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
+  isProviderProxyRemoveListenerError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
@@ -114,6 +115,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isLockedDeviceError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
         isProviderNotFoundError(originalException) ||
+        // V8 Proxy-invariant TypeError when wagmi reads `removeListener` off a
+        // `window.ethereum` a browser extension wrapped in a non-compliant
+        // Proxy — fire-and-forget inside wagmi's connector setup, no fixable
+        // MEW frame, external noise (APP-MEW-WEB-1K8 / MEW-2298).
+        isProviderProxyRemoveListenerError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
         isStorageQuotaExceededError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||

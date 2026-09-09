@@ -16,6 +16,7 @@ import {
   isLockedDeviceError,
   isMetaMaskSdkDecryptError,
   isProviderNotFoundError,
+  isProviderProxyRemoveListenerError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
@@ -875,5 +876,53 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
+  })
+})
+
+describe('isProviderProxyRemoveListenerError', () => {
+  // The exact production message (APP-MEW-WEB-1K8): a browser extension proxies
+  // window.ethereum and wagmi's injected connector reads `removeListener`.
+  const MSG =
+    "'get' on proxy: property 'removeListener' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value (expected 'function(e,t){...}' but got 'function(e,t){...}')"
+
+  it('drops the V8 proxy-invariant removeListener TypeError', () => {
+    expect(isProviderProxyRemoveListenerError(new TypeError(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized production payload (plain object with message)', () => {
+    expect(isProviderProxyRemoveListenerError({ message: MSG })).toBe(true)
+  })
+
+  it('is true for a bare-string rejection', () => {
+    expect(isProviderProxyRemoveListenerError(MSG)).toBe(true)
+    expect(isProviderProxyRemoveListenerError(`TypeError: ${MSG}`)).toBe(true)
+  })
+
+  it('does NOT match a proxy-invariant error for a different property', () => {
+    expect(
+      isProviderProxyRemoveListenerError(
+        new TypeError(
+          "'get' on proxy: property 'request' is a read-only and non-configurable data property on the proxy target but the proxy did not return its actual value",
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app TypeError that merely mentions removeListener', () => {
+    expect(
+      isProviderProxyRemoveListenerError(
+        new TypeError(
+          "Cannot read properties of undefined (reading 'removeListener')",
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isProviderProxyRemoveListenerError(null)).toBe(false)
+    expect(isProviderProxyRemoveListenerError(undefined)).toBe(false)
+    expect(isProviderProxyRemoveListenerError({})).toBe(false)
+    expect(isProviderProxyRemoveListenerError({ message: 42 })).toBe(false)
+    expect(isProviderProxyRemoveListenerError('something else')).toBe(false)
   })
 })
