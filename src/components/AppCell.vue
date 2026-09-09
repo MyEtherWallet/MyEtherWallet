@@ -69,11 +69,15 @@
           <slot name="avatarBadge" />
         </span>
         <span
-          v-if="selected && $slots.avatarBadge"
+          v-if="selected"
           data-test="cell-selected-badge"
-          :class="[badgeClass, sizeSpec.badge, '-left-[5px] -top-[5px]']"
+          :class="[
+            badgeClass,
+            sizeSpec.badge,
+            '-left-[5px] -top-[5px] !bg-bgContrast text-white',
+          ]"
         >
-          <slot name="avatarBadge" />
+          <CheckIcon :class="sizeSpec.selectedIcon" />
         </span>
       </div>
 
@@ -111,6 +115,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
+import { CheckIcon } from '@heroicons/vue/24/outline'
 import AppSkeleton from '@/components/AppSkeleton.vue'
 import AppCellContent from '@/components/AppCellContent.vue'
 import { CELL_SIZE_SPEC, type CellSize } from '@/components/cellSizes'

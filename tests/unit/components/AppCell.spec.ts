@@ -86,25 +86,22 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.emitted('click')).toBeUndefined()
   })
 
-  it('duplicates the network badge top-left when selected, as in the Figma variant', () => {
+  it('renders the dark check badge top-left when selected, keeping the network badge', () => {
     const w = mountCell(
       { selected: true },
       { ...avatarSlot, ...avatarBadgeSlot },
     )
     const selectedBadge = w.get('[data-test="cell-selected-badge"]')
-    expect(selectedBadge.find('[data-test="network"]').exists()).toBe(true)
-    expect(w.findAll('[data-test="network"]')).toHaveLength(2)
+    expect(selectedBadge.classes()).toContain('!bg-bgContrast')
+    expect(selectedBadge.find('svg').exists()).toBe(true)
+    expect(selectedBadge.classes()).toContain(CELL_SIZE_SPEC.medium.badge)
+    expect(w.findAll('[data-test="network"]')).toHaveLength(1)
   })
 
-  it('renders no selected badge without selection, avatar or network badge', () => {
+  it('renders no selected badge without selection or without an avatar', () => {
     const selector = '[data-test="cell-selected-badge"]'
     expect(
-      mountCell({ selected: false }, { ...avatarSlot, ...avatarBadgeSlot })
-        .find(selector)
-        .exists(),
-    ).toBe(false)
-    expect(
-      mountCell({ selected: true }, avatarSlot).find(selector).exists(),
+      mountCell({ selected: false }, avatarSlot).find(selector).exists(),
     ).toBe(false)
     expect(mountCell({ selected: true }).find(selector).exists()).toBe(false)
   })

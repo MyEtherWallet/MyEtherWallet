@@ -41,6 +41,7 @@ export default {
       'bgBase-pressed': '#d6d6d6',
       'bgSurface-hover': '#ededed',
       'bgSurface-pressed': '#e6e6e6',
+      bgContrast: '#222222',
       bgMuted: '#e5e5e5',
       gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
