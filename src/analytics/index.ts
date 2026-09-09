@@ -61,7 +61,7 @@ export const initAnalytics = async (): Promise<void> => {
   }
 
   const consentToTrack = getConsentToTrack()
-  const isProd = import.meta.env.PROD
+  const isProd = import.meta.env.MODE === 'production'
   const serverUrl = isProd
     ? 'https://analytics-web-v7.mewwallet.dev'
     : 'https://analytics-web-development-v7.mewwallet.dev'
