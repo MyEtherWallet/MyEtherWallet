@@ -17,7 +17,7 @@
 import { QuestionMarkCircleIcon } from '@heroicons/vue/24/solid'
 
 //Remove HelpLinks from Beta builds
-const isDevMode = import.meta.env.DEV
+const isDevMode = import.meta.env.MODE !== 'production'
 
 //TODO: add Amplitude event with link + route location
 

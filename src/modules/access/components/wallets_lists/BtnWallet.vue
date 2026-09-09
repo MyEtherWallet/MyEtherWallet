@@ -108,7 +108,7 @@ const resolveImg = async (_img: () => Promise<string>) => {
     // The wallet icon is lazily imported as a hashed JS chunk. Failing to load it
     // (network blip, stale chunk after a redeploy, content blockers) is expected and
     // non-actionable — AsyncImg already falls back to a placeholder. Don't report noise.
-    if (import.meta.env.DEV) {
+    if (import.meta.env.MODE !== 'production') {
       console.error('Error loading wallet image:', props.wallet.name, error)
     }
   } finally {

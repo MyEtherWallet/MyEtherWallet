@@ -24,7 +24,7 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
   // Dev-only component previews — excluded from production builds.
-  ...(import.meta.env.DEV
+  ...(import.meta.env.MODE !== 'production'
     ? [
         {
           path: '/button-preview',
