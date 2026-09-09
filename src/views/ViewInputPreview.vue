@@ -100,8 +100,8 @@ const searchModel = reactive({ default: '', alternative: '' })
       :class="[
         'p-6 rounded-20 space-y-8',
         surface === 'alternative'
-          ? 'bg-white border border-grey-10'
-          : 'bg-app-background border border-dashed border-grey-10',
+          ? 'bg-app-background border border-dashed border-grey-10'
+          : 'bg-white border border-grey-10',
       ]"
     >
       <h2 class="text-s-20 font-semibold capitalize">
@@ -109,8 +109,8 @@ const searchModel = reactive({ default: '', alternative: '' })
         <span class="text-s-13 font-normal text-grey-50">
           ({{
             surface === 'alternative'
-              ? 'white — cards & dialogs'
-              : 'grey — app background'
+              ? 'white + border — dialogs today, also for grey backgrounds'
+              : 'grey fill — for white surfaces'
           }})
         </span>
       </h2>
@@ -147,16 +147,16 @@ const searchModel = reactive({ default: '', alternative: '' })
     <section class="space-y-4">
       <h2 class="text-s-20 font-semibold">AppTextField</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          class="p-6 rounded-20 bg-app-background border border-dashed border-grey-10"
-        >
+        <div class="p-6 rounded-20 bg-white border border-grey-10">
           <p class="text-s-12 text-grey-50 mb-2">surface = default</p>
           <AppTextField
             v-model="textFieldModel.default"
             placeholder="Message to sign"
           />
         </div>
-        <div class="p-6 rounded-20 bg-white border border-grey-10">
+        <div
+          class="p-6 rounded-20 bg-app-background border border-dashed border-grey-10"
+        >
           <p class="text-s-12 text-grey-50 mb-2">surface = alternative</p>
           <AppTextField
             v-model="textFieldModel.alternative"

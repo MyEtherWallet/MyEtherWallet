@@ -71,11 +71,12 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('placeholder')).toBe('0.00')
   })
 
-  it('clears the fallback placeholder once the Large label floats', async () => {
+  it('does not float the label on focus while empty — Filled drives the label', async () => {
     const w = mountInput({ size: 'large', label: 'Recipient', modelValue: '' })
+    await w.get('input').trigger('focus')
+    // Figma Focus + Filled=false keeps the plain placeholder, no label row.
+    expect(w.get('label').classes()).toContain('sr-only')
     expect(w.get('input').attributes('placeholder')).toBe('Recipient')
-    await w.setProps({ modelValue: 'x' })
-    expect(w.get('input').attributes('placeholder')).toBe('')
   })
 
   it('maps surface to bg + resting border', () => {
@@ -112,14 +113,17 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(feedback?.text()).toContain('Bad')
   })
 
-  it('disabled hides the label row and never shows the feedback row', () => {
+  it('disabled + filled keeps the float label in disabled grey; no feedback row', () => {
     const w = mountInput({
       disabled: true,
       errorMessage: 'Bad',
       modelValue: 'x',
       size: 'large',
     })
-    expect(w.get('label').classes()).toContain('sr-only')
+    // Figma Disabled + Filled still shows the label, in text/disabled grey.
+    const label = w.get('label')
+    expect(label.classes()).not.toContain('sr-only')
+    expect(label.classes()).toContain('text-grey-subtle')
     expect(w.text()).not.toContain('Bad')
     expect(w.find('[aria-label="Clear"]').exists()).toBe(false)
     // A disabled field must not announce an invalid state — there is no error

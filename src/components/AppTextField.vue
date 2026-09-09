@@ -22,7 +22,10 @@
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
       <template v-if="showFeedback">
         <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
-        <p :id="feedbackId" class="text-xs leading-[18px] text-error truncate">
+        <p
+          :id="feedbackId"
+          class="text-xs leading-[18px] text-error min-w-0 break-words"
+        >
           {{ errorMessage || $t('common.required') }}
         </p>
       </template>
@@ -59,7 +62,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  /** Grey fill (app bg) vs. white + border (cards/dialogs). */
+  /**
+   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
+   * it disappears on the grey app background); 'alternative' is white with a
+   * 1px border (used on white cards/dialogs today, also works on grey).
+   */
   surface: {
     type: String as PropType<'default' | 'alternative'>,
     default: 'default',

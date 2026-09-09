@@ -24,7 +24,10 @@
           :for="inputId"
           :class="
             isFloating
-              ? 'block text-xs font-semibold leading-[18px] tracking-[-0.24px] text-t-subtle truncate'
+              ? [
+                  'block text-xs font-semibold leading-[18px] tracking-[-0.24px] truncate',
+                  disabled ? 'text-grey-subtle' : 'text-t-subtle',
+                ]
               : 'sr-only'
           "
         >
@@ -90,10 +93,10 @@
       <div
         v-if="showFeedback"
         :id="feedbackId"
-        class="flex items-center gap-1 h-6 px-4"
+        class="flex items-center gap-1 min-h-6 px-4"
       >
         <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
-        <p class="text-xs leading-[18px] text-error truncate">
+        <p class="text-xs leading-[18px] text-error min-w-0 break-words">
           {{ errorMessage || $t('common.required') }}
         </p>
       </div>
@@ -132,7 +135,11 @@ const props = defineProps({
     type: String as PropType<InputSize>,
     default: 'large',
   },
-  /** Figma "Style": grey fill (app bg) vs. white + border (cards/dialogs). */
+  /**
+   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
+   * it disappears on the grey app background); 'alternative' is white with a
+   * 1px border (used on white cards/dialogs today, also works on grey).
+   */
   surface: {
     type: String as PropType<'default' | 'alternative'>,
     default: 'default',
@@ -195,24 +202,14 @@ const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
  * Value / label float
  -------------------------*/
 const hasValue = computed(() => model.value != null && model.value !== '')
-// Large floats the label once the field is filled or focused; Small never
-// shows a label row (spec.showLabel === false). Disabled hides the label row
-// entirely, even when filled.
-const isFloating = computed(
-  () =>
-    spec.value.showLabel &&
-    !props.disabled &&
-    (hasValue.value || inFocusInput.value),
-)
-const resolvedPlaceholder = computed(() => {
-  const fallback = props.placeholder ?? props.label
-  // On Large, hide only the *fallback* placeholder (the one that duplicates the
-  // now-floated label). An explicit caller placeholder is real input guidance
-  // and stays visible while the label floats.
-  return spec.value.showLabel && isFloating.value && props.placeholder == null
-    ? ''
-    : fallback
-})
+// The Figma `Filled` axis drives the label: Large floats it once the field
+// has a value — focus alone keeps the plain placeholder, and a disabled
+// filled field keeps its label (in disabled grey). Small never shows a label
+// row (spec.showLabel === false).
+const isFloating = computed(() => spec.value.showLabel && hasValue.value)
+// While the label floats the field has a value, so the placeholder is never
+// visible alongside it — no need to clear the fallback.
+const resolvedPlaceholder = computed(() => props.placeholder ?? props.label)
 
 /**------------------------
  * Error State
