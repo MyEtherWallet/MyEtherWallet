@@ -25,7 +25,7 @@ type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
   // DEV-only gallery for the Avatar design library (MEW-2196). Never registered
   // in production builds.
-  ...(import.meta.env.DEV
+  ...(import.meta.env.MODE !== 'production'
     ? [
       {
         path: '/dev/avatars',

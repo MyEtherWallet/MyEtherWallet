@@ -97,7 +97,7 @@ export const initAnalytics = async (): Promise<void> => {
     sessionId: sessionId,
     deviceId: deviceId,
     serverZone: inEU ? 'EU' : 'US',
-    debugMode: import.meta.env.DEV,
+    debugMode: import.meta.env.MODE !== 'production',
     sampleRate: .8,
     privacyConfig: {
       maskSelector: ['[data-private]'],
