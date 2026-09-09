@@ -61,7 +61,7 @@ export const initAnalytics = async (): Promise<void> => {
   }
 
   const consentToTrack = getConsentToTrack()
-  const isProd = configs.AMPLITUDE === 'prod'
+  const isProd = import.meta.env.PROD
   const serverUrl = isProd
     ? 'https://analytics-web-v7.mewwallet.dev'
     : 'https://analytics-web-development-v7.mewwallet.dev'
@@ -97,7 +97,7 @@ export const initAnalytics = async (): Promise<void> => {
     sessionId: sessionId,
     deviceId: deviceId,
     serverZone: inEU ? 'EU' : 'US',
-    debugMode: process.env.NODE_ENV !== 'production',
+    debugMode: import.meta.env.DEV,
     sampleRate: .8,
     privacyConfig: {
       maskSelector: ['[data-private]'],

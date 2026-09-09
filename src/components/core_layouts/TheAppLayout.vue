@@ -64,7 +64,7 @@
           >
             <a
               class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
-              :href="configs.VINATGE"
+              :href="configs.VINTAGE"
               target="_blank"
               rel="noopener noreferrer"
             >
