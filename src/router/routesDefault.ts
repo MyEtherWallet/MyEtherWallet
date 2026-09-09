@@ -23,6 +23,19 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: '/cell-preview',
+          name: 'cell-preview',
+          component: () => import('@/views/ViewCellPreview.vue'),
+          meta: {
+            noAuth: true,
+            noWalletFlow: true,
+          },
+        },
+      ]
+    : []),
   {
     // New public Home is the root; disconnected users land here.
     path: ROUTES_MAIN.HOME.PATH,

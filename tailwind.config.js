@@ -37,6 +37,10 @@ export default {
       current: 'currentColor',
       appBackground: '#f5f5f7',
       bgBase: '#f5f5f5',
+      'bgBase-hover': '#e6e6e6',
+      'bgBase-pressed': '#d6d6d6',
+      'bgSurface-hover': '#ededed',
+      'bgSurface-pressed': '#e6e6e6',
       bgMuted: '#e5e5e5',
       gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
@@ -82,6 +86,7 @@ export default {
       'surface-hover': '#f5f5f5',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      't-subtle': '#575757',
       // blues
       'blue-2': 'rgba(0, 91, 229, 1)',
       'blue-3': 'rgba(0, 123, 238, 1)',
@@ -148,6 +153,19 @@ export default {
         // This adds the gradient as a reusable background utility
         'stock-gradient':
           'linear-gradient(270deg, #40E0D0 0%, #55DAA2 6.6%, #7ED06D 16.83%, #AAC137 25%, #D5AB00 35.58%, #FF8C00 43.75%, #FF8C00 55.77%, #FF7526 77.4%, #FF5D3D 100%)',
+        'shimmer-bar':
+          'linear-gradient(-77deg, rgba(127,129,127,0.12) 0%, rgba(127,129,127,0.25) 33.5%, rgba(127,129,127,0.25) 65%, rgba(127,129,127,0.12) 99.5%)',
+        'shimmer-circle':
+          'linear-gradient(-88deg, rgba(127,129,127,0.12) 0%, rgba(127,129,127,0.25) 33.5%, rgba(127,129,127,0.25) 65%, rgba(127,129,127,0.12) 99.5%)',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 1.5s ease-in-out infinite',
       },
     },
   },
