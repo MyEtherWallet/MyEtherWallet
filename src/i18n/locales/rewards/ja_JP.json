@@ -38,6 +38,7 @@
     "info_one_reward_period": "Up to one reward per wallet per {days} day campaign period, sent directly to your wallet",
     "info_no_sybil": "Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.",
     "info_wallet_age": "The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.",
+    "info_min_usdc_balance": "The wallet must hold a minimum balance of {amount} USDC.",
     "info_no_cashout": "Cash out transactions do not qualify.",
     "coming_soon_title": "Rewards coming soon",
     "coming_soon_body": "We're preparing the next rewards campaign. Follow @myetherwallet on X for updates and upcoming announcements.",
