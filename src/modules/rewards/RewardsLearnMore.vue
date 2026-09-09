@@ -43,6 +43,10 @@
                 v-else-if="item.icon === 'wallet-icon'"
                 class="w-4 h-4 text-grey-50"
               />
+              <banknotes-icon
+                v-else-if="item.icon === 'wallet-balance'"
+                class="w-4 h-4 text-grey-50"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
                 class="w-4 h-4 text-grey-50"
@@ -104,6 +108,7 @@ import {
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
 import {
   ArrowPathRoundedSquareIcon,
+  BanknotesIcon,
   WalletIcon,
 } from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
@@ -158,6 +163,7 @@ const MIN_TRADE_AMOUNT = 25
 const MAX_USERS_PER_HOUR = 15
 const REWARD_AMOUNT = 5
 const CAMPAIGN_PERIOD_DAYS = 7
+const MIN_USDC_HOLD_BALANCE = 50
 
 watch(isOpenModel, val => {
   if (val) {
@@ -197,6 +203,12 @@ const infoItems = computed(() => [
   {
     icon: 'wallet-icon',
     text: t('rewards.info_wallet_age'),
+  },
+  {
+    icon: 'wallet-balance',
+    text: t('rewards.info_min_usdc_balance', {
+      amount: MIN_USDC_HOLD_BALANCE,
+    }),
   },
   {
     icon: 'currency-dollar-gray',
