@@ -100,6 +100,28 @@ export function isMetaMaskSdkDecryptError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is the MetaMask SDK's `SDK state invalid -- undefined
+ * provider` failure. The SDK throws it entirely inside its own
+ * `_handleStreamDisconnect` / `_initializeState` path when it loses the
+ * connection to the MetaMask-mobile app and `activeProvider` is `undefined`
+ * during re-initialization (a stale / dropped mobile pairing session). Every
+ * frame is in the bundled `metamask-sdk` chunk — no MEW code is in the stack
+ * and no user is affected — so it is pure Sentry noise, a sibling of
+ * `isMetaMaskSdkDecryptError`. Matched on the (unminified) thrown message AND a
+ * `metamask-sdk` stack frame so an unrelated app error is left untouched.
+ */
+export function isMetaMaskSdkUndefinedProviderError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof e.message === 'string' &&
+    e.message.includes('SDK state invalid -- undefined provider') &&
+    typeof e.stack === 'string' &&
+    e.stack.includes('metamask-sdk')
+  )
+}
+
+/**
  * Whether an error is a wagmi `ProviderNotFoundError` — thrown when a connector
  * calls `getProvider()` and no injected wallet is present (e.g. the user clicks
  * "Browser Wallet" with no extension installed). The connect flow already

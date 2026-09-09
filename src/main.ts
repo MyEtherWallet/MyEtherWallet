@@ -30,6 +30,7 @@ import {
   isInvalidWalletAddressError,
   isLockedDeviceError,
   isMetaMaskSdkDecryptError,
+  isMetaMaskSdkUndefinedProviderError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
@@ -113,6 +114,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // shown to the user as a toast; unactionable noise (APP-MEW-WEB-BH).
         isLockedDeviceError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
+        // MetaMask SDK "SDK state invalid -- undefined provider" — thrown inside
+        // the bundled SDK when it loses the mobile-app connection and
+        // activeProvider is undefined; no app frame, no user affected
+        // (APP-MEW-WEB-SN / MEW-2297).
+        isMetaMaskSdkUndefinedProviderError(originalException) ||
         isProviderNotFoundError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
         isStorageQuotaExceededError(originalException) ||
