@@ -3,6 +3,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import DefaultRoutes from './routesDefault'
 import { pageRouteName } from './routeHierarchy'
+import { isChunkLoadError } from './chunkError'
 
 // A persisted watch-only address restores into a wallet asynchronously (on the
 // chains-load), which happens after this guard runs on a fresh load. Treat it
@@ -49,17 +50,12 @@ router.beforeEach((to, from, next) => {
 })
 
 router.onError((error, to) => {
-  const message = error instanceof Error ? error.message : String(error)
-  const isChunkError =
-    message.includes('Failed to fetch dynamically imported module') ||
-    message.includes('Unable to preload CSS')
+  if (!isChunkLoadError(error)) return
 
-  if (isChunkError) {
-    const reloadKey = `chunk-reload:${to.fullPath}`
-    if (!sessionStorage.getItem(reloadKey)) {
-      sessionStorage.setItem(reloadKey, '1')
-      window.location.href = to.fullPath
-    }
+  const reloadKey = `chunk-reload:${to.fullPath}`
+  if (!sessionStorage.getItem(reloadKey)) {
+    sessionStorage.setItem(reloadKey, '1')
+    window.location.href = to.fullPath
   }
 })
 
