@@ -77,7 +77,7 @@
             '-left-[5px] -top-[5px] !bg-bgContrast text-white',
           ]"
         >
-          <CheckIcon :class="sizeSpec.selectedIcon" />
+          <CheckIcon class="size-4" />
         </span>
       </div>
 

@@ -6,7 +6,6 @@ type CellSizeSpec = {
   cell: string
   avatar: string
   badge: string
-  selectedIcon: string
 }
 
 export const CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
@@ -14,12 +13,10 @@ export const CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
     cell: 'h-[68px] py-3',
     avatar: 'size-10',
     badge: 'size-5',
-    selectedIcon: 'size-4',
   },
   small: {
     cell: 'h-[52px] py-1',
     avatar: 'size-8',
     badge: 'size-[18px]',
-    selectedIcon: 'size-3.5',
   },
 }
