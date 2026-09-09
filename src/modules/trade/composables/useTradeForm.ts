@@ -3,6 +3,17 @@ import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import { useFormPristine } from '@/composables/useFormPristine'
 
+/**
+ * Per-instance state record for the trade module, threaded into the sibling
+ * composables as their shared option bag. The record exists to break a circular
+ * dependency: useTradeValidation reads the quote flags below, while
+ * useTradeQuote needs validation's `hasPreQuoteError`.
+ *
+ * Ownership within the record: `isLoadingQuote`, `isPairUnavailable`,
+ * `isBelowMinimum` and `generalError` are quote outputs — useTradeQuote is
+ * their sole writer (via runQuote/resetQuote); everything else is written by
+ * the module/template. Keep it that way when adding fields.
+ */
 export function useTradeForm(initialChain?: Chain) {
   const selectedFromChain = ref<Chain | undefined>(initialChain)
   const fromTokenSelected = ref<NewTokenInfo | null>(null)

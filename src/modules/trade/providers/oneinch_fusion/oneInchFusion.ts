@@ -40,7 +40,10 @@ import type {
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
-import { isExpectedTradeError } from '@/modules/trade/common/expectedTradeError'
+import {
+  isExpectedTradeError,
+  REPORTABLE_CLIENT_STATUSES,
+} from '@/modules/trade/common/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
@@ -204,7 +207,11 @@ class OneInchFusion {
       // failures: amount below minimum, illiquid/unsupported pair, invalid params.
       // Flag those so the single caller (useTradeQuote) can skip Sentry reporting
       // — reporting is centralized there to avoid double-capture. Genuine failures
-      // (5xx / network / no response) stay unflagged and are reported by the caller.
+      // stay unflagged and are reported by the caller: 5xx / network / no
+      // response, and the reportable 4xxs (401 credential, 403 block, 429
+      // throttle) — those are a broken trade path, not user-correctable input,
+      // and flagging them also mislabeled every pair as unavailable during an
+      // outage (isPairUnavailableError builds on this flag).
       const error = new Error(
         response ||
           rawMessage ||
@@ -215,7 +222,10 @@ class OneInchFusion {
         fusionCode?: string
       }
       error.expectedClientError =
-        typeof status === 'number' && status >= 400 && status < 500
+        typeof status === 'number' &&
+        status >= 400 &&
+        status < 500 &&
+        !REPORTABLE_CLIENT_STATUSES.has(status)
       error.fusionCode = fusionCode
       // A transient axios "Network Error" (the 1inch request never completed —
       // no response received) is environmental noise, already surfaced to the

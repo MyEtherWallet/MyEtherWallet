@@ -8,13 +8,7 @@ import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { TradeForm } from './useTradeForm'
 
-type FromAmountErrorCode =
-  | ''
-  | 'unavailable'
-  | 'invalid'
-  | 'decimals'
-  | 'minimum'
-  | 'balance'
+type FromAmountErrorCode = '' | 'invalid' | 'decimals' | 'minimum' | 'balance'
 
 const NO_ERROR = { code: '' as const, message: '' }
 
@@ -41,7 +35,6 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     isLoadingQuote,
     isPairUnavailable,
     isBelowMinimum,
-    generalError,
     toTokenSelected,
   } = form
 
@@ -50,7 +43,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
 
   // Helper to get token balance parameters
   const getTokenBalanceParams = (token: NewTokenInfo) => {
-    const isMainToken = token.address === MAIN_TOKEN_CONTRACT
+    // Case-insensitive: a checksummed native sentinel from the swap list must
+    // still resolve to the base-network balance.
+    const isMainToken =
+      token.address?.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()
     const balance = token.balance || '0'
 
     const baseNetworkBalance = parseUnits(
@@ -112,12 +108,6 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       fromAmount.value === '0'
     ) {
       return NO_ERROR
-    }
-    if (generalError.value === 'pathfinder error') {
-      return {
-        code: 'unavailable',
-        message: t('trade.error.token-unavailable'),
-      }
     }
     if (isBelowMinimum.value) {
       return {

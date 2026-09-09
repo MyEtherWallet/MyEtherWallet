@@ -9,6 +9,14 @@ const mountTimeline = (props: Record<string, unknown> = {}) =>
       dayLabel: 'MON',
       markerPct: 50,
       timeLabel: '01:15 PM',
+      // sessionRanges is required — the component ships no fallback, so the
+      // spec provides the values it asserts against.
+      sessionRanges: {
+        premarket: '04:00 AM → 09:31 AM',
+        regular: '09:31 AM → 03:59 PM',
+        postmarket: '04:01 PM → 07:59 PM',
+        overnight: '08:05 PM → 03:55 AM',
+      },
       ...props,
     },
     global: { plugins: [i18n] },

@@ -50,11 +50,16 @@ describe('TradeAmountCard', () => {
     expect(card.text()).toContain('Balance')
   })
 
-  it('renders a read-only amount on the buy side', () => {
+  it('renders a read-only, display-formatted amount on the buy side', () => {
+    // The buy amount arrives raw (the quote's formatUnits output) and the card
+    // formats it for display — grouping included.
     const card = mountCard({ side: 'buy', amount: '2.4574' })
     expect(card.text()).toContain('Buy')
     expect(card.find('input').exists()).toBe(false)
-    expect(card.text()).toContain('2.4574')
+    expect(card.text()).toContain('2.45')
+
+    const grouped = mountCard({ side: 'buy', amount: '1234.5' })
+    expect(grouped.text()).toContain('1,234.5')
   })
 
   it('shows the percent row only on the sell side', () => {

@@ -74,7 +74,8 @@
       "processing_note": "这可能需要几分钟",
       "trade_completed": "交易完成",
       "received_total": "您总共收到了 {amount}",
-      "explore_etherscan": "在 Etherscan 上浏览"
+      "explore_etherscan": "在 Etherscan 上浏览",
+      "approval_success": "{symbol} 已获批准交易"
     },
     "error": {
       "approval-failed": "无法授权代币",
@@ -100,6 +101,8 @@
       "postmarket": "盘后",
       "overnight": "夜盘",
       "weekend": "周末",
+      "offhours": "盘后时段",
+      "next_session": "下一个交易时段",
       "paused": "市场暂停",
       "limited": "市场受限",
       "info_label": "市场状态信息",
@@ -176,6 +179,7 @@
       "subtitle": "要继续交易，你必须在 {wallet} 中允许 MEW 使用 {symbol}。",
       "network_fee": "预估网络费",
       "network_fee_tooltip": "签署此批准需要支付少量网络费",
+      "fee_unavailable": "费用不可用",
       "cta": "在 {wallet} 中批准",
       "your_wallet": "你的钱包"
     },

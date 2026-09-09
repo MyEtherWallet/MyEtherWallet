@@ -115,12 +115,10 @@
 import { shallowRef, watch, nextTick, onBeforeUnmount } from 'vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import { useDialogStore } from '@/stores/dialogStore'
-import { storeToRefs } from 'pinia'
 
 const targetDialog = shallowRef<HTMLElement | null>(null)
 
 const dialogStore = useDialogStore()
-const { isAreaHidden } = storeToRefs(dialogStore)
 
 defineOptions({
   inheritAttrs: false,
@@ -209,10 +207,23 @@ const setIsOpen = (_value: boolean = false) => {
   }
 }
 
+// This instance's contribution to the store's refcount. The count (instead of
+// a shared boolean) keeps the background inert during modal-to-modal
+// transitions, where the closing dialog's watcher can run after the opening
+// one's — and it also makes mounting a closed dialog a no-op, where the old
+// `immediate` boolean write cleared the flag another open dialog had set.
+let countsAsOpen = false
+const syncAreaHidden = (open: boolean) => {
+  if (open === countsAsOpen) return
+  countsAsOpen = open
+  if (open) dialogStore.pushAreaHidden()
+  else dialogStore.popAreaHidden()
+}
+
 watch(
   () => isOpen.value,
   async value => {
-    isAreaHidden.value = value
+    syncAreaHidden(value)
     if (value) {
       await nextTick()
       targetDialog.value?.focus()
@@ -223,11 +234,9 @@ watch(
 
 // If the dialog is torn down while still open (e.g. a parent `v-if` flips —
 // TheAddressMenuDialog / TheDepositDialog when the wallet is removed), the
-// isOpen watcher never runs a closing pass, so the global inert flag stays set
-// and the whole app is left non-interactive. Release it on unmount.
+// isOpen watcher never runs a closing pass, so the global inert refcount stays
+// raised and the whole app is left non-interactive. Release it on unmount.
 onBeforeUnmount(() => {
-  if (isOpen.value) {
-    isAreaHidden.value = false
-  }
+  syncAreaHidden(false)
 })
 </script>

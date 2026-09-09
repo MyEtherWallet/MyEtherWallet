@@ -1,9 +1,6 @@
 <template>
   <div
-    :class="[
-      'absolute top-5 z-20 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]',
-      positionClass,
-    ]"
+    class="absolute top-full mt-1 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
   >
     <svg width="12" height="10" viewBox="0 0 12 10" class="shrink-0">
       <path d="M6 0L12 10H0Z" fill="white" />
@@ -33,10 +30,10 @@
       </p>
       <trade-market-timeline
         v-else
-        :day-label="dayLabel"
-        :marker-pct="markerPct"
-        :time-label="timeLabel"
-        :session-ranges="sessionRanges"
+        :day-label="timelineDayLabel"
+        :marker-pct="timelineMarkerPct"
+        :time-label="timelineTimeLabel"
+        :session-ranges="timelineRanges"
       />
       <button
         :aria-label="$t('common.close')"
@@ -56,6 +53,11 @@ import { XMarkIcon } from '@heroicons/vue/20/solid'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'
+import {
+  buildLocalSessionRanges,
+  computeTimelineMarkerPct,
+  getEtNowInfo,
+} from '../common/marketDisplay'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
 const props = withDefaults(
@@ -69,9 +71,9 @@ const props = withDefaults(
   }>(),
   {
     nextOpenText: '',
-    dayLabel: 'MON',
-    markerPct: 55,
-    timeLabel: '01:15 PM',
+    dayLabel: undefined,
+    markerPct: undefined,
+    timeLabel: undefined,
     sessionRanges: undefined,
   },
 )
@@ -82,19 +84,30 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const marketHoursHelpUrl = 'https://help.myetherwallet.com/en/'
+const marketHoursHelpUrl = 'https://help.myetherwallet.com/'
 
-const positionClass = computed(() => {
-  const positions: Record<MarketStatusVariant, string> = {
-    regular: 'left-[-32px]',
-    premarket: 'left-[calc(50%+80.5px)] -translate-x-1/2',
-    postmarket: 'left-[calc(50%+84px)] -translate-x-1/2',
-    overnight: 'left-[calc(50%+76.5px)] -translate-x-1/2',
-    weekend: 'left-[calc(50%+75px)] -translate-x-1/2',
-    paused: 'left-[calc(50%+44px)] -translate-x-1/2',
-  }
-  return positions[props.status]
-})
+// Live fallbacks for callers that omit the timeline props — placeholder data
+// ("MON", 55%, "01:15 PM") must never render as if it were real.
+const mountedAt = new Date()
+const timelineDayLabel = computed(
+  () => props.dayLabel ?? getEtNowInfo(mountedAt).weekday.toUpperCase(),
+)
+const timelineMarkerPct = computed(
+  () =>
+    props.markerPct ??
+    computeTimelineMarkerPct(getEtNowInfo(mountedAt).minuteOfDay),
+)
+const timelineTimeLabel = computed(
+  () =>
+    props.timeLabel ??
+    mountedAt.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    }),
+)
+const timelineRanges = computed(
+  () => props.sessionRanges ?? buildLocalSessionRanges(mountedAt),
+)
 
 const title = computed(() => {
   const titles: Record<MarketStatusVariant, string> = {

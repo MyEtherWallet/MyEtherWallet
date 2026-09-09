@@ -231,7 +231,7 @@ import {
   ChevronDownIcon,
   TrashIcon,
 } from '@heroicons/vue/24/solid'
-import { getTradeExplorerLink } from '@/modules/trade/composables/tradeExplorerLink'
+import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'

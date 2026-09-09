@@ -74,7 +74,8 @@
       "processing_note": "Puede tomar unos minutos",
       "trade_completed": "Operación completada",
       "received_total": "Recibiste un total de {amount}",
-      "explore_etherscan": "Explorar en Etherscan"
+      "explore_etherscan": "Explorar en Etherscan",
+      "approval_success": "{symbol} aprobado para operar"
     },
     "error": {
       "approval-failed": "No se pudo aprobar el token",
@@ -100,6 +101,8 @@
       "postmarket": "Post-mercado",
       "overnight": "Nocturno",
       "weekend": "Fin de semana",
+      "offhours": "Fuera de horario",
+      "next_session": "la próxima sesión",
       "paused": "Mercado en pausa",
       "limited": "Mercado limitado",
       "info_label": "Información del estado del mercado",
@@ -176,6 +179,7 @@
       "subtitle": "Para continuar con tu operación, tenés que permitir que MEW gaste {symbol} en {wallet}.",
       "network_fee": "Comisión de red est.",
       "network_fee_tooltip": "Se necesita una pequeña comisión de red para firmar esta autorización",
+      "fee_unavailable": "Comisión no disponible",
       "cta": "Autorizar en {wallet}",
       "your_wallet": "tu billetera"
     },

@@ -28,7 +28,16 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
   let refreshTimeout: ReturnType<typeof setTimeout> | null = null
   let inFlightFetch: Promise<void> | null = null
   let consecutiveFailures = 0
+  let staleBoundaryRefreshes = 0
   let visibilityListenerAttached = false
+
+  /**
+   * Polling, the 1s countdown tick and the visibilitychange listener run only
+   * while at least one consumer is mounted (`acquire`/`release`, same pattern
+   * as perpsStatusStore). A bare `fetchMarketStatus()` with no consumers is a
+   * one-shot: it updates state and schedules nothing.
+   */
+  let consumers = 0
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
 
@@ -127,6 +136,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
       clearTimeout(refreshTimeout)
       refreshTimeout = null
     }
+    if (consumers === 0) return
     if (consecutiveFailures > 0) {
       const backoff = Math.min(
         MIN_REFRESH_DELAY_MS * 2 ** (consecutiveFailures - 1),
@@ -138,13 +148,22 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
       return
     }
     const transitionAt = nextTransitionAt()
-    const delay =
-      hasStaleBoundary() || !transitionAt
-        ? MIN_REFRESH_DELAY_MS
-        : Math.max(
-            transitionAt + REFRESH_BUFFER_MS - Date.now(),
-            MIN_REFRESH_DELAY_MS,
-          )
+    let delay: number
+    if (hasStaleBoundary() || !transitionAt) {
+      // The backend keeps answering with boundaries already in the past. Back
+      // off like a failure instead of hammering it every 10s indefinitely.
+      staleBoundaryRefreshes += 1
+      delay = Math.min(
+        MIN_REFRESH_DELAY_MS * 2 ** (staleBoundaryRefreshes - 1),
+        MAX_FAILURE_BACKOFF_MS,
+      )
+    } else {
+      staleBoundaryRefreshes = 0
+      delay = Math.max(
+        transitionAt + REFRESH_BUFFER_MS - Date.now(),
+        MIN_REFRESH_DELAY_MS,
+      )
+    }
     refreshTimeout = setTimeout(() => {
       fetchMarketStatus()
     }, delay)
@@ -165,6 +184,36 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     visibilityListenerAttached = true
   }
 
+  const detachVisibilityListener = () => {
+    if (!visibilityListenerAttached) return
+    document.removeEventListener('visibilitychange', onVisibilityChange)
+    visibilityListenerAttached = false
+  }
+
+  /**
+   * Register a live consumer. The first one fetches fresh data (which also
+   * starts the refresh loop and, while the market is closed, the countdown
+   * tick) and attaches the visibility listener; later ones share them.
+   */
+  const acquire = () => {
+    consumers += 1
+    if (consumers > 1) return
+    attachVisibilityListener()
+    void fetchMarketStatus()
+  }
+
+  /** Drop a consumer; the last one out stops every timer and listener. */
+  const release = () => {
+    consumers = Math.max(0, consumers - 1)
+    if (consumers > 0) return
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout)
+      refreshTimeout = null
+    }
+    stopCountdown()
+    detachVisibilityListener()
+  }
+
   const fetchMarketStatus = async (): Promise<void> => {
     if (inFlightFetch) return inFlightFetch
     inFlightFetch = (async () => {
@@ -179,7 +228,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         consecutiveFailures = 0
         lastFetchedAt.value = Date.now()
 
-        if (!isTradingSessionOpen.value) {
+        if (!isTradingSessionOpen.value && consumers > 0) {
           startCountdown()
         } else {
           stopCountdown()
@@ -199,27 +248,10 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
         }
       } finally {
         inFlightFetch = null
-        attachVisibilityListener()
         scheduleNextRefresh()
       }
     })()
     return inFlightFetch
-  }
-
-  const formatNextOpen = (dateString: string) => {
-    try {
-      const date = new Date(dateString)
-      return date.toLocaleString(undefined, {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        timeZoneName: 'short',
-      })
-    } catch {
-      return dateString
-    }
   }
 
   return {
@@ -232,7 +264,7 @@ export const useMarketStatusStore = defineStore('marketStatus', () => {
     isTradingSessionOpen,
     hasStaleBoundary,
     fetchMarketStatus,
-    fetchTradingRestriction,
-    formatNextOpen,
+    acquire,
+    release,
   }
 })

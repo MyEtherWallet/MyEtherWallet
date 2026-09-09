@@ -1,4 +1,11 @@
-import { onBeforeMount, computed, ref, watch, nextTick } from 'vue'
+import {
+  onBeforeMount,
+  onScopeDispose,
+  computed,
+  ref,
+  watch,
+  nextTick,
+} from 'vue'
 import { pickFirstAvailableToken } from '@/modules/trade/common/tradeSession'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
@@ -10,12 +17,13 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { usePairStore } from '@/stores/pairStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import { TRADING_RESTRICTED_HELP_URL } from '../providers/ondoHelpers'
 
 // Composables
 import { useTrade } from './useTrade'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
-import { useMarketStatus } from './useMarketStatus'
 import { useMarketStatusDisplay } from './useMarketStatusDisplay'
 import { useTradeTokens } from './useTradeTokens'
 import { useTradeValidation } from './useTradeValidation'
@@ -30,6 +38,8 @@ import { ToastType } from '@/types/notification'
 export function useTradeModule() {
   const { t } = useI18n()
 
+  // Dev-only until the help center has a trade article to point at — the href
+  // in ModuleTrade still targets the gas-fees article as a placeholder.
   const showHelpLink = import.meta.env.DEV
 
   // --- Stores ---
@@ -96,20 +106,29 @@ export function useTradeModule() {
   } = form
 
   // --- Market Status ---
-  const {
-    marketStatus,
-    currentSession,
-    isTradingSessionOpen,
-    hasStaleMarketStatus,
-    tradingRestrictedHelpUrl,
-    countdownText,
-    fetchMarketStatus,
-    formatNextOpen,
-  } = useMarketStatus()
+  const marketStatusStore = useMarketStatusStore()
+  const { marketStatus, currentSession, isTradingSessionOpen } =
+    storeToRefs(marketStatusStore)
+  const { hasStaleBoundary: hasStaleMarketStatus, fetchMarketStatus } =
+    marketStatusStore
+
+  // Market-status polling runs only while a consumer is mounted; the trade
+  // panel is one (rewards surfaces are the others).
+  marketStatusStore.acquire()
+  onScopeDispose(() => marketStatusStore.release())
 
   watch(isTradingSessionOpen, (isOpen, wasOpen) => {
     if (isOpen && wasOpen === false) void loadTradableAssets()
   })
+
+  // Fail open while the status is unknown (first load, or the fetch failed):
+  // `isMarketOpen`/`isTradingSessionOpen` already default to open, so the
+  // per-asset session gate must agree — otherwise the pill says "Market open"
+  // while the CTA sits disabled on "Trading paused". A wrong guess is corrected
+  // by the provider (MARKET_CLOSED) on the first quote.
+  const sessionForGating = computed(() =>
+    marketStatus.value === null ? 'regular' : currentSession.value,
+  )
 
   // --- Computed ---
   const supportedNetwork = computed(() => {
@@ -233,15 +252,15 @@ export function useTradeModule() {
       if (fromAmountError.value) {
         return
       }
-      if (generalError.value === 'pathfinder error') {
-        displayGeneralError.value = ''
-      } else if (
-        generalError.value.toLowerCase().includes('internal server error')
-      ) {
+      if (generalError.value.toLowerCase().includes('internal server error')) {
         displayGeneralError.value = t('trade.service_unavailable')
       } else {
         displayGeneralError.value = newVal
       }
+    } else {
+      // A successful re-quote (no amount/token change involved) clears the
+      // error; the banner must not outlive it.
+      displayGeneralError.value = ''
     }
   })
 
@@ -258,7 +277,7 @@ export function useTradeModule() {
     tradableAssets,
     additionalBuyAssets,
     hardcodedTokensInfo,
-    currentSession,
+    currentSession: sessionForGating,
   })
 
   const {
@@ -296,6 +315,7 @@ export function useTradeModule() {
     quoteExpiresAt,
     needsApproval,
     fetchQuote,
+    cancelQuote,
     resetQuote,
   } = useTradeQuote({
     form,
@@ -341,13 +361,32 @@ export function useTradeModule() {
   const reviewModalOpen = stepModel('review')
   const progressModalOpen = stepModel('processing')
 
+  // True while the review modal is being force-closed because the expiry
+  // re-quote failed — the modal reads it to skip the OFFER_DECLINED tracking
+  // that a user-initiated close would fire.
+  const quoteRefreshFailed = ref(false)
+
   watch(reviewModalOpen, isOpen => {
     isReviewModalOpenForQuote.value = isOpen
+    if (isOpen) quoteRefreshFailed.value = false
   })
 
-  const refreshExpiredQuote = () => {
+  const refreshExpiredQuote = async () => {
     if (txProceeding.value || isApproving.value) return
-    fetchQuote()
+    await fetchQuote()
+    if (!reviewModalOpen.value || isLoadingQuote.value) return
+    // A fresh quote carries a future expiry (or none, for quotes without an
+    // auction window). An expiry still in the past means the refresh failed or
+    // was refused (market closed, region unresolved, pre-quote error) — without
+    // this the modal sits at 00:00 with Confirm disabled and no way to retry.
+    const expiresAt = quoteExpiresAt.value
+    if (expiresAt === null || expiresAt > Date.now()) return
+    quoteRefreshFailed.value = true
+    reviewModalOpen.value = false
+    toastStore.addToastMessage({
+      text: t('trade.error.failed-to-fetch-quote'),
+      type: ToastType.Error,
+    })
   }
 
   const ctaDisabledLabel = computed(() => {
@@ -406,9 +445,8 @@ export function useTradeModule() {
     fromAmount.value = ''
     toAmount.value = ''
     toAmountError.value = ''
-    generalError.value = ''
     displayGeneralError.value = '' // Clear display error
-    resetQuote()
+    resetQuote() // also clears generalError and the quote error flags
 
     // Reset to default tokens - prefer highest balance additional asset
     if (fromTokens.value.length > 0) {
@@ -483,14 +521,16 @@ export function useTradeModule() {
 
   // --- Watchers ---
 
-  watch(
-    () => progressModalOpen.value,
-    isOpen => {
-      if (!isOpen) {
-        clearValues()
-      }
-    },
-  )
+  // Clear the form only when the flow actually finishes: the progress modal is
+  // dismissed after a submitted order (processing → idle). A failed or rejected
+  // submit walks processing → review instead — clearing on mere modal-close
+  // wiped the form and re-opened the Review modal empty, with a re-submittable
+  // zero-amount order behind an enabled Confirm.
+  watch(tradeFlowStep, (step, prevStep) => {
+    if (prevStep === 'processing' && step === 'idle') {
+      clearValues()
+    }
+  })
 
   // `isTradingAllowedInRegion` is a dependency so a quote requested while the geo
   // check was still in flight — which `fetchQuote` refuses and leaves at '0' — is
@@ -501,6 +541,10 @@ export function useTradeModule() {
     () => {
       if (isSameTokenSelected.value) {
         toAmount.value = '' // Reset same token error on any change
+        // Also drop any quote still queued for the previous pair — letting it
+        // run would issue an A→A request that 400s into a spurious
+        // pair-unavailable notice.
+        cancelQuote()
         return
       }
       displayGeneralError.value = ''
@@ -708,11 +752,8 @@ export function useTradeModule() {
     toAmount,
     toAmountError,
     isPristine,
-    marketStatus,
     isTradingSessionOpen,
-    tradingRestrictedHelpUrl,
-    countdownText,
-    formatNextOpen,
+    tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     supportedNetwork,
     isCurrentNetworkSupported,
     supportedChainsList,
@@ -737,6 +778,7 @@ export function useTradeModule() {
     reviewModalOpen,
     progressModalOpen,
     quoteExpiresAt,
+    quoteRefreshFailed,
     refreshExpiredQuote,
     ctaDisabledLabel,
     showHelpLink,

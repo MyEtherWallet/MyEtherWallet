@@ -74,7 +74,8 @@
       "processing_note": "This can take a few minutes",
       "trade_completed": "Trade completed",
       "received_total": "You received a total of {amount}",
-      "explore_etherscan": "Explore in Etherscan"
+      "explore_etherscan": "Explore in Etherscan",
+      "approval_success": "{symbol} approved for trading"
     },
     "error": {
       "not_enough_balance": "Not enough balance",
@@ -100,6 +101,8 @@
       "postmarket": "Post-Market",
       "overnight": "Overnight",
       "weekend": "Weekend",
+      "offhours": "Off-hours",
+      "next_session": "the next session",
       "paused": "Market paused",
       "limited": "Market limited",
       "info_label": "Market status information",
@@ -176,6 +179,7 @@
       "subtitle": "To continue with your trade, you must allow MEW to spend {symbol} in {wallet}.",
       "network_fee": "Est. network fee",
       "network_fee_tooltip": "A small network fee is required to sign this approval",
+      "fee_unavailable": "Fee unavailable",
       "cta": "Approve in {wallet}",
       "your_wallet": "your wallet"
     },

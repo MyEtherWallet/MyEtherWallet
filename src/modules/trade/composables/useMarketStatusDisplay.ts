@@ -8,7 +8,8 @@ import {
   buildLocalSessionRanges,
   computeTimelineMarkerPct,
   getEtNowInfo,
-} from './marketDisplay'
+  ET_TIMEZONE,
+} from '../common/marketDisplay'
 
 const OPEN_SESSION_VARIANTS = ['premarket', 'postmarket', 'overnight'] as const
 
@@ -30,11 +31,20 @@ export function useMarketStatusDisplay() {
   })
 
   const sessionLabel = (session: string | undefined): string => {
-    const known = ['regular', 'premarket', 'postmarket', 'overnight', 'weekend']
+    const known = [
+      'regular',
+      'premarket',
+      'postmarket',
+      'overnight',
+      'weekend',
+      'offhours',
+    ]
     if (session && known.includes(session)) {
       return t(`trade.market_status.${session}`)
     }
-    return session || ''
+    // The API string is free-form; an unmapped value must not leak a raw key
+    // like "offhours" into every locale's UI.
+    return t('trade.market_status.next_session')
   }
 
   const formatTime = (isoDate: string): string =>
@@ -52,6 +62,9 @@ export function useMarketStatusDisplay() {
 
   const formatDurationUntil = (isoDate: string): string => {
     const diffMs = new Date(isoDate).getTime() - now.value.getTime()
+    // A boundary already in the past (stale status awaiting refresh) must not
+    // render as a perpetual "1 min until …" — return nothing until it heals.
+    if (diffMs <= 0) return ''
     const diffMinutes = Math.ceil(diffMs / 60_000)
     if (diffMinutes < 60) {
       return t('trade.market_status.duration_minutes', {
@@ -78,12 +91,13 @@ export function useMarketStatusDisplay() {
     }
 
     if (pillStatus.value === 'paused') {
-      return status.nextOpen
-        ? t('trade.market_status.until_session', {
-            duration: formatDurationUntil(status.nextOpen),
-            session: sessionLabel(status.nextOpenSession),
-          })
-        : ''
+      if (!status.nextOpen) return ''
+      const duration = formatDurationUntil(status.nextOpen)
+      if (!duration) return ''
+      return t('trade.market_status.until_session', {
+        duration,
+        session: sessionLabel(status.nextOpenSession),
+      })
     }
 
     return status.nextClose
@@ -102,7 +116,15 @@ export function useMarketStatusDisplay() {
 
   const etNowInfo = computed(() => getEtNowInfo(now.value))
 
-  const dayLabel = computed(() => etNowInfo.value.weekday.toUpperCase())
+  // Locale-aware (getEtNowInfo's weekday is pinned to en-US for parsing).
+  const dayLabel = computed(() =>
+    now.value
+      .toLocaleDateString(undefined, {
+        timeZone: ET_TIMEZONE,
+        weekday: 'short',
+      })
+      .toUpperCase(),
+  )
 
   const markerPct = computed(() =>
     computeTimelineMarkerPct(etNowInfo.value.minuteOfDay),

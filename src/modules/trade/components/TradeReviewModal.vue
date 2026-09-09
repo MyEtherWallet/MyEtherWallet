@@ -170,7 +170,7 @@
         </div>
 
         <rewards-trade-confirmation-banner
-          :trade-amount="toAmountFiat"
+          :trade-amount="toAmountUsd"
           :is-cashout="isCashout ?? false"
         />
 
@@ -243,11 +243,15 @@ const props = defineProps<{
   chain?: Chain
   isCashout?: boolean
   expiresAt?: number | null
+  /**
+   * Set by the parent while it force-closes the modal (the expiry re-quote
+   * failed): that close is not a user decision, so OFFER_DECLINED is skipped.
+   */
+  suppressDeclineTracking?: boolean
 }>()
 
 const emit = defineEmits<{
   confirm: []
-  cancel: []
   expired: []
 }>()
 
@@ -300,6 +304,17 @@ const toAmountFiat = computed(() => {
   return formatFiat(fiat.toString()).value
 })
 
+// Plain USD number for the rewards banner, which does arithmetic on it.
+// `toAmountFiat` is a display string — grouped and converted to the display
+// currency — and `Number("1,500.00")` is NaN, so qualifying trades over 1,000
+// units read as not qualifying when fed the formatted value.
+const toAmountUsd = computed(() => {
+  if (!toAmountRaw.value) return '0'
+  return new BigNumber(toAmountRaw.value)
+    .multipliedBy(props.toToken?.price || 0)
+    .toFixed(2)
+})
+
 const fromAmountFiat = computed(() => {
   if (!props.fromAmount) return '0.00'
   const fiat = new BigNumber(props.fromAmount).multipliedBy(
@@ -337,9 +352,13 @@ watch(
   newVal => {
     if (newVal) {
       isProcessing.value = false
+      // Fresh open, fresh state: collapse the breakdown and re-arm the one-shot
+      // expiry emitter (the previous session's timestamp must not block it).
+      isBreakdownOpen.value = false
+      lastExpiredTimestamp = null
       return
     }
-    if (!isProcessing.value) {
+    if (!isProcessing.value && !props.suppressDeclineTracking) {
       analytics.trackTradeEvent(TradeEvent.OFFER_DECLINED)
     }
   },

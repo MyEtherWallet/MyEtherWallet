@@ -1,8 +1,7 @@
 import { storeToRefs } from 'pinia'
-import { computed, ref, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
@@ -149,11 +148,42 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
   let approvalInFlight = false
 
+  const addProcessingToast = (hash: string) => {
+    toastStore.addToastMessage({
+      id: `trade-processing-${hash}`,
+      variant: 'dark',
+      text: t('trade.toast.processing_trade'),
+      textSecondary: t('trade.toast.processing_note'),
+      isInfinite: true,
+      tradeStatus: { kind: 'processing' },
+    })
+  }
+
+  // Closing the progress modal while the order is still pending leaves the user
+  // with no in-flight indicator — hand over to the processing toast, which
+  // ModuleNotifications removes by id when the order settles.
+  watch(tradeFlowStep, (step, prevStep) => {
+    if (prevStep !== 'processing' || step !== 'idle') return
+    const hash = orderHash.value
+    if (!hash) return
+    const order = tradeOrdersStore
+      .getOrdersByAddress(walletAddress.value ?? '')
+      .find(o => o.hash === hash)
+    if (order?.status === 'pending') addProcessingToast(hash)
+  })
+
   const approveFromToken = async (): Promise<boolean> => {
     // Resolved-and-allowed, not merely "not known to be restricted": this sends
-    // an on-chain approval, so an unresolved geo check must block it.
-    if (!isTradingAllowedInRegion.value) return false
+    // an on-chain approval, so an unresolved geo check must block it. Close the
+    // modal rather than leaving an Approve button that silently does nothing —
+    // the panel behind it renders the restriction notice once the geo check
+    // resolves (mirrors confirmTrade).
+    if (!isTradingAllowedInRegion.value) {
+      tradeFlowStep.value = 'idle'
+      return false
+    }
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
+      tradeFlowStep.value = 'idle'
       return false
     }
     if (approvalInFlight) {
@@ -258,7 +288,19 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (tradeFlowStep.value !== 'approvalIntro') return
     const approved = await approveFromToken()
     const dismissedWhileApproving = !isApproving.value
-    if (!approved || dismissedWhileApproving) return
+    if (!approved) return
+    if (dismissedWhileApproving) {
+      // The approval landed, but the user closed the waiting modal mid-flight,
+      // so the review step is not forced back open. Without this toast that
+      // path ends with no feedback at all for a successful on-chain approval.
+      toastStore.addToastMessage({
+        text: t('trade.toast.approval_success', {
+          symbol: fromTokenSelected.value?.symbol,
+        }),
+        type: ToastType.Success,
+      })
+      return
+    }
 
     tradeFlowStep.value = 'review'
     analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
@@ -317,11 +359,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       orderHash.value = result.hash
 
       let canEarnReward: undefined | boolean = undefined
-      const fromUsdValue =
-        parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
+      const fromUsdValue = BigNumber(fromAmount.value || '0').times(
+        fromTokenSelected.value?.price || 0,
+      )
       const minSpendBN = BigNumber(minSpendTrade.value)
       const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
-      if (BigNumber(fromUsdValue).gt(minimumSpend)) {
+      if (fromUsdValue.gt(minimumSpend)) {
         const canEarn =
           await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
@@ -333,16 +376,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ...getRewardFields(),
       })
 
-      // Add order to store
+      // Add order to store. Stored as a raw decimal string — display sites
+      // format it, and the fill-vs-expected math in ModuleNotifications parses
+      // it back (a grouped/abbreviated display string breaks that math).
       const toDecimals = toTokenSelected.value.decimals || 18
-      const expectedToAmount = formatFloatingPointValue(
-        formatUnits(
-          currentQuote.value?.avgAmount ||
-            currentQuote.value?.startAmount ||
-            0n,
-          toDecimals,
-        ),
-      ).value
+      const expectedToAmount = formatUnits(
+        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
+        toDecimals,
+      )
 
       tradeOrdersStore.addOrder({
         hash: result.hash,
@@ -359,14 +400,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         duration: 180,
         fills: [],
         usdValue: fromTokenSelected.value.price
-          ? (
-              parseFloat(fromAmount.value) * fromTokenSelected.value.price
-            ).toFixed(2)
+          ? BigNumber(fromAmount.value || '0')
+              .times(fromTokenSelected.value.price)
+              .toFixed(2)
           : undefined,
         toUsdValue: toTokenSelected.value.price
-          ? (
-              parseFloat(expectedToAmount) * toTokenSelected.value.price
-            ).toFixed(2)
+          ? BigNumber(expectedToAmount)
+              .times(toTokenSelected.value.price)
+              .toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -376,15 +417,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         toTokenAddress: toTokenSelected.value.address,
       })
 
+      // The user dismissed the progress modal while the order was submitting —
+      // the toast is now the only in-flight indicator. The normal flow (modal
+      // kept open, closed later) gets its toast from the step watcher below.
       if (stepIs('idle')) {
-        toastStore.addToastMessage({
-          id: `trade-processing-${result.hash}`,
-          variant: 'dark',
-          text: t('trade.toast.processing_trade'),
-          textSecondary: t('trade.toast.processing_note'),
-          isInfinite: true,
-          tradeStatus: { kind: 'processing' },
-        })
+        addProcessingToast(result.hash)
       }
     } catch (e) {
       if (stepIs('processing')) {

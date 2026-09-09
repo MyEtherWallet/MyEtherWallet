@@ -5,7 +5,7 @@ import {
   formatMinuteOfDay,
   buildLocalSessionRanges,
   SESSION_BOUNDS_ET,
-} from '@/modules/trade/composables/marketDisplay'
+} from '@/modules/trade/common/marketDisplay'
 
 const PCT = {
   leftCapStart: 0,

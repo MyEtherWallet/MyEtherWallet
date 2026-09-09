@@ -267,10 +267,39 @@ describe('getActivePauseReason', () => {
     ).toBeNull()
   })
 
-  it('returns null for a missing or malformed window', () => {
-    expect(getActivePauseReason(pause({ start: null }), INSIDE)).toBeNull()
+  // A missing or unparseable bound is open on that side: an indefinite halt
+  // (start set, no end) is the normal API shape for "paused until further
+  // notice" and must keep surfacing its reason.
+  it('treats a missing start as open-ended from the past', () => {
+    expect(getActivePauseReason(pause({ start: null }), INSIDE)).toBe(
+      'cash_dividend',
+    )
+  })
+
+  it('treats a missing or unparseable end as an indefinite halt', () => {
+    expect(getActivePauseReason(pause({ end: null }), AFTER)).toBe(
+      'cash_dividend',
+    )
+    expect(getActivePauseReason(pause({ end: 'not-a-date' }), AFTER)).toBe(
+      'cash_dividend',
+    )
+  })
+
+  it('still respects the one bound that is present', () => {
+    expect(getActivePauseReason(pause({ end: null }), BEFORE)).toBeNull()
+    expect(getActivePauseReason(pause({ start: null }), AFTER)).toBeNull()
+  })
+
+  it('reads a timezone-naive timestamp as UTC, not viewer-local', () => {
+    const naive = pause({
+      start: '2026-09-03 23:52:00',
+      end: '2026-09-04 08:10:00',
+    })
     expect(
-      getActivePauseReason(pause({ end: 'not-a-date' }), INSIDE),
+      getActivePauseReason(naive, Date.parse('2026-09-04T00:00:00Z')),
+    ).toBe('cash_dividend')
+    expect(
+      getActivePauseReason(naive, Date.parse('2026-09-04T09:00:00Z')),
     ).toBeNull()
   })
 

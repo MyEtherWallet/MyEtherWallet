@@ -28,6 +28,12 @@ describe('sanitizeDecimal', () => {
     expect(sanitizeDecimal('12,947,536.12')).toBe('12947536.12')
   })
 
+  it('reads the European format (dot-grouped, comma decimal) correctly', () => {
+    expect(sanitizeDecimal('1.234,56')).toBe('1234.56')
+    expect(sanitizeDecimal('12.947.536,12')).toBe('12947536.12')
+    expect(sanitizeDecimal('0,5')).toBe('0.5')
+  })
+
   it('treats multiple commas without a dot as thousands separators', () => {
     expect(sanitizeDecimal('1,234,567')).toBe('1234567')
   })

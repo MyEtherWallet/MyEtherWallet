@@ -8,7 +8,7 @@ import { isUserRejectionError } from '@/utils/walletUtils'
  * hides a fully broken trade path — the user sees a toast and Sentry sees
  * nothing.
  */
-const REPORTABLE_CLIENT_STATUSES = new Set([401, 403, 429])
+export const REPORTABLE_CLIENT_STATUSES = new Set([401, 403, 429])
 
 /**
  * Whether a trade-submit error is an *expected* client-side failure — it should

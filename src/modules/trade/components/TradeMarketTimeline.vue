@@ -76,22 +76,14 @@ type SessionKey = 'premarket' | 'regular' | 'postmarket' | 'overnight'
 
 export type TimelineSessionRanges = Record<SessionKey, string>
 
-const props = withDefaults(
-  defineProps<{
-    dayLabel: string
-    markerPct: number
-    timeLabel: string
-    sessionRanges?: TimelineSessionRanges
-  }>(),
-  {
-    sessionRanges: () => ({
-      premarket: '04:00 AM → 09:31 AM',
-      regular: '09:31 AM → 03:59 PM',
-      postmarket: '04:01 PM → 07:59 PM',
-      overnight: '08:05 PM → 03:55 AM',
-    }),
-  },
-)
+const props = defineProps<{
+  dayLabel: string
+  markerPct: number
+  timeLabel: string
+  // Required: a hardcoded fallback here would render ET-shaped English times
+  // as if they were the viewer's local session hours.
+  sessionRanges: TimelineSessionRanges
+}>()
 
 const { t } = useI18n()
 

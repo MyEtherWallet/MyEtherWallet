@@ -68,6 +68,21 @@
                 class="h-[14px] w-[56px] rounded-8 bg-neutral-200 animate-pulse"
               />
             </div>
+            <div
+              v-else-if="hasFailed"
+              class="flex flex-col items-end flex-none"
+            >
+              <p class="text-s-14 leading-[20px] text-error whitespace-nowrap">
+                {{ $t('trade.approve_spending.fee_unavailable') }}
+              </p>
+              <button
+                type="button"
+                class="text-s-14 font-semibold leading-[20px] text-primary hoverNoBG"
+                @click="refetchFee"
+              >
+                {{ $t('common.retry') }}
+              </button>
+            </div>
             <div v-else class="flex flex-col items-end flex-none">
               <p
                 class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black whitespace-nowrap"
@@ -94,7 +109,7 @@
           </div>
         </div>
 
-        <app-base-button :is-loading="isSubmitting" @click="emit('approve')">
+        <app-base-button @click="emit('approve')">
           <span class="flex items-center gap-2">
             {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
             <arrow-top-right-on-square-icon class="w-5 h-5" />
@@ -125,18 +140,18 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useApprovalFee } from '../composables/useApprovalFee'
 
+// No submitting state: clicking Approve flips the flow step synchronously,
+// which closes this modal and opens the waiting-approval one.
 const props = withDefaults(
   defineProps<{
     tokenSymbol?: string
     tokenAddress?: string
     chainId?: string
-    isSubmitting?: boolean
   }>(),
   {
     tokenSymbol: '',
     tokenAddress: '',
     chainId: '',
-    isSubmitting: false,
   },
 )
 
@@ -149,7 +164,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const { selectedChain } = storeToRefs(useChainsStore())
 const { walletAddress, walletName } = storeToRefs(useWalletStore())
-const { isLoading, nativeFee, fiatFee, fetchApprovalFee, reset } =
+const { isLoading, hasFailed, nativeFee, fiatFee, fetchApprovalFee, reset } =
   useApprovalFee()
 
 const approx = (value: string) =>
@@ -164,15 +179,23 @@ const nativeTokenSymbol = computed(
 )
 const nativeTokenLogo = computed(() => selectedChain.value?.icon || '')
 
-watch(model, async isOpen => {
-  if (!isOpen) {
-    reset()
-    return
-  }
-  await fetchApprovalFee({
+const refetchFee = () =>
+  fetchApprovalFee({
     chainId: props.chainId,
     tokenAddress: props.tokenAddress,
     walletAddress: walletAddress.value ?? '',
   })
-})
+
+// Token/chain in the sources too: a pair change while the modal is open must
+// re-quote the fee for the new token, not keep showing the old one's.
+watch(
+  [model, () => props.tokenAddress, () => props.chainId],
+  async ([isOpen]) => {
+    if (!isOpen) {
+      reset()
+      return
+    }
+    await refetchFee()
+  },
+)
 </script>

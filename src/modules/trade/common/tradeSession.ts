@@ -38,6 +38,25 @@ export type PauseReason = (typeof PAUSE_REASONS)[number]
 export const isPauseReason = (value: string): value is PauseReason =>
   (PAUSE_REASONS as readonly string[]).includes(value)
 
+/**
+ * Parses a pause boundary. A timezone-naive timestamp ("2026-03-08 09:30:00")
+ * would otherwise be read in the viewer's local zone, silently shifting the
+ * window by their UTC offset — treat it as UTC instead. Returns null for a
+ * missing or unparseable value.
+ */
+const parsePauseBoundary = (
+  value: string | null | undefined,
+): number | null => {
+  if (!value) return null
+  const trimmed = value.trim()
+  const hasTime = /[T ]\d{1,2}:\d{2}/.test(trimmed)
+  const hasZone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(trimmed)
+  const candidate =
+    hasTime && !hasZone ? `${trimmed.replace(' ', 'T')}Z` : trimmed
+  const time = Date.parse(candidate)
+  return Number.isNaN(time) ? null : time
+}
+
 export const getActivePauseReason = (
   asset: Pick<TradableAsset, 'pause'> | null | undefined,
   now: number,
@@ -45,10 +64,13 @@ export const getActivePauseReason = (
   const pause = asset?.pause
   if (!pause) return null
 
-  const start = pause.start ? Date.parse(pause.start) : NaN
-  const end = pause.end ? Date.parse(pause.end) : NaN
-  if (Number.isNaN(start) || Number.isNaN(end)) return null
-  if (now < start || now > end) return null
+  // A missing or unparseable bound is open on that side, so an indefinite halt
+  // (start set, no end — the normal shape for "paused until further notice")
+  // still surfaces its reason instead of falling back to the generic copy.
+  const start = parsePauseBoundary(pause.start)
+  const end = parsePauseBoundary(pause.end)
+  if (start !== null && now < start) return null
+  if (end !== null && now > end) return null
 
   const slug = pause.reason?.message?.trim().toLowerCase()
   return slug && isPauseReason(slug) ? slug : null

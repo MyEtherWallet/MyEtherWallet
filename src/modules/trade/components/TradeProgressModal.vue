@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import {
@@ -104,7 +104,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
-import { getTradeExplorerLink } from '@/modules/trade/composables/tradeExplorerLink'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 
@@ -121,6 +122,26 @@ const props = defineProps<{
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const tradeOrdersStore = useTradeOrdersStore()
+
+// Publish which order this modal is showing so ModuleNotifications suppresses
+// its completed/cancelled toasts while the same outcome is already on screen.
+const releaseActiveModalOrder = () => {
+  if (tradeOrdersStore.activeModalOrderHash !== null) {
+    tradeOrdersStore.activeModalOrderHash = null
+  }
+}
+watch(
+  [model, () => props.orderHash],
+  ([isOpen, hash]) => {
+    if (isOpen && hash) {
+      tradeOrdersStore.activeModalOrderHash = hash
+    } else {
+      releaseActiveModalOrder()
+    }
+  },
+  { immediate: true },
+)
+onBeforeUnmount(releaseActiveModalOrder)
 
 const tokenAddress = (token: NewTokenInfo | null) =>
   token && props.fromChain
@@ -144,7 +165,8 @@ const isSettled = computed(() => status.value === 'filled' || isFailed.value)
 
 const receivedText = computed(() => {
   if (!order.value?.finalToAmount) return ''
-  return `${order.value.finalToAmount} ${order.value.toSymbol}`
+  // Stored raw (plain decimal string); format for display.
+  return `${formatFloatingPointValue(order.value.finalToAmount).value} ${order.value.toSymbol}`
 })
 
 const title = computed(() => {

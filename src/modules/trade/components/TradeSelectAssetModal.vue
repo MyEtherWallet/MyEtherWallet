@@ -218,6 +218,7 @@ interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber
   fiatValueFormatted: string
   secondaryLine: string
+  hasBalance?: boolean
 }
 
 const props = withDefaults(
@@ -295,21 +296,27 @@ const assets = computed<DisplayAsset[]>(() => {
     }))
   }
 
-  return tokens
-    .map(token => {
-      const amountOwned = token.balance
-        ? formatUnits(BigInt(token.balance), token.decimals)
-        : '0'
-      const fiatValue = BigNumber(amountOwned).multipliedBy(token.price || 0)
-      return {
-        ...token,
-        fiatValue,
-        fiatValueFormatted: formatFiat(fiatValue).display,
-        secondaryLine: `${formatFloatingPointValue(amountOwned).value} ${truncate(token.symbol, 7)}`,
-      }
-    })
-    .filter(asset => asset.fiatValue.isGreaterThan(0))
-    .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
+  return (
+    tokens
+      .map(token => {
+        const amountOwned = token.balance
+          ? formatUnits(BigInt(token.balance), token.decimals)
+          : '0'
+        const fiatValue = BigNumber(amountOwned).multipliedBy(token.price || 0)
+        return {
+          ...token,
+          fiatValue,
+          hasBalance: BigNumber(amountOwned).isGreaterThan(0),
+          fiatValueFormatted: formatFiat(fiatValue).display,
+          secondaryLine: `${formatFloatingPointValue(amountOwned).value} ${truncate(token.symbol, 7)}`,
+        }
+      })
+      // Filter on balance, not fiat value: a held token whose price feed is
+      // missing must stay sellable. With no wallet connected there are no
+      // balances at all — show the list rather than an empty "no tokens" state.
+      .filter(asset => !isWalletConnected.value || asset.hasBalance)
+      .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
+  )
 })
 
 const disabledAddresses = computed(
@@ -321,8 +328,9 @@ const pauseReasonOf = (asset: DisplayAsset) =>
     ? asset.pauseReason
     : null
 
+// Side-agnostic: a held asset that is out of session must be grouped and
+// explained on the sell side too, not rendered as a dead, untagged row.
 const isSessionUnavailable = (asset: DisplayAsset) =>
-  props.side === 'buy' &&
   !pauseReasonOf(asset) &&
   disabledAddresses.value.has(asset.address?.toLowerCase())
 
@@ -337,7 +345,6 @@ const searchResults = computed<DisplayAsset[]>(() => {
   const matches = searchInput.value
     ? fuzzySearchByKeys(assets.value, ['name', 'symbol'], searchInput.value)
     : assets.value
-  if (props.side !== 'buy') return matches
   return [
     ...matches.filter(asset => !isSessionUnavailable(asset)),
     ...matches.filter(isSessionUnavailable),
@@ -365,11 +372,10 @@ watch(isOpen, value => {
   emit('open:selectToken', value)
 })
 
-watch(
-  () => props.networkName,
-  () => {
-    const top = assets.value.find(asset => !isAssetPaused(asset))
-    if (top) selectedToken.value = top
-  },
-)
+// Deliberately no networkName watcher here: on a chain switch this fires while
+// `chainTokens` still holds the previous chain's list (the swap store re-inits
+// asynchronously), so defaulting from it wrote a stale-chain token into the
+// parent's v-model and blocked the parent's own repopulation (which is gated on
+// the selection being empty). Default selection is the parent's job — see the
+// swapLoaded / disabledTokenAddresses watchers in useTradeModule.
 </script>

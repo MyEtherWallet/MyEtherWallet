@@ -1,4 +1,5 @@
 import { computed, type Ref } from 'vue'
+import { useNow } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
@@ -46,6 +47,11 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
 
   const { t } = useI18n()
+
+  // Ticking clock for the pause-window checks below. A bare Date.now() inside
+  // a computed is not reactive, so a pause starting or ending while the page is
+  // open froze the tags and warnings until an unrelated dependency changed.
+  const now = useNow({ interval: 60_000 })
 
   // Check if selected from token is a tradable asset (stock token)
   const isSellingTradableAsset = computed(() => {
@@ -152,7 +158,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
-        const reason = getActivePauseReason(info, Date.now())
+        const reason = getActivePauseReason(info, now.value.getTime())
         return reason
           ? t(`trade.pause_reason.${reason}.tooltip`)
           : t('trade.error.token-not-available', { symbol: token?.symbol })
@@ -190,7 +196,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       chainName,
       fromTokensMap,
       hardcodedTokensInfo.value,
-      Date.now(),
+      now.value.getTime(),
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -276,7 +282,10 @@ function mapTradableAssetsToTokens(
         priceChangePercentage24h: Number.isFinite(priceChange)
           ? priceChange
           : 0,
-        pauseReason: getActivePauseReason(asset, now),
+        // Only a genuinely blocked asset carries a tag — the picker treats a
+        // tagged row as unselectable, so a stale pause record left on a
+        // tradable asset must not block it.
+        pauseReason: asset.tradable ? null : getActivePauseReason(asset, now),
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,

@@ -1,8 +1,13 @@
-import { ref, type Ref, type ComputedRef } from 'vue'
+import {
+  getCurrentScope,
+  onScopeDispose,
+  ref,
+  type Ref,
+  type ComputedRef,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
@@ -101,10 +106,18 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
 
-  const runQuote = async () => {
+  let quoteRunId = 0
+
+  const runQuote = async (runId: number) => {
+    // A run superseded (or cancelled) while waiting in the debounce queue must
+    // not touch any state — not even the synchronous flag resets below.
+    if (runId !== quoteRunId) return
+    const isStale = () => runId !== quoteRunId
+
     isPairUnavailable.value = false
     isBelowMinimum.value = false
     generalError.value = ''
+    needsApproval.value = false
 
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
@@ -146,27 +159,34 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       return
     }
 
+    // Snapshot every input for this run. The awaits below can outlive a token
+    // or amount change, and mixing pre-await inputs with post-await reads is
+    // how a stale quote gets formatted with the wrong token's decimals.
+    const fromToken = fromTokenSelected.value
+    const toToken = toTokenSelected.value
+    const amount = fromAmount.value
+    const address = walletAddress.value
+
     try {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
+      if (isStale()) return
 
       const chainId = parseInt(selectedFromChain.value?.chainID || '1')
       const fusion = new OneInchFusion(wallet.value, chainId)
 
-      const decimals = fromTokenSelected.value.decimals || 18
-      const amountInBaseUnits = parseUnits(
-        fromAmount.value,
-        decimals,
-      ).toString()
+      const decimals = fromToken.decimals || 18
+      const amountInBaseUnits = parseUnits(amount, decimals).toString()
 
       const quote = await fusion.getQuote({
-        fromTokenAddress: fromTokenSelected.value.address,
-        toTokenAddress: toTokenSelected.value.address,
+        fromTokenAddress: fromToken.address,
+        toTokenAddress: toToken.address,
         amount: amountInBaseUnits,
-        fromAddress: walletAddress.value,
-        fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-        toTokenDecimals: toTokenSelected.value.decimals || 18,
+        fromAddress: address,
+        fromTokenDecimals: fromToken.decimals || 18,
+        toTokenDecimals: toToken.decimals || 18,
       })
+      if (isStale()) return
 
       // No quote returned from the provider
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
@@ -188,10 +208,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       quoteExpiresAt.value = quote.auctionDurationSeconds
         ? Date.now() + quote.auctionDurationSeconds * 1000
         : null
-      const toDecimals = toTokenSelected.value.decimals || 18
-      toAmount.value = formatFloatingPointValue(
-        formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
-      ).value
+      // Raw decimal string (no grouping/abbreviation) — consumers format for
+      // display and can safely do arithmetic on it.
+      const toDecimals = toToken.decimals || 18
+      toAmount.value = formatUnits(
+        quote.avgAmount || quote.startAmount,
+        toDecimals,
+      )
 
       if (!isReviewModalOpen.value) {
         analytics.trackTradeEvent(TradeEvent.PRELIMINARY_SHOWN, {
@@ -201,12 +224,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
 
       // Check if approval is required
       const approvalRequired = await fusion.isApprovalRequired(
-        walletAddress.value,
-        fromTokenSelected.value.address,
+        address,
+        fromToken.address,
         BigInt(amountInBaseUnits),
       )
+      if (isStale()) return
       needsApproval.value = approvalRequired
     } catch (e) {
+      // A stale failure belongs to a pair or amount the user already left;
+      // writing its flags would poison the fresh quote's state.
+      if (isStale()) return
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
       isPairUnavailable.value =
@@ -241,12 +268,9 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     }
   }
 
-  let quoteRunId = 0
-
-  const debouncedQuote = useDebounceFn(async () => {
-    const runId = quoteRunId
+  const debouncedQuote = useDebounceFn(async (runId: number) => {
     try {
-      await runQuote()
+      await runQuote(runId)
     } finally {
       if (runId === quoteRunId) isLoadingQuote.value = false
     }
@@ -256,7 +280,23 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     quoteRunId += 1
     const amount = fromAmount.value
     isLoadingQuote.value = amount !== '' && amount !== '0'
-    return debouncedQuote()
+    return debouncedQuote(quoteRunId)
+  }
+
+  /**
+   * Invalidates any pending or in-flight quote run without starting a new one.
+   * The superseded run bails out before touching state, firing analytics, or
+   * issuing the network request (when still queued in the debounce).
+   */
+  const cancelQuote = () => {
+    quoteRunId += 1
+    isLoadingQuote.value = false
+  }
+
+  // The debounce timer survives component teardown; cancelling on scope dispose
+  // stops the trailing run from firing a request and analytics after unmount.
+  if (getCurrentScope()) {
+    onScopeDispose(cancelQuote)
   }
 
   const resetQuote = () => {
@@ -265,6 +305,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     needsApproval.value = false
     isPairUnavailable.value = false
     isBelowMinimum.value = false
+    generalError.value = ''
   }
 
   return {
@@ -272,6 +313,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     quoteExpiresAt,
     needsApproval,
     fetchQuote,
+    cancelQuote,
     resetQuote,
   }
 }

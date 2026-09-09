@@ -55,7 +55,7 @@
             'min-w-0 grow truncate text-s-32 font-bold leading-[36px] tracking-[-0.96px]',
           ]"
         >
-          {{ amount || '0' }}
+          {{ displayAmount || '0' }}
         </p>
 
         <trade-select-asset-modal
@@ -174,6 +174,7 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { useNumericInput } from '@/composables/useNumericInput'
 import { sanitizeDecimal } from '@/utils/sanitizeDecimal'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { useInFocusInput } from '@/composables/useInFocusInput'
@@ -268,6 +269,14 @@ const tokenBalanceRaw = computed(() =>
   ),
 )
 
+// The buy-side amount arrives as a raw decimal string (the quote's output);
+// format it for display only. The sell side shows exactly what the user typed.
+const displayAmount = computed(() =>
+  props.side === 'buy' && amount.value
+    ? formatFloatingPointValue(amount.value).value
+    : amount.value,
+)
+
 const fiatText = computed(() => {
   const numAmount = (amount.value || '').replace(/[^0-9.]/g, '')
   const price = tokenBalanceRaw.value?.price || selectedToken.value?.price || 0
@@ -308,7 +317,7 @@ const AMOUNT_SCALE_CLASSES: Record<number, string> = {
 }
 
 const { scale: amountScale, measureWithScale } = useTextScaler(
-  () => amount.value || '0',
+  () => displayAmount.value || '0',
   {
     scales: AMOUNT_SCALES,
     containerWidthPx: amountDisplayWidth,
@@ -349,18 +358,23 @@ onClickOutside(activeCard, () => {
   applyError()
 })
 
-const checkIfNumber = (e: KeyboardEvent) => {
-  const key = e.key
-  if (key >= '0' && key <= '9') return
-  if (key === '.' && !(amount.value || '').includes('.')) return
-  e.preventDefault()
-}
+// Shared handler: accepts digits and a single '.', and converts a typed ','
+// into '.' at the caret — a comma-decimal keypad could not type a decimal at
+// all with a digits-and-dot-only handler. Pasted text is sanitized in
+// onAmountInput instead.
+const { checkIfNumber } = useNumericInput(amount)
 
 const onAmountInput = (event: Event) => {
   const input = event.target as HTMLInputElement
   const sanitized = sanitizeDecimal(input.value)
   if (input.value !== sanitized) {
+    // Restore the caret relative to the removed characters — assigning .value
+    // alone throws the caret to the end on every rejected character.
+    const caret = input.selectionStart ?? sanitized.length
+    const removed = input.value.length - sanitized.length
     input.value = sanitized
+    const position = Math.max(0, Math.min(caret - removed, sanitized.length))
+    input.setSelectionRange(position, position)
   }
   amount.value = sanitized
 }

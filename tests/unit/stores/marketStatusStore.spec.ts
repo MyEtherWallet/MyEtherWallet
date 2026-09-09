@@ -56,6 +56,7 @@ describe('useMarketStatusStore', () => {
   it('refetches when the tab becomes visible with stale data', async () => {
     mockedGetMarketStatus.mockResolvedValue(make())
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     expect(mockedGetMarketStatus).toHaveBeenCalledTimes(1)
 
@@ -73,6 +74,7 @@ describe('useMarketStatusStore', () => {
   it('does not refetch on visibility when the data is fresh', async () => {
     mockedGetMarketStatus.mockResolvedValue(make())
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
 
@@ -87,6 +89,7 @@ describe('useMarketStatusStore', () => {
       make({ nextClose: iso(60_000), nextOpen: iso(90 * 60_000) }),
     )
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
 
@@ -110,6 +113,7 @@ describe('useMarketStatusStore', () => {
       }),
     )
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
 
@@ -121,6 +125,7 @@ describe('useMarketStatusStore', () => {
     mockedGetMarketStatus.mockRejectedValueOnce(new Error('network down'))
     mockedGetMarketStatus.mockResolvedValue(make())
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     expect(store.marketStatus).toBeNull()
 
@@ -151,6 +156,7 @@ describe('useMarketStatusStore', () => {
       make({ nextClose: iso(-60_000), nextOpen: iso(6 * 60_000) }),
     )
     const store = useMarketStatusStore()
+    store.acquire()
     await store.fetchMarketStatus()
     const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
 
@@ -197,6 +203,50 @@ describe('useMarketStatusStore', () => {
     const store = useMarketStatusStore()
 
     expect(store.hasStaleBoundary()).toBe(false)
+  })
+
+  it('does not start polling from a bare fetch with no consumers', async () => {
+    mockedGetMarketStatus.mockResolvedValue(
+      make({ nextClose: iso(60_000), nextOpen: iso(90 * 60_000) }),
+    )
+    const store = useMarketStatusStore()
+    await store.fetchMarketStatus()
+    const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
+
+    await vi.advanceTimersByTimeAsync(2 * 60 * 60_000)
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch)
+  })
+
+  it('stops polling once the last consumer releases', async () => {
+    mockedGetMarketStatus.mockResolvedValue(
+      make({ nextClose: iso(60_000), nextOpen: iso(90 * 60_000) }),
+    )
+    const store = useMarketStatusStore()
+    store.acquire()
+    await store.fetchMarketStatus()
+    const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
+
+    store.release()
+    await vi.advanceTimersByTimeAsync(2 * 60 * 60_000)
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch)
+  })
+
+  it('backs off instead of polling a stale boundary every 10s forever', async () => {
+    mockedGetMarketStatus.mockResolvedValue(make({ nextClose: iso(-60_000) }))
+    const store = useMarketStatusStore()
+    store.acquire()
+    await store.fetchMarketStatus()
+    const callsAfterFetch = mockedGetMarketStatus.mock.calls.length
+
+    // First stale refresh at 10s...
+    await vi.advanceTimersByTimeAsync(10_100)
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch + 1)
+
+    // ...the next one doubles to 20s rather than firing at 10s again.
+    await vi.advanceTimersByTimeAsync(10_100)
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch + 1)
+    await vi.advanceTimersByTimeAsync(10_100)
+    expect(mockedGetMarketStatus.mock.calls.length).toBe(callsAfterFetch + 2)
   })
 
   it('exposes the tradability computeds from the fetched status', async () => {

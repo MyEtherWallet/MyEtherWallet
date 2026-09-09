@@ -32,7 +32,12 @@ export function useApprovalFee() {
   const nativeFee = ref('')
   const fiatFee = ref('')
 
+  // Invalidates in-flight requests: without it, reopening the modal for token B
+  // while token A's slow fee quote is still pending paints A's fee as B's cost.
+  let fetchRunId = 0
+
   const reset = () => {
+    fetchRunId += 1
     isLoading.value = false
     hasFailed.value = false
     nativeFee.value = ''
@@ -43,6 +48,7 @@ export function useApprovalFee() {
     chainId: string
     tokenAddress: string
     walletAddress: string
+    /** Native-token decimals; 18 on every supported EVM chain. */
     nativeDecimals?: number
   }): Promise<boolean> => {
     const {
@@ -52,6 +58,10 @@ export function useApprovalFee() {
       nativeDecimals = 18,
     } = options
     if (!chainId || !tokenAddress || !walletAddress) return false
+
+    fetchRunId += 1
+    const runId = fetchRunId
+    const isStale = () => runId !== fetchRunId
 
     isLoading.value = true
     hasFailed.value = false
@@ -73,6 +83,7 @@ export function useApprovalFee() {
       if (!response.ok) throw new Error(`Fee quote failed: ${response.status}`)
 
       const quote = (await response.json()) as GetEvmTransactionQuoteResponse
+      if (isStale()) return false
       const tier = quote.fees?.[gasPriceType.value]
       if (!tier?.nativeValue) throw new Error('Fee quote has no native value')
 
@@ -86,6 +97,7 @@ export function useApprovalFee() {
       isLoading.value = false
       return true
     } catch (error) {
+      if (isStale()) return false
       captureException(error, {
         ...SENTRY_MODULE_TAGS.TRADE,
         extra: { title: 'Approval fee quote failed', chainId, tokenAddress },

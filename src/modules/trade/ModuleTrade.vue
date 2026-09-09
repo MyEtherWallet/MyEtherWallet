@@ -119,7 +119,7 @@
             :network-name="selectedFromChain?.name"
             :is-pristine="isPristine"
             :disabled-tokens="disabledTokenAddresses"
-            :max-disabled="fromTokenSelected?.address === MAIN_TOKEN_CONTRACT"
+            :max-disabled="isNativeFromToken"
             @percent="setPercentageAmount"
             @select:token="onFromTokenSelected"
           />
@@ -267,8 +267,8 @@
       :chain="selectedFromChain"
       :is-cashout="isCashOutTradableAsset"
       :expires-at="quoteExpiresAt"
+      :suppress-decline-tracking="quoteRefreshFailed"
       @confirm="confirmTrade"
-      @cancel="reviewModalOpen = false"
       @expired="refreshExpiredQuote"
     />
 
@@ -350,6 +350,7 @@ const {
   reviewModalOpen,
   progressModalOpen,
   quoteExpiresAt,
+  quoteRefreshFailed,
   refreshExpiredQuote,
   ctaDisabledLabel,
   showHelpLink,
@@ -373,6 +374,15 @@ const {
   onFromTokenSelected,
   onToTokenSelected,
 } = useTradeModule()
+
+// Case-insensitive: the swap list can return a checksummed native sentinel,
+// and an exact-match miss here would let MAX select the entire native balance
+// with nothing reserved for gas.
+const isNativeFromToken = computed(
+  () =>
+    fromTokenSelected.value?.address?.toLowerCase() ===
+    MAIN_TOKEN_CONTRACT.toLowerCase(),
+)
 
 // The token selects are `v-model`-bound but hold `null` when nothing is picked,
 // which the child prop types as `undefined`.
