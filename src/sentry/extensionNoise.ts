@@ -396,11 +396,15 @@ export function isWalletConnectSubscribeInterruptedError(
 const NULL_INFO_MESSAGE =
   /cannot read properties of null \(reading 'info'\)|cannot destructure property 'info' of/i
 // An EIP-6963 provider-discovery frame — retained (non-mangled) in the minified
-// bundle: the bundled `mipd` store (`requestProviders`, `createStore`), wagmi's
-// connector enumeration (`getProviders`), the `eip6963:announceProvider`
-// listeners, and MEW's own `providerStore.addProvider`.
+// bundle: the bundled `mipd` store (`requestProviders`), wagmi's connector
+// enumeration (`getProviders`) and config setup (`createConfig`), the
+// `eip6963:announceProvider` listeners, and MEW's own `providerStore.addProvider`.
+// The wagmi enumeration crash (1JN) is anchored on `createConfig` rather than the
+// generic zustand `createStore` (wagmi builds its store on zustand, so a bare
+// `createStore` frame is not unique to provider discovery — an unrelated null-`info`
+// deref passing through any zustand store would otherwise be suppressed).
 const EIP6963_DISCOVERY_FRAME =
-  /requestProviders|createStore|getProviders|announceProvider|eip6963|addProvider/i
+  /requestProviders|getProviders|announceProvider|eip6963|addProvider|createConfig/i
 
 /**
  * Whether an error is the EIP-6963 `announceProvider` null-`detail` crash.

@@ -962,6 +962,22 @@ describe('isEip6963NullProviderError', () => {
     ).toBe(false)
   })
 
+  it('does NOT match a null-`info` deref through a generic zustand createStore frame', () => {
+    // `createStore` / `createStoreImpl` are zustand internals used well beyond
+    // provider discovery; a real null-`info` bug that merely passes through one
+    // must keep reporting. Only the wagmi-specific `createConfig` anchor counts.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at selectState (${BUNDLE}:296:88888)\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)`,
+      }),
+    ).toBe(false)
+  })
+
   it('does NOT match a different null-deref even on a discovery frame', () => {
     // A null-`uuid` read (not `info`) in the same area is a different bug.
     expect(
