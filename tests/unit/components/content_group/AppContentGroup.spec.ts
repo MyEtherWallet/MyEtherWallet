@@ -55,9 +55,12 @@ describe('AppContentGroup', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', align: 'right' },
     })
-    expect(wrapper.get('[data-testid="cg-root"]').classes()).toContain(
-      'text-right',
-    )
+    const rootClasses = wrapper.get('[data-testid="cg-root"]').classes()
+    expect(rootClasses).toContain('text-right')
+    // Aligning via items-start/end would shrink the rows to content width and
+    // break the title ellipsis — rows must stay full-width. Guard against it.
+    expect(rootClasses).not.toContain('items-end')
+    expect(rootClasses).not.toContain('items-start')
   })
 
   it('title is single-line (truncates) by default; description wraps', () => {
@@ -65,6 +68,8 @@ describe('AppContentGroup', () => {
       props: { title: 'T', description: 'D' },
     })
     expect(wrapper.get(title()).classes()).toContain('truncate')
+    // min-w-0 lets the flex item shrink so the ellipsis actually clips.
+    expect(wrapper.get(title()).classes()).toContain('min-w-0')
     expect(wrapper.get(description()).classes()).not.toContain('truncate')
   })
 

@@ -42,8 +42,16 @@ const props = withDefaults(
 const slots = useSlots()
 const hasDescription = computed(() => props.description !== undefined)
 
+// Text alignment cascades to the (possibly wrapping) text and the inline-block
+// skeleton bars. The rows themselves stay full-width (default stretch) so the
+// title can actually clip — items-start/end would shrink them to content width.
 const alignClass = computed(() =>
-  props.align === 'right' ? 'items-end text-right' : 'items-start text-left',
+  props.align === 'right' ? 'text-right' : 'text-left',
+)
+
+// Positions the icon + text within a full-width row.
+const rowJustifyClass = computed(() =>
+  props.align === 'right' ? 'justify-end' : 'justify-start',
 )
 
 const titleClass = computed(() => [
@@ -67,15 +75,19 @@ const descriptionClass = computed(() => [
     <!-- Loading: skeleton bars keep line height stable (12px tall, 4px radius). -->
     <template v-if="loading">
       <div class="py-[5px]">
-        <div class="h-3 w-[35px] rounded-[4px] bg-grey-10 animate-pulse"></div>
+        <div
+          class="inline-block h-3 w-[35px] rounded-[4px] bg-grey-10 animate-pulse"
+        ></div>
       </div>
       <div v-if="hasDescription" class="py-[5px]">
-        <div class="h-3 w-[79px] rounded-[4px] bg-grey-10 animate-pulse"></div>
+        <div
+          class="inline-block h-3 w-[79px] rounded-[4px] bg-grey-10 animate-pulse"
+        ></div>
       </div>
     </template>
 
     <template v-else>
-      <div class="flex items-center gap-1 min-w-0">
+      <div class="flex items-center gap-1 min-w-0" :class="rowJustifyClass">
         <span
           v-if="slots['title-icon']"
           class="w-[18px] h-[18px] shrink-0 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
@@ -84,14 +96,18 @@ const descriptionClass = computed(() => [
         </span>
         <span
           data-testid="cg-title"
-          class="truncate text-t-default"
+          class="truncate min-w-0 text-t-default"
           :class="titleClass"
         >
           {{ title }}
         </span>
       </div>
 
-      <div v-if="hasDescription" class="flex items-center gap-1 min-w-0">
+      <div
+        v-if="hasDescription"
+        class="flex items-center gap-1 min-w-0"
+        :class="rowJustifyClass"
+      >
         <span
           v-if="slots['description-icon']"
           class="w-[18px] h-[18px] shrink-0 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
@@ -100,7 +116,7 @@ const descriptionClass = computed(() => [
         </span>
         <span
           data-testid="cg-description"
-          class="text-info"
+          class="min-w-0 text-info"
           :class="descriptionClass"
         >
           {{ description }}
