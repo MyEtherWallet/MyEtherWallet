@@ -15,6 +15,7 @@ import {
   isInvalidWalletAddressError,
   isLockedDeviceError,
   isMetaMaskSdkDecryptError,
+  isMetaMaskSdkUndefinedProviderError,
   isProviderNotFoundError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
@@ -591,6 +592,42 @@ describe('isMetaMaskSdkDecryptError', () => {
     expect(isMetaMaskSdkDecryptError(null)).toBe(false)
     expect(isMetaMaskSdkDecryptError('aes/gcm: invalid ghash tag')).toBe(false)
     expect(isMetaMaskSdkDecryptError({})).toBe(false)
+  })
+})
+
+describe('isMetaMaskSdkUndefinedProviderError', () => {
+  it('drops the MetaMask SDK "undefined provider" rejection (APP-MEW-WEB-SN)', () => {
+    const err = new Error('SDK state invalid -- undefined provider')
+    err.stack =
+      'Error: SDK state invalid -- undefined provider\n' +
+      '    at /assets/metamask-sdk-BjvlAT9C.js:27:111644\n' +
+      '    at /assets/metamask-sdk-BjvlAT9C.js:1:77170'
+    expect(isMetaMaskSdkUndefinedProviderError(err)).toBe(true)
+  })
+
+  it('ignores the same message from a non-metamask-sdk frame', () => {
+    const err = new Error('SDK state invalid -- undefined provider')
+    err.stack =
+      'Error: SDK state invalid -- undefined provider\n' +
+      '    at /assets/index-abc123.js:1:100'
+    expect(isMetaMaskSdkUndefinedProviderError(err)).toBe(false)
+  })
+
+  it('ignores an unrelated metamask-sdk error', () => {
+    const err = new Error('some other failure')
+    err.stack =
+      'Error: some other failure\n    at /assets/metamask-sdk-BjvlAT9C.js:1:1'
+    expect(isMetaMaskSdkUndefinedProviderError(err)).toBe(false)
+  })
+
+  it('handles non-error inputs', () => {
+    expect(isMetaMaskSdkUndefinedProviderError(null)).toBe(false)
+    expect(
+      isMetaMaskSdkUndefinedProviderError(
+        'SDK state invalid -- undefined provider',
+      ),
+    ).toBe(false)
+    expect(isMetaMaskSdkUndefinedProviderError({})).toBe(false)
   })
 })
 
