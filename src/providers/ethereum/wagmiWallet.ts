@@ -52,6 +52,8 @@ class WagmiWallet extends BaseEvmWallet {
     }
   }
 
+  // Builds explicit sendTransaction fields — never spread tx.toJSON() here:
+  // it carries signature slots (v/r/s) that strict wallets reject.
   private parseSerializedTx(serializedTx: HexPrefixedString) {
     try {
       const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
@@ -60,7 +62,9 @@ class WagmiWallet extends BaseEvmWallet {
       )
       const txObj = tx.toJSON()
       return {
-        ...txObj,
+        to: txObj.to as `0x${string}` | undefined,
+        data: txObj.data as `0x${string}` | undefined,
+        gas: fromHex(txObj.gasLimit ?? '0x0', 'bigint'),
         accessList:
           txObj.accessList?.map(item => ({
             address: item.address as `0x${string}`,
@@ -84,7 +88,9 @@ class WagmiWallet extends BaseEvmWallet {
       })
       const txObj = tx.toJSON()
       return {
-        ...txObj,
+        to: txObj.to as `0x${string}` | undefined,
+        data: txObj.data as `0x${string}` | undefined,
+        gas: fromHex(txObj.gasLimit ?? '0x0', 'bigint'),
         gasPrice: fromHex(txObj.gasPrice ?? '0x0', 'bigint'),
         nonce: fromHex(txObj.nonce ?? '0x0', 'number'),
         chainId: Number(this.chainId),

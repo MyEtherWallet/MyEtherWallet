@@ -67,9 +67,22 @@ class Web3InjectedWallet extends BaseEvmWallet {
     serializedTx: HexPrefixedString,
   ): Promise<HexPrefixedString> {
     const txObj = this.parseSerializedTx(serializedTx)
+    // Only pass fields eth_sendTransaction understands — the parsed JSON also
+    // carries signature slots (v/r/s) that strict wallets like Enkrypt reject.
     const params = {
       from: this.address,
-      ...txObj,
+      to: txObj.to,
+      value: txObj.value,
+      data: txObj.data,
+      nonce: txObj.nonce,
+      gas: txObj.gasLimit,
+      type: txObj.type,
+      ...(txObj.gasPrice
+        ? { gasPrice: txObj.gasPrice }
+        : {
+            maxFeePerGas: txObj.maxFeePerGas,
+            maxPriorityFeePerGas: txObj.maxPriorityFeePerGas,
+          }),
     }
 
     const txHash = await this.provider.provider.request({
