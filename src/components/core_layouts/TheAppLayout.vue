@@ -55,6 +55,7 @@
             <router-view />
           </div>
           <MewFooter
+            v-if="!isDevPlayground"
             :use-i18n="useI18n"
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
@@ -65,6 +66,7 @@
             class="px-3 xs:px-5"
           />
           <div
+            v-if="!isDevPlayground"
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a

@@ -9,8 +9,14 @@ const COMPONENTS: { name: string; to: string }[] = [
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-app-background">
-    <aside class="w-56 shrink-0 border-r border-grey-10 bg-white p-4">
+  <!-- Fixed to the space below the app header so only the main column scrolls;
+       the sidebar stays put. Header is 68px (xs) / 76px (sm+) — see TheHeader. -->
+  <div
+    class="flex h-[calc(100dvh-68px)] sm:h-[calc(100dvh-76px)] overflow-hidden bg-app-background"
+  >
+    <aside
+      class="w-56 shrink-0 overflow-y-auto border-r border-grey-10 bg-white p-4"
+    >
       <router-link
         to="/dev"
         class="block text-s-16 font-bold text-t-default mb-4 hoverOpacity"
@@ -32,7 +38,7 @@ const COMPONENTS: { name: string; to: string }[] = [
         </router-link>
       </nav>
     </aside>
-    <main class="flex-1 min-w-0 overflow-x-auto">
+    <main class="flex-1 min-w-0 overflow-auto">
       <router-view />
     </main>
   </div>
