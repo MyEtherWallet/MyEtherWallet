@@ -462,6 +462,11 @@ const confirmTransaction = async () => {
           textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
+        // Close the verify dialog on failure so stale tx details (from
+        // address, amounts) don't linger behind the error toast.
+        openModal.value = false
+        model.value = false
+
         captureException(e instanceof Error ? e : new Error(msg), {
           ...SENTRY_MODULE_TAGS.SEND,
           extra: {
@@ -500,6 +505,8 @@ const confirmTransaction = async () => {
       text: t('send.toast.tx-send-failed'),
       textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
+    openModal.value = false
+    model.value = false
     // A transient Trezor empty-payload signing failure (APP-MEW-WEB-56) is
     // surfaced to the user as a friendly "reconnect" toast above and is safe to
     // retry, so don't report it to Sentry as a crash.
