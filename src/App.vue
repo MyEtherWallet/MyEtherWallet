@@ -132,7 +132,8 @@ const fetchBalances = () => {
       }
     })
     .catch((error: unknown) => {
-      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      if (import.meta.env.MODE !== 'production')
+        console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
       // Keep the retry loop alive: a transient failure shouldn't permanently
       // stop the timer when balances are still missing from a prior load.

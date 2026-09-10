@@ -23,8 +23,16 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  // DEV-only gallery for the Avatar design library (MEW-2196). Never registered
+  // in production builds.
   ...(import.meta.env.MODE !== 'production'
     ? [
+        {
+          path: '/dev/avatars',
+          name: 'DevAvatarShowcase',
+          component: () => import('@/views/ViewAvatarShowcase.vue'),
+          meta: { noAuth: true, noWalletFlow: true },
+        },
         {
           path: '/cell-preview',
           name: 'cell-preview',

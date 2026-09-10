@@ -262,7 +262,8 @@ const fetchBalances = () => {
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
     })
     .catch((error: unknown) => {
-      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      if (import.meta.env.MODE !== 'production')
+        console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
     })
 }

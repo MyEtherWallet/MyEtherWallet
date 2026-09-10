@@ -18,7 +18,7 @@
             >
               <template #link>
                 <a
-                  :href="configs.VINATGE"
+                  :href="configs.VINTAGE"
                   target="_blank"
                   class="underline hover:text-black transition-colors"
                   >{{ $t('portfolio.welcome.here') }}</a
