@@ -1,4 +1,4 @@
-import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { WalletType, type HexPrefixedString } from '../types'
 import { hexToBytes } from '@ethereumjs/util'
@@ -52,31 +52,52 @@ class WagmiWallet extends BaseEvmWallet {
     }
   }
 
+  private parseSerializedTx(serializedTx: HexPrefixedString) {
+    try {
+      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
+        hexToBytes(serializedTx),
+        { common: commonGenerator(BigInt(this.chainId), Hardfork.London) },
+      )
+      const txObj = tx.toJSON()
+      return {
+        ...txObj,
+        accessList:
+          txObj.accessList?.map(item => ({
+            address: item.address as `0x${string}`,
+            storageKeys: item.storageKeys as readonly `0x${string}`[],
+          })) ?? undefined,
+        maxFeePerGas: fromHex(txObj.maxFeePerGas ?? '0x0', 'bigint'),
+        maxPriorityFeePerGas: fromHex(
+          txObj.maxPriorityFeePerGas ?? '0x0',
+          'bigint',
+        ),
+        nonce: fromHex(txObj.nonce ?? '0x0', 'number'),
+        chainId: fromHex(txObj.chainId ?? '0x0', 'number'),
+        value: fromHex(txObj.value ?? '0x0', 'bigint'),
+        type: 'eip1559' as const,
+      }
+      // on fail, assume legacy tx (e.g. Rootstock) — a legacy RLP has no type
+      // byte, so parsing it as EIP-1559 misreads the payload as the tx type
+    } catch {
+      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
+        common: commonGenerator(BigInt(this.chainId), Hardfork.Berlin),
+      })
+      const txObj = tx.toJSON()
+      return {
+        ...txObj,
+        gasPrice: fromHex(txObj.gasPrice ?? '0x0', 'bigint'),
+        nonce: fromHex(txObj.nonce ?? '0x0', 'number'),
+        chainId: Number(this.chainId),
+        value: fromHex(txObj.value ?? '0x0', 'bigint'),
+        type: 'legacy' as const,
+      }
+    }
+  }
+
   override async SendTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<HexPrefixedString> {
-    const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-      hexToBytes(serializedTx),
-      { common: commonGenerator(BigInt(this.chainId), Hardfork.London) },
-    )
-    const txObj = tx.toJSON()
-    const parseTx = {
-      ...txObj,
-      accessList:
-        txObj.accessList?.map(item => ({
-          address: item.address as `0x${string}`,
-          storageKeys: item.storageKeys as readonly `0x${string}`[],
-        })) ?? undefined,
-      maxFeePerGas: fromHex(txObj.maxFeePerGas ?? '0x0', 'bigint'),
-      maxPriorityFeePerGas: fromHex(
-        txObj.maxPriorityFeePerGas ?? '0x0',
-        'bigint',
-      ),
-      nonce: fromHex(txObj.nonce ?? '0x0', 'number'),
-      chainId: fromHex(txObj.chainId ?? '0x0', 'number'),
-      value: fromHex(txObj.value ?? '0x0', 'bigint'),
-      type: 'eip1559' as const,
-    }
+    const parseTx = this.parseSerializedTx(serializedTx)
     const from = await this.getAddress()
     const params = {
       connector: this.connector,

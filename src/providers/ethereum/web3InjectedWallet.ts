@@ -1,4 +1,4 @@
-import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { WalletType, type HexPrefixedString } from '../types'
 import { hexToBytes } from '@ethereumjs/util'
@@ -46,14 +46,27 @@ class Web3InjectedWallet extends BaseEvmWallet {
     }
   }
 
+  private parseSerializedTx(serializedTx: HexPrefixedString) {
+    try {
+      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
+        hexToBytes(serializedTx),
+        { common: commonGenerator(BigInt(this.chainId), Hardfork.London) },
+      )
+      return tx.toJSON()
+      // on fail, assume legacy tx (e.g. Rootstock) — a legacy RLP has no type
+      // byte, so parsing it as EIP-1559 misreads the payload as the tx type
+    } catch {
+      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
+        common: commonGenerator(BigInt(this.chainId), Hardfork.Berlin),
+      })
+      return tx.toJSON()
+    }
+  }
+
   override async SendTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<HexPrefixedString> {
-    const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-      hexToBytes(serializedTx),
-      { common: commonGenerator(BigInt(this.chainId), Hardfork.London) },
-    )
-    const txObj = tx.toJSON()
+    const txObj = this.parseSerializedTx(serializedTx)
     const params = {
       from: this.address,
       ...txObj,
