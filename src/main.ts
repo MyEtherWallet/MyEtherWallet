@@ -40,6 +40,7 @@ import {
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
+import { CHUNK_LOAD_ERROR_MESSAGES } from '@/router/chunkError'
 
 const app = createApp(App)
 
@@ -61,8 +62,10 @@ if (dsn && process.env.NODE_ENV === 'production') {
       // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
       // assets that no longer exist after a redeploy. These are already
       // auto-recovered by router.onError (reload once), so they are noise.
-      'Unable to preload CSS',
-      'Failed to fetch dynamically imported module',
+      // Covers every browser wording of the same failure (Safari "Importing a
+      // module script failed" APP-MEW-WEB-A5, "text/html ... MIME type"
+      // APP-MEW-WEB-B8, "Unable to preload CSS" APP-MEW-WEB-1K6).
+      ...CHUNK_LOAD_ERROR_MESSAGES,
       // WalletConnect benign rejections when the user abandons the connection flow
       'Proposal expired',
       'Pairing expired',
