@@ -410,3 +410,32 @@ export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean 
   const message = (err as { message?: unknown }).message
   return typeof message === 'string' && message.includes(MESSAGE)
 }
+
+/**
+ * Whether an error is the V8/Chrome `Proxy`-invariant `TypeError` thrown when
+ * wagmi's injected connector reads `removeListener` off a `window.ethereum`
+ * that a browser extension has wrapped in a misbehaving `Proxy`.
+ *
+ * During `generateConfig` (`src/providers/ethereum/wagmiConfig.ts`) -> wagmi
+ * `createConfig`, the injected connector's async `setup()` — fired and never
+ * awaited — calls `getProvider()`, which reads `provider.removeListener` to
+ * normalize the EIP-1193 event API. If the extension's proxy declares
+ * `removeListener` as a read-only, non-configurable data property but its `get`
+ * trap returns a different function, V8 throws `'get' on proxy: property
+ * 'removeListener' is a read-only and non-configurable data property ... but the
+ * proxy did not return its actual value`. Being fire-and-forget, it reaches the
+ * global `onunhandledrejection` handler with no fixable MEW frame — the
+ * extension is broken, not app code — so it is external, unactionable Sentry
+ * noise (APP-MEW-WEB-1K8). Matched on the V8-generated message (minification-
+ * proof) keyed to the `'get' on proxy` + `removeListener` shape so genuine app
+ * `TypeError`s are untouched. Handles both the Error-object and bare-string
+ * payload shapes.
+ */
+export function isProviderProxyRemoveListenerError(err: unknown): boolean {
+  const matches = (m: string): boolean =>
+    m.includes("'get' on proxy") && m.includes('removeListener')
+  if (typeof err === 'string') return matches(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && matches(message)
+}
