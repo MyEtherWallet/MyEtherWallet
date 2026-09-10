@@ -42,6 +42,12 @@
   --color-grey-10: rgba(0, 0, 0, 0.1);
   --color-grey-outline: rgba(188, 200, 204, 1);
   --color-mew-bg: rgba(53, 94, 236, 0.1);
+
+  /* Avatar (design library). Alpha-based fallback survives a future dark theme. */
+  --color-avatar-fallback: rgba(177, 179, 178, 0.3);
+  --color-avatar-initial-bg: #edf2f7;
+  --color-avatar-badge-icon-bg: #e6e6e6;
+  --color-avatar-card-border: #e6e6e6;
 }
 
 /**
