@@ -23,7 +23,7 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  ...(import.meta.env.DEV
+  ...(import.meta.env.MODE !== 'production'
     ? [
         {
           path: '/cell-preview',
