@@ -28,14 +28,20 @@ const DefaultRoutes = <RouteNameCollection>[
   ...(import.meta.env.MODE !== 'production'
     ? [
         {
+          path: '/dev',
+          name: 'DevIndex',
+          component: () => import('@/views/ViewDevIndex.vue'),
+          meta: { noAuth: true, noWalletFlow: true },
+        },
+        {
           path: '/dev/avatars',
           name: 'DevAvatarShowcase',
           component: () => import('@/views/ViewAvatarShowcase.vue'),
           meta: { noAuth: true, noWalletFlow: true },
         },
         {
-          path: '/cell-preview',
-          name: 'cell-preview',
+          path: '/dev/cell',
+          name: 'DevCellPreview',
           component: () => import('@/views/ViewCellPreview.vue'),
           meta: {
             noAuth: true,
