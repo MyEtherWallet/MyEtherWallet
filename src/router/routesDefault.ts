@@ -27,13 +27,13 @@ const DefaultRoutes = <RouteNameCollection>[
   // in production builds.
   ...(import.meta.env.MODE !== 'production'
     ? [
-      {
-        path: '/dev/avatars',
-        name: 'DevAvatarShowcase',
-        component: () => import('@/views/ViewAvatarShowcase.vue'),
-        meta: { noAuth: true },
-      },
-    ]
+        {
+          path: '/avatar-preview',
+          name: 'AvatarPreview',
+          component: () => import('@/views/ViewAvatarShowcase.vue'),
+          meta: { noAuth: true },
+        },
+      ]
     : []),
   {
     // New public Home is the root; disconnected users land here.
