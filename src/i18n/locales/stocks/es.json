@@ -1,10 +1,12 @@
 {
   "stocks": {
-    "all_stocks": "Todas las acciones",
+    "all_stocks": "Explorar acciones",
     "category_menu": "Menú de categorías",
+    "all_categories": "Todas las categorías",
     "name": "Nombre",
     "price": "Precio",
     "twenty_four_h": "24 h",
+    "twenty_four_h_change": "Cambio 24 h",
     "twenty_four_h_volume": "Volumen 24 h",
     "market_cap": "Cap. de mercado",
     "actions": "Acciones",

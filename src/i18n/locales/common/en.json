@@ -39,6 +39,8 @@
       "chains": "No chains found"
     },
     "all_chains": "All chains",
+    "all_networks": "All networks",
+    "showing_page": "Showing page {current} of {total}",
     "edit": "Edit",
     "delete": "Delete",
     "token_count": "no tokens| 1 token | {count} Tokens",

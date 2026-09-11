@@ -304,10 +304,11 @@
       "take-profit": "止盈"
     },
     "market-list": {
-      "title": "永续合约市场",
+      "title": "探索永续合约",
       "search-placeholder": "搜索",
       "filter-placeholder": "筛选",
       "filter-all": "所有市场",
+      "all-categories": "所有类别",
       "filter-stocks": "股票",
       "filter-commodities": "大宗商品",
       "filter-indices": "指数",
@@ -315,6 +316,7 @@
       "column-name": "名称",
       "column-price": "价格",
       "column-24h": "24小时",
+      "column-24h-change": "24 小时涨跌",
       "column-volume": "成交量",
       "column-market-cap": "市值",
       "column-actions": "操作",

@@ -307,10 +307,11 @@
       "authorize-failed": "Failed to authorize withdrawal address"
     },
     "market-list": {
-      "title": "Perpetuals Markets",
+      "title": "Explore perpetuals",
       "search-placeholder": "Search",
       "filter-placeholder": "Filter",
       "filter-all": "All Markets",
+      "all-categories": "All categories",
       "filter-stocks": "Stocks",
       "filter-commodities": "Commodities",
       "filter-indices": "Indices",
@@ -318,6 +319,7 @@
       "column-name": "Name",
       "column-price": "Price",
       "column-24h": "24H",
+      "column-24h-change": "24H Change",
       "column-volume": "Volume",
       "column-market-cap": "Market Cap",
       "column-actions": "Actions",
