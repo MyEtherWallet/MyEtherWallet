@@ -17,7 +17,6 @@ const TABS: { id: AssetPickerTab; labelKey: string }[] = [
   { id: 'all', labelKey: 'all' },
   { id: 'stocks', labelKey: 'stocks' },
   { id: 'crypto', labelKey: 'crypto' },
-  { id: 'perps', labelKey: 'perps' },
 ]
 
 const tab = ref<AssetPickerTab>('all')

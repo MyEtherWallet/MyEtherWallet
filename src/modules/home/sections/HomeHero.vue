@@ -23,7 +23,7 @@ import {
 // Promo "Trade and get 5 USDC" banner above the cards (copy/campaign still TBD).
 const SHOW_HERO_TRADE_BANNER: boolean = false
 // Build-your-watchlist banner + table + add-to-watchlist modal.
-const SHOW_WATCHLIST: boolean = false
+const SHOW_WATCHLIST: boolean = true
 
 const { t } = useI18n()
 
