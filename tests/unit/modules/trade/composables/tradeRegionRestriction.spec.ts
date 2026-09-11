@@ -27,6 +27,7 @@ vi.mock('@/stores/tradeOrdersStore', () => ({
 vi.mock('@/stores/rewardsStore', () => ({
   useRewardsStore: () => ({
     checkAvailabilityAfterTransaction: vi.fn(async () => false),
+    minSpendTrade: ref('250'),
   }),
 }))
 
@@ -54,6 +55,7 @@ vi.mock('@/analytics', () => ({
     trackTradeEventError: mockTrackTradeEventError,
   },
   TradeEvent: {
+    PRELIMINARY_SHOWN: 'Trade_Preliminary_Rate_Shown',
     CLICK_APPROVE: 'Trade_Click_Approve',
     CLICK_TRADE: 'Trade_Click_Trade',
     OFFER_SHOWN: 'Trade_Offer_Shown',
@@ -62,6 +64,7 @@ vi.mock('@/analytics', () => ({
   TradeEventStatus: { INITIATED: 'Trade_Initiated' },
   TradeEventError: {
     PRELIMINARY_ERROR: 'Trade_Preliminary_Error',
+    OFFER_ERROR: 'Trade_Offer_Error',
     APPROVAL_ERROR: 'Trade_Approval_Error',
     SIGN_ERROR: 'Trade_Sign_Error',
   },
@@ -123,16 +126,18 @@ const makeQuoteHarness = async () => {
     isSelectedAssetTradeable: computed(() => true),
     isTradingAllowedInRegion,
     hasPreQuoteError: computed(() => false),
+    isReviewModalOpen: ref(false),
   })
   return {
     ...quote,
     toAmount: form.toAmount,
     isLoadingQuote: form.isLoadingQuote,
     generalError: form.generalError,
+    isPairUnavailable: form.isPairUnavailable,
   }
 }
 
-const makeExecutionHarness = async () => {
+const makeExecutionHarness = async (needsApprovalValue = true) => {
   const { useTradeExecution } =
     await import('@/modules/trade/composables/useTradeExecution')
   const form = await makeForm()
@@ -141,7 +146,7 @@ const makeExecutionHarness = async () => {
     walletAddress: ref('0xwallet'),
     wallet: ref({}) as never,
     currentQuote: ref({ startAmount: 1n, endAmount: 1n, avgAmount: 1n }),
-    needsApproval: ref(true),
+    needsApproval: ref(needsApprovalValue),
     isTradingRestrictedInRegion,
     isTradingAllowedInRegion,
   })
@@ -168,22 +173,22 @@ describe('trade actions in a restricted region', () => {
     expect(isLoadingQuote.value).toBe(false)
   })
 
-  it('handleApprove does not send an approval', async () => {
-    const { handleApprove, isApproving } = await makeExecutionHarness()
+  it('startTradeFlow does not send an approval', async () => {
+    const { startTradeFlow, isApproving } = await makeExecutionHarness()
 
-    await handleApprove()
+    await startTradeFlow()
 
     expect(mockSetApproval).not.toHaveBeenCalled()
     expect(mockTrackTradeEvent).not.toHaveBeenCalled()
     expect(isApproving.value).toBe(false)
   })
 
-  it('openTradeModal does not open the modal', async () => {
-    const { openTradeModal, quoteModalOpen } = await makeExecutionHarness()
+  it('startTradeFlow does not advance past idle', async () => {
+    const { startTradeFlow, tradeFlowStep } = await makeExecutionHarness(false)
 
-    openTradeModal()
+    await startTradeFlow()
 
-    expect(quoteModalOpen.value).toBe(false)
+    expect(tradeFlowStep.value).toBe('idle')
     expect(mockTrackTradeEvent).not.toHaveBeenCalled()
   })
 
@@ -197,15 +202,14 @@ describe('trade actions in a restricted region', () => {
     expect(mockTrackTradeEventStatus).not.toHaveBeenCalled()
   })
 
-  it('confirmTrade closes an already-open modal rather than leaving a dead button', async () => {
-    // The geo check can resolve while the quote modal is up, since the flag
+  it('confirmTrade closes an already-open review modal rather than leaving a dead button', async () => {
     // starts `false` and is corrected asynchronously.
     const execution = await makeExecutionHarness()
-    execution.quoteModalOpen.value = true
+    execution.tradeFlowStep.value = 'review'
 
     await execution.confirmTrade()
 
-    expect(execution.quoteModalOpen.value).toBe(false)
+    expect(execution.tradeFlowStep.value).toBe('idle')
   })
 })
 
@@ -232,10 +236,10 @@ describe('trade actions before the region check resolves', () => {
     expect(isLoadingQuote.value).toBe(false)
   })
 
-  it('handleApprove does not send an approval', async () => {
-    const { handleApprove, isApproving } = await makeExecutionHarness()
+  it('startTradeFlow does not send an approval', async () => {
+    const { startTradeFlow, isApproving } = await makeExecutionHarness()
 
-    await handleApprove()
+    await startTradeFlow()
 
     expect(mockSetApproval).not.toHaveBeenCalled()
     expect(isApproving.value).toBe(false)
@@ -255,8 +259,8 @@ describe('trade actions before the region check resolves', () => {
   // the order.
   it('confirmTrade aborts if the check resolves as restricted mid-flight', async () => {
     hasResolvedRegion.value = true
-    const { confirmTrade, quoteModalOpen } = await makeExecutionHarness()
-    quoteModalOpen.value = true
+    const { confirmTrade, tradeFlowStep } = await makeExecutionHarness()
+    tradeFlowStep.value = 'review'
 
     // Lands during confirmTrade's dynamic import, after the first guard passed.
     void Promise.resolve().then(() => {
@@ -265,7 +269,7 @@ describe('trade actions before the region check resolves', () => {
     await confirmTrade()
 
     expect(mockSubmitOrder).not.toHaveBeenCalled()
-    expect(quoteModalOpen.value).toBe(false)
+    expect(tradeFlowStep.value).toBe('idle')
   })
 })
 
@@ -279,12 +283,12 @@ describe('trade actions where trading is permitted', () => {
   // Proves the guards above are the restriction doing its job, not the harness
   // failing to reach the work for some unrelated reason.
 
-  it('openTradeModal still opens the modal', async () => {
-    const { openTradeModal, quoteModalOpen } = await makeExecutionHarness()
+  it('startTradeFlow still opens the review modal', async () => {
+    const { startTradeFlow, tradeFlowStep } = await makeExecutionHarness(false)
 
-    openTradeModal()
+    await startTradeFlow()
 
-    expect(quoteModalOpen.value).toBe(true)
+    expect(tradeFlowStep.value).toBe('review')
     expect(mockTrackTradeEvent).toHaveBeenCalledWith(
       'Trade_Click_Trade',
       expect.anything(),
@@ -300,13 +304,26 @@ describe('trade actions where trading is permitted', () => {
     expect(mockGetQuote).toHaveBeenCalledTimes(1)
   })
 
-  it('handleApprove still sends the approval', async () => {
+  it('startTradeFlow stops at the approval intro without signing', async () => {
     mockSetApproval.mockResolvedValue(undefined)
-    const { handleApprove } = await makeExecutionHarness()
+    const { startTradeFlow, tradeFlowStep } = await makeExecutionHarness()
 
-    await handleApprove()
+    await startTradeFlow()
+
+    expect(mockSetApproval).not.toHaveBeenCalled()
+    expect(tradeFlowStep.value).toBe('approvalIntro')
+  })
+
+  it('confirmApproval still sends the approval and chains into review', async () => {
+    mockSetApproval.mockResolvedValue(undefined)
+    const { startTradeFlow, confirmApproval, tradeFlowStep } =
+      await makeExecutionHarness()
+
+    await startTradeFlow()
+    await confirmApproval()
 
     expect(mockSetApproval).toHaveBeenCalledTimes(1)
+    expect(tradeFlowStep.value).toBe('review')
   })
 
   it('confirmTrade still submits the order', async () => {

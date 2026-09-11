@@ -3,6 +3,11 @@ import { nextTick, type Ref } from 'vue'
 export const useNumericInput = (model: Ref<string | number>) => {
   const checkIfNumber = (e: KeyboardEvent) => {
     const key = e.key
+    // Non-printable keys (Backspace, arrows, Enter — some browsers still fire
+    // keypress for them) and shortcuts (⌘/Ctrl+V) must keep their defaults.
+    if (key.length > 1 || e.ctrlKey || e.metaKey) {
+      return
+    }
     if (key >= '0' && key <= '9') {
       return
     }

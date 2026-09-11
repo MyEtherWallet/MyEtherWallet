@@ -1276,10 +1276,10 @@ export interface components {
         UUID: string;
         ISO8601: string;
         /**
-         * @description Where a description came from. `MASSIVE` and `COINGECKO` are third party providers; `INTERNAL` is our own curated data.
+         * @description Where a description came from. `MASSIVE`, `FX` and `COINGECKO` are third party providers; `INTERNAL` is our own curated data.
          * @enum {string}
          */
-        DescriptionSource: "MASSIVE" | "COINGECKO" | "INTERNAL";
+        DescriptionSource: "MASSIVE" | "FX" | "COINGECKO" | "INTERNAL";
         /** @enum {string} */
         ChainType: "BITCOIN" | "EVM" | "POLKADOT" | "KADENA" | "SOLANA";
         /** @enum {string} */
@@ -1573,6 +1573,7 @@ export interface components {
             };
             primaryMarket: {
                 price: string;
+                priceChangePercentage24h: string;
                 sharesMultiplier: string;
                 tradableSessions: string[];
             };
@@ -1662,11 +1663,20 @@ export interface components {
                 chains: components["schemas"]["OndoChain"][];
             }[];
             recentNews: {
-                title?: string;
-                thumbnailUrl?: string;
-                articleUrl?: string;
-                timestamp?: number;
-                tickers?: string[];
+                title: string;
+                thumbnailUrl: string;
+                articleUrl: string;
+                timestamp: number;
+                tickers: string[];
+                /** @description Short editorial summary of the article, typically 2-4 sentences. Null when the provider gives none. */
+                description: null | string;
+                author: null | string;
+                publisher: null | {
+                    name: string;
+                    homepageUrl: string;
+                    logoUrl: string;
+                    faviconUrl: string;
+                };
             }[];
             trending: {
                 stockAlias?: string;

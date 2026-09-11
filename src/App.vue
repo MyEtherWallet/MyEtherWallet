@@ -57,8 +57,10 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import Intercom from '@intercom/messenger-js-sdk'
-import { useMarketStatus } from './modules/trade/composables/useMarketStatus'
-const { fetchMarketStatus } = useMarketStatus()
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
+// One-shot warm-up: with no consumer acquired, this updates state and
+// schedules nothing (polling is refcounted by the surfaces that need it).
+const { fetchMarketStatus } = useMarketStatusStore()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)

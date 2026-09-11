@@ -36,7 +36,6 @@
     "empty_txs": "Your send transactions will appear here.",
     "empty_bridge": "Your token bridges will appear here.",
     "empty_swap": "Your token swaps will appear here.",
-    "toast_trade_filled": "Trade Order Filled",
     "toast_trade_cancelled": "Trade Order Cancelled",
     "toast_trade_expired": "Trade Order Expired",
     "toast_transaction_successful": "Transaction Successful",

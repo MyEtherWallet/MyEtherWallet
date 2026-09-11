@@ -85,6 +85,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
+import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { ToastType } from '@/types/notification'
@@ -381,16 +382,22 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
   if (status.status === 'filled' && status.finalToAmount) {
     analytics.trackTradeEventStatus(TradeEventStatus.SUCCESS, analyticsPayload)
-    const finalAmount = formatFloatingPointValue(
-      formatUnits(status.finalToAmount, order.toDecimals),
-    ).value
+    // Raw decimal string — display sites format it, and the diff below parses
+    // it back. A grouped display string ("1,234.56") parses as 1 and produced
+    // nonsense fill-vs-expected percentages.
+    const finalAmount = formatUnits(status.finalToAmount, order.toDecimals)
     updates.finalToAmount = finalAmount
 
-    // Calculate percentage difference
-    const expected = parseFloat(order.expectedToAmount)
-    const actual = parseFloat(finalAmount)
-    if (expected > 0) {
-      updates.percentageDiff = ((actual - expected) / expected) * 100
+    // Orders persisted before the raw format may still hold display strings;
+    // BigNumber reads those as NaN and the diff is skipped, not fabricated.
+    const expected = BigNumber(order.expectedToAmount)
+    const actual = BigNumber(finalAmount)
+    if (expected.isGreaterThan(0) && !actual.isNaN()) {
+      updates.percentageDiff = actual
+        .minus(expected)
+        .dividedBy(expected)
+        .times(100)
+        .toNumber()
     }
 
     // Mark as unseen when status changes to filled (important update)
@@ -398,28 +405,35 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     // Stop polling for this order
     stopPolling(hash)
-    if (!isNotificationsOpen.value) {
-      // Show success toast with trade info
+    toastStore.removeToastById(`trade-processing-${hash}`)
+    if (
+      !isNotificationsOpen.value &&
+      tradeOrdersStore.activeModalOrderHash !== hash
+    ) {
       toastStore.addToastMessage({
-        type: ToastType.Success,
-        text: t('notifications_module.toast_trade_filled'),
+        id: `trade-completed-${hash}`,
+        variant: 'dark',
+        text: t('trade.toast.trade_completed'),
+        textSecondary: t('trade.toast.received_total', {
+          amount: `${formatFloatingPointValue(finalAmount).value} ${order.toSymbol}`,
+        }),
         duration: 10000,
-        tradeInfo: {
-          fromToken: order.fromSymbol,
-          fromtTokenIcon: order.fromTokenIcon || '',
-          fromTokenIsStock: stocksStore.isStock(
-            order.fromTokenAddress || '',
-            order.chainName,
-          ),
-          fromAmount: formatFloatingPointValue(order.fromAmount).value,
-          toToken: order.toSymbol,
+        tradeStatus: {
+          kind: 'completed',
           toTokenIcon: order.toTokenIcon || '',
+          toSymbol: order.toSymbol,
           toTokenIsStock: stocksStore.isStock(
             order.toTokenAddress || '',
             order.chainName,
           ),
-          toAmount: formatFloatingPointValue(finalAmount).value,
         },
+        link: status.fills?.length
+          ? {
+              title: t('trade.toast.explore_etherscan'),
+              url: getTradeExplorerLink(order.chainId, status.fills[0].txHash),
+              isButton: true,
+            }
+          : undefined,
       })
     }
 
@@ -431,6 +445,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
+    toastStore.removeToastById(`trade-processing-${hash}`)
     if (earnedPotentialReward) {
       setEarnedPotentialReward(false)
     }
@@ -439,8 +454,10 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         ? TradeEventStatus.CANCELLED
         : TradeEventStatus.EXPIRED
     analytics.trackTradeEventStatus(event, analyticsPayload)
-    // Show error toast with trade info
-    if (!isNotificationsOpen.value) {
+    if (
+      !isNotificationsOpen.value &&
+      tradeOrdersStore.activeModalOrderHash !== hash
+    ) {
       toastStore.addToastMessage({
         type: ToastType.Error,
         text:

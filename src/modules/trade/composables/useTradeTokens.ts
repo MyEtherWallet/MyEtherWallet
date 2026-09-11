@@ -1,4 +1,5 @@
 import { computed, type Ref } from 'vue'
+import { useNow } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
@@ -11,12 +12,19 @@ import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
+  getActivePauseReason,
+  type PauseReason,
 } from '../common/tradeSession'
 import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
+
+export interface TradeAssetToken extends NewTokenInfo {
+  priceChangePercentage24h?: number
+  pauseReason?: PauseReason | null
+}
 
 interface UseTradeTokensOptions {
   form: TradeForm
@@ -39,6 +47,11 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
 
   const { t } = useI18n()
+
+  // Ticking clock for the pause-window checks below. A bare Date.now() inside
+  // a computed is not reactive, so a pause starting or ending while the page is
+  // open froze the tags and warnings until an unrelated dependency changed.
+  const now = useNow({ interval: 60_000 })
 
   // Check if selected from token is a tradable asset (stock token)
   const isSellingTradableAsset = computed(() => {
@@ -145,10 +158,10 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
-        return (
-          info.pause?.reason?.message ||
-          t('trade.error.token-not-available', { symbol: token?.symbol })
-        )
+        const reason = getActivePauseReason(info, now.value.getTime())
+        return reason
+          ? t(`trade.pause_reason.${reason}.tooltip`)
+          : t('trade.error.token-not-available', { symbol: token?.symbol })
       }
     }
     return ''
@@ -183,6 +196,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       chainName,
       fromTokensMap,
       hardcodedTokensInfo.value,
+      now.value.getTime(),
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -222,6 +236,7 @@ function mapTradableAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
+  now: number,
 ): NewTokenInfo[] {
   const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
     address: token.address,
@@ -250,6 +265,10 @@ function mapTradableAssetsToTokens(
       const tokenPrice =
         parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
 
+      const priceChange = parseFloat(
+        asset.primaryMarket.priceChangePercentage24h ?? '0',
+      )
+
       return {
         name: asset.stockAlias || asset.symbol,
         symbol: asset.symbol.toUpperCase(),
@@ -260,6 +279,13 @@ function mapTradableAssetsToTokens(
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
         price: tokenPrice,
+        priceChangePercentage24h: Number.isFinite(priceChange)
+          ? priceChange
+          : 0,
+        // Only a genuinely blocked asset carries a tag — the picker treats a
+        // tagged row as unselectable, so a stale pause record left on a
+        // tradable asset must not block it.
+        pauseReason: asset.tradable ? null : getActivePauseReason(asset, now),
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,

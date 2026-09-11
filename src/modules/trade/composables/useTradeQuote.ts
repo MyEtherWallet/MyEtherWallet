@@ -1,22 +1,32 @@
-import { ref, type Ref, type ComputedRef } from 'vue'
+import {
+  getCurrentScope,
+  onScopeDispose,
+  ref,
+  type Ref,
+  type ComputedRef,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import { parseUnits, formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
+  TradeEvent,
   TradeEventError,
   type TradePayloadShared,
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
+  isBelowMinimumError,
   isExpectedClientError,
+  isPairUnavailableError,
   isTransientNetworkError,
 } from '@/modules/trade/common/expectedTradeError'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
+
+import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 
 export interface QuoteData {
   startAmount: bigint
@@ -40,6 +50,8 @@ interface UseTradeQuoteOptions {
    */
   isTradingAllowedInRegion: Ref<boolean>
   hasPreQuoteError: ComputedRef<boolean>
+  isReviewModalOpen: Ref<boolean>
+  hasStaleMarketStatus: () => boolean
 }
 
 export function useTradeQuote(options: UseTradeQuoteOptions) {
@@ -51,13 +63,25 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     isSelectedAssetTradeable,
     isTradingAllowedInRegion,
     hasPreQuoteError,
+    isReviewModalOpen,
+    hasStaleMarketStatus,
   } = options
-  const { fromTokenSelected, toTokenSelected, fromAmount, toAmount,
-    selectedFromChain, generalError, isLoadingQuote } = form
+  const {
+    fromTokenSelected,
+    toTokenSelected,
+    fromAmount,
+    toAmount,
+    selectedFromChain,
+    generalError,
+    isLoadingQuote,
+    isPairUnavailable,
+    isBelowMinimum,
+  } = form
 
   const { t } = useI18n()
 
-  const currentQuote = ref<QuoteData | null>(null)
+  const currentQuote = ref<QuoteOutputType | null>(null)
+  const quoteExpiresAt = ref<number | null>(null)
   const needsApproval = ref(false)
 
   const getToAmountUSD = (): number => {
@@ -82,7 +106,19 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
 
-  const fetchQuote = useDebounceFn(async () => {
+  let quoteRunId = 0
+
+  const runQuote = async (runId: number) => {
+    // A run superseded (or cancelled) while waiting in the debounce queue must
+    // not touch any state — not even the synchronous flag resets below.
+    if (runId !== quoteRunId) return
+    const isStale = () => runId !== quoteRunId
+
+    isPairUnavailable.value = false
+    isBelowMinimum.value = false
+    generalError.value = ''
+    needsApproval.value = false
+
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
     if (fromAmount.value === '') {
       toAmount.value = ''
@@ -123,64 +159,97 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       return
     }
 
-    isLoadingQuote.value = true
-    generalError.value = ''
+    // Snapshot every input for this run. The awaits below can outlive a token
+    // or amount change, and mixing pre-await inputs with post-await reads is
+    // how a stale quote gets formatted with the wrong token's decimals.
+    const fromToken = fromTokenSelected.value
+    const toToken = toTokenSelected.value
+    const amount = fromAmount.value
+    const address = walletAddress.value
 
     try {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
+      if (isStale()) return
 
       const chainId = parseInt(selectedFromChain.value?.chainID || '1')
       const fusion = new OneInchFusion(wallet.value, chainId)
 
-      const decimals = fromTokenSelected.value.decimals || 18
-      const amountInBaseUnits = parseUnits(
-        fromAmount.value,
-        decimals,
-      ).toString()
+      const decimals = fromToken.decimals || 18
+      const amountInBaseUnits = parseUnits(amount, decimals).toString()
 
       const quote = await fusion.getQuote({
-        fromTokenAddress: fromTokenSelected.value.address,
-        toTokenAddress: toTokenSelected.value.address,
+        fromTokenAddress: fromToken.address,
+        toTokenAddress: toToken.address,
         amount: amountInBaseUnits,
-        fromAddress: walletAddress.value,
-        fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-        toTokenDecimals: toTokenSelected.value.decimals || 18,
+        fromAddress: address,
+        fromTokenDecimals: fromToken.decimals || 18,
+        toTokenDecimals: toToken.decimals || 18,
       })
+      if (isStale()) return
 
       // No quote returned from the provider
       if (!quote || (!quote.avgAmount && !quote.startAmount)) {
         generalError.value = t('trade.error.no-quotes-returned')
         toAmount.value = '0'
-        analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-          ...getAnalyticsPayload(),
-          errorMsg: 'No quotes returned',
-        })
+        analytics.trackTradeEventError(
+          isReviewModalOpen.value
+            ? TradeEventError.OFFER_ERROR
+            : TradeEventError.PRELIMINARY_ERROR,
+          {
+            ...getAnalyticsPayload(),
+            errorMsg: 'No quotes returned',
+          },
+        )
         return
       }
 
       currentQuote.value = quote
-      const toDecimals = toTokenSelected.value.decimals || 18
-      toAmount.value = formatFloatingPointValue(
-        formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
-      ).value
+      quoteExpiresAt.value = quote.auctionDurationSeconds
+        ? Date.now() + quote.auctionDurationSeconds * 1000
+        : null
+      // Raw decimal string (no grouping/abbreviation) — consumers format for
+      // display and can safely do arithmetic on it.
+      const toDecimals = toToken.decimals || 18
+      toAmount.value = formatUnits(
+        quote.avgAmount || quote.startAmount,
+        toDecimals,
+      )
+
+      if (!isReviewModalOpen.value) {
+        analytics.trackTradeEvent(TradeEvent.PRELIMINARY_SHOWN, {
+          ...getAnalyticsPayload(),
+        })
+      }
 
       // Check if approval is required
       const approvalRequired = await fusion.isApprovalRequired(
-        walletAddress.value,
-        fromTokenSelected.value.address,
+        address,
+        fromToken.address,
         BigInt(amountInBaseUnits),
       )
+      if (isStale()) return
       needsApproval.value = approvalRequired
     } catch (e) {
+      // A stale failure belongs to a pair or amount the user already left;
+      // writing its flags would poison the fresh quote's state.
+      if (isStale()) return
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
+      isPairUnavailable.value =
+        isPairUnavailableError(e) && !hasStaleMarketStatus()
+      isBelowMinimum.value = isBelowMinimumError(e)
       generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
-      analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
-        ...getAnalyticsPayload(),
-        errorMsg: rawMessage || 'Failed to fetch quote',
-      })
+      analytics.trackTradeEventError(
+        isReviewModalOpen.value
+          ? TradeEventError.OFFER_ERROR
+          : TradeEventError.PRELIMINARY_ERROR,
+        {
+          ...getAnalyticsPayload(),
+          errorMsg: rawMessage || 'Failed to fetch quote',
+        },
+      )
       // All three are surfaced to the user above and are pure Sentry noise:
       // transient RPC/WebSocket drops (e.g. the allowance read over
       // wss://nodes.mewapi.io), expected client errors (1inch 4xx, flagged by
@@ -196,20 +265,55 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
           isTransientNetworkError(e),
         extra: { errorMessage: generalError.value },
       })
+    }
+  }
+
+  const debouncedQuote = useDebounceFn(async (runId: number) => {
+    try {
+      await runQuote(runId)
     } finally {
-      isLoadingQuote.value = false
+      if (runId === quoteRunId) isLoadingQuote.value = false
     }
   }, 500)
 
+  const fetchQuote = () => {
+    quoteRunId += 1
+    const amount = fromAmount.value
+    isLoadingQuote.value = amount !== '' && amount !== '0'
+    return debouncedQuote(quoteRunId)
+  }
+
+  /**
+   * Invalidates any pending or in-flight quote run without starting a new one.
+   * The superseded run bails out before touching state, firing analytics, or
+   * issuing the network request (when still queued in the debounce).
+   */
+  const cancelQuote = () => {
+    quoteRunId += 1
+    isLoadingQuote.value = false
+  }
+
+  // The debounce timer survives component teardown; cancelling on scope dispose
+  // stops the trailing run from firing a request and analytics after unmount.
+  if (getCurrentScope()) {
+    onScopeDispose(cancelQuote)
+  }
+
   const resetQuote = () => {
     currentQuote.value = null
+    quoteExpiresAt.value = null
     needsApproval.value = false
+    isPairUnavailable.value = false
+    isBelowMinimum.value = false
+    generalError.value = ''
   }
 
   return {
     currentQuote,
+    quoteExpiresAt,
     needsApproval,
     fetchQuote,
+    cancelQuote,
     resetQuote,
   }
 }

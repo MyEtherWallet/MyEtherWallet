@@ -1,46 +1,54 @@
 <template>
-  <button
-    :class="[
-      isLoading || !selectedToken
-        ? 'bg-grey-10 animate-pulse min-w-[120px]'
-        : 'bg-white hoverNoBG shadow-button border-grey-10 border',
-      'rounded-full px-1 min-h-9 transition-colors',
-    ]"
-    type="button"
-    @click="showAllTokens = true"
-    :aria-label="$t('select_token.title')"
-    :disabled="isLoading || !selectedToken"
+  <slot
+    name="trigger"
+    :open="openSelectToken"
+    :is-loading="isLoading"
+    :selected-token="selectedToken"
   >
-    <div
-      v-if="!isLoading && selectedToken"
-      class="flex flex-nowrap items-center"
+    <button
+      :class="[
+        isLoading || !selectedToken
+          ? 'bg-grey-10 animate-pulse min-w-[120px]'
+          : 'bg-white hoverNoBG shadow-button border-grey-10 border',
+        'rounded-full px-1 min-h-9 transition-colors',
+      ]"
+      type="button"
+      @click="openSelectToken"
+      :aria-label="$t('select_token.title')"
+      :disabled="isLoading || !selectedToken"
     >
-      <app-token-logo
-        :url="selectedToken.logoURI"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-        width="w-7"
-        height="h-7"
-        class="mr-2"
-      />
-      <app-token-symbol
-        v-if="!isLoading"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-      />
-      <div class="ml-1 min-w-4 h-4">
-        <chevron-down-icon v-if="!isLoading" class="text-info" />
+      <div
+        v-if="!isLoading && selectedToken"
+        class="flex flex-nowrap items-center"
+      >
+        <app-token-logo
+          :url="selectedToken.logoURI"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+          width="w-7"
+          height="h-7"
+          :no-shadow="noLogoShadow"
+          class="mr-2"
+        />
+        <app-token-symbol
+          v-if="!isLoading"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+        />
+        <div class="ml-1 min-w-4 h-4">
+          <chevron-down-icon v-if="!isLoading" class="text-info" />
+        </div>
       </div>
-    </div>
-  </button>
+    </button>
+  </slot>
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
@@ -144,6 +152,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -180,6 +189,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -219,6 +229,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -304,6 +315,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -435,6 +447,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  noLogoShadow: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { t } = useI18n()
@@ -474,6 +490,9 @@ const tokens = computed<NewTokenInfo[]>(() => {
 })
 
 const showAllTokens = ref(false)
+const openSelectToken = () => {
+  showAllTokens.value = true
+}
 const searchInput = ref('')
 // Debounced query drives the (expensive) sort + fuzzy search so heavy work runs
 // after the user pauses typing instead of on every keystroke — the untouched

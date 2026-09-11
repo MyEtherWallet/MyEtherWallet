@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import { computed } from 'vue'
+import { ref } from 'vue'
 
 export interface SavedTradeOrder {
   hash: string
@@ -158,6 +158,8 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   ) => {
     subscribers.forEach(callback => callback(item, type))
   }
+  const activeModalOrderHash = ref<string | null>(null)
+
   const tradeOrders = useLocalStorage<TradeOrdersByAddress>(
     'tradeOrders',
     {},
@@ -226,11 +228,6 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     return [...orders, ...txs, ...swapList, ...bridgeList].sort(
       (a, b) => b.createdAt - a.createdAt,
     )
-  }
-
-  // Get orders for address as a computed (reactive)
-  const ordersForAddress = (address: string) => {
-    return computed(() => getOrdersByAddress(address))
   }
 
   // Add a new order
@@ -694,13 +691,13 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     transactions,
     swaps,
     bridges,
+    activeModalOrderHash,
     subscribe,
     getOrdersByAddress,
     getTransactionsByAddress,
     getSwapsByAddress,
     getBridgesByAddress,
     getAllNotifications,
-    ordersForAddress,
     addOrder,
     updateOrder,
     removeOrder,
