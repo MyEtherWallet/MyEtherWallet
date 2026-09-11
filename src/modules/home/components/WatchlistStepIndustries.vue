@@ -50,22 +50,31 @@ const toggle = (id: string) => {
       />
     </div>
 
-    <!-- Only the category list scrolls; the header + footer stay put. -->
-    <div
-      v-else
-      class="mew-scrollbar mt-6 max-h-[320px] overflow-y-auto pr-1"
-    >
-      <div class="grid grid-cols-2 gap-3">
-        <WatchlistSelectableCard
-          v-for="category in categories"
-          :key="category.id"
-          data-test="industry-pill"
-          :selected="selected.includes(category.id)"
-          class="p-4 text-s-16 font-medium text-black"
-          @toggle="toggle(category.id)"
-        >
-          {{ category.label }}
-        </WatchlistSelectableCard>
+    <!-- Only the category list scrolls; the header + footer stay put. Top/bottom
+         white fades hint at the overflow (same pattern as the step-3 asset
+         list); the inner py compensates them so edge pills aren't clipped. -->
+    <div v-else class="relative mt-6">
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-3 bg-gradient-to-b from-white to-transparent"
+        aria-hidden="true"
+      />
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
+        aria-hidden="true"
+      />
+      <div class="mew-scrollbar max-h-[320px] overflow-y-auto py-2 pr-1">
+        <div class="grid grid-cols-2 gap-3">
+          <WatchlistSelectableCard
+            v-for="category in categories"
+            :key="category.id"
+            data-test="industry-pill"
+            :selected="selected.includes(category.id)"
+            class="p-4 text-s-16 font-medium text-black"
+            @toggle="toggle(category.id)"
+          >
+            {{ category.label }}
+          </WatchlistSelectableCard>
+        </div>
       </div>
     </div>
 
