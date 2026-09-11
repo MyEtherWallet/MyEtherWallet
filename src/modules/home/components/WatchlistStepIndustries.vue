@@ -50,17 +50,23 @@ const toggle = (id: string) => {
       />
     </div>
 
-    <div v-else class="mt-6 grid grid-cols-2 gap-3">
-      <WatchlistSelectableCard
-        v-for="category in categories"
-        :key="category.id"
-        data-test="industry-pill"
-        :selected="selected.includes(category.id)"
-        class="p-4 text-s-16 font-medium text-black"
-        @toggle="toggle(category.id)"
-      >
-        {{ category.label }}
-      </WatchlistSelectableCard>
+    <!-- Only the category list scrolls; the header + footer stay put. -->
+    <div
+      v-else
+      class="mew-scrollbar mt-6 max-h-[320px] overflow-y-auto pr-1"
+    >
+      <div class="grid grid-cols-2 gap-3">
+        <WatchlistSelectableCard
+          v-for="category in categories"
+          :key="category.id"
+          data-test="industry-pill"
+          :selected="selected.includes(category.id)"
+          class="p-4 text-s-16 font-medium text-black"
+          @toggle="toggle(category.id)"
+        >
+          {{ category.label }}
+        </WatchlistSelectableCard>
+      </div>
     </div>
 
     <div class="mt-6 flex items-center justify-end gap-4">
