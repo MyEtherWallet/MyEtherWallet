@@ -10,7 +10,7 @@ import {
 import WatchlistStepMarkets from './WatchlistStepMarkets.vue'
 import WatchlistStepIndustries from './WatchlistStepIndustries.vue'
 import WatchlistStepAssets from './WatchlistStepAssets.vue'
-import findingAssetsAnimation from '@/assets/images/watchlist/finding-assets.lottie?url'
+import { preloadWatchlistLoaderLogos } from './watchlistOnboarding'
 
 const isOpen = defineModel<boolean>('isOpen', { required: true })
 
@@ -106,11 +106,10 @@ const finish = () => {
   isOpen.value = false
 }
 
-// Prefetch the loader animation on open so the assets step shows it instantly
-// (no white flash) — the markets/industries steps give it time to warm the
-// cache. Start every run fresh once the dialog closes.
+// Start every run fresh once the dialog closes. On open, eagerly fetch the
+// step-3 loader logos so they're cached before the loading state shows.
 watch(isOpen, open => {
-  if (open) fetch(findingAssetsAnimation).catch(() => {})
+  if (open) preloadWatchlistLoaderLogos()
   else reset()
 })
 </script>

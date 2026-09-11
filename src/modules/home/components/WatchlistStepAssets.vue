@@ -8,7 +8,6 @@ import {
   ChevronDownIcon,
 } from '@heroicons/vue/20/solid'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
-import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -17,9 +16,22 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
-import findingAssetsAnimation from '@/assets/images/watchlist/finding-assets.lottie?url'
+import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
 
 const { t } = useI18n()
+
+// Stepped-conveyor loader: 7 asset logos sit in fixed slots (biggest in the
+// centre, shrinking + fading to the edges) and step one slot left in unison —
+// move, pause, move — while the leftmost exits and a new one enters at the
+// right. The dialog preloads these on open, so they render instantly.
+const LOADER_LOGOS = WATCHLIST_LOADER_LOGOS
+// One slot per second (hold ~0.7s, move ~0.3s) across the 7 slots.
+const LOADER_CYCLE_S = 7
+const LOADER_SLOT_S = LOADER_CYCLE_S / LOADER_LOGOS.length
+// Negative head-start so on first render every logo begins near the end of its
+// hold — the first step lands ~0.15s in instead of after a full hold. It shifts
+// all logos equally, so the steady-state cadence is unchanged.
+const LOADER_HEADSTART_S = 0.55
 
 const props = defineProps<{
   assets: RecommendedAsset[]
@@ -96,23 +108,31 @@ const overflowNames = computed(() =>
 
 <template>
   <div data-test="watchlist-step-assets">
-    <!-- Loading: Lottie animation + "Finding assets…" (no header here by design). -->
+    <!-- Loading: asset logos glide right→left, growing toward the middle (dock
+         conveyor). Pure CSS + bundled logos, so it shows instantly on any
+         connection. No header by design. -->
     <div
       v-if="isLoading"
       data-test="assets-loading"
-      class="flex min-h-[380px] flex-col items-center justify-center text-center"
+      class="flex min-h-[380px] flex-col items-center justify-center gap-8 text-center"
     >
-      <DotLottieVue
-        :src="findingAssetsAnimation"
-        class="aspect-square w-[180px]"
-        autoplay
-        loop
+      <div
+        class="relative flex h-16 w-[300px] items-center justify-center overflow-hidden"
         role="img"
         :aria-label="t('homePage.hero.watchlist.onboarding.assets.loadingTitle')"
-      />
-      <!-- The animation's artboard carries bottom padding; pull the copy up so it
-           sits close under the visible art instead of the box edge. -->
-      <div class="-mt-8 flex flex-col gap-2">
+      >
+        <img
+          v-for="(logo, i) in LOADER_LOGOS"
+          :key="i"
+          :src="logo"
+          alt=""
+          class="dock-logo absolute inset-0 m-auto size-10 rounded-full object-contain"
+          :style="{
+            animationDelay: `${-(i * LOADER_SLOT_S + LOADER_HEADSTART_S)}s`,
+          }"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
         <p class="text-s-24 font-bold leading-[26px] text-black">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
         </p>
@@ -325,3 +345,56 @@ const overflowNames = computed(() =>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Circular stepped conveyor: 7 logos cycle through 7 slots — 5 visible plus a
+   hidden buffer at each end (±170) that the 300px container fully clips. Slots
+   graduate in size and opacity toward the centre: only the middle logo is full
+   size and opaque; its neighbours are smaller + dimmed, the outer pair smaller +
+   dimmer still. Each logo holds in a slot then snaps one slot left (hold, move,
+   hold); all logos are offset by one slot, so the row steps in unison. The
+   buffers share the outer opacity (never 0), so a logo leaving the left wraps to
+   the right buffer and slides back into the clip without any fade-pop; the
+   100%→0% wrap (−170 → +170) happens off-screen, so there's no visible jump. */
+@keyframes dock-step {
+  0%,
+  10% {
+    transform: translateX(170px) scale(0.55);
+    opacity: 0.4;
+  }
+  14.3%,
+  24.3% {
+    transform: translateX(100px) scale(0.65);
+    opacity: 0.4;
+  }
+  28.6%,
+  38.6% {
+    transform: translateX(50px) scale(0.9);
+    opacity: 0.6;
+  }
+  42.9%,
+  52.9% {
+    transform: translateX(0) scale(1.3);
+    opacity: 1;
+  }
+  57.1%,
+  67.1% {
+    transform: translateX(-50px) scale(0.9);
+    opacity: 0.6;
+  }
+  71.4%,
+  81.4% {
+    transform: translateX(-100px) scale(0.65);
+    opacity: 0.4;
+  }
+  85.7%,
+  100% {
+    transform: translateX(-170px) scale(0.55);
+    opacity: 0.4;
+  }
+}
+.dock-logo {
+  animation: dock-step 7s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+</style>

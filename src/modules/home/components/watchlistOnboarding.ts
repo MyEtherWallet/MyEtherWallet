@@ -3,8 +3,35 @@
  * (MEW-2130). Markets and industries are plain arrays so the product can edit
  * the offered options without touching component logic.
  */
+import loaderCrypto1 from '@/assets/images/watchlist/market-crypto-1.png'
+import loaderStocks1 from '@/assets/images/watchlist/market-stocks-1.png'
+import loaderCrypto2 from '@/assets/images/watchlist/market-crypto-2.png'
+import loaderStocks2 from '@/assets/images/watchlist/market-stocks-2.png'
+import loaderCrypto3 from '@/assets/images/watchlist/market-crypto-3.png'
+import loaderStocks3 from '@/assets/images/watchlist/market-stocks-3.png'
+import loaderPerps1 from '@/assets/images/watchlist/market-perps-1.png'
 
 export type WatchlistMarketId = 'stocks' | 'crypto'
+
+// Logos for the step-3 loading conveyor. Bundled here (not in the step
+// component) so the dialog can preload them the moment the wizard opens — by
+// step 3 they're already cached, no cold-start flash.
+export const WATCHLIST_LOADER_LOGOS: string[] = [
+  loaderCrypto1,
+  loaderStocks1,
+  loaderCrypto2,
+  loaderStocks2,
+  loaderCrypto3,
+  loaderStocks3,
+  loaderPerps1,
+]
+
+// Kick off the image downloads (idempotent — the browser dedupes/caches).
+export const preloadWatchlistLoaderLogos = (): void => {
+  for (const src of WATCHLIST_LOADER_LOGOS) {
+    new Image().src = src
+  }
+}
 
 export interface WatchlistMarket {
   id: WatchlistMarketId
