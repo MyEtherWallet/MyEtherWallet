@@ -145,5 +145,7 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
     })
     expect(placeholderRow('stock', 'AAPL').key).toBe('stock-AAPL')
     expect(placeholderRow('perp', 'BTC').key).toBe('perp-BTC')
+    // Settled-without-data → non-loading row (no eternal skeleton).
+    expect(placeholderRow('stock', 'AAPL', false).loading).toBe(false)
   })
 })

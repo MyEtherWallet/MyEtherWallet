@@ -92,14 +92,18 @@ export const mapStockRow = (
 })
 
 /**
- * Optimistic placeholder for a watchlisted id whose market data hasn't loaded
- * yet. Its `key` matches the eventual loaded row so Vue reuses the DOM node
- * (the skeleton hydrates in place, no flicker). Only the id-derived fields and
- * the remove action are known; the rest render as skeletons.
+ * Optimistic placeholder for a watchlisted id whose market data isn't in the
+ * response. Its `key` matches the eventual loaded row so Vue reuses the DOM node
+ * (the skeleton hydrates in place, no flicker). `loading` is true only while the
+ * source is still fetching — once it settles without this id (delisted asset,
+ * disabled perp, failed request) the row renders non-loading instead of a
+ * skeleton that would never resolve. Only the id-derived fields and the remove
+ * action are known; the rest render as skeletons while loading.
  */
 export const placeholderRow = (
   type: WatchlistRowType,
   id: string,
+  loading = true,
 ): WatchlistRow => ({
   key: `${type === 'crypto' ? 'token' : type}-${id}`,
   logoUrl: undefined,
@@ -120,7 +124,7 @@ export const placeholderRow = (
   tradeSymbol: id,
   removeType: type,
   removeId: id,
-  loading: true,
+  loading,
 })
 
 export const mapPerpRow = (
@@ -176,7 +180,8 @@ export function useWatchlistRows(): {
   // → inject() via the WS lifecycle); on non-perps routes it only fetches the
   // contracts snapshot and never opens a socket. The rows computed filters it
   // down to the watchlisted perps.
-  const { contracts: perpsContracts } = usePerpsContracts()
+  const { contracts: perpsContracts, isLoading: isPendingPerps } =
+    usePerpsContracts()
 
   const rows = computed<WatchlistRow[]>(() => {
     // Store membership (localStorage) is the source of truth: emit one row per
@@ -193,17 +198,26 @@ export function useWatchlistRows(): {
       perpsContracts.value.filter(c => !c.disabled).map(c => [c.baseCurrency, c]),
     )
 
+    // A missing id is a loading skeleton only while its source is still
+    // fetching; once settled (error, delisted asset, disabled perp) it renders
+    // a non-loading row so it can't skeleton forever.
     const stockRows = watchListedStocks.value.map(sym => {
       const s = stockBySymbol.get(sym)
-      return s ? mapStockRow(s, fmt) : placeholderRow('stock', sym)
+      return s
+        ? mapStockRow(s, fmt)
+        : placeholderRow('stock', sym, isPendingAllWatchlist.value)
     })
     const tokenRows = watchListedTokens.value.map(id => {
       const t = tokenById.get(id)
-      return t ? mapTokenRow(t, fmt) : placeholderRow('crypto', id)
+      return t
+        ? mapTokenRow(t, fmt)
+        : placeholderRow('crypto', id, isPendingAllWatchlist.value)
     })
     const perpRows = watchListedPerps.value.map(base => {
       const c = perpByBase.get(base)
-      return c ? mapPerpRow(c, fmt) : placeholderRow('perp', base)
+      return c
+        ? mapPerpRow(c, fmt)
+        : placeholderRow('perp', base, isPendingPerps.value)
     })
 
     // Apply the manual drag order (row keys); ids not yet ordered (just added)
