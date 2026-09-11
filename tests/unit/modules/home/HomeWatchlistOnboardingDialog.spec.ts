@@ -42,11 +42,13 @@ vi.mock('@/components/AppDialog.vue', () => ({
 // Step stubs: expose the events + a way to set the model.
 vi.mock('@/modules/home/components/WatchlistStepMarkets.vue', () => ({
   default: {
+    props: { modelValue: Array },
     emits: ['continue', 'skip', 'update:modelValue'],
     template:
       '<div><button data-test="s1" @click="$emit(\'continue\')">markets</button>' +
       '<button data-test="s1-pick" @click="$emit(\'update:modelValue\', [\'crypto\'])">pick</button>' +
-      '<button data-test="s1-skip" @click="$emit(\'skip\')">skip</button></div>',
+      '<button data-test="s1-skip" @click="$emit(\'skip\')">skip</button>' +
+      '<span data-test="s1-model">{{ (modelValue || []).join(\',\') }}</span></div>',
   },
 }))
 vi.mock('@/modules/home/components/WatchlistStepIndustries.vue', () => ({
@@ -62,9 +64,10 @@ vi.mock('@/modules/home/components/WatchlistStepIndustries.vue', () => ({
 vi.mock('@/modules/home/components/WatchlistStepAssets.vue', () => ({
   default: {
     props: { assets: Array, isLoading: Boolean, modelValue: Array },
-    emits: ['done', 'update:modelValue'],
+    emits: ['done', 'back', 'update:modelValue'],
     template:
       '<div><button data-test="pick" @click="$emit(\'update:modelValue\', [\'eth\',\'aapl\',\'btc\'])">pick</button>' +
+      '<button data-test="s3-back" @click="$emit(\'back\')">back</button>' +
       '<button data-test="done" @click="$emit(\'done\')">done</button></div>',
   },
 }))
@@ -119,6 +122,17 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
       'STOCK:Equities',
       'CRYPTO:stablecoins',
     ])
+  })
+
+  it('skip resets the skipped selection so back shows no stale picks', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
+    await w.get('[data-test="s1-skip"]').trigger('click')
+    await flushPromises()
+    // Back: assets → industries → markets. The market pick must be cleared.
+    await w.get('[data-test="s3-back"]').trigger('click')
+    await w.get('[data-test="s2-back"]').trigger('click')
+    expect(w.get('[data-test="s1-model"]').text()).toBe('')
   })
 
   it('back from industries returns to markets', async () => {

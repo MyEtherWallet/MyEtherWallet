@@ -72,6 +72,19 @@ const skipToAssets = async () => {
   fetchRecommendations(cats.map(c => c.id))
 }
 
+// Skip resets the skipped step's selection so navigating back from the assets
+// step never shows stale, never-committed picks. Skipping step 1 also clears any
+// downstream category picks; skipping step 2 keeps the committed markets.
+const skipFromMarkets = () => {
+  selectedMarkets.value = []
+  selectedCategoryIds.value = []
+  skipToAssets()
+}
+const skipFromIndustries = () => {
+  selectedCategoryIds.value = []
+  skipToAssets()
+}
+
 // Close from the header X (the dialog owns isOpen; AppDialog's own close is
 // hidden so the header can render the button in-row).
 const close = () => {
@@ -118,7 +131,7 @@ watch(isOpen, open => {
           v-if="activeStep === 0"
           v-model="selectedMarkets"
           @continue="goToIndustries"
-          @skip="skipToAssets"
+          @skip="skipFromMarkets"
           @close="close"
         />
         <WatchlistStepIndustries
@@ -128,7 +141,7 @@ watch(isOpen, open => {
           :is-loading="isLoadingCategories"
           @continue="goToAssets"
           @back="goToMarkets"
-          @skip="skipToAssets"
+          @skip="skipFromIndustries"
           @close="close"
         />
         <WatchlistStepAssets
