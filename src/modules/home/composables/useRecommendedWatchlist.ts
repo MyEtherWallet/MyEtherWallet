@@ -39,22 +39,26 @@ export function useRecommendedWatchlist(): {
   const { useMEWFetch } = useFetchMewApi()
   const assets = ref<RecommendedAsset[]>([])
   const isLoading = ref(false)
+  // Guards against out-of-order responses (same rationale as useWatchlistCategories):
+  // only the newest request writes assets/isLoading.
+  let latestRequest = 0
 
   const fetchRecommendations = async (categoryIds: string[]) => {
+    const requestId = ++latestRequest
     isLoading.value = true
     try {
       // No categories → nothing to recommend (the endpoint requires them).
       if (!categoryIds.length) {
-        assets.value = []
+        if (requestId === latestRequest) assets.value = []
         return
       }
       const url = `${ASSETS_URL}?categories=${encodeURIComponent(categoryIds.join(','))}`
       const { data } = await useMEWFetch(url).get().json<RawWatchlistAsset[]>()
-      assets.value = (data.value ?? []).map(toRecommended)
+      if (requestId === latestRequest) assets.value = (data.value ?? []).map(toRecommended)
     } catch {
-      assets.value = []
+      if (requestId === latestRequest) assets.value = []
     } finally {
-      isLoading.value = false
+      if (requestId === latestRequest) isLoading.value = false
     }
   }
 

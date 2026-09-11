@@ -37,17 +37,22 @@ export function useWatchlistCategories(): {
   const { useMEWFetch } = useFetchMewApi()
   const categories = ref<WatchlistCategory[]>([])
   const isLoading = ref(false)
+  // Guards against out-of-order responses: going back to step 1 and changing the
+  // markets fires a new fetch, and a slower earlier response must not overwrite
+  // the categories for the latest selection. Only the newest request writes.
+  let latestRequest = 0
 
   const fetchCategories = async (types: WatchlistMarketType[]) => {
+    const requestId = ++latestRequest
     isLoading.value = true
     try {
       const url = `${CATEGORIES_URL}?types=${types.join(',')}`
       const { data } = await useMEWFetch(url).get().json<WatchlistCategory[]>()
-      categories.value = data.value ?? []
+      if (requestId === latestRequest) categories.value = data.value ?? []
     } catch {
-      categories.value = []
+      if (requestId === latestRequest) categories.value = []
     } finally {
-      isLoading.value = false
+      if (requestId === latestRequest) isLoading.value = false
     }
     return categories.value
   }
