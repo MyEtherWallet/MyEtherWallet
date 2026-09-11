@@ -108,11 +108,13 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     ])
   })
 
-  it('skip on industries recommends across every offered category', async () => {
+  it('skip on industries ignores step 1 and recommends across both markets', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1"]').trigger('click')
     await w.get('[data-test="s2-skip"]').trigger('click')
+    await flushPromises() // skipToAssets awaits fetchCategories first
     expect(w.find('[data-test="done"]').exists()).toBe(true)
+    expect(fetchCategories).toHaveBeenCalledWith(['STOCK', 'CRYPTO'])
     expect(fetchRecommendations).toHaveBeenCalledWith([
       'STOCK:Equities',
       'CRYPTO:stablecoins',

@@ -63,20 +63,13 @@ const goToAssets = () => {
   fetchRecommendations(selectedCategoryIds.value)
 }
 
-// Skipping step 1 discards its market picks (only Continue commits them; the
-// refs are left untouched so they reappear on back) and opens the assets step
-// on every category across both markets.
-const skipFromMarkets = async () => {
+// Skipping either step ignores the step-1 market picks and recommends across
+// every category of both markets. (/assets needs valid category ids, so we
+// resolve them first — there's no "all assets of a type" shortcut on the API.)
+const skipToAssets = async () => {
   activeStep.value = 2
   const cats = await fetchCategories(['STOCK', 'CRYPTO'])
   fetchRecommendations(cats.map(c => c.id))
-}
-
-// Skipping step 2 keeps the step-1 markets but drops the category question —
-// recommend across every category offered for those markets.
-const skipFromIndustries = () => {
-  activeStep.value = 2
-  fetchRecommendations(categories.value.map(c => c.id))
 }
 
 // Close from the header X (the dialog owns isOpen; AppDialog's own close is
@@ -125,7 +118,7 @@ watch(isOpen, open => {
           v-if="activeStep === 0"
           v-model="selectedMarkets"
           @continue="goToIndustries"
-          @skip="skipFromMarkets"
+          @skip="skipToAssets"
           @close="close"
         />
         <WatchlistStepIndustries
@@ -135,7 +128,7 @@ watch(isOpen, open => {
           :is-loading="isLoadingCategories"
           @continue="goToAssets"
           @back="goToMarkets"
-          @skip="skipFromIndustries"
+          @skip="skipToAssets"
           @close="close"
         />
         <WatchlistStepAssets
