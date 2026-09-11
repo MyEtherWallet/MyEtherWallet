@@ -1,31 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
-import { sectors } from '@/modules/home/sectors'
+import type { WatchlistCategory } from '@/modules/home/composables/useWatchlistCategories'
 
 const { t } = useI18n()
 
-const props = defineProps<{
-  /** Markets picked in step 1 — scopes which curated collections to offer. */
-  markets: string[]
+defineProps<{
+  /** Curated categories for the markets picked in step 1 (fetched by the dialog). */
+  categories: WatchlistCategory[]
+  isLoading: boolean
 }>()
 
-// Selected curated-collection ids (multi-select). Continue enables with ≥1.
+// Selected category ids (e.g. "STOCK:Equities"). Continue enables with ≥1.
 const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ continue: []; back: []; skip: []; close: [] }>()
-
-// Reuse the "Curated Collections" categories (single source of truth), scoped to
-// the markets chosen in step 1 — both selected shows the combined list.
-const visibleSectors = computed(() =>
-  sectors.filter(
-    s => props.markets.length === 0 || props.markets.includes(s.market),
-  ),
-)
 
 const toggle = (id: string) => {
   selected.value = selected.value.includes(id)
@@ -45,16 +37,29 @@ const toggle = (id: string) => {
       @close="$emit('close')"
     />
 
-    <div class="mt-6 grid grid-cols-2 gap-3">
+    <!-- Categories loading skeleton. -->
+    <div
+      v-if="isLoading"
+      data-test="industries-loading"
+      class="mt-6 grid grid-cols-2 gap-3"
+    >
+      <span
+        v-for="n in 8"
+        :key="n"
+        class="h-[54px] animate-pulse rounded-2xl bg-[#f0f0f0]"
+      />
+    </div>
+
+    <div v-else class="mt-6 grid grid-cols-2 gap-3">
       <WatchlistSelectableCard
-        v-for="sector in visibleSectors"
-        :key="sector.id"
+        v-for="category in categories"
+        :key="category.id"
         data-test="industry-pill"
-        :selected="selected.includes(sector.id)"
+        :selected="selected.includes(category.id)"
         class="p-4 text-s-16 font-medium text-black"
-        @toggle="toggle(sector.id)"
+        @toggle="toggle(category.id)"
       >
-        {{ t(sector.labelKey) }}
+        {{ category.label }}
       </WatchlistSelectableCard>
     </div>
 

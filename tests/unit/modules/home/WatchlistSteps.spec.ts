@@ -65,53 +65,55 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
   })
 })
 
+const CATEGORIES = [
+  { id: 'STOCK:Equities', type: 'STOCK', label: 'Equities', marketCap: 1, volume24h: 1, assetCount: 1 }, // prettier-ignore
+  { id: 'CRYPTO:stablecoins', type: 'CRYPTO', label: 'stablecoins', marketCap: 1, volume24h: 1, assetCount: 1 }, // prettier-ignore
+]
+
 describe('WatchlistStepIndustries (MEW-2130)', () => {
-  it('scopes the curated collections to the step-1 markets', () => {
-    // crypto → 6 crypto sectors, stocks → 10, both → 16 (from sectors.ts).
-    expect(
-      mountWith(WatchlistStepIndustries, {
-        modelValue: [],
-        markets: ['crypto'],
-      }).findAll('[data-test="industry-pill"]').length,
-    ).toBe(6)
-    expect(
-      mountWith(WatchlistStepIndustries, {
-        modelValue: [],
-        markets: ['stocks'],
-      }).findAll('[data-test="industry-pill"]').length,
-    ).toBe(10)
-    expect(
-      mountWith(WatchlistStepIndustries, {
-        modelValue: [],
-        markets: ['crypto', 'stocks'],
-      }).findAll('[data-test="industry-pill"]').length,
-    ).toBe(16)
+  it('renders one pill per category and shows a skeleton while loading', () => {
+    const loading = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      categories: [],
+      isLoading: true,
+    })
+    expect(loading.find('[data-test="industries-loading"]').exists()).toBe(true)
+    expect(loading.findAll('[data-test="industry-pill"]').length).toBe(0)
+
+    const loaded = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      categories: CATEGORIES,
+      isLoading: false,
+    })
+    expect(loaded.findAll('[data-test="industry-pill"]').length).toBe(2)
   })
 
-  it('gates Continue until a collection is picked', () => {
+  it('gates Continue until a category is picked', () => {
     const w = mountWith(WatchlistStepIndustries, {
       modelValue: [],
-      markets: ['crypto'],
+      categories: CATEGORIES,
+      isLoading: false,
     })
     expect(
       w.get('[data-test="industries-continue"]').attributes('disabled'),
     ).toBeDefined()
   })
 
-  it('emits the sector id on pill click', async () => {
+  it('emits the category id on pill click', async () => {
     const w = mountWith(WatchlistStepIndustries, {
       modelValue: [],
-      markets: ['crypto'],
+      categories: CATEGORIES,
+      isLoading: false,
     })
     await w.findAll('[data-test="industry-pill"]')[0].trigger('click')
-    // First crypto sector in sectors.ts is topGainers → id "crypto-topGainers".
-    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto-topGainers'])
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['STOCK:Equities'])
   })
 
   it('emits back when the header back button is clicked', async () => {
     const w = mountWith(WatchlistStepIndustries, {
       modelValue: [],
-      markets: ['crypto'],
+      categories: CATEGORIES,
+      isLoading: false,
     })
     await w.get('[data-test="step-back"]').trigger('click')
     expect(w.emitted('back')).toHaveLength(1)
@@ -120,7 +122,8 @@ describe('WatchlistStepIndustries (MEW-2130)', () => {
   it('emits skip from the Skip button regardless of selection', async () => {
     const w = mountWith(WatchlistStepIndustries, {
       modelValue: [],
-      markets: ['crypto'],
+      categories: CATEGORIES,
+      isLoading: false,
     })
     await w.get('[data-test="industries-skip"]').trigger('click')
     expect(w.emitted('skip')).toHaveLength(1)

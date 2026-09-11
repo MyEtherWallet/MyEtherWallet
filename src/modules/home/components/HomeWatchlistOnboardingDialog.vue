@@ -3,7 +3,10 @@ import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useRecommendedWatchlist } from '@/modules/home/composables/useRecommendedWatchlist'
-import { sectors } from '@/modules/home/sectors'
+import {
+  useWatchlistCategories,
+  marketsToTypes,
+} from '@/modules/home/composables/useWatchlistCategories'
 import WatchlistStepMarkets from './WatchlistStepMarkets.vue'
 import WatchlistStepIndustries from './WatchlistStepIndustries.vue'
 import WatchlistStepAssets from './WatchlistStepAssets.vue'
@@ -12,21 +15,28 @@ import findingAssetsAnimation from '@/assets/images/watchlist/finding-assets.lot
 const isOpen = defineModel<boolean>('isOpen', { required: true })
 
 const watchlistStore = useWatchlistStore()
-const { assets, isLoading, fetchRecommendations } = useRecommendedWatchlist()
+const {
+  assets,
+  isLoading: isLoadingAssets,
+  fetchRecommendations,
+} = useRecommendedWatchlist()
+const {
+  categories,
+  isLoading: isLoadingCategories,
+  fetchCategories,
+} = useWatchlistCategories()
+
+// Step 3 shows the loader while either the categories (skip path) or the assets
+// are still resolving.
+const isLoadingStep3 = computed(
+  () => isLoadingCategories.value || isLoadingAssets.value,
+)
 
 const activeStep = ref(0)
 const selectedMarkets = ref<string[]>([])
-// Curated-collection ids picked in step 2 (e.g. "crypto-stablecoins").
+// Category ids picked in step 2 (e.g. "STOCK:Equities").
 const selectedCategoryIds = ref<string[]>([])
 const selectedAssetIds = ref<string[]>([])
-
-// Resolve the picked ids to the {market, filter} the recommendations fetch needs.
-const selectedCategories = computed(() =>
-  selectedCategoryIds.value
-    .map(id => sectors.find(s => s.id === id))
-    .filter((s): s is (typeof sectors)[number] => Boolean(s))
-    .map(s => ({ market: s.market, filter: s.filter })),
-)
 
 const reset = () => {
   activeStep.value = 0
@@ -35,8 +45,10 @@ const reset = () => {
   selectedAssetIds.value = []
 }
 
+// Continue from step 1 → fetch the categories offered for the picked markets.
 const goToIndustries = () => {
   activeStep.value = 1
+  fetchCategories(marketsToTypes(selectedMarkets.value))
 }
 
 // Back from industries → markets. Selections are kept (refs untouched) so the
@@ -45,25 +57,26 @@ const goToMarkets = () => {
   activeStep.value = 0
 }
 
-// Continue from step 2: fetch with the picked markets + curated collections.
+// Continue from step 2 → recommend the assets in the picked categories.
 const goToAssets = () => {
   activeStep.value = 2
-  fetchRecommendations(selectedMarkets.value, selectedCategories.value)
+  fetchRecommendations(selectedCategoryIds.value)
 }
 
-// Skipping step 1 discards its market picks — only Continue commits them (the
-// refs are left untouched so the picks reappear if the user navigates back), so
-// the assets step opens on the full, unfiltered crypto + stocks list.
-const skipFromMarkets = () => {
+// Skipping step 1 discards its market picks (only Continue commits them; the
+// refs are left untouched so they reappear on back) and opens the assets step
+// on every category across both markets.
+const skipFromMarkets = async () => {
   activeStep.value = 2
-  fetchRecommendations([], [])
+  const cats = await fetchCategories(['STOCK', 'CRYPTO'])
+  fetchRecommendations(cats.map(c => c.id))
 }
 
-// Skipping step 2 keeps the step-1 markets (already accepted) but drops the
-// category question — fetch those markets unfiltered.
+// Skipping step 2 keeps the step-1 markets but drops the category question —
+// recommend across every category offered for those markets.
 const skipFromIndustries = () => {
   activeStep.value = 2
-  fetchRecommendations(selectedMarkets.value, [])
+  fetchRecommendations(categories.value.map(c => c.id))
 }
 
 // Close from the header X (the dialog owns isOpen; AppDialog's own close is
@@ -118,7 +131,8 @@ watch(isOpen, open => {
         <WatchlistStepIndustries
           v-else-if="activeStep === 1"
           v-model="selectedCategoryIds"
-          :markets="selectedMarkets"
+          :categories="categories"
+          :is-loading="isLoadingCategories"
           @continue="goToAssets"
           @back="goToMarkets"
           @skip="skipFromIndustries"
@@ -128,7 +142,7 @@ watch(isOpen, open => {
           v-else
           v-model="selectedAssetIds"
           :assets="assets"
-          :is-loading="isLoading"
+          :is-loading="isLoadingStep3"
           @done="finish"
           @back="goToIndustries"
           @close="close"

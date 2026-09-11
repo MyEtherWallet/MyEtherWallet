@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import type { RecommendedAsset } from '@/modules/home/components/watchlistOnboarding'
 
-// Fixed recommendations covering all three buckets.
+// Fixed recommendations covering all three buckets (finish() reads these).
 const ASSETS: RecommendedAsset[] = [
   { id: 'eth', symbol: 'ETH', name: 'Ethereum', type: 'crypto', watchlistId: 'ethereum' }, // prettier-ignore
   { id: 'aapl', symbol: 'AAPLon', name: 'Apple', type: 'stock', watchlistId: 'AAPL' },
@@ -17,6 +17,17 @@ vi.mock('@/modules/home/composables/useRecommendedWatchlist', () => ({
     isLoading: ref(false),
     fetchRecommendations,
   }),
+}))
+
+const CATS = [{ id: 'STOCK:Equities' }, { id: 'CRYPTO:stablecoins' }]
+const fetchCategories = vi.fn(async () => CATS)
+vi.mock('@/modules/home/composables/useWatchlistCategories', () => ({
+  useWatchlistCategories: () => ({
+    categories: ref(CATS),
+    isLoading: ref(false),
+    fetchCategories,
+  }),
+  marketsToTypes: (markets: string[]) => markets,
 }))
 
 // AppDialog teleports to #app; replace with an inline passthrough.
@@ -43,6 +54,7 @@ vi.mock('@/modules/home/components/WatchlistStepIndustries.vue', () => ({
     emits: ['continue', 'back', 'skip', 'update:modelValue'],
     template:
       '<div><button data-test="s2" @click="$emit(\'continue\')">industries</button>' +
+      '<button data-test="s2-pick" @click="$emit(\'update:modelValue\', [\'STOCK:Equities\'])">pick</button>' +
       '<button data-test="s2-back" @click="$emit(\'back\')">back</button>' +
       '<button data-test="s2-skip" @click="$emit(\'skip\')">skip</button></div>',
   },
@@ -68,42 +80,43 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     localStorage.clear()
     setActivePinia(createPinia())
     fetchRecommendations.mockClear()
+    fetchCategories.mockClear()
   })
 
-  it('advances markets → industries → assets and fetches recommendations', async () => {
+  it('markets → industries fetches categories; industries → assets recommends the picks', async () => {
     const w = mountDialog()
-    expect(w.find('[data-test="s1"]').exists()).toBe(true)
-    await w.get('[data-test="s1"]').trigger('click')
+    await w.get('[data-test="s1"]').trigger('click') // → industries
     expect(w.find('[data-test="s2"]').exists()).toBe(true)
-    await w.get('[data-test="s2"]').trigger('click')
+    expect(fetchCategories).toHaveBeenCalledTimes(1)
+    await w.get('[data-test="s2-pick"]').trigger('click') // pick "STOCK:Equities"
+    await w.get('[data-test="s2"]').trigger('click') // → assets
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+    expect(fetchRecommendations).toHaveBeenCalledWith(['STOCK:Equities'])
   })
 
-  it('skip on markets jumps straight to assets and discards the market picks', async () => {
+  it('skip on markets discards the picks and recommends every category', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
     await w.get('[data-test="s1-skip"]').trigger('click')
+    await flushPromises() // skipFromMarkets awaits fetchCategories first
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    // Skipping step 1 must NOT use the selection — fetch with empty markets.
-    expect(fetchRecommendations).toHaveBeenCalledTimes(1)
-    expect(fetchRecommendations).toHaveBeenCalledWith([], [])
+    expect(fetchCategories).toHaveBeenCalledWith(['STOCK', 'CRYPTO'])
+    // Ignores the crypto pick — recommends across every fetched category.
+    expect(fetchRecommendations).toHaveBeenCalledWith([
+      'STOCK:Equities',
+      'CRYPTO:stablecoins',
+    ])
   })
 
-  it('continue on markets commits the picks used by the assets fetch', async () => {
-    const w = mountDialog()
-    await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
-    await w.get('[data-test="s1"]').trigger('click') // continue → industries
-    await w.get('[data-test="s2-skip"]').trigger('click') // skip industries, keep markets
-    expect(fetchRecommendations).toHaveBeenCalledWith(['crypto'], [])
-  })
-
-  it('skip on industries advances to assets', async () => {
+  it('skip on industries recommends across every offered category', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1"]').trigger('click')
     await w.get('[data-test="s2-skip"]').trigger('click')
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    expect(fetchRecommendations).toHaveBeenCalledTimes(1)
+    expect(fetchRecommendations).toHaveBeenCalledWith([
+      'STOCK:Equities',
+      'CRYPTO:stablecoins',
+    ])
   })
 
   it('back from industries returns to markets', async () => {
