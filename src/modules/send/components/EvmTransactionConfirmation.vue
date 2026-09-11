@@ -280,6 +280,7 @@ import {
   isSignableWallet,
   isUserRejectionError,
   getLocalizedWalletError,
+  isTransientTrezorError,
 } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
@@ -499,16 +500,21 @@ const confirmTransaction = async () => {
       text: t('send.toast.tx-send-failed'),
       textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
-    captureException(
-      e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),
-      {
-        ...SENTRY_MODULE_TAGS.SEND,
-        extra: {
-          title: 'Error sending transaction',
-          errorMessage,
+    // A transient Trezor empty-payload signing failure (APP-MEW-WEB-56) is
+    // surfaced to the user as a friendly "reconnect" toast above and is safe to
+    // retry, so don't report it to Sentry as a crash.
+    if (!isTransientTrezorError(e)) {
+      captureException(
+        e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),
+        {
+          ...SENTRY_MODULE_TAGS.SEND,
+          extra: {
+            title: 'Error sending transaction',
+            errorMessage,
+          },
         },
-      },
-    )
+      )
+    }
   }
 }
 

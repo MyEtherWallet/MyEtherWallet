@@ -53,7 +53,7 @@
     "small_banner_swap_highlight": "赚取 5 USDC",
     "small_banner_trade_text": "交易、持有并获得",
     "small_banner_trade_highlight": "10 USDC",
-    "small_banner_trade_sub": "交易 $100 即可符合资格",
+    "small_banner_trade_sub": "交易 ${amount} 即可符合资格",
     "trade_qualifies": "此笔交易符合奖励资格",
     "trade_not_eligible": "此笔交易不符合奖励资格",
     "cashout_not_qualify": "提现交易不符合奖励资格。",

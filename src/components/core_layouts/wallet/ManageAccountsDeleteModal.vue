@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    class="w-full sm:max-w-[400px] sm:mx-auto"
+    class="w-full max-w-[400px] mx-auto"
   >
     <template #title>
       <div class="flex flex-col gap-1 px-6 pt-6 pr-12">

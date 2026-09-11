@@ -30,9 +30,9 @@
         </app-base-button>
         <p>
           {{ t('portfolio.connect_wallet.or') }}
-          <app-btn-text @click="createWallet" class="underline"
-            >{{ t('common.create_new_wallet') }}</app-btn-text
-          >
+          <app-btn-text @click="createWallet" class="underline">{{
+            t('common.create_new_wallet')
+          }}</app-btn-text>
         </p>
       </div>
     </div>
@@ -47,20 +47,22 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import { useRouter } from 'vue-router'
-import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
+import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
 
 const { t } = useI18n()
 const { isDesktopAndUp } = useAppBreakpoints()
 
 const router = useRouter()
+// Host-scoped, so this empty state opens the flow over whichever page renders it.
+const { accessRoute, createRoute } = useWalletFlowRoute()
 /** ------------------------------
  * Connect Wallet
  ------------------------------*/
 const connectWallet = () => {
-  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
+  router.push(accessRoute.value)
 }
 
 const createWallet = () => {
-  router.push({ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME })
+  router.push(createRoute.value)
 }
 </script>

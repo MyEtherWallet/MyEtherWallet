@@ -15,10 +15,10 @@ const PERPS_WS_URL = {
 }
 
 const perpsClient = new PerpsClient(
-  !configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
+  configs.PERPS_ENV === 'live' ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
 )
 
-const perpsWsUrl = !configs.IS_DEV_MODE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
+const perpsWsUrl = configs.PERPS_ENV === 'live' ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
 
 const SUPPORTED_NETWORK = [mainnet]
 // Perps operates on Ethereum mainnet only; the API takes chainId as a string.
