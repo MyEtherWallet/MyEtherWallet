@@ -197,7 +197,9 @@ const overflowNames = computed(() =>
             </div>
           </div>
 
-          <!-- Empty search state. -->
+          <!-- Empty state: a search with no matches offers "clear search"; no
+               data at all (empty/failed fetch) just says so — there's nothing to
+               clear. -->
           <div
             v-else-if="!visibleAssets.length"
             data-test="assets-empty"
@@ -205,9 +207,14 @@ const overflowNames = computed(() =>
           >
             <ExclamationCircleIcon class="size-6 text-[#575757]" />
             <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
-              {{ t('homePage.hero.watchlist.onboarding.assets.noResults') }}
+              {{
+                query.trim()
+                  ? t('homePage.hero.watchlist.onboarding.assets.noResults')
+                  : t('homePage.hero.watchlist.onboarding.assets.noAssets')
+              }}
             </p>
             <button
+              v-if="query.trim()"
               type="button"
               data-test="assets-clear-search"
               class="mt-6 rounded-full bg-[#f5f5f5] px-6 py-3 text-s-16 font-semibold text-primary"

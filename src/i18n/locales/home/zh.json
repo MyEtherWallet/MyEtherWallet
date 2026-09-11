@@ -43,7 +43,8 @@
           },
           "industries": {
             "subtitle": "您喜欢哪些行业？",
-            "description": "选择您想关注的行业，以进一步个性化您的关注列表。"
+            "description": "选择您想关注的行业，以进一步个性化您的关注列表。",
+            "empty": "暂时没有可用的类别。"
           },
           "assets": {
             "title": "选择要关注的资产",
@@ -54,7 +55,8 @@
             "selected": "已选择 {count} 项资产",
             "moreCount": "+{count} 更多",
             "noResults": "未找到符合搜索的资产，请尝试搜索其他资产",
-            "clearSearch": "清除搜索"
+            "clearSearch": "清除搜索",
+            "noAssets": "暂时没有可关注的资产。"
           },
           "marketLabels": {
             "stocks": "股票",

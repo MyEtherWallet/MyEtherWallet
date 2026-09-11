@@ -43,7 +43,8 @@
           },
           "industries": {
             "subtitle": "¿Qué industrias te gustan?",
-            "description": "Elige las industrias que quieres seguir de cerca para personalizar aún más tu lista de seguimiento."
+            "description": "Elige las industrias que quieres seguir de cerca para personalizar aún más tu lista de seguimiento.",
+            "empty": "No hay categorías disponibles por ahora."
           },
           "assets": {
             "title": "Elige los activos que quieres seguir",
@@ -54,7 +55,8 @@
             "selected": "{count} activos seleccionados",
             "moreCount": "+{count} más",
             "noResults": "No se encontraron activos con tu búsqueda, prueba buscar otro activo",
-            "clearSearch": "Limpiar búsqueda"
+            "clearSearch": "Limpiar búsqueda",
+            "noAssets": "No hay activos disponibles para seguir por ahora."
           },
           "marketLabels": {
             "stocks": "Acciones",

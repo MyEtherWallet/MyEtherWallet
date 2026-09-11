@@ -88,6 +88,16 @@ describe('WatchlistStepIndustries (MEW-2130)', () => {
     expect(loaded.findAll('[data-test="industry-pill"]').length).toBe(2)
   })
 
+  it('shows an empty state (not the fade frame) when no categories come back', () => {
+    const w = mountWith(WatchlistStepIndustries, {
+      modelValue: [],
+      categories: [],
+      isLoading: false,
+    })
+    expect(w.find('[data-test="industries-empty"]').exists()).toBe(true)
+    expect(w.findAll('[data-test="industry-pill"]').length).toBe(0)
+  })
+
   it('gates Continue until a category is picked', () => {
     const w = mountWith(WatchlistStepIndustries, {
       modelValue: [],
@@ -228,6 +238,17 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     await w.get('[data-test="assets-clear-search"]').trigger('click')
     expect(w.find('[data-test="assets-empty"]').exists()).toBe(false)
     expect(w.findAll('[data-test="asset-card"]').length).toBeGreaterThan(0)
+  })
+
+  it('shows a no-data empty state without clear-search when there are no assets', () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: [],
+      isLoading: false,
+      modelValue: [],
+    })
+    expect(w.find('[data-test="assets-empty"]').exists()).toBe(true)
+    // No query to clear — the clear-search action must not render.
+    expect(w.find('[data-test="assets-clear-search"]').exists()).toBe(false)
   })
 
   it('caps footer chips at 2 and collapses the rest into a tooltip chip', () => {

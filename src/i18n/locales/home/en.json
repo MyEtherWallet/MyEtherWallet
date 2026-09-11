@@ -43,7 +43,8 @@
           },
           "industries": {
             "subtitle": "What industries do you like?",
-            "description": "Choose the industries you’d like to keep an eye on to further personalize your watchlist."
+            "description": "Choose the industries you’d like to keep an eye on to further personalize your watchlist.",
+            "empty": "No categories available right now."
           },
           "assets": {
             "title": "Choose assets to follow",
@@ -54,7 +55,8 @@
             "selected": "{count} assets selected",
             "moreCount": "+{count} more",
             "noResults": "No assets found with your search, please try searching a different asset",
-            "clearSearch": "Clear search"
+            "clearSearch": "Clear search",
+            "noAssets": "No assets available to follow right now."
           },
           "marketLabels": {
             "stocks": "Stocks",

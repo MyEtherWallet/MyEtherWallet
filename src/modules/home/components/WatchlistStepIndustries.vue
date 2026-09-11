@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
@@ -48,6 +49,19 @@ const toggle = (id: string) => {
         :key="n"
         class="h-[54px] animate-pulse rounded-2xl bg-[#f0f0f0]"
       />
+    </div>
+
+    <!-- No categories came back (empty response or error): a plain message, not
+         the fade+scroll frame (which would render as two empty bars). -->
+    <div
+      v-else-if="!categories.length"
+      data-test="industries-empty"
+      class="mt-6 flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+    >
+      <ExclamationCircleIcon class="size-6 text-[#575757]" />
+      <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
+        {{ t('homePage.hero.watchlist.onboarding.industries.empty') }}
+      </p>
     </div>
 
     <!-- Only the category list scrolls; the header + footer stay put. Top/bottom
