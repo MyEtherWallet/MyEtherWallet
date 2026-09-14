@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// DEV-only gallery for the Avatar design-library component (MEW-2196). Not
-// registered in production builds — see routesDefault.ts. Lets us eyeball all
-// Type × Size combinations, badges and states against Figma.
+// Gallery for the Avatar design-library component (MEW-2196), reachable at
+// /dev/avatar via the design-library shell — see routesDefault.ts. Lets us
+// eyeball all Type × Size combinations, badges and states against Figma.
 import { PlusIcon, BellIcon } from '@heroicons/vue/24/solid'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'

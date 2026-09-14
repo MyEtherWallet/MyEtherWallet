@@ -23,38 +23,40 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
-  // components that have a preview; each renders in its <router-view>. Never
-  // registered in production builds.
-  ...(import.meta.env.MODE !== 'production'
-    ? [
-        {
-          path: '/dev',
-          component: () => import('@/views/ViewDevLayout.vue'),
-          meta: { noAuth: true },
-          children: [
-            {
-              path: '',
-              name: 'DevIndex',
-              component: () => import('@/views/ViewDevIndex.vue'),
-              meta: { noAuth: true },
-            },
-            {
-              path: 'avatar',
-              name: 'DevAvatar',
-              component: () => import('@/views/ViewAvatarShowcase.vue'),
-              meta: { noAuth: true },
-            },
-            {
-              path: 'content-group',
-              name: 'DevContentGroup',
-              component: () => import('@/views/ViewContentGroupShowcase.vue'),
-              meta: { noAuth: true },
-            },
-          ],
-        },
-      ]
-    : []),
+  // Design-library previews. A sidebar shell (ViewDevLayout) lists the
+  // components that have a preview; each renders in its <router-view>. Reachable
+  // in production too (noAuth) so the library can be reviewed on any deploy.
+  {
+    path: '/dev',
+    component: () => import('@/views/ViewDevLayout.vue'),
+    meta: { noAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'DevIndex',
+        component: () => import('@/views/ViewDevIndex.vue'),
+        meta: { noAuth: true },
+      },
+      {
+        path: 'avatar',
+        name: 'DevAvatar',
+        component: () => import('@/views/ViewAvatarShowcase.vue'),
+        meta: { noAuth: true },
+      },
+      {
+        path: 'content-group',
+        name: 'DevContentGroup',
+        component: () => import('@/views/ViewContentGroupShowcase.vue'),
+        meta: { noAuth: true },
+      },
+      {
+        path: 'input',
+        name: 'DevInput',
+        component: () => import('@/views/ViewInputPreview.vue'),
+        meta: { noAuth: true },
+      },
+    ],
+  },
   {
     // New public Home is the root; disconnected users land here.
     path: ROUTES_MAIN.HOME.PATH,

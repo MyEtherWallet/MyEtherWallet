@@ -7,6 +7,7 @@
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
           <app-text-field
             v-model="message"
+            surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_verify')"
             class="w-full"
           />
@@ -24,6 +25,7 @@
 
           <app-text-field
             v-model="signature"
+            surface="alternative"
             :placeholder="$t('sign_message.enter_signature_to_verify')"
             class="w-full"
           />
