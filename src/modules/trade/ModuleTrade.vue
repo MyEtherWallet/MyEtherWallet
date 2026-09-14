@@ -28,13 +28,18 @@
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
+        <!-- Unavailable cards, one at a time by precedence: a region
+             restriction can't be fixed by switching networks or waiting for
+             the market, so it outranks both; an unsupported network outranks
+             the market schedule. -->
         <!-- Market Closed -->
         <app-unavailable-card
           v-if="
             !isLoading &&
             marketStatus &&
             !isTradingSessionOpen &&
-            isCurrentNetworkSupported
+            isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
           "
           accent="primary"
           class="mb-3"
@@ -58,7 +63,11 @@
 
         <!-- Network Not Supported -->
         <app-unavailable-card
-          v-if="!isLoading && !isCurrentNetworkSupported"
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
           class="mb-3"
           :title="$t('trade.network_not_supported')"
           :description="
@@ -93,11 +102,7 @@
 
         <!-- Trading Restricted -->
         <app-unavailable-card
-          v-if="
-            !isLoading &&
-            isTradingRestrictedInRegion &&
-            isCurrentNetworkSupported
-          "
+          v-if="!isLoading && isTradingRestrictedInRegion"
           class="mb-3"
           :title="$t('trade.trading_not_available')"
           :description="$t('trade.trading_restricted')"
@@ -272,56 +277,6 @@
               <p class="text-grey-50 text-s-11 mt-1">
                 {{ formatNextOpen(marketStatus.nextOpen) }}
               </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Network Not Supported Banner - Centered Overlay -->
-        <div
-          v-if="
-            !isLoading &&
-            !isCurrentNetworkSupported &&
-            !isTradingRestrictedInRegion
-          "
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-        >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('trade.network_not_supported') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{
-                $t('trade.trading_not_available_on', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-              }}
-            </p>
-            <div class="flex flex-col items-center justify-center">
-              <div class="">
-                <button
-                  v-for="chain in supportedChainsList.reverse()"
-                  :key="chain.name"
-                  class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
-                  @click="switchToNetwork(chain)"
-                >
-                  <app-token-logo
-                    v-if="chain.icon"
-                    :url="chain.icon"
-                    :sumbol="chain.nameLong"
-                    width="w-5"
-                    height="h-5"
-                  />
-                  <span>{{ chain.nameLong || chain.name }}</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>

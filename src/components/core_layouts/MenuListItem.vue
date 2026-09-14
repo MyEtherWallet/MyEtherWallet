@@ -82,6 +82,7 @@ import {
   BookOpenIcon,
 } from '@heroicons/vue/24/solid'
 import { useRouter } from 'vue-router'
+import { pageRouteName } from '@/router/routeHierarchy'
 
 const props = defineProps({
   listItem: {
@@ -106,6 +107,7 @@ const hasIcon = computed(() => {
 const router = useRouter()
 
 const isCurrentRoute = computed(() => {
-  return router.currentRoute.value.name === props.listItem.routeName
+  // Stays highlighted while a connect/create overlay is open on top of this page.
+  return pageRouteName(router.currentRoute.value) === props.listItem.routeName
 })
 </script>

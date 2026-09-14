@@ -53,7 +53,7 @@
     "small_banner_swap_highlight": "Gana 5 USDC",
     "small_banner_trade_text": "Opera, mantén y recibe",
     "small_banner_trade_highlight": "10 USDC",
-    "small_banner_trade_sub": "Opera $100 para calificar",
+    "small_banner_trade_sub": "Opera ${amount} para calificar",
     "trade_qualifies": "Esta operación califica para recompensas",
     "trade_not_eligible": "Esta operación no es elegible para recompensas",
     "cashout_not_qualify": "Las transacciones de retiro no califican para recompensas.",

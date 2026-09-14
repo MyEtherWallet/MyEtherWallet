@@ -68,13 +68,15 @@ const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
 )
 const holdingsStore = useHoldingsStore()
-const { status, canRegisterTrade } = storeToRefs(holdingsStore)
+const { status, canRetryTrade, qualificationUsd } = storeToRefs(holdingsStore)
 
 // Only surface the hold campaign while a new trade can still be registered for
-// it — otherwise fall through to the trade campaign.
+// it — otherwise fall through to the trade campaign. `canRetryTrade` also
+// keeps a terminal round 2 (lost/expired) from re-offering: there's no retry
+// after the second round.
 const canClaimHold = computed(
   () =>
-    canRegisterTrade.value &&
+    canRetryTrade.value &&
     (status.value === 'default' ||
       status.value === 'expired' ||
       status.value === 'lost'),
@@ -103,12 +105,14 @@ const onClick = () => {
   }
 }
 
-// Minimum USD spend required to qualify for a trade reward
-const MIN_SPEND_HOLD = 100
-
+// Both thresholds come from the server, so this banner can't promise a reward the
+// backend then declines to register: the hold amount is the campaign's
+// `qualification_value` (the same value holdingsStore.register checks a trade against),
+// and the trade amount is the pool's `minSpendUsd`. 0 means "not known yet", which
+// `qualifies` below treats as not qualifying.
 const minSpend = computed(() =>
   canClaimHold.value
-    ? MIN_SPEND_HOLD
+    ? (qualificationUsd.value ?? 0)
     : canClaimTrade.value
       ? Number(rewardsStore.minSpendTrade)
       : 0,
