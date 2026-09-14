@@ -103,10 +103,11 @@ const themeStyle = computed(() => {
   }
 
   // Tonal secondary: muted grey fill with primary-colored label, no border.
+  // Label is 600 and the fill turns solid white on hover (QA MEW-2324).
   if (props.theme === 'secondary') {
     if (props.isOutline)
-      return 'border border-2 border-grey-10 text-primary bg-transparent'
-    return 'text-primary bg-grey-5'
+      return 'border border-2 border-grey-10 text-primary bg-transparent font-semibold hover:bg-white hover:!opacity-100'
+    return 'text-primary bg-grey-5 font-semibold hover:bg-white hover:!opacity-100'
   }
 
   if (props.theme === 'success') {
