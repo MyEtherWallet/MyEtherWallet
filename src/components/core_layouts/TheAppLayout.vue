@@ -36,7 +36,12 @@
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
+        <main
+          :class="[
+            'basis-full w-full relative',
+            isDevPlayground ? '' : 'max-w-[1440px] mx-auto',
+          ]"
+        >
           <div
             :class="[
               'min-h-[600px]',
@@ -44,12 +49,13 @@
               // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
               // the hero's top padding stacks on the wrapper's. Other routes
               // keep the shared page padding.
-              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
+              isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
             <router-view />
           </div>
           <MewFooter
+            v-if="!isDevPlayground"
             :use-i18n="useI18n"
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
@@ -60,6 +66,7 @@
             class="px-3 xs:px-5"
           />
           <div
+            v-if="!isDevPlayground"
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
@@ -182,6 +189,12 @@ const backgroundClass = computed(() => {
 // The Home page ('/') keeps the layout max-width but drops the shared
 // horizontal padding, so its sections own their padding.
 const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
+
+// DEV-only design-library playground (MEW-2271) renders full-bleed: no wrapper
+// padding or max-width, so its sidebar sits flush against the viewport edge.
+const isDevPlayground = computed(
+  () => route.path === '/dev' || route.path.startsWith('/dev/'),
+)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
