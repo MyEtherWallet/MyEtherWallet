@@ -96,7 +96,7 @@
 
                 <!-- Market Cap -->
                 <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
