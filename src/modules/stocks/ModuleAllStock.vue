@@ -208,6 +208,7 @@
                       <app-token-symbol
                         :symbol="token.symbol"
                         :is-stock="true"
+                        class="!font-semibold"
                       />
                       <app-tooltip
                         :text="token.name"
@@ -230,9 +231,9 @@
                 </td>
                 <!-- Market Cap -->
                 <td class="px-1 py-1 text-right text-s-14 text-black">
-                  <p class="font-normal">{{ token.marketCap }}</p>
+                  <p class="font-semibold">{{ token.marketCap }}</p>
                   <p
-                    class="text-s-12 font-normal md:hidden"
+                    class="text-s-12 font-semibold md:hidden"
                     :class="getPercentClass(getActivePercent(token))"
                   >
                     {{ parsePercent(getActivePercent(token)) }}
@@ -240,7 +241,7 @@
                 </td>
                 <!-- Volume -->
                 <td
-                  class="hidden xl:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                  class="hidden xl:table-cell px-1 py-1 text-right font-semibold text-s-14 text-black"
                 >
                   {{ token.totalVolume }}
                 </td>
@@ -248,7 +249,7 @@
                 <td class="hidden xl:table-cell px-1 py-1 text-right">
                   <div class="flex flex-col items-end justify-center py-2">
                     <p
-                      class="text-s-13 font-normal mb-1"
+                      class="text-s-13 font-semibold mb-1"
                       :class="getPercentClass(getActivePercent(token))"
                     >
                       {{ parsePercent(getActivePercent(token)) }}
@@ -266,11 +267,11 @@
                 </td>
                 <!-- Price -->
                 <td class="hidden md:table-cell pl-1 pr-1 py-1 text-right">
-                  <p class="font-normal text-s-14 text-black">
+                  <p class="font-semibold text-s-14 text-black">
                     {{ token.price }}
                   </p>
                   <p
-                    class="text-s-12 font-normal xl:hidden"
+                    class="text-s-12 font-semibold xl:hidden"
                     :class="getPercentClass(getActivePercent(token))"
                   >
                     {{ parsePercent(getActivePercent(token)) }}

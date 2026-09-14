@@ -219,7 +219,7 @@
                   />
                   <div class="min-w-0">
                     <div class="flex items-center gap-2">
-                      <span class="font-bold whitespace-nowrap">{{
+                      <span class="font-semibold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
                       <span
@@ -236,11 +236,11 @@
               </td>
               <!-- Market Cap -->
               <td class="px-1 py-2 text-right text-s-14 text-black">
-                <p class="font-normal">
+                <p class="font-semibold">
                   {{ formatVolume(contract.openInterestUsd) }}
                 </p>
                 <p
-                  class="text-s-12 font-normal md:hidden"
+                  class="text-s-12 font-semibold md:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
                       ? 'text-success'
@@ -251,14 +251,16 @@
                 </p>
               </td>
               <!-- Volume -->
-              <td class="hidden xl:table-cell px-1 py-2 text-right">
+              <td
+                class="hidden xl:table-cell px-1 py-2 text-right font-semibold text-s-14 text-black"
+              >
                 {{ formatVolume(contract.usdVolume) }}
               </td>
               <!-- 24H Change -->
               <td class="hidden xl:table-cell px-1 py-1 text-right">
                 <div class="flex flex-col items-end justify-center py-2">
                   <p
-                    class="text-s-13 font-normal mb-1"
+                    class="text-s-13 font-semibold mb-1"
                     :class="
                       parseFloat(contract.priceChangePercent ?? '0') >= 0
                         ? 'text-success'
@@ -283,11 +285,11 @@
               </td>
               <!-- Price -->
               <td class="hidden md:table-cell pl-1 pr-1 py-2 text-right">
-                <p class="text-right">
+                <p class="text-right font-semibold text-s-14 text-black">
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
-                  class="text-s-12 font-normal xl:hidden"
+                  class="text-s-12 font-semibold xl:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
                       ? 'text-success'
