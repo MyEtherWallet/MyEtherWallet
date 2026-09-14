@@ -222,7 +222,7 @@
                       :url="token.logoUrl"
                       :symbol="token.symbol"
                       :is-stock="token.ondo !== null"
-                      class="inline-block rounded-full shadow-token"
+                      class="inline-block rounded-full"
                     />
                     <div class="truncate">
                       <app-token-symbol

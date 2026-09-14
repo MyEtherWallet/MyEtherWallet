@@ -202,7 +202,7 @@
                       :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
                       :is-stock="true"
-                      class="inline-block rounded-full shadow-token"
+                      class="inline-block rounded-full"
                     />
                     <div class="truncate">
                       <app-token-symbol
