@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// Dev-only preview for AppInput, AppTextField and AppSearchInput.
-// Route is registered only when import.meta.env.DEV — see routesDefault.ts.
-// Visit https://localhost:8080/input-preview in dev.
+// Component preview for AppInput, AppTextField and AppSearchInput.
+// Reachable at /input-preview (registered in routesDefault.ts).
 //
 // Renders every AppInput axis (size × surface × state) so the rebuild can be
 // diffed against Figma: fixed 56/40 height across states, focus-only error
