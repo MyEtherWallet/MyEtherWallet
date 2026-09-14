@@ -218,6 +218,7 @@
                   <app-token-logo
                     :url="getLogoUrl(contract.baseCurrency)"
                     :symbol="contract.baseCurrency"
+                    no-shadow
                     class="rounded-full"
                   />
                   <div class="min-w-0">

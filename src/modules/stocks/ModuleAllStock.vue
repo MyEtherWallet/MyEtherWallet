@@ -205,6 +205,7 @@
                       :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
                       :is-stock="true"
+                      no-shadow
                       class="inline-block rounded-full"
                     />
                     <div class="truncate">

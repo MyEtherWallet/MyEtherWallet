@@ -225,6 +225,7 @@
                       :url="token.logoUrl"
                       :symbol="token.symbol"
                       :is-stock="token.ondo !== null"
+                      no-shadow
                       class="inline-block rounded-full"
                     />
                     <div class="truncate">
