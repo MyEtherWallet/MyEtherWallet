@@ -58,7 +58,7 @@
         >
           <thead class="bg-white">
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-normal"
             >
               <!-- Watchlist -->
               <th class="w-10 pb-4 text-center"></th>
@@ -69,7 +69,7 @@
                 @click="setHeaderSort(SortValue.NAME)"
               >
                 <div
-                  class="flex items-center gap-1 ml-11 font-bold"
+                  class="flex items-center gap-1 ml-11 font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.NAME,
                   }"
@@ -95,7 +95,7 @@
                 @click="setHeaderSort(SortValue.MARKET_CAP)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-bold"
+                  class="flex items-center gap-1 justify-end relative text-right font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.MARKET_CAP,
                   }"
@@ -123,7 +123,7 @@
                 @click="setHeaderSort(SortValue.VOLUME)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-bold"
+                  class="flex items-center gap-1 justify-end relative text-right font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.VOLUME,
                   }"
@@ -147,7 +147,7 @@
               </th>
               <!-- 24H Change -->
               <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                <div class="text-right font-bold">
+                <div class="text-right font-normal">
                   {{ $t('perps.market-list.column-24h-change') }}
                 </div>
               </th>
@@ -157,7 +157,7 @@
                 @click="setHeaderSort(SortValue.PRICE)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-bold"
+                  class="flex items-center gap-1 justify-end relative text-right font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.PRICE,
                   }"

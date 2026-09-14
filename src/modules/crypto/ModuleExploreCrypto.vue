@@ -66,7 +66,7 @@
             <!-- Header-->
             <thead class="bg-white">
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-normal"
               >
                 <!-- Watchlist -->
                 <th class="w-10 pb-4 text-center"></th>
@@ -76,7 +76,7 @@
                   colspan="2"
                 >
                   <div
-                    class="flex items-center gap-1 ml-11 font-bold"
+                    class="flex items-center gap-1 ml-11 font-normal"
                     :class="{
                       'text-black': headerSort === 'NAME',
                     }"
@@ -99,7 +99,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    class="flex items-center gap-1 justify-end relative text-right font-normal"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -126,7 +126,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    class="flex items-center gap-1 justify-end relative text-right font-normal"
                     :class="{
                       'text-black': headerSort === 'TOTAL_VOLUME',
                     }"
@@ -151,7 +151,7 @@
                 </th>
                 <!-- 24H Change -->
                 <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                  <div class="text-right font-bold">
+                  <div class="text-right font-normal">
                     {{ $t('crypto.twenty_four_h_change') }}
                   </div>
                 </th>
@@ -160,7 +160,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    class="flex items-center gap-1 justify-end relative text-right font-normal"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
