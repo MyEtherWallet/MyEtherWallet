@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { resolveCurrentSession } from '@/modules/trade/composables/marketSession'
+import { resolveCurrentSession } from '@/modules/trade/common/marketSession'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 
 const make = (

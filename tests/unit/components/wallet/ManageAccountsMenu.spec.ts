@@ -57,11 +57,11 @@ describe('ManageAccountsMenu', () => {
     expect(toggle).toHaveBeenCalledTimes(6)
   })
 
-  it('emits remove but keeps the menu open (inline confirm lives in the parent)', async () => {
+  it('emits remove and closes the menu (confirmation lives in a modal)', async () => {
     const toggle = vi.fn()
     const w = factory({ toggle })
     await w.get('[data-test="menu-remove"]').trigger('click')
     expect(w.emitted('remove')).toHaveLength(1)
-    expect(toggle).not.toHaveBeenCalled()
+    expect(toggle).toHaveBeenCalledTimes(1)
   })
 })

@@ -32,10 +32,15 @@ const makeNews = (count: number) =>
 const { box } = vi.hoisted(() => ({ box: { value: [] as unknown[] } }))
 
 vi.mock('@/stores/stocksStore', () => ({
-  useStocksStore: () => ({ recentNews: box.value }),
+  useStocksStore: () => ({
+    recentNews: box.value,
+    stockIconBySymbol: (s?: string) => (s ? `icon-${s}` : undefined),
+    stockTradableSymbol: (s?: string) => (s ? `${s}on` : undefined),
+  }),
 }))
 
 import HomeMarketNews from '@/modules/home/sections/HomeMarketNews.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 
 describe('HomeMarketNews', () => {
   // The news card renders a token badge (AppTokenLogo + AppTokenSymbol) when a
@@ -45,7 +50,12 @@ describe('HomeMarketNews', () => {
     mount(HomeMarketNews, {
       global: {
         plugins: [i18n],
-        stubs: { AppTokenLogo: true, AppTokenSymbol: true },
+        stubs: {
+          AppTokenLogo: true,
+          AppTokenSymbol: true,
+          // Render the slot so the badge's AppTokenLogo is still mounted.
+          RouterLink: { template: '<a><slot /></a>' },
+        },
       },
     })
 
@@ -69,5 +79,19 @@ describe('HomeMarketNews', () => {
     const w = mountIt()
     expect(w.find('[data-test="news-empty"]').exists()).toBe(true)
     expect(w.findAll('[data-test="news-card"]').length).toBe(0)
+  })
+
+  it('resolves the ticker to a stock logo and passes it to the footer badge', () => {
+    box.value = [
+      {
+        title: 'n0',
+        articleUrl: 'https://x.test/0',
+        timestamp: 1700000000000,
+        tickers: ['AAPL'],
+      },
+    ]
+    const w = mountIt()
+    // Ticker symbol resolved to an icon URL via the store, then passed down.
+    expect(w.findComponent(AppTokenLogo).props('url')).toBe('icon-AAPL')
   })
 })

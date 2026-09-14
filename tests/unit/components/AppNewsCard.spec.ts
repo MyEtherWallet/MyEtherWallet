@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { RouterLink } from 'vue-router'
 import AppNewsCard from '@/components/AppNewsCard.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+
+const badgeStubs = { AppTokenLogo: true, AppTokenSymbol: true, RouterLink: true }
 
 describe('AppNewsCard', () => {
   it('renders title and opens href in a new tab', () => {
@@ -29,5 +33,31 @@ describe('AppNewsCard', () => {
   it('renders no date element when timestamp is omitted', () => {
     const w = mount(AppNewsCard, { props: { title: 'Big news' } })
     expect(w.find('[data-test="news-date"]').exists()).toBe(false)
+  })
+
+  it('passes the resolved token logo through to the footer AppTokenLogo', () => {
+    const w = mount(AppNewsCard, {
+      props: { title: 'n', ticker: 'AAPL', tokenLogo: 'aapl.png' },
+      global: { stubs: badgeStubs },
+    })
+    expect(w.findComponent(AppTokenLogo).props('url')).toBe('aapl.png')
+  })
+
+  it('links the ticker badge to the stock page when tokenTo is set', () => {
+    const to = { name: 'stocks-stock-info', params: { symbol: 'AAPLon' } }
+    const w = mount(AppNewsCard, {
+      props: { title: 'n', ticker: 'AAPL', tokenTo: to },
+      global: { stubs: badgeStubs },
+    })
+    expect(w.findComponent(RouterLink).props('to')).toEqual(to)
+  })
+
+  it('renders the ticker badge as a plain label when tokenTo is absent', () => {
+    const w = mount(AppNewsCard, {
+      props: { title: 'n', ticker: 'AAPL' },
+      global: { stubs: badgeStubs },
+    })
+    expect(w.findComponent(RouterLink).exists()).toBe(false)
+    expect(w.find('[data-test="news-ticker"]').element.tagName).toBe('DIV')
   })
 })

@@ -1,96 +1,20 @@
-import { ref, watch, effectScope } from 'vue'
-import { perpsClient } from '../configs'
-import { capturePerps } from '../sentry'
-import { PERPS_FEATURE } from '@/sentry/constants'
-import { usePerpsAuth, onPerpsAuthReset } from './usePerpsAuth'
-import type { PortfolioGraphPoint } from '../sdk/types'
+import { storeToRefs } from 'pinia'
+import { usePerpsPortfolioStore } from '@/stores/perpsPortfolioStore'
 
-export type GraphRange = '24h' | '7d' | '30d' | 'all'
+export type { GraphRange } from '@/stores/perpsPortfolioStore'
 
-const _graphData = ref<PortfolioGraphPoint[]>([])
-const _graphLoading = ref(false)
-const _graphRange = ref<GraphRange>('30d')
-const _cache = ref<Map<GraphRange, PortfolioGraphPoint[]>>(new Map())
-
-let _initialized = false
-
-// Detached scope so watchers survive component unmounts
-const _scope = effectScope(true)
-
+/**
+ * The account's portfolio history graph, from `perpsPortfolioStore`. The first
+ * caller starts the load, by virtue of being the one that creates the store.
+ */
 export function usePerpsPortfolioGraph() {
-  const { token } = usePerpsAuth()
-
-  async function fetchGraph() {
-    if (!token.value) {
-      _graphData.value = []
-      return
-    }
-
-    const cached = _cache.value.get(_graphRange.value)
-    if (cached) {
-      _graphData.value = cached
-      return
-    }
-
-    _graphLoading.value = true
-    try {
-      const res = await perpsClient.getPortfolioGraph(_graphRange.value)
-      const result = res.result ?? []
-      _cache.value.set(_graphRange.value, result)
-      _graphData.value = result
-    } catch (e) {
-      _graphData.value = []
-      capturePerps(PERPS_FEATURE.PORTFOLIO, e, {
-        title: 'PERPS: Error fetching portfolio graph',
-      })
-    } finally {
-      _graphLoading.value = false
-    }
-  }
-
-  if (!_initialized) {
-    _initialized = true
-
-    onPerpsAuthReset(() => {
-      _graphData.value = []
-      _cache.value.clear()
-    })
-
-    // Clear cache every 5 minutes
-    setInterval(() => {
-      _cache.value.clear()
-    }, 300_000)
-
-    _scope.run(() => {
-      watch(
-        token,
-        val => {
-          if (val) {
-            _cache.value.clear()
-            fetchGraph()
-          } else {
-            _graphData.value = []
-            _cache.value.clear()
-          }
-        },
-        { immediate: true },
-      )
-
-      watch(_graphRange, () => {
-        if (token.value) fetchGraph()
-      })
-    })
-  }
-
-  function setRange(range: GraphRange) {
-    _graphRange.value = range
-  }
-
+  const store = usePerpsPortfolioStore()
+  const { graphData, graphLoading, graphRange } = storeToRefs(store)
   return {
-    graphData: _graphData,
-    graphLoading: _graphLoading,
-    graphRange: _graphRange,
-    setRange,
-    refetch: fetchGraph,
+    graphData,
+    graphLoading,
+    graphRange,
+    setRange: store.setRange,
+    refetch: store.fetchGraph,
   }
 }

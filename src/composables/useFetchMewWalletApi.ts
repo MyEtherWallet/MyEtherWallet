@@ -2,6 +2,7 @@ import { ref, type Ref } from 'vue'
 import { createFetch, useTimeoutPoll } from '@vueuse/core'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
+import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 const isDevMode = import.meta.env.DEV
@@ -115,7 +116,26 @@ export const useFetchMewWalletApi = (
             console.error('Failed to fetch. URL: ', url.value)
           }
           if (!isDevMode) {
-            captureException(ctx.error)
+            // `ctx.error` from useFetch is `new Error(response.statusText)` on a
+            // non-OK response — for a plain HTTP status (e.g. 406) that's just
+            // the browser's generic reason phrase ("Not Acceptable"), which
+            // collapses every failure of this endpoint into one unactionable
+            // Sentry issue. Mirror the fix already shipped for the sibling
+            // `useFetchMewApi.ts` (MEW-2032): report a described error tagged
+            // with the endpoint + status and fingerprinted per status so
+            // failures are diagnosable and grouped.
+            const captured = describeMewApiFetchError({
+              error: ctx.error,
+              data,
+              status: response?.status,
+              statusText: response?.statusText,
+              url: url.value,
+            })
+            captureException(captured.error, {
+              fingerprint: captured.fingerprint,
+              tags: captured.tags,
+              extra: captured.extra,
+            })
           }
           ctx.error = data?.message || 'Unknown Error. Failed to fetch.'
           retryCount.value = 0

@@ -1,16 +1,107 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { setActivePinia, createPinia } from 'pinia'
+import { createPinia, setActivePinia } from 'pinia'
+
+const { isTradingRestricted, reportModuleError, setIsRegionRestricted } =
+  vi.hoisted(() => ({
+    isTradingRestricted: vi.fn<() => Promise<boolean>>(),
+    reportModuleError: vi.fn(),
+    setIsRegionRestricted: vi.fn(),
+  }))
+
+vi.mock('@/modules/trade/providers/ondoHelpers', () => ({
+  isTradingRestricted,
+}))
+
+vi.mock('@/utils/reportModuleError', () => ({ reportModuleError }))
 
 // globalStore imports @/analytics and @sentry/vue; @/analytics transitively
-// resolves the hardware-wallet SDK, which is unavailable under jsdom. Stub
-// both so the store loads — this spec only exercises the hide-balance flag.
+// resolves the hardware-wallet SDK, which is unavailable under jsdom. Stub both
+// so the store loads.
 vi.mock('@/analytics', () => ({
-  analytics: { setNetwork: vi.fn(), setIsRegionRestricted: vi.fn() },
+  analytics: {
+    setNetwork: vi.fn(),
+    setIsRegionRestricted,
+  },
 }))
+
 vi.mock('@sentry/vue', () => ({ setTag: vi.fn() }))
 
-const { useGlobalStore } = await import('@/stores/globalStore')
+import { useGlobalStore } from '@/stores/globalStore'
+
+describe('globalStore trading restriction', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    isTradingRestricted.mockReset()
+    reportModuleError.mockReset()
+    setIsRegionRestricted.mockReset()
+  })
+
+  it('starts fail-closed until the restriction check resolves', () => {
+    expect(useGlobalStore().isTradingRestrictedInRegion).toBe(true)
+  })
+
+  it('deduplicates concurrent checks and caches the resolved result', async () => {
+    let resolveRestriction: (restricted: boolean) => void = () => undefined
+    isTradingRestricted.mockReturnValueOnce(
+      new Promise(resolve => {
+        resolveRestriction = resolve
+      }),
+    )
+    const store = useGlobalStore()
+
+    const first = store.fetchTradingRestriction()
+    const second = store.fetchTradingRestriction()
+    expect(isTradingRestricted).toHaveBeenCalledTimes(1)
+    resolveRestriction(false)
+
+    await expect(Promise.all([first, second])).resolves.toEqual([false, false])
+    expect(store.isTradingRestrictedInRegion).toBe(false)
+    expect(store.fetchedTradingThisSession).toBe(true)
+    expect(setIsRegionRestricted).toHaveBeenCalledWith(false)
+
+    await expect(store.fetchTradingRestriction()).resolves.toBe(false)
+    expect(isTradingRestricted).toHaveBeenCalledTimes(1)
+  })
+
+  it('fails closed after an error and allows a later retry', async () => {
+    const error = new Error('restriction service unavailable')
+    isTradingRestricted
+      .mockRejectedValueOnce(error)
+      .mockResolvedValueOnce(false)
+    const store = useGlobalStore()
+
+    await expect(store.fetchTradingRestriction()).resolves.toBe(true)
+    expect(store.isTradingRestrictedInRegion).toBe(true)
+    expect(store.fetchedTradingThisSession).toBe(false)
+    expect(reportModuleError).toHaveBeenCalledWith(
+      expect.objectContaining({ error }),
+    )
+
+    await expect(store.fetchTradingRestriction()).resolves.toBe(false)
+    expect(store.isTradingRestrictedInRegion).toBe(false)
+    expect(isTradingRestricted).toHaveBeenCalledTimes(2)
+  })
+
+  // The gate every trade entry point reads: only "checked AND allowed" opens it.
+  it('only reports trading allowed once a check has come back allowed', async () => {
+    isTradingRestricted.mockResolvedValueOnce(false)
+    const store = useGlobalStore()
+
+    expect(store.isTradingAllowedInRegion).toBe(false)
+
+    await store.fetchTradingRestriction()
+    expect(store.isTradingAllowedInRegion).toBe(true)
+  })
+
+  it('keeps trading blocked when the check fails', async () => {
+    isTradingRestricted.mockRejectedValueOnce(new Error('offline'))
+    const store = useGlobalStore()
+
+    await store.fetchTradingRestriction()
+    expect(store.isTradingAllowedInRegion).toBe(false)
+  })
+})
 
 describe('globalStore hideBalances (MEW-2094)', () => {
   beforeEach(() => {

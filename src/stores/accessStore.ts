@@ -32,6 +32,19 @@ export const useAccessStore = defineStore('accessStore', () => {
     isOpenAccessDialog.value = true
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SHOWN)
   }
+
+  /**
+   * Ensure the dialog is open, without disturbing it if it already is. Used by the
+   * access ROUTE view on mount: most callers open the dialog by flag and the URL then
+   * follows (see ModuleAccessWallet), so by the time the route view mounts the dialog
+   * is already up — re-running openAccessDialog there would reset the caller's
+   * `currentView` and fire a second SHOWN event. Only a genuine route-first entry
+   * (deep link, header CTA) actually opens it here.
+   */
+  const ensureAccessDialogOpen = () => {
+    if (isOpenAccessDialog.value) return
+    openAccessDialog()
+  }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
@@ -98,9 +111,7 @@ export const useAccessStore = defineStore('accessStore', () => {
     walletIcon: string
     config: WalletConfig
   } | null>(null)
-  const setAddressSavedInfo = (
-    info: typeof addressSavedInfo.value,
-  ): void => {
+  const setAddressSavedInfo = (info: typeof addressSavedInfo.value): void => {
     addressSavedInfo.value = info
   }
   const clearAddressSavedInfo = (): void => {
@@ -156,6 +167,7 @@ export const useAccessStore = defineStore('accessStore', () => {
   return {
     isOpenAccessDialog,
     openAccessDialog,
+    ensureAccessDialogOpen,
     closeAccessDialog,
     currentView,
     setCurrentView,

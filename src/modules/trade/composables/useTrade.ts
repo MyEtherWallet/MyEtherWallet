@@ -1,14 +1,14 @@
 import { ref, type Ref } from 'vue'
-import OneInchFusion from './providers/oneinch_fusion/oneInchFusion'
-import type { HardcodedTokenInfo } from './providers/oneinch_fusion/oneInchFusion'
+import OneInchFusion from '../providers/oneinch_fusion/oneInchFusion'
+import type { HardcodedTokenInfo } from '../providers/oneinch_fusion/oneInchFusion'
 import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 import * as Sentry from '@sentry/vue'
+import { reportModuleError } from '@/utils/reportModuleError'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -94,17 +94,12 @@ export const useTrade = (): UseTrade => {
       hardcodedTokensInfo.value = hardcodedInfo
     } catch (e) {
       error.value = (e as Error).message || 'Failed to load tradable assets'
-      if (isDevMode) {
-        console.error('Error loading tradable assets:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error loading tradable assets',
-            errorMessage: error.value,
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error loading tradable assets',
+        error: e,
+        extra: { errorMessage: error.value },
+      })
     } finally {
       isLoading.value = false
     }

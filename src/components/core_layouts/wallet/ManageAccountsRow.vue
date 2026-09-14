@@ -68,7 +68,6 @@
       location="right"
       teleport
       menu-radius-class="rounded-16"
-      @update:open="open => { if (!open) confirmingDelete = false }"
     >
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
@@ -77,7 +76,6 @@
       </template>
       <template #menu-content="{ toggleMenu }">
         <manage-accounts-menu
-          v-if="!confirmingDelete"
           :kind="account.kind"
           :is-active="isActive"
           :toggle="toggleMenu"
@@ -87,27 +85,15 @@
           @paper="$emit('paper')"
           @explorer="$emit('explorer')"
           @disconnect="$emit('disconnect')"
-          @remove="onRemove"
+          @remove="$emit('delete')"
         />
-        <div v-else class="p-3 flex items-center gap-2">
-          <button
-            data-test="delete-confirm"
-            class="text-error text-s-12"
-            @click="$emit('delete'); confirmingDelete = false; toggleMenu()"
-          >
-            {{ $t('common.confirm') }}
-          </button>
-          <button data-test="delete-cancel" class="text-s-12" @click="confirmingDelete = false">
-            {{ $t('common.cancel') }}
-          </button>
-        </div>
       </template>
     </app-pop-up-menu>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { EyeIcon } from '@heroicons/vue/16/solid'
@@ -140,19 +126,18 @@ const emit = defineEmits<{
   'visibility-change': [visible: boolean]
 }>()
 
-const confirmingDelete = ref(false)
-
-// Report when this row enters/leaves the popup's scroll viewport so the parent
-// can lazily (re)fetch its balance. rootMargin prefetches just-below-fold rows.
+// Report when this row enters/leaves the popup's scroll viewport so the parent can
+// lazily (re)fetch its balance. No rootMargin: only rows actually in the viewport
+// count as visible, so we never fetch/poll rows that are off-screen.
 const rowRef = ref<HTMLElement | null>(null)
 const scrollRootRef = computed(() => props.scrollRoot ?? undefined)
 useIntersectionObserver(
   rowRef,
   ([entry]) => emit('visibility-change', entry?.isIntersecting ?? false),
-  { root: scrollRootRef, rootMargin: '100px' },
+  { root: scrollRootRef },
 )
-
-const onRemove = (): void => {
-  confirmingDelete.value = true
-}
+// The observer doesn't emit a final "not visible" when the row unmounts (e.g. its
+// group is collapsed), so report it explicitly — otherwise the address lingers in
+// the parent's visible set and keeps getting polled while off-screen.
+onBeforeUnmount(() => emit('visibility-change', false))
 </script>

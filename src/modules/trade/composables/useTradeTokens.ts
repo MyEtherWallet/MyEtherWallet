@@ -1,27 +1,26 @@
 import { computed, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
-  Chain,
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
-} from './tradeSession'
+} from '../common/tradeSession'
+import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
 
 interface UseTradeTokensOptions {
-  selectedFromChain: Ref<Chain | undefined>
+  form: TradeForm
   fromTokens: Ref<NewTokenInfo[]>
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
   tradableAssets: Ref<GetWebSwapOndoAssetsResponse | null>
   additionalBuyAssets: Ref<GetWebSwapOndoSupportingAssetsResponse | null>
   hardcodedTokensInfo: Ref<HardcodedTokenInfo[]>
@@ -30,15 +29,14 @@ interface UseTradeTokensOptions {
 
 export function useTradeTokens(options: UseTradeTokensOptions) {
   const {
-    selectedFromChain,
+    form,
     fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
     hardcodedTokensInfo,
     currentSession,
   } = options
+  const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
 
   const { t } = useI18n()
 
@@ -209,21 +207,12 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     return tradableTokens
   })
 
-  // Get default from token (main token or first available)
-  const getDefaultFromToken = (tokens: NewTokenInfo[]): NewTokenInfo | null => {
-    return (
-      tokens.find(t => t.address === MAIN_TOKEN_CONTRACT) || tokens[0] || null
-    )
-  }
-
   return {
-    isSellingTradableAsset,
     isCashOutTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
     disabledTokenAddresses,
     toTokens,
-    getDefaultFromToken,
   }
 }
 
@@ -234,6 +223,16 @@ function mapTradableAssetsToTokens(
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
 ): NewTokenInfo[] {
+  const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
+    address: token.address,
+    balance: token.balance || '0',
+  }))
+  const hydrate = (tokens: NewTokenInfo[]) =>
+    hydrateTokenBalances(tokens, {
+      balanceSources,
+      mainTokenAddress: MAIN_TOKEN_CONTRACT,
+    }) as NewTokenInfo[]
+
   const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
@@ -260,7 +259,6 @@ function mapTradableAssetsToTokens(
         cgId: matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: tokenPrice,
         networkInfo: {
           name: chainName.toLowerCase(),
@@ -289,7 +287,6 @@ function mapTradableAssetsToTokens(
           cgId: t.cgId,
           type: 'erc20',
           rank: matchingFromToken?.rank || 0,
-          balance: matchingFromToken?.balance || '0',
           price: t.price,
           networkInfo: {
             name: 'ETHEREUM',
@@ -297,10 +294,10 @@ function mapTradableAssetsToTokens(
           },
         }
       }) as unknown as NewTokenInfo[]
-    return [...mappedAssets, ...hardcodedTokens]
+    return hydrate([...mappedAssets, ...hardcodedTokens])
   }
 
-  return mappedAssets
+  return hydrate(mappedAssets)
 }
 
 // Helper to map supporting assets to token format
@@ -309,7 +306,7 @@ function mapSupportingAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
 ): NewTokenInfo[] {
-  return assets
+  const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
     )
@@ -332,7 +329,6 @@ function mapSupportingAssetsToTokens(
         cgId: asset.coinId || matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: asset.price || matchingFromToken?.price || 0,
         networkInfo: {
           name: chainName.toLowerCase(),
@@ -340,4 +336,12 @@ function mapSupportingAssetsToTokens(
         },
       }
     }) as unknown as NewTokenInfo[]
+
+  return hydrateTokenBalances(mappedAssets, {
+    balanceSources: Array.from(fromTokensMap.values()).map(token => ({
+      address: token.address,
+      balance: token.balance || '0',
+    })),
+    mainTokenAddress: MAIN_TOKEN_CONTRACT,
+  }) as NewTokenInfo[]
 }

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import type { RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppNewsCard from '@/components/AppNewsCard.vue'
 import AppPagination from '@/components/AppPagination.vue'
 
@@ -60,6 +62,24 @@ const newsDescription = (item: {
     ? t('homePage.news.readOnSource', { source })
     : t('homePage.news.readMore')
 }
+
+// News items carry only ticker symbols — resolve each to a stock icon URL from
+// the tradable-assets list in the store (fetched on app start) so the footer
+// badge shows the real logo instead of the initials avatar.
+const tokenLogo = (item: { tickers?: string[] }): string | undefined =>
+  stocksStore.stockIconBySymbol(item.tickers?.[0])
+
+// When the ticker maps to a tradable stock, link its badge to the stock page
+// (same destination as the New Listings cards); non-tradable tickers stay a
+// plain label.
+const tokenTo = (item: {
+  tickers?: string[]
+}): RouteLocationRaw | undefined => {
+  const symbol = stocksStore.stockTradableSymbol(item.tickers?.[0])
+  return symbol
+    ? { name: STOCK_INFO_ROUTE_NAMES.stocks, params: { symbol } }
+    : undefined
+}
 </script>
 
 <template>
@@ -84,6 +104,8 @@ const newsDescription = (item: {
             :date="dateLabel(n.timestamp)"
             :description="newsDescription(n)"
             :ticker="n.tickers?.[0]"
+            :token-logo="tokenLogo(n)"
+            :token-to="tokenTo(n)"
             :href="n.articleUrl"
           />
         </div>

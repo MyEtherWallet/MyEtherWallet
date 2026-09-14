@@ -124,7 +124,6 @@ const emit = defineEmits<(e: MenuAction) => void>()
 
 const select = (action: MenuAction): void => {
   emit(action)
-  // "remove" opens an inline confirm in the parent, so keep the menu open.
-  if (action !== 'remove') props.toggle?.()
+  props.toggle?.()
 }
 </script>

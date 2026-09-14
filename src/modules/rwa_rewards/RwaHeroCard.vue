@@ -69,9 +69,10 @@
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <!-- A season that has already ended has nothing left to count down
-             to; the countdown would sit at "0 seconds". -->
+             to; the countdown would sit at "0 seconds". An empty countdown
+             means `/info` returned no season end, so there is no date to show. -->
         <p
-          v-if="!isCampaignEnded"
+          v-if="!isCampaignEnded && expiresText"
           class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -220,7 +221,7 @@
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
-          v-if="!isCampaignEnded"
+          v-if="!isCampaignEnded && expiresText"
           class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
@@ -301,7 +302,7 @@ import peggyCool from '@/assets/images/rwa-rewards/peggy-cool-thumbsup.webp'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
+import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
@@ -328,6 +329,7 @@ const {
   isCampaignEnded,
   isUnderReview,
   canRegisterTrade,
+  qualificationAmount,
 } = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
@@ -455,16 +457,22 @@ const daysLeftLabel = computed(() => {
   })
 })
 
-const steps: { n: number; pre: string; bold: string; post?: string }[] = [
+// Computed, not a plain array: the qualification amount arrives with `/info` after
+// setup runs, and a once-evaluated array would keep showing the pre-load placeholder.
+const steps = computed<
+  { n: number; pre: string; bold: string; post?: string }[]
+>(() => [
   {
     n: 1,
     pre: t('rwaRewards.hero_step1'),
     bold: t('rwaRewards.hero_step1_bold'),
-    post: t('rwaRewards.hero_step1_post'),
+    post: t('rwaRewards.hero_step1_post', {
+      amount: qualificationAmount.value,
+    }),
   },
   {
     n: 2,
-    pre: t('rwaRewards.hero_step2'),
+    pre: t('rwaRewards.hero_step2', { amount: qualificationAmount.value }),
     bold: t('rwaRewards.hero_step2_bold'),
   },
   {
@@ -472,5 +480,5 @@ const steps: { n: number; pre: string; bold: string; post?: string }[] = [
     pre: t('rwaRewards.hero_step3'),
     bold: t('rwaRewards.hero_step3_bold'),
   },
-]
+])
 </script>

@@ -51,8 +51,16 @@ const walletBody = (): RwaInfoResponse =>
     pending: [{ uuid: 'entry-1', address: ADDRESS }],
   } as unknown as Partial<RwaInfoResponse>)
 
-const ok = (body: unknown) => ({ ok: true, status: 200, json: async () => body })
-const fail = (status: number) => ({ ok: false, status, json: async () => ({}) })
+const ok = (body: unknown) => ({
+  ok: true,
+  status: 200,
+  json: async () => body,
+})
+const fail = (status: number, body: unknown = {}) => ({
+  ok: false,
+  status,
+  json: async () => body,
+})
 
 /** A response whose resolution we control, to interleave the two requests. */
 const deferred = <T>() => {
@@ -163,10 +171,7 @@ describe('holdingsStore — addressless first load', () => {
 
   // The live route answers with the season block and no buckets at all.
   it('normalises a bucket-less body to empty buckets', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(ok({ info: season() })),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(ok({ info: season() })))
 
     const store = useHoldingsStore()
     await store.fetchCampaignInfo()
@@ -182,11 +187,13 @@ describe('holdingsStore — addressless first load', () => {
     // "Expires in" countdown, because a refused address-scoped response nulled
     // the whole payload — season block included.
     it('keeps the countdown alive when the wallet is refused', async () => {
-      const fetchMock = vi.fn().mockImplementation((url: string) =>
-        Promise.resolve(
-          String(url).includes('address') ? fail(403) : ok(campaignBody()),
-        ),
-      )
+      const fetchMock = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            String(url).includes('address') ? fail(403) : ok(campaignBody()),
+          ),
+        )
       vi.stubGlobal('fetch', fetchMock)
 
       const store = useHoldingsStore()
@@ -209,13 +216,15 @@ describe('holdingsStore — addressless first load', () => {
         claimed: [],
         pending: [{ uuid: 'entry-1', address: ADDRESS }],
       }
-      const fetchMock = vi.fn().mockImplementation((url: string) =>
-        Promise.resolve(
-          String(url).includes('address')
-            ? ok(walletOnly)
-            : ok(campaignBody()),
-        ),
-      )
+      const fetchMock = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            String(url).includes('address')
+              ? ok(walletOnly)
+              : ok(campaignBody()),
+          ),
+        )
       vi.stubGlobal('fetch', fetchMock)
 
       const store = useHoldingsStore()
@@ -229,13 +238,19 @@ describe('holdingsStore — addressless first load', () => {
     })
 
     it('still lets the wallet response update the season block', async () => {
-      const fetchMock = vi.fn().mockImplementation((url: string) =>
-        Promise.resolve(
-          String(url).includes('address')
-            ? ok(campaignBody({ info: season({ end: '2100-06-01T00:00:00Z' }) }))
-            : ok(campaignBody()),
-        ),
-      )
+      const fetchMock = vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            String(url).includes('address')
+              ? ok(
+                  campaignBody({
+                    info: season({ end: '2100-06-01T00:00:00Z' }),
+                  }),
+                )
+              : ok(campaignBody()),
+          ),
+        )
       vi.stubGlobal('fetch', fetchMock)
 
       const store = useHoldingsStore()
@@ -243,6 +258,82 @@ describe('holdingsStore — addressless first load', () => {
       await store.fetchInfo(ADDRESS)
 
       expect(store.seasonEnd).toBe('2100-06-01T00:00:00Z')
+    })
+  })
+
+  // A 403 covers both a blocked region and a banned wallet, and the two get
+  // different copy. Only the bare `Forbidden` may be read as a region block.
+  describe('403 refusals', () => {
+    const refused = (body: unknown) =>
+      vi
+        .fn()
+        .mockImplementation((url: string) =>
+          Promise.resolve(
+            String(url).includes('address')
+              ? fail(403, body)
+              : ok(campaignBody()),
+          ),
+        )
+
+    it('reads a bare Forbidden as a region block', async () => {
+      vi.stubGlobal('fetch', refused({ msg: 'Forbidden' }))
+
+      const store = useHoldingsStore()
+      await store.fetchInfo(ADDRESS)
+
+      expect(store.status).toBe('notEligible')
+      expect(store.isRegionBlocked).toBe(true)
+    })
+
+    it('leaves a wallet-level refusal off the region copy', async () => {
+      vi.stubGlobal('fetch', refused({ msg: 'Address is banned' }))
+
+      const store = useHoldingsStore()
+      await store.fetchInfo(ADDRESS)
+
+      expect(store.status).toBe('notEligible')
+      expect(store.isRegionBlocked).toBe(false)
+    })
+
+    it('treats a 403 with no readable body as unexplained', async () => {
+      const noBody = {
+        ok: false,
+        status: 403,
+        json: async () => {
+          throw new Error('not json')
+        },
+      }
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockImplementation((url: string) =>
+            Promise.resolve(
+              String(url).includes('address') ? noBody : ok(campaignBody()),
+            ),
+          ),
+      )
+
+      const store = useHoldingsStore()
+      await store.fetchInfo(ADDRESS)
+
+      expect(store.status).toBe('notEligible')
+      expect(store.isRegionBlocked).toBe(false)
+    })
+
+    it('clears the region block once the wallet is let through', async () => {
+      const fetchMock = refused({ msg: 'Forbidden' })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const store = useHoldingsStore()
+      await store.fetchInfo(ADDRESS)
+      expect(store.isRegionBlocked).toBe(true)
+
+      fetchMock.mockResolvedValue(ok(walletBody()))
+      await store.fetchInfo(ADDRESS)
+
+      expect(store.isRegionBlocked).toBe(false)
+      expect(store.status).toBe('holding')
     })
   })
 
@@ -264,5 +355,61 @@ describe('holdingsStore — addressless first load', () => {
 
     expect(store.isCampaignFull).toBe(false)
     expect(store.status).toBe('holding')
+  })
+})
+
+describe('qualification threshold (server-driven)', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('parses the server value for comparisons and for copy', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(ok(campaignBody())))
+    const store = useHoldingsStore()
+    await store.fetchCampaignInfo()
+    expect(store.qualificationUsd).toBe(500)
+    expect(store.qualificationAmount).toBe('500')
+  })
+
+  it('normalises a decimal string so copy reads "250", not "250.00"', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(
+          ok(campaignBody({ info: season({ qualification_value: '250.00' }) })),
+        ),
+    )
+    const store = useHoldingsStore()
+    await store.fetchCampaignInfo()
+    expect(store.qualificationUsd).toBe(250)
+    expect(store.qualificationAmount).toBe('250')
+  })
+
+  it('reports null before /info lands, so no caller promises a reward on an unknown threshold', () => {
+    const store = useHoldingsStore()
+    expect(store.qualificationUsd).toBeNull()
+    // ...but copy still renders a number rather than a bare '$'.
+    expect(store.qualificationAmount).toBe('250')
+  })
+
+  it('treats an unusable server value as unknown', async () => {
+    for (const bad of ['', '0', 'abc', '-5']) {
+      setActivePinia(createPinia())
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockResolvedValue(
+            ok(campaignBody({ info: season({ qualification_value: bad }) })),
+          ),
+      )
+      const store = useHoldingsStore()
+      await store.fetchCampaignInfo()
+      expect(store.qualificationUsd, `value ${JSON.stringify(bad)}`).toBeNull()
+    }
   })
 })

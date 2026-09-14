@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   isTransientRpcError,
   isAxiosNetworkError,
-} from '@/modules/trade/composables/transientRpcError'
+} from '@/modules/trade/common/transientRpcError'
 
 describe('isTransientRpcError', () => {
   it('is true for the top-level viem error whose message is "WebSocket request failed"', () => {

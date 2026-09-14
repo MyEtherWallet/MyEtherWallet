@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isTransientSwapInitError } from '@/composables/swapInitError'
+import { isTransientSwapInitError } from '@/utils/swapInitError'
 
 describe('isTransientSwapInitError', () => {
   it('is true for a JSON-parse SyntaxError (SDK parsed a non-JSON upstream body)', () => {
@@ -25,6 +25,27 @@ describe('isTransientSwapInitError', () => {
     ).toBe(false)
   })
 
+  it('is true for a WebKit SyntaxError DOMException (Response.json on a non-JSON body)', () => {
+    // Safari's Response.json() failure: DOMException named "SyntaxError"
+    // (code 12) whose message never mentions "json"
+    expect(
+      isTransientSwapInitError(
+        new DOMException(
+          'The string did not match the expected pattern.',
+          'SyntaxError',
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a DOMException that is not a SyntaxError', () => {
+    expect(
+      isTransientSwapInitError(
+        new DOMException('The operation was aborted.', 'AbortError'),
+      ),
+    ).toBe(false)
+  })
+
   it('is true for network errors (various phrasings)', () => {
     expect(isTransientSwapInitError(new Error('Network Error'))).toBe(true)
     expect(isTransientSwapInitError(new TypeError('Failed to fetch'))).toBe(
@@ -40,6 +61,19 @@ describe('isTransientSwapInitError', () => {
       isTransientSwapInitError(
         new TypeError("Cannot read properties of undefined (reading 'all')"),
       ),
+    ).toBe(false)
+  })
+
+  // A bare `includes('network')` matched this, so a real application bug was
+  // retried and then suppressed from Sentry as expected noise.
+  it('is false for a property-access TypeError that merely mentions network', () => {
+    expect(
+      isTransientSwapInitError(
+        new TypeError("Cannot read properties of undefined (reading 'network')"),
+      ),
+    ).toBe(false)
+    expect(
+      isTransientSwapInitError(new TypeError('networkInfo is not a function')),
     ).toBe(false)
   })
 

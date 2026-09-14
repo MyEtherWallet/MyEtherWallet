@@ -17,8 +17,10 @@ export function useCountdown(
 
   const remainingMs = computed<number | null>(() => {
     const tgt = target()
-    if (!tgt) return null
-    const ts = new Date(tgt).getTime()
+    // Nullish rather than falsy: epoch 0 is a valid timestamp, and `new Date(0)`
+    // is a real date. Date instances are read directly rather than re-wrapped.
+    if (tgt == null) return null
+    const ts = tgt instanceof Date ? tgt.getTime() : new Date(tgt).getTime()
     if (Number.isNaN(ts)) return null
     return Math.max(0, ts - now.value)
   })

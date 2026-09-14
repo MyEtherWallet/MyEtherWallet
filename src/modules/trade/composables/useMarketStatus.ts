@@ -1,36 +1,23 @@
 import { ref, computed, onUnmounted } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import {
   getMarketStatus,
-  isTradingRestricted,
   TRADING_RESTRICTED_HELP_URL,
 } from '../providers/ondoHelpers'
-import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import Configs from '@/configs'
 import { useGlobalStore } from '@/stores/globalStore'
-import { resolveCurrentSession } from './marketSession'
+import { resolveCurrentSession } from '../common/marketSession'
+import { reportModuleError } from '@/utils/reportModuleError'
 
-const isDevMode = Configs.IS_DEV_MODE
-
-interface UseMarketStatusOptions {
-  onMarketOpen?: () => void | Promise<void>
-}
-
-
-export function useMarketStatus(options: UseMarketStatusOptions = {}) {
-  const { onMarketOpen } = options
+export function useMarketStatus() {
   const globalStore = useGlobalStore()
-  const { fetchedTradingThisSession } = storeToRefs(globalStore)
-  const { setIsTradingRestrictedInRegion } = globalStore
+  const { fetchTradingRestriction } = globalStore
   const { t } = useI18n()
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
-  let wasMarketClosed = false
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
 
@@ -97,31 +84,6 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     }
   }
 
-  const fetchTradingRestriction = async () => {
-    // should only fetch this once in the session
-    if (fetchedTradingThisSession.value) {
-      return fetchedTradingThisSession.value;
-    }
-    try {
-      const res = await isTradingRestricted()
-      setIsTradingRestrictedInRegion(res)
-      fetchedTradingThisSession.value = true;
-    } catch (e) {
-      if (isDevMode) {
-        console.error('Failed to check trading restriction:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error checking trading restriction',
-            errorMessage: (e as Error).message || 'Unknown error',
-          },
-        })
-      }
-      setIsTradingRestrictedInRegion(true)
-    }
-  }
-
   const fetchMarketStatus = async () => {
     try {
       const [statusResult] = await Promise.all([
@@ -130,32 +92,18 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       ])
       marketStatus.value = statusResult
 
-      // Drive closure side-effects off the real tradable state (Case 3), so
-      // off-hours-open is treated as open and onMarketOpen only fires on a true
-      // closed -> open transition.
+      // Drive closure side-effects off the real tradable state (Case 3).
       if (!isTradingSessionOpen.value) {
-        wasMarketClosed = true
         startCountdown()
       } else {
         stopCountdown()
-        // Trading just (re)opened - call the callback if it was previously closed
-        if (wasMarketClosed && onMarketOpen) {
-          wasMarketClosed = false
-          await onMarketOpen()
-        }
       }
     } catch (e) {
-      if (isDevMode) {
-        console.error('Failed to fetch market status:', e)
-      } else {
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.TRADE,
-          extra: {
-            title: 'TRADE: Error fetching market status',
-            errorMessage: (e as Error).message || 'Unknown error',
-          },
-        })
-      }
+      reportModuleError({
+        tag: SENTRY_MODULE_TAGS.TRADE,
+        title: 'TRADE: Error fetching market status',
+        error: e,
+      })
     }
   }
 
@@ -188,7 +136,6 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
-    fetchTradingRestriction,
     formatNextOpen,
   }
 }

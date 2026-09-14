@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
-import { FIVE_DAYS_MS } from '@/modules/trade/composables/announcementSchedule'
+import { FIVE_DAYS_MS } from '@/modules/trade/common/announcementSchedule'
 
 describe('weekendTradingAnnouncementStore', () => {
   beforeEach(() => {

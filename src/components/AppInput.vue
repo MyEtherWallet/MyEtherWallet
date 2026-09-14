@@ -19,6 +19,7 @@
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
       @input="onInput"
+      @keyup.enter="onEnter"
       autocomplete="off"
     />
     <span
@@ -108,7 +109,21 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  // When true, pressing Enter does NOT emit `enter` — so callers can gate
+  // submit-on-Enter on the same condition as their submit button, without
+  // re-implementing the guard in every module that uses this input.
+  submitDisabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
+
+const emit = defineEmits<{ enter: [] }>()
+
+const onEnter = () => {
+  if (!props.submitDisabled) emit('enter')
+}
 
 const model = defineModel()
 const baseInput = ref<HTMLElement | null>(null)

@@ -7,10 +7,9 @@ import {
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { STOCK_INFO_ROUTE } from './routeStockInfo'
 import { PERP_INFO_ROUTE } from './routePerpInfo'
-import { ACCESS_ROUTES } from './routesAccess'
-import { CREATE_ROUTES } from './routesCreate'
+import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
-import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -24,16 +23,36 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // Dev-only component previews — excluded from production builds.
-  ...(import.meta.env.DEV
+  // DEV-only design-library previews (MEW-2271). A sidebar shell (ViewDevLayout)
+  // lists the components with previews; each renders in its <router-view>. Never
+  // registered in production builds. The preview pages render no wallet-flow
+  // outlet, so they opt out of the connect/create overlays (`noWalletFlow`).
+  ...(import.meta.env.MODE !== 'production'
     ? [
         {
-          path: '/button-preview',
-          name: 'button-preview',
-          component: () => import('@/views/ViewButtonPreview.vue'),
-          meta: {
-            noAuth: true,
-          },
+          path: '/dev',
+          component: () => import('@/views/ViewDevLayout.vue'),
+          meta: { noAuth: true },
+          children: [
+            {
+              path: '',
+              name: 'DevIndex',
+              component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'content-group',
+              name: 'DevContentGroup',
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'buttons',
+              name: 'DevButton',
+              component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+          ],
         },
       ]
     : []),
@@ -47,15 +66,20 @@ const DefaultRoutes = <RouteNameCollection>[
     },
   },
   {
-    // The wallet portfolio moved off the root; requires a connected wallet
-    // (the guard bounces disconnected users to '/'). Its connect/create and
-    // token/stock-info children keep their own `noAuth` where they had it.
+    // The wallet portfolio moved off the root. It stays reachable without a
+    // wallet (`noAuth`) so disconnected users get its connect-wallet state
+    // (ViewPortfolio renders <connect-wallet> when !isWalletConnected) instead
+    // of being bounced to Home. Its token/stock-info children inherit `noAuth` —
+    // all are meant to be reachable disconnected. The connect/create children
+    // are no longer listed here: they are appended to EVERY page route by
+    // withWalletFlowRoutes below, so the flow opens over wherever the user is.
     path: ROUTES_MAIN.PORTFOLIO.PATH,
     name: ROUTES_MAIN.PORTFOLIO.NAME,
     component: PortfolioView,
+    meta: {
+      noAuth: true,
+    },
     children: [
-      CREATE_ROUTES,
-      ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,
         ...TOKEN_INFO_ROUTE,
@@ -150,7 +174,7 @@ const DefaultRoutes = <RouteNameCollection>[
       // blocked state instead of redirecting away. The geo check is still
       // awaited here so it is resolved before the first paint, otherwise a
       // restricted user would briefly see a tradeable UI.
-      await fetchTradingRestriction()
+      await useGlobalStore().fetchTradingRestriction()
       next()
     },
     children: [
@@ -184,8 +208,15 @@ const DefaultRoutes = <RouteNameCollection>[
     component: NotFoundView,
     meta: {
       noAuth: true,
+      // ViewNotFound has no <router-view/> outlet and '/:pathMatch(.*)*/access' is a
+      // nonsense matcher, so this page opts out of the connect/create overlays. The
+      // CTAs fall back to the canonical '/access' / '/create' (useWalletFlowRoute).
+      noWalletFlow: true,
     },
   },
 ]
 
-export default DefaultRoutes
+/** The undecorated page tree, without the connect/create overlays. For tests. */
+export const PAGE_ROUTES = DefaultRoutes
+
+export default withWalletFlowRoutes(DefaultRoutes)

@@ -1,110 +1,42 @@
-import { computed, getCurrentScope, onScopeDispose, ref } from 'vue'
-import { capturePerps } from '../sentry'
-import { PERPS_FEATURE } from '@/sentry/constants'
-import { perpsClient } from '../configs'
-import { PerpsHttpError } from '../sdk/client'
+import { getCurrentScope, onScopeDispose } from 'vue'
+import { storeToRefs } from 'pinia'
+import { usePerpsStatusStore } from '@/stores/perpsStatusStore'
 
 /**
- * `/status` is unauthenticated and returns a single field, so polling it is
- * cheap. A minute is enough resolution for a passive banner, and it doubles as
- * the retry that clears the banner once the service recovers.
- */
-const POLL_INTERVAL_MS = 60_000
-
-/**
- * Server-error floor. Only a 5xx counts as an outage worth telling the user
- * about; the endpoint documents 200, 429 and 500, and of those only the 500 is
- * the service being down.
- *
- * A 429 is the opposite of an outage — the service answered, it just wants us to
- * poll less — so it must not raise the banner. Anything else the endpoint might
- * return (4xx, or a request that never got a response at all) is likewise not
- * evidence the service is down.
- */
-const SERVER_ERROR_STATUS = 500
-
-// Singleton state: every surface reads the same status, so the page banner and
-// any future consumer can never disagree about service availability.
-//
-// The last HTTP status observed from `/status`, or `null` before the first
-// response — and also when a request never reached one (offline, DNS, CORS,
-// aborted), which is indistinguishable from "unknown" for our purposes and
-// deliberately does not raise the banner.
-const statusCode = ref<number | null>(null)
-const isLoadingStatus = ref(false)
-let pollTimer: ReturnType<typeof setInterval> | null = null
-let consumers = 0
-
-/**
- * True only while `/status` is answering with a server error. Everything else —
- * a 200, a 429 throttle, an unreachable endpoint, or the window before the first
- * response — reads as available, so the page never opens with an outage notice
- * it cannot substantiate.
- */
-const isServiceUnavailable = computed(
-  () => statusCode.value !== null && statusCode.value >= SERVER_ERROR_STATUS,
-)
-
-/**
- * Pings `/status` and returns the HTTP status it answered with (`null` if it
- * never answered).
- *
- * Only the response code is consulted — the `marketStatus` field in the body is
- * not read, since availability is what the banner reports.
+ * Pings `/status` once, outside any consumer bookkeeping. Kept as a standalone
+ * export so callers that only want to refresh the verdict — and the spec — don't
+ * have to reach for the store.
  */
 export async function fetchPerpsStatus(): Promise<number | null> {
-  isLoadingStatus.value = true
-  try {
-    await perpsClient.getStatus()
-    statusCode.value = 200
-  } catch (e) {
-    statusCode.value = e instanceof PerpsHttpError ? e.status : null
-    capturePerps(PERPS_FEATURE.STATUS, e, {
-      title: 'PERPS: Error fetching service status',
-      extra: { httpStatus: statusCode.value },
-    })
-  } finally {
-    isLoadingStatus.value = false
-  }
-  // Push the verdict into the client so every other perps endpoint is gated on
-  // it: while the service is down they fail immediately instead of each firing
-  // its own doomed request. Set on every poll, so a recovery reopens the gate.
-  perpsClient.setServiceUnavailable(isServiceUnavailable.value)
-  return statusCode.value
+  return usePerpsStatusStore().fetchStatus()
 }
 
 /**
- * Availability of the perps service, from its `/status` endpoint.
+ * Availability of the perps service. The state itself lives in
+ * `perpsStatusStore`; this adds the per-consumer half the store deliberately
+ * does not own.
  *
  * When called from a component (or any active effect scope) the status is
  * refreshed on entry and kept warm on a timer that runs only while at least one
- * consumer is mounted — leaving the perps page stops the polling. Called
- * outside a scope it does a single fetch and never polls.
+ * consumer is mounted — leaving the perps page stops the polling. Called outside
+ * a scope it does a single fetch and never polls.
  */
 export function usePerpsStatus() {
+  const store = usePerpsStatusStore()
+  const { statusCode, isServiceUnavailable, isLoadingStatus } =
+    storeToRefs(store)
+
   if (getCurrentScope()) {
-    consumers += 1
-    if (consumers === 1) {
-      // Refresh on (re)entry rather than trusting a value that may have gone
-      // stale while nothing was watching it.
-      void fetchPerpsStatus()
-      pollTimer = setInterval(() => void fetchPerpsStatus(), POLL_INTERVAL_MS)
-    }
-    onScopeDispose(() => {
-      consumers -= 1
-      if (consumers === 0 && pollTimer) {
-        clearInterval(pollTimer)
-        pollTimer = null
-      }
-    })
+    store.acquire()
+    onScopeDispose(() => store.release())
   } else if (statusCode.value === null) {
-    void fetchPerpsStatus()
+    void store.fetchStatus()
   }
 
   return {
     statusCode,
     isServiceUnavailable,
     isLoadingStatus,
-    refetch: fetchPerpsStatus,
+    refetch: store.fetchStatus,
   }
 }

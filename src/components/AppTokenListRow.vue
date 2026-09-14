@@ -41,7 +41,6 @@ const changeText = computed(() =>
       :is-stock="isStock"
       width="size-8"
       height="size-8"
-      no-ring
       no-shadow
       class="shrink-0"
     />

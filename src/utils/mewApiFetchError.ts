@@ -75,15 +75,21 @@ export const buildMewApiErrorMessage = (
   const bodyMessage = extractBodyMessage(ctx.data)
   if (bodyMessage) return bodyMessage
 
-  const originalMessage = extractErrorMessage(ctx.error)
-  if (originalMessage) return originalMessage
-
   const statusText = ctx.statusText?.trim()
-  if (statusText) return statusText
+
+  // `useFetch` throws `new Error(response.statusText)`, so for a plain HTTP
+  // status the error message is just the browser's generic reason phrase (e.g.
+  // "Not Acceptable" for 406). That's no more diagnosable than the status
+  // itself, so only prefer the original message when it carries real signal
+  // beyond the reason phrase (e.g. "Failed to fetch").
+  const originalMessage = extractErrorMessage(ctx.error)
+  if (originalMessage && originalMessage !== statusText) return originalMessage
 
   if (typeof ctx.status === 'number') {
     return `MEW API request failed with status ${ctx.status}`
   }
+
+  if (statusText) return statusText
 
   return 'MEW API request failed (network error)'
 }
@@ -108,8 +114,20 @@ export const describeMewApiFetchError = (
   ctx: MewApiFetchErrorContext,
 ): MewApiCapturedError => {
   const message = buildMewApiErrorMessage(ctx)
+  // Two ways a raw error message is unusable, both of which must fall back to
+  // the computed message (keeping the original as `cause`):
+  //
+  // - Whitespace-only: trimmed here to agree with `extractErrorMessage`, which
+  //   already treats it as unusable. Otherwise `new Error('   ')` is kept as-is
+  //   and the fallback is discarded — the blank-message problem this file exists
+  //   to prevent.
+  // - Just the HTTP reason phrase (message === statusText, e.g. "Not
+  //   Acceptable"): reporting it verbatim collapses every failure of that status
+  //   into the generic reason phrase.
   const hasUsableError =
-    ctx.error instanceof Error && ctx.error.message.length > 0
+    ctx.error instanceof Error &&
+    ctx.error.message.trim().length > 0 &&
+    ctx.error.message.trim() !== ctx.statusText?.trim()
   const error = hasUsableError ? (ctx.error as Error) : new Error(message)
   // When we synthesize a fresh Error for the message, keep the original as its
   // `cause` so Sentry can still reconstruct the original stack. (The `cause`

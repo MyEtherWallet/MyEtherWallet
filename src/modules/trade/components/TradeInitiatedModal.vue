@@ -230,7 +230,7 @@ import {
   ArrowLongDownIcon,
 } from '@heroicons/vue/24/solid'
 import type { Chain } from '@/mew_api/types'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
