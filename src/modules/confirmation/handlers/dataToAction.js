@@ -15,8 +15,20 @@ const signatures = {
   '0x28ed4f6c': () => {
     return 'Set ENS controller';
   },
+  // ERC-721 transferFrom. Kept as ENS because the ENS manager is the only MEW
+  // flow that encodes this overload; the decoded recipient and token id rows
+  // on the confirmation screen carry the detail either way.
   '0x23b872dd': () => {
     return 'Transfer ENS name';
+  },
+  '0x42842e0e': () => {
+    return 'Transfer NFT';
+  },
+  '0xb88d4fde': () => {
+    return 'Transfer NFT';
+  },
+  '0xf242432a': () => {
+    return 'Transfer NFT';
   },
   '0xacf1a841': () => {
     return 'Renew ENS name';

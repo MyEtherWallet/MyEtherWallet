@@ -157,6 +157,7 @@ import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
 import { chains } from './handlers/config/configNft';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
+import { USER_INPUT_TYPES } from '@/modules/address-book/ModuleAddressBook';
 
 const MIN_GAS_LIMIT = 21000;
 
@@ -173,6 +174,16 @@ export default {
       hasNoTokens: false,
       selectedNft: {},
       toAddress: '',
+      // The last value the user actually typed or picked, used to reject a
+      // name resolution that arrives for an input they have since replaced.
+      lastEnteredAddress: '',
+      // The one recipient that has been validated AND gas-estimated. This
+      // exact string is what gets encoded, so estimation, confirmation and
+      // calldata can never disagree about who receives the NFT. Empty while
+      // unsettled, which disables Send.
+      confirmedRecipient: '',
+      estimatingRecipient: false,
+      estimateGeneration: 0,
       selectedContract: {},
       gasFees: '0',
       enoughFunds: false,
@@ -281,10 +292,19 @@ export default {
       return this.tokens.slice(this.startIndex, this.endIndex);
     },
     /**
-     * Check if address is valid
+     * Send is only enabled once a recipient has settled: validated, estimated
+     * for the selected token, and affordable. While an estimate is in flight
+     * — or after the recipient changed and before the new one settles — this
+     * is false, so a half-updated recipient can never be sent.
      */
     isValid() {
-      return this.nft.isValidAddress(this.toAddress) && this.enoughFunds;
+      return (
+        !this.estimatingRecipient &&
+        !!this.confirmedRecipient &&
+        this.confirmedRecipient === this.toAddress &&
+        this.nft.isValidAddress(this.confirmedRecipient) &&
+        this.enoughFunds
+      );
     },
     /**
      * Check if network is supported
@@ -329,32 +349,13 @@ export default {
         this.onTab(0);
       }
     },
-    async toAddress(newVal) {
-      if (isAddress(newVal)) {
-        try {
-          const gasTypeFee = this.gasPriceByType(this.gasPriceType);
-          this.localGasPrice = gasTypeFee;
-          const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
-          const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
-          this.gasFees = gasFeesToBN.toString();
-          if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
-            //gasFeesToBN vs current balance
-            this.enoughFunds = false;
-            this.showBalanceError = true;
-          } else {
-            this.enoughFunds = true;
-            this.showBalanceError = false;
-          }
-        } catch (e) {
-          this.enoughFunds = false;
-          this.showBalanceError = false;
-          Toast(
-            `Can't send NFT! Please double check if everything is correct`,
-            {},
-            ERROR
-          );
-        }
-      }
+    toAddress(newVal) {
+      this.estimateRecipient(newVal);
+    },
+    // A different token means the previous estimate described a different
+    // transfer, so the snapshot has to be re-earned.
+    selectedNft() {
+      this.estimateRecipient(this.toAddress);
     }
   },
   mounted() {
@@ -420,17 +421,25 @@ export default {
     },
     closeNftSend() {
       this.onNftSend = false;
+      // Abandon any estimate still in flight along with its snapshot.
+      this.estimateGeneration++;
+      this.estimatingRecipient = false;
+      this.confirmedRecipient = '';
       this.toAddress = '';
+      this.lastEnteredAddress = '';
       this.$router.push({ name: ROUTES_WALLET.NFT_MANAGER.NAME });
     },
     async sendTx() {
       if (this.isValid) {
+        // Encode the exact recipient that was validated and estimated, not
+        // whatever the reactive input happens to hold at this instant.
+        const recipient = this.confirmedRecipient;
         try {
           let gasPrice = undefined;
           if (this.network.type.name === POL.name)
             gasPrice = `0x${toBN(this.localGasPrice).toString('hex')}`;
           this.nft
-            .send(this.toAddress, this.selectedNft, gasPrice)
+            .send(recipient, this.selectedNft, gasPrice)
             .then(response => {
               this.updateValues();
               this.enoughFunds = true;
@@ -468,7 +477,78 @@ export default {
       }
       this.getNfts();
     },
-    setAddress(address) {
+    /**
+     * Estimates gas for `recipient` and, only if that succeeds and the funds
+     * cover it, promotes it to `confirmedRecipient` — the single value used
+     * for estimation, confirmation and encoding alike.
+     *
+     * Guarded by a generation so a slow estimate for a recipient the user has
+     * since replaced cannot report affordability for the wrong transfer.
+     */
+    async estimateRecipient(recipient) {
+      const generation = ++this.estimateGeneration;
+      // Unsettled until proven otherwise; this is what disables Send.
+      this.confirmedRecipient = '';
+      this.enoughFunds = false;
+      this.showBalanceError = false;
+      if (!recipient || !isAddress(recipient) || !this.selectedNft?.contract) {
+        this.estimatingRecipient = false;
+        return;
+      }
+      this.estimatingRecipient = true;
+      try {
+        const gasTypeFee = this.gasPriceByType(this.gasPriceType);
+        const gasFees = await this.nft.getGasFees(recipient, this.selectedNft);
+        if (generation !== this.estimateGeneration) return;
+        this.localGasPrice = gasTypeFee;
+        const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
+        this.gasFees = gasFeesToBN.toString();
+        if (gasFeesToBN.gte(toBN(this.balanceInWei))) {
+          //gasFeesToBN vs current balance
+          this.enoughFunds = false;
+          this.showBalanceError = true;
+        } else {
+          this.enoughFunds = true;
+          this.showBalanceError = false;
+          // Settled: validated, estimated against this token, affordable.
+          this.confirmedRecipient = recipient;
+        }
+      } catch (e) {
+        if (generation !== this.estimateGeneration) return;
+        this.enoughFunds = false;
+        this.showBalanceError = false;
+        Toast(
+          `Can't send NFT! Please double check if everything is correct`,
+          {},
+          ERROR
+        );
+      } finally {
+        if (generation === this.estimateGeneration)
+          this.estimatingRecipient = false;
+      }
+    },
+    /**
+     * Receives the recipient from ModuleAddressBook.
+     * The recipient of an NFT transfer is encoded into the calldata rather
+     * than the tx `to`, so the confirmation screen never shows it as a
+     * destination. That makes a wrong recipient here unusually hard to spot,
+     * so use every signal the address input gives us rather than the address
+     * alone.
+     */
+    setAddress(address, isValidAddress, userInputType) {
+      const inputType = userInputType?.type;
+      if (inputType === USER_INPUT_TYPES.resolved) {
+        // A name resolution is only trustworthy while it still describes what
+        // the user last entered. A resolution that arrives for a superseded
+        // name would otherwise silently redirect the transfer.
+        if (userInputType.value !== this.lastEnteredAddress) return;
+      } else {
+        this.lastEnteredAddress = userInputType?.value ?? address;
+      }
+      if (isValidAddress === false) {
+        this.toAddress = '';
+        return;
+      }
       if (typeof address === 'object' && !!address) {
         this.toAddress = address.address;
       } else {
