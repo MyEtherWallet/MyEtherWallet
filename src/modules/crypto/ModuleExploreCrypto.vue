@@ -99,7 +99,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-normal"
+                    class="flex items-center gap-1 relative font-normal justify-end text-right md:justify-start md:text-left"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -107,13 +107,13 @@
                   >
                     {{ $t('crypto.market_cap') }}
                     <arrow-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                       "
                     />
                     <arrow-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'desc'
                       "
@@ -126,7 +126,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-normal"
+                    class="flex items-center gap-1 justify-start relative text-left font-normal"
                     :class="{
                       'text-black': headerSort === 'TOTAL_VOLUME',
                     }"
@@ -134,14 +134,14 @@
                   >
                     {{ $t('crypto.volume') }}
                     <arrow-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="
                         headerSort === 'TOTAL_VOLUME' &&
                         tableDirection === 'asc'
                       "
                     />
                     <arrow-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="
                         headerSort === 'TOTAL_VOLUME' &&
                         tableDirection === 'desc'
@@ -151,7 +151,7 @@
                 </th>
                 <!-- 24H Change -->
                 <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                  <div class="text-right font-normal">
+                  <div class="text-left font-normal">
                     {{ $t('crypto.twenty_four_h_change') }}
                   </div>
                 </th>
@@ -160,7 +160,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-normal"
+                    class="flex items-center gap-1 justify-start relative text-left font-normal"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -168,11 +168,11 @@
                   >
                     {{ $t('crypto.price') }}
                     <arrow-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
                     />
                     <arrow-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                      class="w-3.5 h-3.5"
                       v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
                     />
                   </div>
@@ -258,7 +258,7 @@
                   </router-link>
                 </td>
                 <!-- Market Cap -->
-                <td class="px-1 py-1 text-right text-s-14 text-black">
+                <td class="px-1 py-1 text-right md:text-left text-s-14 text-black">
                   <p class="font-semibold">{{ token.marketCap }}</p>
                   <p
                     class="text-s-12 font-semibold md:hidden"
@@ -269,13 +269,13 @@
                 </td>
                 <!-- Volume -->
                 <td
-                  class="hidden xl:table-cell px-1 py-1 text-right font-semibold text-s-14 text-black"
+                  class="hidden xl:table-cell px-1 py-1 text-left font-semibold text-s-14 text-black"
                 >
                   {{ token.totalVolume }}
                 </td>
                 <!-- 24H Change -->
-                <td class="hidden xl:table-cell px-1 py-1 text-right">
-                  <div class="flex flex-col items-end justify-center py-2">
+                <td class="hidden xl:table-cell px-1 py-1 text-left">
+                  <div class="flex flex-col items-start justify-center py-2">
                     <p
                       class="text-s-13 font-semibold mb-1"
                       :class="getPercentClass(getActivePercent(token))"
@@ -293,7 +293,7 @@
                   </div>
                 </td>
                 <!-- Price -->
-                <td class="hidden md:table-cell pl-1 pr-1 py-1 text-right">
+                <td class="hidden md:table-cell pl-1 pr-1 py-1 text-left">
                   <p class="font-semibold text-s-14 text-black">
                     {{ token.price }}
                   </p>

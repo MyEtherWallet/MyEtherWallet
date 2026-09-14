@@ -95,7 +95,7 @@
                 @click="setHeaderSort(SortValue.MARKET_CAP)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-normal"
+                  class="flex items-center gap-1 relative font-normal justify-end text-right md:justify-start md:text-left"
                   :class="{
                     'text-black': headerSort === SortValue.MARKET_CAP,
                   }"
@@ -106,14 +106,14 @@
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                   <arrow-up-icon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                 </div>
               </th>
@@ -123,7 +123,7 @@
                 @click="setHeaderSort(SortValue.VOLUME)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-normal"
+                  class="flex items-center gap-1 justify-start relative text-left font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.VOLUME,
                   }"
@@ -134,20 +134,20 @@
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                   <arrow-up-icon
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                 </div>
               </th>
               <!-- 24H Change -->
               <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                <div class="text-right font-normal">
+                <div class="text-left font-normal">
                   {{ $t('perps.market-list.column-24h-change') }}
                 </div>
               </th>
@@ -157,7 +157,7 @@
                 @click="setHeaderSort(SortValue.PRICE)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end relative text-right font-normal"
+                  class="flex items-center gap-1 justify-start relative text-left font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.PRICE,
                   }"
@@ -168,13 +168,13 @@
                       headerSort === SortValue.PRICE &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                   <arrow-up-icon
                     v-if="
                       headerSort === SortValue.PRICE && tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    class="w-3.5 h-3.5"
                   />
                 </div>
               </th>
@@ -239,7 +239,7 @@
                 </div>
               </td>
               <!-- Market Cap -->
-              <td class="px-1 py-2 text-right text-s-14 text-black">
+              <td class="px-1 py-2 text-right md:text-left text-s-14 text-black">
                 <p class="font-semibold">
                   {{ formatVolume(contract.openInterestUsd) }}
                 </p>
@@ -256,13 +256,13 @@
               </td>
               <!-- Volume -->
               <td
-                class="hidden xl:table-cell px-1 py-2 text-right font-semibold text-s-14 text-black"
+                class="hidden xl:table-cell px-1 py-2 text-left font-semibold text-s-14 text-black"
               >
                 {{ formatVolume(contract.usdVolume) }}
               </td>
               <!-- 24H Change -->
-              <td class="hidden xl:table-cell px-1 py-1 text-right">
-                <div class="flex flex-col items-end justify-center py-2">
+              <td class="hidden xl:table-cell px-1 py-1 text-left">
+                <div class="flex flex-col items-start justify-center py-2">
                   <p
                     class="text-s-13 font-semibold mb-1"
                     :class="
@@ -287,8 +287,8 @@
                 </div>
               </td>
               <!-- Price -->
-              <td class="hidden md:table-cell pl-1 pr-1 py-2 text-right">
-                <p class="text-right font-semibold text-s-14 text-black">
+              <td class="hidden md:table-cell pl-1 pr-1 py-2 text-left">
+                <p class="text-left font-semibold text-s-14 text-black">
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
