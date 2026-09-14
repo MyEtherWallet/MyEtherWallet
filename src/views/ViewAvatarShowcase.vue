@@ -73,7 +73,7 @@ const SAMPLE = {
 
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-5xl mx-auto">
-    <h1 class="text-s-24 font-bold">Avatar — design library (MEW-2196)</h1>
+    <h1 class="text-s-24 font-bold">Avatar</h1>
 
     <!-- 40 Type × Size combinations -->
     <section class="flex flex-col gap-4">
