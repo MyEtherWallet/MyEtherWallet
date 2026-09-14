@@ -201,14 +201,17 @@
                         : $t('common.add_to_watchlist')
                     "
                     @click.stop="setWatchlistToken(token)"
-                    class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                    class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
                     <star-outline-icon
                       class="h-4 w-4 cursor-pointer"
                       v-if="!isWatchListed(getWatchlistId(token))"
                     />
-                    <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                    <star-solid-icon
+                      v-else
+                      class="h-4 w-4 cursor-pointer text-primary"
+                    />
                   </button>
                 </td>
                 <!-- Name & Symbol -->

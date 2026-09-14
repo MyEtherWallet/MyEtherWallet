@@ -199,14 +199,17 @@
                       ? $t('perps.market-list.remove-from-watchlist')
                       : $t('perps.market-list.add-to-watchlist')
                   "
-                  class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
                   <star-outline-icon
                     v-if="!watchlist.has(contract.baseCurrency)"
                     class="h-4 w-4 cursor-pointer"
                   />
-                  <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                  <star-solid-icon
+                    v-else
+                    class="h-4 w-4 cursor-pointer text-primary"
+                  />
                 </button>
               </td>
               <!-- Name -->
