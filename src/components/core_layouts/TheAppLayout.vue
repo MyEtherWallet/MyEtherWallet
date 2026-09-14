@@ -27,7 +27,10 @@
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
         'flex w-full mr-[60px] xs:mr-[80px]',
-        isOverflowHidden
+        // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
+        // shell whose <main> scrolls internally), so the app-level scroll must be
+        // off for it — otherwise the page double-scrolls and the sidebar drifts.
+        isOverflowHidden || isDevPlayground
           ? 'overflow-hidden'
           : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
