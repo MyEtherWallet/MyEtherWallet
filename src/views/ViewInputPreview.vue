@@ -83,7 +83,7 @@ const searchModel = reactive({ default: '', alternative: '' })
 </script>
 
 <template>
-  <div class="p-6 md:p-10 bg-app-background min-h-screen space-y-12">
+  <div class="p-6 md:p-10 space-y-12">
     <header>
       <h1 class="text-s-28 font-semibold">AppInput — design library</h1>
       <p class="text-s-14 text-grey-50 mt-1">
