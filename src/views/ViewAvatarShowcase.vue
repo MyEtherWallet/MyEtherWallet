@@ -2,7 +2,7 @@
 // DEV-only gallery for the Avatar design-library component (MEW-2196). Not
 // registered in production builds — see routesDefault.ts. Lets us eyeball all
 // Type × Size combinations, badges and states against Figma.
-import { PlusIcon, CheckIcon, BellIcon } from '@heroicons/vue/24/solid'
+import { PlusIcon, BellIcon } from '@heroicons/vue/24/solid'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
@@ -117,32 +117,92 @@ const SAMPLE = {
       </div>
     </section>
 
-    <!-- Badges: 4 positions -->
+    <!-- Badge × Size: the network/icon badge scales per avatar size; status is fixed 8px -->
     <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Badges (M) — one per avatar</h2>
-      <div class="flex gap-10 items-center">
-        <AppAvatar type="cryptoAsset" size="xl" symbol="ETH" badge-bottom>
-          <template #badge>
-            <AppAvatarBadge type="network" size="xl"
-              ><PlusIcon
-            /></AppAvatarBadge>
-          </template>
-        </AppAvatar>
-        <AppAvatar type="stocks" size="xl" symbol="AAPL" badge-top-left>
-          <template #badge>
-            <AppAvatarBadge type="icon" size="xl"><PlusIcon /></AppAvatarBadge>
-          </template>
-        </AppAvatar>
-        <AppAvatar type="account" size="xl" :address="SAMPLE.address" badge-top>
-          <template #badge>
-            <AppAvatarBadge type="status" size="xl" status="success" />
-          </template>
-        </AppAvatar>
-        <AppAvatar type="initial" size="xl" initial="M" badge-bottom-left>
-          <template #badge>
-            <AppAvatarBadge type="icon" size="xl"><CheckIcon /></AppAvatarBadge>
-          </template>
-        </AppAvatar>
+      <h2 class="text-s-16 font-semibold">Badge × Size</h2>
+      <p class="text-s-12 text-info">
+        Network / Icon badge: 12 · 14 · 18 · 20 · 22 (xs→xl). Status: 8 fixed.
+      </p>
+      <div class="overflow-x-auto">
+        <table class="border-separate border-spacing-x-12 border-spacing-y-10">
+          <thead>
+            <tr>
+              <th></th>
+              <th
+                v-for="s in SIZES"
+                :key="s"
+                class="text-s-16 font-semibold text-black text-center whitespace-nowrap"
+              >
+                {{ sizeLabel(s) }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                class="text-s-16 font-semibold text-black text-left whitespace-nowrap pr-8"
+              >
+                Network
+              </td>
+              <td v-for="s in SIZES" :key="s" class="text-center">
+                <AppAvatar
+                  type="cryptoAsset"
+                  :size="s"
+                  :url="sampleCrypto"
+                  badge-bottom
+                >
+                  <template #badge>
+                    <AppAvatarBadge type="network">
+                      <img
+                        :src="sampleNetwork"
+                        class="w-full h-full object-cover"
+                        alt=""
+                      />
+                    </AppAvatarBadge>
+                  </template>
+                </AppAvatar>
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="text-s-16 font-semibold text-black text-left whitespace-nowrap pr-8"
+              >
+                Icon
+              </td>
+              <td v-for="s in SIZES" :key="s" class="text-center">
+                <AppAvatar
+                  type="account"
+                  :size="s"
+                  :address="SAMPLE.address"
+                  badge-top-left
+                >
+                  <template #badge>
+                    <AppAvatarBadge type="icon"><PlusIcon /></AppAvatarBadge>
+                  </template>
+                </AppAvatar>
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="text-s-16 font-semibold text-black text-left whitespace-nowrap pr-8"
+              >
+                Status
+              </td>
+              <td v-for="s in SIZES" :key="s" class="text-center">
+                <AppAvatar
+                  type="account"
+                  :size="s"
+                  :address="SAMPLE.address"
+                  badge-top
+                >
+                  <template #badge>
+                    <AppAvatarBadge type="status" status="success" />
+                  </template>
+                </AppAvatar>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -159,7 +219,7 @@ const SAMPLE = {
           badge-top
         >
           <template #badge>
-            <AppAvatarBadge type="status" size="xl" :status="st" />
+            <AppAvatarBadge type="status" :status="st" />
           </template>
         </AppAvatar>
       </div>

@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import AvatarStatusDot from './AvatarStatusDot.vue'
 import {
-  statusBadgeBox,
+  STATUS_BADGE_BOX,
   type AvatarBadgeType,
-  type AvatarSize,
   type AvatarStatus,
 } from './types'
 
 // _Avatar badge (1852:356). One circle, 1px solid white border, centered content.
 //   Network — white bg, no padding, logo fills the box (bottom-right).
 //   Icon    — #e6e6e6 bg, 1px padding, holds a glyph (top-left).
-//   Status  — a small white dot-holder (top-right); only M (8px) is design-specced.
-// The parent (AppAvatar) sizes + positions this from the size table; Network /
-// Icon fill their wrapper, Status renders a smaller centered dot inside it.
-const props = defineProps<{
+//   Status  — a fixed 8px white dot-holder (top-right), same at every size.
+// The parent (AppAvatar) sizes + positions the wrapper from the size table;
+// Network / Icon fill it, Status renders its fixed 8px dot centered inside.
+defineProps<{
   type: AvatarBadgeType
-  size: AvatarSize
   status?: AvatarStatus
 }>()
 
-const statusStyle = computed(() => {
-  const box = statusBadgeBox(props.size)
-  return { width: `${box}px`, height: `${box}px` }
-})
+const statusStyle = {
+  width: `${STATUS_BADGE_BOX}px`,
+  height: `${STATUS_BADGE_BOX}px`,
+}
 </script>
 
 <template>

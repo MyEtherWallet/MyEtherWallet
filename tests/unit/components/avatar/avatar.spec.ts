@@ -30,7 +30,7 @@ import {
   AVATAR_SIZES,
   badgeOffset,
   badgePositionStyle,
-  statusBadgeBox,
+  STATUS_BADGE_BOX,
   type AvatarSize,
 } from '@/components/avatar/types'
 
@@ -68,8 +68,21 @@ describe('avatar geometry (types.ts)', () => {
     })
   })
 
-  it('status badge is 8px at M', () => {
-    expect(statusBadgeBox('m')).toBe(8)
+  it('network/icon badge box matches the design sizes per avatar size', () => {
+    const expected: Record<AvatarSize, number> = {
+      xs: 12,
+      s: 14,
+      m: 18,
+      l: 20,
+      xl: 22,
+    }
+    for (const size of SIZES) {
+      expect(AVATAR_SIZES[size].badgeBox).toBe(expected[size])
+    }
+  })
+
+  it('status badge is a fixed 8px at every size', () => {
+    expect(STATUS_BADGE_BOX).toBe(8)
   })
 })
 
@@ -88,7 +101,7 @@ describe('AvatarStatusDot', () => {
 describe('AppAvatarBadge', () => {
   it('network badge is white, filling the box', () => {
     const wrapper = mount(AppAvatarBadge, {
-      props: { type: 'network', size: 'm' },
+      props: { type: 'network' },
     })
     expect(wrapper.classes()).toContain('bg-white')
     expect(wrapper.classes()).toContain('w-full')
@@ -96,14 +109,14 @@ describe('AppAvatarBadge', () => {
 
   it('icon badge uses the icon-bg token', () => {
     const wrapper = mount(AppAvatarBadge, {
-      props: { type: 'icon', size: 'm' },
+      props: { type: 'icon' },
     })
     expect(wrapper.classes()).toContain('bg-avatar-badge-icon-bg')
   })
 
   it('status badge renders a status dot', () => {
     const wrapper = mount(AppAvatarBadge, {
-      props: { type: 'status', size: 'm', status: 'success' },
+      props: { type: 'status', status: 'success' },
     })
     expect(wrapper.findComponent(AvatarStatusDot).exists()).toBe(true)
   })

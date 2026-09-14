@@ -46,18 +46,19 @@ interface AvatarSizeSpec {
   /** Avatar box (px), width = height, perfect circle. */
   box: number
   /**
-   * Network / Icon badge box (px). Deliberately a lookup, not a formula:
-   * badgeBox is not a clean ratio of box (50% → 56.25% → 50% across sizes).
+   * Network / Icon badge box (px). A per-size lookup, not a formula (it is not a
+   * clean ratio of the avatar box). The Status badge does NOT use this — it is a
+   * fixed 8px at every size (see STATUS_BADGE_BOX).
    */
   badgeBox: number
 }
 
 export const AVATAR_SIZES: Record<AvatarSize, AvatarSizeSpec> = {
-  xs: { box: 18, badgeBox: 9 },
-  s: { box: 24, badgeBox: 13 },
+  xs: { box: 18, badgeBox: 12 },
+  s: { box: 24, badgeBox: 14 },
   m: { box: 32, badgeBox: 18 },
-  l: { box: 40, badgeBox: 22 },
-  xl: { box: 48, badgeBox: 24 },
+  l: { box: 40, badgeBox: 20 },
+  xl: { box: 48, badgeBox: 22 },
 }
 
 /** Badge overhangs the avatar by badgeBox × this on every corner (Figma). */
@@ -66,14 +67,8 @@ export const BADGE_OVERHANG_RATIO = 0.22
 export const badgeOffset = (size: AvatarSize): number =>
   AVATAR_SIZES[size].badgeBox * BADGE_OVERHANG_RATIO
 
-/**
- * Status badge is only specced at M (8px) in Figma. Other sizes scale by the
- * avatar-box ratio (M: 32 × 0.25 = 8) — confirm XS/S/L/XL with design.
- */
-export const STATUS_BADGE_RATIO = 0.25
-
-export const statusBadgeBox = (size: AvatarSize): number =>
-  AVATAR_SIZES[size].box * STATUS_BADGE_RATIO
+/** The Status badge is a fixed 8px at every avatar size (design). */
+export const STATUS_BADGE_BOX = 8
 
 /**
  * Absolute placement + box for a badge at a given corner. Generalized from the
