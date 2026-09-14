@@ -56,7 +56,7 @@
                   colspan="2"
                 >
                   <div
-                    class="flex items-center gap-1 ml-11 font-normal"
+                    class="flex items-center gap-1 ml-9 xs:ml-11 font-normal"
                     :class="{
                       'text-black': headerSort === 'NAME',
                     }"
