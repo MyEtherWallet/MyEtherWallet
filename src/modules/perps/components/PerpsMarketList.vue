@@ -75,13 +75,13 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-name') }}
-                  <arrow-long-down-icon
+                  <arrow-down-icon
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'desc'
                     "
                     class="w-3.5 h-3.5"
                   />
-                  <arrow-long-up-icon
+                  <arrow-up-icon
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'asc'
                     "
@@ -101,14 +101,14 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-market-cap') }}
-                  <arrow-long-down-icon
+                  <arrow-down-icon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'desc'
                     "
                     class="w-3.5 h-3.5 absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <arrow-up-icon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'asc'
@@ -129,14 +129,14 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-volume') }}
-                  <arrow-long-down-icon
+                  <arrow-down-icon
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'desc'
                     "
                     class="w-3.5 h-3.5 absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <arrow-up-icon
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'asc'
@@ -163,14 +163,14 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-price') }}
-                  <arrow-long-down-icon
+                  <arrow-down-icon
                     v-if="
                       headerSort === SortValue.PRICE &&
                       tableDirection === 'desc'
                     "
                     class="w-3.5 h-3.5 absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <arrow-up-icon
                     v-if="
                       headerSort === SortValue.PRICE && tableDirection === 'asc'
                     "
@@ -621,7 +621,7 @@
             @click="selectedFilterValue = 'all'"
           >
             {{ $t('perps.market-list.discover-markets') }}
-            <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            <arrow-up-icon class="rotate-90 w-4 h-4 inline-flex" />
           </button>
         </div>
       </div>
@@ -642,15 +642,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import {
+  StarIcon as StarOutlineIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@heroicons/vue/24/outline'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   StarIcon as StarSolidIcon,
-  ArrowLongUpIcon,
-  ArrowLongDownIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
 import AppTableSkeleton, {

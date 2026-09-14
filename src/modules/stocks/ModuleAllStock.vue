@@ -63,11 +63,11 @@
                     @click="setHeaderSort('NAME')"
                   >
                     {{ $t('stocks.name') }}
-                    <arrow-long-up-icon
+                    <arrow-up-icon
                       class="w-3.5 h-3.5"
                       v-if="headerSort === 'NAME' && tableDirection === 'asc'"
                     />
-                    <arrow-long-down-icon
+                    <arrow-down-icon
                       class="w-3.5 h-3.5"
                       v-if="headerSort === 'NAME' && tableDirection === 'desc'"
                     />
@@ -85,13 +85,13 @@
                     @click="setHeaderSort('MARKET_CAP')"
                   >
                     {{ $t('stocks.market_cap') }}
-                    <arrow-long-up-icon
+                    <arrow-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                       "
                     />
-                    <arrow-long-down-icon
+                    <arrow-down-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'desc'
@@ -111,13 +111,13 @@
                     @click="setHeaderSort('VOLUME_24H')"
                   >
                     {{ $t('stocks.twenty_four_h_volume') }}
-                    <arrow-long-up-icon
+                    <arrow-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'VOLUME_24H' && tableDirection === 'asc'
                       "
                     />
-                    <arrow-long-down-icon
+                    <arrow-down-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'VOLUME_24H' && tableDirection === 'desc'
@@ -143,11 +143,11 @@
                     @click="setHeaderSort('PRICE')"
                   >
                     {{ $t('stocks.price') }}
-                    <arrow-long-up-icon
+                    <arrow-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
                     />
-                    <arrow-long-down-icon
+                    <arrow-down-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
                     />
@@ -350,7 +350,7 @@
               @click="selectedCryptoFilter = cryptoFilterOptions[0]"
             >
               {{ $t('stocks.discover_more_stocks') }}
-              <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+              <arrow-up-icon class="rotate-90 w-4 h-4 inline-flex" />
             </button>
           </div>
           <!-- Loading State -->
@@ -425,13 +425,15 @@ import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import {
   StarIcon as StarSolidIcon,
   ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import {
+  StarIcon as StarOutlineIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
