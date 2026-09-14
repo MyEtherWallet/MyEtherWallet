@@ -23,8 +23,8 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // DEV-only design-library previews (MEW-2271). A sidebar shell (ViewDevLayout)
-  // lists the components with previews; each renders in its <router-view>. Never
+  // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
+  // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds.
   ...(import.meta.env.MODE !== 'production'
     ? [
@@ -37,6 +37,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: '',
               name: 'DevIndex',
               component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true },
+            },
+            {
+              path: 'avatar',
+              name: 'DevAvatar',
+              component: () => import('@/views/ViewAvatarShowcase.vue'),
               meta: { noAuth: true },
             },
             {
