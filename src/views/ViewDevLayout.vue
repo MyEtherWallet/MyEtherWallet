@@ -4,6 +4,7 @@
 // area via <router-view>. Add a row here as each component gains a preview.
 // Never registered in production builds — see routesDefault.ts.
 const COMPONENTS: { name: string; to: string }[] = [
+  { name: 'Buttons', to: '/dev/buttons' },
   { name: 'Content Group', to: '/dev/content-group' },
 ]
 </script>

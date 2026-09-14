@@ -34,7 +34,7 @@
         />
       </div>
       <!-- Filter -->
-      <app-btn-group
+      <app-segmented-control
         v-if="isHeaderMaxAndUp"
         v-model:selected="activeFilter"
         :btn-list="filterOptions"
@@ -44,7 +44,7 @@
         <template #btn-content="{ data }">
           {{ data.name }}
         </template>
-      </app-btn-group>
+      </app-segmented-control>
     </div>
     <!-- Wallets-->
     <div
@@ -81,7 +81,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/AppSegmentedControl.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   type WalletConfig,

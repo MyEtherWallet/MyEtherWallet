@@ -4,7 +4,9 @@
       <div
         class="flex flex-wrap justify-start md:justify-between items-center gap-2 mb-6"
       >
-        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">{{ $t('stocks.all_stocks') }}</h1>
+        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">
+          {{ $t('stocks.all_stocks') }}
+        </h1>
 
         <!-- Mobile only Categories-->
         <app-select
@@ -31,7 +33,7 @@
           </template>
         </app-select>
 
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
           size="large"
@@ -62,7 +64,7 @@
               </template>
             </app-select>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
 
       <div class="mt-3 bg-white rounded-16 py-4 px-2">
@@ -221,7 +223,9 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">{{ $t('stocks.actions') }}</p>
+                  <p class="hidden lg:block font-bold">
+                    {{ $t('stocks.actions') }}
+                  </p>
                 </th>
               </tr>
             </thead>
@@ -433,7 +437,7 @@
             </button>
           </div>
           <!-- Loading State -->
-          <div v-if="isLoading" class="">
+          <div v-if="isLoading">
             <div
               v-for="n in Number(activeShownItems.value)"
               :key="n"
@@ -520,7 +524,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

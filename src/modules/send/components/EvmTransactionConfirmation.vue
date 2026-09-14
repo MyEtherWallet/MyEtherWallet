@@ -231,7 +231,7 @@
             </div>
           </expand-transition>
           <div class="flex align-center justify-center mt-6 mb-4 gap-4">
-            <app-base-button @click="goBack" is-outline class="w-full">
+            <app-base-button @click="goBack" type="secondary" class="w-full">
               {{ $t('common.back') }}
             </app-base-button>
             <app-base-button

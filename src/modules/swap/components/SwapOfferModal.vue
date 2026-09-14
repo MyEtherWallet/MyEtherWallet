@@ -100,7 +100,9 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
           <app-pop-up-menu
@@ -266,13 +268,15 @@
         >
           {{ btnText }}
         </app-base-button>
-        <app-btn-text
-          class="mx-auto w-full mt-2 text-error"
-          is-large
+        <app-base-button
+          type="link"
+          tone="danger"
+          size="large"
+          class="mx-auto w-full mt-2"
           @click="declineSwap"
         >
           {{ t('common.cancel') }}
-        </app-btn-text>
+        </app-base-button>
       </div>
     </template>
   </app-dialog>
@@ -286,7 +290,6 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import { computed, watch, ref } from 'vue'
 import {

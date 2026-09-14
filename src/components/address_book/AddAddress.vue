@@ -38,7 +38,7 @@
     <div class="flex justify-center gap-3">
       <app-base-button
         v-if="addressEdit"
-        is-outline
+        type="secondary"
         size="medium"
         @click="cancelEdit"
         >{{ $t('common.cancel') }}</app-base-button

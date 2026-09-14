@@ -165,14 +165,15 @@
             </div>
             <span v-else>{{ $t('trade.quote_modal.confirm_trade') }}</span>
           </app-base-button>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            tone="danger"
+            size="large"
             :disabled="loading"
-            is-large
-            class="text-error"
             @click="$emit('cancel')"
           >
             {{ $t('common.cancel') }}
-          </app-btn-text>
+          </app-base-button>
         </div>
       </div>
     </template>
@@ -183,7 +184,6 @@
 import { computed, ref, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'

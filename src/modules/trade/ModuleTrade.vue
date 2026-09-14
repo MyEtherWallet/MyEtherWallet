@@ -17,7 +17,9 @@
               {{ $t('trade.subtitle') }}
             </p>
           </div>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
             v-if="
               isTradingSessionOpen &&
               isCurrentNetworkSupported &&
@@ -25,7 +27,7 @@
             "
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
         <!-- Unavailable cards, one at a time by precedence: a region
@@ -426,7 +428,8 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+// AppBtnText is not imported: the "clear all" text button became an
+// app-base-button link in the buttons redesign.
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
