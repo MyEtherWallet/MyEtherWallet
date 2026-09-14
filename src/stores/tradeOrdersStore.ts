@@ -26,6 +26,8 @@ export interface SavedTradeOrder {
   chainName: string
   fromAddress: string
   seen?: boolean
+  rewardRegistered?: boolean
+  rewardToastShown?: boolean
 }
 
 export interface TransactionNotification {

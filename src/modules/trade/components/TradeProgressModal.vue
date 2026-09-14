@@ -24,7 +24,7 @@
           </div>
           <arrows-right-left-icon
             class="absolute left-[48px] top-[10px] w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
-            :class="isSettled ? 'scale-0' : 'motion-safe:animate-pulse'"
+            :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
           <div
             class="absolute top-0 transition-all duration-300 motion-reduce:transition-none"
@@ -74,16 +74,22 @@
         >
           {{ $t('trade.progress_modal.background_note') }}
         </p>
-        <a
-          v-else-if="status === 'filled' && explorerLink"
-          :href="explorerLink"
-          target="_blank"
-          rel="noopener"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
+        <transition
+          enter-active-class="transition-all duration-300 delay-300 motion-reduce:transition-none"
+          enter-from-class="opacity-0 translate-y-6"
+          enter-to-class="opacity-100 translate-y-0"
         >
-          {{ $t('trade.progress_modal.show_in_etherscan') }}
-          <arrow-top-right-on-square-icon class="w-5 h-5" />
-        </a>
+          <a
+            v-if="status === 'filled' && explorerLink"
+            :href="explorerLink"
+            target="_blank"
+            rel="noopener"
+            class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
+          >
+            {{ $t('trade.progress_modal.show_in_etherscan') }}
+            <arrow-top-right-on-square-icon class="w-5 h-5" />
+          </a>
+        </transition>
       </div>
     </template>
   </app-dialog>
@@ -191,3 +197,28 @@ const explorerLink = computed(() => {
   return getTradeExplorerLink(order.value.chainId, order.value.fills[0].txHash)
 })
 </script>
+
+<style scoped>
+@keyframes arrows-flip {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  37.5% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+.arrows-flip {
+  animation: arrows-flip 800ms infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrows-flip {
+    animation: none;
+  }
+}
+</style>

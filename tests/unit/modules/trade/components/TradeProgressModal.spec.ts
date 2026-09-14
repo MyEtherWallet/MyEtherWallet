@@ -97,6 +97,14 @@ describe('TradeProgressModal', () => {
       'The trade will be processed in the background',
     )
     expect(modal.find('a').exists()).toBe(false)
+    expect(modal.find('svg.arrows-flip').exists()).toBe(true)
+  })
+
+  it('stops flipping the arrows once the order settles', () => {
+    const modal = mountModal(
+      makeOrder({ status: 'filled', finalToAmount: '0.8952' }),
+    )
+    expect(modal.find('svg.arrows-flip').exists()).toBe(false)
   })
 
   it('shows the completed state with the received amount and explorer link', () => {

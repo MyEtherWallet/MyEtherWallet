@@ -192,16 +192,11 @@
         </p>
       </div>
 
-      <div
-        :class="[
-          'w-full max-w-[340px] transition-all duration-300',
-          blockedClass,
-        ]"
-      >
+      <div class="w-full max-w-[340px] transition-all duration-300">
         <app-base-button
           v-if="!isWalletConnected || isWatchOnly"
           class="w-full"
-          :disabled="!supportedNetwork"
+          :disabled="!supportedNetwork || isTradeBlocked"
           @click="connectWalletForTrade"
         >
           {{ $t('connect_wallet') }}
@@ -371,6 +366,7 @@ const {
   setPercentageAmount,
   connectWalletForTrade,
   blockedClass,
+  isTradeBlocked,
   onFromTokenSelected,
   onToTokenSelected,
 } = useTradeModule()

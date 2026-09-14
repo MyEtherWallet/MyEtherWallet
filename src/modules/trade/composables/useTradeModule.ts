@@ -701,11 +701,15 @@ export function useTradeModule() {
 
   // Blocked only when NO session is tradable (conventional closed AND off-hours
   // closed). Off-hours open keeps the UI interactive with per-asset gating.
-  const { blockedClass } = useBlockedContent(
+  const isTradeBlocked = computed(
     () =>
       !isTradingSessionOpen.value ||
       !isCurrentNetworkSupported.value ||
       isTradingRestrictedInRegion.value,
+  )
+  const { blockedClass } = useBlockedContent(
+    isTradeBlocked,
+    'pointer-events-none opacity-50',
   )
 
   // MEW-1981: toast whenever the user switches a trade token via the picker.
@@ -801,6 +805,7 @@ export function useTradeModule() {
     setPercentageAmount,
     connectWalletForTrade,
     blockedClass,
+    isTradeBlocked,
     onFromTokenSelected,
     onToTokenSelected,
   }

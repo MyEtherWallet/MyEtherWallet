@@ -237,7 +237,14 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId, order.usdValue)
+      holdingsStore
+        .register(order.hash, order.chainId, order.usdValue)
+        .then(registered => {
+          if (!registered) return
+          tradeOrdersStore.updateOrder(order.fromAddress, order.hash, {
+            rewardRegistered: true,
+          })
+        })
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {

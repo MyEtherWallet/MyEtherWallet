@@ -231,15 +231,16 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     orderHash: string,
     chainId: number | string,
     usdValue?: string,
-  ) => {
+  ): Promise<boolean> => {
     const value = new BigNumber(usdValue ?? '')
-    if (value.isNaN()) return
+    if (value.isNaN()) return false
 
     // Cheap pre-filter so an obviously non-qualifying trade costs no request.
     // Only skipped when the threshold is unknown, where the trade can't be
     // ruled out yet and the refresh below is what settles it.
     const knownThreshold = new BigNumber(qualificationValue.value ?? '')
-    if (knownThreshold.isGreaterThan(0) && value.lt(knownThreshold)) return
+    if (knownThreshold.isGreaterThan(0) && value.lt(knownThreshold))
+      return false
 
     // `/register` has no budget gate: it queues whatever hash it is given and
     // answers ok, and the budget is only enforced up to 14 days later, when the
@@ -253,14 +254,15 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
 
     // A season that isn't taking entries: the UI already shows it closed, so
     // there is nothing to tell the user here.
-    if (!canRegisterTrade.value) return
+    if (!canRegisterTrade.value) return false
 
     // Only trades worth at least the campaign's qualification_value qualify.
     // Skip silently for anything below the threshold, or when the threshold is
     // still unknown (the refresh above failed) — registering blind would show a
     // success toast for an entry that can't qualify.
     const threshold = new BigNumber(qualificationValue.value ?? '')
-    if (threshold.isNaN() || threshold.lte(0) || value.lt(threshold)) return
+    if (threshold.isNaN() || threshold.lte(0) || value.lt(threshold))
+      return false
 
     const { addToastMessage } = useToastStore()
     try {
@@ -280,20 +282,18 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
             text: i18n.global.t('rwaRewards.register_unavailable'),
             type: ToastType.Error,
           })
-          return
+          return false
         }
         throw new Error(`RWA register request failed: ${res.status}`)
       }
-      addToastMessage({
-        text: i18n.global.t('rwaRewards.register_success'),
-        type: ToastType.Success,
-      })
+      return true
     } catch {
       error.value = 'Failed to register RWA trade'
       addToastMessage({
         text: i18n.global.t('rwaRewards.register_error'),
         type: ToastType.Error,
       })
+      return false
     }
   }
 

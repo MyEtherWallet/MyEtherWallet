@@ -238,19 +238,17 @@ describe('holdingsStore — addressless first load', () => {
     })
 
     it('still lets the wallet response update the season block', async () => {
-      const fetchMock = vi
-        .fn()
-        .mockImplementation((url: string) =>
-          Promise.resolve(
-            String(url).includes('address')
-              ? ok(
-                  campaignBody({
-                    info: season({ end: '2100-06-01T00:00:00Z' }),
-                  }),
-                )
-              : ok(campaignBody()),
-          ),
-        )
+      const fetchMock = vi.fn().mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('address')
+            ? ok(
+                campaignBody({
+                  info: season({ end: '2100-06-01T00:00:00Z' }),
+                }),
+              )
+            : ok(campaignBody()),
+        ),
+      )
       vi.stubGlobal('fetch', fetchMock)
 
       const store = useHoldingsStore()
@@ -411,5 +409,71 @@ describe('qualification threshold (server-driven)', () => {
       await store.fetchCampaignInfo()
       expect(store.qualificationUsd, `value ${JSON.stringify(bad)}`).toBeNull()
     }
+  })
+})
+
+describe('register', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const connectWallet = async () => {
+    const { useWalletStore } = await import('@/stores/walletStore')
+    useWalletStore().walletAddress = ADDRESS
+  }
+
+  const registerFlow = async (usdValue: string) => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(ok({ msg: 'ok' }))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const store = useHoldingsStore()
+    const registered = await store.register('0xhash', 1, usdValue)
+    return { registered, fetchMock, toastSpy }
+  }
+
+  it('resolves true on a 200 without announcing anything yet', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('600')
+
+    expect(registered).toBe(true)
+    expect(String(fetchMock.mock.calls[1][0])).toContain(
+      '/register?hash=0xhash&chainId=1',
+    )
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false below the qualification threshold without calling /register', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('100')
+
+    expect(registered).toBe(false)
+    expect(
+      fetchMock.mock.calls.some(call => String(call[0]).includes('/register')),
+    ).toBe(false)
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false and warns when the request fails', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(fail(500))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const registered = await useHoldingsStore().register('0xhash', 1, '600')
+
+    expect(registered).toBe(false)
+    expect(toastSpy).toHaveBeenCalledTimes(1)
   })
 })

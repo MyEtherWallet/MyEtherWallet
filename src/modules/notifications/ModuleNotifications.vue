@@ -403,6 +403,14 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     // Mark as unseen when status changes to filled (important update)
     updates.seen = false
 
+    if (order.rewardRegistered && !order.rewardToastShown) {
+      toastStore.addToastMessage({
+        text: t('rwaRewards.register_success'),
+        type: ToastType.Success,
+      })
+      updates.rewardToastShown = true
+    }
+
     // Stop polling for this order
     stopPolling(hash)
     toastStore.removeToastById(`trade-processing-${hash}`)
