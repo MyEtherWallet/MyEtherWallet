@@ -282,7 +282,6 @@
                       parseFloat(contract.priceChangePercent ?? '0') ||
                       undefined
                     "
-                    fill
                   />
                 </div>
               </td>
