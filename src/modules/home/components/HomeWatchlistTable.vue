@@ -304,6 +304,7 @@ const trade = (row: WatchlistRow) => {
                 :is-stock="row.isStock"
                 width="w-10"
                 height="h-10"
+                no-shadow
               />
               <div class="min-w-0">
                 <AppTokenSymbol

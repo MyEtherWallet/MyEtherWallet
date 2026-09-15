@@ -300,6 +300,7 @@ const overflowNames = computed(() =>
               :is-stock="a.type === 'stock'"
               width="w-6"
               height="h-6"
+              no-shadow
             />
             <span
               class="max-w-[80px] truncate text-s-12 font-semibold text-black"
