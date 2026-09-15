@@ -31,7 +31,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
     data-test="add-to-watchlist-dialog"
   >
     <template #content>
-      <div class="flex flex-col p-6">
+      <div class="flex flex-col px-6 pt-6 pb-2">
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
@@ -71,9 +71,9 @@ const { items, isLoading } = useAssetPicker(tab, query)
         </div>
 
         <!-- List: fixed height so the modal never resizes between tabs or
-             loading/loaded (QA). Only this area scrolls; pr keeps the star off
-             the scrollbar. -->
-        <div class="mew-scrollbar mt-2 h-[420px] overflow-y-auto pr-2">
+             loading/loaded (QA). Sits flush under the tabs (no top gap) and only
+             this area scrolls; pr keeps the star off the scrollbar. -->
+        <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
           <div
             v-if="isLoading"
             data-test="picker-loading"
