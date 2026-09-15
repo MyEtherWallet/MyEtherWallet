@@ -271,12 +271,13 @@ const trade = (row: WatchlistRow) => {
             <Bars2Icon class="size-4 text-[#a5a5a5]" />
           </span>
 
-          <!-- Star toggle (remove). Scales up on hover for feedback. -->
+          <!-- Star toggle (remove). Grows a light circular background on hover
+               (Figma), via negative margin so the 20px column stays aligned. -->
           <button
             type="button"
             data-test="watchlist-remove"
             :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="w-5 shrink-0 text-primary transition-transform duration-150 hover:scale-110"
+            class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-[#ededed]"
             @click="remove(row)"
           >
             <StarSolidIcon class="size-5" />
