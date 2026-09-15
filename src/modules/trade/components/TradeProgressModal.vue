@@ -14,9 +14,9 @@
             :class="isSettled ? 'left-[38px] opacity-0 scale-75' : 'left-0'"
           >
             <app-token-logo
-              :url="fromToken?.logoURI"
-              :symbol="fromToken?.symbol"
-              :address="tokenAddress(fromToken)"
+              :url="fromLogo.url"
+              :symbol="fromLogo.symbol"
+              :address="fromLogo.address"
               width="w-10"
               height="h-10"
               no-shadow
@@ -31,9 +31,9 @@
             :class="isSettled ? 'left-[38px]' : 'left-[76px]'"
           >
             <app-token-logo
-              :url="toToken?.logoURI"
-              :symbol="toToken?.symbol"
-              :address="tokenAddress(toToken)"
+              :url="toLogo.url"
+              :symbol="toLogo.symbol"
+              :address="toLogo.address"
               width="w-10"
               height="h-10"
               no-shadow
@@ -149,11 +149,6 @@ watch(
 )
 onBeforeUnmount(releaseActiveModalOrder)
 
-const tokenAddress = (token: NewTokenInfo | null) =>
-  token && props.fromChain
-    ? { address: token.address, network: props.fromChain.name }
-    : undefined
-
 const order = computed(() => {
   if (!walletAddress.value || !props.orderHash) return null
   return (
@@ -162,6 +157,43 @@ const order = computed(() => {
       .find(o => o.hash === props.orderHash) ?? null
   )
 })
+
+const logoOf = (
+  saved: { icon?: string; symbol?: string; address?: string },
+  fallback: NewTokenInfo | null,
+) => {
+  const address = saved.address ?? fallback?.address
+  return {
+    url: saved.icon ?? fallback?.logoURI,
+    symbol: saved.symbol ?? fallback?.symbol,
+    address:
+      address && props.fromChain
+        ? { address, network: props.fromChain.name }
+        : undefined,
+  }
+}
+
+const fromLogo = computed(() =>
+  logoOf(
+    {
+      icon: order.value?.fromTokenIcon,
+      symbol: order.value?.fromSymbol,
+      address: order.value?.fromTokenAddress,
+    },
+    props.fromToken,
+  ),
+)
+
+const toLogo = computed(() =>
+  logoOf(
+    {
+      icon: order.value?.toTokenIcon,
+      symbol: order.value?.toSymbol,
+      address: order.value?.toTokenAddress,
+    },
+    props.toToken,
+  ),
+)
 
 const status = computed(() => order.value?.status ?? 'pending')
 const isFailed = computed(

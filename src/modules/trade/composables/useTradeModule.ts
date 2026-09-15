@@ -18,6 +18,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { usePairStore } from '@/stores/pairStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useMarketStatusStore } from '@/stores/marketStatusStore'
+import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { TRADING_RESTRICTED_HELP_URL } from '../providers/ondoHelpers'
 
@@ -528,6 +529,23 @@ export function useTradeModule() {
   // zero-amount order behind an enabled Confirm.
   watch(tradeFlowStep, (step, prevStep) => {
     if (prevStep === 'processing' && step === 'idle') {
+      clearValues()
+    }
+  })
+
+  const tradeOrdersStore = useTradeOrdersStore()
+  const activeOrderStatus = computed(() => {
+    if (!orderHash.value || !walletAddress.value) return null
+    return (
+      tradeOrdersStore
+        .getOrdersByAddress(walletAddress.value)
+        .find(order => order.hash === orderHash.value)?.status ?? null
+    )
+  })
+
+  watch(activeOrderStatus, (status, previous) => {
+    if (previous !== 'pending') return
+    if (status === 'filled' || status === 'cancelled' || status === 'expired') {
       clearValues()
     }
   })

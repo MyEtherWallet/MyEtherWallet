@@ -137,6 +137,30 @@ describe('TradeProgressModal', () => {
     expect(modal.text()).toContain('The order expired without being filled')
   })
 
+  it('keeps the traded tokens from the saved order even when the form props change', async () => {
+    const modal = mountModal(
+      makeOrder({
+        fromTokenIcon: 'https://icons/usdt.png',
+        toTokenIcon: 'https://icons/aalon.png',
+      }),
+    )
+    await modal.setProps({
+      fromToken: { ...usdt, symbol: 'ETH', logoURI: 'https://icons/eth.png' },
+      toToken: {
+        ...aalon,
+        symbol: 'AAPLON',
+        logoURI: 'https://icons/aapl.png',
+      },
+    })
+
+    const logos = modal.findAllComponents({ name: 'AppTokenLogo' })
+    expect(logos.map(logo => logo.props('url'))).toEqual([
+      'https://icons/usdt.png',
+      'https://icons/aalon.png',
+    ])
+    expect(logos.map(logo => logo.props('symbol'))).toEqual(['USDT', 'AALON'])
+  })
+
   it('closes through the close pill', async () => {
     const modal = mountModal()
     const close = modal
