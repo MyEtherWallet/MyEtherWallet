@@ -80,8 +80,16 @@ export default {
       success: 'rgba(5,192,165,1)',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',
+      // Design-library input (MEW-1971): resting border for the Alternative
+      // surface. Kept separate from `bgBase-hover` (same #e6e6e6) so a later
+      // background tweak never moves every field's border. Use as
+      // `border-border-default`.
+      'border-default': '#e6e6e6',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      // Design-library input (MEW-1971): filled float-label text. Mirrors the
+      // `t-default` naming → `text-t-subtle`.
+      't-subtle': '#575757',
       // blues
       'blue-2': 'rgba(0, 91, 229, 1)',
       'blue-3': 'rgba(0, 123, 238, 1)',
