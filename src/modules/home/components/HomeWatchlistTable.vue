@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import draggable from 'vuedraggable'
@@ -29,7 +28,6 @@ import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 const props = defineProps<{ rows: WatchlistRow[] }>()
 
 const { t } = useI18n()
-const router = useRouter()
 
 const isAddOpen = ref(false)
 const query = ref('')
@@ -93,7 +91,8 @@ const draggableRows = computed<WatchlistRow[]>({
 const changeLabel = (change: number) =>
   formatPercentageValue(Math.abs(change)).value
 
-// Crypto trades via Swap, stocks/perps via Trade (Figma).
+// Crypto trades via Swap, stocks/perps via Trade (Figma). The action opens the
+// wallet side panel in place — it must not navigate away from the home page.
 const actionKey = (row: WatchlistRow) =>
   row.removeType === 'crypto'
     ? 'homePage.hero.watchlist.table.swap'
@@ -116,7 +115,6 @@ const trade = (row: WatchlistRow) => {
   walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
   walletMenu.setWalletPanel('trade')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
-  router.push(row.route)
 }
 </script>
 

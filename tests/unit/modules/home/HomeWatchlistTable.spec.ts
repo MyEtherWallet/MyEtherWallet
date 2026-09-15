@@ -79,6 +79,7 @@ vi.mock('@/modules/home/components/AddToWatchlistDialog.vue', () => ({
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const i18n = createI18n({
   legacy: false,
@@ -114,13 +115,14 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(store.watchListedTokens).toEqual([])
   })
 
-  it('Trade navigates to the row route', async () => {
+  it('Trade opens the trade side panel in place, without navigating', async () => {
+    const walletMenu = useWalletMenuStore()
     const w = mountTable()
     await w.findAll('[data-test="watchlist-trade"]')[0].trigger('click')
-    expect(push).toHaveBeenCalledWith({
-      name: 'home-stock-info',
-      params: { symbol: 'AAPL' },
-    })
+    expect(walletMenu.selectedTradeTokenSymbol).toBe('AAPL')
+    expect(walletMenu.walletPanel).toBe('trade')
+    expect(walletMenu.isOpenSideMenu).toBe(true)
+    expect(push).not.toHaveBeenCalled()
   })
 
   it('caps the list at 5 and expands via Show more', async () => {
