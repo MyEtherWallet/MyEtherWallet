@@ -71,7 +71,7 @@ defineEmits<{
     <button
       type="button"
       data-test="hero-watchlist-begin"
-      class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
+      class="hoverNoBG flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
       @click="$emit('begin')"
     >
       {{ t('homePage.hero.watchlist.begin') }}
