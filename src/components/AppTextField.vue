@@ -30,7 +30,7 @@
         </p>
       </template>
       <button
-        v-if="hasValue"
+        v-if="hasValue && !readonly"
         @click="clearInputValue"
         class="text-s-14 font-medium text-primary hoverOpacity ml-auto px-2"
       >
