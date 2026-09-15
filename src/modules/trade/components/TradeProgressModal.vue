@@ -86,7 +86,7 @@
             rel="noopener"
             class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
           >
-            {{ $t('trade.progress_modal.show_in_etherscan') }}
+            {{ $t('view_in_block_explorer') }}
             <arrow-top-right-on-square-icon class="w-5 h-5" />
           </a>
         </transition>

@@ -56,7 +56,6 @@
       "background_note": "The trade will be processed in the background\nif you close this screen",
       "completed_title": "Trade completed",
       "received": "You received {amount}",
-      "show_in_etherscan": "Show in Etherscan",
       "failed_title": "Trade not completed",
       "cancelled_subtitle": "The order was cancelled",
       "expired_subtitle": "The order expired without being filled"
@@ -74,7 +73,6 @@
       "processing_note": "This can take a few minutes",
       "trade_completed": "Trade completed",
       "received_total": "You received a total of {amount}",
-      "explore_etherscan": "Explore in Etherscan",
       "approval_success": "{symbol} approved for trading"
     },
     "error": {

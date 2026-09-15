@@ -437,7 +437,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         },
         link: status.fills?.length
           ? {
-              title: t('trade.toast.explore_etherscan'),
+              title: t('view_in_block_explorer'),
               url: getTradeExplorerLink(order.chainId, status.fills[0].txHash),
               isButton: true,
             }

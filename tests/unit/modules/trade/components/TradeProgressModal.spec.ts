@@ -120,7 +120,7 @@ describe('TradeProgressModal', () => {
     const link = modal.find('a')
     expect(link.exists()).toBe(true)
     expect(link.attributes('href')).toContain(`/tx/${TX_HASH}`)
-    expect(link.text()).toContain('Show in Etherscan')
+    expect(link.text()).toContain('View in block explorer')
   })
 
   it('omits the explorer link when the order has no fills', () => {

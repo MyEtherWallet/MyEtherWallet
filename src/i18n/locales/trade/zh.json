@@ -56,7 +56,6 @@
       "background_note": "关闭此页面后，\n交易将在后台继续处理",
       "completed_title": "交易完成",
       "received": "您收到了 {amount}",
-      "show_in_etherscan": "在 Etherscan 上查看",
       "failed_title": "交易未完成",
       "cancelled_subtitle": "订单已被取消",
       "expired_subtitle": "订单已过期，未能成交"
@@ -74,7 +73,6 @@
       "processing_note": "这可能需要几分钟",
       "trade_completed": "交易完成",
       "received_total": "您总共收到了 {amount}",
-      "explore_etherscan": "在 Etherscan 上浏览",
       "approval_success": "{symbol} 已获批准交易"
     },
     "error": {

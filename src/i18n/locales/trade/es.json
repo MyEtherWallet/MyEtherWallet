@@ -56,7 +56,6 @@
       "background_note": "La operación se procesará en segundo plano\nsi cierras esta pantalla",
       "completed_title": "Operación completada",
       "received": "Recibiste {amount}",
-      "show_in_etherscan": "Ver en Etherscan",
       "failed_title": "Operación no completada",
       "cancelled_subtitle": "La orden fue cancelada",
       "expired_subtitle": "La orden expiró sin completarse"
@@ -74,7 +73,6 @@
       "processing_note": "Puede tomar unos minutos",
       "trade_completed": "Operación completada",
       "received_total": "Recibiste un total de {amount}",
-      "explore_etherscan": "Explorar en Etherscan",
       "approval_success": "{symbol} aprobado para operar"
     },
     "error": {
