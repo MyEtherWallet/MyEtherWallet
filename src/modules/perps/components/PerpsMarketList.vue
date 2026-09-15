@@ -95,7 +95,7 @@
                 @click="setHeaderSort(SortValue.MARKET_CAP)"
               >
                 <div
-                  class="flex items-center gap-1 relative font-normal justify-end text-right md:justify-start md:text-left"
+                  class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
                   :class="{
                     'text-black': headerSort === SortValue.MARKET_CAP,
                   }"
@@ -157,7 +157,7 @@
                 @click="setHeaderSort(SortValue.PRICE)"
               >
                 <div
-                  class="flex items-center gap-1 justify-start relative text-left font-normal"
+                  class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.PRICE,
                   }"
@@ -180,7 +180,7 @@
               </th>
               <!-- Actions -->
               <th
-                class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[184px]"
               ></th>
             </tr>
           </thead>
@@ -239,7 +239,7 @@
                 </div>
               </td>
               <!-- Market Cap -->
-              <td class="px-1 py-2 text-right md:text-left text-s-14 text-black">
+              <td class="px-1 py-2 text-right lg:text-left text-s-14 text-black">
                 <p class="font-semibold">
                   {{ formatVolume(contract.openInterestUsd) }}
                 </p>
@@ -287,8 +287,8 @@
                 </div>
               </td>
               <!-- Price -->
-              <td class="hidden md:table-cell pl-1 pr-1 py-2 text-left">
-                <p class="text-left font-semibold text-s-14 text-black">
+              <td class="hidden md:table-cell pl-1 pr-1 py-2 text-right lg:text-left">
+                <p class="text-right lg:text-left font-semibold text-s-14 text-black">
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
@@ -865,7 +865,7 @@ const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
   {
     header: '',
     align: 'right',
-    hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]',
+    hidden: 'hidden lg:table-cell lg:w-[184px]',
   },
 ])
 

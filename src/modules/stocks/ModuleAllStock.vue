@@ -78,7 +78,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 relative font-normal justify-end text-right md:justify-start md:text-left"
+                    class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -136,7 +136,7 @@
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-start relative text-left font-normal"
+                    class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -155,7 +155,7 @@
                 </th>
                 <!-- Actions -->
                 <th
-                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[120px]"
+                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[96px]"
                 ></th>
               </tr>
             </thead>
@@ -234,7 +234,7 @@
                   </router-link>
                 </td>
                 <!-- Market Cap -->
-                <td class="px-1 py-1 text-right md:text-left text-s-14 text-black">
+                <td class="px-1 py-1 text-right lg:text-left text-s-14 text-black">
                   <p class="font-semibold">{{ token.marketCap }}</p>
                   <p
                     class="text-s-12 font-semibold md:hidden"
@@ -269,7 +269,7 @@
                   </div>
                 </td>
                 <!-- Price -->
-                <td class="hidden md:table-cell pl-1 pr-1 py-1 text-left">
+                <td class="hidden md:table-cell pl-1 pr-1 py-1 text-right lg:text-left">
                   <p class="font-semibold text-s-14 text-black">
                     {{ token.price }}
                   </p>
