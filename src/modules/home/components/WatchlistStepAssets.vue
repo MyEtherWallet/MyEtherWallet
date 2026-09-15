@@ -142,10 +142,11 @@ const overflowNames = computed(() =>
       </div>
     </div>
 
-    <!-- Results: the column is capped at the dialog height so header, search,
-         "Show more" and footer stay pinned and only the list scrolls. Without
-         the cap, "Show more" pushed the footer (Continue) below the modal. -->
-    <div v-else class="flex max-h-[70vh] flex-col">
+    <!-- Results: header, search, "Show more" and footer sit in normal flow; the
+         token list below caps its own height and scrolls internally, so the
+         footer (Continue) is always visible and only the list scrolls — never
+         the whole wizard. -->
+    <div v-else class="flex flex-col">
       <WatchlistStepHeader
         class="shrink-0"
         :step="3"
@@ -163,12 +164,12 @@ const overflowNames = computed(() =>
         class="mt-5 shrink-0 rounded-full border border-[#e6e6e6]"
       />
 
-      <!-- Token list: flex-fills the space left between the pinned search and
-           footer and scrolls within it (min-h-0 lets it shrink so the footer is
-           never pushed out). Inner py compensates the top/bottom white fades so
-           the edge cards are never clipped (same fade idea as AppSlideGroup,
-           rotated to vertical). -->
-      <div class="relative mt-3 min-h-[240px] flex-1">
+      <!-- Token list: caps at a fraction of the viewport and scrolls inside that
+           box, so "Show more" grows the list only up to the cap and then scrolls
+           — the footer below never moves. Inner py compensates the top/bottom
+           white fades so the edge cards are never clipped (same fade idea as
+           AppSlideGroup, rotated to vertical). -->
+      <div class="relative mt-3">
         <div
           class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-3 bg-gradient-to-b from-white to-transparent"
           aria-hidden="true"
@@ -177,7 +178,7 @@ const overflowNames = computed(() =>
           class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
           aria-hidden="true"
         />
-        <div class="mew-scrollbar h-full overflow-y-auto py-2 pr-1">
+        <div class="mew-scrollbar max-h-[45vh] overflow-y-auto py-2 pr-1">
           <!-- Search skeleton (Figma): a full grid of placeholder cards while a
                query's results settle. -->
           <div
