@@ -180,7 +180,7 @@
 
                 <!-- Actions -->
                 <th
-                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
+                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[96px]"
                 ></th>
               </tr>
             </thead>
@@ -417,38 +417,22 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div
-                    class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
-                  >
-                    <!-- Buy first (inverted order for the Explore Tokens table) -->
-                    <app-base-button
-                      v-if="isBuyableOnCompatibleChain(token.coinId)"
-                      size="small"
-                      @click="buyBtn(token)"
-                      is-outline
-                      class="w-full"
-                      :class="{ 'col-start-2': !hasPrimaryAction(token) }"
-                      >{{ $t('common.buy') }}</app-base-button
-                    >
-                    <!-- Primary action: trade / bridge / swap -->
+                  <!-- Single primary action, tonal style to match Stocks (QA MEW-2324) -->
+                  <div class="hidden lg:flex justify-end">
                     <app-base-button
                       v-if="token.ondo !== null"
                       size="small"
+                      theme="secondary"
+                      class="!px-3 !py-2"
                       @click="tradeBtn(token)"
-                      class="w-full"
-                      :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
-                      }"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
                     <app-base-button
                       v-else-if="getIsBridgeable(token)"
                       size="small"
+                      theme="secondary"
+                      class="!px-3 !py-2"
                       @click="bridgeBtn(token)"
-                      class="w-full"
-                      :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
-                      }"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
                     <app-base-button
@@ -458,11 +442,9 @@
                           getTokenIsCurrentNative(token))
                       "
                       size="small"
+                      theme="secondary"
+                      class="!px-3 !py-2"
                       @click="swapBtn(token)"
-                      class="w-full"
-                      :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
-                      }"
                       >{{ $t('common.swap') }}
                     </app-base-button>
                   </div>
@@ -720,14 +702,6 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
-// A token has a "primary" action (trade / bridge / swap) in the desktop actions
-// cell — mirrors the v-if/v-else-if chain in the template. Used to make a lone
-// button span the full actions width so rows stay vertically aligned.
-const hasPrimaryAction = (token: DisplayToken): boolean =>
-  token.ondo !== null ||
-  getIsBridgeable(token) ||
-  (currentChainhasSwapSupport.value &&
-    (token.chains.length > 0 || getTokenIsCurrentNative(token)))
 const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'crypto_table',
