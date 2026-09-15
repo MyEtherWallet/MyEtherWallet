@@ -31,7 +31,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
     data-test="add-to-watchlist-dialog"
   >
     <template #content>
-      <div class="flex flex-col px-6 pt-6 pb-2">
+      <div class="flex flex-col px-6 pt-6">
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
