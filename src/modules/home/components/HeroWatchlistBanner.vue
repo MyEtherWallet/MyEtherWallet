@@ -20,9 +20,18 @@ defineEmits<{
 </script>
 
 <template>
+  <!-- The whole banner is the launch target (not just the CTA): one interactive
+       surface with a button role + keyboard support, so the inner CTA is a plain
+       visual affordance rather than a nested button. -->
   <div
     data-test="hero-watchlist-banner"
-    class="group relative flex items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-[#e6e6e6]"
+    role="button"
+    tabindex="0"
+    :aria-label="t('homePage.hero.watchlist.title')"
+    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-[#e6e6e6]"
+    @click="$emit('begin')"
+    @keydown.enter="$emit('begin')"
+    @keydown.space.prevent="$emit('begin')"
   >
     <div class="flex min-w-0 flex-1 items-center gap-6">
       <!-- Overlapping stock logos (SPOT clipped at the left, under the fade) -->
@@ -68,15 +77,13 @@ defineEmits<{
       </div>
     </div>
 
-    <button
-      type="button"
+    <span
       data-test="hero-watchlist-begin"
       class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
-      @click="$emit('begin')"
     >
       {{ t('homePage.hero.watchlist.begin') }}
       <ChevronRightIcon class="size-[22px]" />
-    </button>
+    </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
          tracks the banner background so it stays seamless on hover (#e6e6e6). -->
