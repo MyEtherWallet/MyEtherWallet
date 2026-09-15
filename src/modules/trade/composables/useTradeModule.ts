@@ -753,6 +753,11 @@ export function useTradeModule() {
     // The child emits `select:token` only on an explicit user pick, so this is
     // the one place a selection can be attributed to the user.
     fromTokenManuallySelected.value = true
+    resetPristine()
+    fromAmount.value = ''
+    toAmount.value = ''
+    toAmountError.value = ''
+    displayGeneralError.value = ''
     notifyTokensSwitched(token, toTokenSelected.value)
   }
   const onToTokenSelected = (token: NewTokenInfo) => {
