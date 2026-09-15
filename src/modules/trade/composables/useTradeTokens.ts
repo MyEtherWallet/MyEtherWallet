@@ -1,11 +1,13 @@
-import { computed, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useNow } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
+  GetWebStocksTableResponse,
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { hydrateTokenBalances } from '@/utils/tokenBalance'
@@ -47,6 +49,38 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
 
   const { t } = useI18n()
+  const { useMEWFetch } = useFetchMewApi()
+
+  const stockMarketCapBySymbol = ref<Record<string, number>>({})
+  let marketCapsRequested = false
+
+  const loadStockMarketCaps = async () => {
+    if (marketCapsRequested) return
+    marketCapsRequested = true
+    const { data } = await useMEWFetch(
+      '/v1/web/pages/stocks/table?page=1&perPage=100&sort=MARKET_CAP_DESC',
+    )
+      .get()
+      .json<GetWebStocksTableResponse>()
+    const caps: Record<string, number> = {}
+    for (const item of data.value?.items ?? []) {
+      const symbol = item.primaryMarket?.symbol?.toUpperCase()
+      const marketCap = Number(item.underlyingMarket?.marketCap)
+      if (symbol && Number.isFinite(marketCap)) caps[symbol] = marketCap
+    }
+    stockMarketCapBySymbol.value = caps
+  }
+
+  watch(
+    tradableAssets,
+    assets => {
+      if (assets?.length) loadStockMarketCaps()
+    },
+    { immediate: true },
+  )
+
+  const stockMarketCapOf = (token: NewTokenInfo): number =>
+    stockMarketCapBySymbol.value[token.symbol.toUpperCase()] ?? 0
 
   // Ticking clock for the pause-window checks below. A bare Date.now() inside
   // a computed is not reactive, so a pause starting or ending while the page is
@@ -227,6 +261,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     nonTradeableAssetMessage,
     disabledTokenAddresses,
     toTokens,
+    stockMarketCapOf,
   }
 }
 

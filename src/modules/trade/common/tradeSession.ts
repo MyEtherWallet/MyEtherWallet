@@ -142,3 +142,27 @@ export const pickFirstAvailableToken = <T extends { address?: string }>(
     null
   )
 }
+
+export const pickHighestMarketCapToken = <T extends { address?: string }>(
+  tokens: T[],
+  options: {
+    excludeAddress?: string
+    disabledAddresses?: Iterable<string>
+    marketCapOf: (token: T) => number
+  },
+): T | null => {
+  const excluded = options.excludeAddress?.toLowerCase()
+  const disabled = new Set(
+    Array.from(options.disabledAddresses ?? [], address =>
+      address.toLowerCase(),
+    ),
+  )
+  const candidates = tokens.filter(token => {
+    const address = token.address?.toLowerCase() ?? ''
+    return address !== excluded && !disabled.has(address)
+  })
+  if (!candidates.length) return null
+  return candidates.reduce((best, token) =>
+    options.marketCapOf(token) > options.marketCapOf(best) ? token : best,
+  )
+}

@@ -6,7 +6,10 @@ import {
   watch,
   nextTick,
 } from 'vue'
-import { pickFirstAvailableToken } from '@/modules/trade/common/tradeSession'
+import {
+  pickFirstAvailableToken,
+  pickHighestMarketCapToken,
+} from '@/modules/trade/common/tradeSession'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 // Stores
@@ -272,6 +275,7 @@ export function useTradeModule() {
     nonTradeableAssetMessage,
     disabledTokenAddresses,
     toTokens,
+    stockMarketCapOf,
   } = useTradeTokens({
     form,
     fromTokens,
@@ -749,6 +753,20 @@ export function useTradeModule() {
       type: ToastType.Success,
     })
   }
+  const sameAddress = (a?: NewTokenInfo | null, b?: NewTokenInfo | null) =>
+    !!a?.address &&
+    !!b?.address &&
+    a.address.toLowerCase() === b.address.toLowerCase()
+
+  const walletMarketCapOf = (token: NewTokenInfo): number =>
+    allTokens.value.find(
+      walletToken =>
+        walletToken.contract?.toLowerCase() === token.address?.toLowerCase(),
+    )?.market_cap ?? 0
+
+  const buyMarketCapOf = (token: NewTokenInfo): number =>
+    stockMarketCapOf(token) || walletMarketCapOf(token)
+
   const onFromTokenSelected = (token: NewTokenInfo) => {
     // The child emits `select:token` only on an explicit user pick, so this is
     // the one place a selection can be attributed to the user.
@@ -758,10 +776,31 @@ export function useTradeModule() {
     toAmount.value = ''
     toAmountError.value = ''
     displayGeneralError.value = ''
+    if (sameAddress(token, toTokenSelected.value)) {
+      const replacement = pickHighestMarketCapToken(toTokens.value, {
+        excludeAddress: token.address,
+        disabledAddresses: disabledTokenAddresses.value,
+        marketCapOf: buyMarketCapOf,
+      })
+      if (replacement) {
+        toTokenSelected.value = replacement
+        toTokenManuallySelected.value = false
+      }
+    }
     notifyTokensSwitched(token, toTokenSelected.value)
   }
   const onToTokenSelected = (token: NewTokenInfo) => {
     toTokenManuallySelected.value = true
+    if (sameAddress(token, fromTokenSelected.value)) {
+      const replacement = pickHighestMarketCapToken(fromTokens.value, {
+        excludeAddress: token.address,
+        marketCapOf: walletMarketCapOf,
+      })
+      if (replacement) {
+        fromTokenSelected.value = replacement
+        fromTokenManuallySelected.value = false
+      }
+    }
     notifyTokensSwitched(fromTokenSelected.value, token)
   }
 

@@ -4,6 +4,7 @@ import {
   getSessionDisabledAddresses,
   getActivePauseReason,
   pickFirstAvailableToken,
+  pickHighestMarketCapToken,
 } from '@/modules/trade/common/tradeSession'
 import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
@@ -332,5 +333,49 @@ describe('pickFirstAvailableToken', () => {
 
   it('returns null for an empty list', () => {
     expect(pickFirstAvailableToken([], ['0xa'])).toBeNull()
+  })
+})
+
+describe('pickHighestMarketCapToken', () => {
+  const tokens = [
+    { symbol: 'AALON', address: '0xA' },
+    { symbol: 'NVDAON', address: '0xB' },
+    { symbol: 'AAPLON', address: '0xC' },
+  ]
+  const caps: Record<string, number> = { AALON: 10, NVDAON: 5000, AAPLON: 4800 }
+  const marketCapOf = (token: { symbol: string }) => caps[token.symbol] ?? 0
+
+  it('returns the highest market cap token that is not the excluded one', () => {
+    expect(
+      pickHighestMarketCapToken(tokens, { excludeAddress: '0xb', marketCapOf }),
+    ).toEqual(tokens[2])
+  })
+
+  it('skips tokens disabled for the session', () => {
+    expect(
+      pickHighestMarketCapToken(tokens, {
+        excludeAddress: '0xA',
+        disabledAddresses: ['0xb'],
+        marketCapOf,
+      }),
+    ).toEqual(tokens[2])
+  })
+
+  it('falls back to the first candidate when no market cap is known', () => {
+    expect(
+      pickHighestMarketCapToken(tokens, {
+        excludeAddress: '0xA',
+        marketCapOf: () => 0,
+      }),
+    ).toEqual(tokens[1])
+  })
+
+  it('returns null when the excluded token is the only candidate', () => {
+    expect(
+      pickHighestMarketCapToken([tokens[0]], {
+        excludeAddress: '0xA',
+        marketCapOf,
+      }),
+    ).toBeNull()
   })
 })
