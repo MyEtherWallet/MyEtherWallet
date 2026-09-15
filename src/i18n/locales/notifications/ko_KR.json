@@ -1,0 +1,49 @@
+{
+  "notifications_module": {
+    "title": "Notifications",
+    "no_notifications_yet": "No notifications yet",
+    "default_empty_text": "Your recent orders, swaps, bridges and transactions will appear here.",
+    "swap": "swaps",
+    "bridge": "bridge",
+    "transaction": "transactions",
+    "trade_order": "trades",
+    "status": {
+      "pending": "Pending",
+      "possibly_dropped": "Possibly Dropped",
+      "failed": "Failed",
+      "successful": "Successful"
+    },
+    "destination_address": "Destination Address",
+    "price_difference": "Price difference",
+    "filled_in_tx": "Filled in tx",
+    "est": "est:",
+    "order_status": {
+      "pending": "Pending",
+      "filled": "Filled",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "pin_to_keep_open": "Pin to keep open",
+    "unpin": "Unpin",
+    "pin": "Pin",
+    "drag": "Drag",
+    "filter_all": "All",
+    "filter_trades": "Trades",
+    "filter_transactions": "Transactions",
+    "filter_swaps": "Swaps",
+    "filter_bridge": "Bridge",
+    "empty_trade": "Your stock trade orders will appear here.",
+    "empty_txs": "Your send transactions will appear here.",
+    "empty_bridge": "Your token bridges will appear here.",
+    "empty_swap": "Your token swaps will appear here.",
+    "toast_trade_filled": "Trade Order Filled",
+    "toast_trade_cancelled": "Trade Order Cancelled",
+    "toast_trade_expired": "Trade Order Expired",
+    "toast_transaction_successful": "Transaction Successful",
+    "toast_transaction_failed": "Transaction Failed",
+    "toast_swap_successful": "Swap Successful",
+    "toast_swap_failed": "Swap Failed",
+    "toast_bridge_successful": "Bridge Successful",
+    "toast_bridge_failed": "Bridge Failed"
+  }
+}
