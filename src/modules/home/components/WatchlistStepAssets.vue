@@ -142,10 +142,10 @@ const overflowNames = computed(() =>
       </div>
     </div>
 
-    <!-- Results: column sized to content. The list area grows to a max height
-         (with a smooth transition) when "Show more" is used; header, search and
-         footer stay put and only the list scrolls once it is capped. -->
-    <div v-else class="flex flex-col">
+    <!-- Results: the column is capped at the dialog height so header, search,
+         "Show more" and footer stay pinned and only the list scrolls. Without
+         the cap, "Show more" pushed the footer (Continue) below the modal. -->
+    <div v-else class="flex max-h-[70vh] flex-col">
       <WatchlistStepHeader
         class="shrink-0"
         :step="3"
@@ -163,11 +163,12 @@ const overflowNames = computed(() =>
         class="mt-5 shrink-0 rounded-full border border-[#e6e6e6]"
       />
 
-      <!-- Token list: max-height grows with a smooth transition when "Show more"
-           reveals the rest; inner py compensates the top/bottom white fades so
+      <!-- Token list: flex-fills the space left between the pinned search and
+           footer and scrolls within it (min-h-0 lets it shrink so the footer is
+           never pushed out). Inner py compensates the top/bottom white fades so
            the edge cards are never clipped (same fade idea as AppSlideGroup,
-           rotated to vertical). Only this part scrolls once capped. -->
-      <div class="relative mt-3">
+           rotated to vertical). -->
+      <div class="relative mt-3 min-h-[240px] flex-1">
         <div
           class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-3 bg-gradient-to-b from-white to-transparent"
           aria-hidden="true"
@@ -176,10 +177,7 @@ const overflowNames = computed(() =>
           class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
           aria-hidden="true"
         />
-        <div
-          class="mew-scrollbar overflow-y-auto py-2 pr-1 transition-[height] duration-500 ease-out"
-          :class="showAll ? 'h-[500px]' : 'h-[320px]'"
-        >
+        <div class="mew-scrollbar h-full overflow-y-auto py-2 pr-1">
           <!-- Search skeleton (Figma): a full grid of placeholder cards while a
                query's results settle. -->
           <div
