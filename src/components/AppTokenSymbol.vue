@@ -5,7 +5,7 @@
       class="uppercase font-medium truncate text-s-15"
       :class="$attrs.class"
     >
-      {{ truncate(symbol, 7) }}
+      {{ truncate(symbol, maxLength) }}
     </p>
     <p
       v-else
@@ -42,6 +42,15 @@ const props = defineProps({
   isStock: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Max characters before the symbol is truncated with an ellipsis.
+   * Default keeps the historical 7-char cap; callers with room (e.g. the
+   * crypto Explore table) pass a larger value so the symbol uses the space.
+   */
+  maxLength: {
+    type: Number,
+    default: 7,
   },
   hasGradient: {
     type: Boolean,

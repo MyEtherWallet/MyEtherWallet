@@ -1,11 +1,13 @@
 {
   "crypto": {
-    "explore_tokens": "探索代币",
+    "explore_tokens": "探索加密货币",
     "category_menu": "分类菜单",
+    "all_categories": "所有类别",
     "search": "搜索",
     "token": "代币",
     "market_cap": "市值",
     "volume": "交易量",
+    "twenty_four_h_change": "24 小时涨跌",
     "price": "价格",
     "results_count": "{total} 条结果中的 {current} 条",
     "page_of": "第 {current} 页，共 {total} 页",
