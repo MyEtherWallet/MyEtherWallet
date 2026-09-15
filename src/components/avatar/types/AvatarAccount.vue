@@ -13,15 +13,22 @@ const props = defineProps<{
 
 defineOptions({ inheritAttrs: false })
 
+// Blockies falls back to a random seed when the seed is empty, so an addressless
+// account would draw a different pattern every mount. Guard against it: only seed
+// (and render) once we actually have an address; otherwise the template renders
+// nothing and the parent AppAvatar's neutral fallback background shows through.
 const blockie = computed(() =>
-  Blockies({
-    seed: props.address ? props.address.toLowerCase() : '',
-    size: 8,
-    scale: 16,
-  }).toDataURL(),
+  props.address
+    ? Blockies({ seed: props.address.toLowerCase(), size: 8, scale: 16 }).toDataURL()
+    : '',
 )
 </script>
 
 <template>
-  <img :src="blockie" class="w-full h-full rounded-full" :alt="address ?? ''" />
+  <img
+    v-if="address"
+    :src="blockie"
+    class="w-full h-full rounded-full"
+    :alt="address"
+  />
 </template>
