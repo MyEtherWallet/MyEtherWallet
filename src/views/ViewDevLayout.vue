@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // Shell for the design-library previews. The sidebar lists the components that
 // have a preview page; the selected one renders in the main area via
-// <router-view>. Add a row here as each component gains a preview. Reachable in
-// production too — see routesDefault.ts.
+// <router-view>. Add a row here as each component gains a preview. Never
+// registered in production builds — see routesDefault.ts.
 const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Avatar', to: '/dev/avatar' },
   { name: 'Content Group', to: '/dev/content-group' },
