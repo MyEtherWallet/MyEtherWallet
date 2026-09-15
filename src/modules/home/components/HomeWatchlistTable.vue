@@ -271,12 +271,12 @@ const trade = (row: WatchlistRow) => {
             <Bars2Icon class="size-4 text-[#a5a5a5]" />
           </span>
 
-          <!-- Star toggle (remove). -->
+          <!-- Star toggle (remove). Scales up on hover for feedback. -->
           <button
             type="button"
             data-test="watchlist-remove"
             :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="w-5 shrink-0 text-primary"
+            class="w-5 shrink-0 text-primary transition-transform duration-150 hover:scale-110"
             @click="remove(row)"
           >
             <StarSolidIcon class="size-5" />
