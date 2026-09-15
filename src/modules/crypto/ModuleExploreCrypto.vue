@@ -228,10 +228,11 @@
                       no-shadow
                       class="inline-block rounded-full"
                     />
-                    <div class="truncate">
+                    <div class="truncate min-w-0">
                       <app-token-symbol
                         :symbol="token.symbol"
                         :is-stock="token.ondo !== null"
+                        :max-length="30"
                         class="!font-semibold"
                       />
                       <app-tooltip
