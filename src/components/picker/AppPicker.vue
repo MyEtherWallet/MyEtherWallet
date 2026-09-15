@@ -69,7 +69,11 @@ const rootClass = computed(() => [
     class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-[#ededed] focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
     :class="rootClass"
   >
-    <span v-if="avatar" class="shrink-0" data-testid="picker-avatar">
+    <span
+      v-if="avatar && $slots.avatar"
+      class="shrink-0"
+      data-testid="picker-avatar"
+    >
       <slot name="avatar" :size="avatarSize" />
     </span>
 
