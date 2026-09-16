@@ -155,7 +155,7 @@
                 </th>
                 <!-- Actions -->
                 <th
-                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[96px]"
+                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
                 ></th>
               </tr>
             </thead>
@@ -323,7 +323,7 @@
                     <app-base-button
                       size="small"
                       theme="secondary"
-                      class="!px-3 !py-2"
+                      class="!px-3 !py-2 w-24"
                       @click="tradeBtn(token)"
                       >{{ $t('stocks.trade') }}
                     </app-base-button>

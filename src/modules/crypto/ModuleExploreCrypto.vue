@@ -180,7 +180,7 @@
 
                 <!-- Actions -->
                 <th
-                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[96px]"
+                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
                 ></th>
               </tr>
             </thead>
@@ -424,7 +424,7 @@
                       v-if="token.ondo !== null"
                       size="small"
                       theme="secondary"
-                      class="!px-3 !py-2"
+                      class="!px-3 !py-2 w-24"
                       @click="tradeBtn(token)"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
@@ -432,7 +432,7 @@
                       v-else-if="getIsBridgeable(token)"
                       size="small"
                       theme="secondary"
-                      class="!px-3 !py-2"
+                      class="!px-3 !py-2 w-24"
                       @click="bridgeBtn(token)"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
@@ -444,7 +444,7 @@
                       "
                       size="small"
                       theme="secondary"
-                      class="!px-3 !py-2"
+                      class="!px-3 !py-2 w-24"
                       @click="swapBtn(token)"
                       >{{ $t('common.swap') }}
                     </app-base-button>

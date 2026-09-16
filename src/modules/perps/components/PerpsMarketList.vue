@@ -180,7 +180,7 @@
               </th>
               <!-- Actions -->
               <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[184px]"
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[216px]"
               ></th>
             </tr>
           </thead>
@@ -442,7 +442,7 @@
                       <template #menu-button="{ toggleMenu }">
                         <app-base-button
                           size="small"
-                          class="min-w-[136px]"
+                          class="min-w-[136px] !px-3 !py-2"
                           :disabled="isWatchOnly"
                           :theme="
                             getPosition(contract.market)!.direction === 'long'
@@ -533,7 +533,7 @@
                     -->
                     <app-base-button
                       size="small"
-                      class="min-w-[64px]"
+                      class="w-24 !px-3 !py-2"
                       theme="success"
                       :disabled="isPerpsRestricted"
                       @click="
@@ -549,7 +549,7 @@
                     <app-base-button
                       size="small"
                       theme="error"
-                      class="min-w-[64px]"
+                      class="w-24 !px-3 !py-2"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -865,7 +865,7 @@ const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
   {
     header: '',
     align: 'right',
-    hidden: 'hidden lg:table-cell lg:w-[184px]',
+    hidden: 'hidden lg:table-cell lg:w-[216px]',
   },
 ])
 
