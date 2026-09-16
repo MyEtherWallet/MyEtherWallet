@@ -21,20 +21,7 @@ export const formatWithCommas = (raw: string): string => {
   return `${intWithCommas}.${decPart}`
 }
 
-/**
- * Strips any character that is not a digit or `.`, and collapses multiple dots
- * into the first one (so `"1.2.3"` → `"1.23"`).
- */
-export const sanitizeDecimal = (raw: string): string => {
-  let cleaned = raw.replace(/[^\d.]/g, '')
-  const firstDot = cleaned.indexOf('.')
-  if (firstDot !== -1) {
-    cleaned =
-      cleaned.slice(0, firstDot + 1) +
-      cleaned.slice(firstDot + 1).replace(/\./g, '')
-  }
-  return cleaned
-}
+export { sanitizeDecimal } from '@/utils/sanitizeDecimal'
 
 /**
  * Returns `true` if the (already-sanitized) value would exceed the maximum

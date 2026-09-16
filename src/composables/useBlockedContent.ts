@@ -23,9 +23,12 @@ export const BLOCKED_CONTENT_CLASS = 'pointer-events-none opacity-25'
  *   () => isTradingRestrictedInRegion.value || !isCurrentNetworkSupported.value,
  * )
  */
-export const useBlockedContent = (isBlocked: MaybeRefOrGetter<boolean>) => {
+export const useBlockedContent = (
+  isBlocked: MaybeRefOrGetter<boolean>,
+  blockedContentClass: string = BLOCKED_CONTENT_CLASS,
+) => {
   const blockedClass = computed(() =>
-    toValue(isBlocked) ? BLOCKED_CONTENT_CLASS : '',
+    toValue(isBlocked) ? blockedContentClass : '',
   )
 
   return { blockedClass }
