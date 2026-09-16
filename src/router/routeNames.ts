@@ -43,6 +43,7 @@ const ROUTES_CREATE_WALLET = {
 const ROUTES_DEV = {
   INDEX: { NAME: 'DevIndex', PATH: '/dev' },
   TOGGLE: { NAME: 'DevToggle', PATH: 'toggle' },
+  CONTENT_GROUP: { NAME: 'DevContentGroup', PATH: 'content-group' },
 }
 
 type WalletFlowKind = 'access' | 'create'
