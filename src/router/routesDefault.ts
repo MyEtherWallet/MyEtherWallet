@@ -64,6 +64,12 @@ const DefaultRoutes = <RouteNameCollection>[
               component: () => import('@/views/ViewPickerShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
+            {
+              path: 'chip',
+              name: 'DevChip',
+              component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
           ],
         },
       ]
