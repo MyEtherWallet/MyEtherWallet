@@ -27,34 +27,34 @@ const DefaultRoutes = <RouteNameCollection>[
   // DEV-only design-library previews (MEW-1975 toast, MEW-2271 content group).
   // A sidebar shell (ViewDevLayout) lists the components with previews; each
   // renders in its <router-view>. Intentionally absent from production builds.
-  ...(process.env.NODE_ENV !== 'production'
+  ...(process.env.MODE !== 'production'
     ? [
-        {
-          path: ROUTES_DEV.INDEX.PATH,
-          component: () => import('@/views/ViewDevLayout.vue'),
-          meta: { noAuth: true, noWalletFlow: true },
-          children: [
-            {
-              path: '',
-              name: ROUTES_DEV.INDEX.NAME,
-              component: () => import('@/views/ViewDevIndex.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: ROUTES_DEV.TOAST.PATH,
-              name: ROUTES_DEV.TOAST.NAME,
-              component: () => import('@/views/ViewToastShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: ROUTES_DEV.CONTENT_GROUP.PATH,
-              name: ROUTES_DEV.CONTENT_GROUP.NAME,
-              component: () => import('@/views/ViewContentGroupShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-          ],
-        },
-      ]
+      {
+        path: ROUTES_DEV.INDEX.PATH,
+        component: () => import('@/views/ViewDevLayout.vue'),
+        meta: { noAuth: true, noWalletFlow: true },
+        children: [
+          {
+            path: '',
+            name: ROUTES_DEV.INDEX.NAME,
+            component: () => import('@/views/ViewDevIndex.vue'),
+            meta: { noAuth: true, noWalletFlow: true },
+          },
+          {
+            path: ROUTES_DEV.TOAST.PATH,
+            name: ROUTES_DEV.TOAST.NAME,
+            component: () => import('@/views/ViewToastShowcase.vue'),
+            meta: { noAuth: true, noWalletFlow: true },
+          },
+          {
+            path: ROUTES_DEV.CONTENT_GROUP.PATH,
+            name: ROUTES_DEV.CONTENT_GROUP.NAME,
+            component: () => import('@/views/ViewContentGroupShowcase.vue'),
+            meta: { noAuth: true, noWalletFlow: true },
+          },
+        ],
+      },
+    ]
     : []),
   {
     // New public Home is the root; disconnected users land here.
