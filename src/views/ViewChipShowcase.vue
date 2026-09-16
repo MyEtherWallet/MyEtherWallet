@@ -7,20 +7,20 @@
 import { ref } from 'vue'
 import AppChip from '@/components/chip/AppChip.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import type { ChipVariant } from '@/components/chip/types'
+import type { ChipSurface } from '@/components/chip/types'
 
-// Each variant fills the opposite of the surface it sits on, so preview each on
+// Each surface fills the opposite of the page it sits on, so preview each on
 // the surface it is designed for or the fill is invisible (white on white).
-const VARIANTS: { variant: ChipVariant; label: string; surface: string }[] = [
+const VARIANTS: { surface: ChipSurface; label: string; page: string }[] = [
   {
-    variant: 'base',
+    surface: 'default',
     label: 'Variant: base — fills white, sits on a default (grey) surface',
-    surface: 'bg-app-background',
+    page: 'bg-app-background',
   },
   {
-    variant: 'surface',
+    surface: 'alternative',
     label: 'Variant: surface — fills grey, sits on a white surface',
-    surface: 'bg-white',
+    page: 'bg-white',
   },
 ]
 
@@ -39,39 +39,35 @@ const activePreset = ref('25%')
       </p>
     </header>
 
-    <section
-      v-for="v in VARIANTS"
-      :key="v.variant"
-      class="flex flex-col gap-4"
-    >
+    <section v-for="v in VARIANTS" :key="v.surface" class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">{{ v.label }}</h2>
       <div
         class="flex flex-wrap items-start gap-4 rounded-12 border border-grey-10 p-6"
-        :class="v.surface"
+        :class="v.page"
       >
-        <AppChip :variant="v.variant" label="Ethereum">
+        <AppChip :surface="v.surface" label="Ethereum">
           <template #avatar="{ size }">
             <AppAvatar type="initial" :size="size" initial="E" />
           </template>
         </AppChip>
 
-        <AppChip :variant="v.variant" label="All networks" show-icon>
+        <AppChip :surface="v.surface" label="All networks" show-icon>
           <template #avatar="{ size }">
             <AppAvatar type="initial" :size="size" initial="E" />
           </template>
         </AppChip>
 
-        <AppChip :variant="v.variant" label="Opened recently" />
+        <AppChip :surface="v.surface" label="Opened recently" />
 
-        <AppChip :variant="v.variant" label="Filter" show-icon />
+        <AppChip :surface="v.surface" label="Filter" show-icon />
 
-        <AppChip :variant="v.variant" label="Selected" selected>
+        <AppChip :surface="v.surface" label="Selected" selected>
           <template #avatar="{ size }">
             <AppAvatar type="initial" :size="size" initial="E" />
           </template>
         </AppChip>
 
-        <AppChip :variant="v.variant" label="Disabled" disabled>
+        <AppChip :surface="v.surface" label="Disabled" disabled>
           <template #avatar="{ size }">
             <AppAvatar type="initial" :size="size" initial="E" />
           </template>
@@ -89,7 +85,7 @@ const activePreset = ref('25%')
         <AppChip
           v-for="preset in PRESETS"
           :key="preset"
-          variant="surface"
+          surface="alternative"
           :label="preset"
           :selected="activePreset === preset"
           @click="activePreset = preset"

@@ -86,11 +86,11 @@ describe('AppPicker', () => {
   })
 
   it('fills white on the default style and grey on the alternative style', () => {
-    const def = mount(AppPicker, { props: { title: 'T', variant: 'default' } })
+    const def = mount(AppPicker, { props: { title: 'T', surface: 'default' } })
     expect(def.get(root()).classes()).toContain('bg-white')
 
     const alt = mount(AppPicker, {
-      props: { title: 'T', variant: 'alternative' },
+      props: { title: 'T', surface: 'alternative' },
     })
     expect(alt.get(root()).classes()).toContain('bg-bgBase')
   })

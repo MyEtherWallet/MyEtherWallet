@@ -22,12 +22,21 @@ describe('AppChip', () => {
     expect(el.getAttribute('aria-pressed')).toBe('true')
   })
 
-  it('fills white on the base variant and grey on the surface variant', () => {
-    const base = mount(AppChip, { props: { label: 'ETH', variant: 'base' } })
+  it('announces a menu chip as a menu button, not a toggle', () => {
+    const wrapper = mount(AppChip, {
+      props: { label: 'All networks', showIcon: true, selected: true },
+    })
+    const el = wrapper.get(root()).element
+    expect(el.getAttribute('aria-haspopup')).toBe('menu')
+    expect(el.hasAttribute('aria-pressed')).toBe(false)
+  })
+
+  it('fills white on the default surface and grey on the alternative surface', () => {
+    const base = mount(AppChip, { props: { label: 'ETH', surface: 'default' } })
     expect(base.get(root()).classes()).toContain('bg-white')
 
     const surface = mount(AppChip, {
-      props: { label: 'ETH', variant: 'surface' },
+      props: { label: 'ETH', surface: 'alternative' },
     })
     expect(surface.get(root()).classes()).toContain('bg-bgBase')
   })

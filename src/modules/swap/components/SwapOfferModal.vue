@@ -287,7 +287,7 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import { computed, watch, ref } from 'vue'
 import {
   type ProviderQuoteResponse,

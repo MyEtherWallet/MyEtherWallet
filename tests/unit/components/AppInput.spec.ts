@@ -85,7 +85,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     )
     const alt = field(mountInput({ surface: 'alternative' }))
     expect(alt.classes()).toContain('bg-white')
-    expect(alt.classes()).toContain('border-border-default')
+    expect(alt.classes()).toContain('ring-border-default')
   })
 
   it('shows the error ring on focus only; unfocused keeps its normal border', async () => {

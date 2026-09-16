@@ -62,7 +62,7 @@
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import HistoryChart from './components/history/HistoryChart.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'

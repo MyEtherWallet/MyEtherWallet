@@ -536,7 +536,7 @@ import {
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'

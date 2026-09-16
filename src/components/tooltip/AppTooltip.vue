@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, useId, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, useId, nextTick, watch, onBeforeUnmount } from 'vue'
 import {
   PLACEMENT_FLEX,
   ARROW_BEFORE,
@@ -139,21 +139,46 @@ function scheduleHide() {
   hideTimer = setTimeout(close, HIDE_DELAY)
 }
 
+// With both `focus` and `click` active, a mouse click on a focusable trigger
+// fires focusin (open) and then click (toggle → close) in one gesture. Remember
+// that focus just opened it so the click of the same gesture keeps it open.
+let openedByFocus = false
+
 const onEnter = () => has('hover') && scheduleShow()
 const onLeave = () => has('hover') && scheduleHide()
-const onFocus = () => has('focus') && open()
-const onBlur = () => has('focus') && close()
-// Click is bound on the trigger element rather than as a template @click: the
-// interactive element lives in the slot, so the wrapper only relays its clicks.
-const onClick = () => (visible.value ? close() : open())
-
-onMounted(() => {
-  if (has('click')) triggerRef.value?.addEventListener('click', onClick)
-})
-onBeforeUnmount(() => {
-  triggerRef.value?.removeEventListener('click', onClick)
+const onFocus = () => {
+  if (!has('focus')) return
+  openedByFocus = !visible.value
+  open()
+}
+const onBlur = () => {
+  if (!has('focus')) return
+  openedByFocus = false
   close()
-})
+}
+// Clicks from the slotted trigger bubble up to the wrapper, so a template @click
+// is enough — and it follows `trigger` reactively, unlike a mount-time listener.
+const onClick = () => {
+  if (!has('click')) return
+  if (openedByFocus) {
+    openedByFocus = false
+    return
+  }
+  if (visible.value) close()
+  else open()
+}
+
+// Disabling an open tooltip must tear it down: the template hides the bubble,
+// but `visible` and the window/document listeners would otherwise linger, and
+// it would pop back on its own when re-enabled.
+watch(
+  () => props.disabled,
+  disabled => {
+    if (disabled) close()
+  },
+)
+
+onBeforeUnmount(close)
 </script>
 
 <template>
@@ -166,6 +191,7 @@ onBeforeUnmount(() => {
     @mouseleave="onLeave"
     @focusin="onFocus"
     @focusout="onBlur"
+    @click="onClick"
   >
     <slot />
   </span>
@@ -183,14 +209,16 @@ onBeforeUnmount(() => {
       :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
     >
       <div
-        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-[#1a1a1a] px-2 py-1 text-center text-s-12 font-semibold leading-p-150 text-white shadow-button-elevated"
+        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-tooltip-bg px-2 py-1 text-center text-s-12 font-semibold leading-p-150 text-white shadow-button-elevated"
       >
-        <span v-if="$slots.content" class="shrink-0"><slot name="content" /></span>
+        <span v-if="$slots.content" class="shrink-0"
+          ><slot name="content"
+        /></span>
         <span v-if="hasText">{{ text }}</span>
       </div>
 
       <span
-        class="text-[#1a1a1a]"
+        class="text-tooltip-bg"
         :class="[
           ARROW_ROTATE[effectivePlacement],
           ARROW_BEFORE[effectivePlacement] ? 'order-first' : '',

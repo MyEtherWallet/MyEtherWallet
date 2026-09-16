@@ -70,10 +70,6 @@ export const badgeOffset = (size: AvatarSize): number =>
 /** The Status badge is a fixed 8px at every avatar size (design). */
 export const STATUS_BADGE_BOX = 8
 
-/**
- * Absolute placement + box for a badge at a given corner. Generalized from the
- * Figma M reference: top-right `top:-3.96 left:17.96` where 17.96 = box - badgeBox + offset.
- */
 /** Fallback-initials text size per avatar box (Tailwind), for remote-logo types. */
 export const AVATAR_FALLBACK_TEXT_CLASS: Record<AvatarSize, string> = {
   xs: 'text-[8px]',
@@ -83,6 +79,10 @@ export const AVATAR_FALLBACK_TEXT_CLASS: Record<AvatarSize, string> = {
   xl: 'text-s-16',
 }
 
+/**
+ * Absolute placement + box for a badge at a given corner. Generalized from the
+ * Figma M reference: top-right `top:-3.96 left:17.96` where 17.96 = box - badgeBox + offset.
+ */
 export const badgePositionStyle = (
   size: AvatarSize,
   position: AvatarBadgePosition,

@@ -138,7 +138,7 @@ import { type Chain } from '@/mew_api/types'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 

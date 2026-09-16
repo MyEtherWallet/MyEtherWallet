@@ -23,7 +23,7 @@ import { truncateAddress } from '@/utils/filters'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 
 const { t } = useI18n()
 const router = useRouter()

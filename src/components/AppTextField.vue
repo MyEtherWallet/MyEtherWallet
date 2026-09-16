@@ -129,7 +129,9 @@ const surfaceClass = computed(() => {
 
   if (props.surface === 'alternative') {
     if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    return `${base} bg-white border border-border-default hover:border-2 hover:border-grey-subtle`
+    // Constant 2px border; the resting 1px line is an inset ring so hover never
+    // shifts the text (mirrors AppInput).
+    return `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default hover:ring-0 hover:border-grey-subtle`
   }
 
   if (inFocusInput.value) return `${base} bg-bgBase border-2 ${ring}`

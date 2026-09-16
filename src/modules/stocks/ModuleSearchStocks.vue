@@ -261,7 +261,7 @@ import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import AppSheet from '@/components/AppSheet.vue'
 
 // Stores and Composables

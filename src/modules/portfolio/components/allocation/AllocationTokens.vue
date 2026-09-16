@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { truncate } from '@/utils/filters'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import {
   type TokenAllocation,
   ALLOCATION_COLORS,

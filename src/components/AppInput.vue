@@ -239,20 +239,23 @@ const onInput = () => {
 }
 
 /**------------------------
- * Surface — bg + border colour by state. Border is always 2px on the Default
- * surface (transparent at rest) so the ring adds no height/content shift. The
- * error ring is focus-only; an unfocused errored field keeps its normal
- * border and is signalled by the feedback row alone.
+ * Surface — bg + border colour by state. The border is always 2px on both
+ * surfaces so hover/focus never shift the content. The Alternative surface's
+ * resting 1px line is an inset ring drawn inside the transparent 2px border
+ * (a real 1px border would nudge the text by 1px on hover). The error ring is
+ * focus-only; an unfocused errored field keeps its normal border and is
+ * signalled by the feedback row alone.
  -------------------------*/
 const surfaceClass = computed(() => {
   const base = 'box-border transition-colors'
   const ring = hasError.value ? 'border-error' : 'border-primary'
 
   if (props.surface === 'alternative') {
-    if (props.disabled) return `${base} bg-white border border-border-default`
+    const rest = `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default`
+    if (props.disabled) return rest
     if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    // Resting border is 1px #e6e6e6; thickens to 2px grey on hover.
-    return `${base} bg-white border border-border-default hover:border-2 hover:border-grey-subtle`
+    // Resting line is 1px border-default; becomes the full 2px grey border on hover.
+    return `${rest} hover:ring-0 hover:border-grey-subtle`
   }
 
   if (props.disabled) return `${base} bg-bgBase border-2 border-transparent`

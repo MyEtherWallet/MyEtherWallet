@@ -5,9 +5,9 @@ import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import {
   PICKER_SIZE_CLASS,
   PICKER_AVATAR_SIZE,
-  PICKER_STYLE_BG_CLASS,
+  PICKER_SURFACE_BG_CLASS,
   type PickerSize,
-  type PickerStyle,
+  type PickerSurface,
 } from './types'
 
 /**
@@ -22,8 +22,8 @@ import {
  * is consumer-supplied through the `avatar` slot — the picker only owns its size —
  * so any Avatar type (wallet, network, crypto…) can be dropped in.
  *
- * The Figma "Style" axis is spelled `variant` here: `style` is reserved as an
- * HTML/Vue attribute and can't be a prop name.
+ * The Figma "Style" axis is spelled `surface` here (shared with Chip + Input):
+ * `style` is reserved as an HTML/Vue attribute and can't be a prop name.
  */
 const props = withDefaults(
   defineProps<{
@@ -31,14 +31,14 @@ const props = withDefaults(
     /** Second line, size L only — shorter sizes are single-line by design. */
     description?: string
     size?: PickerSize
-    variant?: PickerStyle
+    surface?: PickerSurface
     disabled?: boolean
     /** Show the leading avatar slot (on by default, per Figma). */
     avatar?: boolean
   }>(),
   {
     size: 'm',
-    variant: 'default',
+    surface: 'default',
     disabled: false,
     avatar: true,
   },
@@ -55,7 +55,7 @@ const description = computed(() =>
 
 const rootClass = computed(() => [
   PICKER_SIZE_CLASS[props.size],
-  PICKER_STYLE_BG_CLASS[props.variant],
+  PICKER_SURFACE_BG_CLASS[props.surface],
   isPill.value ? 'inline-flex' : 'flex w-full',
 ])
 </script>
@@ -66,7 +66,7 @@ const rootClass = computed(() => [
     :disabled="disabled"
     aria-haspopup="dialog"
     data-testid="picker"
-    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-[#ededed] focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-bgBase-hover focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
     :class="rootClass"
   >
     <span

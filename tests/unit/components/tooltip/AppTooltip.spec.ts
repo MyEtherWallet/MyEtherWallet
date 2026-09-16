@@ -67,6 +67,34 @@ describe('AppTooltip', () => {
     expect(bubble()).not.toBeNull()
   })
 
+  it('closes when disabled while open and stays closed once re-enabled', async () => {
+    const w = mountTip()
+    await w.get(trigger()).trigger('focusin')
+    await nextTick()
+    expect(bubble()).not.toBeNull()
+
+    await w.setProps({ disabled: true })
+    await nextTick()
+    expect(bubble()).toBeNull()
+
+    await w.setProps({ disabled: false })
+    await nextTick()
+    expect(bubble()).toBeNull()
+  })
+
+  it('keeps a focus-opened tooltip open through the click of the same gesture', async () => {
+    const w = mountTip({ trigger: ['focus', 'click'] })
+    await w.get(trigger()).trigger('focusin')
+    await w.get(trigger()).trigger('click')
+    await nextTick()
+    expect(bubble()).not.toBeNull()
+
+    // A later, separate click toggles it closed.
+    await w.get(trigger()).trigger('click')
+    await nextTick()
+    expect(bubble()).toBeNull()
+  })
+
   it('reflects the placement on the bubble', async () => {
     // jsdom gives the trigger a 0×0 rect at (0,0), so a bottom placement keeps its
     // room and does not flip (top/left would, against the viewport edge).

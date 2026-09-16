@@ -101,7 +101,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '../AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/AppTooltipLegacy.vue'
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications.vue'
 import {
   onClickOutside,

@@ -1,3 +1,8 @@
+<!--
+  Legacy tooltip (pre design-library). Kept under a distinct name so it no longer
+  collides with the design-library `tooltip/AppTooltip.vue`. New code should use
+  that one; existing call sites migrate as their screens are redesigned.
+-->
 <template>
   <div
     ref="tooltipActivatorRef"
