@@ -26,6 +26,9 @@
         "error": "Error",
         "info": "Información"
       }
+    },
+    "content_group": {
+      "name": "Grupo de contenido"
     }
   }
 }

@@ -26,6 +26,9 @@
         "error": "错误",
         "info": "信息"
       }
+    },
+    "content_group": {
+      "name": "内容组"
     }
   }
 }

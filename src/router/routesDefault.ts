@@ -24,7 +24,9 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // Design-library previews are intentionally absent from production builds.
+  // DEV-only design-library previews (MEW-1975 toast, MEW-2271 content group).
+  // A sidebar shell (ViewDevLayout) lists the components with previews; each
+  // renders in its <router-view>. Intentionally absent from production builds.
   ...(process.env.NODE_ENV !== 'production'
     ? [
         {
@@ -42,6 +44,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: ROUTES_DEV.TOAST.PATH,
               name: ROUTES_DEV.TOAST.NAME,
               component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.CONTENT_GROUP.PATH,
+              name: ROUTES_DEV.CONTENT_GROUP.NAME,
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
           ],
