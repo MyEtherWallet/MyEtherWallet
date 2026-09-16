@@ -4,7 +4,9 @@
       <div
         class="flex flex-wrap justify-start md:justify-between items-center gap-2 mb-6"
       >
-        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">{{ $t('stocks.all_stocks') }}</h1>
+        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">
+          {{ $t('stocks.all_stocks') }}
+        </h1>
 
         <!-- Mobile only Categories-->
         <app-select
@@ -221,7 +223,9 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">{{ $t('stocks.actions') }}</p>
+                  <p class="hidden lg:block font-bold">
+                    {{ $t('stocks.actions') }}
+                  </p>
                 </th>
               </tr>
             </thead>
@@ -536,7 +540,7 @@ import {
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'

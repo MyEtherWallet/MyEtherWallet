@@ -27,25 +27,28 @@
             <app-input
               v-if="fetchedInfoViaAddress"
               key="name"
-              :placeholder="t('portfolio.custom_token.token_name_placeholder')"
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_name_placeholder')"
               v-model="tokenName"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="nameError"
             />
             <app-input
               v-if="fetchedInfoViaAddress"
               key="symbol"
-              :placeholder="t('portfolio.custom_token.token_symbol_placeholder')"
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_symbol_placeholder')"
               v-model="tokenSymbol"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="symbolError"
             />
             <app-input
               v-if="fetchedInfoViaAddress"
               key="decimals"
-              :placeholder="t('portfolio.custom_token.token_decimals_placeholder')"
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_decimals_placeholder')"
               v-model="tokenDecimals"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="decimalsError"
             />
           </transition-group>
@@ -85,19 +88,22 @@
             :chain="selectedChain"
           />
           <app-input
-            :placeholder="t('portfolio.custom_token.token_name_placeholder')"
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_name_placeholder')"
             v-model="tokenName"
             :error-message="nameError"
           />
           <app-input
-            :placeholder="t('portfolio.custom_token.token_symbol_placeholder')"
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_symbol_placeholder')"
             v-model="tokenSymbol"
             :error-message="symbolError"
           />
           <app-input
-            :placeholder="t('portfolio.custom_token.token_decimals_placeholder')"
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_decimals_placeholder')"
             v-model="tokenDecimals"
-            :is-disabled="true"
+            :disabled="true"
             :error-message="decimalsError"
           />
         </div>
@@ -106,7 +112,11 @@
           class="max-w-[340px] text-center mb-2"
         >
           <p class="text-s-16 text-black leading-relaxed">
-            {{ t('portfolio.custom_token.delete_confirm', { name: selectedToken?.name ?? '' }) }}
+            {{
+              t('portfolio.custom_token.delete_confirm', {
+                name: selectedToken?.name ?? '',
+              })
+            }}
           </p>
         </div>
         <app-base-button
@@ -175,9 +185,11 @@ const symbolError = computed(() => {
 const decimalsError = computed(() => {
   if (currentView.value === 'delete') return ''
   if (fetchedInfoViaAddress.value) {
-    if (!tokenDecimals.value.trim()) return t('portfolio.custom_token.decimals_required')
+    if (!tokenDecimals.value.trim())
+      return t('portfolio.custom_token.decimals_required')
     const d = parseInt(tokenDecimals.value)
-    if (isNaN(d) || d < 0 || d > 36) return t('portfolio.custom_token.decimals_range')
+    if (isNaN(d) || d < 0 || d > 36)
+      return t('portfolio.custom_token.decimals_range')
   }
   return ''
 })
@@ -343,8 +355,7 @@ watch(adrInput, async () => {
     tokenDecimals.value = decimals.toString()
     fetchedInfoViaAddress.value = true
   } catch {
-    localAddressError.value =
-      t('portfolio.custom_token.fetch_failed')
+    localAddressError.value = t('portfolio.custom_token.fetch_failed')
     fetchedInfoViaAddress.value = true
   } finally {
     fetchingDetails.value = false

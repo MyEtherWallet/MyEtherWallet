@@ -1,10 +1,15 @@
 <script setup lang="ts">
-// DEV-only shell for the design-library previews (MEW-2271). The sidebar lists
-// the components that have a preview page; the selected one renders in the main
-// area via <router-view>. Add a row here as each component gains a preview.
-// Never registered in production builds — see routesDefault.ts.
+// Shell for the design-library previews. The sidebar lists the components that
+// have a preview page; the selected one renders in the main area via
+// <router-view>. Add a row here as each component gains a preview. Never
+// registered in production builds — see routesDefault.ts.
 const COMPONENTS: { name: string; to: string }[] = [
+  { name: 'Avatar', to: '/dev/avatar' },
+  { name: 'Chip', to: '/dev/chip' },
   { name: 'Content Group', to: '/dev/content-group' },
+  { name: 'Input', to: '/dev/input' },
+  { name: 'Picker', to: '/dev/picker' },
+  { name: 'Tooltip', to: '/dev/tooltip' },
 ]
 </script>
 

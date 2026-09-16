@@ -26,7 +26,7 @@ export function useRefreshBalances(): {
   const { wallet, walletAddress } = storeToRefs(walletStore)
   const { setTokens, setIsLoadingBalances } = walletStore
 
-  const noop = () => {}
+  const noop = () => { }
 
   const refreshBalances = ({ silent = false }: RefreshBalancesOptions = {}) => {
     if (!walletAddress.value) {
@@ -44,7 +44,7 @@ export function useRefreshBalances(): {
         )
       })
       .catch((error: unknown) => {
-        if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+        if (import.meta.env.MODE !== 'production') console.error('Balance fetch failed:', error)
         if (!silent) setIsLoadingBalances(false)
       })
   }
