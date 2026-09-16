@@ -160,8 +160,10 @@ export function useAssetPicker(
   const { contracts: perpsContracts } = usePerpsContracts()
   const { markets: perpsMarkets } = usePerpsMarkets()
 
+  // Perps are only shown when the perps tab is active. The "all" tab is
+  // stocks + crypto only (perps was removed from the add-to-watchlist modal).
   const perpsItems = computed<AssetPickerItem[]>(() => {
-    if (tab.value !== 'perps' && tab.value !== 'all') return []
+    if (tab.value !== 'perps') return []
     const marketMap = new Map(perpsMarkets.value.map(p => [p.market, p]))
     return perpsContracts.value
       .filter(c => !c.disabled)
@@ -171,8 +173,7 @@ export function useAssetPicker(
 
   const items = computed<AssetPickerItem[]>(() => {
     if (tab.value === 'perps') return perpsItems.value
-    if (tab.value === 'all')
-      return dedupeItems([...serverItems.value, ...perpsItems.value])
+    if (tab.value === 'all') return dedupeItems(serverItems.value)
     return serverItems.value
   })
 

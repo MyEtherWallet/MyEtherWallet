@@ -49,18 +49,18 @@ describe('AddToWatchlistDialog (MEW-2130)', () => {
     isLoading.value = false
   })
 
-  it('renders the four market tabs with All selected by default', () => {
+  it('renders the market tabs (All, Stocks, Crypto — no Perps) with All selected by default', () => {
     const w = mountDialog()
     const tabs = w.findAll('[data-test="picker-tab"]')
-    expect(tabs.length).toBe(4)
+    expect(tabs.length).toBe(3)
     expect(tabs[0].attributes('aria-selected')).toBe('true')
   })
 
   it('switches the active tab on click', async () => {
     const w = mountDialog()
     const tabs = w.findAll('[data-test="picker-tab"]')
-    await tabs[3].trigger('click') // perps
-    expect(w.findAll('[data-test="picker-tab"]')[3].attributes('aria-selected')).toBe(
+    await tabs[2].trigger('click') // crypto
+    expect(w.findAll('[data-test="picker-tab"]')[2].attributes('aria-selected')).toBe(
       'true',
     )
     expect(w.findAll('[data-test="picker-tab"]')[0].attributes('aria-selected')).toBe(
