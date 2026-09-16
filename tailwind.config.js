@@ -37,6 +37,14 @@ export default {
       current: 'currentColor',
       appBackground: '#f5f5f7',
       bgBase: '#f5f5f5',
+      // Design-library hover / pressed fills shared by Chip, Picker and any
+      // future surface that rests on `bgBase` or white (Figma
+      // background/default-hover / -pressed).
+      'bgBase-hover': '#e6e6e6',
+      'bgBase-pressed': '#d6d6d6',
+      // Design-library Tooltip bubble (Figma background/info, solid — the
+      // translucent `info` token would let the page bleed through).
+      'tooltip-bg': '#1a1a1a',
       bgMuted: '#e5e5e5',
       bgInfo: '#1a1a1a',
       gold: '#FFD700', // used in watchlist
@@ -91,8 +99,16 @@ export default {
       // Design-library semantic toast tokens (Figma: background/info, text/inverted).
       'background-info': '#2f3133',
       'text-inverted': '#ffffff',
+      // Design-library input (MEW-1971): resting border for the Alternative
+      // surface. Kept separate from `bgBase-hover` (same value) so a later
+      // background tweak never moves every field's border. Use as
+      // `border-border-default`.
+      'border-default': '#e6e6e6',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      // Design-library input (MEW-1971): filled float-label text. Mirrors the
+      // `t-default` naming → `text-t-subtle`.
+      't-subtle': '#575757',
       // blues
       'blue-2': 'rgba(0, 91, 229, 1)',
       'blue-3': 'rgba(0, 123, 238, 1)',

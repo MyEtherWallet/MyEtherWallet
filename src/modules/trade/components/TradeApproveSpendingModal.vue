@@ -48,8 +48,6 @@
               </p>
               <app-tooltip
                 :text="$t('trade.approve_spending.network_fee_tooltip')"
-                theme="dark"
-                position="top"
               >
                 <information-circle-icon
                   class="w-[18px] h-[18px] text-black cursor-pointer"
@@ -134,7 +132,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'

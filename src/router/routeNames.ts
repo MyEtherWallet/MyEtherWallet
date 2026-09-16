@@ -42,8 +42,13 @@ const ROUTES_CREATE_WALLET = {
 
 const ROUTES_DEV = {
   INDEX: { NAME: 'DevIndex', PATH: '/dev' },
-  TOAST: { NAME: 'DevToast', PATH: 'toast' },
+  AVATAR: { NAME: 'DevAvatar', PATH: 'avatar' },
+  CHIP: { NAME: 'DevChip', PATH: 'chip' },
   CONTENT_GROUP: { NAME: 'DevContentGroup', PATH: 'content-group' },
+  INPUT: { NAME: 'DevInput', PATH: 'input' },
+  PICKER: { NAME: 'DevPicker', PATH: 'picker' },
+  TOAST: { NAME: 'DevToast', PATH: 'toast' },
+  TOOLTIP: { NAME: 'DevTooltip', PATH: 'tooltip' },
 }
 
 type WalletFlowKind = 'access' | 'create'

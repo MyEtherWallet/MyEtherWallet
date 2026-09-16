@@ -4,27 +4,25 @@
       <p class="text-s-14 text-black mb-4">
         {{ $t('search.opened_recently') }}
       </p>
+      <!-- Design-library Chips ("recent search items"). The popover is white,
+           so the chips take the grey `alternative` fill. -->
       <div class="flex flex-wrap items-start gap-2">
-        <button
+        <app-chip
           v-for="item in recentlyViewedTop6"
           :key="item.id"
-          type="button"
-          class="flex items-center gap-1.5 pl-1 pr-2 py-1 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
+          surface="alternative"
+          :label="displaySymbol(item)"
           @click="selectAsset(item, true)"
         >
-          <app-token-logo
-            :url="item.icon"
-            :symbol="item.symbol"
-            :is-stock="item.isStock"
-            width="w-5"
-            height="h-5"
-          />
-          <app-token-symbol
-            :symbol="item.symbol"
-            :is-stock="item.isStock"
-            class="!text-s-11 font-bold tracking-sp-06"
-          />
-        </button>
+          <template #avatar="{ size }">
+            <app-avatar
+              :type="item.isStock ? 'stocks' : 'cryptoAsset'"
+              :size="size"
+              :url="item.icon"
+              :symbol="item.symbol"
+            />
+          </template>
+        </app-chip>
       </div>
     </div>
     <div class="h-px bg-grey-5 mt-4 mb-2" />
@@ -32,9 +30,22 @@
 </template>
 
 <script setup lang="ts">
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppChip from '@/components/chip/AppChip.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import { truncate } from '@/utils/filters'
+import type { SearchResultItem } from '../types'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 
 const { recentlyViewedTop6, selectAsset } = useGlobalSearch()
+
+// Same text AppTokenSymbol rendered here before the Chip migration: stock
+// tickers drop their "on" suffix and get it back lowercased ("AAPLon"),
+// everything else is the uppercased symbol clipped to 7 chars.
+const displaySymbol = (item: SearchResultItem): string => {
+  if (item.isStock) {
+    const base = item.symbol.toLowerCase().replace(/on$/, '')
+    return `${base.toUpperCase()}on`
+  }
+  return truncate(item.symbol, 7).toUpperCase()
+}
 </script>

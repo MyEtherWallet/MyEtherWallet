@@ -19,6 +19,28 @@ describe('AppContentGroup', () => {
     expect(wrapper.find(description()).exists()).toBe(false)
   })
 
+  it('treats an empty-string description as absent', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'Only title', description: '' },
+    })
+    expect(wrapper.find(description()).exists()).toBe(false)
+  })
+
+  it('colours text for the surface via tone', () => {
+    const light = mount(AppContentGroup, {
+      props: { title: 'T', description: 'D' },
+    })
+    expect(light.get(title()).classes()).toContain('text-t-default')
+    expect(light.get(description()).classes()).toContain('text-info')
+
+    const dark = mount(AppContentGroup, {
+      props: { title: 'T', description: 'D', tone: 'inverse' },
+    })
+    expect(dark.get(title()).classes()).toContain('text-white')
+    expect(dark.get(title()).classes()).not.toContain('text-t-default')
+    expect(dark.get(description()).classes()).toContain('text-white/70')
+  })
+
   it('size "m" uses label/base (16) title and text/sm (14) description', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', size: 'm' },

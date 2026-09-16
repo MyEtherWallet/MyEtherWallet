@@ -12,7 +12,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
@@ -53,8 +53,7 @@ const filtered = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) return props.assets
   return props.assets.filter(
-    a =>
-      a.symbol.toLowerCase().includes(q) || a.name.toLowerCase().includes(q),
+    a => a.symbol.toLowerCase().includes(q) || a.name.toLowerCase().includes(q),
   )
 })
 const visibleAssets = computed(() =>
@@ -83,7 +82,10 @@ watch(query, q => {
     return
   }
   isSearching.value = true
-  searchTimer = setTimeout(() => (isSearching.value = false), SEARCH_DEBOUNCE_MS)
+  searchTimer = setTimeout(
+    () => (isSearching.value = false),
+    SEARCH_DEBOUNCE_MS,
+  )
 })
 onBeforeUnmount(() => clearTimeout(searchTimer))
 
@@ -119,7 +121,9 @@ const overflowNames = computed(() =>
       <div
         class="relative flex h-16 w-[300px] items-center justify-center overflow-hidden"
         role="img"
-        :aria-label="t('homePage.hero.watchlist.onboarding.assets.loadingTitle')"
+        :aria-label="
+          t('homePage.hero.watchlist.onboarding.assets.loadingTitle')
+        "
       >
         <img
           v-for="(logo, i) in LOADER_LOGOS"
@@ -205,7 +209,9 @@ const overflowNames = computed(() =>
             class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
           >
             <ExclamationCircleIcon class="size-6 text-[#575757]" />
-            <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
+            <p
+              class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]"
+            >
               {{
                 query.trim()
                   ? t('homePage.hero.watchlist.onboarding.assets.noResults')
@@ -312,7 +318,6 @@ const overflowNames = computed(() =>
           <AppTooltip
             v-if="overflowAssets.length"
             :text="overflowNames"
-            position="middle"
             class="shrink-0"
           >
             <span

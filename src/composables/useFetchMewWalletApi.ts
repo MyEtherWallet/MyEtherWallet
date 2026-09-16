@@ -98,7 +98,11 @@ export const useFetchMewWalletApi = (
         // If the request fails,  retry the request
         const isNetworkError = !response
         const isServerError = response?.status && response.status >= 500
-        if (_hasRetry && retryCount.value < 3 && (isNetworkError || isServerError)) {
+        if (
+          _hasRetry &&
+          retryCount.value < 3 &&
+          (isNetworkError || isServerError)
+        ) {
           retryCount.value++
           // wait for delay
           await new Promise(resolve => setTimeout(resolve, delay.value))

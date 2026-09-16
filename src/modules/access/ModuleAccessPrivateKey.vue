@@ -8,8 +8,9 @@
         <div class="mt-5 flex flex-col align-center">
           <app-input
             v-model="privateKeyInput"
+            surface="alternative"
             data-private
-            :placeholder="$t('access_wallet_private_key.enter_private_key')"
+            :label="$t('access_wallet_private_key.enter_private_key')"
             type="password"
             is-required
             :aria-label="

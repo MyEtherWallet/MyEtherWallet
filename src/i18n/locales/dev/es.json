@@ -29,6 +29,21 @@
     },
     "content_group": {
       "name": "Grupo de contenido"
+    },
+    "avatar": {
+      "name": "Avatar"
+    },
+    "chip": {
+      "name": "Chip"
+    },
+    "input": {
+      "name": "Campo de entrada"
+    },
+    "picker": {
+      "name": "Selector"
+    },
+    "tooltip": {
+      "name": "Información emergente"
     }
   }
 }

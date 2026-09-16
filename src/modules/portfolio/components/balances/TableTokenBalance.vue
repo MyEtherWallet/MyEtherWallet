@@ -324,9 +324,7 @@
               :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               {{
-                token.market_cap
-                  ? formatFiat(token.market_cap).display
-                  : '-'
+                token.market_cap ? formatFiat(token.market_cap).display : '-'
               }}
             </td>
             <!-- Price -->
@@ -672,7 +670,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons

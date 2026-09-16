@@ -7,14 +7,39 @@ import { ROUTES_DEV } from '@/router/routeNames'
 
 const components = [
   {
-    id: 'toast',
-    labelKey: 'dev.toast.name',
-    to: { name: ROUTES_DEV.TOAST.NAME },
+    id: 'avatar',
+    labelKey: 'dev.avatar.name',
+    to: { name: ROUTES_DEV.AVATAR.NAME },
+  },
+  {
+    id: 'chip',
+    labelKey: 'dev.chip.name',
+    to: { name: ROUTES_DEV.CHIP.NAME },
   },
   {
     id: 'content-group',
     labelKey: 'dev.content_group.name',
     to: { name: ROUTES_DEV.CONTENT_GROUP.NAME },
+  },
+  {
+    id: 'input',
+    labelKey: 'dev.input.name',
+    to: { name: ROUTES_DEV.INPUT.NAME },
+  },
+  {
+    id: 'picker',
+    labelKey: 'dev.picker.name',
+    to: { name: ROUTES_DEV.PICKER.NAME },
+  },
+  {
+    id: 'toast',
+    labelKey: 'dev.toast.name',
+    to: { name: ROUTES_DEV.TOAST.NAME },
+  },
+  {
+    id: 'tooltip',
+    labelKey: 'dev.tooltip.name',
+    to: { name: ROUTES_DEV.TOOLTIP.NAME },
   },
 ]
 </script>

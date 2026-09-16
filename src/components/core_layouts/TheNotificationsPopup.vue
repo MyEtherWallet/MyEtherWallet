@@ -1,7 +1,12 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon :label="$t('menu.open-notifications')" width="w-[40px]" height="h-[40px]" @click="togglePopup">
+    <app-btn-icon
+      :label="$t('menu.open-notifications')"
+      width="w-[40px]"
+      height="h-[40px]"
+      @click="togglePopup"
+    >
       <div class="relative">
         <bell-icon class="w-6 h-6" />
         <!--  dot indicator for unseen orders -->
@@ -62,11 +67,18 @@
             <div class="flex items-center gap-2">
               <app-tooltip
                 v-if="!isMobile"
-                :text="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin_to_keep_open')"
-                position="top-left"
+                :text="
+                  isPinned
+                    ? $t('notifications_module.unpin')
+                    : $t('notifications_module.pin_to_keep_open')
+                "
               >
                 <app-btn-icon
-                  :label="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin')"
+                  :label="
+                    isPinned
+                      ? $t('notifications_module.unpin')
+                      : $t('notifications_module.pin')
+                  "
                   @click="isPinned = !isPinned"
                   class="text-primary"
                 >
@@ -101,7 +113,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '../AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications.vue'
 import {
   onClickOutside,

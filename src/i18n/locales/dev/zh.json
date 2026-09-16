@@ -29,6 +29,21 @@
     },
     "content_group": {
       "name": "内容组"
+    },
+    "avatar": {
+      "name": "头像"
+    },
+    "chip": {
+      "name": "标签"
+    },
+    "input": {
+      "name": "输入框"
+    },
+    "picker": {
+      "name": "选择器"
+    },
+    "tooltip": {
+      "name": "工具提示"
     }
   }
 }
