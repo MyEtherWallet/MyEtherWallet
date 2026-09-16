@@ -1,5 +1,6 @@
 import {
   ROUTES_MAIN,
+  ROUTES_DEV,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
   PERP_INFO_ROUTE_NAME,
@@ -24,55 +25,63 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
   // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
-  // components that have a preview; each renders in its <router-view>. Never
-  // registered in production builds. noWalletFlow: these are previews, not app
-  // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  // components that have a preview; each renders in its <router-view>. Gated on
+  // NODE_ENV — a production *build* of any mode (staging included) never ships
+  // them; see tests/unit/router/devRouteGating.spec.ts. noWalletFlow: these are
+  // previews, not app pages — they must not get the connect/create overlays
+  // from withWalletFlowRoutes.
+  ...(process.env.NODE_ENV !== 'production'
     ? [
         {
-          path: '/dev',
+          path: ROUTES_DEV.INDEX.PATH,
           component: () => import('@/views/ViewDevLayout.vue'),
           meta: { noAuth: true, noWalletFlow: true },
           children: [
             {
               path: '',
-              name: 'DevIndex',
+              name: ROUTES_DEV.INDEX.NAME,
               component: () => import('@/views/ViewDevIndex.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'avatar',
-              name: 'DevAvatar',
+              path: ROUTES_DEV.AVATAR.PATH,
+              name: ROUTES_DEV.AVATAR.NAME,
               component: () => import('@/views/ViewAvatarShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'content-group',
-              name: 'DevContentGroup',
-              component: () => import('@/views/ViewContentGroupShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'input',
-              name: 'DevInput',
-              component: () => import('@/views/ViewInputPreview.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'picker',
-              name: 'DevPicker',
-              component: () => import('@/views/ViewPickerShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'chip',
-              name: 'DevChip',
+              path: ROUTES_DEV.CHIP.PATH,
+              name: ROUTES_DEV.CHIP.NAME,
               component: () => import('@/views/ViewChipShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'tooltip',
-              name: 'DevTooltip',
+              path: ROUTES_DEV.CONTENT_GROUP.PATH,
+              name: ROUTES_DEV.CONTENT_GROUP.NAME,
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.INPUT.PATH,
+              name: ROUTES_DEV.INPUT.NAME,
+              component: () => import('@/views/ViewInputPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.PICKER.PATH,
+              name: ROUTES_DEV.PICKER.NAME,
+              component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.TOAST.PATH,
+              name: ROUTES_DEV.TOAST.NAME,
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.TOOLTIP.PATH,
+              name: ROUTES_DEV.TOOLTIP.NAME,
               component: () => import('@/views/ViewTooltipShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },

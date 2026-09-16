@@ -57,8 +57,10 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import Intercom from '@intercom/messenger-js-sdk'
-import { useMarketStatus } from './modules/trade/composables/useMarketStatus'
-const { fetchMarketStatus } = useMarketStatus()
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
+// One-shot warm-up: with no consumer acquired, this updates state and
+// schedules nothing (polling is refcounted by the surfaces that need it).
+const { fetchMarketStatus } = useMarketStatusStore()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -132,7 +134,7 @@ const fetchBalances = () => {
       }
     })
     .catch((error: unknown) => {
-      if (import.meta.env.MODE !== 'production')
+      if (process.env.NODE_ENV !== 'production')
         console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
       // Keep the retry loop alive: a transient failure shouldn't permanently
@@ -236,7 +238,14 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId, order.usdValue)
+      holdingsStore
+        .register(order.hash, order.chainId, order.usdValue)
+        .then(registered => {
+          if (!registered) return
+          tradeOrdersStore.updateOrder(order.fromAddress, order.hash, {
+            rewardRegistered: true,
+          })
+        })
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {

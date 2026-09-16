@@ -11,11 +11,11 @@
     <div class="relative">
       <transition-group name="fadelist">
         <toast-reward key="toast-reward" />
-        <toast-layout
-          v-for="(i, index) in showToastMessages"
-          :key="`${i.text}-${index}`"
+        <component
+          :is="i.variant === 'dark' ? ToastTradeStatus : ToastLayout"
+          v-for="i in showToastMessages"
+          :key="getToastId(i)"
           :toast="i"
-          :index="index"
         />
       </transition-group>
     </div>
@@ -25,13 +25,21 @@
 import { useToastStore } from '@/stores/toastStore'
 import { storeToRefs } from 'pinia'
 import ToastLayout from './components/ToastLayout.vue'
+import ToastTradeStatus from './components/ToastTradeStatus.vue'
 import ToastReward from './components/ToastReward.vue'
 import { computed } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import type { Toast } from '@/types/notification'
 
 const toastStore = useToastStore()
 const { messages } = storeToRefs(toastStore)
 const { isXS } = useAppBreakpoints()
+const toastIds = new WeakMap<Toast, number>()
+let nextToastId = 0
+const getToastId = (toast: Toast) => {
+  if (!toastIds.has(toast)) toastIds.set(toast, nextToastId++)
+  return toastIds.get(toast)
+}
 const showToastMessages = computed(() => {
   return messages.value.slice(0, 4)
 })

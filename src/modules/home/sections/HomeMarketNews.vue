@@ -49,11 +49,8 @@ const dateLabel = (ts?: number): string => {
   })
 }
 
-// recentNews doesn't type a `description` yet; read it optimistically so the
-// card fills in as soon as the BE starts returning it. Until then, fall back to
-// a useful placeholder that points the reader to the source article.
 const newsDescription = (item: {
-  description?: string
+  description?: string | null
   articleUrl?: string
 }): string => {
   if (item.description) return item.description

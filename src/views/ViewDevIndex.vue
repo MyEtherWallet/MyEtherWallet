@@ -1,10 +1,10 @@
 <template>
-  <div class="p-8 max-w-3xl">
-    <h1 class="text-s-24 font-bold text-t-default mb-2">
-      Design library — dev previews
+  <div class="max-w-3xl p-8">
+    <h1 class="mb-2 text-s-24 font-bold text-t-default">
+      {{ $t('dev.index.title') }}
     </h1>
     <p class="text-s-14 text-info">
-      Select a component from the sidebar to preview it against Figma.
+      {{ $t('dev.index.description') }}
     </p>
   </div>
 </template>

@@ -1,0 +1,49 @@
+{
+  "dev": {
+    "design_library": "Design library",
+    "components": "Components",
+    "index": {
+      "title": "Design library — dev previews",
+      "description": "Select a component from the sidebar to preview it against Figma."
+    },
+    "toast": {
+      "name": "Toast",
+      "description": "Design-library variants with base and optional-content states.",
+      "fire_live": "Fire live toast",
+      "view_details": "View details",
+      "live_title": "Live toast triggered",
+      "live_description": "This toast is rendered through the application toast host.",
+      "base": "Base",
+      "cta_and_slot": "CTA and slot",
+      "preview_title": "{variant} toast",
+      "preview_description": "A concise description provides context for this status.",
+      "optional_slot": "Optional slot content",
+      "types": {
+        "processing": "Processing",
+        "transaction_completed": "Transaction completed",
+        "warning": "Warning",
+        "success": "Success",
+        "error": "Error",
+        "info": "Info"
+      }
+    },
+    "content_group": {
+      "name": "Content Group"
+    },
+    "avatar": {
+      "name": "Avatar"
+    },
+    "chip": {
+      "name": "Chip"
+    },
+    "input": {
+      "name": "Input"
+    },
+    "picker": {
+      "name": "Picker"
+    },
+    "tooltip": {
+      "name": "Tooltip"
+    }
+  }
+}

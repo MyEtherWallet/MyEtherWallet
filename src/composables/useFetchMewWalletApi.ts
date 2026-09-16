@@ -5,7 +5,7 @@ import { captureException } from '@sentry/vue'
 import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
-const isDevMode = import.meta.env.MODE !== 'production'
+const isDevMode = process.env.NODE_ENV !== 'production'
 
 export interface FetchMewAPIResponse {
   isActivePolling: Ref<boolean>
@@ -98,7 +98,11 @@ export const useFetchMewWalletApi = (
         // If the request fails,  retry the request
         const isNetworkError = !response
         const isServerError = response?.status && response.status >= 500
-        if (_hasRetry && retryCount.value < 3 && (isNetworkError || isServerError)) {
+        if (
+          _hasRetry &&
+          retryCount.value < 3 &&
+          (isNetworkError || isServerError)
+        ) {
           retryCount.value++
           // wait for delay
           await new Promise(resolve => setTimeout(resolve, delay.value))
