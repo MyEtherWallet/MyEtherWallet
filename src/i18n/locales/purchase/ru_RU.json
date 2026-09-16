@@ -1,0 +1,80 @@
+{
+  "purchase": {
+    "buy": {
+      "title": "Купить",
+      "youre_buying": "You're buying",
+      "enter_amount": "Enter amount",
+      "continue": "Continue",
+      "connect_wallet": "Connect wallet",
+      "no_quotes": "No quotes found",
+      "need_help": "Need help buying?",
+      "network_not_supported": "Network not supported",
+      "network_not_available": "Buying is not available on {network}. Switch to a supported network.",
+      "error": {
+        "min": "Minimum {min} allowed",
+        "max": "Maximum {max} allowed",
+        "no_quotes": "No quotes found"
+      }
+    },
+    "sell": {
+      "title": "Sell",
+      "youre_selling": "You're selling",
+      "your_balance": "Your balance:",
+      "enter_amount": "Enter amount",
+      "continue": "Continue",
+      "connect_wallet": "Connect wallet",
+      "need_help": "Need help selling?",
+      "network_fee": "Network fee",
+      "network_fee_tooltip": "Fees in the {chain} network are charged in {symbol}",
+      "network_not_supported": "Network not supported",
+      "network_not_available": "Selling is not available on {network}. Switch to a supported network.",
+      "error": {
+        "min": "Minimum {min} allowed",
+        "max": "Maximum {max} allowed",
+        "insufficient": "Not enough {symbol}"
+      },
+      "provider": {
+        "title": "You'll sell {amount}",
+        "youll_send": "You'll send",
+        "youll_receive": "You'll receive",
+        "continue": "Continue"
+      }
+    },
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
+    "min": "Мин.",
+    "max": "Макс.",
+    "bank": "Bank",
+    "select_token": {
+      "title": "Tokens",
+      "subtitle": "Select one from the list",
+      "search_placeholder": "Поиск",
+      "filter_all_networks": "All networks",
+      "filter_title": "Filter by network",
+      "filter_subtitle": "Select a network from the list",
+      "no_results": "No tokens match"
+    },
+    "select_currency": {
+      "title": "Currency",
+      "subtitle": "Select a currency from the list",
+      "search_placeholder": "Поиск",
+      "no_results": "No currencies match"
+    },
+    "select_provider": {
+      "title": "You'll pay {amount}",
+      "subtitle": "Select one of the following providers to define how much {crypto} you'll be receiving.",
+      "best_value": "Best value",
+      "youll_pay": "You'll pay",
+      "youll_receive": "You'll receive",
+      "continue": "Continue",
+      "error": {
+        "no_quotes": "No providers available for this selection. Try a different amount or currency."
+      },
+      "redirect": "You'll be redirected to {provider} to complete your purchase."
+    },
+    "quote": {
+      "updates_in": "Quote updates in {time}",
+      "expired_refreshing": "Quote expired — getting a new one…",
+      "rate_limited": "Too many requests — retry in {seconds}s"
+    }
+  }
+}
