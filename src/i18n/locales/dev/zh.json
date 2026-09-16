@@ -1,0 +1,31 @@
+{
+  "dev": {
+    "design_library": "设计库",
+    "components": "组件",
+    "index": {
+      "title": "设计库 — 开发预览",
+      "description": "从侧边栏选择组件，与 Figma 设计进行比较。"
+    },
+    "toast": {
+      "name": "提示消息",
+      "description": "设计库提示消息的基础状态和可选内容状态。",
+      "fire_live": "触发实时提示",
+      "view_details": "查看详情",
+      "live_title": "已触发实时提示",
+      "live_description": "此提示消息通过应用的提示消息容器显示。",
+      "base": "基础",
+      "cta_and_slot": "操作和插槽",
+      "preview_title": "{variant}提示",
+      "preview_description": "简短描述可为此状态提供背景信息。",
+      "optional_slot": "可选插槽内容",
+      "types": {
+        "processing": "处理中",
+        "transaction_completed": "交易已完成",
+        "warning": "警告",
+        "success": "成功",
+        "error": "错误",
+        "info": "信息"
+      }
+    }
+  }
+}

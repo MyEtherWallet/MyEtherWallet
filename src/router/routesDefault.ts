@@ -1,5 +1,6 @@
 import {
   ROUTES_MAIN,
+  ROUTES_DEV,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
   PERP_INFO_ROUTE_NAME,
@@ -23,6 +24,30 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  // Design-library previews are intentionally absent from production builds.
+  ...(process.env.NODE_ENV !== 'production'
+    ? [
+        {
+          path: ROUTES_DEV.INDEX.PATH,
+          component: () => import('@/views/ViewDevLayout.vue'),
+          meta: { noAuth: true, noWalletFlow: true },
+          children: [
+            {
+              path: '',
+              name: ROUTES_DEV.INDEX.NAME,
+              component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: ROUTES_DEV.TOAST.PATH,
+              name: ROUTES_DEV.TOAST.NAME,
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+          ],
+        },
+      ]
+    : []),
   {
     // New public Home is the root; disconnected users land here.
     path: ROUTES_MAIN.HOME.PATH,

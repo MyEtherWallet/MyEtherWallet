@@ -80,6 +80,9 @@ export default {
       success: 'rgba(5,192,165,1)',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',
+      // Design-library semantic toast tokens (Figma: background/info, text/inverted).
+      'background-info': '#2f3133',
+      'text-inverted': '#ffffff',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
       // blues

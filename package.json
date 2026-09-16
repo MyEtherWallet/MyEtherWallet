@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build:only {@}\" --",
-    "test:unit": "vitest",
+    "test:unit": "vitest --configLoader runner",
     "test:e2e": "nightwatch --config ./nightwatch.conf.cjs tests/e2e/*",
     "build:preview": "vite preview",
     "build:only": "vite build",

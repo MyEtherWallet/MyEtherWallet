@@ -1,0 +1,31 @@
+{
+  "dev": {
+    "design_library": "Biblioteca de diseño",
+    "components": "Componentes",
+    "index": {
+      "title": "Biblioteca de diseño — vistas previas de desarrollo",
+      "description": "Selecciona un componente de la barra lateral para compararlo con Figma."
+    },
+    "toast": {
+      "name": "Notificación",
+      "description": "Variantes de la biblioteca de diseño con estados básicos y contenido opcional.",
+      "fire_live": "Mostrar notificación en vivo",
+      "view_details": "Ver detalles",
+      "live_title": "Notificación en vivo activada",
+      "live_description": "Esta notificación se muestra a través del contenedor de notificaciones de la aplicación.",
+      "base": "Base",
+      "cta_and_slot": "Acción y contenido",
+      "preview_title": "Notificación de {variant}",
+      "preview_description": "Una descripción breve proporciona contexto para este estado.",
+      "optional_slot": "Contenido opcional",
+      "types": {
+        "processing": "Procesando",
+        "transaction_completed": "Transacción completada",
+        "warning": "Advertencia",
+        "success": "Éxito",
+        "error": "Error",
+        "info": "Información"
+      }
+    }
+  }
+}
