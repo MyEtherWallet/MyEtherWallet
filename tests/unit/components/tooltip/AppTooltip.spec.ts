@@ -95,6 +95,22 @@ describe('AppTooltip', () => {
     expect(bubble()).toBeNull()
   })
 
+  it('renders a focusable info icon when no trigger is slotted and forwards attrs', async () => {
+    wrapper = mount(AppTooltip, {
+      props: { text: 'Hint' },
+      attrs: { class: 'flex-1' },
+      attachTo: document.body,
+    })
+    const fallback = wrapper.get('[data-testid="tooltip-default-trigger"]')
+    expect(fallback.attributes('tabindex')).toBe('0')
+    expect(fallback.find('svg').exists()).toBe(true)
+    expect(wrapper.get(trigger()).classes()).toContain('flex-1')
+
+    await wrapper.get(trigger()).trigger('focusin')
+    await nextTick()
+    expect(bubble()?.textContent).toContain('Hint')
+  })
+
   it('reflects the placement on the bubble', async () => {
     // jsdom gives the trigger a 0×0 rect at (0,0), so a bottom placement keeps its
     // room and does not flip (top/left would, against the viewport edge).

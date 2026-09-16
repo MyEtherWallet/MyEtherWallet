@@ -100,7 +100,9 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ {{ currencySymbol }}{{ toAmountFiat }}</div>
+              <div class="text-s-12 text-info">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
           <app-pop-up-menu
@@ -287,7 +289,7 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltipLegacy.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { computed, watch, ref } from 'vue'
 import {
   type ProviderQuoteResponse,

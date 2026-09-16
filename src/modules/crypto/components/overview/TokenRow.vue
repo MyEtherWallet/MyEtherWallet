@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTooltip from '@/components/AppTooltipLegacy.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'

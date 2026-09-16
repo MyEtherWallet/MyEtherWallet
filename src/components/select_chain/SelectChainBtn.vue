@@ -1,32 +1,24 @@
 <template>
   <div>
-    <button
-      :class="[isReady ? 'hoverNoBG' : 'animate-pulse bg-surface']"
-      class="py-2 px-3 rounded-16 w-full border border-1 border-grey-outline min-h-[58px]"
+    <!-- Design-library Picker (L): the selection opens the chain dialog. Sits on
+         a white dialog surface, so it takes the grey `alternative` fill. -->
+    <app-picker
+      size="l"
+      surface="alternative"
+      :title="selectedChain?.nameLong ?? ''"
+      :description="$t('common.network')"
+      :loading="!isReady"
       @click="setOpenDialog(true)"
     >
-      <div v-if="selectedChain" class="flex items-center">
-        <img
-          v-if="selectedChain.icon"
-          :src="selectedChain.icon"
-          alt=""
-          class="w-8 h-8 mr-2 rounded-full object-contain flex-none"
-          height="32"
-          width="32"
+      <template #avatar="{ size }">
+        <app-avatar
+          type="network"
+          :size="size"
+          :url="selectedChain?.icon"
+          :chain="selectedChain?.name"
         />
-        <div class="ml-1 pr-1 min-w-[30px]">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
-            {{ $t('common.network') }}
-          </p>
-          <p
-            class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
-          >
-            {{ selectedChain.nameLong }}
-          </p>
-        </div>
-        <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
-      </div>
-    </button>
+      </template>
+    </app-picker>
     <!-- Dialog with chains list -->
     <select-chain-dialog
       v-if="isLoadedChains"
@@ -43,7 +35,8 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppPicker from '@/components/picker/AppPicker.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import SelectChainDialog from './SelectChainDialog.vue'
 
 defineProps({

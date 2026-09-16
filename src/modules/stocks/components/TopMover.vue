@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTooltip from '@/components/AppTooltipLegacy.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TopMoverHistoryChart from './TopMoverHistoryChart.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'

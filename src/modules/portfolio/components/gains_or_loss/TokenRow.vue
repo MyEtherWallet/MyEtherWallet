@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltipLegacy.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'

@@ -35,12 +35,15 @@ const props = withDefaults(
     disabled?: boolean
     /** Show the leading avatar slot (on by default, per Figma). */
     avatar?: boolean
+    /** Selection not resolved yet: Content Group skeleton, clicks ignored. */
+    loading?: boolean
   }>(),
   {
     size: 'm',
     surface: 'default',
     disabled: false,
     avatar: true,
+    loading: false,
   },
 )
 
@@ -57,6 +60,7 @@ const rootClass = computed(() => [
   PICKER_SIZE_CLASS[props.size],
   PICKER_SURFACE_BG_CLASS[props.surface],
   isPill.value ? 'inline-flex' : 'flex w-full',
+  props.loading ? 'pointer-events-none' : '',
 ])
 </script>
 
@@ -64,6 +68,7 @@ const rootClass = computed(() => [
   <button
     type="button"
     :disabled="disabled"
+    :aria-busy="loading || undefined"
     aria-haspopup="dialog"
     data-testid="picker"
     class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-bgBase-hover focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
@@ -80,6 +85,7 @@ const rootClass = computed(() => [
     <AppContentGroup
       :title="title"
       :description="description"
+      :loading="loading"
       size="m"
       no-wrap
       :class="isPill ? 'shrink-0' : 'flex-1'"

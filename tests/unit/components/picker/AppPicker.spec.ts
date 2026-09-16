@@ -62,7 +62,8 @@ describe('AppPicker', () => {
       mount(AppPicker, {
         props: { title: 'T', size },
         slots: {
-          avatar: props => h('i', { 'data-testid': 'av', 'data-size': props.size }),
+          avatar: props =>
+            h('i', { 'data-testid': 'av', 'data-size': props.size }),
         },
       })
         .get('[data-testid="av"]')
@@ -93,5 +94,16 @@ describe('AppPicker', () => {
       props: { title: 'T', surface: 'alternative' },
     })
     expect(alt.get(root()).classes()).toContain('bg-bgBase')
+  })
+
+  it('shows the Content Group skeleton and ignores clicks while loading', () => {
+    const wrapper = mount(AppPicker, {
+      props: { title: 'Ethereum', loading: true },
+    })
+    const root = wrapper.get('[data-testid="picker"]')
+    expect(root.attributes('aria-busy')).toBe('true')
+    expect(root.classes()).toContain('pointer-events-none')
+    expect(wrapper.find('[data-testid="cg-title"]').exists()).toBe(false)
+    expect(wrapper.find('.animate-pulse').exists()).toBe(true)
   })
 })

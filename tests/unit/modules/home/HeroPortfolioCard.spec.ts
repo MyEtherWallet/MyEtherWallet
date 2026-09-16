@@ -103,9 +103,9 @@ vi.mock('@/components/core_layouts/wallet/TheDepositDialog.vue', () => ({
     template: '<div data-test="deposit-dialog-stub" />',
   },
 }))
-// AppTooltip teleports to #app (absent under jsdom) — passthrough stub renders
+// AppTooltip teleports to body — passthrough stub renders
 // its trigger slot so the wrapped refresh button stays findable/clickable.
-vi.mock('@/components/AppTooltipLegacy.vue', () => ({
+vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
   default: { template: '<div><slot /></div>' },
 }))
 

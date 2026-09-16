@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, useId, nextTick, watch, onBeforeUnmount } from 'vue'
+import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import {
   PLACEMENT_FLEX,
   ARROW_BEFORE,
@@ -16,10 +17,17 @@ import {
  * teleported to the app root and positioned against the trigger's rect with an
  * auto-flip when there is no room on the requested side.
  *
- * The default slot is the trigger; the `content` slot holds optional custom
- * content shown next to / instead of `text`. For rich, interactive overlays
- * (buttons, links) use a Popover / Contextual Menu instead — out of scope here.
+ * The default slot is the trigger; with no slot content a focusable info icon
+ * is rendered so a bare `<AppTooltip text="…" />` works as an inline hint. The
+ * `content` slot holds optional custom content shown next to / instead of
+ * `text`. For rich, interactive overlays (buttons, links) use a Popover /
+ * Contextual Menu instead — out of scope here.
+ *
+ * The root is a fragment (trigger + Teleport), so `class` and other attrs are
+ * forwarded to the trigger wrapper explicitly.
  */
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(
   defineProps<{
     text?: string
@@ -184,6 +192,7 @@ onBeforeUnmount(close)
 <template>
   <span
     ref="triggerRef"
+    v-bind="$attrs"
     class="inline-flex"
     data-testid="tooltip-trigger"
     :aria-describedby="visible ? tooltipId : undefined"
@@ -193,7 +202,15 @@ onBeforeUnmount(close)
     @focusout="onBlur"
     @click="onClick"
   >
-    <slot />
+    <slot>
+      <span
+        tabindex="0"
+        class="inline-flex rounded-full text-info focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        data-testid="tooltip-default-trigger"
+      >
+        <InformationCircleIcon class="size-6 p-1 cursor-pointer" />
+      </span>
+    </slot>
   </span>
 
   <Teleport to="body">
