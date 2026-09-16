@@ -37,6 +37,8 @@
       "chains": "未找到链"
     },
     "all_chains": "所有链",
+    "all_networks": "所有网络",
+    "showing_page": "显示第 {current} 页，共 {total} 页",
     "edit": "编辑",
     "delete": "删除",
     "token_count": "暂无代币 | 1 个代币 | {count} 个代币",
