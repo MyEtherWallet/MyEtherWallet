@@ -40,6 +40,11 @@ const ROUTES_CREATE_WALLET = {
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create' },
 }
 
+const ROUTES_DEV = {
+  INDEX: { NAME: 'DevIndex', PATH: '/dev' },
+  TOGGLE: { NAME: 'DevToggle', PATH: 'toggle' },
+}
+
 type WalletFlowKind = 'access' | 'create'
 
 const WALLET_FLOW_ROUTES: Record<
@@ -102,6 +107,7 @@ const ROUTES_SEND: RouteNameCollection = {
 export {
   ROUTES_MAIN,
   ROUTES_CREATE_WALLET,
+  ROUTES_DEV,
   ROUTES_SEND,
   ROUTES_ACCESS,
   WALLET_FLOW_ROUTES,

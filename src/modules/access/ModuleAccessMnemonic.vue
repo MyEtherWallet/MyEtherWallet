@@ -44,10 +44,10 @@
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
+              <div class="flex items-center gap-2">
+                <app-toggle v-model="hasExtraWord" />
+                <span class="text8">{{ extraWordToggleString }}</span>
+              </div>
             </div>
             <!-- Extra Word -->
             <expand-transition>
