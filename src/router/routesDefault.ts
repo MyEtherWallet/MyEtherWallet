@@ -70,6 +70,12 @@ const DefaultRoutes = <RouteNameCollection>[
               component: () => import('@/views/ViewChipShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
+            {
+              path: 'tooltip',
+              name: 'DevTooltip',
+              component: () => import('@/views/ViewTooltipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
           ],
         },
       ]
