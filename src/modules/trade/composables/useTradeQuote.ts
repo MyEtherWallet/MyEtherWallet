@@ -14,6 +14,7 @@ import {
   isExpectedClientError,
   isTransientNetworkError,
 } from '@/modules/trade/common/expectedTradeError'
+import { getProviderErrorMessageKey } from '@/modules/trade/common/providerErrorMessages'
 import { reportModuleError } from '@/utils/reportModuleError'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
@@ -175,7 +176,10 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : undefined
-      generalError.value = rawMessage || t('trade.error.failed-to-fetch-quote')
+      const providerErrorMessageKey = getProviderErrorMessageKey(rawMessage)
+      generalError.value = providerErrorMessageKey
+        ? t(providerErrorMessageKey)
+        : rawMessage || t('trade.error.failed-to-fetch-quote')
       toAmount.value = '0'
       analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
         ...getAnalyticsPayload(),

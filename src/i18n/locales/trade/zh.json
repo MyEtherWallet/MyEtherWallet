@@ -67,6 +67,7 @@
       "token-not-available": "{symbol} 当前不可交易",
       "no-quotes-returned": "未返回任何报价",
       "failed-to-fetch-quote": "获取报价失败",
+      "xstocks-not-allowed": "您所在的地区不支持此代币的代币化股票交易。",
       "fusion-network-not-supported": "Fusion：不支持的网络",
       "failed-fetch-quote-1inch": "从 1inch 获取报价失败",
       "native-transaction-failed": "原生交易失败",

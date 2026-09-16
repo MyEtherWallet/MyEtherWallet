@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
+import { getProviderErrorMessageKey } from '@/modules/trade/common/providerErrorMessages'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
@@ -180,7 +181,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = getErrorMessage(e, t('trade.error.approval-failed')).toLowerCase()
+      const rawErrorMessage = getErrorMessage(
+        e,
+        t('trade.error.approval-failed'),
+      )
+      const errorMessage = rawErrorMessage.toLowerCase()
+      const providerErrorMessageKey =
+        getProviderErrorMessageKey(rawErrorMessage)
 
       analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
         ...getAnalyticsPayload(),
@@ -195,7 +202,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       toastStore.addToastMessage({
         text: t('trade.error.approval-failed'),
-        textSecondary: errorMessage,
+        textSecondary: providerErrorMessageKey
+          ? t(providerErrorMessageKey)
+          : errorMessage,
         type: ToastType.Error,
       })
     } finally {
@@ -340,7 +349,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = getErrorMessage(e, t('trade.error.submit-failed')).toLowerCase()
+      const rawErrorMessage = getErrorMessage(e, t('trade.error.submit-failed'))
+      const errorMessage = rawErrorMessage.toLowerCase()
+      const providerErrorMessageKey =
+        getProviderErrorMessageKey(rawErrorMessage)
 
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.TRADE,
@@ -358,7 +370,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       toastStore.addToastMessage({
         text: t('trade.error.submit-failed'),
-        textSecondary: errorMessage,
+        textSecondary: providerErrorMessageKey
+          ? t(providerErrorMessageKey)
+          : errorMessage,
         type: ToastType.Error,
       })
     } finally {

@@ -11,7 +11,17 @@ vi.mock('@vueuse/core', () => ({
 // real `createI18n`. Only `useI18n` is stubbed, to keep `t()` outside a component.
 vi.mock('vue-i18n', async importOriginal => ({
   ...(await importOriginal<typeof import('vue-i18n')>()),
-  useI18n: () => ({ t: (key: string) => key }),
+  useI18n: () => ({
+    t: (key: string) =>
+      key === 'trade.error.xstocks-not-allowed'
+        ? 'Tokenized stock trading is not available for this token in your region.'
+        : key,
+  }),
+}))
+
+const mockReportModuleError = vi.fn()
+vi.mock('@/utils/reportModuleError', () => ({
+  reportModuleError: mockReportModuleError,
 }))
 
 const mockAddToastMessage = vi.fn()
@@ -26,6 +36,7 @@ vi.mock('@/stores/tradeOrdersStore', () => ({
 
 vi.mock('@/stores/rewardsStore', () => ({
   useRewardsStore: () => ({
+    minSpendTrade: { __v_isRef: true, value: 0 },
     checkAvailabilityAfterTransaction: vi.fn(async () => false),
   }),
 }))
@@ -317,5 +328,85 @@ describe('trade actions where trading is permitted', () => {
 
     expect(mockSubmitOrder).toHaveBeenCalledTimes(1)
     expect(mockAddOrder).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('provider error messages', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    hasResolvedRegion.value = true
+    isTradingRestrictedInRegion.value = false
+  })
+
+  it('translates XSTOCKS_NOT_ALLOWED while retaining the raw quote error for analytics', async () => {
+    const providerError = Object.assign(new Error('XSTOCKS_NOT_ALLOWED'), {
+      expectedClientError: true,
+    })
+    mockGetQuote.mockRejectedValue(providerError)
+    const { fetchQuote, generalError, toAmount } = await makeQuoteHarness()
+
+    await fetchQuote()
+
+    expect(generalError.value).toBe(
+      'Tokenized stock trading is not available for this token in your region.',
+    )
+    expect(generalError.value).not.toContain('XSTOCKS_NOT_ALLOWED')
+    expect(toAmount.value).toBe('0')
+    expect(mockTrackTradeEventError).toHaveBeenCalledWith(
+      'Trade_Preliminary_Error',
+      expect.objectContaining({ errorMsg: 'XSTOCKS_NOT_ALLOWED' }),
+    )
+    expect(mockReportModuleError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: providerError,
+        expected: true,
+      }),
+    )
+  })
+
+  it('continues to surface an unmapped quote error verbatim', async () => {
+    mockGetQuote.mockRejectedValue(new Error('insufficient liquidity'))
+    const { fetchQuote, generalError } = await makeQuoteHarness()
+
+    await fetchQuote()
+
+    expect(generalError.value).toBe('insufficient liquidity')
+  })
+
+  it('translates XSTOCKS_NOT_ALLOWED in the approval error toast', async () => {
+    mockSetApproval.mockRejectedValue(new Error('XSTOCKS_NOT_ALLOWED'))
+    const { handleApprove } = await makeExecutionHarness()
+
+    await handleApprove()
+
+    expect(mockAddToastMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        textSecondary:
+          'Tokenized stock trading is not available for this token in your region.',
+      }),
+    )
+  })
+
+  it('translates XSTOCKS_NOT_ALLOWED in the submit error toast', async () => {
+    const providerError = Object.assign(new Error('XSTOCKS_NOT_ALLOWED'), {
+      expectedClientError: true,
+    })
+    mockSubmitOrder.mockRejectedValue(providerError)
+    const { confirmTrade } = await makeExecutionHarness()
+
+    await confirmTrade()
+
+    expect(mockAddToastMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        textSecondary:
+          'Tokenized stock trading is not available for this token in your region.',
+      }),
+    )
+    expect(mockReportModuleError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: providerError,
+        expected: true,
+      }),
+    )
   })
 })

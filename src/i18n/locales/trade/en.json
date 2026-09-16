@@ -67,6 +67,7 @@
       "token-not-available": "{symbol} is currently not available for trading",
       "no-quotes-returned": "No quotes returned",
       "failed-to-fetch-quote": "Failed to fetch quote",
+      "xstocks-not-allowed": "Tokenized stock trading is not available for this token in your region.",
       "fusion-network-not-supported": "Fusion: network not supported",
       "failed-fetch-quote-1inch": "Failed to fetch quote from 1inch",
       "native-transaction-failed": "Native Transaction Failed",
