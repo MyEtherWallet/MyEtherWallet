@@ -98,7 +98,6 @@
                   width="w-10"
                   height="h-10"
                   no-shadow
-                  no-ring
                 />
                 <span
                   v-if="isSelected(asset)"
