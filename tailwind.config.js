@@ -32,22 +32,6 @@ export default {
       '3xl': '1601px',
       print: { raw: 'print' }, // => @media  print { ... }
     },
-    /**
-     * Colors live in `src/assets/main.css` under `@theme`, as the semantic
-     * tokens from the Figma design library (background/*, text/*, icon/*,
-     * border/*). Only the few values below have no semantic equivalent:
-     * third-party or product branding, and Tailwind's own primitives.
-     */
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: '#000000',
-      white: '#ffffff',
-      // Product / third-party branding, deliberately outside the semantic set.
-      gold: '#FFD700', // watchlist star
-      portfolio: '#0c5876', // paper wallet print branding
-      enkryptBg: 'rgba(186,74,255,0.1)', // Enkrypt promo card
-    },
     extend: {
       fontSize: {
         's-48': ['48px', '120%'],
@@ -98,13 +82,6 @@ export default {
         16: '16px',
         12: '12px',
         8: '8px',
-      },
-      boxShadow: {
-        token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
-        button: '0px 1px 4px 0px rgba(0, 0, 0, 0.12)',
-        container: '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
-        'button-elevated':
-          '0px 1px 4px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.25)',
       },
       backgroundImage: {
         // This adds the gradient as a reusable background utility
