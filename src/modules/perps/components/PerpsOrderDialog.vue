@@ -25,7 +25,13 @@
                 order.side === 'buy' ? 'text-success' : 'text-error',
               ]"
             >
-              {{ order.side === 'buy' ? $t('perps.order.buy') : order.side === 'sell' ? $t('perps.order.sell') : order.side }}
+              {{
+                order.side === 'buy'
+                  ? $t('perps.order.buy')
+                  : order.side === 'sell'
+                    ? $t('perps.order.sell')
+                    : order.side
+              }}
             </span>
           </div>
         </div>
@@ -42,11 +48,7 @@
                 class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
                 >{{ row.label }}</span
               >
-              <app-tooltip
-                v-if="row.tooltip"
-                :text="row.tooltip"
-                position="top-right"
-              />
+              <app-tooltip v-if="row.tooltip" :text="row.tooltip" />
             </div>
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
               {{ row.value }}
@@ -82,7 +84,7 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { capturePerps } from '../sentry'

@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+// Lists every preview registered under /dev/ (the ViewDevLayout children in
+// routesDefault.ts), so a new showcase shows up here without another edit.
 const router = useRouter()
 
 const DEV_PREFIX = '/dev/'
@@ -19,11 +21,13 @@ const previewRoutes = computed(() =>
 </script>
 
 <template>
-  <div class="min-h-screen bg-appBackground p-10">
-    <h1 class="title5 mb-2">Design system playground</h1>
-    <p class="mb-8 text-s-14 text-t-subtle">
-      Every component preview registered under <code>/dev/</code>. Add a route
-      with that prefix and it shows up here.
+  <div class="p-8 max-w-3xl">
+    <h1 class="text-s-24 font-bold text-t-default mb-2">
+      Design library — dev previews
+    </h1>
+    <p class="mb-8 text-s-14 text-info">
+      Every component preview registered under <code>/dev/</code>. Pick one here
+      or from the sidebar to preview it against Figma.
     </p>
 
     <ul class="flex max-w-[480px] flex-col gap-2">

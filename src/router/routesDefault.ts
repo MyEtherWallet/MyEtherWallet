@@ -23,30 +23,66 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // DEV-only gallery for the Avatar design library (MEW-2196). Never registered
-  // in production builds.
+  // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
+  // components that have a preview; each renders in its <router-view>. Never
+  // registered in production builds. noWalletFlow: these are previews, not app
+  // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
   ...(import.meta.env.MODE !== 'production'
     ? [
         {
           path: '/dev',
-          name: 'DevIndex',
-          component: () => import('@/views/ViewDevIndex.vue'),
+          component: () => import('@/views/ViewDevLayout.vue'),
           meta: { noAuth: true, noWalletFlow: true },
-        },
-        {
-          path: '/dev/avatars',
-          name: 'DevAvatarShowcase',
-          component: () => import('@/views/ViewAvatarShowcase.vue'),
-          meta: { noAuth: true, noWalletFlow: true },
-        },
-        {
-          path: '/dev/cell',
-          name: 'DevCellPreview',
-          component: () => import('@/views/ViewCellPreview.vue'),
-          meta: {
-            noAuth: true,
-            noWalletFlow: true,
-          },
+          children: [
+            {
+              path: '',
+              name: 'DevIndex',
+              component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'avatar',
+              name: 'DevAvatar',
+              component: () => import('@/views/ViewAvatarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'cell',
+              name: 'DevCellPreview',
+              component: () => import('@/views/ViewCellPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'chip',
+              name: 'DevChip',
+              component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'content-group',
+              name: 'DevContentGroup',
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'input',
+              name: 'DevInput',
+              component: () => import('@/views/ViewInputPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'picker',
+              name: 'DevPicker',
+              component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tooltip',
+              name: 'DevTooltip',
+              component: () => import('@/views/ViewTooltipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+          ],
         },
       ]
     : []),
