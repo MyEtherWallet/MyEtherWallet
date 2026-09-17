@@ -8,14 +8,17 @@ vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span data-test="token-logo" />' },
 }))
 vi.mock('@/components/AppTokenSymbol.vue', () => ({
-  default: { props: ['symbol', 'isStock'], template: '<span>{{ symbol }}</span>' },
+  default: {
+    props: ['symbol', 'isStock'],
+    template: '<span>{{ symbol }}</span>',
+  },
 }))
 
-// AppTooltip relies on the v-element-hover directive + teleport; stub it and
-// expose its text so the "+N more" tooltip can be asserted.
-vi.mock('@/components/AppTooltip.vue', () => ({
+// AppTooltip teleports its bubble to body; stub it and expose its text so the
+// "+N more" tooltip can be asserted.
+vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
   default: {
-    props: ['text', 'position'],
+    props: ['text', 'placement'],
     template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
   },
 }))

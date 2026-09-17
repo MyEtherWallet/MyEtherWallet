@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ROUTES_DEV } from '@/router/routeNames'
 
-// DEV-only shell for the design-library previews (MEW-2271). The sidebar lists
-// the components that have a preview page; the selected one renders in the main
+// DEV-only shell for the design-library previews. The sidebar lists the
+// components that have a preview page; the selected one renders in the main
 // area via <router-view>. Add a row here as each component gains a preview.
 // Never registered in production builds — see routesDefault.ts.
 const components = [
-  { name: 'Toggle', to: { name: ROUTES_DEV.TOGGLE.NAME } },
+  { name: 'Avatar', to: { name: ROUTES_DEV.AVATAR.NAME } },
+  { name: 'Chip', to: { name: ROUTES_DEV.CHIP.NAME } },
   { name: 'Content Group', to: { name: ROUTES_DEV.CONTENT_GROUP.NAME } },
+  { name: 'Input', to: { name: ROUTES_DEV.INPUT.NAME } },
+  { name: 'Picker', to: { name: ROUTES_DEV.PICKER.NAME } },
+  { name: 'Toggle', to: { name: ROUTES_DEV.TOGGLE.NAME } },
+  { name: 'Tooltip', to: { name: ROUTES_DEV.TOOLTIP.NAME } },
 ]
 </script>
 

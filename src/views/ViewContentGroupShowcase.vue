@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// DEV-only gallery for the Content Group design-library component (MEW-2271).
-// Never registered in production builds — see routesDefault.ts. Lets us eyeball
-// the Size × Align × Inverted matrix, the icon slots and the loading state
+// Gallery for the Content Group design-library component (MEW-2271), reachable
+// at /dev/content-group via the design-library shell — see routesDefault.ts.
+// Lets us eyeball the Size × Align × Inverted matrix, the icon slots and the
+// loading state
 // against Figma.
 import { WalletIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'

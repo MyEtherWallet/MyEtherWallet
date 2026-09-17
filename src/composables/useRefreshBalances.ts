@@ -26,7 +26,7 @@ export function useRefreshBalances(): {
   const { wallet, walletAddress } = storeToRefs(walletStore)
   const { setTokens, setIsLoadingBalances } = walletStore
 
-  const noop = () => {}
+  const noop = () => { }
 
   const refreshBalances = ({ silent = false }: RefreshBalancesOptions = {}) => {
     if (!walletAddress.value) {
