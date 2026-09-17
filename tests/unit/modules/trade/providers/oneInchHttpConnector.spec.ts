@@ -89,4 +89,42 @@ describe('IsolatedAxiosConnector', () => {
       connector.get('https://fusion.1inch.io/quote'),
     ).resolves.toEqual({ quoteId: 'abc' })
   })
+
+  it('captures the raw quoter body so callers can read fields the SDK drops', async () => {
+    const connector = new IsolatedAxiosConnector()
+    const body = {
+      quoteId: null,
+      marketAmount: '7691305155320972158',
+      priceImpactPercent: 0.43,
+    }
+    clientOf(connector).defaults.adapter = async config => ({
+      data: body,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config,
+    })
+
+    expect(connector.lastQuoteResponse).toBeNull()
+    await connector.get(
+      'https://fusion.1inch.io/quoter/v2.0/1/quote/receive/?x=1',
+    )
+    expect(connector.lastQuoteResponse).toEqual(body)
+  })
+
+  it('ignores non-quote responses when capturing the raw body', async () => {
+    const connector = new IsolatedAxiosConnector()
+    clientOf(connector).defaults.adapter = async config => ({
+      data: { status: 'filled' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config,
+    })
+
+    await connector.get(
+      'https://fusion.1inch.io/orders/v2.0/1/order/status/0xabc',
+    )
+    expect(connector.lastQuoteResponse).toBeNull()
+  })
 })

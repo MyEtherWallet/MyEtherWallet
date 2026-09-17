@@ -42,6 +42,7 @@ const quote: QuoteOutputType = {
   slippage: 5.5,
   tokenFee: 186132624610132138n,
   marketReturn: 1042335914536949912n,
+  priceImpact: 0.43,
   usdPrices: {
     fromToken: '1.0000982169632373',
     toToken: '13.539447672837907',

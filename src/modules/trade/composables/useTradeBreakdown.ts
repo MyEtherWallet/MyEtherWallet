@@ -55,16 +55,14 @@ export const useTradeBreakdown = ({
     return `${currencySymbol.value}${formatFiat(fiat.toString()).value}`
   })
 
+  // 1inch reports impact as a positive percentage for a worse rate; the UI
+  // shows it signed, so a 0.43 loss renders as "-0.43%".
   const priceImpact = computed(() => {
-    const marketReturn = quote.value?.marketReturn
-    if (!marketReturn || !executionAmount.value) return EMPTY_VALUE
-    const market = new BigNumber(marketReturn.toString())
-    if (market.isZero()) return EMPTY_VALUE
-    const impact = new BigNumber(executionAmount.value.toString())
-      .minus(market)
-      .dividedBy(market)
-      .multipliedBy(100)
-    return `${impact.decimalPlaces(2).toString()}%`
+    const impact = quote.value?.priceImpact
+    if (impact === undefined || impact === null) return EMPTY_VALUE
+    const pct = new BigNumber(impact)
+    if (!pct.isFinite()) return EMPTY_VALUE
+    return `${pct.negated().decimalPlaces(2).toString()}%`
   })
 
   const maxSlippage = computed(() => {

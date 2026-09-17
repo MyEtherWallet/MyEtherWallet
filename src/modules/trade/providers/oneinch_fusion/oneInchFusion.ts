@@ -94,6 +94,7 @@ const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
 
 class OneInchFusion {
   private web3Provider: Web3ProviderConnector
+  private httpConnector: IsolatedAxiosConnector
   private sdk: FusionSDK
   private publicClient: PublicClient
   private chain: Chain
@@ -153,11 +154,12 @@ class OneInchFusion {
     })
     this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
     this.chain = chainConfig.chain
+    this.httpConnector = new IsolatedAxiosConnector()
     this.sdk = new FusionSDK({
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
       blockchainProvider: this.web3Provider,
-      httpProvider: new IsolatedAxiosConnector(),
+      httpProvider: this.httpConnector,
     })
   }
 
@@ -184,6 +186,15 @@ class OneInchFusion {
     try {
       const quote = await this.sdk.getQuote(getFusionParams(config))
       const preset = quote.presets[quote.recommendedPreset]!
+      // The SDK's Quote drops `priceImpactPercent`; read it from the raw body
+      // captured by the connector, only if that body matches this quote.
+      const raw = this.httpConnector.lastQuoteResponse
+      const priceImpact =
+        raw &&
+        raw.marketAmount === quote.marketReturn.toString() &&
+        typeof raw.priceImpactPercent === 'number'
+          ? raw.priceImpactPercent
+          : undefined
       return {
         startAmount: preset.auctionStartAmount,
         endAmount: preset.auctionEndAmount,
@@ -192,6 +203,7 @@ class OneInchFusion {
         slippage: quote.slippage,
         tokenFee: preset.tokenFee,
         marketReturn: quote.marketReturn,
+        priceImpact,
         usdPrices: quote.prices.usd,
       }
     } catch (e: unknown) {

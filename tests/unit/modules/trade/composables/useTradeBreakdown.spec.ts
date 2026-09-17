@@ -30,6 +30,7 @@ const realQuote: QuoteOutputType = {
   slippage: 5.5,
   tokenFee: 186132624610132138n,
   marketReturn: 1042335914536949912n,
+  priceImpact: 0.43,
   usdPrices: {
     fromToken: '1.0000982169632373',
     toToken: '13.539447672837907',
@@ -68,9 +69,21 @@ describe('useTradeBreakdown', () => {
     expect(txFee.value).toMatch(/^\$2\.52/)
   })
 
-  it('computes price impact of execution amount vs market return', () => {
+  it('renders the provider price impact as a signed percentage', () => {
     const { priceImpact } = setup()
-    expect(priceImpact.value).toBe('-11.67%')
+    expect(priceImpact.value).toBe('-0.43%')
+  })
+
+  it('renders a zero price impact without a sign', () => {
+    const { priceImpact } = setup({ ...realQuote, priceImpact: 0 })
+    expect(priceImpact.value).toBe('0%')
+  })
+
+  it('does not derive price impact from the auction bounds', () => {
+    // Start, end and market return are present but 1inch reported no impact
+    // figure; the old midpoint formula would have produced -11.67% here.
+    const { priceImpact } = setup({ ...realQuote, priceImpact: undefined })
+    expect(priceImpact.value).toBe('—')
   })
 
   it('renders slippage as a percentage', () => {
