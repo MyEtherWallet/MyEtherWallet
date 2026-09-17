@@ -514,7 +514,7 @@
                   v-if="isBuyableOnCompatibleChain(token.coinId)"
                   size="small"
                   @click="buyBtn(token)"
-                  is-outline
+                  type="secondary"
                   class="w-full"
                   :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
@@ -586,7 +586,7 @@
         </p>
       </div>
       <!-- Loading State -->
-      <div v-if="isLoading" class="">
+      <div v-if="isLoading">
         <div
           v-for="n in Number(activeShownItems.value)"
           :key="n"

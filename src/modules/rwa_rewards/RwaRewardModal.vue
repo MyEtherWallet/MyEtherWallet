@@ -346,7 +346,7 @@
               </div>
               <app-base-button
                 v-if="status === 'banned' || isUnderReview"
-                theme="neutral"
+                type="secondary"
                 size="medium"
                 class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
                 @click="onContactSupport"

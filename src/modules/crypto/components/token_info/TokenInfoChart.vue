@@ -1,5 +1,5 @@
 <template>
-  <app-btn-group
+  <app-segmented-control
     v-model:selected="selectedChartFilter"
     :disabled="isLoadingFetch"
     :btn-list="isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions"
@@ -28,7 +28,7 @@
         </template>
       </app-select>
     </template>
-  </app-btn-group>
+  </app-segmented-control>
   <div class="h-[200px] sm:h-[320px]">
     <chart-price
       v-if="!isLoadingFetch && !notAvailable"
@@ -43,7 +43,9 @@
       :class="{ 'animate-pulse': isLoadingFetch }"
     >
       <div class="flex flex-col items-center h-full justify-center gap-2">
-        <p v-if="notAvailable" class="text-s-14 text-info">{{ $t('common.no_data_available') }}</p>
+        <p v-if="notAvailable" class="text-s-14 text-info">
+          {{ $t('common.no_data_available') }}
+        </p>
       </div>
     </div>
   </div>
@@ -52,7 +54,7 @@
 <script setup lang="ts">
 import { computed, ref, onBeforeUnmount, watch } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'

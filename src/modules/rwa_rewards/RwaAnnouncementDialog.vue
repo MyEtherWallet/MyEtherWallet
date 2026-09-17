@@ -27,7 +27,7 @@
             </p>
           </div>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="w-full text-s-16 font-semibold tracking-[-0.32px]"
             @click="onGoToOffer"
           >

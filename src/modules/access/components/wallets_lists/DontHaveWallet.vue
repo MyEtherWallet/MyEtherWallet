@@ -4,7 +4,7 @@
   >
     <p class="text-center text-s-14">{{ $t('common.dont_have_wallet') }}</p>
     <app-base-button
-      isOutline
+      type="secondary"
       class="bg-white h-12 !py-0 !px-0 w-full"
       size="medium"
       @click="goToCreateWallet"

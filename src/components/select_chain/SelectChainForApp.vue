@@ -5,7 +5,7 @@
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
     >
-      <app-btn-group
+      <app-segmented-control
         v-if="isBtnGroup"
         v-model:selected="selectedChain"
         :btn-list="shownChains"
@@ -37,7 +37,7 @@
             </div>
           </button>
         </template>
-      </app-btn-group>
+      </app-segmented-control>
       <button
         v-else
         class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
@@ -86,7 +86,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/AppSegmentedControl.vue'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
