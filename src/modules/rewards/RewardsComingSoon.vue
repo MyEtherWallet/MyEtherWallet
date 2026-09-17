@@ -9,13 +9,13 @@
     >
       <!-- Top: icon + title -->
       <div class="flex items-start gap-3 mb-3">
-        <h3 class="text-s-20 font-bold text-primary leading-tight pt-1">
+        <h3 class="text-s-20 font-bold text-text-brand leading-tight pt-1">
           {{ t('rewards.coming_soon_title') }}
         </h3>
       </div>
 
       <!-- Body text -->
-      <p class="text-s-14 text-[#575757] leading-[22px] mb-6">
+      <p class="text-s-14 text-text-subtle leading-[22px] mb-6">
         {{ t('rewards.coming_soon_body') }}
       </p>
 
@@ -25,7 +25,7 @@
           href="https://x.com/myetherwallet"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 border border-primary text-primary text-s-14 font-medium rounded-full px-4 py-2 hoverOpacity"
+          class="inline-flex items-center gap-1.5 border border-border-brand text-text-brand text-s-14 font-medium rounded-full px-4 py-2 hoverOpacity"
         >
           {{ t('rewards.follow_myetherwallet') }}
           <svg

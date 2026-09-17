@@ -25,7 +25,7 @@
         </app-chip>
       </div>
     </div>
-    <div class="h-px bg-grey-5 mt-4 mb-2" />
+    <div class="h-px bg-background-default mt-4 mb-2" />
   </div>
 </template>
 

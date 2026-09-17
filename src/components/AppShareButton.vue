@@ -83,7 +83,7 @@
           >
             <CheckIcon
               v-if="linkCopied"
-              class="w-5 h-5 shrink-0 text-success"
+              class="w-5 h-5 shrink-0 text-text-success"
             />
             <ClipboardIcon v-else class="w-5 h-5 shrink-0" />
             {{ linkCopied ? $t('common.copied') : $t('common.copy_link') }}

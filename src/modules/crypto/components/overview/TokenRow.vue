@@ -15,14 +15,14 @@
       />
       <app-tooltip :text="name" v-if="name.length > 20">
         <p
-          class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+          class="hidden xs:block text-s-12 text-text-subtle truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
         >
           {{ name }}
         </p>
       </app-tooltip>
       <p
         v-else
-        class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+        class="hidden xs:block text-s-12 text-text-subtle truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
       >
         {{ name }}
       </p>
@@ -34,8 +34,8 @@
       <p
         class="text-s-12 text-right"
         :class="{
-          'text-error': token.priceChangePercentage24h < 0,
-          'text-success': token.priceChangePercentage24h >= 0,
+          'text-text-error': token.priceChangePercentage24h < 0,
+          'text-text-success': token.priceChangePercentage24h >= 0,
         }"
       >
         {{ formatPercentageValue(token.priceChangePercentage24h).value }}

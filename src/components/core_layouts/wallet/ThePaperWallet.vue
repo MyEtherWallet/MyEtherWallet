@@ -44,7 +44,11 @@
           <div class="flex justify-between items-center mx-3 gap-6">
             <div>
               <p class="text-s-28 font-semibold mb-2">
-                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong || selectedChain?.name || '' }) }}
+                {{
+                  $t('paper_wallet.my_address', {
+                    chain: selectedChain?.nameLong || selectedChain?.name || '',
+                  })
+                }}
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie
@@ -67,17 +71,20 @@
               <!-- Loading QR Placeholder -->
               <div
                 v-show="isLoadingQRCode"
-                class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+                class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
               ></div>
             </div>
           </div>
 
           <p
-            class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
+            class="my-6 mx-auto text-s-14 text-p-130 text-text-subtle print:text-black text-center max-w-[400px]"
           >
-            <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
+            <span class="font-semibold uppercase">{{
+              $t('paper_wallet.tip_label')
+            }}</span>
+            {{ $t('paper_wallet.tip') }}
           </p>
-          <hr class="h-px bg-grey-10 border-0 w-full my-6" />
+          <hr class="h-px bg-background-default-hover border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->
           <div class="flex justify-between items-center mx-6 mb-6">
             <img
@@ -90,12 +97,12 @@
             <div class="ml-auto">
               <p class="mb-3">
                 <chat-bubble-bottom-center-text-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                  class="inline h-4 w-4 mr-2 text-text-brand"
                 />support@myetherwallet.com
               </p>
               <p>
                 <globe-alt-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                  class="inline h-4 w-4 mr-2 text-text-brand"
                 />https://www.myetherwallet.com
               </p>
             </div>
@@ -103,7 +110,9 @@
           <div
             class="flex justify-center items-center mx-6 mb-6 mt-10 print:hidden"
           >
-            <app-base-button @click="print">{{ $t('paper_wallet.print') }}</app-base-button>
+            <app-base-button @click="print">{{
+              $t('paper_wallet.print')
+            }}</app-base-button>
           </div>
         </div>
       </div>

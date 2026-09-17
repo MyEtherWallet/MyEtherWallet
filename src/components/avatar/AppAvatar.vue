@@ -140,7 +140,7 @@ watchEffect(() => {
 
     <span
       v-if="showConnectedRing"
-      class="absolute rounded-full border-2 border-success pointer-events-none"
+      class="absolute rounded-full border-2 border-border-success pointer-events-none"
       :style="connectedRingStyle"
     />
   </div>

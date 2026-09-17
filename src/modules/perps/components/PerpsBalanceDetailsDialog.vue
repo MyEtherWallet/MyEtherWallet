@@ -8,14 +8,16 @@
   >
     <template #content>
       <div class="pb-6 pt-4">
-        <div class="bg-mewBg rounded-2xl divide-y divide-grey-outline p-2">
+        <div
+          class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+        >
           <div
             v-for="row in balanceRows"
             :key="row.label"
             class="flex items-center justify-between px-5 py-4"
           >
             <span
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
               >{{ row.label }}</span
             >
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
@@ -25,7 +27,7 @@
         </div>
 
         <app-btn-text
-          class="w-full mt-4 text-primary"
+          class="w-full mt-4 text-text-brand"
           is-large
           @click="$emit('close')"
           >{{ $t('perps.trade.tab-close') }}</app-btn-text

@@ -77,8 +77,8 @@ describe('PerpsStatusBanner', () => {
     const banner = await mountBanner()
 
     const shell = banner.get('[role="status"]')
-    expect(shell.classes()).toContain('bg-warning-10')
-    expect(banner.get('svg').classes()).toContain('text-warning')
+    expect(shell.classes()).toContain('bg-background-warning-subtle')
+    expect(banner.get('svg').classes()).toContain('text-text-warning')
   })
 
   it('yields to the jurisdiction block, which outranks service availability', async () => {

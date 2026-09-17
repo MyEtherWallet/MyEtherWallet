@@ -32,75 +32,21 @@ export default {
       '3xl': '1601px',
       print: { raw: 'print' }, // => @media  print { ... }
     },
+    /**
+     * Colors live in `src/assets/main.css` under `@theme`, as the semantic
+     * tokens from the Figma design library (background/*, text/*, icon/*,
+     * border/*). Only the few values below have no semantic equivalent:
+     * third-party or product branding, and Tailwind's own primitives.
+     */
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-      appBackground: '#f5f5f7',
-      bgBase: '#f5f5f5',
-      // Design-library hover / pressed fills shared by Chip, Picker and any
-      // future surface that rests on `bgBase` or white (Figma
-      // background/default-hover / -pressed).
-      'bgBase-hover': '#e6e6e6',
-      'bgBase-pressed': '#d6d6d6',
-      // Design-library Tooltip bubble (Figma background/info, solid — the
-      // translucent `info` token would let the page bleed through).
-      'tooltip-bg': '#1a1a1a',
-      bgMuted: '#e5e5e5',
-      gold: '#FFD700', // used in watchlist
-      'side-menu': '#07385f',
-      titleColor: '#222222',
-      primary: 'rgb(0,90,229,1)',
-      primaryActive: '#0067e0',
-      violet: '#9D00FF',
-      violetActive: '#a81aff',
-      portfolio: '#0c5876',
-      mewBg: 'rgba(53,94,236,0.1)',
-      mewBgHex: '#355eec1a',
-      enkryptBg: 'rgba(186,74,255,0.1)',
       black: '#000000',
       white: '#ffffff',
-      surface: 'rgba(232, 232, 237, 1)',
-      'surface-light': 'rgba(249, 250, 251, 1)',
-      info: 'rgba(0, 0, 0, 0.65)',
-      'grey-light': 'rgba(232, 232, 237, 1)',
-      'grey-light-2': 'rgba(248, 250, 252, 1)',
-      'grey-outline': 'rgba(188,200,204,1)',
-      'grey-70': 'rgba(0,0,0,0.7)',
-      'grey-50': 'rgba(0,0,0,0.5)',
-      'grey-30': 'rgba(0,0,0,0.3)',
-      'grey-10': 'rgba(0,0,0,0.1)',
-      'grey-5': 'rgba(0,0,0,0.05)',
-      'grey-5-hex': '#0000000d',
-      'mew-green-text': '#05C0A5',
-      'grey-8': 'rgba(0,0,0,0.08)',
-      error: 'rgba(228,12,91,1)',
-      'error-10': 'rgba(228,12,91,0.1)',
-      'error-7': '#f9eaef',
-      blue: 'rgba(22 129,255,1)',
-      'blue-10': 'rgba(22,129,255,0.1)',
-      'blue-7': 'rgba(22,129,255,0.07)',
-      'blue-950': 'rgb(23 37 84)',
-      'mew-purple': 'rgba(104, 76, 255, 1)',
-      'purple-10': 'rgba(104,76,255,0.1)',
-      'purple-7': 'rgba(104,76,255,0.07)',
-      warning: 'rgba(255,165,0, 1)',
-      'warning-10': 'rgba(255,165,0,0.1)',
-      success: 'rgba(5,192,165,1)',
-      'grey-subtle': '#a5a5a5',
-      'surface-hover': '#f5f5f5',
-      // Design-library input (MEW-1971): resting border for the Alternative
-      // surface. Kept separate from `bgBase-hover` (same value) so a later
-      // background tweak never moves every field's border. Use as
-      // `border-border-default`.
-      'border-default': '#e6e6e6',
-      //Text:
-      't-default': 'rgba(0, 0, 0, 1)',
-      // Design-library input (MEW-1971): filled float-label text. Mirrors the
-      // `t-default` naming → `text-t-subtle`.
-      't-subtle': '#575757',
-      // blues
-      'blue-2': 'rgba(0, 91, 229, 1)',
-      'blue-3': 'rgba(0, 123, 238, 1)',
+      // Product / third-party branding, deliberately outside the semantic set.
+      gold: '#FFD700', // watchlist star
+      portfolio: '#0c5876', // paper wallet print branding
+      enkryptBg: 'rgba(186,74,255,0.1)', // Enkrypt promo card
     },
     extend: {
       fontSize: {

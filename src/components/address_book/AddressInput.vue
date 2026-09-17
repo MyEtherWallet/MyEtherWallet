@@ -7,12 +7,12 @@
       >
         <div
           v-if="!resolvedAddress"
-          class="rounded-full bg-grey-5 w-8 h-8 border border-grey-10"
+          class="rounded-full bg-background-default w-8 h-8 border border-border-default"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-8 h-8 border border-grey-10"
+          class="rounded-full w-8 h-8 border border-border-default"
           height="32"
           width="32"
         />
@@ -24,9 +24,9 @@
           'pointer-events-none absolute left-14 transition-all aria-hidden',
           inFocusInput
             ? hasError && !isPristine
-              ? 'text-error'
-              : 'text-primary'
-            : 'text-grey-50',
+              ? 'text-text-error'
+              : 'text-text-brand'
+            : 'text-text-muted',
           inFocusInput || adrInput !== ''
             ? 'top-2 text-s-11'
             : 'top-[18px] text-sm font-medium',
@@ -43,12 +43,12 @@
         type="text"
         :class="[
           {
-            '!border-primary !border-2': inFocusInput,
+            '!border-border-brand !border-2': inFocusInput,
             '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
           isRaised
             ? 'shadow-button shadow-button-elevated'
-            : 'border border-grey-outline',
+            : 'border border-border-strong',
           'grow focus:outline-none focus:ring-0 bg-white   text-normal rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="resolvedLabel"
@@ -63,14 +63,14 @@
           :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
-          class="text-primary"
+          class="text-text-brand"
         >
           <x-circle-icon class="w-6 h-6" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
-          class="text-primary"
+          class="text-text-brand"
         >
           <users-icon class="w-6 h-6" />
         </app-btn-icon>
@@ -85,8 +85,8 @@
             resolvedAddress !== ''
           "
           :class="{
-            'text-error': addressErrorMessages && !isPristine,
-            'text-info !text-s-11': resolvedAddress,
+            'text-text-error': addressErrorMessages && !isPristine,
+            'text-text-subtle !text-s-11': resolvedAddress,
           }"
           class="text-s-12 truncate"
         >

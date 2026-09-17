@@ -12,7 +12,7 @@
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
-          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-primary rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
+          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-background-brand rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
         >
           {{ unseenNotificationsCount }}
         </div>
@@ -50,7 +50,7 @@
 
               <span
                 v-if="unseenNotificationsCount > 0"
-                class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
+                class="bg-background-brand text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
               >
                 {{ unseenNotificationsCount }}
               </span>
@@ -80,7 +80,7 @@
                       : $t('notifications_module.pin')
                   "
                   @click="isPinned = !isPinned"
-                  class="text-primary"
+                  class="text-text-brand"
                 >
                   <img
                     :src="pinIcon"

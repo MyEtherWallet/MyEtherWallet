@@ -11,14 +11,18 @@
       <div class="flex items-center gap-3 min-w-[160px]">
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
-          :class="[!swapClaimed && !swapNoRewards ? 'bg-blue-10' : 'bg-grey-5']"
+          :class="[
+            !swapClaimed && !swapNoRewards
+              ? 'bg-background-brand-subtle'
+              : 'bg-background-default',
+          ]"
         >
           <icon-swap
             class="w-6 h-6"
             :class="[
               !swapClaimed && !swapNoRewards
-                ? ' text-primary'
-                : 'text-[#A5A5A5]',
+                ? ' text-text-brand'
+                : 'text-text-placeholder',
             ]"
           />
         </div>
@@ -34,25 +38,25 @@
           >
           <template v-if="!swapClaimed && !swapNoRewards">
             <div
-              class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
+              class="w-full h-1.5 bg-background-brand-subtle rounded-full overflow-hidden mt-1 flex"
             >
               <div
-                class="h-full bg-primary rounded-full transition-all"
+                class="h-full bg-background-brand rounded-full transition-all"
                 :style="{ width: `${swapRemainingPct}%` }"
               />
             </div>
-            <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
+            <p class="text-s-12 text-text-brand mt-0.5 leading-[18px]">
               <b>{{ swapRemainingCount ?? '—' }}/{{ swapTotal ?? '—' }}</b>
               {{ t('rewards.rewards_left_label') }}
             </p>
           </template>
           <p
             v-else-if="swapClaimed"
-            class="text-s-12 font-medium mt-0.5 text-success"
+            class="text-s-12 font-medium mt-0.5 text-text-success"
           >
             {{ t('rewards.reward_claimed') }}
           </p>
-          <p v-else class="text-s-12 font-medium mt-0.5 text-error">
+          <p v-else class="text-s-12 font-medium mt-0.5 text-text-error">
             {{ t('rewards.no_rewards_left') }}
           </p>
         </div>
@@ -68,7 +72,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-[6px] border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
@@ -100,16 +104,16 @@
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
             !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
-              ? 'bg-blue-10'
-              : 'bg-grey-5',
+              ? 'bg-background-brand-subtle'
+              : 'bg-background-default',
           ]"
         >
           <icon-trade
             class="w-6 h-6"
             :class="[
               !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
-                ? 'text-primary'
-                : 'text-[#A5A5A5]',
+                ? 'text-text-brand'
+                : 'text-text-placeholder',
             ]"
           />
         </div>
@@ -127,31 +131,31 @@
             v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
           >
             <div
-              class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
+              class="w-full h-1.5 bg-background-brand-subtle rounded-full overflow-hidden mt-1 flex"
             >
               <div
-                class="h-full bg-primary rounded-full transition-all"
+                class="h-full bg-background-brand rounded-full transition-all"
                 :style="{ width: `${tradeRemainingPct}%` }"
               />
             </div>
-            <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
+            <p class="text-s-12 text-text-brand mt-0.5 leading-[18px]">
               <b>{{ tradeRemainingCount ?? '—' }}/{{ tradeTotal ?? '—' }}</b>
               {{ t('rewards.rewards_left_label') }}
             </p>
           </template>
           <p
             v-else-if="tradeClaimed"
-            class="text-s-12 font-medium mt-0.5 text-success"
+            class="text-s-12 font-medium mt-0.5 text-text-success"
           >
             {{ t('rewards.reward_claimed') }}
           </p>
           <p
             v-else-if="tradeMarketClosed"
-            class="text-s-12 font-medium mt-0.5 text-error"
+            class="text-s-12 font-medium mt-0.5 text-text-error"
           >
             {{ t('rewards.market_is_closed') }}
           </p>
-          <p v-else class="text-s-12 font-medium mt-0.5 text-error">
+          <p v-else class="text-s-12 font-medium mt-0.5 text-text-error">
             {{ t('rewards.no_rewards_left') }}
           </p>
         </div>
@@ -167,7 +171,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-[6px] border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"

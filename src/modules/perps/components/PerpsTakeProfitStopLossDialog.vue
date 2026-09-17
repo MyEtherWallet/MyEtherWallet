@@ -23,7 +23,7 @@
             <span class="font-bold text-s-16">{{ displaySymbol }}</span>
           </div>
           <div class="text-right">
-            <span class="text-info text-s-14 mr-2">{{
+            <span class="text-text-subtle text-s-14 mr-2">{{
               $t('perps.auto-close.current-price')
             }}</span>
             <span class="font-bold text-s-16">{{
@@ -37,7 +37,7 @@
           <div
             v-if="hasTakeProfit"
             key="take-profit-input"
-            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
+            class="bg-background-brand-subtle rounded-20 px-4 py-3 sm:p-5"
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
@@ -48,7 +48,7 @@
                 }}
               </p>
               <app-btn-text
-                class="text-primary text-s-12 sm:text-s-14"
+                class="text-text-brand text-s-12 sm:text-s-14"
                 @click="removeTakeProfit"
               >
                 {{ $t('perps.auto-close.remove') }}
@@ -66,7 +66,9 @@
                     :key="pct"
                     class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
-                      activeTpPill === pct ? '!bg-mewBg text-primary' : ''
+                      activeTpPill === pct
+                        ? '!bg-background-brand-subtle text-text-brand'
+                        : ''
                     "
                     @click="$emit('setTakeProfitPct', pct)"
                   >
@@ -78,18 +80,18 @@
             <transition name="fade" mode="out-in">
               <div
                 v-if="takeProfitError"
-                class="text-error text-s-12 mt-1 pl-3"
+                class="text-text-error text-s-12 mt-1 pl-3"
               >
                 {{ takeProfitError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">{{
+              <span class="text-text-subtle">{{
                 $t('perps.auto-close.projected-profit')
               }}</span>
               <span
                 v-if="tempProjectedProfit !== null && takeProfitPrice !== null"
-                class="text-success ml-2 font-medium"
+                class="text-text-success ml-2 font-medium"
                 >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
               >
               <span v-else class="ml-2 font-medium"> - </span>
@@ -98,7 +100,7 @@
           <button
             v-else
             key="add-take-profit"
-            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
             @click="setTempTakeProfitPrice"
           >
             <plus-circle-icon
@@ -113,7 +115,7 @@
           <div
             v-if="hasStopLoss"
             key="stop-loss-input"
-            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
+            class="bg-background-brand-subtle rounded-20 px-4 py-3 sm:p-5"
           >
             <div class="flex justify-between items-center pl-3">
               <p class="text-s-12 sm:text-s-14 font-bold">
@@ -124,7 +126,7 @@
                 }}
               </p>
               <app-btn-text
-                class="text-primary text-s-12 sm:text-s-14"
+                class="text-text-brand text-s-12 sm:text-s-14"
                 @click="removeStopLoss"
               >
                 {{ $t('perps.auto-close.remove') }}
@@ -142,7 +144,9 @@
                     :key="pct"
                     class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
-                      activeSlPill === pct ? '!bg-mewBg text-primary' : ''
+                      activeSlPill === pct
+                        ? '!bg-background-brand-subtle text-text-brand'
+                        : ''
                     "
                     @click="$emit('setStopLossPct', pct)"
                   >
@@ -152,17 +156,20 @@
               </template>
             </perps-amount>
             <transition name="fade" mode="out-in">
-              <div v-if="stopLossError" class="text-error text-s-12 mt-1 pl-3">
+              <div
+                v-if="stopLossError"
+                class="text-text-error text-s-12 mt-1 pl-3"
+              >
                 {{ stopLossError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
-              <span class="text-info">{{
+              <span class="text-text-subtle">{{
                 $t('perps.auto-close.projected-loss')
               }}</span>
               <span
                 v-if="tempProjectedLoss !== null && stopLossPrice !== null"
-                class="text-error font-medium ml-2"
+                class="text-text-error font-medium ml-2"
                 >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
               >
               <span v-else class="ml-2 font-medium"> - </span>
@@ -171,7 +178,7 @@
           <button
             v-else
             key="add-stop-loss"
-            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
             @click="setTempStopLossPrice"
           >
             <plus-circle-icon

@@ -51,7 +51,7 @@
               />
             </div>
 
-            <div v-if="fileError.value" class="text-error mt-4">
+            <div v-if="fileError.value" class="text-text-error mt-4">
               {{ fileError.description }}
             </div>
           </div>

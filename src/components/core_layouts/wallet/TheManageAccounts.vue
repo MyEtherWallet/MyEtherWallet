@@ -52,16 +52,20 @@
             :inert="view !== 'accounts'"
             class="absolute inset-0 w-full h-full"
             :style="{
-              transform: view === 'accounts' ? 'translateX(0)' : `translateX(calc(-100% - ${GAP}px))`,
+              transform:
+                view === 'accounts'
+                  ? 'translateX(0)'
+                  : `translateX(calc(-100% - ${GAP}px))`,
               opacity: view === 'accounts' ? 1 : 0,
-              transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              transition:
+                'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
             }"
           >
             <div class="flex flex-col h-full">
               <!-- Section 1: network pill + active-account card -->
               <div class="shrink-0 p-4">
                 <div
-                  class="bg-surface-hover rounded-20 overflow-hidden transition-colors has-[[data-test=network-row]:hover]:bg-[#e6e6e6]"
+                  class="bg-background-default rounded-20 overflow-hidden transition-colors has-[[data-test=network-row]:hover]:bg-background-default-hover"
                 >
                   <button
                     data-test="network-row"
@@ -76,12 +80,17 @@
                         aria-hidden="true"
                         class="w-7 h-7 rounded-full object-contain flex-shrink-0"
                       />
-                      <div v-else class="w-7 h-7 rounded-full bg-white flex-shrink-0" />
+                      <div
+                        v-else
+                        class="w-7 h-7 rounded-full bg-white flex-shrink-0"
+                      />
                       <span class="text-s-14 font-semibold text-black truncate">
                         {{ chainsStore.selectedChain?.nameLong }}
                       </span>
                     </div>
-                    <chevron-right-icon class="w-6 h-6 text-black flex-shrink-0" />
+                    <chevron-right-icon
+                      class="w-6 h-6 text-black flex-shrink-0"
+                    />
                   </button>
                   <manage-accounts-card
                     v-if="activeAccount"
@@ -100,11 +109,15 @@
                   />
                   <!-- No connected address for the selected network: keep the popup
                        usable (pick another address below or switch network). -->
-                  <div v-else data-test="no-active-address" class="px-4 py-6 text-center">
+                  <div
+                    v-else
+                    data-test="no-active-address"
+                    class="px-4 py-6 text-center"
+                  >
                     <p class="text-s-16 font-semibold text-black">
                       {{ $t('multi_address.no_address_title') }}
                     </p>
-                    <p class="mt-1 text-s-14 text-[#575757]">
+                    <p class="mt-1 text-s-14 text-text-subtle">
                       {{ $t('multi_address.no_address_subtitle') }}
                     </p>
                   </div>
@@ -115,10 +128,12 @@
                     data-test="over-cap-note"
                     class="flex flex-col items-center gap-1 p-5 text-center"
                   >
-                    <p class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]">
+                    <p
+                      class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]"
+                    >
                       {{ $t('multi_address.cap_note_title') }}
                     </p>
-                    <p class="text-s-14 text-[#575757] leading-5">
+                    <p class="text-s-14 text-text-subtle leading-5">
                       {{ $t('multi_address.cap_note_description') }}
                     </p>
                   </div>
@@ -135,11 +150,16 @@
                         class="flex items-center justify-between w-full px-4 py-3 text-left"
                         @click="toggleGroup(group.type)"
                       >
-                        <span class="text-s-14 text-[#575757] leading-5">
-                          {{ $t('multi_address.saved_group', { type: group.label }) }} ({{ group.accounts.length }})
+                        <span class="text-s-14 text-text-subtle leading-5">
+                          {{
+                            $t('multi_address.saved_group', {
+                              type: group.label,
+                            })
+                          }}
+                          ({{ group.accounts.length }})
                         </span>
                         <chevron-down-icon
-                          class="w-5 h-5 text-[#575757] flex-shrink-0 transition-transform duration-200"
+                          class="w-5 h-5 text-text-subtle flex-shrink-0 transition-transform duration-200"
                           :class="{ 'rotate-180': !collapsed[group.type] }"
                         />
                       </button>
@@ -172,12 +192,20 @@
                       </expand-transition>
                     </div>
                   </template>
-                  <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
+                  <p v-else class="text-center text-text-subtle py-6">
+                    {{ $t('multi_address.empty') }}
+                  </p>
                   <div class="pb-10" />
                 </div>
                 <div
                   class="pointer-events-none absolute bottom-0 left-0 right-0 h-8"
-                  style="background: linear-gradient(180deg, rgba(245, 245, 245, 0.00) 0%, #F5F5F5 100%);"
+                  style="
+                    background: linear-gradient(
+                      180deg,
+                      rgba(245, 245, 245, 0) 0%,
+                      #f5f5f5 100%
+                    );
+                  "
                   aria-hidden="true"
                 />
               </div>
@@ -186,13 +214,26 @@
               <div class="shrink-0 p-4">
                 <!-- Hide the "save this address?" prompt at the cap: saving would
                      fail, so the prompt makes no sense there. -->
-                <div v-if="detectedAddress && !detectedIsSaved && !watchOnlyStore.isAtCap" class="mb-4 flex items-center gap-2 px-2">
+                <div
+                  v-if="
+                    detectedAddress &&
+                    !detectedIsSaved &&
+                    !watchOnlyStore.isAtCap
+                  "
+                  class="mb-4 flex items-center gap-2 px-2"
+                >
                   <div class="flex-1 min-w-0">
-                    <p class="text-s-12 text-[#575757] leading-[18px]">
-                      {{ $t('multi_address.detected_wallet', { wallet: detectedWalletName }) }}
+                    <p class="text-s-12 text-text-subtle leading-[18px]">
+                      {{
+                        $t('multi_address.detected_wallet', {
+                          wallet: detectedWalletName,
+                        })
+                      }}
                     </p>
                     <div class="flex items-center gap-1.5 min-w-0">
-                      <span class="text-s-16 font-semibold text-black leading-[22px] truncate">
+                      <span
+                        class="text-s-16 font-semibold text-black leading-[22px] truncate"
+                      >
                         {{ truncateAddress(detectedAddress, 6, 4) }}
                       </span>
                       <img
@@ -200,16 +241,20 @@
                         :src="detectedWalletIcon"
                         alt=""
                         aria-hidden="true"
-                        class="size-[22px] rounded-full object-contain bg-[#f5f5f5] p-[3px] shrink-0"
+                        class="size-[22px] rounded-full object-contain bg-background-default p-[3px] shrink-0"
                       />
                     </div>
-                    <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
+                    <p
+                      v-if="detectedMessage"
+                      data-test="detected-message"
+                      class="text-s-12 text-text-error mt-1"
+                    >
                       {{ detectedMessage }}
                     </p>
                   </div>
                   <button
                     data-test="save-detected"
-                    class="h-10 px-3 border-[1.5px] border-primary rounded-[24px] text-primary text-s-14 font-semibold shrink-0"
+                    class="h-10 px-3 border-[1.5px] border-border-brand rounded-[24px] text-text-brand text-s-14 font-semibold shrink-0"
                     @click="saveDetected"
                   >
                     {{ $t('multi_address.save_address') }}
@@ -218,7 +263,7 @@
 
                 <button
                   data-test="add-address"
-                  class="w-full h-12 rounded-24 bg-[#e6e6e6] flex items-center justify-center text-s-16 font-semibold text-black"
+                  class="w-full h-12 rounded-24 bg-background-default-hover flex items-center justify-center text-s-16 font-semibold text-black"
                   @click="onAdd"
                 >
                   {{ $t('multi_address.connect_another') }}
@@ -233,9 +278,13 @@
             :inert="view !== 'network'"
             class="absolute inset-0 w-full h-full"
             :style="{
-              transform: view === 'network' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+              transform:
+                view === 'network'
+                  ? 'translateX(0)'
+                  : `translateX(calc(100% + ${GAP}px))`,
               opacity: view === 'network' ? 1 : 0,
-              transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              transition:
+                'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
             }"
           >
             <manage-accounts-network-view
@@ -250,9 +299,13 @@
             :inert="view !== 'connect-address'"
             class="absolute inset-0 w-full h-full"
             :style="{
-              transform: view === 'connect-address' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+              transform:
+                view === 'connect-address'
+                  ? 'translateX(0)'
+                  : `translateX(calc(100% + ${GAP}px))`,
               opacity: view === 'connect-address' ? 1 : 0,
-              transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              transition:
+                'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
             }"
           >
             <manage-accounts-connect-address-view @back="view = 'accounts'" />
@@ -263,7 +316,10 @@
 
     <!-- Modals live outside the popup's v-if so they survive the popup closing
          (Paper wallet and Rename both close the popup before opening). -->
-    <the-paper-wallet v-model:is-open="openPaperWallet" :address="paperTarget?.address" />
+    <the-paper-wallet
+      v-model:is-open="openPaperWallet"
+      :address="paperTarget?.address"
+    />
     <manage-accounts-rename-modal
       v-model:is-open="renameOpen"
       :current-name="renameTarget?.addressName"
@@ -278,7 +334,14 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onUnmounted, type CSSProperties } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onUnmounted,
+  type CSSProperties,
+} from 'vue'
 import { onClickOutside, useWindowSize, useIntervalFn } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -388,7 +451,9 @@ watch(openDialog, val => {
 
 const watchOnlyStore = useWatchOnlyStore()
 const { refreshDetectedAddress } = useDetectedAddress()
-const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
+const activeAccount = computed<SavedAccount | null>(
+  () => watchOnlyStore.activeAccount,
+)
 // All saved addresses across chain types (insertion order preserved per bucket).
 // The template splits them into collapsible per-chain-type groups; see `groups`.
 const allAccounts = computed<SavedAccount[]>(() => watchOnlyStore.allAccounts)
@@ -481,7 +546,8 @@ const groups = computed<AccountGroup[]>(() => {
     arr.push(acc)
     buckets.set(acc.chainType, arr)
   }
-  const order = activeType === 'BITCOIN' ? ['BITCOIN', 'EVM'] : ['EVM', 'BITCOIN']
+  const order =
+    activeType === 'BITCOIN' ? ['BITCOIN', 'EVM'] : ['EVM', 'BITCOIN']
   return order
     .filter(type => (buckets.get(type)?.length ?? 0) > 0)
     .map(type => ({
@@ -738,7 +804,11 @@ const onRenameSave = (name: string): void => {
 // this name (the current account is excluded so a no-op rename is allowed).
 const isRenameNameTaken = (name: string): boolean =>
   renameTarget.value
-    ? !isNameUnique(watchOnlyStore.watchOnlyAddresses, name, renameTarget.value.id)
+    ? !isNameUnique(
+        watchOnlyStore.watchOnlyAddresses,
+        name,
+        renameTarget.value.id,
+      )
     : false
 // Paper wallet opens a modal (same as the home wallet card) for the chosen
 // account's address; close the popup first.
@@ -787,7 +857,10 @@ const refresh = (acc: SavedAccount): void => {
   })
 }
 const openExplorer = (acc: SavedAccount): void => {
-  const url = chainsStore.selectedChain?.blockExplorerAddr?.replace('[[address]]', acc.address)
+  const url = chainsStore.selectedChain?.blockExplorerAddr?.replace(
+    '[[address]]',
+    acc.address,
+  )
   if (url) window.open(url, '_blank')
   openDialog.value = false
 }
@@ -808,7 +881,9 @@ const saveDetected = (): void => {
   )
   if (!res.added) {
     detectedMessage.value =
-      res.reason === 'cap' ? t('multi_address.cap_reached') : t('multi_address.duplicate_address')
+      res.reason === 'cap'
+        ? t('multi_address.cap_reached')
+        : t('multi_address.duplicate_address')
     return
   }
   detectedMessage.value = ''
@@ -823,15 +898,23 @@ const saveDetected = (): void => {
   walletStore.clearDetectedAddress()
 }
 
-watch(detectedAddress, () => { detectedMessage.value = '' })
+watch(detectedAddress, () => {
+  detectedMessage.value = ''
+})
 
 const anchorRef = computed(() => props.anchor ?? null)
 // Ignore the trigger anchor and any teleported account menu (rendered at body
 // level, outside popupRef) — otherwise clicking a menu item counts as an outside
 // click and closes the popup regardless of the item's own handler.
-onClickOutside(popupRef, () => { openDialog.value = false }, {
-  ignore: [anchorRef, '.app-popup-menu-floating'],
-})
+onClickOutside(
+  popupRef,
+  () => {
+    openDialog.value = false
+  },
+  {
+    ignore: [anchorRef, '.app-popup-menu-floating'],
+  },
+)
 </script>
 
 <style scoped>

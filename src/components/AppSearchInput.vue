@@ -4,7 +4,7 @@
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
-        inFocusInput ? 'text-primary' : 'text-info',
+        inFocusInput ? 'text-text-brand' : 'text-text-subtle',
       ]"
       @click="searchInput?.focus()"
     />
@@ -38,7 +38,10 @@
         :label="$t('common.clear_icon')"
       >
         <x-circle-icon
-          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
+          :class="[
+            'text-text-brand',
+            size === 'compact' ? 'w-5 h-5' : 'w-6 h-6',
+          ]"
       /></app-btn-icon>
     </div>
   </div>

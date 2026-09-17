@@ -35,33 +35,163 @@
   --line-height-p-150: 150%;
   --line-height-p-160: 160%;
 
-  --color-app-background: #f5f5f7;
-  --color-primary: rgb(0, 90, 229);
-  --color-info: rgba(0, 0, 0, 0.65);
-  --color-grey-5: rgba(0, 0, 0, 0.05);
-  --color-grey-10: rgba(0, 0, 0, 0.1);
-  --color-grey-outline: rgba(188, 200, 204, 1);
-  --color-mew-bg: rgba(53, 94, 236, 0.1);
+  /* ------------------------------------------------------------------ *
+   * SEMANTIC COLOR TOKENS
+   * Source of truth: Figma "MEW Web App - Design Library" - page
+   * "Colors" > section "Color tokens" (node 25:126).
+   * Names mirror the Figma variable paths 1:1, so `background/default`
+   * becomes `--color-background-default` -> `bg-background-default`.
+   * Trailing comment on each line is the Figma primitive it aliases.
+   * Only these semantic tokens are meant to be used in markup; the raw
+   * primitive scales are deliberately not exposed as utilities.
+   * ------------------------------------------------------------------ */
 
-  /* Avatar (design library). Alpha-based fallback survives a future dark theme. */
+  /* background - neutral surfaces */
+  --color-background-default: #f5f5f5; /* neutral/100 */
+  --color-background-default-hover: #e6e6e6; /* neutral/200 */
+  --color-background-default-pressed: #d6d6d6; /* neutral/300 */
+  --color-background-default-selected: #dedede; /* neutral/250 */
+  --color-background-alternative: #ffffff; /* neutral/white */
+  --color-background-alternative-hover: #ededed; /* neutral/150 */
+  --color-background-alternative-pressed: #e6e6e6; /* neutral/200 */
+  --color-background-alternative-selected: #ededed; /* neutral/150 */
+  --color-background-toggle: #d6d6d6; /* neutral/300 */
+  --color-background-formfield: #f5f5f5; /* neutral/100 */
+  --color-background-formfield-hover: #e6e6e6; /* neutral/200 */
+  --color-background-skeleton: #e6e6e6; /* neutral/200 */
+  --color-background-disabled: #f5f5f5; /* neutral/100 */
+
+  /* background - contrast */
+  --color-background-contrast-default: #222222; /* neutral/800 solid */
+  --color-background-contrast-hover: #333333; /* neutral/750 solid */
+  --color-background-contrast-pressed: #4d4d4d; /* neutral/650 solid */
+  --color-background-contrast-disabled: #1a1a1a; /* neutral/900 solid */
+
+  /* background - brand */
+  --color-background-brand: #005ae5; /* brand/700 */
+  --color-background-brand-hover: #084dc5; /* brand/800 */
+  --color-background-brand-pressed: #0d449b; /* brand/900 */
+  --color-background-brand-disabled: #b5deff; /* brand/200 */
+  --color-background-brand-subtle: #edf2f7; /* brand/75 */
+  --color-background-brand-subtle-hover: #d6edff; /* brand/100 */
+  --color-background-brand-subtle-pressed: #b5deff; /* brand/200 */
+  --color-background-loading-track: #b5deff; /* brand/200 */
+
+  /* background - status */
+  --color-background-error: #e40c58; /* red/600 */
+  --color-background-error-hover: #cc0452; /* red/700 */
+  --color-background-error-pressed: #ab064c; /* red/800 */
+  --color-background-error-subtle: #f7edf1; /* red/75 */
+  --color-background-error-subtle-hover: #ffdbe3; /* red/100 */
+  --color-background-error-subtle-pressed: #ffc2d3; /* red/200 */
+  --color-background-loading-track-danger: #ff5789; /* red/400 */
+  --color-background-success: #01a08c; /* green/600 */
+  --color-background-success-subtle: #cdf2ed; /* green/125 */
+  --color-background-success-subtle-hover: #b4ece4; /* green/150 */
+  --color-background-warning: #e27d00; /* orange/600 */
+  --color-background-warning-subtle: #f7f4ed; /* orange/75 */
+  --color-background-warning-subtle-hover: #ffedc5; /* orange/100 */
+  --color-background-info: #1a1a1a; /* neutral/900 */
+  --color-background-info-subtle: #edf2f7; /* brand/75 */
+
+  /* background - overlay */
+  --color-background-overlay-subtle: rgba(0, 0, 0, 0.2); /* neutral/black 20% */
+  --color-background-overlay-inverted: rgba(
+    255,
+    255,
+    255,
+    0.4
+  ); /* neutral/white 40% */
+
+  /* background - decorative (category / illustration only, never status) */
+  --color-background-decorative-blue: #1e91ff; /* brand/500 */
+  --color-background-decorative-blue-strong: #005ae5; /* brand/700 */
+  --color-background-decorative-purple: #684cff; /* purple/500 */
+  --color-background-decorative-purple-strong: #4d1ee3; /* purple/700 */
+  --color-background-decorative-violet: #c16cff; /* violet/400 */
+  --color-background-decorative-violet-strong: #9d00ff; /* violet/700 */
+  --color-background-decorative-pink: #f31b6f; /* red/500 */
+  --color-background-decorative-pink-strong: #cc0452; /* red/700 */
+  --color-background-decorative-orange: #ffa500; /* orange/500 */
+  --color-background-decorative-orange-strong: #e27d00; /* orange/600 */
+  --color-background-decorative-green: #01a08c; /* green/600 */
+  --color-background-decorative-green-strong: #067f71; /* green/700 */
+  --color-background-decorative-neutral: #767676; /* neutral/500 */
+
+  /* text */
+  --color-text-default: #000000; /* neutral/black */
+  --color-text-subtle: #575757; /* neutral/600 */
+  --color-text-muted: #767676; /* neutral/500 */
+  --color-text-placeholder: #a5a5a5; /* neutral/400 */
+  --color-text-disabled: #a5a5a5; /* neutral/400 */
+  --color-text-inverted: #ffffff; /* neutral/white */
+  --color-text-inverted-subtle: #b3b3b3; /* neutral/375 */
+  --color-text-brand: #005ae5; /* brand/700 */
+  --color-text-brand-hover: #084dc5; /* brand/800 */
+  --color-text-brand-pressed: #0d449b; /* brand/900 */
+  --color-text-error: #e40c58; /* red/600 */
+  --color-text-success: #01a08c; /* green/600 */
+  --color-text-warning: #e27d00; /* orange/600 */
+  --color-text-info: #005ae5; /* brand/700 */
+  --color-text-on-brand: #ffffff; /* neutral/white */
+  --color-text-on-error: #ffffff; /* neutral/white */
+  --color-text-on-success: #ffffff; /* neutral/white */
+  --color-text-on-warning: #000000; /* neutral/black */
+
+  /* icon */
+  --color-icon-default: #000000; /* neutral/black */
+  --color-icon-subtle: #767676; /* neutral/500 */
+  --color-icon-disabled: #a5a5a5; /* neutral/400 */
+  --color-icon-inverted: #ffffff; /* neutral/white */
+  --color-icon-brand: #005ae5; /* brand/700 */
+  --color-icon-error: #e40c58; /* red/600 */
+  --color-icon-success: #01a08c; /* green/600 */
+  --color-icon-warning: #e27d00; /* orange/600 */
+
+  /* border */
+  --color-border-subtle: #f5f5f5; /* neutral/100 */
+  --color-border-default: #e6e6e6; /* neutral/200 */
+  --color-border-strong: #d6d6d6; /* neutral/300 */
+  --color-border-hover: #a5a5a5; /* neutral/400 */
+  --color-border-pressed: #767676; /* neutral/500 */
+  --color-border-selected: #000000; /* neutral/black */
+  --color-border-focus: #0675ff; /* brand/600 */
+  --color-border-brand: #005ae5; /* brand/700 */
+  --color-border-error: #e40c58; /* red/600 */
+  --color-border-error-subtle: #ffc2d3; /* red/200 */
+  --color-border-success: #01a08c; /* green/600 */
+  --color-border-warning: #e27d00; /* orange/600 */
+  --color-border-disabled: #e6e6e6; /* neutral/200 */
+  --color-border-inverted: #333333; /* neutral/750 */
+  --color-transparent-brand: rgba(
+    6,
+    117,
+    255,
+    0.3
+  ); /* brand/600 30% - focus ring halo */
+
+  /* Avatar (design library) - keeps its own alpha fallback, which has no
+     semantic equivalent in Figma. */
   --color-avatar-fallback: rgba(177, 179, 178, 0.3);
-  --color-avatar-initial-bg: #edf2f7;
-  --color-avatar-badge-icon-bg: #e6e6e6;
-  --color-avatar-card-border: #e6e6e6;
 }
 
 /**
  * VARIABLES
  */
 :root {
-  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    'DM Sans',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --borderRadius: 5px;
   min-width: 320px;
   zoom: 1;
-  background-color: #f5f5f7;
-  color: rgba(0, 0, 0, 1);
+  background-color: var(--color-background-default);
+  color: var(--color-text-default);
   box-sizing: border-box;
 }
 
@@ -185,7 +315,7 @@
 }
 
 .hoverNoBG {
-  @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
+  @apply hover:bg-background-default-hover transition-colors duration-300 ease-in-out;
 }
 
 .hoverOnDarkBG {
@@ -193,7 +323,7 @@
 }
 
 .hoverBGWhite {
-  @apply hover:bg-grey-light transition-all duration-300 ease-in;
+  @apply hover:bg-background-default-hover transition-all duration-300 ease-in;
 }
 
 /**
@@ -322,7 +452,7 @@ html {
 .mew-scrollbar {
   scrollbar-width: thin !important;
   /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent !important;
+  scrollbar-color: var(--color-background-overlay-subtle) transparent !important;
   -ms-overflow-style: auto !important;
   /* IE and Edge */
 }
@@ -337,7 +467,7 @@ html {
 }
 
 .mew-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2) !important;
+  background-color: var(--color-background-overlay-subtle) !important;
   border-radius: 10px !important;
   border: 4px solid transparent !important;
   background-clip: content-box !important;

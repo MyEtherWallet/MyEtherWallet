@@ -6,13 +6,13 @@ const props = defineProps<{
   type: AvatarStatus
 }>()
 
-// Semantic theme tokens (tailwind.config.js). `muted` reuses grey-subtle — no
+// Semantic theme tokens (main.css @theme). `muted` reuses decorative-neutral — no
 // dedicated status-muted token exists.
 const COLOR: Record<AvatarStatus, string> = {
-  error: 'bg-error',
-  warning: 'bg-warning',
-  success: 'bg-success',
-  muted: 'bg-grey-subtle',
+  error: 'bg-background-error',
+  warning: 'bg-background-warning',
+  success: 'bg-background-success',
+  muted: 'bg-background-decorative-neutral',
 }
 
 const colorClass = computed(() => COLOR[props.type])

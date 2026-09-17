@@ -120,7 +120,7 @@ const SAMPLE = {
     <!-- Badge × Size: the network/icon badge scales per avatar size; status is fixed 8px -->
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Badge × Size</h2>
-      <p class="text-s-12 text-info">
+      <p class="text-s-12 text-text-subtle">
         Network / Icon badge: 12 · 14 · 18 · 20 · 22 (xs→xl). Status: 8 fixed.
       </p>
       <div class="overflow-x-auto">
@@ -246,7 +246,7 @@ const SAMPLE = {
         <div class="bg-white p-4 rounded-16">
           <AppAvatar type="network" size="xl" />
         </div>
-        <div class="bg-app-background p-4 rounded-16">
+        <div class="bg-background-default p-4 rounded-16">
           <AppAvatar type="network" size="xl" />
         </div>
         <div class="bg-white p-4 rounded-16">

@@ -15,7 +15,7 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
       <h1 class="text-s-24 font-bold">Tooltip</h1>
-      <p class="text-s-14 text-info">
+      <p class="text-s-14 text-text-subtle">
         Small contextual overlay shown on hover or focus. Hover or Tab to a
         trigger to show its tooltip.
       </p>
@@ -23,7 +23,9 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
 
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Placements</h2>
-      <div class="flex flex-wrap gap-10 rounded-12 border border-grey-10 p-16">
+      <div
+        class="flex flex-wrap gap-10 rounded-12 border border-border-default p-16"
+      >
         <AppTooltip
           v-for="p in PLACEMENTS"
           :key="p"
@@ -37,7 +39,9 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
 
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Content</h2>
-      <div class="flex flex-wrap gap-10 rounded-12 border border-grey-10 p-16">
+      <div
+        class="flex flex-wrap gap-10 rounded-12 border border-border-default p-16"
+      >
         <AppTooltip text="Text only">
           <AppChip variant="surface" label="Text" />
         </AppTooltip>
@@ -68,7 +72,9 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
       <h2 class="text-s-16 font-semibold">
         Auto-flip (resize or scroll so a trigger nears an edge)
       </h2>
-      <div class="flex justify-between rounded-12 border border-grey-10 p-4">
+      <div
+        class="flex justify-between rounded-12 border border-border-default p-4"
+      >
         <AppTooltip placement="left" text="Flips to the right near the edge">
           <AppChip variant="surface" label="Left" />
         </AppTooltip>

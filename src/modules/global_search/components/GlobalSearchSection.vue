@@ -5,7 +5,7 @@
         {{ title }}
       </span>
       <span class="text-s-14 text-black">·</span>
-      <span class="text-s-14 text-grey-subtle">{{ subtitle }}</span>
+      <span class="text-s-14 text-text-placeholder">{{ subtitle }}</span>
     </div>
 
     <div v-if="items.length === 0 && isLoading">
@@ -14,14 +14,14 @@
         :key="`skeleton-${i}`"
         class="flex items-center gap-3 px-3 py-2"
       >
-        <div class="w-8 h-8 rounded-full bg-surface-hover animate-pulse" />
+        <div class="w-8 h-8 rounded-full bg-background-default animate-pulse" />
         <div class="flex-1 flex flex-col gap-1">
-          <div class="h-3 w-20 rounded bg-surface-hover animate-pulse" />
-          <div class="h-2 w-28 rounded bg-surface-hover animate-pulse" />
+          <div class="h-3 w-20 rounded bg-background-default animate-pulse" />
+          <div class="h-2 w-28 rounded bg-background-default animate-pulse" />
         </div>
         <div class="flex flex-col items-end gap-1">
-          <div class="h-3 w-14 rounded bg-surface-hover animate-pulse" />
-          <div class="h-2 w-10 rounded bg-surface-hover animate-pulse" />
+          <div class="h-3 w-14 rounded bg-background-default animate-pulse" />
+          <div class="h-2 w-10 rounded bg-background-default animate-pulse" />
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
       class="flex items-center justify-center gap-5 w-full px-3 pb-2"
       @click="$emit('toggle-expand')"
     >
-      <div class="flex-1 h-px bg-grey-5" />
+      <div class="flex-1 h-px bg-background-default" />
       <div class="flex items-center gap-1 shrink-0">
         <span class="text-s-12 font-semibold text-black tracking-tight">
           {{ expanded ? $t('search.show_less') : $t('search.show_more') }}
@@ -50,7 +50,7 @@
           :class="{ 'rotate-180': expanded }"
         />
       </div>
-      <div class="flex-1 h-px bg-grey-5" />
+      <div class="flex-1 h-px bg-background-default" />
     </button>
   </div>
 </template>

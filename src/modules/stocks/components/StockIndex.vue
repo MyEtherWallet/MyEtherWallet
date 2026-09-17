@@ -7,10 +7,10 @@
       class="text-s-9 md:text-s-11 font-semibold leading-p-150 text-nowrap"
       :class="{
         'text-black': !stockIndex.priceChangePercentage24h,
-        'text-error':
+        'text-text-error':
           stockIndex.priceChangePercentage24h &&
           stockIndex.priceChangePercentage24h < 0,
-        'text-success':
+        'text-text-success':
           stockIndex.priceChangePercentage24h &&
           stockIndex.priceChangePercentage24h >= 0,
       }"
