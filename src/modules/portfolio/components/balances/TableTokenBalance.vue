@@ -985,6 +985,10 @@ const tokens = computed<DisplayToken[]>(() => {
             price_change_percentage_24h: token.priceChangePercentage24h || 0,
             sparkline_in_7d: token.sparklineIn7d || [],
             logo_url: token.logoUrl || '',
+            // Watchlist tokens return ondo: null for non-stocks. Downstream
+            // stock checks use `ondo !== undefined`, so keep null out or they
+            // treat it as a stock and read primaryMarket off null.
+            ondo: token.ondo ?? undefined,
           } as DisplayToken
         }) || []
 
