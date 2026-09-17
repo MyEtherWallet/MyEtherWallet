@@ -111,9 +111,13 @@ const remove = (row: WatchlistRow) => {
   }
 }
 
-const trade = (row: WatchlistRow) => {
+const actionCall = (row: WatchlistRow) => {
   walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
-  walletMenu.setWalletPanel('trade')
+  if (row.removeType === 'crypto') {
+    walletMenu.setWalletPanel('swap')
+  } else {
+    walletMenu.setWalletPanel('trade')
+  }
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
 }
 </script>
@@ -254,7 +258,9 @@ const trade = (row: WatchlistRow) => {
                star). Hidden entirely while filtering. -->
           <span
             class="drag-handle flex w-4 shrink-0 items-center justify-center min-[780px]:hidden"
-            :class="dragDisabled ? 'invisible' : 'cursor-grab active:cursor-grabbing'"
+            :class="
+              dragDisabled ? 'invisible' : 'cursor-grab active:cursor-grabbing'
+            "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
             <Bars2Icon class="size-4 text-[#a5a5a5]" />
@@ -371,7 +377,9 @@ const trade = (row: WatchlistRow) => {
 
           <!-- Price — carries the 24h change inline below 1280px (no separate
                change column there); right-aligned on mobile per Figma. -->
-          <div class="flex w-[100px] flex-col items-end min-[780px]:items-start">
+          <div
+            class="flex w-[100px] flex-col items-end min-[780px]:items-start"
+          >
             <span
               v-if="row.loading"
               class="inline-block h-4 w-12 animate-pulse rounded bg-[#f0f0f0]"
@@ -392,9 +400,7 @@ const trade = (row: WatchlistRow) => {
           </div>
 
           <!-- Actions: a Trade/Swap button (≥780px), a kebab menu below. -->
-          <div
-            class="flex w-8 shrink-0 justify-end min-[780px]:w-[96px]"
-          >
+          <div class="flex w-8 shrink-0 justify-end min-[780px]:w-[96px]">
             <span
               v-if="row.loading"
               class="h-9 w-8 animate-pulse rounded-full bg-[#f0f0f0] min-[780px]:w-[96px]"
@@ -404,7 +410,7 @@ const trade = (row: WatchlistRow) => {
                 type="button"
                 data-test="watchlist-trade"
                 class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary min-[780px]:block"
-                @click="trade(row)"
+                @click="actionCall(row)"
               >
                 {{ t(actionKey(row)) }}
               </button>
@@ -414,7 +420,9 @@ const trade = (row: WatchlistRow) => {
                   data-test="watchlist-menu"
                   :aria-label="t('homePage.hero.watchlist.table.moreActions')"
                   class="hoverNoBG flex size-8 items-center justify-center rounded-full text-[#575757]"
-                  @click="openMenuKey = openMenuKey === row.key ? null : row.key"
+                  @click="
+                    openMenuKey = openMenuKey === row.key ? null : row.key
+                  "
                 >
                   <EllipsisHorizontalIcon class="size-5" />
                 </button>
@@ -433,8 +441,10 @@ const trade = (row: WatchlistRow) => {
                         data-test="watchlist-menu-trade"
                         class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-black"
                         @click="
-                          trade(row);
-                          openMenuKey = null;
+                          () => {
+                            actionCall(row)
+                            openMenuKey = null
+                          }
                         "
                       >
                         {{ t(actionKey(row)) }}
@@ -445,8 +455,10 @@ const trade = (row: WatchlistRow) => {
                         type="button"
                         class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-error"
                         @click="
-                          remove(row);
-                          openMenuKey = null;
+                          () => {
+                            remove(row)
+                            openMenuKey = null
+                          }
                         "
                       >
                         {{ t('homePage.hero.watchlist.table.removeShort') }}
@@ -470,7 +482,9 @@ const trade = (row: WatchlistRow) => {
         class="hoverNoBG rounded-full px-3 py-1 text-s-16 font-semibold text-black"
         @click="expanded = true"
       >
-        {{ t('homePage.hero.watchlist.table.showMore', { count: hiddenCount }) }}
+        {{
+          t('homePage.hero.watchlist.table.showMore', { count: hiddenCount })
+        }}
       </button>
       <span class="h-px flex-1 bg-grey-outline/40" aria-hidden="true" />
     </div>

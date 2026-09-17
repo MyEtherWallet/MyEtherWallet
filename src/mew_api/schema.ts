@@ -324,6 +324,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/watchlist/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebWatchlistAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/watchlist/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebWatchlistCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/pages/stocks/table": {
         parameters: {
             query?: never;
@@ -1722,6 +1754,34 @@ export interface components {
                 chains: components["schemas"]["OndoChain"][];
             }[];
         };
+        /** @enum {string} */
+        WatchlistAssetType: "STOCK" | "CRYPTO";
+        GetWebWatchlistAssetsResponse: {
+            /**
+             * @description Opaque identifier, namespaced by type. Stock ids carry the primary market symbol, crypto ids the CoinGecko coin id.
+             * @example CRYPTO:bitcoin
+             */
+            id: string;
+            type: components["schemas"]["WatchlistAssetType"];
+            symbol: string;
+            /** @description Null when the source does not publish one. */
+            name?: string | null;
+            iconUrl?: string | null;
+        }[];
+        GetWebWatchlistCategoriesResponse: {
+            /**
+             * @description Opaque identifier to pass back to /v1/web/watchlist/assets. Namespaced by type, because stock and crypto categories come from different systems and their raw ids can collide.
+             * @example crypto:meme-token
+             */
+            id: string;
+            type: components["schemas"]["WatchlistAssetType"];
+            /** @description Display name. Null when the upstream name is unknown. */
+            label: string | null;
+            marketCap?: number | null;
+            volume24h?: number | null;
+            /** @description Assets in the category, when known. */
+            assetCount?: number | null;
+        }[];
         GetWebStocksTableResponse: {
             page: number;
             pages: number;
@@ -2783,6 +2843,22 @@ export interface components {
                 "application/json": components["schemas"]["GetWebStocksOverviewResponse"];
             };
         };
+        GetWebWatchlistAssetsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebWatchlistAssetsResponse"];
+            };
+        };
+        GetWebWatchlistCategoriesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebWatchlistCategoriesResponse"];
+            };
+        };
         GetWebStocksTableSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -3294,6 +3370,10 @@ export interface components {
         WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
         WebStocksTableSort: components["schemas"]["WebStocksTableSort"];
         WebStocksWatchlistSort: components["schemas"]["WebStocksWatchlistSort"];
+        /** @description Comma separated category ids from /v1/web/watchlist/categories. Assets in any of them are returned. Omit to return every asset, which is what the wizard shows before anything is picked. */
+        WatchlistCategories: string;
+        /** @description Comma separated asset types to include, matching the user's step 1 selection. Omit to include every type. */
+        WatchlistAssetTypes: string;
         WebStocksTableCategory: components["schemas"]["WebStocksTableCategory"];
         WebTokensWatchlistSort: components["schemas"]["WebTokensWatchlistSort"];
         ChainNames: string;
@@ -3641,6 +3721,37 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebStocksOverviewSuccess"];
+        };
+    };
+    GetWebWatchlistAssets: {
+        parameters: {
+            query?: {
+                /** @description Comma separated category ids from /v1/web/watchlist/categories. Assets in any of them are returned. Omit to return every asset, which is what the wizard shows before anything is picked. */
+                categories?: components["parameters"]["WatchlistCategories"];
+                search?: components["parameters"]["Search"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebWatchlistAssetsSuccess"];
+        };
+    };
+    GetWebWatchlistCategories: {
+        parameters: {
+            query?: {
+                /** @description Comma separated asset types to include, matching the user's step 1 selection. Omit to include every type. */
+                types?: components["parameters"]["WatchlistAssetTypes"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebWatchlistCategoriesSuccess"];
         };
     };
     GetWebStocksTable: {

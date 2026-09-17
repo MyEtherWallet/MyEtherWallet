@@ -324,9 +324,7 @@
               :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               {{
-                token.market_cap
-                  ? formatFiat(token.market_cap).display
-                  : '-'
+                token.market_cap ? formatFiat(token.market_cap).display : '-'
               }}
             </td>
             <!-- Price -->
@@ -1122,7 +1120,7 @@ const getCurrentViewableItemsIndex = computed(() =>
 // A token has a "primary" action (trade / swap) in the desktop actions cell.
 // Used so a lone button spans the full actions width and rows stay aligned.
 const hasPrimaryAction = (token: DisplayToken): boolean =>
-  token.ondo !== undefined || currentChainhasSwapSupport.value
+  !!token.ondo || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'balance_table',
@@ -1134,7 +1132,7 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
 }
 
 const getTokenRoute = (token: DisplayToken) => {
-  if (token.ondo !== undefined) {
+  if (token.ondo) {
     return {
       name: STOCK_INFO_ROUTE_NAMES.home,
       params: { symbol: token.ondo.primaryMarket.symbol },
@@ -1147,7 +1145,7 @@ const getTokenRoute = (token: DisplayToken) => {
 }
 
 const onTokenLinkClick = (token: DisplayToken) => {
-  if (token.ondo === undefined) {
+  if (!token.ondo) {
     tokenInfoStore.setTokenInfo(token)
   }
 }
@@ -1162,7 +1160,7 @@ const getWatchlistId = (token: DisplayToken): string => {
 }
 
 const isTokenStock = (token: DisplayToken): boolean => {
-  return token.ondo !== undefined && !!token.ondo?.primaryMarket?.symbol
+  return !!token.ondo?.primaryMarket?.symbol
 }
 
 const setWatchlistToken = (token: DisplayToken) => {
