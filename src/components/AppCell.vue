@@ -40,7 +40,7 @@
           class="absolute"
           :style="selectedBadgeStyle"
         >
-          <AppAvatarBadge type="icon" class="!bg-bgContrast !text-white">
+          <AppAvatarBadge type="icon" tone="contrast">
             <CheckIcon />
           </AppAvatarBadge>
         </span>

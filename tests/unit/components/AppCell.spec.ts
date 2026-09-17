@@ -118,7 +118,7 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     const { badgeBox } = AVATAR_SIZES[CELL_SIZE_SPEC.medium.avatar]
     expect(badge.attributes('style')).toContain(`width: ${badgeBox}px`)
     expect(badge.find('svg').exists()).toBe(true)
-    expect(badge.find('.\\!bg-bgContrast').exists()).toBe(true)
+    expect(badge.find('.bg-bgContrast').exists()).toBe(true)
   })
 
   it('renders no selected badge without selection or without an avatar', () => {
