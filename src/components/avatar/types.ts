@@ -20,6 +20,9 @@ export type AvatarSize = 'xs' | 's' | 'm' | 'l' | 'xl'
 
 export type AvatarBadgeType = 'network' | 'icon' | 'status'
 
+/** Icon badge fill: grey by default; `contrast` is the dark (#222) selected check. */
+export type AvatarBadgeTone = 'default' | 'contrast'
+
 /** Status-dot colors — mapped to the theme's semantic tokens in AvatarStatusDot. */
 export type AvatarStatus = 'error' | 'warning' | 'success' | 'muted'
 

@@ -47,6 +47,18 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'cell',
+              name: 'DevCellPreview',
+              component: () => import('@/views/ViewCellPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'chip',
+              name: 'DevChip',
+              component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'content-group',
               name: 'DevContentGroup',
               component: () => import('@/views/ViewContentGroupShowcase.vue'),
@@ -62,12 +74,6 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'chip',
-              name: 'DevChip',
-              component: () => import('@/views/ViewChipShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

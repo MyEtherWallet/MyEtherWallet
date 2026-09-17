@@ -5,6 +5,7 @@
 // registered in production builds — see routesDefault.ts.
 const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Avatar', to: '/dev/avatar' },
+  { name: 'Cell', to: '/dev/cell' },
   { name: 'Chip', to: '/dev/chip' },
   { name: 'Content Group', to: '/dev/content-group' },
   { name: 'Input', to: '/dev/input' },

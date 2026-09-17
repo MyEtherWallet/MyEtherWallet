@@ -110,7 +110,7 @@ const descriptionClass = computed(() => [
           class="truncate min-w-0"
           :class="titleClass"
         >
-          {{ title }}
+          <slot name="title">{{ title }}</slot>
         </span>
       </div>
 

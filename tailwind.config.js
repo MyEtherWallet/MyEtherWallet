@@ -42,6 +42,9 @@ export default {
       // background/default-hover / -pressed).
       'bgBase-hover': '#e6e6e6',
       'bgBase-pressed': '#d6d6d6',
+      'bgSurface-hover': '#ededed',
+      'bgSurface-pressed': '#e6e6e6',
+      bgContrast: '#222222',
       // Design-library Tooltip bubble (Figma background/info, solid — the
       // translucent `info` token would let the page bleed through).
       'tooltip-bg': '#1a1a1a',
@@ -164,6 +167,19 @@ export default {
         // This adds the gradient as a reusable background utility
         'stock-gradient':
           'linear-gradient(270deg, #40E0D0 0%, #55DAA2 6.6%, #7ED06D 16.83%, #AAC137 25%, #D5AB00 35.58%, #FF8C00 43.75%, #FF8C00 55.77%, #FF7526 77.4%, #FF5D3D 100%)',
+        'shimmer-bar':
+          'linear-gradient(-77deg, rgba(127,129,127,0.12) 0%, rgba(127,129,127,0.25) 33.5%, rgba(127,129,127,0.25) 65%, rgba(127,129,127,0.12) 99.5%)',
+        'shimmer-circle':
+          'linear-gradient(-88deg, rgba(127,129,127,0.12) 0%, rgba(127,129,127,0.25) 33.5%, rgba(127,129,127,0.25) 65%, rgba(127,129,127,0.12) 99.5%)',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 1.5s ease-in-out infinite',
       },
     },
   },

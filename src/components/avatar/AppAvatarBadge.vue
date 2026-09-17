@@ -2,6 +2,7 @@
 import AvatarStatusDot from './AvatarStatusDot.vue'
 import {
   STATUS_BADGE_BOX,
+  type AvatarBadgeTone,
   type AvatarBadgeType,
   type AvatarStatus,
 } from './types'
@@ -12,10 +13,19 @@ import {
 //   Status  — a fixed 8px white dot-holder (top-right), same at every size.
 // The parent (AppAvatar) sizes + positions the wrapper from the size table;
 // Network / Icon fill it, Status renders its fixed 8px dot centered inside.
-defineProps<{
-  type: AvatarBadgeType
-  status?: AvatarStatus
-}>()
+withDefaults(
+  defineProps<{
+    type: AvatarBadgeType
+    status?: AvatarStatus
+    tone?: AvatarBadgeTone
+  }>(),
+  { tone: 'default' },
+)
+
+const ICON_TONE_CLASS: Record<AvatarBadgeTone, string> = {
+  default: 'bg-avatar-badge-icon-bg text-t-default',
+  contrast: 'bg-bgContrast text-white',
+}
 
 const statusStyle = {
   width: `${STATUS_BADGE_BOX}px`,
@@ -33,7 +43,8 @@ const statusStyle = {
 
   <div
     v-else-if="type === 'icon'"
-    class="w-full h-full rounded-full border border-white bg-avatar-badge-icon-bg overflow-hidden flex items-center justify-center box-border p-px text-t-default [&_svg]:w-full [&_svg]:h-full"
+    class="w-full h-full rounded-full border border-white overflow-hidden flex items-center justify-center box-border p-px [&_svg]:w-full [&_svg]:h-full"
+    :class="ICON_TONE_CLASS[tone]"
   >
     <slot />
   </div>

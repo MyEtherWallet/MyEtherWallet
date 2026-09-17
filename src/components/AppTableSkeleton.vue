@@ -26,11 +26,8 @@
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row">
-        <td
-          :colspan="columns.length || 1"
-          class="px-1 sm:px-4 py-2"
-        >
-          <div class="h-10 bg-grey-10 animate-pulse rounded-12"></div>
+        <td :colspan="columns.length || 1" class="px-1 sm:px-4 py-2">
+          <AppSkeleton class="h-10 w-full" />
         </td>
       </tr>
     </tbody>
@@ -39,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import AppSkeleton from '@/components/AppSkeleton.vue'
 
 export interface SkeletonColumn {
   /** Text alignment */
