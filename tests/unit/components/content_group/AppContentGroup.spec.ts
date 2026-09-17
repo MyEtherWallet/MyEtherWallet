@@ -14,6 +14,15 @@ describe('AppContentGroup', () => {
     expect(wrapper.text()).toContain('Total value')
   })
 
+  it('lets a title slot replace the title text', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'Fallback' },
+      slots: { title: '<b data-testid="custom-title">ETH</b>' },
+    })
+    expect(wrapper.find('[data-testid="custom-title"]').exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('Fallback')
+  })
+
   it('omits the description block when no description is given', () => {
     const wrapper = mount(AppContentGroup, { props: { title: 'Only title' } })
     expect(wrapper.find(description()).exists()).toBe(false)

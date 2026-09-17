@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { StarIcon } from '@heroicons/vue/24/outline'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/24/solid'
 import AppCell from '@components/AppCell.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { CELL_SIZES } from '@components/cellSizes'
@@ -37,7 +39,8 @@ const prefixClicks = ref(0)
   <div class="min-h-screen bg-appBackground p-10">
     <h1 class="title5 mb-2">AppCell — variant × state × size</h1>
     <p class="mb-8 text-s-14 text-t-subtle">
-      Cell clicks: {{ clicks }} · prefix clicks: {{ prefixClicks }}
+      Composes AppAvatar, AppAvatarBadge and AppContentGroup. Cell clicks:
+      {{ clicks }} · prefix clicks: {{ prefixClicks }}
     </p>
 
     <div
@@ -62,21 +65,23 @@ const prefixClicks = ref(0)
               v-bind="state.props"
               title="Title"
               description="Information"
+              accessory-title="$1,230"
+              accessory-description="1,230 USDC"
               @click="clicks++"
             >
-              <template #avatar>
-                <span class="size-full bg-primary" />
-              </template>
-              <template #avatarBadge>
-                <span class="size-full bg-violet" />
-              </template>
-              <template #accessory>
-                <p
-                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+              <template #avatar="{ size: avatarSize }">
+                <AppAvatar
+                  :size="avatarSize"
+                  type="cryptoAsset"
+                  symbol="USDC"
+                  badge-bottom
                 >
-                  $1,230
-                </p>
-                <p class="text-s-14 leading-5 text-t-subtle">1,230 USDC</p>
+                  <template #badge>
+                    <AppAvatarBadge type="network">
+                      <span class="size-full rounded-full bg-violet" />
+                    </AppAvatarBadge>
+                  </template>
+                </AppAvatar>
               </template>
             </AppCell>
           </div>
@@ -96,8 +101,8 @@ const prefixClicks = ref(0)
             <StarIcon class="size-4" />
           </AppBtnIcon>
         </template>
-        <template #avatar>
-          <span class="size-full bg-primary" />
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="W" />
         </template>
       </AppCell>
 
@@ -106,8 +111,8 @@ const prefixClicks = ref(0)
         description="Action slot"
         @click="clicks++"
       >
-        <template #avatar>
-          <span class="size-full bg-primary" />
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="B" />
         </template>
         <template #action>
           <AppBaseButton size="small" @click="prefixClicks++"
@@ -121,8 +126,8 @@ const prefixClicks = ref(0)
         description="Overflow menu"
         @click="clicks++"
       >
-        <template #avatar>
-          <span class="size-full bg-primary" />
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="S" />
         </template>
         <template #suffix>
           <AppBtnIcon label="More" @click="prefixClicks++">
@@ -134,21 +139,12 @@ const prefixClicks = ref(0)
       <AppCell title="No avatar" description="Text only" @click="clicks++" />
 
       <AppCell
-        title="Static row"
-        description="interactive=false — no hover, no cursor"
-        :interactive="false"
+        title="Custom accessory slot"
+        description="Coloured 24h change"
+        accessory-title="$1,230"
       >
-        <template #avatar>
-          <span class="size-full bg-primary" />
-        </template>
-      </AppCell>
-
-      <AppCell
-        title="Very long title that should truncate instead of wrapping onto a second line"
-        description="Very long description that should truncate instead of wrapping onto a second line"
-      >
-        <template #avatar>
-          <span class="size-full bg-primary" />
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="C" />
         </template>
         <template #accessory>
           <p
@@ -156,6 +152,27 @@ const prefixClicks = ref(0)
           >
             $1,230
           </p>
+          <p class="text-s-14 leading-5 text-success">+2.45%</p>
+        </template>
+      </AppCell>
+
+      <AppCell
+        title="Static row"
+        description="interactive=false — no hover, no cursor"
+        :interactive="false"
+      >
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="R" />
+        </template>
+      </AppCell>
+
+      <AppCell
+        title="Very long title that should truncate instead of wrapping onto a second line"
+        description="Very long description that should truncate instead of wrapping onto a second line"
+        accessory-title="$1,230"
+      >
+        <template #avatar="{ size: avatarSize }">
+          <AppAvatar :size="avatarSize" type="initial" initial="L" />
         </template>
       </AppCell>
     </div>

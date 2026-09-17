@@ -16,6 +16,12 @@ vi.mock('vue-router', () => ({
   useRouter: () => ({ push }),
 }))
 
+// AppAvatar's network type pulls chainsStore → hw-wallet chain, which fails
+// under jsdom; the card only forwards props to it, so mock the module away.
+vi.mock('@/components/avatar/AppAvatar.vue', () => ({
+  default: { name: 'AppAvatar', template: '<i data-test="avatar" />' },
+}))
+
 vi.mock('@/composables/useCurrency', () => ({
   useCurrency: () => ({
     formatFiat: (value: number | string) => ({ display: `$${value}` }),
@@ -36,7 +42,6 @@ const AppCellStub = {
 
 const stubs = {
   AppCell: AppCellStub,
-  AppTokenLogo: true,
   AppTokenSymbol: {
     props: ['symbol'],
     template: '<span>{{ symbol }}</span>',

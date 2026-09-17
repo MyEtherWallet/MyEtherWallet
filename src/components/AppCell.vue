@@ -25,75 +25,64 @@
       <slot name="prefix" />
     </div>
 
-    <template v-if="loading">
+    <template v-if="$slots.avatar">
       <AppSkeleton
-        v-if="$slots.avatar"
+        v-if="loading"
         shape="circle"
         data-test="cell-skeleton-avatar"
         class="size-8 shrink-0"
       />
-      <div
-        data-test="cell-skeleton-content"
-        class="flex min-w-0 flex-1 flex-col gap-1.5 py-[5px]"
-      >
-        <AppSkeleton class="h-3 w-[60px]" />
-        <AppSkeleton class="h-3 w-[100px]" />
+      <div v-else class="relative flex shrink-0">
+        <slot name="avatar" :size="sizeSpec.avatar" />
+        <span
+          v-if="selected"
+          data-test="cell-selected-badge"
+          class="absolute"
+          :style="selectedBadgeStyle"
+        >
+          <AppAvatarBadge type="icon" class="!bg-bgContrast !text-white">
+            <CheckIcon />
+          </AppAvatarBadge>
+        </span>
       </div>
+    </template>
+
+    <AppContentGroup
+      :title="title"
+      :description="description"
+      :loading="loading"
+      size="m"
+      no-wrap
+      class="flex-1"
+    >
+      <template v-if="$slots.title" #title>
+        <slot name="title" />
+      </template>
+    </AppContentGroup>
+
+    <template v-if="hasAccessory">
       <div
-        v-if="$slots.accessory"
+        v-if="loading"
         data-test="cell-skeleton-accessory"
         class="flex shrink-0 flex-col items-end gap-2"
       >
         <AppSkeleton class="h-3 w-[50px]" />
         <AppSkeleton class="h-3 w-[70px]" />
       </div>
+      <div v-else class="shrink-0 text-right">
+        <slot name="accessory">
+          <AppContentGroup
+            :title="accessoryTitle"
+            :description="accessoryDescription"
+            size="m"
+            align="right"
+            no-wrap
+          />
+        </slot>
+      </div>
     </template>
 
-    <template v-else>
-      <div
-        v-if="$slots.avatar"
-        :class="[
-          'relative shrink-0 rounded-full bg-[rgba(177,179,178,0.3)]',
-          sizeSpec.avatar,
-        ]"
-      >
-        <div
-          class="flex size-full items-center justify-center overflow-hidden rounded-full"
-        >
-          <slot name="avatar" />
-        </div>
-        <span
-          v-if="$slots.avatarBadge"
-          :class="[badgeClass, sizeSpec.badge, '-bottom-[5px] -right-[5px]']"
-        >
-          <slot name="avatarBadge" />
-        </span>
-        <span
-          v-if="selected"
-          data-test="cell-selected-badge"
-          :class="[
-            badgeClass,
-            sizeSpec.badge,
-            '-left-[5px] -top-[5px] !bg-bgContrast text-white',
-          ]"
-        >
-          <CheckIcon class="size-4" />
-        </span>
-      </div>
-
-      <AppCellContent :title="title" :description="description" class="flex-1">
-        <template v-if="$slots.title" #title>
-          <slot name="title" />
-        </template>
-      </AppCellContent>
-
-      <div
-        v-if="$slots.accessory"
-        class="flex shrink-0 flex-col items-end justify-center text-right"
-      >
-        <slot name="accessory" />
-      </div>
-
+    <template v-if="!loading">
       <div v-if="$slots.action" class="shrink-0" @click.stop>
         <slot name="action" />
       </div>
@@ -114,10 +103,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, useSlots, type PropType } from 'vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
 import AppSkeleton from '@/components/AppSkeleton.vue'
-import AppCellContent from '@/components/AppCellContent.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import { badgePositionStyle } from '@/components/avatar/types'
 import { CELL_SIZE_SPEC, type CellSize } from '@/components/cellSizes'
 
 const props = defineProps({
@@ -143,6 +134,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  accessoryTitle: {
+    type: String,
+    default: '',
+  },
+  accessoryDescription: {
+    type: String,
+    default: '',
+  },
   selected: {
     type: Boolean,
     default: false,
@@ -165,7 +164,17 @@ const emit = defineEmits<{
   click: []
 }>()
 
+const slots = useSlots()
+
 const sizeSpec = computed(() => CELL_SIZE_SPEC[props.size])
+
+const selectedBadgeStyle = computed(() =>
+  badgePositionStyle(sizeSpec.value.avatar, 'topLeft'),
+)
+
+const hasAccessory = computed(
+  () => Boolean(slots.accessory) || props.accessoryTitle !== '',
+)
 
 const isInteractive = computed(
   () => props.interactive && !props.disabled && !props.loading,
@@ -179,9 +188,6 @@ const surfaceClass = computed(() => {
     ? `${resting} hover:bg-bgBase-hover active:bg-bgBase-pressed`
     : `${resting} hover:bg-bgSurface-hover active:bg-bgSurface-pressed`
 })
-
-const badgeClass =
-  'absolute flex items-center justify-center overflow-hidden rounded-full border border-white bg-white'
 
 const onClick = () => {
   if (isInteractive.value) emit('click')

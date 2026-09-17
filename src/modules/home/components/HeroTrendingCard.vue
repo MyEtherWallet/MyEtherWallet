@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { useRouter, type RouteLocationRaw } from 'vue-router'
 import AppCell from '@/components/AppCell.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { useCurrency } from '@/composables/useCurrency'
 import type { TrendingRowItem } from './heroTrending'
@@ -79,15 +79,12 @@ const changeText = (change: number) =>
         data-test="token-list-row"
         @click="router.push(item.to)"
       >
-        <template #avatar>
-          <AppTokenLogo
+        <template #avatar="{ size }">
+          <AppAvatar
+            :size="size"
+            :type="item.isStock ? 'stocks' : 'cryptoAsset'"
             :url="item.logo"
             :symbol="item.symbol"
-            :is-stock="item.isStock"
-            width="size-8"
-            height="size-8"
-            no-ring
-            no-shadow
           />
         </template>
         <template #title>
