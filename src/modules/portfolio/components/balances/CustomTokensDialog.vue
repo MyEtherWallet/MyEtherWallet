@@ -27,29 +27,28 @@
             <app-input
               v-if="fetchedInfoViaAddress"
               key="name"
-              :placeholder="t('portfolio.custom_token.token_name_placeholder')"
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_name_placeholder')"
               v-model="tokenName"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="nameError"
             />
             <app-input
               v-if="fetchedInfoViaAddress"
               key="symbol"
-              :placeholder="
-                t('portfolio.custom_token.token_symbol_placeholder')
-              "
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_symbol_placeholder')"
               v-model="tokenSymbol"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="symbolError"
             />
             <app-input
               v-if="fetchedInfoViaAddress"
               key="decimals"
-              :placeholder="
-                t('portfolio.custom_token.token_decimals_placeholder')
-              "
+              surface="alternative"
+              :label="t('portfolio.custom_token.token_decimals_placeholder')"
               v-model="tokenDecimals"
-              :is-disabled="fetchingDetails"
+              :disabled="fetchingDetails"
               :error-message="decimalsError"
             />
           </transition-group>
@@ -89,21 +88,22 @@
             :chain="selectedChain"
           />
           <app-input
-            :placeholder="t('portfolio.custom_token.token_name_placeholder')"
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_name_placeholder')"
             v-model="tokenName"
             :error-message="nameError"
           />
           <app-input
-            :placeholder="t('portfolio.custom_token.token_symbol_placeholder')"
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_symbol_placeholder')"
             v-model="tokenSymbol"
             :error-message="symbolError"
           />
           <app-input
-            :placeholder="
-              t('portfolio.custom_token.token_decimals_placeholder')
-            "
+            surface="alternative"
+            :label="t('portfolio.custom_token.token_decimals_placeholder')"
             v-model="tokenDecimals"
-            :is-disabled="true"
+            :disabled="true"
             :error-message="decimalsError"
           />
         </div>

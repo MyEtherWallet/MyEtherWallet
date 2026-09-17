@@ -78,13 +78,15 @@
             <div v-else class="px-5">
               <app-input
                 v-model="newPathLabel"
-                :placeholder="$t('derivation_path.enter_label')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_label')"
                 is-required
                 class="mt-4"
               />
               <app-input
                 v-model="newPath"
-                :placeholder="$t('derivation_path.enter_path')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_path')"
                 is-required
               />
               <div class="flex items-center flex-col justify-center mt-3">

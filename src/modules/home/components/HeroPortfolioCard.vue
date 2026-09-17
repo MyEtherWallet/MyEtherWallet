@@ -23,7 +23,7 @@ import { truncateAddress } from '@/utils/filters'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -173,7 +173,6 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
               ? t('homePage.hero.showBalance')
               : t('homePage.hero.hideBalance')
           "
-          position="middle"
         >
           <button
             type="button"
@@ -188,7 +187,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
             />
           </button>
         </AppTooltip>
-        <AppTooltip :text="t('homePage.hero.refreshTooltip')" position="middle">
+        <AppTooltip :text="t('homePage.hero.refreshTooltip')">
           <button
             type="button"
             data-test="hero-refresh"
@@ -225,7 +224,6 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
                   ? t('homePage.hero.addressCopied')
                   : t('homePage.hero.copyAddress')
               "
-              position="middle"
             >
               <button
                 type="button"

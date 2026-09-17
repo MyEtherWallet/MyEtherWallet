@@ -123,7 +123,9 @@
                     <exclamation-circle-icon
                       class="inline-block w-5 h-5 text-grey-50 mr-1"
                     />
-                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
+                    {{
+                      $t('stocks.no_results_found_for', { query: searchInput })
+                    }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div
@@ -219,7 +221,9 @@
           </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
-          <p class="font-semibold text-s-14">{{ $t('stocks.trending_colon') }}</p>
+          <p class="font-semibold text-s-14">
+            {{ $t('stocks.trending_colon') }}
+          </p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
             <app-tooltip :text="stock.stockAlias">
               <router-link
@@ -261,7 +265,7 @@ import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
 
 // Stores and Composables

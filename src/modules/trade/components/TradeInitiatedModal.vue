@@ -108,7 +108,9 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ fromAmountFiat }}</p>
+                  <p class="text-info text-s-14">
+                    {{ currencySymbol }}{{ fromAmountFiat }}
+                  </p>
                 </div>
               </div>
 
@@ -155,7 +157,9 @@
                     >
                     </app-tooltip>
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ toAmountFiat }}</p>
+                  <p class="text-info text-s-14">
+                    {{ currencySymbol }}{{ toAmountFiat }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -223,7 +227,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import {
   CheckCircleIcon,
   XCircleIcon,

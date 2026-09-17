@@ -56,7 +56,7 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
     {} as Record<number, ReturnType<typeof http>>,
   )
   const allConnectors = [...connectorsLocal]
-  if (import.meta.env.DEV) {
+  if (import.meta.env.MODE !== 'production') {
     const testAddress = import.meta.env.VITE_TEST_ADDRESS as string | undefined
     if (testAddress) {
       const mConnector = mock({

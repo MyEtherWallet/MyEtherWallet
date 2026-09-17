@@ -1,5 +1,7 @@
 export type ContentGroupSize = 'm' | 'l'
 export type ContentGroupAlign = 'left' | 'right'
+/** Which surface the group sits on — picks the text colours. */
+export type ContentGroupTone = 'default' | 'inverse'
 
 /**
  * Content Group typography (design library, MEW-2271). Its Figma section is
@@ -21,4 +23,15 @@ export const DESCRIPTION_SIZE_CLASS: Record<ContentGroupSize, string> = {
 export const TITLE_WEIGHT_CLASS: Record<ContentGroupSize, string> = {
   m: 'font-medium',
   l: 'font-semibold',
+}
+
+/** Title / description colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
+export const TONE_TITLE_CLASS: Record<ContentGroupTone, string> = {
+  default: 'text-t-default',
+  inverse: 'text-white',
+}
+
+export const TONE_DESCRIPTION_CLASS: Record<ContentGroupTone, string> = {
+  default: 'text-info',
+  inverse: 'text-white/70',
 }
