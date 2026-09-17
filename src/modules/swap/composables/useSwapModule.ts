@@ -14,6 +14,7 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
+import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -348,7 +349,11 @@ export function useSwapModule(): SwapModuleBindings {
       const max = BigInt(
         selectedQuote.value.minMax?.maximumFrom.toString() || '0',
       )
-      if (baseAmount < min) return t('swap.error.minimum-amount')
+      if (baseAmount < min)
+        return t('swap.error.minimum-amount', {
+          amount: smallestMinFromDisplay([min], decimals),
+          symbol: fromTokenSelected.value.symbol,
+        })
       if (baseAmount > max) return t('swap.error.maximum-amount')
     }
 
@@ -872,7 +877,13 @@ export function useSwapModule(): SwapModuleBindings {
           // if no providers were selected after filter minimum
           // fromValue is probably too low
           if (quotes.length > 0) {
-            generalError.value = t('swap.error.minimum-amount')
+            generalError.value = t('swap.error.minimum-amount', {
+              amount: smallestMinFromDisplay(
+                quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+                fromDecimals,
+              ),
+              symbol: fromTokenSelected.value?.symbol,
+            })
           }
           const event = bestSwapLoadingOpen.value
             ? SwapEventError.OFFER_ERROR
