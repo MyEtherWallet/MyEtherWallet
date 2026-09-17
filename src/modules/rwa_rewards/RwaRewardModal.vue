@@ -100,7 +100,8 @@
               </rwa-modal-step>
             </template>
 
-            <!-- HOLDING -->
+            <!-- HOLDING (round 1: steps 1-3; round 2: the finished first
+                 round stays visible above the new hold) -->
             <template v-else-if="status === 'holding'">
               <rwa-modal-step variant="done" connector-blue>
                 <p :class="stepText" class="flex items-center h-6">
@@ -108,20 +109,64 @@
                   }}<span :class="boldText">&nbsp;{{ qualifyingLabel }}</span>
                 </p>
               </rwa-modal-step>
-              <rwa-modal-step variant="current" :number="2" stretch>
-                <div class="flex flex-col items-start gap-3 pb-7">
+              <template v-if="isRoundTwoActive">
+                <rwa-modal-step variant="done" connector-blue>
                   <p :class="stepText" class="flex items-center h-6">
+                    {{ $t('rwaRewards.modal_held_14') }}
+                  </p>
+                </rwa-modal-step>
+                <rwa-modal-step variant="done" connector-blue>
+                  <p :class="stepText" class="flex items-center h-6">
+                    {{ $t('rwaRewards.r2_first_reward_claimed') }}
+                  </p>
+                </rwa-modal-step>
+              </template>
+              <rwa-modal-step
+                variant="current"
+                :number="isRoundTwoActive ? 4 : 2"
+                stretch
+              >
+                <div class="flex flex-col items-start gap-3 pb-7">
+                  <p
+                    v-if="isRoundTwoActive"
+                    :class="stepText"
+                    class="flex items-center h-6"
+                  >
+                    {{ $t('rwaRewards.r2_hold_step_pre')
+                    }}<span :class="boldText"
+                      >&nbsp;{{ $t('rwaRewards.r2_hold_step_bold') }}</span
+                    >&nbsp;{{ r2HoldStepPost }}
+                  </p>
+                  <p v-else :class="stepText" class="flex items-center h-6">
                     {{ $t('rwaRewards.modal_step2_pre')
                     }}<span :class="boldText"
                       >&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span
                     >&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
                   </p>
-                  <rwa-hold-tracker :current="holdCurrent" />
+                  <rwa-hold-tracker
+                    :current="holdCurrent"
+                    :total="holdTotalDays"
+                  />
                   <p :class="boldText">{{ holdDaysLeftLabel }}</p>
+                  <p v-if="isRoundTwoActive" :class="subText">
+                    {{ $t('rwaRewards.r2_hold_warning') }}
+                  </p>
                 </div>
               </rwa-modal-step>
-              <rwa-modal-step variant="plain" :number="3" last>
-                <p :class="stepText" class="flex items-center h-6">
+              <rwa-modal-step
+                variant="plain"
+                :number="isRoundTwoActive ? 5 : 3"
+                last
+              >
+                <p
+                  v-if="isRoundTwoActive"
+                  :class="stepText"
+                  class="flex items-center h-6"
+                >
+                  {{ $t('rwaRewards.r2_reward_step')
+                  }}<span :class="boldText">&nbsp;{{ rewardLabel }}</span>
+                </p>
+                <p v-else :class="stepText" class="flex items-center h-6">
                   {{ $t('rwaRewards.modal_step3')
                   }}<span :class="boldText"
                     >&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span
@@ -130,7 +175,8 @@
               </rwa-modal-step>
             </template>
 
-            <!-- LOST -->
+            <!-- LOST (a lost round 2 is terminal: no retry, and the claimed
+                 first reward is unaffected) -->
             <template v-else-if="status === 'lost'">
               <rwa-modal-step variant="doneGrey">
                 <p :class="mutedText" class="flex items-center h-6">
@@ -138,25 +184,49 @@
                   {{ qualifyingLabel }}
                 </p>
               </rwa-modal-step>
+              <template v-if="isRoundTwoActive">
+                <rwa-modal-step variant="doneGrey">
+                  <p :class="mutedText" class="flex items-center h-6">
+                    {{ $t('rwaRewards.modal_held_14') }}
+                  </p>
+                </rwa-modal-step>
+                <rwa-modal-step variant="doneGrey">
+                  <p :class="mutedText" class="flex items-center h-6">
+                    {{ $t('rwaRewards.r2_first_reward_claimed') }}
+                  </p>
+                </rwa-modal-step>
+              </template>
               <rwa-modal-step variant="failed" stretch>
                 <div class="flex flex-col items-start gap-3 pb-7">
                   <p class="text-s-14 font-semibold leading-5 text-[#e40c58]">
-                    {{ $t('rwaRewards.modal_lost_title') }}
+                    {{
+                      isRoundTwoActive
+                        ? $t('rwaRewards.r2_lost_title')
+                        : $t('rwaRewards.modal_lost_title')
+                    }}
                   </p>
                   <p :class="stepText">
                     {{
-                      $t('rwaRewards.modal_lost_desc', {
-                        amount: qualifyingLabel,
-                      })
+                      isRoundTwoActive
+                        ? $t('rwaRewards.r2_lost_desc', {
+                            amount: qualifyingLabel,
+                          })
+                        : $t('rwaRewards.modal_lost_desc', {
+                            amount: qualifyingLabel,
+                          })
                     }}
                   </p>
                   <rwa-hold-tracker
                     :current="holdCurrent"
                     :failed-day="holdCurrent"
+                    :total="holdTotalDays"
                   />
-                  <div class="flex items-center gap-2 w-full">
+                  <div
+                    v-if="!isRoundTwoActive"
+                    class="flex items-center gap-2 w-full"
+                  >
                     <app-base-button
-                      v-if="canRegisterTrade"
+                      v-if="canRetryTrade"
                       class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
                       @click="onTrade"
                     >
@@ -184,8 +254,19 @@
                   </div>
                 </div>
               </rwa-modal-step>
-              <rwa-modal-step variant="plain" :number="3" last>
-                <p :class="mutedText" class="flex items-center h-6">
+              <rwa-modal-step
+                variant="plain"
+                :number="isRoundTwoActive ? 5 : 3"
+                last
+              >
+                <p
+                  v-if="isRoundTwoActive"
+                  :class="mutedText"
+                  class="flex items-center h-6"
+                >
+                  {{ $t('rwaRewards.r2_reward_step') }} {{ rewardLabel }}
+                </p>
+                <p v-else :class="mutedText" class="flex items-center h-6">
                   {{ $t('rwaRewards.modal_step3') }}
                   {{ $t('rwaRewards.modal_step3_bold') }}
                 </p>
@@ -205,16 +286,29 @@
                   {{ $t('rwaRewards.modal_held_14') }}
                 </p>
               </rwa-modal-step>
+              <rwa-modal-step
+                v-if="isRoundTwoActive"
+                variant="done"
+                connector-blue
+              >
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.r2_first_reward_claimed') }}
+                </p>
+              </rwa-modal-step>
 
               <rwa-modal-step
                 v-if="status === 'earned'"
                 variant="current"
-                :number="3"
+                :number="isRoundTwoActive ? 4 : 3"
                 last
               >
                 <div class="flex flex-col items-start gap-0.5">
                   <p :class="titleText">
-                    {{ $t('rwaRewards.modal_claim_title') }}
+                    {{
+                      isRoundTwoActive
+                        ? $t('rwaRewards.r2_claim_title')
+                        : $t('rwaRewards.modal_claim_title')
+                    }}
                   </p>
                   <p :class="stepText">
                     {{ $t('rwaRewards.modal_claim_desc') }}
@@ -233,7 +327,7 @@
                 />
                 <div class="flex flex-col flex-1 min-w-0">
                   <p :class="titleText">
-                    {{ $t('rwaRewards.reward_amount') }}
+                    {{ rewardLabel }}
                   </p>
                   <!-- Only when the reward itself carries a deadline. -->
                   <p v-if="hasRewardExpiry" :class="subText">
@@ -261,11 +355,15 @@
               <rwa-modal-step
                 v-if="status === 'claimed'"
                 variant="done"
-                :number="3"
+                :number="isRoundTwoActive ? 4 : 3"
                 last
               >
                 <p :class="titleText">
-                  {{ $t('rwaRewards.modal_claimed_step') }}
+                  {{
+                    isRoundTwoActive
+                      ? $t('rwaRewards.r2_claimed_step')
+                      : $t('rwaRewards.modal_claimed_step')
+                  }}
                 </p>
               </rwa-modal-step>
               <div
@@ -280,7 +378,7 @@
                 />
                 <div class="flex flex-col flex-1 min-w-0">
                   <p :class="titleText">
-                    {{ $t('rwaRewards.reward_amount') }}
+                    {{ rewardLabel }}
                   </p>
                   <p :class="subText">
                     {{ $t('rwaRewards.sub_claimed') }}
@@ -292,15 +390,24 @@
                   <check-icon class="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
+              <!-- Why there is (or isn't yet) a second round after the first
+                   claim — nothing actionable, so a plain note. -->
+              <p v-if="round2Notice" :class="subText" class="w-full mt-2 px-1">
+                {{ round2Notice }}
+              </p>
 
               <rwa-modal-step
                 v-if="status === 'expired'"
                 variant="failed"
-                :number="3"
+                :number="isRoundTwoActive ? 4 : 3"
                 last
               >
                 <p :class="titleText">
-                  {{ $t('rwaRewards.modal_expired_step') }}
+                  {{
+                    isRoundTwoActive
+                      ? $t('rwaRewards.r2_expired_step')
+                      : $t('rwaRewards.modal_expired_step')
+                  }}
                 </p>
               </rwa-modal-step>
               <div
@@ -315,7 +422,7 @@
                 />
                 <div class="flex flex-col flex-1 min-w-0">
                   <p :class="titleText">
-                    {{ $t('rwaRewards.reward_amount') }}
+                    {{ rewardLabel }}
                   </p>
                   <p :class="subText">
                     {{ $t('rwaRewards.sub_closed') }}
@@ -411,8 +518,12 @@ const {
   isCampaignEnded,
   isUnderReview,
   isRegionBlocked,
-  canRegisterTrade,
+  canRetryTrade,
   qualificationAmount,
+  isRoundTwoActive,
+  round2Status,
+  holdTotalDays,
+  rewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
@@ -549,14 +660,39 @@ const offerRules = computed(() => [
     : []),
 ])
 
-const HOLD_TOTAL = 14
 const holdCurrent = computed(() => {
   const start = activeReward.value?.start_timestamp
   if (!start) return 1
   const elapsed = Math.floor(
     (Date.now() - new Date(start).getTime()) / 86_400_000,
   )
-  return Math.min(Math.max(elapsed + 1, 1), HOLD_TOTAL)
+  return Math.min(Math.max(elapsed + 1, 1), holdTotalDays.value)
+})
+
+// "for {n} more days." — the round-2 hold length comes from the server.
+const r2HoldStepPost = computed(() =>
+  t(
+    'rwaRewards.r2_hold_step_post',
+    { count: holdTotalDays.value },
+    holdTotalDays.value,
+  ),
+)
+
+// Server-driven when the season block has landed; the campaign's advertised
+// round-1 copy otherwise.
+const rewardLabel = computed(
+  () => rewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
+
+// After the first claim there may be nothing actionable about round 2 — the
+// pool ran out, or the entry is still being opened. Say which, once.
+const round2Notice = computed(() => {
+  if (status.value !== 'claimed' || isRoundTwoActive.value) return ''
+  if (round2Status.value === 'UNAVAILABLE')
+    return t('rwaRewards.r2_unavailable_notice')
+  if (round2Status.value === 'ELIGIBLE')
+    return t('rwaRewards.r2_setting_up_notice')
+  return ''
 })
 
 const qualifyingLabel = computed(() => {
@@ -564,7 +700,12 @@ const qualifyingLabel = computed(() => {
   if (!r?.qualifying_amount) return ''
   const meta = info.value?.metas?.find(m => m.id === r.id)
   const symbol = meta?.symbol ?? ''
-  const decimals = meta?.crypto?.decimals?.[0] ?? 18
+  // Multi-chain metas keep ids/decimals as parallel arrays — pick the entry's
+  // own chain rather than assuming the first.
+  const chainIndex =
+    meta?.crypto?.ids?.findIndex(id => id.startsWith(`${r.chain_id}:`)) ?? -1
+  const decimals =
+    meta?.crypto?.decimals?.[chainIndex === -1 ? 0 : chainIndex] ?? 18
   const amount = new BigNumber(r.qualifying_amount).shiftedBy(-decimals)
   if (amount.isNaN()) return ''
   return `${amount.toFormat()} ${symbol}`.trim()

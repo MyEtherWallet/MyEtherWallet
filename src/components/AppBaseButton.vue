@@ -88,7 +88,9 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
+    type: String as PropType<
+      'primary' | 'secondary' | 'error' | 'success' | 'neutral'
+    >,
     default: 'primary',
   },
 })
@@ -98,6 +100,14 @@ const themeStyle = computed(() => {
     if (props.isOutline)
       return 'border border-2 border-primary text-primary bg-transparent'
     return 'text-white bg-primary'
+  }
+
+  // Tonal secondary: muted grey fill with primary-colored label, no border.
+  // Label is 600 and the fill turns solid white on hover (QA MEW-2324).
+  if (props.theme === 'secondary') {
+    if (props.isOutline)
+      return 'border border-2 border-grey-10 text-primary bg-transparent font-semibold hover:bg-white hover:!opacity-100'
+    return 'text-primary bg-grey-5 font-semibold hover:bg-white hover:!opacity-100'
   }
 
   if (props.theme === 'success') {

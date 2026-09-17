@@ -1,15 +1,18 @@
 <script setup lang="ts">
-// Shell for the design-library previews. The sidebar lists the components that
-// have a preview page; the selected one renders in the main area via
-// <router-view>. Add a row here as each component gains a preview. Never
-// registered in production builds — see routesDefault.ts.
-const COMPONENTS: { name: string; to: string }[] = [
-  { name: 'Avatar', to: '/dev/avatar' },
-  { name: 'Chip', to: '/dev/chip' },
-  { name: 'Content Group', to: '/dev/content-group' },
-  { name: 'Input', to: '/dev/input' },
-  { name: 'Picker', to: '/dev/picker' },
-  { name: 'Tooltip', to: '/dev/tooltip' },
+import { ROUTES_DEV } from '@/router/routeNames'
+
+// DEV-only shell for the design-library previews. The sidebar lists the
+// components that have a preview page; the selected one renders in the main
+// area via <router-view>. Add a row here as each component gains a preview.
+// Never registered in production builds — see routesDefault.ts.
+const components = [
+  { name: 'Avatar', to: { name: ROUTES_DEV.AVATAR.NAME } },
+  { name: 'Chip', to: { name: ROUTES_DEV.CHIP.NAME } },
+  { name: 'Content Group', to: { name: ROUTES_DEV.CONTENT_GROUP.NAME } },
+  { name: 'Input', to: { name: ROUTES_DEV.INPUT.NAME } },
+  { name: 'Picker', to: { name: ROUTES_DEV.PICKER.NAME } },
+  { name: 'Toggle', to: { name: ROUTES_DEV.TOGGLE.NAME } },
+  { name: 'Tooltip', to: { name: ROUTES_DEV.TOOLTIP.NAME } },
 ]
 </script>
 
@@ -23,27 +26,27 @@ const COMPONENTS: { name: string; to: string }[] = [
       class="w-56 shrink-0 overflow-y-auto border-r border-grey-10 bg-white p-4"
     >
       <router-link
-        to="/dev"
-        class="block text-s-16 font-bold text-t-default mb-4 hoverOpacity"
+        :to="{ name: ROUTES_DEV.INDEX.NAME }"
+        class="mb-4 block text-s-16 font-bold text-t-default hoverOpacity"
       >
         Design library
       </router-link>
-      <p class="text-s-11 font-bold uppercase text-info tracking-sp-06 mb-2">
+      <p class="mb-2 text-s-11 font-bold uppercase tracking-sp-06 text-info">
         Components
       </p>
       <nav class="flex flex-col gap-1">
         <router-link
-          v-for="c in COMPONENTS"
-          :key="c.to"
-          :to="c.to"
+          v-for="component in components"
+          :key="component.name"
+          :to="component.to"
           class="rounded-8 px-3 py-2 text-s-14 text-t-default hoverNoBG transition-colors"
           active-class="bg-grey-10 font-medium"
         >
-          {{ c.name }}
+          {{ component.name }}
         </router-link>
       </nav>
     </aside>
-    <main class="flex-1 min-w-0 overflow-auto">
+    <main class="min-w-0 flex-1 overflow-auto">
       <router-view />
     </main>
   </div>

@@ -88,6 +88,13 @@ export default {
       success: 'rgba(5,192,165,1)',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',
+      // Design-library semantic background and focus tokens (MEW-1974).
+      'background-alternative': '#ffffff',
+      'background-toggle': '#e6e6e6',
+      'background-default-hover': '#dcdcdc',
+      'background-brand': '#005ae5',
+      'background-brand-hover': '#0067e0',
+      focus: '#005ae5',
       // Design-library input (MEW-1971): resting border for the Alternative
       // surface. Kept separate from `bgBase-hover` (same value) so a later
       // background tweak never moves every field's border. Use as

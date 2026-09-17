@@ -10,7 +10,16 @@ import type { Chain as wChain } from '@wagmi/core/chains'
 
 type CreateWalletFn = WalletList[number]['wallets'][number]
 
-const REMOVED_WALLETS_ID = ['bitskiWallet', 'backpackWallet', 'portoWallet']
+// `baseAccount` is removed because @base-org/account@1.1.1 (pulled in transitively by
+// @wagmi/connectors) throws a TDZ `ReferenceError: Cannot access 'p' before initialization`
+// from createBaseAccountSDK().getProvider(), so clicking the wallet always crashes.
+// See Sentry APP-MEW-WEB-1C0. Drop the removal once the SDK dependency is bumped past the fix.
+const REMOVED_WALLETS_ID = [
+  'bitskiWallet',
+  'backpackWallet',
+  'portoWallet',
+  'baseAccount',
+]
 
 const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 const allRainbowWallets = Object.values(rainbowWallets).filter(wallet => {
