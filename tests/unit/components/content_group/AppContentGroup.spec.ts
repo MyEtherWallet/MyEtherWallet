@@ -30,14 +30,14 @@ describe('AppContentGroup', () => {
     const light = mount(AppContentGroup, {
       props: { title: 'T', description: 'D' },
     })
-    expect(light.get(title()).classes()).toContain('text-t-default')
-    expect(light.get(description()).classes()).toContain('text-info')
+    expect(light.get(title()).classes()).toContain('text-text-default')
+    expect(light.get(description()).classes()).toContain('text-text-subtle')
 
     const dark = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', tone: 'inverse' },
     })
     expect(dark.get(title()).classes()).toContain('text-white')
-    expect(dark.get(title()).classes()).not.toContain('text-t-default')
+    expect(dark.get(title()).classes()).not.toContain('text-text-default')
     expect(dark.get(description()).classes()).toContain('text-white/70')
   })
 

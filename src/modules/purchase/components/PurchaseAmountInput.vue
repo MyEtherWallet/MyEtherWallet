@@ -2,14 +2,14 @@
   <div
     :class="[
       isFocused
-        ? 'bg-white border-grey-10'
-        : 'bg-bgBase border-transparent has-[.amount-value:hover]:border-grey-10',
+        ? 'bg-white border-border-default'
+        : 'bg-background-default border-transparent has-[.amount-value:hover]:border-border-default',
       'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
     ]"
   >
     <!-- Header -->
     <div
-      class="w-full flex items-center justify-between pb-3 border-b border-grey-10"
+      class="w-full flex items-center justify-between pb-3 border-b border-border-default"
     >
       <p class="text-s-11 font-bold tracking-sp-06 uppercase text-black">
         {{ label }}
@@ -28,7 +28,7 @@
       <label
         :for="inputId"
         :style="scaleStyle"
-        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
+        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-text-brand font-bold"
       >
         <span class="amount-value flex items-center">
           <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
@@ -58,7 +58,7 @@
           />
           <span
             v-if="amount === ''"
-            :class="isFocused ? 'text-grey-30' : 'text-black'"
+            :class="isFocused ? 'text-text-placeholder' : 'text-black'"
             aria-hidden="true"
             >0</span
           >
@@ -77,40 +77,43 @@
         aria-live="polite"
       >
         <span
-          class="inline-block w-5 h-5 rounded-full border-2 border-grey-10 border-t-grey-30 animate-spin"
+          class="inline-block w-5 h-5 rounded-full border-2 border-border-default border-t-border-hover animate-spin"
         />
       </p>
       <p
         v-else-if="errorMessage"
-        class="text-s-16 font-semibold text-error leading-[22px] tracking-[-0.32px] text-center"
+        class="text-s-16 font-semibold text-text-error leading-[22px] tracking-[-0.32px] text-center"
       >
         {{ errorMessage }}
       </p>
       <p
         v-else-if="helperMessage"
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+        class="text-s-16 font-semibold text-text-subtle leading-[22px] tracking-[-0.32px] text-center"
       >
         {{ helperMessage }}
       </p>
       <p
         v-else
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+        class="text-s-16 font-semibold text-text-subtle leading-[22px] tracking-[-0.32px] text-center"
       >
         ≈ {{ estimate }}
       </p>
     </div>
 
     <!-- Balance row (Sell mode) -->
-    <p v-if="balance" class="text-s-12 text-info leading-[18px] text-center">
+    <p
+      v-if="balance"
+      class="text-s-12 text-text-subtle leading-[18px] text-center"
+    >
       {{ $t('purchase.sell.your_balance') }}
       <span
         :class="[
           'font-semibold tracking-[-0.24px]',
-          balance.hasError ? 'text-error' : 'text-black',
+          balance.hasError ? 'text-text-error' : 'text-black',
         ]"
         >{{ balance.value }}</span
       >
-      <span class="text-info"> ({{ balance.fiat }})</span>
+      <span class="text-text-subtle"> ({{ balance.fiat }})</span>
     </p>
 
     <!-- Quick amount buttons -->
@@ -120,7 +123,7 @@
         :key="btn.usdValue"
         type="button"
         :class="[
-          isFocused ? 'bg-bgBase' : 'bg-white',
+          isFocused ? 'bg-background-default' : 'bg-white',
           selectedUsdValue === btn.usdValue
             ? 'outline-2 outline-black -outline-offset-2'
             : '',

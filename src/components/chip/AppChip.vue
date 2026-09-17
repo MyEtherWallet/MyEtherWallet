@@ -52,7 +52,7 @@ const borderClass = computed(() =>
     :aria-pressed="showIcon ? undefined : selected"
     :aria-haspopup="showIcon ? 'menu' : undefined"
     data-testid="chip"
-    class="inline-flex h-8 items-center rounded-full border px-1 text-s-14 font-medium text-t-default transition-colors duration-150 hover:bg-bgBase-hover active:bg-bgBase-pressed focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    class="inline-flex h-8 items-center rounded-full border px-1 text-s-14 font-medium text-text-default transition-colors duration-150 hover:bg-background-default-hover active:bg-background-default-pressed focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
     :class="[CHIP_SURFACE_BG_CLASS[surface], borderClass]"
     @click="emit('click', $event)"
   >

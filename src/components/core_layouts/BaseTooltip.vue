@@ -45,7 +45,7 @@
           :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="emit('dismiss')"
         >
-          <XMarkIcon class="w-4 h-4 text-info" />
+          <XMarkIcon class="w-4 h-4 text-text-subtle" />
         </button>
       </div>
     </transition>

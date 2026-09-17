@@ -21,7 +21,9 @@ defineEmits<{
 }>()
 
 const up = computed(() => (props.change ?? 0) >= 0)
-const changeColor = computed(() => (up.value ? 'text-success' : 'text-error'))
+const changeColor = computed(() =>
+  up.value ? 'text-text-success' : 'text-text-error',
+)
 const changeText = computed(() =>
   props.change != null
     ? `${up.value ? '+' : '-'}${Math.abs(props.change).toFixed(2)}%`
@@ -32,7 +34,7 @@ const changeText = computed(() =>
 <template>
   <div
     data-test="token-list-row"
-    class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-[#f7f7f7]"
+    class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-background-default"
     @click="$emit('select')"
   >
     <AppTokenLogo
@@ -50,7 +52,7 @@ const changeText = computed(() =>
         :is-stock="isStock"
         class="!text-s-16 !font-semibold tracking-[-0.32px] text-black"
       />
-      <span v-if="name" class="truncate text-s-14 leading-5 text-[#575757]">
+      <span v-if="name" class="truncate text-s-14 leading-5 text-text-subtle">
         {{ name }}
       </span>
     </div>

@@ -14,14 +14,16 @@
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <!-- Close Details -->
-        <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
+        <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.side-label')
             }}</span>
             <span
               class="font-bold"
-              :class="direction === 'long' ? 'text-error' : 'text-success'"
+              :class="
+                direction === 'long' ? 'text-text-error' : 'text-text-success'
+              "
               >{{
                 direction === 'long'
                   ? $t('perps.close.sell-close-long')
@@ -30,19 +32,19 @@
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.order-type-label')
             }}</span>
             <span class="font-bold">{{ $t('perps.confirm.market') }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.market-price')
             }}</span>
             <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.close.close-amount-label')
             }}</span>
             <span class="font-bold">{{
@@ -50,7 +52,7 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium"
+            <span class="text-text-subtle font-medium"
               >{{ $t('perps.trade.size') }}
             </span>
             <span class="font-bold"
@@ -58,18 +60,20 @@
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.close.close-percentage-label')
             }}</span>
             <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.close.current-pnl-label')
             }}</span>
             <span
               class="font-bold"
-              :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
+              :class="
+                positionPnl >= 0 ? 'text-text-success' : 'text-text-error'
+              "
               >{{ formatPnl(String(positionPnl)) }} ({{
                 (positionRoe * 100).toFixed(2)
               }}%)</span
@@ -80,9 +84,9 @@
         <!-- Error -->
         <div
           v-if="closeError"
-          class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
         >
-          <p class="text-error text-s-14 font-medium">{{ closeError }}</p>
+          <p class="text-text-error text-s-14 font-medium">{{ closeError }}</p>
         </div>
 
         <!-- Actions -->

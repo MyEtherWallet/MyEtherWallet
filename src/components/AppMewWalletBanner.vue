@@ -33,7 +33,7 @@
               href="https://download.mewwallet.com"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center px-7 py-1 rounded-full bg-primary text-white font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
+              class="inline-flex items-center px-7 py-1 rounded-full bg-background-brand text-white font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
             >
               {{ $t('common.mew_app_banner.download_now') }}
             </a>
@@ -43,7 +43,7 @@
               @mouseleave="showQr = false"
             >
               <div
-                class="w-10 h-10 bg-grey-light rounded-full flex items-center justify-center cursor-pointer"
+                class="w-10 h-10 bg-background-default-hover rounded-full flex items-center justify-center cursor-pointer"
               >
                 <QrCodeIcon class="w-5 h-5" />
               </div>

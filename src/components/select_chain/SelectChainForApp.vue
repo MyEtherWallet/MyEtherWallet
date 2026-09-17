@@ -33,7 +33,7 @@
           >
             <div class="flex items-center justify-center capitalize">
               <span>{{ $t('common.more') }}</span>
-              <chevron-down-icon class="text-info w-4 h-4 ml-1" />
+              <chevron-down-icon class="text-text-subtle w-4 h-4 ml-1" />
             </div>
           </button>
         </template>
@@ -48,12 +48,14 @@
             v-if="selectedChain.icon"
             :src="selectedChain.icon"
             alt=""
-            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-mewBg"
+            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-background-brand-subtle"
             height="32"
             width="32"
           />
           <div class="ml-1 pr-1 min-w-[30px]">
-            <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+            <p
+              class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
+            >
               {{ $t('common.network') }}
             </p>
             <p

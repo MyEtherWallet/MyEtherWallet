@@ -3,21 +3,21 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 sm:px-5 py-4 transition-all min-h-[120px] flex flex-col"
     :class="{
-      'ring-2 ring-primary': inFocusInput,
+      'ring-2 ring-border-brand': inFocusInput,
     }"
     @click="setInFocusInput"
   >
-    <p class="font-semibold text-s-12 text-info">{{ displayTitle }}</p>
+    <p class="font-semibold text-s-12 text-text-subtle">{{ displayTitle }}</p>
     <div class="flex justify-start items-center w-full gap-1">
       <span
         class="font-medium text-s-28 tracking-tight shrink-0"
-        :class="[!amount ? 'opacity-60' : '', !!error ? 'text-error' : '']"
+        :class="[!amount ? 'opacity-60' : '', !!error ? 'text-text-error' : '']"
         >$</span
       >
       <input
         ref="amountInput"
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
-        :class="{ 'text-error': !!error }"
+        :class="{ 'text-text-error': !!error }"
         name="amount-input"
         id="amount-input"
         type="text"

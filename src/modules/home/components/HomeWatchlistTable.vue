@@ -52,23 +52,20 @@ const trade = (row: WatchlistRow) => {
 </script>
 
 <template>
-  <section
-    data-test="home-watchlist-table"
-    class="rounded-2xl bg-white p-6"
-  >
+  <section data-test="home-watchlist-table" class="rounded-2xl bg-white p-6">
     <div class="flex items-start justify-between">
       <div>
         <h2 class="text-s-20 font-bold text-black">
           {{ t('homePage.hero.watchlist.table.title') }}
         </h2>
-        <p class="mt-1 text-s-14 text-[#575757]">
+        <p class="mt-1 text-s-14 text-text-subtle">
           {{ t('homePage.hero.watchlist.table.subtitle') }}
         </p>
       </div>
       <button
         type="button"
         data-test="watchlist-add-new"
-        class="flex shrink-0 items-center gap-1 rounded-full bg-[#f5f5f5] px-4 py-2 text-s-14 font-medium text-primary"
+        class="flex shrink-0 items-center gap-1 rounded-full bg-background-default px-4 py-2 text-s-14 font-medium text-text-brand"
         @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addNew') }}
@@ -78,7 +75,7 @@ const trade = (row: WatchlistRow) => {
 
     <!-- Column headers (lg+) -->
     <div
-      class="mt-6 hidden items-center gap-4 border-b border-grey-outline/40 pb-2 text-s-11 uppercase tracking-wide text-[#575757] lg:flex"
+      class="mt-6 hidden items-center gap-4 border-b border-border-strong/40 pb-2 text-s-11 uppercase tracking-wide text-text-subtle lg:flex"
     >
       <span class="min-w-0 flex-1">
         {{ t('homePage.hero.watchlist.table.columns.asset') }}
@@ -100,7 +97,7 @@ const trade = (row: WatchlistRow) => {
         v-for="row in rows"
         :key="row.key"
         data-test="watchlist-row"
-        class="flex items-center gap-4 border-b border-grey-outline/30 py-4 last:border-b-0"
+        class="flex items-center gap-4 border-b border-border-strong/30 py-4 last:border-b-0"
       >
         <!-- Asset -->
         <div class="flex min-w-0 flex-1 items-center gap-3">
@@ -108,7 +105,7 @@ const trade = (row: WatchlistRow) => {
             type="button"
             data-test="watchlist-remove"
             :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="shrink-0 text-primary"
+            class="shrink-0 text-text-brand"
             @click="remove(row)"
           >
             <StarSolidIcon class="size-5" />
@@ -126,7 +123,7 @@ const trade = (row: WatchlistRow) => {
               :is-stock="row.isStock"
               class="block truncate text-s-14 font-bold text-black"
             />
-            <span class="block truncate text-s-12 text-[#575757]">
+            <span class="block truncate text-s-12 text-text-subtle">
               {{ row.name }}
             </span>
           </div>
@@ -148,7 +145,7 @@ const trade = (row: WatchlistRow) => {
         <div class="hidden w-[140px] items-center justify-end gap-2 lg:flex">
           <span
             class="flex items-center gap-0.5 text-s-12"
-            :class="row.change < 0 ? 'text-error' : 'text-success'"
+            :class="row.change < 0 ? 'text-text-error' : 'text-text-success'"
           >
             {{ changeLabel(row.change) }}
             <ArrowDownIcon v-if="row.change < 0" class="size-3.5" />
@@ -169,7 +166,7 @@ const trade = (row: WatchlistRow) => {
         <button
           type="button"
           data-test="watchlist-trade"
-          class="w-[88px] shrink-0 rounded-full bg-[#f5f5f5] py-2 text-s-14 font-medium text-primary"
+          class="w-[88px] shrink-0 rounded-full bg-background-default py-2 text-s-14 font-medium text-text-brand"
           @click="trade(row)"
         >
           {{ t('homePage.hero.watchlist.table.trade') }}

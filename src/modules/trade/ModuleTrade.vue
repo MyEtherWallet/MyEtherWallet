@@ -13,7 +13,7 @@
         <div class="flex items-end justify-between mb-2 px-4">
           <div>
             <p class="font-bold text-s-28">{{ $t('trade.title') }}</p>
-            <p class="text-info text-s-12 ml-1">
+            <p class="text-text-subtle text-s-12 ml-1">
               {{ $t('trade.subtitle') }}
             </p>
           </div>
@@ -23,7 +23,7 @@
               isCurrentNetworkSupported &&
               !isTradingRestrictedInRegion
             "
-            class="text-primary text-s-14 pb-1"
+            class="text-text-brand text-s-14 pb-1"
             @click="clearValues"
             >{{ $t('common.clear_all') }}</app-btn-text
           >
@@ -54,7 +54,7 @@
               >
                 {{ $t('trade.opens_in', { countdown: countdownText }) }}
               </p>
-              <p class="text-grey-50 text-s-11 mt-1">
+              <p class="text-text-muted text-s-11 mt-1">
                 {{ formatNextOpen(marketStatus.nextOpen) }}
               </p>
             </div>
@@ -120,7 +120,7 @@
               -->
 
               <span
-                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
+                class="absolute -top-2 -right-2 p-1 rounded-full bg-background-error border-2 border-white flex items-center justify-center"
               >
                 <exclamation-circle-icon
                   class="w-4 h-4 text-white"
@@ -138,7 +138,7 @@
         </app-unavailable-card>
 
         <div :class="['relative transition-all duration-300', blockedClass]">
-          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
+          <div class="bg-background-brand-subtle rounded-20 p-4 mx-auto mb-2">
             <select-chain-for-app
               :can-store="false"
               :passed-chains="fromChains"
@@ -149,7 +149,7 @@
           <!-- From Section -->
           <div
             v-if="supportedNetwork"
-            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
+            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto"
           >
             <p class="text-s-12 mb-1 font-bold ml-3">
               {{ $t('trade.you_are_selling') }}
@@ -209,18 +209,20 @@
               ]"
               @click="swapTokens"
             >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+              <arrows-up-down-icon class="w-5 h-5 text-text-brand" />
             </button> -->
             <!-- Arrow Button -->
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <arrow-down-icon class="w-5 h-5 text-text-brand" />
             </div>
           </div>
 
           <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
+          <div
+            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto mt-2"
+          >
             <p class="text-s-12 mb-1 font-bold ml-3">
               {{ $t('trade.you_are_buying') }}
             </p>
@@ -256,15 +258,15 @@
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-border-brand rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
           >
             <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">
+              <exclamation-circle-icon class="w-5 h-5 text-text-brand" />
+              <p class="text-text-brand font-medium text-s-16">
                 {{ $t('trade.market_closed') }}
               </p>
             </div>
-            <p class="text-info text-s-14 text-center mb-4">
+            <p class="text-text-subtle text-s-14 text-center mb-4">
               {{ marketStatus.reason?.message }}
             </p>
             <div class="text-center">
@@ -274,7 +276,7 @@
               >
                 {{ $t('trade.opens_in', { countdown: countdownText }) }}
               </p>
-              <p class="text-grey-50 text-s-11 mt-1">
+              <p class="text-text-muted text-s-11 mt-1">
                 {{ formatNextOpen(marketStatus.nextOpen) }}
               </p>
             </div>
@@ -286,9 +288,9 @@
       <div
         v-if="!isLoading && displayGeneralError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
+        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
-        <p class="text-error text-s-14 text-center break-words">
+        <p class="text-text-error text-s-14 text-center break-words">
           {{ displayGeneralError }}
         </p>
       </div>
@@ -302,9 +304,9 @@
           nonTradeableAssetMessage
         "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-background-warning-subtle border border-border-warning rounded-12 mb-2"
       >
-        <p class="text-warning text-s-14 text-center">
+        <p class="text-text-warning text-s-14 text-center">
           <app-token-symbol
             :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
             :address="

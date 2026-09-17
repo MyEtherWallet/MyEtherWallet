@@ -11,22 +11,25 @@
     >
       <div
         v-if="isCompact"
-        class="flex items-center gap-2 px-4 py-3 border-b border-mewBg"
+        class="flex items-center gap-2 px-4 py-3 border-b border-border-default"
       >
-        <magnifying-glass-icon class="w-4 h-4 text-info" />
+        <magnifying-glass-icon class="w-4 h-4 text-text-subtle" />
         <input
           ref="compactInputEl"
           v-model="query"
           type="text"
           :placeholder="$t('search.placeholder')"
           :aria-label="$t('search.placeholder')"
-          class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
+          class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-text-subtle"
         />
-        <button class="text-s-13 font-medium text-primary" @click="close">
+        <button class="text-s-13 font-medium text-text-brand" @click="close">
           {{ $t('search.cancel') }}
         </button>
       </div>
-      <div v-auto-animate class="overflow-y-auto overscroll-contain flex-1 min-h-[280px] px-3 pt-5 pb-3 flex flex-col">
+      <div
+        v-auto-animate
+        class="overflow-y-auto overscroll-contain flex-1 min-h-[280px] px-3 pt-5 pb-3 flex flex-col"
+      >
         <!-- Gate on debouncedQuery so the chips remain visible during the
              debounce window — avoids a brief blank panel between keystroke
              and the first refetch. -->
@@ -56,11 +59,11 @@
           v-if="showEmptyState"
           class="flex flex-col items-center justify-center gap-1 px-4 text-center flex-1"
         >
-          <magnifying-glass-icon class="w-8 h-8 text-info mb-1" />
+          <magnifying-glass-icon class="w-8 h-8 text-text-subtle mb-1" />
           <p class="text-s-14 font-semibold">
             {{ $t('search.no_results_title') }}
           </p>
-          <p class="text-s-12 text-info">
+          <p class="text-s-12 text-text-subtle">
             {{ $t('search.no_results_subtitle') }}
           </p>
         </div>
@@ -78,10 +81,9 @@ import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchSection from './GlobalSearchSection.vue'
 import RecentlyViewedChips from './RecentlyViewedChips.vue'
 
-const props = withDefaults(
-  defineProps<{ isCompact?: boolean }>(),
-  { isCompact: false },
-)
+const props = withDefaults(defineProps<{ isCompact?: boolean }>(), {
+  isCompact: false,
+})
 
 const {
   isOpen,
@@ -120,7 +122,10 @@ watch(showEmptyState, empty => {
 })
 
 const route = useRoute()
-watch(() => route.fullPath, () => {
-  if (isOpen.value) close()
-})
+watch(
+  () => route.fullPath,
+  () => {
+    if (isOpen.value) close()
+  },
+)
 </script>

@@ -53,7 +53,7 @@
                 },
                 hasContentGutter ? 'px-4 xs:px-6 sm:px-8' : '',
                 bg,
-                hasTitleUnderline ? 'border-b border-grey-outline' : '',
+                hasTitleUnderline ? 'border-b border-border-strong' : '',
               ]"
             >
               <slot name="title">

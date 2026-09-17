@@ -2,7 +2,7 @@
   <div
     :class="[
       {
-        'bg-surface rounded-32 p-1': variant === 'default',
+        'bg-background-default-hover rounded-32 p-1': variant === 'default',
       },
       { 'max-w-fit': !hasFullWidth },
       'flex  gap-1',
@@ -34,7 +34,8 @@
           },
           { hoverNoBG: variant === 'default' && !areEqual(selected, btn) },
           {
-            '!bg-surface': variant === 'outline' && !areEqual(selected, btn),
+            '!bg-background-default-hover':
+              variant === 'outline' && !areEqual(selected, btn),
           },
           {
             ' !bg-black text-white':

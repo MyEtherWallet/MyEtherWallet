@@ -45,7 +45,7 @@
             <!-- Loading QR Placeholder -->
             <div
               v-show="isLoadingQRCode"
-              class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+              class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
             ></div>
           </div>
         </div>
@@ -64,7 +64,7 @@
             <!-- Copy -->
             <app-btn-copy
               :copy-value="walletAddress"
-              class="!min-w-10 h-10 text-primary"
+              class="!min-w-10 h-10 text-text-brand"
             >
             </app-btn-copy>
             <!-- Block Explorer Link -->
@@ -74,7 +74,7 @@
               target="_blank"
               class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-primary-light transition-colors"
             >
-              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-primary" />
+              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-text-brand" />
             </a>
           </div>
         </div>
