@@ -307,8 +307,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             <StarSolidIcon class="size-5" />
           </button>
 
-          <!-- Token -->
-          <div class="flex min-w-0 flex-1 items-center gap-2">
+          <!-- Token — a focusable link so keyboard users can open the drawer
+               (the row-body click is a mouse convenience layered on top). -->
+          <router-link
+            :to="row.route"
+            data-test="watchlist-row-link"
+            :aria-label="row.name || row.symbol || undefined"
+            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg no-underline outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+          >
             <template v-if="row.loading">
               <span
                 class="size-10 shrink-0 animate-pulse rounded-full bg-[#f0f0f0]"
@@ -342,7 +348,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 </span>
               </div>
             </template>
-          </div>
+          </router-link>
 
           <!-- Market cap (≥780px) -->
           <span

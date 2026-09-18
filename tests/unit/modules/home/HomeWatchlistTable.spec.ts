@@ -97,7 +97,13 @@ const i18n = createI18n({
 })
 
 const mountTable = (rows: WatchlistRow[] = ROWS) =>
-  mount(HomeWatchlistTable, { props: { rows }, global: { plugins: [i18n] } })
+  mount(HomeWatchlistTable, {
+    props: { rows },
+    global: {
+      plugins: [i18n],
+      stubs: { RouterLink: { props: ['to'], template: '<a><slot /></a>' } },
+    },
+  })
 
 describe('HomeWatchlistTable (MEW-2130)', () => {
   beforeEach(() => {
@@ -138,6 +144,13 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     const w = mountTable()
     await w.findAll('[data-test="watchlist-row"]')[0].trigger('click')
     expect(push).toHaveBeenCalledWith(ROWS[0].route)
+  })
+
+  it('exposes a focusable link for the row body (keyboard access)', () => {
+    const w = mountTable([makeRow()])
+    const link = w.find('[data-test="watchlist-row-link"]')
+    expect(link.exists()).toBe(true)
+    expect(link.element.tagName).toBe('A')
   })
 
   it('clicking the star (remove) does not navigate', async () => {
