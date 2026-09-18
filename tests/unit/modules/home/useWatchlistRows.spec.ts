@@ -58,7 +58,7 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
       removeId: 'ethereum',
     })
     expect(row.route).toEqual({
-      name: TOKEN_INFO_ROUTE_NAMES.home,
+      name: TOKEN_INFO_ROUTE_NAMES.homePage,
       params: { tokenId: 'ethereum' },
     })
   })
@@ -95,7 +95,7 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
       removeId: 'AAPL',
     })
     expect(row.route).toEqual({
-      name: STOCK_INFO_ROUTE_NAMES.home,
+      name: STOCK_INFO_ROUTE_NAMES.homePage,
       params: { symbol: 'AAPL' },
     })
   })

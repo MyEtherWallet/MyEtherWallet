@@ -61,7 +61,10 @@ export const mapTokenRow = (
   marketCapDisplay: fmt.compact(t.marketCap),
   volumeDisplay: fmt.compact(t.totalVolume),
   sparkline: t.sparklineIn7d ?? [],
-  route: { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: t.coinId } },
+  route: {
+    name: TOKEN_INFO_ROUTE_NAMES.homePage,
+    params: { tokenId: t.coinId },
+  },
   tradeSymbol: t.symbol,
   removeType: 'crypto',
   removeId: t.coinId,
@@ -82,7 +85,7 @@ export const mapStockRow = (
   volumeDisplay: fmt.compact(s.underlyingMarket.volume24h),
   sparkline: s.primaryMarket.sparkline24h ?? [],
   route: {
-    name: STOCK_INFO_ROUTE_NAMES.home,
+    name: STOCK_INFO_ROUTE_NAMES.homePage,
     params: { symbol: s.primaryMarket.symbol },
   },
   tradeSymbol: s.primaryMarket.symbol,
@@ -116,10 +119,10 @@ export const placeholderRow = (
   sparkline: [],
   route:
     type === 'stock'
-      ? { name: STOCK_INFO_ROUTE_NAMES.home, params: { symbol: id } }
+      ? { name: STOCK_INFO_ROUTE_NAMES.homePage, params: { symbol: id } }
       : type === 'perp'
         ? { name: PERP_INFO_ROUTE_NAME, params: { market: id } }
-        : { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: id } },
+        : { name: TOKEN_INFO_ROUTE_NAMES.homePage, params: { tokenId: id } },
   tradeSymbol: id,
   removeType: type,
   removeId: id,

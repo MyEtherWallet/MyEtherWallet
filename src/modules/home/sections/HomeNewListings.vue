@@ -120,7 +120,7 @@ const stockItems = computed<ListingCardItem[]>(() =>
     // Stocks always open the Trade panel — the CTA is never disabled.
     tradeDisabled: false,
     to: {
-      name: STOCK_INFO_ROUTE_NAMES.stocks,
+      name: STOCK_INFO_ROUTE_NAMES.homePage,
       params: { symbol: item.primaryMarket.symbol },
     },
   })),
@@ -163,11 +163,11 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
       nativeChains: item.nativeChains,
       to: item.ondo
         ? {
-            name: STOCK_INFO_ROUTE_NAMES.crypto,
+            name: STOCK_INFO_ROUTE_NAMES.homePage,
             params: { symbol: item.ondo.primaryMarket.symbol },
           }
         : {
-            name: TOKEN_INFO_ROUTE_NAMES.crypto,
+            name: TOKEN_INFO_ROUTE_NAMES.homePage,
             params: { tokenId: item.coinId },
           },
     }
