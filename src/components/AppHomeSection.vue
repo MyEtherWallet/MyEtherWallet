@@ -3,7 +3,7 @@ defineProps<{ title?: string; subtitle?: string }>()
 </script>
 
 <template>
-  <section class="relative px-8 py-8">
+  <section class="relative px-3 py-8 xs:px-5">
     <header
       v-if="title"
       class="mb-8 flex items-start justify-between gap-4"
