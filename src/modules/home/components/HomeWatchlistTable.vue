@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
 import {
   StarIcon as StarSolidIcon,
@@ -46,6 +47,7 @@ const CATEGORIES = [
 
 const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
+const router = useRouter()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const matchesCategory = (r: WatchlistRow) =>
@@ -115,6 +117,15 @@ const actionCall = (row: WatchlistRow) => {
     walletMenu.setWalletPanel('trade')
   }
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
+}
+
+// Clicking the row body opens the asset's info drawer. Clicks that land on the
+// star, action button, kebab menu or drag handle run their own action instead
+// (the menu backdrop stops its own click), so only a click on the row itself
+// navigates.
+const openInfo = (row: WatchlistRow, e: MouseEvent) => {
+  if ((e.target as HTMLElement).closest('button, a, .drag-handle')) return
+  router.push(row.route)
 }
 </script>
 
@@ -245,8 +256,9 @@ const actionCall = (row: WatchlistRow) => {
       <template #item="{ element: row }">
         <li
           data-test="watchlist-row"
-          class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
+          class="group relative flex cursor-pointer items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
           :class="{ 'min-[780px]:hover:pl-7': !dragDisabled }"
+          @click="openInfo(row, $event)"
         >
           <!-- Mobile: the handle is always visible (fixed) so touch users can
                reorder. Desktop: it fades in on hover and the row's left padding
@@ -426,7 +438,7 @@ const actionCall = (row: WatchlistRow) => {
                   <div
                     class="fixed inset-0 z-10"
                     aria-hidden="true"
-                    @click="openMenuKey = null"
+                    @click.stop="openMenuKey = null"
                   />
                   <ul
                     class="absolute right-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-grey-outline/40 bg-white py-1 shadow-lg"

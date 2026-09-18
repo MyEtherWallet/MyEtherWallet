@@ -125,6 +125,18 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(push).not.toHaveBeenCalled()
   })
 
+  it('clicking the row body opens the asset info drawer', async () => {
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-row"]')[0].trigger('click')
+    expect(push).toHaveBeenCalledWith(ROWS[0].route)
+  })
+
+  it('clicking the star (remove) does not navigate', async () => {
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-remove"]')[0].trigger('click')
+    expect(push).not.toHaveBeenCalled()
+  })
+
   it('caps the list at 5 and expands via Show more', async () => {
     const rows = Array.from({ length: 7 }, (_, i) =>
       makeRow({ key: `token-${i}`, symbol: `T${i}`, removeId: `t${i}` }),
