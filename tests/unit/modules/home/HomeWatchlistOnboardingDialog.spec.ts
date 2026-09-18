@@ -143,6 +143,39 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(w.find('[data-test="s1"]').exists()).toBe(true)
   })
 
+  it('back to markets clears downstream picks so a later fetch is not stale (MEW-2360)', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2-pick"]').trigger('click') // pick STOCK:Equities
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    expect(fetchRecommendations).toHaveBeenLastCalledWith(['STOCK:Equities'])
+
+    // All the way back to markets: assets + categories must be cleared.
+    await w.get('[data-test="s3-back"]').trigger('click') // → industries
+    await w.get('[data-test="s2-back"]').trigger('click') // → markets
+
+    // Forward again without re-picking a category → the recommend call must not
+    // reuse the stale STOCK:Equities pick.
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    expect(fetchRecommendations).toHaveBeenLastCalledWith([])
+  })
+
+  it('back from assets clears the asset picks (MEW-2360)', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    await w.get('[data-test="pick"]').trigger('click') // pick eth, aapl, btc
+    await w.get('[data-test="s3-back"]').trigger('click') // → industries (assets cleared)
+    await w.get('[data-test="s2"]').trigger('click') // → assets again
+    await w.get('[data-test="done"]').trigger('click') // finish with no picks
+
+    const store = useWatchlistStore()
+    expect(store.watchListedTokens).toEqual([])
+    expect(store.watchListedStocks).toEqual([])
+    expect(store.watchListedPerps).toEqual([])
+  })
+
   it('done adds each selected asset to its matching bucket and closes', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1"]').trigger('click')

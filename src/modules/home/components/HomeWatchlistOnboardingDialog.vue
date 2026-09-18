@@ -51,10 +51,21 @@ const goToIndustries = () => {
   fetchCategories(marketsToTypes(selectedMarkets.value))
 }
 
-// Back from industries → markets. Selections are kept (refs untouched) so the
-// user sees their prior picks (AC: back preserves prior selections).
+// Back from industries → markets. Clears everything downstream (categories +
+// assets) so changing a market choice can't carry stale category/asset picks
+// into the next fetch. The market picks themselves are kept.
 const goToMarkets = () => {
   activeStep.value = 0
+  selectedCategoryIds.value = []
+  selectedAssetIds.value = []
+}
+
+// Back from assets → industries. Clears the asset picks so re-editing the
+// categories (or just returning) can't carry a stale asset selection forward.
+// Category picks are kept; categories are already loaded, so no re-fetch.
+const backToIndustries = () => {
+  activeStep.value = 1
+  selectedAssetIds.value = []
 }
 
 // Continue from step 2 → recommend the assets in the picked categories.
@@ -149,7 +160,7 @@ watch(isOpen, open => {
           :assets="assets"
           :is-loading="isLoadingStep3"
           @done="finish"
-          @back="goToIndustries"
+          @back="backToIndustries"
           @close="close"
         />
       </div>
