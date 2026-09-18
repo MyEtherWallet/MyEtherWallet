@@ -17,7 +17,6 @@ const TABS: { id: AssetPickerTab; labelKey: string }[] = [
   { id: 'all', labelKey: 'all' },
   { id: 'stocks', labelKey: 'stocks' },
   { id: 'crypto', labelKey: 'crypto' },
-  { id: 'perps', labelKey: 'perps' },
 ]
 
 const tab = ref<AssetPickerTab>('all')
@@ -32,7 +31,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
     data-test="add-to-watchlist-dialog"
   >
     <template #content>
-      <div class="flex max-h-[70vh] flex-col p-6">
+      <div class="flex flex-col px-6 pt-6">
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
@@ -43,6 +42,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
+          bg-class="bg-[#f5f5f5]"
           class="mt-5"
         />
 
@@ -70,12 +70,14 @@ const { items, isLoading } = useAssetPicker(tab, query)
           </button>
         </div>
 
-        <!-- List (pr keeps the star off the scrollbar) -->
-        <div class="mew-scrollbar mt-2 min-h-[240px] flex-1 overflow-y-auto pr-2">
+        <!-- List: fixed height so the modal never resizes between tabs or
+             loading/loaded (QA). Sits flush under the tabs (no top gap) and only
+             this area scrolls; pr keeps the star off the scrollbar. -->
+        <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
           <div
             v-if="isLoading"
             data-test="picker-loading"
-            class="flex h-[240px] items-center justify-center"
+            class="flex h-full items-center justify-center"
           >
             <span
               class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"

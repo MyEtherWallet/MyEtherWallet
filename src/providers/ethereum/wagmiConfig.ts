@@ -1,6 +1,11 @@
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
-import { createConfig, http, mock, type Config } from '@wagmi/core'
+import {
+  createConfig,
+  http,
+  mock,
+  type Config,
+} from '@wagmi/core'
 import { connectorsForWallets, type WalletList } from '@rainbow-me/rainbowkit'
 import * as rainbowWallets from '@rainbow-me/rainbowkit/wallets'
 
@@ -10,7 +15,16 @@ import type { Chain as wChain } from '@wagmi/core/chains'
 
 type CreateWalletFn = WalletList[number]['wallets'][number]
 
-const REMOVED_WALLETS_ID = ['bitskiWallet', 'backpackWallet', 'portoWallet']
+// `baseAccount` is removed because @base-org/account@1.1.1 (pulled in transitively by
+// @wagmi/connectors) throws a TDZ `ReferenceError: Cannot access 'p' before initialization`
+// from createBaseAccountSDK().getProvider(), so clicking the wallet always crashes.
+// See Sentry APP-MEW-WEB-1C0. Drop the removal once the SDK dependency is bumped past the fix.
+const REMOVED_WALLETS_ID = [
+  'bitskiWallet',
+  'backpackWallet',
+  'portoWallet',
+  'baseAccount',
+]
 
 const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 const allRainbowWallets = Object.values(rainbowWallets).filter(wallet => {
@@ -62,7 +76,7 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
       const mConnector = mock({
         accounts: [testAddress as `0x${string}`],
       })
-      allConnectors.push(mConnector)
+      allConnectors.push(mConnector as unknown as (typeof allConnectors)[number])
     }
   }
 

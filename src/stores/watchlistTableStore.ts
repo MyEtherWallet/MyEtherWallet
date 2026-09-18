@@ -35,6 +35,24 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
     },
   )
 
+  /**
+   * Manual display order for the home watchlist table, as row keys
+   * ("stock-AAPL" | "token-ethereum" | "perp-BTC"). The table is drag-sorted
+   * across all buckets, so a single ordered list is the source of truth for
+   * display; ids not present here (freshly added) fall back to the top.
+   */
+  const watchlistOrder = useLocalStorage<string[]>(
+    StoreConfigs.LOCAL_STORAGE_KEYS.watchlistOrder,
+    [],
+    {
+      mergeDefaults: true,
+    },
+  )
+
+  const setWatchlistOrder = (keys: string[]) => {
+    watchlistOrder.value = keys
+  }
+
   const setWatchlistItem = (
     id: string,
     isStock: boolean | null | undefined = true,
@@ -85,5 +103,7 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
     watchListedPerps,
     setWatchlistPerp,
     isWatchListedPerp,
+    watchlistOrder,
+    setWatchlistOrder,
   }
 })
