@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
 import {
   StarIcon as StarSolidIcon,
@@ -20,6 +20,7 @@ import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
@@ -46,7 +47,8 @@ const CATEGORIES = [
 
 const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu } = storeToRefs(walletMenu)
+const router = useRouter()
+const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
 
 const matchesCategory = (r: WatchlistRow) =>
   category.value === 'all' ||
@@ -91,12 +93,17 @@ const draggableRows = computed<WatchlistRow[]>({
 const changeLabel = (change: number) =>
   formatPercentageValue(Math.abs(change)).value
 
-// Crypto trades via Swap, stocks/perps via Trade (Figma). The action opens the
-// wallet side panel in place — it must not navigate away from the home page.
-const actionKey = (row: WatchlistRow) =>
-  row.removeType === 'crypto'
-    ? 'homePage.hero.watchlist.table.swap'
-    : 'homePage.hero.watchlist.table.trade'
+// Crypto trades via Swap or Bridge (whichever the info drawer would open for
+// this token — swap on the current chain, bridge otherwise), stocks via Trade
+// (Figma). The action opens the wallet side panel in place; it must not
+// navigate away from the home page.
+const actionKey = (row: WatchlistRow) => {
+  if (row.removeType !== 'crypto')
+    return 'homePage.hero.watchlist.table.trade'
+  return row.cta === 'bridge'
+    ? 'homePage.hero.watchlist.table.bridge'
+    : 'homePage.hero.watchlist.table.swap'
+}
 
 const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
   category.value = value
@@ -104,21 +111,31 @@ const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
 }
 
 const remove = (row: WatchlistRow) => {
-  if (row.removeType === 'perp') {
-    watchlistStore.setWatchlistPerp(row.removeId)
-  } else {
-    watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
-  }
+  watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
 }
 
 const actionCall = (row: WatchlistRow) => {
-  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
   if (row.removeType === 'crypto') {
-    walletMenu.setWalletPanel('swap')
-  } else {
-    walletMenu.setWalletPanel('trade')
+    // Prime + open the same panel the info drawer would (swap on the current
+    // chain, bridge off it) so the side panel isn't left empty.
+    if (row.cta === 'bridge') {
+      openBridgeForToken(row.symbol, row.name, row.nativeChains, row.chains)
+    } else {
+      openSwapForToken(row.symbol, row.name, row.chains, row.nativeChains)
+    }
+    return
   }
-  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
+  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
+  walletMenu.openPanel('trade')
+}
+
+// Clicking the row body opens the asset's info drawer. Clicks that land on the
+// star, action button, kebab menu or drag handle run their own action instead
+// (the menu backdrop stops its own click), so only a click on the row itself
+// navigates.
+const openInfo = (row: WatchlistRow, e: MouseEvent) => {
+  if ((e.target as HTMLElement).closest('button, a, .drag-handle')) return
+  router.push(row.route)
 }
 </script>
 
@@ -249,8 +266,9 @@ const actionCall = (row: WatchlistRow) => {
       <template #item="{ element: row }">
         <li
           data-test="watchlist-row"
-          class="group relative flex items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
+          class="group relative flex cursor-pointer items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
           :class="{ 'min-[780px]:hover:pl-7': !dragDisabled }"
+          @click="openInfo(row, $event)"
         >
           <!-- Mobile: the handle is always visible (fixed) so touch users can
                reorder. Desktop: it fades in on hover and the row's left padding
@@ -289,8 +307,14 @@ const actionCall = (row: WatchlistRow) => {
             <StarSolidIcon class="size-5" />
           </button>
 
-          <!-- Token -->
-          <div class="flex min-w-0 flex-1 items-center gap-2">
+          <!-- Token — a focusable link so keyboard users can open the drawer
+               (the row-body click is a mouse convenience layered on top). -->
+          <router-link
+            :to="row.route"
+            data-test="watchlist-row-link"
+            :aria-label="row.name || row.symbol || undefined"
+            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg no-underline outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+          >
             <template v-if="row.loading">
               <span
                 class="size-10 shrink-0 animate-pulse rounded-full bg-[#f0f0f0]"
@@ -324,7 +348,7 @@ const actionCall = (row: WatchlistRow) => {
                 </span>
               </div>
             </template>
-          </div>
+          </router-link>
 
           <!-- Market cap (≥780px) -->
           <span
@@ -409,7 +433,7 @@ const actionCall = (row: WatchlistRow) => {
               <button
                 type="button"
                 data-test="watchlist-trade"
-                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary min-[780px]:block"
+                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary transition-colors group-hover:bg-white min-[780px]:block"
                 @click="actionCall(row)"
               >
                 {{ t(actionKey(row)) }}
@@ -430,7 +454,7 @@ const actionCall = (row: WatchlistRow) => {
                   <div
                     class="fixed inset-0 z-10"
                     aria-hidden="true"
-                    @click="openMenuKey = null"
+                    @click.stop="openMenuKey = null"
                   />
                   <ul
                     class="absolute right-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-grey-outline/40 bg-white py-1 shadow-lg"

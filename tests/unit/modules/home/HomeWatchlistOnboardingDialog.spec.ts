@@ -97,31 +97,26 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(fetchRecommendations).toHaveBeenCalledWith(['STOCK:Equities'])
   })
 
-  it('skip on markets discards the picks and recommends every category', async () => {
+  it('skip on markets recommends the full set without fetching categories', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
     await w.get('[data-test="s1-skip"]').trigger('click')
-    await flushPromises() // skipFromMarkets awaits fetchCategories first
+    await flushPromises()
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    expect(fetchCategories).toHaveBeenCalledWith(['STOCK', 'CRYPTO'])
-    // Ignores the crypto pick — recommends across every fetched category.
-    expect(fetchRecommendations).toHaveBeenCalledWith([
-      'STOCK:Equities',
-      'CRYPTO:stablecoins',
-    ])
+    // No categories resolved; recommend everything (no arg → no `categories=`).
+    expect(fetchCategories).not.toHaveBeenCalled()
+    expect(fetchRecommendations).toHaveBeenCalledWith()
   })
 
-  it('skip on industries ignores step 1 and recommends across both markets', async () => {
+  it('skip on industries recommends the full set without extra category fetches', async () => {
     const w = mountDialog()
-    await w.get('[data-test="s1"]').trigger('click')
+    await w.get('[data-test="s1"]').trigger('click') // → industries (fetchCategories once)
     await w.get('[data-test="s2-skip"]').trigger('click')
-    await flushPromises() // skipToAssets awaits fetchCategories first
+    await flushPromises()
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    expect(fetchCategories).toHaveBeenCalledWith(['STOCK', 'CRYPTO'])
-    expect(fetchRecommendations).toHaveBeenCalledWith([
-      'STOCK:Equities',
-      'CRYPTO:stablecoins',
-    ])
+    // Only the step-1 → industries transition fetched categories; skip adds none.
+    expect(fetchCategories).toHaveBeenCalledTimes(1)
+    expect(fetchRecommendations).toHaveBeenCalledWith()
   })
 
   it('skip resets the skipped selection so back shows no stale picks', async () => {
@@ -141,6 +136,39 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(w.find('[data-test="s2"]').exists()).toBe(true)
     await w.get('[data-test="s2-back"]').trigger('click')
     expect(w.find('[data-test="s1"]').exists()).toBe(true)
+  })
+
+  it('back to markets clears downstream picks so a later fetch is not stale (MEW-2360)', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2-pick"]').trigger('click') // pick STOCK:Equities
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    expect(fetchRecommendations).toHaveBeenLastCalledWith(['STOCK:Equities'])
+
+    // All the way back to markets: assets + categories must be cleared.
+    await w.get('[data-test="s3-back"]').trigger('click') // → industries
+    await w.get('[data-test="s2-back"]').trigger('click') // → markets
+
+    // Forward again without re-picking a category → the recommend call must not
+    // reuse the stale STOCK:Equities pick.
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    expect(fetchRecommendations).toHaveBeenLastCalledWith([])
+  })
+
+  it('back from assets clears the asset picks (MEW-2360)', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2"]').trigger('click') // → assets
+    await w.get('[data-test="pick"]').trigger('click') // pick eth, aapl, btc
+    await w.get('[data-test="s3-back"]').trigger('click') // → industries (assets cleared)
+    await w.get('[data-test="s2"]').trigger('click') // → assets again
+    await w.get('[data-test="done"]').trigger('click') // finish with no picks
+
+    const store = useWatchlistStore()
+    expect(store.watchListedTokens).toEqual([])
+    expect(store.watchListedStocks).toEqual([])
+    expect(store.watchListedPerps).toEqual([])
   })
 
   it('done adds each selected asset to its matching bucket and closes', async () => {
