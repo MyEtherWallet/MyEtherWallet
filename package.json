@@ -137,10 +137,10 @@
   "pnpm": {
     "overrides": {
       "axios": "1.14.0",
-      "@amplitude/analytics-core": "2.46.0"
+      "@amplitude/analytics-core": "2.55.0"
     },
     "patchedDependencies": {
-      "@amplitude/analytics-core@2.46.0": "patches/@amplitude__analytics-core@2.46.0.patch"
+      "@amplitude/analytics-core@2.55.0": "patches/@amplitude__analytics-core@2.55.0.patch"
     }
   }
 }
