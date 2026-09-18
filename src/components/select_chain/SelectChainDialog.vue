@@ -68,9 +68,7 @@
             v-if="notSupportedChains.length"
             class="flex items-center gap-1 pl-5 pt-5 pb-1"
           >
-            <app-tooltip
-              :text="$t('select_chain.incompatible_tooltip')"
-            >
+            <app-tooltip :text="$t('select_chain.incompatible_tooltip')">
               <p class="text-s-16 font-medium text-info">
                 {{ $t('select_chain.incompatible_title') }}
               </p></app-tooltip
@@ -198,7 +196,7 @@ const setSelectedChain = (chain: Chain) => {
 /** -------------------------------
  * Dialog
  -------------------------------*/
-const openDialog = defineModel('isOpen', {
+const openDialog = defineModel<boolean>('isOpen', {
   default: false,
 })
 const setOpenDialog = (value: boolean) => {

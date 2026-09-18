@@ -4,3 +4,5 @@ onlyBuiltDependencies:
   - node-hid
   - usb
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@myetherwallet/vue-common-components'
