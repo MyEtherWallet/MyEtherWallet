@@ -64,16 +64,18 @@ export function useNewListingCta(): {
   }
 
   const run = (token: NewListingCtaToken): void => {
-    const kind = resolve(token)
-    if (kind === 'swap') {
+    // Bridge only when the coin lives off the current chain; otherwise open Swap
+    // — including the 'none' case, so the CTA always opens a panel like the
+    // watchlist table rather than dead-ending.
+    if (resolve(token) === 'bridge') {
+      openBridgeForToken(token.symbol, token.name, token.nativeChains)
+    } else {
       openSwapForToken(
         token.symbol,
         token.name,
         token.chains,
         token.nativeChains,
       )
-    } else if (kind === 'bridge') {
-      openBridgeForToken(token.symbol, token.name, token.nativeChains)
     }
   }
 

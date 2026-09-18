@@ -54,22 +54,17 @@ const { formatFiat, formatFiatCompact } = useCurrency()
 const { newCoins, fetchNewCoins } = useCryptoNewCoins()
 const { resolve: resolveCta, run: runCta } = useNewListingCta()
 
-// Crypto CTA mirrors the crypto page (Swap / Bridge), but never hides the
-// button: an unsupported coin ('none') shows Swap disabled so cards keep an
-// equal footer. Returns the label + whether it should render disabled.
-const cryptoCta = (
+// Crypto CTA label mirrors the info drawer: Swap on the current chain, Bridge
+// off it (falls back to Swap otherwise). The button is always enabled — clicking
+// opens the side panel like the watchlist table, even when there's no direct
+// route.
+const cryptoCtaLabel = (
   chains?: CryptoOverviewChain[],
   nativeChains?: CryptoOverviewNativeChain[],
-): { label: string; disabled: boolean } => {
-  const kind = resolveCta({ chains, nativeChains })
-  return {
-    label:
-      kind === 'bridge'
-        ? t('homePage.listings.bridge')
-        : t('homePage.listings.swap'),
-    disabled: kind === 'none',
-  }
-}
+): string =>
+  resolveCta({ chains, nativeChains }) === 'bridge'
+    ? t('homePage.listings.bridge')
+    : t('homePage.listings.swap')
 
 // Stocks overview is triggered by ViewHome; crypto newCoins is section-only.
 onMounted(fetchNewCoins)
@@ -129,7 +124,6 @@ const stockItems = computed<ListingCardItem[]>(() =>
 // page.
 const cryptoItems = computed<ListingCardItem[]>(() =>
   newCoins.value.map(item => {
-    const cta = cryptoCta(item.chains, item.nativeChains)
     return {
       key: item.coinId,
       name: item.name,
@@ -150,8 +144,8 @@ const cryptoItems = computed<ListingCardItem[]>(() =>
       favoriteId: item.coinId,
       isStock: false,
       tradePanel: 'swap',
-      ctaLabel: cta.label,
-      tradeDisabled: cta.disabled,
+      ctaLabel: cryptoCtaLabel(item.chains, item.nativeChains),
+      tradeDisabled: false,
       chains: item.chains,
       nativeChains: item.nativeChains,
       to: item.ondo
@@ -175,10 +169,10 @@ const items = computed<ListingCardItem[]>(() =>
 // - Stocks open the Trade panel, which restores its "to" token from
 //   selectedTradeTokenSymbol — set that first (same as ViewStockInfo / the
 //   stocks & balance tables).
-// - Crypto runs the resolved CTA (swap or bridge) via useNewListingCta, which
-//   primes the wallet drawer from the coin's chains/nativeChains and opens the
-//   matching panel. 'none' cards render Swap disabled, so onTrade never fires
-//   for them.
+// - Crypto runs the resolved CTA via useNewListingCta, which primes the wallet
+//   drawer from the coin's chains/nativeChains and opens the matching panel
+//   (Bridge off the current chain, Swap otherwise — including the fallback, so
+//   the button always opens a panel like the watchlist table).
 const onTrade = (it: ListingCardItem) => {
   if (it.isStock) {
     walletMenu.setSelectedTradeTokenSymbol(it.symbol)

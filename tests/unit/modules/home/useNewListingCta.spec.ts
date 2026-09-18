@@ -173,4 +173,17 @@ describe('useNewListingCta', () => {
     )
     expect(openSwapForToken).not.toHaveBeenCalled()
   })
+
+  it("run opens Swap as the fallback for a 'none' CTA (no dead-end)", () => {
+    // No swap-capable chain resolves to 'none', but the button is still enabled,
+    // so run must open a panel (Swap) rather than doing nothing.
+    useNewListingCta().run({
+      symbol: 'X',
+      name: 'X',
+      chains: [],
+      nativeChains: [],
+    })
+    expect(openSwapForToken).toHaveBeenCalledWith('X', 'X', [], [])
+    expect(openBridgeForToken).not.toHaveBeenCalled()
+  })
 })
