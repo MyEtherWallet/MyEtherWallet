@@ -417,7 +417,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               <button
                 type="button"
                 data-test="watchlist-trade"
-                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary min-[780px]:block"
+                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary transition-colors group-hover:bg-white min-[780px]:block"
                 @click="actionCall(row)"
               >
                 {{ t(actionKey(row)) }}
