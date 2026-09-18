@@ -242,11 +242,7 @@
                         <p
                           class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                         >
-                          {{
-                            token.ondo?.stockAlias
-                              ? token.ondo.stockAlias
-                              : token.name
-                          }}
+                          {{ getTokenDisplayName(token) }}
                         </p>
                       </app-tooltip>
                       <p
@@ -536,6 +532,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
