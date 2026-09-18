@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { StoreConfigs } from './configs'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification/index'
+import i18n from '@/i18n'
+
+/** Max items allowed per watchlist bucket (crypto, stocks and perps each). */
+export const WATCHLIST_MAX = 25
+
 export const useWatchlistStore = defineStore('useWatchlistStore', () => {
   /**--------------------------
    * WATCHLIST LOCAL STORAGE
@@ -53,6 +60,21 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
     watchlistOrder.value = keys
   }
 
+  // Both toggle fns below are the single add path every UI trigger routes
+  // through (star buttons across crypto/stocks/perps + the onboarding batch
+  // loop), so capping each bucket here covers them all.
+  // ponytail: a batch add that overflows fires one toast per rejected item —
+  // acceptable for the onboarding edge case; dedupe if it proves noisy.
+  const notifyWatchlistFull = () => {
+    useToastStore().addToastMessage({
+      text: i18n.global.t('common.watchlist_limit_reached', {
+        max: WATCHLIST_MAX,
+      }),
+      type: ToastType.Error,
+      duration: 5000,
+    })
+  }
+
   const setWatchlistItem = (
     id: string,
     isStock: boolean | null | undefined = true,
@@ -62,9 +84,13 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
 
     if (isAlreadyListed) {
       targetList.value = targetList.value.filter(item => item !== id)
-    } else {
-      targetList.value = [...targetList.value, id]
+      return
     }
+    if (targetList.value.length >= WATCHLIST_MAX) {
+      notifyWatchlistFull()
+      return
+    }
+    targetList.value = [...targetList.value, id]
   }
 
   const setWatchlistPerp = (symbol: string) => {
@@ -73,9 +99,13 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
       watchListedPerps.value = watchListedPerps.value.filter(
         item => item !== symbol,
       )
-    } else {
-      watchListedPerps.value = [...watchListedPerps.value, symbol]
+      return
     }
+    if (watchListedPerps.value.length >= WATCHLIST_MAX) {
+      notifyWatchlistFull()
+      return
+    }
+    watchListedPerps.value = [...watchListedPerps.value, symbol]
   }
 
   const isWatchListedPerp = (symbol: string) =>

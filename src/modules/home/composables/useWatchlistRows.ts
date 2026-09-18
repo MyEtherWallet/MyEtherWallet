@@ -4,7 +4,6 @@ import { storeToRefs } from 'pinia'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { useCurrency } from '@/composables/useCurrency'
-import { usePerpsContracts } from '@/modules/perps/composables/usePerpsMarkets'
 import { getLogoUrl } from '@/modules/perps/utils/market'
 import type { Contract } from '@/modules/perps/sdk/types'
 import type {
@@ -149,9 +148,9 @@ export const mapPerpRow = (
 })
 
 /**
- * Unified watchlist rows for the home table (MEW-2130) — merges crypto tokens,
- * stocks and perps into one VM list. Perps data (and its WS lifecycle) is only
- * wired when the user actually has a perp watchlisted.
+ * Watchlist rows for the home table — merges crypto tokens and stocks into one
+ * VM list (MEW-2130). Perps are intentionally excluded from the home watchlist
+ * (MEW-2360); they live only in the perps module.
  */
 export function useWatchlistRows(): {
   rows: ComputedRef<WatchlistRow[]>
@@ -159,7 +158,7 @@ export function useWatchlistRows(): {
   refresh: () => void
 } {
   const watchlistStore = useWatchlistStore()
-  const { watchListedTokens, watchListedStocks, watchListedPerps, watchlistOrder } =
+  const { watchListedTokens, watchListedStocks, watchlistOrder } =
     storeToRefs(watchlistStore)
   const { formatFiat, formatFiatCompact } = useCurrency()
 
@@ -176,13 +175,6 @@ export function useWatchlistRows(): {
     isPendingAllWatchlist,
   } = useFetchWatchlist(filterChain)
 
-  // Perps contracts singleton. Must be acquired during setup (usePerpsContracts
-  // → inject() via the WS lifecycle); on non-perps routes it only fetches the
-  // contracts snapshot and never opens a socket. The rows computed filters it
-  // down to the watchlisted perps.
-  const { contracts: perpsContracts, isLoading: isPendingPerps } =
-    usePerpsContracts()
-
   const rows = computed<WatchlistRow[]>(() => {
     // Store membership (localStorage) is the source of truth: emit one row per
     // watchlisted id right away so a just-added item shows instantly, using the
@@ -193,9 +185,6 @@ export function useWatchlistRows(): {
     )
     const stockBySymbol = new Map(
       (stocksWatchlistData.value ?? []).map(s => [s.primaryMarket.symbol, s]),
-    )
-    const perpByBase = new Map(
-      perpsContracts.value.filter(c => !c.disabled).map(c => [c.baseCurrency, c]),
     )
 
     // A missing id is a loading skeleton only while its source is still
@@ -213,23 +202,15 @@ export function useWatchlistRows(): {
         ? mapTokenRow(t, fmt)
         : placeholderRow('crypto', id, isPendingAllWatchlist.value)
     })
-    const perpRows = watchListedPerps.value.map(base => {
-      const c = perpByBase.get(base)
-      return c
-        ? mapPerpRow(c, fmt)
-        : placeholderRow('perp', base, isPendingPerps.value)
-    })
 
     // Apply the manual drag order (row keys); ids not yet ordered (just added)
     // sort to the top so they're visible above the "Show more" fold. Array sort
-    // is stable, so unordered items keep their bucket order (stocks, tokens,
-    // perps) and the default (empty order) matches the pre-drag layout.
+    // is stable, so unordered items keep their bucket order (stocks then tokens)
+    // and the default (empty order) matches the pre-drag layout.
     const orderIndex = new Map(watchlistOrder.value.map((k, i) => [k, i]))
     const rank = (r: WatchlistRow) =>
       orderIndex.has(r.key) ? (orderIndex.get(r.key) as number) : -1
-    return [...stockRows, ...tokenRows, ...perpRows].sort(
-      (a, b) => rank(a) - rank(b),
-    )
+    return [...stockRows, ...tokenRows].sort((a, b) => rank(a) - rank(b))
   })
 
   const refresh = () => fetchAllWatchlist()

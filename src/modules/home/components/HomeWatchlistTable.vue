@@ -104,11 +104,7 @@ const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
 }
 
 const remove = (row: WatchlistRow) => {
-  if (row.removeType === 'perp') {
-    watchlistStore.setWatchlistPerp(row.removeId)
-  } else {
-    watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
-  }
+  watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
 }
 
 const actionCall = (row: WatchlistRow) => {
