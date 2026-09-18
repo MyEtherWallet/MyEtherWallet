@@ -6,6 +6,7 @@ import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { useCurrency } from '@/composables/useCurrency'
 import { getLogoUrl } from '@/modules/perps/utils/market'
 import { useNewListingCta, type NewListingCtaKind } from './useNewListingCta'
+import type { SwapChain, SwapNativeChain } from './useNewListingSwap'
 import type { Contract } from '@/modules/perps/sdk/types'
 import type {
   GetWebTokensWatchlistResponseToken,
@@ -41,6 +42,10 @@ export interface WatchlistRow {
    * or bridges (only on other chains). Matches the info drawer's panel so the
    * row's button advertises what actually opens. */
   cta?: NewListingCtaKind
+  /** Crypto only: the coin's chains, carried so the action can prime the
+   * swap/bridge panel (mapped to the minimal shape the swap helpers read). */
+  chains?: SwapChain[]
+  nativeChains?: SwapNativeChain[]
   /** True while the row exists in the store but its market data is still loading
    * (optimistic row) — the table renders a skeleton for it. */
   loading?: boolean
@@ -73,6 +78,15 @@ export const mapTokenRow = (
   tradeSymbol: t.symbol,
   removeType: 'crypto',
   removeId: t.coinId,
+  chains: (t.chains ?? []).map(c => ({
+    chainName: c.chainName,
+    contract: c.address,
+    decimals: c.decimals,
+  })),
+  nativeChains: (t.nativeChains ?? []).map(c => ({
+    chainName: c.chainName,
+    decimals: c.decimals,
+  })),
 })
 
 export const mapStockRow = (

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
@@ -21,6 +20,7 @@ import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
@@ -48,7 +48,7 @@ const CATEGORIES = [
 const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
 const router = useRouter()
-const { isOpenSideMenu } = storeToRefs(walletMenu)
+const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
 
 const matchesCategory = (r: WatchlistRow) =>
   category.value === 'all' ||
@@ -115,13 +115,18 @@ const remove = (row: WatchlistRow) => {
 }
 
 const actionCall = (row: WatchlistRow) => {
-  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
   if (row.removeType === 'crypto') {
-    walletMenu.setWalletPanel(row.cta === 'bridge' ? 'bridge' : 'swap')
-  } else {
-    walletMenu.setWalletPanel('trade')
+    // Prime + open the same panel the info drawer would (swap on the current
+    // chain, bridge off it) so the side panel isn't left empty.
+    if (row.cta === 'bridge') {
+      openBridgeForToken(row.symbol, row.name, row.nativeChains, row.chains)
+    } else {
+      openSwapForToken(row.symbol, row.name, row.chains, row.nativeChains)
+    }
+    return
   }
-  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
+  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
+  walletMenu.openPanel('trade')
 }
 
 // Clicking the row body opens the asset's info drawer. Clicks that land on the

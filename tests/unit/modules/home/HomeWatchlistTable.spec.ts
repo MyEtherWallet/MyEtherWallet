@@ -76,6 +76,13 @@ vi.mock('@/modules/home/components/AddToWatchlistDialog.vue', () => ({
     template: '<div data-test="add-dialog" :data-open="isOpen" />',
   },
 }))
+// The crypto action primes + opens the swap/bridge panel through this helper
+// (which pulls the swap stack / Ledger). Stub it and assert the calls.
+const openSwapForToken = vi.fn()
+const openBridgeForToken = vi.fn()
+vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
+  useNewListingSwap: () => ({ openSwapForToken, openBridgeForToken }),
+}))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -97,6 +104,8 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     localStorage.clear()
     setActivePinia(createPinia())
     push.mockClear()
+    openSwapForToken.mockClear()
+    openBridgeForToken.mockClear()
   })
 
   it('renders one row per provided watchlist row', () => {
@@ -137,18 +146,30 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(push).not.toHaveBeenCalled()
   })
 
-  it('opens the Bridge panel for a crypto row whose cta is bridge', async () => {
-    const walletMenu = useWalletMenuStore()
-    const w = mountTable([makeRow({ removeType: 'crypto', cta: 'bridge' })])
+  it('primes and opens Bridge with the row chains for a bridge cta', async () => {
+    const chains = [{ chainName: 'Polygon', contract: '0x1', decimals: 18 }]
+    const nativeChains = [{ chainName: 'Solana', decimals: 9 }]
+    const w = mountTable([
+      makeRow({ removeType: 'crypto', cta: 'bridge', chains, nativeChains }),
+    ])
     await w.get('[data-test="watchlist-trade"]').trigger('click')
-    expect(walletMenu.walletPanel).toBe('bridge')
+    expect(openBridgeForToken).toHaveBeenCalledWith(
+      'ETH',
+      'Ethereum',
+      nativeChains,
+      chains,
+    )
+    expect(openSwapForToken).not.toHaveBeenCalled()
   })
 
-  it('opens the Swap panel for a crypto row without a bridge cta', async () => {
-    const walletMenu = useWalletMenuStore()
-    const w = mountTable([makeRow({ removeType: 'crypto', cta: 'swap' })])
+  it('primes and opens Swap for a crypto row without a bridge cta', async () => {
+    const chains = [{ chainName: 'Ethereum', contract: '0x1', decimals: 18 }]
+    const w = mountTable([
+      makeRow({ removeType: 'crypto', cta: 'swap', chains, nativeChains: [] }),
+    ])
     await w.get('[data-test="watchlist-trade"]').trigger('click')
-    expect(walletMenu.walletPanel).toBe('swap')
+    expect(openSwapForToken).toHaveBeenCalledWith('ETH', 'Ethereum', chains, [])
+    expect(openBridgeForToken).not.toHaveBeenCalled()
   })
 
   it('caps the list at 5 and expands via Show more', async () => {
