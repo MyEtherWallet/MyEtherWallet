@@ -58,12 +58,10 @@ const { resolve: resolveCta, run: runCta } = useNewListingCta()
 // button: an unsupported coin ('none') shows Swap disabled so cards keep an
 // equal footer. Returns the label + whether it should render disabled.
 const cryptoCta = (
-  symbol: string,
-  name: string,
   chains?: CryptoOverviewChain[],
   nativeChains?: CryptoOverviewNativeChain[],
 ): { label: string; disabled: boolean } => {
-  const kind = resolveCta({ symbol, name, chains, nativeChains })
+  const kind = resolveCta({ chains, nativeChains })
   return {
     label:
       kind === 'bridge'
@@ -131,12 +129,7 @@ const stockItems = computed<ListingCardItem[]>(() =>
 // page.
 const cryptoItems = computed<ListingCardItem[]>(() =>
   newCoins.value.map(item => {
-    const cta = cryptoCta(
-      item.symbol,
-      item.name,
-      item.chains,
-      item.nativeChains,
-    )
+    const cta = cryptoCta(item.chains, item.nativeChains)
     return {
       key: item.coinId,
       name: item.name,

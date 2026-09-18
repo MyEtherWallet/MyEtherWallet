@@ -7,6 +7,11 @@ vi.mock('@/modules/perps/composables/usePerpsMarkets', () => ({
 vi.mock('@/modules/perps/utils/market', () => ({
   getLogoUrl: (base: string) => `logo-${base}`,
 }))
+// useNewListingCta pulls the swap stack (Ledger hw-wallets); the pure mappers
+// under test don't touch it, so stub it out of the module graph.
+vi.mock('@/modules/home/composables/useNewListingCta', () => ({
+  useNewListingCta: () => ({ resolve: () => 'swap', run: () => {} }),
+}))
 // useCurrency → currencyStore → @/analytics (hardware SDK). Stub it out; the
 // pure mappers take formatters by injection anyway.
 vi.mock('@/composables/useCurrency', () => ({

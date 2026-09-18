@@ -137,6 +137,20 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(push).not.toHaveBeenCalled()
   })
 
+  it('opens the Bridge panel for a crypto row whose cta is bridge', async () => {
+    const walletMenu = useWalletMenuStore()
+    const w = mountTable([makeRow({ removeType: 'crypto', cta: 'bridge' })])
+    await w.get('[data-test="watchlist-trade"]').trigger('click')
+    expect(walletMenu.walletPanel).toBe('bridge')
+  })
+
+  it('opens the Swap panel for a crypto row without a bridge cta', async () => {
+    const walletMenu = useWalletMenuStore()
+    const w = mountTable([makeRow({ removeType: 'crypto', cta: 'swap' })])
+    await w.get('[data-test="watchlist-trade"]').trigger('click')
+    expect(walletMenu.walletPanel).toBe('swap')
+  })
+
   it('caps the list at 5 and expands via Show more', async () => {
     const rows = Array.from({ length: 7 }, (_, i) =>
       makeRow({ key: `token-${i}`, symbol: `T${i}`, removeId: `t${i}` }),

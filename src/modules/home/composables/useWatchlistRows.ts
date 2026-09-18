@@ -5,6 +5,7 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { useCurrency } from '@/composables/useCurrency'
 import { getLogoUrl } from '@/modules/perps/utils/market'
+import { useNewListingCta, type NewListingCtaKind } from './useNewListingCta'
 import type { Contract } from '@/modules/perps/sdk/types'
 import type {
   GetWebTokensWatchlistResponseToken,
@@ -36,6 +37,10 @@ export interface WatchlistRow {
   /** How to remove this row from the watchlist. */
   removeType: WatchlistRowType
   removeId: string
+  /** Crypto only: whether the trade action swaps (token is on the current chain)
+   * or bridges (only on other chains). Matches the info drawer's panel so the
+   * row's button advertises what actually opens. */
+  cta?: NewListingCtaKind
   /** True while the row exists in the store but its market data is still loading
    * (optimistic row) — the table renders a skeleton for it. */
   loading?: boolean
@@ -164,6 +169,7 @@ export function useWatchlistRows(): {
   const { watchListedTokens, watchListedStocks, watchlistOrder } =
     storeToRefs(watchlistStore)
   const { formatFiat, formatFiatCompact } = useCurrency()
+  const { resolve: resolveCta } = useNewListingCta()
 
   const fmt: RowFormatters = {
     fiat: v => formatFiat(v).display,
@@ -201,9 +207,12 @@ export function useWatchlistRows(): {
     })
     const tokenRows = watchListedTokens.value.map(id => {
       const t = tokenById.get(id)
-      return t
-        ? mapTokenRow(t, fmt)
-        : placeholderRow('crypto', id, isPendingAllWatchlist.value)
+      if (!t) return placeholderRow('crypto', id, isPendingAllWatchlist.value)
+      const row = mapTokenRow(t, fmt)
+      // Same swap-vs-bridge call the info drawer makes, so the row's button
+      // matches the panel that opens.
+      row.cta = resolveCta({ chains: t.chains, nativeChains: t.nativeChains })
+      return row
     })
 
     // Apply the manual drag order (row keys); ids not yet ordered (just added)

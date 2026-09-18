@@ -93,12 +93,17 @@ const draggableRows = computed<WatchlistRow[]>({
 const changeLabel = (change: number) =>
   formatPercentageValue(Math.abs(change)).value
 
-// Crypto trades via Swap, stocks/perps via Trade (Figma). The action opens the
-// wallet side panel in place — it must not navigate away from the home page.
-const actionKey = (row: WatchlistRow) =>
-  row.removeType === 'crypto'
-    ? 'homePage.hero.watchlist.table.swap'
-    : 'homePage.hero.watchlist.table.trade'
+// Crypto trades via Swap or Bridge (whichever the info drawer would open for
+// this token — swap on the current chain, bridge otherwise), stocks via Trade
+// (Figma). The action opens the wallet side panel in place; it must not
+// navigate away from the home page.
+const actionKey = (row: WatchlistRow) => {
+  if (row.removeType !== 'crypto')
+    return 'homePage.hero.watchlist.table.trade'
+  return row.cta === 'bridge'
+    ? 'homePage.hero.watchlist.table.bridge'
+    : 'homePage.hero.watchlist.table.swap'
+}
 
 const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
   category.value = value
@@ -112,7 +117,7 @@ const remove = (row: WatchlistRow) => {
 const actionCall = (row: WatchlistRow) => {
   walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
   if (row.removeType === 'crypto') {
-    walletMenu.setWalletPanel('swap')
+    walletMenu.setWalletPanel(row.cta === 'bridge' ? 'bridge' : 'swap')
   } else {
     walletMenu.setWalletPanel('trade')
   }

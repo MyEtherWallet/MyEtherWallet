@@ -90,6 +90,20 @@ describe('useNewListingCta', () => {
     ).toBe('swap')
   })
 
+  it("returns 'bridge' for a contract only on another swap-capable chain (matches the drawer)", () => {
+    // Previously this returned 'swap' (any contract chain counted), but the
+    // token-info drawer bridges a coin that isn't on the current chain.
+    chain.swapSupported = name => name === 'Solana'
+    expect(
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: contractOn('Solana'),
+        nativeChains: [],
+      }),
+    ).toBe('bridge')
+  })
+
   it("returns 'bridge' when native to another swap-capable chain, not on the current one", () => {
     chain.swapSupported = name => name === 'Solana'
     expect(
