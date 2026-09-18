@@ -23,6 +23,7 @@ import FTM from './FTM';
 import GNO from './GNO';
 import OP from './OP';
 import COTI from './COTI.js';
+import ROBINHOOD from './ROBINHOOD.js';
 
 export {
   ETH,
@@ -48,5 +49,6 @@ export {
   ROOTSTOCKTESTNET,
   AMOY,
   XLAYER,
-  XLAYERTESTNET
+  XLAYERTESTNET,
+  ROBINHOOD
 };
