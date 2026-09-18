@@ -74,13 +74,12 @@ const goToAssets = () => {
   fetchRecommendations(selectedCategoryIds.value)
 }
 
-// Skipping either step ignores the step-1 market picks and recommends across
-// every category of both markets. (/assets needs valid category ids, so we
-// resolve them first — there's no "all assets of a type" shortcut on the API.)
-const skipToAssets = async () => {
+// Skipping either step recommends the full set: with no category picks we hit
+// /assets without the `categories` param and the API returns everything, so
+// there's no need to resolve categories first.
+const skipToAssets = () => {
   activeStep.value = 2
-  const cats = await fetchCategories(['STOCK', 'CRYPTO'])
-  fetchRecommendations(cats.map(c => c.id))
+  fetchRecommendations()
 }
 
 // Skip resets the skipped step's selection so navigating back from the assets
