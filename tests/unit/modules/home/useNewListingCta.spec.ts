@@ -104,6 +104,17 @@ describe('useNewListingCta', () => {
     ).toBe('bridge')
   })
 
+  it("returns 'none' for a contract-only chain with no contract address", () => {
+    // Addressless contract entry can't be bridged, so it must not advertise Bridge.
+    chain.swapSupported = name => name === 'Solana'
+    expect(
+      useNewListingCta().resolve({
+        chains: [{ chainName: 'Solana' }],
+        nativeChains: [],
+      }),
+    ).toBe('none')
+  })
+
   it("returns 'bridge' when native to another swap-capable chain, not on the current one", () => {
     chain.swapSupported = name => name === 'Solana'
     expect(

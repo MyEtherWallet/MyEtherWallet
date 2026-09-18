@@ -224,8 +224,12 @@ export function useWatchlistRows(): {
       if (!t) return placeholderRow('crypto', id, isPendingAllWatchlist.value)
       const row = mapTokenRow(t, fmt)
       // Same swap-vs-bridge call the info drawer makes, so the row's button
-      // matches the panel that opens.
-      row.cta = resolveCta({ chains: t.chains, nativeChains: t.nativeChains })
+      // matches the panel that opens. Use the mapped row chains (contract
+      // populated from the API's `address`) so the bridge contract check works.
+      row.cta = resolveCta({
+        chains: row.chains,
+        nativeChains: row.nativeChains,
+      })
       return row
     })
 

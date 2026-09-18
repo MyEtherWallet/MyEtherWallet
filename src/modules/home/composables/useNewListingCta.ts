@@ -22,7 +22,7 @@ export interface NewListingCtaToken {
  * needs the full arrays to hand to the swap/bridge panel.
  */
 export interface CtaChainsToken {
-  chains?: readonly { chainName: string }[]
+  chains?: readonly { chainName: string; contract?: string | null }[]
   nativeChains?: readonly { chainName: string }[]
 }
 
@@ -57,9 +57,13 @@ export function useNewListingCta(): {
     if (onCurrentChain) {
       return chainsStore.currentChainhasSwapSupport ? 'swap' : 'none'
     }
+    // A contract chain only counts for bridging when it carries the coin's
+    // address; without it there's nothing to bridge.
     const hasSwapChain =
       nativeChains.some(c => chainsStore.chainHasSwapSupport(c.chainName)) ||
-      chains.some(c => chainsStore.chainHasSwapSupport(c.chainName))
+      chains.some(
+        c => c.contract && chainsStore.chainHasSwapSupport(c.chainName),
+      )
     return hasSwapChain ? 'bridge' : 'none'
   }
 

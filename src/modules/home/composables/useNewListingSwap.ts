@@ -98,8 +98,11 @@ export function useNewListingSwap(): {
     const nativeHome = nativeChains.find(c =>
       chainsStore.chainHasSwapSupport(c.chainName),
     )
-    const contractHome = chains.find(c =>
-      chainsStore.chainHasSwapSupport(c.chainName),
+    // A contract chain is only usable when it carries the coin's address —
+    // otherwise there's nothing to bridge (don't fall back to the native
+    // sentinel, which would prime the chain's own currency under this symbol).
+    const contractHome = chains.find(
+      c => c.contract && chainsStore.chainHasSwapSupport(c.chainName),
     )
     const homeChain = nativeHome ?? contractHome
     const toChain = homeChain
