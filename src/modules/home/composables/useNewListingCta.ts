@@ -68,7 +68,12 @@ export function useNewListingCta(): {
     // — including the 'none' case, so the CTA always opens a panel like the
     // watchlist table rather than dead-ending.
     if (resolve(token) === 'bridge') {
-      openBridgeForToken(token.symbol, token.name, token.nativeChains)
+      openBridgeForToken(
+        token.symbol,
+        token.name,
+        token.nativeChains,
+        token.chains,
+      )
     } else {
       openSwapForToken(
         token.symbol,

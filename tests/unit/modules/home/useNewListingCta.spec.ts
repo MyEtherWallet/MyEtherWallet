@@ -170,7 +170,21 @@ describe('useNewListingCta', () => {
       'X',
       'X',
       token.nativeChains,
+      token.chains,
     )
+    expect(openSwapForToken).not.toHaveBeenCalled()
+  })
+
+  it('run bridges a contract-only coin, forwarding its contract chains', () => {
+    chain.swapSupported = name => name === 'Solana'
+    const token = {
+      symbol: 'X',
+      name: 'X',
+      chains: contractOn('Solana'),
+      nativeChains: [],
+    }
+    useNewListingCta().run(token)
+    expect(openBridgeForToken).toHaveBeenCalledWith('X', 'X', [], token.chains)
     expect(openSwapForToken).not.toHaveBeenCalled()
   })
 
