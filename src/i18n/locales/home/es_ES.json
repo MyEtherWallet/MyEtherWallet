@@ -1,0 +1,171 @@
+{
+  "homePage": {
+    "hero": {
+      "welcomeTitle": "Welcome to MEW",
+      "welcomeSubtitle": "Connect your wallet to start trading stocks and crypto",
+      "createWallet": "Crear wallet",
+      "connectWallet": "Connect wallet",
+      "ownTotal": "You own a total of",
+      "today": "today",
+      "goToPortfolio": "Go to Portfolio",
+      "noAssetsTitle": "Let's start\nthis journey",
+      "noAssetsSubtitle": "Buy or deposit to start trading stocks and crypto",
+      "makeDeposit": "Make a deposit",
+      "buyCrypto": "Buy crypto",
+      "toggleBalance": "Toggle balance visibility",
+      "showBalance": "Show balance",
+      "hideBalance": "Hide balance",
+      "copyAddress": "Copy address",
+      "addressCopied": "Copied!",
+      "refreshTooltip": "Refresh balance (updates every 2 min)",
+      "trendingStocks": "Trending stocks",
+      "trendingCrypto": "Trending crypto",
+      "last24h": "Last 24h",
+      "empty": "No data available",
+      "banner": {
+        "title": "Trade and get 5 USDC",
+        "subtitle": "The first 10 trades of $50+ each hour get 10 USDC.",
+        "learnMore": "Learn more",
+        "tradeStocks": "Trade stocks"
+      },
+      "watchlist": {
+        "title": "Build your watchlist",
+        "subtitle": "Find assets to follow based on your interests",
+        "begin": "Let's begin",
+        "onboarding": {
+          "continue": "Continue",
+          "skip": "Skip",
+          "stepProgress": "Step {step} / {total}",
+          "markets": {
+            "subtitle": "What assets are you interested in?",
+            "description": "This will help personalize your watchlist. Skip if you already know what you want to follow.",
+            "hint": "You can select more options"
+          },
+          "industries": {
+            "subtitle": "What industries do you like?",
+            "description": "Choose the industries you’d like to keep an eye on to further personalize your watchlist.",
+            "empty": "No categories available right now."
+          },
+          "assets": {
+            "title": "Choose assets to follow",
+            "subtitle": "Here are some assets you might want to follow",
+            "loadingTitle": "Finding assets…",
+            "loadingSubtitle": "We are looking for assets that align with your interests",
+            "done": "Done",
+            "selected": "{count} assets selected",
+            "moreCount": "+{count} more",
+            "noResults": "No assets found with your search, please try searching a different asset",
+            "clearSearch": "Clear search",
+            "noAssets": "No assets available to follow right now."
+          },
+          "marketLabels": {
+            "stocks": "Stocks",
+            "crypto": "Crypto",
+            "perps": "Perpetuals"
+          },
+          "industryLabels": {
+            "commodities": "Commodities",
+            "equities": "Equities",
+            "tech": "Tech",
+            "ai": "Artificial Intelligence",
+            "hardware": "Hardware",
+            "gaming": "Gaming",
+            "transport": "Transport",
+            "software": "Software",
+            "construction": "Construction",
+            "privacy": "Privacidad",
+            "infrastructure": "Infrastructure",
+            "etfs": "ETFs"
+          }
+        },
+        "table": {
+          "title": "Watchlist",
+          "moreActions": "More actions",
+          "addAsset": "Add asset",
+          "allCategories": "All categories",
+          "trade": "Trade",
+          "swap": "Swap",
+          "remove": "Remove from watchlist",
+          "removeShort": "Remove",
+          "dragLabel": "Drag to reorder",
+          "showMore": "Show {count} more",
+          "columns": {
+            "token": "Token",
+            "marketCap": "Market cap",
+            "volume": "Volume",
+            "change24h": "24h Change",
+            "price": "Price"
+          }
+        },
+        "addModal": {
+          "title": "Add to watchlist",
+          "subtitle": "Search and add assets you are interested in",
+          "searchPlaceholder": "Search",
+          "empty": "No assets found",
+          "tabs": {
+            "all": "All",
+            "stocks": "Stocks",
+            "crypto": "Crypto",
+            "perps": "Perpetuals"
+          }
+        }
+      }
+    },
+    "offers": {
+      "title": "Exclusive Offers",
+      "subtitle": "Get rewarded for using MEW!",
+      "category": {
+        "trade": "Trade",
+        "buy": "Comprar",
+        "hold": "Hold"
+      },
+      "items": {
+        "trade": {
+          "title": "Trade +$500",
+          "highlight": "Earn 5 USDC"
+        },
+        "buy": {
+          "title": "Buy crypto",
+          "highlight": "Pay zero MEW fees"
+        },
+        "hold": {
+          "title": "Trade & Hold",
+          "highlight": "Earn 10 USDC"
+        }
+      }
+    },
+    "listings": {
+      "title": "New Listings",
+      "subtitle": "Discover the latest stocks and crypto tokens in the market.",
+      "tab": {
+        "stocks": "Stocks",
+        "crypto": "Crypto"
+      },
+      "stat": {
+        "marketCap": "Mkt cap",
+        "change24h": "24h",
+        "volume24h": "24h vol"
+      },
+      "trade": "Trade",
+      "swap": "Swap",
+      "bridge": "Bridge",
+      "openStockPage": "Open stock page",
+      "openCryptoPage": "Open crypto page"
+    },
+    "sectors": {
+      "title": "Curated Collections",
+      "subtitle": "Explore different investing themes and collections exclusively on MEW."
+    },
+    "news": {
+      "title": "Market News",
+      "subtitle": "Keep your finger on the pulse of market news as it happens. Powered by MEW.",
+      "empty": "No news available right now",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{n} days ago",
+      "pagination": "Showing page {page} of {total}",
+      "readOnSource": "Read the full article on {source}",
+      "readMore": "Read the full article"
+    }
+  }
+}
