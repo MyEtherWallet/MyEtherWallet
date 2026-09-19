@@ -405,7 +405,11 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     if (order.rewardRegistered && !order.rewardToastShown) {
       toastStore.addToastMessage({
-        text: t('rwaRewards.register_success'),
+        text: t(
+          'rwaRewards.register_success',
+          { count: holdingsStore.round1HoldDays },
+          holdingsStore.round1HoldDays,
+        ),
         type: ToastType.Success,
       })
       updates.rewardToastShown = true

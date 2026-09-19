@@ -1,4 +1,5 @@
-const mewWalletUrl = import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
+const mewWalletUrl =
+  import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
 // Strapi serves uploads from the host root (`/uploads/...`), not from `/api`,
 // so the host is the shared constant and the API path hangs off it.
@@ -29,6 +30,8 @@ const configs = {
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
   RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,
+  /** Rewards marketing page: terms & conditions and the full rewards list. */
+  REWARDS_PAGE_URL: 'https://myetherwallet.com/rewards',
   MEW_MOBILE_DOWNLOAD_URL: 'https://download.mewwallet.com',
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
@@ -38,7 +41,7 @@ const configs = {
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
-  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
+  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev',
 }
 
 export default configs
