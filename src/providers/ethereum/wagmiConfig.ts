@@ -1,6 +1,11 @@
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
-import { createConfig, http, mock, type Config } from '@wagmi/core'
+import {
+  createConfig,
+  http,
+  mock,
+  type Config,
+} from '@wagmi/core'
 import { connectorsForWallets, type WalletList } from '@rainbow-me/rainbowkit'
 import * as rainbowWallets from '@rainbow-me/rainbowkit/wallets'
 
@@ -71,7 +76,7 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
       const mConnector = mock({
         accounts: [testAddress as `0x${string}`],
       })
-      allConnectors.push(mConnector)
+      allConnectors.push(mConnector as unknown as (typeof allConnectors)[number])
     }
   }
 
