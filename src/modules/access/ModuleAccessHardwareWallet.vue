@@ -119,6 +119,7 @@ import { useI18n } from 'vue-i18n'
 import {
   getLocalizedWalletError,
   isTransientTrezorError,
+  isDeviceInterfaceBusyError,
 } from '@/utils/walletUtils'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
@@ -415,9 +416,11 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
-    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    if (!isDeviceInterfaceBusyError(e)) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
     return false
   }
 }

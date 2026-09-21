@@ -86,7 +86,17 @@ export const getLocalizedWalletError = (
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')
   }
+  if (isDeviceInterfaceBusyError(raw)) {
+    return t('common.error.ledger_device_busy')
+  }
   return undefined
+}
+
+export const isDeviceInterfaceBusyError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return /claim\s*interface/.test(message)
 }
 
 /**

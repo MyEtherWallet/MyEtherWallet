@@ -57,6 +57,7 @@
       "ledger_locked": "您的 Ledger 已锁定。请解锁后重试。",
       "ledger_app_not_open": "请在您的 Ledger 上打开以太坊应用后重试。",
       "trezor_read_failed": "无法从 Trezor 读取您的地址。请重新连接设备后重试。",
+      "ledger_device_busy": "另一个应用正在使用您的 Ledger。请关闭 Ledger Live 或其他已连接的标签页后重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",
