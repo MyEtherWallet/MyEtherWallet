@@ -4,8 +4,9 @@ import { storeToRefs } from 'pinia'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { useCurrency } from '@/composables/useCurrency'
-import { usePerpsContracts } from '@/modules/perps/composables/usePerpsMarkets'
 import { getLogoUrl } from '@/modules/perps/utils/market'
+import { useNewListingCta, type NewListingCtaKind } from './useNewListingCta'
+import type { SwapChain, SwapNativeChain } from './useNewListingSwap'
 import type { Contract } from '@/modules/perps/sdk/types'
 import type {
   GetWebTokensWatchlistResponseToken,
@@ -37,6 +38,14 @@ export interface WatchlistRow {
   /** How to remove this row from the watchlist. */
   removeType: WatchlistRowType
   removeId: string
+  /** Crypto only: whether the trade action swaps (token is on the current chain)
+   * or bridges (only on other chains). Matches the info drawer's panel so the
+   * row's button advertises what actually opens. */
+  cta?: NewListingCtaKind
+  /** Crypto only: the coin's chains, carried so the action can prime the
+   * swap/bridge panel (mapped to the minimal shape the swap helpers read). */
+  chains?: SwapChain[]
+  nativeChains?: SwapNativeChain[]
   /** True while the row exists in the store but its market data is still loading
    * (optimistic row) — the table renders a skeleton for it. */
   loading?: boolean
@@ -62,10 +71,22 @@ export const mapTokenRow = (
   marketCapDisplay: fmt.compact(t.marketCap),
   volumeDisplay: fmt.compact(t.totalVolume),
   sparkline: t.sparklineIn7d ?? [],
-  route: { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: t.coinId } },
+  route: {
+    name: TOKEN_INFO_ROUTE_NAMES.homePage,
+    params: { tokenId: t.coinId },
+  },
   tradeSymbol: t.symbol,
   removeType: 'crypto',
   removeId: t.coinId,
+  chains: (t.chains ?? []).map(c => ({
+    chainName: c.chainName,
+    contract: c.address,
+    decimals: c.decimals,
+  })),
+  nativeChains: (t.nativeChains ?? []).map(c => ({
+    chainName: c.chainName,
+    decimals: c.decimals,
+  })),
 })
 
 export const mapStockRow = (
@@ -83,7 +104,7 @@ export const mapStockRow = (
   volumeDisplay: fmt.compact(s.underlyingMarket.volume24h),
   sparkline: s.primaryMarket.sparkline24h ?? [],
   route: {
-    name: STOCK_INFO_ROUTE_NAMES.home,
+    name: STOCK_INFO_ROUTE_NAMES.homePage,
     params: { symbol: s.primaryMarket.symbol },
   },
   tradeSymbol: s.primaryMarket.symbol,
@@ -117,10 +138,10 @@ export const placeholderRow = (
   sparkline: [],
   route:
     type === 'stock'
-      ? { name: STOCK_INFO_ROUTE_NAMES.home, params: { symbol: id } }
+      ? { name: STOCK_INFO_ROUTE_NAMES.homePage, params: { symbol: id } }
       : type === 'perp'
         ? { name: PERP_INFO_ROUTE_NAME, params: { market: id } }
-        : { name: TOKEN_INFO_ROUTE_NAMES.home, params: { tokenId: id } },
+        : { name: TOKEN_INFO_ROUTE_NAMES.homePage, params: { tokenId: id } },
   tradeSymbol: id,
   removeType: type,
   removeId: id,
@@ -149,9 +170,9 @@ export const mapPerpRow = (
 })
 
 /**
- * Unified watchlist rows for the home table (MEW-2130) — merges crypto tokens,
- * stocks and perps into one VM list. Perps data (and its WS lifecycle) is only
- * wired when the user actually has a perp watchlisted.
+ * Watchlist rows for the home table — merges crypto tokens and stocks into one
+ * VM list (MEW-2130). Perps are intentionally excluded from the home watchlist
+ * (MEW-2360); they live only in the perps module.
  */
 export function useWatchlistRows(): {
   rows: ComputedRef<WatchlistRow[]>
@@ -159,9 +180,10 @@ export function useWatchlistRows(): {
   refresh: () => void
 } {
   const watchlistStore = useWatchlistStore()
-  const { watchListedTokens, watchListedStocks, watchListedPerps, watchlistOrder } =
+  const { watchListedTokens, watchListedStocks, watchlistOrder } =
     storeToRefs(watchlistStore)
   const { formatFiat, formatFiatCompact } = useCurrency()
+  const { resolve: resolveCta } = useNewListingCta()
 
   const fmt: RowFormatters = {
     fiat: v => formatFiat(v).display,
@@ -176,13 +198,6 @@ export function useWatchlistRows(): {
     isPendingAllWatchlist,
   } = useFetchWatchlist(filterChain)
 
-  // Perps contracts singleton. Must be acquired during setup (usePerpsContracts
-  // → inject() via the WS lifecycle); on non-perps routes it only fetches the
-  // contracts snapshot and never opens a socket. The rows computed filters it
-  // down to the watchlisted perps.
-  const { contracts: perpsContracts, isLoading: isPendingPerps } =
-    usePerpsContracts()
-
   const rows = computed<WatchlistRow[]>(() => {
     // Store membership (localStorage) is the source of truth: emit one row per
     // watchlisted id right away so a just-added item shows instantly, using the
@@ -193,9 +208,6 @@ export function useWatchlistRows(): {
     )
     const stockBySymbol = new Map(
       (stocksWatchlistData.value ?? []).map(s => [s.primaryMarket.symbol, s]),
-    )
-    const perpByBase = new Map(
-      perpsContracts.value.filter(c => !c.disabled).map(c => [c.baseCurrency, c]),
     )
 
     // A missing id is a loading skeleton only while its source is still
@@ -209,27 +221,26 @@ export function useWatchlistRows(): {
     })
     const tokenRows = watchListedTokens.value.map(id => {
       const t = tokenById.get(id)
-      return t
-        ? mapTokenRow(t, fmt)
-        : placeholderRow('crypto', id, isPendingAllWatchlist.value)
-    })
-    const perpRows = watchListedPerps.value.map(base => {
-      const c = perpByBase.get(base)
-      return c
-        ? mapPerpRow(c, fmt)
-        : placeholderRow('perp', base, isPendingPerps.value)
+      if (!t) return placeholderRow('crypto', id, isPendingAllWatchlist.value)
+      const row = mapTokenRow(t, fmt)
+      // Same swap-vs-bridge call the info drawer makes, so the row's button
+      // matches the panel that opens. Use the mapped row chains (contract
+      // populated from the API's `address`) so the bridge contract check works.
+      row.cta = resolveCta({
+        chains: row.chains,
+        nativeChains: row.nativeChains,
+      })
+      return row
     })
 
     // Apply the manual drag order (row keys); ids not yet ordered (just added)
     // sort to the top so they're visible above the "Show more" fold. Array sort
-    // is stable, so unordered items keep their bucket order (stocks, tokens,
-    // perps) and the default (empty order) matches the pre-drag layout.
+    // is stable, so unordered items keep their bucket order (stocks then tokens)
+    // and the default (empty order) matches the pre-drag layout.
     const orderIndex = new Map(watchlistOrder.value.map((k, i) => [k, i]))
     const rank = (r: WatchlistRow) =>
       orderIndex.has(r.key) ? (orderIndex.get(r.key) as number) : -1
-    return [...stockRows, ...tokenRows, ...perpRows].sort(
-      (a, b) => rank(a) - rank(b),
-    )
+    return [...stockRows, ...tokenRows].sort((a, b) => rank(a) - rank(b))
   })
 
   const refresh = () => fetchAllWatchlist()
