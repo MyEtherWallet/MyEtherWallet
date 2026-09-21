@@ -837,9 +837,15 @@ export function useSwapModule(): SwapModuleBindings {
     bestOfferSelectionOpen.value = false
   }
 
+  // Monotonic id so a superseded in-flight request can't apply its results or
+  // clear the loading state over a newer one (requests can overlap despite the
+  // debounce when the amount/pair changes mid-flight) — MEW-2293.
+  let latestQuotesRequestId = 0
+
   const fetchQuotes = async () => {
     if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
       return
+    const requestId = ++latestQuotesRequestId
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
     const requestedAmount = fromAmount.value
@@ -861,6 +867,10 @@ export function useSwapModule(): SwapModuleBindings {
         fromAddress: requestedFromAddress,
         toAddress: requestedToAddress,
       })
+
+      // A newer request started while this one was in flight — its results are
+      // stale, so don't apply them or fire analytics for them.
+      if (requestId !== latestQuotesRequestId) return
 
       if (quotes && quotes.length > 0) {
         const fromDecimals = fromToken.decimals || 18
@@ -917,7 +927,9 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } catch (err: unknown) {
-      generalError.value = t('swap.error.fetching-quotes')
+      if (requestId === latestQuotesRequestId) {
+        generalError.value = t('swap.error.fetching-quotes')
+      }
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.SWAP,
         title: 'SWAP: fetchQuotes Error',
@@ -934,7 +946,9 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } finally {
-      isLoadingQuotes.value = false
+      // Only the latest request owns the loading state; a superseded one
+      // clearing it would hide the newer request still in flight.
+      if (requestId === latestQuotesRequestId) isLoadingQuotes.value = false
     }
   }
 
