@@ -857,7 +857,13 @@ export function useSwapModule(): SwapModuleBindings {
     // arrives here as '' and would reach viem's parser. Nothing to quote.
     const requestedAmount = fromAmount.value
     const requestedAmountBN = BigNumber(requestedAmount)
-    if (requestedAmountBN.isNaN() || requestedAmountBN.lte(0)) return
+    if (requestedAmountBN.isNaN() || requestedAmountBN.lte(0)) {
+      // Nothing to quote, and any request still in flight was for an amount
+      // that no longer exists: invalidate it so it cannot land later.
+      latestQuotesRequestId++
+      isLoadingQuotes.value = false
+      return
+    }
     const requestId = ++latestQuotesRequestId
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
@@ -1356,7 +1362,10 @@ export function useSwapModule(): SwapModuleBindings {
         }
         debounceFetchQuotes()
       } else {
-        // Clear stale quotes when amount becomes invalid
+        // Clear stale quotes when amount becomes invalid, and invalidate any
+        // request still in flight so its result cannot land on the empty field.
+        latestQuotesRequestId++
+        isLoadingQuotes.value = false
         providers.value = []
         selectedQuote.value = undefined
         toAmount.value = ''
