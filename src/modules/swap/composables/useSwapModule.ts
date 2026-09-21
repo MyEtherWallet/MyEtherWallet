@@ -14,7 +14,10 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
-import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
+import {
+  smallestMinFromDisplay,
+  resolveServableMinDisplay,
+} from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -890,17 +893,34 @@ export function useSwapModule(): SwapModuleBindings {
         if (providers.value.length === 0) {
           quotesError.value = true
           // Every returned quote reported a minimum above the entered amount, so
-          // the amount is too low. Show the smallest real minimum among them — a
-          // provider that can actually service it. Placeholder minimums (a bare 0
-          // or 1 base unit that some providers report instead of a real limit) are
-          // dropped in the helper so we don't render a misleading near-zero floor
-          // (MEW-2293).
+          // the amount is too low. The smallest declared minimum overstates the
+          // real floor when a provider with an undeclared, fee-dependent floor
+          // (e.g. Rango) simply returned nothing for this amount, so probe a few
+          // amounts below that declared minimum in parallel and show the lowest
+          // one that actually gets a quote (MEW-2293). Loading stays on until the
+          // probes settle so the error box appears once, with the final figure.
           if (quotes.length > 0) {
+            const amount = await resolveServableMinDisplay(
+              fromAmountBase,
+              quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+              fromDecimals,
+              async probeAmount => {
+                const probed = await getQuote({
+                  fromToken,
+                  toToken,
+                  amount: probeAmount,
+                  fromAddress: requestedFromAddress,
+                  toAddress: requestedToAddress,
+                })
+                return (
+                  probed?.map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
+                )
+              },
+            )
+            // The probes take a few seconds; a newer request owns the state now.
+            if (requestId !== latestQuotesRequestId) return
             generalError.value = t('swap.error.minimum-amount', {
-              amount: smallestMinFromDisplay(
-                quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
-                fromDecimals,
-              ),
+              amount,
               symbol: fromToken.symbol,
             })
           }

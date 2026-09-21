@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { parseUnits } from 'viem'
 
-import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
+import {
+  smallestMinFromDisplay,
+  probeAmountsBetween,
+  resolveServableMinDisplay,
+} from '@/modules/swap/swapMinAmount'
 
 describe('smallestMinFromDisplay', () => {
   it('rounds the minimum UP so the shown amount is never below it (PYUSD, 6dp)', () => {
@@ -52,5 +56,110 @@ describe('smallestMinFromDisplay', () => {
   it('falls back to the raw value when every minimum is a placeholder', () => {
     // Nothing real to show; better than dropping the message entirely.
     expect(smallestMinFromDisplay([1n], 18)).toBe('0.00000001')
+  })
+})
+
+describe('probeAmountsBetween', () => {
+  it('spaces three probes geometrically, strictly inside the gap, ascending', () => {
+    const amount = parseUnits('0.07', 18)
+    const ceiling = parseUnits('446', 18)
+    const probes = probeAmountsBetween(amount, ceiling)
+    expect(probes).toHaveLength(3)
+    for (let i = 0; i < probes.length; i++) {
+      expect(probes[i] > amount).toBe(true)
+      expect(probes[i] < ceiling).toBe(true)
+      if (i > 0) expect(probes[i] > probes[i - 1]).toBe(true)
+    }
+    // ~0.63, ~5.6, ~50 POL: one probe per order of magnitude of the gap.
+    expect(Number(probes[0]) / 1e18).toBeCloseTo(0.63, 1)
+    expect(Number(probes[1]) / 1e18).toBeCloseTo(5.6, 0)
+    expect(Number(probes[2]) / 1e18).toBeCloseTo(50, -1)
+  })
+
+  it('returns nothing when there is no gap to probe', () => {
+    expect(probeAmountsBetween(10n, 10n)).toEqual([])
+    expect(probeAmountsBetween(20n, 10n)).toEqual([])
+    expect(probeAmountsBetween(1n, 2n)).toEqual([])
+  })
+
+  it('probes from one base unit when the entered amount parsed to zero', () => {
+    const probes = probeAmountsBetween(0n, 10_000n)
+    expect(probes.length).toBeGreaterThan(0)
+    expect(probes[0] > 1n).toBe(true)
+  })
+})
+
+describe('resolveServableMinDisplay', () => {
+  const rangoPlaceholder = 1n
+  const changellyReal = parseUnits('445.9768161', 18)
+  const entered = parseUnits('0.07', 18)
+
+  // A Rango-like provider: quotes (placeholder min) at or above its hidden floor,
+  // nothing below it. Changelly always answers with its clamped real minimum.
+  const providersWithFloor = (floor: bigint) => async (amount: string) => {
+    const base = parseUnits(amount, 18)
+    return base >= floor ? [changellyReal, rangoPlaceholder] : [changellyReal]
+  }
+
+  it('shows the lowest probe amount that actually received a quote', async () => {
+    const probe = vi.fn(providersWithFloor(parseUnits('1', 18)))
+    const display = await resolveServableMinDisplay(
+      entered,
+      [changellyReal],
+      18,
+      probe,
+    )
+    // Probes land near 0.63, 5.6 and 50 POL; the floor is 1 POL, so 5.6 is the
+    // lowest servable one. Far below Changelly's 446.
+    expect(probe).toHaveBeenCalledTimes(3)
+    expect(Number(display)).toBeGreaterThan(1)
+    expect(Number(display)).toBeLessThan(10)
+    // Re-entering the shown value must clear the floor.
+    expect(parseUnits(display, 18) >= parseUnits('1', 18)).toBe(true)
+  })
+
+  it('does not count a quote clamped up to a minimum above the probe amount', async () => {
+    // Only Changelly answers, always with a minimum above every probe.
+    const display = await resolveServableMinDisplay(
+      entered,
+      [changellyReal],
+      18,
+      async () => [changellyReal],
+    )
+    expect(display).toBe('445.98')
+  })
+
+  it('falls back to the smallest real declared minimum when every probe fails', async () => {
+    const display = await resolveServableMinDisplay(
+      entered,
+      [rangoPlaceholder, changellyReal],
+      18,
+      async () => {
+        throw new Error('network')
+      },
+    )
+    expect(display).toBe('445.98')
+  })
+
+  it('tolerates one rejected probe and still uses the others', async () => {
+    let calls = 0
+    const probe = async (amount: string) => {
+      if (calls++ === 0) throw new Error('flaky')
+      return providersWithFloor(parseUnits('1', 18))(amount)
+    }
+    const display = await resolveServableMinDisplay(
+      entered,
+      [changellyReal],
+      18,
+      probe,
+    )
+    expect(Number(display)).toBeLessThan(446)
+  })
+
+  it('skips probing when no declared minimum is real', async () => {
+    const probe = vi.fn(async () => [] as bigint[])
+    const display = await resolveServableMinDisplay(0n, [1n], 18, probe)
+    expect(probe).not.toHaveBeenCalled()
+    expect(display).toBe('0.00000001')
   })
 })
