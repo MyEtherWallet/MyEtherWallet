@@ -180,8 +180,12 @@ describe('output fiat floor', () => {
 
   it('rejects dust output and accepts output worth the floor', () => {
     expect(meetsOutputFloor(dustOut, 18, ethPrice)).toBe(false)
-    const oneDollarOfEth = parseUnits((MIN_OUTPUT_USD / ethPrice).toFixed(18), 18)
-    expect(meetsOutputFloor(oneDollarOfEth, 18, ethPrice)).toBe(true)
+    // 1% above the floor: toFixed(18) can round the exact quotient down a hair.
+    const justAboveFloor = parseUnits(
+      ((MIN_OUTPUT_USD * 1.01) / ethPrice).toFixed(18),
+      18,
+    )
+    expect(meetsOutputFloor(justAboveFloor, 18, ethPrice)).toBe(true)
   })
 
   it('never blocks a route when the price is unknown', () => {
@@ -194,8 +198,8 @@ describe('output fiat floor', () => {
     const entered = parseUnits('0.007', 18)
     const usd = outputUsd(dustOut, 18, ethPrice)!
     const needed = inputForOutputFloor(entered, usd)!
-    // 0.007 POL bought $0.00075, so $1 needs ~9.3 POL; +2% -> ~9.5 POL.
-    expect(Number(needed) / 1e18).toBeCloseTo(9.5, 0)
+    // 0.007 POL bought $0.00075, so $0.50 needs ~4.7 POL; +2% -> ~4.8 POL.
+    expect(Number(needed) / 1e18).toBeCloseTo(4.8, 0)
     expect(needed > entered).toBe(true)
   })
 
@@ -215,7 +219,7 @@ describe('output fiat floor', () => {
       18,
       async () => [], // probes below the floor are filtered out by the caller
     )
-    expect(Number(display)).toBeCloseTo(9.5, 0)
+    expect(Number(display)).toBeCloseTo(4.8, 0)
     expect(parseUnits(display, 18) >= synthesized).toBe(true)
   })
 })

@@ -885,8 +885,9 @@ export function useSwapModule(): SwapModuleBindings {
         const toDecimals = toToken.decimals || 18
         const quoteOutputUsd = (q: ProviderQuoteResponse) =>
           outputUsd(BigInt(q.toTokenAmount.toString()), toDecimals, toToken.price)
-        // A route whose output is worth less than MIN_OUTPUT_USD is not offered:
-        // the user would pay gas to receive dust. Unknown price never blocks.
+        // A route whose output is worth less than MIN_OUTPUT_USD is not offered,
+        // swap or bridge: the user would pay gas to receive dust. An unknown
+        // price never blocks.
         const meetsFloor = (q: ProviderQuoteResponse) =>
           meetsOutputFloor(
             BigInt(q.toTokenAmount.toString()),

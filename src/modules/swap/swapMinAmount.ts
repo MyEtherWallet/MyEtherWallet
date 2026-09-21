@@ -117,11 +117,11 @@ export const resolveServableMinDisplay = async (
 }
 
 /**
- * Smallest fiat value a quote's output may have and still be offered. Below it
- * the user pays source-chain gas to receive dust (MEW-2293: 0.007 POL bridged
- * to ~0.00000027 ETH with the button enabled).
+ * Smallest fiat value a quote's output may have and still be offered, for swaps
+ * and bridges alike. Below it the user pays gas to receive dust (MEW-2293:
+ * 0.007 POL bridged to ~0.00000027 ETH with the button enabled).
  */
-export const MIN_OUTPUT_USD = 1
+export const MIN_OUTPUT_USD = 0.5
 
 /**
  * Fiat value of a quote's output in the to-token's units, or null when no price
