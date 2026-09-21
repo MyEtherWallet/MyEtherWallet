@@ -702,9 +702,14 @@ export function useSwapModule(): SwapModuleBindings {
         return 'NOT_ENOUGH_BALANCE'
       }
     } else {
+      // This runs on render while a gas-fee quote is held, which outlives the
+      // amount: a cleared or partially typed field ('' or '0.') must not reach
+      // viem's parser. No amount means no fee shortfall to report.
+      const amountBN = BigNumber(fromAmount.value)
+      if (amountBN.isNaN() || amountBN.lte(0)) return undefined
       const totalBalanceNeeded =
         fee +
-        BigInt(parseUnits(fromAmount.value, fromTokenSelected.value.decimals))
+        parseUnits(amountBN.toFixed(), fromTokenSelected.value.decimals)
       if (totalBalanceNeeded > mainTokenBalance) {
         return 'NOT_ENOUGH_BALANCE'
       }
