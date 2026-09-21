@@ -852,10 +852,15 @@ export function useSwapModule(): SwapModuleBindings {
   const fetchQuotes = async () => {
     if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
       return
+    // The debounced call reads the amount when it fires, not when it was
+    // scheduled, so an amount typed then cleared within the debounce window
+    // arrives here as '' and would reach viem's parser. Nothing to quote.
+    const requestedAmount = fromAmount.value
+    const requestedAmountBN = BigNumber(requestedAmount)
+    if (requestedAmountBN.isNaN() || requestedAmountBN.lte(0)) return
     const requestId = ++latestQuotesRequestId
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
-    const requestedAmount = fromAmount.value
     const requestedFromAddress = userAddress.value
     const requestedToAddress = toAddress.value
     isLoadingQuotes.value = true
