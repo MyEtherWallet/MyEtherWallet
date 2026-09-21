@@ -922,16 +922,19 @@ export function useSwapModule(): SwapModuleBindings {
           // one that actually gets a quote (MEW-2293). Loading stays on until the
           // probes settle so the error box appears once, with the final figure.
           if (quotes.length > 0) {
-            // Declared minimums, plus — for quotes dropped by the fiat floor — the
-            // input at which their own rate would reach it. That gives a provider
-            // with no declared minimum (Rango) a real one to resolve against.
-            const mins = quotes.map(q => BigInt(q.minMax.minimumFrom.toString()))
-            for (const q of quotes) {
-              if (meetsFloor(q)) continue
+            // One minimum per quote. A quote that clears the fiat floor keeps
+            // its declared minimum. A quote dropped by the floor contributes the
+            // greater of its declared minimum and the input at which its own
+            // rate would reach the floor, so its lower declared figure can never
+            // set the ceiling. That also gives a provider with no declared
+            // minimum (Rango) a real one to resolve against.
+            const mins = quotes.map(q => {
+              const declared = BigInt(q.minMax.minimumFrom.toString())
+              if (meetsFloor(q)) return declared
               const usd = quoteOutputUsd(q)
               const needed = usd && inputForOutputFloor(fromAmountBase, usd)
-              if (needed) mins.push(needed)
-            }
+              return needed && needed > declared ? needed : declared
+            })
             const amount = await resolveServableMinDisplay(
               fromAmountBase,
               mins,
@@ -1443,8 +1446,10 @@ export function useSwapModule(): SwapModuleBindings {
           toAmount.value = BigNumberVal.toFixed(6) // 6 decimals down to 0.0001
           return
         }
-        // 8 decimals below that, so a tiny non-zero estimate never reads as 0
-        toAmount.value = BigNumberVal.toFixed(8)
+        // 8 decimals below that. If even that rounds to 0, show the exact
+        // value so a positive estimate is never displayed or treated as zero.
+        const eightDp = BigNumberVal.toFixed(8)
+        toAmount.value = BigNumber(eightDp).gt(0) ? eightDp : val
       }
     },
   )
