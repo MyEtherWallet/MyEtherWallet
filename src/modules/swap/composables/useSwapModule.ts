@@ -14,7 +14,13 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
-import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
+import {
+  smallestMinFromDisplay,
+  resolveServableMinDisplay,
+  outputUsd,
+  meetsOutputFloor,
+  inputForOutputFloor,
+} from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -398,7 +404,8 @@ export function useSwapModule(): SwapModuleBindings {
         fromAmount.value !== '' &&
         fromAmount.value !== '0' &&
         fromAmountError.value === '' &&
-        toAmount.value !== '0'
+        // A quote whose estimate rounds to zero must not be submittable.
+        BigNumber(toAmount.value).gt(0)
       ) ||
       (isCrossChain.value && toAddressError.value !== '') ||
       isLoadingQuotes.value ||
@@ -845,10 +852,21 @@ export function useSwapModule(): SwapModuleBindings {
   const fetchQuotes = async () => {
     if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
       return
+    // The debounced call reads the amount when it fires, not when it was
+    // scheduled, so an amount typed then cleared within the debounce window
+    // arrives here as '' and would reach viem's parser. Nothing to quote.
+    const requestedAmount = fromAmount.value
+    const requestedAmountBN = BigNumber(requestedAmount)
+    if (requestedAmountBN.isNaN() || requestedAmountBN.lte(0)) {
+      // Nothing to quote, and any request still in flight was for an amount
+      // that no longer exists: invalidate it so it cannot land later.
+      latestQuotesRequestId++
+      isLoadingQuotes.value = false
+      return
+    }
     const requestId = ++latestQuotesRequestId
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
-    const requestedAmount = fromAmount.value
     const requestedFromAddress = userAddress.value
     const requestedToAddress = toAddress.value
     isLoadingQuotes.value = true
@@ -873,10 +891,23 @@ export function useSwapModule(): SwapModuleBindings {
       if (requestId !== latestQuotesRequestId) return
 
       if (quotes && quotes.length > 0) {
-        const fromDecimals = fromToken.decimals || 18
+        const fromDecimals = fromToken.decimals ?? 18
         const fromAmountBase = parseUnits(requestedAmount, fromDecimals)
+        const toDecimals = toToken.decimals ?? 18
+        const quoteOutputUsd = (q: ProviderQuoteResponse) =>
+          outputUsd(BigInt(q.toTokenAmount.toString()), toDecimals, toToken.price)
+        // A route whose output is worth less than MIN_OUTPUT_USD is not offered,
+        // swap or bridge: the user would pay gas to receive dust. An unknown
+        // price never blocks.
+        const meetsFloor = (q: ProviderQuoteResponse) =>
+          meetsOutputFloor(
+            BigInt(q.toTokenAmount.toString()),
+            toDecimals,
+            toToken.price,
+          )
 
         providers.value = quotes
+          .filter(meetsFloor)
           .sort((a, b) => {
             const aMin = BigInt(a.minMax.minimumFrom.toString())
             const bMin = BigInt(b.minMax.minimumFrom.toString())
@@ -890,17 +921,49 @@ export function useSwapModule(): SwapModuleBindings {
         if (providers.value.length === 0) {
           quotesError.value = true
           // Every returned quote reported a minimum above the entered amount, so
-          // the amount is too low. Show the smallest real minimum among them — a
-          // provider that can actually service it. Placeholder minimums (a bare 0
-          // or 1 base unit that some providers report instead of a real limit) are
-          // dropped in the helper so we don't render a misleading near-zero floor
-          // (MEW-2293).
+          // the amount is too low. The smallest declared minimum overstates the
+          // real floor when a provider with an undeclared, fee-dependent floor
+          // (e.g. Rango) simply returned nothing for this amount, so probe a few
+          // amounts below that declared minimum in parallel and show the lowest
+          // one that actually gets a quote (MEW-2293). Loading stays on until the
+          // probes settle so the error box appears once, with the final figure.
           if (quotes.length > 0) {
+            // One minimum per quote. A quote that clears the fiat floor keeps
+            // its declared minimum. A quote dropped by the floor contributes the
+            // greater of its declared minimum and the input at which its own
+            // rate would reach the floor, so its lower declared figure can never
+            // set the ceiling. That also gives a provider with no declared
+            // minimum (Rango) a real one to resolve against.
+            const mins = quotes.map(q => {
+              const declared = BigInt(q.minMax.minimumFrom.toString())
+              if (meetsFloor(q)) return declared
+              const usd = quoteOutputUsd(q)
+              const needed = usd && inputForOutputFloor(fromAmountBase, usd)
+              return needed && needed > declared ? needed : declared
+            })
+            const amount = await resolveServableMinDisplay(
+              fromAmountBase,
+              mins,
+              fromDecimals,
+              async probeAmount => {
+                const probed = await getQuote({
+                  fromToken,
+                  toToken,
+                  amount: probeAmount,
+                  fromAddress: requestedFromAddress,
+                  toAddress: requestedToAddress,
+                })
+                return (
+                  probed
+                    ?.filter(meetsFloor)
+                    .map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
+                )
+              },
+            )
+            // The probes take a few seconds; a newer request owns the state now.
+            if (requestId !== latestQuotesRequestId) return
             generalError.value = t('swap.error.minimum-amount', {
-              amount: smallestMinFromDisplay(
-                quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
-                fromDecimals,
-              ),
+              amount,
               symbol: fromToken.symbol,
             })
           }
@@ -1299,7 +1362,10 @@ export function useSwapModule(): SwapModuleBindings {
         }
         debounceFetchQuotes()
       } else {
-        // Clear stale quotes when amount becomes invalid
+        // Clear stale quotes when amount becomes invalid, and invalidate any
+        // request still in flight so its result cannot land on the empty field.
+        latestQuotesRequestId++
+        isLoadingQuotes.value = false
         providers.value = []
         selectedQuote.value = undefined
         toAmount.value = ''
@@ -1385,7 +1451,14 @@ export function useSwapModule(): SwapModuleBindings {
           toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
           return
         }
-        toAmount.value = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
+        if (BigNumberVal.gte(0.0001)) {
+          toAmount.value = BigNumberVal.toFixed(6) // 6 decimals down to 0.0001
+          return
+        }
+        // 8 decimals below that. If even that rounds to 0, show the exact
+        // value so a positive estimate is never displayed or treated as zero.
+        const eightDp = BigNumberVal.toFixed(8)
+        toAmount.value = BigNumber(eightDp).gt(0) ? eightDp : val
       }
     },
   )
