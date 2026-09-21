@@ -102,7 +102,19 @@ describe('TradeSelectAssetModal (buy)', () => {
     await mountOpenModal()
 
     expect(
-      document.querySelector('#app [role="dialog"] .bg-stock-gradient'),
+      document.querySelector('#app [role="dialog"] p span.bg-stock-gradient'),
     ).toBeNull()
+  })
+
+  it('draws the stock outline around every buy-side logo', async () => {
+    await mountOpenModal()
+
+    const rows = document.querySelectorAll(
+      '#app [role="dialog"] [class*="h-[68px]"]',
+    )
+    expect(rows.length).toBeGreaterThan(0)
+    rows.forEach(row =>
+      expect(row.querySelector('div.bg-stock-gradient')).not.toBeNull(),
+    )
   })
 })
