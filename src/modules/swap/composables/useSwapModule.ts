@@ -846,6 +846,8 @@ export function useSwapModule(): SwapModuleBindings {
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
     const requestedAmount = fromAmount.value
+    const requestedFromAddress = userAddress.value
+    const requestedToAddress = toAddress.value
     isLoadingQuotes.value = true
     providers.value = []
     selectedQuote.value = undefined
@@ -859,8 +861,8 @@ export function useSwapModule(): SwapModuleBindings {
         fromToken,
         toToken,
         amount: requestedAmount,
-        fromAddress: userAddress.value,
-        toAddress: toAddress.value,
+        fromAddress: requestedFromAddress,
+        toAddress: requestedToAddress,
       })
 
       if (quotes && quotes.length > 0) {
@@ -893,16 +895,23 @@ export function useSwapModule(): SwapModuleBindings {
                   fromToken,
                   toToken,
                   amount: probeAmount,
-                  fromAddress: userAddress.value,
-                  toAddress: toAddress.value,
+                  fromAddress: requestedFromAddress,
+                  toAddress: requestedToAddress,
                 })
                 return (
                   probed?.map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
                 )
               },
             )
-            // Skip if the user changed the amount while the probe was in flight.
-            if (fromAmount.value === requestedAmount) {
+            // Skip if the request identity changed while the probe was in
+            // flight: amount, token pair, or either address.
+            if (
+              fromAmount.value === requestedAmount &&
+              fromTokenSelected.value === fromToken &&
+              toTokenSelected.value === toToken &&
+              userAddress.value === requestedFromAddress &&
+              toAddress.value === requestedToAddress
+            ) {
               generalError.value = t('swap.error.minimum-amount', {
                 amount,
                 symbol: fromToken.symbol,
