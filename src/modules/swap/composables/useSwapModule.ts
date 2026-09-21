@@ -17,6 +17,9 @@ import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
 import {
   smallestMinFromDisplay,
   resolveServableMinDisplay,
+  outputUsd,
+  meetsOutputFloor,
+  inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
@@ -401,7 +404,8 @@ export function useSwapModule(): SwapModuleBindings {
         fromAmount.value !== '' &&
         fromAmount.value !== '0' &&
         fromAmountError.value === '' &&
-        toAmount.value !== '0'
+        // A quote whose estimate rounds to zero must not be submittable.
+        BigNumber(toAmount.value).gt(0)
       ) ||
       (isCrossChain.value && toAddressError.value !== '') ||
       isLoadingQuotes.value ||
@@ -878,8 +882,20 @@ export function useSwapModule(): SwapModuleBindings {
       if (quotes && quotes.length > 0) {
         const fromDecimals = fromToken.decimals || 18
         const fromAmountBase = parseUnits(requestedAmount, fromDecimals)
+        const toDecimals = toToken.decimals || 18
+        const quoteOutputUsd = (q: ProviderQuoteResponse) =>
+          outputUsd(BigInt(q.toTokenAmount.toString()), toDecimals, toToken.price)
+        // A route whose output is worth less than MIN_OUTPUT_USD is not offered:
+        // the user would pay gas to receive dust. Unknown price never blocks.
+        const meetsFloor = (q: ProviderQuoteResponse) =>
+          meetsOutputFloor(
+            BigInt(q.toTokenAmount.toString()),
+            toDecimals,
+            toToken.price,
+          )
 
         providers.value = quotes
+          .filter(meetsFloor)
           .sort((a, b) => {
             const aMin = BigInt(a.minMax.minimumFrom.toString())
             const bMin = BigInt(b.minMax.minimumFrom.toString())
@@ -900,9 +916,19 @@ export function useSwapModule(): SwapModuleBindings {
           // one that actually gets a quote (MEW-2293). Loading stays on until the
           // probes settle so the error box appears once, with the final figure.
           if (quotes.length > 0) {
+            // Declared minimums, plus — for quotes dropped by the fiat floor — the
+            // input at which their own rate would reach it. That gives a provider
+            // with no declared minimum (Rango) a real one to resolve against.
+            const mins = quotes.map(q => BigInt(q.minMax.minimumFrom.toString()))
+            for (const q of quotes) {
+              if (meetsFloor(q)) continue
+              const usd = quoteOutputUsd(q)
+              const needed = usd && inputForOutputFloor(fromAmountBase, usd)
+              if (needed) mins.push(needed)
+            }
             const amount = await resolveServableMinDisplay(
               fromAmountBase,
-              quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+              mins,
               fromDecimals,
               async probeAmount => {
                 const probed = await getQuote({
@@ -913,7 +939,9 @@ export function useSwapModule(): SwapModuleBindings {
                   toAddress: requestedToAddress,
                 })
                 return (
-                  probed?.map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
+                  probed
+                    ?.filter(meetsFloor)
+                    .map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
                 )
               },
             )
@@ -1405,7 +1433,12 @@ export function useSwapModule(): SwapModuleBindings {
           toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
           return
         }
-        toAmount.value = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
+        if (BigNumberVal.gte(0.0001)) {
+          toAmount.value = BigNumberVal.toFixed(6) // 6 decimals down to 0.0001
+          return
+        }
+        // 8 decimals below that, so a tiny non-zero estimate never reads as 0
+        toAmount.value = BigNumberVal.toFixed(8)
       }
     },
   )

@@ -115,3 +115,53 @@ export const resolveServableMinDisplay = async (
   if (!servable.length) return displayUp(ceiling, decimals)
   return displayUp(servable.reduce((a, b) => (b < a ? b : a)), decimals)
 }
+
+/**
+ * Smallest fiat value a quote's output may have and still be offered. Below it
+ * the user pays source-chain gas to receive dust (MEW-2293: 0.007 POL bridged
+ * to ~0.00000027 ETH with the button enabled).
+ */
+export const MIN_OUTPUT_USD = 1
+
+/**
+ * Fiat value of a quote's output in the to-token's units, or null when no price
+ * is known — an unknown price never blocks a route.
+ */
+export const outputUsd = (
+  toAmountBase: bigint,
+  decimals: number,
+  price?: number | null,
+): BigNumber | null =>
+  price && price > 0
+    ? new BigNumber(formatUnits(toAmountBase, decimals)).times(price)
+    : null
+
+export const meetsOutputFloor = (
+  toAmountBase: bigint,
+  decimals: number,
+  price?: number | null,
+): boolean => {
+  const usd = outputUsd(toAmountBase, decimals, price)
+  return usd === null || usd.gte(MIN_OUTPUT_USD)
+}
+
+/**
+ * Input amount (base units) at which a quote under the fiat floor would reach
+ * it, scaling the quoted rate linearly with a 2% margin for rate drift. This is
+ * fed into the minimum resolution as a synthesized "real" minimum for providers
+ * that declare none. Null when the output is worthless (nothing to scale).
+ */
+export const inputForOutputFloor = (
+  amountBase: bigint,
+  usd: BigNumber,
+): bigint | null => {
+  if (amountBase <= 0n || usd.lte(0)) return null
+  return BigInt(
+    new BigNumber(amountBase.toString())
+      .times(MIN_OUTPUT_USD)
+      .div(usd)
+      .times(1.02)
+      .integerValue(BigNumber.ROUND_CEIL)
+      .toFixed(0),
+  )
+}

@@ -5,6 +5,10 @@ import {
   smallestMinFromDisplay,
   probeAmountsBetween,
   resolveServableMinDisplay,
+  MIN_OUTPUT_USD,
+  outputUsd,
+  meetsOutputFloor,
+  inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
 
 describe('smallestMinFromDisplay', () => {
@@ -161,5 +165,57 @@ describe('resolveServableMinDisplay', () => {
     const display = await resolveServableMinDisplay(0n, [1n], 18, probe)
     expect(probe).not.toHaveBeenCalled()
     expect(display).toBe('0.00000001')
+  })
+})
+
+describe('output fiat floor', () => {
+  // Rango, 0.007 POL -> ~0.00000027 ETH at $2,782: worth about $0.00075.
+  const dustOut = parseUnits('0.00000027', 18)
+  const ethPrice = 2782.41
+
+  it('values the output in fiat using the to-token price', () => {
+    const usd = outputUsd(dustOut, 18, ethPrice)
+    expect(usd?.toNumber()).toBeCloseTo(0.00075, 4)
+  })
+
+  it('rejects dust output and accepts output worth the floor', () => {
+    expect(meetsOutputFloor(dustOut, 18, ethPrice)).toBe(false)
+    const oneDollarOfEth = parseUnits((MIN_OUTPUT_USD / ethPrice).toFixed(18), 18)
+    expect(meetsOutputFloor(oneDollarOfEth, 18, ethPrice)).toBe(true)
+  })
+
+  it('never blocks a route when the price is unknown', () => {
+    expect(outputUsd(dustOut, 18, undefined)).toBeNull()
+    expect(meetsOutputFloor(dustOut, 18, 0)).toBe(true)
+    expect(meetsOutputFloor(dustOut, 18, null)).toBe(true)
+  })
+
+  it('scales the quoted rate to the input needed for the floor, with margin', () => {
+    const entered = parseUnits('0.007', 18)
+    const usd = outputUsd(dustOut, 18, ethPrice)!
+    const needed = inputForOutputFloor(entered, usd)!
+    // 0.007 POL bought $0.00075, so $1 needs ~9.3 POL; +2% -> ~9.5 POL.
+    expect(Number(needed) / 1e18).toBeCloseTo(9.5, 0)
+    expect(needed > entered).toBe(true)
+  })
+
+  it('cannot scale a worthless or zero input', () => {
+    expect(inputForOutputFloor(0n, outputUsd(dustOut, 18, ethPrice)!)).toBeNull()
+    expect(inputForOutputFloor(parseUnits('1', 18), outputUsd(0n, 18, ethPrice)!)).toBeNull()
+  })
+
+  it('a synthesized floor minimum resolves like a declared one', async () => {
+    // Only Rango answered (placeholder min) but under the floor; its scaled
+    // input becomes the ceiling and, with no servable probe, the shown minimum.
+    const entered = parseUnits('0.007', 18)
+    const synthesized = inputForOutputFloor(entered, outputUsd(dustOut, 18, ethPrice)!)!
+    const display = await resolveServableMinDisplay(
+      entered,
+      [1n, synthesized],
+      18,
+      async () => [], // probes below the floor are filtered out by the caller
+    )
+    expect(Number(display)).toBeCloseTo(9.5, 0)
+    expect(parseUnits(display, 18) >= synthesized).toBe(true)
   })
 })
