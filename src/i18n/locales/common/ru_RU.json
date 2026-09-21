@@ -1,5 +1,6 @@
 {
   "common": {
+    "watchlist_limit_reached": "You can save up to {max} items in each watchlist.",
     "search": "Поиск",
     "swap": "Swap",
     "bridge": "Bridge",
