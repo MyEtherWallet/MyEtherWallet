@@ -9,6 +9,7 @@ import { useWatchlistRows } from '@/modules/home/composables/useWatchlistRows'
 import HeroPortfolioCard from '@/modules/home/components/HeroPortfolioCard.vue'
 import HeroTrendingCard from '@/modules/home/components/HeroTrendingCard.vue'
 import HeroBanner from '@/modules/home/components/HeroBanner.vue'
+import RwaHomeBanner from '@/modules/rwa_rewards/RwaHomeBanner.vue'
 import HeroWatchlistBanner from '@/modules/home/components/HeroWatchlistBanner.vue'
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
 import HomeWatchlistOnboardingDialog from '@/modules/home/components/HomeWatchlistOnboardingDialog.vue'
@@ -113,6 +114,8 @@ onMounted(fetchTrending)
 
 <template>
   <div data-test="home-hero" class="flex flex-col gap-6">
+    <!-- Trade & hold campaign: state-driven, dismissible per state. -->
+    <RwaHomeBanner />
     <HeroBanner v-if="SHOW_HERO_TRADE_BANNER" />
     <!-- Container-query layout so the Hero reflows on the AVAILABLE width (which
          shrinks when the wallet side panel opens), not the viewport:
