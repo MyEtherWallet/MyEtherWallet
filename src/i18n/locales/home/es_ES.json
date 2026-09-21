@@ -85,6 +85,7 @@
           "allCategories": "All categories",
           "trade": "Trade",
           "swap": "Swap",
+          "bridge": "Bridge",
           "remove": "Remove from watchlist",
           "removeShort": "Remove",
           "dragLabel": "Drag to reorder",
