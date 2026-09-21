@@ -885,9 +885,9 @@ export function useSwapModule(): SwapModuleBindings {
       if (requestId !== latestQuotesRequestId) return
 
       if (quotes && quotes.length > 0) {
-        const fromDecimals = fromToken.decimals || 18
+        const fromDecimals = fromToken.decimals ?? 18
         const fromAmountBase = parseUnits(requestedAmount, fromDecimals)
-        const toDecimals = toToken.decimals || 18
+        const toDecimals = toToken.decimals ?? 18
         const quoteOutputUsd = (q: ProviderQuoteResponse) =>
           outputUsd(BigInt(q.toTokenAmount.toString()), toDecimals, toToken.price)
         // A route whose output is worth less than MIN_OUTPUT_USD is not offered,
