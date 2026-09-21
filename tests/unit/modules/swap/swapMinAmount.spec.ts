@@ -1,10 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
-import { parseUnits, formatUnits } from 'viem'
+import { describe, it, expect } from 'vitest'
+import { parseUnits } from 'viem'
 
-import {
-  smallestMinFromDisplay,
-  resolveMinFromDisplay,
-} from '@/modules/swap/swapMinAmount'
+import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
 
 describe('smallestMinFromDisplay', () => {
   it('rounds the minimum UP so the shown amount is never below it (PYUSD, 6dp)', () => {
@@ -35,44 +32,25 @@ describe('smallestMinFromDisplay', () => {
   it('returns "0" when there are no minimums', () => {
     expect(smallestMinFromDisplay([], 6)).toBe('0')
   })
-})
 
-describe('resolveMinFromDisplay', () => {
-  it('lowers the shown min when the re-query surfaces a cheaper provider (POL, 18dp)', async () => {
-    // Sub-minimum request only returned an expensive bridge (400 POL); a cheaper
-    // provider (5 POL) returned null and was dropped by the aggregator (MEW-2293).
-    const expensiveMin = parseUnits('400', 18)
-    const cheaperMin = parseUnits('5', 18)
-    // Re-query at 400 POL lets the cheaper provider quote and report its true min.
-    const probe = vi.fn().mockResolvedValue([cheaperMin, expensiveMin])
-
-    const display = await resolveMinFromDisplay([expensiveMin], 18, probe)
-
-    expect(probe).toHaveBeenCalledWith(formatUnits(expensiveMin, 18))
-    expect(display).toBe('5')
+  it('ignores a placeholder minimum so a real floor is shown (POL, 18dp)', () => {
+    // Rango reports minimumFrom = 1 base unit (a placeholder, not a real limit);
+    // Changelly reports the real 445.9768161 POL. The real one must win, instead
+    // of rendering a misleading 0.00000001 POL (MEW-2293).
+    const rangoPlaceholder = 1n
+    const changellyReal = parseUnits('445.9768161', 18)
+    expect(
+      smallestMinFromDisplay([rangoPlaceholder, changellyReal], 18),
+    ).toBe('445.98')
   })
 
-  it('keeps the first-set min when the re-query adds nothing', async () => {
-    const min = parseUnits('400', 18)
-    const probe = vi.fn().mockResolvedValue([])
-    expect(await resolveMinFromDisplay([min], 18, probe)).toBe('400')
+  it('treats a bare 0 minimum as a placeholder too', () => {
+    const real = parseUnits('5', 18)
+    expect(smallestMinFromDisplay([0n, real], 18)).toBe('5')
   })
 
-  it('falls back to the first-set min when the re-query throws', async () => {
-    const min = parseUnits('400', 18)
-    const probe = vi.fn().mockRejectedValue(new Error('network'))
-    expect(await resolveMinFromDisplay([min], 18, probe)).toBe('400')
-  })
-
-  it('never raises the shown min even if the re-query only returns higher mins', async () => {
-    const min = parseUnits('400', 18)
-    const probe = vi.fn().mockResolvedValue([parseUnits('900', 18)])
-    expect(await resolveMinFromDisplay([min], 18, probe)).toBe('400')
-  })
-
-  it('returns "0" when there are no initial minimums', async () => {
-    const probe = vi.fn()
-    expect(await resolveMinFromDisplay([], 18, probe)).toBe('0')
-    expect(probe).not.toHaveBeenCalled()
+  it('falls back to the raw value when every minimum is a placeholder', () => {
+    // Nothing real to show; better than dropping the message entirely.
+    expect(smallestMinFromDisplay([1n], 18)).toBe('0.00000001')
   })
 })

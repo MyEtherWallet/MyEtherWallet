@@ -14,10 +14,7 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
-import {
-  smallestMinFromDisplay,
-  resolveMinFromDisplay,
-} from '@/modules/swap/swapMinAmount'
+import { smallestMinFromDisplay } from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -840,9 +837,15 @@ export function useSwapModule(): SwapModuleBindings {
     bestOfferSelectionOpen.value = false
   }
 
+  // Monotonic id so a superseded in-flight request can't apply its results or
+  // clear the loading state over a newer one (requests can overlap despite the
+  // debounce when the amount/pair changes mid-flight) — MEW-2293.
+  let latestQuotesRequestId = 0
+
   const fetchQuotes = async () => {
     if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
       return
+    const requestId = ++latestQuotesRequestId
     const fromToken = fromTokenSelected.value
     const toToken = toTokenSelected.value
     const requestedAmount = fromAmount.value
@@ -865,6 +868,10 @@ export function useSwapModule(): SwapModuleBindings {
         toAddress: requestedToAddress,
       })
 
+      // A newer request started while this one was in flight — its results are
+      // stale, so don't apply them or fire analytics for them.
+      if (requestId !== latestQuotesRequestId) return
+
       if (quotes && quotes.length > 0) {
         const fromDecimals = fromToken.decimals || 18
         const fromAmountBase = parseUnits(requestedAmount, fromDecimals)
@@ -882,41 +889,20 @@ export function useSwapModule(): SwapModuleBindings {
         selectedQuote.value = providers.value[0] || undefined
         if (providers.value.length === 0) {
           quotesError.value = true
-          // No provider met the minimum, so the entered amount is too low. The
-          // cheaper-minimum providers may have returned null for this sub-minimum
-          // amount and been dropped, so re-query at the smallest returned min to
-          // surface them and show the true floor (MEW-2293).
+          // Every returned quote reported a minimum above the entered amount, so
+          // the amount is too low. Show the smallest real minimum among them — a
+          // provider that can actually service it. Placeholder minimums (a bare 0
+          // or 1 base unit that some providers report instead of a real limit) are
+          // dropped in the helper so we don't render a misleading near-zero floor
+          // (MEW-2293).
           if (quotes.length > 0) {
-            const amount = await resolveMinFromDisplay(
-              quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
-              fromDecimals,
-              async probeAmount => {
-                const probed = await getQuote({
-                  fromToken,
-                  toToken,
-                  amount: probeAmount,
-                  fromAddress: requestedFromAddress,
-                  toAddress: requestedToAddress,
-                })
-                return (
-                  probed?.map(q => BigInt(q.minMax.minimumFrom.toString())) ?? []
-                )
-              },
-            )
-            // Skip if the request identity changed while the probe was in
-            // flight: amount, token pair, or either address.
-            if (
-              fromAmount.value === requestedAmount &&
-              fromTokenSelected.value === fromToken &&
-              toTokenSelected.value === toToken &&
-              userAddress.value === requestedFromAddress &&
-              toAddress.value === requestedToAddress
-            ) {
-              generalError.value = t('swap.error.minimum-amount', {
-                amount,
-                symbol: fromToken.symbol,
-              })
-            }
+            generalError.value = t('swap.error.minimum-amount', {
+              amount: smallestMinFromDisplay(
+                quotes.map(q => BigInt(q.minMax.minimumFrom.toString())),
+                fromDecimals,
+              ),
+              symbol: fromToken.symbol,
+            })
           }
           const event = bestSwapLoadingOpen.value
             ? SwapEventError.OFFER_ERROR
@@ -941,7 +927,9 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } catch (err: unknown) {
-      generalError.value = t('swap.error.fetching-quotes')
+      if (requestId === latestQuotesRequestId) {
+        generalError.value = t('swap.error.fetching-quotes')
+      }
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.SWAP,
         title: 'SWAP: fetchQuotes Error',
@@ -958,7 +946,9 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } finally {
-      isLoadingQuotes.value = false
+      // Only the latest request owns the loading state; a superseded one
+      // clearing it would hide the newer request still in flight.
+      if (requestId === latestQuotesRequestId) isLoadingQuotes.value = false
     }
   }
 
