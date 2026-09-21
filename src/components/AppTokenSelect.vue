@@ -179,6 +179,7 @@
 
 <script setup lang="ts">
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted, watch } from 'vue'
 import {
@@ -361,9 +362,7 @@ const getBalance = (_value: string) => {
   return formatFloatingPointValue(_value).value
 }
 
-const getName = (token: TokenBalance): string => {
-  return token.ondo?.stockAlias ? token.ondo.stockAlias : token.name
-}
+const getName = (token: TokenBalance): string => getTokenDisplayName(token)
 
 const emit = defineEmits<{
   'open:selectToken': [isOpen: boolean]
