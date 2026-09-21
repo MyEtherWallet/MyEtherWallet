@@ -18,12 +18,14 @@ import {
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
+import configs from '@/configs'
 
 // Feature flags — flip to `true` to re-enable on the home page.
 // Promo "Trade and get 5 USDC" banner above the cards (copy/campaign still TBD).
 const SHOW_HERO_TRADE_BANNER: boolean = false
-// Build-your-watchlist banner + table + add-to-watchlist modal.
-const SHOW_WATCHLIST: boolean = true
+// Build-your-watchlist banner + table + add-to-watchlist modal. Hidden until
+// VITE_WATCHLIST_ENABLED is 'true' (per-env toggle, see configs.ts).
+const SHOW_WATCHLIST: boolean = configs.SHOW_WATCHLIST
 
 const { t } = useI18n()
 

@@ -38,7 +38,10 @@ const configs = {
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
-  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
+  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev',
+  // Watchlist (home banner + table + onboarding) stays hidden unless the env var
+  // is explicitly 'true', so it can be flipped per environment.
+  SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true'
 }
 
 export default configs
