@@ -70,11 +70,11 @@ export const mapStockRow = (
   key: `stock-${s.primaryMarket.symbol}`,
   logoUrl: s.iconPngUrl || s.iconSvgUrl,
   symbol: s.primaryMarket.symbol,
-  name: s.underlyingMarket.name,
+  name: s.stockAlias || s.underlyingMarket?.name || '',
   isStock: true,
   priceDisplay: fmt.fiat(s.primaryMarket.price),
   change: parseFloat(s.primaryMarket.priceChangePercentage24h) || 0,
-  marketValueDisplay: fmt.compact(s.underlyingMarket.marketCap),
+  marketValueDisplay: fmt.compact(s.underlyingMarket?.marketCap),
   sparkline: s.primaryMarket.sparkline24h ?? [],
   route: {
     name: STOCK_INFO_ROUTE_NAMES.home,

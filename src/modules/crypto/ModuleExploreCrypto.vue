@@ -3,7 +3,9 @@
     <div
       class="flex flex-col sm:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-3 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('crypto.explore_tokens') }}</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('crypto.explore_tokens') }}
+      </h1>
 
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
@@ -28,7 +30,9 @@
                   class="min-h-10 rounded-full hoverNoBG px-3 flex items-center gap-1"
                   @click="toggleSelect"
                 >
-                  <span class="font-medium text-s-17">{{ $t('common.more') }}</span>
+                  <span class="font-medium text-s-17">{{
+                    $t('common.more')
+                  }}</span>
                   <chevron-down-icon class="w-4 h-4" />
                 </button>
               </template>
@@ -507,7 +511,9 @@
                       @click="tradeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
@@ -517,7 +523,9 @@
                       @click="bridgeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
@@ -531,7 +539,9 @@
                       @click="swapBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('common.swap') }}
                     </app-base-button>
@@ -682,6 +692,7 @@ import type {
   Chain,
   GetWebTokensTableResponse,
   GetWebTokensTableResponseToken,
+  GetWebTokensWatchlistResponseToken,
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -711,8 +722,11 @@ const { t } = useI18n()
 const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+} = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
@@ -956,7 +970,7 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
     location: 'crypto_table',
     token: token.symbol,
-    stock: token.ondo?.underlyingMarket.name,
+    stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
@@ -1114,14 +1128,29 @@ onMounted(() => {
   }
 })
 
-const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+// Serves both the token table and the watchlist. The two endpoints agree on
+// every field except ondo.underlyingMarket.name, which the watchlist types as
+// optional — normalize onto the table shape so both map to one DisplayToken.
+// The alias wins over the underlying market's name wherever both are present.
+const formatToken = (
+  item: GetWebTokensTableResponseToken | GetWebTokensWatchlistResponseToken,
+): DisplayToken => {
   return {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
     marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
-    totalVolume: item.totalVolume
-      ? formatFiat(item.totalVolume).display
-      : '-',
+    totalVolume: item.totalVolume ? formatFiat(item.totalVolume).display : '-',
+    ondo: item.ondo
+      ? {
+          ...item.ondo,
+          underlyingMarket: item.ondo.underlyingMarket
+            ? {
+                name:
+                  item.ondo.stockAlias || item.ondo.underlyingMarket.name || '',
+              }
+            : null,
+        }
+      : null,
   }
 }
 
@@ -1130,7 +1159,9 @@ const formatStock = (
 ): DisplayToken => {
   return {
     coinId: '',
-    name: item.underlyingMarket.name,
+    // Portfolio tokens have no single underlying market, so the API sends
+    // underlyingMarket as null and the alias carries the display name.
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
     price: item.primaryMarket.price
@@ -1141,10 +1172,10 @@ const formatStock = (
       ? Number(item.primaryMarket.priceChangePercentage24h)
       : null,
     priceChangePercentage7d: null,
-    totalVolume: item.underlyingMarket.volume24h
+    totalVolume: item.underlyingMarket?.volume24h
       ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
-    marketCap: item.underlyingMarket.marketCap
+    marketCap: item.underlyingMarket?.marketCap
       ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
@@ -1157,9 +1188,10 @@ const formatStock = (
       primaryMarket: {
         symbol: item.primaryMarket.symbol,
       },
-      underlyingMarket: {
-        name: item.underlyingMarket.name,
-      },
+      underlyingMarket: item.underlyingMarket
+        ? { name: item.underlyingMarket.name }
+        : null,
+      constituentTokens: item.constituentTokens,
     },
     sparklineIn7d: item.primaryMarket.sparkline24h || null,
   }

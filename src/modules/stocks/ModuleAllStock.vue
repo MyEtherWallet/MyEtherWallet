@@ -4,7 +4,9 @@
       <div
         class="flex flex-wrap justify-start md:justify-between items-center gap-2 mb-6"
       >
-        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">{{ $t('stocks.all_stocks') }}</h1>
+        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">
+          {{ $t('stocks.all_stocks') }}
+        </h1>
 
         <!-- Mobile only Categories-->
         <app-select
@@ -221,7 +223,9 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">{{ $t('stocks.actions') }}</p>
+                  <p class="hidden lg:block font-bold">
+                    {{ $t('stocks.actions') }}
+                  </p>
                 </th>
               </tr>
             </thead>
@@ -748,19 +752,19 @@ const { stocksWatchlistData, fetchStocksWatchlist, onStocksWatchlistResponse } =
 const formatStock = (
   item: GetWebStocksWatchlistResponseStock,
 ): DisplayToken => {
-  const priceRaw = item.primaryMarket.price
+  const priceRaw = item.primaryMarket?.price
     ? Number(item.primaryMarket.price)
     : 0
-  const marketCapRaw = item.underlyingMarket.marketCap
+  const marketCapRaw = item.underlyingMarket?.marketCap
     ? Number(item.underlyingMarket.marketCap)
     : 0
-  const totalVolumeRaw = item.underlyingMarket.volume24h
+  const totalVolumeRaw = item.underlyingMarket?.volume24h
     ? Number(item.underlyingMarket.volume24h)
     : 0
 
   return {
     symbol: item.primaryMarket.symbol,
-    name: item.underlyingMarket.name,
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     price: priceRaw ? formatFiat(priceRaw).display : '-',
     marketCap: marketCapRaw ? formatFiat(marketCapRaw).display : '-',
     totalVolume: totalVolumeRaw ? formatFiat(totalVolumeRaw).display : '-',
@@ -880,16 +884,16 @@ const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
   const priceRaw = tableItem.primaryMarket.price
     ? Number(tableItem.primaryMarket.price)
     : 0
-  const marketCapRaw = tableItem.underlyingMarket.marketCap
+  const marketCapRaw = tableItem.underlyingMarket?.marketCap
     ? Number(tableItem.underlyingMarket.marketCap)
     : 0
-  const totalVolumeRaw = tableItem.underlyingMarket.volume24h
+  const totalVolumeRaw = tableItem.underlyingMarket?.volume24h
     ? Number(tableItem.underlyingMarket.volume24h)
     : 0
 
   return {
     symbol: tableItem.primaryMarket.symbol,
-    name: tableItem.underlyingMarket.name,
+    name: tableItem.stockAlias || tableItem.underlyingMarket?.name || '',
     price: priceRaw ? formatFiat(priceRaw).display : '-',
     marketCap: marketCapRaw ? formatFiat(marketCapRaw).display : '-',
     totalVolume: totalVolumeRaw ? formatFiat(totalVolumeRaw).display : '-',

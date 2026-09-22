@@ -6,6 +6,7 @@
       <div class="col-span-12 -mt-2">
         <module-stock-indexes class="-mx-1" />
         <module-search-stocks />
+        <module-oip class="mt-9" />
         <module-top-movers class="mt-6" />
       </div>
       <module-newly-added class="col-span-12 lg:col-span-4" />
@@ -25,6 +26,7 @@ import ModuleNewlyAdded from '@/modules/stocks/ModuleNewlyAdded.vue'
 import ModuleTrending from '@/modules/stocks/ModuleTrending.vue'
 import ModuleNews from '@/modules/stocks/ModuleNews.vue'
 import ModuleAllStock from '@/modules/stocks/ModuleAllStock.vue'
+import ModuleOip from '@/modules/stocks/ModuleOip.vue'
 import { useStocksStore } from '@/stores/stocksStore'
 
 const stocksStore = useStocksStore()

@@ -58,6 +58,14 @@
     "dividend_yield": "Dividend Yield",
     "payout_frequency": "Payout Frequency",
     "last_amount": "Last Amount",
-    "last_payment_date": "Last Payment Date"
+    "last_payment_date": "Last Payment Date",
+    "provider": "Provider",
+    "ytd": "YTD",
+    "oip_title": "Ondo Intelligent Portfolios",
+    "oip_description": "Each portfolio is a professionally constructed basket of Ondo tokenized stocks and ETFs, delivered as a single onchain token.",
+    "oip_learn_more": "Learn more",
+    "oip_category_thematic": "Thematic",
+    "oip_category_income": "Income",
+    "oip_category_allocation": "Allocation"
   }
 }

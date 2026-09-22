@@ -58,7 +58,7 @@ export const mapStockItem = (
 ): AssetPickerItem => ({
   key: `stock-${s.primaryMarket.symbol}`,
   symbol: s.primaryMarket.symbol,
-  name: s.underlyingMarket.name,
+  name: s.stockAlias || s.underlyingMarket?.name || '',
   logoUrl: s.iconPngUrl || s.iconSvgUrl || undefined,
   type: 'stock',
   watchlistId: s.primaryMarket.symbol,

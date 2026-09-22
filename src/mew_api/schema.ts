@@ -372,6 +372,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/pages/stocks/oips": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksOips"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/pages/stocks-info/stocks/{symbol}/summary": {
         parameters: {
             query?: never;
@@ -668,6 +684,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetBalancesByChainNameAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/chains/{chainName}/addresses/{address}/token-balances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebBalancesByChainNameAndAddress"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1276,10 +1308,10 @@ export interface components {
         UUID: string;
         ISO8601: string;
         /**
-         * @description Where a description came from. `MASSIVE` and `COINGECKO` are third party providers; `INTERNAL` is our own curated data.
+         * @description Where a description came from. `MASSIVE`, `FX` and `COINGECKO` are third party providers; `INTERNAL` is our own curated data.
          * @enum {string}
          */
-        DescriptionSource: "MASSIVE" | "COINGECKO" | "INTERNAL";
+        DescriptionSource: "MASSIVE" | "FX" | "COINGECKO" | "INTERNAL";
         /** @enum {string} */
         ChainType: "BITCOIN" | "EVM" | "POLKADOT" | "KADENA" | "SOLANA";
         /** @enum {string} */
@@ -1573,13 +1605,15 @@ export interface components {
             };
             primaryMarket: {
                 price: string;
+                priceChangePercentage24h: string;
                 sharesMultiplier: string;
                 tradableSessions: string[];
             };
-            underlyingMarket: {
+            underlyingMarket: null | {
                 name: string;
                 price: string;
             };
+            constituentTokens?: string[];
             addresses: {
                 chainName: null | string;
                 ondoGmNetworkChainId: string;
@@ -1654,19 +1688,29 @@ export interface components {
                     priceChangePercentage24h: string;
                     sparkline24h: number[];
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name: string;
                     volume24h: string;
                     marketCap: string;
                 };
+                constituentTokens?: string[];
                 chains: components["schemas"]["OndoChain"][];
             }[];
             recentNews: {
-                title?: string;
-                thumbnailUrl?: string;
-                articleUrl?: string;
-                timestamp?: number;
-                tickers?: string[];
+                title: string;
+                thumbnailUrl: string;
+                articleUrl: string;
+                timestamp: number;
+                tickers: string[];
+                /** @description Short editorial summary of the article, typically 2-4 sentences. Null when the provider gives none. */
+                description: null | string;
+                author: null | string;
+                publisher: null | {
+                    name: string;
+                    homepageUrl: string;
+                    logoUrl: string;
+                    faviconUrl: string;
+                };
             }[];
             trending: {
                 stockAlias?: string;
@@ -1678,11 +1722,12 @@ export interface components {
                     priceChangePercentage24h: string;
                     sparkline24h: number[];
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name: string;
                     volume24h: string;
                     marketCap: string;
                 };
+                constituentTokens?: string[];
                 chains: components["schemas"]["OndoChain"][];
             }[];
             topMovers: {
@@ -1698,11 +1743,12 @@ export interface components {
                         price?: string;
                     }[];
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name: string;
                     volume24h: string;
                     marketCap: string;
                 };
+                constituentTokens?: string[];
                 chains: components["schemas"]["OndoChain"][];
             }[];
             banner: {
@@ -1727,11 +1773,12 @@ export interface components {
                     priceChangePercentage24h: string;
                     sparkline24h: number[];
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name: string;
                     volume24h: string;
                     marketCap: string;
                 };
+                constituentTokens?: string[];
             }[];
         };
         GetWebStocksWatchlistResponse: {
@@ -1744,11 +1791,12 @@ export interface components {
                 priceChangePercentage24h: string;
                 sparkline24h: number[];
             };
-            underlyingMarket: {
+            underlyingMarket: null | {
                 name: string;
                 volume24h: string;
                 marketCap: string;
             };
+            constituentTokens?: string[];
         }[];
         GetWebStocksSummaryResponse: {
             stockAlias?: string;
@@ -1759,9 +1807,27 @@ export interface components {
                 price: string;
                 priceChangePercentage24h: string;
             };
-            underlyingMarket: {
+            underlyingMarket: null | {
                 name: string;
             };
+            constituentTokens?: string[];
+        }[];
+        GetWebStocksOipsResponse: {
+            symbol: string;
+            name: string | null;
+            description: string;
+            iconPngUrl: string | null;
+            iconSvgUrl: string | null;
+            /** @enum {string} */
+            category: "Thematic" | "Income" | "Allocation";
+            /** @enum {string} */
+            modelProvider: "Ondo" | "BlackRock";
+            sectorAllocation: null | {
+                sector: string;
+                weightPct: number;
+            }[];
+            price: string | null;
+            ytdChangePct: number | null;
         }[];
         GetWebStocksInfoSummaryResponse: {
             stockAlias?: string;
@@ -1788,12 +1854,13 @@ export interface components {
                 open24h?: string;
                 high24h?: string;
                 low24h?: string;
+                ytdChangePct?: number;
                 priceChart24h?: {
                     timestamp: number;
                     price: string;
                 }[];
             };
-            underlyingMarket?: {
+            underlyingMarket?: null | {
                 name: string;
                 ticker: string;
                 priceHigh52w: string;
@@ -1805,7 +1872,9 @@ export interface components {
                 open24h?: string;
                 high24h?: string;
                 low24h?: string;
+                ytdChangePct?: number;
             };
+            constituentTokens?: string[];
             chainBalances: {
                 chainName: null | string;
                 chainNameLong: null | string;
@@ -2149,9 +2218,10 @@ export interface components {
                     primaryMarket: {
                         symbol: string;
                     };
-                    underlyingMarket: {
-                        name?: string;
+                    underlyingMarket: null | {
+                        name: string;
                     };
+                    constituentTokens?: string[];
                 };
                 sparklineIn7d: null | number[];
             }[];
@@ -2192,9 +2262,10 @@ export interface components {
                 primaryMarket: {
                     symbol: string;
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name?: string;
                 };
+                constituentTokens?: string[];
             };
             sparklineIn7d: null | number[];
         }[];
@@ -2256,11 +2327,12 @@ export interface components {
                     priceChangePercentage24h: string;
                     sharesMultiplier: string;
                 };
-                underlyingMarket: {
+                underlyingMarket: null | {
                     name: string;
                     volume24h: string;
                     marketCap: string;
                 };
+                constituentTokens?: string[];
                 chains: components["schemas"]["OndoChain"][];
             }[];
         };
@@ -2330,6 +2402,36 @@ export interface components {
                     underlyingMarket: {
                         name?: string;
                     };
+                };
+                sparkline_in_7d?: null | number[];
+            }[];
+        };
+        GetWebBalancesByChainNameAndAddressResponse: {
+            result: {
+                coinId?: string;
+                balance: string;
+                contract: string;
+                decimals?: number;
+                logo_url?: string;
+                name?: string;
+                price?: number;
+                symbol?: string;
+                market_cap?: number;
+                price_change_percentage_24h?: number;
+                volume_24h?: number;
+                is_rwa?: boolean;
+                is_stablecoin?: boolean;
+                ondo?: {
+                    stockAlias?: string;
+                    iconPngUrl?: string;
+                    iconSvgUrl?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                    underlyingMarket: null | {
+                        name: string;
+                    };
+                    constituentTokens?: string[];
                 };
                 sparkline_in_7d?: null | number[];
             }[];
@@ -2797,6 +2899,14 @@ export interface components {
                 "application/json": components["schemas"]["GetWebStocksSummaryResponse"];
             };
         };
+        GetWebStocksOipsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksOipsResponse"];
+            };
+        };
         GetWebStocksInfoSummarySuccess: {
             headers: {
                 [name: string]: unknown;
@@ -2955,6 +3065,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetBalancesByChainNameAndAddressResponse"];
+            };
+        };
+        GetWebBalancesByChainNameAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebBalancesByChainNameAndAddressResponse"];
             };
         };
         GetTokenBalancesByChainNamesAndAddressSuccess: {
@@ -3679,6 +3797,18 @@ export interface operations {
             200: components["responses"]["GetWebStocksSummarySuccess"];
         };
     };
+    GetWebStocksOips: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksOipsSuccess"];
+        };
+    };
     GetWebStocksInfoSummary: {
         parameters: {
             query?: {
@@ -3971,6 +4101,25 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetBalancesByChainNameAndAddressSuccess"];
+        };
+    };
+    GetWebBalancesByChainNameAndAddress: {
+        parameters: {
+            query?: {
+                sparklines?: components["parameters"]["IncludeSparklines"];
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                address: components["parameters"]["Address"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebBalancesByChainNameAndAddressSuccess"];
         };
     };
     GetBtcBalanceByChainNameAndAddresses: {
