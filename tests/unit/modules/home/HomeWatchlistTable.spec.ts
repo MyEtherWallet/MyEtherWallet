@@ -85,7 +85,10 @@ vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
 }))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import {
+  useWatchlistStore,
+  WATCHLIST_MAX,
+} from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const i18n = createI18n({
@@ -230,5 +233,27 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
       'true',
     )
     expect(push).not.toHaveBeenCalled()
+  })
+
+  it('hides the Add asset button once both buckets are full (MEW-2374)', () => {
+    const store = useWatchlistStore()
+    for (let i = 0; i < WATCHLIST_MAX; i++) {
+      store.setWatchlistItem(`coin-${i}`, false) // crypto
+      store.setWatchlistItem(`STK-${i}`, true) // stock
+    }
+    const w = mountTable()
+    expect(w.find('[data-test="watchlist-add-new"]').exists()).toBe(false)
+    expect(w.find('[data-test="watchlist-add-new-mobile"]').exists()).toBe(false)
+  })
+
+  it('keeps the Add asset button while a bucket still has room', () => {
+    const store = useWatchlistStore()
+    // Crypto full, stocks empty → still something to add.
+    for (let i = 0; i < WATCHLIST_MAX; i++) {
+      store.setWatchlistItem(`coin-${i}`, false)
+    }
+    expect(mountTable().find('[data-test="watchlist-add-new"]').exists()).toBe(
+      true,
+    )
   })
 })

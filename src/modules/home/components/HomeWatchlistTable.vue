@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
@@ -18,7 +19,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
@@ -49,6 +50,15 @@ const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
 const router = useRouter()
 const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
+
+// The add modal only offers crypto + stocks, so once both buckets hit the limit
+// there's nothing left to add — hide the "Add asset" button.
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const isWatchlistFull = computed(
+  () =>
+    watchListedTokens.value.length >= WATCHLIST_MAX &&
+    watchListedStocks.value.length >= WATCHLIST_MAX,
+)
 
 const matchesCategory = (r: WatchlistRow) =>
   category.value === 'all' ||
@@ -147,6 +157,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
         {{ t('homePage.hero.watchlist.table.title') }}
       </h2>
       <button
+        v-if="!isWatchlistFull"
         type="button"
         data-test="watchlist-add-new-mobile"
         class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:hidden"
@@ -206,6 +217,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
         </div>
       </div>
       <button
+        v-if="!isWatchlistFull"
         type="button"
         data-test="watchlist-add-new"
         class="hidden h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:flex"
