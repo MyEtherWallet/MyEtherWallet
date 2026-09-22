@@ -21,7 +21,9 @@
             {{ t('rewards.earn_rewards_title') }}
           </h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            {{ t('rewards.portfolio_trade_description', { min: minSpendTrade }) }}
+            {{
+              t('rewards.portfolio_trade_description', { min: minSpendTrade })
+            }}
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
@@ -130,7 +132,7 @@ import { analytics, RewardsEvent } from '@/analytics'
 import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
 
 const { t } = useI18n()
 
@@ -166,8 +168,8 @@ const timeUntilSwapNextEligible = ref('--')
 const timeUntilTradeNextEligible = ref('--')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 
-const { countdownText: timeUntilMarketOpen, fetchMarketStatus } =
-  useMarketStatus()
+const marketStatusStore = useMarketStatusStore()
+const { countdownText: timeUntilMarketOpen } = storeToRefs(marketStatusStore)
 
 function formatDiff(ms: number): string {
   const d = Math.floor(ms / 86_400_000)
@@ -207,13 +209,14 @@ function updateCountdowns() {
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
   rewardsStore.fetchPool()
-  fetchMarketStatus()
+  marketStatusStore.acquire()
   updateCountdowns()
   countdownTimer = setInterval(updateCountdowns, 60_000)
 })
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
+  marketStatusStore.release()
 })
 
 const navigateTo = (panel: 'swap' | 'trade') => {

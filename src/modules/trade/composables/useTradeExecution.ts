@@ -1,8 +1,7 @@
-import { storeToRefs } from 'pinia';
-import { ref, type Ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
 import { useToastStore } from '@/stores/toastStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
@@ -18,7 +17,10 @@ import {
 import Configs from '@/configs'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
-import { isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isInsufficientFundsError,
+  isUserRejectionError,
+} from '@/utils/walletUtils'
 import { reportModuleError } from '@/utils/reportModuleError'
 import BigNumber from 'bignumber.js'
 import type { WalletInterface } from '@/providers/common/walletInterface'
@@ -26,12 +28,21 @@ import type { TradeForm } from './useTradeForm'
 
 const isDevMode = Configs.IS_DEV_MODE
 
+export type TradeFlowStep =
+  | 'idle'
+  | 'approvalIntro'
+  | 'approving'
+  | 'review'
+  | 'processing'
+
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (error instanceof Error && error.message) return error.message
   if (typeof error === 'string') return error
   if (error && typeof error === 'object') {
-    if ('message' in error && typeof error.message === 'string') return error.message
-    if ('details' in error && typeof error.details === 'string') return error.details
+    if ('message' in error && typeof error.message === 'string')
+      return error.message
+    if ('details' in error && typeof error.details === 'string')
+      return error.details
   }
   return fallback
 }
@@ -77,7 +88,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     isTradingRestrictedInRegion,
     isTradingAllowedInRegion,
   } = options
-  const { fromTokenSelected, toTokenSelected, fromAmount, selectedFromChain } = form
+  const { fromTokenSelected, toTokenSelected, fromAmount, selectedFromChain } =
+    form
 
   const { t } = useI18n()
   const toastStore = useToastStore()
@@ -87,10 +99,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
   const { minSpendTrade } = storeToRefs(rewardsStore)
 
-  const isApproving = ref(false)
+  const tradeFlowStep = ref<TradeFlowStep>('idle')
+  const stepIs = (step: TradeFlowStep) => tradeFlowStep.value === step
+  const isApproving = computed(() => tradeFlowStep.value === 'approving')
   const txProceeding = ref(false)
-  const quoteModalOpen = ref(false)
-  const tradeInitiatedOpen = ref(false)
   const orderHash = ref<string>('')
 
   // USD value of the to-side quote (endAmount is in base units)
@@ -127,24 +139,62 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       holdCampaignStatus: holdingsStore.status,
       qualifyingTradeAmount: reward?.qualifying_amount
         ? new BigNumber(reward.qualifying_amount)
-          .shiftedBy(-decimals)
-          .toString()
+            .shiftedBy(-decimals)
+            .toString()
         : undefined,
       qualifyingTradeToken: meta?.symbol,
       qualifiedSince: reward?.qualification_timestamp,
     }
   }
-  const handleApprove = async () => {
+  let approvalInFlight = false
+
+  const addProcessingToast = (hash: string) => {
+    toastStore.addToastMessage({
+      id: `trade-processing-${hash}`,
+      variant: 'dark',
+      text: t('trade.toast.processing_trade'),
+      textSecondary: t('trade.toast.processing_note'),
+      isInfinite: true,
+      tradeStatus: { kind: 'processing' },
+    })
+  }
+
+  // Closing the progress modal while the order is still pending leaves the user
+  // with no in-flight indicator — hand over to the processing toast, which
+  // ModuleNotifications removes by id when the order settles.
+  watch(tradeFlowStep, (step, prevStep) => {
+    if (prevStep !== 'processing' || step !== 'idle') return
+    const hash = orderHash.value
+    if (!hash) return
+    const order = tradeOrdersStore
+      .getOrdersByAddress(walletAddress.value ?? '')
+      .find(o => o.hash === hash)
+    if (order?.status === 'pending') addProcessingToast(hash)
+  })
+
+  const approveFromToken = async (): Promise<boolean> => {
     // Resolved-and-allowed, not merely "not known to be restricted": this sends
-    // an on-chain approval, so an unresolved geo check must block it.
-    if (!isTradingAllowedInRegion.value) return
+    // an on-chain approval, so an unresolved geo check must block it. Close the
+    // modal rather than leaving an Approve button that silently does nothing —
+    // the panel behind it renders the restriction notice once the geo check
+    // resolves (mirrors confirmTrade).
+    if (!isTradingAllowedInRegion.value) {
+      tradeFlowStep.value = 'idle'
+      return false
+    }
     if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
-      return
+      tradeFlowStep.value = 'idle'
+      return false
+    }
+    if (approvalInFlight) {
+      tradeFlowStep.value = 'approving'
+      return false
     }
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.CLICK_APPROVE, analyticsPayload)
 
-    isApproving.value = true
+    approvalInFlight = true
+    tradeFlowStep.value = 'approving'
 
     try {
       const { default: OneInchFusion } =
@@ -159,15 +209,22 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       )
 
       needsApproval.value = false
-
-      toastStore.addToastMessage({
-        text: t('trade.toast.approval-success'),
-        textSecondary: t('trade.toast.approval-success-secondary', {
-          symbol: fromTokenSelected.value.symbol,
-        }),
-        type: ToastType.Success,
-      })
+      return true
     } catch (e) {
+      tradeFlowStep.value = 'idle'
+      if (isInsufficientFundsError(e)) {
+        toastStore.addToastMessage({
+          text: t('common.not_enough_balance_to_cover_fee', {
+            symbol: selectedFromChain.value?.currencyName,
+          }),
+          type: ToastType.Error,
+        })
+        analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
+          ...getAnalyticsPayload(),
+          errorMsg: 'insufficient_funds_for_gas',
+        })
+        return false
+      }
       if (isUserRejectionError(e)) {
         toastStore.addToastMessage({
           text: t('common.error.user_canceled_request'),
@@ -177,10 +234,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           ...getAnalyticsPayload(),
           errorMsg: 'declined_by_user',
         })
-        return
+        return false
       }
 
-      const errorMessage = getErrorMessage(e, t('trade.error.approval-failed')).toLowerCase()
+      const errorMessage = getErrorMessage(
+        e,
+        t('trade.error.approval-failed'),
+      ).toLowerCase()
 
       analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
         ...getAnalyticsPayload(),
@@ -198,12 +258,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         textSecondary: errorMessage,
         type: ToastType.Error,
       })
+      return false
     } finally {
-      isApproving.value = false
+      approvalInFlight = false
     }
   }
 
-  const openTradeModal = () => {
+  const startTradeFlow = async () => {
+    if (tradeFlowStep.value !== 'idle') return
     if (isTradingRestrictedInRegion.value) return
     if (!currentQuote.value) {
       toastStore.addToastMessage({
@@ -212,7 +274,35 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       return
     }
     analytics.trackTradeEvent(TradeEvent.CLICK_TRADE, getAnalyticsPayload())
-    quoteModalOpen.value = true
+
+    if (needsApproval.value) {
+      tradeFlowStep.value = 'approvalIntro'
+      return
+    }
+
+    tradeFlowStep.value = 'review'
+    analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
+  }
+
+  const confirmApproval = async () => {
+    if (tradeFlowStep.value !== 'approvalIntro') return
+    const approved = await approveFromToken()
+    const dismissedWhileApproving = !isApproving.value
+    if (!approved) return
+    if (dismissedWhileApproving) {
+      // The approval landed, but the user closed the waiting modal mid-flight,
+      // so the review step is not forced back open. Without this toast that
+      // path ends with no feedback at all for a successful on-chain approval.
+      toastStore.addToastMessage({
+        text: t('trade.toast.approval_success', {
+          symbol: fromTokenSelected.value?.symbol,
+        }),
+        type: ToastType.Success,
+      })
+      return
+    }
+
+    tradeFlowStep.value = 'review'
     analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
   }
 
@@ -223,7 +313,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     // already open, leaving it up would give them a Confirm button that silently
     // does nothing.
     if (!isTradingAllowedInRegion.value) {
-      quoteModalOpen.value = false
+      tradeFlowStep.value = 'idle'
       return
     }
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
@@ -233,6 +323,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
+    orderHash.value = ''
+    tradeFlowStep.value = 'processing'
 
     try {
       const { default: OneInchFusion } =
@@ -251,7 +343,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       // import), and the geo check can land against the user in that gap. This is
       // the last point at which nothing has been signed yet.
       if (!isTradingAllowedInRegion.value) {
-        quoteModalOpen.value = false
+        tradeFlowStep.value = 'idle'
         return
       }
 
@@ -266,14 +358,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       orderHash.value = result.hash
 
-      quoteModalOpen.value = false
-      tradeInitiatedOpen.value = true
       let canEarnReward: undefined | boolean = undefined
-      const fromUsdValue =
-        parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      const minSpendBN = BigNumber(minSpendTrade.value);
+      const fromUsdValue = BigNumber(fromAmount.value || '0').times(
+        fromTokenSelected.value?.price || 0,
+      )
+      const minSpendBN = BigNumber(minSpendTrade.value)
       const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
-      if (BigNumber(fromUsdValue).gt(minimumSpend)) {
+      if (fromUsdValue.gt(minimumSpend)) {
         const canEarn =
           await rewardsStore.checkAvailabilityAfterTransaction('trade')
         canEarnReward = canEarn ? true : undefined
@@ -285,16 +376,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ...getRewardFields(),
       })
 
-      // Add order to store
+      // Add order to store. Stored as a raw decimal string — display sites
+      // format it, and the fill-vs-expected math in ModuleNotifications parses
+      // it back (a grouped/abbreviated display string breaks that math).
       const toDecimals = toTokenSelected.value.decimals || 18
-      const expectedToAmount = formatFloatingPointValue(
-        formatUnits(
-          currentQuote.value?.avgAmount ||
-          currentQuote.value?.startAmount ||
-          0n,
-          toDecimals,
-        ),
-      ).value
+      const expectedToAmount = formatUnits(
+        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
+        toDecimals,
+      )
 
       tradeOrdersStore.addOrder({
         hash: result.hash,
@@ -311,14 +400,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         duration: 180,
         fills: [],
         usdValue: fromTokenSelected.value.price
-          ? (
-            parseFloat(fromAmount.value) * fromTokenSelected.value.price
-          ).toFixed(2)
+          ? BigNumber(fromAmount.value || '0')
+              .times(fromTokenSelected.value.price)
+              .toFixed(2)
           : undefined,
         toUsdValue: toTokenSelected.value.price
-          ? (
-            parseFloat(expectedToAmount) * toTokenSelected.value.price
-          ).toFixed(2)
+          ? BigNumber(expectedToAmount)
+              .times(toTokenSelected.value.price)
+              .toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -327,7 +416,17 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fromTokenAddress: fromTokenSelected.value.address,
         toTokenAddress: toTokenSelected.value.address,
       })
+
+      // The user dismissed the progress modal while the order was submitting —
+      // the toast is now the only in-flight indicator. The normal flow (modal
+      // kept open, closed later) gets its toast from the step watcher below.
+      if (stepIs('idle')) {
+        addProcessingToast(result.hash)
+      }
     } catch (e) {
+      if (stepIs('processing')) {
+        tradeFlowStep.value = 'review'
+      }
       if (isUserRejectionError(e)) {
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
@@ -340,7 +439,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const errorMessage = getErrorMessage(e, t('trade.error.submit-failed')).toLowerCase()
+      const errorMessage = getErrorMessage(
+        e,
+        t('trade.error.submit-failed'),
+      ).toLowerCase()
 
       reportModuleError({
         tag: SENTRY_MODULE_TAGS.TRADE,
@@ -367,13 +469,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   }
 
   return {
+    tradeFlowStep,
     isApproving,
     txProceeding,
-    quoteModalOpen,
-    tradeInitiatedOpen,
     orderHash,
-    handleApprove,
-    openTradeModal,
+    startTradeFlow,
+    confirmApproval,
     confirmTrade,
   }
 }

@@ -1,4 +1,5 @@
 import { ref, computed, watch, type Ref, type ComputedRef } from 'vue'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useDebounceFn } from '@vueuse/core'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { usePerpsContracts, usePerpsMarkets } from '@/modules/perps/composables/usePerpsMarkets'
@@ -37,7 +38,7 @@ export const mapCryptoItem = (
     return {
       key: `stock-${t.ondo.primaryMarket.symbol}`,
       symbol: t.symbol,
-      name: t.ondo.stockAlias ?? t.name,
+      name: getTokenDisplayName(t),
       logoUrl: t.logoUrl ?? undefined,
       type: 'stock',
       watchlistId: t.ondo.primaryMarket.symbol,
@@ -160,8 +161,10 @@ export function useAssetPicker(
   const { contracts: perpsContracts } = usePerpsContracts()
   const { markets: perpsMarkets } = usePerpsMarkets()
 
+  // Perps are only shown when the perps tab is active. The "all" tab is
+  // stocks + crypto only (perps was removed from the add-to-watchlist modal).
   const perpsItems = computed<AssetPickerItem[]>(() => {
-    if (tab.value !== 'perps' && tab.value !== 'all') return []
+    if (tab.value !== 'perps') return []
     const marketMap = new Map(perpsMarkets.value.map(p => [p.market, p]))
     return perpsContracts.value
       .filter(c => !c.disabled)
@@ -171,8 +174,7 @@ export function useAssetPicker(
 
   const items = computed<AssetPickerItem[]>(() => {
     if (tab.value === 'perps') return perpsItems.value
-    if (tab.value === 'all')
-      return dedupeItems([...serverItems.value, ...perpsItems.value])
+    if (tab.value === 'all') return dedupeItems(serverItems.value)
     return serverItems.value
   })
 

@@ -24,13 +24,26 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
   {
-    // New public Home is the root; disconnected users land here.
+    // New public Home is the root; disconnected users land here. It hosts its
+    // own token/stock-info drawer children so clicks from the Home sections
+    // (watchlist, New Listings, Market News) open the drawer in place at
+    // `/token/:tokenId` / `/stock/:symbol` instead of routing to another page.
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: ViewHome,
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.homePage,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.homePage,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     // The wallet portfolio moved off the root. It stays reachable without a

@@ -1,58 +1,64 @@
 import { ref, type Ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import {
-  MOCK_RECOMMENDED_ASSETS,
-  type RecommendedAsset,
-} from '@/modules/home/components/watchlistOnboarding'
+import type { RecommendedAsset } from '@/modules/home/components/watchlistOnboarding'
 
 /**
- * Flip to `true` once the backend recommendations endpoint ships. While false,
- * the composable returns MOCK_RECOMMENDED_ASSETS without a network call. Even
- * when true, any request failure falls back to the mock so the wizard never
- * dead-ends.
+ * Recommended assets for the watchlist onboarding step 3 (MEW-2130). Fetches the
+ * assets for the categories picked in step 2 from the backend `/watchlist/assets`
+ * endpoint; with no categories (the skip path) it omits the param and the API
+ * returns the full set. Either way the whole set is returned (no cap), so the
+ * step's search + "show more" run client-side.
+ *
+ * The API asset id is `TYPE:watchlistId` ("STOCK:AAPLon" | "CRYPTO:tether"),
+ * where the tail is exactly the id the watchlist store keys on (tokenized stock
+ * symbol or coin id).
  */
-const ENDPOINT_READY = false
-const RECOMMENDATIONS_ENDPOINT = '/v1/web/watchlist/recommendations'
+interface RawWatchlistAsset {
+  id: string
+  type: 'STOCK' | 'CRYPTO'
+  symbol: string
+  name: string
+  iconUrl?: string
+}
 
-/**
- * Recommended assets for the watchlist onboarding wizard (MEW-2130). POSTs the
- * user's selected markets + industries and returns a list to follow. Mockable
- * until the backend is live.
- */
+const ASSETS_URL = '/v1/web/watchlist/assets'
+
+const toRecommended = (a: RawWatchlistAsset): RecommendedAsset => ({
+  id: a.id,
+  symbol: a.symbol,
+  name: a.name,
+  logoUrl: a.iconUrl,
+  type: a.type === 'STOCK' ? 'stock' : 'crypto',
+  watchlistId: a.id.slice(a.id.indexOf(':') + 1),
+})
+
 export function useRecommendedWatchlist(): {
   assets: Ref<RecommendedAsset[]>
   isLoading: Ref<boolean>
-  fetchRecommendations: (
-    markets: string[],
-    industries: string[],
-  ) => Promise<void>
+  fetchRecommendations: (categoryIds?: string[]) => Promise<void>
 } {
   const { useMEWFetch } = useFetchMewApi()
   const assets = ref<RecommendedAsset[]>([])
   const isLoading = ref(false)
+  // Guards against out-of-order responses (same rationale as useWatchlistCategories):
+  // only the newest request writes assets/isLoading.
+  let latestRequest = 0
 
-  const fetchRecommendations = async (
-    markets: string[],
-    industries: string[],
-  ) => {
+  const fetchRecommendations = async (categoryIds: string[] = []) => {
+    const requestId = ++latestRequest
     isLoading.value = true
     try {
-      if (!ENDPOINT_READY) {
-        assets.value = MOCK_RECOMMENDED_ASSETS
-        return
-      }
-      const { data, error, execute } = useMEWFetch(RECOMMENDATIONS_ENDPOINT, {
-        immediate: false,
-      })
-        .post({ markets, industries })
-        .json<RecommendedAsset[]>()
-      await execute()
-      if (error.value || !data.value) throw error.value ?? new Error('no data')
-      assets.value = data.value
+      // With categories, recommend only those; with none, omit the param so the
+      // endpoint returns the full set (don't send an empty `categories=`).
+      const url = categoryIds.length
+        ? `${ASSETS_URL}?categories=${encodeURIComponent(categoryIds.join(','))}`
+        : ASSETS_URL
+      const { data } = await useMEWFetch(url).get().json<RawWatchlistAsset[]>()
+      if (requestId === latestRequest) assets.value = (data.value ?? []).map(toRecommended)
     } catch {
-      assets.value = MOCK_RECOMMENDED_ASSETS
+      if (requestId === latestRequest) assets.value = []
     } finally {
-      isLoading.value = false
+      if (requestId === latestRequest) isLoading.value = false
     }
   }
 
