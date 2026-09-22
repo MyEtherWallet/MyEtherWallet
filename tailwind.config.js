@@ -38,6 +38,7 @@ export default {
       appBackground: '#f5f5f7',
       bgBase: '#f5f5f5',
       bgMuted: '#e5e5e5',
+      bgInfo: '#1a1a1a',
       gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
       titleColor: '#222222',
@@ -57,6 +58,7 @@ export default {
       'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-light-2': 'rgba(248, 250, 252, 1)',
       'grey-outline': 'rgba(188,200,204,1)',
+      'grey-divider': '#d6d6d6',
       'grey-70': 'rgba(0,0,0,0.7)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
@@ -78,6 +80,12 @@ export default {
       warning: 'rgba(255,165,0, 1)',
       'warning-10': 'rgba(255,165,0,0.1)',
       success: 'rgba(5,192,165,1)',
+      'success-600': '#01a08c',
+      'orange-600': '#e27d00',
+      'warning-subtle': '#f7f4ed',
+      'warning-subtle-hover': '#ffedc5',
+      'neutral-200': '#e6e6e6',
+      'neutral-500': '#767676',
       'grey-subtle': '#a5a5a5',
       'surface-hover': '#f5f5f5',
       //Text:

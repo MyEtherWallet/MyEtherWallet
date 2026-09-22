@@ -12,6 +12,8 @@ export interface ToastLink {
 }
 
 export interface Toast {
+  id?: string
+  variant?: 'default' | 'dark'
   type?: ToastType
   text: string
   textSecondary?: string
@@ -19,6 +21,12 @@ export interface Toast {
   link?: ToastLink
   duration?: number
   isInfinite?: boolean
+  tradeStatus?: {
+    kind: 'processing' | 'completed'
+    toTokenIcon?: string
+    toSymbol?: string
+    toTokenIsStock?: boolean
+  }
   tradeInfo?: {
     fromToken: string
     fromtTokenIcon: string

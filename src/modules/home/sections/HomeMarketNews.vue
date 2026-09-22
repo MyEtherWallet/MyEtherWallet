@@ -49,9 +49,6 @@ const dateLabel = (ts?: number): string => {
   })
 }
 
-// recentNews now types `description`, but the BE sends null whenever the
-// provider gives none — fall back to a useful placeholder that points the
-// reader to the source article.
 const newsDescription = (item: {
   description?: string | null
   articleUrl?: string
@@ -77,7 +74,7 @@ const tokenTo = (item: {
 }): RouteLocationRaw | undefined => {
   const symbol = stocksStore.stockTradableSymbol(item.tickers?.[0])
   return symbol
-    ? { name: STOCK_INFO_ROUTE_NAMES.stocks, params: { symbol } }
+    ? { name: STOCK_INFO_ROUTE_NAMES.homePage, params: { symbol } }
     : undefined
 }
 </script>

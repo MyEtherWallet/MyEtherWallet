@@ -17,60 +17,74 @@ export interface NewListingCtaToken {
 }
 
 /**
- * Decides a crypto new-listing card's CTA exactly the way the crypto table does
- * (ModuleExploreCrypto): bridge takes priority over swap, and the same
- * getTokenIsCurrentNative / getIsBridgeable rules key off `nativeChains` +
- * `chains`. Cards render Swap disabled on 'none' (see HomeNewListings), so the
- * button is never hidden.
+ * resolve() only reads chain names, so it accepts any shape that carries them
+ * (the overview `newCoins`, the watchlist token response, ...). run() still
+ * needs the full arrays to hand to the swap/bridge panel.
+ */
+export interface CtaChainsToken {
+  chains?: readonly { chainName: string; contract?: string | null }[]
+  nativeChains?: readonly { chainName: string }[]
+}
+
+/**
+ * Decides a crypto CTA (New Listings card + Home watchlist row) the same way the
+ * token-info drawer (ModuleTokenInfo) opens its panel: a coin available on the
+ * current chain swaps, one that lives only on other chains bridges. Keeping this
+ * in sync with the drawer is the point — the button must advertise the panel the
+ * click actually opens. 'none' (no swap-capable chain at all) renders Swap
+ * disabled on the cards, so the button is never hidden.
  */
 export function useNewListingCta(): {
-  resolve: (token: NewListingCtaToken) => NewListingCtaKind
+  resolve: (token: CtaChainsToken) => NewListingCtaKind
   run: (token: NewListingCtaToken) => void
 } {
   const chainsStore = useChainsStore()
   const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
 
-  const resolve = (token: NewListingCtaToken): NewListingCtaKind => {
+  const resolve = (token: CtaChainsToken): NewListingCtaKind => {
     const chains = token.chains ?? []
     const nativeChains = token.nativeChains ?? []
     const current = chainsStore.selectedChain?.name
+    if (!current) return 'none'
 
-    const isNative = nativeChains.length > 0
-    const isCurrentNative =
-      !!current && nativeChains.some(c => c.chainName === current)
-    const availableOnCurrent =
-      !!current && chains.some(c => c.chainName === current)
-    const hasSwapNativeChain = nativeChains.some(c =>
-      chainsStore.chainHasSwapSupport(c.chainName),
-    )
+    // On the current chain → Swap; only on other chains → Bridge. This mirrors
+    // the drawer's `supportedChains.find(current) ? swap : bridge` so the CTA
+    // label and the panel that opens can't disagree.
+    const onCurrentChain =
+      chains.some(c => c.chainName === current) ||
+      nativeChains.some(c => c.chainName === current)
 
-    // Bridge wins over swap, mirroring the table's v-if / v-else-if order.
-    if (
-      isNative &&
-      !isCurrentNative &&
-      !availableOnCurrent &&
-      hasSwapNativeChain
-    )
-      return 'bridge'
-    if (
-      chainsStore.currentChainhasSwapSupport &&
-      (chains.length > 0 || isCurrentNative)
-    )
-      return 'swap'
-    return 'none'
+    if (onCurrentChain) {
+      return chainsStore.currentChainhasSwapSupport ? 'swap' : 'none'
+    }
+    // A contract chain only counts for bridging when it carries the coin's
+    // address; without it there's nothing to bridge.
+    const hasSwapChain =
+      nativeChains.some(c => chainsStore.chainHasSwapSupport(c.chainName)) ||
+      chains.some(
+        c => c.contract && chainsStore.chainHasSwapSupport(c.chainName),
+      )
+    return hasSwapChain ? 'bridge' : 'none'
   }
 
   const run = (token: NewListingCtaToken): void => {
-    const kind = resolve(token)
-    if (kind === 'swap') {
+    // Bridge only when the coin lives off the current chain; otherwise open Swap
+    // — including the 'none' case, so the CTA always opens a panel like the
+    // watchlist table rather than dead-ending.
+    if (resolve(token) === 'bridge') {
+      openBridgeForToken(
+        token.symbol,
+        token.name,
+        token.nativeChains,
+        token.chains,
+      )
+    } else {
       openSwapForToken(
         token.symbol,
         token.name,
         token.chains,
         token.nativeChains,
       )
-    } else if (kind === 'bridge') {
-      openBridgeForToken(token.symbol, token.name, token.nativeChains)
     }
   }
 
