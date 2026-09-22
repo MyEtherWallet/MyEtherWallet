@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     data-test="listing-card"
     class="flex w-[300px] shrink-0 cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4 transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
     @click="$emit('select')"
@@ -31,6 +31,7 @@
 
       <button
         type="button"
+        :aria-label="$t('common.add_to_watchlist')"
         data-test="listing-favorite"
         class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
@@ -45,7 +46,7 @@
       <!-- Description reserves a fixed 3-line block whether present, short, or
            absent, so every card stays the same height regardless of content. -->
       <div
-        class="line-clamp-4 h-[85=6px] leading-5 text-[#575757] text-s-14"
+        class="line-clamp-4 h-[86px] leading-5 text-[#575757] text-s-14"
         data-test="listing-description"
       >
         <p
@@ -122,7 +123,7 @@
       {{ tradeLabel }}
     </button>
     <div v-else class="h-10 w-full" aria-hidden="true" />
-  </div>
+  </button>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'

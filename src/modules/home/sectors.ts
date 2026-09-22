@@ -1,5 +1,4 @@
 import type { Component } from 'vue'
-import type { RouteLocationRaw } from 'vue-router'
 import {
   ChartBarIcon,
   BuildingOffice2Icon,
@@ -129,7 +128,15 @@ export const sectors: IndustrySector[] = [...STOCK_SECTORS, ...CRYPTO_SECTORS]
 // /crypto (ModuleExploreCrypto) read `?category=` on mount to preselect the tab.
 // Section tiles carry a `hash` instead; the destination section scrolls itself
 // into view on mount (see ModuleOip.vue).
-export function sectorLink(s: IndustrySector): RouteLocationRaw {
+export interface SectorLink {
+  path: string
+  /** Set on filter tiles — preselects the destination table's category tab. */
+  query?: Record<string, string>
+  /** Set on section tiles — the anchor the destination section scrolls to. */
+  hash?: string
+}
+
+export function sectorLink(s: IndustrySector): SectorLink {
   const path = s.market === 'stocks' ? '/stocks' : '/crypto'
   if (s.hash) return { path, hash: s.hash }
   return { path, query: { category: s.filter ?? '' } }
