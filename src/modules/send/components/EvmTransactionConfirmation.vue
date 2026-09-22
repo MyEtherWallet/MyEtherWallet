@@ -281,6 +281,7 @@ import {
   isUserRejectionError,
   getLocalizedWalletError,
   isTransientTrezorError,
+  isBlindSigningDisabledError,
 } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
@@ -510,7 +511,7 @@ const confirmTransaction = async () => {
     // A transient Trezor empty-payload signing failure (APP-MEW-WEB-56) is
     // surfaced to the user as a friendly "reconnect" toast above and is safe to
     // retry, so don't report it to Sentry as a crash.
-    if (!isTransientTrezorError(e)) {
+    if (!isTransientTrezorError(e) && !isBlindSigningDisabledError(e)) {
       captureException(
         e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),
         {

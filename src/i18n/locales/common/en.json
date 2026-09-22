@@ -59,6 +59,7 @@
       "user_canceled_request": "User canceled the request",
       "ledger_locked": "Your Ledger is locked. Unlock it and try again.",
       "ledger_app_not_open": "Open the Ethereum app on your Ledger and try again.",
+      "ledger_blind_signing": "Enable Blind signing (Contract data) in the app settings on your Ledger and try again.",
       "trezor_read_failed": "Couldn't read your address from Trezor. Reconnect the device and try again.",
       "method_not_implemented": "Method not implemented: {method}",
       "invalid_name": "Invalid name",
