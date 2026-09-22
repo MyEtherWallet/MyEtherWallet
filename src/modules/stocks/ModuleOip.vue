@@ -1,5 +1,5 @@
 <template>
-  <div class="relative my-4">
+  <div id="oip" ref="section" class="relative my-4">
     <div class="ml-4">
       <h2
         data-test="section-title"
@@ -47,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter, type RouteLocationRaw } from 'vue-router'
+import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -87,6 +87,7 @@ const CATEGORY_KEYS: Record<string, string> = {
 }
 
 const { t } = useI18n()
+const route = useRoute()
 const router = useRouter()
 const stocksStore = useStocksStore()
 const walletMenu = useWalletMenuStore()
@@ -95,6 +96,22 @@ const { formatFiat } = useCurrency()
 
 // Section-only fetch — the stocks overview is triggered by ViewStocks.
 onMounted(stocksStore.fetchStocksOips)
+
+// The home Industry Sectors tile links here as /stocks#oip. The app scrolls an
+// inner overflow-y-auto wrapper rather than the window (TheAppLayout.vue), so
+// the router's scrollBehavior can't reach this — bring the section into view
+// ourselves, the same way PerpsPagination does.
+const section = ref<HTMLElement | null>(null)
+onMounted(async () => {
+  if (route.hash !== '#oip') return
+  await nextTick()
+  const el = section.value
+  if (!el) return
+  // Offset for the fixed app header (TheHeader.vue: h-[68px] sm:h-[76px]).
+  const headerHeight = window.innerWidth >= 640 ? 76 : 68
+  el.style.scrollMarginTop = `${headerHeight + 12}px`
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+})
 
 const items = computed<OipCardItem[]>(() => {
   return stocksStore.oips.map(item => ({
