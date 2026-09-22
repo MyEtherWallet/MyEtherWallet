@@ -1,5 +1,5 @@
 <template>
-  <button
+  <div
     data-test="listing-card"
     class="flex w-[300px] shrink-0 cursor-pointer flex-col gap-6 overflow-hidden rounded-2xl bg-white p-4 transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
     @click="$emit('select')"
@@ -123,7 +123,7 @@
       {{ tradeLabel }}
     </button>
     <div v-else class="h-10 w-full" aria-hidden="true" />
-  </button>
+  </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
