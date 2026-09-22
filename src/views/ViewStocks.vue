@@ -6,9 +6,9 @@
       <div class="col-span-12 -mt-2">
         <module-stock-indexes class="-mx-1" />
         <module-search-stocks />
-        <module-oip class="mt-9" />
-        <module-top-movers class="mt-6" />
       </div>
+      <module-oip class="col-span-12" />
+      <module-top-movers class="col-span-12" />
       <module-newly-added class="col-span-12 lg:col-span-4" />
       <module-trending class="col-span-12 lg:col-span-4" />
       <module-news class="col-span-12 lg:col-span-4" />
