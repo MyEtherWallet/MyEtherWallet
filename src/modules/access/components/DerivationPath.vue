@@ -123,7 +123,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
 
@@ -135,11 +135,13 @@ defineProps({
   },
 })
 
-const chainStore = useChainsStore()
+// The chain picked in the access dialog drives the path list — not the app's
+// global network, which may still be a different chain (or type) at this point.
+const accessStore = useAccessStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(accessStore)
 // TODO: handle DOT and SOL later on
 const defaultPath = isEvmChain.value
   ? Bip44Paths[WALLET_TYPES.MNEMONIC]
@@ -180,7 +182,7 @@ watch(
 
 watch(
   () => selectedChain.value,
-  (newValue: Chain | undefined) => {
+  (newValue: Chain | null) => {
     if (newValue) {
       setPaths()
       // reset search input

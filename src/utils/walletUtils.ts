@@ -82,6 +82,15 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  // USB interface already claimed — Ledger Live, another tab, or a transport of
+  // ours that was never released (WebUSB: "Unable to claim interface")
+  if (
+    message.includes('unable to claim interface') ||
+    message.includes('claiminterface') ||
+    message.includes('interface is in use')
+  ) {
+    return t('common.error.ledger_interface_busy')
+  }
   // Transient Trezor connect state (APP-MEW-WEB-P5)
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')

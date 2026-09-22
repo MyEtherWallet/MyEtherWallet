@@ -97,7 +97,15 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
-import { ref, watch, markRaw, computed, onMounted } from 'vue'
+import {
+  ref,
+  watch,
+  markRaw,
+  computed,
+  onMounted,
+  onUnmounted,
+  nextTick,
+} from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
@@ -114,7 +122,6 @@ import {
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import {
   getLocalizedWalletError,
@@ -128,15 +135,21 @@ import type { HWManager } from '@/providers/hw/types'
 import {
   getLedgerWebUSBTransport,
   getLedgerBLETransport,
+  closeLedgerTransport,
+  isLedgerInterfaceBusyError,
   isWebUSBSupported,
   isWebBLESupported,
 } from '@/providers/hw/ledger/transport'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
-import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
+import type { Chain } from '@/mew_api/types'
 import EvmHardwareWallet from '@/providers/ethereum/evmHardwareWallet'
-import type { HexPrefixedString } from '@/providers/types'
+import { WalletType, type HexPrefixedString } from '@/providers/types'
+import {
+  fetchNativeBalances,
+  formatNativeBalance,
+} from '@/composables/useNativeBalances'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -145,7 +158,6 @@ import { NetworkNames } from '@enkryptcom/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { isTrezorSupported } from '@/utils/walletUtils'
-import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
@@ -195,7 +207,18 @@ const updateChain = (chain: Chain) => {
  * Derivation Path
  -------------------------*/
 const paths = ref<PathType[]>([])
-let isChainSwitching = false
+
+// Held true while this component itself rewrites the stored derivation (on
+// connect, on a chain switch) so the path watcher below doesn't queue a second
+// loadList on top of the one the flow already runs. Cleared after nextTick,
+// because the watcher runs in the flush after the write, not synchronously.
+let suppressPathWatcher = false
+const setSelectedDerivationSilently = async (path: PathType) => {
+  suppressPathWatcher = true
+  setSelectedDerivation(path)
+  await nextTick()
+  suppressPathWatcher = false
+}
 
 /**------------------------
  * Steps
@@ -352,12 +375,12 @@ const unlockWallet = async () => {
         (path: PathType) => path.path === selectedDerivation.value?.path,
       )
     ) {
-      setSelectedDerivation(paths.value[0])
+      await setSelectedDerivationSilently(paths.value[0])
     }
 
     // Only advance to step 2 after all validations pass
     activeStep.value = 1
-    loadList()
+    void loadList()
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)
     const isNoDerivationPaths =
@@ -367,10 +390,13 @@ const unlockWallet = async () => {
       text: t('error_connecting'),
       textSecondary: isNoDerivationPaths
         ? t('access.no_supported_derivation_paths')
-        : errorMessage,
+        : (getLocalizedWalletError(errorMessage) ?? errorMessage),
     })
-    // Don't report expected user errors to Sentry
-    if (!errorMessage.includes('Make sure you have')) {
+    // Don't report expected user / environment errors to Sentry
+    if (
+      !errorMessage.includes('Make sure you have') &&
+      !isLedgerInterfaceBusyError(e)
+    ) {
       captureException(e, SENTRY_MODULE_TAGS.ACCESS)
     }
   } finally {
@@ -405,9 +431,14 @@ const isUserCancelledTransport = (e: unknown): boolean => {
   )
 }
 
+// True once this flow opened a Ledger transport, so unmount knows whether there
+// is anything of ours to release.
+let ledgerTransportOpened = false
+
 const openTransport = async (getTransport: () => Promise<unknown>) => {
   try {
     await getTransport()
+    ledgerTransportOpened = true
     return true
   } catch (e) {
     if (isUserCancelledTransport(e)) return false
@@ -415,9 +446,13 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('error_connecting'),
-      textSecondary: errorMessage,
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
-    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    // The device being held by Ledger Live / another tab is the user's
+    // environment, not a defect — keep it out of Sentry.
+    if (!isLedgerInterfaceBusyError(e)) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
     return false
   }
 }
@@ -441,15 +476,48 @@ const selectedIndex = ref(0)
 const page = ref(0)
 const toastStore = useToastStore()
 
+// Bumped on every load (and every scheduled reload) so a superseded load stops
+// before its next device read or balance request and never writes into the list.
 let loadListGeneration = 0
 
-const loadList = async (page: number = 0) => {
+// Device settle time before reloading after a chain / path change (as before).
+const RELOAD_SETTLE_MS = 1000
+let scheduledLoad: ReturnType<typeof setTimeout> | null = null
+const cancelScheduledLoad = () => {
+  if (scheduledLoad) {
+    clearTimeout(scheduledLoad)
+    scheduledLoad = null
+  }
+}
+
+/**
+ * Reload the first page after the device settles. Back-to-back triggers (a
+ * chain switch that also rewrites the derivation, quick path changes) collapse
+ * into one load, and the load already in flight is invalidated immediately so
+ * it stops issuing device and balance calls during the wait.
+ */
+const scheduleLoadList = () => {
+  cancelScheduledLoad()
+  loadListGeneration++
+  isLoadingWalletList.value = true
+  page.value = 0
+  scheduledLoad = setTimeout(() => {
+    scheduledLoad = null
+    void loadList(0)
+  }, RELOAD_SETTLE_MS)
+}
+
+const loadList = async (pageIndex: number = 0) => {
+  cancelScheduledLoad()
   const generation = ++loadListGeneration
+  const isStale = () => generation !== loadListGeneration
   isLoadingWalletList.value = true
   walletList.value = []
-  const startIndex = page * 5
-  const chainId = selectedChain.value?.chainID ?? '1'
-  const chainName = selectedChain.value?.name ?? 'ETHEREUM'
+  const startIndex = pageIndex * 5
+  const chain = selectedChain.value
+  const chainId = chain?.chainID ?? '1'
+  const chainName = chain?.name ?? 'ETHEREUM'
+  const chainType = chain?.type ?? 'EVM'
   const networkName = chainToEnum[chainName] ?? 'Ethereum'
   const instance = wallet.value
     ? wallet.value.getWalletInstance?.()
@@ -458,9 +526,10 @@ const loadList = async (page: number = 0) => {
     : hwWalletInstance
 
   try {
+    const entries: SelectAddress[] = []
     for (let i = startIndex; i < startIndex + 5; i++) {
       if (selectedDerivation.value?.basePath === '') return
-      if (generation !== loadListGeneration) return
+      if (isStale()) return
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName as any,
@@ -468,7 +537,7 @@ const loadList = async (page: number = 0) => {
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
-      if (generation !== loadListGeneration) return
+      if (isStale()) return
 
       const hardwareWalletInstance = isEvmChain.value
         ? new EvmHardwareWallet(
@@ -488,23 +557,38 @@ const loadList = async (page: number = 0) => {
             selectedHwWalletType.value as HWwalletType,
             instance!,
           )
-      const fetchBalance = await hardwareWalletInstance.getBalance()
-      if (generation !== loadListGeneration) return
-
-      const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
-        token => token.contract === MAIN_TOKEN_CONTRACT,
-      )
-
-      walletList.value.push({
+      entries.push({
         address: await hardwareWalletInstance.getAddress(),
         index: i,
-        balance: formatUnits(BigInt(mainToken!.balance), mainToken!.decimals!),
+        balance: '0',
         walletInstance: hardwareWalletInstance,
       })
-      if (walletList.value.length === 1) {
-        selectedIndex.value = walletList.value[0].index
-        isLoadingWalletList.value = false
+    }
+    if (isStale()) return
+
+    // One batched request for the page against the chain picked in this dialog,
+    // instead of a per-address token-list fetch (5x the calls to a rate-limited
+    // endpoint, and against the app's global chain rather than this one). A
+    // failure here must not block access: the addresses show with a 0 balance.
+    try {
+      const balances = await fetchNativeBalances(
+        { name: chainName, type: chainType, chainID: chainId },
+        entries.map(e => e.address),
+      )
+      if (isStale()) return
+      for (const entry of entries) {
+        const raw = balances.get(entry.address.toLowerCase())
+        if (raw !== undefined) {
+          entry.balance = formatNativeBalance(raw, chainType)
+        }
       }
+    } catch (e) {
+      console.error('Error fetching balances:', e)
+    }
+
+    walletList.value = entries
+    if (entries.length > 0) {
+      selectedIndex.value = entries[0].index
     }
   } catch (e) {
     if (generation !== loadListGeneration) return
@@ -531,62 +615,71 @@ watch(
   () => selectedChain.value,
   async (newValue, oldValue) => {
     if (!oldValue) return
-    if (newValue !== null) {
-      paths.value = []
-      isLoadingWalletList.value = true
-      hwWalletInstance = createHwManager()
-      if (activeStep.value === 1) {
-        const networkName = chainToEnum[newValue.name as string] as NetworkNames
+    if (newValue === null) return
+    // Only the address step has a list to rebuild; on the connect step the new
+    // chain is simply picked up by unlockWallet.
+    if (activeStep.value !== 1) return
 
-        // For Ledger, pre-populate paths from local config immediately — no transport needed.
-        // This avoids the UI showing empty paths while isConnected switches the Ledger app (~6s).
-        if (currentView.value === 'ledger') {
-          const localPaths = (evmSupportedPaths[networkName] ??
-            btcSupportedPaths[networkName] ??
-            []) as PathType[]
-          if (localPaths.length > 0) {
-            isChainSwitching = true
-            paths.value = localPaths
-            if (
-              !localPaths.some(p => p.path === selectedDerivation.value?.path)
-            ) {
-              setSelectedDerivation(localPaths[0])
-            }
-          }
-        }
+    paths.value = []
+    // Invalidate the load in flight right away and hold the path watcher: every
+    // derivation write below belongs to this switch and must not queue its own
+    // reload — the single scheduleLoadList() at the end does that (for Ledger
+    // and Trezor alike; the guard used to cover only Ledger's local paths).
+    loadListGeneration++
+    cancelScheduledLoad()
+    isLoadingWalletList.value = true
+    suppressPathWatcher = true
+    hwWalletInstance = createHwManager()
+    const networkName = chainToEnum[newValue.name as string] as NetworkNames
 
-        try {
-          await hwWalletInstance!.isConnected({
-            wallet: selectedHwWalletType.value as HWwalletType,
-            networkName: networkName as any,
-          })
-          const newPaths = (await hwWalletInstance!.getSupportedPaths({
-            wallet: selectedHwWalletType.value as HWwalletType,
-            networkName: networkName as any,
-          })) as PathType[]
-          paths.value = newPaths
-          if (
-            newPaths.length > 0 &&
-            (selectedDerivation.value?.path === '' ||
-              !newPaths.some(p => p.path === selectedDerivation.value?.path))
-          ) {
-            setSelectedDerivation(newPaths[0])
-          }
-        } catch (e) {
-          const errorMessage = e instanceof Error ? e.message : String(e)
-          toastStore.addToastMessage({
-            type: ToastType.Error,
-            text: t('error_connecting'),
-            textSecondary: errorMessage,
-          })
-          captureException(e, SENTRY_MODULE_TAGS.ACCESS)
-        } finally {
-          isChainSwitching = false
+    // For Ledger, pre-populate paths from local config immediately — no transport needed.
+    // This avoids the UI showing empty paths while isConnected switches the Ledger app (~6s).
+    if (currentView.value === 'ledger') {
+      const localPaths = (evmSupportedPaths[networkName] ??
+        btcSupportedPaths[networkName] ??
+        []) as PathType[]
+      if (localPaths.length > 0) {
+        paths.value = localPaths
+        if (!localPaths.some(p => p.path === selectedDerivation.value?.path)) {
+          setSelectedDerivation(localPaths[0])
         }
       }
-      const waiter = new Promise(r => setTimeout(r, 1000))
-      waiter.then(() => loadList())
     }
+
+    let connected = false
+    try {
+      await hwWalletInstance!.isConnected({
+        wallet: selectedHwWalletType.value as HWwalletType,
+        networkName: networkName as any,
+      })
+      const newPaths = (await hwWalletInstance!.getSupportedPaths({
+        wallet: selectedHwWalletType.value as HWwalletType,
+        networkName: networkName as any,
+      })) as PathType[]
+      paths.value = newPaths
+      if (
+        newPaths.length > 0 &&
+        (selectedDerivation.value?.path === '' ||
+          !newPaths.some(p => p.path === selectedDerivation.value?.path))
+      ) {
+        setSelectedDerivation(newPaths[0])
+      }
+      connected = true
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : String(e)
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: t('error_connecting'),
+        textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
+      })
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    } finally {
+      // The watcher runs in the flush after the last derivation write above.
+      await nextTick()
+      suppressPathWatcher = false
+    }
+    if (connected) scheduleLoadList()
+    else isLoadingWalletList.value = false
   },
 )
 
@@ -595,13 +688,11 @@ watch(
   (newValue: string | undefined, oldValue: string | undefined) => {
     // if old value was empty or undefined, it means this is the first time the path is set
     if (!oldValue || oldValue === '') return
-    // skip while the chain watcher is mid-switch to avoid a premature loadList()
-    if (isChainSwitching) return
+    // this component is rewriting the path itself and already reloads
+    if (suppressPathWatcher) return
     if (newValue) {
-      isLoadingWalletList.value = true
       hwWalletInstance = createHwManager()
-      const waiter = new Promise(r => setTimeout(r, 1000))
-      waiter.then(() => loadList())
+      scheduleLoadList()
     }
   },
 )
@@ -629,6 +720,27 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
 })
 const { closeAccessDialog } = useAccessStore()
 
+// Set once a wallet from this flow was handed to the store: its Ledger
+// transport must then stay open for signing.
+let accessed = false
+
+// Leaving the flow (back to the wallet list, dialog closed): stop any pending or
+// in-flight load, and if we opened a Ledger transport without connecting a
+// wallet, release the USB/BLE interface so Ledger Live / another tab can claim
+// the device — unless a Ledger wallet from an earlier session is still
+// connected and signing over that same transport.
+onUnmounted(() => {
+  cancelScheduledLoad()
+  loadListGeneration++
+  if (
+    ledgerTransportOpened &&
+    !accessed &&
+    wallet.value?.getWalletType() !== WalletType.LEDGER
+  ) {
+    void closeLedgerTransport()
+  }
+})
+
 const access = async () => {
   // `selectedIndex` holds the derivation index (set by SelectAddressList from
   // `walletList[i].index`), not the array position. On page 2+ those differ, so
@@ -640,6 +752,7 @@ const access = async () => {
   )?.walletInstance
   if (!wallet) return
   isUnlockingWallet.value = true
+  accessed = true
 
   setWallet(
     markRaw(wallet as EvmHardwareWallet) as WalletInterface,
