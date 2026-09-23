@@ -10,6 +10,7 @@ const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Input', to: '/dev/input' },
   { name: 'Picker', to: '/dev/picker' },
   { name: 'Tooltip', to: '/dev/tooltip' },
+  { name: 'Typography', to: '/dev/typography' },
 ]
 </script>
 
