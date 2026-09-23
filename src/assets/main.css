@@ -63,6 +63,49 @@
   background-color: #f5f5f7;
   color: rgba(0, 0, 0, 1);
   box-sizing: border-box;
+
+  /**
+   * Size scale (MEW-2364). The 35-token contract designers reference, in rem,
+   * 1:1 with Tailwind's default `spacing` scale (px = rem × 16). Templates
+   * consume it through Tailwind utilities (`w-4`, `p-2.5`, `size-10`); these
+   * vars are for the rare dynamic binding a utility can't reach, and mirror
+   * `components/sizeScale.ts` (see /dev/sizes). Keep the two in sync.
+   */
+  --size-0: 0;
+  --size-px: 0.0625rem;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-1-5: 0.375rem;
+  --size-2: 0.5rem;
+  --size-2-5: 0.625rem;
+  --size-3: 0.75rem;
+  --size-3-5: 0.875rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+  --size-14: 3.5rem;
+  --size-16: 4rem;
+  --size-20: 5rem;
+  --size-24: 6rem;
+  --size-28: 7rem;
+  --size-32: 8rem;
+  --size-36: 9rem;
+  --size-40: 10rem;
+  --size-44: 11rem;
+  --size-48: 12rem;
+  --size-52: 13rem;
+  --size-56: 14rem;
+  --size-60: 15rem;
+  --size-64: 16rem;
+  --size-72: 18rem;
+  --size-80: 20rem;
+  --size-96: 24rem;
 }
 
 /**
