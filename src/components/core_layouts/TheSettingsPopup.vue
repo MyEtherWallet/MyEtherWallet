@@ -7,7 +7,7 @@
       height="h-[40px]"
       @click="togglePopup"
     >
-      <cog6-tooth-icon class="w-6 h-6" />
+      <AppIcon name="cog-6-tooth" variant="filled" />
     </app-btn-icon>
 
     <!-- Headless network selector (mobile): owns the chain dialog. It renders
@@ -90,8 +90,11 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <globe-alt-icon
-                      class="w-5 h-5 text-primary flex-shrink-0"
+                    <AppIcon
+                      name="globe-alt"
+                      variant="filled"
+                      size="s"
+                      class="text-primary flex-shrink-0"
                     />
                     <span
                       class="text-s-16 font-normal leading-[22px] text-black capitalize"
@@ -111,8 +114,11 @@
                       class="text-s-14 font-normal leading-[20px] text-[#575757] truncate max-w-[120px]"
                       >{{ selectedChain?.nameLong }}</span
                     >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-[#575757] flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-[#575757] flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -125,8 +131,11 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <banknotes-icon
-                      class="w-5 h-5 text-primary flex-shrink-0"
+                    <AppIcon
+                      name="banknotes"
+                      variant="filled"
+                      size="s"
+                      class="text-primary flex-shrink-0"
                     />
                     <span
                       class="text-s-16 font-normal leading-[22px] text-black"
@@ -146,8 +155,11 @@
                       class="text-s-14 font-normal leading-[20px] text-[#575757]"
                       >{{ selectedCurrency }}</span
                     >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-[#575757] flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-[#575757] flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -160,7 +172,12 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <language-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                    <AppIcon
+                      name="language"
+                      variant="filled"
+                      size="s"
+                      class="text-primary flex-shrink-0"
+                    />
                     <span
                       class="text-s-16 font-normal leading-[22px] text-black"
                       >{{ $t('settings.language') }}</span
@@ -171,8 +188,11 @@
                       class="text-s-14 font-normal leading-[20px] text-[#575757]"
                       >{{ selectedLanguageAbbr }}</span
                     >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-[#575757] flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-[#575757] flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -185,8 +205,11 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <currency-dollar-icon
-                      class="w-5 h-5 text-primary flex-shrink-0"
+                    <AppIcon
+                      name="currency-dollar"
+                      variant="filled"
+                      size="s"
+                      class="text-primary flex-shrink-0"
                     />
                     <span
                       class="text-s-16 font-normal leading-[22px] text-black"
@@ -198,8 +221,11 @@
                       class="text-s-14 font-normal leading-[20px] text-[#575757]"
                       >{{ selectedFeeLabel }}</span
                     >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-[#575757] flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-[#575757] flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -218,8 +244,11 @@
                 <!-- Usage analytics -->
                 <div class="flex w-full h-6 justify-between items-center">
                   <div class="flex items-center gap-2.5">
-                    <circle-stack-icon
-                      class="w-5 h-5 text-primary flex-shrink-0"
+                    <AppIcon
+                      name="circle-stack"
+                      variant="filled"
+                      size="s"
+                      class="text-primary flex-shrink-0"
                     />
                     <div class="flex items-center gap-1">
                       <span
@@ -229,8 +258,11 @@
                       <app-tooltip
                         :text="$t('settings.usage_analytics_tooltip')"
                       >
-                        <question-mark-circle-icon
-                          class="w-4 h-4 text-[#A5A5A5] flex-shrink-0 cursor-pointer"
+                        <AppIcon
+                          name="question-mark-circle"
+                          variant="filled"
+                          size="xxs"
+                          class="text-[#A5A5A5] flex-shrink-0 cursor-pointer"
                         />
                       </app-tooltip>
                     </div>
@@ -278,7 +310,7 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
                 <span class="text-s-16 font-normal leading-[22px] text-black">
                   {{ $t('settings.select_transaction_fee') }}
@@ -322,8 +354,11 @@
                       >{{ option.description }}</span
                     >
                   </div>
-                  <check-circle-icon
-                    class="w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="flex-shrink-0 transition-colors duration-150"
                     :class="
                       selectedFee === option.id
                         ? 'text-primary'
@@ -357,7 +392,7 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
                 <span class="text-s-16 font-bold leading-[22px] text-black">
                   {{ $t('settings.select_currency') }}
@@ -405,8 +440,11 @@
                       >{{ option.name }}</span
                     >
                   </div>
-                  <check-circle-icon
-                    class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="relative flex-shrink-0 transition-colors duration-150"
                     :class="
                       selectedCurrency === option.code
                         ? 'text-primary'
@@ -440,7 +478,7 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
                 <span class="text-s-16 font-normal leading-[22px] text-black">
                   {{ $t('settings.select_language') }}
@@ -476,7 +514,12 @@
                       >{{ selectedLanguageOption.native }}</span
                     >
                   </div>
-                  <check-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="s"
+                    class="text-primary flex-shrink-0"
+                  />
                 </div>
 
                 <!-- Full language list -->
@@ -516,21 +559,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import {
-  CurrencyDollarIcon,
-  CircleStackIcon,
-  ChevronLeftIcon,
-  CheckCircleIcon,
-  CheckIcon,
-  LanguageIcon,
-  GlobeAltIcon,
-  BanknotesIcon,
-} from '@heroicons/vue/20/solid'
-import {
-  ChevronRightIcon,
-  QuestionMarkCircleIcon,
-} from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'

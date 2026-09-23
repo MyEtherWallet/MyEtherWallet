@@ -21,7 +21,11 @@
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
       <template v-if="showFeedback">
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
+        <AppIcon
+          name="exclamation-circle"
+          size="s"
+          class="shrink-0 text-error"
+        />
         <p
           :id="feedbackId"
           class="text-xs leading-[18px] text-error min-w-0 break-words"
@@ -42,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch, useId, type PropType } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 
 defineOptions({ inheritAttrs: false })

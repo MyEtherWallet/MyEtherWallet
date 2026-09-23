@@ -39,7 +39,12 @@
           </p>
         </div>
       </div>
-      <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <div class="flex gap-2 text-right">
         <app-blockie
           :address="transaction.toAddress"
@@ -52,7 +57,7 @@
           class="font-mono text-s-12 hover:underline flex items-center justify-end gap-1"
         >
           {{ truncateHash(transaction.toAddress) }}
-          <arrow-up-right-icon class="w-2 h-2" />
+          <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
         </a>
       </div>
     </div>
@@ -62,9 +67,12 @@
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <chevron-down-icon
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
           :class="[
-            'transition-transform w-3 h-3  ml-2',
+            'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
           ]"
         />
@@ -75,7 +83,7 @@
         @click="$emit('remove', transaction.hash)"
         class="ml-auto -mr-2"
       >
-        <trash-icon class="w-4 h-4" />
+        <AppIcon name="trash" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
 
@@ -120,7 +128,7 @@
             class="font-mono hover:underline flex items-center gap-1 text-s-12"
           >
             {{ truncateHash(transaction.hash) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
 
@@ -152,12 +160,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import {
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type { TransactionNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'

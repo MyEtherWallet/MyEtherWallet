@@ -120,8 +120,11 @@
                     key="search_no_data_message"
                     class="text-s-14 text-info flex items-center justify-center text-wrap break-all h-[64px]"
                   >
-                    <exclamation-circle-icon
-                      class="inline-block w-5 h-5 text-grey-50 mr-1"
+                    <AppIcon
+                      name="exclamation-circle"
+                      size="s"
+                      variant="filled"
+                      class="inline-block text-grey-50 mr-1"
                     />
                     {{
                       $t('stocks.no_results_found_for', { query: searchInput })
@@ -259,7 +262,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useFocusWithin, watchDebounced } from '@vueuse/core'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 // Components
 import AppSearchInput from '@/components/AppSearchInput.vue'

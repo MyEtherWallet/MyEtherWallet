@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { PlusIcon, CheckIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
@@ -75,8 +75,13 @@ const toggle = (id: string) => {
             "
             aria-hidden="true"
           >
-            <CheckIcon v-if="selected.includes(asset.id)" class="size-4" />
-            <PlusIcon v-else class="size-4" />
+            <AppIcon
+              v-if="selected.includes(asset.id)"
+              name="check"
+              size="xxs"
+              variant="filled"
+            />
+            <AppIcon v-else name="plus" size="xxs" variant="filled" />
           </span>
           <AppTokenLogo
             :url="asset.logoUrl"

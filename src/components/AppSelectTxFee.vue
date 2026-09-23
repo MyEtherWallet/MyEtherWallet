@@ -26,7 +26,12 @@
           <span class="text-info font-medium">
             {{ selectedFeeNative }}
           </span>
-          <chevron-down-icon class="w-4 h-4 text-info" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="text-info"
+          />
         </template>
       </div>
     </button>
@@ -94,19 +99,24 @@
                     ' mr-2 xs:mr-4',
                   ]"
                 >
-                  <currency-dollar-icon
+                  <AppIcon
+                    name="currency-dollar"
+                    size="s"
                     v-if="fee.id === GasPriceType.ECONOMY"
-                    class="w-5 h-5"
                   />
-                  <check-icon
+                  <AppIcon
+                    name="check"
+                    size="s"
                     v-else-if="fee.id === GasPriceType.REGULAR"
-                    class="w-5 h-5"
                   />
                   <div v-else class="flex">
-                    <arrow-long-up-icon class="w-5 h-5" />
-                    <arrow-long-up-icon
+                    <AppIcon name="arrow-long-up" variant="filled" size="s" />
+                    <AppIcon
+                      name="arrow-long-up"
+                      variant="filled"
+                      size="s"
                       v-if="fee.id === GasPriceType.FASTEST"
-                      class="w-5 h-5 -mx-2"
+                      class="-mx-2"
                     />
                   </div>
                 </div>
@@ -133,8 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'

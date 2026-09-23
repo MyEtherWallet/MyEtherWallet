@@ -13,14 +13,14 @@
       :class="isOpen ? 'bg-white' : 'bg-mewBg'"
       @click="open"
     >
-      <magnifying-glass-icon class="w-5 h-5 text-info" />
+      <AppIcon name="magnifying-glass" size="s" class="text-info" />
     </button>
     <div
       v-else
       class="flex items-center gap-2 h-10 px-4 rounded-full transition-colors duration-500"
       :class="isOpen ? 'bg-white' : 'bg-mewBg'"
     >
-      <magnifying-glass-icon class="w-4 h-4 text-info" />
+      <AppIcon name="magnifying-glass" size="xxs" class="text-info" />
       <input
         v-model="query"
         type="text"
@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { onClickOutside, useElementSize } from '@vueuse/core'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalSearch } from '../composables/useGlobalSearch'

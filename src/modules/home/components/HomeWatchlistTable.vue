@@ -3,12 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import {
-  StarIcon as StarSolidIcon,
-  PlusIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-} from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
@@ -72,7 +67,7 @@ const trade = (row: WatchlistRow) => {
         @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addNew') }}
-        <PlusIcon class="size-4" />
+        <AppIcon name="plus" size="xxs" variant="filled" />
       </button>
     </div>
 
@@ -111,7 +106,7 @@ const trade = (row: WatchlistRow) => {
             class="shrink-0 text-primary"
             @click="remove(row)"
           >
-            <StarSolidIcon class="size-5" />
+            <AppIcon name="star" size="s" variant="filled" />
           </button>
           <AppTokenLogo
             :url="row.logoUrl"
@@ -151,8 +146,13 @@ const trade = (row: WatchlistRow) => {
             :class="row.change < 0 ? 'text-error' : 'text-success'"
           >
             {{ changeLabel(row.change) }}
-            <ArrowDownIcon v-if="row.change < 0" class="size-3.5" />
-            <ArrowUpIcon v-else class="size-3.5" />
+            <AppIcon
+              v-if="row.change < 0"
+              name="arrow-down"
+              size="xxs"
+              variant="filled"
+            />
+            <AppIcon v-else name="arrow-up" size="xxs" variant="filled" />
           </span>
           <TableSparkline
             v-if="row.sparkline.length"

@@ -62,7 +62,12 @@
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
-              <chevron-down-icon class="w-4 h-4 ml-2" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="ml-2"
+              />
             </button>
           </template>
         </app-select>
@@ -145,7 +150,7 @@ import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'

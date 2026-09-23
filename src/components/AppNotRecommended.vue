@@ -2,7 +2,7 @@
   <div class="p-4 sm:p-6 bg-error-7 border-1 border-error-10 rounded-16 w-full">
     <div class="flex items-center">
       <!-- icon container -->
-      <exclamation-triangle-icon class="w-6 h-6 mr-2 text-error" />
+      <AppIcon name="exclamation-triangle" class="mr-2 text-error" />
       <h3 class="font-bold">{{ title || $t('common.not_recommended') }}</h3>
     </div>
 
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 defineProps({
   title: {

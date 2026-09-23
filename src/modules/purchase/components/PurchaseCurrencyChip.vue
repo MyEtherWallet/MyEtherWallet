@@ -14,13 +14,18 @@
     <span class="text-s-11 font-bold tracking-sp-06 uppercase">
       {{ currency }}
     </span>
-    <chevron-right-icon class="w-[15px] h-[15px] flex-none" />
+    <AppIcon
+      name="chevron-right"
+      variant="filled"
+      size="xxs"
+      class="flex-none"
+    />
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 

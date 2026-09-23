@@ -69,7 +69,7 @@
           @click="clearInputValue"
           :label="$t('common.clear_icon')"
         >
-          <x-circle-icon class="w-5 h-5 text-primary" />
+          <AppIcon name="x-circle" size="s" class="text-primary" />
         </app-btn-icon>
         <app-btn-icon
           v-if="showReveal"
@@ -80,9 +80,11 @@
               : $t('common.hide_password')
           "
         >
-          <component
-            :is="!showPassword ? EyeSlashIcon : EyeIcon"
-            class="w-5 h-5 text-primary"
+          <AppIcon
+            :name="!showPassword ? 'eye-slash' : 'eye'"
+            variant="filled"
+            size="s"
+            class="text-primary"
           />
         </app-btn-icon>
       </div>
@@ -95,7 +97,11 @@
         :id="feedbackId"
         class="flex items-center gap-1 min-h-6 px-4"
       >
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
+        <AppIcon
+          name="exclamation-circle"
+          size="s"
+          class="shrink-0 text-error"
+        />
         <p class="text-xs leading-[18px] text-error min-w-0 break-words">
           {{ errorMessage || $t('common.required') }}
         </p>
@@ -115,8 +121,7 @@ import {
   type InputTypeHTMLAttribute,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
-import { XCircleIcon, ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { INPUT_SIZE_SPEC, type InputSize } from '@/components/inputSizes'
 

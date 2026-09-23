@@ -5,8 +5,11 @@
       target="_blank"
       class="block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
     >
-      <QuestionMarkCircleIcon
-        class="w-5 h-5 sm:w-6 sm:h-6 display inline block mr-1 text-t-default"
+      <AppIcon
+        name="question-mark-circle"
+        variant="filled"
+        size="s"
+        class="sm:size-6 inline-block mr-1 text-t-default"
       />
       <span class="underline"> {{ title }} </span>
     </a>
@@ -14,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionMarkCircleIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 //Remove HelpLinks from Beta builds
 const isDevMode = import.meta.env.MODE !== 'production'

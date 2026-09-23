@@ -28,11 +28,18 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -59,11 +66,20 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
+                        class="text-primary"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
                       />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        class="text-primary"
+                        v-else
+                      />
                     </div>
                   </button>
                 </div>
@@ -119,7 +135,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'

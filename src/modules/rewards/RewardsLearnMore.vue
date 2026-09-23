@@ -19,37 +19,56 @@
               class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
               :class="index < 3 ? 'bg-blue-10' : 'bg-grey-5'"
             >
-              <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-primary"
+              <AppIcon
                 v-if="item.icon === 'swap'"
+                name="arrow-path-rounded-square"
+                size="xxs"
+                class="text-primary"
               />
-              <trophy-icon
+              <AppIcon
                 v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-primary"
+                name="trophy"
+                variant="filled"
+                size="xxs"
+                class="text-primary"
               />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
                 class="w-4 h-4 text-primary"
               />
-              <currency-dollar-icon
+              <AppIcon
                 v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-primary"
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                class="text-primary"
               />
-              <calendar-icon
+              <AppIcon
                 v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-grey-50"
+                name="calendar"
+                variant="filled"
+                size="xxs"
+                class="text-grey-50"
               />
-              <wallet-icon
+              <AppIcon
                 v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-grey-50"
+                name="wallet"
+                size="xxs"
+                class="text-grey-50"
               />
-              <currency-dollar-icon
+              <AppIcon
                 v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-grey-50"
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                class="text-grey-50"
               />
-              <face-frown-icon
+              <AppIcon
                 v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-grey-50"
+                name="face-frown"
+                variant="filled"
+                size="xxs"
+                class="text-grey-50"
               />
             </div>
             <p class="text-s-14 text-info leading-snug pt-1">
@@ -95,17 +114,8 @@ import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import {
-  TrophyIcon,
-  CalendarIcon,
-  CurrencyDollarIcon,
-  FaceFrownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  ArrowPathRoundedSquareIcon,
-  WalletIcon,
-} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'

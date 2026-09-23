@@ -13,8 +13,8 @@
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
       >
-        <star-solid-icon v-if="isWatchlisted" class="h-5 w-5" />
-        <star-outline-icon v-else class="h-5 w-5" />
+        <AppIcon v-if="isWatchlisted" name="star" variant="filled" size="s" />
+        <AppIcon v-else name="star" size="s" />
       </app-btn-icon>
     </div>
     <div
@@ -36,9 +36,7 @@
           width="w-10 xs:w-[56px]"
           height="h-10 xs:h-[56px]"
         />
-        <div
-          class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-        >
+        <div class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4">
           <app-token-logo
             v-if="selectedChain && existsOnCurrentChain"
             :url="selectedChain.icon"
@@ -73,13 +71,17 @@
             {{ currentPrice ? formatFiat(currentPrice).display : '--' }}
           </p>
           <div v-if="priceChangeNum !== null" class="inline-block ml-2">
-            <ArrowTrendingDownIcon
+            <AppIcon
               v-if="priceChangeNum < 0"
-              class="w-4 h-4 inline-block text-error"
+              name="arrow-trending-down"
+              size="xxs"
+              class="inline-block text-error"
             />
-            <ArrowTrendingUpIcon
+            <AppIcon
               v-else
-              class="w-4 h-4 inline-block text-success"
+              name="arrow-trending-up"
+              size="xxs"
+              class="inline-block text-success"
             />
             <span
               :class="[
@@ -111,12 +113,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppShareButton from '@/components/AppShareButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
-import {
-  StarIcon as StarOutlineIcon,
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 
@@ -128,7 +125,10 @@ const props = defineProps({
   iconUrl: { type: String, default: undefined },
   symbol: { type: String, required: true },
   name: { type: String, required: true },
-  currentPrice: { type: [Number, String] as PropType<number | string | null>, default: null },
+  currentPrice: {
+    type: [Number, String] as PropType<number | string | null>,
+    default: null,
+  },
   priceChangePercentage: {
     type: [Number, String] as PropType<number | string | null>,
     default: null,
@@ -147,15 +147,22 @@ defineEmits<{ 'toggle-watchlist': [] }>()
 const { formatFiat } = useCurrency()
 
 const priceChangeNum = computed(() => {
-  if (props.priceChangePercentage === null || props.priceChangePercentage === undefined)
+  if (
+    props.priceChangePercentage === null ||
+    props.priceChangePercentage === undefined
+  )
     return null
   return Number(props.priceChangePercentage)
 })
 
 const priceChangeDisplay = computed(() => {
-  if (props.priceChangePercentage === null || props.priceChangePercentage === undefined)
+  if (
+    props.priceChangePercentage === null ||
+    props.priceChangePercentage === undefined
+  )
     return ''
-  if (props.isStock) return formatPercentageValue(props.priceChangePercentage).value
+  if (props.isStock)
+    return formatPercentageValue(props.priceChangePercentage).value
   return `${Number(props.priceChangePercentage).toFixed(2)}%`
 })
 </script>

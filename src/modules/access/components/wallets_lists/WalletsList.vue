@@ -12,7 +12,7 @@
         class="md-header:hidden"
         @click="openFilterSortModal = true"
       >
-        <Bars3Icon class="h-6 w-6" />
+        <AppIcon name="bars-3" variant="filled" />
       </app-btn-icon>
     </div>
     <div class="flex mb-4 sm:mb-6 justify-between items-center gap-3 flex-wrap">
@@ -91,7 +91,7 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
-import { Bars3Icon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 import { storeToRefs } from 'pinia'

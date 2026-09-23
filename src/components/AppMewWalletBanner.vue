@@ -11,7 +11,12 @@
           @click="dismissMewBanner"
           :aria-label="$t('common.close_banner')"
         >
-          <XMarkIcon class="w-3 h-3 text-white" />
+          <AppIcon
+            name="x-mark"
+            variant="filled"
+            size="xxs"
+            class="text-white"
+          />
         </button>
 
         <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
@@ -45,7 +50,7 @@
               <div
                 class="w-10 h-10 bg-grey-light rounded-full flex items-center justify-center cursor-pointer"
               >
-                <QrCodeIcon class="w-5 h-5" />
+                <AppIcon name="qr-code" variant="filled" size="s" />
               </div>
               <div
                 v-if="showQr"
@@ -101,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { QrCodeIcon, XMarkIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { onMounted, ref } from 'vue'
 import mewBannerItem from '@/assets/images/mewwallet/mew-banner-item.png'
 import mewBannerItemMobile from '@/assets/images/mewwallet/mew-banner-item-mobile.png'
