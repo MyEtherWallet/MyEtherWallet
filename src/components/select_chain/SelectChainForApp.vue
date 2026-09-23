@@ -33,7 +33,7 @@
           >
             <div class="flex items-center justify-center capitalize">
               <span>{{ $t('common.more') }}</span>
-              <chevron-down-icon class="text-text-subtle w-4 h-4 ml-1" />
+              <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-text-subtle ml-1" />
             </div>
           </button>
         </template>
@@ -64,7 +64,7 @@
               {{ selectedChain.nameLong }}
             </p>
           </div>
-          <chevron-down-icon class="flex-none w-4 h-4 ml-auto" />
+          <AppIcon name="chevron-down" variant="filled" size="xxs" class="flex-none ml-auto" />
         </div>
       </button>
     </slot>
@@ -87,11 +87,11 @@ import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const prop = defineProps({
   isBtnGroup: {
     type: Boolean,

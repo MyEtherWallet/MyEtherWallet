@@ -12,7 +12,7 @@
             class="-ml-3 mr-3"
             @click="closeAddEdit"
           >
-            <ArrowLeftIcon class="w-5 h-5" />
+            <AppIcon name="arrow-left" variant="filled" size="s" />
           </app-btn-icon>
           <h1 class="text-s-28 font-bold">
             {{ dialogTitle }}
@@ -160,7 +160,7 @@ import AppDialog from '@components/AppDialog.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import type { Chain } from '@/mew_api/types'
 
