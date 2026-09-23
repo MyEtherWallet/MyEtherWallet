@@ -132,7 +132,7 @@ const SAMPLE: IconName = 'wallet'
           class="flex flex-col items-center gap-2 rounded-8 border border-grey-10 p-3 hoverNoBG"
           :title="name"
         >
-          <div class="flex h-8 items-center">
+          <div class="flex h-14 items-center">
             <AppIcon :name="name" :size="size" :variant="variant" />
           </div>
           <span class="w-full truncate text-center text-s-11 text-info">
