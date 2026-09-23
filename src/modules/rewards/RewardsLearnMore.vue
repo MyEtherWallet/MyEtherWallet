@@ -23,42 +23,18 @@
                   : 'bg-background-default'
               "
             >
-              <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-text-brand"
-                v-if="item.icon === 'swap'"
-              />
-              <trophy-icon
-                v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-text-brand"
-              />
+              <AppIcon name="arrow-path-rounded-square" size="xxs" v-if="item.icon === 'swap'" class="text-text-brand" />
+              <AppIcon name="trophy" variant="filled" size="xxs" v-else-if="item.icon === 'trophy'" class="text-text-brand" />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
                 class="w-4 h-4 text-text-brand"
               />
-              <currency-dollar-icon
-                v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-text-brand"
-              />
-              <calendar-icon
-                v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-text-muted"
-              />
-              <wallet-icon
-                v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-text-muted"
-              />
-              <banknotes-icon
-                v-else-if="item.icon === 'wallet-balance'"
-                class="w-4 h-4 text-text-muted"
-              />
-              <currency-dollar-icon
-                v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-text-muted"
-              />
-              <face-frown-icon
-                v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-text-muted"
-              />
+              <AppIcon name="currency-dollar" variant="filled" size="xxs" v-else-if="item.icon === 'currency-dollar'" class="text-text-brand" />
+              <AppIcon name="calendar" variant="filled" size="xxs" v-else-if="item.icon === 'calendar'" class="text-text-muted" />
+              <AppIcon name="wallet" size="xxs" v-else-if="item.icon === 'wallet-icon'" class="text-text-muted" />
+              <AppIcon name="banknotes" size="xxs" v-else-if="item.icon === 'wallet-balance'" class="text-text-muted" />
+              <AppIcon name="currency-dollar" variant="filled" size="xxs" v-else-if="item.icon === 'currency-dollar-gray'" class="text-text-muted" />
+              <AppIcon name="face-frown" variant="filled" size="xxs" v-else-if="item.icon === 'face-frown'" class="text-text-muted" />
             </div>
             <p class="text-s-14 text-text-subtle leading-snug pt-1">
               {{ item.text }}
@@ -103,18 +79,7 @@ import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import {
-  TrophyIcon,
-  CalendarIcon,
-  CurrencyDollarIcon,
-  FaceFrownIcon,
-} from '@heroicons/vue/24/solid'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  ArrowPathRoundedSquareIcon,
-  BanknotesIcon,
-  WalletIcon,
-} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -122,6 +87,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   location?:
     | 'main-banner'
