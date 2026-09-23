@@ -57,6 +57,7 @@ const SAMPLE: IconName = 'wallet'
               ? 'bg-grey-10 font-medium text-t-default'
               : 'text-info'
           "
+          :aria-pressed="variant === v"
           @click="variant = v"
         >
           {{ v }}
@@ -75,6 +76,7 @@ const SAMPLE: IconName = 'wallet'
           :class="
             size === s ? 'bg-grey-10 font-medium text-t-default' : 'text-info'
           "
+          :aria-pressed="size === s"
           @click="size = s"
         >
           {{ s }}
