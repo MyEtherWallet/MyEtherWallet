@@ -4,7 +4,12 @@
  *
  * Everything geometric lives here so the parent and children read one source of
  * truth instead of recomputing box math per component.
+ *
+ * On-scale boxes reference `SIZE[token]` (MEW-2364) so a scale change lands
+ * here too; the off-scale ones (Avatar XS box 18, M/XL badges 18/22) are Figma
+ * component geometry and stay literals — see the exception comments below.
  */
+import { SIZE } from '@/components/sizeScale'
 
 export type AvatarType =
   | 'wallet'
@@ -54,11 +59,11 @@ interface AvatarSizeSpec {
 }
 
 export const AVATAR_SIZES: Record<AvatarSize, AvatarSizeSpec> = {
-  xs: { box: 18, badgeBox: 12 },
-  s: { box: 24, badgeBox: 14 },
-  m: { box: 32, badgeBox: 18 },
-  l: { box: 40, badgeBox: 20 },
-  xl: { box: 48, badgeBox: 22 },
+  xs: { box: 18, badgeBox: SIZE[3] }, // box 18 off-scale: Figma Avatar XS (no size/4.5)
+  s: { box: SIZE[6], badgeBox: SIZE[3.5] },
+  m: { box: SIZE[8], badgeBox: 18 }, // badge 18 off-scale: Figma Avatar M badge
+  l: { box: SIZE[10], badgeBox: SIZE[5] },
+  xl: { box: SIZE[12], badgeBox: 22 }, // badge 22 off-scale: Figma Avatar XL badge
 }
 
 /** Badge overhangs the avatar by badgeBox × this on every corner (Figma). */
@@ -68,7 +73,7 @@ export const badgeOffset = (size: AvatarSize): number =>
   AVATAR_SIZES[size].badgeBox * BADGE_OVERHANG_RATIO
 
 /** The Status badge is a fixed 8px at every avatar size (design). */
-export const STATUS_BADGE_BOX = 8
+export const STATUS_BADGE_BOX = SIZE[2] // 8
 
 /** Fallback-initials text size per avatar box (Tailwind), for remote-logo types. */
 export const AVATAR_FALLBACK_TEXT_CLASS: Record<AvatarSize, string> = {
