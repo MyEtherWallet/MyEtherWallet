@@ -7,6 +7,7 @@ const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Avatar', to: '/dev/avatar' },
   { name: 'Chip', to: '/dev/chip' },
   { name: 'Content Group', to: '/dev/content-group' },
+  { name: 'Icon', to: '/dev/icons' },
   { name: 'Input', to: '/dev/input' },
   { name: 'Picker', to: '/dev/picker' },
   { name: 'Tooltip', to: '/dev/tooltip' },
