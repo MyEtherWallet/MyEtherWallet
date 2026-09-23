@@ -45,8 +45,11 @@
         <span class="text-s-12 font-semibold text-black tracking-tight">
           {{ expanded ? $t('search.show_less') : $t('search.show_more') }}
         </span>
-        <chevron-down-icon
-          class="w-3.5 h-3.5 text-black transition-transform"
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="text-black transition-transform"
           :class="{ 'rotate-180': expanded }"
         />
       </div>
@@ -57,7 +60,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import GlobalSearchResultRow from './GlobalSearchResultRow.vue'
 import type { SearchResultItem } from '../types'
 
