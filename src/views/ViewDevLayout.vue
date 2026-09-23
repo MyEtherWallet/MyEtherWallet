@@ -6,6 +6,7 @@
 const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Button', to: '/dev/button' },
   { name: 'Colors', to: '/dev/colors' },
+  { name: 'Typography', to: '/dev/typography' },
 ]
 </script>
 

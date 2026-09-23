@@ -52,6 +52,12 @@ const DefaultRoutes = <RouteNameCollection>[
               component: () => import('@/views/ViewButtonPreview.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
+            {
+              path: 'typography',
+              name: 'DevTypography',
+              component: () => import('@/views/ViewTypographyShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
           ],
         },
       ]
