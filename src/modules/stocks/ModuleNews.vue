@@ -10,7 +10,7 @@
           :label="$t('common.previous_page')"
           @click="prevPage"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
           class=""
@@ -18,7 +18,7 @@
           :label="$t('common.next_page')"
           @click="nextPage"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" size="xxs" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -74,7 +74,7 @@ v-for="ticker in article.tickers || []"
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'
