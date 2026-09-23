@@ -1230,8 +1230,8 @@ const getMainBtnText = computed(() => {
 <style scoped>
 .slider-input::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--thumb-color, #0052ff);
   cursor: pointer;
@@ -1240,8 +1240,8 @@ const getMainBtnText = computed(() => {
 }
 
 .slider-input::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--thumb-color, #0052ff);
   cursor: pointer;

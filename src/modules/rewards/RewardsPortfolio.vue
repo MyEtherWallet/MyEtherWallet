@@ -258,30 +258,30 @@ const onConnectAddress = () => {
 }
 
 .confetti-piece {
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 2px;
 }
 
 .confetti-piece:nth-child(3n) {
   background: #7b61ff;
-  width: 6px;
-  height: 12px;
+  width: var(--size-1-5);
+  height: var(--size-3);
   border-radius: 1px;
   transform: rotate(45deg);
 }
 
 .confetti-piece:nth-child(3n + 1) {
   background: #3b82f6;
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 50%;
 }
 
 .confetti-piece:nth-child(3n + 2) {
   background: #fbbf24;
-  width: 5px;
-  height: 14px;
+  width: 5px; /* off-scale: decorative confetti, no size token */
+  height: var(--size-3-5);
   border-radius: 1px;
   transform: rotate(-30deg);
 }
