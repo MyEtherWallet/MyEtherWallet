@@ -31,14 +31,19 @@
         {{ chain.nameLong || chain.name }}
       </p>
     </div>
-    <chevron-right-icon class="w-5 h-5 text-black flex-none" />
+    <AppIcon
+      name="chevron-right"
+      variant="filled"
+      size="s"
+      class="text-black flex-none"
+    />
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { Chain } from '@/mew_api/types'
