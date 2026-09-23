@@ -36,7 +36,7 @@
                 <span class="text-s-16 font-medium">{{
                   selectedFilter.label
                 }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
+                <AppIcon name="chevron-down" size="xxs" variant="filled" class="ml-1" />
               </div>
             </button>
           </div>
@@ -90,17 +90,21 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-name') }}
-                  <arrow-long-down-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5"
+                    name="arrow-long-down"
+                    size="xxs"
+                    variant="filled"
                   />
-                  <arrow-long-up-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5"
+                    name="arrow-long-up"
+                    size="xxs"
+                    variant="filled"
                   />
                 </div>
               </th>
@@ -116,18 +120,24 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-price') }}
-                  <arrow-long-down-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.PRICE &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-down"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.PRICE && tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-up"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
                 </div>
               </th>
@@ -143,19 +153,25 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-24h') }}
-                  <arrow-long-down-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.PERCENT &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-down"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.PERCENT &&
                       tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-up"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
                 </div>
               </th>
@@ -171,19 +187,25 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-volume') }}
-                  <arrow-long-down-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-down"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-up"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
                 </div>
               </th>
@@ -199,19 +221,25 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-market-cap') }}
-                  <arrow-long-down-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'desc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-down"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
-                  <arrow-long-up-icon
+                  <AppIcon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'asc'
                     "
-                    class="w-3.5 h-3.5 absolute -right-4"
+                    name="arrow-long-up"
+                    size="xxs"
+                    variant="filled"
+                    class="absolute -right-4"
                   />
                 </div>
               </th>
@@ -243,11 +271,19 @@
                   class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
-                  <star-outline-icon
+                  <AppIcon
                     v-if="!watchlist.has(contract.baseCurrency)"
-                    class="h-4 w-4 cursor-pointer"
+                    name="star"
+                    size="xxs"
+                    class="cursor-pointer"
                   />
-                  <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                  <AppIcon
+                    v-else
+                    name="star"
+                    size="xxs"
+                    variant="filled"
+                    class="cursor-pointer"
+                  />
                 </button>
               </td>
               <!-- Name -->
@@ -342,7 +378,7 @@
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
                       </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
@@ -356,13 +392,18 @@
                             toggleMenu(),
                           ]"
                         >
-                          <star-outline-icon
+                          <AppIcon
                             v-if="!watchlist.has(contract.baseCurrency)"
-                            class="h-4 w-4 cursor-pointer"
+                            name="star"
+                            size="xxs"
+                            class="cursor-pointer"
                           />
-                          <star-solid-icon
+                          <AppIcon
                             v-else
-                            class="h-4 w-4 cursor-pointer"
+                            name="star"
+                            size="xxs"
+                            variant="filled"
+                            class="cursor-pointer"
                           />
                           <span class="ml-2">{{
                             watchlist.has(contract.baseCurrency)
@@ -622,7 +663,12 @@
             @click="selectedFilterValue = 'all'"
           >
             {{ $t('perps.market-list.discover-markets') }}
-            <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            <AppIcon
+              name="arrow-long-up"
+              size="xxs"
+              variant="filled"
+              class="rotate-90 inline-flex"
+            />
           </button>
         </div>
       </div>
@@ -643,15 +689,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import {
-  ChevronDownIcon,
-  StarIcon as StarSolidIcon,
-  ArrowLongUpIcon,
-  ArrowLongDownIcon,
-  EllipsisVerticalIcon,
-} from '@heroicons/vue/24/solid'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'

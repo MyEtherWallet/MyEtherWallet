@@ -72,7 +72,7 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-2" />
+                  <AppIcon name="chevron-down" size="xxs" variant="filled" class="ml-2" />
                 </div>
               </button>
             </div>
@@ -241,7 +241,7 @@
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
                       </app-btn-icon>
                       <AppBaseButton
                         class="hidden lg:flex"
@@ -505,7 +505,7 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <ellipsis-vertical-icon class="w-5 h-5" />
+                      <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
@@ -545,7 +545,7 @@
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
                 >
-                  <chevron-right-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-right" size="s" variant="filled" />
                 </app-btn-icon>
               </td>
             </tr>
@@ -688,7 +688,7 @@
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
-                    <chevron-right-icon class="w-5 h-5" />
+                    <AppIcon name="chevron-right" size="s" variant="filled" />
                   </app-btn-icon>
                 </td>
               </tr>
@@ -877,11 +877,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ChevronDownIcon,
-  EllipsisVerticalIcon,
-  ChevronRightIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'

@@ -7,7 +7,7 @@
       width="w-8"
       @click="onPrev"
     >
-      <ChevronLeftIcon class="w-4 h-4" />
+      <AppIcon name="chevron-left" size="xxs" variant="filled" />
     </app-btn-icon>
     <span class="px-2 text-s-12 text-info font-medium">
       <template v-if="totalPages !== undefined"
@@ -29,7 +29,7 @@
       width="w-8"
       @click="onNext"
     >
-      <ChevronRightIcon class="w-4 h-4" />
+      <AppIcon name="chevron-right" size="xxs" variant="filled" />
     </app-btn-icon>
   </div>
 </template>
@@ -38,7 +38,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 

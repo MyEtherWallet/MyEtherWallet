@@ -34,8 +34,11 @@
     >
       <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
            unreadable for copy, so the text stays near-black. -->
-      <exclamation-triangle-icon
-        class="w-4 h-4 shrink-0 text-warning"
+      <AppIcon
+        name="exclamation-triangle"
+        size="xxs"
+        variant="filled"
+        class="shrink-0 text-warning"
         aria-hidden="true"
       />
       <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
@@ -51,8 +54,11 @@
     >
       <template #icon>
         <div class="relative">
-          <globe-asia-australia-icon
-            class="w-12 h-12 text-black"
+          <AppIcon
+            name="globe-asia-australia"
+            size="xl"
+            variant="filled"
+            class="text-black"
             aria-hidden="true"
           />
           <!--
@@ -65,8 +71,11 @@
           <span
             class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-error flex items-center justify-center"
           >
-            <exclamation-circle-icon
-              class="w-5 h-5 text-white"
+            <AppIcon
+              name="exclamation-circle"
+              size="s"
+              variant="filled"
+              class="text-white"
               aria-hidden="true"
             />
           </span>
@@ -131,9 +140,12 @@
                 </p>
               </div>
             </div>
-            <chevron-down-icon
+            <AppIcon
               v-if="!isLoading"
-              class="text-info w-4 h-4 ml-4"
+              name="chevron-down"
+              size="xxs"
+              variant="filled"
+              class="text-info ml-4"
             />
           </button>
 
@@ -185,14 +197,18 @@
               @click="onClickOrderSide(side.value)"
             >
               {{ side.label }}
-              <arrow-trending-up-icon
+              <AppIcon
                 v-if="side.value === 'buy'"
-                class="w-4 h-4"
+                name="arrow-trending-up"
+                size="xxs"
+                variant="filled"
                 :class="orderSide === side.value ? 'text-white' : 'text-black'"
               />
-              <arrow-trending-down-icon
+              <AppIcon
                 v-if="side.value === 'sell'"
-                class="w-4 h-4"
+                name="arrow-trending-down"
+                size="xxs"
+                variant="filled"
                 :class="orderSide === side.value ? 'text-white' : 'text-black'"
               />
             </button>
@@ -264,10 +280,13 @@
                       {{ $t('perps.trade.market-order-description') }}
                     </p>
                   </div>
-                  <check-icon
+                  <AppIcon
                     v-if="orderType === 'market'"
-                    class="text-primary h-5 w-5"
-                  ></check-icon>
+                    name="check"
+                    size="s"
+                    variant="filled"
+                    class="text-primary"
+                  />
 
                   <span v-else class="w-4 mt-0.5" />
                 </div>
@@ -286,10 +305,13 @@
                       {{ $t('perps.trade.limit-order-description') }}
                     </p>
                   </div>
-                  <check-icon
+                  <AppIcon
                     v-if="orderType === 'limit'"
-                    class="text-primary h-5 w-5"
-                  ></check-icon>
+                    name="check"
+                    size="s"
+                    variant="filled"
+                    class="text-primary"
+                  />
                   <span v-else class="w-4 mt-0.5" />
                 </div>
               </div>
@@ -440,7 +462,7 @@
                     manageMode === 'add' ? effectiveLeverage : leverage
                   }}&times;
                 </p>
-                <ChevronDownIcon class="w-3 h-3" />
+                <AppIcon name="chevron-down" size="xxs" variant="filled" />
               </button>
             </div>
             <p class="text-info text-s-12 -mt-2 mb-2 truncate">
@@ -565,7 +587,7 @@
               class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
               @click="openAutoCloseModal"
             >
-              <plus-circle-icon class="w-4 h-4" />
+              <AppIcon name="plus-circle" size="xxs" variant="filled" />
               <p class="text-s-12 font-medium">
                 {{ $t('perps.trade.add-tp-sl') }}
               </p>
@@ -604,7 +626,7 @@
                 class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
                 @click="openAutoCloseModal"
               >
-                <plus-circle-icon class="w-4 h-4" />
+                <AppIcon name="plus-circle" size="xxs" variant="filled" />
                 <p class="text-s-12 font-medium">
                   {{
                     takeProfitPrice === null
@@ -879,16 +901,7 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import {
-  ChevronDownIcon,
-  CheckIcon,
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-  PlusCircleIcon,
-  GlobeAsiaAustraliaIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
