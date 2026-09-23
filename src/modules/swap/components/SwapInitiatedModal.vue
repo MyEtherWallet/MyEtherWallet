@@ -24,8 +24,11 @@
                 class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
               >
                 {{ truncateHash(snapshot.toAddress) }}
-                <arrow-up-right-icon
-                  class="w-3 h-3 inline-block align-middle text-black"
+                <AppIcon
+                  name="arrow-up-right"
+                  variant="filled"
+                  size="xxs"
+                  class="inline-block align-middle text-black"
               /></a>
             </div>
             <span
@@ -66,13 +69,19 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <check-circle-icon
+                <AppIcon
                   v-else-if="notificationStatus === 'confirmed'"
-                  class="w-5 h-5 text-success"
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
+                  class="text-success"
                 />
-                <x-circle-icon
+                <AppIcon
                   v-else-if="notificationStatus === 'failed'"
-                  class="w-5 h-5 text-error"
+                  name="x-circle"
+                  variant="filled"
+                  size="s"
+                  class="text-error"
                 />
               </div>
 
@@ -152,7 +161,7 @@
 
               <!-- Divider Arrow -->
               <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
-                <arrow-long-down-icon class="w-6 h-6" />
+                <AppIcon name="arrow-long-down" variant="filled" />
               </div>
 
               <!-- To Row -->
@@ -247,8 +256,11 @@
               rel="noopener noreferrer"
               class="group underline inline-block"
               >{{ t('swap.initiated.check-explorer') }}
-              <arrow-long-right-icon
-                class="inline-block align-middle w-4 h-4 ml-1 transition-transform group-hover:translate-x-1"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="xxs"
+                class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1"
               />
             </a>
           </p>
@@ -268,13 +280,7 @@ import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { ArrowLongDownIcon } from '@heroicons/vue/24/solid'
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'
