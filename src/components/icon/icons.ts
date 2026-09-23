@@ -182,6 +182,7 @@ import {
   PlusCircleIcon as PlusCircleOutline,
   TagIcon as TagOutline,
   WrenchScrewdriverIcon as WrenchScrewdriverOutline,
+  LanguageIcon as LanguageOutline,
 } from '@heroicons/vue/24/outline'
 
 // Heroicons — style=filled (Figma) → 24/solid
@@ -285,6 +286,7 @@ import {
   PlusCircleIcon as PlusCircleSolid,
   TagIcon as TagSolid,
   WrenchScrewdriverIcon as WrenchScrewdriverSolid,
+  LanguageIcon as LanguageSolid,
 } from '@heroicons/vue/24/solid'
 
 // Custom glyphs not in Heroicons — authored SFCs, currentColor, viewBox 24.
@@ -602,6 +604,7 @@ export const icons = {
     stroke: WrenchScrewdriverOutline,
     filled: WrenchScrewdriverSolid,
   },
+  language: { stroke: LanguageOutline, filled: LanguageSolid },
 } as const satisfies Record<string, IconEntry>
 
 export type IconName = keyof typeof icons
