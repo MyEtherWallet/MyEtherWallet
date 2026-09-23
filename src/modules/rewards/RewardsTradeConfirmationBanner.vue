@@ -8,7 +8,11 @@
     >
       <!-- Variation 1: Trade qualifies for rewards -->
       <div v-if="qualifies" class="flex items-center gap-3">
-        <check-circle-icon class="w-6 h-6 text-success shrink-0" />
+        <AppIcon
+          name="check-circle"
+          variant="filled"
+          class="text-success shrink-0"
+        />
         <p class="text-s-14 font-semibold">
           {{ t('rewards.trade_qualifies') }}
         </p>
@@ -16,7 +20,11 @@
 
       <!-- Variations 2 & 3: Trade is not eligible for rewards -->
       <div v-else class="flex items-center gap-3 text-s-14">
-        <exclamation-circle-icon class="w-6 h-6 text-warning shrink-0" />
+        <AppIcon
+          name="exclamation-circle"
+          variant="filled"
+          class="text-warning shrink-0"
+        />
         <div class="text-left">
           <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->
@@ -29,7 +37,7 @@
           </p>
         </div>
       </div>
-      <chevron-right-icon class="w-4 h-4" />
+      <AppIcon name="chevron-right" variant="filled" size="xxs" />
     </button>
     <rwa-trade-info-modal v-model:is-open="isTradeInfoOpen" />
   </div>
@@ -39,11 +47,7 @@
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ChevronRightIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 import { useRewardsStore } from '@/stores/rewardsStore'
