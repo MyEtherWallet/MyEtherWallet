@@ -50,10 +50,7 @@
         :label="!showPassword ? $t('common.show_password') : $t('common.hide_password')"
         :disabled="isDisabled"
       >
-        <component
-          :is="!showPassword ? EyeSlashIcon : EyeIcon"
-          class="text-text-brand"
-        />
+        <AppIcon :name="!showPassword ? 'eye-slash' : 'eye'" variant="filled" class="text-text-brand" />
       </app-btn-icon>
     </div>
     <transition name="fade" mode="out-in">
@@ -83,9 +80,9 @@ import {
   watch,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   placeholder: {
     type: String,

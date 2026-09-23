@@ -13,8 +13,8 @@
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
       >
-        <star-solid-icon v-if="isWatchlisted" class="h-5 w-5" />
-        <star-outline-icon v-else class="h-5 w-5" />
+        <AppIcon name="star" variant="filled" size="s" v-if="isWatchlisted" />
+        <AppIcon name="star" size="s" v-else />
       </app-btn-icon>
     </div>
     <div
@@ -71,14 +71,8 @@
             {{ currentPrice ? formatFiat(currentPrice).display : '--' }}
           </p>
           <div v-if="priceChangeNum !== null" class="inline-block ml-2">
-            <ArrowTrendingDownIcon
-              v-if="priceChangeNum < 0"
-              class="w-4 h-4 inline-block text-text-error"
-            />
-            <ArrowTrendingUpIcon
-              v-else
-              class="w-4 h-4 inline-block text-text-success"
-            />
+            <AppIcon name="arrow-trending-down" size="xxs" v-if="priceChangeNum < 0" class="inline-block text-text-error" />
+            <AppIcon name="arrow-trending-up" size="xxs" v-else class="inline-block text-text-success" />
             <span
               :class="[
                 {
@@ -109,15 +103,10 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppShareButton from '@/components/AppShareButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
-import {
-  StarIcon as StarOutlineIcon,
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from '@heroicons/vue/24/outline'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   isLoading: { type: Boolean, required: true },
   hasData: { type: Boolean, required: true },

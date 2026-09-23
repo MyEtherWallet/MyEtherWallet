@@ -32,7 +32,7 @@
                     <IconWatchOnly class="inline-block w-3 h-3" />
                     {{ t('common.watch_only') }}
                   </p>
-                  <chevron-down-icon class="w-2.5 h-2.5 ml-1" />
+                  <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-1" />
                 </button>
               </template>
               <template #menu-content>
@@ -42,9 +42,7 @@
                       @click="setOpenPaperWalletDialog(true)"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <QrCodeIcon
-                        class="w-5 h-5 inline-block mr-2 text-text-brand"
-                      />
+                      <AppIcon name="qr-code" variant="filled" size="s" class="inline-block mr-2 text-text-brand" />
                       {{ $t('view_paper_wallet') }}
                     </li>
                     <li
@@ -52,9 +50,7 @@
                       @click="switchAddress()"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <UserGroupIcon
-                        class="w-5 h-5 inline-block mr-2 text-text-brand"
-                      />
+                      <AppIcon name="user-group" size="s" class="inline-block mr-2 text-text-brand" />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
@@ -66,9 +62,7 @@
                       @click="deleteWallet"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <TrashIcon
-                        class="w-5 h-5 inline-block mr-2 text-text-error"
-                      />
+                      <AppIcon name="trash" size="s" class="inline-block mr-2 text-text-error" />
                       {{
                         isWatchOnly
                           ? $t('delete_watch_only_wallet')
@@ -90,7 +84,7 @@
               class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
               @click="copyClick"
             >
-              <ClipboardDocumentIcon class="w-5 h-5" />
+              <AppIcon name="clipboard-document" size="s" />
             </button>
             <!-- Link to block explorer -->
             <a
@@ -99,7 +93,7 @@
               target="_blank"
               class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             >
-              <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+              <AppIcon name="arrow-top-right-on-square" size="s" />
             </a>
           </div>
         </div>
@@ -122,7 +116,7 @@
             class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="fetchBalances"
           >
-            <ArrowPathIcon class="w-5 h-5" />
+            <AppIcon name="arrow-path" size="s" />
           </button>
         </div>
         <!-- Token balances -->
@@ -156,15 +150,7 @@ import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { truncateAddress } from '@/utils/filters'
-import { ChevronDownIcon, QrCodeIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
-import {
-  ClipboardDocumentIcon,
-  ArrowPathIcon,
-  ArrowTopRightOnSquareIcon,
-  UserGroupIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/outline'
 import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
@@ -186,6 +172,7 @@ import {
 } from '@/analytics'
 import * as Sentry from '@sentry/vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void

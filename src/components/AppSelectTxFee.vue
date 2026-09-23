@@ -26,7 +26,7 @@
           <span class="text-text-subtle font-medium">
             {{ selectedFeeNative }}
           </span>
-          <chevron-down-icon class="w-4 h-4 text-text-subtle" />
+          <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-text-subtle" />
         </template>
       </div>
     </button>
@@ -94,20 +94,11 @@
                     ' mr-2 xs:mr-4',
                   ]"
                 >
-                  <currency-dollar-icon
-                    v-if="fee.id === GasPriceType.ECONOMY"
-                    class="w-5 h-5"
-                  />
-                  <check-icon
-                    v-else-if="fee.id === GasPriceType.REGULAR"
-                    class="w-5 h-5"
-                  />
+                  <AppIcon name="currency-dollar" size="s" v-if="fee.id === GasPriceType.ECONOMY" />
+                  <AppIcon name="check" size="s" v-else-if="fee.id === GasPriceType.REGULAR" />
                   <div v-else class="flex">
-                    <arrow-long-up-icon class="w-5 h-5" />
-                    <arrow-long-up-icon
-                      v-if="fee.id === GasPriceType.FASTEST"
-                      class="w-5 h-5 -mx-2"
-                    />
+                    <AppIcon name="arrow-long-up" variant="filled" size="s" />
+                    <AppIcon name="arrow-long-up" variant="filled" size="s" v-if="fee.id === GasPriceType.FASTEST" class="-mx-2" />
                   </div>
                 </div>
                 <div class="flex flex-col text-left">
@@ -135,8 +126,6 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
@@ -164,6 +153,7 @@ import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const walletMenu = useWalletMenuStore()
 const { formatFiat } = useCurrency()
 

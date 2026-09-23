@@ -33,7 +33,7 @@
             ]"
           >
             <span v-if="index < activeStep" class="text-text-brand">
-              <check-icon class="w-3 h-3" />
+              <AppIcon name="check" size="xxs" />
             </span>
             <span v-else class="text-white text-xs">{{ index + 1 }}</span>
             <span
@@ -59,8 +59,8 @@
   </div>
 </template>
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
-import { CheckIcon } from '@heroicons/vue/24/outline'
 const props = defineProps({
   steps: {
     type: Array as () => string[],

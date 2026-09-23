@@ -11,7 +11,7 @@
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
           <span>{{ selected ? selected.label : '' }}</span>
-          <chevron-down-icon class="w-4 h-4 ml-1" />
+          <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-1" />
         </div>
       </button>
     </slot>
@@ -101,10 +101,7 @@
               @click="selectOption(option)"
             >
               {{ option.label }}
-              <check-icon
-                v-if="selected && option.value === selected.value"
-                class="ml-auto w-8 h-4 text-text-brand px-2 -mr-3"
-              />
+              <AppIcon name="check" variant="filled" size="l" v-if="selected && option.value === selected.value" class="ml-auto text-text-brand px-2 -mr-3" />
             </button>
           </div>
         </div>
@@ -138,12 +135,12 @@
  *   :emit-only="true" @select-option="selectHandler" />
  *
  */
-import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { ref, computed } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const emit = defineEmits<{
   (e: 'select-option'): void
 }>()

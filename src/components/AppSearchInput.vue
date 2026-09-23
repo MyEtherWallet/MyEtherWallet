@@ -1,13 +1,10 @@
 <template>
   <div class="relative">
-    <magnifying-glass-icon
-      :class="[
+    <AppIcon name="magnifying-glass" @click="searchInput?.focus()" :class="[
         'absolute left-0 mx-3 cursor-pointer',
-        size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
+        size === 'compact' ? 'top-2.5' : 'top-2',
         inFocusInput ? 'text-text-brand' : 'text-text-subtle',
-      ]"
-      @click="searchInput?.focus()"
-    />
+      ]" />
 
     <input
       ref="searchInput"
@@ -46,9 +43,9 @@
 <script setup lang="ts">
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.
  *
