@@ -205,10 +205,7 @@
                           )
                         }}%)
                       </span>
-                      <CheckIcon
-                        v-if="item.quote.provider === selectedQuote?.provider"
-                        class="w-5 h-5 text-text-brand"
-                      />
+                      <AppIcon name="check" variant="filled" size="s" v-if="item.quote.provider === selectedQuote?.provider" class="text-text-brand" />
                       <div v-else class="w-4 h-4" />
                     </div>
                   </div>
@@ -302,7 +299,6 @@ import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
-import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
@@ -311,6 +307,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 
