@@ -17,8 +17,12 @@
               @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
               class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
-              <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
-              <ChevronDoubleRightIcon v-else class="w-5 h-5" />
+              <AppIcon
+                v-if="!isOpenSideMenu"
+                name="chevron-double-left"
+                size="s"
+              />
+              <AppIcon v-else name="chevron-double-right" size="s" />
             </button>
             <!-- Trade button -->
             <button
@@ -115,9 +119,7 @@
               ]"
               @click="openDepositDialog = true"
             >
-              <QrCodeIcon
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
-              />
+              <AppIcon name="qr-code" class="mb-1 xs:size-8 text-primary" />
               <p
                 :class="[
                   actionTextSizeClass,
@@ -197,7 +199,7 @@
           class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
-          <ChevronDoubleRightIcon class="w-5 h-5" />
+          <AppIcon name="chevron-double-right" size="s" />
         </app-btn-icon>
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
@@ -247,11 +249,7 @@ import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import {
-  QrCodeIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-} from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,

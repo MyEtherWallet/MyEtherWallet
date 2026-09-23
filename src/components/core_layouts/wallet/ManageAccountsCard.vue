@@ -9,7 +9,10 @@
       aria-hidden="true"
       class="absolute inset-0 w-full h-full object-cover"
     />
-    <div class="absolute inset-0 rounded-20 bg-black/25 backdrop-blur-[1px]" aria-hidden="true" />
+    <div
+      class="absolute inset-0 rounded-20 bg-black/25 backdrop-blur-[1px]"
+      aria-hidden="true"
+    />
 
     <!-- Header: balance / name / wallet • address + actions -->
     <div class="relative flex items-start gap-3">
@@ -21,17 +24,27 @@
             v-if="balanceLoading"
             class="inline-block w-16 h-3.5 bg-white/25 animate-pulse rounded align-middle"
           />
-          <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
+          <template v-else-if="balance"
+            >${{ formatFiat(balance.usdValue) }}</template
+          >
           <template v-else>$0.00</template>
         </p>
-        <p class="text-s-24 font-bold leading-[26px] truncate">{{ account.addressName }}</p>
+        <p class="text-s-24 font-bold leading-[26px] truncate">
+          {{ account.addressName }}
+        </p>
         <!-- Wallet name always shows; append the truncated address only for a
              custom label (a default label already IS the address). -->
         <p class="text-s-14 leading-p-140 flex items-center gap-1 min-w-0">
           <span class="truncate">{{ account.walletName }}</span>
-          <template v-if="account.addressName !== truncateAddress(account.address, 6, 4)">
+          <template
+            v-if="
+              account.addressName !== truncateAddress(account.address, 6, 4)
+            "
+          >
             <span>•</span>
-            <span class="flex-shrink-0">{{ truncateAddress(account.address, 6, 4) }}</span>
+            <span class="flex-shrink-0">{{
+              truncateAddress(account.address, 6, 4)
+            }}</span>
           </template>
         </p>
       </div>
@@ -41,15 +54,15 @@
           class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors"
           @click="onRefresh"
         >
-          <arrow-path-icon class="w-6 h-6" :class="{ 'animate-spin': spinning }" />
+          <AppIcon name="arrow-path" :class="{ 'animate-spin': spinning }" />
         </button>
         <button
           :aria-label="$t('multi_address.menu.copy')"
           class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors"
           @click="onCopy"
         >
-          <check-icon v-if="copied" class="w-6 h-6" />
-          <document-duplicate-icon v-else class="w-6 h-6" />
+          <AppIcon v-if="copied" name="check" />
+          <AppIcon v-else name="document-duplicate" />
         </button>
         <app-pop-up-menu
           placeholder="account menu"
@@ -58,8 +71,12 @@
           menu-radius-class="rounded-16"
         >
           <template #menu-button="{ toggleMenu }">
-            <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors" @click="toggleMenu">
-              <ellipsis-vertical-icon class="w-6 h-6" />
+            <button
+              data-test="menu-button"
+              class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors"
+              @click="toggleMenu"
+            >
+              <AppIcon name="ellipsis-vertical" variant="filled" />
             </button>
           </template>
           <template #menu-content="{ toggleMenu }">
@@ -90,8 +107,10 @@
       </template>
       <template v-else>
         <span class="flex items-center gap-1">
-          <span class="rounded-full size-4 flex items-center justify-center flex-shrink-0">
-            <eye-icon class="w-4 h-4" />
+          <span
+            class="rounded-full size-4 flex items-center justify-center flex-shrink-0"
+          >
+            <AppIcon name="eye" variant="filled" size="xxs" />
           </span>
           <span class="font-semibold">{{ $t('multi_address.watchonly') }}</span>
         </span>
@@ -103,13 +122,19 @@
         >
           <!-- Keep the label in flow (invisible) so the button width never
                changes; overlay a spinner centered while connecting. -->
-          <span class="font-semibold text-s-14 text-black" :class="{ 'opacity-0': connecting }">{{ $t('multi_address.connect_address') }}</span>
+          <span
+            class="font-semibold text-s-14 text-black"
+            :class="{ 'opacity-0': connecting }"
+            >{{ $t('multi_address.connect_address') }}</span
+          >
           <span
             v-if="connecting"
             class="absolute inset-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            <span class="size-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+            <span
+              class="size-4 rounded-full border-2 border-black/20 border-t-black animate-spin"
+            />
           </span>
         </button>
       </template>
@@ -119,13 +144,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import {
-  DocumentDuplicateIcon,
-  ArrowPathIcon,
-  CheckIcon,
-} from '@heroicons/vue/24/outline'
-import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
-import { EyeIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'

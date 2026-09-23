@@ -7,15 +7,18 @@
         class="size-10 rounded-full hoverNoBG flex items-center justify-center"
         @click="onBack"
       >
-        <chevron-left-icon class="w-5 h-5 text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </button>
     </div>
     <div
       class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 pt-4 text-center"
     >
-      <div
-        class="size-16 rounded-full bg-[#f5f5f5] overflow-hidden shrink-0"
-      >
+      <div class="size-16 rounded-full bg-[#f5f5f5] overflow-hidden shrink-0">
         <img
           v-if="info?.walletIcon"
           :src="info.walletIcon"
@@ -29,7 +32,11 @@
           {{ $t('multi_address.connect_address_modal.title') }}
         </p>
         <p class="text-s-14 text-[#575757] leading-[20px]">
-          {{ $t('multi_address.connect_address_modal.subtitle', { wallet: info?.walletName }) }}
+          {{
+            $t('multi_address.connect_address_modal.subtitle', {
+              wallet: info?.walletName,
+            })
+          }}
         </p>
       </div>
       <div class="w-full rounded-[24px] bg-[#f5f5f5] p-6">
@@ -46,8 +53,12 @@
       class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
       @click="onOpenWallet"
     >
-      {{ $t('multi_address.connect_address_modal.open_wallet', { wallet: info?.walletName }) }}
-      <arrow-top-right-on-square-icon class="w-5 h-5" />
+      {{
+        $t('multi_address.connect_address_modal.open_wallet', {
+          wallet: info?.walletName,
+        })
+      }}
+      <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" />
     </button>
     <!-- Retry the connect after the user selects the address in their extension
          (an auto-retry also fires on accountsChanged; this is the manual path). -->
@@ -64,10 +75,7 @@
 <script setup lang="ts">
 import { watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  ChevronLeftIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 

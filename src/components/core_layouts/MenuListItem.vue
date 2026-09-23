@@ -24,21 +24,29 @@
         v-else-if="listItem.iconID === ICON_IDS.PORTFOLIO"
         class="w-5 h-5"
       />
-      <bell-icon
+      <AppIcon
         v-else-if="listItem.iconID === ICON_IDS.NOTIFICATIONS"
-        class="w-5 h-5"
+        name="bell"
+        variant="filled"
+        size="s"
       />
-      <cog-icon
+      <AppIcon
         v-else-if="listItem.iconID === ICON_IDS.SETTINGS"
-        class="w-5 h-5"
+        name="cog"
+        variant="filled"
+        size="s"
       />
-      <wrench-screwdriver-icon
+      <AppIcon
         v-else-if="listItem.iconID === ICON_IDS.TOOLS"
-        class="w-4 h-4"
+        name="wrench-screwdriver"
+        variant="filled"
+        size="xxs"
       />
-      <book-open-icon
+      <AppIcon
         v-else-if="listItem.iconID === ICON_IDS.LEARN"
-        class="w-4 h-4"
+        name="book-open"
+        variant="filled"
+        size="xxs"
       />
       <icon-crypto
         v-else-if="listItem.iconID === ICON_IDS.CRYPTO"
@@ -54,10 +62,13 @@
       />
     </div>
     <p class="capitalize">{{ listItem.title }}</p>
-    <chevron-down-icon
+    <AppIcon
       v-if="isDropDown"
+      name="chevron-down"
+      variant="filled"
+      size="xxs"
       :class="[
-        'ml-auto w-4 h-4 transition-transform',
+        'ml-auto transition-transform',
         { 'rotate-180': isDropDownOpen },
       ]"
     />
@@ -74,13 +85,7 @@ import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
 import IconCrypto from '@/assets/icons/core_menu/icon-crypto.vue'
 import IconStocks from '@/assets/icons/core_menu/icon-stocks.vue'
 import IconPerps from '@/modules/perps/IconPerps.vue'
-import {
-  BellIcon,
-  CogIcon,
-  ChevronDownIcon,
-  WrenchScrewdriverIcon,
-  BookOpenIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useRouter } from 'vue-router'
 import { pageRouteName } from '@/router/routeHierarchy'
 
