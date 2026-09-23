@@ -19,7 +19,7 @@
             >
           </p>
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-auto mr-1" />
       </div>
     </button>
 
@@ -113,7 +113,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'

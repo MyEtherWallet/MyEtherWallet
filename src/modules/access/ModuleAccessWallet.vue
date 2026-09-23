@@ -23,7 +23,7 @@
             class="!w-10 !h-10 mr-auto mt-4"
             @click="accessStore.setCurrentView('default')"
           >
-            <arrow-right-icon class="w-5 h-5 rotate-180" />
+            <AppIcon name="arrow-right" size="s" class="rotate-180" />
           </app-btn-icon>
         </div>
         <div
@@ -87,7 +87,7 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowRightIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
