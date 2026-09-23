@@ -51,6 +51,90 @@
 }
 
 /**
+* TYPOGRAPHY
+*
+* Design library (MEW-2031). Source of truth: Figma "MEW Web App — Design
+* Library", page 📝 Typography, node 45:6165. Each class carries size,
+* line-height, letter-spacing and weight, so one class is the whole style.
+* A `font-*` / `leading-*` / `tracking-*` utility still overrides its slot.
+*/
+@theme {
+  --text-label-xs: 12px;
+  --text-label-xs--line-height: 18px;
+  --text-label-xs--letter-spacing: -0.02em;
+  --text-label-xs--font-weight: 600;
+
+  --text-label-sm: 14px;
+  --text-label-sm--line-height: 20px;
+  --text-label-sm--letter-spacing: -0.02em;
+  --text-label-sm--font-weight: 600;
+
+  --text-label-base: 16px;
+  --text-label-base--line-height: 22px;
+  --text-label-base--letter-spacing: -0.02em;
+  --text-label-base--font-weight: 600;
+
+  --text-text-xs: 12px;
+  --text-text-xs--line-height: 18px;
+  --text-text-xs--letter-spacing: 0em;
+  --text-text-xs--font-weight: 400;
+
+  --text-text-sm: 14px;
+  --text-text-sm--line-height: 20px;
+  --text-text-sm--letter-spacing: 0em;
+  --text-text-sm--font-weight: 400;
+
+  --text-text-base: 16px;
+  --text-text-base--line-height: 22px;
+  --text-text-base--letter-spacing: 0em;
+  --text-text-base--font-weight: 400;
+
+  --text-heading-base: 20px;
+  --text-heading-base--line-height: 22px;
+  --text-heading-base--letter-spacing: -0.02em;
+  --text-heading-base--font-weight: 700;
+
+  --text-heading-lg-subtle: 24px;
+  --text-heading-lg-subtle--line-height: 24px;
+  --text-heading-lg-subtle--letter-spacing: -0.02em;
+  --text-heading-lg-subtle--font-weight: 400;
+
+  --text-heading-lg: 24px;
+  --text-heading-lg--line-height: 26px;
+  --text-heading-lg--letter-spacing: -0.02em;
+  --text-heading-lg--font-weight: 700;
+
+  --text-heading-xl: 28px;
+  --text-heading-xl--line-height: 32px;
+  --text-heading-xl--letter-spacing: -0.03em;
+  --text-heading-xl--font-weight: 700;
+
+  --text-heading-2xl: 32px;
+  --text-heading-2xl--line-height: 36px;
+  --text-heading-2xl--letter-spacing: -0.03em;
+  --text-heading-2xl--font-weight: 700;
+
+  --text-heading-3xl: 40px;
+  --text-heading-3xl--line-height: 44px;
+  --text-heading-3xl--letter-spacing: -0.03em;
+  --text-heading-3xl--font-weight: 700;
+
+  --text-heading-4xl: 52px;
+  --text-heading-4xl--line-height: 56px;
+  --text-heading-4xl--letter-spacing: -0.04em;
+  --text-heading-4xl--font-weight: 700;
+}
+
+/* A utility, not a theme token: font-size tokens cannot carry text-transform. */
+@utility text-overline {
+  font-size: 11px;
+  line-height: var(--tw-leading, 15px);
+  letter-spacing: var(--tw-tracking, 0.6px);
+  font-weight: var(--tw-font-weight, 400);
+  text-transform: uppercase;
+}
+
+/**
  * VARIABLES
  */
 :root {
