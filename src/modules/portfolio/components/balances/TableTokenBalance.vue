@@ -248,7 +248,7 @@
             </th>
             <!-- Actions -->
             <th
-              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
+              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-40 xl:w-[180px] 2xl:w-[200px]"
             ></th>
           </tr>
         </thead>
@@ -401,7 +401,7 @@
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                     >
                       <button
                         v-if="getWatchlistId(token)"
@@ -488,7 +488,7 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
+                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-40 ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
@@ -590,7 +590,7 @@
         <div
           v-for="n in Number(activeShownItems.value)"
           :key="n"
-          class="flex w-full h-[56px] py-2"
+          class="flex w-full h-14 py-2"
         >
           <div
             class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
@@ -1107,7 +1107,7 @@ const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
   usePaginate<DisplayToken>(tokens, shownItems)
 
 const getTableHeight = computed(() =>
-  shownItems.value === 5 ? 'min-h-[320px]' : 'min-h-[596px]',
+  shownItems.value === 5 ? 'min-h-80' : 'min-h-[596px]',
 )
 
 const getCurrentViewableItemsIndex = computed(() =>

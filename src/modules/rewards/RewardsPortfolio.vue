@@ -39,7 +39,7 @@
           :class="
             isOpenSideMenu
               ? 'xl:hidden 2xl:block 2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block xl:w-[80px] xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
+              : 'xl:block xl:w-20 xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
           "
         />
       </div>
@@ -89,7 +89,7 @@
         alt=""
         width="650"
         height="292"
-        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
+        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-5 mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
         :class="[isOpenSideMenu ? '' : 'xl:hidden']"
       />
 

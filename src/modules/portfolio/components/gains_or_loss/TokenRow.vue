@@ -35,7 +35,7 @@
             {{ formatFiat(token.price).display }}
           </p>
           <div
-            class="text-s-11 font-normal flex items-center gap-[2px]"
+            class="text-s-11 font-normal flex items-center gap-0.5"
             :class="{
               'text-error': token.percentChange < 0,
               'text-success': token.percentChange >= 0,

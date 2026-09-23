@@ -29,7 +29,7 @@
       </app-select>
     </template>
   </app-btn-group>
-  <div class="h-[200px] sm:h-[320px]">
+  <div class="h-[200px] sm:h-80">
     <chart-price
       v-if="!isLoadingFetch && !notAvailable"
       :labels="labels"

@@ -49,7 +49,7 @@
                     :key="option.value"
                     :class="[
                       option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
+                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"

@@ -1,7 +1,7 @@
 <template>
   <div
     ref="wrapperEl"
-    class="relative min-w-0 w-[240px]"
+    class="relative min-w-0 w-60"
     :class="isOpen ? 'z-[2]' : ''"
     @keydown="trapFocus"
   >

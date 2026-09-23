@@ -7,7 +7,7 @@
     <template #content>
       <div class="pl-6 sm:pl-8 pb-10 pt-2 welcome-gradient">
         <div class="flex flex-row mb-4">
-          <div class="xs:min-w-[320px] max-w-[400px]">
+          <div class="xs:min-w-80 max-w-[400px]">
             <p class="text-s-16 max-w-[600px] text-info">
               {{ $t('portfolio.welcome.description') }}
             </p>

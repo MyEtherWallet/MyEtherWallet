@@ -1,6 +1,6 @@
 <template>
   <button
-    class="w-[160px] h-10 bg-white border border-[#e6e6e6] rounded-[20px] flex items-center gap-2.5 pl-2 pr-2.5"
+    class="w-40 h-10 bg-white border border-[#e6e6e6] rounded-[20px] flex items-center gap-2.5 pl-2 pr-2.5"
     :class="hover ? 'hoverNoBG' : 'cursor-default'"
   >
     <!-- Connected: active address for the current network -->
@@ -24,7 +24,7 @@
       <span class="flex flex-col items-start flex-1 min-w-0 gap-0.5">
         <span
           v-if="isLoadingBalances"
-          class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded my-[2px]"
+          class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded my-0.5"
         />
         <span
           v-else

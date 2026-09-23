@@ -48,7 +48,7 @@
                   class="flex flex-col items-start gap-3"
                   :class="{ 'pb-5': hasStep1Cta }"
                 >
-                  <p :class="stepText" class="h-6 mb-[14px]">
+                  <p :class="stepText" class="h-6 mb-3.5">
                     {{
                       $t('rwaRewards.modal_step1', {
                         amount: qualificationAmount,

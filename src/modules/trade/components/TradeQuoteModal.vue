@@ -37,7 +37,7 @@
                     ? { address: fromToken.address, network: chain.name }
                     : undefined
                 "
-                class="!text-s-17 lg:!text-s-20 !font-bold ml-[2px]"
+                class="!text-s-17 lg:!text-s-20 !font-bold ml-0.5"
               />
             </div>
             <span> {{ $t('trade.quote_modal.you_will_get') }}</span>
@@ -52,8 +52,8 @@
                     ? { address: toToken.address, network: chain.name }
                     : undefined
                 "
-                width="w-8 lg:w-[64px]"
-                height="h-8 lg:h-[64px]"
+                width="w-8 lg:w-16"
+                height="h-8 lg:h-16"
               />
             </div>
             <div class="ml-5 min-w-0">

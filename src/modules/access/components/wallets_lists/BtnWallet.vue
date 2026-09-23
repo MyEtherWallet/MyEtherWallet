@@ -11,7 +11,7 @@
         :alt="$t('access_wallet.official_badge_alt')"
         height="20"
         width="68"
-        class="w-[56px] object-contain h-5"
+        class="w-14 object-contain h-5"
       />
       <h5
         v-if="isDetected || isRecent"

@@ -180,7 +180,7 @@
                     <button
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      class="px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       :disabled="
                         pct === 100 &&
                         fromTokenSelected?.address === MAIN_TOKEN_CONTRACT

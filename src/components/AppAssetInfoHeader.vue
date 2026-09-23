@@ -33,8 +33,8 @@
           :url="iconUrl"
           :symbol="symbol"
           :is-stock="isStock"
-          width="w-10 xs:w-[56px]"
-          height="h-10 xs:h-[56px]"
+          width="w-10 xs:w-14"
+          height="h-10 xs:h-14"
         />
         <div
           class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"

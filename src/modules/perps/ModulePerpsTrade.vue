@@ -376,7 +376,7 @@
             <button
               v-for="pct in [-5, -2.5, 0, 2.5, 5]"
               :key="pct"
-              class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+              class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
             >
               {{
@@ -510,7 +510,7 @@
               <button
                 v-for="pct in [10, 25, 50, 75, 100]"
                 :key="pct"
-                class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                 @click="setPercentage(pct)"
               >
                 {{ pct + '%' }}
@@ -696,7 +696,7 @@
                 v-for="pct in [5, 25, 50, 75, 100]"
                 :key="pct"
                 :disabled="isClosePillDisabled(pct)"
-                class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                 :class="
                   isClosePillDisabled(pct)
                     ? 'opacity-40 cursor-not-allowed'

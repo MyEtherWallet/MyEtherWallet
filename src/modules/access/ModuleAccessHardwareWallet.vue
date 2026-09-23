@@ -15,7 +15,7 @@
                 :activeStep="activeStep"
               />
               <div
-                class="flex flex-col items-center justify-center mt-[40px] gap-3"
+                class="flex flex-col items-center justify-center mt-10 gap-3"
               >
                 <app-base-button
                   v-if="currentView !== 'ledger' || usbSupported"
