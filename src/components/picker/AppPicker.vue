@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import {
   PICKER_SIZE_CLASS,
@@ -95,7 +95,7 @@ const rootClass = computed(() => [
       class="flex size-4 shrink-0 items-center justify-center text-info"
       data-testid="picker-chevron"
     >
-      <ChevronRightIcon class="size-full" />
+      <AppIcon name="chevron-right" size="xxs" />
     </span>
   </button>
 </template>

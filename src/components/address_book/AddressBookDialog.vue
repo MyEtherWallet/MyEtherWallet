@@ -12,7 +12,7 @@
             class="-ml-3 mr-3"
             @click="closeAddEdit"
           >
-            <ArrowLeftIcon class="w-5 h-5" />
+            <AppIcon name="arrow-left" variant="filled" size="s" />
           </app-btn-icon>
           <h1 class="text-s-28 font-bold">
             {{ dialogTitle }}
@@ -47,7 +47,7 @@
                   @click="showAddAddress = true"
                 >
                   {{ $t('common.add') }}
-</app-base-button>
+                </app-base-button>
               </div>
             </div>
 
@@ -72,7 +72,9 @@
                 {{
                   selectedListItem.id === 'recent'
                     ? $t('address_book.recent_transactions')
-                    : $t('address_book.chain_addresses', { chain: network?.nameLong || selectedChain?.nameLong })
+                    : $t('address_book.chain_addresses', {
+                        chain: network?.nameLong || selectedChain?.nameLong,
+                      })
                 }}
               </p>
               <address-book-item
@@ -89,7 +91,11 @@
                 v-if="otherChainsAdrs.length"
                 class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
-                {{ $t('address_book.non_compatible', { chain: network?.nameLong || selectedChain?.nameLong }) }}
+                {{
+                  $t('address_book.non_compatible', {
+                    chain: network?.nameLong || selectedChain?.nameLong,
+                  })
+                }}
               </p>
               <address-book-item
                 v-for="adr in otherChainsAdrs"
@@ -154,7 +160,7 @@ import AppDialog from '@components/AppDialog.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import type { Chain } from '@/mew_api/types'
 

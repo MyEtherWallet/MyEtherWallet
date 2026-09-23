@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, useId, nextTick, watch, onBeforeUnmount } from 'vue'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   PLACEMENT_FLEX,
   ARROW_BEFORE,
@@ -208,7 +208,7 @@ onBeforeUnmount(close)
         class="inline-flex rounded-full text-info focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         data-testid="tooltip-default-trigger"
       >
-        <InformationCircleIcon class="size-6 p-1 cursor-pointer" />
+        <AppIcon name="information-circle" class="p-1 cursor-pointer" />
       </span>
     </slot>
   </span>

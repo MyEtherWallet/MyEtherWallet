@@ -58,9 +58,11 @@
                 </div>
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
-              <check-icon
+              <AppIcon
                 v-if="chain.name === selectedChain?.name"
-                class="w-6 h-6 text-[#2F80ED]"
+                name="check"
+                variant="filled"
+                class="text-[#2F80ED]"
               />
             </div>
           </button>
@@ -133,7 +135,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { CheckIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
