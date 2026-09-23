@@ -14,7 +14,7 @@
           height="h-8"
           width="w-8"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" variant="filled" size="xxs" />
         </app-btn-icon>
 
         <span class="px-2 text-s-12 text-info font-medium"
@@ -27,7 +27,7 @@
           height="h-8"
           width="w-8"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" variant="filled" size="xxs" />
         </app-btn-icon>
       </div>
     </div>
@@ -84,7 +84,11 @@
         class="font-bold text-s-14 transition-colors duration-300 hover:text-primary flex items-center px-1"
       >
         {{ buttonText }}
-        <arrow-long-up-icon class="rotate-90 w-4 h-4 ml-1.5"
+        <AppIcon
+          name="arrow-long-up"
+          variant="filled"
+          size="xxs"
+          class="rotate-90 ml-1.5"
       /></router-link>
     </div>
   </div>
@@ -99,11 +103,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import { usePaginate } from '@/composables/usePaginate'
 import { ROUTES_MAIN } from '@/router/routeNames'
