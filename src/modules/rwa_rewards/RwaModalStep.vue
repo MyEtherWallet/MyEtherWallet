@@ -9,11 +9,7 @@
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full box-border"
         :class="circleClass"
       >
-        <check-icon
-          v-if="variant === 'done' || variant === 'doneGrey'"
-          class="w-3.5 h-3.5"
-          :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'"
-        />
+        <AppIcon name="check" variant="filled" size="xxs" v-if="variant === 'done' || variant === 'doneGrey'" :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'" />
         <x-mark-icon
           v-else-if="variant === 'failed'"
           class="w-3.5 h-3.5 text-white"
@@ -41,8 +37,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
-
+import { XMarkIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     variant: 'done' | 'doneGrey' | 'current' | 'plain' | 'failed'
