@@ -28,11 +28,8 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <ArrowLongUpIcon
-                    v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4"
-                  />
-                  <ArrowLongDownIcon v-else class="w-4 h-4" />
+                  <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if="activeSortDirection === SortDirection.ASC" />
+                  <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-else />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -63,14 +60,8 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
                     >
-                      <ArrowLongUpIcon
-                        v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-text-brand"
-                      />
-                      <ArrowLongDownIcon
-                        v-else
-                        class="w-5 h-5 text-text-brand"
-                      />
+                      <AppIcon name="arrow-long-up" variant="filled" size="s" v-if="activeSortDirection === SortDirection.ASC" class="text-text-brand" />
+                      <AppIcon name="arrow-long-down" variant="filled" size="s" v-else class="text-text-brand" />
                     </div>
                   </button>
                 </div>
@@ -126,7 +117,6 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
@@ -139,6 +129,7 @@ const { currencySymbol } = useCurrency()
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useRouter } from 'vue-router'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,

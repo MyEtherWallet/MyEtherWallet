@@ -46,7 +46,7 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-text-brand" />
+              <AppIcon name="qr-code" size="xxs" class="text-text-brand xl:size-5" />
               <p>
                 {{ $t('portfolio.no_balance.deposit') }}
                 {{ selectedChain?.currencyName }}
@@ -62,7 +62,6 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -73,6 +72,7 @@ import { ref, computed } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { isXLAndUp } = useAppBreakpoints()
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
