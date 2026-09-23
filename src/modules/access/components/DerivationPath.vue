@@ -192,6 +192,10 @@ watch(
 )
 
 const setPaths = () => {
+  // No chain selected yet (the dialog's chain is null until it opens): nothing
+  // to reconcile against, and falling through would overwrite the stored
+  // derivation with the Ethereum default.
+  if (!selectedChain.value) return
   if (selectedDerivation.value) {
     selectedPath.value = selectedDerivation.value
   }
