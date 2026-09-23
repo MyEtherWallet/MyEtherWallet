@@ -115,7 +115,13 @@ const SAMPLE: IconName = 'wallet'
     <section class="flex flex-col gap-3">
       <h2 class="text-s-16 font-semibold">
         All icons
-        <span class="font-normal text-info">({{ filtered.length }})</span>
+        <span
+          role="status"
+          :aria-label="`${filtered.length} icons`"
+          class="font-normal text-info"
+        >
+          ({{ filtered.length }})
+        </span>
       </h2>
       <div
         class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 text-t-default"
@@ -134,7 +140,7 @@ const SAMPLE: IconName = 'wallet'
           </span>
         </div>
       </div>
-      <p v-if="!filtered.length" class="text-s-14 text-info">
+      <p v-if="!filtered.length" role="status" class="text-s-14 text-info">
         No icon matches “{{ query }}”.
       </p>
     </section>
