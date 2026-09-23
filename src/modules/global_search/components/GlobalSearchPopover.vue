@@ -13,7 +13,7 @@
         v-if="isCompact"
         class="flex items-center gap-2 px-4 py-3 border-b border-border-default"
       >
-        <magnifying-glass-icon class="w-4 h-4 text-text-subtle" />
+        <AppIcon name="magnifying-glass" size="xxs" class="text-text-subtle" />
         <input
           ref="compactInputEl"
           v-model="query"
@@ -59,7 +59,7 @@
           v-if="showEmptyState"
           class="flex flex-col items-center justify-center gap-1 px-4 text-center flex-1"
         >
-          <magnifying-glass-icon class="w-8 h-8 text-text-subtle mb-1" />
+          <AppIcon name="magnifying-glass" size="l" class="text-text-subtle mb-1" />
           <p class="text-s-14 font-semibold">
             {{ $t('search.no_results_title') }}
           </p>
@@ -75,12 +75,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { analytics, GlobalSearchEvent } from '@/analytics'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchSection from './GlobalSearchSection.vue'
 import RecentlyViewedChips from './RecentlyViewedChips.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(defineProps<{ isCompact?: boolean }>(), {
   isCompact: false,
 })
