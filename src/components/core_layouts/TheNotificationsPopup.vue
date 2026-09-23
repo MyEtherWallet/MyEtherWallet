@@ -1,13 +1,13 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon :label="$t('menu.open-notifications')" width="w-[40px]" height="h-[40px]" @click="togglePopup">
+    <app-btn-icon :label="$t('menu.open-notifications')" width="w-10" height="h-10" @click="togglePopup">
       <div class="relative">
         <bell-icon class="w-6 h-6" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
-          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-background-brand rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
+          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-background-brand rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-1"
         >
           {{ unseenNotificationsCount }}
         </div>

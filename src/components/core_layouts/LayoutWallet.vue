@@ -6,7 +6,7 @@
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
           : '!border-border-default',
         'border-white',
-        '  w-[60px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        '  w-[60px] xs:w-20 bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
       ]"
     >
       <div>
@@ -37,7 +37,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.trade') }}
@@ -59,7 +59,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
@@ -81,7 +81,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.perps') }}
@@ -103,7 +103,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.bridge') }}
@@ -123,7 +123,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -145,7 +145,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -167,7 +167,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -194,7 +194,7 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"

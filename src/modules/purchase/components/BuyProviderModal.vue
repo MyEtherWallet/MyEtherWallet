@@ -49,7 +49,7 @@
             >
               <span
                 v-if="index === 0"
-                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-background-success text-white text-label-sm px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
+                class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-background-success text-white text-label-sm px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
               >
                 {{ t('purchase.select_provider.best_value') }}
               </span>
@@ -89,7 +89,7 @@
                       <img
                         :src="method.src"
                         :alt="method.alt"
-                        class="max-w-[19px] max-h-[14px] object-contain"
+                        class="max-w-[19px] max-h-3.5 object-contain"
                       />
                     </div>
                   </div>

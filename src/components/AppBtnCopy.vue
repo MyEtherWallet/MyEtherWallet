@@ -53,11 +53,11 @@ const props = defineProps({
   },
   height: {
     type: String,
-    default: 'h-[32px]',
+    default: 'h-8',
   },
   width: {
     type: String,
-    default: 'w-[32px]',
+    default: 'w-8',
   },
   iconClass: {
     type: String,

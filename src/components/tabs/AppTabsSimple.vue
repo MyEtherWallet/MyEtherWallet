@@ -17,7 +17,7 @@
             ' border-b-2  border-b-border-brand text-text-brand ':
               activeTabIndex === index,
           },
-          'p-2 rounded-t-12 bg-transparent text-s-15 font-medium hoverNoBG min-w-[90px] -mb-[1px]',
+          'p-2 rounded-t-12 bg-transparent text-s-15 font-medium hoverNoBG min-w-[90px] -mb-px',
         ]"
         role="tab"
         :aria-selected="

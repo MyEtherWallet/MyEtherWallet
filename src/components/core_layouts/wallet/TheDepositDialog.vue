@@ -26,7 +26,7 @@
             })
           }}
         </h1>
-        <p class="text-s-15 text-text-subtle leading-relaxed max-w-[320px]">
+        <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
           {{
             $t('common.deposit_description', {
               chain: selectedChain?.nameLong || 'Ethereum',

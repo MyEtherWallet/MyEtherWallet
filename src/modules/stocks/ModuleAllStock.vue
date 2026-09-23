@@ -305,7 +305,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <ul>
                           <li

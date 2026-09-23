@@ -43,7 +43,7 @@
                 />
                 <app-base-button
                   size="medium"
-                  class="!px-5 !min-h-[40px] !text-s-15"
+                  class="!px-5 !min-h-10 !text-s-15"
                   @click="showAddAddress = true"
                 >
                   {{ $t('common.add') }}

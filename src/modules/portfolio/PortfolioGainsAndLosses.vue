@@ -2,7 +2,7 @@
   <div class="w-full" v-if="isWalletConnected">
     <div class="flex flex-wrap items-center w-full justify-between mb-1 px-1">
       <h2
-        class="text-s-14 xs:text-s-18 font-bold max-w-[160px] xs:max-w-none pl-2"
+        class="text-s-14 xs:text-s-18 font-bold max-w-40 xs:max-w-none pl-2"
       >
         {{ title }}
       </h2>

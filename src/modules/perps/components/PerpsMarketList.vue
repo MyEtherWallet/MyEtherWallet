@@ -15,7 +15,7 @@
           bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('perps.market-list.search-placeholder')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
@@ -227,7 +227,7 @@
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
@@ -329,7 +329,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <button
                           class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
@@ -475,7 +475,7 @@
                       </template>
                       <template #menu-content="{ toggleMenu }">
                         <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                         >
                           <ul>
                             <li
