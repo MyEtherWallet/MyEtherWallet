@@ -6,12 +6,14 @@
     :height="height"
     :width="width"
   >
-    <ClipboardDocumentIcon :class="iconClass" />
+    <AppIcon name="clipboard-document" :size="size" />
   </app-btn-icon>
 </template>
 <script setup lang="ts">
+import { type PropType } from 'vue'
 import AppBtnIcon from './AppBtnIcon.vue'
-import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import type { IconSize } from '@/components/icon/icons'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
@@ -59,9 +61,9 @@ const props = defineProps({
     type: String,
     default: 'w-[32px]',
   },
-  iconClass: {
-    type: String,
-    default: 'w-5 h-5',
+  size: {
+    type: String as PropType<IconSize>,
+    default: 's',
   },
 })
 const emit = defineEmits<{

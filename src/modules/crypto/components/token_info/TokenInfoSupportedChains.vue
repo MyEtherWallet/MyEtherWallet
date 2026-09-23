@@ -5,7 +5,9 @@
       v-if="!isLoading && supportedChains?.length"
       :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
     >
-      <h3 class="text-s-20 xs:text-s-24 font-bold mb-2">{{ $t('crypto.supported_chains') }}</h3>
+      <h3 class="text-s-20 xs:text-s-24 font-bold mb-2">
+        {{ $t('crypto.supported_chains') }}
+      </h3>
       <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
         <div
           v-for="i in supportedChains"
@@ -55,7 +57,7 @@
                   :copy-value="i.contract"
                   width="w-6"
                   height="h-6"
-                  icon-class="w-3.5 h-3.5"
+                  size="xxs"
                   class="hoverNoBG"
                 />
               </div>

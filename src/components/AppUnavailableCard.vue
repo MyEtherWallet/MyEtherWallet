@@ -5,9 +5,11 @@
   >
     <div class="flex justify-center">
       <slot name="icon">
-        <exclamation-circle-icon
-          :class="['w-12 h-12', accentClass]"
-          aria-hidden="true"
+        <AppIcon
+          name="exclamation-circle"
+          variant="filled"
+          size="xl"
+          :class="accentClass"
         />
       </slot>
     </div>
@@ -27,7 +29,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = withDefaults(
   defineProps<{

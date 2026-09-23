@@ -4,12 +4,12 @@
     :is-white="props.isWhite"
     :label="label ?? $t('common.close')"
   >
-    <XMarkIcon />
+    <AppIcon name="x-mark" variant="filled" />
   </app-btn-icon>
 </template>
 <script setup lang="ts">
 import AppBtnIcon from './AppBtnIcon.vue'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 /**
  * @description A close icon button component.
