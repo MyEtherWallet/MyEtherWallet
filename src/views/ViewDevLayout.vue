@@ -14,7 +14,10 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
   },
   {
     title: 'Components',
-    items: [{ name: 'Button', to: '/dev/button' }],
+    items: [
+      { name: 'Button', to: '/dev/button' },
+      { name: 'Icon', to: '/dev/icons' },
+    ],
   },
 ]
 </script>
