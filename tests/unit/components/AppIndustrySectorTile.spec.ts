@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import { ClockIcon } from '@heroicons/vue/24/outline'
 import AppIndustrySectorTile from '@/components/AppIndustrySectorTile.vue'
 
 describe('AppIndustrySectorTile', () => {
@@ -31,8 +30,8 @@ describe('AppIndustrySectorTile', () => {
   })
 
   it('renders the icon inside the bubble when provided', () => {
-    const w = mountIt({ icon: ClockIcon })
-    expect(w.findComponent(ClockIcon).exists()).toBe(true)
+    const w = mountIt({ icon: 'clock' })
+    expect(w.find('svg').exists()).toBe(true)
   })
 
   it('renders as a RouterLink using `to`', () => {

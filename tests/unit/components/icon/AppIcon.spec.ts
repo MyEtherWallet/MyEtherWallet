@@ -68,7 +68,7 @@ describe('AppIcon', () => {
   })
 
   it('registers the full icon inventory, each with at least one variant', () => {
-    expect(ICON_NAMES).toHaveLength(178)
+    expect(ICON_NAMES).toHaveLength(179)
     for (const name of ICON_NAMES) {
       const entry = icons[name]
       expect(entry.stroke ?? entry.filled).toBeTruthy()
