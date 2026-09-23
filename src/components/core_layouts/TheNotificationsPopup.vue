@@ -3,7 +3,7 @@
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
     <app-btn-icon :label="$t('menu.open-notifications')" width="w-10" height="h-10" @click="togglePopup">
       <div class="relative">
-        <bell-icon class="w-6 h-6" />
+        <AppIcon name="bell" variant="filled" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
@@ -94,7 +94,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, nextTick, onMounted } from 'vue'
 import { analytics, NotificationEvent } from '@/analytics'
-import { BellIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { storeToRefs } from 'pinia'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'

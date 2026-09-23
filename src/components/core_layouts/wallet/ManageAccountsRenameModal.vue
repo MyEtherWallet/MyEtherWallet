@@ -34,7 +34,7 @@
             data-test="rename-modal-error"
             class="flex items-center gap-1.5 px-1"
           >
-            <exclamation-circle-icon class="w-4 h-4 shrink-0 text-text-error" />
+            <AppIcon name="exclamation-circle" variant="filled" size="xxs" class="shrink-0 text-text-error" />
             <p class="text-s-12 text-text-error leading-[18px]">
               {{ $t('multi_address.rename.duplicate') }}
             </p>
@@ -60,9 +60,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
 import AppDialog from '@/components/AppDialog.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const props = defineProps<{
   currentName?: string

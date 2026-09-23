@@ -9,7 +9,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.rename') }}
       </span>
-      <pencil-square-icon class="w-4 h-4 text-black" />
+      <AppIcon name="pencil-square" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <button
@@ -21,7 +21,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.copy') }}
       </span>
-      <clipboard-document-icon class="w-4 h-4 text-black" />
+      <AppIcon name="clipboard-document" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <button
@@ -33,7 +33,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.refresh') }}
       </span>
-      <arrow-path-icon class="w-4 h-4 text-black" />
+      <AppIcon name="arrow-path" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <div class="h-px w-full bg-background-default-hover" />
@@ -47,7 +47,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.paper_wallet') }}
       </span>
-      <document-icon class="w-4 h-4 text-black" />
+      <AppIcon name="document" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <button
@@ -59,7 +59,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.explorer') }}
       </span>
-      <arrow-top-right-on-square-icon class="w-4 h-4 text-black" />
+      <AppIcon name="arrow-top-right-on-square" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <div class="h-px w-full bg-background-default-hover" />
@@ -74,7 +74,7 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.disconnect') }}
       </span>
-      <link-slash-icon class="w-4 h-4 text-black" />
+      <AppIcon name="link-slash" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <button
@@ -88,22 +88,13 @@
       >
         {{ $t('multi_address.menu.remove') }}
       </span>
-      <trash-icon class="w-4 h-4 text-text-error" />
+      <AppIcon name="trash" variant="filled" size="xxs" class="text-text-error" />
     </button>
   </div>
 </template>
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
-import {
-  TrashIcon,
-  ClipboardDocumentIcon,
-  ArrowPathIcon,
-  DocumentIcon,
-  ArrowTopRightOnSquareIcon,
-  PencilSquareIcon,
-  LinkSlashIcon,
-} from '@heroicons/vue/24/solid'
-
 type MenuAction =
   'rename' | 'copy' | 'refresh' | 'paper' | 'explorer' | 'disconnect' | 'remove'
 

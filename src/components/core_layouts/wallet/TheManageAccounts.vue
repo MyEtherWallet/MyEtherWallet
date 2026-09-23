@@ -88,9 +88,7 @@
                         {{ chainsStore.selectedChain?.nameLong }}
                       </span>
                     </div>
-                    <chevron-right-icon
-                      class="w-6 h-6 text-black flex-shrink-0"
-                    />
+                    <AppIcon name="chevron-right" variant="filled" class="text-black flex-shrink-0" />
                   </button>
                   <manage-accounts-card
                     v-if="activeAccount"
@@ -156,10 +154,7 @@
                           }}
                           ({{ group.accounts.length }})
                         </span>
-                        <chevron-down-icon
-                          class="w-5 h-5 text-text-subtle flex-shrink-0 transition-transform duration-200"
-                          :class="{ 'rotate-180': !collapsed[group.type] }"
-                        />
+                        <AppIcon name="chevron-down" variant="filled" size="s" class="text-text-subtle flex-shrink-0 transition-transform duration-200" :class="{ 'rotate-180': !collapsed[group.type] }" />
                       </button>
                       <expand-transition>
                         <div
@@ -343,7 +338,6 @@ import {
 import { onClickOutside, useWindowSize, useIntervalFn } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
@@ -375,6 +369,7 @@ import {
 } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
 
 const { t } = useI18n()

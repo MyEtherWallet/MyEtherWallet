@@ -39,11 +39,7 @@
           >
             {{ accountName }}
           </span>
-          <eye-icon
-            v-if="isWatchOnly"
-            data-test="pill-watch-only"
-            class="w-3 h-3 text-text-subtle flex-shrink-0"
-          />
+          <AppIcon name="eye" variant="filled" size="xxs" v-if="isWatchOnly" data-test="pill-watch-only" class="text-text-subtle flex-shrink-0" />
           <account-connected-dot v-else data-test="pill-connected" />
         </span>
       </span>
@@ -66,22 +62,21 @@
         {{ $t('multi_address.no_address_pill') }}
       </span>
     </template>
-    <chevron-down-icon class="w-5 h-5 text-black flex-shrink-0" />
+    <AppIcon name="chevron-down" variant="filled" size="s" class="text-black flex-shrink-0" />
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
-import { EyeIcon } from '@heroicons/vue/16/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { truncateAddress } from '@/utils/filters'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 withDefaults(defineProps<{ hover?: boolean }>(), { hover: true })
 
 const walletStore = useWalletStore()

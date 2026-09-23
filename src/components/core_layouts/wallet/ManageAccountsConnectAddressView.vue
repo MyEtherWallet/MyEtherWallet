@@ -7,7 +7,7 @@
         class="size-10 rounded-full hoverNoBG flex items-center justify-center"
         @click="onBack"
       >
-        <chevron-left-icon class="w-5 h-5 text-black" />
+        <AppIcon name="chevron-left" variant="filled" size="s" class="text-black" />
       </button>
     </div>
     <div
@@ -55,7 +55,7 @@
           wallet: info?.walletName,
         })
       }}
-      <arrow-top-right-on-square-icon class="w-5 h-5" />
+      <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" />
     </button>
     <!-- Retry the connect after the user selects the address in their extension
          (an auto-retry also fires on accountsChanged; this is the manual path). -->
@@ -72,13 +72,10 @@
 <script setup lang="ts">
 import { watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  ChevronLeftIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/solid'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const emit = defineEmits<{ back: [] }>()
 
 const accessStore = useAccessStore()
