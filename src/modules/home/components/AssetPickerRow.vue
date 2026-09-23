@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import type { AssetPickerItem } from '@/modules/home/composables/useAssetPicker'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{ item: AssetPickerItem }>()
 
 const watchlistStore = useWatchlistStore()
@@ -61,8 +60,8 @@ const toggle = () => {
       class="shrink-0"
       @click="toggle"
     >
-      <StarSolidIcon v-if="isListed" class="size-6 text-text-brand" />
-      <StarOutlineIcon v-else class="size-6 text-text-placeholder" />
+      <AppIcon name="star" variant="filled" v-if="isListed" class="text-text-brand" />
+      <AppIcon name="star" v-else class="text-text-placeholder" />
     </button>
   </div>
 </template>

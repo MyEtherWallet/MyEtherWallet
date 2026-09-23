@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
@@ -15,6 +14,7 @@ import crypto1 from '@/assets/images/watchlist/market-crypto-1.png'
 import crypto2 from '@/assets/images/watchlist/market-crypto-2.png'
 import crypto3 from '@/assets/images/watchlist/market-crypto-3.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 // Decorative overlapping logo clusters per market (exported from Figma).
@@ -104,7 +104,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <ChevronRightIcon class="size-5" />
+          <AppIcon name="chevron-right" variant="filled" size="s" />
         </span>
       </AppBaseButton>
     </div>

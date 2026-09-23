@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  PlusIcon,
-  CheckIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/20/solid'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -19,6 +12,7 @@ import type { RecommendedAsset } from './watchlistOnboarding'
 import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
 import { WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 // Stepped-conveyor loader: 7 asset logos sit in fixed slots (biggest in the
@@ -229,7 +223,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             data-test="assets-empty"
             class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
           >
-            <ExclamationCircleIcon class="size-6 text-text-subtle" />
+            <AppIcon name="exclamation-circle" class="text-text-subtle" />
             <p
               class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
             >
@@ -280,11 +274,8 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                   "
                   aria-hidden="true"
                 >
-                  <CheckIcon
-                    v-if="selected.includes(asset.id)"
-                    class="size-3.5"
-                  />
-                  <PlusIcon v-else class="size-3.5" />
+                  <AppIcon name="check" variant="filled" size="xxs" v-if="selected.includes(asset.id)" />
+                  <AppIcon name="plus" variant="filled" size="xxs" v-else />
                 </span>
               </span>
               <AppTokenSymbol
@@ -311,7 +302,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           @click="showAll = true"
         >
           {{ t('search.show_more') }}
-          <ChevronDownIcon class="size-4" />
+          <AppIcon name="chevron-down" variant="filled" size="xxs" />
         </button>
         <span
           class="h-px flex-1 bg-background-default-hover"
@@ -379,7 +370,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         >
           <span class="flex items-center gap-2">
             {{ t('homePage.hero.watchlist.onboarding.continue') }}
-            <ChevronRightIcon class="size-5" />
+            <AppIcon name="chevron-right" variant="filled" size="s" />
           </span>
         </AppBaseButton>
       </div>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import stockSpot from '@/assets/images/watchlist/stock-spot.png'
 import stockIbm from '@/assets/images/watchlist/stock-ibm.png'
 import stockNke from '@/assets/images/watchlist/stock-nke.png'
 import stockLly from '@/assets/images/watchlist/stock-lly.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineEmits<{
@@ -80,7 +80,7 @@ defineEmits<{
       class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
     >
       {{ t('homePage.hero.watchlist.begin') }}
-      <ChevronRightIcon class="size-[22px]" />
+      <AppIcon name="chevron-right" variant="filled" />
     </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
