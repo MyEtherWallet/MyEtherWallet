@@ -4,7 +4,7 @@
 // Lets us eyeball the Size × Align × Inverted matrix, the icon slots and the
 // loading state
 // against Figma.
-import { WalletIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import type {
   ContentGroupAlign,
@@ -57,13 +57,19 @@ const combos = SIZES.flatMap(size =>
       <div class="flex gap-8">
         <div class="border border-grey-10 rounded-12 p-4 bg-white">
           <AppContentGroup title="My Wallet" description="Verified account">
-            <template #title-icon><WalletIcon /></template>
-            <template #description-icon><CheckBadgeIcon /></template>
+            <template #title-icon
+              ><AppIcon name="wallet" variant="filled"
+            /></template>
+            <template #description-icon
+              ><AppIcon name="check-badge" variant="filled"
+            /></template>
           </AppContentGroup>
         </div>
         <div class="border border-grey-10 rounded-12 p-4 bg-white">
           <AppContentGroup size="l" title="My Wallet" description="Verified">
-            <template #title-icon><WalletIcon /></template>
+            <template #title-icon
+              ><AppIcon name="wallet" variant="filled"
+            /></template>
           </AppContentGroup>
         </div>
       </div>

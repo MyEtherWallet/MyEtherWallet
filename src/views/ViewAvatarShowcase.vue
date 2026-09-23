@@ -2,7 +2,7 @@
 // Gallery for the Avatar design-library component (MEW-2196), reachable at
 // /dev/avatar via the design-library shell — see routesDefault.ts. Lets us
 // eyeball all Type × Size combinations, badges and states against Figma.
-import { PlusIcon, BellIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppAvatarCard from '@/components/avatar/AppAvatarCard.vue'
@@ -108,7 +108,9 @@ const SAMPLE = {
                   :initial="SAMPLE.initial"
                   :url="SAMPLE_URLS[t]"
                 >
-                  <template v-if="t === 'icon'" #icon><PlusIcon /></template>
+                  <template v-if="t === 'icon'" #icon
+                    ><AppIcon name="plus" variant="filled"
+                  /></template>
                 </AppAvatar>
               </td>
             </tr>
@@ -177,7 +179,9 @@ const SAMPLE = {
                   badge-top-left
                 >
                   <template #badge>
-                    <AppAvatarBadge type="icon"><PlusIcon /></AppAvatarBadge>
+                    <AppAvatarBadge type="icon"
+                      ><AppIcon name="plus" variant="filled"
+                    /></AppAvatarBadge>
                   </template>
                 </AppAvatar>
               </td>
@@ -251,7 +255,7 @@ const SAMPLE = {
         </div>
         <div class="bg-white p-4 rounded-16">
           <AppAvatar type="icon" size="xl">
-            <template #icon><BellIcon /></template>
+            <template #icon><AppIcon name="bell" variant="filled" /></template>
           </AppAvatar>
         </div>
       </div>
