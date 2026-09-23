@@ -32,7 +32,7 @@
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
+              <AppIcon name="chevron-down" variant="filled" size="xxs" class="shrink-0 text-text-subtle" />
             </button>
           </template>
         </app-select>
@@ -75,18 +75,8 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-name') }}
-                  <arrow-down-icon
-                    v-if="
-                      headerSort === SortValue.NAME && tableDirection === 'desc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
-                  <arrow-up-icon
-                    v-if="
-                      headerSort === SortValue.NAME && tableDirection === 'asc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
+                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.NAME && tableDirection === 'desc' " />
+                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.NAME && tableDirection === 'asc' " />
                 </div>
               </th>
               <!-- Market Cap -->
@@ -101,20 +91,8 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-market-cap') }}
-                  <arrow-down-icon
-                    v-if="
-                      headerSort === SortValue.MARKET_CAP &&
-                      tableDirection === 'desc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
-                  <arrow-up-icon
-                    v-if="
-                      headerSort === SortValue.MARKET_CAP &&
-                      tableDirection === 'asc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
+                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.MARKET_CAP && tableDirection === 'desc' " />
+                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.MARKET_CAP && tableDirection === 'asc' " />
                 </div>
               </th>
               <!-- Volume -->
@@ -129,20 +107,8 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-volume') }}
-                  <arrow-down-icon
-                    v-if="
-                      headerSort === SortValue.VOLUME &&
-                      tableDirection === 'desc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
-                  <arrow-up-icon
-                    v-if="
-                      headerSort === SortValue.VOLUME &&
-                      tableDirection === 'asc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
+                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.VOLUME && tableDirection === 'desc' " />
+                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.VOLUME && tableDirection === 'asc' " />
                 </div>
               </th>
               <!-- 24H Change -->
@@ -163,19 +129,8 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-price') }}
-                  <arrow-down-icon
-                    v-if="
-                      headerSort === SortValue.PRICE &&
-                      tableDirection === 'desc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
-                  <arrow-up-icon
-                    v-if="
-                      headerSort === SortValue.PRICE && tableDirection === 'asc'
-                    "
-                    class="w-3.5 h-3.5"
-                  />
+                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.PRICE && tableDirection === 'desc' " />
+                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.PRICE && tableDirection === 'asc' " />
                 </div>
               </th>
               <!-- Actions -->
@@ -202,14 +157,8 @@
                   class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
-                  <star-outline-icon
-                    v-if="!watchlist.has(contract.baseCurrency)"
-                    class="h-4 w-4 cursor-pointer"
-                  />
-                  <star-solid-icon
-                    v-else
-                    class="h-4 w-4 cursor-pointer text-text-brand"
-                  />
+                  <AppIcon name="star" size="xxs" v-if="!watchlist.has(contract.baseCurrency)" class="cursor-pointer" />
+                  <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer text-text-brand" />
                 </button>
               </td>
               <!-- Name -->
@@ -324,7 +273,7 @@
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
                       </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
@@ -338,14 +287,8 @@
                             toggleMenu(),
                           ]"
                         >
-                          <star-outline-icon
-                            v-if="!watchlist.has(contract.baseCurrency)"
-                            class="h-4 w-4 cursor-pointer"
-                          />
-                          <star-solid-icon
-                            v-else
-                            class="h-4 w-4 cursor-pointer"
-                          />
+                          <AppIcon name="star" size="xxs" v-if="!watchlist.has(contract.baseCurrency)" class="cursor-pointer" />
+                          <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer" />
                           <span class="ml-2">{{
                             watchlist.has(contract.baseCurrency)
                               ? $t('perps.market-list.remove-from-watchlist')
@@ -595,7 +538,7 @@
               :label="$t('common.previous_page')"
               @click="prevPage"
             >
-              <chevron-left-icon class="w-4 h-4" />
+              <AppIcon name="chevron-left" variant="filled" size="xxs" />
             </app-btn-icon>
             <app-btn-icon
               class="bg-background-default"
@@ -605,7 +548,7 @@
               :label="$t('common.next_page')"
               @click="nextPage"
             >
-              <chevron-right-icon class="w-4 h-4" />
+              <AppIcon name="chevron-right" variant="filled" size="xxs" />
             </app-btn-icon>
           </div>
         </div>
@@ -628,7 +571,7 @@
             @click="selectedFilterValue = 'all'"
           >
             {{ $t('perps.market-list.discover-markets') }}
-            <arrow-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
           </button>
         </div>
       </div>
@@ -649,19 +592,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  StarIcon as StarOutlineIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-} from '@heroicons/vue/24/outline'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  StarIcon as StarSolidIcon,
-  EllipsisVerticalIcon,
-} from '@heroicons/vue/24/solid'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -689,6 +620,7 @@ import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   PerpsChangeLeverageEvent,

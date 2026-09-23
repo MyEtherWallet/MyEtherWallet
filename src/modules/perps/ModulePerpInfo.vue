@@ -30,14 +30,8 @@
               {{ formatPrice(currentPrice) }}
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
-              <ArrowTrendingDownIcon
-                v-if="priceChangePercent < 0"
-                class="w-4 h-4 inline-block text-text-error"
-              />
-              <ArrowTrendingUpIcon
-                v-else
-                class="w-4 h-4 inline-block text-text-success"
-              />
+              <AppIcon name="arrow-trending-down" size="xxs" v-if="priceChangePercent < 0" class="inline-block text-text-error" />
+              <AppIcon name="arrow-trending-up" size="xxs" v-else class="inline-block text-text-success" />
               <span
                 :class="[
                   {
@@ -85,7 +79,7 @@
                   @click="toggleSelect"
                 >
                   <p>{{ $t('perps.info.more-label') }}</p>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </button>
               </template>
             </app-select>
@@ -226,7 +220,7 @@
               >
                 <div class="flex items-center">
                   <span>{{ $t('perps.positions.manage-label') }}</span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
               <app-btn-icon
@@ -236,7 +230,7 @@
                 width="w-7 xs:w-8"
                 @click="toggleSelect"
               >
-                <ellipsis-vertical-icon class="w-5 h-5" />
+                <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
               </app-btn-icon>
             </template>
           </app-select>
@@ -299,10 +293,7 @@
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}
-          <chevron-down-icon
-            class="w-4 h-4 ml-1 inline-block align-middle"
-            :class="{ 'rotate-180 ': showPositionMore }"
-          />
+          <AppIcon name="chevron-down" size="xxs" class="ml-1 inline-block align-middle" :class="{ 'rotate-180': showPositionMore }" />
         </app-btn-text>
         <transition name="fade" mode="out-in">
           <div
@@ -470,7 +461,7 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
             </div>
@@ -665,7 +656,7 @@
                             width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
                           >
-                            <ellipsis-vertical-icon class="w-5 h-5" />
+                            <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
                           </app-btn-icon>
                         </template>
                         <template #menu-content="{ toggleMenu }">
@@ -710,7 +701,7 @@
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon name="chevron-right" variant="filled" size="s" />
                       </app-btn-icon>
                     </div>
                   </td>
@@ -831,7 +822,7 @@
                         class="ml-auto"
                         @click="openFillDialog(fill)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon name="chevron-right" variant="filled" size="s" />
                       </app-btn-icon>
                     </td>
                   </tr>
@@ -969,18 +960,12 @@ import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderCon
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
-import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import { PERPS_CHART_INTERVALS, getPerpsChartRange } from './utils/chart'
 
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/outline'
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
 import { capturePerps } from './sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
@@ -1003,6 +988,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,

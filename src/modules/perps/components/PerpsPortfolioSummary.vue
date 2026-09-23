@@ -15,10 +15,7 @@
             width="w-6"
             @click="onRefreshBalance"
           >
-            <ArrowPathIcon
-              class="w-4 h-4 text-text-subtle"
-              :class="{ 'animate-spin': loading }"
-            />
+            <AppIcon name="arrow-path" size="xxs" class="text-text-subtle" :class="{ 'animate-spin': loading }" />
           </app-btn-icon>
         </div>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">
@@ -139,7 +136,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ArrowPathIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -159,6 +155,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 defineProps({
   watchOnly: {
     type: Boolean,
