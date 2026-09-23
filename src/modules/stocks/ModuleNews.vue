@@ -35,7 +35,7 @@
           <img
             :src="article.thumbnailUrl"
             :alt="$t('stocks.article_image')"
-            class="flex-none w-[64px] h-[64px] object-cover rounded-12"
+            class="flex-none w-16 h-16 object-cover rounded-12"
           />
           <div class="flex flex-col gap-1 w-full h-full justify-between">
             <p class="text-s-14 line-clamp-2">
@@ -52,7 +52,7 @@
               <span
 v-for="ticker in article.tickers || []"
                 :key="ticker"
-                class="text-s-9 font-semibold tracking-sp-06 uppercase text-info bg-mewBg px-2 py-[1px] rounded"
+                class="text-s-9 font-semibold tracking-sp-06 uppercase text-info bg-mewBg px-2 py-px rounded"
               >
                 {{ ticker }}
               </span>

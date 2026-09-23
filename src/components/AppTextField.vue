@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-[160px] px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-grey-subtle focus:outline-none focus:ring-0',
+        'w-full h-40 px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-grey-subtle focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"

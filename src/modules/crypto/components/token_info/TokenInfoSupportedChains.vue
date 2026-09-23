@@ -63,7 +63,7 @@
           </div>
           <div
             v-if="selectedChain?.name === i.chainName"
-            class="shrink-0 flex items-center bg-primary/10 px-[6px] py-1 rounded-full border border-primary/20"
+            class="shrink-0 flex items-center bg-primary/10 px-1.5 py-1 rounded-full border border-primary/20"
           >
             <span
               class="uppercase text-[8px] font-bold text-primary leading-none tracking-sp-06"

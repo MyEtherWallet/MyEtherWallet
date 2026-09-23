@@ -20,7 +20,7 @@
       </p>
 
       <!-- CTA -->
-      <div class="absolute bottom-[20px] flex items-center gap-2">
+      <div class="absolute bottom-5 flex items-center gap-2">
         <a
           href="https://x.com/myetherwallet"
           target="_blank"

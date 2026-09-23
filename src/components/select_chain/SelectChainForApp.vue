@@ -43,7 +43,7 @@
         class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
         @click="setOpenDialog(true)"
       >
-        <div v-if="selectedChain" class="flex items-center min-h-[36px]">
+        <div v-if="selectedChain" class="flex items-center min-h-9">
           <img
             v-if="selectedChain.icon"
             :src="selectedChain.icon"

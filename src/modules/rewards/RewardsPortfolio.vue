@@ -39,7 +39,7 @@
           :class="
             isOpenSideMenu
               ? 'xl:hidden 2xl:block 2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block xl:w-[80px] xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
+              : 'xl:block xl:w-20 xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
           "
         />
       </div>
@@ -89,7 +89,7 @@
         alt=""
         width="650"
         height="292"
-        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
+        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-5 mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
         :class="[isOpenSideMenu ? '' : 'xl:hidden']"
       />
 
@@ -258,30 +258,30 @@ const onConnectAddress = () => {
 }
 
 .confetti-piece {
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 2px;
 }
 
 .confetti-piece:nth-child(3n) {
   background: #7b61ff;
-  width: 6px;
-  height: 12px;
+  width: var(--size-1-5);
+  height: var(--size-3);
   border-radius: 1px;
   transform: rotate(45deg);
 }
 
 .confetti-piece:nth-child(3n + 1) {
   background: #3b82f6;
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 50%;
 }
 
 .confetti-piece:nth-child(3n + 2) {
   background: #fbbf24;
-  width: 5px;
-  height: 14px;
+  width: 5px; /* off-scale: decorative confetti, no size token */
+  height: var(--size-3-5);
   border-radius: 1px;
   transform: rotate(-30deg);
 }

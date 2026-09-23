@@ -20,11 +20,11 @@
         <div class="text-left">
           <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
+          <p v-if="isCashout && canClaimHold" class="text-info mt-0.5">
             {{ t('rewards.cashout_not_qualify') }}
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
-          <p v-else class="text-info mt-[2px]">
+          <p v-else class="text-info mt-0.5">
             {{ t('rewards.trade_more_to_qualify', { amount: amountNeeded }) }}
           </p>
         </div>

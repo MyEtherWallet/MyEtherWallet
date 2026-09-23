@@ -143,7 +143,7 @@
               </div>
 
               <!-- Divider Arrow -->
-              <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
+              <div class="flex justify-start my-2 lg:my-4 mx-1.5 lg:mx-3">
                 <arrow-long-down-icon class="w-6 h-6" />
               </div>
 

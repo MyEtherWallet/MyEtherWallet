@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative overflow-hidden rounded-2xl flex flex-col justify-between block mt-[32px] cursor-pointer"
+    class="relative overflow-hidden rounded-2xl flex flex-col justify-between block mt-8 cursor-pointer"
     @click="openSpaceX"
   >
     <img
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div
-      class="relative z-10 p-5 flex flex-col justify-between min-h-[160px] sm:min-h-[200px] lg:min-h-[244px]"
+      class="relative z-10 p-5 flex flex-col justify-between min-h-40 sm:min-h-[200px] lg:min-h-[244px]"
     >
       <div>
         <p

@@ -16,7 +16,7 @@
             :alt="t('home')"
             width="280"
             height="96"
-            class="w-[140px] h-[48px] flex-none object-contain"
+            class="w-[140px] h-12 flex-none object-contain"
           />
           <img
             v-else
@@ -75,7 +75,7 @@
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
           v-else-if="isRestoringWallet"
-          class="w-[160px] h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
+          class="w-40 h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
           aria-hidden="true"
         />
         <!-- Wallet area, trapped in its own stacking context so internal z-index

@@ -9,7 +9,7 @@
         <p class="text-info font-medium">{{ $t('common.fee') }}:</p>
         <div
           v-if="!hasFees"
-          class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
+          class="bg-grey-10 rounded-full animate-pulse min-w-20 h-4"
         ></div>
         <p v-else-if="hasFiatEstimates" class="font-medium text-black">
           {{ selectedFeeFiat }}

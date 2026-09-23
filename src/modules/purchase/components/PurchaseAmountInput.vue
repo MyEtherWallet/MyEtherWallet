@@ -28,7 +28,7 @@
       <label
         :for="inputId"
         :style="scaleStyle"
-        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
+        class="h-14 w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
       >
         <span class="amount-value flex items-center">
           <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{

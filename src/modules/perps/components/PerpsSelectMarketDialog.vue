@@ -109,7 +109,7 @@
                       contract.baseCurrency
                     }}</span>
                     <span
-                      class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                      class="shrink-0 bg-surface text-info font-bold rounded px-1.5 py-px text-s-9"
                       >{{ getMarketLeverage(contract) }}x</span
                     >
                   </div>

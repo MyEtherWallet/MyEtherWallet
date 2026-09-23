@@ -3,8 +3,8 @@
     <!-- Settings Button -->
     <app-btn-icon
       :label="$t('menu.open-settings')"
-      width="w-[40px]"
-      height="h-[40px]"
+      width="w-10"
+      height="h-10"
       @click="togglePopup"
     >
       <cog6-tooth-icon class="w-6 h-6" />
@@ -374,7 +374,7 @@
               <!-- Currency options -->
               <div
                 ref="currencyListRef"
-                class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2"
+                class="flex flex-col gap-1 w-full max-h-80 overflow-y-auto -mx-2 px-2"
               >
                 <div
                   v-for="option in currencyOptions"

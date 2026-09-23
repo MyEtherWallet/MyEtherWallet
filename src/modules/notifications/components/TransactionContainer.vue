@@ -12,11 +12,11 @@
       </div>
       <div
         :class="txStatus.color"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+        class="ml-2 px-2.5 py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
           v-if="txStatus.key === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
+          class="bg-white w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
         ></div>
         {{ $t(txStatus.labelKey) }}
       </div>

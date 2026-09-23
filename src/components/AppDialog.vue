@@ -13,7 +13,7 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-pointer fixed inset-0 bg-black/40 w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          class="cursor-pointer fixed inset-0 bg-black/40 w-screen overscroll-none overflow-hidden min-w-80 min-h-lvh"
           :class="zIndexOverlay"
           @click="!persistent ? setIsOpen(false) : () => {}"
           aria-hidden
@@ -35,7 +35,7 @@
         >
           <div
             v-if="isOpen"
-            class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden outline-none"
+            class="cursor-default min-w-80 rounded-32 flex flex-col max-h-full overflow-hidden outline-none"
             :class="[bg, $attrs.class]"
             @click.stop
             role="dialog"
@@ -68,7 +68,7 @@
               <app-btn-icon-close
                 v-if="!persistent && !hideClose"
                 @close="setIsOpen(false)"
-                class="absolute top-4 right-4 min-w-[32px]"
+                class="absolute top-4 right-4 min-w-8"
               />
             </div>
             <div
