@@ -115,7 +115,7 @@
                     data-test="over-cap-note"
                     class="flex flex-col items-center gap-1 p-5 text-center"
                   >
-                    <p class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]">
+                    <p class="text-label-base text-black">
                       {{ $t('multi_address.cap_note_title') }}
                     </p>
                     <p class="text-s-14 text-[#575757] leading-5">

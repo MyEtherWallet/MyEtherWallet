@@ -1,9 +1,6 @@
 <template>
   <div class="w-full">
-    <p
-      v-if="daysLeftLabel"
-      class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
-    >
+    <p v-if="daysLeftLabel" class="text-label-sm text-black">
       {{ daysLeftLabel }}
     </p>
     <div
@@ -24,12 +21,9 @@
           v-else-if="chipState(day) === 'failed'"
           class="w-3.5 h-3.5 text-white"
         />
-        <span
-          v-else
-          class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
-          :class="numberClass(day)"
-          >{{ day }}</span
-        >
+        <span v-else class="text-label-xs" :class="numberClass(day)">{{
+          day
+        }}</span>
       </div>
     </div>
   </div>

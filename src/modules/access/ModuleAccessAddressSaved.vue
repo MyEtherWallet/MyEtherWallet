@@ -26,7 +26,7 @@
           />
         </div>
         <div class="flex flex-col gap-2 w-full">
-          <h2 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
+          <h2 class="text-heading-base text-black">
             {{ titleLead }}<br />{{
               $t('multi_address.address_saved.title_suffix')
             }}

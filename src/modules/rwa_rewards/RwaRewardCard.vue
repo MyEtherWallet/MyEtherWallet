@@ -10,21 +10,14 @@
 
     <div class="relative z-10 flex flex-col max-w-[250px] gap-2">
       <div class="flex flex-col">
-        <p
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-        >
+        <p class="text-label-base text-black">
           {{ title }}
         </p>
-        <p
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-pre-line"
-        >
+        <p class="text-text-sm text-[#575757] whitespace-pre-line">
           {{ description }}
         </p>
       </div>
-      <p
-        v-if="footnote"
-        class="text-s-12 font-normal leading-[18px] text-[#575757]"
-      >
+      <p v-if="footnote" class="text-text-xs text-[#575757]">
         {{ footnote }}
       </p>
     </div>

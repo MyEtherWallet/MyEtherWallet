@@ -32,9 +32,7 @@ const onLearnMore = () => {
   >
     <ChartBarSquareIcon class="size-8 shrink-0 text-primary" />
     <div class="flex min-w-0 flex-1 flex-col">
-      <p
-        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-      >
+      <p class="text-label-base text-black">
         {{ t('homePage.hero.banner.title') }}
       </p>
       <p class="text-s-14 leading-5 text-black">

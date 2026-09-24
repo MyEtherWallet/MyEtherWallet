@@ -372,7 +372,7 @@
                     {{ token.price }}
                   </p>
                   <p
-                    class="text-s-12 font-normal xs:hidden"
+                    class="text-text-xs xs:hidden"
                     :class="getPercentClass(getActivePercent(token))"
                   >
                     {{ parsePercent(getActivePercent(token)) }}

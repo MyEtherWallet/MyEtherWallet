@@ -78,7 +78,7 @@
         class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-white px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
         :style="{ left: `${tooltipPos.left}px`, top: `${tooltipPos.top}px`, transform: 'translate(-50%, calc(-100% - 9px))' }"
       >
-        <p class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center">
+        <p class="text-label-xs text-black text-center">
           {{ t('purchase.sell.network_fee_tooltip', { symbol: displayChain?.currencyName ?? '', chain: displayChain?.nameLong ?? '' }) }}
         </p>
         <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
@@ -98,7 +98,7 @@
       href="https://help.myetherwallet.com/"
       target="_blank"
       rel="noopener"
-      class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+      class="mt-auto self-center text-label-xs text-primary hover:underline"
     >
       {{ t('purchase.sell.need_help') }}
     </a>

@@ -57,9 +57,7 @@ defineEmits<{
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ t('homePage.hero.watchlist.title') }}
         </p>
         <p class="text-s-16 leading-[22px] text-[#575757]">

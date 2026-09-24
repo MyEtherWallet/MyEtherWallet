@@ -28,9 +28,7 @@
           >
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
           </p>
-          <p
-            class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black whitespace-pre-line"
-          >
+          <p class="text-heading-xl text-black whitespace-pre-line">
             {{ $t('rwaRewards.hero_title') }}
           </p>
         </div>
@@ -573,9 +571,8 @@ const qualifyingLabel = computed(() => {
 const stepText = 'text-s-14 leading-5 text-[#575757]'
 const boldText = 'font-semibold text-black tracking-[-0.28px]'
 const mutedText = 'text-s-14 leading-5 text-grey-subtle'
-const titleText =
-  'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
-const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
+const titleText = 'text-label-sm text-black'
+const bodyText = 'text-text-sm text-[#575757]'
 const subText = 'text-s-12 leading-[18px] text-[#575757]'
 const expiresPill =
   'h-12 px-4 rounded-24 bg-[#e6e6e6] text-[#575757] text-s-14 font-semibold whitespace-nowrap'
