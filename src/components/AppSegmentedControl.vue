@@ -23,7 +23,9 @@
         :key="index"
         role="tab"
         :aria-selected="areEqual(selected, btn)"
+        :disabled="disabled"
         :class="[
+          { 'cursor-not-allowed opacity-40': disabled },
           { 'min-h-10 min-w-[110px] px-3': size === 'large' },
           { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
           { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
@@ -47,11 +49,11 @@
         ]"
         @click="setSelected(btn)"
       >
-        <slot name="btn-content" :data="btn">
+        <slot name="btn-content" :data="btn" :disabled="disabled">
           {{ index }}
         </slot>
       </button>
-      <slot name="custom" />
+      <slot name="custom" :disabled="disabled" />
     </div>
     <!-- Loading -->
     <div v-else class="flex flex-row gap-1">
@@ -135,6 +137,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * @disabled - Blocks selection and dims the controls. Bind it to a parent
+   * loading flag so options can't be changed while data is in flight.
+   */
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emit = defineEmits<{
   (e: 'onUpdate:selected', btn: T): void
@@ -147,6 +157,8 @@ const emit = defineEmits<{
 const selected = defineModel<T | undefined | null>('selected')
 
 const setSelected = (btn: T) => {
+  if (props.disabled) return
+
   if (!props.useEmitOnly) {
     selected.value = btn
   }

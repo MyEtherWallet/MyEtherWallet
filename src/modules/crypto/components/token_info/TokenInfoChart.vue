@@ -9,7 +9,7 @@
     <template #btn-content="{ data }">
       {{ data.label }}
     </template>
-    <template #custom>
+    <template #custom="{ disabled }">
       <app-select
         v-if="isXS"
         v-model:selected="selectedChartFilter"
@@ -19,7 +19,8 @@
       >
         <template #select-button="{ toggleSelect }">
           <button
-            class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
+            class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center disabled:cursor-not-allowed disabled:opacity-40"
+            :disabled="disabled"
             @click="toggleSelect"
           >
             <p>{{ $t('common.more') }}</p>
