@@ -117,7 +117,6 @@
                   :symbol="asset.symbol"
                   :address="tokenAddress(asset)"
                   :is-stock="side === 'buy'"
-                  :has-gradient="false"
                   class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
                 />
                 <p
