@@ -49,6 +49,20 @@ describe('AppBaseButton', () => {
     expect(cls).not.toContain(BTN_SIZE_SPEC.large.padding.split(' ')[0])
   })
 
+  it('drops the label padding for the link type', () => {
+    // A link renders inline with no padding, so the label wrapper must not
+    // carry the size labelPadding either.
+    const label = mountIt({ type: 'link' }, { default: 'Learn more' }).find(
+      'span',
+    )
+    expect(label.classes()).not.toContain(BTN_SIZE_SPEC.large.labelPadding)
+    // A non-link keeps it.
+    const solid = mountIt({ type: 'secondary' }, { default: 'Cancel' }).find(
+      'span',
+    )
+    expect(solid.classes()).toContain(BTN_SIZE_SPEC.large.labelPadding)
+  })
+
   it('applies the danger tone per type', () => {
     expect(mountIt({ tone: 'danger' }).classes()).toContain('bg-error')
     expect(mountIt({ type: 'secondary', tone: 'danger' }).classes()).toContain(
