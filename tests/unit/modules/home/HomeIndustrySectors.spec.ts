@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import HomeIndustrySectors from '@/modules/home/sections/HomeIndustrySectors.vue'
-import { sectors } from '@/modules/home/sectors'
+import { sectors, sectorLink } from '@/modules/home/sectors'
 
 // HomeIndustrySectors uses useI18n() (Composition API), which needs the i18n
 // plugin installed on the app instance. Mirrors the pattern used in
@@ -18,9 +18,12 @@ const i18n = createI18n({
 
 // The real AppSlideGroup renders content through per-index named slots
 // (#item-0, #item-1, ...) — see src/components/app_slide_group/AppSlideGroup.vue.
-// The stub renders every possible slot up to a generous cap so both tabs'
-// item counts are covered without hardcoding per-tab totals.
-const MAX_ITEMS = 10
+// The stub renders one slot per tile of the largest tab, derived from the data
+// so a newly added sector can never be silently dropped from these counts.
+const MAX_ITEMS = Math.max(
+  sectors.filter(s => s.market === 'stocks').length,
+  sectors.filter(s => s.market === 'crypto').length,
+)
 const AppSlideGroupStub = {
   template: `<div>${Array.from({ length: MAX_ITEMS }, (_, i) => `<slot name="item-${i}" />`).join('')}</div>`,
 }
@@ -65,9 +68,45 @@ describe('HomeIndustrySectors', () => {
     const w = mountIt()
     const links = w.findAllComponents(RouterLinkStub)
     const stockSectors = sectors.filter(s => s.market === 'stocks')
-    expect(links[0].props('to')).toEqual({
-      path: '/stocks',
-      query: { category: stockSectors[0].filter },
+    expect(links).toHaveLength(stockSectors.length)
+    stockSectors.forEach((s, i) => {
+      expect(links[i].props('to')).toEqual(sectorLink(s))
+    })
+  })
+
+  // The Ondo Intelligent Portfolios tile is the one stock tile that is not an
+  // All-Stocks table category: it opens the ModuleOip section on /stocks via an
+  // anchor rather than preselecting a `?category=` filter.
+  describe('Ondo Intelligent Portfolios tile', () => {
+    const oip = sectors.find(s => s.id === 'stocks-oip')!
+    // i18n is mounted with empty messages, so vue-i18n renders the key itself.
+    const oipLabel = oip.labelKey
+
+    const labelsOf = (w: ReturnType<typeof mountIt>) =>
+      w.findAll('[data-test="sector-label"]').map(n => n.text())
+
+    it('is registered as a stocks sector with no table filter', () => {
+      expect(oip.market).toBe('stocks')
+      expect(oip.filter).toBeUndefined()
+      expect(oip.hash).toBe('#oip')
+    })
+
+    it('renders a tile on the stocks tab', () => {
+      expect(labelsOf(mountIt())).toContain(oipLabel)
+    })
+
+    it('anchors at the OIP section instead of a category query', () => {
+      const w = mountIt()
+      const stockSectors = sectors.filter(s => s.market === 'stocks')
+      const link =
+        w.findAllComponents(RouterLinkStub)[stockSectors.indexOf(oip)]
+      expect(link.props('to')).toEqual({ path: '/stocks', hash: '#oip' })
+    })
+
+    it('does not appear on the crypto tab', async () => {
+      const w = mountIt()
+      await w.get('[data-test="tab-switch"]').trigger('click')
+      expect(labelsOf(w)).not.toContain(oipLabel)
     })
   })
 })

@@ -188,6 +188,10 @@ export type PortfolioHistoryResponse =
 export type GetTradableAssetsResponse =
   components['schemas']['GetWebStocksAddressesResponse']
 
+export type GetWebStocksOipsResponse =
+  components['schemas']['GetWebStocksOipsResponse']
+export type StockOipItem = GetWebStocksOipsResponse[number]
+
 /** --------------------------
  * Stock Info Page
  --------------------------*/

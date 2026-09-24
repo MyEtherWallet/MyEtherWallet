@@ -15,23 +15,18 @@
     />
     <div class="truncate">
       <app-token-symbol :symbol="token.primaryMarket.symbol" :is-stock="true" />
-      <app-tooltip
-        :text="token.underlyingMarket.name"
-        v-if="
-          token.underlyingMarket.name && token.underlyingMarket.name.length > 12
-        "
-      >
+      <app-tooltip :text="getName" v-if="getName.length > 12">
         <p
           class="hidden xs:block text-s-12 text-info truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
         >
-          {{ token.underlyingMarket.name }}
+          {{ getName }}
         </p>
       </app-tooltip>
       <p
         v-else
         class="truncate text-s-12 text-info max-w-[120px] xs:max-w-full"
       >
-        {{ token.underlyingMarket.name || '' }}
+        {{ getName }}
       </p>
     </div>
     <table-sparkline
@@ -84,6 +79,11 @@ const props = defineProps<{
 
 const { formatFiat } = useCurrency()
 
+// Portfolio tokens have no single underlying market, so the API sends
+// underlyingMarket as null and the alias carries the display name.
+const getName = computed(
+  () => props.token.stockAlias || props.token.underlyingMarket?.name || '',
+)
 const getPrice = computed(() => {
   return props.token.primaryMarket.price
     ? formatFiat(props.token.primaryMarket.price).display

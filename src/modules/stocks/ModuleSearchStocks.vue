@@ -81,15 +81,15 @@
                           :is-stock="true"
                         />
                         <app-tooltip
-                          :text="stock.underlyingMarket.name"
-                          v-if="stock.underlyingMarket.name.length > 12"
+                          :text="getStockName(stock)"
+                          v-if="getStockName(stock).length > 12"
                         >
                           <p class="text-s-12 text-info truncate">
-                            {{ stock.underlyingMarket.name }}
+                            {{ getStockName(stock) }}
                           </p>
                         </app-tooltip>
                         <p v-else class="text-s-12 text-info truncate">
-                          {{ stock.underlyingMarket.name }}
+                          {{ getStockName(stock) }}
                         </p>
                       </div>
                       <div class="flex flex-col items-end flex-none">
@@ -123,7 +123,9 @@
                     <exclamation-circle-icon
                       class="inline-block w-5 h-5 text-grey-50 mr-1"
                     />
-                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
+                    {{
+                      $t('stocks.no_results_found_for', { query: searchInput })
+                    }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div
@@ -219,7 +221,9 @@
           </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
-          <p class="font-semibold text-s-14">{{ $t('stocks.trending_colon') }}</p>
+          <p class="font-semibold text-s-14">
+            {{ $t('stocks.trending_colon') }}
+          </p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
             <app-tooltip :text="stock.stockAlias">
               <router-link
@@ -297,7 +301,7 @@ const results = computed(() => {
   const data = searchData.value || []
   return fuzzySearchByKeys(
     data,
-    ['primaryMarket.symbol', 'underlyingMarket.name'],
+    ['primaryMarket.symbol', 'stockAlias', 'underlyingMarket.name'],
     searchInput.value,
   )
 })
@@ -315,6 +319,10 @@ const showNoDataMessage = computed(() => {
     searchInput.value && searchInput.value !== '' && results.value.length === 0
   )
 })
+
+const getStockName = (stock: GetWebStocksSummaryResponse[number]) => {
+  return stock.stockAlias || stock.underlyingMarket?.name || ''
+}
 
 watchDebounced(
   focused,

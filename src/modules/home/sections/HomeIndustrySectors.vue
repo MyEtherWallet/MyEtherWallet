@@ -23,7 +23,9 @@ const tabLabels = computed(() => [
 ])
 
 const tabSectors = computed(() =>
-  sectors.filter(s => s.market === (activeTabIndex.value === 0 ? 'stocks' : 'crypto')),
+  sectors.filter(
+    s => s.market === (activeTabIndex.value === 0 ? 'stocks' : 'crypto'),
+  ),
 )
 </script>
 
