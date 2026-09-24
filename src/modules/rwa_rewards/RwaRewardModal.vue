@@ -19,9 +19,7 @@
         />
 
         <div class="relative z-10 flex flex-col items-start gap-2 pr-[150px]">
-          <p
-            class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black whitespace-pre-line"
-          >
+          <p class="text-heading-xl text-black whitespace-pre-line">
             {{ headline }}
           </p>
         </div>
@@ -471,9 +469,8 @@ const round2Notice = computed(() => {
 const stepText = 'text-s-14 leading-5 text-text-subtle'
 const boldText =
   'text-s-14 font-semibold leading-5 text-black tracking-[-0.28px]'
-const titleText =
-  'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
-const bodyText = 'text-s-14 font-normal leading-5 text-text-subtle'
+const titleText = 'text-label-sm text-black'
+const bodyText = 'text-text-sm text-text-subtle'
 const subText = 'text-s-12 leading-[18px] text-text-subtle'
 const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
 

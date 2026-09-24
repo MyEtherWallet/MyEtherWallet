@@ -46,9 +46,7 @@
     <!-- HOLDING — either round: title, days left, the day grid. -->
     <template v-if="status === 'holding'">
       <div class="relative z-10 w-full pr-[90px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ holdingTitle }}
         </p>
       </div>
@@ -76,9 +74,7 @@
     <!-- LOST — the hold was broken. Round 1 can start over; round 2 can't. -->
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-text-subtle">
@@ -97,6 +93,7 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
+              position="middle"
               class="flex-1"
             >
               <button
@@ -132,9 +129,7 @@
     <!-- EARNED — claimable. Round 1 points at the bonus that follows. -->
     <template v-else-if="status === 'earned'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-text-subtle">
@@ -176,9 +171,7 @@
       </template>
       <template v-else>
         <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-          <p
-            class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-          >
+          <p class="text-heading-base text-black">
             {{ $t('rwaRewards.hero_claimed_title') }}
           </p>
           <p class="text-s-12 leading-[18px] text-text-subtle">
@@ -206,9 +199,7 @@
     <!-- EXPIRED — the claim window closed. Round 1 can start over. -->
     <template v-else-if="status === 'expired'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-text-subtle">
@@ -226,6 +217,7 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
+              position="middle"
               class="flex-1"
             >
               <button
@@ -264,15 +256,13 @@
       >
         <div class="flex flex-col items-center gap-4">
           <lock-closed-icon class="w-7 h-7 text-text-brand" />
-          <p
-            class="text-s-14 font-normal leading-5 text-text-subtle text-center"
-          >
+          <p class="text-text-sm text-text-subtle text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
         <app-base-button
           theme="neutral"
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          class="text-label-base"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
@@ -283,9 +273,7 @@
     <!-- DEFAULT — the offer: both rounds spelled out. -->
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ headline }}
         </p>
       </div>

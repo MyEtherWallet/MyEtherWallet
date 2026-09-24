@@ -6,9 +6,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('rename')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.rename') }}
       </span>
       <pencil-square-icon class="w-4 h-4 text-black" />
@@ -20,9 +18,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('copy')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.copy') }}
       </span>
       <clipboard-document-icon class="w-4 h-4 text-black" />
@@ -34,9 +30,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('refresh')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.refresh') }}
       </span>
       <arrow-path-icon class="w-4 h-4 text-black" />
@@ -50,9 +44,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('paper')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.paper_wallet') }}
       </span>
       <document-icon class="w-4 h-4 text-black" />
@@ -64,9 +56,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('explorer')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.explorer') }}
       </span>
       <arrow-top-right-on-square-icon class="w-4 h-4 text-black" />
@@ -81,9 +71,7 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('disconnect')"
     >
-      <span
-        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
-      >
+      <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.disconnect') }}
       </span>
       <link-slash-icon class="w-4 h-4 text-black" />
