@@ -62,9 +62,7 @@
               }"
             >
               <!-- Title -->
-              <h3
-                class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-              >
+              <h3 class="self-stretch text-heading-base text-black">
                 {{ $t('settings.title') }}
               </h3>
 
@@ -93,10 +91,9 @@
                     <globe-alt-icon
                       class="w-5 h-5 text-primary flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black capitalize"
-                      >{{ $t('common.network') }}</span
-                    >
+                    <span class="text-text-base text-black capitalize">{{
+                      $t('common.network')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2 min-w-0">
                     <img
@@ -108,7 +105,7 @@
                       width="20"
                     />
                     <span
-                      class="text-s-14 font-normal leading-[20px] text-[#575757] truncate max-w-[120px]"
+                      class="text-text-sm text-[#575757] truncate max-w-[120px]"
                       >{{ selectedChain?.nameLong }}</span
                     >
                     <chevron-right-icon
@@ -128,10 +125,9 @@
                     <banknotes-icon
                       class="w-5 h-5 text-primary flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.currency') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.currency')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
                     <app-token-logo
@@ -142,10 +138,9 @@
                       height="h-5"
                       class="flex-shrink-0"
                     />
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-[#575757]"
-                      >{{ selectedCurrency }}</span
-                    >
+                    <span class="text-text-sm text-[#575757]">{{
+                      selectedCurrency
+                    }}</span>
                     <chevron-right-icon
                       class="w-4 h-4 text-[#575757] flex-shrink-0"
                     />
@@ -161,16 +156,14 @@
                   />
                   <div class="relative flex items-center gap-2.5">
                     <language-icon class="w-5 h-5 text-primary flex-shrink-0" />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.language') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.language')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-[#575757]"
-                      >{{ selectedLanguageAbbr }}</span
-                    >
+                    <span class="text-text-sm text-[#575757]">{{
+                      selectedLanguageAbbr
+                    }}</span>
                     <chevron-right-icon
                       class="w-4 h-4 text-[#575757] flex-shrink-0"
                     />
@@ -188,16 +181,14 @@
                     <currency-dollar-icon
                       class="w-5 h-5 text-primary flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.default_fee') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.default_fee')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-[#575757]"
-                      >{{ selectedFeeLabel }}</span
-                    >
+                    <span class="text-text-sm text-[#575757]">{{
+                      selectedFeeLabel
+                    }}</span>
                     <chevron-right-icon
                       class="w-4 h-4 text-[#575757] flex-shrink-0"
                     />
@@ -222,10 +213,9 @@
                       class="w-5 h-5 text-primary flex-shrink-0"
                     />
                     <div class="flex items-center gap-1">
-                      <span
-                        class="text-s-16 font-normal leading-[22px] text-black"
-                        >{{ $t('settings.usage_analytics') }}</span
-                      >
+                      <span class="text-text-base text-black">{{
+                        $t('settings.usage_analytics')
+                      }}</span>
                       <app-tooltip
                         :text="$t('settings.usage_analytics_tooltip')"
                       >
@@ -280,15 +270,13 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-text-base text-black">
                   {{ $t('settings.select_transaction_fee') }}
                 </span>
               </div>
 
               <!-- Description -->
-              <p
-                class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]"
-              >
+              <p class="self-stretch text-text-sm text-[#575757]">
                 {{ $t('settings.fee_description') }}
               </p>
 
@@ -307,20 +295,16 @@
                 >
                   <div class="flex-1 flex flex-col gap-1">
                     <div class="flex items-center gap-0.5">
-                      <span
-                        class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-black"
-                        >{{ option.label }}</span
-                      >
-                      <span
-                        class="text-s-14 font-normal leading-[20px] text-[#A5A5A5]"
-                      >
+                      <span class="text-label-sm text-black">{{
+                        option.label
+                      }}</span>
+                      <span class="text-text-sm text-[#A5A5A5]">
                         – {{ option.price }}</span
                       >
                     </div>
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#575757]"
-                      >{{ option.description }}</span
-                    >
+                    <span class="text-text-xs text-[#575757]">{{
+                      option.description
+                    }}</span>
                   </div>
                   <check-circle-icon
                     class="w-5 h-5 flex-shrink-0 transition-colors duration-150"
@@ -365,9 +349,7 @@
               </div>
 
               <!-- Description -->
-              <p
-                class="self-stretch text-s-14 font-normal leading-[20px] text-[#575757]"
-              >
+              <p class="self-stretch text-text-sm text-[#575757]">
                 {{ $t('settings.currency_description') }}
               </p>
 
@@ -400,10 +382,9 @@
                       class="text-s-14 font-semibold leading-[20px] text-black flex-shrink-0"
                       >{{ option.code }}</span
                     >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#A5A5A5] truncate"
-                      >{{ option.name }}</span
-                    >
+                    <span class="text-text-xs text-[#A5A5A5] truncate">{{
+                      option.name
+                    }}</span>
                   </div>
                   <check-circle-icon
                     class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
@@ -442,7 +423,7 @@
                 >
                   <chevron-left-icon class="w-5 h-5" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-text-base text-black">
                   {{ $t('settings.select_language') }}
                 </span>
               </div>
@@ -463,18 +444,13 @@
                   class="flex w-full items-center gap-1 border-y border-[#E6E6E6] py-3"
                 >
                   <div class="flex flex-1 min-w-0 items-center gap-1">
-                    <span
-                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                      >{{ selectedLanguageOption.label }}</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#575757]"
-                      >/</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#575757]"
-                      >{{ selectedLanguageOption.native }}</span
-                    >
+                    <span class="text-label-base text-black">{{
+                      selectedLanguageOption.label
+                    }}</span>
+                    <span class="text-text-xs text-[#575757]">/</span>
+                    <span class="text-text-xs text-[#575757]">{{
+                      selectedLanguageOption.native
+                    }}</span>
                   </div>
                   <check-icon class="w-5 h-5 text-primary flex-shrink-0" />
                 </div>
@@ -490,18 +466,13 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex flex-1 min-w-0 items-center gap-1">
-                    <span
-                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                      >{{ language.label }}</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#575757]"
-                      >/</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-[#575757]"
-                      >{{ language.native }}</span
-                    >
+                    <span class="text-label-base text-black">{{
+                      language.label
+                    }}</span>
+                    <span class="text-text-xs text-[#575757]">/</span>
+                    <span class="text-text-xs text-[#575757]">{{
+                      language.native
+                    }}</span>
                   </div>
                 </div>
               </div>

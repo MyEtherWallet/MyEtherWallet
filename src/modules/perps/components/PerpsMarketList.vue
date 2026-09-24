@@ -281,7 +281,7 @@
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
-                  class="text-s-12 font-normal mb-1 xs:hidden"
+                  class="text-text-xs mb-1 xs:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
                       ? 'text-success'

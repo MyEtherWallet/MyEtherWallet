@@ -5,7 +5,7 @@
   >
     <template #title>
       <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
-        <h1 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
+        <h1 class="text-heading-base text-black">
           {{ $t('multi_address.rename.title') }}
         </h1>
         <p class="text-s-16 text-[#575757] leading-[22px]">

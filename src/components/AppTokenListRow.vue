@@ -55,9 +55,7 @@ const changeText = computed(() =>
       </span>
     </div>
     <div class="flex shrink-0 flex-col items-end text-right">
-      <p
-        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-      >
+      <p class="text-label-base text-black">
         {{ priceDisplay }}
       </p>
       <p

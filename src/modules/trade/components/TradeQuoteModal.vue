@@ -101,7 +101,7 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-info text-right text-text-xs">
                   ${{ toAmountFiat }}
                 </p>
               </div>
@@ -123,7 +123,7 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-info text-right text-text-xs">
                   ${{ minAmountFiat }}
                 </p>
               </div>

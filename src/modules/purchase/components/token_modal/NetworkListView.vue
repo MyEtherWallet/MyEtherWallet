@@ -9,7 +9,7 @@
         <chevron-left-icon class="w-5 h-5 text-black" />
       </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
-        <h2 class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]">
+        <h2 class="text-heading-xl">
           {{ $t('purchase.select_token.filter_title') }}
         </h2>
         <p class="text-s-16 text-info leading-[22px]">

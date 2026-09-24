@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-1 pr-12 flex-none">
       <h2
         id="dialogTitle"
-        class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
+        class="text-heading-xl"
       >
         {{ $t('purchase.select_token.title') }}
       </h2>

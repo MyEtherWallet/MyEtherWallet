@@ -44,9 +44,7 @@
 
     <template v-if="status === 'holding'">
       <div class="relative z-10 w-full">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black max-w-[210px]"
-        >
+        <p class="text-heading-base text-black max-w-[210px]">
           {{ $t('rwaRewards.hero_holding_title') }}
         </p>
       </div>
@@ -73,13 +71,11 @@
              means `/info` returned no season end, so there is no date to show. -->
         <p
           v-if="!isCampaignEnded && expiresText"
-          class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
+          class="text-text-xs text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-[#575757]">
@@ -123,9 +119,7 @@
 
     <template v-else-if="status === 'earned'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-[#575757]">
@@ -145,9 +139,7 @@
 
     <template v-else-if="status === 'claimed'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_claimed_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-[#575757]">
@@ -172,9 +164,7 @@
 
     <template v-else-if="status === 'expired'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
         <p class="text-s-12 leading-[18px] text-[#575757]">
@@ -203,13 +193,13 @@
       >
         <div class="flex flex-col items-center gap-4">
           <lock-closed-icon class="w-7 h-7 text-primary" />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <p class="text-text-sm text-[#575757] text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
         <app-base-button
           theme="neutral"
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          class="text-label-base"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
@@ -221,13 +211,11 @@
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
           v-if="!isCampaignEnded && expiresText"
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
+          class="text-text-sm text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_title') }}
         </p>
       </div>

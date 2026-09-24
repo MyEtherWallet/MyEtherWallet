@@ -34,7 +34,7 @@ const { formatFiat } = useCurrency()
         @click="router.push(seeAllTo)"
       >
         <span
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black transition-colors group-hover:text-primary"
+          class="text-label-base text-black transition-colors group-hover:text-primary"
         >
           {{ title }}
         </span>

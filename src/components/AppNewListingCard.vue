@@ -105,9 +105,7 @@ const changeText = computed(() =>
         >
           {{ marketCapLabel }}
         </p>
-        <p
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
-        >
+        <p class="text-label-sm text-black">
           {{ marketCap }}
         </p>
       </div>
@@ -118,10 +116,7 @@ const changeText = computed(() =>
           {{ changeLabel }}
         </p>
         <div v-if="change != null" class="flex items-center gap-1">
-          <p
-            class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
-            :class="changeColor"
-          >
+          <p class="text-label-sm" :class="changeColor">
             {{ changeText }}
           </p>
           <component
@@ -137,9 +132,7 @@ const changeText = computed(() =>
         >
           {{ volumeLabel }}
         </p>
-        <p
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
-        >
+        <p class="text-label-sm text-black">
           {{ volume }}
         </p>
       </div>

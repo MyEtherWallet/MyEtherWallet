@@ -131,7 +131,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         class="flex w-full flex-col gap-2"
         data-test="hero-portfolio-notconnected"
       >
-        <p class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]">
+        <p class="text-label-base">
           {{ t('homePage.hero.welcomeTitle') }}
         </p>
         <h2
@@ -330,7 +330,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
         </div>
         <div
           v-else
-          class="flex items-center gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px]"
+          class="flex items-center gap-1 text-heading-base"
           data-test="hero-today"
         >
           <component

@@ -55,7 +55,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
       <span
         v-if="category"
         data-test="rewards-category"
-        class="text-s-12 font-semibold tracking-[-0.24px] text-primary"
+        class="text-label-xs text-primary"
         >{{ category }}</span
       >
     </div>
@@ -64,7 +64,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     <div class="relative flex items-end gap-4">
       <!-- Compact (mobile / side-panel-open) headline; full size on wide layout. -->
       <div
-        class="flex min-w-0 flex-1 flex-col gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px] @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
+        class="flex min-w-0 flex-1 flex-col gap-1 text-heading-base @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
       >
         <p data-test="rewards-title" class="text-black">{{ title }}</p>
         <p v-if="highlight" data-test="rewards-highlight" class="text-primary">

@@ -82,20 +82,17 @@
       </p>
       <p
         v-else-if="errorMessage"
-        class="text-s-16 font-semibold text-error leading-[22px] tracking-[-0.32px] text-center"
+        class="text-label-base text-error text-center"
       >
         {{ errorMessage }}
       </p>
       <p
         v-else-if="helperMessage"
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+        class="text-label-base text-info text-center"
       >
         {{ helperMessage }}
       </p>
-      <p
-        v-else
-        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
-      >
+      <p v-else class="text-label-base text-info text-center">
         ≈ {{ estimate }}
       </p>
     </div>

@@ -6,10 +6,7 @@
     <template #content>
       <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
         <div class="flex flex-col gap-1 pr-12 flex-none">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{ $t('purchase.select_currency.title') }}
           </h2>
           <p class="text-s-16 text-info leading-[22px]">
