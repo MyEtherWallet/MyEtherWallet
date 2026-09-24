@@ -71,7 +71,7 @@ const stockItems = computed<TrendingRowItem[]>(() =>
   stockTrending.value.slice(0, 5).map(item => ({
     logo: item.iconPngUrl || item.iconSvgUrl,
     symbol: item.primaryMarket.symbol,
-    name: item.underlyingMarket.name,
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     isStock: true,
     price: item.primaryMarket.price ? Number(item.primaryMarket.price) : 0,
     change: item.primaryMarket.priceChangePercentage24h
