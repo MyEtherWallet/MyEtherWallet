@@ -84,7 +84,7 @@
               <button
                 v-for="chain in supportedChainsList"
                 :key="chain.name"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                class="flex items-center gap-2 px-4 py-2 bg-background-brand-subtle hover:bg-background-brand-subtle-hover font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
                 @click="switchToNetwork(chain)"
               >
                 <app-token-logo

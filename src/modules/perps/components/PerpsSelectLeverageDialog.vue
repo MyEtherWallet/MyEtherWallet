@@ -20,7 +20,7 @@
           <!-- +/- Controls -->
           <div class="flex items-center justify-center gap-6 mb-5">
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
               :disabled="modelValue <= 1"
               :class="
                 modelValue <= 1
@@ -62,7 +62,7 @@
               <span class="font-bold text-[40px] tracking-tight">&times;</span>
             </div>
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
               :disabled="modelValue >= maxLeverage"
               :class="
                 modelValue >= maxLeverage

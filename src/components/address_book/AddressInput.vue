@@ -49,7 +49,7 @@
           isRaised
             ? 'shadow-button shadow-button-elevated'
             : 'border border-border-strong',
-          'grow focus:outline-none focus:ring-0 bg-white   text-normal rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
+          'grow focus:outline-none focus:ring-0 bg-white text-text-default rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="resolvedLabel"
         @focus="setInFocusInput()"

@@ -198,9 +198,7 @@ const setSelectedChain = (chain: Chain) => {
 /** -------------------------------
  * Dialog
  -------------------------------*/
-const openDialog = defineModel('isOpen', {
-  default: false,
-})
+const openDialog = defineModel<boolean>('isOpen', { default: false })
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }

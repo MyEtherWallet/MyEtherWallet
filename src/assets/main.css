@@ -80,7 +80,6 @@
  * green-125/150, orange-75) exist because Figma's semantic tokens alias them.
  */
 :root {
-
   /* brand */
   --brand-950: #0e2a5d;
   --brand-900: #0d449b;
@@ -248,8 +247,9 @@
   --background-info-subtle: var(--brand-75); /* brand/75 */
 
   /* background · overlay */
-  --background-overlay-subtle: var(--black); /* neutral/black */
-  --background-overlay-inverted: var(--white); /* neutral/white */
+  /* neutral/black · 20%, neutral/white · 40% */
+  --background-overlay-subtle: rgb(0 0 0 / 0.2);
+  --background-overlay-inverted: rgb(255 255 255 / 0.4);
 
   /* background · decorative (category / illustration only) */
   --background-decorative-blue: var(--brand-500); /* brand/500 */
@@ -311,7 +311,6 @@
   --border-warning: var(--orange-600); /* orange/600 */
   --border-disabled: var(--neutral-200); /* neutral/200 */
   --border-inverted: var(--neutral-750); /* neutral/750 */
-  --transparent-brand: color-mix(in srgb, var(--brand-600) 30%, transparent);
 
   /**
    * Elevation. Each shadow is held whole in its own variable rather than
@@ -475,7 +474,6 @@
  * is what lets the [data-theme='dark'] block above swap the theme at runtime.
  */
 @theme inline {
-
   /* background · neutral surfaces */
   --color-background-default: var(--background-default);
   --color-background-default-hover: var(--background-default-hover);
@@ -489,7 +487,9 @@
   --color-background-skeleton: var(--background-skeleton);
   --color-background-disabled: var(--background-disabled);
   --color-background-default-selected: var(--background-default-selected);
-  --color-background-alternative-selected: var(--background-alternative-selected);
+  --color-background-alternative-selected: var(
+    --background-alternative-selected
+  );
 
   /* background · contrast */
   --color-background-contrast-default: var(--background-contrast-default);
@@ -504,7 +504,9 @@
   --color-background-brand-disabled: var(--background-brand-disabled);
   --color-background-brand-subtle: var(--background-brand-subtle);
   --color-background-brand-subtle-hover: var(--background-brand-subtle-hover);
-  --color-background-brand-subtle-pressed: var(--background-brand-subtle-pressed);
+  --color-background-brand-subtle-pressed: var(
+    --background-brand-subtle-pressed
+  );
   --color-background-loading-track: var(--background-loading-track);
 
   /* background · status */
@@ -513,14 +515,22 @@
   --color-background-error-pressed: var(--background-error-pressed);
   --color-background-error-subtle: var(--background-error-subtle);
   --color-background-error-subtle-hover: var(--background-error-subtle-hover);
-  --color-background-error-subtle-pressed: var(--background-error-subtle-pressed);
-  --color-background-loading-track-danger: var(--background-loading-track-danger);
+  --color-background-error-subtle-pressed: var(
+    --background-error-subtle-pressed
+  );
+  --color-background-loading-track-danger: var(
+    --background-loading-track-danger
+  );
   --color-background-success: var(--background-success);
   --color-background-success-subtle: var(--background-success-subtle);
-  --color-background-success-subtle-hover: var(--background-success-subtle-hover);
+  --color-background-success-subtle-hover: var(
+    --background-success-subtle-hover
+  );
   --color-background-warning: var(--background-warning);
   --color-background-warning-subtle: var(--background-warning-subtle);
-  --color-background-warning-subtle-hover: var(--background-warning-subtle-hover);
+  --color-background-warning-subtle-hover: var(
+    --background-warning-subtle-hover
+  );
   --color-background-info: var(--background-info);
   --color-background-info-subtle: var(--background-info-subtle);
 
@@ -530,17 +540,29 @@
 
   /* background · decorative (category / illustration only) */
   --color-background-decorative-blue: var(--background-decorative-blue);
-  --color-background-decorative-blue-strong: var(--background-decorative-blue-strong);
+  --color-background-decorative-blue-strong: var(
+    --background-decorative-blue-strong
+  );
   --color-background-decorative-purple: var(--background-decorative-purple);
-  --color-background-decorative-purple-strong: var(--background-decorative-purple-strong);
+  --color-background-decorative-purple-strong: var(
+    --background-decorative-purple-strong
+  );
   --color-background-decorative-violet: var(--background-decorative-violet);
-  --color-background-decorative-violet-strong: var(--background-decorative-violet-strong);
+  --color-background-decorative-violet-strong: var(
+    --background-decorative-violet-strong
+  );
   --color-background-decorative-pink: var(--background-decorative-pink);
-  --color-background-decorative-pink-strong: var(--background-decorative-pink-strong);
+  --color-background-decorative-pink-strong: var(
+    --background-decorative-pink-strong
+  );
   --color-background-decorative-orange: var(--background-decorative-orange);
-  --color-background-decorative-orange-strong: var(--background-decorative-orange-strong);
+  --color-background-decorative-orange-strong: var(
+    --background-decorative-orange-strong
+  );
   --color-background-decorative-green: var(--background-decorative-green);
-  --color-background-decorative-green-strong: var(--background-decorative-green-strong);
+  --color-background-decorative-green-strong: var(
+    --background-decorative-green-strong
+  );
   --color-background-decorative-neutral: var(--background-decorative-neutral);
 
   /* text */
@@ -588,7 +610,6 @@
   --color-border-warning: var(--border-warning);
   --color-border-disabled: var(--border-disabled);
   --color-border-inverted: var(--border-inverted);
-  --color-transparent-brand: var(--transparent-brand);
 
   /**
    * Vendor compatibility ONLY.
@@ -616,7 +637,12 @@
  * VARIABLES
  */
 :root {
-  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    'DM Sans',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --borderRadius: 5px;

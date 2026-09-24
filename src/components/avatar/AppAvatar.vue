@@ -127,7 +127,7 @@ watchEffect(() => {
     <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
     <div
       class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-      :class="{ 'bg-avatar-fallback': showFallbackBg }"
+      :class="{ 'bg-background-info-subtle': showFallbackBg }"
     >
       <component :is="typeComponent" v-bind="forwardProps">
         <slot name="icon" />

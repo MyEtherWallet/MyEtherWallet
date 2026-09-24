@@ -14,7 +14,7 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-colors',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
       ]"

@@ -217,7 +217,7 @@
               </div>
             </div>
             <p
-              class="font-bold text-s-15 text-textDark break-all flex-1 leading-snug"
+              class="font-bold text-s-15 text-text-default break-all flex-1 leading-snug"
             >
               {{ depositAddress }}
             </p>

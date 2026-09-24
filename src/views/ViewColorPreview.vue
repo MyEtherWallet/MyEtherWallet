@@ -965,13 +965,6 @@ const SEMANTIC: SemanticToken[] = [
     group: 'border',
     alias: 'neutral/750',
   },
-  {
-    name: 'transparent/brand',
-    token: 'transparent-brand',
-    swatch: 'bg-transparent-brand',
-    group: 'border',
-    alias: 'brand/600 · 30%',
-  },
 ]
 
 const GROUPS = [...new Set(SEMANTIC.map(t => t.group))]
