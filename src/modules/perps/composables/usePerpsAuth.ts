@@ -330,6 +330,7 @@ export function usePerpsAuth() {
       const challenge = await perpsClient.getLoginChallenge({
         walletAddress: address,
         chainId: '1',
+        builderCode: BUILDER_CODE
       })
       const walletType = wallet.value.getWalletType()
       walletTypeStr = walletType
@@ -354,7 +355,6 @@ export function usePerpsAuth() {
       const complete = await perpsClient.completeLoginChallenge({
         id: challenge.result.id,
         signature,
-        builderCode: BUILDER_CODE
       })
       token.value = complete.result.token
       accountId.value = complete.result.accountId
