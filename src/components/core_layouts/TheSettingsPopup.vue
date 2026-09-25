@@ -464,7 +464,10 @@ const { selectedCurrency } = storeToRefs(currencyStore)
 const currencyOptions = computed(() => {
   const active = SUPPORTED_CURRENCIES.filter(c => c.code === selectedCurrency.value)
   const rest = SUPPORTED_CURRENCIES.filter(c => c.code !== selectedCurrency.value)
-  return [...active, ...rest]
+  return [...active, ...rest].map(c => ({
+    code: c.code,
+    name: t(`settings.currency_country.${c.code}`),
+  }))
 })
 
 const selectCurrency = (code: string) => {
