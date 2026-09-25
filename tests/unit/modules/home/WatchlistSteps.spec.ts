@@ -1,6 +1,24 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import { computed, ref, unref } from 'vue'
+
+// The assets grid virtualizes its rows (useVirtualList). jsdom has no layout, so
+// the observer would measure a 0px viewport and mount ~0 rows; render every row
+// instead so the card-count assertions stay deterministic.
+vi.mock('@vueuse/core', async importOriginal => {
+  const actual = await importOriginal<typeof import('@vueuse/core')>()
+  return {
+    ...actual,
+    useVirtualList: (source: unknown) => ({
+      list: computed(() =>
+        (unref(source) as unknown[]).map((data, index) => ({ data, index })),
+      ),
+      containerProps: { ref: ref(null), onScroll: () => {}, style: {} },
+      wrapperProps: computed(() => ({ style: {} })),
+    }),
+  }
+})
 
 // AppTokenLogo / AppTokenSymbol import the stocks store (Ledger SDK
 // transitively). Stub them.
