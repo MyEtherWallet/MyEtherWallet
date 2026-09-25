@@ -1,6 +1,27 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import { computed, ref, unref } from 'vue'
+
+// The assets grid virtualizes its rows (useVirtualList). jsdom has no layout, so
+// the observer would measure a 0px viewport and mount ~0 rows; render every row
+// instead so the card-count assertions stay deterministic. scrollTo is spied so we
+// can assert the list snaps back to the top when the recommendations change.
+const virtualScrollTo = vi.hoisted(() => vi.fn())
+vi.mock('@vueuse/core', async importOriginal => {
+  const actual = await importOriginal<typeof import('@vueuse/core')>()
+  return {
+    ...actual,
+    useVirtualList: (source: unknown) => ({
+      list: computed(() =>
+        (unref(source) as unknown[]).map((data, index) => ({ data, index })),
+      ),
+      containerProps: { ref: ref(null), onScroll: () => {}, style: {} },
+      wrapperProps: computed(() => ({ style: {} })),
+      scrollTo: virtualScrollTo,
+    }),
+  }
+})
 
 // AppTokenLogo / AppTokenSymbol import the stocks store (Ledger SDK
 // transitively). Stub them.
@@ -163,6 +184,19 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
       MOCK_RECOMMENDED_ASSETS.length,
     )
     expect(w.find('[data-test="assets-show-more"]').exists()).toBe(false)
+  })
+
+  it('snaps the virtual list back to the top when recommendations change (CodeRabbit)', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    virtualScrollTo.mockClear()
+    // New recommendations arriving must reset the scroll offset, or useVirtualList
+    // can keep a stale offset from the previously expanded list and show nothing.
+    await w.setProps({ assets: MOCK_RECOMMENDED_ASSETS.slice(0, 5) })
+    expect(virtualScrollTo).toHaveBeenCalledWith(0)
   })
 
   it('gates Done on selection and emits done', async () => {
