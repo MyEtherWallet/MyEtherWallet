@@ -72,10 +72,6 @@ const hasMore = computed(
     !showAll.value &&
     filtered.value.length > INITIAL_COUNT,
 )
-// Reset the reveal when the result set changes (query typed/cleared, new
-// recommendations) so "showAll" never sticks across a different list.
-watch([query, () => props.assets], () => (showAll.value = false))
-
 // Virtualize by row: chunk the visible assets into rows of GRID_COLUMNS and mount
 // only the rows near the viewport. ROW_HEIGHT = card (96px) + the 8px gap below it.
 const GRID_COLUMNS = 4
@@ -91,7 +87,17 @@ const {
   list: visibleRows,
   containerProps,
   wrapperProps,
+  scrollTo,
 } = useVirtualList(assetRows, { itemHeight: ROW_HEIGHT, overscan: 6 })
+
+// Reset the reveal when the result set changes (query typed/cleared, new
+// recommendations) so "showAll" never sticks across a different list. Snap the
+// virtual list back to the top too: after collapsing, a stale scroll offset from
+// the previously expanded list can leave useVirtualList rendering an empty window.
+watch([query, () => props.assets], () => {
+  showAll.value = false
+  scrollTo(0)
+})
 
 // Search-loading: while the user is typing a query, show skeleton cards (Figma)
 // until results settle. The filter is client-side today, so a short debounce
