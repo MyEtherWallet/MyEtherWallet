@@ -1,4 +1,3 @@
-import type Transport from '@ledgerhq/hw-transport'
 import EthApp from '@ledgerhq/hw-app-eth'
 import ledgerService from '@ledgerhq/hw-app-eth/lib-es/services/ledger/index'
 import { NetworkNames } from '@enkryptcom/types'
@@ -53,9 +52,14 @@ function hexToBuffer(h: string): Buffer {
   return Buffer.from(h.startsWith('0x') ? h.slice(2) : h, 'hex')
 }
 
+/**
+ * Ethereum-app wrapper. It never holds on to a transport: the transport is a
+ * module singleton that gets closed and reopened (app switch on the device,
+ * re-plug, a second Connect click), so a cached handle would go stale and every
+ * operation asks `getLedgerTransport()` for the live one instead.
+ */
 export class LedgerEthereum {
   readonly network: NetworkNames
-  private transport: Transport | null = null
   private HDNodes: Record<string, HDKey> = {}
 
   constructor(network: NetworkNames) {
@@ -63,13 +67,12 @@ export class LedgerEthereum {
   }
 
   async init(): Promise<boolean> {
-    this.transport = await getLedgerTransport()
+    await getLedgerTransport()
     return true
   }
 
   async isConnected(): Promise<boolean> {
-    if (!this.transport) await this.init()
-    this.transport = await ensureLedgerApp(this.transport!, this.network)
+    await ensureLedgerApp(await getLedgerTransport(), this.network)
     return true
   }
 
@@ -83,9 +86,8 @@ export class LedgerEthereum {
     if (!evmSupportedPaths[this.network]) {
       throw new Error('ledger-ethereum: Invalid network name')
     }
-    if (!this.transport) await this.init()
     const isHardenedLeaf = options.pathType.basePath.split('/').length - 1 === 2
-    const eth = new EthApp(this.transport!)
+    const eth = new EthApp(await getLedgerTransport())
 
     if (!isHardenedLeaf) {
       if (!this.HDNodes[options.pathType.basePath]) {
@@ -122,8 +124,7 @@ export class LedgerEthereum {
   async signPersonalMessage(
     options: SignPersonalMessageRequest,
   ): Promise<string> {
-    if (!this.transport) await this.init()
-    const eth = new EthApp(this.transport!)
+    const eth = new EthApp(await getLedgerTransport())
     const fullPath = options.pathType.path.replace('{index}', options.pathIndex)
     const result = await eth.signPersonalMessage(
       fullPath,
@@ -133,8 +134,7 @@ export class LedgerEthereum {
   }
 
   async signTransaction(options: SignTransactionRequest): Promise<string> {
-    if (!this.transport) await this.init()
-    const eth = new EthApp(this.transport!)
+    const eth = new EthApp(await getLedgerTransport())
     const fullPath = options.pathType.path.replace('{index}', options.pathIndex)
 
     const raw = options.transaction.getMessageToSign()
@@ -154,8 +154,7 @@ export class LedgerEthereum {
   }
 
   async signTypedMessage(request: SignTypedMessageRequest): Promise<string> {
-    if (!this.transport) await this.init()
-    const eth = new EthApp(this.transport!)
+    const eth = new EthApp(await getLedgerTransport())
     const fullPath = request.pathType.path.replace('{index}', request.pathIndex)
 
     try {
