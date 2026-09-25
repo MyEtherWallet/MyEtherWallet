@@ -16,7 +16,7 @@ import {
  * reused inside Pickers, Cells, rows, cards, Toasts and Modal headers — building
  * it once lets those compose it instead of re-implementing the layout.
  *
- * Colours come from `tone`: `default` (title `t-default`, description `info`) for
+ * Colours come from `tone`: `default` (title `text/default`, description `text/subtle`) for
  * light surfaces, `inverse` (white / white-70) for dark ones such as a Toast or
  * a dark modal header. The spans set their colour explicitly, so a wrapper's
  * `text-*` class would never reach them — use `tone` instead. The `inverted`
@@ -87,12 +87,12 @@ const descriptionClass = computed(() => [
     <template v-if="loading">
       <div class="py-[5px]">
         <div
-          class="inline-block h-3 w-[35px] rounded-[4px] bg-grey-10 animate-pulse"
+          class="inline-block h-3 w-[35px] rounded-[4px] bg-background-default-hover animate-pulse"
         ></div>
       </div>
       <div v-if="hasDescription" class="py-[5px]">
         <div
-          class="inline-block h-3 w-[79px] rounded-[4px] bg-grey-10 animate-pulse"
+          class="inline-block h-3 w-[79px] rounded-[4px] bg-background-default-hover animate-pulse"
         ></div>
       </div>
     </template>

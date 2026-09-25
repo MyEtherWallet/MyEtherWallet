@@ -79,7 +79,7 @@
                 <app-btn-text
                   @click="backStep"
                   is-large
-                  class="mt-2 text-primary"
+                  class="mt-2 text-text-brand"
                 >
                   {{ $t('common.back') }}
                 </app-btn-text>

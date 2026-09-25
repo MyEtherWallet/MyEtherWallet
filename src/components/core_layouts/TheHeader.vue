@@ -41,7 +41,7 @@
             :key="index"
             :to="{ name: item.routeName }"
             class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-surface"
+            active-class="bg-background-default-hover"
             v-ripple
           >
             {{ item.title }}
@@ -75,7 +75,7 @@
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
           v-else-if="isRestoringWallet"
-          class="w-[160px] h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
+          class="w-[160px] h-10 rounded-[20px] bg-background-default-hover animate-pulse shrink-0"
           aria-hidden="true"
         />
         <!-- Wallet area, trapped in its own stacking context so internal z-index

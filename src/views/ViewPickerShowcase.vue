@@ -16,7 +16,7 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
   {
     surface: 'default',
     label: 'Style: default — fills white, sits on a default (grey) surface',
-    page: 'bg-app-background',
+    page: 'bg-background-default',
   },
   {
     surface: 'alternative',
@@ -30,7 +30,7 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
       <h1 class="text-s-24 font-bold">Picker</h1>
-      <p class="text-s-14 text-info">
+      <p class="text-s-14 text-text-subtle">
         Trigger that opens a modal to pick something (use Dropdown when the
         choice is inline). Hover a row or Tab to it to see the hover and focus
         states.
@@ -43,10 +43,10 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
         <div
           v-for="size in SIZES"
           :key="size"
-          class="flex flex-col items-start gap-3 rounded-12 border border-grey-10 p-4"
+          class="flex flex-col items-start gap-3 rounded-12 border border-border-default p-4"
           :class="s.page"
         >
-          <p class="text-s-11 uppercase tracking-sp-06 text-info">
+          <p class="text-s-11 uppercase tracking-sp-06 text-text-subtle">
             size {{ size }}
           </p>
 

@@ -15,7 +15,7 @@ const VARIANTS: { surface: ChipSurface; label: string; page: string }[] = [
   {
     surface: 'default',
     label: 'Variant: base — fills white, sits on a default (grey) surface',
-    page: 'bg-app-background',
+    page: 'bg-background-default',
   },
   {
     surface: 'alternative',
@@ -33,7 +33,7 @@ const activePreset = ref('25%')
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
       <h1 class="text-s-24 font-bold">Chip</h1>
-      <p class="text-s-14 text-info">
+      <p class="text-s-14 text-text-subtle">
         Compact selectable pill for quick filters and presets. Hover a chip,
         press it, or Tab to it to see the hover, pressed and focus states.
       </p>
@@ -42,7 +42,7 @@ const activePreset = ref('25%')
     <section v-for="v in VARIANTS" :key="v.surface" class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">{{ v.label }}</h2>
       <div
-        class="flex flex-wrap items-start gap-4 rounded-12 border border-grey-10 p-6"
+        class="flex flex-wrap items-start gap-4 rounded-12 border border-border-default p-6"
         :class="v.page"
       >
         <AppChip :surface="v.surface" label="Ethereum">
@@ -80,7 +80,7 @@ const activePreset = ref('25%')
         Chip group — single select ({{ activePreset }})
       </h2>
       <div
-        class="flex flex-wrap gap-2 rounded-12 border border-grey-10 bg-white p-6"
+        class="flex flex-wrap gap-2 rounded-12 border border-border-default bg-white p-6"
       >
         <AppChip
           v-for="preset in PRESETS"

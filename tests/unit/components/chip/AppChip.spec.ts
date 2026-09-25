@@ -38,7 +38,7 @@ describe('AppChip', () => {
     const surface = mount(AppChip, {
       props: { label: 'ETH', surface: 'alternative' },
     })
-    expect(surface.get(root()).classes()).toContain('bg-bgBase')
+    expect(surface.get(root()).classes()).toContain('bg-background-default')
   })
 
   it('outlines a selected chip and stays borderless otherwise', () => {

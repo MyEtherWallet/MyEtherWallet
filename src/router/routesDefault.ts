@@ -76,6 +76,18 @@ const DefaultRoutes = <RouteNameCollection>[
               component: () => import('@/views/ViewTooltipShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
+            {
+              path: 'colors',
+              name: 'DevColors',
+              component: () => import('@/views/ViewColorPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'button',
+              name: 'DevButton',
+              component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
           ],
         },
       ]

@@ -35,33 +35,621 @@
   --line-height-p-150: 150%;
   --line-height-p-160: 160%;
 
-  --color-app-background: #f5f5f7;
-  --color-primary: rgb(0, 90, 229);
-  --color-info: rgba(0, 0, 0, 0.65);
-  --color-grey-5: rgba(0, 0, 0, 0.05);
-  --color-grey-10: rgba(0, 0, 0, 0.1);
-  --color-grey-outline: rgba(188, 200, 204, 1);
-  --color-mew-bg: rgba(53, 94, 236, 0.1);
+  /**
+   * Drop Tailwind's stock palette. The old JS config did this implicitly by
+   * setting `theme.colors` rather than `theme.extend.colors`; `@theme` EXTENDS
+   * by default, so without this reset every default shade reappears and
+   * off-system colours become reachable again as e.g. `bg-gray-200`.
+   */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
 
-  /* Avatar (design library). Alpha-based fallback survives a future dark theme. */
-  --color-avatar-fallback: rgba(177, 179, 178, 0.3);
-  --color-avatar-initial-bg: #edf2f7;
-  --color-avatar-badge-icon-bg: #e6e6e6;
-  --color-avatar-card-border: #e6e6e6;
+  /**
+   * Product / third-party branding. Deliberately outside the semantic set:
+   * these identify a thing rather than express a role, so they must not flip
+   * with the theme.
+   */
+  --color-gold: #ffd700; /* watchlist star */
+  --color-portfolio: #0c5876; /* paper wallet print branding */
+  --color-enkryptBg: rgba(186, 74, 255, 0.1); /* Enkrypt promo card */
+}
+
+/**
+ * DARK VARIANT
+ *
+ * Escape hatch for the rare thing a semantic token cannot express (theme-
+ * specific shadows, gradients). Prefer semantic tokens — they flip on their
+ * own, so `dark:` should stay rare.
+ */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/**
+ * COLOR PRIMITIVES
+ *
+ * Source of truth: Figma "MEW Web App — Design Library", page 🎨 Colors
+ * (file SI6XCvKMRNrv9YCayhZ9MH, node 25:126), section "Primitives · complete
+ * palette".
+ *
+ * These are plain custom properties, NOT `@theme` entries, so Tailwind
+ * generates no `bg-brand-700`-style utilities for them. Primitives are the
+ * only place a colour literal belongs; markup binds to the semantic tokens
+ * below. The off-tenth steps (neutral-150/250/375/650/750, brand-75, red-75,
+ * green-125/150, orange-75) exist because Figma's semantic tokens alias them.
+ */
+:root {
+  /* brand */
+  --brand-950: #0e2a5d;
+  --brand-900: #0d449b;
+  --brand-800: #084dc5;
+  --brand-700: #005ae5;
+  --brand-600: #0675ff;
+  --brand-500: #1e91ff;
+  --brand-400: #48adff;
+  --brand-300: #83cbff;
+  --brand-200: #b5deff;
+  --brand-100: #d6edff;
+  --brand-75: #edf2f7;
+  --brand-50: #edf6ff;
+
+  /* purple */
+  --purple-950: #1e0b6a;
+  --purple-900: #37169c;
+  --purple-800: #4018bf;
+  --purple-700: #4d1ee3;
+  --purple-600: #5c30f7;
+  --purple-500: #684cff;
+  --purple-400: #9285ff;
+  --purple-300: #b6b1ff;
+  --purple-200: #d5d4ff;
+  --purple-100: #e9e8ff;
+  --purple-50: #f2f2ff;
+
+  /* violet */
+  --violet-950: #4c0076;
+  --violet-900: #67079c;
+  --violet-800: #7d06c3;
+  --violet-700: #9d00ff;
+  --violet-600: #a00fff;
+  --violet-500: #ad35ff;
+  --violet-400: #c16cff;
+  --violet-300: #d8a5ff;
+  --violet-200: #e9cdff;
+  --violet-100: #f3e3ff;
+  --violet-50: #faf3ff;
+
+  /* red */
+  --red-950: #520023;
+  --red-900: #920947;
+  --red-800: #ab064c;
+  --red-700: #cc0452;
+  --red-600: #e40c58;
+  --red-500: #f31b6f;
+  --red-400: #ff5789;
+  --red-300: #ff8aa9;
+  --red-200: #ffc2d3;
+  --red-100: #ffdbe3;
+  --red-75: #f7edf1;
+  --red-50: #fff0f3;
+
+  /* green */
+  --green-950: #003330;
+  --green-900: #0e534c;
+  --green-800: #0a655c;
+  --green-700: #067f71;
+  --green-600: #01a08c;
+  --green-500: #05c0a5;
+  --green-400: #1ee3c3;
+  --green-300: #51f7d7;
+  --green-200: #91fee5;
+  --green-150: #b4ece4;
+  --green-125: #cdf2ed;
+  --green-100: #c8fff1;
+  --green-50: #effefa;
+
+  /* orange */
+  --orange-950: #481a00;
+  --orange-900: #7c360b;
+  --orange-800: #984108;
+  --orange-700: #bb5602;
+  --orange-600: #e27d00;
+  --orange-500: #ffa500;
+  --orange-400: #ffbe1b;
+  --orange-300: #ffcb46;
+  --orange-200: #ffde85;
+  --orange-100: #ffedc5;
+  --orange-75: #f7f4ed;
+  --orange-50: #fff7ea;
+
+  /* neutral */
+  --white: #ffffff;
+  --black: #000000;
+  --neutral-900: #1a1a1a;
+  --neutral-800: #222222;
+  --neutral-750: #333333;
+  --neutral-700: #434343;
+  --neutral-650: #4d4d4d;
+  --neutral-600: #575757;
+  --neutral-500: #767676;
+  --neutral-400: #a5a5a5;
+  --neutral-375: #b3b3b3;
+  --neutral-300: #d6d6d6;
+  --neutral-250: #dedede;
+  --neutral-200: #e6e6e6;
+  --neutral-150: #ededed;
+  --neutral-100: #f5f5f5;
+  --neutral-50: #fafafa;
+}
+
+/**
+ * SEMANTIC TOKENS — LIGHT
+ *
+ * The indirection layer, one variable per published Figma token (96 of them).
+ * Names mirror the Figma variable paths 1:1, so `background/default` becomes
+ * `--background-default` and, via the `@theme inline` block below,
+ * `bg-background-default`. The trailing comment on each line is the primitive
+ * it aliases in Figma.
+ *
+ * Components bind to these and never to a ramp step, so the whole theme swaps
+ * by redefining this one block.
+ */
+:root {
+  color-scheme: light;
+
+  /* background · neutral surfaces */
+  --background-default: var(--neutral-100); /* neutral/100 */
+  --background-default-hover: var(--neutral-200); /* neutral/200 */
+  --background-default-pressed: var(--neutral-300); /* neutral/300 */
+  --background-alternative: var(--white); /* neutral/white */
+  --background-alternative-hover: var(--neutral-150); /* neutral/150 */
+  --background-alternative-pressed: var(--neutral-200); /* neutral/200 */
+  --background-toggle: var(--neutral-300); /* neutral/300 */
+  --background-formfield: var(--neutral-100); /* neutral/100 */
+  --background-formfield-hover: var(--neutral-200); /* neutral/200 */
+  --background-skeleton: var(--neutral-200); /* neutral/200 */
+  --background-disabled: var(--neutral-100); /* neutral/100 */
+  --background-default-selected: var(--neutral-250); /* neutral/250 */
+  --background-alternative-selected: var(--neutral-150); /* neutral/150 */
+
+  /* background · contrast */
+  --background-contrast-default: var(--neutral-800); /* neutral/800 */
+  --background-contrast-hover: var(--neutral-750); /* neutral/750 */
+  --background-contrast-pressed: var(--neutral-650); /* neutral/650 */
+  --background-contrast-disabled: var(--neutral-900); /* neutral/900 */
+
+  /* background · brand */
+  --background-brand: var(--brand-700); /* brand/700 */
+  --background-brand-hover: var(--brand-800); /* brand/800 */
+  --background-brand-pressed: var(--brand-900); /* brand/900 */
+  --background-brand-disabled: var(--brand-200); /* brand/200 */
+  --background-brand-subtle: var(--brand-75); /* brand/75 */
+  --background-brand-subtle-hover: var(--brand-100); /* brand/100 */
+  --background-brand-subtle-pressed: var(--brand-200); /* brand/200 */
+  --background-loading-track: var(--brand-200); /* brand/200 */
+
+  /* background · status */
+  --background-error: var(--red-600); /* red/600 */
+  --background-error-hover: var(--red-700); /* red/700 */
+  --background-error-pressed: var(--red-800); /* red/800 */
+  --background-error-subtle: var(--red-75); /* red/75 */
+  --background-error-subtle-hover: var(--red-100); /* red/100 */
+  --background-error-subtle-pressed: var(--red-200); /* red/200 */
+  --background-loading-track-danger: var(--red-400); /* red/400 */
+  --background-success: var(--green-600); /* green/600 */
+  --background-success-subtle: var(--green-125); /* green/125 */
+  --background-success-subtle-hover: var(--green-150); /* green/150 */
+  --background-warning: var(--orange-600); /* orange/600 */
+  --background-warning-subtle: var(--orange-75); /* orange/75 */
+  --background-warning-subtle-hover: var(--orange-100); /* orange/100 */
+  --background-info: var(--neutral-900); /* neutral/900 */
+  --background-info-subtle: var(--brand-75); /* brand/75 */
+
+  /* background · overlay */
+  /* neutral/black · 20%, neutral/white · 40% */
+  --background-overlay-subtle: rgb(0 0 0 / 0.2);
+  --background-overlay-inverted: rgb(255 255 255 / 0.4);
+
+  /* background · decorative (category / illustration only) */
+  --background-decorative-blue: var(--brand-500); /* brand/500 */
+  --background-decorative-blue-strong: var(--brand-700); /* brand/700 */
+  --background-decorative-purple: var(--purple-500); /* purple/500 */
+  --background-decorative-purple-strong: var(--purple-700); /* purple/700 */
+  --background-decorative-violet: var(--violet-400); /* violet/400 */
+  --background-decorative-violet-strong: var(--violet-700); /* violet/700 */
+  --background-decorative-pink: var(--red-500); /* red/500 */
+  --background-decorative-pink-strong: var(--red-700); /* red/700 */
+  --background-decorative-orange: var(--orange-500); /* orange/500 */
+  --background-decorative-orange-strong: var(--orange-600); /* orange/600 */
+  --background-decorative-green: var(--green-600); /* green/600 */
+  --background-decorative-green-strong: var(--green-700); /* green/700 */
+  --background-decorative-neutral: var(--neutral-500); /* neutral/500 */
+
+  /* text */
+  --text-default: var(--black); /* neutral/black */
+  --text-subtle: var(--neutral-600); /* neutral/600 */
+  --text-muted: var(--neutral-500); /* neutral/500 */
+  --text-placeholder: var(--neutral-400); /* neutral/400 */
+  --text-disabled: var(--neutral-400); /* neutral/400 */
+  --text-inverted: var(--white); /* neutral/white */
+  --text-inverted-subtle: var(--neutral-375); /* neutral/375 */
+  --text-brand: var(--brand-700); /* brand/700 */
+  --text-brand-hover: var(--brand-800); /* brand/800 */
+  --text-brand-pressed: var(--brand-900); /* brand/900 */
+  --text-error: var(--red-600); /* red/600 */
+  --text-success: var(--green-600); /* green/600 */
+  --text-warning: var(--orange-600); /* orange/600 */
+  --text-info: var(--brand-700); /* brand/700 */
+  --text-on-brand: var(--white); /* neutral/white */
+  --text-on-error: var(--white); /* neutral/white */
+  --text-on-success: var(--white); /* neutral/white */
+  --text-on-warning: var(--black); /* neutral/black */
+
+  /* icon */
+  --icon-default: var(--black); /* neutral/black */
+  --icon-subtle: var(--neutral-500); /* neutral/500 */
+  --icon-disabled: var(--neutral-400); /* neutral/400 */
+  --icon-inverted: var(--white); /* neutral/white */
+  --icon-brand: var(--brand-700); /* brand/700 */
+  --icon-error: var(--red-600); /* red/600 */
+  --icon-success: var(--green-600); /* green/600 */
+  --icon-warning: var(--orange-600); /* orange/600 */
+
+  /* border */
+  --border-subtle: var(--neutral-100); /* neutral/100 */
+  --border-default: var(--neutral-200); /* neutral/200 */
+  --border-strong: var(--neutral-300); /* neutral/300 */
+  --border-hover: var(--neutral-400); /* neutral/400 */
+  --border-pressed: var(--neutral-500); /* neutral/500 */
+  --border-selected: var(--black); /* neutral/black */
+  --border-focus: var(--brand-600); /* brand/600 */
+  --border-brand: var(--brand-700); /* brand/700 */
+  --border-error: var(--red-600); /* red/600 */
+  --border-error-subtle: var(--red-200); /* red/200 */
+  --border-success: var(--green-600); /* green/600 */
+  --border-warning: var(--orange-600); /* orange/600 */
+  --border-disabled: var(--neutral-200); /* neutral/200 */
+  --border-inverted: var(--neutral-750); /* neutral/750 */
+
+  /**
+   * Elevation. Each shadow is held whole in its own variable rather than
+   * assembled from parts: Tailwind's `shadow-*` parser walks the value looking
+   * for a colour slot to swap for `--tw-shadow-color`, and given a composed
+   * value it mistakes the blur or spread for the colour and emits invalid CSS.
+   * A single `var()` has nothing to mis-split.
+   */
+  --shadow-token-value: 0px 3px 5px rgb(0 0 0 / 0.16);
+  --shadow-button-value: 0px 1px 4px 0px rgb(0 0 0 / 0.12);
+  --shadow-container-value: 0px 1.5px 6px 0px rgb(0 0 0 / 0.1);
+  --shadow-button-elevated-value:
+    0px 1px 4px 0px rgb(0 0 0 / 0.12), 0px 0px 1px 0px rgb(0 0 0 / 0.25);
+}
+
+/**
+ * SEMANTIC TOKENS — DARK
+ *
+ * The entire dark theme is this one block. Figma publishes only a light
+ * "Base" mode, so these values are authored here — but every one is an
+ * existing ramp step, so no off-system colour enters the codebase.
+ *
+ * Scoped to any [data-theme='dark'] rather than :root specifically, so a
+ * single container can be themed independently of the document. That is what
+ * lets /dev/colors render the light and dark palettes side by side.
+ *
+ * Two deliberate asymmetries:
+ *   - `text/on-*` and `background/contrast-*` do not simply invert. `on-*` is
+ *     text sitting ON a filled brand or status surface, which stays white in
+ *     both themes; inverting it would put black labels on every primary
+ *     button. `contrast-*` is the inverse of the page, so it flips to near-white.
+ *   - brand and status solids shift lighter rather than darker: brand/700
+ *     (#005ae5) on #1a1a1a is ~2.9:1, below AA for text, where brand/500
+ *     (#1e91ff) reaches ~6.6:1.
+ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* background · neutral surfaces */
+  --background-default: var(--neutral-900);
+  --background-default-hover: var(--neutral-700);
+  --background-default-pressed: var(--neutral-650);
+  --background-alternative: var(--neutral-800);
+  --background-alternative-hover: var(--neutral-750);
+  --background-alternative-pressed: var(--neutral-700);
+  --background-toggle: var(--neutral-650);
+  --background-formfield: var(--neutral-800);
+  --background-formfield-hover: var(--neutral-750);
+  --background-skeleton: var(--neutral-700);
+  --background-disabled: var(--neutral-800);
+  --background-default-selected: var(--neutral-700);
+  --background-alternative-selected: var(--neutral-750);
+
+  /* background · contrast */
+  --background-contrast-default: var(--neutral-100);
+  --background-contrast-hover: var(--neutral-150);
+  --background-contrast-pressed: var(--neutral-250);
+  --background-contrast-disabled: var(--neutral-50);
+
+  /* background · brand */
+  --background-brand: var(--brand-500);
+  --background-brand-hover: var(--brand-400);
+  --background-brand-pressed: var(--brand-300);
+  --background-brand-disabled: var(--brand-900);
+  --background-brand-subtle: var(--brand-950);
+  --background-brand-subtle-hover: var(--brand-900);
+  --background-brand-subtle-pressed: var(--brand-800);
+  --background-loading-track: var(--brand-900);
+
+  /* background · status */
+  --background-error: var(--red-500);
+  --background-error-hover: var(--red-400);
+  --background-error-pressed: var(--red-300);
+  --background-error-subtle: var(--red-950);
+  --background-error-subtle-hover: var(--red-900);
+  --background-error-subtle-pressed: var(--red-800);
+  --background-loading-track-danger: var(--red-900);
+  --background-success: var(--green-500);
+  --background-success-subtle: var(--green-950);
+  --background-success-subtle-hover: var(--green-900);
+  --background-warning: var(--orange-400);
+  --background-warning-subtle: var(--orange-950);
+  --background-warning-subtle-hover: var(--orange-900);
+  --background-info: var(--neutral-100);
+  --background-info-subtle: var(--brand-950);
+
+  /* background · overlay */
+  --background-overlay-subtle: rgba(0, 0, 0, 0.6);
+  --background-overlay-inverted: rgba(255, 255, 255, 0.24);
+
+  /* background · decorative (category / illustration only) */
+  --background-decorative-blue: var(--brand-400);
+  --background-decorative-blue-strong: var(--brand-500);
+  --background-decorative-purple: var(--purple-400);
+  --background-decorative-purple-strong: var(--purple-500);
+  --background-decorative-violet: var(--violet-300);
+  --background-decorative-violet-strong: var(--violet-500);
+  --background-decorative-pink: var(--red-400);
+  --background-decorative-pink-strong: var(--red-500);
+  --background-decorative-orange: var(--orange-400);
+  --background-decorative-orange-strong: var(--orange-500);
+  --background-decorative-green: var(--green-500);
+  --background-decorative-green-strong: var(--green-600);
+  --background-decorative-neutral: var(--neutral-400);
+
+  /* text */
+  --text-default: var(--white);
+  --text-subtle: var(--neutral-400);
+  --text-muted: var(--neutral-500);
+  --text-placeholder: var(--neutral-500);
+  --text-disabled: var(--neutral-600);
+  --text-inverted: var(--black);
+  --text-inverted-subtle: var(--neutral-650);
+  --text-brand: var(--brand-500);
+  --text-brand-hover: var(--brand-400);
+  --text-brand-pressed: var(--brand-300);
+  --text-error: var(--red-400);
+  --text-success: var(--green-500);
+  --text-warning: var(--orange-400);
+  --text-info: var(--brand-500);
+
+  /* icon */
+  --icon-default: var(--white);
+  --icon-subtle: var(--neutral-400);
+  --icon-disabled: var(--neutral-600);
+  --icon-inverted: var(--black);
+  --icon-brand: var(--brand-500);
+  --icon-error: var(--red-400);
+  --icon-success: var(--green-500);
+  --icon-warning: var(--orange-400);
+
+  /* border */
+  --border-subtle: var(--neutral-800);
+  --border-default: var(--neutral-700);
+  --border-strong: var(--neutral-650);
+  --border-hover: var(--neutral-500);
+  --border-pressed: var(--neutral-400);
+  --border-selected: var(--white);
+  --border-focus: var(--brand-500);
+  --border-brand: var(--brand-500);
+  --border-error: var(--red-400);
+  --border-error-subtle: var(--red-800);
+  --border-success: var(--green-500);
+  --border-warning: var(--orange-400);
+  --border-disabled: var(--neutral-700);
+  --border-inverted: var(--neutral-150);
+
+  /* A 12%-black shadow is invisible on a near-black surface. */
+  --shadow-token-value: 0px 3px 5px rgb(0 0 0 / 0.5);
+  --shadow-button-value: 0px 1px 4px 0px rgb(0 0 0 / 0.4);
+  --shadow-container-value: 0px 1.5px 6px 0px rgb(0 0 0 / 0.35);
+  --shadow-button-elevated-value:
+    0px 1px 4px 0px rgb(0 0 0 / 0.4), 0px 0px 1px 0px rgb(0 0 0 / 0.6);
+}
+
+/**
+ * SEMANTIC UTILITIES
+ *
+ * `inline` is load-bearing: it makes each utility resolve `var(--fg)`-style
+ * references at the use site instead of baking in a copy of the value, which
+ * is what lets the [data-theme='dark'] block above swap the theme at runtime.
+ */
+@theme inline {
+  /* background · neutral surfaces */
+  --color-background-default: var(--background-default);
+  --color-background-default-hover: var(--background-default-hover);
+  --color-background-default-pressed: var(--background-default-pressed);
+  --color-background-alternative: var(--background-alternative);
+  --color-background-alternative-hover: var(--background-alternative-hover);
+  --color-background-alternative-pressed: var(--background-alternative-pressed);
+  --color-background-toggle: var(--background-toggle);
+  --color-background-formfield: var(--background-formfield);
+  --color-background-formfield-hover: var(--background-formfield-hover);
+  --color-background-skeleton: var(--background-skeleton);
+  --color-background-disabled: var(--background-disabled);
+  --color-background-default-selected: var(--background-default-selected);
+  --color-background-alternative-selected: var(
+    --background-alternative-selected
+  );
+
+  /* background · contrast */
+  --color-background-contrast-default: var(--background-contrast-default);
+  --color-background-contrast-hover: var(--background-contrast-hover);
+  --color-background-contrast-pressed: var(--background-contrast-pressed);
+  --color-background-contrast-disabled: var(--background-contrast-disabled);
+
+  /* background · brand */
+  --color-background-brand: var(--background-brand);
+  --color-background-brand-hover: var(--background-brand-hover);
+  --color-background-brand-pressed: var(--background-brand-pressed);
+  --color-background-brand-disabled: var(--background-brand-disabled);
+  --color-background-brand-subtle: var(--background-brand-subtle);
+  --color-background-brand-subtle-hover: var(--background-brand-subtle-hover);
+  --color-background-brand-subtle-pressed: var(
+    --background-brand-subtle-pressed
+  );
+  --color-background-loading-track: var(--background-loading-track);
+
+  /* background · status */
+  --color-background-error: var(--background-error);
+  --color-background-error-hover: var(--background-error-hover);
+  --color-background-error-pressed: var(--background-error-pressed);
+  --color-background-error-subtle: var(--background-error-subtle);
+  --color-background-error-subtle-hover: var(--background-error-subtle-hover);
+  --color-background-error-subtle-pressed: var(
+    --background-error-subtle-pressed
+  );
+  --color-background-loading-track-danger: var(
+    --background-loading-track-danger
+  );
+  --color-background-success: var(--background-success);
+  --color-background-success-subtle: var(--background-success-subtle);
+  --color-background-success-subtle-hover: var(
+    --background-success-subtle-hover
+  );
+  --color-background-warning: var(--background-warning);
+  --color-background-warning-subtle: var(--background-warning-subtle);
+  --color-background-warning-subtle-hover: var(
+    --background-warning-subtle-hover
+  );
+  --color-background-info: var(--background-info);
+  --color-background-info-subtle: var(--background-info-subtle);
+
+  /* background · overlay */
+  --color-background-overlay-subtle: var(--background-overlay-subtle);
+  --color-background-overlay-inverted: var(--background-overlay-inverted);
+
+  /* background · decorative (category / illustration only) */
+  --color-background-decorative-blue: var(--background-decorative-blue);
+  --color-background-decorative-blue-strong: var(
+    --background-decorative-blue-strong
+  );
+  --color-background-decorative-purple: var(--background-decorative-purple);
+  --color-background-decorative-purple-strong: var(
+    --background-decorative-purple-strong
+  );
+  --color-background-decorative-violet: var(--background-decorative-violet);
+  --color-background-decorative-violet-strong: var(
+    --background-decorative-violet-strong
+  );
+  --color-background-decorative-pink: var(--background-decorative-pink);
+  --color-background-decorative-pink-strong: var(
+    --background-decorative-pink-strong
+  );
+  --color-background-decorative-orange: var(--background-decorative-orange);
+  --color-background-decorative-orange-strong: var(
+    --background-decorative-orange-strong
+  );
+  --color-background-decorative-green: var(--background-decorative-green);
+  --color-background-decorative-green-strong: var(
+    --background-decorative-green-strong
+  );
+  --color-background-decorative-neutral: var(--background-decorative-neutral);
+
+  /* text */
+  --color-text-default: var(--text-default);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-muted: var(--text-muted);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-text-disabled: var(--text-disabled);
+  --color-text-inverted: var(--text-inverted);
+  --color-text-inverted-subtle: var(--text-inverted-subtle);
+  --color-text-brand: var(--text-brand);
+  --color-text-brand-hover: var(--text-brand-hover);
+  --color-text-brand-pressed: var(--text-brand-pressed);
+  --color-text-error: var(--text-error);
+  --color-text-success: var(--text-success);
+  --color-text-warning: var(--text-warning);
+  --color-text-info: var(--text-info);
+  --color-text-on-brand: var(--text-on-brand);
+  --color-text-on-error: var(--text-on-error);
+  --color-text-on-success: var(--text-on-success);
+  --color-text-on-warning: var(--text-on-warning);
+
+  /* icon */
+  --color-icon-default: var(--icon-default);
+  --color-icon-subtle: var(--icon-subtle);
+  --color-icon-disabled: var(--icon-disabled);
+  --color-icon-inverted: var(--icon-inverted);
+  --color-icon-brand: var(--icon-brand);
+  --color-icon-error: var(--icon-error);
+  --color-icon-success: var(--icon-success);
+  --color-icon-warning: var(--icon-warning);
+
+  /* border */
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-hover: var(--border-hover);
+  --color-border-pressed: var(--border-pressed);
+  --color-border-selected: var(--border-selected);
+  --color-border-focus: var(--border-focus);
+  --color-border-brand: var(--border-brand);
+  --color-border-error: var(--border-error);
+  --color-border-error-subtle: var(--border-error-subtle);
+  --color-border-success: var(--border-success);
+  --color-border-warning: var(--border-warning);
+  --color-border-disabled: var(--border-disabled);
+  --color-border-inverted: var(--border-inverted);
+
+  /**
+   * Vendor compatibility ONLY.
+   *
+   * @myetherwallet/vue-common-components hardcodes `bg-primary`, `text-info`,
+   * `text-error`, `border-error` and `ring-error` as strings inside its dist
+   * bundle, which sits in our Tailwind content globs (tailwind.config.js).
+   * Removing these makes those components lose their styling silently —
+   * Tailwind emits no CSS for an unknown class and raises no error.
+   *
+   * DO NOT use in app code. Use the semantic tokens above instead.
+   */
+  --color-primary: var(--background-brand);
+  --color-info: var(--text-subtle);
+  --color-error: var(--background-error);
+
+  /* Elevation — see the *-value variables above for why these are indirected. */
+  --shadow-token: var(--shadow-token-value);
+  --shadow-button: var(--shadow-button-value);
+  --shadow-container: var(--shadow-container-value);
+  --shadow-button-elevated: var(--shadow-button-elevated-value);
 }
 
 /**
  * VARIABLES
  */
 :root {
-  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family:
+    'DM Sans',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --borderRadius: 5px;
   min-width: 320px;
   zoom: 1;
-  background-color: #f5f5f7;
-  color: rgba(0, 0, 0, 1);
+  background-color: var(--background-default);
+  color: var(--text-default);
   box-sizing: border-box;
 }
 
@@ -185,7 +773,7 @@
 }
 
 .hoverNoBG {
-  @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
+  @apply hover:bg-background-default-hover transition-colors duration-300 ease-in-out;
 }
 
 .hoverOnDarkBG {
@@ -193,7 +781,7 @@
 }
 
 .hoverBGWhite {
-  @apply hover:bg-grey-light transition-all duration-300 ease-in;
+  @apply hover:bg-background-default-hover transition-all duration-300 ease-in;
 }
 
 /**
@@ -322,7 +910,7 @@ html {
 .mew-scrollbar {
   scrollbar-width: thin !important;
   /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent !important;
+  scrollbar-color: var(--color-background-overlay-subtle) transparent !important;
   -ms-overflow-style: auto !important;
   /* IE and Edge */
 }
@@ -337,7 +925,7 @@ html {
 }
 
 .mew-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2) !important;
+  background-color: var(--color-background-overlay-subtle) !important;
   border-radius: 10px !important;
   border: 4px solid transparent !important;
   background-clip: content-box !important;

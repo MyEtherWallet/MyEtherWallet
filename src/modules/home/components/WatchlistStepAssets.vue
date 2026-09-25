@@ -33,13 +33,13 @@ const toggle = (id: string) => {
       class="flex min-h-[360px] flex-col items-center justify-center text-center"
     >
       <span
-        class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"
+        class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
         aria-hidden="true"
       />
       <p class="mt-6 text-s-20 font-bold text-black">
         {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
       </p>
-      <p class="mt-1 text-s-16 text-[#575757]">
+      <p class="mt-1 text-s-16 text-text-subtle">
         {{ t('homePage.hero.watchlist.onboarding.assets.loadingSubtitle') }}
       </p>
     </div>
@@ -49,7 +49,7 @@ const toggle = (id: string) => {
       <h2 class="text-s-24 font-bold text-black">
         {{ t('homePage.hero.watchlist.onboarding.assets.title') }}
       </h2>
-      <p class="mt-1 text-s-16 text-[#575757]">
+      <p class="mt-1 text-s-16 text-text-subtle">
         {{ t('homePage.hero.watchlist.onboarding.assets.subtitle') }}
       </p>
 
@@ -70,8 +70,8 @@ const toggle = (id: string) => {
             class="absolute left-2 top-3 flex size-5 items-center justify-center rounded-full"
             :class="
               selected.includes(asset.id)
-                ? 'bg-success text-white'
-                : 'bg-[#e6e6e6] text-black'
+                ? 'bg-background-success text-white'
+                : 'bg-background-default-hover text-black'
             "
             aria-hidden="true"
           >
@@ -90,7 +90,7 @@ const toggle = (id: string) => {
       </div>
 
       <div class="mt-4 flex items-center justify-end gap-4">
-        <span class="text-s-14 text-[#575757]">
+        <span class="text-s-14 text-text-subtle">
           {{
             t('homePage.hero.watchlist.onboarding.assets.selected', {
               count: selected.length,

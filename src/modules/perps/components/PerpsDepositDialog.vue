@@ -8,7 +8,7 @@
     <template v-if="showDepositAddress && showIsLive" #title>
       <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
         <button
-          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-grey-5 transition-colors mr-2"
+          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-background-default transition-colors mr-2"
           @click="showDepositAddress = false"
         >
           <chevron-left-icon class="w-5 h-5" />
@@ -30,7 +30,7 @@
               :label="$t('perps.deposit.live-mode-label')"
               class="mb-4"
             /> -->
-            <div class="bg-mewBg rounded-20 px-4 p-4">
+            <div class="bg-background-brand-subtle rounded-20 px-4 p-4">
               <!-- Amount Input -->
               <p class="font-bold ml-3 mb-1">
                 {{ $t('perps.deposit.amount-label') }}
@@ -72,7 +72,7 @@
               <!-- Network -->
               <div class="mt-5 px-2 flex items-center justify-between">
                 <p
-                  class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
+                  class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
                 >
                   {{ $t('perps.deposit.from-network-label') }}
                 </p>
@@ -97,7 +97,7 @@
               <!--Deposit Address-->
               <div class="py-4 px-2 flex items-center justify-between">
                 <p
-                  class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
+                  class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
                 >
                   {{ $t('perps.deposit.to-address-label') }}
                 </p>
@@ -107,7 +107,7 @@
                     v-if="showIsLive"
                     class="font-medium text-s-14 flex items-center gap-2"
                     :class="{
-                      'animate-pulse w-[120px] h-[21px] bg-surface rounded-8':
+                      'animate-pulse w-[120px] h-[21px] bg-background-default-hover rounded-8':
                         !depositAddress,
                     }"
                   >
@@ -132,9 +132,9 @@
             <!-- Error -->
             <div
               v-if="error"
-              class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-4 mt-2"
+              class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4 mb-4 mt-2"
             >
-              <p class="text-[#ff5b5a] text-s-14 font-medium">{{ error }}</p>
+              <p class="text-text-error text-s-14 font-medium">{{ error }}</p>
             </div>
 
             <!-- Deposit Button -->
@@ -150,7 +150,7 @@
             <!-- Deposit Address Link -->
             <div v-if="showIsLive && depositAddress" class="text-center mt-5">
               <button
-                class="text-primary text-s-14 font-medium hover:underline inline-flex items-center gap-1"
+                class="text-text-brand text-s-14 font-medium hover:underline inline-flex items-center gap-1"
                 @click="showDepositAddress = true"
               >
                 {{ $t('perps.deposit.use-deposit-address-link') }}
@@ -170,7 +170,7 @@
           <!-- QR Code -->
           <div class="flex justify-center mb-8">
             <div
-              class="rounded-[20px] border border-[#e5e7eb] p-4 relative inline-block"
+              class="rounded-[20px] border border-border-default p-4 relative inline-block"
             >
               <qrcode-vue
                 :value="depositAddress || ''"
@@ -217,7 +217,7 @@
               </div>
             </div>
             <p
-              class="font-bold text-s-15 text-textDark break-all flex-1 leading-snug"
+              class="font-bold text-s-15 text-text-default break-all flex-1 leading-snug"
             >
               {{ depositAddress }}
             </p>

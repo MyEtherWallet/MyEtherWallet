@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-[160px] px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-grey-subtle focus:outline-none focus:ring-0',
+        'w-full h-[160px] px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-text-placeholder focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"
@@ -21,10 +21,10 @@
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
       <template v-if="showFeedback">
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
+        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-text-error" />
         <p
           :id="feedbackId"
-          class="text-xs leading-[18px] text-error min-w-0 break-words"
+          class="text-xs leading-[18px] text-text-error min-w-0 break-words"
         >
           {{ errorMessage || $t('common.required') }}
         </p>
@@ -32,7 +32,7 @@
       <button
         v-if="hasValue && !readonly"
         @click="clearInputValue"
-        class="text-s-14 font-medium text-primary hoverOpacity ml-auto px-2"
+        class="text-s-14 font-medium text-text-brand hoverOpacity ml-auto px-2"
       >
         {{ $t('common.clear') }}
       </button>
@@ -125,17 +125,18 @@ const onInput = () => {
  -------------------------*/
 const surfaceClass = computed(() => {
   const base = 'box-border transition-colors resize-none'
-  const ring = hasError.value ? 'border-error' : 'border-primary'
+  const ring = hasError.value ? 'border-border-error' : 'border-border-brand'
 
   if (props.surface === 'alternative') {
     if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
     // Constant 2px border; the resting 1px line is an inset ring so hover never
     // shifts the text (mirrors AppInput).
-    return `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default hover:ring-0 hover:border-grey-subtle`
+    return `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default hover:ring-0 hover:border-border-hover`
   }
 
-  if (inFocusInput.value) return `${base} bg-bgBase border-2 ${ring}`
-  return `${base} bg-bgBase border-2 border-transparent hover:border-grey-subtle`
+  if (inFocusInput.value)
+    return `${base} bg-background-default border-2 ${ring}`
+  return `${base} bg-background-default border-2 border-transparent hover:border-border-hover`
 })
 
 const clearInputValue = () => {

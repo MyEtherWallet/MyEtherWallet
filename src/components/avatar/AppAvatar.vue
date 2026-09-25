@@ -127,7 +127,7 @@ watchEffect(() => {
     <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
     <div
       class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-      :class="{ 'bg-avatar-fallback': showFallbackBg }"
+      :class="{ 'bg-background-info-subtle': showFallbackBg }"
     >
       <component :is="typeComponent" v-bind="forwardProps">
         <slot name="icon" />
@@ -140,7 +140,7 @@ watchEffect(() => {
 
     <span
       v-if="showConnectedRing"
-      class="absolute rounded-full border-2 border-success pointer-events-none"
+      class="absolute rounded-full border-2 border-border-success pointer-events-none"
       :style="connectedRingStyle"
     />
   </div>

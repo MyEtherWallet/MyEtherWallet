@@ -5,12 +5,14 @@
         <div class="flex items-end justify-between mb-4 px-4">
           <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
           <app-btn-text
-            class="text-primary text-s-15 pb-1"
+            class="text-text-brand text-s-15 pb-1"
             @click="resetSendModule"
             >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
-        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+        <div
+          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+        >
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelectedContract"
@@ -19,11 +21,18 @@
             :is-pristine="isPristine"
           >
             <template #balance-action>
-              <div v-if="isWalletConnected && !isWatchOnly && tokenSelected && isInternalWallet()">
+              <div
+                v-if="
+                  isWalletConnected &&
+                  !isWatchOnly &&
+                  tokenSelected &&
+                  isInternalWallet()
+                "
+              >
                 <button
                   type="button"
                   class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                @click="setMaxAmount()"
+                  @click="setMaxAmount()"
                 >
                   {{ $t('common.max') }}
                 </button>
@@ -271,23 +280,26 @@ const isNativeTokenSelected = computed(() => {
 /** ----------------
  * Max Amount
  ------------------*/
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
-  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
-  getDecimals: () => tokenSelected.value?.decimals ?? 18,
-  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
-  isNativeToken: () => isNativeTokenSelected.value,
-  isTokenSelected: () => !!tokenSelected.value,
-  getAmount: () => amount.value,
-  onAmountChange: value => { amount.value = value },
-  markFormDirty,
-  resetFormPristine: resetPristine,
-  getTokenIdentifier: () => tokenSelectedContract.value,
-  getDependencies: () => [
-    tokenSelected.value?.balanceWei,
-    selectedFeeNativeValue.value,
-  ],
-  onMaxApplied: () => checkAmountForError(),
-})
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
+  useMaxAmount({
+    getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+    getDecimals: () => tokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+    isNativeToken: () => isNativeTokenSelected.value,
+    isTokenSelected: () => !!tokenSelected.value,
+    getAmount: () => amount.value,
+    onAmountChange: value => {
+      amount.value = value
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => tokenSelectedContract.value,
+    getDependencies: () => [
+      tokenSelected.value?.balanceWei,
+      selectedFeeNativeValue.value,
+    ],
+    onMaxApplied: () => checkAmountForError(),
+  })
 
 const checkAmountForError = () => {
   // Skip validation if form is pristine (just cleared or initial state)
@@ -302,7 +314,10 @@ const checkAmountForError = () => {
     tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? safeParseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
+    ? safeParseUnits(
+        amount.value.toString(),
+        tokenSelected.value?.decimals ?? 18,
+      )
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -477,7 +492,11 @@ watchDebounced(
     prevToken.value = currentToken
     prevToAddress.value = currentToAddress
 
-    if (isMaxSelected.value && onlyAmountChanged && isNativeTokenSelected.value) {
+    if (
+      isMaxSelected.value &&
+      onlyAmountChanged &&
+      isNativeTokenSelected.value
+    ) {
       return
     }
 

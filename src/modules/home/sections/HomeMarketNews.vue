@@ -87,7 +87,7 @@ const tokenTo = (item: {
     <p
       v-if="total === 0"
       data-test="news-empty"
-      class="text-s-16 text-[#575757]"
+      class="text-s-16 text-text-subtle"
     >
       {{ t('homePage.news.empty') }}
     </p>
