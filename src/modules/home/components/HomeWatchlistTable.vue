@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
@@ -14,11 +15,12 @@ import {
 } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
@@ -49,6 +51,15 @@ const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
 const router = useRouter()
 const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
+
+// The add modal only offers crypto + stocks, so once both buckets hit the limit
+// there's nothing left to add — hide the "Add asset" button.
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const isWatchlistFull = computed(
+  () =>
+    watchListedTokens.value.length >= WATCHLIST_MAX &&
+    watchListedStocks.value.length >= WATCHLIST_MAX,
+)
 
 const matchesCategory = (r: WatchlistRow) =>
   category.value === 'all' ||
@@ -146,15 +157,26 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <h2 class="min-w-0 flex-1 text-s-20 font-bold text-black">
         {{ t('homePage.hero.watchlist.table.title') }}
       </h2>
-      <button
-        type="button"
-        data-test="watchlist-add-new-mobile"
-        class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:hidden"
-        @click="isAddOpen = true"
+      <AppTooltip
+        :text="
+          isWatchlistFull
+            ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
+            : ''
+        "
+        position="bottom-left"
+        class="shrink-0 min-[780px]:hidden"
       >
-        {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <PlusIcon class="size-[18px]" />
-      </button>
+        <button
+          type="button"
+          data-test="watchlist-add-new-mobile"
+          :disabled="isWatchlistFull"
+          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          @click="isAddOpen = true"
+        >
+          {{ t('homePage.hero.watchlist.table.addAsset') }}
+          <PlusIcon class="size-[18px]" />
+        </button>
+      </AppTooltip>
     </div>
 
     <!-- Toolbar: search + category stacked on mobile; Add asset (desktop). -->
@@ -205,15 +227,26 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           </template>
         </div>
       </div>
-      <button
-        type="button"
-        data-test="watchlist-add-new"
-        class="hidden h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white min-[780px]:flex"
-        @click="isAddOpen = true"
+      <AppTooltip
+        :text="
+          isWatchlistFull
+            ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
+            : ''
+        "
+        position="bottom-left"
+        class="hidden shrink-0 min-[780px]:block"
       >
-        {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <PlusIcon class="size-[18px]" />
-      </button>
+        <button
+          type="button"
+          data-test="watchlist-add-new"
+          :disabled="isWatchlistFull"
+          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          @click="isAddOpen = true"
+        >
+          {{ t('homePage.hero.watchlist.table.addAsset') }}
+          <PlusIcon class="size-[18px]" />
+        </button>
+      </AppTooltip>
     </div>
 
     <div class="mt-6 h-px w-full bg-grey-outline/40" aria-hidden="true" />

@@ -63,14 +63,17 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
   // Both toggle fns below are the single add path every UI trigger routes
   // through (star buttons across crypto/stocks/perps + the onboarding batch
   // loop), so capping each bucket here covers them all.
-  // ponytail: a batch add that overflows fires one toast per rejected item —
-  // acceptable for the onboarding edge case; dedupe if it proves noisy.
   const notifyWatchlistFull = () => {
-    useToastStore().addToastMessage({
-      text: i18n.global.t('common.watchlist_limit_reached', {
-        max: WATCHLIST_MAX,
-      }),
-      type: ToastType.Error,
+    const toastStore = useToastStore()
+    const text = i18n.global.t('common.watchlist_limit_reached', {
+      max: WATCHLIST_MAX,
+    })
+    // Surface the limit toast once: a batch add (onboarding) rejects many items
+    // in one tick and would otherwise stack an identical toast per item.
+    if (toastStore.messages.some(m => m.text === text)) return
+    toastStore.addToastMessage({
+      text,
+      type: ToastType.Warning,
       duration: 5000,
     })
   }
