@@ -5,7 +5,6 @@
 
       <div class="flex">
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage === 0"
           :label="$t('common.previous_page')"
           @click="prevPage"
@@ -13,7 +12,6 @@
           <ChevronLeftIcon class="w-4 h-4" />
         </app-btn-icon>
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage >= totalPages - 1"
           :label="$t('common.next_page')"
           @click="nextPage"

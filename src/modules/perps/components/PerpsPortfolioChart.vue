@@ -6,7 +6,7 @@
     <div
       class="flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-x-10 mb-2 gap-y-2"
     >
-      <app-btn-group
+      <app-segmented-control
         v-model:selected="selectedRange"
         :disabled="graphLoading"
         :btn-list="rangeOptions"
@@ -16,7 +16,7 @@
         <template #btn-content="{ data }">
           {{ data.label }}
         </template>
-      </app-btn-group>
+      </app-segmented-control>
 
       <div class="flex flex-wrap items-center gap-2">
         <button
@@ -60,7 +60,7 @@
 import { computed, ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import {
   usePerpsPortfolioGraph,
   type GraphRange,
@@ -127,7 +127,7 @@ const rangeOptions = computed<RangeOption[]>(() => [
 ])
 
 // Track the range by value, not by object: labels are locale-dependent and
-// AppBtnGroup compares the selection by structural equality.
+// AppSegmentedControl compares the selection by structural equality.
 const selectedRangeValue = ref<GraphRange>(
   rangeOptions.value.find(r => r.value === graphRange.value)?.value ?? '30d',
 )

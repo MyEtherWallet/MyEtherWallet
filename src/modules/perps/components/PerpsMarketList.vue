@@ -8,7 +8,7 @@
       </h1>
       <!--Filter Lists-->
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedFilter"
           :btn-list="filterOptions"
           size="large"
@@ -17,7 +17,7 @@
           <template #btn-content="{ data }">
             <span class="px-2">{{ data.label }}</span>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
       <app-select
         v-model:selected="selectedFilter"
@@ -468,10 +468,10 @@
                           size="small"
                           class="min-w-[136px]"
                           :disabled="isWatchOnly"
-                          :theme="
+                          :tone="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
-                              : 'error'
+                              : 'danger'
                           "
                           @click="
                             onManagePositionClick(
@@ -558,7 +558,7 @@
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
-                      theme="success"
+                      tone="success"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -572,7 +572,7 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      theme="error"
+                      tone="danger"
                       class="min-w-[64px]"
                       :disabled="isPerpsRestricted"
                       @click="
@@ -655,7 +655,7 @@ import {
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -910,7 +910,7 @@ const filterOptions = computed<FilterOption[]>(() => [
 ])
 
 // Track the filter by value, not by object: labels are locale-dependent and
-// AppBtnGroup/AppSelect compare the selection by structural equality.
+// AppSegmentedControl/AppSelect compare the selection by structural equality.
 const selectedFilterValue = ref('all')
 
 const selectedFilter = computed<FilterOption>({

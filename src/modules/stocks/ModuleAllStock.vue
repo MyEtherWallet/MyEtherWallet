@@ -33,7 +33,7 @@
           </template>
         </app-select>
 
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
           size="large"
@@ -64,7 +64,7 @@
               </template>
             </app-select>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
 
       <div class="mt-3 bg-white rounded-16 py-4 px-2">
@@ -437,7 +437,7 @@
             </button>
           </div>
           <!-- Loading State -->
-          <div v-if="isLoading" class="">
+          <div v-if="isLoading">
             <div
               v-for="n in Number(activeShownItems.value)"
               :key="n"
@@ -524,7 +524,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

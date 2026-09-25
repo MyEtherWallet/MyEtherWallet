@@ -3,10 +3,12 @@
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('portfolio.your_balances') }}</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('portfolio.your_balances') }}
+      </h1>
       <!--Filter Lists-->
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedCryptoFilter"
           :btn-list="allTokensFilterOptions"
           size="large"
@@ -15,7 +17,7 @@
           <template #btn-content="{ data }">
             <span class="px-2">{{ $t(data.label) }}</span>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
       <app-select
         v-model:selected="selectedCryptoFilter"
@@ -54,7 +56,7 @@
 
 <script lang="ts" setup>
 import TableTokenBalance from './components/balances/TableTokenBalance.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'

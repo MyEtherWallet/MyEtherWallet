@@ -1,7 +1,12 @@
 <template>
   <div>
-    <app-btn-text class="text-primary text-s-14" @click="openDialog = true">
-      {{ $t('common.view_all') }}</app-btn-text
+    <app-base-button
+      type="link"
+      size="small"
+      class="text-primary text-s-14"
+      @click="openDialog = true"
+    >
+      {{ $t('common.view_all') }}</app-base-button
     >
     <app-dialog
       v-model:is-open="openDialog"
@@ -116,7 +121,7 @@
 
 <script setup lang="ts">
 import AppDialog from '@/components/AppDialog.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'

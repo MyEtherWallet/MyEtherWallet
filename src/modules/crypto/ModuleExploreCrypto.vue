@@ -8,7 +8,7 @@
       </h1>
 
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-        <app-btn-group
+        <app-segmented-control
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
           size="large"
@@ -38,7 +38,7 @@
               </template>
             </app-select>
           </template>
-        </app-btn-group>
+        </app-segmented-control>
       </div>
 
       <app-select
@@ -499,7 +499,7 @@
                       v-if="isBuyableOnCompatibleChain(token.coinId)"
                       size="small"
                       @click="buyBtn(token)"
-                      is-outline
+                      type="secondary"
                       class="w-full"
                       :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                       >{{ $t('common.buy') }}</app-base-button
@@ -573,7 +573,7 @@
             </button>
           </div>
           <!-- Loading State -->
-          <div v-if="isLoading" class="">
+          <div v-if="isLoading">
             <div
               v-for="n in Number(activeShownItems.value)"
               :key="n"
@@ -665,7 +665,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
