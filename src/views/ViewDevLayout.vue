@@ -9,6 +9,7 @@ const COMPONENTS: { name: string; to: string }[] = [
   { name: 'Chip', to: '/dev/chip' },
   { name: 'Colors', to: '/dev/colors' },
   { name: 'Content Group', to: '/dev/content-group' },
+  { name: 'Icon', to: '/dev/icons' },
   { name: 'Input', to: '/dev/input' },
   { name: 'Picker', to: '/dev/picker' },
   { name: 'Tooltip', to: '/dev/tooltip' },
