@@ -68,10 +68,30 @@ const backToIndustries = () => {
   selectedAssetIds.value = []
 }
 
-// Continue from step 2 → recommend the assets in the picked categories.
+// Resolve the recommendation query from the step-1 markets + step-2 categories:
+// each selected market keeps the categories the user picked for it, or falls
+// back to `<TYPE>:all` when they picked none — so "crypto with no category" still
+// means "all crypto", not "all markets" (MEW-2375). When every selected market
+// falls back to `:all` (both crypto + stocks = everything), that's the same as
+// skipping step 2, so we omit the param and let the API return the full set.
+const recommendForSelection = () => {
+  const types = marketsToTypes(selectedMarkets.value)
+  const categoryIds = types.flatMap(type => {
+    const picked = selectedCategoryIds.value.filter(id =>
+      id.startsWith(`${type}:`),
+    )
+    return picked.length ? picked : [`${type}:all`]
+  })
+  const isEverything =
+    types.length >= 2 && categoryIds.every(id => id.endsWith(':all'))
+  if (isEverything) fetchRecommendations()
+  else fetchRecommendations(categoryIds)
+}
+
+// Continue from step 2 → recommend the assets for the current selection.
 const goToAssets = () => {
   activeStep.value = 2
-  fetchRecommendations(selectedCategoryIds.value)
+  recommendForSelection()
 }
 
 // Skipping either step recommends the full set: with no category picks we hit
