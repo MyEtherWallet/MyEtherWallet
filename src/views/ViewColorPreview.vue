@@ -105,6 +105,9 @@
                   class="py-2 pr-4 text-s-12 text-text-muted whitespace-nowrap"
                 >
                   {{ token.alias }}
+                  <span class="block text-text-placeholder">{{
+                    aliasHex(token.alias) ?? ''
+                  }}</span>
                 </td>
               </tr>
             </template>
@@ -140,16 +143,16 @@
               class="flex flex-col gap-1"
             >
               <span
-                ref="primitiveEls"
-                :data-primitive="`${ramp.name}-${step}`"
                 class="block w-16 h-12 rounded-8 border border-border-default"
-                :style="{ backgroundColor: `var(--${ramp.name}-${step})` }"
+                :style="{
+                  backgroundColor: `var(${primitiveVar(ramp.name, step)})`,
+                }"
               />
               <span class="text-s-11 font-mono text-text-muted">{{
                 step
               }}</span>
               <span class="text-s-11 font-mono text-text-placeholder">
-                {{ primitiveValues[`${ramp.name}-${step}`] ?? '' }}
+                {{ primitiveValues[`${ramp.name}-${step}`] ?? '&mdash;' }}
               </span>
             </div>
           </div>
@@ -1073,6 +1076,28 @@ const RAMPS = [
       '50',
     ],
   },
+  {
+    name: 'neutral',
+    steps: [
+      'black',
+      '900',
+      '800',
+      '750',
+      '700',
+      '650',
+      '600',
+      '500',
+      '400',
+      '375',
+      '300',
+      '250',
+      '200',
+      '150',
+      '100',
+      '50',
+      'white',
+    ],
+  },
 ]
 
 /** Category colours carry no meaning, so they only need a visual check. */
@@ -1089,7 +1114,25 @@ const contrast = reactive<Record<'light' | 'dark', Record<string, string>>>({
   dark: {},
 })
 const primitiveValues = ref<Record<string, string>>({})
-const primitiveEls = ref<HTMLElement[]>([])
+
+/** `neutral/white` and `neutral/black` are `--white` / `--black`, not steps. */
+const primitiveVar = (ramp: string, step: string) =>
+  step === 'white' || step === 'black' ? `--${step}` : `--${ramp}-${step}`
+
+/** The CSS minifier collapses `#333333` to `#333`; show the full form. */
+const expandHex = (value: string) => {
+  const v = value.toLowerCase()
+  const short = v.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/)
+  return short
+    ? `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}`
+    : v
+}
+
+/** Hex for a Figma alias like `neutral/100`, once `measure()` has run. */
+const aliasHex = (alias: string) => {
+  const [ramp, step] = alias.split('/')
+  return step ? primitiveValues.value[`${ramp}-${step}`] : undefined
+}
 
 const toHex = (rgb: string): string => {
   const parts = rgb.match(/\d+(\.\d+)?/g)
@@ -1155,11 +1198,15 @@ const measure = () => {
     document.body.removeChild(probe)
   }
 
-  // Primitives are theme-independent, so read them straight off the DOM.
+  // Primitives are theme-independent custom properties on :root, so read them
+  // straight off the stylesheet. They are authored as hex, so no conversion.
+  const root = getComputedStyle(document.documentElement)
   const values: Record<string, string> = {}
-  for (const el of primitiveEls.value) {
-    const key = el.dataset.primitive
-    if (key) values[key] = toHex(getComputedStyle(el).backgroundColor)
+  for (const ramp of RAMPS) {
+    for (const step of ramp.steps) {
+      const value = root.getPropertyValue(primitiveVar(ramp.name, step)).trim()
+      if (value) values[`${ramp.name}-${step}`] = expandHex(value)
+    }
   }
   primitiveValues.value = values
 }
