@@ -147,6 +147,16 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(fetchRecommendations).toHaveBeenCalledWith()
   })
 
+  it('skip on industries keeps the picked market as <TYPE>:all (MEW-2376)', async () => {
+    const w = mountDialog()
+    await w.get('[data-test="s1-pick"]').trigger('click') // markets = ['crypto']
+    await w.get('[data-test="s1"]').trigger('click') // → industries
+    await w.get('[data-test="s2-skip"]').trigger('click') // skip industries
+    await flushPromises()
+    // Crypto was selected but no category → CRYPTO:all, not the full set.
+    expect(fetchRecommendations).toHaveBeenLastCalledWith(['CRYPTO:all'])
+  })
+
   it('skip resets the skipped selection so back shows no stale picks', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1-pick"]').trigger('click') // select "crypto"
