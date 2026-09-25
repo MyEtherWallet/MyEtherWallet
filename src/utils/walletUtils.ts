@@ -82,11 +82,21 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  if (isBlindSigningDisabledError(raw)) {
+    return t('common.error.ledger_blind_signing')
+  }
   // Transient Trezor connect state (APP-MEW-WEB-P5)
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')
   }
   return undefined
+}
+
+export const isBlindSigningDisabledError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return message.includes('blind signing') || message.includes('contract data')
 }
 
 /**
