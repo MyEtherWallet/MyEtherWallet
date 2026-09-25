@@ -6,6 +6,7 @@
         <div class="flex items-center flex-col gap-1 pt-6">
           <app-text-field
             v-model="message"
+            surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_sign')"
             class="w-full"
           />
@@ -32,31 +33,31 @@
             <template #content>
               <div class="flex flex-col gap-6 pb-6 pt-2">
                 <div>
-                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
                     {{ $t('sign_message.message_label') }}
                   </h3>
                   <div
-                    class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
+                    class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
                   >
                     {{ hexMessage }}
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
                     {{ $t('sign_message.signing_address_label') }}
                   </h3>
                   <div
-                    class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
+                    class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
                   >
                     {{ walletAddress }}
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
                     {{ $t('sign_message.signature_label') }}
                   </h3>
                   <div
-                    class="bg-grey-5 rounded-xl p-4 text-s-12 break-all border border-grey-10 text-grey-70 font-mono"
+                    class="bg-background-default rounded-xl p-4 text-s-12 break-all border border-border-default text-text-subtle font-mono"
                   >
                     {{ signature }}
                   </div>

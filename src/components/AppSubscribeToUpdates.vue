@@ -1,11 +1,12 @@
 <template>
   <div class="flex flex-col justify-center max-w-[490px] w-full">
-    <p class="text-s-16 text-info mb-4">
+    <p class="text-s-16 text-text-subtle mb-4">
       {{ $t('common.subscribe.cta') }}
     </p>
     <app-input
       v-model="email"
-      :placeholder="$t('common.subscribe.email_placeholder')"
+      surface="alternative"
+      :label="$t('common.subscribe.email_placeholder')"
       type="email"
       :error-message="emailErrorMessage"
     />

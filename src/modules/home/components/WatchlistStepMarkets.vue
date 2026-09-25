@@ -2,7 +2,10 @@
 import { useI18n } from 'vue-i18n'
 import { ArrowRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
+import {
+  WATCHLIST_MARKETS,
+  type WatchlistMarketId,
+} from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
 import stocks2 from '@/assets/images/watchlist/market-stocks-2.png'
 import stocks3 from '@/assets/images/watchlist/market-stocks-3.png'
@@ -39,7 +42,7 @@ const toggle = (id: string) => {
     <h2 class="text-s-24 font-bold text-black">
       {{ t('homePage.hero.watchlist.title') }}
     </h2>
-    <p class="mt-1 text-s-16 text-[#575757]">
+    <p class="mt-1 text-s-16 text-text-subtle">
       {{ t('homePage.hero.watchlist.onboarding.markets.subtitle') }}
     </p>
 
@@ -54,12 +57,16 @@ const toggle = (id: string) => {
         :class="
           selected.includes(market.id)
             ? 'border-black bg-white'
-            : 'border-transparent bg-[#f5f5f5]'
+            : 'border-transparent bg-background-default'
         "
         @click="toggle(market.id)"
       >
         <span class="text-s-16 font-bold text-black">
-          {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
+          {{
+            t(
+              `homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`,
+            )
+          }}
         </span>
         <!-- Decorative asset cluster (Figma logos). -->
         <span class="flex items-center" aria-hidden="true">
@@ -76,7 +83,7 @@ const toggle = (id: string) => {
     </div>
 
     <div class="mt-8 flex items-center justify-between">
-      <span class="text-s-14 text-[#575757]">
+      <span class="text-s-14 text-text-subtle">
         {{ t('homePage.hero.watchlist.onboarding.markets.hint') }}
       </span>
       <AppBaseButton

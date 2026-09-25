@@ -1,6 +1,12 @@
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
-import { createConfig, http, mock, type Config } from '@wagmi/core'
+import {
+  createConfig,
+  http,
+  mock,
+  type Config,
+  type CreateConnectorFn,
+} from '@wagmi/core'
 import { connectorsForWallets, type WalletList } from '@rainbow-me/rainbowkit'
 import * as rainbowWallets from '@rainbow-me/rainbowkit/wallets'
 
@@ -55,8 +61,12 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
     },
     {} as Record<number, ReturnType<typeof http>>,
   )
-  const allConnectors = [...connectorsLocal]
-  if (import.meta.env.DEV) {
+  // RainbowKit still ships against wagmi 2 (@wagmi/core 2.x) while `mock` and
+  // `createConfig` come from @wagmi/core 3.x, whose connector config gained a
+  // `providers` field. Pin the array to the 3.x type: 2.x connector functions
+  // are assignable to it (they accept a superset config), the reverse is not.
+  const allConnectors: CreateConnectorFn[] = [...connectorsLocal]
+  if (import.meta.env.MODE !== 'production') {
     const testAddress = import.meta.env.VITE_TEST_ADDRESS as string | undefined
     if (testAddress) {
       const mConnector = mock({

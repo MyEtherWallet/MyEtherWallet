@@ -27,7 +27,10 @@
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
         'flex w-full mr-[60px] xs:mr-[80px]',
-        isOverflowHidden
+        // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
+        // shell whose <main> scrolls internally), so the app-level scroll must be
+        // off for it — otherwise the page double-scrolls and the sidebar drifts.
+        isOverflowHidden || isDevPlayground
           ? 'overflow-hidden'
           : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
@@ -36,7 +39,12 @@
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
+        <main
+          :class="[
+            'basis-full w-full relative',
+            isDevPlayground ? '' : 'max-w-[1440px] mx-auto',
+          ]"
+        >
           <div
             :class="[
               'min-h-[600px]',
@@ -44,12 +52,13 @@
               // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
               // the hero's top padding stacks on the wrapper's. Other routes
               // keep the shared page padding.
-              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
+              isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
             <router-view />
           </div>
           <MewFooter
+            v-if="!isDevPlayground"
             :use-i18n="useI18n"
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
@@ -60,11 +69,12 @@
             class="px-3 xs:px-5"
           />
           <div
+            v-if="!isDevPlayground"
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
               class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
-              :href="configs.VINATGE"
+              :href="configs.VINTAGE"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -182,6 +192,12 @@ const backgroundClass = computed(() => {
 // The Home page ('/') keeps the layout max-width but drops the shared
 // horizontal padding, so its sections own their padding.
 const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
+
+// DEV-only design-library playground (MEW-2271) renders full-bleed: no wrapper
+// padding or max-width, so its sidebar sits flush against the viewport edge.
+const isDevPlayground = computed(
+  () => route.path === '/dev' || route.path.startsWith('/dev/'),
+)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

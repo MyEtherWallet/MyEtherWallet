@@ -4,10 +4,7 @@ defineProps<{ title?: string; subtitle?: string }>()
 
 <template>
   <section class="relative px-8 py-8">
-    <header
-      v-if="title"
-      class="mb-8 flex items-start justify-between gap-4"
-    >
+    <header v-if="title" class="mb-8 flex items-start justify-between gap-4">
       <div>
         <h2
           data-test="section-title"
@@ -17,7 +14,7 @@ defineProps<{ title?: string; subtitle?: string }>()
         </h2>
         <p
           v-if="subtitle"
-          class="mt-2 text-s-16 leading-[22px] text-[#575757]"
+          class="mt-2 text-s-16 leading-[22px] text-text-subtle"
         >
           {{ subtitle }}
         </p>

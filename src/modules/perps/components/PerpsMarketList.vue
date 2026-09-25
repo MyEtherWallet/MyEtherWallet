@@ -7,7 +7,9 @@
         {{ $t('perps.market-list.title') }}
       </h1>
       <!--Filter Lists-->
-      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+      <div
+        class="hidden lg:flex lg:items-center bg-background-default rounded-full"
+      >
         <app-btn-group
           v-model:selected="selectedFilter"
           :btn-list="filterOptions"
@@ -27,7 +29,9 @@
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+          <div
+            class="bg-background-default-hover rounded-full p-1 w-full xs:w-auto"
+          >
             <button
               class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
               @click="toggleSelect"
@@ -46,9 +50,11 @@
 
     <div class="mt-3 bg-white rounded-16 py-4 px-2">
       <!-- Search -->
-      <div class="flex items-center px-2 pt-2 pb-6 mb-4 border-b border-grey-5">
+      <div
+        class="flex items-center px-2 pt-2 pb-6 mb-4 border-b border-border-subtle"
+      >
         <div
-          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:max-w-[500px]"
+          class="flex grow gap-4 justify-between items-center bg-background-default-hover rounded-full p-1 w-full md:max-w-[500px]"
         >
           <app-search-input
             v-model="searchQuery"
@@ -75,7 +81,7 @@
         <table ref="marketsTable" class="w-full text-sm table-fixed">
           <thead class="bg-white">
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
             >
               <th class="hidden xs:table-cell xs:w-10 py-2 text-center"></th>
               <!-- Name -->
@@ -240,7 +246,7 @@
                       ? $t('perps.market-list.remove-from-watchlist')
                       : $t('perps.market-list.add-to-watchlist')
                   "
-                  class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
                   <star-outline-icon
@@ -264,12 +270,12 @@
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
                     </div>
-                    <span class="text-info text-s-12 truncate block">{{
+                    <span class="text-text-subtle text-s-12 truncate block">{{
                       contract.longName
                     }}</span>
                   </div>
@@ -284,8 +290,8 @@
                   class="text-s-12 font-normal mb-1 xs:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-success'
-                      : 'text-error'
+                      ? 'text-text-success'
+                      : 'text-text-error'
                   "
                 >
                   {{ formatChange(contract.priceChangePercent) }}
@@ -298,8 +304,8 @@
                     class="text-s-13 font-normal mb-1"
                     :class="
                       parseFloat(contract.priceChangePercent ?? '0') >= 0
-                        ? 'text-success'
-                        : 'text-error'
+                        ? 'text-text-success'
+                        : 'text-text-error'
                     "
                   >
                     {{ formatChange(contract.priceChangePercent) }}
@@ -371,7 +377,7 @@
                           }}</span>
                         </button>
                         <hr
-                          class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                          class="h-px bg-border-strong border-0 w-full my-2 xs:hidden"
                         />
                         <ul>
                           <template v-if="getPosition(contract.market)">
@@ -605,7 +611,7 @@
         </div>
         <div
           v-if="filteredContracts.length === 0"
-          class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
         >
           <p
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"

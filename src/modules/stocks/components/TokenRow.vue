@@ -22,14 +22,14 @@
         "
       >
         <p
-          class="hidden xs:block text-s-12 text-info truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
+          class="hidden xs:block text-s-12 text-text-subtle truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
         >
           {{ token.underlyingMarket.name }}
         </p>
       </app-tooltip>
       <p
         v-else
-        class="truncate text-s-12 text-info max-w-[120px] xs:max-w-full"
+        class="truncate text-s-12 text-text-subtle max-w-[120px] xs:max-w-full"
       >
         {{ token.underlyingMarket.name || '' }}
       </p>
@@ -51,10 +51,10 @@
         class="text-s-12 text-right"
         :class="{
           'text-black': !token.primaryMarket.priceChangePercentage24h,
-          'text-error':
+          'text-text-error':
             token.primaryMarket.priceChangePercentage24h &&
             parseFloat(token.primaryMarket.priceChangePercentage24h) < 0,
-          'text-success':
+          'text-text-success':
             token.primaryMarket.priceChangePercentage24h &&
             parseFloat(token.primaryMarket.priceChangePercentage24h) >= 0,
         }"
@@ -70,7 +70,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import type { StockTrendingItem } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TableSparkline from '@/components/TableSparkline.vue'

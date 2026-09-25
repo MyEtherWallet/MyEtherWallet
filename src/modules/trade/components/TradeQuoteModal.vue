@@ -7,7 +7,7 @@
     <template #content>
       <div class="mx-4 mb-1 pb-2">
         <div
-          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
+          class="p-4 flex flex-col border border-solid border-border-default rounded-20 mb-2"
         >
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             {{ $t('trade.quote_modal.quote_from') }}
@@ -42,7 +42,9 @@
             </div>
             <span> {{ $t('trade.quote_modal.you_will_get') }}</span>
           </div>
-          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+          <div
+            class="flex items-center bg-background-brand-subtle rounded-20 p-4 my-2"
+          >
             <div class="relative flex-none overflow-visible">
               <app-token-logo
                 :url="toToken?.logoURI"
@@ -72,7 +74,7 @@
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 flex-none"
                 />
               </div>
-              <div class="text-s-12 text-info">
+              <div class="text-s-12 text-text-subtle">
                 ≈ {{ currencySymbol }}{{ toAmountFiat }}
               </div>
             </div>
@@ -81,7 +83,7 @@
           <!-- Quote Details -->
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
-              <p class="text-info">
+              <p class="text-text-subtle">
                 {{ $t('trade.quote_modal.estimated_amount') }}
                 <app-tooltip
                   :text="$t('trade.quote_modal.limit_order_warning')"
@@ -101,13 +103,13 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-text-subtle font-normal text-right text-s-12">
                   ${{ toAmountFiat }}
                 </p>
               </div>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
-              <span class="text-info">{{
+              <span class="text-text-subtle">{{
                 $t('trade.quote_modal.min_amount')
               }}</span>
               <div>
@@ -123,7 +125,7 @@
                     class="!text-s-14 !font-medium !leading-p-100"
                   />
                 </p>
-                <p class="text-info font-normal text-right text-s-12">
+                <p class="text-text-subtle font-normal text-right text-s-12">
                   ${{ minAmountFiat }}
                 </p>
               </div>
@@ -168,7 +170,7 @@
           <app-btn-text
             :disabled="loading"
             is-large
-            class="text-error"
+            class="text-text-error"
             @click="$emit('cancel')"
           >
             {{ $t('common.cancel') }}
@@ -186,7 +188,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import RewardsTradeConfirmationBanner from '@/modules/rewards/RewardsTradeConfirmationBanner.vue'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'

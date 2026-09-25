@@ -5,7 +5,9 @@
     sheet-class=" !px-4 sm:!px-5 !pt-4 !pb-5 h-full flex flex-col justify-between overflow-y-auto sm:overflow-hidden"
   >
     <div class="flex items-center w-full justify-between mb-5">
-      <h2 class="text-s-20 font-bold leading-tight">{{ t('portfolio.overview.title') }}</h2>
+      <h2 class="text-s-20 font-bold leading-tight">
+        {{ t('portfolio.overview.title') }}
+      </h2>
     </div>
 
     <div v-if="!isLoading" class="flex flex-col gap-4">
@@ -18,7 +20,7 @@
               :key="`placeholder-stocks-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -35,15 +37,17 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.tokenized_stocks') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.tokenized_stocks')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', stocksTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stocksFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             stocksPercentageFormatted
           }}</span>
         </div>
@@ -58,7 +62,7 @@
               :key="`placeholder-stables-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -75,15 +79,17 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.stables') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.stables')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', stablesTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stablesFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             stablesPercentageFormatted
           }}</span>
         </div>
@@ -98,7 +104,7 @@
               :key="`placeholder-largecap-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -118,14 +124,14 @@
           </div>
           <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-1">
-              <span class="text-s-15 font-medium truncate"
-                >{{ t('portfolio.overview.large_market_cap') }}</span
-              >
+              <span class="text-s-15 font-medium truncate">{{
+                t('portfolio.overview.large_market_cap')
+              }}</span>
               <app-tooltip
                 :text="t('portfolio.overview.large_market_cap_tooltip')"
               />
             </div>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', largeCapTokenCount)
             }}</span>
           </div>
@@ -134,7 +140,7 @@
           <span class="text-s-15 font-medium">{{
             largeCapFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             largeCapPercentageFormatted
           }}</span>
         </div>
@@ -149,7 +155,7 @@
               :key="`placeholder-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -169,8 +175,10 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.altcoins') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.altcoins')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', altcoinsTokenCount)
             }}</span>
           </div>
@@ -179,7 +187,7 @@
           <span class="text-s-15 font-medium">{{
             altcoinsFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             altcoinsPercentageFormatted
           }}</span>
         </div>
@@ -189,7 +197,7 @@
       <div
         v-for="i in 4"
         :key="`loading-overview-${i}`"
-        class="bg-grey-10 animate-pulse rounded-16 w-full h-[41px]"
+        class="bg-background-default-hover animate-pulse rounded-16 w-full h-[41px]"
       ></div>
     </div>
   </app-sheet>
@@ -198,7 +206,7 @@
 import { storeToRefs } from 'pinia'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'

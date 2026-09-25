@@ -51,7 +51,7 @@
               />
             </div>
 
-            <div v-if="fileError.value" class="text-error mt-4">
+            <div v-if="fileError.value" class="text-text-error mt-4">
               {{ fileError.description }}
             </div>
           </div>
@@ -62,8 +62,9 @@
             />
             <app-input
               v-model="password"
+              surface="alternative"
               data-private
-              :placeholder="$t('access_wallet_keystore.enter_password')"
+              :label="$t('access_wallet_keystore.enter_password')"
               type="password"
               :error-message="errorPassword"
               is-required

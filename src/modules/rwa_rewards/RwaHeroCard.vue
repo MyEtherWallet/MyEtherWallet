@@ -15,7 +15,7 @@
   />
   <div
     v-else
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-border-default rounded-16 p-5 min-h-[293px]"
   >
     <img
       v-if="status !== 'banned'"
@@ -73,7 +73,7 @@
              means `/info` returned no season end, so there is no date to show. -->
         <p
           v-if="!isCampaignEnded && expiresText"
-          class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
+          class="text-s-12 font-normal leading-[18px] text-text-subtle whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
@@ -82,7 +82,7 @@
         >
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
@@ -93,11 +93,10 @@
           <app-tooltip
             v-if="isDisabledCta"
             :text="disabledCtaTooltip"
-            position="middle"
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
@@ -129,7 +128,7 @@
         >
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_earned_desc') }}
         </p>
       </div>
@@ -151,7 +150,7 @@
         >
           {{ $t('rwaRewards.hero_claimed_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_claimed_desc') }}
         </p>
       </div>
@@ -178,7 +177,7 @@
         >
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
@@ -203,8 +202,10 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <lock-closed-icon class="w-7 h-7 text-primary" />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <lock-closed-icon class="w-7 h-7 text-text-brand" />
+          <p
+            class="text-s-14 font-normal leading-5 text-text-subtle text-center"
+          >
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
@@ -222,7 +223,7 @@
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
           v-if="!isCampaignEnded && expiresText"
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
+          class="text-s-14 font-normal leading-5 text-text-subtle whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
@@ -243,7 +244,7 @@
             :last="i === steps.length - 1"
             path-height="36px"
           >
-            <p class="text-s-14 leading-5 text-[#575757] pt-0.5">
+            <p class="text-s-14 leading-5 text-text-subtle pt-0.5">
               {{ step.pre }}
               <span class="font-semibold text-black tracking-[-0.28px]">{{
                 step.bold
@@ -257,11 +258,10 @@
           <app-tooltip
             v-if="isDisabledCta"
             :text="disabledCtaTooltip"
-            position="middle"
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
@@ -307,7 +307,7 @@ import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import {
   analytics,

@@ -9,14 +9,14 @@
         <h1 class="text-s-28 lg:text-s-40 font-bold">
           {{ $t('stocks.explore_tokenized_stocks') }}
         </h1>
-        <p class="text-s-14 lg:text-s-16 text-info">
+        <p class="text-s-14 lg:text-s-16 text-text-subtle">
           {{ $t('stocks.explore_subtitle') }}
         </p>
       </div>
       <div class="flex items-center justify-center flex-col">
         <div
           ref="focusTarget"
-          class="flex grow gap-4 justify-between items-center p-[6px] bg-surface !w-full md:w-auto max-w-[500px] rounded-full relative"
+          class="flex grow gap-4 justify-between items-center p-[6px] bg-background-default-hover !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
             v-model="searchInput"
@@ -27,7 +27,7 @@
           <transition name="fade" mode="out-in">
             <div
               v-if="showDropdown"
-              class="absolute bottom-[-4px] left-[5px] z-10 w-full max-w-[calc(100%-10px)] bg-white rounded-20 shadow-2xl border-surface border-1 px-2 py-4 translate-y-full overflow-y-auto max-h-[300px] overflow-y-auto"
+              class="absolute bottom-[-4px] left-[5px] z-10 w-full max-w-[calc(100%-10px)] bg-white rounded-20 shadow-2xl border-border-default border-1 px-2 py-4 translate-y-full overflow-y-auto max-h-[300px] overflow-y-auto"
             >
               <transition name="fade" mode="out-in">
                 <div
@@ -37,7 +37,7 @@
                 >
                   <svg
                     aria-hidden="true"
-                    class="animate-spin mx-auto text-primary fill-white/90"
+                    class="animate-spin mx-auto text-text-brand fill-white/90"
                     viewBox="0 0 100 101"
                     width="24"
                     height="24"
@@ -68,7 +68,7 @@
                       v-for="(stock, i) in results"
                       :key="stock.primaryMarket.symbol"
                       class="w-full flex items-center gap-3 hoverNoBG rounded-12 py-2 px-3 text-left"
-                      :class="{ 'bg-mewBg': i == 0 }"
+                      :class="{ 'bg-background-brand-subtle': i == 0 }"
                     >
                       <app-token-logo
                         :symbol="stock.primaryMarket.symbol"
@@ -84,11 +84,11 @@
                           :text="stock.underlyingMarket.name"
                           v-if="stock.underlyingMarket.name.length > 12"
                         >
-                          <p class="text-s-12 text-info truncate">
+                          <p class="text-s-12 text-text-subtle truncate">
                             {{ stock.underlyingMarket.name }}
                           </p>
                         </app-tooltip>
-                        <p v-else class="text-s-12 text-info truncate">
+                        <p v-else class="text-s-12 text-text-subtle truncate">
                           {{ stock.underlyingMarket.name }}
                         </p>
                       </div>
@@ -101,8 +101,8 @@
                             parseFloat(
                               stock.primaryMarket.priceChangePercentage24h,
                             ) > 0
-                              ? 'text-success'
-                              : 'text-error'
+                              ? 'text-text-success'
+                              : 'text-text-error'
                           "
                           class="text-s-12"
                         >
@@ -118,12 +118,14 @@
                   <p
                     v-if="showNoDataMessage"
                     key="search_no_data_message"
-                    class="text-s-14 text-info flex items-center justify-center text-wrap break-all h-[64px]"
+                    class="text-s-14 text-text-subtle flex items-center justify-center text-wrap break-all h-[64px]"
                   >
                     <exclamation-circle-icon
-                      class="inline-block w-5 h-5 text-grey-50 mr-1"
+                      class="inline-block w-5 h-5 text-text-muted mr-1"
                     />
-                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
+                    {{
+                      $t('stocks.no_results_found_for', { query: searchInput })
+                    }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div
@@ -133,7 +135,7 @@
                   >
                     <p
                       v-if="recentlyViewedStocks.length > 0"
-                      class="text-s-12 font-medium text-info ml-3 mb-1"
+                      class="text-s-12 font-medium text-text-subtle ml-3 mb-1"
                     >
                       {{ $t('stocks.recently_viewed') }}
                     </p>
@@ -177,7 +179,9 @@
                         results.length === 0
                       "
                     >
-                      <p class="text-s-12 font-medium text-info ml-3 mb-1">
+                      <p
+                        class="text-s-12 font-medium text-text-subtle ml-3 mb-1"
+                      >
                         {{ $t('common.trending') }}
                       </p>
                       <div
@@ -219,7 +223,9 @@
           </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
-          <p class="font-semibold text-s-14">{{ $t('stocks.trending_colon') }}</p>
+          <p class="font-semibold text-s-14">
+            {{ $t('stocks.trending_colon') }}
+          </p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
             <app-tooltip :text="stock.stockAlias">
               <router-link
@@ -261,7 +267,7 @@ import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
 
 // Stores and Composables

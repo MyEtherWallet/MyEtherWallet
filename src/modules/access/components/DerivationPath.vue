@@ -6,7 +6,9 @@
     >
       <div class="flex items-center">
         <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p
+            class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
+          >
             {{ $t('derivation_path.title') }}
           </p>
           <p
@@ -14,7 +16,7 @@
             class="text-ellipsis truncate font-medium text-sm"
           >
             {{ selectedPath.label }}
-            <span class="text-info text-s-12 leading-[16px]">
+            <span class="text-text-subtle text-s-12 leading-[16px]">
               - {{ selectedPath.path }}</span
             >
           </p>
@@ -51,7 +53,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-grey-10 border-0 w-full" />
+                <hr class="h-px bg-background-default-hover border-0 w-full" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -63,13 +65,15 @@
                 >
                   <div class="flex justify-between items-center w-full">
                     <p>{{ path.label }}</p>
-                    <p class="text-info">{{ path.path }}</p>
+                    <p class="text-text-subtle">{{ path.path }}</p>
                   </div>
                 </button>
               </div>
               <!-- Seacrh not found-->
               <div v-else>
-                <div class="flex justify-center mt-10 h-[400px] text-info">
+                <div
+                  class="flex justify-center mt-10 h-[400px] text-text-subtle"
+                >
                   <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
@@ -78,13 +82,15 @@
             <div v-else class="px-5">
               <app-input
                 v-model="newPathLabel"
-                :placeholder="$t('derivation_path.enter_label')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_label')"
                 is-required
                 class="mt-4"
               />
               <app-input
                 v-model="newPath"
-                :placeholder="$t('derivation_path.enter_path')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_path')"
                 is-required
               />
               <div class="flex items-center flex-col justify-center mt-3">
@@ -92,7 +98,7 @@
                   $t('common.add')
                 }}</app-base-button>
                 <app-btn-text
-                  class="text-primary mt-4"
+                  class="text-text-brand mt-4"
                   is-large
                   @click="setShowAddPath(false)"
                   >{{ $t('common.cancel') }}</app-btn-text

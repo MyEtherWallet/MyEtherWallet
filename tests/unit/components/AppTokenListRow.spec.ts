@@ -33,7 +33,7 @@ describe('AppTokenListRow (MEW-2094)', () => {
     const change = mountRow({ symbol: 'BTC', change: 11.37 }).get(
       '[data-test="token-list-row-change"]',
     )
-    expect(change.classes()).toContain('text-success')
+    expect(change.classes()).toContain('text-text-success')
     expect(change.text()).toBe('+11.37%')
   })
 
@@ -41,7 +41,7 @@ describe('AppTokenListRow (MEW-2094)', () => {
     const change = mountRow({ symbol: 'USDT', change: -1.65 }).get(
       '[data-test="token-list-row-change"]',
     )
-    expect(change.classes()).toContain('text-error')
+    expect(change.classes()).toContain('text-text-error')
     expect(change.text()).toBe('-1.65%')
   })
 

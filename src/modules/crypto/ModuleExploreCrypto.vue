@@ -3,9 +3,13 @@
     <div
       class="flex flex-col sm:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-3 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('crypto.explore_tokens') }}</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('crypto.explore_tokens') }}
+      </h1>
 
-      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+      <div
+        class="hidden lg:flex lg:items-center bg-background-default rounded-full"
+      >
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
@@ -28,7 +32,9 @@
                   class="min-h-10 rounded-full hoverNoBG px-3 flex items-center gap-1"
                   @click="toggleSelect"
                 >
-                  <span class="font-medium text-s-17">{{ $t('common.more') }}</span>
+                  <span class="font-medium text-s-17">{{
+                    $t('common.more')
+                  }}</span>
                   <chevron-down-icon class="w-4 h-4" />
                 </button>
               </template>
@@ -45,7 +51,9 @@
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full sm:w-auto">
+          <div
+            class="bg-background-default-hover rounded-full p-1 w-full sm:w-auto"
+          >
             <button
               class="rounded-full bg-white py-3 w-full min-w-[180px] px-5 shadow-button"
               @click="toggleSelect"
@@ -65,7 +73,7 @@
     <div class="basis-full">
       <div class="bg-white rounded-16 py-4 px-2">
         <div
-          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
+          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:pt-2 pb-6 mb-4 sm:gap-6 border-b border-border-subtle"
         >
           <button
             class="xs:hidden mb-3 bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
@@ -89,7 +97,7 @@
             </div>
           </button>
           <div
-            class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[600px]"
+            class="flex grow gap-4 justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[600px]"
           >
             <app-search-input
               v-model="searchInput"
@@ -127,7 +135,7 @@
             <!-- Header-->
             <thead class="bg-white">
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
+                class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 border-b border-border-subtle font-bold"
               >
                 <!-- Watchlist -->
                 <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
@@ -220,7 +228,7 @@
                   >
                     <template #select-button="{ toggleSelect }">
                       <button
-                        class="px-1 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        class="px-1 text-right !uppercase font-bold text-s-11 text-text-subtle tracking-sp-06 hover:text-black transition-colors capitalize w-full"
                         @click="toggleSelect"
                       >
                         <div class="flex items-center justify-end gap-1">
@@ -279,7 +287,7 @@
                         : $t('common.add_to_watchlist')
                     "
                     @click.stop="setWatchlistToken(token)"
-                    class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                    class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
                     <star-outline-icon
@@ -312,7 +320,7 @@
                         v-if="token.name.length > 20"
                       >
                         <p
-                          class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                          class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                         >
                           {{
                             token.ondo?.stockAlias
@@ -323,7 +331,7 @@
                       </app-tooltip>
                       <p
                         v-else
-                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
                         {{ token.name }}
                       </p>
@@ -428,7 +436,7 @@
                               token.chains.length > 0 ||
                               getTokenIsCurrentNative(token)
                             "
-                            class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                            class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
                           />
 
                           <ul>
@@ -437,7 +445,7 @@
                               @click.stop="[toggleMenu(), buyBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-buy class="text-primary w-4 h-4 mr-2" />
+                              <icon-buy class="text-text-brand w-4 h-4 mr-2" />
                               <p>{{ $t('common.buy') }}</p>
                             </li>
                             <template v-if="token.ondo !== null">
@@ -448,7 +456,9 @@
                                 ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
-                                <icon-trade class="text-primary w-4 h-4 mr-2" />
+                                <icon-trade
+                                  class="text-text-brand w-4 h-4 mr-2"
+                                />
                                 <p>{{ $t('crypto.trade') }}</p>
                               </li>
                             </template>
@@ -462,7 +472,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-bridge
-                                  class="text-primary w-4 h-4 mr-2"
+                                  class="text-text-brand w-4 h-4 mr-2"
                                 />
                                 <p>{{ $t('crypto.bridge') }}</p>
                               </li>
@@ -478,7 +488,9 @@
                                 ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
-                                <icon-swap class="text-primary w-4 h-4 mr-2" />
+                                <icon-swap
+                                  class="text-text-brand w-4 h-4 mr-2"
+                                />
                                 <p>{{ $t('common.swap') }}</p>
                               </li>
                             </template>
@@ -507,7 +519,9 @@
                       @click="tradeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.trade') }}
                     </app-base-button>
@@ -517,7 +531,9 @@
                       @click="bridgeBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('crypto.bridge') }}
                     </app-base-button>
@@ -531,7 +547,9 @@
                       @click="swapBtn(token)"
                       class="w-full"
                       :class="{
-                        'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
+                        'col-start-2': !isBuyableOnCompatibleChain(
+                          token.coinId,
+                        ),
                       }"
                       >{{ $t('common.swap') }}
                     </app-base-button>
@@ -542,7 +560,7 @@
           </table>
           <div
             v-if="!isLoading && tokens.length === 0"
-            class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+            class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
           >
             <p
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
@@ -570,18 +588,18 @@
               class="flex w-full h-[56px] py-2"
             >
               <div
-                class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+                class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
               ></div>
             </div>
           </div>
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
         >
           <div
             v-if="selectedCryptoFilter.value !== 'watchlist'"
-            class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
+            class="text-text-subtle order-3 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
             {{
@@ -604,7 +622,7 @@
             </app-btn-icon>
 
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-info">
+              <span class="text-text-subtle">
                 {{ $t('crypto.page_of', { current: page, total: totalPages }) }}
               </span>
             </div>
@@ -626,11 +644,11 @@
             >
               <template #select-button="{ toggleSelect }">
                 <button
-                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-border-default hover:border-border-hover transition-colors"
                   @click="toggleSelect"
                 >
                   <span>{{ activeShownItems.label }}</span>
-                  <ChevronDownIcon class="w-4 h-4 text-info" />
+                  <ChevronDownIcon class="w-4 h-4 text-text-subtle" />
                 </button>
               </template>
             </app-select>
@@ -659,7 +677,7 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -711,8 +729,11 @@ const { t } = useI18n()
 const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+} = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
@@ -1119,9 +1140,7 @@ const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
     marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
-    totalVolume: item.totalVolume
-      ? formatFiat(item.totalVolume).display
-      : '-',
+    totalVolume: item.totalVolume ? formatFiat(item.totalVolume).display : '-',
   }
 }
 
@@ -1265,9 +1284,9 @@ const parsePercent = (val: number | null): string => {
 
 const getPercentClass = (val: number | null): string => {
   if (val === null || val === undefined) return ''
-  if (val > 0) return 'text-success'
-  if (val < 0) return 'text-error'
-  return 'text-primary'
+  if (val > 0) return 'text-text-success'
+  if (val < 0) return 'text-text-error'
+  return 'text-text-brand'
 }
 
 const debounceTrackSearch = useDebounceFn((value: string) => {

@@ -8,17 +8,17 @@
       <div class="pl-6 sm:pl-8 pb-10 pt-2 welcome-gradient">
         <div class="flex flex-row mb-4">
           <div class="xs:min-w-[320px] max-w-[400px]">
-            <p class="text-s-16 max-w-[600px] text-info">
+            <p class="text-s-16 max-w-[600px] text-text-subtle">
               {{ $t('portfolio.welcome.description') }}
             </p>
             <i18n-t
               keypath="portfolio.welcome.nostalgic"
               tag="p"
-              class="text-s-16 max-w-[600px] text-info mt-2"
+              class="text-s-16 max-w-[600px] text-text-subtle mt-2"
             >
               <template #link>
                 <a
-                  :href="configs.VINATGE"
+                  :href="configs.VINTAGE"
                   target="_blank"
                   class="underline hover:text-black transition-colors"
                   >{{ $t('portfolio.welcome.here') }}</a

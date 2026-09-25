@@ -109,9 +109,9 @@ export function formatRoe(val: string): string {
 
 export function pnlColor(val: string): string {
   const n = parseFloat(val)
-  if (n > 0) return 'text-success'
-  if (n < 0) return 'text-error'
-  return 'text-info'
+  if (n > 0) return 'text-text-success'
+  if (n < 0) return 'text-text-error'
+  return 'text-text-subtle'
 }
 
 export function marginRatioColor(val: string): string {
@@ -120,8 +120,8 @@ export function marginRatioColor(val: string): string {
   const maxThreshold = new BigNumber(0.95) // example threshold, adjust as needed
 
   if (n.lt(minthreshold)) return 'text-black'
-  if (n.lt(maxThreshold)) return 'text-warning'
-  return 'text-error'
+  if (n.lt(maxThreshold)) return 'text-text-warning'
+  return 'text-text-error'
 }
 
 export function formatContractPrice(contract: {
@@ -222,13 +222,13 @@ export const directionKey = (direction: string | undefined): string => {
 export const withdrawalStatusColor = (status: string): string => {
   switch (status) {
     case 'WITHDRAWAL_SUCCESS':
-      return 'text-success'
+      return 'text-text-success'
     case 'WITHDRAWAL_PENDING':
-      return 'text-warning'
+      return 'text-text-warning'
     case 'WITHDRAWAL_FAILURE':
-      return 'text-error'
+      return 'text-text-error'
     default:
       // WITHDRAWAL_CANCELLED / WITHDRAWAL_UNKNOWN / anything unmapped
-      return 'text-info'
+      return 'text-text-subtle'
   }
 }

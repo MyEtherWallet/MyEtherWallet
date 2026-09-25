@@ -14,19 +14,21 @@
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <!-- Order Details -->
-        <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
+        <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.side-label')
             }}</span>
             <span
               class="font-bold"
-              :class="orderSide === 'buy' ? 'text-success' : 'text-error'"
+              :class="
+                orderSide === 'buy' ? 'text-text-success' : 'text-text-error'
+              "
               >{{ orderSideLabel }}</span
             >
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.order-type-label')
             }}</span>
             <span class="font-bold">{{
@@ -36,7 +38,7 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.market-price')
             }}</span>
             <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
@@ -45,13 +47,13 @@
             v-if="orderType === 'limit'"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.limit-price')
             }}</span>
             <span class="font-bold">${{ limitPrice }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.margin')
             }}</span>
             <span class="font-bold">{{
@@ -59,25 +61,25 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.leverage')
             }}</span>
             <span class="font-bold">{{ leverage }}&times;</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.position-size')
             }}</span>
             <span class="font-bold">{{ formatUsd(positionSizeUsd) }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.size', { symbol: displaySymbol })
             }}</span>
             <span class="font-bold">{{ orderSize }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.est-liquidation')
             }}</span>
             <span class="font-bold">{{
@@ -85,7 +87,7 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.est-fee', {
                 type: isMaker
                   ? $t('perps.confirm.maker')
@@ -98,10 +100,10 @@
             v-if="takeProfitPrice !== null"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.take-profit')
             }}</span>
-            <span class="text-success font-bold">{{
+            <span class="text-text-success font-bold">{{
               formatUsd(takeProfitPrice!)
             }}</span>
           </div>
@@ -109,10 +111,10 @@
             v-if="stopLossPrice !== null"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">{{
+            <span class="text-text-subtle font-medium">{{
               $t('perps.confirm.stop-loss')
             }}</span>
-            <span class="text-error font-bold">{{
+            <span class="text-text-error font-bold">{{
               formatUsd(stopLossPrice!)
             }}</span>
           </div>
@@ -121,9 +123,9 @@
         <!-- Error -->
         <div
           v-if="orderError || leverageError || limitPriceOutOfTolerance"
-          class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
         >
-          <p class="text-error text-s-14 font-medium">
+          <p class="text-text-error text-s-14 font-medium">
             {{
               orderError || leverageError || $t('perps.errors.out-of-tolerance')
             }}

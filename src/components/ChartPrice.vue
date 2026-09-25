@@ -88,13 +88,17 @@ Chart.register(
   Filler,
 )
 
+/**
+ * Chart.js paints to a canvas, which cannot resolve `var(--color-*)`, so these
+ * mirror the semantic tokens as literals. Keep in sync with `main.css`.
+ */
 const colors = {
-  upColor: 'rgb(5,192,165,1)',
-  downColor: 'rgb(239,68,68,1)',
-  bgUp: 'rgba(5,192,165,0.07)',
-  bgDown: 'rgba(239,68,68,0.07)',
-  bgGrey: 'rgba(0,0,0,0.05)',
-  tooltipBg: 'rgba(0,0,0,0.7)',
+  upColor: '#01a08c', // background/success
+  downColor: '#e40c58', // background/error
+  bgUp: 'rgba(1,160,140,0.07)', // background/success @ 7%
+  bgDown: 'rgba(228,12,88,0.07)', // background/error @ 7%
+  bgGrey: '#f5f5f5', // background/default
+  tooltipBg: '#1a1a1a', // background/info
 }
 
 /** Simple bucket-average downsampling (fast + good enough for display-only) */
@@ -241,108 +245,110 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
   void rate.value
   void currencySymbol.value
   return {
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: 'index',
-    intersect: false,
-  },
-  plugins: {
-    tooltip: {
-      filter: function (tooltipItem) {
-        // Disable tooltip for Dataset 2 (which has index 1)
-        return tooltipItem.datasetIndex !== 1
-      },
-      padding: 10,
-      backgroundColor: colors.tooltipBg,
-      boxPadding: 10,
-      bodySpacing: 3,
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
       intersect: false,
-      titleSpacing: 3,
-      displayColors: false,
-      titleFont: {
-        size: 12,
-        fontFamily: 'Roboto , sans-serif',
-        weight: 'normal',
-      },
-      bodyFont: {
-        size: 16,
-        fontFamily: 'Roboto , sans-serif',
-      },
-      callbacks: {
-        label: function (context) {
-          let label = context.dataset.label || ''
-          if (label) {
-            label += ': '
-          }
-          if (context.parsed.y !== null) {
-            return formatFiat(context.parsed.y).display
-          }
-          return label
+    },
+    plugins: {
+      tooltip: {
+        filter: function (tooltipItem) {
+          // Disable tooltip for Dataset 2 (which has index 1)
+          return tooltipItem.datasetIndex !== 1
         },
-        title: function (context) {
-          if (context.length === 0) {
-            return ''
-          }
-          const date = new Date(displayLabels.value[context[0].dataIndex] || '')
-          return date.toLocaleDateString('en-US', {
-            minute: 'numeric',
-            hour: 'numeric',
-          })
+        padding: 10,
+        backgroundColor: colors.tooltipBg,
+        boxPadding: 10,
+        bodySpacing: 3,
+        intersect: false,
+        titleSpacing: 3,
+        displayColors: false,
+        titleFont: {
+          size: 12,
+          fontFamily: 'Roboto , sans-serif',
+          weight: 'normal',
+        },
+        bodyFont: {
+          size: 16,
+          fontFamily: 'Roboto , sans-serif',
+        },
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || ''
+            if (label) {
+              label += ': '
+            }
+            if (context.parsed.y !== null) {
+              return formatFiat(context.parsed.y).display
+            }
+            return label
+          },
+          title: function (context) {
+            if (context.length === 0) {
+              return ''
+            }
+            const date = new Date(
+              displayLabels.value[context[0].dataIndex] || '',
+            )
+            return date.toLocaleDateString('en-US', {
+              minute: 'numeric',
+              hour: 'numeric',
+            })
+          },
         },
       },
     },
-  },
-  scales: {
-    x: {
-      display: true,
-      ticks: {
-        font: {
-          size: 10,
+    scales: {
+      x: {
+        display: true,
+        ticks: {
+          font: {
+            size: 10,
+          },
+          maxTicksLimit: 4,
+          type: 'time',
+          align: 'start',
+          color: 'rgba(0, 0, 0, 0.65)',
+          callback: function (value) {
+            const date = new Date(displayLabels.value[value as number])
+            const format = getFormat()
+            return props.timeFrame === '1D'
+              ? date.toLocaleTimeString('en-US', format)
+              : date.toLocaleDateString('en-US', format)
+          },
         },
-        maxTicksLimit: 4,
-        type: 'time',
-        align: 'start',
-        color: 'rgba(0, 0, 0, 0.65)',
-        callback: function (value) {
-          const date = new Date(displayLabels.value[value as number])
-          const format = getFormat()
-          return props.timeFrame === '1D'
-            ? date.toLocaleTimeString('en-US', format)
-            : date.toLocaleDateString('en-US', format)
+        border: {
+          display: false, // This removes the main x-axis line
+        },
+        grid: {
+          display: false, // Set display to false to remove vertical grid lines
         },
       },
-      border: {
-        display: false, // This removes the main x-axis line
-      },
-      grid: {
-        display: false, // Set display to false to remove vertical grid lines
+      y: {
+        display: true,
+        ticks: {
+          count: 3,
+          callback: function (value: any) {
+            return formatChartValue(value)
+          },
+          font: {
+            size: 10,
+          },
+          color: 'rgba(0, 0, 0, 0.65)',
+        },
+        suggestedMin: yBounds.value.min,
+        suggestedMax: yBounds.value.max,
+        position: 'right',
+        border: {
+          display: false, // This removes the main x-axis line
+        },
+        grid: {
+          display: false, // Set display to false to remove vertical grid lines
+        },
       },
     },
-    y: {
-      display: true,
-      ticks: {
-        count: 3,
-        callback: function (value: any) {
-          return formatChartValue(value)
-        },
-        font: {
-          size: 10,
-        },
-        color: 'rgba(0, 0, 0, 0.65)',
-      },
-      suggestedMin: yBounds.value.min,
-      suggestedMax: yBounds.value.max,
-      position: 'right',
-      border: {
-        display: false, // This removes the main x-axis line
-      },
-      grid: {
-        display: false, // Set display to false to remove vertical grid lines
-      },
-    },
-  },
-  elements: { line: { capBezierPoints: true } },
+    elements: { line: { capBezierPoints: true } },
   }
 })
 

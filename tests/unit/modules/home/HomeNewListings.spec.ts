@@ -135,7 +135,6 @@ describe('HomeNewListings', () => {
         stubs: {
           AppTabBar: AppTabBarStub,
           // Tooltip wraps each card; render its slot inline (skip teleport/hover).
-          AppTooltipHint: { template: '<div><slot /></div>' },
           AppSlideGroup: AppSlideGroupStub,
           // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
           // internally — irrelevant to this section's mapping logic, so
@@ -159,10 +158,10 @@ describe('HomeNewListings', () => {
     const cards = w.findAll('[data-test="listing-card"]')
     expect(cards[0].text()).toContain('AAPL')
     expect(cards[0].text()).toContain('Apple')
-    expect(cards[0].find('.text-success').exists()).toBe(true)
+    expect(cards[0].find('.text-text-success').exists()).toBe(true)
     expect(cards[1].text()).toContain('TSLA')
     expect(cards[1].text()).toContain('Tesla')
-    expect(cards[1].find('.text-error').exists()).toBe(true)
+    expect(cards[1].find('.text-text-error').exists()).toBe(true)
   })
 
   it('formats the raw price string via useCurrency before handing it to the card', () => {
@@ -274,7 +273,7 @@ describe('HomeNewListings', () => {
     const favorite = mountIt()
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-favorite"]')
-    expect(favorite.find('.text-primary').exists()).toBe(true)
+    expect(favorite.find('.text-text-brand').exists()).toBe(true)
     isWatchListed.mockReturnValue(false)
   })
 })

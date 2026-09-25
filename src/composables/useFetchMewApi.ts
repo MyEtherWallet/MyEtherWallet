@@ -5,7 +5,7 @@ import { captureException } from '@sentry/vue'
 import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
-const isDevMode = import.meta.env.DEV
+const isDevMode = import.meta.env.MODE !== 'production'
 
 export interface FetchMewAPIResponse {
   isActivePolling: Ref<boolean>

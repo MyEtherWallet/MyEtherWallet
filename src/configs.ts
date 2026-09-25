@@ -33,12 +33,10 @@ const configs = {
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
     'https://3779ba7db0670350a396d35fbeb766c0@o382951.ingest.us.sentry.io/4511061868347392',
-  VINATGE: 'https://www.myetherwallet.com/wallet/access',
+  VINTAGE: 'https://www.myetherwallet.com/wallet/access',
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
-  AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
-  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev'
 }
 
 export default configs

@@ -54,7 +54,7 @@
         />
         <hr
           v-if="index < filteredNotifications.length - 1"
-          class="border-t border-grey-10 mt-4"
+          class="border-t border-border-default mt-4"
         />
       </div>
       <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
@@ -63,7 +63,7 @@
       <app-btn-text
         v-if="notificationsCount > 1"
         @click="deleteAllNotifications"
-        class="text-primary text-s-14"
+        class="text-text-brand text-s-14"
       >
         {{ $t('common.delete_all') }}
       </app-btn-text>
@@ -262,7 +262,8 @@ const fetchBalances = () => {
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
     })
     .catch((error: unknown) => {
-      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      if (import.meta.env.MODE !== 'production')
+        console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
     })
 }

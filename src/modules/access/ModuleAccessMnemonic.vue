@@ -19,6 +19,7 @@
             />
             <app-text-field
               v-model="mnemonic"
+              surface="alternative"
               data-private
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
               class="mt-4"
@@ -40,7 +41,7 @@
                     )
                   }}
                 </p>
-                <p class="text-s-14 text-info italic">
+                <p class="text-s-14 text-text-subtle italic">
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>
@@ -54,10 +55,9 @@
               <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
+                  surface="alternative"
                   data-private
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
+                  :label="$t('access_wallet_recovery_phrase.enter_extra_word')"
                 />
               </div>
             </expand-transition>

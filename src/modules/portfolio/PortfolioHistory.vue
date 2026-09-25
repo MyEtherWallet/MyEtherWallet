@@ -13,7 +13,7 @@
       </div>
       <div class="text-right">
         <p
-          class="font-bold text-s-11 tracking-sp-06 uppercase text-info leading-none mb-1"
+          class="font-bold text-s-11 tracking-sp-06 uppercase text-text-subtle leading-none mb-1"
         >
           {{ t('portfolio.history.last_24h') }}
         </p>
@@ -25,8 +25,8 @@
           <span
             class="text-s-11 leading-none"
             :class="{
-              'text-error': lastTwentyFourHours.fiat.isLessThan(0),
-              'text-success': lastTwentyFourHours.fiat.isGreaterThan(0),
+              'text-text-error': lastTwentyFourHours.fiat.isLessThan(0),
+              'text-text-success': lastTwentyFourHours.fiat.isGreaterThan(0),
             }"
           >
             {{ lastTwentyFourHours.percentChange.isLessThan(0) ? '-' : '+'
@@ -38,19 +38,19 @@
         </div>
         <div
           v-else
-          class="h-11 w-[60px] bg-grey-10 rounded-xl animate-pulse"
+          class="h-11 w-[60px] bg-background-default-hover rounded-xl animate-pulse"
         ></div>
       </div>
     </div>
     <div
       v-if="isFetching && !chartData.length"
-      class="flex-1 bg-grey-10 rounded-xl animate-pulse mx-4 min-h-[150px]"
+      class="flex-1 bg-background-default-hover rounded-xl animate-pulse mx-4 min-h-[150px]"
     ></div>
     <div v-else-if="!chartData.length" class="px-4 pb-3">
       <div
-        class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[140px] w-full"
+        class="flex-1 flex items-center justify-center bg-background-default rounded-xl min-h-[140px] w-full"
       >
-        <p class="text-info text-center text-s-13">
+        <p class="text-text-subtle text-center text-s-13">
           {{ t('portfolio.history.no_chart_data') }}
         </p>
       </div>
@@ -62,7 +62,7 @@
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import HistoryChart from './components/history/HistoryChart.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
