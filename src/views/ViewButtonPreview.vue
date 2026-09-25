@@ -2,7 +2,7 @@
 // Dev-only preview for AppBaseButton and AppBtnGroup, rendered inside the
 // design-library shell (ViewDevLayout). Route is registered only outside
 // production builds — see routesDefault.ts.
-// Visit https://localhost:8080/dev/buttons in dev.
+// Visit https://localhost:8080/dev/button in dev.
 //
 // This page doubles as the "collect examples and test the secondary in
 // multiple contexts" surface: the Contexts section below renders the secondary

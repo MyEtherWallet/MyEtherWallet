@@ -53,7 +53,7 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'buttons',
+              path: 'button',
               name: 'DevButton',
               component: () => import('@/views/ViewButtonPreview.vue'),
               meta: { noAuth: true, noWalletFlow: true },
