@@ -5,7 +5,7 @@
     v-element-hover="[onHover, { delayLeave: 300 }]"
   >
     <slot>
-      <information-circle-icon class="h-6 w-6 p-1 cursor-pointer text-text-subtle" />
+      <AppIcon name="information-circle" class="p-1 cursor-pointer text-text-subtle" />
     </slot>
     <teleport to="#app">
       <transition name="fade" mode="out-in">
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { vElementHover } from '@vueuse/components'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const show = ref(false)
 const visible = ref(false)
 

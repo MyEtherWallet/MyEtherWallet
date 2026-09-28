@@ -67,10 +67,7 @@
                   ></path>
                 </svg>
                 <AppIcon name="check-circle" variant="filled" size="s" v-else-if="notificationStatus === 'confirmed'" class="text-text-success" />
-                <x-circle-icon
-                  v-else-if="notificationStatus === 'failed'"
-                  class="w-5 h-5 text-text-error"
-                />
+                <AppIcon name="x-circle" variant="filled" size="s" v-else-if="notificationStatus === 'failed'" class="text-text-error" />
               </div>
 
               <!-- Status Text -->
@@ -271,7 +268,6 @@ import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { XCircleIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'

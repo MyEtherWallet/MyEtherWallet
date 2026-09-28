@@ -42,8 +42,7 @@
           'transition-opacity opacity-0',
         ]"
       >
-        <x-circle-icon :class="isDisabled ? 'text-text-placeholder' : 'text-text-brand'"
-      /></app-btn-icon>
+        <AppIcon name="x-circle" :class="isDisabled ? 'text-text-placeholder' : 'text-text-brand'" /></app-btn-icon>
       <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
@@ -81,7 +80,6 @@ import {
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
-import { XCircleIcon } from '@heroicons/vue/24/outline'
 import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   placeholder: {

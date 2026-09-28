@@ -10,10 +10,7 @@
         :class="circleClass"
       >
         <AppIcon name="check" variant="filled" size="xxs" v-if="variant === 'done' || variant === 'doneGrey'" :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'" />
-        <x-mark-icon
-          v-else-if="variant === 'failed'"
-          class="w-3.5 h-3.5 text-white"
-        />
+        <AppIcon name="x-mark" variant="filled" size="xxs" v-else-if="variant === 'failed'" class="text-white" />
         <span
           v-else
           class="text-label-sm"
@@ -37,7 +34,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { XMarkIcon } from '@heroicons/vue/16/solid'
 import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{

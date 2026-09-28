@@ -24,7 +24,7 @@
             {{ selectedChain.nameLong }}
           </p>
         </div>
-        <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
+        <AppIcon name="chevron-down" variant="filled" size="xxs" class="flex-none ml-auto mr-1" />
       </div>
     </button>
     <!-- Dialog with chains list -->
@@ -43,9 +43,9 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import SelectChainDialog from './SelectChainDialog.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 defineProps({
   isBtnGroup: {
     type: Boolean,

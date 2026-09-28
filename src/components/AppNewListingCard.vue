@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
@@ -37,7 +36,7 @@ const up = computed(() => (props.change ?? 0) >= 0)
 const changeColor = computed(() =>
   up.value ? 'text-text-success' : 'text-text-error',
 )
-const changeArrowIcon = computed(() => (up.value ? ArrowUpIcon : ArrowDownIcon))
+const changeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
 const changeText = computed(() =>
   props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
 )
@@ -120,9 +119,10 @@ const changeText = computed(() =>
           <p class="text-label-sm" :class="changeColor">
             {{ changeText }}
           </p>
-          <component
-            :is="changeArrowIcon"
-            class="size-4"
+          <AppIcon
+            :name="changeArrowIcon"
+            variant="filled"
+            size="xxs"
             :class="changeColor"
           />
         </div>

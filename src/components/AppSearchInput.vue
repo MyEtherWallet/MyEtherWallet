@@ -30,12 +30,10 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon
-          :class="[
+        <AppIcon name="x-circle" :class="[
             'text-text-brand',
-            size === 'compact' ? 'w-5 h-5' : 'w-6 h-6',
-          ]"
-      /></app-btn-icon>
+            size === 'compact' ? '' : '',
+          ]" /></app-btn-icon>
     </div>
   </div>
 </template>
@@ -43,8 +41,6 @@
 <script setup lang="ts">
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { XCircleIcon } from '@heroicons/vue/24/outline'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.
