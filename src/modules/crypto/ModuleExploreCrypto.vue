@@ -352,7 +352,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <button
                           v-if="token.coinId || token.ondo"
@@ -503,7 +503,7 @@
         </div>
         <!-- Loading State -->
         <div v-if="isLoading" class="">
-          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-[56px] py-2">
+          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-14 py-2">
             <div
               class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
             ></div>

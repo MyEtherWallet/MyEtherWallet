@@ -168,7 +168,7 @@
               </th>
               <!-- Actions -->
               <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-28"
               ></th>
             </tr>
           </thead>
@@ -379,7 +379,7 @@
         </div>
         <!-- Loading State -->
         <div v-if="isLoading" class="">
-          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-[56px] py-2">
+          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-14 py-2">
             <div
               class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
             ></div>

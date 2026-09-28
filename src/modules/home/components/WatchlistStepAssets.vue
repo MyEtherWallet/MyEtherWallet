@@ -221,7 +221,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           <div
             v-else-if="!visibleAssets.length"
             data-test="assets-empty"
-            class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+            class="flex min-h-40 flex-col items-center justify-center py-6 text-center"
           >
             <AppIcon name="exclamation-circle" class="text-text-subtle" />
             <p
