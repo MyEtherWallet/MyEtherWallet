@@ -2,12 +2,23 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useInputStore } from '@/stores/inputStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import type {
-  Chain,
-  CryptoOverviewChain,
-  CryptoOverviewNativeChain,
-} from '@/mew_api/types'
+import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/stores/swapStore'
+
+/**
+ * The helpers only read chainName + contract + decimals, so they accept any
+ * chain shape carrying them: the overview `newCoins` (contract chains) or the
+ * watchlist token response mapped to it.
+ */
+export interface SwapChain {
+  chainName: string
+  contract?: string | null
+  decimals?: number | null
+}
+export interface SwapNativeChain {
+  chainName: string
+  decimals?: number | null
+}
 
 /**
  * Opens Swap / Bridge for a crypto new-listing coin, mirroring the crypto
@@ -22,22 +33,21 @@ export function useNewListingSwap(): {
   openSwapForToken: (
     symbol: string,
     name: string,
-    chains?: CryptoOverviewChain[],
-    nativeChains?: CryptoOverviewNativeChain[],
+    chains?: SwapChain[],
+    nativeChains?: SwapNativeChain[],
   ) => void
   openBridgeForToken: (
     symbol: string,
     name: string,
-    nativeChains?: CryptoOverviewNativeChain[],
+    nativeChains?: SwapNativeChain[],
+    chains?: SwapChain[],
   ) => void
 } {
   const chainsStore = useChainsStore()
   const { storeSwapValues } = useInputStore()
   const walletMenu = useWalletMenuStore()
 
-  const isCurrentNative = (
-    nativeChains: CryptoOverviewNativeChain[],
-  ): boolean => {
+  const isCurrentNative = (nativeChains: SwapNativeChain[]): boolean => {
     const current = chainsStore.selectedChain?.name
     return !!current && nativeChains.some(c => c.chainName === current)
   }
@@ -45,8 +55,8 @@ export function useNewListingSwap(): {
   const openSwapForToken = (
     symbol: string,
     name: string,
-    chains: CryptoOverviewChain[] = [],
-    nativeChains: CryptoOverviewNativeChain[] = [],
+    chains: SwapChain[] = [],
+    nativeChains: SwapNativeChain[] = [],
   ): void => {
     const current = chainsStore.selectedChain?.name
     // On a native chain the "to" token is the chain's own currency; otherwise
@@ -76,16 +86,25 @@ export function useNewListingSwap(): {
     walletMenu.openPanel('swap')
   }
 
-  // Bridge the coin in from the first native chain that supports swap; the "to"
-  // token is that chain's native currency (mirrors ModuleExploreCrypto.bridgeBtn).
+  // Bridge the coin in from the first swap-capable chain. Prefer a native chain
+  // (the "to" token is that chain's native currency); fall back to a swap-capable
+  // contract chain so contract-only coins still preselect a destination + token.
   const openBridgeForToken = (
     symbol: string,
     name: string,
-    nativeChains: CryptoOverviewNativeChain[] = [],
+    nativeChains: SwapNativeChain[] = [],
+    chains: SwapChain[] = [],
   ): void => {
-    const homeChain = nativeChains.find(c =>
+    const nativeHome = nativeChains.find(c =>
       chainsStore.chainHasSwapSupport(c.chainName),
     )
+    // A contract chain is only usable when it carries the coin's address —
+    // otherwise there's nothing to bridge (don't fall back to the native
+    // sentinel, which would prime the chain's own currency under this symbol).
+    const contractHome = chains.find(
+      c => c.contract && chainsStore.chainHasSwapSupport(c.chainName),
+    )
+    const homeChain = nativeHome ?? contractHome
     const toChain = homeChain
       ? chainsStore.allChains.find(c => c.name === homeChain.chainName)
       : undefined
@@ -93,7 +112,9 @@ export function useNewListingSwap(): {
       storeSwapValues({
         fromToken: {} as NewTokenInfo,
         toToken: {
-          address: MAIN_TOKEN_CONTRACT,
+          address: nativeHome
+            ? MAIN_TOKEN_CONTRACT
+            : contractHome?.contract || MAIN_TOKEN_CONTRACT,
           symbol,
           name,
           decimals: homeChain.decimals ?? 18,

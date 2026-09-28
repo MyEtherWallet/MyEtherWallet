@@ -22,7 +22,7 @@
             <span
               :class="[
                 'font-medium text-s-16 leading-p-100 capitalize',
-                order.side === 'buy' ? 'text-success' : 'text-error',
+                order.side === 'buy' ? 'text-text-success' : 'text-text-error',
               ]"
             >
               {{
@@ -37,7 +37,9 @@
         </div>
       </div>
       <div class="pb-6 pt-4">
-        <div class="bg-mewBg rounded-2xl divide-y divide-grey-outline p-2">
+        <div
+          class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+        >
           <div
             v-for="row in rows"
             :key="row.label"
@@ -45,7 +47,7 @@
           >
             <div class="flex items-center gap-1">
               <span
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
                 >{{ row.label }}</span
               >
               <app-tooltip v-if="row.tooltip" :text="row.tooltip" />
@@ -57,7 +59,7 @@
         </div>
         <button
           v-if="isCancellable"
-          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
+          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-background-error disabled:opacity-50"
           :disabled="cancelling"
           @click="$emit('cancel', order)"
         >
@@ -68,7 +70,7 @@
           }}
         </button>
         <app-btn-text
-          class="w-full mt-2 text-primary"
+          class="w-full mt-2 text-text-brand"
           is-large
           @click="$emit('close')"
           >{{ $t('perps.trade.tab-close') }}</app-btn-text
@@ -189,7 +191,8 @@ const rows = computed(() => {
         props.order.side === 'buy'
           ? t('perps.order.buy')
           : t('perps.order.sell'),
-      colorClass: props.order.side === 'buy' ? 'text-success' : 'text-error',
+      colorClass:
+        props.order.side === 'buy' ? 'text-text-success' : 'text-text-error',
     },
     {
       label: t('perps.order.type-label'),
@@ -200,10 +203,10 @@ const rows = computed(() => {
       value: orderStatusLabels.value[props.order.status] ?? props.order.status,
       colorClass:
         props.order.status === 'open' || props.order.status === 'pending'
-          ? 'text-primary'
+          ? 'text-text-brand'
           : props.order.status === 'fullyfilled'
-            ? 'text-success'
-            : 'text-info',
+            ? 'text-text-success'
+            : 'text-text-subtle',
     },
     {
       label: t('perps.order.price-label'),

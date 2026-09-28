@@ -8,7 +8,9 @@
   >
     <template #content>
       <div v-if="walletAddress" class="mb-6">
-        <div class="bg-mewBg rounded-20 p-4 bg-mewBg mb-4">
+        <div
+          class="bg-background-brand-subtle rounded-20 p-4 bg-background-brand-subtle mb-4"
+        >
           <!-- Amount -->
           <div class="mb-4">
             <perps-amount
@@ -23,7 +25,7 @@
                   <transition name="fade">
                     <p
                       v-if="amountError"
-                      class="text-error text-s-12 absolute -top-2.5 left-0"
+                      class="text-text-error text-s-12 absolute -top-2.5 left-0"
                     >
                       {{ amountError }}
                     </p>
@@ -39,7 +41,7 @@
                     </button>
                     <!-- Available balance -->
                     <div class="ml-auto text-left">
-                      <span class="text-info text-s-13">{{
+                      <span class="text-text-subtle text-s-13">{{
                         $t('perps.withdraw.available-label')
                       }}</span>
                       <span class="font-medium text-s-13 ml-1">
@@ -54,7 +56,7 @@
           <!-- Withdraw to -->
           <div class="mb-4">
             <p
-              class="text-info text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
+              class="text-text-subtle text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
             >
               {{ $t('perps.withdraw.withdraw-to-label') }}
             </p>
@@ -69,7 +71,7 @@
           </div>
           <!-- Withdrawal fee -->
           <div class="flex justify-between text-s-13">
-            <span class="text-info">{{
+            <span class="text-text-subtle">{{
               $t('perps.withdraw.withdrawal-fee-label')
             }}</span>
             <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
@@ -85,9 +87,9 @@
         <transition name="fade">
           <div
             v-if="error"
-            class="w-full p-4 bg-error-10 border border-error rounded-12 mb-2"
+            class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
           >
-            <p class="text-error text-s-14 text-center">
+            <p class="text-text-error text-s-14 text-center">
               {{ error }}
             </p>
           </div>

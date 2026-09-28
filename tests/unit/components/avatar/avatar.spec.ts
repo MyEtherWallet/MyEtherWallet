@@ -88,10 +88,10 @@ describe('avatar geometry (types.ts)', () => {
 
 describe('AvatarStatusDot', () => {
   it.each([
-    ['error', 'bg-error'],
-    ['warning', 'bg-warning'],
-    ['success', 'bg-success'],
-    ['muted', 'bg-grey-subtle'],
+    ['error', 'bg-background-error'],
+    ['warning', 'bg-background-warning'],
+    ['success', 'bg-background-success'],
+    ['muted', 'bg-background-decorative-neutral'],
   ] as const)('%s → %s', (type, cls) => {
     const wrapper = mount(AvatarStatusDot, { props: { type } })
     expect(wrapper.classes()).toContain(cls)
@@ -107,11 +107,11 @@ describe('AppAvatarBadge', () => {
     expect(wrapper.classes()).toContain('w-full')
   })
 
-  it('icon badge uses the icon-bg token', () => {
+  it('icon badge uses the neutral surface token', () => {
     const wrapper = mount(AppAvatarBadge, {
       props: { type: 'icon' },
     })
-    expect(wrapper.classes()).toContain('bg-avatar-badge-icon-bg')
+    expect(wrapper.classes()).toContain('bg-background-default-hover')
   })
 
   it('status badge renders a status dot', () => {
@@ -211,18 +211,18 @@ describe('AppAvatar', () => {
     const connected = mount(AppAvatar, {
       props: { type: 'account', address: '0xabc', connected: true },
     })
-    expect(connected.find('.border-success').exists()).toBe(true)
+    expect(connected.find('.border-border-success').exists()).toBe(true)
 
     const idle = mount(AppAvatar, {
       props: { type: 'account', address: '0xabc' },
     })
-    expect(idle.find('.border-success').exists()).toBe(false)
+    expect(idle.find('.border-border-success').exists()).toBe(false)
 
     // The ring must live outside the clipping layer, or it gets clipped.
     const initial = mount(AppAvatar, {
       props: { type: 'initial', initial: 'A', connected: true },
     })
-    expect(initial.find('.border-success').exists()).toBe(false)
+    expect(initial.find('.border-border-success').exists()).toBe(false)
   })
 
   it('warns in dev when more than one badge is active', () => {

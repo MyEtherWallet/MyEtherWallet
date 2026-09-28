@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-background-contrast-default rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
         :class="{ 'mew-card-readable': !useDynamicContrast }"
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
@@ -43,7 +43,7 @@
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <QrCodeIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-text-brand"
                       />
                       {{ $t('view_paper_wallet') }}
                     </li>
@@ -53,18 +53,22 @@
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
                       <UserGroupIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                        class="w-5 h-5 inline-block mr-2 text-text-brand"
                       />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
+                  <hr
+                    class="h-px bg-background-default-hover border-0 w-full my-2"
+                  />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <TrashIcon class="w-5 h-5 inline-block mr-2 text-error" />
+                      <TrashIcon
+                        class="w-5 h-5 inline-block mr-2 text-text-error"
+                      />
                       {{
                         isWatchOnly
                           ? $t('delete_watch_only_wallet')

@@ -41,7 +41,7 @@
                     )
                   }}
                 </p>
-                <p class="text-s-14 text-info italic">
+                <p class="text-s-14 text-text-subtle italic">
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>

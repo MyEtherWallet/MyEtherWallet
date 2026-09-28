@@ -205,7 +205,7 @@ onBeforeUnmount(close)
     <slot>
       <span
         tabindex="0"
-        class="inline-flex rounded-full text-info focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        class="inline-flex rounded-full text-text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
         data-testid="tooltip-default-trigger"
       >
         <InformationCircleIcon class="size-6 p-1 cursor-pointer" />
@@ -226,7 +226,7 @@ onBeforeUnmount(close)
       :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
     >
       <div
-        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-tooltip-bg px-2 py-1 text-center text-s-12 font-semibold leading-p-150 text-white shadow-button-elevated"
+        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-background-info px-2 py-1 text-center text-s-12 font-semibold leading-p-150 text-white shadow-button-elevated"
       >
         <span v-if="$slots.content" class="shrink-0"
           ><slot name="content"
@@ -235,7 +235,7 @@ onBeforeUnmount(close)
       </div>
 
       <span
-        class="text-tooltip-bg"
+        class="text-background-info"
         :class="[
           ARROW_ROTATE[effectivePlacement],
           ARROW_BEFORE[effectivePlacement] ? 'order-first' : '',

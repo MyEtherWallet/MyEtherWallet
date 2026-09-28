@@ -17,7 +17,6 @@ const TABS: { id: AssetPickerTab; labelKey: string }[] = [
   { id: 'all', labelKey: 'all' },
   { id: 'stocks', labelKey: 'stocks' },
   { id: 'crypto', labelKey: 'crypto' },
-  { id: 'perps', labelKey: 'perps' },
 ]
 
 const tab = ref<AssetPickerTab>('all')
@@ -32,23 +31,24 @@ const { items, isLoading } = useAssetPicker(tab, query)
     data-test="add-to-watchlist-dialog"
   >
     <template #content>
-      <div class="flex max-h-[70vh] flex-col p-6">
+      <div class="flex flex-col px-6 pt-6">
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
-        <p class="mt-1 text-s-16 text-[#575757]">
+        <p class="mt-1 text-s-16 text-text-subtle">
           {{ t('homePage.hero.watchlist.addModal.subtitle') }}
         </p>
 
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
+          bg-class="bg-background-default"
           class="mt-5"
         />
 
         <!-- Tabs -->
         <div
-          class="mt-5 flex gap-6 border-b border-grey-outline/40"
+          class="mt-5 flex gap-6 border-b border-border-strong/40"
           role="tablist"
         >
           <button
@@ -62,7 +62,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
             :class="
               tab === tabItem.id
                 ? 'border-black text-black'
-                : 'border-transparent text-[#575757]'
+                : 'border-transparent text-text-subtle'
             "
             @click="tab = tabItem.id"
           >
@@ -70,22 +70,24 @@ const { items, isLoading } = useAssetPicker(tab, query)
           </button>
         </div>
 
-        <!-- List (pr keeps the star off the scrollbar) -->
-        <div class="mew-scrollbar mt-2 min-h-60 flex-1 overflow-y-auto pr-2">
+        <!-- List: fixed height so the modal never resizes between tabs or
+             loading/loaded (QA). Sits flush under the tabs (no top gap) and only
+             this area scrolls; pr keeps the star off the scrollbar. -->
+        <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
           <div
             v-if="isLoading"
             data-test="picker-loading"
-            class="flex h-60 items-center justify-center"
+            class="flex h-full items-center justify-center"
           >
             <span
-              class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"
+              class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
               aria-hidden="true"
             />
           </div>
           <p
             v-else-if="!items.length"
             data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-[#575757]"
+            class="py-16 text-center text-s-14 text-text-subtle"
           >
             {{ t('homePage.hero.watchlist.addModal.empty') }}
           </p>

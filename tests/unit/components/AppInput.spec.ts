@@ -49,7 +49,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     await w.setProps({ modelValue: 'vitalik.eth' })
     const label = w.get('label')
     expect(label.classes()).not.toContain('sr-only')
-    expect(label.classes()).toContain('text-t-subtle')
+    expect(label.classes()).toContain('text-text-subtle')
     // Figma label/xs is DM Sans 600 (semibold).
     expect(label.classes()).toContain('font-semibold')
   })
@@ -81,7 +81,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
 
   it('maps surface to bg + resting border', () => {
     expect(field(mountInput({ surface: 'default' })).classes()).toContain(
-      'bg-bgBase',
+      'bg-background-default',
     )
     const alt = field(mountInput({ surface: 'alternative' }))
     expect(alt.classes()).toContain('bg-white')
@@ -94,11 +94,11 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
       modelValue: '0x',
     })
     // Unfocused: no red ring, but the feedback row is shown.
-    expect(field(w).classes()).not.toContain('border-error')
+    expect(field(w).classes()).not.toContain('border-border-error')
     expect(w.text()).toContain('Enter a valid address')
     // Focus: ring turns error red.
     await w.get('input').trigger('focus')
-    expect(field(w).classes()).toContain('border-error')
+    expect(field(w).classes()).toContain('border-border-error')
   })
 
   it('wires aria-invalid and aria-describedby to the feedback row', () => {
@@ -123,7 +123,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     // Figma Disabled + Filled still shows the label, in text/disabled grey.
     const label = w.get('label')
     expect(label.classes()).not.toContain('sr-only')
-    expect(label.classes()).toContain('text-grey-subtle')
+    expect(label.classes()).toContain('text-text-placeholder')
     expect(w.text()).not.toContain('Bad')
     expect(w.find('[aria-label="Clear"]').exists()).toBe(false)
     // A disabled field must not announce an invalid state — there is no error
