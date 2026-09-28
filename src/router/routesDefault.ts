@@ -23,16 +23,36 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
-  // Dev-only component previews — excluded from production builds.
+  // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
+  // components that have a preview; each renders in its <router-view>. Never
+  // registered in production builds. noWalletFlow: these are previews, not app
+  // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
   ...(import.meta.env.MODE !== 'production'
     ? [
         {
-          path: '/button-preview',
-          name: 'button-preview',
-          component: () => import('@/views/ViewButtonPreview.vue'),
-          meta: {
-            noAuth: true,
-          },
+          path: '/dev',
+          component: () => import('@/views/ViewDevLayout.vue'),
+          meta: { noAuth: true, noWalletFlow: true },
+          children: [
+            {
+              path: '',
+              name: 'DevIndex',
+              component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'colors',
+              name: 'DevColors',
+              component: () => import('@/views/ViewColorPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'button',
+              name: 'DevButton',
+              component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+          ],
         },
       ]
     : []),

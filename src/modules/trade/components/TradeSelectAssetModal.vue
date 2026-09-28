@@ -26,14 +26,14 @@
         </h1>
         <p
           v-if="side === 'buy'"
-          class="text-s-16 leading-[22px] text-[#575757] text-center"
+          class="text-s-16 leading-[22px] text-text-subtle text-center"
         >
           {{ $t('trade.select_asset.subtitle') }}
         </p>
       </div>
       <app-btn-icon
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-bgBase"
+        class="absolute top-6 right-6 bg-background-default"
         height="h-8"
         width="w-8"
         @click="isOpen = false"
@@ -52,7 +52,7 @@
           <app-search-input
             v-model="searchInput"
             size="compact"
-            bg-class="bg-bgBase"
+            bg-class="bg-background-default"
             input-class="!text-s-14 placeholder:text-neutral-500"
             :placeholder="$t('select_token.search')"
           />
@@ -120,7 +120,7 @@
                   class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
                 />
                 <p
-                  class="text-s-14 leading-[20px] text-[#575757] truncate max-w-full"
+                  class="text-s-14 leading-[20px] text-text-subtle truncate max-w-full"
                 >
                   {{ asset.name }}
                 </p>
@@ -155,7 +155,7 @@
                 </p>
                 <p
                   :class="[
-                    side === 'buy' ? changeColor(asset) : 'text-[#575757]',
+                    side === 'buy' ? changeColor(asset) : 'text-text-subtle',
                     'text-s-14 leading-[20px] whitespace-nowrap',
                   ]"
                 >
@@ -167,7 +167,7 @@
 
           <p
             v-if="!searchResults.length"
-            class="text-s-14 leading-[20px] text-info text-center py-6"
+            class="text-s-14 leading-[20px] text-text-subtle text-center py-6"
           >
             {{
               searchInput
@@ -361,7 +361,9 @@ const firstUnavailableAsset = computed(() =>
 )
 
 const changeColor = (asset: DisplayAsset) =>
-  (asset.priceChangePercentage24h ?? 0) < 0 ? 'text-error' : 'text-success-600'
+  (asset.priceChangePercentage24h ?? 0) < 0
+    ? 'text-text-error'
+    : 'text-success-600'
 
 const isSelected = (asset: DisplayAsset) =>
   selectedToken.value?.address?.toLowerCase() === asset.address?.toLowerCase()

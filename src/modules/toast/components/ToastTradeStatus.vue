@@ -3,7 +3,7 @@
     role="alert"
     :class="[
       isXS ? 'w-[95%] mx-auto' : 'w-[360px]',
-      'bg-bgInfo rounded-16 p-3 flex items-start gap-3 mt-4',
+      'bg-background-info rounded-16 p-3 flex items-start gap-3 mt-4',
     ]"
   >
     <app-spinner
@@ -44,7 +44,7 @@
         :href="toast.link.url"
         target="_blank"
         rel="noopener"
-        class="self-start bg-primary rounded-24 px-3 py-1 text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-white"
+        class="self-start bg-background-brand rounded-24 px-3 py-1 text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-white"
       >
         {{ toast.link.title }}
       </a>

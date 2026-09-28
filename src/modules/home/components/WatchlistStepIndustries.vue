@@ -33,7 +33,9 @@ const toggle = (id: string) => {
       :step="2"
       show-back
       :title="t('homePage.hero.watchlist.onboarding.industries.subtitle')"
-      :description="t('homePage.hero.watchlist.onboarding.industries.description')"
+      :description="
+        t('homePage.hero.watchlist.onboarding.industries.description')
+      "
       @back="$emit('back')"
       @close="$emit('close')"
     />
@@ -47,7 +49,7 @@ const toggle = (id: string) => {
       <span
         v-for="n in 8"
         :key="n"
-        class="h-[54px] animate-pulse rounded-2xl bg-[#f0f0f0]"
+        class="h-[54px] animate-pulse rounded-2xl bg-background-skeleton"
       />
     </div>
 
@@ -58,8 +60,10 @@ const toggle = (id: string) => {
       data-test="industries-empty"
       class="mt-6 flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
     >
-      <ExclamationCircleIcon class="size-6 text-[#575757]" />
-      <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
+      <ExclamationCircleIcon class="size-6 text-text-subtle" />
+      <p
+        class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
+      >
         {{ t('homePage.hero.watchlist.onboarding.industries.empty') }}
       </p>
     </div>
@@ -96,7 +100,7 @@ const toggle = (id: string) => {
       <button
         type="button"
         data-test="industries-skip"
-        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-primary"
+        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-text-brand"
         @click="$emit('skip')"
       >
         {{ t('homePage.hero.watchlist.onboarding.skip') }}

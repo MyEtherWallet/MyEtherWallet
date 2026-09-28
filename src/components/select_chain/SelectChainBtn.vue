@@ -1,8 +1,8 @@
 <template>
   <div>
     <button
-      :class="[isReady ? 'hoverNoBG' : 'animate-pulse bg-surface']"
-      class="py-2 px-3 rounded-16 w-full border border-1 border-grey-outline min-h-[58px]"
+      :class="[isReady ? 'hoverNoBG' : 'animate-pulse bg-background-default-hover']"
+      class="py-2 px-3 rounded-16 w-full border border-1 border-border-strong min-h-[58px]"
       @click="setOpenDialog(true)"
     >
       <div v-if="selectedChain" class="flex items-center">
@@ -15,7 +15,7 @@
           width="32"
         />
         <div class="ml-1 pr-1 min-w-[30px]">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p class="text-text-subtle text-left text-s-12 leading-[16px] capitalize">
             {{ $t('common.network') }}
           </p>
           <p

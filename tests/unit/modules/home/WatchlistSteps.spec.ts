@@ -8,7 +8,10 @@ vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span data-test="token-logo" />' },
 }))
 vi.mock('@/components/AppTokenSymbol.vue', () => ({
-  default: { props: ['symbol', 'isStock'], template: '<span>{{ symbol }}</span>' },
+  default: {
+    props: ['symbol', 'isStock'],
+    template: '<span>{{ symbol }}</span>',
+  },
 }))
 
 // AppTooltip relies on the v-element-hover directive + teleport; stub it and
@@ -288,8 +291,20 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     }))
     const assets = [
       ...crypto,
-      { id: 'cx', symbol: 'CX', name: 'Coin X', type: 'crypto', watchlistId: 'cx' },
-      { id: 's1', symbol: 'S1', name: 'Stock 1', type: 'stock', watchlistId: 's1' },
+      {
+        id: 'cx',
+        symbol: 'CX',
+        name: 'Coin X',
+        type: 'crypto',
+        watchlistId: 'cx',
+      },
+      {
+        id: 's1',
+        symbol: 'S1',
+        name: 'Stock 1',
+        type: 'stock',
+        watchlistId: 's1',
+      },
     ]
     const w = mountWith(WatchlistStepAssets, {
       assets,

@@ -33,7 +33,7 @@
             class="fixed z-[2200] app-popup-menu-floating"
           >
             <div
-              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl border border-grey-10 overflow-hidden"
+              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl border border-border-default overflow-hidden"
               :class="menuRadiusClass"
             >
               <slot name="menu-content" :toggleMenu="toggleMenu" />
@@ -65,7 +65,7 @@
           ]"
         >
           <div
-            class="min-w-[180px] max-w-full bg-white shadow-xl border border-grey-10 overflow-hidden"
+            class="min-w-[180px] max-w-full bg-white shadow-xl border border-border-default overflow-hidden"
             :class="menuRadiusClass"
           >
             <slot name="menu-content" :toggleMenu="toggleMenu" />
@@ -192,7 +192,10 @@ watch(openSelect, v => emit('update:open', v))
 const computeFloatingStyle = (): void => {
   if (!target.value) return
   const rect = target.value.getBoundingClientRect()
-  const style: CSSProperties = { position: 'fixed', top: `${rect.bottom + 8}px` }
+  const style: CSSProperties = {
+    position: 'fixed',
+    top: `${rect.bottom + 8}px`,
+  }
 
   if (props.location === PopupLocation.LEFT) {
     style.left = `${rect.left}px`

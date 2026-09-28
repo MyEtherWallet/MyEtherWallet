@@ -12,8 +12,8 @@
         <p class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]">
           {{ title }}
         </p>
-        <p class="text-s-12 text-info leading-[18px]">{{ body }}</p>
-        <p class="text-s-12 text-info leading-[18px]">
+        <p class="text-s-12 text-text-subtle leading-[18px]">{{ body }}</p>
+        <p class="text-s-12 text-text-subtle leading-[18px]">
           <a
             :href="marketHoursHelpUrl"
             target="_blank"
@@ -24,8 +24,11 @@
           {{ $t('trade.market_status_popover.learn_more_suffix') }}
         </p>
       </div>
-      <div class="w-full border-t border-grey-10" />
-      <p v-if="status === 'weekend'" class="text-s-12 text-info leading-[18px]">
+      <div class="w-full border-t border-border-default" />
+      <p
+        v-if="status === 'weekend'"
+        class="text-s-12 text-text-subtle leading-[18px]"
+      >
         {{ nextOpenText }}
       </p>
       <trade-market-timeline

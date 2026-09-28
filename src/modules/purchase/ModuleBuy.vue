@@ -49,7 +49,7 @@
         href="https://help.myetherwallet.com/"
         target="_blank"
         rel="noopener"
-        class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+        class="mt-auto self-center text-s-12 font-semibold text-text-brand tracking-[-0.24px] hover:underline"
       >
         {{ t('purchase.buy.need_help') }}
       </a>
@@ -114,10 +114,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
-import {
-  v7ToPurchaseChain,
-  purchaseChainToChain,
-} from './helpers/chainMapping'
+import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 import { useQuoteCountdown } from './composables/useQuoteCountdown'
@@ -154,7 +151,8 @@ const {
 } = purchaseStore
 
 const walletStore = useWalletStore()
-const { isWalletConnected, isWatchOnly, walletAddress } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly, walletAddress } =
+  storeToRefs(walletStore)
 
 const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
@@ -162,7 +160,8 @@ const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 
-const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(buyNetworks, walletChain, chains)
+const { compatibleChainCodes, incompatibleChainCodes } =
+  usePurchaseCompatibility(buyNetworks, walletChain, chains)
 
 const supportedNetworkChains = computed<Chain[]>(() =>
   compatibleChainCodes.value
@@ -250,7 +249,10 @@ onMounted(() => {
   analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
-watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
+watch(
+  [() => walletMenu.selectedPurchaseCoinId, buyNetworks],
+  applyPreselectedToken,
+)
 
 const currencyOptions = computed(() => {
   const tokenProviders = selectedToken.value?.providers
@@ -313,7 +315,9 @@ const formattedCryptoEstimate = computed(() => {
 const buyPayload = computed<BuyPayloadShared>(() => {
   const rate = currencyRate.value
   const amountUSD =
-    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+    rate && rate > 0
+      ? (Number(fiatAmount.value) / rate).toFixed(2)
+      : fiatAmount.value
   return {
     network: displayChain.value?.name,
     token: tokenSymbol.value,
@@ -439,7 +443,9 @@ watch(selectedToken, token => {
 
 watch(currencyOptions, options => {
   if (options.length && !options.includes(selectedFiat.value)) {
-    selectedFiat.value = options.includes(DEFAULT_FIAT) ? DEFAULT_FIAT : options[0]
+    selectedFiat.value = options.includes(DEFAULT_FIAT)
+      ? DEFAULT_FIAT
+      : options[0]
   }
 })
 

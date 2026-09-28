@@ -60,25 +60,41 @@ describe('AddToWatchlistDialog (MEW-2130)', () => {
     const w = mountDialog()
     const tabs = w.findAll('[data-test="picker-tab"]')
     await tabs[2].trigger('click') // crypto
-    expect(w.findAll('[data-test="picker-tab"]')[2].attributes('aria-selected')).toBe(
-      'true',
-    )
-    expect(w.findAll('[data-test="picker-tab"]')[0].attributes('aria-selected')).toBe(
-      'false',
-    )
+    expect(
+      w.findAll('[data-test="picker-tab"]')[2].attributes('aria-selected'),
+    ).toBe('true')
+    expect(
+      w.findAll('[data-test="picker-tab"]')[0].attributes('aria-selected'),
+    ).toBe('false')
   })
 
   it('shows the loading spinner while fetching', () => {
     isLoading.value = true
-    expect(mountDialog().find('[data-test="picker-loading"]').exists()).toBe(true)
+    expect(mountDialog().find('[data-test="picker-loading"]').exists()).toBe(
+      true,
+    )
   })
 
   it('renders one row per item', () => {
     items.value = [
-      { key: 'crypto-eth', symbol: 'ETH', name: 'Ethereum', type: 'crypto', watchlistId: 'ethereum' },
-      { key: 'stock-AAPL', symbol: 'AAPL', name: 'Apple', type: 'stock', watchlistId: 'AAPL' },
+      {
+        key: 'crypto-eth',
+        symbol: 'ETH',
+        name: 'Ethereum',
+        type: 'crypto',
+        watchlistId: 'ethereum',
+      },
+      {
+        key: 'stock-AAPL',
+        symbol: 'AAPL',
+        name: 'Apple',
+        type: 'stock',
+        watchlistId: 'AAPL',
+      },
     ]
-    expect(mountDialog().findAll('[data-test="asset-picker-row"]').length).toBe(2)
+    expect(mountDialog().findAll('[data-test="asset-picker-row"]').length).toBe(
+      2,
+    )
   })
 
   it('shows the empty state when there are no items and not loading', () => {

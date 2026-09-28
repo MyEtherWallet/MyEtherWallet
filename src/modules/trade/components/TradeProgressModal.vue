@@ -42,7 +42,7 @@
           <span
             class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
             :class="[
-              isFailed ? 'bg-error' : 'bg-success-600',
+              isFailed ? 'bg-background-error' : 'bg-success-600',
               isSettled ? 'scale-100' : 'scale-0',
             ]"
           >
@@ -55,14 +55,14 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ title }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-info">
+          <p class="text-s-16 leading-[22px] text-text-subtle">
             {{ subtitle }}
           </p>
         </div>
 
         <app-base-button
           theme="neutral"
-          class="!bg-bgBase !text-primary !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
+          class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
           @click="model = false"
         >
           {{ $t('trade.progress_modal.close_screen') }}
@@ -70,7 +70,7 @@
 
         <p
           v-if="status === 'pending'"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-info whitespace-pre-line"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
         >
           {{ $t('trade.progress_modal.background_note') }}
         </p>

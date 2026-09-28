@@ -8,11 +8,11 @@
 
       <!-- Filters: search + category -->
       <div
-        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-grey-5"
+        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
         <app-search-input
           v-model="searchInput"
-          bg-class="bg-grey-5"
+          bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('common.search')"
           class="w-full xs:w-[240px] shrink-0"
@@ -27,13 +27,13 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
               @click="toggleSelect"
             >
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedCryptoFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+              <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
             </button>
           </template>
         </app-select>
@@ -46,7 +46,7 @@
           <!-- Header-->
           <thead class="bg-white">
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-normal"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-normal"
             >
               <!-- Watchlist -->
               <th class="w-10 pb-4 text-center"></th>
@@ -164,7 +164,7 @@
             <tr
               v-for="token in tokens"
               :key="token.name + token.marketCap"
-              class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
+              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
               @click="onRowClick(token)"
             >
               <!-- Watchlist -->
@@ -176,7 +176,7 @@
                       : $t('common.add_to_watchlist')
                   "
                   @click.stop="setWatchlistToken(token.coinId)"
-                  class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
                   <!-- changes color when active -->
                   <star-outline-icon
@@ -185,7 +185,7 @@
                   />
                   <star-solid-icon
                     v-else
-                    class="h-4 w-4 cursor-pointer text-primary"
+                    class="h-4 w-4 cursor-pointer text-text-brand"
                   />
                 </button>
               </td>
@@ -219,14 +219,14 @@
                       v-if="token.name.length > 20"
                     >
                       <p
-                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
                         {{ token.name }}
                       </p>
                     </app-tooltip>
                     <p
                       v-else
-                      class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
@@ -312,7 +312,7 @@
                             @click.stop="[toggleMenu(), tradeBtn(token, true)]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-trade class="text-primary w-4 h-4 mr-2" />
+                            <icon-trade class="text-text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('stocks.trade') }}</p>
                           </li>
                         </ul>
@@ -335,7 +335,7 @@
         </table>
         <div
           v-if="!isLoading && tokens.length === 0"
-          class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
         >
           <p
             v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
@@ -359,7 +359,7 @@
         <div v-if="isLoading" class="">
           <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-[56px] py-2">
             <div
-              class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+              class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
             ></div>
           </div>
         </div>
@@ -367,14 +367,17 @@
 
       <!-- Footer / pagination -->
       <div
-        class="flex items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+        class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
       >
-        <span class="text-info" :class="isLoading ? 'invisible' : 'visible'">
+        <span
+          class="text-text-subtle"
+          :class="isLoading ? 'invisible' : 'visible'"
+        >
           {{ $t('common.showing_page', { current: page, total: totalPages }) }}
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-grey-5"
+            class="bg-background-default"
             height="h-10"
             width="w-10"
             :disabled="!isLoading && page === 1"
@@ -384,7 +387,7 @@
             <chevron-left-icon class="w-4 h-4" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-grey-5"
+            class="bg-background-default"
             height="h-10"
             width="w-10"
             :disabled="!isLoading && page >= totalPages"
@@ -826,9 +829,9 @@ const parsePercent = (val: number | null): string => {
 
 const getPercentClass = (val: number | null): string => {
   if (val === null || val === undefined) return ''
-  if (val > 0) return 'text-success'
-  if (val < 0) return 'text-error'
-  return 'text-primary'
+  if (val > 0) return 'text-text-success'
+  if (val < 0) return 'text-text-error'
+  return 'text-text-brand'
 }
 
 const debounceTrackSearch = useDebounceFn((value: string) => {

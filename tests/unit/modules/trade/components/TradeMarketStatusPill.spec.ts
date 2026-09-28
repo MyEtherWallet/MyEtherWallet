@@ -30,7 +30,7 @@ describe('TradeMarketStatusPill', () => {
   it('renders paused in the subtle color without the limited note', () => {
     const pill = mountPill({ status: 'paused' })
     expect(pill.text()).toContain('Market paused')
-    expect(pill.find('p').classes()).toContain('text-info')
+    expect(pill.find('p').classes()).toContain('text-text-subtle')
     expect(pill.text()).not.toContain('Market limited')
   })
 

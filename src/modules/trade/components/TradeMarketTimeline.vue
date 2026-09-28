@@ -19,7 +19,7 @@
         >
           <div
             v-if="hoveredIndex === index"
-            class="absolute -inset-x-0.5 top-0 h-3 rounded-full bg-grey-10"
+            class="absolute -inset-x-0.5 top-0 h-3 rounded-full bg-background-default-hover"
           />
           <div
             :class="[
@@ -60,7 +60,7 @@
       </div>
       <div class="relative w-full h-[18px]">
         <p
-          class="absolute top-0 -translate-x-1/2 text-s-12 text-grey-subtle leading-[18px] whitespace-nowrap"
+          class="absolute top-0 -translate-x-1/2 text-s-12 text-text-placeholder leading-[18px] whitespace-nowrap"
           :style="{ left: `clamp(30px, ${markerPct}%, calc(100% - 30px))` }"
         >
           {{ timeLabel }}

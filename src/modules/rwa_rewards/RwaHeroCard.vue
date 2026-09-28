@@ -15,7 +15,7 @@
   />
   <div
     v-else
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-border-default rounded-16 p-5 min-h-[293px]"
     :data-test="`rwa-hero-${status}`"
   >
     <img
@@ -62,7 +62,7 @@
           </p>
           <button
             type="button"
-            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-primary hoverOpacity"
+            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-text-brand hoverOpacity"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"
           >
@@ -81,7 +81,7 @@
         >
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
@@ -97,11 +97,10 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
-                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
                 disabled
               >
                 {{ disabledCtaLabel }}
@@ -138,7 +137,7 @@
         >
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ earnedDescription }}
         </p>
       </div>
@@ -163,7 +162,7 @@
           >
             {{ $t('rwaRewards.hero_done_title') }}
           </p>
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <p class="text-s-12 leading-[18px] text-text-subtle">
             {{ $t('rwaRewards.hero_done_desc', { total: earnedTotalLabel }) }}
           </p>
         </div>
@@ -182,7 +181,7 @@
           >
             {{ $t('rwaRewards.hero_claimed_title') }}
           </p>
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <p class="text-s-12 leading-[18px] text-text-subtle">
             {{ $t('rwaRewards.hero_claimed_desc', { amount: rewardLabel }) }}
           </p>
         </div>
@@ -212,7 +211,7 @@
         >
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
@@ -227,11 +226,10 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
-                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
                 disabled
               >
                 {{ disabledCtaLabel }}
@@ -265,8 +263,10 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <lock-closed-icon class="w-7 h-7 text-primary" />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <lock-closed-icon class="w-7 h-7 text-text-brand" />
+          <p
+            class="text-s-14 font-normal leading-5 text-text-subtle text-center"
+          >
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
@@ -314,7 +314,7 @@
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}

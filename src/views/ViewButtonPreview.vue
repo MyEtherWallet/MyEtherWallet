@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Dev-only preview for AppBaseButton (all types × states × sizes).
 // Route is registered only when import.meta.env.DEV — see routesDefault.ts.
-// Visit https://localhost:8080/button-preview in dev.
+// Visit https://localhost:8080/dev/button in dev.
 import AppBaseButton from '@components/AppBaseButton.vue'
 
 const types = [
@@ -16,30 +16,30 @@ const sizes = ['large', 'medium', 'small'] as const
 </script>
 
 <template>
-  <div class="p-10 bg-app-background min-h-screen">
+  <div class="p-10 bg-background-default min-h-screen">
     <h1 class="title5 mb-8">AppBaseButton — states preview</h1>
 
     <div
       v-for="t in types"
       :key="t.label"
-      class="mb-10 border-b border-grey-10 pb-8"
+      class="mb-10 border-b border-border-default pb-8"
     >
       <h2 class="text7 mb-4">{{ t.label }}</h2>
 
       <div class="grid grid-cols-[80px_repeat(3,1fr)] gap-4 items-center">
         <div></div>
-        <div class="text-s-13 text-grey-50">Large</div>
-        <div class="text-s-13 text-grey-50">Medium</div>
-        <div class="text-s-13 text-grey-50">Small</div>
+        <div class="text-s-13 text-text-subtle">Large</div>
+        <div class="text-s-13 text-text-subtle">Medium</div>
+        <div class="text-s-13 text-text-subtle">Small</div>
 
         <!-- Default -->
-        <div class="text-s-13 text-grey-50">Default</div>
+        <div class="text-s-13 text-text-subtle">Default</div>
         <div v-for="s in sizes" :key="`d-${s}`">
           <AppBaseButton v-bind="t.props" :size="s">Button</AppBaseButton>
         </div>
 
         <!-- Loading -->
-        <div class="text-s-13 text-grey-50">Loading</div>
+        <div class="text-s-13 text-text-subtle">Loading</div>
         <div v-for="s in sizes" :key="`l-${s}`">
           <AppBaseButton v-bind="t.props" :size="s" isLoading
             >Button</AppBaseButton
@@ -47,7 +47,7 @@ const sizes = ['large', 'medium', 'small'] as const
         </div>
 
         <!-- Disabled -->
-        <div class="text-s-13 text-grey-50">Disabled</div>
+        <div class="text-s-13 text-text-subtle">Disabled</div>
         <div v-for="s in sizes" :key="`x-${s}`">
           <AppBaseButton v-bind="t.props" :size="s" disabled
             >Button</AppBaseButton
@@ -55,7 +55,7 @@ const sizes = ['large', 'medium', 'small'] as const
         </div>
 
         <!-- Leading / Trailing icons -->
-        <div class="text-s-13 text-grey-50">Icons</div>
+        <div class="text-s-13 text-text-subtle">Icons</div>
         <div v-for="s in sizes" :key="`i-${s}`">
           <AppBaseButton v-bind="t.props" :size="s">
             <template #leading>
@@ -70,7 +70,7 @@ const sizes = ['large', 'medium', 'small'] as const
       </div>
     </div>
 
-    <p class="text-s-13 text-grey-50">
+    <p class="text-s-13 text-text-subtle">
       Hover and Pressed are pseudo-state driven — hover / click the Default row
       buttons above to see the color shift and darken.
     </p>

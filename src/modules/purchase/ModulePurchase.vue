@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <!-- Topbar -->
-    <div class="border-b border-grey-10 -mx-4">
+    <div class="border-b border-border-default -mx-4">
       <div class="flex items-center gap-4 px-4 -mb-px">
         <button
           v-for="tab in tabs"
@@ -11,7 +11,7 @@
             'px-1 pb-2 border-b-2 transition-colors',
             currentTab === tab.value
               ? 'border-black text-black'
-              : 'border-transparent text-grey-30',
+              : 'border-transparent text-text-placeholder',
           ]"
           @click="currentTab = tab.value"
         >
@@ -29,7 +29,6 @@
         <module-sell v-else key="sell" class="flex-1" />
       </transition>
     </div>
-
   </div>
 </template>
 

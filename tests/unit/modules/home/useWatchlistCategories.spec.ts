@@ -27,9 +27,8 @@ vi.mock('@/composables/useFetchMewApi', () => ({
   }),
 }))
 
-const { useWatchlistCategories, marketsToTypes } = await import(
-  '@/modules/home/composables/useWatchlistCategories'
-)
+const { useWatchlistCategories, marketsToTypes } =
+  await import('@/modules/home/composables/useWatchlistCategories')
 
 describe('useWatchlistCategories (MEW-2130)', () => {
   beforeEach(() => {
@@ -46,9 +45,7 @@ describe('useWatchlistCategories (MEW-2130)', () => {
   it('fetches the categories endpoint for the given types', async () => {
     const { categories, fetchCategories } = useWatchlistCategories()
     const result = await fetchCategories(['STOCK', 'CRYPTO'])
-    expect(calls[0]).toBe(
-      '/v1/web/watchlist/categories?types=STOCK,CRYPTO',
-    )
+    expect(calls[0]).toBe('/v1/web/watchlist/categories?types=STOCK,CRYPTO')
     expect(categories.value).toEqual(CATEGORIES)
     expect(result).toEqual(CATEGORIES)
   })

@@ -22,7 +22,7 @@
               {{ $t('trade.review_modal.trade_provider') }}
             </p>
             <div
-              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-bgBase"
+              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-background-default"
             >
               <img :src="oneInchLogo" alt="" class="w-6 h-6 rounded-full" />
               <span
@@ -39,7 +39,9 @@
             >
               {{ $t('trade.review_modal.estimated_summary') }}
             </p>
-            <div class="w-full flex flex-col gap-4 p-4 rounded-16 bg-bgBase">
+            <div
+              class="w-full flex flex-col gap-4 p-4 rounded-16 bg-background-default"
+            >
               <div class="flex items-center gap-3">
                 <p
                   class="flex-1 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
@@ -57,7 +59,7 @@
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
                   </p>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     ≈ {{ currencySymbol }}{{ fromAmountFiat }}
                   </p>
                 </div>
@@ -71,7 +73,7 @@
                 />
               </div>
 
-              <div class="h-px w-full bg-grey-divider"></div>
+              <div class="h-px w-full bg-border-default"></div>
 
               <div class="flex items-center gap-3">
                 <div class="flex-1 flex flex-col">
@@ -80,7 +82,7 @@
                   >
                     {{ $t('trade.review_modal.you_receive') }}
                   </p>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     {{ $t('trade.review_modal.value_estimated') }}
                   </p>
                 </div>
@@ -95,7 +97,7 @@
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
                   </p>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     ≈ {{ currencySymbol }}{{ toAmountFiat }}
                   </p>
                 </div>
@@ -112,9 +114,11 @@
               <expand-transition>
                 <div v-if="isBreakdownOpen">
                   <div class="flex flex-col gap-4">
-                    <div class="h-px w-full bg-grey-divider"></div>
+                    <div class="h-px w-full bg-border-default"></div>
                     <div class="flex items-center gap-2">
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
+                      <p
+                        class="flex-1 text-s-16 leading-[22px] text-text-subtle"
+                      >
                         {{ $t('trade.review_modal.min_receive') }}
                       </p>
                       <p
@@ -136,7 +140,9 @@
                       :key="row.label"
                       class="flex items-center gap-2"
                     >
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
+                      <p
+                        class="flex-1 text-s-16 leading-[22px] text-text-subtle"
+                      >
                         {{ row.label }}
                       </p>
                       <p
@@ -190,7 +196,7 @@
             v-if="expiresAt"
             keypath="trade.review_modal.quote_refreshes_in"
             tag="p"
-            class="text-s-14 leading-[20px] text-info"
+            class="text-s-14 leading-[20px] text-text-subtle"
           >
             <template #time>
               <span

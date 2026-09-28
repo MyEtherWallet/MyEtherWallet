@@ -37,16 +37,16 @@ export interface IndustrySector {
 // Figma tile palette (design-library "IndustrySectorTile", node 1082:2605):
 // the 10 distinct colors, cycled across the tiles.
 const PALETTE = [
-  '#684cff',
-  '#f31b6f',
-  '#e27d00',
-  '#c16cff',
-  '#067f71',
-  '#4d1ee3',
-  '#cc0452',
-  '#ffa500',
-  '#9d00ff',
-  '#05c0a5',
+  'var(--color-background-decorative-purple)',
+  'var(--color-background-decorative-pink)',
+  'var(--color-background-decorative-orange-strong)',
+  'var(--color-background-decorative-violet)',
+  'var(--color-background-decorative-green-strong)',
+  'var(--color-background-decorative-purple-strong)',
+  'var(--color-background-decorative-pink-strong)',
+  'var(--color-background-decorative-orange)',
+  'var(--color-background-decorative-violet-strong)',
+  'var(--color-background-decorative-green)',
 ]
 
 function make(

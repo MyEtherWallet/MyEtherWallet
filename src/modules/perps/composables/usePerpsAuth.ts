@@ -41,7 +41,11 @@ function getStoredArray<T = string>(key: string): T[] {
 // catches a genuinely dead legacy token. Only a known, elapsed expiry blocks a
 // silent restore.
 function isTokenExpired(expirationSecs: unknown): boolean {
-  if (typeof expirationSecs !== 'number' || !Number.isFinite(expirationSecs) || expirationSecs <= 0) {
+  if (
+    typeof expirationSecs !== 'number' ||
+    !Number.isFinite(expirationSecs) ||
+    expirationSecs <= 0
+  ) {
     return false
   }
   return Date.now() / 1000 >= expirationSecs - TOKEN_EXPIRY_BUFFER_SECS
@@ -145,7 +149,9 @@ async function tryRestoreAuth(address: string, generation: number) {
   }
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
-  const storedExpirations: number[] = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
+  const storedExpirations: number[] = getStoredArray<number>(
+    STORAGE_KEY_EXPIRATION,
+  )
   for (let i = 0; i < storedTokens.length; i++) {
     let decryptedToken: string
     try {
@@ -218,12 +224,12 @@ async function clearAuth() {
   _restoreGeneration++
   isAuthenticating.value = false
 
-  if (!wallet.value) return;
+  if (!wallet.value) return
   const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
   const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
   const storedExp = getStoredArray<number>(STORAGE_KEY_EXPIRATION)
 
-  const address = await wallet.value!.getAddress();
+  const address = await wallet.value!.getAddress()
   const results = await Promise.all(
     storedTokens.map(async (eToken: string, i: number) => {
       try {
@@ -244,9 +250,18 @@ async function clearAuth() {
     exp: number
   }[]
 
-  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(kept.map(e => e.token)))
-  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(kept.map(e => e.account)))
-  localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify(kept.map(e => e.exp)))
+  localStorage.setItem(
+    STORAGE_KEY_TOKEN,
+    JSON.stringify(kept.map(e => e.token)),
+  )
+  localStorage.setItem(
+    STORAGE_KEY_ACCOUNT,
+    JSON.stringify(kept.map(e => e.account)),
+  )
+  localStorage.setItem(
+    STORAGE_KEY_EXPIRATION,
+    JSON.stringify(kept.map(e => e.exp)),
+  )
 }
 
 perpsClient.setOnUnauthorized(() => {
@@ -316,7 +331,13 @@ export function usePerpsAuth() {
     // guard below (an `await` here would let two same-tick clicks both get past
     // `isAuthenticating` before it is set).
     if (isPerpsRestricted.value) return
-    if (isRestoringAuth.value || _authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
+    if (
+      isRestoringAuth.value ||
+      _authRestored ||
+      isAuthenticating.value ||
+      isWaitingForConfirm.value
+    )
+      return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
@@ -330,14 +351,16 @@ export function usePerpsAuth() {
       const challenge = await perpsClient.getLoginChallenge({
         walletAddress: address,
         chainId: '1',
-        builderCode: BUILDER_CODE
+        builderCode: BUILDER_CODE,
       })
       const walletType = wallet.value.getWalletType()
       walletTypeStr = walletType
-      const isInjected = walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
+      const isInjected =
+        walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
 
       if (!isInjected) {
-        isHardwareWalletSigning.value = walletType === WalletType.LEDGER || walletType === WalletType.TREZOR
+        isHardwareWalletSigning.value =
+          walletType === WalletType.LEDGER || walletType === WalletType.TREZOR
         signingMessage.value = challenge.result.message
         isWaitingForConfirm.value = true
         showSigningPrompt.value = true
@@ -390,9 +413,21 @@ export function usePerpsAuth() {
       const encryptedToken = await encrypt(token.value, address)
       const encryptedAcc = await encrypt(accountId.value, address)
 
-      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify([...kept.map(e => e.token), encryptedToken]))
-      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify([...kept.map(e => e.account), encryptedAcc]))
-      localStorage.setItem(STORAGE_KEY_EXPIRATION, JSON.stringify([...kept.map(e => e.exp), complete.result.expirationSecs]))
+      localStorage.setItem(
+        STORAGE_KEY_TOKEN,
+        JSON.stringify([...kept.map(e => e.token), encryptedToken]),
+      )
+      localStorage.setItem(
+        STORAGE_KEY_ACCOUNT,
+        JSON.stringify([...kept.map(e => e.account), encryptedAcc]),
+      )
+      localStorage.setItem(
+        STORAGE_KEY_EXPIRATION,
+        JSON.stringify([
+          ...kept.map(e => e.exp),
+          complete.result.expirationSecs,
+        ]),
+      )
 
       await perpsClient.acceptAgreement({
         termsVersion: 1,
@@ -400,7 +435,8 @@ export function usePerpsAuth() {
       })
       analytics.trackPerpsSignInEvent(PerpsSignInEvent.SUCCESS, { source })
     } catch (e) {
-      const errorMessage = e instanceof Error ? e.message : 'Authentication failed'
+      const errorMessage =
+        e instanceof Error ? e.message : 'Authentication failed'
       if (isUserRejectionError(e)) {
         analytics.trackPerpsSignInEvent(PerpsSignInEvent.CANCEL, { source })
       } else {
@@ -561,7 +597,7 @@ export function usePerpsBalance() {
         if (token.value) void fetchBalance()
       })
 
-      perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
+      perpsWs.subscribe<PerpsBalance>('balancePerps', rows => {
         // Ignore pushes while signed out / mid wallet-switch: the socket can
         // still be authenticated as the previous account until logout/login
         // round-trips, and an in-flight frame would otherwise repopulate the

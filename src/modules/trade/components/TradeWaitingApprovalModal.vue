@@ -12,7 +12,7 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ $t('trade.waiting_approval.title') }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-info">
+          <p class="text-s-16 leading-[22px] text-text-subtle">
             {{ $t('trade.waiting_approval.subtitle') }}
           </p>
         </div>
@@ -21,7 +21,7 @@
           <img :src="waitingApprovalImage" alt="" class="w-full h-full" />
           <div
             v-if="walletIcon || walletAddress"
-            class="absolute top-12 left-[124px] w-10 h-10 rounded-full bg-bgBase flex items-center justify-center"
+            class="absolute top-12 left-[124px] w-10 h-10 rounded-full bg-background-default flex items-center justify-center"
           >
             <img
               v-if="walletIcon"
@@ -43,7 +43,7 @@
           <p class="font-semibold tracking-[-0.28px]">
             {{ $t('trade.waiting_approval.help_title') }}
           </p>
-          <p class="text-info">
+          <p class="text-text-subtle">
             {{ $t('trade.waiting_approval.help_text') }}
           </p>
         </div>

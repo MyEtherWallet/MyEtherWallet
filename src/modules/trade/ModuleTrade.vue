@@ -6,7 +6,7 @@
       <p class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
         {{ $t('trade.title') }}
       </p>
-      <p class="text-s-12 text-info leading-[18px]">
+      <p class="text-s-12 text-text-subtle leading-[18px]">
         {{ $t('trade.subtitle') }}
       </p>
     </div>
@@ -50,7 +50,7 @@
               <button
                 v-for="chain in supportedChainsList"
                 :key="chain.name"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                class="flex items-center gap-2 px-4 py-2 bg-background-brand-subtle hover:bg-background-brand-subtle-hover font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
                 @click="switchToNetwork(chain)"
               >
                 <app-token-logo
@@ -87,7 +87,7 @@
               -->
 
               <span
-                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
+                class="absolute -top-2 -right-2 p-1 rounded-full bg-background-error border-2 border-white flex items-center justify-center"
               >
                 <exclamation-circle-icon
                   class="w-4 h-4 text-white"
@@ -127,7 +127,7 @@
           <div class="relative h-0 z-10 flex justify-center">
             <div
               aria-hidden="true"
-              class="absolute top-[6px] -translate-y-1/2 bg-bgBase border-4 border-white rounded-12 p-2.5"
+              class="absolute top-[6px] -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
             >
               <arrow-down-icon class="w-5 h-5" />
             </div>
@@ -154,9 +154,9 @@
       <div
         v-if="!isLoading && displayGeneralError && !isPairUnavailable"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
+        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
-        <p class="text-error text-s-14 text-center break-words">
+        <p class="text-text-error text-s-14 text-center break-words">
           {{ displayGeneralError }}
         </p>
       </div>
@@ -170,9 +170,9 @@
           nonTradeableAssetMessage
         "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-background-warning-subtle border border-border-warning rounded-12 mb-2"
       >
-        <p class="text-warning text-s-14 text-center">
+        <p class="text-text-warning text-s-14 text-center">
           <app-token-symbol
             :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
             :address="
@@ -212,7 +212,7 @@
               v-else-if="isTradeDisabled"
               type="button"
               disabled
-              class="w-full h-12 flex items-center justify-center rounded-24 bg-bgBase text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
             >
               {{ ctaDisabledLabel }}
             </button>
@@ -245,7 +245,7 @@
         href="https://help.myetherwallet.com/en/article/what-is-gas"
         target="_blank"
         rel="noopener noreferrer"
-        class="flex h-10 items-center px-3 rounded-24 text-primary text-s-14 font-semibold tracking-[-0.28px] hoverNoBG"
+        class="flex h-10 items-center px-3 rounded-24 text-text-brand text-s-14 font-semibold tracking-[-0.28px] hoverNoBG"
       >
         {{ $t('trade.need_help') }}
       </a>

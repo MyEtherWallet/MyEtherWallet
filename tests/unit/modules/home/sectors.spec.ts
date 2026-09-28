@@ -42,7 +42,7 @@ describe('sectors', () => {
       .filter(s => s.market === 'crypto')
       .forEach(s => expect(s.labelKey).toMatch(/^crypto\./))
     sectors.forEach(s => {
-      expect(s.color).toMatch(/^#[0-9a-f]{6}$/i)
+      expect(s.color).toMatch(/^var\(--color-background-decorative-[a-z-]+\)$/)
       expect(s.icon).toBeTruthy()
     })
   })

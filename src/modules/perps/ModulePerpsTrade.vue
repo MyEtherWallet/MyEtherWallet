@@ -12,7 +12,7 @@
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
       <div>
         <p class="font-bold text-s-28">{{ $t('perps.trade.perpetuals') }}</p>
-        <p class="text-info text-s-12 ml-1">
+        <p class="text-text-subtle text-s-12 ml-1">
           {{ $t('perps.trade.powered-by') }}
         </p>
       </div>
@@ -30,12 +30,12 @@
     <div
       v-if="showStatusLabel"
       role="status"
-      class="flex items-center gap-1.5 mb-3 px-3 py-2 rounded-12 bg-warning-10"
+      class="flex items-center gap-1.5 mb-3 px-3 py-2 rounded-12 bg-background-warning-subtle"
     >
       <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
            unreadable for copy, so the text stays near-black. -->
       <exclamation-triangle-icon
-        class="w-4 h-4 shrink-0 text-warning"
+        class="w-4 h-4 shrink-0 text-text-warning"
         aria-hidden="true"
       />
       <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
@@ -63,7 +63,7 @@
             two sizes 8px apart to preserve that ring width.
           -->
           <span
-            class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-error flex items-center justify-center"
+            class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-background-error flex items-center justify-center"
           >
             <exclamation-circle-icon
               class="w-5 h-5 text-white"
@@ -88,14 +88,16 @@
       :inert="isPerpsRestricted"
     >
       <!-- Scrollable content -->
-      <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
+      <div
+        class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3"
+      >
         <!-- Asset Selector & Price & current Position Info if open -->
         <div>
           <!-- Token Selector -->
           <button
             :class="[
               isLoading || !selectedToken
-                ? 'bg-grey-10 animate-pulse'
+                ? 'bg-background-default-hover animate-pulse'
                 : 'bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all',
               'rounded-20 px-1 transition-colors w-full flex items-center justify-between px-4 py-2',
             ]"
@@ -120,10 +122,12 @@
                   :is-stock="selectedToken.ondo !== undefined"
                   class="!font-bold text-left"
                 />
-                <p class="text-info text-s-12">
+                <p class="text-text-subtle text-s-12">
                   {{ formatUsd(currentPrice) }}
                   <span
-                    :class="priceChange >= 0 ? 'text-success' : 'text-error'"
+                    :class="
+                      priceChange >= 0 ? 'text-text-success' : 'text-text-error'
+                    "
                     class="pl-1"
                   >
                     ({{ priceChange.toFixed(2) }}%)
@@ -133,14 +137,14 @@
             </div>
             <chevron-down-icon
               v-if="!isLoading"
-              class="text-info w-4 h-4 ml-4"
+              class="text-text-subtle w-4 h-4 ml-4"
             />
           </button>
 
           <!-- Position Info -->
           <div v-if="activePosition" class="px-2 mt-3 flex flex-col gap-1">
             <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-info text-s-12">
+              <p class="text-text-subtle text-s-12">
                 {{ $t('perps.trade.position-size') }}
               </p>
               <p class="font-medium">
@@ -148,11 +152,13 @@
               </p>
             </div>
             <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-info text-s-12">
+              <p class="text-text-subtle text-s-12">
                 {{ $t('perps.trade.current-profit') }}
               </p>
               <p
-                :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
+                :class="
+                  positionPnl >= 0 ? 'text-text-success' : 'text-text-error'
+                "
                 class="font-medium"
               >
                 {{ formatPnl(String(positionPnl)) }}
@@ -177,9 +183,10 @@
                   ? 'text-white  shadow-button shadow-button-elevated'
                   : ' hoverNoBG ',
                 {
-                  'bg-success':
+                  'bg-background-success':
                     orderSide === side.value && side.value === 'buy',
-                  'bg-error': orderSide === side.value && side.value === 'sell',
+                  'bg-background-error':
+                    orderSide === side.value && side.value === 'sell',
                 },
               ]"
               @click="onClickOrderSide(side.value)"
@@ -208,8 +215,10 @@
                   ? ' text-white shadow-button shadow-button-elevated'
                   : 'hoverNoBG',
                 {
-                  'bg-success': orderSide === 'buy' && manageMode === 'add',
-                  'bg-error': orderSide === 'sell' && manageMode === 'add',
+                  'bg-background-success':
+                    orderSide === 'buy' && manageMode === 'add',
+                  'bg-background-error':
+                    orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
               @click="onClickManageMode('add')"
@@ -223,8 +232,10 @@
                   ? 'text-white shadow-button shadow-button-elevated'
                   : 'hoverNoBG',
                 {
-                  'bg-success': orderSide === 'buy' && manageMode === 'close',
-                  'bg-error': orderSide === 'sell' && manageMode === 'close',
+                  'bg-background-success':
+                    orderSide === 'buy' && manageMode === 'close',
+                  'bg-background-error':
+                    orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
               @click="onClickManageMode('close')"
@@ -247,12 +258,14 @@
           >
             <template #menu-content="{ toggleMenu }">
               <div
-                class="bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] w-[260px] p-2 overflow-hidden"
+                class="bg-white rounded-[20px] shadow-xl border border-border-default w-[260px] p-2 overflow-hidden"
               >
                 <div
                   class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
                   :class="
-                    orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                    orderType === 'market'
+                      ? 'bg-background-brand-subtle'
+                      : 'hover:bg-background-default'
                   "
                   @click="[setOrderType('market'), toggleMenu()]"
                 >
@@ -260,13 +273,13 @@
                     <p class="font-bold text-s-14">
                       {{ $t('perps.trade.market-order') }}
                     </p>
-                    <p class="text-info text-s-12 mt-0.5">
+                    <p class="text-text-subtle text-s-12 mt-0.5">
                       {{ $t('perps.trade.market-order-description') }}
                     </p>
                   </div>
                   <check-icon
                     v-if="orderType === 'market'"
-                    class="text-primary h-5 w-5"
+                    class="text-text-brand h-5 w-5"
                   ></check-icon>
 
                   <span v-else class="w-4 mt-0.5" />
@@ -274,7 +287,9 @@
                 <div
                   class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
                   :class="
-                    orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                    orderType === 'limit'
+                      ? 'bg-background-brand-subtle'
+                      : 'hover:bg-background-default'
                   "
                   @click="[setOrderType('limit'), toggleMenu()]"
                 >
@@ -282,13 +297,13 @@
                     <p class="font-bold text-s-14">
                       {{ $t('perps.trade.limit-order') }}
                     </p>
-                    <p class="text-info text-s-12 mt-0.5">
+                    <p class="text-text-subtle text-s-12 mt-0.5">
                       {{ $t('perps.trade.limit-order-description') }}
                     </p>
                   </div>
                   <check-icon
                     v-if="orderType === 'limit'"
-                    class="text-primary h-5 w-5"
+                    class="text-text-brand h-5 w-5"
                   ></check-icon>
                   <span v-else class="w-4 mt-0.5" />
                 </div>
@@ -301,7 +316,7 @@
           v-if="orderType === 'limit'"
           class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 py-3 transition-all flex flex-col justify-between"
         >
-          <p class="font-semibold text-s-12 text-info">
+          <p class="font-semibold text-s-12 text-text-subtle">
             {{ $t('perps.trade.target-price', { symbol: displaySymbol }) }}
           </p>
           <div class="flex items-center py-1">
@@ -309,7 +324,7 @@
               class="font-bold text-s-20 tracking-tight shrink-0"
               :class="[
                 !limitPrice || limitPrice === '' ? 'opacity-50' : '',
-                limitPriceHasError ? 'text-error' : '',
+                limitPriceHasError ? 'text-text-error' : '',
               ]"
               >$</span
             >
@@ -320,7 +335,7 @@
               placeholder="0.00"
               :aria-label="$t('perps.confirm.limit-price')"
               class="w-full min-w-0 font-bold text-s-20 tracking-tight outline-none bg-transparent"
-              :class="{ 'text-error': limitPriceHasError }"
+              :class="{ 'text-text-error': limitPriceHasError }"
               @keydown="
                 e => {
                   if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
@@ -333,7 +348,7 @@
           <transition name="fade" mode="out-in">
             <div
               v-if="!limitPrice || parseFloat(limitPrice) === 0"
-              class="text-error text-s-12 mb-1"
+              class="text-text-error text-s-12 mb-1"
             >
               {{ $t('perps.errors.target-required') }}
             </div>
@@ -341,19 +356,19 @@
               v-else-if="
                 isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
-              class="text-error text-s-12 mb-1"
+              class="text-text-error text-s-12 mb-1"
             >
               {{ $t('perps.errors.invalid-price') }}
             </div>
             <div
               v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
-              class="text-error text-s-12 mb-1"
+              class="text-text-error text-s-12 mb-1"
             >
               {{ $t('perps.errors.price-max', { max: '$10,000,000' }) }}
             </div>
             <div
               v-else-if="limitPricePrecisionError"
-              class="text-error text-s-12 mb-1"
+              class="text-text-error text-s-12 mb-1"
             >
               {{
                 quoteDecimals === 0
@@ -366,7 +381,7 @@
             </div>
             <div
               v-else-if="limitPriceOutOfTolerance"
-              class="text-error text-s-12 mb-1"
+              class="text-text-error text-s-12 mb-1"
             >
               {{ $t('perps.errors.out-of-tolerance') }}
             </div>
@@ -394,7 +409,7 @@
           <div
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between gap-2"
           >
-            <p class="text-s-12 text-info mr-3 font-semibold">
+            <p class="text-s-12 text-text-subtle mr-3 font-semibold">
               {{ $t('perps.trade.margin-available') }}
               <span class="font-medium ml-1 font-normal">
                 {{ formatUsd(availableMargin) }}
@@ -405,7 +420,7 @@
                 class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
                 :class="[
                   !inputAmount || inputAmount === '' ? 'before:opacity-50' : '',
-                  marginPrecisionError ? 'before:text-error' : '',
+                  marginPrecisionError ? 'before:text-text-error' : '',
                 ]"
               >
                 <input
@@ -416,7 +431,7 @@
                   placeholder="0.00"
                   :aria-label="$t('perps.trade.margin-amount-label')"
                   class="font-bold text-s-28 bg-transparent outline-none w-full"
-                  :class="{ 'text-error': marginPrecisionError }"
+                  :class="{ 'text-text-error': marginPrecisionError }"
                   @keydown="
                     e => {
                       if (['e', 'E', '+', '-'].includes(e.key))
@@ -427,13 +442,13 @@
                 />
               </div>
               <button
-                class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-surface min-w-15"
+                class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-background-default-hover min-w-15"
                 :disabled="isLoadingLeverage"
                 @click="openLeverage"
               >
                 <span
                   v-if="isLoadingLeverage"
-                  class="ml-auto bg-grey-10 animate-pulse rounded-full h-4 w-8"
+                  class="ml-auto bg-background-default-hover animate-pulse rounded-full h-4 w-8"
                 />
                 <p v-else class="ml-auto font-semibold text-s-14">
                   {{
@@ -443,7 +458,7 @@
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
-            <p class="text-info text-s-12 -mt-2 mb-2 truncate">
+            <p class="text-text-subtle text-s-12 -mt-2 mb-2 truncate">
               {{ $t('perps.trade.size') }}
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>
@@ -452,7 +467,7 @@
             <transition name="fade" mode="out-in">
               <div
                 v-if="marginPrecisionError"
-                class="text-error text-s-12 mb-1"
+                class="text-text-error text-s-12 mb-1"
               >
                 {{ $t('perps.errors.margin-precision') }}
               </div>
@@ -461,7 +476,7 @@
                   Number(inputAmount || '0') > availableMargin ||
                   isNaN(Number(inputAmount))
                 "
-                class="text-error text-s-12 mb-1"
+                class="text-text-error text-s-12 mb-1"
               >
                 {{
                   isNaN(Number(inputAmount))
@@ -474,7 +489,7 @@
                   Number(inputAmount || '0') > 0 &&
                   positionSizeUsd < minOrderAmount
                 "
-                class="text-error text-s-12 mb-1"
+                class="text-text-error text-s-12 mb-1"
               >
                 {{
                   $t('perps.errors.min-amount', {
@@ -495,11 +510,11 @@
                 :aria-label="$t('perps.trade.size-percentage-label')"
                 class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
                 :style="{
-                  background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
+                  background: `linear-gradient(to right, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} 0%, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} ${sliderValue}%, var(--color-background-default-hover) ${sliderValue}%, var(--color-background-default-hover) 100%)`,
                   '--thumb-color':
                     orderSide === 'buy'
-                      ? 'rgba(5,192,165,1)'
-                      : 'rgba(228,12,91,1)',
+                      ? 'var(--color-background-success)'
+                      : 'var(--color-background-error)',
                 }"
                 @input="onSliderInput"
               />
@@ -516,13 +531,13 @@
                 {{ pct + '%' }}
               </button>
             </div>
-            <hr class="border-t border-grey-5 mt-1" />
+            <hr class="border-t border-border-subtle mt-1" />
             <!-- New size -->
             <div
               v-if="activePosition && manageMode === 'add'"
               class="flex justify-between text-s-14 py-1 font-medium"
             >
-              <span class="font-bold text-s-12 text-info">{{
+              <span class="font-bold text-s-12 text-text-subtle">{{
                 $t('perps.trade.new-size')
               }}</span>
               <span class="font-bold">{{
@@ -535,7 +550,7 @@
             </div>
             <!-- Est. Liquidation -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-info">{{
+              <span class="font-bold text-s-12 text-text-subtle">{{
                 $t('perps.trade.est-liquidation')
               }}</span>
               <span class="font-bold">{{
@@ -548,7 +563,7 @@
             </div>
             <!-- Margin Ratio -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-info">{{
+              <span class="font-bold text-s-12 text-text-subtle">{{
                 $t('perps.balance.margin-ratio-label')
               }}</span>
               <span class="font-bold">{{
@@ -576,7 +591,7 @@
             >
               <button
                 v-if="takeProfitPrice !== null"
-                class="flex items-center hoverBGWhite bg-success text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
+                class="flex items-center hoverBGWhite bg-background-success text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
                 @click="openAutoCloseModal"
               >
                 <p class="text-s-12">
@@ -589,7 +604,7 @@
 
               <button
                 v-if="stopLossPrice !== null"
-                class="flex items-center hoverBGWhite bg-error text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
+                class="flex items-center hoverBGWhite bg-background-error text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
                 @click="openAutoCloseModal"
               >
                 <p class="text-s-12">
@@ -625,7 +640,7 @@
           <div
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between"
           >
-            <p class="font-semibold text-s-12 text-info mr-3">
+            <p class="font-semibold text-s-12 text-text-subtle mr-3">
               {{ $t('perps.trade.amount-to-close') }}
             </p>
             <!-- input -->
@@ -633,7 +648,7 @@
               class="flex items-center before:content-['$'] before:font-bold before:text-[28px] before:tracking-tight before:mr-1"
               :class="[
                 !closeAmount || closeAmount === '' ? 'before:opacity-50' : '',
-                closeAmountPrecisionError ? 'before:text-error' : '',
+                closeAmountPrecisionError ? 'before:text-text-error' : '',
               ]"
             >
               <input
@@ -644,7 +659,7 @@
                 placeholder="0.00"
                 :aria-label="$t('perps.close.close-amount-label')"
                 class="font-bold text-s-28 bg-transparent outline-none w-full"
-                :class="{ 'text-error': closeAmountPrecisionError }"
+                :class="{ 'text-text-error': closeAmountPrecisionError }"
                 @keydown="
                   e => {
                     if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault()
@@ -653,7 +668,7 @@
                 @input="onCloseAmountInput"
               />
             </div>
-            <p class="text-info text-s-12 mb-2">
+            <p class="text-text-subtle text-s-12 mb-2">
               {{ $t('perps.trade.new-size-close') }}
               {{
                 formatUsd(
@@ -667,7 +682,7 @@
             <transition name="fade" mode="out-in">
               <div
                 v-if="closeAmountPrecisionError"
-                class="text-error text-s-12 mb-1"
+                class="text-text-error text-s-12 mb-1"
               >
                 {{ $t('perps.errors.amount-precision') }}
               </div>
@@ -682,11 +697,11 @@
               :aria-label="$t('perps.close.close-percentage-label')"
               class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
               :style="{
-                background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
+                background: `linear-gradient(to right, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} 0%, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} ${closeSliderValue}%, var(--color-background-default-hover) ${closeSliderValue}%, var(--color-background-default-hover) 100%)`,
                 '--thumb-color':
                   orderSide === 'buy'
-                    ? 'rgba(5,192,165,1)'
-                    : 'rgba(228,12,91,1)',
+                    ? 'var(--color-background-success)'
+                    : 'var(--color-background-error)',
               }"
               @input="onCloseSliderInput"
             />
@@ -700,7 +715,7 @@
                 :class="
                   isClosePillDisabled(pct)
                     ? 'opacity-40 cursor-not-allowed'
-                    : 'hover:border-grey-300 hover: '
+                    : 'hover:border-border-hover'
                 "
                 @click="setClosePercentage(pct)"
               >
@@ -712,9 +727,9 @@
           <!-- Close Error -->
           <div
             v-if="closeError"
-            class="mx-4 mb-4 bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+            class="mx-4 mb-4 bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
           >
-            <p class="text-error text-s-14 font-medium">
+            <p class="text-text-error text-s-14 font-medium">
               {{ closeError }}
             </p>
           </div>
@@ -723,9 +738,9 @@
       <!-- Submit Button -->
       <template v-if="!isSupportedNetwork">
         <div
-          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+          class="bg-background-brand-subtle rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
         >
-          <p class="text-info text-s-14 mb-4">
+          <p class="text-text-subtle text-s-14 mb-4">
             {{ $t('perps.trade.eth-only') }}
           </p>
           <app-base-button class="w-full" @click="onSwitchToEthereum">
@@ -1233,7 +1248,7 @@ const getMainBtnText = computed(() => {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--thumb-color, #0052ff);
+  background: var(--thumb-color, var(--color-background-brand));
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -1243,7 +1258,7 @@ const getMainBtnText = computed(() => {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--thumb-color, #0052ff);
+  background: var(--thumb-color, var(--color-background-brand));
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);

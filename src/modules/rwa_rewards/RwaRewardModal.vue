@@ -14,7 +14,7 @@
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <app-btn-icon-close
-          class="absolute top-4 right-4 z-20 bg-[#f5f5f5]"
+          class="absolute top-4 right-4 z-20 bg-background-default"
           @close="holdingsStore.closeModal()"
         />
 
@@ -53,7 +53,7 @@
                 <template v-if="step.kind === 'trade' && isOffer">
                   <div
                     v-if="isDisabledCta"
-                    class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                    class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-background-default text-text-muted text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                   >
                     {{ disabledCtaLabel }}
                   </div>
@@ -106,7 +106,7 @@
                     </app-base-button>
                     <div
                       v-else
-                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-background-default text-text-muted text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                     >
                       {{ disabledCtaLabel }}
                     </div>
@@ -157,7 +157,7 @@
                     </app-base-button>
                     <span
                       v-else
-                      class="shrink-0 py-1 px-2 rounded-8 bg-[#ffdbe3] text-[#cc0452] text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
+                      class="shrink-0 py-1 px-2 rounded-8 bg-background-error-subtle text-text-error text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
                     >
                       {{ $t('rwaRewards.reward_expired') }}
                     </span>
@@ -173,7 +173,7 @@
                     </app-base-button>
                     <div
                       v-else
-                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-background-default text-text-muted text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                     >
                       {{ disabledCtaLabel }}
                     </div>
@@ -202,9 +202,9 @@
                  whichever progress view it had, with the review explained here. -->
             <div
               v-if="showNotice"
-              class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
+              class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-background-default"
             >
-              <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
+              <lock-closed-icon class="w-6 h-6 text-text-brand shrink-0" />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">{{ noticeTitle }}</p>
                 <p :class="bodyText">{{ noticeDesc }}</p>
@@ -221,7 +221,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-[#e6e6e6] w-full"></div>
+          <div class="h-px bg-background-default-hover w-full"></div>
 
           <div class="flex items-center justify-between gap-4 w-full">
             <!-- A season that has already ended has nothing left to count down
@@ -235,7 +235,7 @@
               :href="rewardsPageUrl"
               target="_blank"
               rel="noopener"
-              class="text-s-16 font-semibold tracking-[-0.32px] text-primary hover:underline"
+              class="text-s-16 font-semibold tracking-[-0.32px] text-text-brand hover:underline"
               data-test="rwa-modal-terms"
               @click="trackCta('terms')"
             >
@@ -468,13 +468,13 @@ const round2Notice = computed(() => {
   return ''
 })
 
-const stepText = 'text-s-14 leading-5 text-[#575757]'
+const stepText = 'text-s-14 leading-5 text-text-subtle'
 const boldText =
   'text-s-14 font-semibold leading-5 text-black tracking-[-0.28px]'
 const titleText =
   'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
-const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
-const subText = 'text-s-12 leading-[18px] text-[#575757]'
+const bodyText = 'text-s-14 font-normal leading-5 text-text-subtle'
+const subText = 'text-s-12 leading-[18px] text-text-subtle'
 const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
 
 const onTrade = () => {

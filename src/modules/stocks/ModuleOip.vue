@@ -7,7 +7,7 @@
       >
         {{ t('stocks.oip_title') }}
       </h2>
-      <p class="mt-2 text-s-16 leading-[22px] text-[#575757] max-w-[600px]">
+      <p class="mt-2 text-s-16 leading-[22px] text-text-subtle max-w-[600px]">
         {{ t('stocks.oip_description') }}
         <a
           href="https://ondo.finance//intelligent-portfolios"

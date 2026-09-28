@@ -7,7 +7,7 @@
     <template #title>
       <app-btn-icon
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-bgBase"
+        class="absolute top-6 right-6 bg-background-default"
         height="h-8"
         width="w-8"
         @click="model = false"
@@ -37,7 +37,7 @@
         </div>
 
         <div
-          class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-bgBase"
+          class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-background-default"
         >
           <div class="flex items-center justify-center gap-3 w-full">
             <div class="flex flex-1 min-w-0 items-center gap-1">
@@ -72,12 +72,14 @@
               v-else-if="hasFailed"
               class="flex flex-col items-end flex-none"
             >
-              <p class="text-s-14 leading-[20px] text-error whitespace-nowrap">
+              <p
+                class="text-s-14 leading-[20px] text-text-error whitespace-nowrap"
+              >
                 {{ $t('trade.approve_spending.fee_unavailable') }}
               </p>
               <button
                 type="button"
-                class="text-s-14 font-semibold leading-[20px] text-primary hoverNoBG"
+                class="text-s-14 font-semibold leading-[20px] text-text-brand hoverNoBG"
                 @click="refetchFee"
               >
                 {{ $t('common.retry') }}
@@ -91,7 +93,7 @@
               </p>
               <p
                 v-if="fiatFee"
-                class="text-s-14 leading-[20px] text-info whitespace-nowrap"
+                class="text-s-14 leading-[20px] text-text-subtle whitespace-nowrap"
               >
                 {{ approx(fiatFee) }}
               </p>

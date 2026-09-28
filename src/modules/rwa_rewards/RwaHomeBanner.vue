@@ -3,7 +3,7 @@
     v-if="banner"
     data-test="rwa-home-banner"
     :data-status="status"
-    class="flex items-center gap-4 w-full min-h-[80px] px-5 py-4 rounded-16 border border-[#e6e6e6] bg-white"
+    class="flex items-center gap-4 w-full min-h-[80px] px-5 py-4 rounded-16 border border-border-default bg-white"
   >
     <img
       :src="peggyIcon"
@@ -16,7 +16,7 @@
       >
         {{ banner.title }}
       </p>
-      <p class="text-s-14 leading-5 text-[#575757]">
+      <p class="text-s-14 leading-5 text-text-subtle">
         {{ banner.description }}
       </p>
     </div>
@@ -24,7 +24,7 @@
       <button
         v-if="banner.secondary"
         type="button"
-        class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-primary hoverOpacity whitespace-nowrap"
+        class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-text-brand hoverOpacity whitespace-nowrap"
         data-test="rwa-home-banner-secondary"
         @click="onSecondary"
       >
