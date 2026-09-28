@@ -8,10 +8,7 @@
       <div class="flex flex-col gap-8 pt-8 pb-8">
         <!-- Header (close button is rendered by AppDialog at top-4 right-4) -->
         <div class="flex flex-col gap-1 pr-10">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{
               t('purchase.select_provider.title', {
                 amount: formattedFiatAmount,
@@ -52,7 +49,7 @@
             >
               <span
                 v-if="index === 0"
-                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-background-success text-white text-s-14 font-semibold leading-[20px] tracking-[-0.28px] px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
+                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-background-success text-white text-label-sm px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
               >
                 {{ t('purchase.select_provider.best_value') }}
               </span>
@@ -70,15 +67,11 @@
                 <div
                   class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
                 >
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                  >
+                  <p class="text-label-base text-black">
                     {{ formattedCryptoAmount(quote) }}
                     {{ quote.crypto_currency }}
                   </p>
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-text-subtle"
-                  >
+                  <p class="text-label-base text-text-subtle">
                     ≈ {{ formattedFiatReceive(quote) }}
                   </p>
                 </div>
@@ -117,7 +110,7 @@
               <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_pay') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedFiatAmount }}
               </span>
             </div>
@@ -126,7 +119,7 @@
               <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_receive') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{
                   selectedQuote
                     ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`

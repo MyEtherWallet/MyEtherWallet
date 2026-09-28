@@ -8,7 +8,7 @@ defineProps<{ title?: string; subtitle?: string }>()
       <div>
         <h2
           data-test="section-title"
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
+          class="text-heading-base text-black"
         >
           {{ title }}
         </h2>
