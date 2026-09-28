@@ -36,7 +36,6 @@
     "empty_txs": "Tus transacciones de envío aparecerán aquí.",
     "empty_bridge": "Tus puentes de tokens aparecerán aquí.",
     "empty_swap": "Tus intercambios de tokens aparecerán aquí.",
-    "toast_trade_filled": "Orden de operación ejecutada",
     "toast_trade_cancelled": "Orden de operación cancelada",
     "toast_trade_expired": "Orden de operación expirada",
     "toast_transaction_successful": "Transacción exitosa",

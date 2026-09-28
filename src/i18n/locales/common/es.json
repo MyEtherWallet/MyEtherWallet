@@ -1,5 +1,6 @@
 {
   "common": {
+    "watchlist_limit_reached": "Puedes guardar hasta {max} elementos en cada lista de seguimiento.",
     "search": "Buscar",
     "swap": "Cambio",
     "bridge": "Puente",
@@ -37,6 +38,8 @@
       "chains": "No se encontraron cadenas"
     },
     "all_chains": "Todas las redes",
+    "all_networks": "Todas las redes",
+    "showing_page": "Mostrando página {current} de {total}",
     "edit": "Editar",
     "delete": "Eliminar",
     "token_count": "sin tokens| 1 token | {count} tokens",

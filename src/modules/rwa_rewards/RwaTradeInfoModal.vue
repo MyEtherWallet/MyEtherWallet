@@ -26,7 +26,7 @@ import { storeToRefs } from 'pinia'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
-import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
 
 const isOpenModel = defineModel<boolean>('isOpen', { default: false })
 
@@ -57,8 +57,8 @@ const timeUntilSwapNextEligible = ref('--')
 const timeUntilTradeNextEligible = ref('--')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 
-const { countdownText: timeUntilMarketOpen, fetchMarketStatus } =
-  useMarketStatus()
+const marketStatusStore = useMarketStatusStore()
+const { countdownText: timeUntilMarketOpen } = storeToRefs(marketStatusStore)
 
 const formatDiff = (ms: number): string => {
   const d = Math.floor(ms / 86_400_000)
@@ -96,13 +96,14 @@ const updateCountdowns = () => {
 
 onMounted(() => {
   rewardsStore.fetchPool()
-  fetchMarketStatus()
+  marketStatusStore.acquire()
   updateCountdowns()
   countdownTimer = setInterval(updateCountdowns, 60_000)
 })
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
+  marketStatusStore.release()
   // Navigating away with the modal open counts as closing it — otherwise the
   // flag stays set and holds the tooltip off for the rest of the session.
   if (isOpenModel.value) setTradeInfoOpen(false)

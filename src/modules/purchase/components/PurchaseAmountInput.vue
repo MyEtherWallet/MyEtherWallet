@@ -76,9 +76,7 @@
         class="h-[22px] flex items-center justify-center"
         aria-live="polite"
       >
-        <span
-          class="inline-block w-5 h-5 rounded-full border-2 border-border-default border-t-border-hover animate-spin"
-        />
+        <app-spinner size-class="w-5 h-5" class="text-text-placeholder" />
       </p>
       <p
         v-else-if="errorMessage"
@@ -145,6 +143,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useElementSize } from '@vueuse/core'
+import AppSpinner from '@/components/AppSpinner.vue'
 import PurchaseCurrencyChip from './PurchaseCurrencyChip.vue'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
@@ -152,7 +151,7 @@ import {
   sanitizeDecimal,
   exceedsLimits,
 } from '../helpers/amountFormatting'
-import { useTextScaler } from '../composables/useTextScaler'
+import { useTextScaler } from '@/composables/useTextScaler'
 import { measureTextWidth } from '@/utils/measureText'
 
 export interface QuickButton {
