@@ -65,6 +65,12 @@ vi.mock('@/components/AppSearchInput.vue', () => ({
       '<input data-test="search" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
   },
 }))
+vi.mock('@/components/AppTooltip.vue', () => ({
+  default: {
+    props: ['text', 'position'],
+    template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
+  },
+}))
 vi.mock('@/components/TableSparkline.vue', () => ({
   default: { template: '<span data-test="sparkline" />' },
 }))
@@ -85,7 +91,10 @@ vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
 }))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import {
+  useWatchlistStore,
+  WATCHLIST_MAX,
+} from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const i18n = createI18n({
@@ -230,5 +239,38 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
       'true',
     )
     expect(push).not.toHaveBeenCalled()
+  })
+
+  it('disables the Add asset button with a tooltip once both buckets are full (MEW-2374)', () => {
+    const store = useWatchlistStore()
+    for (let i = 0; i < WATCHLIST_MAX; i++) {
+      store.setWatchlistItem(`coin-${i}`, false) // crypto
+      store.setWatchlistItem(`STK-${i}`, true) // stock
+    }
+    const w = mountTable()
+    expect(
+      w.get('[data-test="watchlist-add-new"]').attributes('disabled'),
+    ).toBeDefined()
+    // The wrapping tooltip carries a message while the button is disabled.
+    const tooltips = w.findAll('[data-test="tooltip"]')
+    expect(
+      tooltips.some(tip => (tip.attributes('data-text') ?? '').length > 0),
+    ).toBe(true)
+  })
+
+  it('keeps the Add asset button enabled (no tooltip) while a bucket has room', () => {
+    const store = useWatchlistStore()
+    // Crypto full, stocks empty → still something to add.
+    for (let i = 0; i < WATCHLIST_MAX; i++) {
+      store.setWatchlistItem(`coin-${i}`, false)
+    }
+    const w = mountTable()
+    expect(
+      w.get('[data-test="watchlist-add-new"]').attributes('disabled'),
+    ).toBeUndefined()
+    const tooltips = w.findAll('[data-test="tooltip"]')
+    expect(
+      tooltips.every(tip => (tip.attributes('data-text') ?? '') === ''),
+    ).toBe(true)
   })
 })
