@@ -68,14 +68,15 @@ const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
 )
 const holdingsStore = useHoldingsStore()
-const { status, canRegisterTrade, qualificationUsd } =
-  storeToRefs(holdingsStore)
+const { status, canRetryTrade, qualificationUsd } = storeToRefs(holdingsStore)
 
 // Only surface the hold campaign while a new trade can still be registered for
-// it — otherwise fall through to the trade campaign.
+// it — otherwise fall through to the trade campaign. `canRetryTrade` also
+// keeps a terminal round 2 (lost/expired) from re-offering: there's no retry
+// after the second round.
 const canClaimHold = computed(
   () =>
-    canRegisterTrade.value &&
+    canRetryTrade.value &&
     (status.value === 'default' ||
       status.value === 'expired' ||
       status.value === 'lost'),

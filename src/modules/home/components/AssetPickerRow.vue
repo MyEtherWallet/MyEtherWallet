@@ -42,6 +42,7 @@ const toggle = () => {
       :is-stock="item.type === 'stock'"
       width="w-10"
       height="h-10"
+      no-shadow
     />
     <div class="min-w-0 flex-1">
       <AppTokenSymbol

@@ -81,15 +81,15 @@
                           :is-stock="true"
                         />
                         <app-tooltip
-                          :text="stock.underlyingMarket.name"
-                          v-if="stock.underlyingMarket.name.length > 12"
+                          :text="getStockName(stock)"
+                          v-if="getStockName(stock).length > 12"
                         >
                           <p class="text-s-12 text-text-subtle truncate">
-                            {{ stock.underlyingMarket.name }}
+                            {{ getStockName(stock) }}
                           </p>
                         </app-tooltip>
                         <p v-else class="text-s-12 text-text-subtle truncate">
-                          {{ stock.underlyingMarket.name }}
+                          {{ getStockName(stock) }}
                         </p>
                       </div>
                       <div class="flex flex-col items-end flex-none">
@@ -303,7 +303,7 @@ const results = computed(() => {
   const data = searchData.value || []
   return fuzzySearchByKeys(
     data,
-    ['primaryMarket.symbol', 'underlyingMarket.name'],
+    ['primaryMarket.symbol', 'stockAlias', 'underlyingMarket.name'],
     searchInput.value,
   )
 })
@@ -321,6 +321,10 @@ const showNoDataMessage = computed(() => {
     searchInput.value && searchInput.value !== '' && results.value.length === 0
   )
 })
+
+const getStockName = (stock: GetWebStocksSummaryResponse[number]) => {
+  return stock.stockAlias || stock.underlyingMarket?.name || ''
+}
 
 watchDebounced(
   focused,

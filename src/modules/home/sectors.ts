@@ -15,14 +15,19 @@ import {
   CurrencyDollarIcon,
   FaceSmileIcon,
   MusicalNoteIcon,
+  RectangleGroupIcon,
 } from '@heroicons/vue/24/outline'
 
 export interface IndustrySector {
   id: string
   labelKey: string
   market: 'stocks' | 'crypto'
-  /** Filter value the destination page reads from `?category=` to preselect. */
-  filter: string
+  /** Filter value the destination page reads from `?category=` to preselect.
+   *  Absent on tiles that point at a section instead of a table filter. */
+  filter?: string
+  /** Section anchor on the destination page, for tiles that open a section
+   *  rather than preselect a filter. Mutually exclusive with `filter`. */
+  hash?: string
   /** Solid tile background — reuses the Figma tile palette. */
   color: string
   /** Heroicon rendered white inside the translucent bubble. */
@@ -66,6 +71,16 @@ function make(
 // value so a tile deep-links straight into that filtered view. Labels reuse the
 // stocks category strings so there is a single source of truth.
 const STOCK_SECTORS: IndustrySector[] = [
+  // Not a table category — this one opens the Ondo Intelligent Portfolios
+  // section on /stocks (ModuleOip.vue), which anchors on `#oip`.
+  {
+    id: 'stocks-oip',
+    labelKey: 'stocks.oip_sector',
+    market: 'stocks',
+    hash: '#oip',
+    color: PALETTE[9],
+    icon: RectangleGroupIcon,
+  },
   make('stocks', 'stocks.category_equities', 'EQUITIES', ChartBarIcon, 0),
   make('stocks', 'stocks.category_stock', 'STOCK', BuildingOffice2Icon, 1),
   make(
@@ -111,12 +126,18 @@ export const sectors: IndustrySector[] = [...STOCK_SECTORS, ...CRYPTO_SECTORS]
 
 // Deep-link into the destination page's filter. /stocks (ModuleAllStock) and
 // /crypto (ModuleExploreCrypto) read `?category=` on mount to preselect the tab.
-export function sectorLink(s: IndustrySector): {
+// Section tiles carry a `hash` instead; the destination section scrolls itself
+// into view on mount (see ModuleOip.vue).
+export interface SectorLink {
   path: string
-  query: Record<string, string>
-} {
-  return {
-    path: s.market === 'stocks' ? '/stocks' : '/crypto',
-    query: { category: s.filter },
-  }
+  /** Set on filter tiles — preselects the destination table's category tab. */
+  query?: Record<string, string>
+  /** Set on section tiles — the anchor the destination section scrolls to. */
+  hash?: string
+}
+
+export function sectorLink(s: IndustrySector): SectorLink {
+  const path = s.market === 'stocks' ? '/stocks' : '/crypto'
+  if (s.hash) return { path, hash: s.hash }
+  return { path, query: { category: s.filter ?? '' } }
 }
