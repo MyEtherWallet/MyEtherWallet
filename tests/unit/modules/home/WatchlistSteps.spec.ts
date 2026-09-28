@@ -79,6 +79,18 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
     expect(enabled.emitted('continue')).toHaveLength(1)
   })
 
+  it('is single-select: picking the other market replaces the current one', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: ['stocks'] })
+    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto'])
+  })
+
+  it('clicking the selected market clears the pick', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
+    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual([])
+  })
+
   it('emits skip from the Skip button regardless of selection', async () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
     await w.get('[data-test="markets-skip"]').trigger('click')

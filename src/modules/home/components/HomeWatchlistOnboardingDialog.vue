@@ -33,6 +33,7 @@ const isLoadingStep3 = computed(
 )
 
 const activeStep = ref(0)
+// Step-1 market pick (single-select, so at most one id; empty = skipped).
 const selectedMarkets = ref<string[]>([])
 // Category ids picked in step 2 (e.g. "STOCK:Equities").
 const selectedCategoryIds = ref<string[]>([])
@@ -68,12 +69,13 @@ const backToIndustries = () => {
   selectedAssetIds.value = []
 }
 
-// Resolve the recommendation query from the step-1 markets + step-2 categories:
-// each selected market keeps the categories the user picked for it, or falls
+// Resolve the recommendation query from the step-1 market + step-2 categories:
+// each market in play keeps the categories the user picked for it, or falls
 // back to `<TYPE>:all` when they picked none — so "crypto with no category" still
-// means "all crypto", not "all markets" (MEW-2375). When every selected market
-// falls back to `:all` (both crypto + stocks = everything), that's the same as
-// skipping step 2, so we omit the param and let the API return the full set.
+// means "all crypto", not "all markets" (MEW-2375). Step 1 is single-select, so
+// both markets are only in play when step 1 was skipped (no pick → both types);
+// when every one of them falls back to `:all` that's everything, so we omit the
+// param and let the API return the full set.
 const recommendForSelection = () => {
   const types = marketsToTypes(selectedMarkets.value)
   const categoryIds = types.flatMap(type => {
