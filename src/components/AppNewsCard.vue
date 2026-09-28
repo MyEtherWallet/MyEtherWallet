@@ -53,13 +53,13 @@ const dateLabel = computed(
         target="_blank"
         rel="noopener noreferrer"
         data-test="news-title"
-        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-primary group-hover:underline"
+        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-primary group-hover:underline group-has-[.news-ticker:hover]:text-black group-has-[.news-ticker:hover]:no-underline"
       >
         {{ title }}
       </a>
       <p
         v-if="description"
-        class="line-clamp-3 w-full text-s-16 leading-[22px] text-[#575757] group-hover:text-black"
+        class="line-clamp-3 w-full text-s-16 leading-[22px] text-[#575757] group-hover:text-black group-has-[.news-ticker:hover]:text-[#575757]"
       >
         {{ description }}
       </p>
@@ -70,7 +70,7 @@ const dateLabel = computed(
       v-if="ticker"
       :to="tokenTo"
       data-test="news-ticker"
-      class="flex w-fit shrink-0 items-center gap-2"
+      class="news-ticker flex w-fit shrink-0 items-center gap-2"
       :class="tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''"
     >
       <AppTokenLogo
@@ -88,7 +88,7 @@ const dateLabel = computed(
     </component>
 
     <ArrowTopRightOnSquareIcon
-      class="pointer-events-none absolute right-6 top-6 size-5 text-[#575757] opacity-0 transition-opacity group-hover:opacity-100"
+      class="pointer-events-none absolute right-6 top-6 size-5 text-[#575757] opacity-0 transition-opacity group-hover:opacity-100 group-has-[.news-ticker:hover]:opacity-0"
     />
   </div>
 </template>

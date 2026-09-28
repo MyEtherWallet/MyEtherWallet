@@ -17,6 +17,7 @@ import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
+import { WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 
 const { t } = useI18n()
 
@@ -104,6 +105,22 @@ const overflowAssets = computed(() => selectedAssets.value.slice(MAX_CHIPS))
 const overflowNames = computed(() =>
   overflowAssets.value.map(a => a.symbol).join(', '),
 )
+
+// Cap the modal selection at the watchlist's per-category limit (WATCHLIST_MAX
+// each for crypto / stocks / perps) so finish() never has to silently drop the
+// overflow. Once a category is full its unselected cards disable; an already
+// selected card is never disabled so it can still be toggled off. With every
+// category full, the whole unselected list reads as disabled.
+const selectedCountByType = computed(() => {
+  const counts = new Map<RecommendedAsset['type'], number>()
+  for (const a of selectedAssets.value) {
+    counts.set(a.type, (counts.get(a.type) ?? 0) + 1)
+  }
+  return counts
+})
+const isDisabled = (asset: RecommendedAsset): boolean =>
+  !selected.value.includes(asset.id) &&
+  (selectedCountByType.value.get(asset.type) ?? 0) >= WATCHLIST_MAX
 </script>
 
 <template>
@@ -229,6 +246,7 @@ const overflowNames = computed(() =>
               :key="asset.id"
               data-test="asset-card"
               :selected="selected.includes(asset.id)"
+              :disabled="isDisabled(asset)"
               bg="bg-white"
               class="flex h-[96px] flex-col items-center justify-center gap-2"
               @toggle="toggle(asset.id)"

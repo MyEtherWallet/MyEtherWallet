@@ -77,6 +77,11 @@ vi.mock('@/modules/home/components/HeroTrendingCard.vue', () => ({
 vi.mock('@/modules/home/components/HeroBanner.vue', () => ({
   default: { template: '<div data-test="hero-banner" />' },
 }))
+// The campaign banner reads holdingsStore, which imports walletStore (Ledger
+// SDK) — inert here, it has its own spec.
+vi.mock('@/modules/rwa_rewards/RwaHomeBanner.vue', () => ({
+  default: { template: '<div data-test="rwa-home-banner" />' },
+}))
 vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
   default: {
     emits: ['begin'],
@@ -126,6 +131,21 @@ vi.mock('@/stores/watchlistTableStore', async () => {
   }
 })
 
+// SHOW_WATCHLIST is env-driven via configs; force it on for the gating tests and
+// let a single test flip it off.
+let showWatchlist = true
+vi.mock('@/configs', async importOriginal => {
+  const actual = await importOriginal<typeof import('@/configs')>()
+  return {
+    default: {
+      ...actual.default,
+      get SHOW_WATCHLIST() {
+        return showWatchlist
+      },
+    },
+  }
+})
+
 import HomeHero from '@/modules/home/sections/HomeHero.vue'
 
 const mountHero = () => mount(HomeHero, { global: { plugins: [i18n] } })
@@ -133,6 +153,7 @@ const mountHero = () => mount(HomeHero, { global: { plugins: [i18n] } })
 describe('HomeHero (MEW-2094)', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    showWatchlist = true
     fetchTrending.mockClear()
     refreshWatchlist.mockClear()
     watchListedTokens.value = []
@@ -184,12 +205,20 @@ describe('HomeHero (MEW-2094)', () => {
 
   it('opens the onboarding wizard when the banner emits begin', async () => {
     const w = mountHero()
-    expect(w.find('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'false',
-    )
+    expect(
+      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
+    ).toBe('false')
     await w.find('[data-test="hero-watchlist-banner"]').trigger('click')
-    expect(w.find('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'true',
-    )
+    expect(
+      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
+    ).toBe('true')
+  })
+
+  it('hides the whole watchlist surface when the flag is off', () => {
+    showWatchlist = false
+    const w = mountHero()
+    expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
+    expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
+    expect(w.find('[data-test="onboarding-dialog"]').exists()).toBe(false)
   })
 })

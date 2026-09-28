@@ -10,6 +10,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import i18n from '@/i18n'
 import TradeSelectAssetModal from '@/modules/trade/components/TradeSelectAssetModal.vue'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
 
 const asset = (symbol: string, address: string, extra = {}) => ({
   symbol,
@@ -98,11 +99,56 @@ describe('TradeSelectAssetModal (buy)', () => {
     rows.forEach(row => expect(row.classList.contains('flex-none')).toBe(true))
   })
 
+  it('shows the stock alias instead of the wallet token name on the sell side', async () => {
+    const MELI = asset('MELION', '0x0000000000000000000000000000000000000009', {
+      name: 'MercadoLibre (Ondo Tokenized Stock)',
+    })
+    const pinia = createPinia()
+    setActivePinia(pinia)
+    useChainsStore().isLoaded = true
+    useWalletStore().tokens = [
+      {
+        contract: MELI.address,
+        name: MELI.name,
+        ondo: { stockAlias: 'MercadoLibre' },
+      },
+    ] as never
+    const wrapper = mount(TradeSelectAssetModal, {
+      props: { side: 'sell', chainTokens: [MELI] } as never,
+      slots: {
+        trigger: ({ open }: { open: () => void }) =>
+          h('button', { 'data-testid': 'open', onClick: open }),
+      },
+      global: { plugins: [pinia, i18n] },
+      attachTo: document.body,
+    })
+    await wrapper.find('[data-testid="open"]').trigger('click')
+    await nextTick()
+
+    const dialogText = document.querySelector(
+      '#app [role="dialog"]',
+    )!.textContent!
+    expect(dialogText).toContain('MercadoLibre')
+    expect(dialogText).not.toContain('Ondo Tokenized Stock')
+  })
+
   it('renders the ticker suffix without the stock gradient', async () => {
     await mountOpenModal()
 
     expect(
-      document.querySelector('#app [role="dialog"] .bg-stock-gradient'),
+      document.querySelector('#app [role="dialog"] p span.bg-stock-gradient'),
     ).toBeNull()
+  })
+
+  it('draws the stock outline around every buy-side logo', async () => {
+    await mountOpenModal()
+
+    const rows = document.querySelectorAll(
+      '#app [role="dialog"] [class*="h-[68px]"]',
+    )
+    expect(rows.length).toBeGreaterThan(0)
+    rows.forEach(row =>
+      expect(row.querySelector('div.bg-stock-gradient')).not.toBeNull(),
+    )
   })
 })

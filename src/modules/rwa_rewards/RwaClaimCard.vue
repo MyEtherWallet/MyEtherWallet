@@ -28,6 +28,7 @@
       v-if="variant === 'claim'"
       :is-loading="loading"
       class="w-full text-s-16 font-semibold tracking-[-0.32px]"
+      data-test="rwa-claim-card-button"
       @click="onClick"
     >
       {{ buttonLabel }}

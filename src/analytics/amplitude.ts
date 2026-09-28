@@ -87,6 +87,8 @@ import type {
   HoldRewardsBannerEvent,
   HoldRewardsMainCardEvent,
   HoldRewardsMainCardEventPayload,
+  HoldRewardsHomeBannerEvent,
+  HoldRewardsHomeBannerEventPayload,
   RerwadsAndOffersEvent,
   RerwadsAndOffersEventPayload,
   TradeConfirmationBannerEvent,
@@ -416,7 +418,9 @@ export class Analytics {
    * @param event   Type of Multi Address event
    * @returns       Promise that resolves when the event is tracked
    */
-  readonly trackMultiAddressEvent = (event: MultiAddressEvent): Promise<void> => {
+  readonly trackMultiAddressEvent = (
+    event: MultiAddressEvent,
+  ): Promise<void> => {
     return this._track(event, {})
   }
 
@@ -665,6 +669,13 @@ export class Analytics {
     event: (typeof HoldRewardsBannerEvent)[keyof typeof HoldRewardsBannerEvent],
   ): Promise<void> => {
     return this._track(event, {})
+  }
+
+  readonly trackHoldRewardsHomeBannerEvent = (
+    event: (typeof HoldRewardsHomeBannerEvent)[keyof typeof HoldRewardsHomeBannerEvent],
+    payload: HoldRewardsHomeBannerEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
   }
 
   readonly trackHoldRewardsMainCardEvent = (

@@ -1,4 +1,5 @@
 import { ref, computed, watch, type Ref, type ComputedRef } from 'vue'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useDebounceFn } from '@vueuse/core'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { usePerpsContracts, usePerpsMarkets } from '@/modules/perps/composables/usePerpsMarkets'
@@ -37,7 +38,7 @@ export const mapCryptoItem = (
     return {
       key: `stock-${t.ondo.primaryMarket.symbol}`,
       symbol: t.symbol,
-      name: t.ondo.stockAlias ?? t.name,
+      name: getTokenDisplayName(t),
       logoUrl: t.logoUrl ?? undefined,
       type: 'stock',
       watchlistId: t.ondo.primaryMarket.symbol,
@@ -58,7 +59,7 @@ export const mapStockItem = (
 ): AssetPickerItem => ({
   key: `stock-${s.primaryMarket.symbol}`,
   symbol: s.primaryMarket.symbol,
-  name: s.underlyingMarket.name,
+  name: s.stockAlias || s.underlyingMarket?.name || '',
   logoUrl: s.iconPngUrl || s.iconSvgUrl || undefined,
   type: 'stock',
   watchlistId: s.primaryMarket.symbol,

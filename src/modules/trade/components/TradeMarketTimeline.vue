@@ -1,6 +1,8 @@
 <template>
   <div class="w-full flex items-start gap-2">
-    <p class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]">
+    <p
+      class="flex h-3 items-center text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
+    >
       {{ dayLabel }}
     </p>
     <div class="flex-1 min-w-0 flex flex-col">

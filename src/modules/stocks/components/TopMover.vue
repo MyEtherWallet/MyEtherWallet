@@ -20,19 +20,13 @@
           :symbol="stock.primaryMarket.symbol"
           :is-stock="true"
         />
-        <app-tooltip
-          :text="stock.underlyingMarket.name"
-          v-if="
-            stock.underlyingMarket.name &&
-            stock.underlyingMarket.name.length > 12
-          "
-        >
+        <app-tooltip :text="getName" v-if="getName.length > 12">
           <p class="text-s-12 text-info truncate leading-tight max-w-[120px]">
-            {{ stock.underlyingMarket.name }}
+            {{ getName }}
           </p>
         </app-tooltip>
         <p v-else class="text-s-12 text-info truncate pr-2">
-          {{ stock.underlyingMarket.name }}
+          {{ getName }}
         </p>
       </div>
     </div>
@@ -81,6 +75,11 @@ const props = defineProps<{ stock: StockTopMoverItem }>()
 
 const { formatFiat } = useCurrency()
 
+// Portfolio tokens have no single underlying market, so the API sends
+// underlyingMarket as null and the alias carries the display name.
+const getName = computed(
+  () => props.stock.stockAlias || props.stock.underlyingMarket?.name || '',
+)
 const getPrice = computed(() => {
   return props.stock.primaryMarket.price
     ? formatFiat(props.stock.primaryMarket.price).display

@@ -126,4 +126,34 @@ describe('useNewListingSwap', () => {
     )
     expect(openPanel).toHaveBeenCalledWith('bridge')
   })
+
+  it('bridges a contract-only coin from its swap-capable contract chain', () => {
+    // No native chains: prime from the supported contract entry (its address),
+    // not the native sentinel, so the destination + token are preselected.
+    const { openBridgeForToken } = useNewListingSwap()
+    openBridgeForToken('TOK', 'Token', [], [contract('Ethereum', '0xABC')])
+
+    expect(storeSwapValues).toHaveBeenCalledWith(
+      expect.objectContaining({
+        toToken: expect.objectContaining({
+          address: '0xABC',
+          symbol: 'TOK',
+        }),
+        toChain: { name: 'Ethereum' },
+      }),
+    )
+    expect(openPanel).toHaveBeenCalledWith('bridge')
+  })
+
+  it('does not prime from a contract chain that has no address', () => {
+    // An addressless contract entry has nothing to bridge, so don't fall back
+    // to the native sentinel (which would prime the wrong asset). Panel still opens.
+    const { openBridgeForToken } = useNewListingSwap()
+    openBridgeForToken('TOK', 'Token', [], [
+      { chainName: 'Ethereum', contract: '', decimals: 18 },
+    ])
+
+    expect(storeSwapValues).not.toHaveBeenCalled()
+    expect(openPanel).toHaveBeenCalledWith('bridge')
+  })
 })

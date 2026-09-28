@@ -7,7 +7,7 @@
     z-index-container="z-[201]"
   >
     <template #content>
-      <div class="relative flex flex-col items-start p-6 gap-20 w-full">
+      <div class="relative flex flex-col items-start p-6 gap-14 w-full">
         <img
           :src="heroImg"
           alt=""
@@ -18,423 +18,185 @@
           @close="holdingsStore.closeModal()"
         />
 
-        <div class="relative z-10 flex flex-col items-start gap-2">
-          <!-- A season that has already ended has nothing left to count down
-               to; the countdown would sit at "0 seconds". An empty countdown
-               means `/info` returned no season end, so there is no date to show. -->
-          <p
-            v-if="!isCampaignEnded && expiresText"
-            class="text-s-12 leading-[18px] text-[#575757]"
-          >
-            {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
-          </p>
+        <div class="relative z-10 flex flex-col items-start gap-2 pr-[150px]">
           <p
             class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black whitespace-pre-line"
           >
-            {{ $t('rwaRewards.hero_title') }}
+            {{ headline }}
           </p>
         </div>
 
         <div class="relative z-10 flex flex-col gap-8 w-full">
           <div class="flex flex-col w-full">
-            <!-- DEFAULT (offer) -->
-            <template v-if="isOffer">
-              <rwa-modal-step
-                variant="plain"
-                :number="1"
-                :stretch="hasStep1Cta"
+            <rwa-modal-step
+              v-for="(step, i) in steps"
+              :key="step.kind"
+              :variant="step.state"
+              :number="step.number"
+              :connector-blue="step.state === 'done'"
+              :stretch="step.hasContent"
+              :last="i === steps.length - 1"
+              :data-test="`rwa-step-${step.kind}`"
+            >
+              <div
+                class="flex flex-col items-start gap-3"
+                :class="{ 'pb-7': step.hasContent }"
               >
-                <div
-                  class="flex flex-col items-start gap-3"
-                  :class="{ 'pb-5': hasStep1Cta }"
+                <p
+                  class="flex items-center min-h-6"
+                  :class="step.state === 'plain' ? stepText : boldText"
                 >
-                  <p :class="stepText" class="h-6 mb-[14px]">
-                    {{
-                      $t('rwaRewards.modal_step1', {
-                        amount: qualificationAmount,
-                      })
-                    }}
-                    <span :class="boldText"
-                      >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
-                    >
-                  </p>
-                  <!-- The season is closed to new entries, so the CTA states
-                       the reason rather than inviting a trade that can no
-                       longer be registered. Same treatment as "Start again"
-                       in the lost branch below. -->
+                  {{ step.label }}
+                </p>
+
+                <!-- Step 1 — the offer: invite the trade, or say why not. -->
+                <template v-if="step.kind === 'trade' && isOffer">
                   <div
-                    v-if="
-                      status === 'temporarilyPaused' ||
-                      status === 'campaignFull' ||
-                      status === 'underReview' ||
-                      status === 'campaignEnded'
-                    "
+                    v-if="isDisabledCta"
                     class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                   >
                     {{ disabledCtaLabel }}
                   </div>
                   <app-base-button
-                    v-else-if="status === 'default'"
-                    class="w-40 text-s-16 font-semibold tracking-[-0.32px]"
+                    v-else
+                    class="min-w-40 text-s-16 font-semibold tracking-[-0.32px]"
+                    data-test="rwa-modal-trade"
                     @click="onTrade"
                   >
-                    {{ $t('rwaRewards.trade_now') }}
+                    {{
+                      $t('rwaRewards.trade_amount', {
+                        amount: qualificationAmount,
+                      })
+                    }}
                   </app-base-button>
-                </div>
-              </rwa-modal-step>
-              <rwa-modal-step variant="plain" :number="2">
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_step2_pre')
-                  }}<span :class="boldText"
-                    >&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span
-                  >&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
-                </p>
-              </rwa-modal-step>
-              <rwa-modal-step variant="plain" :number="3" last>
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_step3')
-                  }}<span :class="boldText"
-                    >&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span
-                  >
-                </p>
-              </rwa-modal-step>
-            </template>
+                </template>
 
-            <!-- HOLDING (round 1: steps 1-3; round 2: the finished first
-                 round stays visible above the new hold) -->
-            <template v-else-if="status === 'holding'">
-              <rwa-modal-step variant="done" connector-blue>
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_qualifying_trade')
-                  }}<span :class="boldText">&nbsp;{{ qualifyingLabel }}</span>
-                </p>
-              </rwa-modal-step>
-              <template v-if="isRoundTwoActive">
-                <rwa-modal-step variant="done" connector-blue>
-                  <p :class="stepText" class="flex items-center h-6">
-                    {{ $t('rwaRewards.modal_held_14') }}
-                  </p>
-                </rwa-modal-step>
-                <rwa-modal-step variant="done" connector-blue>
-                  <p :class="stepText" class="flex items-center h-6">
-                    {{ $t('rwaRewards.r2_first_reward_claimed') }}
-                  </p>
-                </rwa-modal-step>
-              </template>
-              <rwa-modal-step
-                variant="current"
-                :number="isRoundTwoActive ? 4 : 2"
-                stretch
-              >
-                <div class="flex flex-col items-start gap-3 pb-7">
-                  <p
-                    v-if="isRoundTwoActive"
-                    :class="stepText"
-                    class="flex items-center h-6"
-                  >
-                    {{ $t('rwaRewards.r2_hold_step_pre')
-                    }}<span :class="boldText"
-                      >&nbsp;{{ $t('rwaRewards.r2_hold_step_bold') }}</span
-                    >&nbsp;{{ r2HoldStepPost }}
-                  </p>
-                  <p v-else :class="stepText" class="flex items-center h-6">
-                    {{ $t('rwaRewards.modal_step2_pre')
-                    }}<span :class="boldText"
-                      >&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span
-                    >&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
-                  </p>
-                  <rwa-hold-tracker
-                    :current="holdCurrent"
-                    :total="holdTotalDays"
-                  />
-                  <p :class="boldText">{{ holdDaysLeftLabel }}</p>
-                  <p v-if="isRoundTwoActive" :class="subText">
-                    {{ $t('rwaRewards.r2_hold_warning') }}
-                  </p>
-                </div>
-              </rwa-modal-step>
-              <rwa-modal-step
-                variant="plain"
-                :number="isRoundTwoActive ? 5 : 3"
-                last
-              >
-                <p
-                  v-if="isRoundTwoActive"
-                  :class="stepText"
-                  class="flex items-center h-6"
+                <!-- Hold steps — the day grid while holding or after a loss. -->
+                <template
+                  v-else-if="
+                    (step.kind === 'hold1' || step.kind === 'hold2') &&
+                    (step.state === 'current' || step.state === 'failed')
+                  "
                 >
-                  {{ $t('rwaRewards.r2_reward_step')
-                  }}<span :class="boldText">&nbsp;{{ rewardLabel }}</span>
-                </p>
-                <p v-else :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_step3')
-                  }}<span :class="boldText"
-                    >&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span
-                  >
-                </p>
-              </rwa-modal-step>
-            </template>
-
-            <!-- LOST (a lost round 2 is terminal: no retry, and the claimed
-                 first reward is unaffected) -->
-            <template v-else-if="status === 'lost'">
-              <rwa-modal-step variant="doneGrey">
-                <p :class="mutedText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_qualifying_trade') }}
-                  {{ qualifyingLabel }}
-                </p>
-              </rwa-modal-step>
-              <template v-if="isRoundTwoActive">
-                <rwa-modal-step variant="doneGrey">
-                  <p :class="mutedText" class="flex items-center h-6">
-                    {{ $t('rwaRewards.modal_held_14') }}
-                  </p>
-                </rwa-modal-step>
-                <rwa-modal-step variant="doneGrey">
-                  <p :class="mutedText" class="flex items-center h-6">
-                    {{ $t('rwaRewards.r2_first_reward_claimed') }}
-                  </p>
-                </rwa-modal-step>
-              </template>
-              <rwa-modal-step variant="failed" stretch>
-                <div class="flex flex-col items-start gap-3 pb-7">
-                  <p class="text-s-14 font-semibold leading-5 text-[#e40c58]">
-                    {{
-                      isRoundTwoActive
-                        ? $t('rwaRewards.r2_lost_title')
-                        : $t('rwaRewards.modal_lost_title')
-                    }}
-                  </p>
-                  <p :class="stepText">
-                    {{
-                      isRoundTwoActive
-                        ? $t('rwaRewards.r2_lost_desc', {
-                            amount: qualifyingLabel,
-                          })
-                        : $t('rwaRewards.modal_lost_desc', {
-                            amount: qualifyingLabel,
-                          })
-                    }}
-                  </p>
                   <rwa-hold-tracker
                     :current="holdCurrent"
-                    :failed-day="holdCurrent"
+                    :failed-day="
+                      step.state === 'failed' ? holdCurrent : undefined
+                    "
                     :total="holdTotalDays"
                   />
-                  <div
-                    v-if="!isRoundTwoActive"
-                    class="flex items-center gap-2 w-full"
+                  <p v-if="step.state === 'current'" :class="boldText">
+                    {{ holdDaysLeftLabel }}
+                  </p>
+                  <p
+                    v-if="step.state === 'current' && step.kind === 'hold2'"
+                    :class="subText"
                   >
+                    {{ $t('rwaRewards.hold_warning') }}
+                  </p>
+                  <!-- Round 1 can be started over; a finished round 2 is terminal. -->
+                  <template v-if="step.state === 'failed' && !isRoundTwoActive">
                     <app-base-button
                       v-if="canRetryTrade"
-                      class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
+                      class="min-w-40 text-s-16 font-semibold tracking-[-0.32px]"
+                      data-test="rwa-modal-trade-again"
                       @click="onTrade"
                     >
-                      {{ $t('rwaRewards.start_again') }}
+                      {{ $t('rwaRewards.trade_again') }}
                     </app-base-button>
-                    <!-- The season stopped taking new entries, so there is
-                         nothing to start again. -->
                     <div
                       v-else
-                      class="flex flex-1 items-center justify-center h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
                     >
                       {{ disabledCtaLabel }}
                     </div>
-                    <div
-                      v-if="!isCampaignEnded && expiresText"
-                      :class="expiresPill"
-                      class="flex items-center justify-center"
+                  </template>
+                </template>
+
+                <!-- Claim steps — the reward card while claimable or expired. -->
+                <template
+                  v-else-if="
+                    (step.kind === 'claim1' || step.kind === 'claim2') &&
+                    (step.state === 'current' || step.state === 'failed')
+                  "
+                >
+                  <div
+                    :class="subCard"
+                    class="flex items-center gap-3 w-full"
+                    data-test="rwa-modal-claim-card"
+                  >
+                    <img
+                      :src="usdcIcon"
+                      alt=""
+                      class="w-[42px] h-[42px] shrink-0"
+                    />
+                    <div class="flex flex-col flex-1 min-w-0">
+                      <p :class="titleText">{{ rewardLabel }}</p>
+                      <p
+                        v-if="step.state === 'current' && hasRewardExpiry"
+                        :class="subText"
+                      >
+                        {{
+                          $t('rwaRewards.expires_in', { time: subExpiresText })
+                        }}
+                      </p>
+                    </div>
+                    <app-base-button
+                      v-if="step.state === 'current'"
+                      size="medium"
+                      :is-loading="isClaiming"
+                      class="min-w-[120px] shrink-0 whitespace-nowrap text-s-16 font-semibold tracking-[-0.32px]"
+                      data-test="rwa-modal-claim"
+                      @click="onClaim"
                     >
                       {{
-                        $t('rwaRewards.hero_offer_expires', {
-                          time: expiresText,
-                        })
+                        isWatchOnly
+                          ? $t('rwaRewards.login')
+                          : $t('rwaRewards.claim')
                       }}
-                    </div>
+                    </app-base-button>
+                    <span
+                      v-else
+                      class="shrink-0 py-1 px-2 rounded-8 bg-[#ffdbe3] text-[#cc0452] text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
+                    >
+                      {{ $t('rwaRewards.reward_expired') }}
+                    </span>
                   </div>
-                </div>
-              </rwa-modal-step>
-              <rwa-modal-step
-                variant="plain"
-                :number="isRoundTwoActive ? 5 : 3"
-                last
-              >
-                <p
-                  v-if="isRoundTwoActive"
-                  :class="mutedText"
-                  class="flex items-center h-6"
-                >
-                  {{ $t('rwaRewards.r2_reward_step') }} {{ rewardLabel }}
-                </p>
-                <p v-else :class="mutedText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_step3') }}
-                  {{ $t('rwaRewards.modal_step3_bold') }}
-                </p>
-              </rwa-modal-step>
-            </template>
-
-            <!-- EARNED / CLAIMED / EXPIRED (steps 1 & 2 done) -->
-            <template v-else>
-              <rwa-modal-step variant="done" connector-blue>
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_qualifying_trade')
-                  }}<span :class="boldText">&nbsp;{{ qualifyingLabel }}</span>
-                </p>
-              </rwa-modal-step>
-              <rwa-modal-step variant="done" connector-blue>
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.modal_held_14') }}
-                </p>
-              </rwa-modal-step>
-              <rwa-modal-step
-                v-if="isRoundTwoActive"
-                variant="done"
-                connector-blue
-              >
-                <p :class="stepText" class="flex items-center h-6">
-                  {{ $t('rwaRewards.r2_first_reward_claimed') }}
-                </p>
-              </rwa-modal-step>
-
-              <rwa-modal-step
-                v-if="status === 'earned'"
-                variant="current"
-                :number="isRoundTwoActive ? 4 : 3"
-                last
-              >
-                <div class="flex flex-col items-start gap-0.5">
-                  <p :class="titleText">
-                    {{
-                      isRoundTwoActive
-                        ? $t('rwaRewards.r2_claim_title')
-                        : $t('rwaRewards.modal_claim_title')
-                    }}
-                  </p>
-                  <p :class="stepText">
-                    {{ $t('rwaRewards.modal_claim_desc') }}
-                  </p>
-                </div>
-              </rwa-modal-step>
-              <div
-                v-if="status === 'earned'"
-                :class="subCard"
-                class="flex items-center gap-3 w-full mt-5"
-              >
-                <img
-                  :src="usdcIcon"
-                  alt=""
-                  class="w-[42px] h-[42px] shrink-0"
-                />
-                <div class="flex flex-col flex-1 min-w-0">
-                  <p :class="titleText">
-                    {{ rewardLabel }}
-                  </p>
-                  <!-- Only when the reward itself carries a deadline. -->
-                  <p v-if="hasRewardExpiry" :class="subText">
-                    {{
-                      $t('rwaRewards.hero_offer_expires', {
-                        time: subExpiresText,
-                      })
-                    }}
-                  </p>
-                </div>
-                <app-base-button
-                  size="medium"
-                  :is-loading="isClaiming"
-                  class="min-w-[120px] shrink-0 whitespace-nowrap text-s-16 font-semibold tracking-[-0.32px]"
-                  @click="onClaim"
-                >
-                  {{
-                    isWatchOnly
-                      ? $t('rwaRewards.login')
-                      : $t('rwaRewards.claim')
-                  }}
-                </app-base-button>
+                  <template v-if="step.state === 'failed' && !isRoundTwoActive">
+                    <app-base-button
+                      v-if="canRetryTrade"
+                      class="min-w-40 text-s-16 font-semibold tracking-[-0.32px]"
+                      data-test="rwa-modal-trade-again"
+                      @click="onTrade"
+                    >
+                      {{ $t('rwaRewards.trade_again') }}
+                    </app-base-button>
+                    <div
+                      v-else
+                      class="flex items-center justify-center min-w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px] whitespace-nowrap"
+                    >
+                      {{ disabledCtaLabel }}
+                    </div>
+                  </template>
+                </template>
               </div>
+            </rwa-modal-step>
 
-              <rwa-modal-step
-                v-if="status === 'claimed'"
-                variant="done"
-                :number="isRoundTwoActive ? 4 : 3"
-                last
-              >
-                <p :class="titleText">
-                  {{
-                    isRoundTwoActive
-                      ? $t('rwaRewards.r2_claimed_step')
-                      : $t('rwaRewards.modal_claimed_step')
-                  }}
-                </p>
-              </rwa-modal-step>
-              <div
-                v-if="status === 'claimed'"
-                :class="subCard"
-                class="flex items-center gap-3 w-full mt-5"
-              >
-                <img
-                  :src="usdcIcon"
-                  alt=""
-                  class="w-[42px] h-[42px] shrink-0"
-                />
-                <div class="flex flex-col flex-1 min-w-0">
-                  <p :class="titleText">
-                    {{ rewardLabel }}
-                  </p>
-                  <p :class="subText">
-                    {{ $t('rwaRewards.sub_claimed') }}
-                  </p>
-                </div>
-                <div
-                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-success"
-                >
-                  <check-icon class="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-              <!-- Why there is (or isn't yet) a second round after the first
-                   claim — nothing actionable, so a plain note. -->
-              <p v-if="round2Notice" :class="subText" class="w-full mt-2 px-1">
-                {{ round2Notice }}
-              </p>
+            <!-- Both rewards paid: nothing follows this season. -->
+            <app-base-button
+              v-if="isSeasonComplete"
+              class="w-full mt-5 text-s-16 font-semibold tracking-[-0.32px]"
+              data-test="rwa-modal-discover"
+              @click="onDiscoverRewards"
+            >
+              {{ $t('rwaRewards.discover_more_rewards') }}
+            </app-base-button>
 
-              <rwa-modal-step
-                v-if="status === 'expired'"
-                variant="failed"
-                :number="isRoundTwoActive ? 4 : 3"
-                last
-              >
-                <p :class="titleText">
-                  {{
-                    isRoundTwoActive
-                      ? $t('rwaRewards.r2_expired_step')
-                      : $t('rwaRewards.modal_expired_step')
-                  }}
-                </p>
-              </rwa-modal-step>
-              <div
-                v-if="status === 'expired'"
-                :class="subCard"
-                class="flex items-center gap-3 w-full mt-5"
-              >
-                <img
-                  :src="usdcIcon"
-                  alt=""
-                  class="w-[42px] h-[42px] shrink-0"
-                />
-                <div class="flex flex-col flex-1 min-w-0">
-                  <p :class="titleText">
-                    {{ rewardLabel }}
-                  </p>
-                  <p :class="subText">
-                    {{ $t('rwaRewards.sub_closed') }}
-                  </p>
-                </div>
-                <div
-                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-[#e40c58]"
-                >
-                  <x-mark-icon class="w-3.5 h-3.5 text-white" />
-                </div>
-              </div>
-            </template>
+            <!-- Why there is (or isn't yet) a second round after the first
+                 claim — nothing actionable, so a plain note. -->
+            <p v-if="round2Notice" :class="subText" class="w-full mt-4 px-1">
+              {{ round2Notice }}
+            </p>
 
             <!-- Sits outside the status branches: a wallet under review keeps
                  whichever progress view it had, with the review explained here. -->
@@ -444,12 +206,8 @@
             >
               <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
               <div class="flex flex-col gap-0.5 flex-1">
-                <p :class="titleText">
-                  {{ noticeTitle }}
-                </p>
-                <p :class="bodyText">
-                  {{ noticeDesc }}
-                </p>
+                <p :class="titleText">{{ noticeTitle }}</p>
+                <p :class="bodyText">{{ noticeDesc }}</p>
               </div>
               <app-base-button
                 v-if="status === 'banned' || isUnderReview"
@@ -465,15 +223,24 @@
 
           <div class="h-px bg-[#e6e6e6] w-full"></div>
 
-          <div class="flex flex-col gap-3 w-full">
-            <p :class="titleText">
-              {{ $t('rwaRewards.offer_rules') }}
+          <div class="flex items-center justify-between gap-4 w-full">
+            <!-- A season that has already ended has nothing left to count down
+                 to; an empty countdown means `/info` returned no season end. -->
+            <p :class="bodyText">
+              <template v-if="!isCampaignEnded && expiresText">
+                {{ $t('rwaRewards.ends_in', { time: expiresText }) }}
+              </template>
             </p>
-            <ul class="list-disc pl-[21px] m-0 flex flex-col gap-3">
-              <li v-for="(rule, i) in offerRules" :key="i" :class="bodyText">
-                {{ rule }}
-              </li>
-            </ul>
+            <a
+              :href="rewardsPageUrl"
+              target="_blank"
+              rel="noopener"
+              class="text-s-16 font-semibold tracking-[-0.32px] text-primary hover:underline"
+              data-test="rwa-modal-terms"
+              @click="trackCta('terms')"
+            >
+              {{ $t('rwaRewards.terms_and_conditions') }}
+            </a>
           </div>
         </div>
       </div>
@@ -489,18 +256,19 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
+import { useRewardSteps } from '@/modules/rwa_rewards/composables/useRewardSteps'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
+import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
@@ -523,8 +291,17 @@ const {
   isRoundTwoActive,
   round2Status,
   holdTotalDays,
+  hasRoundTwo,
+  round1HoldDays,
+  round2HoldDays,
+  round1RewardAmountLabel,
+  round2RewardAmountLabel,
+  totalRewardAmountLabel,
   rewardAmountLabel,
 } = storeToRefs(holdingsStore)
+const { t } = useI18n()
+const rewardsPageUrl = configs.REWARDS_PAGE_URL
+
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
 // different deadlines, and `expiration_timestamp` is optional: the store reads
@@ -536,7 +313,6 @@ const { text: subExpiresText } = useCountdown(
 const hasRewardExpiry = computed(
   () => !!activeReward.value?.expiration_timestamp,
 )
-const { t } = useI18n()
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
 )
@@ -584,14 +360,6 @@ const disabledCtaLabel = computed(() => {
   if (isCampaignFull.value) return t('rwaRewards.campaign_full')
   return t('rwaRewards.not_eligible')
 })
-const hasStep1Cta = computed(
-  () =>
-    status.value === 'default' ||
-    status.value === 'temporarilyPaused' ||
-    status.value === 'campaignFull' ||
-    status.value === 'underReview' ||
-    status.value === 'campaignEnded',
-)
 const noticeTitle = computed(() => {
   if (isUnderReview.value) return t('rwaRewards.modal_under_review_title')
   if (status.value === 'banned') return t('rwaRewards.modal_banned_title')
@@ -608,12 +376,15 @@ const noticeDesc = computed(() => {
     ? t('trade.trading_restricted')
     : t('rwaRewards.modal_not_eligible_desc')
 })
+
+const round = computed<1 | 2>(() => (isRoundTwoActive.value ? 2 : 1))
 // Fire a reward-offer CTA event for an offer-modal action
 const trackCta = (cta: string) =>
   analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
     campaign: 'hold',
     cta,
     card_status: status.value,
+    round: round.value,
     location: 'offers_card',
   })
 
@@ -621,44 +392,6 @@ const onContactSupport = () => {
   trackCta('contact_support')
   showIntercom()
 }
-
-const campaignEndText = computed(() => {
-  const iso = seasonEnd.value
-  if (!iso) return ''
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return ''
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Los_Angeles',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-    timeZoneName: 'short',
-  }).formatToParts(d)
-  const get = (type: string) => parts.find(p => p.type === type)?.value ?? ''
-  const minute = get('minute')
-  const period = get('dayPeriod').toLowerCase()
-  const time =
-    minute === '0'
-      ? `${get('hour')}${period}`
-      : `${get('hour')}:${minute.padStart(2, '0')}${period}`
-  return `${get('month')} ${get('day')} at ${time} ${get('timeZoneName')}`
-})
-
-const offerRules = computed(() => [
-  t('rwaRewards.offer_rule_1', { amount: qualificationAmount.value }),
-  t('rwaRewards.offer_rule_2'),
-  t('rwaRewards.offer_rule_3'),
-  t('rwaRewards.offer_rule_4'),
-  t('rwaRewards.offer_rule_5'),
-  t('rwaRewards.offer_rule_6'),
-  // `/info` can come back without a season end, which would leave this rule
-  // reading "Campaign ends" with nothing after it — drop it instead.
-  ...(campaignEndText.value
-    ? [t('rwaRewards.offer_rule_7', { date: campaignEndText.value })]
-    : []),
-])
 
 const holdCurrent = computed(() => {
   const start = activeReward.value?.start_timestamp
@@ -669,31 +402,25 @@ const holdCurrent = computed(() => {
   return Math.min(Math.max(elapsed + 1, 1), holdTotalDays.value)
 })
 
-// "for {n} more days." — the round-2 hold length comes from the server.
-const r2HoldStepPost = computed(() =>
-  t(
-    'rwaRewards.r2_hold_step_post',
-    { count: holdTotalDays.value },
-    holdTotalDays.value,
-  ),
-)
-
 // Server-driven when the season block has landed; the campaign's advertised
 // round-1 copy otherwise.
+const round1Label = computed(
+  () => round1RewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
+const round2Label = computed(
+  () => round2RewardAmountLabel.value ?? round1Label.value,
+)
 const rewardLabel = computed(
   () => rewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
 )
 
-// After the first claim there may be nothing actionable about round 2 — the
-// pool ran out, or the entry is still being opened. Say which, once.
-const round2Notice = computed(() => {
-  if (status.value !== 'claimed' || isRoundTwoActive.value) return ''
-  if (round2Status.value === 'UNAVAILABLE')
-    return t('rwaRewards.r2_unavailable_notice')
-  if (round2Status.value === 'ELIGIBLE')
-    return t('rwaRewards.r2_setting_up_notice')
-  return ''
-})
+// "Hold and get up to 25 USDC" once both rounds' amounts are known; the
+// single-round headline otherwise.
+const headline = computed(() =>
+  hasRoundTwo.value && totalRewardAmountLabel.value
+    ? t('rwaRewards.hero_title_total', { total: totalRewardAmountLabel.value })
+    : t('rwaRewards.hero_title', { amount: round1Label.value }),
+)
 
 const qualifyingLabel = computed(() => {
   const r = activeReward.value
@@ -711,21 +438,53 @@ const qualifyingLabel = computed(() => {
   return `${amount.toFormat()} ${symbol}`.trim()
 })
 
+const { steps } = useRewardSteps({
+  status,
+  isRoundTwoActive,
+  hasRoundTwo,
+  round1HoldDays,
+  round2HoldDays,
+  qualificationAmount,
+  qualifyingLabel,
+  round1Label,
+  round2Label,
+})
+
+// Both rewards paid, or the only reward on a single-round season.
+const isSeasonComplete = computed(
+  () =>
+    status.value === 'claimed' &&
+    (isRoundTwoActive.value || !hasRoundTwo.value),
+)
+
+// After the first claim there may be nothing actionable about round 2 — the
+// pool ran out, or the entry is still being opened. Say which, once.
+const round2Notice = computed(() => {
+  if (status.value !== 'claimed' || isRoundTwoActive.value) return ''
+  if (round2Status.value === 'UNAVAILABLE')
+    return t('rwaRewards.r2_unavailable_notice')
+  if (round2Status.value === 'ELIGIBLE')
+    return t('rwaRewards.r2_setting_up_notice')
+  return ''
+})
+
 const stepText = 'text-s-14 leading-5 text-[#575757]'
-const boldText = 'font-semibold text-black tracking-[-0.28px]'
-const mutedText = 'text-s-14 leading-5 text-grey-subtle'
+const boldText =
+  'text-s-14 font-semibold leading-5 text-black tracking-[-0.28px]'
 const titleText =
   'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
 const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
 const subText = 'text-s-12 leading-[18px] text-[#575757]'
-const expiresPill =
-  'h-12 px-4 rounded-24 bg-[#e6e6e6] text-[#575757] text-s-14 font-semibold whitespace-nowrap'
 const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
 
 const onTrade = () => {
   trackCta('trade')
   walletMenuStore.openPanel('trade')
   holdingsStore.closeModal()
+}
+const onDiscoverRewards = () => {
+  trackCta('discover_rewards')
+  window.open(rewardsPageUrl, '_blank', 'noopener')
 }
 const onClaim = async () => {
   // A watch-only address can't sign the claim — send the user to log in with a

@@ -74,7 +74,7 @@ const tokenTo = (item: {
 }): RouteLocationRaw | undefined => {
   const symbol = stocksStore.stockTradableSymbol(item.tickers?.[0])
   return symbol
-    ? { name: STOCK_INFO_ROUTE_NAMES.stocks, params: { symbol } }
+    ? { name: STOCK_INFO_ROUTE_NAMES.homePage, params: { symbol } }
     : undefined
 }
 </script>

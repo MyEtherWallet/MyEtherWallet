@@ -277,4 +277,32 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(w.findAll('[data-test="selected-chip"]').length).toBe(1)
     expect(w.find('[data-test="selected-chip-more"]').exists()).toBe(false)
   })
+
+  it('disables unselected cards once a category hits the 25 cap (MEW-2360)', async () => {
+    const crypto = Array.from({ length: 25 }, (_, i) => ({
+      id: `c${i}`,
+      symbol: `C${i}`,
+      name: `Coin ${i}`,
+      type: 'crypto',
+      watchlistId: `c${i}`,
+    }))
+    const assets = [
+      ...crypto,
+      { id: 'cx', symbol: 'CX', name: 'Coin X', type: 'crypto', watchlistId: 'cx' },
+      { id: 's1', symbol: 'S1', name: 'Stock 1', type: 'stock', watchlistId: 's1' },
+    ]
+    const w = mountWith(WatchlistStepAssets, {
+      assets,
+      isLoading: false,
+      modelValue: crypto.map(c => c.id), // 25 crypto already selected
+    })
+    await w.get('[data-test="assets-show-more"]').trigger('click')
+    const cards = w.findAll('[data-test="asset-card"]')
+    expect(cards).toHaveLength(27)
+    // Selected crypto stays enabled (so it can be toggled off); the extra
+    // unselected crypto is capped; the stock is a different category, still open.
+    expect(cards[0].attributes('disabled')).toBeUndefined()
+    expect(cards[25].attributes('disabled')).toBeDefined()
+    expect(cards[26].attributes('disabled')).toBeUndefined()
+  })
 })

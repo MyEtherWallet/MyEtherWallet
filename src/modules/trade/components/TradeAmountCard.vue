@@ -105,7 +105,6 @@
                     : undefined
                 "
                 :is-stock="side === 'buy'"
-                :has-gradient="false"
                 class="!text-s-14 !font-semibold leading-[20px] tracking-[-0.28px]"
               />
               <chevron-right-icon class="w-5 h-5" />

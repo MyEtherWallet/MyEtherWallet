@@ -98,7 +98,6 @@
                   width="w-10"
                   height="h-10"
                   no-shadow
-                  no-ring
                 />
                 <span
                   v-if="isSelected(asset)"
@@ -118,7 +117,6 @@
                   :symbol="asset.symbol"
                   :address="tokenAddress(asset)"
                   :is-stock="side === 'buy'"
-                  :has-gradient="false"
                   class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
                 />
                 <p
@@ -201,6 +199,7 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useMarketStatusStore } from '@/stores/marketStatusStore'
 import { useCurrency } from '@/composables/useCurrency'
@@ -246,7 +245,8 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
-const { isLoadingBalances, isWalletConnected } = storeToRefs(useWalletStore())
+const walletStore = useWalletStore()
+const { isLoadingBalances, isWalletConnected } = storeToRefs(walletStore)
 const { isLoaded } = storeToRefs(useChainsStore())
 const { currentSession } = storeToRefs(useMarketStatusStore())
 
@@ -303,8 +303,13 @@ const assets = computed<DisplayAsset[]>(() => {
           ? formatUnits(BigInt(token.balance), token.decimals)
           : '0'
         const fiatValue = BigNumber(amountOwned).multipliedBy(token.price || 0)
+        const walletToken = walletStore.getTokenBalance(token.address)
         return {
           ...token,
+          name: getTokenDisplayName({
+            name: token.name,
+            ondo: walletToken?.ondo,
+          }),
           fiatValue,
           hasBalance: BigNumber(amountOwned).isGreaterThan(0),
           fiatValueFormatted: formatFiat(fiatValue).display,

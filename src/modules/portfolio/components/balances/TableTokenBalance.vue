@@ -829,14 +829,16 @@ const formatStock = (
   item: GetWebStocksWatchlistResponseStock,
 ): DisplayToken => {
   return {
-    name: item.underlyingMarket.name,
+    // Portfolio tokens have no single underlying market, so the API sends
+    // underlyingMarket as null and the alias carries the display name.
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     logo_url: item.iconPngUrl || item.iconSvgUrl || '',
     price: item.primaryMarket.price ? Number(item.primaryMarket.price) : 0,
     price_change_percentage_24h: item.primaryMarket.priceChangePercentage24h
       ? Number(item.primaryMarket.priceChangePercentage24h)
       : 0,
-    market_cap: item.underlyingMarket.marketCap
+    market_cap: item.underlyingMarket?.marketCap
       ? Number(item.underlyingMarket.marketCap)
       : 0,
     sparkline_in_7d: item.primaryMarket.sparkline24h || [],
@@ -853,7 +855,7 @@ const formatStock = (
         symbol: item.primaryMarket.symbol,
       },
       underlyingMarket: {
-        name: item.underlyingMarket.name,
+        name: item.underlyingMarket?.name,
       },
     },
   } as DisplayToken
@@ -1208,7 +1210,7 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
     location: 'balance_table',
     token: token.symbol,
     isMobile,
-    stock: token.ondo?.underlyingMarket.name,
+    stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')

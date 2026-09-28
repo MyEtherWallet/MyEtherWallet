@@ -4,9 +4,10 @@ import type { RecommendedAsset } from '@/modules/home/components/watchlistOnboar
 
 /**
  * Recommended assets for the watchlist onboarding step 3 (MEW-2130). Fetches the
- * assets that belong to the categories picked in step 2 from the backend
- * `/watchlist/assets` endpoint. The full set for the chosen categories is
- * returned (no cap), so the step's search + "show more" run client-side.
+ * assets for the categories picked in step 2 from the backend `/watchlist/assets`
+ * endpoint; with no categories (the skip path) it omits the param and the API
+ * returns the full set. Either way the whole set is returned (no cap), so the
+ * step's search + "show more" run client-side.
  *
  * The API asset id is `TYPE:watchlistId` ("STOCK:AAPLon" | "CRYPTO:tether"),
  * where the tail is exactly the id the watchlist store keys on (tokenized stock
@@ -34,7 +35,7 @@ const toRecommended = (a: RawWatchlistAsset): RecommendedAsset => ({
 export function useRecommendedWatchlist(): {
   assets: Ref<RecommendedAsset[]>
   isLoading: Ref<boolean>
-  fetchRecommendations: (categoryIds: string[]) => Promise<void>
+  fetchRecommendations: (categoryIds?: string[]) => Promise<void>
 } {
   const { useMEWFetch } = useFetchMewApi()
   const assets = ref<RecommendedAsset[]>([])
@@ -43,16 +44,15 @@ export function useRecommendedWatchlist(): {
   // only the newest request writes assets/isLoading.
   let latestRequest = 0
 
-  const fetchRecommendations = async (categoryIds: string[]) => {
+  const fetchRecommendations = async (categoryIds: string[] = []) => {
     const requestId = ++latestRequest
     isLoading.value = true
     try {
-      // No categories → nothing to recommend (the endpoint requires them).
-      if (!categoryIds.length) {
-        if (requestId === latestRequest) assets.value = []
-        return
-      }
-      const url = `${ASSETS_URL}?categories=${encodeURIComponent(categoryIds.join(','))}`
+      // With categories, recommend only those; with none, omit the param so the
+      // endpoint returns the full set (don't send an empty `categories=`).
+      const url = categoryIds.length
+        ? `${ASSETS_URL}?categories=${encodeURIComponent(categoryIds.join(','))}`
+        : ASSETS_URL
       const { data } = await useMEWFetch(url).get().json<RawWatchlistAsset[]>()
       if (requestId === latestRequest) assets.value = (data.value ?? []).map(toRecommended)
     } catch {

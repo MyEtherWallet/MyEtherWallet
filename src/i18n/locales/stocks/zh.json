@@ -60,6 +60,15 @@
     "dividend_yield": "股息收益率",
     "payout_frequency": "派息频率",
     "last_amount": "上次金额",
-    "last_payment_date": "上次派息日期"
+    "last_payment_date": "上次派息日期",
+    "ytd": "年初至今",
+    "provider": "提供方",
+    "oip_title": "Ondo Intelligent Portfolios",
+    "oip_description": "每个投资组合都是由专业人士构建的 Ondo 代币化股票和 ETF 组合，以单一链上代币的形式提供。",
+    "oip_learn_more": "了解更多",
+    "oip_category_thematic": "主题型",
+    "oip_category_income": "收益型",
+    "oip_category_allocation": "资产配置",
+    "oip_sector": "Intelligent Portfolios"
   }
 }

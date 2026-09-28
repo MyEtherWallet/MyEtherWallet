@@ -15,6 +15,7 @@ import type {
   RwaClaimResponse,
   RwaClaimResult,
   RwaInfoResponse,
+  RwaRewardDenomination,
   RwaRewardItem,
   RwaRound2State,
   RwaRound2Summary,
@@ -356,9 +357,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       if (!res.ok) {
         const errorKey = mapClaimError(res.status)
         // These refusals mean our snapshot is stale — already claimed, no
-        // longer claimable, or the window closed — so re-read `/info` rather
-        // than leave the card arguing with the server.
-        if ([404, 409, 410].includes(res.status)) fetchInfo(currentAddress)
+        // longer claimable, the window closed, or claiming was locked — so
+        // re-read `/info` rather than leave the card arguing with the server.
+        if ([404, 409, 410, 423].includes(res.status)) fetchInfo(currentAddress)
         error.value = 'Failed to claim RWA reward'
         return { success: false, errorKey }
       }
@@ -397,8 +398,13 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     const result = await performClaim(reward)
     const { addToastMessage } = useToastStore()
     if (result.success) {
+      const amount =
+        (reward.round === 2
+          ? round2RewardAmountLabel.value
+          : round1RewardAmountLabel.value) ??
+        i18n.global.t('rwaRewards.reward_amount')
       addToastMessage({
-        text: i18n.global.t('rwaRewards.claim_success'),
+        text: i18n.global.t('rwaRewards.claim_success', { amount }),
         type: ToastType.Success,
       })
     } else {
@@ -752,35 +758,93 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     return ROUND1_HOLD_DAYS
   })
 
+  /** Round-2 season configuration; absent on single-round seasons. */
+  const round2Config = computed(() => info.value?.info?.round2 ?? null)
+  const hasRoundTwo = computed(() => round2Config.value !== null)
+
+  /** Round-1 hold length. No server field exists — see `ROUND1_HOLD_DAYS`. */
+  const round1HoldDays = computed(() => ROUND1_HOLD_DAYS)
+  /** Round-2 hold length from the server; null on single-round seasons. */
+  const round2HoldDays = computed<number | null>(
+    () => round2Config.value?.days_to_hold ?? null,
+  )
+  /** Both holds back to back, for "you held N days total". */
+  const totalHoldDays = computed(
+    () => ROUND1_HOLD_DAYS + (round2HoldDays.value ?? 0),
+  )
+
   /**
-   * Display label for the active round's reward, e.g. "10 USDC". Round 1 reads
-   * `info.rewards`, round 2 `info.round2.rewards` — the round-2 amount is not
-   * final and must never be hardcoded. Null until the season block and metas
-   * land; callers fall back to the round-1 campaign copy.
+   * Resolve one denomination list to a display amount. The payout lands on the
+   * entry's chain; with no entry yet, the first denomination is shown (the
+   * amounts only differ by chain decimals). Decimals come from the meta entry
+   * for the reward's own chain — multi-chain metas keep `ids`/`decimals` as
+   * parallel arrays. Null until the season block and metas land.
    */
-  const rewardAmountLabel = computed<string | null>(() => {
-    const season = info.value?.info
-    const rewards = isRoundTwoActive.value
-      ? season?.round2?.rewards
-      : season?.rewards
+  const resolveReward = (
+    rewards: RwaRewardDenomination[] | undefined,
+  ): { amount: BigNumber; symbol: string } | null => {
     if (!rewards?.length) return null
-    // The payout lands on the entry's chain; with no entry yet, show the
-    // first denomination (the amounts only differ by chain decimals).
     const chainId = activeReward.value?.chain_id
     const reward =
       (chainId != null &&
         rewards.find(r => r.id.split(':')[1] === String(chainId))) ||
-      rewards[0]
+      rewards[0]!
     const meta = info.value?.metas?.find(m => m.id === reward.id)
     if (!meta) return null
-    // Reward ids are single-chain (`crypto:<chain>:<address>`), so the meta's
-    // first decimals entry is the right one.
-    const amount = new BigNumber(reward.amount).shiftedBy(
-      -(meta.crypto.decimals[0] ?? 6),
-    )
+    const rewardChain = reward.id.split(':')[1]
+    const chainIndex =
+      meta.crypto?.ids?.findIndex(id => id.startsWith(`${rewardChain}:`)) ?? -1
+    const decimals =
+      meta.crypto?.decimals?.[chainIndex === -1 ? 0 : chainIndex] ?? 6
+    const amount = new BigNumber(reward.amount).shiftedBy(-decimals)
     if (amount.isNaN()) return null
-    return `${amount.toFormat()} ${meta.symbol}`.trim()
+    return { amount, symbol: meta.symbol ?? '' }
+  }
+  const formatReward = (r: { amount: BigNumber; symbol: string } | null) =>
+    r ? `${r.amount.toFormat()} ${r.symbol}`.trim() : null
+
+  const round1Reward = computed(() => resolveReward(info.value?.info?.rewards))
+  const round2Reward = computed(() =>
+    resolveReward(round2Config.value?.rewards),
+  )
+
+  /** Round-1 reward, e.g. "10 USDC" — from `info.rewards`. */
+  const round1RewardAmountLabel = computed(() =>
+    formatReward(round1Reward.value),
+  )
+  /**
+   * Round-2 reward — from `info.round2.rewards`. Not final and may differ from
+   * round 1, so it is never assumed equal and never hardcoded.
+   */
+  const round2RewardAmountLabel = computed(() =>
+    formatReward(round2Reward.value),
+  )
+  /**
+   * Both rounds added up, e.g. "25 USDC", for "Hold and get up to …" copy.
+   * Only when both pay the same token; a single-round season yields round 1.
+   */
+  const totalRewardAmountLabel = computed<string | null>(() => {
+    const r1 = round1Reward.value
+    const r2 = round2Reward.value
+    if (!r1) return null
+    if (!r2 || !hasRoundTwo.value) return formatReward(r1)
+    if (r1.symbol !== r2.symbol) return null
+    return formatReward({
+      amount: r1.amount.plus(r2.amount),
+      symbol: r1.symbol,
+    })
   })
+
+  /**
+   * Display label for the active round's reward. Round 1 reads `info.rewards`,
+   * round 2 `info.round2.rewards`. Null until the season block and metas land;
+   * callers fall back to the round-1 campaign copy.
+   */
+  const rewardAmountLabel = computed<string | null>(() =>
+    isRoundTwoActive.value
+      ? round2RewardAmountLabel.value
+      : round1RewardAmountLabel.value,
+  )
 
   /**
    * Hide the whole hold offer — every entry the wallet has, not just the
@@ -830,7 +894,14 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     isRoundTwoActive,
     canRetryTrade,
     holdTotalDays,
+    hasRoundTwo,
+    round1HoldDays,
+    round2HoldDays,
+    totalHoldDays,
     rewardAmountLabel,
+    round1RewardAmountLabel,
+    round2RewardAmountLabel,
+    totalRewardAmountLabel,
     dismissOffer,
     isCampaignFull,
     isCampaignEnded,
