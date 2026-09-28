@@ -15,7 +15,7 @@
           ]"
           @click="currentTab = tab.value"
         >
-          <span class="text-s-24 font-bold leading-[26px] tracking-[-0.48px]">
+          <span class="text-heading-lg">
             {{ tab.label }}
           </span>
         </button>

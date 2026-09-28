@@ -49,7 +49,7 @@
         href="https://help.myetherwallet.com/"
         target="_blank"
         rel="noopener"
-        class="mt-auto self-center text-s-12 font-semibold text-text-brand tracking-[-0.24px] hover:underline"
+        class="mt-auto self-center text-label-xs text-text-brand hover:underline"
       >
         {{ t('purchase.buy.need_help') }}
       </a>

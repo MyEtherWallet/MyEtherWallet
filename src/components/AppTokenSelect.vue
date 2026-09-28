@@ -158,7 +158,7 @@
                   {{ currencySymbol }} {{ formatUsdBalance(token.usd_balance) }}
                 </p>
                 <div class="flex item-center justify-end gap-1">
-                  <p class="text-text-subtle text-s-12 font-normal">
+                  <p class="text-text-subtle text-text-xs">
                     {{ getBalance(token.balance) }}
                   </p>
                   <app-token-symbol

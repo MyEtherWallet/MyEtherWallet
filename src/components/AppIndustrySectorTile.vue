@@ -25,10 +25,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
     <span class="flex items-center rounded-full bg-white/20 p-2">
       <component :is="icon" v-if="icon" class="size-[18px] text-white" />
     </span>
-    <p
-      data-test="sector-label"
-      class="w-full text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-white"
-    >
+    <p data-test="sector-label" class="w-full text-heading-base text-white">
       {{ label }}
     </p>
   </component>

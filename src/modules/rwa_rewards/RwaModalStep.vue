@@ -20,7 +20,7 @@
         />
         <span
           v-else
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
+          class="text-label-sm"
           :class="variant === 'current' ? 'text-text-brand' : 'text-black'"
           >{{ number }}</span
         >

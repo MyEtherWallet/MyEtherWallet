@@ -12,8 +12,8 @@ const props = defineProps<{
 defineOptions({ inheritAttrs: false })
 
 const FONT: Record<AvatarSize, string> = {
-  xs: 'text-s-12 font-semibold tracking-[-0.24px]',
-  s: 'text-s-12 font-semibold tracking-[-0.24px]',
+  xs: 'text-label-xs',
+  s: 'text-label-xs',
   m: 'text-s-14 font-semibold tracking-[-0.28px]',
   l: 'text-s-16 font-semibold tracking-[-0.32px]',
   xl: 'text-s-20 font-bold tracking-[-0.4px]',
