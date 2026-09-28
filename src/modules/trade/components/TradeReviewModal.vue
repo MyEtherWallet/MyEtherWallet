@@ -166,8 +166,11 @@
                     ? $t('trade.review_modal.close_breakdown')
                     : $t('trade.review_modal.expand_breakdown')
                 }}
-                <chevron-down-icon
-                  class="w-4 h-4 transition-transform"
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="transition-transform"
                   :class="{ 'rotate-180': isBreakdownOpen }"
                 />
               </span>
@@ -215,7 +218,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import AppDialog from '@/components/AppDialog.vue'
@@ -236,6 +238,7 @@ import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/o
 import { useTradeBreakdown } from '@/modules/trade/composables/useTradeBreakdown'
 import { analytics, TradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })

@@ -38,7 +38,7 @@
         width="w-8"
         @click="isOpen = false"
       >
-        <x-mark-icon class="w-6 h-6" />
+        <AppIcon name="x-mark" />
       </app-btn-icon>
     </template>
     <template #content>
@@ -103,7 +103,11 @@
                   v-if="isSelected(asset)"
                   class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
                 >
-                  <check-circle-icon class="w-6 h-6 flex-none text-black" />
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    class="flex-none text-black"
+                  />
                 </span>
               </div>
 
@@ -141,8 +145,11 @@
                   >
                     {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
                   </span>
-                  <information-circle-icon
-                    class="w-[18px] h-[18px] text-orange-600"
+                  <AppIcon
+                    name="information-circle"
+                    variant="filled"
+                    size="xs"
+                    class="text-orange-600"
                   />
                 </span>
               </app-tooltip>
@@ -186,9 +193,6 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
-import { CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/solid'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
@@ -213,6 +217,7 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber
   fiatValueFormatted: string

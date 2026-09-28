@@ -12,7 +12,7 @@
         width="w-8"
         @click="model = false"
       >
-        <x-mark-icon class="w-6 h-6" />
+        <AppIcon name="x-mark" />
       </app-btn-icon>
     </template>
     <template #content>
@@ -51,8 +51,10 @@
                 theme="dark"
                 position="top"
               >
-                <information-circle-icon
-                  class="w-[18px] h-[18px] text-black cursor-pointer"
+                <AppIcon
+                  name="information-circle"
+                  size="xs"
+                  class="text-black cursor-pointer"
                 />
               </app-tooltip>
             </div>
@@ -64,9 +66,7 @@
               <div
                 class="h-[18px] w-[88px] rounded-8 bg-neutral-200 animate-pulse"
               />
-              <div
-                class="h-3.5 w-14 rounded-8 bg-neutral-200 animate-pulse"
-              />
+              <div class="h-3.5 w-14 rounded-8 bg-neutral-200 animate-pulse" />
             </div>
             <div
               v-else-if="hasFailed"
@@ -114,7 +114,7 @@
         <app-base-button @click="emit('approve')">
           <span class="flex items-center gap-2">
             {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon name="arrow-top-right-on-square" size="s" />
           </span>
         </app-base-button>
       </div>
@@ -125,11 +125,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  InformationCircleIcon,
-  XMarkIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
@@ -142,6 +137,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useApprovalFee } from '../composables/useApprovalFee'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // No submitting state: clicking Approve flips the flow step synchronously,
 // which closes this modal and opens the waiting-approval one.
 const props = withDefaults(

@@ -22,8 +22,11 @@
               no-shadow
             />
           </div>
-          <arrows-right-left-icon
-            class="absolute left-12 top-2.5 w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
+          <AppIcon
+            name="arrows-right-left"
+            variant="filled"
+            size="s"
+            class="absolute left-12 top-2.5 transition-transform duration-300 motion-reduce:transition-none"
             :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
           <div
@@ -46,8 +49,20 @@
               isSettled ? 'scale-100' : 'scale-0',
             ]"
           >
-            <x-mark-icon v-if="isFailed" class="w-3.5 h-3.5 text-white" />
-            <check-icon v-else class="w-3.5 h-3.5 text-white" />
+            <AppIcon
+              name="x-mark"
+              variant="filled"
+              size="xxs"
+              v-if="isFailed"
+              class="text-white"
+            />
+            <AppIcon
+              name="check"
+              variant="filled"
+              size="xxs"
+              v-else
+              class="text-white"
+            />
           </span>
         </div>
 
@@ -87,7 +102,11 @@
             class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
           >
             {{ $t('view_in_block_explorer') }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </a>
         </transition>
       </div>
@@ -99,12 +118,6 @@
 import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import {
-  ArrowsRightLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  CheckIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -115,6 +128,7 @@ import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const model = defineModel<boolean>('isOpen', { default: false })
 
