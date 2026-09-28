@@ -17,7 +17,7 @@
           </p>
         </div>
 
-        <div class="relative w-[240px] h-[200px]" aria-hidden="true">
+        <div class="relative w-60 h-[200px]" aria-hidden="true">
           <img :src="waitingApprovalImage" alt="" class="w-full h-full" />
           <div
             v-if="walletIcon || walletAddress"

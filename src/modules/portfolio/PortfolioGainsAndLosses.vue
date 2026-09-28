@@ -1,9 +1,7 @@
 <template>
   <div class="w-full" v-if="isWalletConnected">
     <div class="flex flex-wrap items-center w-full justify-between mb-1 px-1">
-      <h2
-        class="text-s-14 xs:text-s-18 font-bold max-w-40 xs:max-w-none pl-2"
-      >
+      <h2 class="text-s-14 xs:text-s-18 font-bold max-w-40 xs:max-w-none pl-2">
         {{ title }}
       </h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">

@@ -167,7 +167,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"
-          class="w-full rounded-full min-[780px]:w-[240px]"
+          class="w-full rounded-full min-[780px]:w-60"
         />
         <div class="relative shrink-0 self-start">
           <button
@@ -186,7 +186,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               @click="isCategoryOpen = false"
             />
             <ul
-              class="absolute left-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
+              class="absolute left-0 z-20 mt-1 min-w-40 overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
             >
               <li v-for="c in CATEGORIES" :key="c.value">
                 <button
@@ -241,7 +241,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <span class="w-[100px]">
         {{ t('homePage.hero.watchlist.table.columns.price') }}
       </span>
-      <span class="w-8 shrink-0 min-[780px]:w-[96px]" aria-hidden="true" />
+      <span class="w-8 shrink-0 min-[780px]:w-24" aria-hidden="true" />
     </div>
 
     <!-- Empty (search / category with no match). -->
@@ -429,16 +429,16 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           </div>
 
           <!-- Actions: a Trade/Swap button (≥780px), a kebab menu below. -->
-          <div class="flex w-8 shrink-0 justify-end min-[780px]:w-[96px]">
+          <div class="flex w-8 shrink-0 justify-end min-[780px]:w-24">
             <span
               v-if="row.loading"
-              class="h-9 w-8 animate-pulse rounded-full bg-background-skeleton min-[780px]:w-[96px]"
+              class="h-9 w-8 animate-pulse rounded-full bg-background-skeleton min-[780px]:w-24"
             />
             <template v-else>
               <button
                 type="button"
                 data-test="watchlist-trade"
-                class="hidden w-[96px] rounded-full bg-background-default py-2 text-s-16 font-semibold text-text-brand transition-colors group-hover:bg-white min-[780px]:block"
+                class="hidden w-24 rounded-full bg-background-default py-2 text-s-16 font-semibold text-text-brand transition-colors group-hover:bg-white min-[780px]:block"
                 @click="actionCall(row)"
               >
                 {{ t(actionKey(row)) }}
@@ -462,7 +462,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     @click.stop="openMenuKey = null"
                   />
                   <ul
-                    class="absolute right-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
+                    class="absolute right-0 z-20 mt-1 min-w-40 overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
                   >
                     <li>
                       <button

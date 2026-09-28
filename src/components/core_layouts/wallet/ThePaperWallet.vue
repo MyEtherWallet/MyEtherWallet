@@ -30,10 +30,7 @@
             >
               {{ $t('paper_wallet.title') }}
             </h1>
-            <button
-              class="sm:-mr-4 min-w-8 ml-auto"
-              @click="setIsOpen(false)"
-            >
+            <button class="sm:-mr-4 min-w-8 ml-auto" @click="setIsOpen(false)">
               <app-btn-icon-close
                 @click="setIsOpen(false)"
                 class="print:hidden"

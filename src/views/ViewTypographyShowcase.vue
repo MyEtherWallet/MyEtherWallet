@@ -85,15 +85,6 @@ const TOKENS: TypeToken[] = [
     uppercase: false,
   },
   {
-    figma: 'heading/lg-subtle',
-    className: 'text-heading-lg-subtle',
-    weight: 400,
-    size: 24,
-    lineHeight: 24,
-    tracking: '-2%',
-    uppercase: false,
-  },
-  {
     figma: 'heading/lg',
     className: 'text-heading-lg',
     weight: 700,
@@ -227,10 +218,10 @@ onMounted(() => {
 <template>
   <div ref="root" class="p-8 flex flex-col gap-10 max-w-5xl mx-auto">
     <header class="flex flex-col gap-2">
-      <h1 class="text-s-24 font-bold text-t-default">Typography</h1>
-      <p class="text-s-14 text-info max-w-[70ch]">
+      <h1 class="text-s-24 font-bold text-text-default">Typography</h1>
+      <p class="text-s-14 text-text-subtle max-w-[70ch]">
         The {{ TOKENS.length }} text styles from
-        <span class="font-medium text-t-default">
+        <span class="font-medium text-text-default">
           MEW Web App — Design Library
         </span>
         (Figma page 📝 Typography, node
@@ -241,7 +232,7 @@ onMounted(() => {
       </p>
       <p
         class="text-s-14 max-w-[70ch]"
-        :class="failingCount ? 'text-error' : 'text-info'"
+        :class="failingCount ? 'text-text-error' : 'text-text-subtle'"
       >
         <template v-if="failingCount">
           {{ failingCount }} token(s) do not match the Figma spec — see the
@@ -255,22 +246,22 @@ onMounted(() => {
 
     <!-- Scale -->
     <section class="flex flex-col gap-3">
-      <h2 class="text-s-16 font-semibold text-t-default">Scale</h2>
+      <h2 class="text-s-16 font-semibold text-text-default">Scale</h2>
       <div
-        class="flex flex-col gap-5 rounded-12 border border-grey-10 bg-white p-6"
+        class="flex flex-col gap-5 rounded-12 border border-border-default bg-background-alternative p-6"
       >
         <div
           v-for="token in TOKENS"
           :key="token.className"
           class="flex flex-col gap-1"
         >
-          <span class="text-s-11 uppercase text-info tracking-sp-06">
+          <span class="text-s-11 uppercase text-text-subtle tracking-sp-06">
             {{ token.figma }}
           </span>
           <p
             :data-type-token="token.className"
             :class="token.className"
-            class="text-t-default"
+            class="text-text-default"
           >
             {{ SAMPLE_TEXT }}
           </p>
@@ -280,12 +271,12 @@ onMounted(() => {
 
     <!-- Dev handoff -->
     <section class="flex flex-col gap-3">
-      <h2 class="text-s-16 font-semibold text-t-default">Dev handoff</h2>
+      <h2 class="text-s-16 font-semibold text-text-default">Dev handoff</h2>
       <div class="overflow-x-auto">
         <table class="w-full border-collapse min-w-[900px]">
           <thead>
             <tr
-              class="text-left text-s-11 font-bold uppercase tracking-sp-06 text-info"
+              class="text-left text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
             >
               <th class="py-2 pr-4 font-bold">Style name</th>
               <th class="py-2 pr-4 font-bold">Class</th>
@@ -301,13 +292,13 @@ onMounted(() => {
             <tr
               v-for="token in TOKENS"
               :key="token.className"
-              class="border-t border-grey-10 align-middle"
+              class="border-t border-border-default align-middle"
             >
               <td class="py-2 pr-4 text-s-14 font-medium whitespace-nowrap">
                 {{ token.figma }}
               </td>
               <td
-                class="py-2 pr-4 text-s-12 font-mono text-info whitespace-nowrap"
+                class="py-2 pr-4 text-s-12 font-mono text-text-subtle whitespace-nowrap"
               >
                 {{ token.className }}
               </td>
@@ -324,18 +315,18 @@ onMounted(() => {
                 {{ token.uppercase ? 'UPPERCASE' : 'None' }}
               </td>
               <td
-                class="py-2 pr-4 text-s-12 font-mono text-info whitespace-nowrap"
+                class="py-2 pr-4 text-s-12 font-mono text-text-subtle whitespace-nowrap"
               >
                 {{ formatComputed(token) }}
               </td>
               <td class="py-2 pr-4 text-s-12 whitespace-nowrap">
                 <span
                   v-if="mismatches(token).length"
-                  class="font-medium text-error"
+                  class="font-medium text-text-error"
                 >
                   {{ mismatches(token).join(', ') }}
                 </span>
-                <span v-else class="text-mew-green-text">match</span>
+                <span v-else class="text-text-success">match</span>
               </td>
             </tr>
           </tbody>
@@ -345,8 +336,8 @@ onMounted(() => {
 
     <!-- Overrides -->
     <section class="flex flex-col gap-3">
-      <h2 class="text-s-16 font-semibold text-t-default">Overrides</h2>
-      <p class="text-s-14 text-info max-w-[70ch]">
+      <h2 class="text-s-16 font-semibold text-text-default">Overrides</h2>
+      <p class="text-s-14 text-text-subtle max-w-[70ch]">
         A token sets weight, line-height and letter-spacing as defaults, so a
         <span class="font-mono">font-*</span>,
         <span class="font-mono">leading-*</span> or
@@ -354,27 +345,27 @@ onMounted(() => {
         regardless of class order.
       </p>
       <div
-        class="flex flex-col gap-4 rounded-12 border border-grey-10 bg-white p-6"
+        class="flex flex-col gap-4 rounded-12 border border-border-default bg-background-alternative p-6"
       >
         <div class="flex flex-col gap-1">
-          <span class="text-s-11 uppercase text-info tracking-sp-06">
+          <span class="text-s-11 uppercase text-text-subtle tracking-sp-06">
             text-heading-lg
           </span>
-          <p class="text-heading-lg text-t-default">{{ SAMPLE_TEXT }}</p>
+          <p class="text-heading-lg text-text-default">{{ SAMPLE_TEXT }}</p>
         </div>
         <div class="flex flex-col gap-1">
-          <span class="text-s-11 uppercase text-info tracking-sp-06">
+          <span class="text-s-11 uppercase text-text-subtle tracking-sp-06">
             text-heading-lg font-normal
           </span>
-          <p class="text-heading-lg font-normal text-t-default">
+          <p class="text-heading-lg font-normal text-text-default">
             {{ SAMPLE_TEXT }}
           </p>
         </div>
         <div class="flex flex-col gap-1">
-          <span class="text-s-11 uppercase text-info tracking-sp-06">
+          <span class="text-s-11 uppercase text-text-subtle tracking-sp-06">
             font-normal text-heading-lg
           </span>
-          <p class="font-normal text-heading-lg text-t-default">
+          <p class="font-normal text-heading-lg text-text-default">
             {{ SAMPLE_TEXT }}
           </p>
         </div>

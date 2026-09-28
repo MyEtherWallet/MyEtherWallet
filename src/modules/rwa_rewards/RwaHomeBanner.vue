@@ -3,7 +3,7 @@
     v-if="banner"
     data-test="rwa-home-banner"
     :data-status="status"
-    class="flex items-center gap-4 w-full min-h-[80px] px-5 py-4 rounded-16 border border-border-default bg-white"
+    class="flex items-center gap-4 w-full min-h-20 px-5 py-4 rounded-16 border border-border-default bg-white"
   >
     <img
       :src="peggyIcon"
