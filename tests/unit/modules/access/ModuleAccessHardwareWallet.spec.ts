@@ -21,6 +21,7 @@ const h = vi.hoisted(() => ({
   captureException: vi.fn(),
   ledgerIsConnected: vi.fn(),
   ledgerGetSupportedPaths: vi.fn(),
+  ledgerGetAddress: vi.fn(),
   resolveTransport: null as null | ((v: unknown) => void),
 }))
 
@@ -123,6 +124,7 @@ vi.mock('@/providers/hw/ledger', () => ({
   default: class LedgerManager {
     isConnected = h.ledgerIsConnected
     getSupportedPaths = h.ledgerGetSupportedPaths
+    getAddress = h.ledgerGetAddress
   },
 }))
 vi.mock('@/providers/hw/ledger/transport', () => ({
@@ -137,6 +139,7 @@ vi.mock('@/providers/hw/ledger/transport', () => ({
 
 import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWallet.vue'
 import { useAccessStore } from '@/stores/accessStore'
+import { useDerivationStore } from '@/stores/derivationStore'
 import { resetTrezorManager } from '@/providers/hw/trezorManager'
 
 const stubs = {
@@ -170,7 +173,27 @@ beforeEach(() => {
     { basePath: "m/44'/60'/0'", path: "m/44'/60'/0'/0", label: 'Ethereum' },
   ])
   useAccessStore().setCurrentView('ledger')
+  useAccessStore().selectedChain.value = {
+    chainID: '1',
+    name: 'ETHEREUM',
+    type: 'EVM',
+  }
+  useDerivationStore().ledgerSelectedDerivation.value = {
+    basePath: '',
+    path: '',
+  }
 })
+
+// Connects the Ledger and lands on the address list step.
+const connectLedger = async () => {
+  const wrapper = factory()
+  await flushPromises()
+  await wrapper.find('button').trigger('click')
+  h.resolveTransport!({})
+  await flushPromises()
+  await vi.advanceTimersByTimeAsync(1000)
+  return wrapper
+}
 
 afterEach(() => {
   vi.useRealTimers()
@@ -250,5 +273,49 @@ describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () =
     )
     expect(h.captureException).not.toHaveBeenCalled()
     wrapper.unmount()
+  })
+
+  it('stops a chain switch that is still connecting when the view unmounts', async () => {
+    const wrapper = await connectLedger()
+    h.ledgerGetSupportedPaths.mockClear()
+    let resolveConnected!: () => void
+    h.ledgerIsConnected.mockReturnValue(
+      new Promise<void>(resolve => {
+        resolveConnected = resolve
+      }),
+    )
+
+    useAccessStore().selectedChain.value = {
+      chainID: '137',
+      name: 'POLYGON',
+      type: 'EVM',
+    }
+    await flushPromises() // chain watcher waiting on isConnected
+
+    useAccessStore().closeAccessDialog()
+    wrapper.unmount()
+    resolveConnected()
+    await flushPromises()
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(h.ledgerGetSupportedPaths).not.toHaveBeenCalled()
+    expect(h.addToastMessage).not.toHaveBeenCalled()
+  })
+
+  it('does not load addresses from a derivation change once the view unmounts', async () => {
+    const derivation = useDerivationStore().ledgerSelectedDerivation
+    derivation.value = { basePath: "m/44'/60'/0'", path: "m/44'/60'/0'/0" }
+    const wrapper = await connectLedger()
+    h.ledgerGetAddress.mockClear()
+
+    derivation.value = { basePath: "m/44'/60'", path: "m/44'/60'/0'" }
+    await flushPromises() // derivation watcher scheduled loadList in 1s
+
+    // Unmount without leaving the Ledger view, as when the dialog is closed
+    // and reopened on Ledger right away.
+    wrapper.unmount()
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(h.ledgerGetAddress).not.toHaveBeenCalled()
   })
 })

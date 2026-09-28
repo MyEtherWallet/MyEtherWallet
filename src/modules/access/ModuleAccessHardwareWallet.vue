@@ -470,6 +470,8 @@ const toastStore = useToastStore()
 let loadListGeneration = 0
 
 const loadList = async (page: number = 0) => {
+  // The chain and derivation watchers call us after a 1s wait.
+  if (isUnmounted) return
   const generation = ++loadListGeneration
   isLoadingWalletList.value = true
   walletList.value = []
@@ -586,10 +588,12 @@ watch(
             wallet: selectedHwWalletType.value as HWwalletType,
             networkName: networkName as any,
           })
+          if (isUnmounted) return
           const newPaths = (await hwWalletInstance!.getSupportedPaths({
             wallet: selectedHwWalletType.value as HWwalletType,
             networkName: networkName as any,
           })) as PathType[]
+          if (isUnmounted) return
           paths.value = newPaths
           if (
             newPaths.length > 0 &&
@@ -599,6 +603,7 @@ watch(
             setSelectedDerivation(newPaths[0])
           }
         } catch (e) {
+          if (isUnmounted) return
           const errorMessage = e instanceof Error ? e.message : String(e)
           toastStore.addToastMessage({
             type: ToastType.Error,
