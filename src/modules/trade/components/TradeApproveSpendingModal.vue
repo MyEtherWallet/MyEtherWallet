@@ -64,9 +64,11 @@
               class="flex flex-col items-end gap-1 flex-none"
             >
               <div
-                class="h-[18px] w-[88px] rounded-8 bg-neutral-200 animate-pulse"
+                class="h-[18px] w-[88px] rounded-8 bg-background-skeleton animate-pulse"
               />
-              <div class="h-3.5 w-14 rounded-8 bg-neutral-200 animate-pulse" />
+              <div
+                class="h-3.5 w-14 rounded-8 bg-background-skeleton animate-pulse"
+              />
             </div>
             <div
               v-else-if="hasFailed"

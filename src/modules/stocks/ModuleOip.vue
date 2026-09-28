@@ -13,7 +13,12 @@
           href="https://ondo.finance//intelligent-portfolios"
           class="px-1 text-black font-medium hover:underline inline-flex items-center gap-1"
           >{{ t('stocks.oip_learn_more') }}
-          <AppIcon name="arrow-right" variant="filled" />
+          <AppIcon
+            name="arrow-right"
+            variant="filled"
+            size="s"
+            class="font-bold"
+          />
         </a>
       </p>
     </div>

@@ -84,6 +84,6 @@ const isLimited = computed(() =>
 
 const statusColorClass = computed(() => {
   if (props.status === 'paused') return 'text-text-subtle'
-  return isLimited.value ? 'text-orange-600' : 'text-success-600'
+  return isLimited.value ? 'text-text-warning' : 'text-text-success'
 })
 </script>

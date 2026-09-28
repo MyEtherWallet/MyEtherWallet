@@ -45,7 +45,7 @@
           <span
             class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
             :class="[
-              isFailed ? 'bg-background-error' : 'bg-success-600',
+              isFailed ? 'bg-background-error' : 'bg-background-success',
               isSettled ? 'scale-100' : 'scale-0',
             ]"
           >

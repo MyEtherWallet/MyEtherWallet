@@ -32,7 +32,7 @@
             variant="filled"
             size="xs"
             v-if="toast.tradeStatus?.kind === 'completed'"
-            class="text-success-600"
+            class="text-text-success"
           />
         </p>
         <p

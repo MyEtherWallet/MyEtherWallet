@@ -53,7 +53,7 @@
             v-model="searchInput"
             size="compact"
             bg-class="bg-background-default"
-            input-class="!text-s-14 placeholder:text-neutral-500"
+            input-class="!text-s-14 placeholder:text-text-placeholder"
             :placeholder="$t('select_token.search')"
           />
           <p
@@ -101,7 +101,7 @@
                 />
                 <span
                   v-if="isSelected(asset)"
-                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
+                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-background-skeleton"
                 >
                   <AppIcon
                     name="check-circle"
@@ -141,7 +141,7 @@
                   class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
                 >
                   <span
-                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-orange-600"
+                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-text-warning"
                   >
                     {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
                   </span>
@@ -149,7 +149,7 @@
                     name="information-circle"
                     variant="filled"
                     size="xs"
-                    class="text-orange-600"
+                    class="text-text-warning"
                   />
                 </span>
               </app-tooltip>
@@ -368,7 +368,7 @@ const firstUnavailableAsset = computed(() =>
 const changeColor = (asset: DisplayAsset) =>
   (asset.priceChangePercentage24h ?? 0) < 0
     ? 'text-text-error'
-    : 'text-success-600'
+    : 'text-text-success'
 
 const isSelected = (asset: DisplayAsset) =>
   selectedToken.value?.address?.toLowerCase() === asset.address?.toLowerCase()

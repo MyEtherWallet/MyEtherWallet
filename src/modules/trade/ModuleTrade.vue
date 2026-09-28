@@ -218,7 +218,7 @@
               v-else-if="isTradeDisabled"
               type="button"
               disabled
-              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-text-muted text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
             >
               {{ ctaDisabledLabel }}
             </button>
@@ -239,7 +239,7 @@
               name="exclamation-triangle"
               variant="filled"
               size="s"
-              class="flex-none text-orange-600"
+              class="flex-none text-text-warning"
             />
             <p class="text-s-14 leading-[20px] text-black">
               {{ $t('trade.pair_unavailable.notice') }}
