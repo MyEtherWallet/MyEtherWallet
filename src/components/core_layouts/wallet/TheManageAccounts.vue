@@ -792,7 +792,12 @@ const openExplorer = (acc: SavedAccount): void => {
   openDialog.value = false
 }
 const copy = (address: string): void => {
-  void navigator.clipboard.writeText(address)
+  // Some mobile browsers (e.g. VivoBrowser on Android) reject clipboard writes
+  // when permission is denied; swallow it so it doesn't escape as an unhandled
+  // promise rejection. The row/card already shows optimistic copy feedback.
+  void navigator.clipboard.writeText(address).catch(() => {
+    /* clipboard permission denied — nothing to recover */
+  })
 }
 const saveDetected = (): void => {
   if (!detectedAddress.value) return
