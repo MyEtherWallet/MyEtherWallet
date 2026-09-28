@@ -102,7 +102,9 @@ const hasArrow = computed(
 const tooltipRef = ref<HTMLElement | null>(null)
 const tooltipActivatorRef = ref<HTMLElement | null>(null)
 const onHover = (hovered: boolean) => {
-  if (hovered) {
+  // No text → nothing to show (lets callers wrap an element and enable the
+  // tooltip only conditionally by toggling `text`).
+  if (hovered && props.text) {
     show.value = true
     onHoverActive()
   } else {
