@@ -11,6 +11,13 @@ const BLE_RETRY_DELAY_MS = 600
 let cached: { transport: Transport; kind: LedgerTransportKind } | null = null
 let inflight: Promise<Transport> | null = null
 let lastKind: LedgerTransportKind | null = null
+let lifecycleQueue: Promise<unknown> = Promise.resolve()
+
+function enqueueTransportOpen<T>(openTransport: () => Promise<T>): Promise<T> {
+  const queued = lifecycleQueue.then(openTransport, openTransport)
+  lifecycleQueue = queued.catch(() => undefined)
+  return queued
+}
 
 function sleep(ms: number): Promise<void> {
   return new Promise(r => setTimeout(r, ms))
@@ -131,35 +138,43 @@ export async function getLedgerTransport(
   if (cached) return cached.transport
   if (inflight) return inflight
 
-  inflight = (async () => {
+  inflight = enqueueTransportOpen(async () => {
     try {
+      if (cached) return cached.transport
       const kind = preferred ?? lastKind
       if (!kind) throw new Error('Ledger: no transport kind specified.')
       return await openPreferred(kind)
     } finally {
       inflight = null
     }
-  })()
+  })
 
   return inflight
 }
 
-export async function getLedgerWebUSBTransport(): Promise<Transport> {
-  cached = null
+async function releaseActiveTransport(): Promise<void> {
   inflight = null
-  const t = await createWebUSB()
-  if (!t) throw new Error('WebUSB is not supported in this browser')
-  attachLifecycle(t, 'webusb')
-  return t
+  await closeLedgerTransport()
+}
+
+export async function getLedgerWebUSBTransport(): Promise<Transport> {
+  return enqueueTransportOpen(async () => {
+    await releaseActiveTransport()
+    const t = await createWebUSB()
+    if (!t) throw new Error('WebUSB is not supported in this browser')
+    attachLifecycle(t, 'webusb')
+    return t
+  })
 }
 
 export async function getLedgerBLETransport(): Promise<Transport> {
-  cached = null
-  inflight = null
-  const t = await createWebBLE()
-  if (!t) throw new Error('Web Bluetooth is not supported or was cancelled')
-  attachLifecycle(t, 'webble')
-  return t
+  return enqueueTransportOpen(async () => {
+    await releaseActiveTransport()
+    const t = await createWebBLE()
+    if (!t) throw new Error('Web Bluetooth is not supported or was cancelled')
+    attachLifecycle(t, 'webble')
+    return t
+  })
 }
 
 export async function closeLedgerTransport(): Promise<void> {
