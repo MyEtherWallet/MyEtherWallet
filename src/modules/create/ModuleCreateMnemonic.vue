@@ -203,13 +203,13 @@
             <div class="pt-4 pb-2">
               <div class="flex flex-col items-center justify-center gap-4">
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[240px]"
+                  class="w-full xs:w-auto xs:min-w-60"
                   @click="closeCreateOpenAccess()"
                 >
                   {{ $t('connect_wallet') }}
                 </app-base-button>
                 <app-btn-text
-                  class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
+                  class="w-full xs:w-auto xs:min-w-60 flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
                   {{ $t('create_wallet.mnemonic.create_another_wallet') }}

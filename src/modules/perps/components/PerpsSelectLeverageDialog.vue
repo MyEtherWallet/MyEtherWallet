@@ -223,8 +223,8 @@ const sliderFillPct = computed(() => {
 <style scoped>
 .leverage-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--color-background-brand);
   cursor: pointer;
@@ -233,8 +233,8 @@ const sliderFillPct = computed(() => {
 }
 
 .leverage-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--color-background-brand);
   cursor: pointer;

@@ -259,7 +259,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <ul>
                           <li
@@ -460,7 +460,7 @@
               <td class="px-1 py-3 hidden lg:table-cell">
                 <p
                   :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
                     order.status === 'open' || order.status === 'pending'
                       ? 'text-text-brand'
                       : order.status === 'fullyfilled'
@@ -520,7 +520,7 @@
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                     >
                       <ul>
                         <li
@@ -644,7 +644,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-text-success'
                             : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover lg:hidden',
+                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-px bg-background-default-hover lg:hidden',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -659,7 +659,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-text-success'
                         : 'text-text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover',
                     ]"
                   >
                     {{ $t(directionKey(fill.direction)) }}

@@ -58,7 +58,7 @@ const toggle = (id: string) => {
     <div
       v-else-if="!categories.length"
       data-test="industries-empty"
-      class="mt-6 flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+      class="mt-6 flex min-h-40 flex-col items-center justify-center py-6 text-center"
     >
       <ExclamationCircleIcon class="size-6 text-text-subtle" />
       <p
@@ -80,7 +80,7 @@ const toggle = (id: string) => {
         class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
         aria-hidden="true"
       />
-      <div class="mew-scrollbar max-h-[320px] overflow-y-auto py-2 pr-1">
+      <div class="mew-scrollbar max-h-80 overflow-y-auto py-2 pr-1">
         <div class="grid grid-cols-2 gap-3">
           <WatchlistSelectableCard
             v-for="category in categories"

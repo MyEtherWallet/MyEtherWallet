@@ -127,7 +127,7 @@
           <div class="relative h-0 z-10 flex justify-center">
             <div
               aria-hidden="true"
-              class="absolute top-[6px] -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
+              class="absolute top-1.5 -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
             >
               <arrow-down-icon class="w-5 h-5" />
             </div>

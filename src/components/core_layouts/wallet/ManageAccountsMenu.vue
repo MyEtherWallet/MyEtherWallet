@@ -105,13 +105,7 @@ import {
 } from '@heroicons/vue/24/solid'
 
 type MenuAction =
-  | 'rename'
-  | 'copy'
-  | 'refresh'
-  | 'paper'
-  | 'explorer'
-  | 'disconnect'
-  | 'remove'
+  'rename' | 'copy' | 'refresh' | 'paper' | 'explorer' | 'disconnect' | 'remove'
 
 const props = withDefaults(
   defineProps<{

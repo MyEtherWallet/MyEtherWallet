@@ -16,7 +16,7 @@
   >
     <template #title>
       <div
-        class="flex flex-col gap-1 items-center justify-center w-full min-h-[80px] px-6 pt-6 pb-4"
+        class="flex flex-col gap-1 items-center justify-center w-full min-h-20 px-6 pt-6 pb-4"
       >
         <h1
           id="dialogTitle"
@@ -45,7 +45,7 @@
       <div class="flex h-full flex-col">
         <div
           :class="[
-            sectionHeader ? 'pb-[2px]' : 'pb-6',
+            sectionHeader ? 'pb-0.5' : 'pb-6',
             'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
           ]"
         >
@@ -65,7 +65,7 @@
         </div>
 
         <div
-          class="flex flex-1 flex-col gap-[2px] overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
+          class="flex flex-1 flex-col gap-0.5 overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
         >
           <template v-for="asset in searchResults" :key="asset.address">
             <p

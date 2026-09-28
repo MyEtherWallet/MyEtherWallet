@@ -30,7 +30,7 @@
           />
           <div
             v-if="hoveredIndex === index"
-            class="absolute bottom-[14px] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
+            class="absolute bottom-3.5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
           >
             <div class="bg-white rounded-16 p-4 whitespace-nowrap">
               <p

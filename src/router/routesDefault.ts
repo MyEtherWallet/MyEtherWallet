@@ -41,6 +41,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'sizes',
+              name: 'DevSizes',
+              component: () => import('@/views/ViewSizesShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'avatar',
               name: 'DevAvatar',
               component: () => import('@/views/ViewAvatarShowcase.vue'),

@@ -18,7 +18,7 @@
               option.value === activeFilter.value
                 ? 'border-border-brand text-text-brand'
                 : '',
-              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-20 text-s-17 font-medium',
             ]"
             role="option"
             :id="option.value"
@@ -41,7 +41,7 @@
               option.value === activeSort.value
                 ? 'border-border-brand text-text-brand'
                 : '',
-              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-20 text-s-17 font-medium',
             ]"
             :id="option.value"
             @click="setActiveSort(option)"

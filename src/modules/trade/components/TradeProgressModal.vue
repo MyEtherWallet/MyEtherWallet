@@ -23,7 +23,7 @@
             />
           </div>
           <arrows-right-left-icon
-            class="absolute left-[48px] top-[10px] w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
+            class="absolute left-12 top-2.5 w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
             :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
           <div

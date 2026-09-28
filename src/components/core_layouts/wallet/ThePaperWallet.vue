@@ -22,7 +22,7 @@
               :alt="$t('home')"
               width="94px"
               height="32px"
-              class="w-[94px] max-h-[32px] flex-none object-contain"
+              class="w-[94px] max-h-8 flex-none object-contain"
             />
 
             <h1
@@ -30,10 +30,7 @@
             >
               {{ $t('paper_wallet.title') }}
             </h1>
-            <button
-              class="sm:-mr-4 min-w-[32px] ml-auto"
-              @click="setIsOpen(false)"
-            >
+            <button class="sm:-mr-4 min-w-8 ml-auto" @click="setIsOpen(false)">
               <app-btn-icon-close
                 @click="setIsOpen(false)"
                 class="print:hidden"

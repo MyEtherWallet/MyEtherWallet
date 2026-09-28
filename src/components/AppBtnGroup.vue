@@ -26,7 +26,7 @@
         :class="[
           { 'min-h-10 min-w-[110px] px-3': size === 'large' },
           { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
-          { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
+          { 'min-h-7 min-w-20 !text-s-14': size === 'small' },
           { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
           {
             'bg-white shadow-container !hover:bg-white':

@@ -405,9 +405,7 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  | EstimatesRequestBody
-  | BitcoinQuotesRequestBody
-  | undefined => {
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&

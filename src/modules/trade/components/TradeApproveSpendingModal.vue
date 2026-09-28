@@ -17,7 +17,7 @@
     </template>
     <template #content>
       <div
-        class="flex flex-col gap-6 items-center justify-center h-full px-6 py-[112px]"
+        class="flex flex-col gap-6 items-center justify-center h-full px-6 py-28"
       >
         <div class="flex flex-col gap-2 items-center justify-center w-full">
           <h1
@@ -62,9 +62,7 @@
               <div
                 class="h-[18px] w-[88px] rounded-8 bg-neutral-200 animate-pulse"
               />
-              <div
-                class="h-[14px] w-[56px] rounded-8 bg-neutral-200 animate-pulse"
-              />
+              <div class="h-3.5 w-14 rounded-8 bg-neutral-200 animate-pulse" />
             </div>
             <div
               v-else-if="hasFailed"

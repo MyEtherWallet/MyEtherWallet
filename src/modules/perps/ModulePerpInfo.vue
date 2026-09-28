@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="pb-3 xs:pb-5">
       <div
-        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px] h-5 w-5"
+        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-20 h-5 w-5"
       >
         <!-- <app-btn-icon label="Share">
           <share-icon class="h-5 w-5" />
@@ -13,8 +13,8 @@
         <app-token-logo
           :url="getLogoUrl(baseCurrency)"
           :symbol="baseCurrency"
-          width="w-10 xs:w-[56px]"
-          height="h-10 xs:h-[56px]"
+          width="w-10 xs:w-14"
+          height="h-10 xs:h-14"
         />
         <div class="flex flex-col">
           <h1
@@ -92,7 +92,7 @@
           </template>
         </app-btn-group>
       </div>
-      <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
+      <div class="h-[200px] sm:h-80 px-4 lg:px-10 py-6">
         <chart-price
           v-if="!chartLoading && chartLabels.length > 0"
           :labels="chartLabels"
@@ -567,7 +567,7 @@
                 >
                   <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-text-subtle text-s-12 mb-[2px]">
+                    <p class="text-text-subtle text-s-12 mb-0.5">
                       {{ formatDate(order.createdAt) }}
                     </p>
                     <p
@@ -591,7 +591,7 @@
                   <td class="px-1 py-3 hidden 2xl:table-cell">
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
                         order.status === 'open' || order.status === 'pending'
                           ? 'text-text-brand '
                           : order.status === 'fullyfilled'
@@ -613,7 +613,7 @@
 
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-background-default-hover',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-px bg-background-default-hover',
                         order.status === 'open' || order.status === 'pending'
                           ? 'text-text-brand '
                           : order.status === 'fullyfilled'
@@ -670,7 +670,7 @@
                         </template>
                         <template #menu-content="{ toggleMenu }">
                           <div
-                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                           >
                             <ul>
                               <li
@@ -795,7 +795,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-text-success'
                             : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-background-default-hover -ml-1',
+                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover -ml-1',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
