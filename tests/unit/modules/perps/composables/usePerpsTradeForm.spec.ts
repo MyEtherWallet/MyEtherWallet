@@ -38,7 +38,12 @@ vi.mock('vue-i18n', () => {
     void i18nMock.localeTick.value
     return mockT(key, params)
   })
-  return { useI18n: () => ({ t: i18nMock.tSpy }) }
+  return {
+    useI18n: () => ({ t: i18nMock.tSpy }),
+    // `perps/sentry.ts` -> `utils/walletUtils.ts` -> `i18n/index.ts` builds the
+    // app instance at import time; stub it so the suite can load.
+    createI18n: () => ({ global: { t: i18nMock.tSpy, locale: ref('en') } }),
+  }
 })
 
 vi.mock('vue-router', () => ({
@@ -368,6 +373,74 @@ describe('usePerpsTradeForm — hide disabled tokens (MEW-2025)', () => {
     ]
     const form = usePerpsTradeForm()
     expect(form.filteredMarketList.value).toHaveLength(2)
+  })
+})
+
+describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
+  const makeContract = (market: string) =>
+    ({
+      market,
+      baseCurrency: market.split('-')[0],
+      quoteCurrency: 'USD',
+      disabled: false,
+      usdVolume: '0',
+      priceChangePercent: '0',
+      bid: '1',
+      ask: '1',
+      indexPrice: '1',
+      tags: [],
+    }) as unknown as Contract
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    walletMenuState.selectedTradeOrderSide = 'buy'
+    walletMenuState.selectedTradeManageMode = null
+  })
+
+  afterEach(() => {
+    mockContracts.contracts.value = []
+  })
+
+  it('falls back to the first contract when Trade left a symbol perps does not list', () => {
+    // e.g. an Ondo Intelligent Portfolio token picked in the Trade panel
+    walletMenuState.selectedTradeTokenSymbol = 'OIPTECH'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('BTC')
+    // The Trade panel's pick is preserved for when the user switches back.
+    expect(walletMenuState.selectedTradeTokenSymbol).toBe('OIPTECH')
+  })
+
+  it('keeps the prefill when a contract exists for it', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'ETH'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('ETH')
+  })
+
+  it('matches a full market name and ignores case', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'eth-usd'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('eth')
+  })
+
+  it('keeps the prefill until contracts have loaded, then re-evaluates', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'OIPTECH'
+    mockContracts.contracts.value = []
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('OIPTECH')
+    mockContracts.contracts.value = [makeContract('BTC-USD')]
+    expect(form.displaySymbol.value).toBe('BTC')
   })
 })
 
