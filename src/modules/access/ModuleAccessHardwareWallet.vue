@@ -97,7 +97,14 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
-import { ref, watch, markRaw, computed, onMounted } from 'vue'
+import {
+  ref,
+  watch,
+  markRaw,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+} from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
@@ -302,6 +309,7 @@ const backStep = () => {
 }
 
 const connectingWallet = ref(false)
+let isUnmounted = false
 
 const unlockWallet = async () => {
   // Gate Trezor on browser capability: @enkryptcom/hw-wallets `getTrezorConnect`
@@ -319,9 +327,11 @@ const unlockWallet = async () => {
   // Read the wallet type once. The Ledger flow awaits the transport before
   // calling us, and the user can close the dialog or press Back meanwhile,
   // which resets the view to 'default'. Going on would pair the Trezor manager
-  // with a null wallet and crash in hw-wallets (APP-MEW-WEB-1ND).
+  // with a null wallet and crash in hw-wallets (APP-MEW-WEB-1ND). The same can
+  // happen during the awaits below, so recheck after each one.
   const walletType = selectedHwWalletType.value
-  if (!walletType) return
+  const isStale = () => isUnmounted || selectedHwWalletType.value !== walletType
+  if (!walletType || isStale()) return
 
   connectingWallet.value = true
   const networkName = chainToEnum[
@@ -340,10 +350,12 @@ const unlockWallet = async () => {
       .then(() => {
         return new Promise(r => setTimeout(r, 1000))
       })
+    if (isStale()) return
     paths.value = (await hwWalletInstance!.getSupportedPaths({
       wallet: walletType,
       networkName: networkName as any,
     })) as PathType[]
+    if (isStale()) return
 
     // Guard against empty paths array
     if (paths.value.length === 0) {
@@ -366,6 +378,7 @@ const unlockWallet = async () => {
     activeStep.value = 1
     loadList()
   } catch (e) {
+    if (isStale()) return
     const errorMessage = e instanceof Error ? e.message : String(e)
     const isNoDerivationPaths =
       errorMessage === 'No supported derivation paths found for this wallet'
@@ -387,6 +400,12 @@ const unlockWallet = async () => {
 
 const usbSupported = ref(false)
 const bleSupported = ref(false)
+
+onBeforeUnmount(() => {
+  isUnmounted = true
+  // Also cancel an address list that is still loading.
+  loadListGeneration++
+})
 
 onMounted(async () => {
   if (currentView.value === 'ledger') {

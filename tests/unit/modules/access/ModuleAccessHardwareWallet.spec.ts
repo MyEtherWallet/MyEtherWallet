@@ -194,6 +194,45 @@ describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () =
     expect(h.addToastMessage).not.toHaveBeenCalled()
   })
 
+  it('stops the unlock when the dialog closes while isConnected is pending', async () => {
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper.find('button').trigger('click')
+    h.resolveTransport!({})
+    await flushPromises() // isConnected resolved, 1s wait pending
+
+    useAccessStore().closeAccessDialog()
+    wrapper.unmount()
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(h.ledgerGetSupportedPaths).not.toHaveBeenCalled()
+    expect(h.addToastMessage).not.toHaveBeenCalled()
+  })
+
+  it('does not toast or report when isConnected fails after the dialog closes', async () => {
+    let rejectConnected!: (e: Error) => void
+    h.ledgerIsConnected.mockReturnValue(
+      new Promise((_, reject) => {
+        rejectConnected = reject
+      }),
+    )
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper.find('button').trigger('click')
+    h.resolveTransport!({})
+    await flushPromises()
+
+    useAccessStore().closeAccessDialog()
+    wrapper.unmount()
+    rejectConnected(new Error('Device disconnected'))
+    await flushPromises()
+
+    expect(h.addToastMessage).not.toHaveBeenCalled()
+    expect(h.captureException).not.toHaveBeenCalled()
+  })
+
   it('still connects through the Ledger manager when the view is unchanged', async () => {
     const wrapper = factory()
     await flushPromises()
