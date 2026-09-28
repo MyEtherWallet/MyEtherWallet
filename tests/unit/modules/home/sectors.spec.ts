@@ -3,7 +3,9 @@ import { sectors, sectorLink } from '@/modules/home/sectors'
 
 describe('sectors', () => {
   it('exposes the 10 All-Stocks table categories in order', () => {
-    const filters = sectors.filter(s => s.market === 'stocks').map(s => s.filter)
+    const filters = sectors
+      .filter(s => s.market === 'stocks')
+      .map(s => s.filter)
     expect(filters).toEqual([
       'EQUITIES',
       'STOCK',
@@ -19,7 +21,9 @@ describe('sectors', () => {
   })
 
   it('exposes the 6 live crypto filter categories (no watchlist)', () => {
-    const filters = sectors.filter(s => s.market === 'crypto').map(s => s.filter)
+    const filters = sectors
+      .filter(s => s.market === 'crypto')
+      .map(s => s.filter)
     expect(filters).toEqual([
       'topGainers',
       'topLosers',
@@ -38,7 +42,7 @@ describe('sectors', () => {
       .filter(s => s.market === 'crypto')
       .forEach(s => expect(s.labelKey).toMatch(/^crypto\./))
     sectors.forEach(s => {
-      expect(s.color).toMatch(/^#[0-9a-f]{6}$/i)
+      expect(s.color).toMatch(/^var\(--color-background-decorative-[a-z-]+\)$/)
       expect(s.icon).toBeTruthy()
     })
   })

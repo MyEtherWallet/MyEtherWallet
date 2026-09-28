@@ -64,18 +64,18 @@ const chipState = (day: number): ChipState => {
 const chipClass = (day: number) => {
   switch (chipState(day)) {
     case 'done':
-      return 'bg-[#0b53bf]'
+      return 'bg-background-brand'
     case 'current':
-      return 'bg-white/70 border-2 border-[#0b53bf]'
+      return 'bg-white/70 border-2 border-border-brand'
     case 'failed':
-      return 'bg-[#e40c58]'
+      return 'bg-background-error'
     case 'doneGrey':
-      return 'bg-grey-subtle'
+      return 'bg-background-decorative-neutral'
     default:
-      return 'bg-[#e6e6e6]'
+      return 'bg-background-default-hover'
   }
 }
 
 const numberClass = (day: number) =>
-  chipState(day) === 'current' ? 'text-[#0b53bf]' : 'text-[#575757]'
+  chipState(day) === 'current' ? 'text-text-brand' : 'text-text-subtle'
 </script>

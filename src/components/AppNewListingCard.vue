@@ -35,7 +35,9 @@ defineEmits<{
 }>()
 
 const up = computed(() => (props.change ?? 0) >= 0)
-const changeColor = computed(() => (up.value ? 'text-success' : 'text-error'))
+const changeColor = computed(() =>
+  up.value ? 'text-text-success' : 'text-text-error',
+)
 const changeArrowIcon = computed(() => (up.value ? ArrowUpIcon : ArrowDownIcon))
 const changeText = computed(() =>
   props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
@@ -70,8 +72,8 @@ const changeText = computed(() =>
         class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
       >
-        <StarSolidIcon v-if="favorite" class="size-5 text-primary" />
-        <StarOutlineIcon v-else class="size-5 text-[#575757]" />
+        <StarSolidIcon v-if="favorite" class="size-5 text-text-brand" />
+        <StarOutlineIcon v-else class="size-5 text-text-subtle" />
       </button>
     </div>
 
@@ -83,14 +85,14 @@ const changeText = computed(() =>
           :is-stock="isStock"
           class="shrink-0 !text-s-16 !font-semibold tracking-[-0.32px] text-black"
         />
-        <span v-if="name" class="min-w-0 flex-1 truncate text-[#575757]">{{
+        <span v-if="name" class="min-w-0 flex-1 truncate text-text-subtle">{{
           name
         }}</span>
       </div>
       <!-- Description reserves a fixed 3-line block whether present, short, or
            absent, so every card stays the same height regardless of content. -->
       <p
-        class="line-clamp-3 h-[60px] text-s-14 leading-5 text-[#575757]"
+        class="line-clamp-3 h-[60px] text-s-14 leading-5 text-text-subtle"
         data-test="listing-description"
       >
         {{ description }}
@@ -101,7 +103,7 @@ const changeText = computed(() =>
     <div class="flex w-full items-start gap-6">
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ marketCapLabel }}
         </p>
@@ -113,7 +115,7 @@ const changeText = computed(() =>
       </div>
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ changeLabel }}
         </p>
@@ -133,7 +135,7 @@ const changeText = computed(() =>
       </div>
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ volumeLabel }}
         </p>
@@ -152,7 +154,7 @@ const changeText = computed(() =>
       type="button"
       data-test="listing-trade"
       :disabled="tradeDisabled"
-      class="flex h-10 w-full items-center justify-center rounded-3xl bg-grey-5 text-s-14 font-semibold tracking-[-0.28px] text-primary transition-colors hover:bg-grey-10 disabled:cursor-not-allowed disabled:text-[#a5a5a5] disabled:hover:bg-grey-5"
+      class="flex h-10 w-full items-center justify-center rounded-3xl bg-background-default text-s-14 font-semibold tracking-[-0.28px] text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:text-text-placeholder disabled:hover:bg-background-default"
       @click.stop="$emit('trade')"
     >
       {{ tradeLabel }}

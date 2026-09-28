@@ -51,11 +51,15 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
 
     <!-- category chip -->
     <div v-if="category || icon" class="relative flex items-center gap-2">
-      <component :is="icon" v-if="icon" class="size-8 shrink-0 text-primary" />
+      <component
+        :is="icon"
+        v-if="icon"
+        class="size-8 shrink-0 text-text-brand"
+      />
       <span
         v-if="category"
         data-test="rewards-category"
-        class="text-s-12 font-semibold tracking-[-0.24px] text-primary"
+        class="text-s-12 font-semibold tracking-[-0.24px] text-text-brand"
         >{{ category }}</span
       >
     </div>
@@ -67,12 +71,16 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
         class="flex min-w-0 flex-1 flex-col gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px] @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
       >
         <p data-test="rewards-title" class="text-black">{{ title }}</p>
-        <p v-if="highlight" data-test="rewards-highlight" class="text-primary">
+        <p
+          v-if="highlight"
+          data-test="rewards-highlight"
+          class="text-text-brand"
+        >
           {{ highlight }}
         </p>
       </div>
       <span class="flex shrink-0 items-center p-2">
-        <ChevronRightIcon class="size-6 text-primary" />
+        <ChevronRightIcon class="size-6 text-text-brand" />
       </span>
     </div>
   </component>

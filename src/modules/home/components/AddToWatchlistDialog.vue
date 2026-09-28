@@ -36,7 +36,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
-        <p class="mt-1 text-s-16 text-[#575757]">
+        <p class="mt-1 text-s-16 text-text-subtle">
           {{ t('homePage.hero.watchlist.addModal.subtitle') }}
         </p>
 
@@ -48,7 +48,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
 
         <!-- Tabs -->
         <div
-          class="mt-5 flex gap-6 border-b border-grey-outline/40"
+          class="mt-5 flex gap-6 border-b border-border-strong/40"
           role="tablist"
         >
           <button
@@ -62,7 +62,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
             :class="
               tab === tabItem.id
                 ? 'border-black text-black'
-                : 'border-transparent text-[#575757]'
+                : 'border-transparent text-text-subtle'
             "
             @click="tab = tabItem.id"
           >
@@ -71,21 +71,23 @@ const { items, isLoading } = useAssetPicker(tab, query)
         </div>
 
         <!-- List (pr keeps the star off the scrollbar) -->
-        <div class="mew-scrollbar mt-2 min-h-[240px] flex-1 overflow-y-auto pr-2">
+        <div
+          class="mew-scrollbar mt-2 min-h-[240px] flex-1 overflow-y-auto pr-2"
+        >
           <div
             v-if="isLoading"
             data-test="picker-loading"
             class="flex h-[240px] items-center justify-center"
           >
             <span
-              class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"
+              class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
               aria-hidden="true"
             />
           </div>
           <p
             v-else-if="!items.length"
             data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-[#575757]"
+            class="py-16 text-center text-s-14 text-text-subtle"
           >
             {{ t('homePage.hero.watchlist.addModal.empty') }}
           </p>

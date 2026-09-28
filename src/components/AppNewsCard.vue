@@ -43,7 +43,7 @@ const dateLabel = computed(
     class="group relative isolate flex h-[280px] flex-col justify-between gap-4 overflow-hidden rounded-2xl bg-white p-6"
   >
     <div class="flex w-full min-h-0 flex-1 flex-col gap-2 overflow-hidden">
-      <div class="flex items-center gap-1 text-s-14 leading-5 text-[#575757]">
+      <div class="flex items-center gap-1 text-s-14 leading-5 text-text-subtle">
         <span v-if="source">{{ source }}</span>
         <span v-if="source && dateLabel">•</span>
         <span v-if="dateLabel" data-test="news-date">{{ dateLabel }}</span>
@@ -53,13 +53,13 @@ const dateLabel = computed(
         target="_blank"
         rel="noopener noreferrer"
         data-test="news-title"
-        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-primary group-hover:underline"
+        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-text-brand group-hover:underline"
       >
         {{ title }}
       </a>
       <p
         v-if="description"
-        class="line-clamp-3 w-full text-s-16 leading-[22px] text-[#575757] group-hover:text-black"
+        class="line-clamp-3 w-full text-s-16 leading-[22px] text-text-subtle group-hover:text-black"
       >
         {{ description }}
       </p>
@@ -71,7 +71,9 @@ const dateLabel = computed(
       :to="tokenTo"
       data-test="news-ticker"
       class="flex w-fit shrink-0 items-center gap-2"
-      :class="tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''"
+      :class="
+        tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''
+      "
     >
       <AppTokenLogo
         :symbol="ticker"
@@ -83,12 +85,12 @@ const dateLabel = computed(
       <AppTokenSymbol
         :symbol="ticker"
         :is-stock="true"
-        class="!text-s-14 !font-normal !text-[#575757]"
+        class="!text-s-14 !font-normal !text-text-subtle"
       />
     </component>
 
     <ArrowTopRightOnSquareIcon
-      class="pointer-events-none absolute right-6 top-6 size-5 text-[#575757] opacity-0 transition-opacity group-hover:opacity-100"
+      class="pointer-events-none absolute right-6 top-6 size-5 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100"
     />
   </div>
 </template>

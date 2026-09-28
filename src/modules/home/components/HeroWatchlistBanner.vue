@@ -62,7 +62,7 @@ defineEmits<{
         >
           {{ t('homePage.hero.watchlist.title') }}
         </p>
-        <p class="text-s-16 leading-[22px] text-[#575757]">
+        <p class="text-s-16 leading-[22px] text-text-subtle">
           {{ t('homePage.hero.watchlist.subtitle') }}
         </p>
       </div>

@@ -22,16 +22,17 @@
         >
           <div
             :class="[
-              'w-6 h-6 rounded-full  bg-grey-30 flex items-center justify-center relative',
+              'w-6 h-6 rounded-full  bg-background-default-pressed flex items-center justify-center relative',
               {
-                '!bg-primary': index === activeStep,
+                '!bg-background-brand': index === activeStep,
               },
               {
-                '!bg-white border border-primary border-2': index < activeStep,
+                '!bg-white border border-border-brand border-2':
+                  index < activeStep,
               },
             ]"
           >
-            <span v-if="index < activeStep" class="text-primary">
+            <span v-if="index < activeStep" class="text-text-brand">
               <check-icon class="w-3 h-3" />
             </span>
             <span v-else class="text-white text-xs">{{ index + 1 }}</span>
@@ -39,7 +40,7 @@
               v-if="showStepNumber"
               :class="[
                 'hidden md:block absolute top-8 w-[120px] text-center text-xs lowercase',
-                { 'text-info': index > activeStep },
+                { 'text-text-subtle': index > activeStep },
               ]"
               >{{ step }}</span
             >
@@ -47,7 +48,7 @@
         </div>
         <hr
           v-if="index !== steps.length - 1"
-          class="h-px bg-grey-outline border-0 w-full"
+          class="h-px bg-border-strong border-0 w-full"
         />
       </div>
     </div>

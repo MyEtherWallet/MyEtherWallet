@@ -16,14 +16,14 @@
           {{ title }}
         </p>
         <p
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-pre-line"
+          class="text-s-14 font-normal leading-5 text-text-subtle whitespace-pre-line"
         >
           {{ description }}
         </p>
       </div>
       <p
         v-if="footnote"
-        class="text-s-12 font-normal leading-[18px] text-[#575757]"
+        class="text-s-12 font-normal leading-[18px] text-text-subtle"
       >
         {{ footnote }}
       </p>
@@ -46,8 +46,8 @@
           class="flex items-center h-10 pr-3 pl-4 gap-1 rounded-full text-s-14 font-semibold"
           :class="
             effectivePrimaryDisabled
-              ? 'bg-[#f5f5f5] text-[#767676] cursor-default'
-              : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
+              ? 'bg-background-default text-text-muted cursor-default'
+              : 'bg-background-brand text-white cursor-pointer hoverOpacityHasBG'
           "
           :disabled="effectivePrimaryDisabled"
           @click="clickPrimary"
@@ -65,7 +65,7 @@
         </button>
         <button
           v-if="secondaryLabel"
-          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-[#e6e6e6] text-black text-s-14 font-semibold"
+          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-background-default-hover text-black text-s-14 font-semibold"
           @click="clickSecondary"
         >
           {{ secondaryLabel }}

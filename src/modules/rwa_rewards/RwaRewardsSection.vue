@@ -58,7 +58,7 @@
       ></div>
       <button
         v-show="canScrollLeft"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-border-default bg-white z-[2]"
         :aria-label="$t('rwaRewards.previous')"
         @click="scrollPrev"
       >
@@ -79,7 +79,7 @@
       ></div>
       <button
         v-show="canScrollRight"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-border-default bg-white z-[2]"
         :aria-label="$t('rwaRewards.next')"
         @click="scrollNext"
       >

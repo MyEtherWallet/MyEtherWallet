@@ -15,97 +15,146 @@
     />
 
     <div :class="['flex flex-col gap-3 h-full', blockedClass]">
-    <purchase-token-select-card
-      v-if="displayChain"
-      :chain="displayChain"
-      :token="selectedToken"
-      @click="showTokenModal = true"
-    />
-    <purchase-amount-input
-      :label="t('purchase.sell.youre_selling')"
-      :currency="selectedFiat"
-      :amount-symbol="tokenSymbol"
-      symbol-position="suffix"
-      :amount="cryptoAmount"
-      :estimate="formattedFiatEstimate"
-      :is-loading="isFetchingSellQuote"
-      :balance="balanceDisplay"
-      :quick-buttons="[]"
-      :error-message="amountError"
-      :helper-message="amountHelper"
-      @update:amount="onCryptoAmountChange"
-      @open-currency="showCurrencyModal = true"
-      @focus="isInputFocused = true"
-      @blur="isInputFocused = false"
-    />
+      <purchase-token-select-card
+        v-if="displayChain"
+        :chain="displayChain"
+        :token="selectedToken"
+        @click="showTokenModal = true"
+      />
+      <purchase-amount-input
+        :label="t('purchase.sell.youre_selling')"
+        :currency="selectedFiat"
+        :amount-symbol="tokenSymbol"
+        symbol-position="suffix"
+        :amount="cryptoAmount"
+        :estimate="formattedFiatEstimate"
+        :is-loading="isFetchingSellQuote"
+        :balance="balanceDisplay"
+        :quick-buttons="[]"
+        :error-message="amountError"
+        :helper-message="amountHelper"
+        @update:amount="onCryptoAmountChange"
+        @open-currency="showCurrencyModal = true"
+        @focus="isInputFocused = true"
+        @blur="isInputFocused = false"
+      />
 
-    <!-- Network fee -->
-    <div class="flex items-center h-16 px-4 rounded-20 bg-bgBase border border-transparent">
-      <span class="flex items-center gap-1.5 text-s-12 text-info leading-[18px] flex-none">
-        {{ t('purchase.sell.network_fee') }}
-        <span
-          ref="infoIconRef"
-          class="flex items-center cursor-default"
-          @mouseenter="onInfoIconEnter"
-          @mouseleave="onInfoIconLeave"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="7" cy="7" r="6.5" stroke="currentColor"/>
-            <path d="M7 6.5V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            <circle cx="7" cy="4.5" r="0.75" fill="currentColor"/>
-          </svg>
-        </span>
-      </span>
-
-      <button
-        v-if="networkFeeDisplay"
-        type="button"
-        class="flex-1 h-full flex items-center justify-end gap-1 text-s-12 leading-[18px]"
-        @click="feeSelector?.openFeeModal()"
-      >
-        <span class="text-info font-normal">≈</span>
-        <span class="text-black font-semibold tracking-[-0.24px]">{{ networkFeeDisplay }}</span>
-        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-info">
-          <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <span v-else class="flex-1 text-right text-s-12 text-info leading-[18px]">---</span>
-    </div>
-
-    <teleport to="#app">
+      <!-- Network fee -->
       <div
-        v-if="showNetworkFeeTooltip"
-        class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-white px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
-        :style="{ left: `${tooltipPos.left}px`, top: `${tooltipPos.top}px`, transform: 'translate(-50%, calc(-100% - 9px))' }"
+        class="flex items-center h-16 px-4 rounded-20 bg-background-default border border-transparent"
       >
-        <p class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center">
-          {{ t('purchase.sell.network_fee_tooltip', { symbol: displayChain?.currencyName ?? '', chain: displayChain?.nameLong ?? '' }) }}
-        </p>
-        <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
+        <span
+          class="flex items-center gap-1.5 text-s-12 text-text-subtle leading-[18px] flex-none"
+        >
+          {{ t('purchase.sell.network_fee') }}
+          <span
+            ref="infoIconRef"
+            class="flex items-center cursor-default"
+            @mouseenter="onInfoIconEnter"
+            @mouseleave="onInfoIconLeave"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="7" cy="7" r="6.5" stroke="currentColor" />
+              <path
+                d="M7 6.5V10"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="4.5" r="0.75" fill="currentColor" />
+            </svg>
+          </span>
+        </span>
+
+        <button
+          v-if="networkFeeDisplay"
+          type="button"
+          class="flex-1 h-full flex items-center justify-end gap-1 text-s-12 leading-[18px]"
+          @click="feeSelector?.openFeeModal()"
+        >
+          <span class="text-text-subtle font-normal">≈</span>
+          <span class="text-black font-semibold tracking-[-0.24px]">{{
+            networkFeeDisplay
+          }}</span>
+          <svg
+            width="6"
+            height="10"
+            viewBox="0 0 6 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            class="text-text-subtle"
+          >
+            <path
+              d="M1 1L5 5L1 9"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <span
+          v-else
+          class="flex-1 text-right text-s-12 text-text-subtle leading-[18px]"
+          >---</span
+        >
       </div>
-    </teleport>
 
-    <app-base-button
-      class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
-      :disabled="ctaDisabled && !ctaIsLoading"
-      :is-loading="ctaIsLoading"
-      @click="onSubmit"
-    >
-      {{ ctaLabel }}
-    </app-base-button>
+      <teleport to="#app">
+        <div
+          v-if="showNetworkFeeTooltip"
+          class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-white px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
+          :style="{
+            left: `${tooltipPos.left}px`,
+            top: `${tooltipPos.top}px`,
+            transform: 'translate(-50%, calc(-100% - 9px))',
+          }"
+        >
+          <p
+            class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center"
+          >
+            {{
+              t('purchase.sell.network_fee_tooltip', {
+                symbol: displayChain?.currencyName ?? '',
+                chain: displayChain?.nameLong ?? '',
+              })
+            }}
+          </p>
+          <div
+            class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white"
+          />
+        </div>
+      </teleport>
 
-    <a
-      href="https://help.myetherwallet.com/"
-      target="_blank"
-      rel="noopener"
-      class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
-    >
-      {{ t('purchase.sell.need_help') }}
-    </a>
+      <app-base-button
+        class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+        :disabled="ctaDisabled && !ctaIsLoading"
+        :is-loading="ctaIsLoading"
+        @click="onSubmit"
+      >
+        {{ ctaLabel }}
+      </app-base-button>
 
-    <div class="hidden">
-      <app-select-tx-fee ref="feeSelector" />
-    </div>
+      <a
+        href="https://help.myetherwallet.com/"
+        target="_blank"
+        rel="noopener"
+        class="mt-auto self-center text-s-12 font-semibold text-text-brand tracking-[-0.24px] hover:underline"
+      >
+        {{ t('purchase.sell.need_help') }}
+      </a>
+
+      <div class="hidden">
+        <app-select-tx-fee ref="feeSelector" />
+      </div>
     </div>
 
     <purchase-token-modal
@@ -161,12 +210,12 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useAccessStore } from '@/stores/accessStore'
 
-import { formatFloatingPointValue, formatFiatValue } from '@/utils/numberFormatHelper'
-import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
-  v7ToPurchaseChain,
-  purchaseChainToChain,
-} from './helpers/chainMapping'
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
+import { getCurrencySymbol } from '@/utils/currencySymbols'
+import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 import { useQuoteCountdown } from './composables/useQuoteCountdown'
@@ -210,7 +259,8 @@ const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 
-const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(sellNetworks, walletChain, chains)
+const { compatibleChainCodes, incompatibleChainCodes } =
+  usePurchaseCompatibility(sellNetworks, walletChain, chains)
 
 const supportedNetworkChains = computed<Chain[]>(() =>
   compatibleChainCodes.value
@@ -335,17 +385,23 @@ const tokenBalance = computed<string | null>(() => {
     walletChain.value?.currencyName === selectedToken.value.symbol
   if (isNativeOfWalletChain) return nativeBalance.value
   const found = tokens.value.find(
-    t => t.contract.toLowerCase() === selectedToken.value?.contract_address.toLowerCase(),
+    t =>
+      t.contract.toLowerCase() ===
+      selectedToken.value?.contract_address.toLowerCase(),
   )
   if (found) return found.balance
   if (isLoadingBalances.value) return null
   // Not in the balance list: 0 if it's the wallet's chain, unknown otherwise.
-  const tokenChain = purchaseChainToChain(selectedToken.value.chain, chains.value)
+  const tokenChain = purchaseChainToChain(
+    selectedToken.value.chain,
+    chains.value,
+  )
   return tokenChain?.name === walletChain.value?.name ? '0' : null
 })
 
 const tokenBalanceFiat = computed<number | null>(() => {
-  if (!tokenBalance.value || tokenPrice.value <= 0 || !fiatRate.value) return null
+  if (!tokenBalance.value || tokenPrice.value <= 0 || !fiatRate.value)
+    return null
   return Number(tokenBalance.value) * tokenPrice.value * fiatRate.value
 })
 
@@ -426,7 +482,8 @@ const onInfoIconLeave = () => {
 }
 
 const networkFeeDisplay = computed(() => {
-  if (isAmountEmpty.value || !amountIsValid.value || isFetchingSellQuote.value) return null
+  if (isAmountEmpty.value || !amountIsValid.value || isFetchingSellQuote.value)
+    return null
   const sel = feeSelector.value
   if (!sel || !sel.hasFees) return null
   const native = sel.selectedFeeNative as string

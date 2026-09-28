@@ -23,7 +23,7 @@ const toggle = (key: string) => {
     <h2 class="text-s-24 font-bold text-black">
       {{ t('homePage.hero.watchlist.title') }}
     </h2>
-    <p class="mt-1 text-s-16 text-[#575757]">
+    <p class="mt-1 text-s-16 text-text-subtle">
       {{ t('homePage.hero.watchlist.onboarding.industries.subtitle') }}
     </p>
 
@@ -38,7 +38,7 @@ const toggle = (key: string) => {
         :class="
           selected.includes(key)
             ? 'border-black bg-white text-black'
-            : 'border-transparent bg-[#f5f5f5] text-black'
+            : 'border-transparent bg-background-default text-black'
         "
         @click="toggle(key)"
       >

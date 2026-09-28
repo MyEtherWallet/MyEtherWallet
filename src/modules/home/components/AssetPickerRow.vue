@@ -49,7 +49,7 @@ const toggle = () => {
         :is-stock="item.type === 'stock'"
         class="block truncate text-s-16 font-bold text-black"
       />
-      <span class="block truncate text-s-14 text-[#575757]">
+      <span class="block truncate text-s-14 text-text-subtle">
         {{ item.name }}
       </span>
     </div>
@@ -60,8 +60,8 @@ const toggle = () => {
       class="shrink-0"
       @click="toggle"
     >
-      <StarSolidIcon v-if="isListed" class="size-6 text-primary" />
-      <StarOutlineIcon v-else class="size-6 text-[#a5a5a5]" />
+      <StarSolidIcon v-if="isListed" class="size-6 text-text-brand" />
+      <StarOutlineIcon v-else class="size-6 text-text-placeholder" />
     </button>
   </div>
 </template>

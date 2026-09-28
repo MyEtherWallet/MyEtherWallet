@@ -32,16 +32,16 @@ export interface IndustrySector {
 // Figma tile palette (design-library "IndustrySectorTile", node 1082:2605):
 // the 10 distinct colors, cycled across the tiles.
 const PALETTE = [
-  '#684cff',
-  '#f31b6f',
-  '#e27d00',
-  '#c16cff',
-  '#067f71',
-  '#4d1ee3',
-  '#cc0452',
-  '#ffa500',
-  '#9d00ff',
-  '#05c0a5',
+  'var(--color-background-decorative-purple)',
+  'var(--color-background-decorative-pink)',
+  'var(--color-background-decorative-orange-strong)',
+  'var(--color-background-decorative-violet)',
+  'var(--color-background-decorative-green-strong)',
+  'var(--color-background-decorative-purple-strong)',
+  'var(--color-background-decorative-pink-strong)',
+  'var(--color-background-decorative-orange)',
+  'var(--color-background-decorative-violet-strong)',
+  'var(--color-background-decorative-green)',
 ]
 
 function make(
@@ -68,14 +68,32 @@ function make(
 const STOCK_SECTORS: IndustrySector[] = [
   make('stocks', 'stocks.category_equities', 'EQUITIES', ChartBarIcon, 0),
   make('stocks', 'stocks.category_stock', 'STOCK', BuildingOffice2Icon, 1),
-  make('stocks', 'stocks.category_large_cap', 'LARGE_CAP', BuildingLibraryIcon, 2),
+  make(
+    'stocks',
+    'stocks.category_large_cap',
+    'LARGE_CAP',
+    BuildingLibraryIcon,
+    2,
+  ),
   make('stocks', 'stocks.category_us', 'US', FlagIcon, 3),
   make('stocks', 'stocks.category_growth', 'GROWTH', ArrowTrendingUpIcon, 4),
   make('stocks', 'stocks.category_technology', 'TECHNOLOGY', CpuChipIcon, 5),
   make('stocks', 'stocks.category_etf', 'ETF', ChartPieIcon, 6),
   make('stocks', 'stocks.category_value', 'VALUE', TagIcon, 7),
-  make('stocks', 'stocks.category_small_cap', 'SMALL_CAP', BuildingStorefrontIcon, 8),
-  make('stocks', 'stocks.category_industrials', 'INDUSTRIALS', WrenchScrewdriverIcon, 9),
+  make(
+    'stocks',
+    'stocks.category_small_cap',
+    'SMALL_CAP',
+    BuildingStorefrontIcon,
+    8,
+  ),
+  make(
+    'stocks',
+    'stocks.category_industrials',
+    'INDUSTRIALS',
+    WrenchScrewdriverIcon,
+    9,
+  ),
 ]
 
 // Crypto tab: the categories currently live in the /crypto filter (Coingecko),

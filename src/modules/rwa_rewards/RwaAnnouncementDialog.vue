@@ -21,7 +21,7 @@
               {{ $t('rwaRewards.announcement_title') }}
             </h1>
             <p
-              class="text-s-16 font-normal leading-[22px] text-[#575757] text-center whitespace-pre-line"
+              class="text-s-16 font-normal leading-[22px] text-text-subtle text-center whitespace-pre-line"
             >
               {{ $t('rwaRewards.announcement_desc') }}
             </p>

@@ -27,7 +27,7 @@ const char = computed(() => Array.from(props.initial ?? '')[0] ?? '')
 
 <template>
   <div
-    class="w-full h-full flex items-center justify-center bg-avatar-initial-bg text-t-default leading-none uppercase"
+    class="w-full h-full flex items-center justify-center bg-background-brand-subtle text-text-default leading-none uppercase"
     :class="fontClass"
   >
     {{ char }}

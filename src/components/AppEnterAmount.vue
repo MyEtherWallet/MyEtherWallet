@@ -3,7 +3,7 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput || isOpenSelectToken,
+      'ring-2 ring-border-brand': inFocusInput || isOpenSelectToken,
     }"
     @click="setInFocusInput"
   >
@@ -11,7 +11,9 @@
       <input
         ref="amountInput"
         class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
-        :class="{ 'text-error': !!error && !isOpenSelectToken && !isPristine }"
+        :class="{
+          'text-text-error': !!error && !isOpenSelectToken && !isPristine,
+        }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -33,14 +35,14 @@
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
-          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+          class="h-5 flex bg-background-default-hover rounded-full w-1/2"
         ></div>
         <div v-else class="flex justify-between items-center gap-2">
           <div
             :class="[
               !!error && !isOpenSelectToken && !isPristine
-                ? 'text-error'
-                : 'text-info',
+                ? 'text-text-error'
+                : 'text-text-subtle',
               'text-s-14',
             ]"
           >
@@ -48,7 +50,7 @@
           </div>
           <div
             v-if="isWalletConnected"
-            class="flex items-center gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
+            class="flex items-center gap-2 text-s-12 leading-p-120 text-text-subtle font-medium whitespace-nowrap"
           >
             <div>
               {{ $t('common.balance') }}:
@@ -61,7 +63,7 @@
       <transition name="fade" mode="out-in">
         <p
           v-if="!!error && !isLoading && !isOpenSelectToken && !isPristine"
-          class="text-error text-s-12 leading-p-130 mt-1"
+          class="text-text-error text-s-12 leading-p-130 mt-1"
         >
           {{ error }}
         </p>

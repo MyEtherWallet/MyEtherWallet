@@ -4,7 +4,7 @@
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
-        inFocusInput ? 'text-primary' : 'text-info',
+        inFocusInput ? 'text-text-brand' : 'text-text-subtle',
       ]"
       @click="searchInput?.focus()"
     />
@@ -14,7 +14,7 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-colors',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
       ]"
@@ -38,7 +38,10 @@
         :label="$t('common.clear_icon')"
       >
         <x-circle-icon
-          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
+          :class="[
+            'text-text-brand',
+            size === 'compact' ? 'w-5 h-5' : 'w-6 h-6',
+          ]"
       /></app-btn-icon>
     </div>
   </div>

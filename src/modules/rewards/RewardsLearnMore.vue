@@ -3,7 +3,7 @@
     <template #content>
       <div class="px-6 py-6 flex flex-col">
         <!-- Title -->
-        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
+        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-text-brand">Trade</h3> -->
         <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
           {{ t('rewards.learn_more_title') }}
         </h3>
@@ -17,49 +17,53 @@
           >
             <div
               class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-              :class="index < 3 ? 'bg-blue-10' : 'bg-grey-5'"
+              :class="
+                index < 3
+                  ? 'bg-background-brand-subtle'
+                  : 'bg-background-default'
+              "
             >
               <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-text-brand"
                 v-if="item.icon === 'swap'"
               />
               <trophy-icon
                 v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-text-brand"
               />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-text-brand"
               />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-text-brand"
               />
               <calendar-icon
                 v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-text-muted"
               />
               <wallet-icon
                 v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-text-muted"
               />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-text-muted"
               />
               <face-frown-icon
                 v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-grey-50"
+                class="w-4 h-4 text-text-muted"
               />
             </div>
-            <p class="text-s-14 text-info leading-snug pt-1">
+            <p class="text-s-14 text-text-subtle leading-snug pt-1">
               {{ item.text }}
             </p>
           </div>
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-grey-10" />
+        <hr class="my-6 border-t border-border-default" />
 
         <rewards-rows
           v-if="!isBanned"
