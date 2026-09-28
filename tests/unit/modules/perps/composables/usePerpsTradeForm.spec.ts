@@ -402,8 +402,7 @@ describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
   })
 
   it('falls back to the first contract when Trade left a symbol perps does not list', () => {
-    // e.g. an Ondo Intelligent Portfolio token picked in the Trade panel
-    walletMenuState.selectedTradeTokenSymbol = 'OIPTECH'
+    walletMenuState.selectedTradeTokenSymbol = 'NOTLISTED'
     mockContracts.contracts.value = [
       makeContract('BTC-USD'),
       makeContract('ETH-USD'),
@@ -411,7 +410,7 @@ describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
     const form = usePerpsTradeForm()
     expect(form.displaySymbol.value).toBe('BTC')
     // The Trade panel's pick is preserved for when the user switches back.
-    expect(walletMenuState.selectedTradeTokenSymbol).toBe('OIPTECH')
+    expect(walletMenuState.selectedTradeTokenSymbol).toBe('NOTLISTED')
   })
 
   it('keeps the prefill when a contract exists for it', () => {
@@ -435,10 +434,10 @@ describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
   })
 
   it('keeps the prefill until contracts have loaded, then re-evaluates', () => {
-    walletMenuState.selectedTradeTokenSymbol = 'OIPTECH'
+    walletMenuState.selectedTradeTokenSymbol = 'NOTLISTED'
     mockContracts.contracts.value = []
     const form = usePerpsTradeForm()
-    expect(form.displaySymbol.value).toBe('OIPTECH')
+    expect(form.displaySymbol.value).toBe('NOTLISTED')
     mockContracts.contracts.value = [makeContract('BTC-USD')]
     expect(form.displaySymbol.value).toBe('BTC')
   })

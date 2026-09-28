@@ -196,11 +196,10 @@ export function usePerpsTradeForm() {
   )
 
   // `selectedTradeTokenSymbol` is shared with the Trade panel, which can leave a
-  // symbol there that has no perps market (an Ondo Intelligent Portfolio token,
-  // or any stock the perps venue doesn't list). Only honour it when a contract
-  // exists for it; otherwise start from the first contract, as an empty prefill
-  // does. The store is left untouched so switching back to Trade still restores
-  // the user's pick there.
+  // symbol there that has no perps market (any asset the perps venue doesn't
+  // list). Only honour it when a contract exists for it; otherwise start from
+  // the first contract, as an empty prefill does. The store is left untouched
+  // so switching back to Trade still restores the user's pick there.
   const findContractForSymbol = (symbol: string | null) => {
     if (!symbol) return undefined
     const base = symbol.split('-')[0].toUpperCase()
