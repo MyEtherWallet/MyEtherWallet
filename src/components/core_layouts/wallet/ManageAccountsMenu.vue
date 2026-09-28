@@ -3,7 +3,7 @@
     <button
       data-test="menu-rename"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('rename')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -15,7 +15,7 @@
     <button
       data-test="menu-copy"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('copy')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -27,7 +27,7 @@
     <button
       data-test="menu-refresh"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('refresh')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -36,12 +36,12 @@
       <arrow-path-icon class="w-4 h-4 text-black" />
     </button>
 
-    <div class="h-px w-full bg-grey-10" />
+    <div class="h-px w-full bg-background-default-hover" />
 
     <button
       data-test="menu-paper"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('paper')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -53,7 +53,7 @@
     <button
       data-test="menu-explorer"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('explorer')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -62,13 +62,13 @@
       <arrow-top-right-on-square-icon class="w-4 h-4 text-black" />
     </button>
 
-    <div class="h-px w-full bg-grey-10" />
+    <div class="h-px w-full bg-background-default-hover" />
 
     <button
       v-if="kind === 'signing'"
       data-test="menu-disconnect"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('disconnect')"
     >
       <span class="flex-1 text-left text-text-sm text-black">
@@ -80,13 +80,15 @@
     <button
       data-test="menu-remove"
       type="button"
-      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
+      class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-background-default"
       @click="select('remove')"
     >
-      <span class="flex-1 text-left font-semibold text-s-14 leading-[20px] text-[#e40c58]">
+      <span
+        class="flex-1 text-left font-semibold text-s-14 leading-[20px] text-text-error"
+      >
         {{ $t('multi_address.menu.remove') }}
       </span>
-      <trash-icon class="w-4 h-4 text-[#e40c58]" />
+      <trash-icon class="w-4 h-4 text-text-error" />
     </button>
   </div>
 </template>

@@ -100,6 +100,28 @@ export function isMetaMaskSdkDecryptError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is the MetaMask SDK's `SDK state invalid -- undefined
+ * provider` failure. The SDK throws it entirely inside its own
+ * `_handleStreamDisconnect` / `_initializeState` path when it loses the
+ * connection to the MetaMask-mobile app and `activeProvider` is `undefined`
+ * during re-initialization (a stale / dropped mobile pairing session). Every
+ * frame is in the bundled `metamask-sdk` chunk — no MEW code is in the stack
+ * and no user is affected — so it is pure Sentry noise, a sibling of
+ * `isMetaMaskSdkDecryptError`. Matched on the (unminified) thrown message AND a
+ * `metamask-sdk` stack frame so an unrelated app error is left untouched.
+ */
+export function isMetaMaskSdkUndefinedProviderError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof e.message === 'string' &&
+    e.message.includes('SDK state invalid -- undefined provider') &&
+    typeof e.stack === 'string' &&
+    e.stack.includes('metamask-sdk')
+  )
+}
+
+/**
  * Whether an error is a wagmi `ProviderNotFoundError` — thrown when a connector
  * calls `getProvider()` and no injected wallet is present (e.g. the user clicks
  * "Browser Wallet" with no extension installed). The connect flow already
@@ -280,16 +302,16 @@ export function isIndexedDbMutationError(err: unknown): boolean {
   )
 }
 /* Whether an error is a Web Bluetooth "GATT Server is disconnected"
-  * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
-  * operation runs after the device has disconnected.The Ledger BLE transport
-  * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
-  * fire - and - forgets`characteristic.stopNotifications()` after the device drops
-  * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
-  * call is detached from any promise the app awaits, it surfaces as an unhandled
-  * rejection, and the connect flow already shows the user a "Failed to connect"
-  * toast — so it is external, unactionable Sentry noise.The frames are bundled
-  * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
-  * browser - native(minification - proof) message instead.
+ * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
+ * operation runs after the device has disconnected.The Ledger BLE transport
+ * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+ * fire - and - forgets`characteristic.stopNotifications()` after the device drops
+ * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
+ * call is detached from any promise the app awaits, it surfaces as an unhandled
+ * rejection, and the connect flow already shows the user a "Failed to connect"
+ * toast — so it is external, unactionable Sentry noise.The frames are bundled
+ * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
+ * browser - native(minification - proof) message instead.
  */
 export function isBluetoothGattDisconnectedError(err: unknown): boolean {
   if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
@@ -317,8 +339,7 @@ export function isLockedDeviceError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
   const e = err as { name?: unknown; message?: unknown }
   if (e.name === 'LockedDeviceError') return true
-  const message =
-    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  const message = typeof e.message === 'string' ? e.message.toLowerCase() : ''
   return message.includes('0x5515') || message.includes('locked device')
 }
 
@@ -381,10 +402,41 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
  * "connection is closed" shapes already suppressed elsewhere. Handles both the
  * Error-object and bare-string payload shapes.
  */
-export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+export function isWalletConnectSubscribeInterruptedError(
+  err: unknown,
+): boolean {
   const MESSAGE = 'Connection interrupted while trying to subscribe'
   if (typeof err === 'string') return err.includes(MESSAGE)
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message
   return typeof message === 'string' && message.includes(MESSAGE)
+}
+
+/**
+ * Whether an error is the V8/Chrome `Proxy`-invariant `TypeError` thrown when
+ * wagmi's injected connector reads `removeListener` off a `window.ethereum`
+ * that a browser extension has wrapped in a misbehaving `Proxy`.
+ *
+ * During `generateConfig` (`src/providers/ethereum/wagmiConfig.ts`) -> wagmi
+ * `createConfig`, the injected connector's async `setup()` — fired and never
+ * awaited — calls `getProvider()`, which reads `provider.removeListener` to
+ * normalize the EIP-1193 event API. If the extension's proxy declares
+ * `removeListener` as a read-only, non-configurable data property but its `get`
+ * trap returns a different function, V8 throws `'get' on proxy: property
+ * 'removeListener' is a read-only and non-configurable data property ... but the
+ * proxy did not return its actual value`. Being fire-and-forget, it reaches the
+ * global `onunhandledrejection` handler with no fixable MEW frame — the
+ * extension is broken, not app code — so it is external, unactionable Sentry
+ * noise (APP-MEW-WEB-1K8). Matched on the V8-generated message (minification-
+ * proof) keyed to the `'get' on proxy` + `removeListener` shape so genuine app
+ * `TypeError`s are untouched. Handles both the Error-object and bare-string
+ * payload shapes.
+ */
+export function isProviderProxyRemoveListenerError(err: unknown): boolean {
+  const matches = (m: string): boolean =>
+    m.includes("'get' on proxy") && m.includes('removeListener')
+  if (typeof err === 'string') return matches(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && matches(message)
 }

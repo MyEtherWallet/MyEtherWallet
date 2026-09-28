@@ -30,7 +30,7 @@ const onLearnMore = () => {
     class="flex flex-wrap items-center gap-4 overflow-hidden rounded-2xl border border-white bg-cover bg-center bg-no-repeat p-4"
     :style="{ backgroundImage: bannerBackground }"
   >
-    <ChartBarSquareIcon class="size-8 shrink-0 text-primary" />
+    <ChartBarSquareIcon class="size-8 shrink-0 text-text-brand" />
     <div class="flex min-w-0 flex-1 flex-col">
       <p class="text-label-base text-black">
         {{ t('homePage.hero.banner.title') }}
@@ -43,7 +43,7 @@ const onLearnMore = () => {
       <button
         type="button"
         data-test="hero-banner-learn"
-        class="h-10 rounded-3xl px-3 text-s-14 font-semibold tracking-[-0.28px] text-primary"
+        class="h-10 rounded-3xl px-3 text-s-14 font-semibold tracking-[-0.28px] text-text-brand"
         @click="onLearnMore"
       >
         {{ t('homePage.hero.banner.learnMore') }}
@@ -51,7 +51,7 @@ const onLearnMore = () => {
       <button
         type="button"
         data-test="hero-banner-trade"
-        class="h-10 rounded-3xl bg-white px-3 text-s-14 font-semibold tracking-[-0.28px] text-primary"
+        class="h-10 rounded-3xl bg-white px-3 text-s-14 font-semibold tracking-[-0.28px] text-text-brand"
         @click="onTradeStocks"
       >
         {{ t('homePage.hero.banner.tradeStocks') }}

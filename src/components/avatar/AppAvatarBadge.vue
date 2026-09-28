@@ -33,7 +33,7 @@ const statusStyle = {
 
   <div
     v-else-if="type === 'icon'"
-    class="w-full h-full rounded-full border border-white bg-avatar-badge-icon-bg overflow-hidden flex items-center justify-center box-border p-px text-t-default [&_svg]:w-full [&_svg]:h-full"
+    class="w-full h-full rounded-full border border-white bg-background-default-hover overflow-hidden flex items-center justify-center box-border p-px text-text-default [&_svg]:w-full [&_svg]:h-full"
   >
     <slot />
   </div>

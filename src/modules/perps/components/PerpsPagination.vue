@@ -9,15 +9,13 @@
     >
       <ChevronLeftIcon class="w-4 h-4" />
     </app-btn-icon>
-    <span class="px-2 text-s-12 text-info font-medium">
-      <template v-if="totalPages !== undefined"
-        >{{
-          t('perps.pagination.page-of', {
-            current: currentPage + 1,
-            total: totalPages,
-          })
-        }}</template
-      >
+    <span class="px-2 text-s-12 text-text-subtle font-medium">
+      <template v-if="totalPages !== undefined">{{
+        t('perps.pagination.page-of', {
+          current: currentPage + 1,
+          total: totalPages,
+        })
+      }}</template>
       <template v-else>{{
         t('perps.pagination.page', { current: currentPage + 1 })
       }}</template>
@@ -71,7 +69,8 @@ const canPrev = computed(() =>
 const canNext = computed(() =>
   props.hasNext !== undefined
     ? props.hasNext
-    : props.totalPages !== undefined && props.currentPage + 1 < props.totalPages,
+    : props.totalPages !== undefined &&
+      props.currentPage + 1 < props.totalPages,
 )
 
 function scrollToTarget() {

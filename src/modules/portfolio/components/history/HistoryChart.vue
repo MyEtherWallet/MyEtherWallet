@@ -83,13 +83,17 @@ Chart.register(
   Filler,
 )
 
+/**
+ * Chart.js paints to a canvas, which cannot resolve `var(--color-*)`, so these
+ * mirror the semantic tokens as literals. Keep in sync with `main.css`.
+ */
 const colors = {
-  upColor: 'rgb(5,192,165,1)',
-  downColor: 'rgb(239,68,68,1)',
-  bgUp: 'rgba(5,192,165,0.07)',
-  bgDown: 'rgba(239,68,68,0.07)',
-  bgGrey: 'rgba(0,0,0,0.05)',
-  tooltipBg: 'rgba(0,0,0,0.7)',
+  upColor: '#01a08c', // background/success
+  downColor: '#e40c58', // background/error
+  bgUp: 'rgba(1,160,140,0.07)', // background/success @ 7%
+  bgDown: 'rgba(228,12,88,0.07)', // background/error @ 7%
+  bgGrey: '#f5f5f5', // background/default
+  tooltipBg: '#1a1a1a', // background/info
 }
 
 const customTooltip = ref<TooltipState | null>(null)
@@ -204,7 +208,7 @@ const chartData = computed<ChartData<'line'>>(() => {
   if (topPoints.value.length > 0) {
     dataSet.datasets!.push({
       data: topPoints.value,
-      borderColor: '#9D00FF',
+      borderColor: '#9d00ff',
       ...lineSettings,
     })
   }

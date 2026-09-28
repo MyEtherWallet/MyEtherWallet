@@ -8,7 +8,7 @@ import { isUserRejectionError } from '@/utils/walletUtils'
  * hides a fully broken trade path — the user sees a toast and Sentry sees
  * nothing.
  */
-const REPORTABLE_CLIENT_STATUSES = new Set([401, 403, 429])
+export const REPORTABLE_CLIENT_STATUSES = new Set([401, 403, 429])
 
 /**
  * Whether a trade-submit error is an *expected* client-side failure — it should
@@ -39,6 +39,24 @@ export function isExpectedTradeError(e: unknown): boolean {
 export function isExpectedClientError(e: unknown): boolean {
   if (typeof e !== 'object' || e === null) return false
   return !!(e as { expectedClientError?: boolean }).expectedClientError
+}
+
+const BELOW_MINIMUM_CODE = 'INSUFFICIENT_AMOUNT'
+const NON_PAIR_FUSION_CODES = new Set([BELOW_MINIMUM_CODE, 'MARKET_CLOSED'])
+
+const fusionCodeOf = (e: unknown): string | undefined =>
+  isExpectedClientError(e)
+    ? (e as { fusionCode?: string }).fusionCode
+    : undefined
+
+export function isPairUnavailableError(e: unknown): boolean {
+  if (!isExpectedClientError(e)) return false
+  const code = fusionCodeOf(e)
+  return !code || !NON_PAIR_FUSION_CODES.has(code)
+}
+
+export function isBelowMinimumError(e: unknown): boolean {
+  return fusionCodeOf(e) === BELOW_MINIMUM_CODE
 }
 
 /**

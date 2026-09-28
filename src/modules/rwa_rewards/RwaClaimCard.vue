@@ -8,14 +8,16 @@
         <p class="text-label-sm text-black">
           {{ amountLabel }}
         </p>
-        <p v-if="subtitle" class="text-s-12 leading-[18px] text-[#575757]">
+        <p v-if="subtitle" class="text-s-12 leading-[18px] text-text-subtle">
           {{ subtitle }}
         </p>
       </div>
       <div
         v-if="variant === 'sent' || variant === 'closed'"
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
-        :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
+        :class="
+          variant === 'sent' ? 'bg-background-success' : 'bg-background-error'
+        "
       >
         <check-icon v-if="variant === 'sent'" class="w-3.5 h-3.5 text-white" />
         <x-mark-icon v-else class="w-3.5 h-3.5 text-white" />
@@ -26,6 +28,7 @@
       v-if="variant === 'claim'"
       :is-loading="loading"
       class="w-full text-s-16 font-semibold tracking-[-0.32px]"
+      data-test="rwa-claim-card-button"
       @click="onClick"
     >
       {{ buttonLabel }}

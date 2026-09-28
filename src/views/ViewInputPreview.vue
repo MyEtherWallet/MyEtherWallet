@@ -86,7 +86,7 @@ const searchModel = reactive({ default: '', alternative: '' })
   <div class="p-6 md:p-10 space-y-12">
     <header>
       <h1 class="text-s-28 font-semibold">AppInput — design library</h1>
-      <p class="text-s-14 text-grey-50 mt-1">
+      <p class="text-s-14 text-text-muted mt-1">
         Hover / focus the Default-row fields to see the border ring. The error
         ring is focus-only; blurred errored fields keep their normal border and
         show the feedback row.
@@ -99,13 +99,13 @@ const searchModel = reactive({ default: '', alternative: '' })
       :class="[
         'p-6 rounded-20 space-y-8',
         surface === 'alternative'
-          ? 'bg-app-background border border-dashed border-grey-10'
-          : 'bg-white border border-grey-10',
+          ? 'bg-background-default border border-dashed border-border-default'
+          : 'bg-white border border-border-default',
       ]"
     >
       <h2 class="text-s-20 font-semibold capitalize">
         surface = {{ surface }}
-        <span class="text-s-13 font-normal text-grey-50">
+        <span class="text-s-13 font-normal text-text-muted">
           ({{
             surface === 'alternative'
               ? 'white + border — dialogs today, also for grey backgrounds'
@@ -115,12 +115,12 @@ const searchModel = reactive({ default: '', alternative: '' })
       </h2>
 
       <div v-for="size in sizes" :key="size" class="space-y-4">
-        <h3 class="text-s-15 text-grey-50 capitalize">size = {{ size }}</h3>
+        <h3 class="text-s-15 text-text-muted capitalize">size = {{ size }}</h3>
         <div
           class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-5"
         >
           <div v-for="v in variants" :key="v.key">
-            <p class="text-s-12 text-grey-50 mb-1">{{ v.caption }}</p>
+            <p class="text-s-12 text-text-muted mb-1">{{ v.caption }}</p>
             <AppInput
               v-model="models[`${surface}-${size}-${v.key}`]"
               :size="size"
@@ -130,11 +130,11 @@ const searchModel = reactive({ default: '', alternative: '' })
               v-bind="v.props"
             >
               <template v-if="v.leading" #leading>
-                <UserCircleIcon class="w-full h-full text-grey-subtle" />
+                <UserCircleIcon class="w-full h-full text-text-placeholder" />
               </template>
               <template v-if="v.trailing" #trailing>
                 <AppBtnIcon label="Paste">
-                  <ClipboardIcon class="w-5 h-5 text-primary" />
+                  <ClipboardIcon class="w-5 h-5 text-text-brand" />
                 </AppBtnIcon>
               </template>
             </AppInput>
@@ -146,17 +146,17 @@ const searchModel = reactive({ default: '', alternative: '' })
     <section class="space-y-4">
       <h2 class="text-s-20 font-semibold">AppTextField</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="p-6 rounded-20 bg-white border border-grey-10">
-          <p class="text-s-12 text-grey-50 mb-2">surface = default</p>
+        <div class="p-6 rounded-20 bg-white border border-border-default">
+          <p class="text-s-12 text-text-muted mb-2">surface = default</p>
           <AppTextField
             v-model="textFieldModel.default"
             placeholder="Message to sign"
           />
         </div>
         <div
-          class="p-6 rounded-20 bg-app-background border border-dashed border-grey-10"
+          class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
         >
-          <p class="text-s-12 text-grey-50 mb-2">surface = alternative</p>
+          <p class="text-s-12 text-text-muted mb-2">surface = alternative</p>
           <AppTextField
             v-model="textFieldModel.alternative"
             surface="alternative"
@@ -170,13 +170,13 @@ const searchModel = reactive({ default: '', alternative: '' })
       <h2 class="text-s-20 font-semibold">AppSearchInput</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
-          class="p-6 rounded-20 bg-app-background border border-dashed border-grey-10"
+          class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
         >
-          <p class="text-s-12 text-grey-50 mb-2">on grey app bg</p>
+          <p class="text-s-12 text-text-muted mb-2">on grey app bg</p>
           <AppSearchInput v-model="searchModel.default" />
         </div>
-        <div class="p-6 rounded-20 bg-white border border-grey-10">
-          <p class="text-s-12 text-grey-50 mb-2">on white card</p>
+        <div class="p-6 rounded-20 bg-white border border-border-default">
+          <p class="text-s-12 text-text-muted mb-2">on white card</p>
           <AppSearchInput v-model="searchModel.alternative" />
         </div>
       </div>

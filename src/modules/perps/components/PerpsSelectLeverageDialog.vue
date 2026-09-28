@@ -16,11 +16,11 @@
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <!-- Leverage Card -->
-        <div class="bg-mewBg rounded-[20px] p-5">
+        <div class="bg-background-brand-subtle rounded-[20px] p-5">
           <!-- +/- Controls -->
           <div class="flex items-center justify-center gap-6 mb-5">
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
               :disabled="modelValue <= 1"
               :class="
                 modelValue <= 1
@@ -62,7 +62,7 @@
               <span class="font-bold text-[40px] tracking-tight">&times;</span>
             </div>
             <button
-              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
               :disabled="modelValue >= maxLeverage"
               :class="
                 modelValue >= maxLeverage
@@ -70,7 +70,10 @@
                   : 'shadow-button shadow-button-elevated'
               "
               @click="
-                $emit('update:modelValue', Math.min(maxLeverage, modelValue + 1))
+                $emit(
+                  'update:modelValue',
+                  Math.min(maxLeverage, modelValue + 1),
+                )
               "
             >
               <PlusIcon class="w-5 h-5" />
@@ -83,7 +86,7 @@
               v-for="tick in tickValues"
               :key="tick"
               class="text-[11px] font-medium hoverNoBG rounded-full px-2 py-0.5"
-              :class="modelValue > tick ? 'text-info' : ''"
+              :class="modelValue > tick ? 'text-text-subtle' : ''"
               @click="$emit('update:modelValue', tick)"
             >
               {{ tick }}&times;
@@ -101,7 +104,7 @@
               :aria-label="$t('perps.confirm.leverage')"
               class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
               :style="{
-                background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderFillPct}%, #e5e7eb ${sliderFillPct}%, #e5e7eb 100%)`,
+                background: `linear-gradient(to right, var(--color-background-brand) 0%, var(--color-background-brand) ${sliderFillPct}%, var(--color-background-default-hover) ${sliderFillPct}%, var(--color-background-default-hover) 100%)`,
               }"
               @input="
                 $emit(
@@ -114,9 +117,12 @@
         </div>
 
         <!-- Description -->
-        <p class="text-s-14 text-info leading-relaxed" v-if="mode === 'create'">
+        <p
+          class="text-s-14 text-text-subtle leading-relaxed"
+          v-if="mode === 'create'"
+        >
           {{ $t('perps.select-leverage.leverage-description') }}
-          <a href="#" class="text-[#0052ff] font-medium hover:underline">{{
+          <a href="#" class="text-text-brand font-medium hover:underline">{{
             $t('perps.select-leverage.learn-more')
           }}</a>
         </p>
@@ -131,14 +137,16 @@
         <!-- Leverage Error -->
         <div
           v-if="leverageError"
-          class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
         >
-          <p class="text-error text-s-14 font-medium">{{ leverageError }}</p>
+          <p class="text-text-error text-s-14 font-medium">
+            {{ leverageError }}
+          </p>
         </div>
 
         <!-- Save Button -->
         <button
-          class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+          class="w-full bg-background-brand text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
           :disabled="isSaving"
           @click="$emit('save')"
         >
@@ -218,7 +226,7 @@ const sliderFillPct = computed(() => {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #0052ff;
+  background: var(--color-background-brand);
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -228,7 +236,7 @@ const sliderFillPct = computed(() => {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #0052ff;
+  background: var(--color-background-brand);
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
