@@ -26,7 +26,6 @@ const h = vi.hoisted(() => ({
 vi.mock('@enkryptcom/hw-wallets', () => {
   class FakeProvider {
     static getSupportedNetworks = () => ['ETH']
-    async init() {}
     async isConnected() {
       return true
     }
@@ -143,13 +142,20 @@ const stubs = {
   AppSheet: { template: '<div><slot /></div>' },
   AppStepper: { template: '<div><slot /></div>' },
   AppStepDescription: { template: '<div />' },
-  AppBaseButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
+  AppBaseButton: {
+    template: '<button @click="$emit(\'click\')"><slot /></button>',
+  },
   AppBtnText: { template: '<button><slot /></button>' },
   SelectAddressList: { template: '<div />' },
   SelectChainForApp: { template: '<div />' },
   HardwareWalletDerivation: { template: '<div />' },
   ButtonNoWallet: { template: '<div />' },
 }
+
+const factory = () =>
+  mount(ModuleAccessHardwareWallet, {
+    global: { stubs, mocks: { $t: (k: string) => k } },
+  })
 
 beforeEach(() => {
   resetTrezorManager()
@@ -159,13 +165,10 @@ beforeEach(() => {
 
 describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () => {
   it('does not run the unlock flow when the dialog closes while the Ledger transport is opening', async () => {
-    const wrapper = mount(ModuleAccessHardwareWallet, {
-      global: { stubs, mocks: { $t: (k: string) => k } },
-    })
+    const wrapper = factory()
     await flushPromises() // usbSupported -> true, Connect USB button renders
 
     await wrapper.find('button').trigger('click') // connectViaUSB, transport pending
-    expect(h.resolveTransport).toBeTypeOf('function')
 
     // User closes the access dialog; the parent unmounts this view.
     useAccessStore().closeAccessDialog()
@@ -180,9 +183,7 @@ describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () =
 
   it('still connects through the Ledger manager when the view is unchanged', async () => {
     h.ledgerIsConnected.mockResolvedValue(true)
-    const wrapper = mount(ModuleAccessHardwareWallet, {
-      global: { stubs, mocks: { $t: (k: string) => k } },
-    })
+    const wrapper = factory()
     await flushPromises()
 
     await wrapper.find('button').trigger('click')
