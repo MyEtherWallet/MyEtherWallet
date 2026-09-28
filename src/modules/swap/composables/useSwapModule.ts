@@ -1,11 +1,4 @@
-import {
-  ref,
-  computed,
-  watch,
-  nextTick,
-  type Ref,
-  type ComputedRef,
-} from 'vue'
+import { ref, computed, watch, nextTick, type Ref, type ComputedRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
@@ -49,8 +42,13 @@ import { useSwapAnalytics } from './useSwapAnalytics'
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (error instanceof Error && error.message) return error.message
   if (typeof error === 'string') return error
-  if (error && typeof error === 'object' && 'message' in error &&
-    typeof error.message === 'string') return error.message
+  if (
+    error &&
+    typeof error === 'object' &&
+    'message' in error &&
+    typeof error.message === 'string'
+  )
+    return error.message
   return fallback
 }
 
@@ -83,7 +81,11 @@ import {
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  isInsufficientFundsError,
+} from '@/utils/walletUtils'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import { reportModuleError } from '@/utils/reportModuleError'
@@ -196,23 +198,36 @@ export function useSwapModule(): SwapModuleBindings {
 
   // --- Swap Store ---
   const swapStore = useSwapStore()
-  const {
-    supportedNetwork,
-    swapLoaded,
-    toChains,
-    fromTokens,
-    toTokens,
-  } = storeToRefs(swapStore)
+  const { supportedNetwork, swapLoaded, toChains, fromTokens, toTokens } =
+    storeToRefs(swapStore)
   const { initSwapper, getQuote, getSwap } = swapStore
 
   const form = useSwapForm()
   const {
-    selectedToChain, fromTokenSelected, toTokenSelected, toAddressError,
-    generalError, fromAmount, toAmount, userToAddress, foundNickName,
-    providers, selectedQuote, swapInfo, swapGasFeeQuote, txHash, localToTokens,
-    isLoadingQuotes, bestSwapLoadingOpen, bestOfferSelectionOpen,
-    swapInitiatedOpen, txProceeding, quotesError, isPristine,
-    resetPristine, markFormDirty,
+    selectedToChain,
+    fromTokenSelected,
+    toTokenSelected,
+    toAddressError,
+    generalError,
+    fromAmount,
+    toAmount,
+    userToAddress,
+    foundNickName,
+    providers,
+    selectedQuote,
+    swapInfo,
+    swapGasFeeQuote,
+    txHash,
+    localToTokens,
+    isLoadingQuotes,
+    bestSwapLoadingOpen,
+    bestOfferSelectionOpen,
+    swapInitiatedOpen,
+    txProceeding,
+    quotesError,
+    isPristine,
+    resetPristine,
+    markFormDirty,
   } = form
   const { getAnalyticsShared } = useSwapAnalytics({ form, selectedChain })
 
@@ -312,7 +327,9 @@ export function useSwapModule(): SwapModuleBindings {
 
     // Validate Decimals
     const decimals = fromTokenSelected.value.decimals || 18
-    if (BigNumber(fromAmount.value).toFixed().split('.')[1]?.length > decimals) {
+    if (
+      BigNumber(fromAmount.value).toFixed().split('.')[1]?.length > decimals
+    ) {
       return t('swap.error.too-many-decimals')
     }
 
@@ -395,7 +412,9 @@ export function useSwapModule(): SwapModuleBindings {
     return ((fromValue - toValue) / fromValue) * 100
   })
 
-  const priceImpactTooHigh = computed(() => priceImpact.value > MAX_PRICE_IMPACT)
+  const priceImpactTooHigh = computed(
+    () => priceImpact.value > MAX_PRICE_IMPACT,
+  )
 
   const isSwapDisabled = computed(
     () =>
@@ -441,7 +460,9 @@ export function useSwapModule(): SwapModuleBindings {
 
   const getSwapFee = (): bigint => {
     const feeData = swapGasFeeQuote.value?.fees?.[gasPriceType.value]
-    const gasFee = BigInt(feeData?.nativeValue || feeData?.nativeFeeTotal || '0')
+    const gasFee = BigInt(
+      feeData?.nativeValue || feeData?.nativeFeeTotal || '0',
+    )
     const additionalFees = BigInt(
       selectedQuote.value?.additionalNativeFees?.toString() || '0',
     )
@@ -460,7 +481,9 @@ export function useSwapModule(): SwapModuleBindings {
       isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
       isTokenSelected: () => !!fromTokenSelected.value,
       getAmount: () => fromAmount.value,
-      onAmountChange: value => { fromAmount.value = String(value) },
+      onAmountChange: value => {
+        fromAmount.value = String(value)
+      },
       markFormDirty,
       resetFormPristine: resetPristine,
       getTokenIdentifier: () => fromTokenSelected.value?.address,
@@ -644,6 +667,24 @@ export function useSwapModule(): SwapModuleBindings {
           errorMsg: 'declined_by_user',
         })
         return
+      } else if (isInsufficientFundsError(e)) {
+        const insufficientFundsMessage = t(
+          'common.not_enough_balance_to_cover_fee',
+          { symbol: selectedChain.value?.currencyName },
+        )
+        generalError.value = insufficientFundsMessage
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: insufficientFundsMessage,
+          duration: 10000,
+        })
+        if (!isDevMode) {
+          analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+            ...analyticsPayload,
+            errorMsg: 'insufficient_funds_for_gas',
+          })
+        }
+        return
       } else {
         if (!isDevMode) {
           analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
@@ -683,6 +724,18 @@ export function useSwapModule(): SwapModuleBindings {
 
   // --- Pre-Swap & Quotes ---
 
+  const quotedNativeSpend = computed<bigint | undefined>(() => {
+    if (isBitcoinChain.value) return undefined
+    const quotedTransactions = (swapInfo.value?.transactions || []).filter(
+      (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+    )
+    if (quotedTransactions.length === 0) return undefined
+    return quotedTransactions.reduce(
+      (total, tx) => total + BigInt(tx.value || '0'),
+      0n,
+    )
+  })
+
   const swapFeeError = computed<string | undefined>(() => {
     if (
       !swapGasFeeQuote.value?.fees ||
@@ -707,9 +760,12 @@ export function useSwapModule(): SwapModuleBindings {
       // viem's parser. No amount means no fee shortfall to report.
       const amountBN = BigNumber(fromAmount.value)
       if (amountBN.isNaN() || amountBN.lte(0)) return undefined
-      const totalBalanceNeeded =
-        fee +
+      // Prefer the native value the quoted transactions actually send; fall
+      // back to the typed amount before a quote exists.
+      const nativeSpend =
+        quotedNativeSpend.value ??
         parseUnits(amountBN.toFixed(), fromTokenSelected.value.decimals)
+      const totalBalanceNeeded = fee + nativeSpend
       if (totalBalanceNeeded > mainTokenBalance) {
         return 'NOT_ENOUGH_BALANCE'
       }
@@ -727,7 +783,10 @@ export function useSwapModule(): SwapModuleBindings {
       swapGasFeeQuote.value = (res as QuotesResponse) || undefined
       bestOfferSelectionOpen.value = true
     } catch (e: unknown) {
-      generalError.value = getErrorMessage(e, t('swap.error.fetching-btc-gas-fees'))
+      generalError.value = getErrorMessage(
+        e,
+        t('swap.error.fetching-btc-gas-fees'),
+      )
       if (!isDevMode) {
         analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
           ...analyticsPayload,
@@ -900,7 +959,11 @@ export function useSwapModule(): SwapModuleBindings {
         const fromAmountBase = parseUnits(requestedAmount, fromDecimals)
         const toDecimals = toToken.decimals ?? 18
         const quoteOutputUsd = (q: ProviderQuoteResponse) =>
-          outputUsd(BigInt(q.toTokenAmount.toString()), toDecimals, toToken.price)
+          outputUsd(
+            BigInt(q.toTokenAmount.toString()),
+            toDecimals,
+            toToken.price,
+          )
         // A route whose output is worth less than MIN_OUTPUT_USD is not offered,
         // swap or bridge: the user would pay gas to receive dust. An unknown
         // price never blocks.
@@ -1184,13 +1247,15 @@ export function useSwapModule(): SwapModuleBindings {
       const mewToken = fromTokens.value.find(
         t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
       )
-      fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
+      fromTokenSelected.value = (mewToken ||
+        fromTokens.value[0]) as NewTokenInfo
     } else {
       // No token selected, no stored values - use default
       const mewToken = fromTokens.value.find(
         t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
       )
-      fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
+      fromTokenSelected.value = (mewToken ||
+        fromTokens.value[0]) as NewTokenInfo
     }
   }
 
@@ -1216,326 +1281,344 @@ export function useSwapModule(): SwapModuleBindings {
     return providers.value[0]
   })
   const swapTokensFeature = useSwapTokens({
-    form, setFromToken, setToToken, parsedFromTokens, filteredToTokens,
-    parsedToChains, fromChains,
+    form,
+    setFromToken,
+    setToToken,
+    parsedFromTokens,
+    filteredToTokens,
+    parsedToChains,
+    fromChains,
   })
   const swapValidationFeature = useSwapValidation({
-    fromAmountError, toAmountError, isSwapDisabled, isSameToken,
-    priceImpact, priceImpactTooHigh, swapFeeError,
+    fromAmountError,
+    toAmountError,
+    isSwapDisabled,
+    isSameToken,
+    priceImpact,
+    priceImpactTooHigh,
+    swapFeeError,
   })
   const swapQuoteFeature = useSwapQuote({
-    form, fetchQuotes, debounceFetchQuotes, bestRate,
+    form,
+    fetchQuotes,
+    debounceFetchQuotes,
+    bestRate,
   })
   useSwapGasFee({
-    generateBTCGasFeeQuote, generateEVMGasFeeQuote, getSwapFee,
+    generateBTCGasFeeQuote,
+    generateEVMGasFeeQuote,
+    getSwapFee,
     getTokenBalanceParams,
   })
   const swapExecutionFeature = useSwapExecution({
-    proceedWithSwap, swapForBtc, swapForEvm, swapButton,
+    proceedWithSwap,
+    swapForBtc,
+    swapForEvm,
+    swapButton,
   })
 
   const bindWatchers = () => {
-  // Sync swap/bridge pair to pairStore
-  watch(fromTokenSelected, token => {
-    if (isSwapView.value) {
-      setSwapFromToken(token ?? null)
-    } else {
-      setBridgeFromToken(token ?? null)
-    }
-  })
-
-  watch(toTokenSelected, token => {
-    if (isSwapView.value) {
-      setSwapToToken(token ?? null)
-    } else {
-      setBridgeToToken(token ?? null)
-    }
-  })
-
-  watch(selectedToChain, chain => {
-    if (!isSwapView.value) {
-      setBridgeToChain(
-        chain && chain.name !== selectedChain.value?.name ? chain : null,
-      )
-    }
-  })
-
-  // Deep Link / Swap Values Watcher
-  watch(
-    () => swapValues.value,
-    async newVal => {
-      if (hasSwapValues.value) {
-        markFormDirty() // Restoring values means form is not pristine
-        selectedToChain.value = newVal.toChain
-        await nextTick()
-        setToToken()
-        setFromToken()
-        fromAmount.value = newVal.fromAmount
-        setTimeout(() => clearSwapValues(), 1000)
-      }
-    },
-    { deep: true },
-  )
-
-  // Reset state on Swap Success Dialog close
-  watch(
-    () => swapInitiatedOpen.value,
-    isOpen => {
-      if (!isOpen) {
-        // Add address to book if new
-        if (!foundNickName.value && toAddress.value) {
-          addAddress(
-            {
-              address: toAddress.value,
-              name: '',
-              chainName: selectedToChain.value?.name || '',
-              chainType: selectedToChain.value?.type || '',
-            },
-            selectedToChain.value?.type || '',
-          )
-        }
-
-        // Cleanup
-        txHash.value = '0x'
-        providers.value = []
-        clearValues()
-      }
-    },
-  )
-
-  // Fetch Quote Trigger
-  const prevFromToken = ref<string | null>(null)
-  const prevToToken = ref<string | null>(null)
-  const prevUserAddress = ref<string | null>(null)
-  const prevToAddress = ref<string | null>(null)
-
-  watch(
-    () => [
-      fromAmount.value,
-      fromTokenSelected.value?.address,
-      userAddress.value,
-      toAddress.value,
-      toTokenSelected.value?.address,
-    ],
-    () => {
-      generalError.value = ''
-      quotesError.value = false
-
-      const currentFromToken = fromTokenSelected.value?.address || null
-      const currentToToken = toTokenSelected.value?.address || null
-      const currentUserAddress = userAddress.value || null
-      const currentToAddress = toAddress.value || null
-      const onlyAmountChanged =
-        prevFromToken.value === currentFromToken &&
-        prevToToken.value === currentToToken &&
-        prevUserAddress.value === currentUserAddress &&
-        prevToAddress.value === currentToAddress &&
-        prevFromToken.value !== null
-
-      prevFromToken.value = currentFromToken
-      prevToToken.value = currentToToken
-      prevUserAddress.value = currentUserAddress
-      prevToAddress.value = currentToAddress
-
-      if (isSameToken.value) {
-        toAmount.value = ''
-        return
-      }
-
-      const isNativeToken =
-        fromTokenSelected.value?.address?.toLowerCase() ===
-        MAIN_TOKEN_CONTRACT.toLowerCase()
-      if (
-        isMaxSelected.value &&
-        onlyAmountChanged &&
-        isNativeToken &&
-        selectedQuote.value
-      ) {
-        return
-      }
-
-      if (
-        swapLoaded.value &&
-        !BigNumber(fromAmount.value).isNaN() &&
-        !BigNumber(fromAmount.value).isZero() &&
-        toTokenSelected.value
-      ) {
-        if (isCrossChain.value && !toAddress.value && !isPristine.value) {
-          // Highlight the missing address instead of silently returning
-          toAddressError.value = t('swap.error.recipient-required')
-          return
-        }
-        debounceFetchQuotes()
+    // Sync swap/bridge pair to pairStore
+    watch(fromTokenSelected, token => {
+      if (isSwapView.value) {
+        setSwapFromToken(token ?? null)
       } else {
-        // Clear stale quotes when amount becomes invalid, and invalidate any
-        // request still in flight so its result cannot land on the empty field.
-        latestQuotesRequestId++
-        isLoadingQuotes.value = false
-        providers.value = []
-        selectedQuote.value = undefined
-        toAmount.value = ''
+        setBridgeFromToken(token ?? null)
       }
-    },
-  )
+    })
 
-  watch(
-    () => selectedQuote.value,
-    async (provider, _prev, onCleanup) => {
-      if (!provider) return
-      // A newer selectedQuote invalidates this run: flag it so late-resolving
-      // getSwap / gas-fee-quote calls don't overwrite state with stale data.
-      let cancelled = false
-      onCleanup(() => {
-        cancelled = true
-      })
-      const analyticsPayload = getAnalyticsShared()
-      // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
-      txProceeding.value = true
-      try {
-        const res = await getSwap(provider)
-        if (cancelled) return
-        swapInfo.value = res
-        const quoteRes = await (isBitcoinChain.value
-          ? generateBTCGasFeeQuote()
-          : generateEVMGasFeeQuote())
-        if (cancelled) return
-        swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
-      } catch (err: unknown) {
-        if (cancelled) return
-        swapInfo.value = null
-        swapGasFeeQuote.value = undefined
-        const errorMessage = getErrorMessage(err, 'Error fetching gas fees')
-        generalError.value = errorMessage
-        const isExpectedQuoteError =
-          errorMessage === t('swap.error.pair-not-available') ||
-          isExpectedSwapQuoteError(errorMessage)
-        if (!isDevMode) {
-          analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
-            ...analyticsPayload,
-            errorMsg: generalError.value,
-          })
-        }
-        reportModuleError({
-          tag: SENTRY_MODULE_TAGS.SWAP,
-          title: 'SWAP: Error fetching gas fees on quote selection',
-          error: err,
-          expected: isExpectedQuoteError,
-          extra: { errorMessage: generalError.value },
-        })
-      } finally {
-        if (!cancelled) txProceeding.value = false
+    watch(toTokenSelected, token => {
+      if (isSwapView.value) {
+        setSwapToToken(token ?? null)
+      } else {
+        setBridgeToToken(token ?? null)
       }
-    },
-    { deep: true },
-  )
+    })
 
-  // Update To Amount Estimate
-  watch(
-    () => bestRate.value,
-    () => {
-      if (
-        bestRate.value &&
-        providers.value.length > 0 &&
-        !fromAmountError.value
-      ) {
-        const val = formatUnits(
-          BigInt(bestRate.value.toTokenAmount.toString()),
-          toTokenSelected.value?.decimals || 18,
+    watch(selectedToChain, chain => {
+      if (!isSwapView.value) {
+        setBridgeToChain(
+          chain && chain.name !== selectedChain.value?.name ? chain : null,
         )
-
-        const BigNumberVal = BigNumber(val)
-        if (BigNumberVal.gte(100000)) {
-          toAmount.value = BigNumberVal.toFixed(0) // No decimals for very large numbers
-          return
-        }
-        if (BigNumberVal.gte(10)) {
-          toAmount.value = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
-          return
-        }
-        if (BigNumberVal.gte(1)) {
-          toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
-          return
-        }
-        if (BigNumberVal.gte(0.0001)) {
-          toAmount.value = BigNumberVal.toFixed(6) // 6 decimals down to 0.0001
-          return
-        }
-        // 8 decimals below that. If even that rounds to 0, show the exact
-        // value so a positive estimate is never displayed or treated as zero.
-        const eightDp = BigNumberVal.toFixed(8)
-        toAmount.value = BigNumber(eightDp).gt(0) ? eightDp : val
       }
-    },
-  )
+    })
 
-  // Watch Chain Name for Nickname lookup
-  watch(
-    () => toAddress.value,
-    addr => {
-      foundNickName.value = ''
-      if (!addr) return
-      const found = inAddressBook(addr, selectedToChain.value?.type || '')
-      if (found) foundNickName.value = (found as Address).name
-    },
-    { immediate: true },
-  )
-
-  // Reset toChain and inputs when global chain changes in swap view
-  watch(
-    () => selectedChain.value?.name,
-    (newName, oldName) => {
-      if (!newName || !oldName || newName === oldName) return
-
-      if (newName === 'BITCOIN') {
-        const eth = chains.value.find(c => c.name === 'ETHEREUM')
-        if (eth) selectedToChain.value = eth
-      } else {
-        if (isSwapView.value) {
-          selectedToChain.value = selectedChain.value!
+    // Deep Link / Swap Values Watcher
+    watch(
+      () => swapValues.value,
+      async newVal => {
+        if (hasSwapValues.value) {
+          markFormDirty() // Restoring values means form is not pristine
+          selectedToChain.value = newVal.toChain
+          await nextTick()
+          setToToken()
+          setFromToken()
+          fromAmount.value = newVal.fromAmount
+          setTimeout(() => clearSwapValues(), 1000)
         }
-      }
-      clearValues()
-    },
-  )
+      },
+      { deep: true },
+    )
 
-  // Handle From Tokens Updates
-  watch(
-    () => fromTokens.value,
-    () => setFromToken(),
-    { deep: true },
-  )
+    // Reset state on Swap Success Dialog close
+    watch(
+      () => swapInitiatedOpen.value,
+      isOpen => {
+        if (!isOpen) {
+          // Add address to book if new
+          if (!foundNickName.value && toAddress.value) {
+            addAddress(
+              {
+                address: toAddress.value,
+                name: '',
+                chainName: selectedToChain.value?.name || '',
+                chainType: selectedToChain.value?.type || '',
+              },
+              selectedToChain.value?.type || '',
+            )
+          }
 
-  // When from-token changes on same chain, auto-switch to-token if it matches
-  watch(
-    () => fromTokenSelected.value?.address,
-    () => {
-      swapGasFeeQuote.value = undefined
-      if (
-        fromTokenSelected.value &&
-        toTokenSelected.value &&
-        selectedChain.value?.name === selectedToChain.value?.name &&
-        fromTokenSelected.value.address.toLowerCase() ===
-          toTokenSelected.value.address.toLowerCase()
-      ) {
-        const alt = filteredToTokens.value[0]
-        toTokenSelected.value = alt || null
-      }
-    },
-  )
+          // Cleanup
+          txHash.value = '0x'
+          providers.value = []
+          clearValues()
+        }
+      },
+    )
 
-  // Handle To Tokens Updates (e.g. swap re-init on chain change)
-  watch(
-    () => toTokens.value,
-    () => setToToken(),
-    { deep: true },
-  )
+    // Fetch Quote Trigger
+    const prevFromToken = ref<string | null>(null)
+    const prevToToken = ref<string | null>(null)
+    const prevUserAddress = ref<string | null>(null)
+    const prevToAddress = ref<string | null>(null)
 
-  // Refresh localToTokens balances when wallet balances update
-  watch(
-    () => [tokens.value, balanceWei.value],
-    () => setToToken(),
-    { deep: true },
-  )
+    watch(
+      () => [
+        fromAmount.value,
+        fromTokenSelected.value?.address,
+        userAddress.value,
+        toAddress.value,
+        toTokenSelected.value?.address,
+      ],
+      () => {
+        generalError.value = ''
+        quotesError.value = false
+
+        const currentFromToken = fromTokenSelected.value?.address || null
+        const currentToToken = toTokenSelected.value?.address || null
+        const currentUserAddress = userAddress.value || null
+        const currentToAddress = toAddress.value || null
+        const onlyAmountChanged =
+          prevFromToken.value === currentFromToken &&
+          prevToToken.value === currentToToken &&
+          prevUserAddress.value === currentUserAddress &&
+          prevToAddress.value === currentToAddress &&
+          prevFromToken.value !== null
+
+        prevFromToken.value = currentFromToken
+        prevToToken.value = currentToToken
+        prevUserAddress.value = currentUserAddress
+        prevToAddress.value = currentToAddress
+
+        if (isSameToken.value) {
+          toAmount.value = ''
+          return
+        }
+
+        const isNativeToken =
+          fromTokenSelected.value?.address?.toLowerCase() ===
+          MAIN_TOKEN_CONTRACT.toLowerCase()
+        if (
+          isMaxSelected.value &&
+          onlyAmountChanged &&
+          isNativeToken &&
+          selectedQuote.value
+        ) {
+          return
+        }
+
+        if (
+          swapLoaded.value &&
+          !BigNumber(fromAmount.value).isNaN() &&
+          !BigNumber(fromAmount.value).isZero() &&
+          toTokenSelected.value
+        ) {
+          if (isCrossChain.value && !toAddress.value && !isPristine.value) {
+            // Highlight the missing address instead of silently returning
+            toAddressError.value = t('swap.error.recipient-required')
+            return
+          }
+          debounceFetchQuotes()
+        } else {
+          // Clear stale quotes when amount becomes invalid, and invalidate any
+          // request still in flight so its result cannot land on the empty field.
+          latestQuotesRequestId++
+          isLoadingQuotes.value = false
+          providers.value = []
+          selectedQuote.value = undefined
+          toAmount.value = ''
+        }
+      },
+    )
+
+    watch(
+      () => selectedQuote.value,
+      async (provider, _prev, onCleanup) => {
+        if (!provider) return
+        // A newer selectedQuote invalidates this run: flag it so late-resolving
+        // getSwap / gas-fee-quote calls don't overwrite state with stale data.
+        let cancelled = false
+        onCleanup(() => {
+          cancelled = true
+        })
+        const analyticsPayload = getAnalyticsShared()
+        // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
+        txProceeding.value = true
+        try {
+          const res = await getSwap(provider)
+          if (cancelled) return
+          swapInfo.value = res
+          const quoteRes = await (isBitcoinChain.value
+            ? generateBTCGasFeeQuote()
+            : generateEVMGasFeeQuote())
+          if (cancelled) return
+          swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
+        } catch (err: unknown) {
+          if (cancelled) return
+          swapInfo.value = null
+          swapGasFeeQuote.value = undefined
+          const errorMessage = getErrorMessage(err, 'Error fetching gas fees')
+          generalError.value = errorMessage
+          const isExpectedQuoteError =
+            errorMessage === t('swap.error.pair-not-available') ||
+            isExpectedSwapQuoteError(errorMessage)
+          if (!isDevMode) {
+            analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+              ...analyticsPayload,
+              errorMsg: generalError.value,
+            })
+          }
+          reportModuleError({
+            tag: SENTRY_MODULE_TAGS.SWAP,
+            title: 'SWAP: Error fetching gas fees on quote selection',
+            error: err,
+            expected: isExpectedQuoteError,
+            extra: { errorMessage: generalError.value },
+          })
+        } finally {
+          if (!cancelled) txProceeding.value = false
+        }
+      },
+      { deep: true },
+    )
+
+    // Update To Amount Estimate
+    watch(
+      () => bestRate.value,
+      () => {
+        if (
+          bestRate.value &&
+          providers.value.length > 0 &&
+          !fromAmountError.value
+        ) {
+          const val = formatUnits(
+            BigInt(bestRate.value.toTokenAmount.toString()),
+            toTokenSelected.value?.decimals || 18,
+          )
+
+          const BigNumberVal = BigNumber(val)
+          if (BigNumberVal.gte(100000)) {
+            toAmount.value = BigNumberVal.toFixed(0) // No decimals for very large numbers
+            return
+          }
+          if (BigNumberVal.gte(10)) {
+            toAmount.value = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
+            return
+          }
+          if (BigNumberVal.gte(1)) {
+            toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
+            return
+          }
+          if (BigNumberVal.gte(0.0001)) {
+            toAmount.value = BigNumberVal.toFixed(6) // 6 decimals down to 0.0001
+            return
+          }
+          // 8 decimals below that. If even that rounds to 0, show the exact
+          // value so a positive estimate is never displayed or treated as zero.
+          const eightDp = BigNumberVal.toFixed(8)
+          toAmount.value = BigNumber(eightDp).gt(0) ? eightDp : val
+        }
+      },
+    )
+
+    // Watch Chain Name for Nickname lookup
+    watch(
+      () => toAddress.value,
+      addr => {
+        foundNickName.value = ''
+        if (!addr) return
+        const found = inAddressBook(addr, selectedToChain.value?.type || '')
+        if (found) foundNickName.value = (found as Address).name
+      },
+      { immediate: true },
+    )
+
+    // Reset toChain and inputs when global chain changes in swap view
+    watch(
+      () => selectedChain.value?.name,
+      (newName, oldName) => {
+        if (!newName || !oldName || newName === oldName) return
+
+        if (newName === 'BITCOIN') {
+          const eth = chains.value.find(c => c.name === 'ETHEREUM')
+          if (eth) selectedToChain.value = eth
+        } else {
+          if (isSwapView.value) {
+            selectedToChain.value = selectedChain.value!
+          }
+        }
+        clearValues()
+      },
+    )
+
+    // Handle From Tokens Updates
+    watch(
+      () => fromTokens.value,
+      () => setFromToken(),
+      { deep: true },
+    )
+
+    // When from-token changes on same chain, auto-switch to-token if it matches
+    watch(
+      () => fromTokenSelected.value?.address,
+      () => {
+        swapGasFeeQuote.value = undefined
+        if (
+          fromTokenSelected.value &&
+          toTokenSelected.value &&
+          selectedChain.value?.name === selectedToChain.value?.name &&
+          fromTokenSelected.value.address.toLowerCase() ===
+            toTokenSelected.value.address.toLowerCase()
+        ) {
+          const alt = filteredToTokens.value[0]
+          toTokenSelected.value = alt || null
+        }
+      },
+    )
+
+    // Handle To Tokens Updates (e.g. swap re-init on chain change)
+    watch(
+      () => toTokens.value,
+      () => setToToken(),
+      { deep: true },
+    )
+
+    // Refresh localToTokens balances when wallet balances update
+    watch(
+      () => [tokens.value, balanceWei.value],
+      () => setToToken(),
+      { deep: true },
+    )
   }
 
   // --- Lifecycle ---
@@ -1560,7 +1643,8 @@ export function useSwapModule(): SwapModuleBindings {
         ) {
           selectedToChain.value = bridgeToChain.value
         }
-        if (bridgeFromToken.value) fromTokenSelected.value = bridgeFromToken.value
+        if (bridgeFromToken.value)
+          fromTokenSelected.value = bridgeFromToken.value
         if (bridgeToToken.value) toTokenSelected.value = bridgeToToken.value
       }
     }
