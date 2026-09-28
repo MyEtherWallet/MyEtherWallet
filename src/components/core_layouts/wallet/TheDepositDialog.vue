@@ -74,7 +74,10 @@
               target="_blank"
               class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
             >
-              <AppIcon name="arrow-top-right-on-square" class="text-text-brand" />
+              <AppIcon
+                name="arrow-top-right-on-square"
+                class="text-text-brand"
+              />
             </a>
           </div>
         </div>

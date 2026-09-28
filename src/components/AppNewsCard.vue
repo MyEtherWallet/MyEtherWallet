@@ -89,6 +89,11 @@ const dateLabel = computed(
       />
     </component>
 
-    <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" class="pointer-events-none absolute right-6 top-6 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100 group-has-[.news-ticker:hover]:opacity-0" />
+    <AppIcon
+      name="arrow-top-right-on-square"
+      variant="filled"
+      size="s"
+      class="pointer-events-none absolute right-6 top-6 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100 group-has-[.news-ticker:hover]:opacity-0"
+    />
   </div>
 </template>

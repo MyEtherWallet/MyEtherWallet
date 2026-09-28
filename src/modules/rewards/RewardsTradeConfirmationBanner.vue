@@ -8,7 +8,11 @@
     >
       <!-- Variation 1: Trade qualifies for rewards -->
       <div v-if="qualifies" class="flex items-center gap-3">
-        <AppIcon name="check-circle" variant="filled" class="text-text-success shrink-0" />
+        <AppIcon
+          name="check-circle"
+          variant="filled"
+          class="text-text-success shrink-0"
+        />
         <p class="text-s-14 font-semibold">
           {{ t('rewards.trade_qualifies') }}
         </p>
@@ -16,7 +20,11 @@
 
       <!-- Variations 2 & 3: Trade is not eligible for rewards -->
       <div v-else class="flex items-center gap-3 text-s-14">
-        <AppIcon name="exclamation-circle" variant="filled" class="text-text-warning shrink-0" />
+        <AppIcon
+          name="exclamation-circle"
+          variant="filled"
+          class="text-text-warning shrink-0"
+        />
         <div class="text-left">
           <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->

@@ -27,7 +27,12 @@
                 class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
               >
                 {{ truncateHash(snapshot.toAddress) }}
-                <AppIcon name="arrow-up-right" variant="filled" size="xxs" class="inline-block align-middle text-black" /></a>
+                <AppIcon
+                  name="arrow-up-right"
+                  variant="filled"
+                  size="xxs"
+                  class="inline-block align-middle text-black"
+              /></a>
               <span v-else class="font-mono text-s-13 lg:text-s-16">
                 {{ truncateHash(snapshot.toAddress) }}
               </span>
@@ -63,8 +68,20 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <AppIcon name="check-circle" variant="filled" size="s" v-else-if="notificationStatus === 'confirmed'" class="text-text-success" />
-                <AppIcon name="x-circle" variant="filled" size="s" v-else-if="notificationStatus === 'failed'" class="text-text-error" />
+                <AppIcon
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
+                  v-else-if="notificationStatus === 'confirmed'"
+                  class="text-text-success"
+                />
+                <AppIcon
+                  name="x-circle"
+                  variant="filled"
+                  size="s"
+                  v-else-if="notificationStatus === 'failed'"
+                  class="text-text-error"
+                />
               </div>
 
               <!-- Status Text -->
@@ -213,7 +230,12 @@
               rel="noopener noreferrer"
               class="group underline inline-block"
               >{{ t('send.initiated.check-explorer') }}
-              <AppIcon name="arrow-long-right" variant="filled" size="xxs" class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1" />
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="xxs"
+                class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1"
+              />
             </a>
           </p>
         </div>

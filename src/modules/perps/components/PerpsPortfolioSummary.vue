@@ -15,7 +15,12 @@
             width="w-6"
             @click="onRefreshBalance"
           >
-            <AppIcon name="arrow-path" size="xxs" class="text-text-subtle" :class="{ 'animate-spin': loading }" />
+            <AppIcon
+              name="arrow-path"
+              size="xxs"
+              class="text-text-subtle"
+              :class="{ 'animate-spin': loading }"
+            />
           </app-btn-icon>
         </div>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">

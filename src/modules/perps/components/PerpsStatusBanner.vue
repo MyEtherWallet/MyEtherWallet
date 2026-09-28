@@ -16,7 +16,12 @@
       unreadable for body copy. Near-black text on the amber shell reads as an
       amber banner without failing contrast.
     -->
-    <AppIcon name="exclamation-triangle" size="s" aria-hidden="true" class="shrink-0 text-text-warning" />
+    <AppIcon
+      name="exclamation-triangle"
+      size="s"
+      aria-hidden="true"
+      class="shrink-0 text-text-warning"
+    />
     <p class="text-s-14">{{ $t('perps.status.unavailable') }}</p>
   </div>
 </template>

@@ -11,7 +11,12 @@
         class="absolute top-4 left-4 flex items-center justify-center size-8 rounded-full hoverNoBG"
         @click="onBack"
       >
-        <AppIcon name="chevron-left" variant="filled" size="s" class="text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </button>
     </template>
     <template #content>
@@ -55,7 +60,11 @@
                 wallet: info?.walletName,
               })
             }}
-            <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" />
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </button>
           <button
             data-test="address-saved-retry"

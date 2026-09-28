@@ -60,7 +60,12 @@ const toggle = () => {
       class="shrink-0"
       @click="toggle"
     >
-      <AppIcon name="star" variant="filled" v-if="isListed" class="text-text-brand" />
+      <AppIcon
+        name="star"
+        variant="filled"
+        v-if="isListed"
+        class="text-text-brand"
+      />
       <AppIcon name="star" v-else class="text-text-placeholder" />
     </button>
   </div>

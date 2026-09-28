@@ -30,7 +30,12 @@ const onLearnMore = () => {
     class="flex flex-wrap items-center gap-4 overflow-hidden rounded-2xl border border-white bg-cover bg-center bg-no-repeat p-4"
     :style="{ backgroundImage: bannerBackground }"
   >
-    <AppIcon name="chart-bar-square" variant="filled" size="l" class="shrink-0 text-text-brand" />
+    <AppIcon
+      name="chart-bar-square"
+      variant="filled"
+      size="l"
+      class="shrink-0 text-text-brand"
+    />
     <div class="flex min-w-0 flex-1 flex-col">
       <p class="text-label-base text-black">
         {{ t('homePage.hero.banner.title') }}

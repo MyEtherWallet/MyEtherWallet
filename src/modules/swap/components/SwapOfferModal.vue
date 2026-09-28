@@ -205,7 +205,13 @@
                           )
                         }}%)
                       </span>
-                      <AppIcon name="check" variant="filled" size="s" v-if="item.quote.provider === selectedQuote?.provider" class="text-text-brand" />
+                      <AppIcon
+                        name="check"
+                        variant="filled"
+                        size="s"
+                        v-if="item.quote.provider === selectedQuote?.provider"
+                        class="text-text-brand"
+                      />
                       <div v-else class="w-4 h-4" />
                     </div>
                   </div>

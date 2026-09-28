@@ -7,7 +7,12 @@
         class="size-10 rounded-full hoverNoBG flex items-center justify-center"
         @click="onBack"
       >
-        <AppIcon name="chevron-left" variant="filled" size="s" class="text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </button>
     </div>
     <div

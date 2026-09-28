@@ -32,7 +32,12 @@
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedFilter.label }}
               </span>
-              <AppIcon name="chevron-down" variant="filled" size="xxs" class="shrink-0 text-text-subtle" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="shrink-0 text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
@@ -75,8 +80,20 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-name') }}
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.NAME && tableDirection === 'desc' " />
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.NAME && tableDirection === 'asc' " />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'asc'
+                    "
+                  />
                 </div>
               </th>
               <!-- Market Cap -->
@@ -91,8 +108,22 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-market-cap') }}
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.MARKET_CAP && tableDirection === 'desc' " />
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.MARKET_CAP && tableDirection === 'asc' " />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'asc'
+                    "
+                  />
                 </div>
               </th>
               <!-- Volume -->
@@ -107,8 +138,22 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-volume') }}
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.VOLUME && tableDirection === 'desc' " />
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.VOLUME && tableDirection === 'asc' " />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'asc'
+                    "
+                  />
                 </div>
               </th>
               <!-- 24H Change -->
@@ -129,8 +174,21 @@
                   }"
                 >
                   {{ $t('perps.market-list.column-price') }}
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === SortValue.PRICE && tableDirection === 'desc' " />
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === SortValue.PRICE && tableDirection === 'asc' " />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.PRICE &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.PRICE && tableDirection === 'asc'
+                    "
+                  />
                 </div>
               </th>
               <!-- Actions -->
@@ -157,8 +215,19 @@
                   class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
-                  <AppIcon name="star" size="xxs" v-if="!watchlist.has(contract.baseCurrency)" class="cursor-pointer" />
-                  <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer text-text-brand" />
+                  <AppIcon
+                    name="star"
+                    size="xxs"
+                    v-if="!watchlist.has(contract.baseCurrency)"
+                    class="cursor-pointer"
+                  />
+                  <AppIcon
+                    name="star"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="cursor-pointer text-text-brand"
+                  />
                 </button>
               </td>
               <!-- Name -->
@@ -273,7 +342,11 @@
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                       >
-                        <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
@@ -287,8 +360,19 @@
                             toggleMenu(),
                           ]"
                         >
-                          <AppIcon name="star" size="xxs" v-if="!watchlist.has(contract.baseCurrency)" class="cursor-pointer" />
-                          <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer" />
+                          <AppIcon
+                            name="star"
+                            size="xxs"
+                            v-if="!watchlist.has(contract.baseCurrency)"
+                            class="cursor-pointer"
+                          />
+                          <AppIcon
+                            name="star"
+                            variant="filled"
+                            size="xxs"
+                            v-else
+                            class="cursor-pointer"
+                          />
                           <span class="ml-2">{{
                             watchlist.has(contract.baseCurrency)
                               ? $t('perps.market-list.remove-from-watchlist')

@@ -5,7 +5,12 @@
       target="_blank"
       class="block text-text-subtle text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
     >
-      <AppIcon name="question-mark-circle" variant="filled" size="s" class="display inline block mr-1 text-text-default sm:size-6" />
+      <AppIcon
+        name="question-mark-circle"
+        variant="filled"
+        size="s"
+        class="display inline block mr-1 text-text-default sm:size-6"
+      />
       <span class="underline"> {{ title }} </span>
     </a>
   </div>

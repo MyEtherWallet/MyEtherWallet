@@ -30,8 +30,18 @@
               {{ formatPrice(currentPrice) }}
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
-              <AppIcon name="arrow-trending-down" size="xxs" v-if="priceChangePercent < 0" class="inline-block text-text-error" />
-              <AppIcon name="arrow-trending-up" size="xxs" v-else class="inline-block text-text-success" />
+              <AppIcon
+                name="arrow-trending-down"
+                size="xxs"
+                v-if="priceChangePercent < 0"
+                class="inline-block text-text-error"
+              />
+              <AppIcon
+                name="arrow-trending-up"
+                size="xxs"
+                v-else
+                class="inline-block text-text-success"
+              />
               <span
                 :class="[
                   {
@@ -293,7 +303,12 @@
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}
-          <AppIcon name="chevron-down" size="xxs" class="ml-1 inline-block align-middle" :class="{ 'rotate-180': showPositionMore }" />
+          <AppIcon
+            name="chevron-down"
+            size="xxs"
+            class="ml-1 inline-block align-middle"
+            :class="{ 'rotate-180': showPositionMore }"
+          />
         </app-btn-text>
         <transition name="fade" mode="out-in">
           <div
@@ -656,7 +671,11 @@
                             width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
                           >
-                            <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+                            <AppIcon
+                              name="ellipsis-vertical"
+                              variant="filled"
+                              size="s"
+                            />
                           </app-btn-icon>
                         </template>
                         <template #menu-content="{ toggleMenu }">
@@ -701,7 +720,11 @@
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
                       >
-                        <AppIcon name="chevron-right" variant="filled" size="s" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </div>
                   </td>
@@ -822,7 +845,11 @@
                         class="ml-auto"
                         @click="openFillDialog(fill)"
                       >
-                        <AppIcon name="chevron-right" variant="filled" size="s" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </td>
                   </tr>

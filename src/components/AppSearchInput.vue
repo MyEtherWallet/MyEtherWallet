@@ -1,10 +1,15 @@
 <template>
   <div class="relative">
-    <AppIcon name="magnifying-glass" @click="searchInput?.focus()" :class="[
+    <AppIcon
+      name="magnifying-glass"
+      :size="size === 'compact' ? 's' : 'm'"
+      @click="searchInput?.focus()"
+      :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5' : 'top-2',
         inFocusInput ? 'text-text-brand' : 'text-text-subtle',
-      ]" />
+      ]"
+    />
 
     <input
       ref="searchInput"
@@ -30,10 +35,11 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <AppIcon name="x-circle" :class="[
-            'text-text-brand',
-            size === 'compact' ? '' : '',
-          ]" /></app-btn-icon>
+        <AppIcon
+          name="x-circle"
+          :size="size === 'compact' ? 's' : 'm'"
+          class="text-text-brand"
+      /></app-btn-icon>
     </div>
   </div>
 </template>

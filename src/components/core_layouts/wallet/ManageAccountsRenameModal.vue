@@ -34,7 +34,12 @@
             data-test="rename-modal-error"
             class="flex items-center gap-1.5 px-1"
           >
-            <AppIcon name="exclamation-circle" variant="filled" size="xxs" class="shrink-0 text-text-error" />
+            <AppIcon
+              name="exclamation-circle"
+              variant="filled"
+              size="xxs"
+              class="shrink-0 text-text-error"
+            />
             <p class="text-s-12 text-text-error leading-[18px]">
               {{ $t('multi_address.rename.duplicate') }}
             </p>

@@ -120,8 +120,15 @@
                     key="search_no_data_message"
                     class="text-s-14 text-text-subtle flex items-center justify-center text-wrap break-all h-16"
                   >
-                    <AppIcon name="exclamation-circle" variant="filled" size="s" class="inline-block text-text-muted mr-1" />
-                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
+                    <AppIcon
+                      name="exclamation-circle"
+                      variant="filled"
+                      size="s"
+                      class="inline-block text-text-muted mr-1"
+                    />
+                    {{
+                      $t('stocks.no_results_found_for', { query: searchInput })
+                    }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div
@@ -219,7 +226,9 @@
           </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
-          <p class="font-semibold text-s-14">{{ $t('stocks.trending_colon') }}</p>
+          <p class="font-semibold text-s-14">
+            {{ $t('stocks.trending_colon') }}
+          </p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
             <app-tooltip :text="stock.stockAlias">
               <router-link

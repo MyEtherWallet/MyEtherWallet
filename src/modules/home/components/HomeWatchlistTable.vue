@@ -274,7 +274,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <AppIcon name="bars-2" variant="filled" size="xxs" class="text-text-placeholder" />
+            <AppIcon
+              name="bars-2"
+              variant="filled"
+              size="xxs"
+              class="text-text-placeholder"
+            />
           </span>
           <span
             class="drag-handle absolute left-2 top-1/2 hidden -translate-y-1/2 pointer-events-none opacity-0 transition-opacity min-[780px]:flex"
@@ -285,7 +290,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <AppIcon name="bars-2" variant="filled" size="xxs" class="text-text-placeholder" />
+            <AppIcon
+              name="bars-2"
+              variant="filled"
+              size="xxs"
+              class="text-text-placeholder"
+            />
           </span>
 
           <!-- Star toggle (remove). Grows a light circular background on hover
@@ -379,7 +389,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 "
               >
                 {{ changeLabel(row.change) }}
-                <AppIcon name="arrow-down" variant="filled" size="xxs" v-if="row.change < 0" />
+                <AppIcon
+                  name="arrow-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
+                />
                 <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
               <TableSparkline
@@ -414,7 +429,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 "
               >
                 {{ changeLabel(row.change) }}
-                <AppIcon name="arrow-down" variant="filled" size="xxs" v-if="row.change < 0" />
+                <AppIcon
+                  name="arrow-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
+                />
                 <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
             </template>
@@ -445,7 +465,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
                 >
-                  <AppIcon name="ellipsis-horizontal" variant="filled" size="s" />
+                  <AppIcon
+                    name="ellipsis-horizontal"
+                    variant="filled"
+                    size="s"
+                  />
                 </button>
                 <template v-if="openMenuKey === row.key">
                   <div

@@ -17,7 +17,11 @@
               @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
               class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
-              <AppIcon name="chevron-double-left" size="s" v-if="!isOpenSideMenu" />
+              <AppIcon
+                name="chevron-double-left"
+                size="s"
+                v-if="!isOpenSideMenu"
+              />
               <AppIcon name="chevron-double-right" size="s" v-else />
             </button>
             <!-- Trade button -->
@@ -117,7 +121,10 @@
               ]"
               @click="openDepositDialog = true"
             >
-              <AppIcon name="qr-code" :class="['mb-1 text-text-brand xs:size-7']" />
+              <AppIcon
+                name="qr-code"
+                :class="['mb-1 text-text-brand xs:size-7']"
+              />
               <p
                 :class="[
                   actionTextSizeClass,

@@ -33,7 +33,12 @@
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedCryptoFilter.label }}
               </span>
-              <AppIcon name="chevron-down" variant="filled" size="xxs" class="shrink-0 text-text-subtle" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="shrink-0 text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
@@ -63,8 +68,16 @@
                   @click="setHeaderSort('NAME')"
                 >
                   {{ $t('stocks.name') }}
-                  <AppIcon name="arrow-up" size="xxs" v-if="headerSort === 'NAME' && tableDirection === 'asc'" />
-                  <AppIcon name="arrow-down" size="xxs" v-if="headerSort === 'NAME' && tableDirection === 'desc'" />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="headerSort === 'NAME' && tableDirection === 'asc'"
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="headerSort === 'NAME' && tableDirection === 'desc'"
+                  />
                 </div>
               </th>
               <!-- Market Cap -->
@@ -79,8 +92,20 @@
                   @click="setHeaderSort('MARKET_CAP')"
                 >
                   {{ $t('stocks.market_cap') }}
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === 'MARKET_CAP' && tableDirection === 'asc' " />
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === 'MARKET_CAP' && tableDirection === 'desc' " />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'MARKET_CAP' && tableDirection === 'asc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'MARKET_CAP' && tableDirection === 'desc'
+                    "
+                  />
                 </div>
               </th>
               <!-- Volume -->
@@ -95,8 +120,20 @@
                   @click="setHeaderSort('VOLUME_24H')"
                 >
                   {{ $t('stocks.twenty_four_h_volume') }}
-                  <AppIcon name="arrow-up" size="xxs" v-if=" headerSort === 'VOLUME_24H' && tableDirection === 'asc' " />
-                  <AppIcon name="arrow-down" size="xxs" v-if=" headerSort === 'VOLUME_24H' && tableDirection === 'desc' " />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'VOLUME_24H' && tableDirection === 'asc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'VOLUME_24H' && tableDirection === 'desc'
+                    "
+                  />
                 </div>
               </th>
               <!-- 24H Change -->
@@ -117,8 +154,16 @@
                   @click="setHeaderSort('PRICE')"
                 >
                   {{ $t('stocks.price') }}
-                  <AppIcon name="arrow-up" size="xxs" v-if="headerSort === 'PRICE' && tableDirection === 'asc'" />
-                  <AppIcon name="arrow-down" size="xxs" v-if="headerSort === 'PRICE' && tableDirection === 'desc'" />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                  />
                 </div>
               </th>
               <!-- Actions -->
@@ -147,8 +192,19 @@
                   class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
                   <!-- changes color when active -->
-                  <AppIcon name="star" size="xxs" v-if="!isWatchListed(token.coinId)" class="cursor-pointer" />
-                  <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer text-text-brand" />
+                  <AppIcon
+                    name="star"
+                    size="xxs"
+                    v-if="!isWatchListed(token.coinId)"
+                    class="cursor-pointer"
+                  />
+                  <AppIcon
+                    name="star"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="cursor-pointer text-text-brand"
+                  />
                 </button>
               </td>
               <!-- Name -->
@@ -262,7 +318,11 @@
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                       >
-                        <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">

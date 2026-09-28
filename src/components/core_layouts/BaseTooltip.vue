@@ -45,7 +45,12 @@
           :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="emit('dismiss')"
         >
-          <AppIcon name="x-mark" variant="filled" size="xxs" class="text-text-subtle" />
+          <AppIcon
+            name="x-mark"
+            variant="filled"
+            size="xxs"
+            class="text-text-subtle"
+          />
         </button>
       </div>
     </transition>

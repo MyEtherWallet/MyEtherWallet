@@ -44,7 +44,12 @@
           "
         />
         <div class="ml-1 min-w-4 h-4">
-          <AppIcon name="chevron-down" variant="filled" v-if="!isLoading" class="text-text-subtle" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            v-if="!isLoading"
+            class="text-text-subtle"
+          />
         </div>
       </div>
     </button>
@@ -80,8 +85,20 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortLabel }}</span>
-                  <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if="activeSortDirection === SortDirection.ASC" class="shrink-0" />
-                  <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-else class="shrink-0" />
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
+                    v-if="activeSortDirection === SortDirection.ASC"
+                    class="shrink-0"
+                  />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="shrink-0"
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -112,8 +129,20 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <AppIcon name="arrow-long-up" variant="filled" size="s" v-if="activeSortDirection === SortDirection.ASC" class="text-text-brand" />
-                      <AppIcon name="arrow-long-down" variant="filled" size="s" v-else class="text-text-brand" />
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
+                        v-if="activeSortDirection === SortDirection.ASC"
+                        class="text-text-brand"
+                      />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        v-else
+                        class="text-text-brand"
+                      />
                     </div>
                   </button>
                 </div>

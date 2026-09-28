@@ -46,7 +46,11 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <AppIcon name="qr-code" size="xxs" class="text-text-brand xl:size-5" />
+              <AppIcon
+                name="qr-code"
+                size="xxs"
+                class="text-text-brand xl:size-5"
+              />
               <p>
                 {{ $t('portfolio.no_balance.deposit') }}
                 {{ selectedChain?.currencyName }}

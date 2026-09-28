@@ -27,7 +27,12 @@
         <span class="text-s-13 font-medium whitespace-nowrap">
           {{ filterButtonLabel }}
         </span>
-        <AppIcon name="chevron-right" variant="filled" size="xxs" class="text-black" />
+        <AppIcon
+          name="chevron-right"
+          variant="filled"
+          size="xxs"
+          class="text-black"
+        />
       </button>
     </div>
 
@@ -78,7 +83,13 @@
           >
             {{ entry.network.name }}
           </span>
-          <AppIcon name="check-circle" variant="filled" size="s" v-if="isSelectedToken(entry)" class="text-text-brand flex-none" />
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
+            v-if="isSelectedToken(entry)"
+            class="text-text-brand flex-none"
+          />
         </button>
       </li>
       <li

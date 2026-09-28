@@ -76,7 +76,13 @@
         >
           <template #icon>
             <div class="relative">
-              <AppIcon name="globe-asia-australia" variant="filled" size="xxl" aria-hidden="true" class="text-black" />
+              <AppIcon
+                name="globe-asia-australia"
+                variant="filled"
+                size="xxl"
+                aria-hidden="true"
+                class="text-black"
+              />
               <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
                 from the dark globe behind it — drop it and the badge reads as a
@@ -86,7 +92,13 @@
               <span
                 class="absolute -top-2 -right-2 p-1 rounded-full bg-background-error border-2 border-white flex items-center justify-center"
               >
-                <AppIcon name="exclamation-circle" variant="filled" size="xxs" aria-hidden="true" class="text-white" />
+                <AppIcon
+                  name="exclamation-circle"
+                  variant="filled"
+                  size="xxs"
+                  aria-hidden="true"
+                  class="text-white"
+                />
               </span>
             </div>
           </template>
@@ -223,7 +235,12 @@
             v-if="isPairUnavailable && isTradingSessionOpen"
             class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
           >
-            <AppIcon name="exclamation-triangle" variant="filled" size="s" class="flex-none text-orange-600" />
+            <AppIcon
+              name="exclamation-triangle"
+              variant="filled"
+              size="s"
+              class="flex-none text-orange-600"
+            />
             <p class="text-s-14 leading-[20px] text-black">
               {{ $t('trade.pair_unavailable.notice') }}
             </p>

@@ -20,7 +20,10 @@
       autocomplete="off"
     />
     <div class="flex items-center min-h-[32px] mt-1">
-      <p v-if="errorMessage" class="pl-4 text-text-error text-s-12 leading-tight">
+      <p
+        v-if="errorMessage"
+        class="pl-4 text-text-error text-s-12 leading-tight"
+      >
         {{ errorMessage }}
       </p>
       <p

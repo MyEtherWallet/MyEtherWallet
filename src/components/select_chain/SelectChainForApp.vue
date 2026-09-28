@@ -33,7 +33,12 @@
           >
             <div class="flex items-center justify-center capitalize">
               <span>{{ $t('common.more') }}</span>
-              <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-text-subtle ml-1" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="text-text-subtle ml-1"
+              />
             </div>
           </button>
         </template>
@@ -64,7 +69,12 @@
               {{ selectedChain.nameLong }}
             </p>
           </div>
-          <AppIcon name="chevron-down" variant="filled" size="xxs" class="flex-none ml-auto" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="flex-none ml-auto"
+          />
         </div>
       </button>
     </slot>

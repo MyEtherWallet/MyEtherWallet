@@ -93,10 +93,20 @@
             />
             <div class="ml-auto">
               <p class="mb-3">
-                <AppIcon name="chat-bubble-bottom-center-text" variant="filled" size="xxs" class="inline mr-2 text-text-brand" />support@myetherwallet.com
+                <AppIcon
+                  name="chat-bubble-bottom-center-text"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
+                />support@myetherwallet.com
               </p>
               <p>
-                <AppIcon name="globe-alt" variant="filled" size="xxs" class="inline mr-2 text-text-brand" />https://www.myetherwallet.com
+                <AppIcon
+                  name="globe-alt"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
+                />https://www.myetherwallet.com
               </p>
             </div>
           </div>

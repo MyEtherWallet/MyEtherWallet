@@ -11,7 +11,12 @@
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
           <span>{{ selected ? selected.label : '' }}</span>
-          <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-1" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="ml-1"
+          />
         </div>
       </button>
     </slot>
@@ -101,7 +106,13 @@
               @click="selectOption(option)"
             >
               {{ option.label }}
-              <AppIcon name="check" variant="filled" size="l" v-if="selected && option.value === selected.value" class="ml-auto text-text-brand px-2 -mr-3" />
+              <AppIcon
+                name="check"
+                variant="filled"
+                size="l"
+                v-if="selected && option.value === selected.value"
+                class="ml-auto text-text-brand px-2 -mr-3"
+              />
             </button>
           </div>
         </div>

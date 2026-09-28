@@ -76,7 +76,12 @@
                       }}
                     </span>
                   </span>
-                  <AppIcon name="chevron-down" size="xxs" variant="filled" class="ml-2" />
+                  <AppIcon
+                    name="chevron-down"
+                    size="xxs"
+                    variant="filled"
+                    class="ml-2"
+                  />
                 </div>
               </button>
             </div>
@@ -245,7 +250,11 @@
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
                       >
-                        <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          size="s"
+                          variant="filled"
+                        />
                       </app-btn-icon>
                       <AppBaseButton
                         class="hidden lg:flex"
@@ -515,7 +524,11 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        size="s"
+                        variant="filled"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">

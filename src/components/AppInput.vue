@@ -25,7 +25,11 @@
     <span
       :class="[
         'pointer-events-none absolute top-[17px] left-5 bottom-auto transition-all pl-2 aria-hidden',
-        inFocusInput ? (hasError ? 'text-text-error' : 'text-text-brand') : 'text-text-subtle',
+        inFocusInput
+          ? hasError
+            ? 'text-text-error'
+            : 'text-text-brand'
+          : 'text-text-subtle',
         { 'text-[10px] translate-y-[-70%]': inFocusInput || model !== '' },
         { 'pl-8': $slots.prepend },
       ]"
@@ -42,14 +46,25 @@
           'transition-opacity opacity-0',
         ]"
       >
-        <AppIcon name="x-circle" :class="isDisabled ? 'text-text-placeholder' : 'text-text-brand'" /></app-btn-icon>
+        <AppIcon
+          name="x-circle"
+          :class="isDisabled ? 'text-text-placeholder' : 'text-text-brand'"
+      /></app-btn-icon>
       <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
-        :label="!showPassword ? $t('common.show_password') : $t('common.hide_password')"
+        :label="
+          !showPassword
+            ? $t('common.show_password')
+            : $t('common.hide_password')
+        "
         :disabled="isDisabled"
       >
-        <AppIcon :name="!showPassword ? 'eye-slash' : 'eye'" variant="filled" class="text-text-brand" />
+        <AppIcon
+          :name="!showPassword ? 'eye-slash' : 'eye'"
+          variant="filled"
+          class="text-text-brand"
+        />
       </app-btn-icon>
     </div>
     <transition name="fade" mode="out-in">

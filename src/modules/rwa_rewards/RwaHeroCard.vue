@@ -255,7 +255,12 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <AppIcon name="lock-closed" variant="filled" size="l" class="text-text-brand" />
+          <AppIcon
+            name="lock-closed"
+            variant="filled"
+            size="l"
+            class="text-text-brand"
+          />
           <p class="text-text-sm text-text-subtle text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>

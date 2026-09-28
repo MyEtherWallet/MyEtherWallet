@@ -23,18 +23,63 @@
                   : 'bg-background-default'
               "
             >
-              <AppIcon name="arrow-path-rounded-square" size="xxs" v-if="item.icon === 'swap'" class="text-text-brand" />
-              <AppIcon name="trophy" variant="filled" size="xxs" v-else-if="item.icon === 'trophy'" class="text-text-brand" />
+              <AppIcon
+                name="arrow-path-rounded-square"
+                size="xxs"
+                v-if="item.icon === 'swap'"
+                class="text-text-brand"
+              />
+              <AppIcon
+                name="trophy"
+                variant="filled"
+                size="xxs"
+                v-else-if="item.icon === 'trophy'"
+                class="text-text-brand"
+              />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
                 class="w-4 h-4 text-text-brand"
               />
-              <AppIcon name="currency-dollar" variant="filled" size="xxs" v-else-if="item.icon === 'currency-dollar'" class="text-text-brand" />
-              <AppIcon name="calendar" variant="filled" size="xxs" v-else-if="item.icon === 'calendar'" class="text-text-muted" />
-              <AppIcon name="wallet" size="xxs" v-else-if="item.icon === 'wallet-icon'" class="text-text-muted" />
-              <AppIcon name="banknotes" size="xxs" v-else-if="item.icon === 'wallet-balance'" class="text-text-muted" />
-              <AppIcon name="currency-dollar" variant="filled" size="xxs" v-else-if="item.icon === 'currency-dollar-gray'" class="text-text-muted" />
-              <AppIcon name="face-frown" variant="filled" size="xxs" v-else-if="item.icon === 'face-frown'" class="text-text-muted" />
+              <AppIcon
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                v-else-if="item.icon === 'currency-dollar'"
+                class="text-text-brand"
+              />
+              <AppIcon
+                name="calendar"
+                variant="filled"
+                size="xxs"
+                v-else-if="item.icon === 'calendar'"
+                class="text-text-muted"
+              />
+              <AppIcon
+                name="wallet"
+                size="xxs"
+                v-else-if="item.icon === 'wallet-icon'"
+                class="text-text-muted"
+              />
+              <AppIcon
+                name="banknotes"
+                size="xxs"
+                v-else-if="item.icon === 'wallet-balance'"
+                class="text-text-muted"
+              />
+              <AppIcon
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                v-else-if="item.icon === 'currency-dollar-gray'"
+                class="text-text-muted"
+              />
+              <AppIcon
+                name="face-frown"
+                variant="filled"
+                size="xxs"
+                v-else-if="item.icon === 'face-frown'"
+                class="text-text-muted"
+              />
             </div>
             <p class="text-s-14 text-text-subtle leading-snug pt-1">
               {{ item.text }}

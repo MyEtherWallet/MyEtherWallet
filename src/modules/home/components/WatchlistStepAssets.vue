@@ -274,7 +274,12 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                   "
                   aria-hidden="true"
                 >
-                  <AppIcon name="check" variant="filled" size="xxs" v-if="selected.includes(asset.id)" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="xxs"
+                    v-if="selected.includes(asset.id)"
+                  />
                   <AppIcon name="plus" variant="filled" size="xxs" v-else />
                 </span>
               </span>

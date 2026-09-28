@@ -90,7 +90,12 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <AppIcon name="globe-alt" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                    <AppIcon
+                      name="globe-alt"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
+                    />
                     <span class="text-text-base text-black capitalize">{{
                       $t('common.network')
                     }}</span>
@@ -108,7 +113,12 @@
                       class="text-text-sm text-text-subtle truncate max-w-[120px]"
                       >{{ selectedChain?.nameLong }}</span
                     >
-                    <AppIcon name="chevron-right" variant="filled" size="xxs" class="text-text-subtle flex-shrink-0" />
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
+                    />
                   </div>
                 </div>
                 <!-- Currency -->
@@ -120,7 +130,12 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <AppIcon name="banknotes" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                    <AppIcon
+                      name="banknotes"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
+                    />
                     <span class="text-text-base text-black">{{
                       $t('settings.currency')
                     }}</span>
@@ -137,7 +152,12 @@
                     <span class="text-text-sm text-text-subtle">{{
                       selectedCurrency
                     }}</span>
-                    <AppIcon name="chevron-right" variant="filled" size="xxs" class="text-text-subtle flex-shrink-0" />
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
+                    />
                   </div>
                 </div>
                 <!-- Language -->
@@ -149,7 +169,12 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <AppIcon name="language" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                    <AppIcon
+                      name="language"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
+                    />
                     <span class="text-text-base text-black">{{
                       $t('settings.language')
                     }}</span>
@@ -158,7 +183,12 @@
                     <span class="text-text-sm text-text-subtle">{{
                       selectedLanguageAbbr
                     }}</span>
-                    <AppIcon name="chevron-right" variant="filled" size="xxs" class="text-text-subtle flex-shrink-0" />
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
+                    />
                   </div>
                 </div>
                 <!-- Default fee -->
@@ -170,7 +200,12 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <AppIcon name="currency-dollar" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                    <AppIcon
+                      name="currency-dollar"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
+                    />
                     <span class="text-text-base text-black">{{
                       $t('settings.default_fee')
                     }}</span>
@@ -179,7 +214,12 @@
                     <span class="text-text-sm text-text-subtle">{{
                       selectedFeeLabel
                     }}</span>
-                    <AppIcon name="chevron-right" variant="filled" size="xxs" class="text-text-subtle flex-shrink-0" />
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
+                    />
                   </div>
                 </div>
               </div>
@@ -199,7 +239,12 @@
                 <!-- Usage analytics -->
                 <div class="flex w-full h-6 justify-between items-center">
                   <div class="flex items-center gap-2.5">
-                    <AppIcon name="circle-stack" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                    <AppIcon
+                      name="circle-stack"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
+                    />
                     <div class="flex items-center gap-1">
                       <span class="text-text-base text-black">{{
                         $t('settings.usage_analytics')
@@ -208,7 +253,12 @@
                         :text="$t('settings.usage_analytics_tooltip')"
                         position="middle"
                       >
-                        <AppIcon name="question-mark-circle" variant="filled" size="xxs" class="text-text-placeholder flex-shrink-0 cursor-pointer" />
+                        <AppIcon
+                          name="question-mark-circle"
+                          variant="filled"
+                          size="xxs"
+                          class="text-text-placeholder flex-shrink-0 cursor-pointer"
+                        />
                       </app-tooltip>
                     </div>
                   </div>
@@ -293,11 +343,17 @@
                       option.description
                     }}</span>
                   </div>
-                  <AppIcon name="check-circle" variant="filled" size="s" class="flex-shrink-0 transition-colors duration-150" :class="
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="flex-shrink-0 transition-colors duration-150"
+                    :class="
                       selectedFee === option.id
                         ? 'text-text-brand'
                         : 'text-icon-disabled invisible group-hover:visible'
-                    " />
+                    "
+                  />
                 </div>
               </div>
             </div>
@@ -374,11 +430,17 @@
                       option.name
                     }}</span>
                   </div>
-                  <AppIcon name="check-circle" variant="filled" size="s" class="relative flex-shrink-0 transition-colors duration-150" :class="
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="relative flex-shrink-0 transition-colors duration-150"
+                    :class="
                       selectedCurrency === option.code
                         ? 'text-text-brand'
                         : 'text-icon-disabled invisible group-hover:visible'
-                    " />
+                    "
+                  />
                 </div>
               </div>
             </div>
@@ -437,7 +499,12 @@
                       selectedLanguageOption.native
                     }}</span>
                   </div>
-                  <AppIcon name="check" variant="filled" size="s" class="text-text-brand flex-shrink-0" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="s"
+                    class="text-text-brand flex-shrink-0"
+                  />
                 </div>
 
                 <!-- Full language list -->

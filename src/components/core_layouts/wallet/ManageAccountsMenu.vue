@@ -9,7 +9,12 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.rename') }}
       </span>
-      <AppIcon name="pencil-square" variant="filled" size="xxs" class="text-black" />
+      <AppIcon
+        name="pencil-square"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -21,7 +26,12 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.copy') }}
       </span>
-      <AppIcon name="clipboard-document" variant="filled" size="xxs" class="text-black" />
+      <AppIcon
+        name="clipboard-document"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -33,7 +43,12 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.refresh') }}
       </span>
-      <AppIcon name="arrow-path" variant="filled" size="xxs" class="text-black" />
+      <AppIcon
+        name="arrow-path"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <div class="h-px w-full bg-background-default-hover" />
@@ -59,7 +74,12 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.explorer') }}
       </span>
-      <AppIcon name="arrow-top-right-on-square" variant="filled" size="xxs" class="text-black" />
+      <AppIcon
+        name="arrow-top-right-on-square"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <div class="h-px w-full bg-background-default-hover" />
@@ -74,7 +94,12 @@
       <span class="flex-1 text-left text-text-sm text-black">
         {{ $t('multi_address.menu.disconnect') }}
       </span>
-      <AppIcon name="link-slash" variant="filled" size="xxs" class="text-black" />
+      <AppIcon
+        name="link-slash"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -88,7 +113,12 @@
       >
         {{ $t('multi_address.menu.remove') }}
       </span>
-      <AppIcon name="trash" variant="filled" size="xxs" class="text-text-error" />
+      <AppIcon
+        name="trash"
+        variant="filled"
+        size="xxs"
+        class="text-text-error"
+      />
     </button>
   </div>
 </template>

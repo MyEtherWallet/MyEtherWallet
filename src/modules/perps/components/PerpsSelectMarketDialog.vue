@@ -26,8 +26,20 @@
                 @click="toggleMenu"
               >
                 <span>{{ activeSortLabel }}</span>
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if="sortDirection === 'asc'" class="shrink-0" />
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-else class="shrink-0" />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="sortDirection === 'asc'"
+                  class="shrink-0"
+                />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="shrink-0"
+                />
               </button>
             </template>
             <template #menu-content="{ toggleMenu }">
@@ -49,11 +61,17 @@
                   @click="[$emit('setSort', option.value), toggleMenu()]"
                 >
                   {{ option.label }}
-                  <AppIcon :name="
+                  <AppIcon
+                    :name="
                       sortValue === option.value && sortDirection === 'asc'
                         ? 'arrow-long-up'
                         : 'arrow-long-down'
-                    " variant="filled" size="s" v-if="sortValue === option.value" class="ml-auto text-text-brand" />
+                    "
+                    variant="filled"
+                    size="s"
+                    v-if="sortValue === option.value"
+                    class="ml-auto text-text-brand"
+                  />
                 </button>
               </div>
             </template>

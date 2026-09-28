@@ -34,7 +34,13 @@
     >
       <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
            unreadable for copy, so the text stays near-black. -->
-      <AppIcon name="exclamation-triangle" variant="filled" size="xxs" aria-hidden="true" class="shrink-0 text-text-warning" />
+      <AppIcon
+        name="exclamation-triangle"
+        variant="filled"
+        size="xxs"
+        aria-hidden="true"
+        class="shrink-0 text-text-warning"
+      />
       <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
     </div>
 
@@ -48,7 +54,13 @@
     >
       <template #icon>
         <div class="relative">
-          <AppIcon name="globe-asia-australia" variant="filled" size="xxl" aria-hidden="true" class="text-black" />
+          <AppIcon
+            name="globe-asia-australia"
+            variant="filled"
+            size="xxl"
+            aria-hidden="true"
+            class="text-black"
+          />
           <!--
             Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
             knocked-out "!" lets the red through, and the 4px the circle extends
@@ -59,7 +71,13 @@
           <span
             class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-background-error flex items-center justify-center"
           >
-            <AppIcon name="exclamation-circle" variant="filled" size="s" aria-hidden="true" class="text-white" />
+            <AppIcon
+              name="exclamation-circle"
+              variant="filled"
+              size="s"
+              aria-hidden="true"
+              class="text-white"
+            />
           </span>
         </div>
       </template>
@@ -126,7 +144,13 @@
                 </p>
               </div>
             </div>
-            <AppIcon name="chevron-down" variant="filled" size="xxs" v-if="!isLoading" class="text-text-subtle ml-4" />
+            <AppIcon
+              name="chevron-down"
+              variant="filled"
+              size="xxs"
+              v-if="!isLoading"
+              class="text-text-subtle ml-4"
+            />
           </button>
 
           <!-- Position Info -->
@@ -180,8 +204,20 @@
               @click="onClickOrderSide(side.value)"
             >
               {{ side.label }}
-              <AppIcon name="arrow-trending-up" variant="filled" size="xxs" v-if="side.value === 'buy'" :class="orderSide === side.value ? 'text-white' : 'text-black'" />
-              <AppIcon name="arrow-trending-down" variant="filled" size="xxs" v-if="side.value === 'sell'" :class="orderSide === side.value ? 'text-white' : 'text-black'" />
+              <AppIcon
+                name="arrow-trending-up"
+                variant="filled"
+                size="xxs"
+                v-if="side.value === 'buy'"
+                :class="orderSide === side.value ? 'text-white' : 'text-black'"
+              />
+              <AppIcon
+                name="arrow-trending-down"
+                variant="filled"
+                size="xxs"
+                v-if="side.value === 'sell'"
+                :class="orderSide === side.value ? 'text-white' : 'text-black'"
+              />
             </button>
           </div>
           <div
@@ -257,7 +293,13 @@
                       {{ $t('perps.trade.market-order-description') }}
                     </p>
                   </div>
-                  <AppIcon name="check" variant="filled" size="s" v-if="orderType === 'market'" class="text-text-brand" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="s"
+                    v-if="orderType === 'market'"
+                    class="text-text-brand"
+                  />
 
                   <span v-else class="w-4 mt-0.5" />
                 </div>
@@ -278,7 +320,13 @@
                       {{ $t('perps.trade.limit-order-description') }}
                     </p>
                   </div>
-                  <AppIcon name="check" variant="filled" size="s" v-if="orderType === 'limit'" class="text-text-brand" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="s"
+                    v-if="orderType === 'limit'"
+                    class="text-text-brand"
+                  />
                   <span v-else class="w-4 mt-0.5" />
                 </div>
               </div>

@@ -29,7 +29,14 @@
           <span class="font-semibold text-s-14 truncate text-black">{{
             account.addressName
           }}</span>
-          <AppIcon name="eye" variant="filled" size="xxs" v-if="account.kind === 'watchOnly'" data-test="row-watch-only" class="flex-shrink-0 text-text-subtle" />
+          <AppIcon
+            name="eye"
+            variant="filled"
+            size="xxs"
+            v-if="account.kind === 'watchOnly'"
+            data-test="row-watch-only"
+            class="flex-shrink-0 text-text-subtle"
+          />
           <account-connected-dot v-else size="md" data-test="row-connected" />
         </div>
         <!-- Wallet name always shows; the truncated address is prepended only for

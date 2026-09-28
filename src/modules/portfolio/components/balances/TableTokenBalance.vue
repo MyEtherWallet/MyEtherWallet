@@ -118,8 +118,24 @@
                 @click="setHeaderSort(SortValueString.NAME)"
               >
                 {{ $t('portfolio.table.token_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-if=" headerSort === SortValueString.NAME && tableDirection === 'desc' " />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if=" headerSort === SortValueString.NAME && tableDirection === 'asc' " />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.NAME &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.NAME &&
+                    tableDirection === 'asc'
+                  "
+                />
               </div>
             </th>
             <!-- Market Cap -->
@@ -135,8 +151,26 @@
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
                 {{ $t('portfolio.table.market_cap_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-if=" headerSort === SortValueString.MARKET_CAP && tableDirection === 'desc' " class="absolute -right-4" />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if=" headerSort === SortValueString.MARKET_CAP && tableDirection === 'asc' " class="absolute -right-4" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'desc'
+                  "
+                  class="absolute -right-4"
+                />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'asc'
+                  "
+                  class="absolute -right-4"
+                />
               </div>
             </th>
             <!-- Price -->
@@ -151,8 +185,26 @@
                 @click="setHeaderSort(SortValueString.PRICE)"
               >
                 {{ $t('portfolio.table.price_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-if=" headerSort === SortValueString.PRICE && tableDirection === 'desc' " class="absolute -right-4" />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if=" headerSort === SortValueString.PRICE && tableDirection === 'asc' " class="absolute -right-4" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'desc'
+                  "
+                  class="absolute -right-4"
+                />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'asc'
+                  "
+                  class="absolute -right-4"
+                />
               </div>
             </th>
             <!-- 24h % -->
@@ -167,8 +219,26 @@
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
                 {{ $t('portfolio.table.24h_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-if=" headerSort === SortValueString.PERCENT && tableDirection === 'desc' " class="absolute -right-4" />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if=" headerSort === SortValueString.PERCENT && tableDirection === 'asc' " class="absolute -right-4" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'desc'
+                  "
+                  class="absolute -right-4"
+                />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'asc'
+                  "
+                  class="absolute -right-4"
+                />
               </div>
             </th>
 
@@ -184,8 +254,26 @@
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
                 {{ $t('portfolio.table.balance_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-if=" headerSort === SortValueString.VALUE && tableDirection === 'desc' " class="absolute -right-4" />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if=" headerSort === SortValueString.VALUE && tableDirection === 'asc' " class="absolute -right-4" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.VALUE &&
+                    tableDirection === 'desc'
+                  "
+                  class="absolute -right-4"
+                />
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="
+                    headerSort === SortValueString.VALUE &&
+                    tableDirection === 'asc'
+                  "
+                  class="absolute -right-4"
+                />
               </div>
             </th>
             <!-- Actions -->
@@ -216,8 +304,19 @@
                 class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
                 <!-- changes icon when active -->
-                <AppIcon name="star" size="xxs" v-if="!isWatchListed(getWatchlistId(token))" class="cursor-pointer" />
-                <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer" />
+                <AppIcon
+                  name="star"
+                  size="xxs"
+                  v-if="!isWatchListed(getWatchlistId(token))"
+                  class="cursor-pointer"
+                />
+                <AppIcon
+                  name="star"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="cursor-pointer"
+                />
               </button>
             </td>
             <!-- Name -->
@@ -263,9 +362,7 @@
               :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               {{
-                token.market_cap
-                  ? formatFiat(token.market_cap).display
-                  : '-'
+                token.market_cap ? formatFiat(token.market_cap).display : '-'
               }}
             </td>
             <!-- Price -->
@@ -337,7 +434,11 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        variant="filled"
+                        size="s"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
@@ -349,8 +450,19 @@
                         class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                         @click.stop="[setWatchlistToken(token), toggleMenu()]"
                       >
-                        <AppIcon name="star" size="xxs" v-if="!isWatchListed(getWatchlistId(token))" class="cursor-pointer" />
-                        <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer" />
+                        <AppIcon
+                          name="star"
+                          size="xxs"
+                          v-if="!isWatchListed(getWatchlistId(token))"
+                          class="cursor-pointer"
+                        />
+                        <AppIcon
+                          name="star"
+                          variant="filled"
+                          size="xxs"
+                          v-else
+                          class="cursor-pointer"
+                        />
                         <span class="ml-2">{{
                           isWatchListed(getWatchlistId(token))
                             ? $t('portfolio.table.remove_from_watchlist')
@@ -403,7 +515,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <AppIcon name="pencil" variant="filled" size="xxs" class="mr-2" />
+                          <AppIcon
+                            name="pencil"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.edit') }}</p>
                         </li>
                         <li
@@ -413,7 +530,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <AppIcon name="trash" variant="filled" size="xxs" class="mr-2" />
+                          <AppIcon
+                            name="trash"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.delete') }}</p>
                         </li>
                       </ul>
@@ -487,7 +609,12 @@
         <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >{{ $t('portfolio.table.discover_more_tokens') }}
-          <AppIcon name="arrow-long-up" variant="filled" size="xxs" class="rotate-90 inline-flex" />
+          <AppIcon
+            name="arrow-long-up"
+            variant="filled"
+            size="xxs"
+            class="rotate-90 inline-flex"
+          />
         </router-link>
       </div>
       <div
@@ -585,7 +712,12 @@
               @click="toggleSelect"
             >
               <span>{{ activeShownItems.label }}</span>
-              <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-text-subtle" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="text-text-subtle"
+              />
             </button>
           </template>
         </app-select>

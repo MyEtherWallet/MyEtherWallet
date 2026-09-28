@@ -59,7 +59,12 @@
           </p>
         </div>
       </div>
-      <AppIcon name="arrow-long-right" variant="filled" size="xxs" class="flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <div class="flex items-center gap-2">
         <app-token-logo
           v-if="order.toTokenIcon"
@@ -137,10 +142,14 @@
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <AppIcon name="chevron-down" variant="filled" :class="[
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          :class="[
             'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
-          ]" />
+          ]"
+        />
       </app-btn-text>
       <!-- delete Button -->
       <app-btn-icon

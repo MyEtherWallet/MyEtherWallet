@@ -9,8 +9,20 @@
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full box-border"
         :class="circleClass"
       >
-        <AppIcon name="check" variant="filled" size="xxs" v-if="variant === 'done' || variant === 'doneGrey'" :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'" />
-        <AppIcon name="x-mark" variant="filled" size="xxs" v-else-if="variant === 'failed'" class="text-white" />
+        <AppIcon
+          name="check"
+          variant="filled"
+          size="xxs"
+          v-if="variant === 'done' || variant === 'doneGrey'"
+          :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'"
+        />
+        <AppIcon
+          name="x-mark"
+          variant="filled"
+          size="xxs"
+          v-else-if="variant === 'failed'"
+          class="text-white"
+        />
         <span
           v-else
           class="text-label-sm"

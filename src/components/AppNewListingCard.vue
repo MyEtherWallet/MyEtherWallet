@@ -70,7 +70,13 @@ const changeText = computed(() =>
         class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
       >
-        <AppIcon name="star" variant="filled" size="s" v-if="favorite" class="text-text-brand" />
+        <AppIcon
+          name="star"
+          variant="filled"
+          size="s"
+          v-if="favorite"
+          class="text-text-brand"
+        />
         <AppIcon name="star" size="s" v-else class="text-text-subtle" />
       </button>
     </div>

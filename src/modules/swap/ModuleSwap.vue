@@ -110,7 +110,12 @@
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <AppIcon name="arrow-down" variant="filled" size="s" class="text-text-brand" />
+              <AppIcon
+                name="arrow-down"
+                variant="filled"
+                size="s"
+                class="text-text-brand"
+              />
             </div>
           </div>
 

@@ -1,7 +1,12 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon :label="$t('menu.open-notifications')" width="w-10" height="h-10" @click="togglePopup">
+    <app-btn-icon
+      :label="$t('menu.open-notifications')"
+      width="w-10"
+      height="h-10"
+      @click="togglePopup"
+    >
       <div class="relative">
         <AppIcon name="bell" variant="filled" />
         <!--  dot indicator for unseen orders -->
@@ -62,11 +67,19 @@
             <div class="flex items-center gap-2">
               <app-tooltip
                 v-if="!isMobile"
-                :text="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin_to_keep_open')"
+                :text="
+                  isPinned
+                    ? $t('notifications_module.unpin')
+                    : $t('notifications_module.pin_to_keep_open')
+                "
                 position="top-left"
               >
                 <app-btn-icon
-                  :label="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin')"
+                  :label="
+                    isPinned
+                      ? $t('notifications_module.unpin')
+                      : $t('notifications_module.pin')
+                  "
                   @click="isPinned = !isPinned"
                   class="text-text-brand"
                 >

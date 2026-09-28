@@ -71,8 +71,18 @@
             {{ currentPrice ? formatFiat(currentPrice).display : '--' }}
           </p>
           <div v-if="priceChangeNum !== null" class="inline-block ml-2">
-            <AppIcon name="arrow-trending-down" size="xxs" v-if="priceChangeNum < 0" class="inline-block text-text-error" />
-            <AppIcon name="arrow-trending-up" size="xxs" v-else class="inline-block text-text-success" />
+            <AppIcon
+              name="arrow-trending-down"
+              size="xxs"
+              v-if="priceChangeNum < 0"
+              class="inline-block text-text-error"
+            />
+            <AppIcon
+              name="arrow-trending-up"
+              size="xxs"
+              v-else
+              class="inline-block text-text-success"
+            />
             <span
               :class="[
                 {

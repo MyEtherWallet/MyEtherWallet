@@ -40,7 +40,12 @@
                 <span class="text-s-16 font-medium">{{
                   selectedCryptoFilter.label
                 }}</span>
-                <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-1" />
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="ml-1"
+                />
               </div>
             </button>
           </div>

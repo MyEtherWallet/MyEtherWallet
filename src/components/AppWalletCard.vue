@@ -32,7 +32,12 @@
                     <IconWatchOnly class="inline-block w-3 h-3" />
                     {{ t('common.watch_only') }}
                   </p>
-                  <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-1" />
+                  <AppIcon
+                    name="chevron-down"
+                    variant="filled"
+                    size="xxs"
+                    class="ml-1"
+                  />
                 </button>
               </template>
               <template #menu-content>
@@ -42,7 +47,12 @@
                       @click="setOpenPaperWalletDialog(true)"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <AppIcon name="qr-code" variant="filled" size="s" class="inline-block mr-2 text-text-brand" />
+                      <AppIcon
+                        name="qr-code"
+                        variant="filled"
+                        size="s"
+                        class="inline-block mr-2 text-text-brand"
+                      />
                       {{ $t('view_paper_wallet') }}
                     </li>
                     <li
@@ -50,7 +60,11 @@
                       @click="switchAddress()"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <AppIcon name="user-group" size="s" class="inline-block mr-2 text-text-brand" />
+                      <AppIcon
+                        name="user-group"
+                        size="s"
+                        class="inline-block mr-2 text-text-brand"
+                      />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
@@ -62,7 +76,11 @@
                       @click="deleteWallet"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <AppIcon name="trash" size="s" class="inline-block mr-2 text-text-error" />
+                      <AppIcon
+                        name="trash"
+                        size="s"
+                        class="inline-block mr-2 text-text-error"
+                      />
                       {{
                         isWatchOnly
                           ? $t('delete_watch_only_wallet')

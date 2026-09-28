@@ -39,7 +39,14 @@
           >
             {{ accountName }}
           </span>
-          <AppIcon name="eye" variant="filled" size="xxs" v-if="isWatchOnly" data-test="pill-watch-only" class="text-text-subtle flex-shrink-0" />
+          <AppIcon
+            name="eye"
+            variant="filled"
+            size="xxs"
+            v-if="isWatchOnly"
+            data-test="pill-watch-only"
+            class="text-text-subtle flex-shrink-0"
+          />
           <account-connected-dot v-else data-test="pill-connected" />
         </span>
       </span>
@@ -62,7 +69,12 @@
         {{ $t('multi_address.no_address_pill') }}
       </span>
     </template>
-    <AppIcon name="chevron-down" variant="filled" size="s" class="text-black flex-shrink-0" />
+    <AppIcon
+      name="chevron-down"
+      variant="filled"
+      size="s"
+      class="text-black flex-shrink-0"
+    />
   </button>
 </template>
 

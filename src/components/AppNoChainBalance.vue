@@ -29,7 +29,11 @@
             })
           }}
         </p>
-        <AppIcon name="arrow-long-right" size="xxs" class="group-hover:translate-x-1 transition-transform xl:size-5" />
+        <AppIcon
+          name="arrow-long-right"
+          size="xxs"
+          class="group-hover:translate-x-1 transition-transform xl:size-5"
+        />
       </div>
     </app-btn-text>
     <app-base-button

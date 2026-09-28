@@ -187,7 +187,11 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <AppIcon name="check" size="xl" class="text-text-brand stroke-[3px] mb-4" />
+              <AppIcon
+                name="check"
+                size="xl"
+                class="text-text-brand stroke-[3px] mb-4"
+              />
               <h3
                 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
@@ -213,7 +217,11 @@
                   @click="activeStep = 0"
                 >
                   {{ $t('create_wallet.mnemonic.create_another_wallet') }}
-                  <AppIcon name="arrow-long-right" size="s" class="ml-2 transition-transform group-hover:translate-x-1" />
+                  <AppIcon
+                    name="arrow-long-right"
+                    size="s"
+                    class="ml-2 transition-transform group-hover:translate-x-1"
+                  />
                 </app-btn-text>
               </div>
             </div>

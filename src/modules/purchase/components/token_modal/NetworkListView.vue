@@ -6,7 +6,12 @@
         class="flex-none -ml-1"
         @click="emit('back')"
       >
-        <AppIcon name="chevron-left" variant="filled" size="s" class="text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
         <h2 class="text-heading-xl">
@@ -54,7 +59,13 @@
           <span class="text-s-16 font-semibold text-black flex-1">
             {{ $t('purchase.select_token.filter_all_networks') }}
           </span>
-          <AppIcon name="check-circle" variant="filled" size="s" v-if="currentFilter === null" class="text-text-brand flex-none" />
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
+            v-if="currentFilter === null"
+            class="text-text-brand flex-none"
+          />
         </button>
       </li>
 
@@ -74,7 +85,13 @@
           <span class="text-s-16 font-semibold text-black flex-1 truncate">
             {{ network.name }}
           </span>
-          <AppIcon name="check-circle" variant="filled" size="s" v-if="currentFilter === network.chain" class="text-text-brand flex-none" />
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
+            v-if="currentFilter === network.chain"
+            class="text-text-brand flex-none"
+          />
         </button>
       </li>
 

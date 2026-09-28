@@ -21,7 +21,12 @@
             >
           </p>
         </div>
-        <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="ml-auto mr-1"
+        />
       </div>
     </button>
 

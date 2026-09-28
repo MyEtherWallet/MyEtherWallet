@@ -88,7 +88,11 @@
                         {{ chainsStore.selectedChain?.nameLong }}
                       </span>
                     </div>
-                    <AppIcon name="chevron-right" variant="filled" class="text-black flex-shrink-0" />
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      class="text-black flex-shrink-0"
+                    />
                   </button>
                   <manage-accounts-card
                     v-if="activeAccount"
@@ -154,7 +158,13 @@
                           }}
                           ({{ group.accounts.length }})
                         </span>
-                        <AppIcon name="chevron-down" variant="filled" size="s" class="text-text-subtle flex-shrink-0 transition-transform duration-200" :class="{ 'rotate-180': !collapsed[group.type] }" />
+                        <AppIcon
+                          name="chevron-down"
+                          variant="filled"
+                          size="s"
+                          class="text-text-subtle flex-shrink-0 transition-transform duration-200"
+                          :class="{ 'rotate-180': !collapsed[group.type] }"
+                        />
                       </button>
                       <expand-transition>
                         <div

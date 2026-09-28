@@ -5,7 +5,10 @@
     v-element-hover="[onHover, { delayLeave: 300 }]"
   >
     <slot>
-      <AppIcon name="information-circle" class="p-1 cursor-pointer text-text-subtle" />
+      <AppIcon
+        name="information-circle"
+        class="p-1 cursor-pointer text-text-subtle"
+      />
     </slot>
     <teleport to="#app">
       <transition name="fade" mode="out-in">
@@ -34,7 +37,9 @@
               position === 'top'
                 ? [
                     'top-full left-1/2 -translate-x-1/2 border-t-[10px] border-x-[6px] border-x-transparent',
-                    theme === 'dark' ? 'border-t-background-info' : 'border-t-white',
+                    theme === 'dark'
+                      ? 'border-t-background-info'
+                      : 'border-t-white',
                   ]
                 : [
                     'top-1/2 -translate-y-1/2 border-y-[6px] border-y-transparent',

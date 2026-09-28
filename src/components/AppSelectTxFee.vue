@@ -26,7 +26,12 @@
           <span class="text-text-subtle font-medium">
             {{ selectedFeeNative }}
           </span>
-          <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-text-subtle" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="text-text-subtle"
+          />
         </template>
       </div>
     </button>
@@ -94,11 +99,25 @@
                     ' mr-2 xs:mr-4',
                   ]"
                 >
-                  <AppIcon name="currency-dollar" size="s" v-if="fee.id === GasPriceType.ECONOMY" />
-                  <AppIcon name="check" size="s" v-else-if="fee.id === GasPriceType.REGULAR" />
+                  <AppIcon
+                    name="currency-dollar"
+                    size="s"
+                    v-if="fee.id === GasPriceType.ECONOMY"
+                  />
+                  <AppIcon
+                    name="check"
+                    size="s"
+                    v-else-if="fee.id === GasPriceType.REGULAR"
+                  />
                   <div v-else class="flex">
                     <AppIcon name="arrow-long-up" variant="filled" size="s" />
-                    <AppIcon name="arrow-long-up" variant="filled" size="s" v-if="fee.id === GasPriceType.FASTEST" class="-mx-2" />
+                    <AppIcon
+                      name="arrow-long-up"
+                      variant="filled"
+                      size="s"
+                      v-if="fee.id === GasPriceType.FASTEST"
+                      class="-mx-2"
+                    />
                   </div>
                 </div>
                 <div class="flex flex-col text-left">

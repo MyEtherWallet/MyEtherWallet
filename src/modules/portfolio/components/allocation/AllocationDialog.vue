@@ -28,8 +28,18 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <AppIcon name="arrow-long-up" variant="filled" size="xxs" v-if="activeSortDirection === SortDirection.ASC" />
-                  <AppIcon name="arrow-long-down" variant="filled" size="xxs" v-else />
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
+                    v-if="activeSortDirection === SortDirection.ASC"
+                  />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -60,8 +70,20 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
                     >
-                      <AppIcon name="arrow-long-up" variant="filled" size="s" v-if="activeSortDirection === SortDirection.ASC" class="text-text-brand" />
-                      <AppIcon name="arrow-long-down" variant="filled" size="s" v-else class="text-text-brand" />
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
+                        v-if="activeSortDirection === SortDirection.ASC"
+                        class="text-text-brand"
+                      />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        v-else
+                        class="text-text-brand"
+                      />
                     </div>
                   </button>
                 </div>

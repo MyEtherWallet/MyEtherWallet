@@ -59,7 +59,11 @@
           v-if="showEmptyState"
           class="flex flex-col items-center justify-center gap-1 px-4 text-center flex-1"
         >
-          <AppIcon name="magnifying-glass" size="l" class="text-text-subtle mb-1" />
+          <AppIcon
+            name="magnifying-glass"
+            size="l"
+            class="text-text-subtle mb-1"
+          />
           <p class="text-s-14 font-semibold">
             {{ $t('search.no_results_title') }}
           </p>

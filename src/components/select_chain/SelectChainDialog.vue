@@ -60,7 +60,12 @@
                 </div>
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
-              <AppIcon name="check" variant="filled" v-if="chain.name === selectedChain?.name" class="text-text-brand" />
+              <AppIcon
+                name="check"
+                variant="filled"
+                v-if="chain.name === selectedChain?.name"
+                class="text-text-brand"
+              />
             </div>
           </button>
           <div
