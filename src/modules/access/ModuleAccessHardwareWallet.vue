@@ -316,6 +316,13 @@ const unlockWallet = async () => {
     return
   }
 
+  // Read the wallet type once. The Ledger flow awaits the transport before
+  // calling us, and the user can close the dialog or press Back meanwhile,
+  // which resets the view to 'default'. Going on would pair the Trezor manager
+  // with a null wallet and crash in hw-wallets (APP-MEW-WEB-1ND).
+  const walletType = selectedHwWalletType.value
+  if (!walletType) return
+
   connectingWallet.value = true
   const networkName = chainToEnum[
     selectedChain.value?.name as string
@@ -327,14 +334,14 @@ const unlockWallet = async () => {
   try {
     await hwWalletInstance!
       .isConnected({
-        wallet: selectedHwWalletType.value as HWwalletType,
+        wallet: walletType,
         networkName: networkName as any,
       })
       .then(() => {
         return new Promise(r => setTimeout(r, 1000))
       })
     paths.value = (await hwWalletInstance!.getSupportedPaths({
-      wallet: selectedHwWalletType.value as HWwalletType,
+      wallet: walletType,
       networkName: networkName as any,
     })) as PathType[]
 
