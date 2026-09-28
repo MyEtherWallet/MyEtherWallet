@@ -204,7 +204,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             <div
               v-for="n in INITIAL_COUNT"
               :key="n"
-              class="flex h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
+              class="flex h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
             >
               <div
                 class="size-10 animate-pulse rounded-full bg-background-skeleton"
@@ -252,7 +252,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               :selected="selected.includes(asset.id)"
               :disabled="isDisabled(asset)"
               bg="bg-white"
-              class="flex h-[96px] flex-col items-center justify-center gap-2"
+              class="flex h-24 flex-col items-center justify-center gap-2"
               @toggle="toggle(asset.id)"
             >
               <span class="relative">
@@ -334,7 +334,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               no-shadow
             />
             <span
-              class="max-w-[80px] truncate text-s-12 font-semibold text-black"
+              class="max-w-20 truncate text-s-12 font-semibold text-black"
             >
               {{ a.symbol }}
             </span>

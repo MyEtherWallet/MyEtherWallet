@@ -15,7 +15,7 @@
           bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('crypto.search')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
@@ -196,7 +196,7 @@
 
               <!-- Actions -->
               <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-28"
               ></th>
             </tr>
           </thead>

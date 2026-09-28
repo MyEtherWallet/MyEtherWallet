@@ -15,7 +15,7 @@
           bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('common.search')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
