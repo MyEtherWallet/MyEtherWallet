@@ -217,7 +217,7 @@
               </th>
               <!-- Actions -->
               <th
-                class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
+                class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-60"
               >
                 <p class="hidden lg:block font-bold">
                   {{ $t('perps.market-list.column-actions') }}
@@ -264,7 +264,7 @@
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-surface text-info font-bold rounded px-1.5 py-px text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
@@ -347,7 +347,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <button
                           class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
@@ -493,7 +493,7 @@
                       </template>
                       <template #menu-content="{ toggleMenu }">
                         <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                         >
                           <ul>
                             <li
@@ -557,7 +557,7 @@
                     -->
                     <app-base-button
                       size="small"
-                      class="min-w-[64px]"
+                      class="min-w-16"
                       theme="success"
                       :disabled="isPerpsRestricted"
                       @click="
@@ -573,7 +573,7 @@
                     <app-base-button
                       size="small"
                       theme="error"
-                      class="min-w-[64px]"
+                      class="min-w-16"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -863,7 +863,7 @@ const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
   {
     header: '',
     align: 'right',
-    hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]',
+    hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-60',
   },
 ])
 

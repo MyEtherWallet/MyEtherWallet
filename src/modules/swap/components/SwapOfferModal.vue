@@ -62,8 +62,8 @@
                     ? { address: toToken.address, network: toChain.name }
                     : undefined
                 "
-                width="w-8 lg:w-[48px]"
-                height="h-8 lg:h-[48px]"
+                width="w-8 lg:w-12"
+                height="h-8 lg:h-12"
               />
               <div
                 class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"

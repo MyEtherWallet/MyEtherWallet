@@ -64,7 +64,7 @@
                   <button
                     v-for="pct in takeProfitPills"
                     :key="pct"
-                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-2.5 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
                       activeTpPill === pct ? '!bg-mewBg text-primary' : ''
                     "
@@ -140,7 +140,7 @@
                   <button
                     v-for="pct in [1, 2, 3, 4, 5]"
                     :key="pct"
-                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-2.5 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
                       activeSlPill === pct ? '!bg-mewBg text-primary' : ''
                     "

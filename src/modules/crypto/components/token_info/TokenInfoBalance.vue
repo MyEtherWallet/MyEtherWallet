@@ -41,7 +41,7 @@
             <app-token-symbol
               :symbol="tokenSymbol"
               :is-stock="isStock"
-              class="text-s-17 xs:text-s-24 !font-bold !leading-p-110 ml-[2px]"
+              class="text-s-17 xs:text-s-24 !font-bold !leading-p-110 ml-0.5"
             />
           </div>
 
@@ -106,7 +106,7 @@
                 <app-token-symbol
                   :symbol="tokenSymbol"
                   :is-stock="isStock"
-                  class="text-s-16 !font-bold !leading-p-110 ml-[2px]"
+                  class="text-s-16 !font-bold !leading-p-110 ml-0.5"
                 />
               </div>
 

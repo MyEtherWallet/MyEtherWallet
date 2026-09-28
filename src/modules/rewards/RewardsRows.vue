@@ -8,7 +8,7 @@
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
-      <div class="flex items-center gap-3 min-w-[160px]">
+      <div class="flex items-center gap-3 min-w-40">
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[!swapClaimed && !swapNoRewards ? 'bg-blue-10' : 'bg-grey-5']"
@@ -68,7 +68,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-1.5 border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
@@ -95,7 +95,7 @@
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
-      <div class="flex items-center gap-3 min-w-[160px]">
+      <div class="flex items-center gap-3 min-w-40">
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
@@ -167,7 +167,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-1.5 border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"

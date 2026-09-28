@@ -10,7 +10,7 @@
       </h2>
     </div>
     <img
-      class="absolute bottom-0 right-4 w-[40%] max-w-[160px] min-w-[64px] hidden md:block"
+      class="absolute bottom-0 right-4 w-[40%] max-w-40 min-w-16 hidden md:block"
       :src="usdcTokens"
       alt=""
     />

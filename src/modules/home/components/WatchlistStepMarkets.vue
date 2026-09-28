@@ -50,7 +50,7 @@ const toggle = (id: string) => {
         type="button"
         data-test="market-card"
         :aria-pressed="selected.includes(market.id)"
-        class="relative flex h-[128px] flex-col justify-between rounded-2xl border-2 p-4 text-left transition-colors"
+        class="relative flex h-32 flex-col justify-between rounded-2xl border-2 p-4 text-left transition-colors"
         :class="
           selected.includes(market.id)
             ? 'border-black bg-white'

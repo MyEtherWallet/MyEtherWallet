@@ -29,10 +29,10 @@
                   <!-- TODO: add ens resolution-->
                   <p v-if="!isWatchOnly">{{ t('common.my_wallet') }}</p>
                   <p v-else>
-                    <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
+                    <IconWatchOnly class="inline-block w-3 h-3" />
                     {{ t('common.watch_only') }}
                   </p>
-                  <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
+                  <chevron-down-icon class="w-2.5 h-2.5 ml-1" />
                 </button>
               </template>
               <template #menu-content>
@@ -136,7 +136,7 @@
             class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
           ></div>
           <button
-            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-1.5 px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
             {{ isWatchOnly ? t('common.connect') : t('common.disconnect') }}

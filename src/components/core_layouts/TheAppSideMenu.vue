@@ -49,7 +49,7 @@
                 :alt="t('home')"
                 width="280"
                 height="96"
-                class="w-[94px] h-[32px] flex-none object-contain"
+                class="w-[94px] h-8 flex-none object-contain"
               />
               <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>

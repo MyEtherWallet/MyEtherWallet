@@ -32,7 +32,7 @@
         <div
           v-for="token in 3"
           :key="`loading-trending-${token}`"
-          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[48px]"
+          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-12"
         ></div>
       </div>
     </app-sheet>

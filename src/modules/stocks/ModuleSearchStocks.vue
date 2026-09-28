@@ -16,7 +16,7 @@
       <div class="flex items-center justify-center flex-col">
         <div
           ref="focusTarget"
-          class="flex grow gap-4 justify-between items-center p-[6px] bg-surface !w-full md:w-auto max-w-[500px] rounded-full relative"
+          class="flex grow gap-4 justify-between items-center p-1.5 bg-surface !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
             v-model="searchInput"
@@ -33,7 +33,7 @@
                 <div
                   v-if="isLoading"
                   key="search_is_loading"
-                  class="h-[64px] flex items-center justify-center"
+                  class="h-16 flex items-center justify-center"
                 >
                   <svg
                     aria-hidden="true"
@@ -118,7 +118,7 @@
                   <p
                     v-if="showNoDataMessage"
                     key="search_no_data_message"
-                    class="text-s-14 text-info flex items-center justify-center text-wrap break-all h-[64px]"
+                    class="text-s-14 text-info flex items-center justify-center text-wrap break-all h-16"
                   >
                     <exclamation-circle-icon
                       class="inline-block w-5 h-5 text-grey-50 mr-1"
