@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 
 /**
@@ -20,6 +20,7 @@ const h = vi.hoisted(() => ({
   addToastMessage: vi.fn(),
   captureException: vi.fn(),
   ledgerIsConnected: vi.fn(),
+  ledgerGetSupportedPaths: vi.fn(),
   resolveTransport: null as null | ((v: unknown) => void),
 }))
 
@@ -121,7 +122,7 @@ vi.mock('@/providers/bitcoin/btcHardwareWallet', () => ({ default: class {} }))
 vi.mock('@/providers/hw/ledger', () => ({
   default: class LedgerManager {
     isConnected = h.ledgerIsConnected
-    getSupportedPaths = vi.fn(async () => [])
+    getSupportedPaths = h.ledgerGetSupportedPaths
   },
 }))
 vi.mock('@/providers/hw/ledger/transport', () => ({
@@ -158,9 +159,21 @@ const factory = () =>
   })
 
 beforeEach(() => {
+  vi.clearAllMocks()
+  // Only setTimeout: unlockWallet waits 1s after isConnected, and flushPromises
+  // needs the real setImmediate.
+  vi.useFakeTimers({ toFake: ['setTimeout'] })
   resetTrezorManager()
   h.resolveTransport = null
+  h.ledgerIsConnected.mockResolvedValue(true)
+  h.ledgerGetSupportedPaths.mockResolvedValue([
+    { basePath: "m/44'/60'/0'", path: "m/44'/60'/0'/0", label: 'Ethereum' },
+  ])
   useAccessStore().setCurrentView('ledger')
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })
 
 describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () => {
@@ -182,15 +195,18 @@ describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () =
   })
 
   it('still connects through the Ledger manager when the view is unchanged', async () => {
-    h.ledgerIsConnected.mockResolvedValue(true)
     const wrapper = factory()
     await flushPromises()
 
     await wrapper.find('button').trigger('click')
     h.resolveTransport!({})
     await flushPromises()
+    await vi.advanceTimersByTimeAsync(1000)
 
     expect(h.ledgerIsConnected).toHaveBeenCalledWith(
+      expect.objectContaining({ wallet: 'ledger', networkName: 'ETH' }),
+    )
+    expect(h.ledgerGetSupportedPaths).toHaveBeenCalledWith(
       expect.objectContaining({ wallet: 'ledger', networkName: 'ETH' }),
     )
     expect(h.captureException).not.toHaveBeenCalled()
