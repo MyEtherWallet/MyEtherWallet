@@ -35,6 +35,23 @@ describe('getLocalizedWalletError (MEW-2049)', () => {
     }
   })
 
+  it('maps a claimed USB interface (Ledger Live / another tab / unreleased transport) to a localized message', () => {
+    expect(
+      getLocalizedWalletError(
+        "Failed to execute 'claimInterface' on 'USBDevice': Unable to claim interface.",
+      ),
+    ).toBe(
+      'Another app or browser tab (e.g. Ledger Live) is using your Ledger. Close it, reconnect the device, and try again.',
+    )
+    expect(
+      getLocalizedWalletError(
+        'Ledger is in use by another application or browser tab (Unable to claim interface)',
+      ),
+    ).toBe(
+      'Another app or browser tab (e.g. Ledger Live) is using your Ledger. Close it, reconnect the device, and try again.',
+    )
+  })
+
   it('maps on-device rejection to the shared cancel message', () => {
     expect(getLocalizedWalletError('Ledger device: 0x6985')).toBe(
       'User canceled the request',

@@ -112,6 +112,20 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return this.hwWalletInstance
   }
 
+  /**
+   * Release the Ledger USB/BLE interface on disconnect so Ledger Live or another
+   * tab can claim the device — and so our own next connect never finds it still
+   * held ("Unable to claim interface"). The Trezor manager is a session
+   * singleton and stays up.
+   */
+  override async disconnect(): Promise<boolean> {
+    if (this.walletType === HWwalletType.ledger) {
+      const manager = this.hwWalletInstance as { close?: () => Promise<void> }
+      await manager.close?.().catch(() => undefined)
+    }
+    return true
+  }
+
   override async SignMessage(options: {
     message: string
     options?: unknown
