@@ -93,13 +93,19 @@
             />
             <div class="ml-auto">
               <p class="mb-3">
-                <chat-bubble-bottom-center-text-icon
-                  class="inline h-4 w-4 mr-2 text-text-brand"
+                <AppIcon
+                  name="chat-bubble-bottom-center-text"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
                 />support@myetherwallet.com
               </p>
               <p>
-                <globe-alt-icon
-                  class="inline h-4 w-4 mr-2 text-text-brand"
+                <AppIcon
+                  name="globe-alt"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
                 />https://www.myetherwallet.com
               </p>
             </div>
@@ -125,11 +131,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
-import {
-  GlobeAltIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from '@heroicons/vue/24/solid'
-
+import AppIcon from '@/components/icon/AppIcon.vue'
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

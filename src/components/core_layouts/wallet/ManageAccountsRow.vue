@@ -29,10 +29,13 @@
           <span class="font-semibold text-s-14 truncate text-black">{{
             account.addressName
           }}</span>
-          <eye-icon
+          <AppIcon
             v-if="account.kind === 'watchOnly'"
+            name="eye"
+            variant="filled"
+            size="xxs"
             data-test="row-watch-only"
-            class="w-4 h-4 flex-shrink-0 text-text-subtle"
+            class="flex-shrink-0 text-text-subtle"
           />
           <account-connected-dot v-else size="md" data-test="row-connected" />
         </div>
@@ -79,7 +82,7 @@
     >
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
-          <ellipsis-vertical-icon class="w-5 h-5" />
+          <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
         </button>
       </template>
       <template #menu-content="{ toggleMenu }">
@@ -103,8 +106,6 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
-import { EyeIcon } from '@heroicons/vue/16/solid'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -112,6 +113,7 @@ import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsM
 import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = defineProps<{
   account: SavedAccount

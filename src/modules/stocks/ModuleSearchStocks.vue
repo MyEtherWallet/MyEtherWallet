@@ -120,8 +120,11 @@
                     key="search_no_data_message"
                     class="text-s-14 text-text-subtle flex items-center justify-center text-wrap break-all h-16"
                   >
-                    <exclamation-circle-icon
-                      class="inline-block w-5 h-5 text-text-muted mr-1"
+                    <AppIcon
+                      name="exclamation-circle"
+                      variant="filled"
+                      size="s"
+                      class="inline-block text-text-muted mr-1"
                     />
                     {{
                       $t('stocks.no_results_found_for', { query: searchInput })
@@ -261,8 +264,6 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useFocusWithin, watchDebounced } from '@vueuse/core'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
-
 // Components
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -282,6 +283,7 @@ import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { formatFiat } = useCurrency()
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)

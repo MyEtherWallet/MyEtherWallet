@@ -103,8 +103,10 @@
             class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
             @click="setTempTakeProfitPrice"
           >
-            <plus-circle-icon
-              class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
+            <AppIcon
+              name="plus-circle"
+              variant="filled"
+              class="mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
             />
             {{ $t('perps.auto-close.add-take-profit') }}
           </button>
@@ -181,8 +183,10 @@
             class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
             @click="setTempStopLossPrice"
           >
-            <plus-circle-icon
-              class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
+            <AppIcon
+              name="plus-circle"
+              variant="filled"
+              class="mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
             />
             {{ $t('perps.auto-close.add-stop-loss') }}
           </button>
@@ -215,7 +219,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
-import { PlusCircleIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })

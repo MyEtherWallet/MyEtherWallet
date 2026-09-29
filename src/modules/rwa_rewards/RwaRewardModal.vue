@@ -202,7 +202,11 @@
               v-if="showNotice"
               class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-background-default"
             >
-              <lock-closed-icon class="w-6 h-6 text-text-brand shrink-0" />
+              <AppIcon
+                name="lock-closed"
+                variant="filled"
+                class="text-text-brand shrink-0"
+              />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">{{ noticeTitle }}</p>
                 <p :class="bodyText">{{ noticeDesc }}</p>
@@ -262,13 +266,13 @@ import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
 import { useRewardSteps } from '@/modules/rwa_rewards/composables/useRewardSteps'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
 import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
 const { isWatchOnly } = storeToRefs(useWalletStore())

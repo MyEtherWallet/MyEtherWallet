@@ -76,9 +76,12 @@
         >
           <template #icon>
             <div class="relative">
-              <globe-asia-australia-icon
-                class="w-12 h-12 text-black"
+              <AppIcon
+                name="globe-asia-australia"
+                variant="filled"
+                size="xxl"
                 aria-hidden="true"
+                class="text-black"
               />
               <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
@@ -89,9 +92,12 @@
               <span
                 class="absolute -top-2 -right-2 p-1 rounded-full bg-background-error border-2 border-white flex items-center justify-center"
               >
-                <exclamation-circle-icon
-                  class="w-4 h-4 text-white"
+                <AppIcon
+                  name="exclamation-circle"
+                  variant="filled"
+                  size="xxs"
                   aria-hidden="true"
+                  class="text-white"
                 />
               </span>
             </div>
@@ -129,7 +135,7 @@
               aria-hidden="true"
               class="absolute top-1.5 -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
             >
-              <arrow-down-icon class="w-5 h-5" />
+              <AppIcon name="arrow-down" variant="filled" size="s" />
             </div>
           </div>
 
@@ -212,7 +218,7 @@
               v-else-if="isTradeDisabled"
               type="button"
               disabled
-              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-text-muted text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
             >
               {{ ctaDisabledLabel }}
             </button>
@@ -229,8 +235,11 @@
             v-if="isPairUnavailable && isTradingSessionOpen"
             class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
           >
-            <exclamation-triangle-icon
-              class="w-5 h-5 flex-none text-orange-600"
+            <AppIcon
+              name="exclamation-triangle"
+              variant="filled"
+              size="s"
+              class="flex-none text-text-warning"
             />
             <p class="text-s-14 leading-[20px] text-black">
               {{ $t('trade.pair_unavailable.notice') }}
@@ -289,10 +298,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
-import { GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import TradeAmountCard from './components/TradeAmountCard.vue'
 import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
@@ -308,6 +313,7 @@ import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useTradeModule } from './composables/useTradeModule'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const {
   selectedChain,
   swapLoaded,

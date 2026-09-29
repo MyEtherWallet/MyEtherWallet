@@ -67,7 +67,12 @@
           </p>
         </div>
       </div>
-      <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <!-- To -->
       <div class="flex items-center gap-3">
         <div class="relative">
@@ -118,9 +123,12 @@
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <chevron-down-icon
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
           :class="[
-            'transition-transform w-3 h-3 ml-2',
+            'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
           ]"
         />
@@ -131,7 +139,7 @@
         @click="$emit('remove', bridge.hash)"
         class="ml-auto -mr-2"
       >
-        <trash-icon class="w-4 h-4" />
+        <AppIcon name="trash" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
 
@@ -162,7 +170,7 @@
             class="font-mono hover:underline flex items-center gap-1 text-s-12"
           >
             {{ truncateHash(bridge.hash) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
 
@@ -207,7 +215,7 @@
               class="rounded-full inline-block align-middle mr-1"
             />
             {{ truncateHash(bridge.toAddress) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
       </div>
@@ -217,12 +225,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import {
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type { BridgeNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'

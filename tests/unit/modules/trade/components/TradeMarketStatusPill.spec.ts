@@ -14,7 +14,7 @@ describe('TradeMarketStatusPill', () => {
   it('renders the open state in green without the limited note', () => {
     const pill = mountPill()
     expect(pill.text()).toContain('Regular market')
-    expect(pill.find('p').classes()).toContain('text-success-600')
+    expect(pill.find('p').classes()).toContain('text-text-success')
     expect(pill.text()).not.toContain('Market limited')
   })
 
@@ -22,7 +22,7 @@ describe('TradeMarketStatusPill', () => {
     'renders %s in orange with the limited note',
     status => {
       const pill = mountPill({ status })
-      expect(pill.find('p').classes()).toContain('text-orange-600')
+      expect(pill.find('p').classes()).toContain('text-text-warning')
       expect(pill.text()).toContain('Market limited')
     },
   )

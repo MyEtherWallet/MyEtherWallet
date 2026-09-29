@@ -43,7 +43,7 @@
         class="absolute right-1 top-1 flex w-6 h-6 items-center justify-center rounded-full hoverNoBG"
         @click="emit('close')"
       >
-        <XMarkIcon class="w-4 h-4" />
+        <AppIcon name="x-mark" variant="filled" size="xxs" />
       </button>
     </div>
   </div>
@@ -52,7 +52,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'
@@ -63,6 +62,7 @@ import {
 } from '../common/marketDisplay'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     status: MarketStatusVariant

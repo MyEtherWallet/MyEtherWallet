@@ -82,8 +82,10 @@
             time: swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset,
           })
         }}
-        <clock-icon
-          class="w-3.5 h-3.5 ml-auto"
+        <AppIcon
+          name="clock"
+          size="xxs"
+          class="ml-auto"
           :class="{
             '2xl:hidden 3xl:block': isOpenSideMenu,
           }"
@@ -185,8 +187,10 @@
                 : timeUntilHourReset,
           })
         }}
-        <clock-icon
-          class="w-3.5 h-3.5 ml-auto"
+        <AppIcon
+          name="clock"
+          size="xxs"
+          class="ml-auto"
           :class="{
             '2xl:hidden 3xl:block': isOpenSideMenu,
           }"
@@ -198,7 +202,7 @@
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ClockIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
