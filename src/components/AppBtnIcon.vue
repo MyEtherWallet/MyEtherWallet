@@ -8,7 +8,7 @@
     :disabled="href ? undefined : disabled"
     :aria-label="label"
     :class="[
-      'inline-flex shrink-0 items-center justify-center rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default disabled:opacity-40',
+      'inline-flex shrink-0 items-center justify-center rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default! disabled:opacity-40',
       BTN_ICON_SIZE[size].box,
       BTN_ICON_VARIANT_CLASS[variant],
     ]"
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import AppIcon from '@/components/icon/AppIcon.vue'
-import type { IconName } from '@/components/icon/icons'
+import type { IconEntry, IconName } from '@/components/icon/icons'
 import {
   BTN_ICON_SIZE,
   BTN_ICON_VARIANT_CLASS,
@@ -37,7 +37,8 @@ import {
  * Button Icon (design library, Figma 82:15271). Icon-only button for compact
  * actions where a label isn't needed. Hover, pressed, disabled and focus are
  * native CSS states, not props. `@click` falls through as a native listener,
- * so a disabled button never fires it.
+ * so a disabled button never fires it. `cursor-default!` needs the important
+ * flag to beat the unlayered global `button { cursor: pointer }` in main.css.
  *
  * Pass `icon` for a registry glyph (sized to the button); use the default slot
  * only for custom artwork the registry doesn't have. `href` renders an external
@@ -52,19 +53,16 @@ withDefaults(
      *  prop name as AppIcon `label`. */
     label: string
     icon?: IconName
-    iconVariant?: 'stroke' | 'filled'
+    iconVariant?: keyof IconEntry
     variant?: BtnIconVariant
     size?: BtnIconSize
     disabled?: boolean
     href?: string
   }>(),
   {
-    icon: undefined,
     iconVariant: 'stroke',
     variant: 'naked',
     size: 'm',
-    disabled: false,
-    href: undefined,
   },
 )
 </script>
