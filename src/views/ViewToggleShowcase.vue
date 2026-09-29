@@ -46,11 +46,14 @@ const interactiveValue = ref(false)
           <span class="pr-8 text-s-12 text-text-subtle">
             Status={{ status.label }}
           </span>
+          <!-- No-op listener keeps the samples fixed: without it defineModel
+               flips the value locally on click. -->
           <app-toggle
             v-for="state in STATES"
             :key="state.label"
             :model-value="status.value"
             :class="{ 'is-forced-hover': state.forcedHover }"
+            @update:model-value="() => {}"
             :aria-label="`${status.label} — ${state.label}`"
           />
         </template>
