@@ -58,10 +58,7 @@
                 <app-btn-copy
                   v-if="i.contract && i.contract !== 'N/A'"
                   :copy-value="i.contract"
-                  width="w-6"
-                  height="h-6"
-                  size="xxs"
-                  class="hoverNoBG"
+                  size="s"
                 />
               </div>
             </div>

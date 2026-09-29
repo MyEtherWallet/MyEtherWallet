@@ -5,19 +5,19 @@
 
       <div class="flex">
         <app-btn-icon
+          icon="chevron-left"
+          icon-variant="filled"
           :disabled="isLoading || currentPage === 0"
           :label="$t('common.previous_page')"
           @click="previousPage"
-        >
-          <AppIcon name="chevron-left" size="xxs" variant="filled" />
-        </app-btn-icon>
+        />
         <app-btn-icon
+          icon="chevron-right"
+          icon-variant="filled"
           :disabled="isLoading || currentPage + 1 >= totalPages"
           :label="$t('common.next_page')"
           @click="nextPage"
-        >
-          <AppIcon name="chevron-right" size="xxs" variant="filled" />
-        </app-btn-icon>
+        />
       </div>
     </div>
 
@@ -42,7 +42,6 @@
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 
 defineProps<{
   title: string
