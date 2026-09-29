@@ -18,13 +18,12 @@
         <div class="w-8 sm:ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
-            icon="icon-arrow-left"
+            icon="arrow-left"
+            size="l"
             :label="$t('access_wallet.back_to_connect_options')"
-            class="!w-10 !h-10 mr-auto mt-4"
+            class="mr-auto mt-4"
             @click="accessStore.setCurrentView('default')"
-          >
-            <AppIcon name="arrow-right" size="s" class="rotate-180" />
-          </app-btn-icon>
+          />
         </div>
         <div
           :class="
@@ -87,7 +86,6 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'

@@ -29,17 +29,16 @@
               </p>
               <app-btn-copy
                 :copyValue="walletList[i - 1].address"
-                class="hidden xs:block text-text-brand ml-4"
+                class="hidden xs:inline-flex text-text-brand ml-4"
                 @click.stop
               />
               <app-btn-icon
+                icon="arrow-top-right-on-square"
                 :href="blockExplorerUrl(walletList[i - 1].address)"
                 :label="$t('select_address_list.view_in_explorer')"
                 class="text-text-brand ml-1 xs:ml-0"
                 @click.stop
-              >
-                <AppIcon name="arrow-top-right-on-square" size="s" />
-              </app-btn-icon>
+              />
             </div>
             <p class="text-xs text-text-subtle">
               {{ walletList[i - 1].balance }}
@@ -71,19 +70,19 @@
     </div>
     <div class="mt-2 flex items-center justify-center gap-2">
       <app-btn-icon
+        icon="chevron-left"
+        icon-variant="filled"
         @click="emit('prevpage')"
         :label="$t('common.previous_page')"
         :disabled="isDisabled"
-      >
-        <AppIcon name="chevron-left" variant="filled" size="s" />
-      </app-btn-icon>
+      />
       <app-btn-icon
+        icon="chevron-right"
+        icon-variant="filled"
         @click="emit('nextpage')"
         :label="$t('common.next_page')"
         :disabled="isLoading || walletList.length < 5"
-      >
-        <AppIcon name="chevron-right" variant="filled" size="s" />
-      </app-btn-icon>
+      />
     </div>
   </div>
 </template>
