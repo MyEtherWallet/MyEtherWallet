@@ -14,7 +14,8 @@
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <app-btn-icon-close
-          class="absolute top-4 right-4 z-20 bg-background-default"
+          variant="filled"
+          class="absolute top-4 right-4 z-20"
           @close="holdingsStore.closeModal()"
         />
 
