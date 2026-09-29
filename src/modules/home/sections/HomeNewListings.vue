@@ -208,6 +208,11 @@ const onTrade = (it: ListingCardItem) => {
             :volume-label="t('homePage.listings.stat.volume24h')"
             :volume="it.volume"
             :favorite="it.favorite"
+            :favorite-label="
+              it.favorite
+                ? t('common.remove_from_watchlist')
+                : t('common.add_to_watchlist')
+            "
             :trade-label="it.ctaLabel"
             :trade-disabled="it.tradeDisabled"
             @select="router.push(it.to)"

@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -300,15 +301,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
 
           <!-- Star toggle (remove). Grows a light circular background on hover
                (Figma), via negative margin so the 20px column stays aligned. -->
-          <button
-            type="button"
+          <AppBtnIcon
             data-test="watchlist-remove"
-            :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-background-default-hover"
+            icon="star"
+            icon-variant="filled"
+            :label="t('homePage.hero.watchlist.table.remove')"
+            class="-m-1 text-text-brand"
             @click="remove(row)"
-          >
-            <AppIcon name="star" size="s" variant="filled" />
-          </button>
+          />
 
           <!-- Token — a focusable link so keyboard users can open the drawer
                (the row-body click is a mouse convenience layered on top). -->
@@ -456,21 +456,16 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 {{ t(actionKey(row)) }}
               </button>
               <div class="relative min-[780px]:hidden">
-                <button
-                  type="button"
+                <AppBtnIcon
                   data-test="watchlist-menu"
-                  :aria-label="t('homePage.hero.watchlist.table.moreActions')"
-                  class="hoverNoBG flex size-8 items-center justify-center rounded-full text-text-subtle"
+                  icon="ellipsis-horizontal"
+                  icon-variant="filled"
+                  :label="t('homePage.hero.watchlist.table.moreActions')"
+                  class="text-text-subtle"
                   @click="
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
-                >
-                  <AppIcon
-                    name="ellipsis-horizontal"
-                    size="s"
-                    variant="filled"
-                  />
-                </button>
+                />
                 <template v-if="openMenuKey === row.key">
                   <div
                     class="fixed inset-0 z-10"
