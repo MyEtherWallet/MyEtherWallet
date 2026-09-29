@@ -412,6 +412,51 @@ export function isWalletConnectSubscribeInterruptedError(
   return typeof message === 'string' && message.includes(MESSAGE)
 }
 
+// The null-`info` deref message, in both shapes the crash surfaces as: the
+// `he.info` read (`Cannot read properties of null (reading 'info')`) and the
+// `({ info }) =>` destructure (`Cannot destructure property 'info' of ...`).
+const NULL_INFO_MESSAGE =
+  /cannot read properties of null \(reading 'info'\)|cannot destructure property 'info' of/i
+// An EIP-6963 provider-discovery frame — retained (non-mangled) in the minified
+// bundle: the bundled `mipd` store (`requestProviders`), wagmi's connector
+// enumeration (`getProviders`) and config setup (`createConfig`), the
+// `eip6963:announceProvider` listeners, and MEW's own `providerStore.addProvider`.
+// The wagmi enumeration crash (1JN) is anchored on `createConfig` rather than the
+// generic zustand `createStore` (wagmi builds its store on zustand, so a bare
+// `createStore` frame is not unique to provider discovery — an unrelated null-`info`
+// deref passing through any zustand store would otherwise be suppressed).
+const EIP6963_DISCOVERY_FRAME =
+  /requestProviders|getProviders|announceProvider|eip6963|addProvider|createConfig/i
+
+/**
+ * Whether an error is the EIP-6963 `announceProvider` null-`detail` crash.
+ *
+ * A browser wallet extension announces itself by dispatching an
+ * `eip6963:announceProvider` CustomEvent whose `detail` should be
+ * `{ info, provider }`. A buggy or hostile extension can dispatch it with a
+ * null (or null-`info`) `detail`. Three independent listeners then read `.info`
+ * off it and throw: MEW's own `providerStore.addProvider` (the `App.vue`
+ * listener), and — via `generateConfig` → wagmi `createConfig` — the bundled
+ * `mipd` store's `requestProviders` callback and wagmi's `getProviders()`
+ * enumeration (APP-MEW-WEB-1JG / 1JM / 1JN). None is an app logic bug: the
+ * announced payload is untrusted third-party extension input, and MEW cannot
+ * correct it at the mipd/wagmi layer without a dependency bump. So all three are
+ * external, unactionable Sentry noise.
+ *
+ * Matched on the browser-native (minification-proof) null-`info` message AND an
+ * EIP-6963 provider-discovery frame in the stack, so an unrelated `.info`
+ * null-deref elsewhere in the app keeps reporting. Fails open when no stack is
+ * present (never suppresses on the message alone).
+ */
+export function isEip6963NullProviderError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  if (typeof e.message !== 'string' || !NULL_INFO_MESSAGE.test(e.message)) {
+    return false
+  }
+  return typeof e.stack === 'string' && EIP6963_DISCOVERY_FRAME.test(e.stack)
+}
+
 /**
  * Whether an error is the V8/Chrome `Proxy`-invariant `TypeError` thrown when
  * wagmi's injected connector reads `removeListener` off a `window.ethereum`
