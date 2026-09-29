@@ -182,30 +182,23 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
+                <AppBtnIcon
+                  icon="star"
+                  :icon-variant="
+                    isWatchListed(token.coinId) ? 'filled' : 'stroke'
+                  "
+                  :label="
                     isWatchListed(token.coinId)
                       ? $t('common.remove_from_watchlist')
                       : $t('common.add_to_watchlist')
                   "
+                  :class="
+                    isWatchListed(token.coinId)
+                      ? 'text-text-brand'
+                      : 'text-text-subtle'
+                  "
                   @click.stop="setWatchlistToken(token.coinId)"
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
-                >
-                  <!-- changes color when active -->
-                  <AppIcon
-                    name="star"
-                    size="xxs"
-                    class="cursor-pointer"
-                    v-if="!isWatchListed(token.coinId)"
-                  />
-                  <AppIcon
-                    v-else
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                />
               </td>
               <!-- Name -->
               <td class="px-1 py-1" colspan="2">
