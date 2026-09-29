@@ -2,12 +2,12 @@
   <app-pop-up-menu :placeholder="$t('common.share')" location="right">
     <template #menu-button="{ toggleMenu }">
       <app-btn-icon
+        icon="share"
+        icon-variant="filled"
         :label="$t('common.share')"
         :disabled="disabled"
         @click="toggleMenu"
-      >
-        <AppIcon name="share" variant="filled" size="s" />
-      </app-btn-icon>
+      />
     </template>
     <template #menu-content="{ toggleMenu }">
       <div class="py-2 min-w-[200px]">

@@ -8,12 +8,12 @@
         <div class="flex items-center">
           <app-btn-icon
             v-if="showAddAddress"
+            icon="arrow-left"
+            icon-variant="filled"
             :label="$t('common.go_back')"
             class="-ml-3 mr-3"
             @click="closeAddEdit"
-          >
-            <AppIcon name="arrow-left" variant="filled" size="s" />
-          </app-btn-icon>
+          />
           <h1 class="text-s-28 font-bold">
             {{ dialogTitle }}
           </h1>
@@ -160,7 +160,6 @@ import AppDialog from '@components/AppDialog.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import type { Chain } from '@/mew_api/types'
 

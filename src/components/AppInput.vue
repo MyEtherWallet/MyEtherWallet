@@ -67,26 +67,22 @@
         <app-btn-icon
           v-if="showClear"
           @click="clearInputValue"
+          icon="x-circle"
+          class="text-text-brand"
           :label="$t('common.clear_icon')"
-        >
-          <AppIcon name="x-circle" size="s" class="text-text-brand" />
-        </app-btn-icon>
+        />
         <app-btn-icon
           v-if="showReveal"
           @click="togglePasswordVisibility"
+          :icon="!showPassword ? 'eye-slash' : 'eye'"
+          icon-variant="filled"
+          class="text-text-brand"
           :label="
             !showPassword
               ? $t('common.show_password')
               : $t('common.hide_password')
           "
-        >
-          <AppIcon
-            :name="!showPassword ? 'eye-slash' : 'eye'"
-            variant="filled"
-            size="s"
-            class="text-text-brand"
-          />
-        </app-btn-icon>
+        />
       </div>
     </div>
 

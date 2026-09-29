@@ -5,6 +5,8 @@
     >
       <app-share-button :share-text="shareText" :disabled="isLoading" />
       <app-btn-icon
+        icon="star"
+        :icon-variant="isWatchlisted ? 'filled' : 'stroke'"
         :label="
           isWatchlisted
             ? $t('common.remove_from_watchlist')
@@ -12,10 +14,7 @@
         "
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
-      >
-        <AppIcon v-if="isWatchlisted" name="star" variant="filled" size="s" />
-        <AppIcon v-else name="star" size="s" />
-      </app-btn-icon>
+      />
     </div>
     <div
       v-if="isLoading || !hasData"

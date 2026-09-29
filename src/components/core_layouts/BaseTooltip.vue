@@ -40,18 +40,14 @@
         <slot />
 
         <!-- Dismiss button -->
-        <button
-          class="absolute top-2 right-2 p-1 rounded-full hoverNoBG"
-          :aria-label="$t('trade.weekend.dismiss_tooltip')"
+        <AppBtnIcon
+          icon="x-mark"
+          icon-variant="filled"
+          size="s"
+          :label="$t('trade.weekend.dismiss_tooltip')"
+          class="absolute top-2 right-2 text-text-subtle"
           @click="emit('dismiss')"
-        >
-          <AppIcon
-            name="x-mark"
-            variant="filled"
-            size="xxs"
-            class="text-text-subtle"
-          />
-        </button>
+        />
       </div>
     </transition>
   </teleport>
@@ -69,7 +65,7 @@
  * and what to render inside.
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 
 const props = withDefaults(
   defineProps<{

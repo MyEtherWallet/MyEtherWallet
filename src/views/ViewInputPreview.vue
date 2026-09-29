@@ -136,9 +136,11 @@ const searchModel = reactive({ default: '', alternative: '' })
                 />
               </template>
               <template v-if="v.trailing" #trailing>
-                <AppBtnIcon label="Paste">
-                  <AppIcon name="clipboard" size="s" class="text-text-brand" />
-                </AppBtnIcon>
+                <AppBtnIcon
+                  icon="clipboard"
+                  label="Paste"
+                  class="text-text-brand"
+                />
               </template>
             </AppInput>
           </div>

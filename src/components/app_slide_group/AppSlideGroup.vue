@@ -66,20 +66,20 @@
 
       <app-btn-icon
         v-if="!allIsVisible && !edgeNav"
+        icon="chevron-left"
+        icon-variant="filled"
         :label="$t('common.previous_page')"
         class="ml-auto"
         @click="scrollToPreviousGroup"
-      >
-        <AppIcon name="chevron-left" variant="filled" size="xxs" />
-      </app-btn-icon>
+      />
       <app-btn-icon
         v-if="!allIsVisible && !edgeNav"
         class="-mr-2"
+        icon="chevron-right"
+        icon-variant="filled"
         :label="$t('common.next_page')"
         @click="scrollToNextGroup"
-      >
-        <AppIcon name="chevron-right" variant="filled" size="xxs" />
-      </app-btn-icon>
+      />
     </div>
   </div>
 </template>

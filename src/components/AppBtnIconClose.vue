@@ -1,18 +1,17 @@
 <template>
   <app-btn-icon
     @click="closeClick"
-    :is-white="props.isWhite"
+    icon="x-mark"
+    icon-variant="filled"
     :label="label ?? $t('common.close')"
-  >
-    <AppIcon name="x-mark" variant="filled" />
-  </app-btn-icon>
+  />
 </template>
 <script setup lang="ts">
 import AppBtnIcon from './AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 
 /**
- * @description A close icon button component.
+ * @description A close icon button component. Other AppBtnIcon props
+ * (`variant`, `size`) fall through to the button.
  * @emits close - When the close button is clicked.
  *
  * @example Simple usage
@@ -21,18 +20,11 @@ import AppIcon from '@/components/icon/AppIcon.vue'
  *  @example Custome aria-label
  * <app-btn-icon-close @close="close" label="close dialog" />
  *
- * @example White close icon
- * <app-btn-icon-close @close="close" is-white />
+ * @example On a dark surface
+ * <app-btn-icon-close @close="close" variant="naked-contrast" />
  */
 
-const props = defineProps({
-  /**
-   * @label Whether the close icon button should be white.
-   */
-  isWhite: {
-    default: false,
-    type: Boolean,
-  },
+defineProps({
   /**
    * @label The aria-label for the close button.
    */

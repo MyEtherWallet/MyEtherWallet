@@ -3,12 +3,12 @@
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
     <app-btn-icon
       :label="$t('menu.open-notifications')"
-      width="w-10"
-      height="h-10"
+      size="l"
       @click="togglePopup"
     >
+      <!-- slot, not the icon prop: the unseen-count badge overlays the glyph -->
       <div class="relative">
-        <AppIcon name="bell" variant="filled" />
+        <AppIcon name="bell" variant="filled" size="l" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"

@@ -1,19 +1,15 @@
 <template>
   <div class="flex flex-col h-full min-h-0 p-4">
     <div class="shrink-0 flex items-center">
-      <button
+      <AppBtnIcon
         data-test="connect-address-view-back"
-        aria-label="back"
-        class="size-10 rounded-full hoverNoBG flex items-center justify-center"
+        icon="chevron-left"
+        icon-variant="filled"
+        size="l"
+        :label="$t('common.back')"
+        class="text-black"
         @click="onBack"
-      >
-        <AppIcon
-          name="chevron-left"
-          variant="filled"
-          size="s"
-          class="text-black"
-        />
-      </button>
+      />
     </div>
     <div
       class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 pt-4 text-center"
@@ -78,6 +74,7 @@
 import { watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 
