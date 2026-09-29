@@ -200,7 +200,7 @@
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"
-          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
+          class="md:hidden flex-none ml-3"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <AppIcon name="chevron-double-right" size="s" />

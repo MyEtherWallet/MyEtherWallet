@@ -13,8 +13,11 @@
         :disabled="isLoading"
         @click="$emit('toggle-watchlist')"
       >
-        <AppIcon v-if="isWatchlisted" name="star" variant="filled" size="s" />
-        <AppIcon v-else name="star" size="s" />
+        <AppIcon
+          name="star"
+          :variant="isWatchlisted ? 'filled' : 'stroke'"
+          size="s"
+        />
       </app-btn-icon>
     </div>
     <div

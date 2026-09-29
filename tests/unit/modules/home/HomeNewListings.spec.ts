@@ -273,7 +273,7 @@ describe('HomeNewListings', () => {
     const favorite = mountIt()
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-favorite"]')
-    expect(favorite.find('.text-text-brand').exists()).toBe(true)
+    expect(favorite.classes()).toContain('text-text-brand')
     isWatchListed.mockReturnValue(false)
   })
 })

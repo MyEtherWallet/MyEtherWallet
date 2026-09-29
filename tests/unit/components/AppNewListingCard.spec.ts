@@ -30,6 +30,7 @@ describe('AppNewListingCard', () => {
         volumeLabel: '24h vol',
         volume: '$5M',
         tradeLabel: 'Trade',
+        favoriteLabel: 'Add to watchlist',
         ...props,
       },
     })

@@ -34,7 +34,7 @@
       <app-btn-icon
         v-if="!isSelectable"
         :label="$t('common.edit')"
-        class="text-text-brand hover:bg-background-brand/10"
+        class="text-text-brand"
         @click="editAddress(adr)"
       >
         <AppIcon name="pencil" size="s" />
@@ -42,7 +42,7 @@
       <app-btn-icon
         v-if="!isSelectable"
         :label="$t('common.delete')"
-        class="text-text-brand hover:bg-background-brand/10"
+        class="text-text-brand"
         @click="deleteAddress(adr)"
       >
         <AppIcon name="trash" size="s" />

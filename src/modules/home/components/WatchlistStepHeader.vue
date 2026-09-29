@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronLeftIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 // Shared onboarding header (MEW-2130): one horizontal row with back (steps 2–3),
 // centered "Step X / 3" progress, and close — back/close are grey filled icon
@@ -28,12 +28,12 @@ const { t } = useI18n()
     <div class="flex items-center justify-between">
       <AppBtnIcon
         v-if="showBack"
-        filled
+        variant="filled"
         :label="t('common.back')"
         data-test="step-back"
         @click="$emit('back')"
       >
-        <ChevronLeftIcon class="size-6" />
+        <AppIcon name="chevron-left" variant="filled" />
       </AppBtnIcon>
       <span v-else class="size-8 shrink-0" aria-hidden="true" />
 
@@ -47,12 +47,12 @@ const { t } = useI18n()
       </p>
 
       <AppBtnIcon
-        filled
+        variant="filled"
         :label="t('common.close')"
         data-test="step-close"
         @click="$emit('close')"
       >
-        <XMarkIcon class="size-6" />
+        <AppIcon name="x-mark" variant="filled" />
       </AppBtnIcon>
     </div>
 

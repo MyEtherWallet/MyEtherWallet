@@ -91,7 +91,7 @@
                     <AppIcon
                       name="chevron-right"
                       variant="filled"
-                      size="m"
+                      size="xs"
                       class="text-black flex-shrink-0"
                     />
                   </button>

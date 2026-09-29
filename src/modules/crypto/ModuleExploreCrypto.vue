@@ -210,30 +210,27 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
+                <AppBtnIcon
+                  :label="
                     isWatchListed(getWatchlistId(token))
                       ? $t('common.remove_from_watchlist')
                       : $t('common.add_to_watchlist')
                   "
+                  :class="
+                    isWatchListed(getWatchlistId(token))
+                      ? 'text-text-brand'
+                      : 'text-text-subtle'
+                  "
                   @click.stop="setWatchlistToken(token)"
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
-                  <!-- changes color when active -->
                   <AppIcon
                     name="star"
+                    :variant="
+                      isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                    "
                     size="xxs"
-                    class="cursor-pointer"
-                    v-if="!isWatchListed(getWatchlistId(token))"
                   />
-                  <AppIcon
-                    v-else
-                    name="star"
-                    size="xxs"
-                    variant="filled"
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                </AppBtnIcon>
               </td>
               <!-- Name & Symbol -->
               <td class="px-1 py-1" colspan="2">
@@ -340,8 +337,6 @@
                       <app-btn-icon
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -523,9 +518,8 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click="previousPage"
@@ -533,9 +527,8 @@
             <AppIcon name="chevron-left" size="xxs" variant="filled" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click="nextPage"
