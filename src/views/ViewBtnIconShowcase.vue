@@ -14,16 +14,9 @@ import {
 
 const VARIANTS = Object.keys(BTN_ICON_VARIANT_CLASS) as BtnIconVariant[]
 const SIZES = Object.keys(BTN_ICON_SIZE) as BtnIconSize[]
-const SIZE_PX: Record<BtnIconSize, string> = {
-  s: '22 / 16',
-  m: '32 / 24',
-  l: '40 / 32',
-}
-// Contrast styles are for dark surfaces, so they get the contrast panel.
-const surface = (v: BtnIconVariant) =>
-  v.endsWith('contrast')
-    ? 'bg-background-contrast-default'
-    : 'bg-white border border-border-default'
+// Every style on a light surface; the contrast styles again on the dark panel
+// they are built for.
+const CONTRAST = VARIANTS.filter(v => v.endsWith('contrast'))
 </script>
 
 <template>
@@ -40,24 +33,32 @@ const surface = (v: BtnIconVariant) =>
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Style × State</h2>
       <div
-        v-for="v in VARIANTS"
-        :key="v"
-        class="flex items-center gap-8 rounded-12 p-6"
-        :class="surface(v)"
+        class="flex flex-col gap-4 rounded-12 border border-border-default bg-white p-6"
       >
-        <span
-          class="w-36 text-s-14 font-medium"
-          :class="v.endsWith('contrast') ? 'text-white' : 'text-text-default'"
-        >
-          {{ v }}
-        </span>
-        <AppBtnIcon :variant="v" icon="x-mark" :label="`${v} default`" />
-        <AppBtnIcon
-          :variant="v"
-          icon="x-mark"
-          :label="`${v} disabled`"
-          disabled
-        />
+        <div v-for="v in VARIANTS" :key="v" class="flex items-center gap-8">
+          <span class="w-36 text-s-14 font-medium">{{ v }}</span>
+          <AppBtnIcon :variant="v" icon="x-mark" :label="`${v} default`" />
+          <AppBtnIcon
+            :variant="v"
+            icon="x-mark"
+            :label="`${v} disabled`"
+            disabled
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-4 rounded-12 bg-background-contrast-default p-6"
+      >
+        <div v-for="v in CONTRAST" :key="v" class="flex items-center gap-8">
+          <span class="w-36 text-s-14 font-medium text-white">{{ v }}</span>
+          <AppBtnIcon :variant="v" icon="x-mark" :label="`${v} default`" />
+          <AppBtnIcon
+            :variant="v"
+            icon="x-mark"
+            :label="`${v} disabled`"
+            disabled
+          />
+        </div>
       </div>
       <p class="text-s-12 text-text-subtle">
         Columns: default (interactive) · disabled.
@@ -65,7 +66,7 @@ const surface = (v: BtnIconVariant) =>
     </section>
 
     <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Sizes (box / glyph px)</h2>
+      <h2 class="text-s-16 font-semibold">Sizes</h2>
       <div
         class="flex items-end gap-8 rounded-12 border border-border-default bg-white p-6"
       >
@@ -81,7 +82,7 @@ const surface = (v: BtnIconVariant) =>
             :label="`size ${s}`"
           />
           <span class="text-s-12 text-text-subtle">
-            {{ s.toUpperCase() }} · {{ SIZE_PX[s] }}
+            {{ s.toUpperCase() }}
           </span>
         </div>
       </div>
