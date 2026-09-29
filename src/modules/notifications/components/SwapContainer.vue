@@ -101,12 +101,12 @@
       </app-btn-text>
       <!-- delete Button -->
       <app-btn-icon
+        icon="trash"
+        icon-variant="filled"
         :label="$t('common.delete_notification')"
         @click="$emit('remove', swap.hash)"
         class="ml-auto -mr-2"
-      >
-        <AppIcon name="trash" variant="filled" size="xxs" />
-      </app-btn-icon>
+      />
     </div>
     <expand-transition>
       <div v-show="showMoreDetails" class="px-1">
