@@ -7,12 +7,13 @@
   >
     <template v-if="showDepositAddress && showIsLive" #title>
       <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
-        <button
-          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-background-default transition-colors mr-2"
+        <app-btn-icon
+          icon="chevron-left"
+          icon-variant="filled"
+          :label="$t('common.back')"
+          class="mr-2"
           @click="showDepositAddress = false"
-        >
-          <AppIcon name="chevron-left" size="s" variant="filled" />
-        </button>
+        />
         <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
           {{ $t('perps.deposit.eth-deposit-address-title') }}
         </h1>
@@ -225,12 +226,11 @@
             <!-- Refresh -->
             <!-- <app-tooltip text="Refresh deposit address">
               <app-btn-icon
+                icon="arrow-path"
                 label="Refresh deposit address"
                 :disabled="loading"
                 @click="fetchDepositAddress"
-              >
-                <arrow-path-icon class="w-[18px] h-[18px]" />
-              </app-btn-icon>
+                />
             </app-tooltip> -->
           </div>
         </template>
@@ -245,6 +245,7 @@ import QrcodeVue from 'qrcode.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'

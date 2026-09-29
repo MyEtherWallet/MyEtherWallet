@@ -5,9 +5,7 @@
       <div
         class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-20 h-5 w-5"
       >
-        <!-- <app-btn-icon label="Share">
-          <share-icon class="h-5 w-5" />
-        </app-btn-icon> -->
+        <!-- <app-btn-icon icon="share" label="Share" /> -->
       </div>
       <div class="px-4 lg:px-10 py-0 flex items-start gap-4">
         <app-token-logo
@@ -234,14 +232,12 @@
                 </div>
               </button>
               <app-btn-icon
-                class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
+                icon="ellipsis-vertical"
+                icon-variant="filled"
+                class="xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
                 :label="$t('perps.info.manage-position-label')"
-                height="h-7 xs:h-8"
-                width="w-7 xs:w-8"
                 @click="toggleSelect"
-              >
-                <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
-              </app-btn-icon>
+              />
             </template>
           </app-select>
           <div v-else class="ml-auto order-1 xs:order-3">
@@ -666,17 +662,11 @@
                       >
                         <template #menu-button="{ toggleMenu }">
                           <app-btn-icon
+                            icon="ellipsis-vertical"
+                            icon-variant="filled"
                             :label="$t('perps.market-list.action-menu-label')"
-                            height="h-7 xs:h-8"
-                            width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
-                          >
-                            <AppIcon
-                              name="ellipsis-vertical"
-                              size="s"
-                              variant="filled"
-                            />
-                          </app-btn-icon>
+                          />
                         </template>
                         <template #menu-content="{ toggleMenu }">
                           <div
@@ -713,19 +703,13 @@
                         </template>
                       </app-pop-up-menu>
                       <app-btn-icon
+                        icon="chevron-right"
+                        icon-variant="filled"
                         v-else
                         :label="$t('perps.positions.view-order-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
-                      >
-                        <AppIcon
-                          name="chevron-right"
-                          size="s"
-                          variant="filled"
-                        />
-                      </app-btn-icon>
+                      />
                     </div>
                   </td>
                 </tr>
@@ -839,18 +823,12 @@
                     <!-- Actions -->
                     <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                       <app-btn-icon
+                        icon="chevron-right"
+                        icon-variant="filled"
                         :label="$t('perps.positions.view-fill-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         class="ml-auto"
                         @click="openFillDialog(fill)"
-                      >
-                        <AppIcon
-                          name="chevron-right"
-                          size="s"
-                          variant="filled"
-                        />
-                      </app-btn-icon>
+                      />
                     </td>
                   </tr>
                 </tbody>

@@ -1,14 +1,12 @@
 <template>
   <div class="flex items-center justify-center gap-1">
     <app-btn-icon
+      icon="chevron-left"
+      icon-variant="filled"
       :disabled="disabled || !canPrev"
       :label="t('perps.pagination.previous-page')"
-      height="h-8"
-      width="w-8"
       @click="onPrev"
-    >
-      <AppIcon name="chevron-left" size="xxs" variant="filled" />
-    </app-btn-icon>
+    />
     <span class="px-2 text-s-12 text-text-subtle font-medium">
       <template v-if="totalPages !== undefined">{{
         t('perps.pagination.page-of', {
@@ -21,14 +19,12 @@
       }}</template>
     </span>
     <app-btn-icon
+      icon="chevron-right"
+      icon-variant="filled"
       :disabled="disabled || !canNext"
       :label="t('perps.pagination.next-page')"
-      height="h-8"
-      width="w-8"
       @click="onNext"
-    >
-      <AppIcon name="chevron-right" size="xxs" variant="filled" />
-    </app-btn-icon>
+    />
   </div>
 </template>
 
@@ -36,7 +32,6 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 

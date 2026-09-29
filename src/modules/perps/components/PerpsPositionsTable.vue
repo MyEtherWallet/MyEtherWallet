@@ -76,7 +76,12 @@
                       }}
                     </span>
                   </span>
-                  <AppIcon name="chevron-down" size="xxs" variant="filled" class="ml-2" />
+                  <AppIcon
+                    name="chevron-down"
+                    size="xxs"
+                    variant="filled"
+                    class="ml-2"
+                  />
                 </div>
               </button>
             </div>
@@ -239,14 +244,12 @@
                   >
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
+                        icon="ellipsis-vertical"
+                        icon-variant="filled"
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
-                        class="flex lg:hidden"
-                      >
-                        <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
-                      </app-btn-icon>
+                        class="lg:hidden"
+                      />
                       <AppBaseButton
                         class="hidden lg:flex"
                         size="small"
@@ -510,13 +513,11 @@
                 >
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
+                      icon="ellipsis-vertical"
+                      icon-variant="filled"
                       :label="$t('perps.market-list.action-menu-label')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
-                    >
-                      <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
-                    </app-btn-icon>
+                    />
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
@@ -548,15 +549,13 @@
                 </app-pop-up-menu>
                 <!-- View order details button -->
                 <app-btn-icon
+                  icon="chevron-right"
+                  icon-variant="filled"
                   v-else
                   :label="$t('perps.positions.view-order-details-label')"
-                  height="h-7 xs:h-8"
-                  width="w-7 xs:w-8"
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
-                >
-                  <AppIcon name="chevron-right" size="s" variant="filled" />
-                </app-btn-icon>
+                />
               </td>
             </tr>
           </tbody>
@@ -692,14 +691,12 @@
                 <!-- Actions -->
                 <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                   <app-btn-icon
+                    icon="chevron-right"
+                    icon-variant="filled"
                     :label="$t('perps.positions.view-fill-details-label')"
-                    height="h-7 xs:h-8"
-                    width="w-7 xs:w-8"
                     class="ml-auto"
                     @click="openFillDialog(fill)"
-                  >
-                    <AppIcon name="chevron-right" size="s" variant="filled" />
-                  </app-btn-icon>
+                  />
                 </td>
               </tr>
             </tbody>
