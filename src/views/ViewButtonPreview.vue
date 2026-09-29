@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Dev-only preview for AppBaseButton (all types × states × sizes).
-// Route is registered only when import.meta.env.DEV — see routesDefault.ts.
+// Route is registered only when import.meta.env.MODE !== 'production' — see routesDefault.ts.
 // Visit https://localhost:8080/dev/button in dev.
 import AppBaseButton from '@components/AppBaseButton.vue'
 
