@@ -386,21 +386,23 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            icon="chevron-left"
-            icon-variant="filled"
             variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click.stop="previousPage"
-          />
+          >
+            <AppIcon name="chevron-left" variant="filled" size="xxs" />
+          </app-btn-icon>
           <app-btn-icon
-            icon="chevron-right"
-            icon-variant="filled"
             variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click.stop="nextPage"
-          />
+          >
+            <AppIcon name="chevron-right" variant="filled" size="xxs" />
+          </app-btn-icon>
         </div>
       </div>
       <select-chain-dialog

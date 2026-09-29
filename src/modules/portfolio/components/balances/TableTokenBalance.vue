@@ -663,12 +663,12 @@
       </div>
       <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
         <app-btn-icon
-          icon="chevron-left"
-          icon-variant="filled"
           :disabled="!isLoading && currentPage === 0"
           :label="$t('common.previous_page')"
           @click.stop="prevPage"
-        />
+        >
+          <AppIcon name="chevron-left" variant="filled" size="xxs" />
+        </app-btn-icon>
         <div class="flex items-center gap-2">
           <span class="text-black">{{ currentPage + 1 }}</span>
           <span class="text-text-subtle">{{
@@ -677,12 +677,12 @@
           <span class="text-text-subtle">{{ totalPages }}</span>
         </div>
         <app-btn-icon
-          icon="chevron-right"
-          icon-variant="filled"
           :disabled="!isLoading && currentPage + 1 >= totalPages"
           :label="$t('common.next_page')"
           @click.stop="nextPage"
-        />
+        >
+          <AppIcon name="chevron-right" variant="filled" size="xxs" />
+        </app-btn-icon>
       </div>
 
       <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">

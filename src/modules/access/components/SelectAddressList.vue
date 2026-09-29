@@ -70,19 +70,19 @@
     </div>
     <div class="mt-2 flex items-center justify-center gap-2">
       <app-btn-icon
-        icon="chevron-left"
-        icon-variant="filled"
         @click="emit('prevpage')"
         :label="$t('common.previous_page')"
         :disabled="isDisabled"
-      />
+      >
+        <AppIcon name="chevron-left" variant="filled" size="s" />
+      </app-btn-icon>
       <app-btn-icon
-        icon="chevron-right"
-        icon-variant="filled"
         @click="emit('nextpage')"
         :label="$t('common.next_page')"
         :disabled="isLoading || walletList.length < 5"
-      />
+      >
+        <AppIcon name="chevron-right" variant="filled" size="s" />
+      </app-btn-icon>
     </div>
   </div>
 </template>
