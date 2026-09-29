@@ -38,6 +38,7 @@
     "info_one_reward_period": "每个钱包在 {days} 天的活动期间内最多可获得一份奖励，直接发送到您的钱包",
     "info_no_sybil": "涉嫌通过女巫攻击（创建多个账户以获取更多奖励）或其他操纵手段滥用奖励计划的钱包将被取消资格。",
     "info_wallet_age": "钱包必须至少创建满 3 周（相对于当前日期），并持有至少 0.005 ETH 的最低余额。",
+    "info_min_usdc_balance": "钱包必须持有至少 {amount} USDC 的最低余额。",
     "info_no_cashout": "提现交易不符合资格。",
     "coming_soon_title": "奖励即将上线",
     "coming_soon_body": "我们正在筹备下一期奖励活动。在 X 上关注 @myetherwallet，获取最新动态和即将发布的公告。",

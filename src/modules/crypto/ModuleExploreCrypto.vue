@@ -8,14 +8,14 @@
 
       <!-- Filters: search + category + network -->
       <div
-        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-grey-5"
+        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
         <app-search-input
           v-model="searchInput"
-          bg-class="bg-grey-5"
+          bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('crypto.search')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
@@ -27,20 +27,20 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
               @click="toggleSelect"
             >
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedCryptoFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+              <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
             </button>
           </template>
         </app-select>
 
         <!-- Network filter -->
         <button
-          class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+          class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
           @click="openChainDialog = true"
         >
           <div class="flex items-center gap-2 truncate">
@@ -55,7 +55,7 @@
               {{ networkFilterLabel }}
             </span>
           </div>
-          <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+          <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
         </button>
       </div>
 
@@ -66,7 +66,7 @@
           <!-- Header-->
           <thead class="bg-white">
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-normal"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 border-b border-border-subtle font-normal"
             >
               <!-- Watchlist -->
               <th class="w-10 pb-4 text-center"></th>
@@ -178,7 +178,7 @@
 
               <!-- Actions -->
               <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-28"
               ></th>
             </tr>
           </thead>
@@ -187,7 +187,7 @@
             <tr
               v-for="token in tokens"
               :key="token.name + token.marketCap"
-              class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
+              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
               @click="onRowClick(token)"
             >
               <!-- Watchlist -->
@@ -199,7 +199,7 @@
                       : $t('common.add_to_watchlist')
                   "
                   @click.stop="setWatchlistToken(token)"
-                  class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
                   <!-- changes color when active -->
                   <star-outline-icon
@@ -208,7 +208,7 @@
                   />
                   <star-solid-icon
                     v-else
-                    class="h-4 w-4 cursor-pointer text-primary"
+                    class="h-4 w-4 cursor-pointer text-text-brand"
                   />
                 </button>
               </td>
@@ -238,18 +238,14 @@
                       v-if="token.name.length > 20"
                     >
                       <p
-                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
-                        {{
-                          token.ondo?.stockAlias
-                            ? token.ondo.stockAlias
-                            : token.name
-                        }}
+                        {{ getTokenDisplayName(token) }}
                       </p>
                     </app-tooltip>
                     <p
                       v-else
-                      class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
@@ -329,7 +325,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <button
                           v-if="token.coinId || token.ondo"
@@ -358,7 +354,7 @@
                             token.chains.length > 0 ||
                             getTokenIsCurrentNative(token)
                           "
-                          class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                          class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
                         />
 
                         <ul>
@@ -367,7 +363,7 @@
                             @click.stop="[toggleMenu(), buyBtn(token, true)]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-buy class="text-primary w-4 h-4 mr-2" />
+                            <icon-buy class="text-text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('common.buy') }}</p>
                           </li>
                           <template v-if="token.ondo !== null">
@@ -378,7 +374,9 @@
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-trade class="text-primary w-4 h-4 mr-2" />
+                              <icon-trade
+                                class="text-text-brand w-4 h-4 mr-2"
+                              />
                               <p>{{ $t('crypto.trade') }}</p>
                             </li>
                           </template>
@@ -391,7 +389,9 @@
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-bridge class="text-primary w-4 h-4 mr-2" />
+                              <icon-bridge
+                                class="text-text-brand w-4 h-4 mr-2"
+                              />
                               <p>{{ $t('crypto.bridge') }}</p>
                             </li>
                             <li
@@ -403,7 +403,7 @@
                               @click.stop="[toggleMenu(), swapBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-swap class="text-primary w-4 h-4 mr-2" />
+                              <icon-swap class="text-text-brand w-4 h-4 mr-2" />
                               <p>{{ $t('common.swap') }}</p>
                             </li>
                           </template>
@@ -449,7 +449,7 @@
         </table>
         <div
           v-if="!isLoading && tokens.length === 0"
-          class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
         >
           <p
             v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
@@ -471,9 +471,9 @@
         </div>
         <!-- Loading State -->
         <div v-if="isLoading" class="">
-          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-[56px] py-2">
+          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-14 py-2">
             <div
-              class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+              class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
             ></div>
           </div>
         </div>
@@ -481,14 +481,17 @@
 
       <!-- Footer / pagination -->
       <div
-        class="flex items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+        class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
       >
-        <span class="text-info" :class="isLoading ? 'invisible' : 'visible'">
+        <span
+          class="text-text-subtle"
+          :class="isLoading ? 'invisible' : 'visible'"
+        >
           {{ $t('common.showing_page', { current: page, total: totalPages }) }}
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-grey-5"
+            class="bg-background-default"
             height="h-10"
             width="w-10"
             :disabled="!isLoading && page === 1"
@@ -498,7 +501,7 @@
             <ChevronLeftIcon class="w-4 h-4" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-grey-5"
+            class="bg-background-default"
             height="h-10"
             width="w-10"
             :disabled="!isLoading && page >= totalPages"
@@ -523,6 +526,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -555,6 +559,7 @@ import type {
   Chain,
   GetWebTokensTableResponse,
   GetWebTokensTableResponseToken,
+  GetWebTokensWatchlistResponseToken,
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -820,7 +825,7 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
     location: 'crypto_table',
     token: token.symbol,
-    stock: token.ondo?.underlyingMarket.name,
+    stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
@@ -970,12 +975,29 @@ onMounted(() => {
   }
 })
 
-const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+// Serves both the token table and the watchlist. The two endpoints agree on
+// every field except ondo.underlyingMarket.name, which the watchlist types as
+// optional — normalize onto the table shape so both map to one DisplayToken.
+// The alias wins over the underlying market's name wherever both are present.
+const formatToken = (
+  item: GetWebTokensTableResponseToken | GetWebTokensWatchlistResponseToken,
+): DisplayToken => {
   return {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
     marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
     totalVolume: item.totalVolume ? formatFiat(item.totalVolume).display : '-',
+    ondo: item.ondo
+      ? {
+          ...item.ondo,
+          underlyingMarket: item.ondo.underlyingMarket
+            ? {
+                name:
+                  item.ondo.stockAlias || item.ondo.underlyingMarket.name || '',
+              }
+            : null,
+        }
+      : null,
   }
 }
 
@@ -984,7 +1006,9 @@ const formatStock = (
 ): DisplayToken => {
   return {
     coinId: '',
-    name: item.underlyingMarket.name,
+    // Portfolio tokens have no single underlying market, so the API sends
+    // underlyingMarket as null and the alias carries the display name.
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
     price: item.primaryMarket.price
@@ -995,10 +1019,10 @@ const formatStock = (
       ? Number(item.primaryMarket.priceChangePercentage24h)
       : null,
     priceChangePercentage7d: null,
-    totalVolume: item.underlyingMarket.volume24h
+    totalVolume: item.underlyingMarket?.volume24h
       ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
-    marketCap: item.underlyingMarket.marketCap
+    marketCap: item.underlyingMarket?.marketCap
       ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
@@ -1011,9 +1035,10 @@ const formatStock = (
       primaryMarket: {
         symbol: item.primaryMarket.symbol,
       },
-      underlyingMarket: {
-        name: item.underlyingMarket.name,
-      },
+      underlyingMarket: item.underlyingMarket
+        ? { name: item.underlyingMarket.name }
+        : null,
+      constituentTokens: item.constituentTokens,
     },
     sparklineIn7d: item.primaryMarket.sparkline24h || null,
   }
@@ -1119,9 +1144,9 @@ const parsePercent = (val: number | null): string => {
 
 const getPercentClass = (val: number | null): string => {
   if (val === null || val === undefined) return ''
-  if (val > 0) return 'text-success'
-  if (val < 0) return 'text-error'
-  return 'text-primary'
+  if (val > 0) return 'text-text-success'
+  if (val < 0) return 'text-text-error'
+  return 'text-text-brand'
 }
 
 const debounceTrackSearch = useDebounceFn((value: string) => {

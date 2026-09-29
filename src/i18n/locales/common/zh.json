@@ -1,5 +1,6 @@
 {
   "common": {
+    "watchlist_limit_reached": "每个关注列表最多可保存 {max} 个项目。",
     "search": "搜索",
     "swap": "兑换",
     "bridge": "跨链桥",

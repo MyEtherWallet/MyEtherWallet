@@ -37,8 +37,13 @@ const { t } = useI18n()
       </AppBtnIcon>
       <span v-else class="size-8 shrink-0" aria-hidden="true" />
 
-      <p class="text-s-16 font-normal text-[#575757]">
-        {{ t('homePage.hero.watchlist.onboarding.stepProgress', { step, total: TOTAL_STEPS }) }}
+      <p class="text-s-16 font-normal text-text-subtle">
+        {{
+          t('homePage.hero.watchlist.onboarding.stepProgress', {
+            step,
+            total: TOTAL_STEPS,
+          })
+        }}
       </p>
 
       <AppBtnIcon
@@ -53,10 +58,7 @@ const { t } = useI18n()
 
     <div v-if="title || description" class="mt-4">
       <h2 v-if="title" class="text-s-20 font-bold text-black">{{ title }}</h2>
-      <p
-        v-if="description"
-        class="mt-1 text-s-16 font-normal text-[#575757]"
-      >
+      <p v-if="description" class="mt-1 text-s-16 font-normal text-text-subtle">
         {{ description }}
       </p>
     </div>

@@ -4,9 +4,9 @@
       :class="[
         hasShadow && !isOpenSideMenu
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
-          : '!border-grey-10',
+          : '!border-border-default',
         'border-white',
-        '  w-[60px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        '  w-[60px] xs:w-20 bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
       ]"
     >
       <div>
@@ -26,18 +26,18 @@
               @click="openPanel('trade')"
               :class="[
                 walletPanel === 'trade' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-trade
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.trade') }}
@@ -48,16 +48,18 @@
               @click="openPanel('swap')"
               :class="[
                 walletPanel === 'swap' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12  flex flex-col items-center justify-center w-full',
               ]"
             >
-              <icon-swap :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
+              <icon-swap
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
@@ -68,18 +70,18 @@
               @click="openPanel('perps')"
               :class="[
                 walletPanel === 'perps' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-perps
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.perps') }}
@@ -90,18 +92,18 @@
               @click="openPanel('bridge')"
               :class="[
                 walletPanel === 'bridge' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-bridge
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.bridge') }}
@@ -116,12 +118,12 @@
               @click="openDepositDialog = true"
             >
               <QrCodeIcon
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -132,18 +134,18 @@
               @click="openPanel('send')"
               :class="[
                 walletPanel === 'send' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-send
-                :class="['mb-1 mt-1 w-5 h-5 xs:w-6 xs:h-6 text-primary']"
+                :class="['mb-1 mt-1 w-5 h-5 xs:w-6 xs:h-6 text-text-brand']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -154,16 +156,18 @@
               @click="openPanel('purchase')"
               :class="[
                 walletPanel === 'purchase' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
-              <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
+              <icon-buy
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -188,9 +192,9 @@
         :class="[
           hasShadow && !isOpenSideMenu
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
-            : 'border-grey-10 border-l-1',
+            : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"

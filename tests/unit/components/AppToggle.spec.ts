@@ -15,10 +15,14 @@ describe('AppToggle', () => {
     const wrapper = mountToggle()
 
     expect(wrapper.findAll('button')).toHaveLength(1)
-    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe('false')
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'false',
+    )
 
     await wrapper.setProps({ modelValue: true })
-    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe('true')
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'true',
+    )
   })
 
   it('updates v-model and emits the new value when clicked', async () => {
@@ -30,16 +34,20 @@ describe('AppToggle', () => {
     expect(wrapper.emitted('change')).toEqual([[true]])
   })
 
-  it.each([
-    ['Enter', 'Enter'],
-    ['Space', ' '],
-  ])('updates v-model when activated with %s', async (_name, key) => {
+  it('renders a native button so Enter / Space activate it', () => {
     const wrapper = mountToggle()
 
-    await wrapper.get('[role="switch"]').trigger('keydown', { key })
+    expect(wrapper.get('[role="switch"]').element.tagName).toBe('BUTTON')
+    expect(wrapper.get('[role="switch"]').attributes('type')).toBe('button')
+  })
 
-    expect(wrapper.emitted('update:modelValue')).toEqual([[true]])
-    expect(wrapper.emitted('change')).toEqual([[true]])
+  it('toggles back off on a second click', async () => {
+    const wrapper = mountToggle({ modelValue: true })
+
+    await wrapper.get('[role="switch"]').trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
+    expect(wrapper.emitted('change')).toEqual([[false]])
   })
 
   it('does not change or emit when disabled', async () => {
@@ -48,8 +56,6 @@ describe('AppToggle', () => {
 
     expect(toggle.attributes('disabled')).toBeDefined()
     await toggle.trigger('click')
-    await toggle.trigger('keydown', { key: 'Enter' })
-    await toggle.trigger('keydown', { key: ' ' })
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     expect(wrapper.emitted('change')).toBeUndefined()
@@ -61,7 +67,7 @@ describe('AppToggle', () => {
 
     expect(toggle.classes()).toContain('bg-background-toggle')
     expect(toggle.classes()).toContain('hover:bg-background-default-hover')
-    expect(toggle.classes()).toContain('focus-visible:ring-focus')
+    expect(toggle.classes()).toContain('focus-visible:ring-border-focus')
     expect(wrapper.get('span').classes()).not.toContain('translate-x-[19px]')
 
     await wrapper.setProps({ modelValue: true })

@@ -20,7 +20,7 @@
       </p>
 
       <!-- Body -->
-      <p class="text-s-12 text-info leading-[1.4]">
+      <p class="text-s-12 text-text-subtle leading-[1.4]">
         {{ entry.description }}
       </p>
 

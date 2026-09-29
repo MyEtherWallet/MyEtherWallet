@@ -5,14 +5,12 @@
     :aria-checked="model"
     :disabled="disabled"
     :class="[
-      'app-toggle flex h-6 w-[43px] items-center rounded-full p-[3px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:cursor-not-allowed',
+      'flex h-6 w-[43px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background-default disabled:pointer-events-none disabled:opacity-40',
       model
         ? 'bg-background-brand hover:bg-background-brand-hover'
         : 'bg-background-toggle hover:bg-background-default-hover',
     ]"
     @click="toggle"
-    @keydown.enter.prevent="toggle"
-    @keydown.space.prevent="toggle"
   >
     <span
       aria-hidden="true"
@@ -25,9 +23,17 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Design-library Toggle (MEW-1974, Figma node 628-190): 43×24 switch whose
+ * 18px knob slides between off and on. Hover is CSS only; label/description
+ * text lives outside — pair it with a Cell or Content Group.
+ *
+ * @example
+ * <app-toggle v-model="enabled" aria-label="Enable notifications" />
+ */
 const props = withDefaults(
   defineProps<{
-    /** Prevents the switch value from being changed. */
+    /** Prevents the switch value from being changed. Not in Figma yet. */
     disabled?: boolean
   }>(),
   { disabled: false },
@@ -40,6 +46,7 @@ const emit = defineEmits<{
 
 const model = defineModel<boolean>({ required: true })
 
+// Native <button> already turns Enter / Space into a click.
 const toggle = () => {
   if (props.disabled) return
 
@@ -48,14 +55,3 @@ const toggle = () => {
   emit('change', value)
 }
 </script>
-
-<style scoped>
-/* Used only by the dev preview to display CSS hover states side by side. */
-.app-toggle.is-forced-hover[aria-checked='false'] {
-  background-color: var(--color-background-default-hover);
-}
-
-.app-toggle.is-forced-hover[aria-checked='true'] {
-  background-color: var(--color-background-brand-hover);
-}
-</style>

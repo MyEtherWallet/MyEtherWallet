@@ -76,6 +76,13 @@ vi.mock('@/modules/home/components/AddToWatchlistDialog.vue', () => ({
     template: '<div data-test="add-dialog" :data-open="isOpen" />',
   },
 }))
+// The crypto action primes + opens the swap/bridge panel through this helper
+// (which pulls the swap stack / Ledger). Stub it and assert the calls.
+const openSwapForToken = vi.fn()
+const openBridgeForToken = vi.fn()
+vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
+  useNewListingSwap: () => ({ openSwapForToken, openBridgeForToken }),
+}))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -90,13 +97,21 @@ const i18n = createI18n({
 })
 
 const mountTable = (rows: WatchlistRow[] = ROWS) =>
-  mount(HomeWatchlistTable, { props: { rows }, global: { plugins: [i18n] } })
+  mount(HomeWatchlistTable, {
+    props: { rows },
+    global: {
+      plugins: [i18n],
+      stubs: { RouterLink: { props: ['to'], template: '<a><slot /></a>' } },
+    },
+  })
 
 describe('HomeWatchlistTable (MEW-2130)', () => {
   beforeEach(() => {
     localStorage.clear()
     setActivePinia(createPinia())
     push.mockClear()
+    openSwapForToken.mockClear()
+    openBridgeForToken.mockClear()
   })
 
   it('renders one row per provided watchlist row', () => {
@@ -123,6 +138,51 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(walletMenu.walletPanel).toBe('trade')
     expect(walletMenu.isOpenSideMenu).toBe(true)
     expect(push).not.toHaveBeenCalled()
+  })
+
+  it('clicking the row body opens the asset info drawer', async () => {
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-row"]')[0].trigger('click')
+    expect(push).toHaveBeenCalledWith(ROWS[0].route)
+  })
+
+  it('exposes a focusable link for the row body (keyboard access)', () => {
+    const w = mountTable([makeRow()])
+    const link = w.find('[data-test="watchlist-row-link"]')
+    expect(link.exists()).toBe(true)
+    expect(link.element.tagName).toBe('A')
+  })
+
+  it('clicking the star (remove) does not navigate', async () => {
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-remove"]')[0].trigger('click')
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('primes and opens Bridge with the row chains for a bridge cta', async () => {
+    const chains = [{ chainName: 'Polygon', contract: '0x1', decimals: 18 }]
+    const nativeChains = [{ chainName: 'Solana', decimals: 9 }]
+    const w = mountTable([
+      makeRow({ removeType: 'crypto', cta: 'bridge', chains, nativeChains }),
+    ])
+    await w.get('[data-test="watchlist-trade"]').trigger('click')
+    expect(openBridgeForToken).toHaveBeenCalledWith(
+      'ETH',
+      'Ethereum',
+      nativeChains,
+      chains,
+    )
+    expect(openSwapForToken).not.toHaveBeenCalled()
+  })
+
+  it('primes and opens Swap for a crypto row without a bridge cta', async () => {
+    const chains = [{ chainName: 'Ethereum', contract: '0x1', decimals: 18 }]
+    const w = mountTable([
+      makeRow({ removeType: 'crypto', cta: 'swap', chains, nativeChains: [] }),
+    ])
+    await w.get('[data-test="watchlist-trade"]').trigger('click')
+    expect(openSwapForToken).toHaveBeenCalledWith('ETH', 'Ethereum', chains, [])
+    expect(openBridgeForToken).not.toHaveBeenCalled()
   })
 
   it('caps the list at 5 and expands via Show more', async () => {

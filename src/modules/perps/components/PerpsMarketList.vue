@@ -8,14 +8,14 @@
 
       <!-- Filters: search + category -->
       <div
-        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-grey-5"
+        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
         <app-search-input
           v-model="searchQuery"
-          bg-class="bg-grey-5"
+          bg-class="bg-background-default"
           size="compact"
           :placeholder="$t('perps.market-list.search-placeholder')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
@@ -26,13 +26,13 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
               @click="toggleSelect"
             >
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+              <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
             </button>
           </template>
         </app-select>
@@ -58,7 +58,7 @@
         >
           <thead class="bg-white">
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-normal"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-normal"
             >
               <!-- Watchlist -->
               <th class="w-10 pb-4 text-center"></th>
@@ -188,7 +188,7 @@
             <tr
               v-for="contract in paginatedContracts"
               :key="contract.market"
-              class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
+              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
               @click="$emit('viewMarket', contract.market)"
             >
               <!-- Watchlist -->
@@ -199,7 +199,7 @@
                       ? $t('perps.market-list.remove-from-watchlist')
                       : $t('perps.market-list.add-to-watchlist')
                   "
-                  class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
                   <star-outline-icon
@@ -208,7 +208,7 @@
                   />
                   <star-solid-icon
                     v-else
-                    class="h-4 w-4 cursor-pointer text-primary"
+                    class="h-4 w-4 cursor-pointer text-text-brand"
                   />
                 </button>
               </td>
@@ -227,19 +227,21 @@
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
                     </div>
-                    <span class="text-info text-s-12 truncate block">{{
+                    <span class="text-text-subtle text-s-12 truncate block">{{
                       contract.longName
                     }}</span>
                   </div>
                 </div>
               </td>
               <!-- Market Cap -->
-              <td class="px-1 py-2 text-right lg:text-left text-s-14 text-black">
+              <td
+                class="px-1 py-2 text-right lg:text-left text-s-14 text-black"
+              >
                 <p class="font-semibold">
                   {{ formatVolume(contract.openInterestUsd) }}
                 </p>
@@ -247,8 +249,8 @@
                   class="text-s-12 font-semibold md:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-success'
-                      : 'text-error'
+                      ? 'text-text-success'
+                      : 'text-text-error'
                   "
                 >
                   {{ formatChange(contract.priceChangePercent) }}
@@ -267,8 +269,8 @@
                     class="text-s-13 font-semibold mb-1"
                     :class="
                       parseFloat(contract.priceChangePercent ?? '0') >= 0
-                        ? 'text-success'
-                        : 'text-error'
+                        ? 'text-text-success'
+                        : 'text-text-error'
                     "
                   >
                     {{ formatChange(contract.priceChangePercent) }}
@@ -287,16 +289,20 @@
                 </div>
               </td>
               <!-- Price -->
-              <td class="hidden md:table-cell pl-1 pr-1 py-2 text-right lg:text-left">
-                <p class="text-right lg:text-left font-semibold text-s-14 text-black">
+              <td
+                class="hidden md:table-cell pl-1 pr-1 py-2 text-right lg:text-left"
+              >
+                <p
+                  class="text-right lg:text-left font-semibold text-s-14 text-black"
+                >
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
                   class="text-s-12 font-semibold xl:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-success'
-                      : 'text-error'
+                      ? 'text-text-success'
+                      : 'text-text-error'
                   "
                 >
                   {{ formatChange(contract.priceChangePercent) }}
@@ -323,7 +329,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <button
                           class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
@@ -347,7 +353,7 @@
                           }}</span>
                         </button>
                         <hr
-                          class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                          class="h-px bg-border-strong border-0 w-full my-2 xs:hidden"
                         />
                         <ul>
                           <template v-if="getPosition(contract.market)">
@@ -469,7 +475,7 @@
                       </template>
                       <template #menu-content="{ toggleMenu }">
                         <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                         >
                           <ul>
                             <li
@@ -570,9 +576,9 @@
         <!-- Footer / pagination -->
         <div
           v-if="filteredContracts.length > 0"
-          class="flex items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+          class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
         >
-          <span class="text-info">
+          <span class="text-text-subtle">
             {{
               $t('common.showing_page', {
                 current: currentPage + 1,
@@ -582,7 +588,7 @@
           </span>
           <div class="flex items-center gap-2">
             <app-btn-icon
-              class="bg-grey-5"
+              class="bg-background-default"
               height="h-10"
               width="w-10"
               :disabled="currentPage === 0"
@@ -592,7 +598,7 @@
               <chevron-left-icon class="w-4 h-4" />
             </app-btn-icon>
             <app-btn-icon
-              class="bg-grey-5"
+              class="bg-background-default"
               height="h-10"
               width="w-10"
               :disabled="currentPage >= totalPages - 1"
@@ -605,7 +611,7 @@
         </div>
         <div
           v-if="filteredContracts.length === 0"
-          class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
         >
           <p
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"

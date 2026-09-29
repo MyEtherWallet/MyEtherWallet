@@ -32,7 +32,9 @@ export const marketsToTypes = (markets: string[]): WatchlistMarketType[] => {
 export function useWatchlistCategories(): {
   categories: Ref<WatchlistCategory[]>
   isLoading: Ref<boolean>
-  fetchCategories: (types: WatchlistMarketType[]) => Promise<WatchlistCategory[]>
+  fetchCategories: (
+    types: WatchlistMarketType[],
+  ) => Promise<WatchlistCategory[]>
 } {
   const { useMEWFetch } = useFetchMewApi()
   const categories = ref<WatchlistCategory[]>([])

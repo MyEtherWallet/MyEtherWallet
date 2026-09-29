@@ -6,18 +6,15 @@
     <template #content>
       <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
         <div class="flex flex-col gap-1 pr-12 flex-none">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{ $t('purchase.select_currency.title') }}
           </h2>
-          <p class="text-s-16 text-info leading-[22px]">
+          <p class="text-s-16 text-text-subtle leading-[22px]">
             {{ $t('purchase.select_currency.subtitle') }}
           </p>
         </div>
         <div
-          class="flex items-center h-12 px-1 bg-white border-4 border-grey-10 rounded-24 flex-none"
+          class="flex items-center h-12 px-1 bg-white border-4 border-border-default rounded-24 flex-none"
         >
           <app-search-input
             v-model="searchInput"
@@ -33,7 +30,7 @@
           aria-live="polite"
         >
           <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+            class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
           />
         </div>
         <ul v-else role="listbox" class="flex flex-col flex-1 overflow-y-auto">
@@ -41,7 +38,7 @@
             <button
               type="button"
               :class="[
-                currency === selected ? '!bg-mewBg' : '',
+                currency === selected ? '!bg-background-brand-subtle' : '',
                 'flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left',
               ]"
               @click="onSelect(currency)"
@@ -60,7 +57,7 @@
           </li>
           <li
             v-if="filteredCurrencies.length === 0"
-            class="text-info text-s-14 text-center py-10"
+            class="text-text-subtle text-s-14 text-center py-10"
           >
             {{ $t('purchase.select_currency.no_results') }}
           </li>

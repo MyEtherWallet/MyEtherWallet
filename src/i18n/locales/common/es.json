@@ -1,5 +1,6 @@
 {
   "common": {
+    "watchlist_limit_reached": "Puedes guardar hasta {max} elementos en cada lista de seguimiento.",
     "search": "Buscar",
     "swap": "Cambio",
     "bridge": "Puente",

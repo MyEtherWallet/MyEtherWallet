@@ -40,17 +40,6 @@ const ROUTES_CREATE_WALLET = {
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create' },
 }
 
-const ROUTES_DEV = {
-  INDEX: { NAME: 'DevIndex', PATH: '/dev' },
-  AVATAR: { NAME: 'DevAvatar', PATH: 'avatar' },
-  CHIP: { NAME: 'DevChip', PATH: 'chip' },
-  CONTENT_GROUP: { NAME: 'DevContentGroup', PATH: 'content-group' },
-  INPUT: { NAME: 'DevInput', PATH: 'input' },
-  PICKER: { NAME: 'DevPicker', PATH: 'picker' },
-  TOGGLE: { NAME: 'DevToggle', PATH: 'toggle' },
-  TOOLTIP: { NAME: 'DevTooltip', PATH: 'tooltip' },
-}
-
 type WalletFlowKind = 'access' | 'create'
 
 const WALLET_FLOW_ROUTES: Record<
@@ -84,6 +73,10 @@ const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {
   crypto: 'token-info-crypto',
   home: 'token-info-home',
+  // The public Home ('/') hosts its own token/stock-info drawer so clicks from
+  // its sections (watchlist, New Listings, Market News) open in place instead
+  // of routing to /portfolio or /crypto. See routesDefault.ts.
+  homePage: 'token-info-home-page',
   stocks: 'token-info-stocks',
   earn: 'token-info-earn',
   verify: 'token-info-verify',
@@ -92,6 +85,7 @@ const TOKEN_INFO_ROUTE_NAMES = {
 const STOCK_INFO = { PATH: 'stock/:symbol' }
 const STOCK_INFO_ROUTE_NAMES = {
   home: 'home-stock-info',
+  homePage: 'home-page-stock-info',
   crypto: 'crypto-stock-info',
   stocks: 'stocks-stock-info',
   earn: 'earn-stock-info',
@@ -113,7 +107,6 @@ const ROUTES_SEND: RouteNameCollection = {
 export {
   ROUTES_MAIN,
   ROUTES_CREATE_WALLET,
-  ROUTES_DEV,
   ROUTES_SEND,
   ROUTES_ACCESS,
   WALLET_FLOW_ROUTES,

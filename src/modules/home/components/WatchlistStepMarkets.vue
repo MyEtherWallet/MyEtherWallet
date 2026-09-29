@@ -4,7 +4,10 @@ import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
-import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
+import {
+  WATCHLIST_MARKETS,
+  type WatchlistMarketId,
+} from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
 import stocks2 from '@/assets/images/watchlist/market-stocks-2.png'
 import stocks3 from '@/assets/images/watchlist/market-stocks-3.png'
@@ -51,7 +54,11 @@ const toggle = (id: string) => {
         @toggle="toggle(market.id)"
       >
         <span class="text-s-16 font-semibold text-black">
-          {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
+          {{
+            t(
+              `homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`,
+            )
+          }}
         </span>
         <!-- Overlapping round asset avatars (Figma logos, 24px with card-bg ring). -->
         <span class="flex items-center" aria-hidden="true">
@@ -63,7 +70,9 @@ const toggle = (id: string) => {
             class="size-6 rounded-full border"
             :class="[
               i > 0 ? '-ml-2' : '',
-              selected.includes(market.id) ? 'border-white' : 'border-[#f5f5f5]',
+              selected.includes(market.id)
+                ? 'border-white'
+                : 'border-background-default',
             ]"
           />
         </span>
@@ -74,7 +83,7 @@ const toggle = (id: string) => {
       <button
         type="button"
         data-test="markets-skip"
-        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-primary"
+        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-text-brand"
         @click="$emit('skip')"
       >
         {{ t('homePage.hero.watchlist.onboarding.skip') }}

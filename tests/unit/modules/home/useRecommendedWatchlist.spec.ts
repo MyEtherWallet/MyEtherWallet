@@ -11,14 +11,15 @@ vi.mock('@/composables/useFetchMewApi', () => ({
   useFetchMewApi: () => ({
     useMEWFetch: (url: string) => {
       calls.push(String(url))
-      return { get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }) }
+      return {
+        get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }),
+      }
     },
   }),
 }))
 
-const { useRecommendedWatchlist } = await import(
-  '@/modules/home/composables/useRecommendedWatchlist'
-)
+const { useRecommendedWatchlist } =
+  await import('@/modules/home/composables/useRecommendedWatchlist')
 
 describe('useRecommendedWatchlist (MEW-2130)', () => {
   beforeEach(() => {
@@ -31,11 +32,13 @@ describe('useRecommendedWatchlist (MEW-2130)', () => {
     expect(isLoading.value).toBe(false)
   })
 
-  it('no categories → no fetch, empty assets', async () => {
+  it('no categories → fetches the endpoint without a categories param', async () => {
     const { assets, fetchRecommendations } = useRecommendedWatchlist()
     await fetchRecommendations([])
-    expect(assets.value).toEqual([])
-    expect(calls.length).toBe(0)
+    expect(calls.length).toBe(1)
+    expect(calls[0]).toBe('/v1/web/watchlist/assets')
+    // The API returns the full set, which is mapped like any other response.
+    expect(assets.value.length).toBe(2)
   })
 
   it('fetches the assets endpoint and maps id → type + watchlistId', async () => {

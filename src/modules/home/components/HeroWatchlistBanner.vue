@@ -28,7 +28,7 @@ defineEmits<{
     role="button"
     tabindex="0"
     :aria-label="t('homePage.hero.watchlist.title')"
-    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-[#e6e6e6]"
+    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-background-default-hover"
     @click="$emit('begin')"
     @keydown.enter="$emit('begin')"
     @keydown.space.prevent="$emit('begin')"
@@ -66,12 +66,10 @@ defineEmits<{
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ t('homePage.hero.watchlist.title') }}
         </p>
-        <p class="text-s-16 leading-[22px] text-[#575757]">
+        <p class="text-s-16 leading-[22px] text-text-subtle">
           {{ t('homePage.hero.watchlist.subtitle') }}
         </p>
       </div>

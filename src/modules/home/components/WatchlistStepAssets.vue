@@ -17,6 +17,7 @@ import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
+import { WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 
 const { t } = useI18n()
 
@@ -106,6 +107,22 @@ const overflowAssets = computed(() => selectedAssets.value.slice(MAX_CHIPS))
 const overflowNames = computed(() =>
   overflowAssets.value.map(a => a.symbol).join(', '),
 )
+
+// Cap the modal selection at the watchlist's per-category limit (WATCHLIST_MAX
+// each for crypto / stocks / perps) so finish() never has to silently drop the
+// overflow. Once a category is full its unselected cards disable; an already
+// selected card is never disabled so it can still be toggled off. With every
+// category full, the whole unselected list reads as disabled.
+const selectedCountByType = computed(() => {
+  const counts = new Map<RecommendedAsset['type'], number>()
+  for (const a of selectedAssets.value) {
+    counts.set(a.type, (counts.get(a.type) ?? 0) + 1)
+  }
+  return counts
+})
+const isDisabled = (asset: RecommendedAsset): boolean =>
+  !selected.value.includes(asset.id) &&
+  (selectedCountByType.value.get(asset.type) ?? 0) >= WATCHLIST_MAX
 </script>
 
 <template>
@@ -140,7 +157,7 @@ const overflowNames = computed(() =>
         <p class="text-s-24 font-bold leading-[26px] text-black">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
         </p>
-        <p class="text-s-16 text-[#575757]">
+        <p class="text-s-16 text-text-subtle">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingSubtitle') }}
         </p>
       </div>
@@ -165,7 +182,7 @@ const overflowNames = computed(() =>
         v-model="query"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
         bg-class="bg-white"
-        class="mt-5 shrink-0 rounded-full border border-[#e6e6e6]"
+        class="mt-5 shrink-0 rounded-full border border-border-default"
       />
 
       <!-- Token list: caps at a fraction of the viewport and scrolls inside that
@@ -193,10 +210,14 @@ const overflowNames = computed(() =>
             <div
               v-for="n in INITIAL_COUNT"
               :key="n"
-              class="flex h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
+              class="flex h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
             >
-              <div class="size-10 animate-pulse rounded-full bg-[#f0f0f0]" />
-              <div class="h-[22px] w-16 animate-pulse rounded bg-[#f0f0f0]" />
+              <div
+                class="size-10 animate-pulse rounded-full bg-background-skeleton"
+              />
+              <div
+                class="h-[22px] w-16 animate-pulse rounded bg-background-skeleton"
+              />
             </div>
           </div>
 
@@ -206,11 +227,11 @@ const overflowNames = computed(() =>
           <div
             v-else-if="!visibleAssets.length"
             data-test="assets-empty"
-            class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+            class="flex min-h-40 flex-col items-center justify-center py-6 text-center"
           >
-            <ExclamationCircleIcon class="size-6 text-[#575757]" />
+            <ExclamationCircleIcon class="size-6 text-text-subtle" />
             <p
-              class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]"
+              class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
             >
               {{
                 query.trim()
@@ -222,7 +243,7 @@ const overflowNames = computed(() =>
               v-if="query.trim()"
               type="button"
               data-test="assets-clear-search"
-              class="mt-6 rounded-full bg-[#f5f5f5] px-6 py-3 text-s-16 font-semibold text-primary"
+              class="mt-6 rounded-full bg-background-default px-6 py-3 text-s-16 font-semibold text-text-brand"
               @click="query = ''"
             >
               {{ t('homePage.hero.watchlist.onboarding.assets.clearSearch') }}
@@ -235,8 +256,9 @@ const overflowNames = computed(() =>
               :key="asset.id"
               data-test="asset-card"
               :selected="selected.includes(asset.id)"
+              :disabled="isDisabled(asset)"
               bg="bg-white"
-              class="flex h-[96px] flex-col items-center justify-center gap-2"
+              class="flex h-24 flex-col items-center justify-center gap-2"
               @toggle="toggle(asset.id)"
             >
               <span class="relative">
@@ -253,8 +275,8 @@ const overflowNames = computed(() =>
                   class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
                   :class="
                     selected.includes(asset.id)
-                      ? 'bg-success text-white'
-                      : 'bg-[#e6e6e6] text-black'
+                      ? 'bg-background-success text-white'
+                      : 'bg-background-default-hover text-black'
                   "
                   aria-hidden="true"
                 >
@@ -278,7 +300,10 @@ const overflowNames = computed(() =>
       <!-- Show more divider (only while there is a hidden remainder). Kept
            outside the scroll area so its spacing to the footer is exact. -->
       <div v-if="hasMore" class="mt-6 flex shrink-0 items-center gap-5">
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <span
+          class="h-px flex-1 bg-background-default-hover"
+          aria-hidden="true"
+        />
         <button
           type="button"
           data-test="assets-show-more"
@@ -288,7 +313,10 @@ const overflowNames = computed(() =>
           {{ t('search.show_more') }}
           <ChevronDownIcon class="size-4" />
         </button>
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <span
+          class="h-px flex-1 bg-background-default-hover"
+          aria-hidden="true"
+        />
       </div>
 
       <div class="mt-6 flex shrink-0 items-center justify-between gap-4">
@@ -299,7 +327,7 @@ const overflowNames = computed(() =>
             v-for="a in chipAssets"
             :key="a.id"
             data-test="selected-chip"
-            class="flex h-8 min-w-0 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-3"
+            class="flex h-8 min-w-0 items-center gap-1 rounded-full bg-background-default py-1 pl-1 pr-3"
           >
             <AppTokenLogo
               :url="a.logoUrl"
@@ -309,9 +337,7 @@ const overflowNames = computed(() =>
               height="h-6"
               no-shadow
             />
-            <span
-              class="max-w-[80px] truncate text-s-12 font-semibold text-black"
-            >
+            <span class="max-w-20 truncate text-s-12 font-semibold text-black">
               {{ a.symbol }}
             </span>
           </span>
@@ -322,7 +348,7 @@ const overflowNames = computed(() =>
           >
             <span
               data-test="selected-chip-more"
-              class="flex h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-[#f5f5f5] px-3 text-s-12 font-semibold text-black"
+              class="flex h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-background-default px-3 text-s-12 font-semibold text-black"
             >
               {{
                 t('homePage.hero.watchlist.onboarding.assets.moreCount', {

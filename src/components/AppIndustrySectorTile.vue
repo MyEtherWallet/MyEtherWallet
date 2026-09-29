@@ -19,16 +19,13 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'div'))
     :is="tag"
     :to="props.to"
     data-test="sector-tile"
-    class="flex h-[120px] w-[200px] shrink-0 cursor-pointer flex-col items-end justify-center gap-10 overflow-hidden rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-black/20"
+    class="flex h-[120px] w-[200px] shrink-0 cursor-pointer flex-col items-end justify-between overflow-hidden rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-black/20"
     :style="{ backgroundColor: color }"
   >
     <span class="flex items-center rounded-full bg-white/20 p-2">
       <component :is="icon" v-if="icon" class="size-[18px] text-white" />
     </span>
-    <p
-      data-test="sector-label"
-      class="w-full text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-white"
-    >
+    <p data-test="sector-label" class="w-full text-heading-base text-white">
       {{ label }}
     </p>
   </component>

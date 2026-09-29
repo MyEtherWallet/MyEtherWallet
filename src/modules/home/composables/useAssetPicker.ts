@@ -1,7 +1,11 @@
 import { ref, computed, watch, type Ref, type ComputedRef } from 'vue'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useDebounceFn } from '@vueuse/core'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { usePerpsContracts, usePerpsMarkets } from '@/modules/perps/composables/usePerpsMarkets'
+import {
+  usePerpsContracts,
+  usePerpsMarkets,
+} from '@/modules/perps/composables/usePerpsMarkets'
 import { getLogoUrl } from '@/modules/perps/utils/market'
 import type { Contract, TradingPair } from '@/modules/perps/sdk/types'
 import type {
@@ -37,7 +41,7 @@ export const mapCryptoItem = (
     return {
       key: `stock-${t.ondo.primaryMarket.symbol}`,
       symbol: t.symbol,
-      name: t.ondo.stockAlias ?? t.name,
+      name: getTokenDisplayName(t),
       logoUrl: t.logoUrl ?? undefined,
       type: 'stock',
       watchlistId: t.ondo.primaryMarket.symbol,
@@ -58,7 +62,7 @@ export const mapStockItem = (
 ): AssetPickerItem => ({
   key: `stock-${s.primaryMarket.symbol}`,
   symbol: s.primaryMarket.symbol,
-  name: s.underlyingMarket.name,
+  name: s.stockAlias || s.underlyingMarket?.name || '',
   logoUrl: s.iconPngUrl || s.iconSvgUrl || undefined,
   type: 'stock',
   watchlistId: s.primaryMarket.symbol,
@@ -116,13 +120,17 @@ export function useAssetPicker(
 
   const fetchCrypto = async (q: string): Promise<AssetPickerItem[]> => {
     const url = `/v1/web/tokens-table?page=1&perPage=${PER_PAGE}&sort=MARKET_CAP_DESC&search=${encodeURIComponent(q)}`
-    const { data } = await useMEWFetch(url).get().json<GetWebTokensTableResponse>()
+    const { data } = await useMEWFetch(url)
+      .get()
+      .json<GetWebTokensTableResponse>()
     return (data.value?.items ?? []).map(mapCryptoItem)
   }
 
   const fetchStocks = async (q: string): Promise<AssetPickerItem[]> => {
     const url = `/v1/web/pages/stocks/table?page=1&perPage=${PER_PAGE}&sort=MARKET_CAP_DESC&search=${encodeURIComponent(q)}`
-    const { data } = await useMEWFetch(url).get().json<GetWebStocksTableResponse>()
+    const { data } = await useMEWFetch(url)
+      .get()
+      .json<GetWebStocksTableResponse>()
     return (data.value?.items ?? []).map(mapStockItem)
   }
 
