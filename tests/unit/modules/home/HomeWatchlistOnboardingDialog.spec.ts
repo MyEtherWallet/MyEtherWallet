@@ -102,10 +102,10 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(w.find('[data-test="done"]').exists()).toBe(true)
     // Both markets are in play (no market pick → both); the user picked a stock
     // category but no crypto one, so crypto falls back to CRYPTO:all (MEW-2375).
-    expect(fetchRecommendations).toHaveBeenCalledWith([
-      'STOCK:Equities',
-      'CRYPTO:all',
-    ])
+    expect(fetchRecommendations).toHaveBeenCalledWith(
+      ['STOCK:Equities', 'CRYPTO:all'],
+      ['STOCK', 'CRYPTO'],
+    )
   })
 
   it('falls back to <TYPE>:all for a selected market with no category (MEW-2375)', async () => {
@@ -114,15 +114,16 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s1"]').trigger('click') // → industries
     await w.get('[data-test="s2"]').trigger('click') // → assets, no category picked
     // Only crypto selected, no crypto category → CRYPTO:all (not the full set).
-    expect(fetchRecommendations).toHaveBeenCalledWith(['CRYPTO:all'])
+    expect(fetchRecommendations).toHaveBeenCalledWith(['CRYPTO:all'], ['CRYPTO'])
   })
 
   it('treats every market falling back to :all as skip (no param) (MEW-2375)', async () => {
     const w = mountDialog()
     await w.get('[data-test="s1"]').trigger('click') // both markets, → industries
     await w.get('[data-test="s2"]').trigger('click') // → assets, no category picked
-    // Both crypto + stocks with no category = everything → same as skip.
-    expect(fetchRecommendations).toHaveBeenLastCalledWith()
+    // Both crypto + stocks with no category = everything → categories omitted, but
+    // both types are still sent (same as skip on the categories side).
+    expect(fetchRecommendations).toHaveBeenLastCalledWith([], ['STOCK', 'CRYPTO'])
   })
 
   it('skip on markets recommends the full set without fetching categories', async () => {
@@ -131,9 +132,9 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s1-skip"]').trigger('click')
     await flushPromises()
     expect(w.find('[data-test="done"]').exists()).toBe(true)
-    // No categories resolved; recommend everything (no arg → no `categories=`).
+    // No categories resolved; recommend everything for both types (no `categories=`).
     expect(fetchCategories).not.toHaveBeenCalled()
-    expect(fetchRecommendations).toHaveBeenCalledWith()
+    expect(fetchRecommendations).toHaveBeenCalledWith([], ['STOCK', 'CRYPTO'])
   })
 
   it('skip on industries recommends the full set without extra category fetches', async () => {
@@ -144,7 +145,7 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     expect(w.find('[data-test="done"]').exists()).toBe(true)
     // Only the step-1 → industries transition fetched categories; skip adds none.
     expect(fetchCategories).toHaveBeenCalledTimes(1)
-    expect(fetchRecommendations).toHaveBeenCalledWith()
+    expect(fetchRecommendations).toHaveBeenCalledWith([], ['STOCK', 'CRYPTO'])
   })
 
   it('skip on industries keeps the picked market as <TYPE>:all (MEW-2376)', async () => {
@@ -154,7 +155,10 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s2-skip"]').trigger('click') // skip industries
     await flushPromises()
     // Crypto was selected but no category → CRYPTO:all, not the full set.
-    expect(fetchRecommendations).toHaveBeenLastCalledWith(['CRYPTO:all'])
+    expect(fetchRecommendations).toHaveBeenLastCalledWith(
+      ['CRYPTO:all'],
+      ['CRYPTO'],
+    )
   })
 
   it('skip resets the skipped selection so back shows no stale picks', async () => {
@@ -181,10 +185,10 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     await w.get('[data-test="s1"]').trigger('click') // → industries
     await w.get('[data-test="s2-pick"]').trigger('click') // pick STOCK:Equities
     await w.get('[data-test="s2"]').trigger('click') // → assets
-    expect(fetchRecommendations).toHaveBeenLastCalledWith([
-      'STOCK:Equities',
-      'CRYPTO:all',
-    ])
+    expect(fetchRecommendations).toHaveBeenLastCalledWith(
+      ['STOCK:Equities', 'CRYPTO:all'],
+      ['STOCK', 'CRYPTO'],
+    )
 
     // All the way back to markets: assets + categories must be cleared.
     await w.get('[data-test="s3-back"]').trigger('click') // → industries
@@ -194,8 +198,9 @@ describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
     // reuse the stale STOCK:Equities pick.
     await w.get('[data-test="s1"]').trigger('click') // → industries
     await w.get('[data-test="s2"]').trigger('click') // → assets
-    // No category for either market → both fall back to :all → skip (no param).
-    expect(fetchRecommendations).toHaveBeenLastCalledWith()
+    // No category for either market → both fall back to :all → categories omitted,
+    // both types still sent.
+    expect(fetchRecommendations).toHaveBeenLastCalledWith([], ['STOCK', 'CRYPTO'])
   })
 
   it('back from assets clears the asset picks (MEW-2360)', async () => {

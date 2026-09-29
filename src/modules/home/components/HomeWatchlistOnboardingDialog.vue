@@ -69,13 +69,14 @@ const backToIndustries = () => {
   selectedAssetIds.value = []
 }
 
-// Resolve the recommendation query from the step-1 market + step-2 categories:
-// each market in play keeps the categories the user picked for it, or falls
-// back to `<TYPE>:all` when they picked none — so "crypto with no category" still
-// means "all crypto", not "all markets" (MEW-2375). Step 1 is single-select, so
-// both markets are only in play when step 1 was skipped (no pick → both types);
-// when every one of them falls back to `:all` that's everything, so we omit the
-// param and let the API return the full set.
+// Resolve the recommendation query from the step-1 market + step-2 categories.
+// `types` carries the step-1 market(s) (CRYPTO/STOCK) so the API scopes to them.
+// Each market in play keeps the categories the user picked for it, or falls back
+// to `<TYPE>:all` when they picked none — so "crypto with no category" still means
+// "all crypto", not "all markets" (MEW-2375). Step 1 is single-select, so both
+// markets are only in play when step 1 was skipped (no pick → both types); when
+// every one of them falls back to `:all` that's everything, so we omit the
+// categories and let the API return the full set for those types.
 const recommendForSelection = () => {
   const types = marketsToTypes(selectedMarkets.value)
   const categoryIds = types.flatMap(type => {
@@ -86,8 +87,8 @@ const recommendForSelection = () => {
   })
   const isEverything =
     types.length >= 2 && categoryIds.every(id => id.endsWith(':all'))
-  if (isEverything) fetchRecommendations()
-  else fetchRecommendations(categoryIds)
+  if (isEverything) fetchRecommendations([], types)
+  else fetchRecommendations(categoryIds, types)
 }
 
 // Continue from step 2 → recommend the assets for the current selection.
