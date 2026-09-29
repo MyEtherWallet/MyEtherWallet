@@ -300,13 +300,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           </span>
 
           <!-- Star toggle (remove). Grows a light circular background on hover
-               (Figma), via negative margin so the 20px column stays aligned. -->
+               (Figma), via negative margin (32px box - 2 x 6px) so the 20px column stays
+               aligned. -->
           <AppBtnIcon
             data-test="watchlist-remove"
             icon="star"
             icon-variant="filled"
             :label="t('homePage.hero.watchlist.table.remove')"
-            class="-m-1 text-text-brand"
+            class="-m-1.5 text-text-brand"
             @click="remove(row)"
           />
 
