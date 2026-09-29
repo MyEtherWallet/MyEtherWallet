@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { CHIP_SURFACE_BG_CLASS, type ChipSurface } from './types'
 import type { AvatarSize } from '@/components/avatar/types'
 
@@ -67,7 +67,7 @@ const borderClass = computed(() =>
       class="flex size-4.5 shrink-0 items-center justify-center"
       data-testid="chip-icon"
     >
-      <ChevronDownIcon class="size-full" />
+      <AppIcon name="chevron-down" size="xs" />
     </span>
   </button>
 </template>

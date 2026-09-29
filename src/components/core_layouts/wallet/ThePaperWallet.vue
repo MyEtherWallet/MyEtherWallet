@@ -44,7 +44,11 @@
           <div class="flex justify-between items-center mx-3 gap-6">
             <div>
               <p class="text-s-28 font-semibold mb-2">
-                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong || selectedChain?.name || '' }) }}
+                {{
+                  $t('paper_wallet.my_address', {
+                    chain: selectedChain?.nameLong || selectedChain?.name || '',
+                  })
+                }}
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie
@@ -75,7 +79,10 @@
           <p
             class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
           >
-            <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
+            <span class="font-semibold uppercase">{{
+              $t('paper_wallet.tip_label')
+            }}</span>
+            {{ $t('paper_wallet.tip') }}
           </p>
           <hr class="h-px bg-grey-10 border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->
@@ -89,13 +96,19 @@
             />
             <div class="ml-auto">
               <p class="mb-3">
-                <chat-bubble-bottom-center-text-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                <AppIcon
+                  name="chat-bubble-bottom-center-text"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-primary"
                 />support@myetherwallet.com
               </p>
               <p>
-                <globe-alt-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                <AppIcon
+                  name="globe-alt"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-primary"
                 />https://www.myetherwallet.com
               </p>
             </div>
@@ -103,7 +116,9 @@
           <div
             class="flex justify-center items-center mx-6 mb-6 mt-10 print:hidden"
           >
-            <app-base-button @click="print">{{ $t('paper_wallet.print') }}</app-base-button>
+            <app-base-button @click="print">{{
+              $t('paper_wallet.print')
+            }}</app-base-button>
           </div>
         </div>
       </div>
@@ -119,10 +134,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
-import {
-  GlobeAltIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)

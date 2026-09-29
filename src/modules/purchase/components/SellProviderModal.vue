@@ -112,8 +112,11 @@
           >
             <span class="flex items-center justify-center gap-2">
               {{ t('purchase.sell.provider.continue') }}
-              <arrow-top-right-on-square-icon
-                class="w-[22px] h-[22px] flex-none"
+              <AppIcon
+                name="arrow-top-right-on-square"
+                variant="filled"
+                size="s"
+                class="flex-none"
               />
             </span>
           </app-base-button>
@@ -133,7 +136,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import {

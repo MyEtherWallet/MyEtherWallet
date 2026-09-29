@@ -79,8 +79,11 @@
               rel="noopener noreferrer"
             >
               {{ t('common.old_version_link') }}
-              <arrow-long-right-icon
-                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="s"
+                class="text-black inline-block group-hover:translate-x-1 transition-transform"
               />
             </a>
           </div>
@@ -110,7 +113,7 @@ import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)

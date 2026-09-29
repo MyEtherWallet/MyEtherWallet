@@ -6,10 +6,17 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('rename')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.rename') }}
       </span>
-      <pencil-square-icon class="w-4 h-4 text-black" />
+      <AppIcon
+        name="pencil-square"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -18,10 +25,17 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('copy')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.copy') }}
       </span>
-      <clipboard-document-icon class="w-4 h-4 text-black" />
+      <AppIcon
+        name="clipboard-document"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -30,10 +44,17 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('refresh')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.refresh') }}
       </span>
-      <arrow-path-icon class="w-4 h-4 text-black" />
+      <AppIcon
+        name="arrow-path"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <div class="h-px w-full bg-grey-10" />
@@ -44,10 +65,12 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('paper')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.paper_wallet') }}
       </span>
-      <document-icon class="w-4 h-4 text-black" />
+      <AppIcon name="document" variant="filled" size="xxs" class="text-black" />
     </button>
 
     <button
@@ -56,10 +79,17 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('explorer')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.explorer') }}
       </span>
-      <arrow-top-right-on-square-icon class="w-4 h-4 text-black" />
+      <AppIcon
+        name="arrow-top-right-on-square"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <div class="h-px w-full bg-grey-10" />
@@ -71,10 +101,17 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('disconnect')"
     >
-      <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
+      <span
+        class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black"
+      >
         {{ $t('multi_address.menu.disconnect') }}
       </span>
-      <link-slash-icon class="w-4 h-4 text-black" />
+      <AppIcon
+        name="link-slash"
+        variant="filled"
+        size="xxs"
+        class="text-black"
+      />
     </button>
 
     <button
@@ -83,24 +120,23 @@
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
       @click="select('remove')"
     >
-      <span class="flex-1 text-left font-semibold text-s-14 leading-[20px] text-[#e40c58]">
+      <span
+        class="flex-1 text-left font-semibold text-s-14 leading-[20px] text-[#e40c58]"
+      >
         {{ $t('multi_address.menu.remove') }}
       </span>
-      <trash-icon class="w-4 h-4 text-[#e40c58]" />
+      <AppIcon
+        name="trash"
+        variant="filled"
+        size="xxs"
+        class="text-[#e40c58]"
+      />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  TrashIcon,
-  ClipboardDocumentIcon,
-  ArrowPathIcon,
-  DocumentIcon,
-  ArrowTopRightOnSquareIcon,
-  PencilSquareIcon,
-  LinkSlashIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 type MenuAction =
   | 'rename'

@@ -137,9 +137,12 @@
             @click="showMoreDetails = !showMoreDetails"
           >
             {{ $t('common.more_details') }}
-            <chevron-down-icon
+            <AppIcon
+              name="chevron-down"
+              variant="filled"
+              size="xxs"
               :class="[
-                'transition-transform w-4 h-4 ml-2',
+                'transition-transform ml-2',
                 { 'rotate-180': showMoreDetails },
               ]"
             />
@@ -268,7 +271,7 @@ import {
 import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from '@/providers/ethereum/utils'

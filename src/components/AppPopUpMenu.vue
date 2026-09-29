@@ -10,7 +10,12 @@
       >
         <div class="flex items-center">
           <span :class="`text-s-${props.labelSize}`">{{ placeholder }}</span>
-          <chevron-down-icon class="w-4 h-4 ml-1" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="ml-1"
+          />
         </div>
       </button>
     </slot>
@@ -104,7 +109,7 @@
  *   </template>
  * </app-pop-up-menu>
  */
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, watch, type CSSProperties, type PropType } from 'vue'
 import { onClickOutside, useEventListener } from '@vueuse/core'
 
@@ -192,7 +197,10 @@ watch(openSelect, v => emit('update:open', v))
 const computeFloatingStyle = (): void => {
   if (!target.value) return
   const rect = target.value.getBoundingClientRect()
-  const style: CSSProperties = { position: 'fixed', top: `${rect.bottom + 8}px` }
+  const style: CSSProperties = {
+    position: 'fixed',
+    top: `${rect.bottom + 8}px`,
+  }
 
   if (props.location === PopupLocation.LEFT) {
     style.left = `${rect.left}px`

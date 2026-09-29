@@ -39,16 +39,22 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <check-circle-icon
+                <AppIcon
                   v-else-if="notificationStatus === 'filled'"
-                  class="w-5 h-5 text-success"
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
+                  class="text-success"
                 />
-                <x-circle-icon
+                <AppIcon
                   v-else-if="
                     notificationStatus === 'cancelled' ||
                     notificationStatus === 'expired'
                   "
-                  class="w-5 h-5 text-error"
+                  name="x-circle"
+                  variant="filled"
+                  size="s"
+                  class="text-error"
                 />
               </div>
 
@@ -116,7 +122,7 @@
 
               <!-- Divider Arrow -->
               <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
-                <arrow-long-down-icon class="w-6 h-6" />
+                <AppIcon name="arrow-long-down" variant="filled" />
               </div>
 
               <!-- To Row -->
@@ -228,11 +234,7 @@ import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ArrowLongDownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import { useWalletStore } from '@/stores/walletStore'

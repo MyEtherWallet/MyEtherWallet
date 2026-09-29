@@ -100,7 +100,7 @@
               disabled
             >
               {{ disabledCtaLabel }}
-              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+              <AppIcon name="information-circle" class="shrink-0" />
             </button>
           </app-tooltip>
           <app-base-button
@@ -202,7 +202,12 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <lock-closed-icon class="w-7 h-7 text-primary" />
+          <AppIcon
+            name="lock-closed"
+            variant="filled"
+            size="l"
+            class="text-primary"
+          />
           <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
@@ -263,7 +268,7 @@
               disabled
             >
               {{ disabledCtaLabel }}
-              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+              <AppIcon name="information-circle" class="shrink-0" />
             </button>
           </app-tooltip>
           <app-base-button
@@ -290,8 +295,7 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import gradientBg from '@/assets/images/rwa-rewards/card-gradient-bg.png'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc.webp'

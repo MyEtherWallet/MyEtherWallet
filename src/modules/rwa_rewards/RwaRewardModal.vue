@@ -289,7 +289,12 @@
                 <div
                   class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-success"
                 >
-                  <check-icon class="w-3.5 h-3.5 text-white" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="xxs"
+                    class="text-white"
+                  />
                 </div>
               </div>
 
@@ -324,7 +329,12 @@
                 <div
                   class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-[#e40c58]"
                 >
-                  <x-mark-icon class="w-3.5 h-3.5 text-white" />
+                  <AppIcon
+                    name="x-mark"
+                    variant="filled"
+                    size="xxs"
+                    class="text-white"
+                  />
                 </div>
               </div>
             </template>
@@ -335,7 +345,11 @@
               v-if="showNotice"
               class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
             >
-              <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
+              <AppIcon
+                name="lock-closed"
+                variant="filled"
+                class="text-primary shrink-0"
+              />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">
                   {{ noticeTitle }}
@@ -382,7 +396,7 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -390,7 +404,6 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'

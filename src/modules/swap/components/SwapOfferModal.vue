@@ -202,9 +202,12 @@
                           )
                         }}%)
                       </span>
-                      <CheckIcon
+                      <AppIcon
                         v-if="item.quote.provider === selectedQuote?.provider"
-                        class="w-5 h-5 text-primary"
+                        name="check"
+                        variant="filled"
+                        size="s"
+                        class="text-primary"
                       />
                       <div v-else class="w-4 h-4" />
                     </div>
@@ -299,7 +302,7 @@ import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
-import { CheckIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'

@@ -33,7 +33,7 @@
                   <span class="font-medium text-s-17">{{
                     $t('common.more')
                   }}</span>
-                  <chevron-down-icon class="w-4 h-4" />
+                  <AppIcon name="chevron-down" size="xxs" variant="filled" />
                 </button>
               </template>
             </app-select>
@@ -58,7 +58,7 @@
                 <span class="text-s-16 font-medium truncate">
                   {{ selectedCryptoFilter.label }}</span
                 >
-                <chevron-down-icon class="w-4 h-4" />
+                <AppIcon name="chevron-down" size="xxs" variant="filled" />
               </div>
             </button>
           </div>
@@ -89,7 +89,12 @@
                 class="text-s-14 leading-p-140 font-medium"
                 >{{ selectedChainFilter.nameLong }}</span
               >
-              <chevron-down-icon class="ml-auto w-4 h-4 ml-2" />
+              <AppIcon
+                name="chevron-down"
+                size="xxs"
+                variant="filled"
+                class="ml-auto ml-2"
+              />
             </div>
           </button>
           <div
@@ -118,7 +123,12 @@
                   class="text-s-14 leading-p-140 font-medium text-nowrap"
                   >{{ selectedChainFilter.nameLong }}</span
                 >
-                <chevron-down-icon class="w-4 h-4 ml-2" />
+                <AppIcon
+                  name="chevron-down"
+                  size="xxs"
+                  variant="filled"
+                  class="ml-2"
+                />
               </div>
             </button>
           </div>
@@ -148,13 +158,17 @@
                     @click="setHeaderSort('NAME')"
                   >
                     {{ $t('crypto.token') }}
-                    <arrow-long-up-icon
-                      class="w-3.5 h-3.5"
+                    <AppIcon
                       v-if="headerSort === 'NAME' && tableDirection === 'asc'"
+                      name="arrow-long-up"
+                      size="xxs"
+                      variant="filled"
                     />
-                    <arrow-long-down-icon
-                      class="w-3.5 h-3.5"
+                    <AppIcon
                       v-if="headerSort === 'NAME' && tableDirection === 'desc'"
+                      name="arrow-long-down"
+                      size="xxs"
+                      variant="filled"
                     />
                   </div>
                 </th>
@@ -171,17 +185,23 @@
                     @click="setHeaderSort('MARKET_CAP')"
                   >
                     {{ $t('crypto.market_cap') }}
-                    <arrow-long-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                       "
+                      name="arrow-long-up"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
-                    <arrow-long-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'desc'
                       "
+                      name="arrow-long-down"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
                   </div>
                 </th>
@@ -198,19 +218,25 @@
                     @click="setHeaderSort('TOTAL_VOLUME')"
                   >
                     {{ $t('crypto.volume') }}
-                    <arrow-long-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="
                         headerSort === 'TOTAL_VOLUME' &&
                         tableDirection === 'asc'
                       "
+                      name="arrow-long-up"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
-                    <arrow-long-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="
                         headerSort === 'TOTAL_VOLUME' &&
                         tableDirection === 'desc'
                       "
+                      name="arrow-long-down"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
                   </div>
                 </th>
@@ -229,7 +255,11 @@
                       >
                         <div class="flex items-center justify-end gap-1">
                           <p>{{ activePercent.label }}</p>
-                          <chevron-down-icon class="w-3 h-3" />
+                          <AppIcon
+                            name="chevron-down"
+                            size="xxs"
+                            variant="filled"
+                          />
                         </div>
                       </button>
                     </template>
@@ -247,13 +277,19 @@
                     @click="setHeaderSort('PRICE')"
                   >
                     {{ $t('crypto.price') }}
-                    <arrow-long-up-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                      name="arrow-long-up"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
-                    <arrow-long-down-icon
-                      class="w-3.5 h-3.5 absolute -right-4"
+                    <AppIcon
                       v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                      name="arrow-long-down"
+                      size="xxs"
+                      variant="filled"
+                      class="absolute -right-4"
                     />
                   </div>
                 </th>
@@ -286,11 +322,19 @@
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
-                    <star-outline-icon
-                      class="h-4 w-4 cursor-pointer"
+                    <AppIcon
                       v-if="!isWatchListed(getWatchlistId(token))"
+                      name="star"
+                      size="xxs"
+                      class="cursor-pointer"
                     />
-                    <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                    <AppIcon
+                      v-else
+                      name="star"
+                      size="xxs"
+                      variant="filled"
+                      class="cursor-pointer"
+                    />
                   </button>
                 </td>
                 <!-- Name & Symbol -->
@@ -395,7 +439,11 @@
                           height="h-7 xs:h-8"
                           width="w-7 xs:w-8"
                         >
-                          <ellipsis-vertical-icon class="w-5 h-5" />
+                          <AppIcon
+                            name="ellipsis-vertical"
+                            size="s"
+                            variant="filled"
+                          />
                         </app-btn-icon>
                       </template>
                       <template #menu-content="{ toggleMenu }">
@@ -410,13 +458,18 @@
                               toggleMenu(),
                             ]"
                           >
-                            <star-outline-icon
-                              class="h-4 w-4 cursor-pointer"
+                            <AppIcon
                               v-if="!isWatchListed(getWatchlistId(token))"
+                              name="star"
+                              size="xxs"
+                              class="cursor-pointer"
                             />
-                            <star-solid-icon
+                            <AppIcon
                               v-else
-                              class="h-4 w-4 cursor-pointer"
+                              name="star"
+                              size="xxs"
+                              variant="filled"
+                              class="cursor-pointer"
                             />
                             <span class="ml-2">{{
                               isWatchListed(getWatchlistId(token))
@@ -569,7 +622,12 @@
               @click="selectedCryptoFilter = cryptoFilterOptions[0]"
             >
               {{ $t('crypto.discover_more_tokens') }}
-              <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+              <AppIcon
+                name="arrow-long-up"
+                size="xxs"
+                variant="filled"
+                class="rotate-90 inline-flex"
+              />
             </button>
           </div>
           <!-- Loading State -->
@@ -610,7 +668,7 @@
               :label="$t('common.previous_page')"
               @click="previousPage"
             >
-              <ChevronLeftIcon class="w-4 h-4" />
+              <AppIcon name="chevron-left" size="xxs" variant="filled" />
             </app-btn-icon>
 
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
@@ -623,7 +681,7 @@
               :label="$t('common.next_page')"
               @click="nextPage"
             >
-              <ChevronRightIcon class="w-4 h-4" />
+              <AppIcon name="chevron-right" size="xxs" variant="filled" />
             </app-btn-icon>
           </div>
           <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
@@ -640,7 +698,12 @@
                   @click="toggleSelect"
                 >
                   <span>{{ activeShownItems.label }}</span>
-                  <ChevronDownIcon class="w-4 h-4 text-info" />
+                  <AppIcon
+                    name="chevron-down"
+                    size="xxs"
+                    variant="filled"
+                    class="text-info"
+                  />
                 </button>
               </template>
             </app-select>
@@ -674,16 +737,7 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  StarIcon as StarSolidIcon,
-  ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisVerticalIcon,
-} from '@heroicons/vue/24/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'

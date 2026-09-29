@@ -1,13 +1,17 @@
 <template>
   <div class="relative">
-    <magnifying-glass-icon
+    <button
+      type="button"
+      :aria-label="placeholder || $t('common.search')"
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
-        size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
+        size === 'compact' ? 'top-2.5' : 'top-2',
         inFocusInput ? 'text-primary' : 'text-info',
       ]"
       @click="searchInput?.focus()"
-    />
+    >
+      <AppIcon name="magnifying-glass" :size="size === 'compact' ? 's' : 'm'" />
+    </button>
 
     <input
       ref="searchInput"
@@ -37,8 +41,10 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon
-          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
+        <AppIcon
+          name="x-circle"
+          :size="size === 'compact' ? 's' : 'm'"
+          class="text-primary"
       /></app-btn-icon>
     </div>
   </div>
@@ -47,8 +53,7 @@
 <script setup lang="ts">
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { XCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.

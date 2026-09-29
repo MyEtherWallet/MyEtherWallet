@@ -29,8 +29,10 @@
               "
               @click="$emit('update:modelValue', Math.max(1, modelValue - 1))"
             >
-              <MinusIcon
-                class="w-5 h-5"
+              <AppIcon
+                name="minus"
+                size="s"
+                variant="filled"
                 :class="{ '!opacity-30': modelValue <= 1 }"
               />
             </button>
@@ -73,7 +75,7 @@
                 $emit('update:modelValue', Math.min(maxLeverage, modelValue + 1))
               "
             >
-              <PlusIcon class="w-5 h-5" />
+              <AppIcon name="plus" size="s" variant="filled" />
             </button>
           </div>
 
@@ -153,7 +155,7 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
-import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppWarning from '@/components/AppWarning.vue'

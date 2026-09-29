@@ -6,7 +6,7 @@
         :disabled="disabled"
         @click="toggleMenu"
       >
-        <ShareIcon class="h-5 w-5" />
+        <AppIcon name="share" variant="filled" size="s" />
       </app-btn-icon>
     </template>
     <template #menu-content="{ toggleMenu }">
@@ -81,11 +81,13 @@
               }
             "
           >
-            <CheckIcon
+            <AppIcon
+              name="check"
+              size="s"
               v-if="linkCopied"
-              class="w-5 h-5 shrink-0 text-success"
+              class="shrink-0 text-success"
             />
-            <ClipboardIcon v-else class="w-5 h-5 shrink-0" />
+            <AppIcon v-else name="clipboard" size="s" class="shrink-0" />
             {{ linkCopied ? $t('common.copied') : $t('common.copy_link') }}
           </li>
         </ul>
@@ -98,8 +100,7 @@
 import { ref } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import { ShareIcon } from '@heroicons/vue/24/solid'
-import { ClipboardIcon, CheckIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = defineProps<{
   shareText: string

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
-const props = defineProps<{ modelValue: number; total: number; perPage: number }>()
+const props = defineProps<{
+  modelValue: number
+  total: number
+  perPage: number
+}>()
 const emit = defineEmits<{ 'update:modelValue': [page: number] }>()
 
 const pageCount = computed(() =>
@@ -33,7 +37,7 @@ const go = (p: number) => {
         class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue - 1)"
       >
-        <ChevronLeftIcon class="size-6" />
+        <AppIcon name="chevron-left" variant="filled" />
       </button>
       <button
         data-test="next"
@@ -42,7 +46,7 @@ const go = (p: number) => {
         class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue + 1)"
       >
-        <ChevronRightIcon class="size-6" />
+        <AppIcon name="chevron-right" variant="filled" />
       </button>
     </div>
   </div>

@@ -26,13 +26,16 @@
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1">
-          <span
-            class="font-semibold text-s-14 truncate text-black"
-          >{{ account.addressName }}</span>
-          <eye-icon
+          <span class="font-semibold text-s-14 truncate text-black">{{
+            account.addressName
+          }}</span>
+          <AppIcon
             v-if="account.kind === 'watchOnly'"
+            name="eye"
+            variant="filled"
+            size="xxs"
             data-test="row-watch-only"
-            class="w-4 h-4 flex-shrink-0 text-[#575757]"
+            class="flex-shrink-0 text-[#575757]"
           />
           <account-connected-dot v-else size="md" data-test="row-connected" />
         </div>
@@ -42,7 +45,11 @@
           class="text-s-12 truncate"
           :class="isActive ? 'text-black' : 'text-info'"
         >
-          <template v-if="account.addressName !== truncateAddress(account.address, 6, 4)">
+          <template
+            v-if="
+              account.addressName !== truncateAddress(account.address, 6, 4)
+            "
+          >
             {{ truncateAddress(account.address, 6, 4) }} •
           </template>
           {{ account.walletName }}
@@ -60,7 +67,9 @@
       <template v-if="balanceLoading && (isActive || !balance)">
         <span class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded" />
       </template>
-      <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
+      <template v-else-if="balance"
+        >${{ formatFiat(balance.usdValue) }}</template
+      >
     </div>
 
     <app-pop-up-menu
@@ -71,7 +80,7 @@
     >
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
-          <ellipsis-vertical-icon class="w-5 h-5" />
+          <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
         </button>
       </template>
       <template #menu-content="{ toggleMenu }">
@@ -95,8 +104,7 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
-import { EyeIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

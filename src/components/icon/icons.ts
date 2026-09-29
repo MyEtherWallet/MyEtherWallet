@@ -160,6 +160,29 @@ import {
   ChevronUpDownIcon as ChevronUpDownOutline,
   PlusIcon as PlusOutline,
   XMarkIcon as XMarkOutline,
+  BookOpenIcon as BookOpenOutline,
+  BuildingLibraryIcon as BuildingLibraryOutline,
+  BuildingOffice2Icon as BuildingOffice2Outline,
+  BuildingStorefrontIcon as BuildingStorefrontOutline,
+  ChartBarSquareIcon as ChartBarSquareOutline,
+  ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextOutline,
+  ClipboardIcon as ClipboardOutline,
+  CogIcon as CogOutline,
+  CurrencyDollarIcon as CurrencyDollarOutline,
+  DocumentDuplicateIcon as DocumentDuplicateOutline,
+  DocumentIcon as DocumentOutline,
+  FaceFrownIcon as FaceFrownOutline,
+  FaceSmileIcon as FaceSmileOutline,
+  FlagIcon as FlagOutline,
+  GlobeAsiaAustraliaIcon as GlobeAsiaAustraliaOutline,
+  LinkSlashIcon as LinkSlashOutline,
+  MagnifyingGlassIcon as MagnifyingGlassOutline,
+  MinusIcon as MinusOutline,
+  MusicalNoteIcon as MusicalNoteOutline,
+  PlusCircleIcon as PlusCircleOutline,
+  TagIcon as TagOutline,
+  WrenchScrewdriverIcon as WrenchScrewdriverOutline,
+  LanguageIcon as LanguageOutline,
 } from '@heroicons/vue/24/outline'
 
 // Heroicons — style=filled (Figma) → 24/solid
@@ -241,6 +264,29 @@ import {
   LifebuoyIcon as LifebuoySolid,
   TrashIcon as TrashSolid,
   XCircleIcon as XCircleSolid,
+  BookOpenIcon as BookOpenSolid,
+  BuildingLibraryIcon as BuildingLibrarySolid,
+  BuildingOffice2Icon as BuildingOffice2Solid,
+  BuildingStorefrontIcon as BuildingStorefrontSolid,
+  ChartBarSquareIcon as ChartBarSquareSolid,
+  ChatBubbleBottomCenterTextIcon as ChatBubbleBottomCenterTextSolid,
+  ClipboardIcon as ClipboardSolid,
+  CogIcon as CogSolid,
+  CurrencyDollarIcon as CurrencyDollarSolid,
+  DocumentDuplicateIcon as DocumentDuplicateSolid,
+  DocumentIcon as DocumentSolid,
+  FaceFrownIcon as FaceFrownSolid,
+  FaceSmileIcon as FaceSmileSolid,
+  FlagIcon as FlagSolid,
+  GlobeAsiaAustraliaIcon as GlobeAsiaAustraliaSolid,
+  LinkSlashIcon as LinkSlashSolid,
+  MagnifyingGlassIcon as MagnifyingGlassSolid,
+  MinusIcon as MinusSolid,
+  MusicalNoteIcon as MusicalNoteSolid,
+  PlusCircleIcon as PlusCircleSolid,
+  TagIcon as TagSolid,
+  WrenchScrewdriverIcon as WrenchScrewdriverSolid,
+  LanguageIcon as LanguageSolid,
 } from '@heroicons/vue/24/solid'
 
 // Custom glyphs not in Heroicons — authored SFCs, currentColor, viewBox 24.
@@ -503,6 +549,62 @@ export const icons = {
   keystore: { stroke: KeystoreOutline, filled: KeystoreFilled },
   'watch-only': { stroke: WatchOnlyOutline },
   perpetuals: { filled: PerpetualsFilled },
+  // --- app-in-use Heroicons not (yet) in the Figma 156 set; registered so
+  // every usage routes through AppIcon. Pending design confirmation for library
+  // inclusion (MEW-2359). Both variants wired since both exist in Heroicons.
+  'book-open': { stroke: BookOpenOutline, filled: BookOpenSolid },
+  'building-library': {
+    stroke: BuildingLibraryOutline,
+    filled: BuildingLibrarySolid,
+  },
+  'building-office-2': {
+    stroke: BuildingOffice2Outline,
+    filled: BuildingOffice2Solid,
+  },
+  'building-storefront': {
+    stroke: BuildingStorefrontOutline,
+    filled: BuildingStorefrontSolid,
+  },
+  'chart-bar-square': {
+    stroke: ChartBarSquareOutline,
+    filled: ChartBarSquareSolid,
+  },
+  'chat-bubble-bottom-center-text': {
+    stroke: ChatBubbleBottomCenterTextOutline,
+    filled: ChatBubbleBottomCenterTextSolid,
+  },
+  clipboard: { stroke: ClipboardOutline, filled: ClipboardSolid },
+  cog: { stroke: CogOutline, filled: CogSolid },
+  'currency-dollar': {
+    stroke: CurrencyDollarOutline,
+    filled: CurrencyDollarSolid,
+  },
+  'document-duplicate': {
+    stroke: DocumentDuplicateOutline,
+    filled: DocumentDuplicateSolid,
+  },
+  document: { stroke: DocumentOutline, filled: DocumentSolid },
+  'face-frown': { stroke: FaceFrownOutline, filled: FaceFrownSolid },
+  'face-smile': { stroke: FaceSmileOutline, filled: FaceSmileSolid },
+  flag: { stroke: FlagOutline, filled: FlagSolid },
+  'globe-asia-australia': {
+    stroke: GlobeAsiaAustraliaOutline,
+    filled: GlobeAsiaAustraliaSolid,
+  },
+  'link-slash': { stroke: LinkSlashOutline, filled: LinkSlashSolid },
+  'magnifying-glass': {
+    stroke: MagnifyingGlassOutline,
+    filled: MagnifyingGlassSolid,
+  },
+  minus: { stroke: MinusOutline, filled: MinusSolid },
+  'musical-note': { stroke: MusicalNoteOutline, filled: MusicalNoteSolid },
+  'plus-circle': { stroke: PlusCircleOutline, filled: PlusCircleSolid },
+  tag: { stroke: TagOutline, filled: TagSolid },
+  'wrench-screwdriver': {
+    stroke: WrenchScrewdriverOutline,
+    filled: WrenchScrewdriverSolid,
+  },
+  language: { stroke: LanguageOutline, filled: LanguageSolid },
 } as const satisfies Record<string, IconEntry>
 
 export type IconName = keyof typeof icons

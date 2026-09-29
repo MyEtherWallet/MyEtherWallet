@@ -11,8 +11,7 @@ import AppTextField from '@components/AppTextField.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { INPUT_SIZES } from '@components/inputSizes'
-import { UserCircleIcon } from '@heroicons/vue/24/solid'
-import { ClipboardIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const sizes = INPUT_SIZES
 const surfaces = ['default', 'alternative'] as const
@@ -130,11 +129,15 @@ const searchModel = reactive({ default: '', alternative: '' })
               v-bind="v.props"
             >
               <template v-if="v.leading" #leading>
-                <UserCircleIcon class="w-full h-full text-grey-subtle" />
+                <AppIcon
+                  name="user-circle"
+                  variant="filled"
+                  class="w-full h-full text-grey-subtle"
+                />
               </template>
               <template v-if="v.trailing" #trailing>
                 <AppBtnIcon label="Paste">
-                  <ClipboardIcon class="w-5 h-5 text-primary" />
+                  <AppIcon name="clipboard" size="s" class="text-primary" />
                 </AppBtnIcon>
               </template>
             </AppInput>

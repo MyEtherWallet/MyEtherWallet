@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
@@ -71,7 +71,9 @@ const dateLabel = computed(
       :to="tokenTo"
       data-test="news-ticker"
       class="flex w-fit shrink-0 items-center gap-2"
-      :class="tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''"
+      :class="
+        tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''
+      "
     >
       <AppTokenLogo
         :symbol="ticker"
@@ -87,8 +89,11 @@ const dateLabel = computed(
       />
     </component>
 
-    <ArrowTopRightOnSquareIcon
-      class="pointer-events-none absolute right-6 top-6 size-5 text-[#575757] opacity-0 transition-opacity group-hover:opacity-100"
+    <AppIcon
+      name="arrow-top-right-on-square"
+      variant="filled"
+      size="s"
+      class="pointer-events-none absolute right-6 top-6 text-[#575757] opacity-0 transition-opacity group-hover:opacity-100"
     />
   </div>
 </template>

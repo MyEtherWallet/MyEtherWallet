@@ -36,7 +36,7 @@
                 class="text-primary ml-1 xs:ml-0"
                 @click.stop
               >
-                <arrow-top-right-on-square-icon class="w-5 h-5" />
+                <AppIcon name="arrow-top-right-on-square" size="s" />
               </app-btn-icon>
             </div>
             <p class="text-xs text-info">
@@ -52,9 +52,12 @@
               'border border-primary border-2 w-5 h-5 ml-auto rounded-full flex items-center justify-center transition-colors',
             ]"
           >
-            <check-icon
+            <AppIcon
               v-if="walletList[i - 1].index === model"
-              class="text-white w-3 h-3"
+              name="check"
+              variant="filled"
+              size="xxs"
+              class="text-white"
             />
           </div>
         </button>
@@ -70,14 +73,14 @@
         :label="$t('common.previous_page')"
         :disabled="isDisabled"
       >
-        <chevron-left-icon class="w-5 h-5" />
+        <AppIcon name="chevron-left" variant="filled" size="s" />
       </app-btn-icon>
       <app-btn-icon
         @click="emit('nextpage')"
         :label="$t('common.next_page')"
         :disabled="isLoading || walletList.length < 5"
       >
-        <chevron-right-icon class="w-5 h-5" />
+        <AppIcon name="chevron-right" variant="filled" size="s" />
       </app-btn-icon>
     </div>
   </div>
@@ -88,10 +91,7 @@ import { computed, type PropType } from 'vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import { CheckIcon } from '@heroicons/vue/24/solid'
-import { ChevronLeftIcon } from '@heroicons/vue/24/solid'
-import { ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { truncateAddress } from '@/utils/filters'
 import { type SelectAddress } from '../types/selectAddress'
 import { useChainsStore } from '@/stores/chainsStore'

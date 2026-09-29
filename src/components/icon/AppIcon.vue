@@ -40,9 +40,12 @@ const props = withDefaults(
 )
 
 // Widen the narrow per-name literal to IconEntry so both variants are indexable.
-const entry = computed<IconEntry>(() => icons[props.name])
+// `icons[name]` can be undefined when `name` arrives as an untyped string (a
+// dynamic `:name` binding), so guard rather than crash — an unknown name simply
+// renders nothing.
+const entry = computed<IconEntry | undefined>(() => icons[props.name])
 const component = computed(
-  () => entry.value[props.variant] ?? entry.value.stroke ?? entry.value.filled,
+  () => entry.value?.[props.variant] ?? entry.value?.stroke ?? entry.value?.filled,
 )
 const sizeClass = computed(() => ICON_SIZE_CLASS[props.size])
 const isLabelled = computed(() => !!props.label)

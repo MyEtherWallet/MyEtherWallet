@@ -19,8 +19,20 @@
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
         :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
       >
-        <check-icon v-if="variant === 'sent'" class="w-3.5 h-3.5 text-white" />
-        <x-mark-icon v-else class="w-3.5 h-3.5 text-white" />
+        <AppIcon
+          v-if="variant === 'sent'"
+          name="check"
+          variant="filled"
+          size="xxs"
+          class="text-white"
+        />
+        <AppIcon
+          v-else
+          name="x-mark"
+          variant="filled"
+          size="xxs"
+          class="text-white"
+        />
       </div>
     </div>
 
@@ -39,7 +51,7 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'

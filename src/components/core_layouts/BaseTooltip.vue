@@ -45,7 +45,12 @@
           :aria-label="$t('trade.weekend.dismiss_tooltip')"
           @click="emit('dismiss')"
         >
-          <XMarkIcon class="w-4 h-4 text-info" />
+          <AppIcon
+            name="x-mark"
+            variant="filled"
+            size="xxs"
+            class="text-info"
+          />
         </button>
       </div>
     </transition>
@@ -64,7 +69,7 @@
  * and what to render inside.
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = withDefaults(
   defineProps<{

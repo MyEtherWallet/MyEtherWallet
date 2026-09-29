@@ -37,7 +37,13 @@
         "
       />
       <div class="ml-1 min-w-4 h-4">
-        <chevron-down-icon v-if="!isLoading" class="text-info" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          v-if="!isLoading"
+          class="text-info"
+        />
       </div>
     </div>
   </button>
@@ -72,11 +78,20 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortLabel }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4 shrink-0"
+                    class="shrink-0"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="shrink-0"
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -103,11 +118,20 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
+                        class="text-primary"
                       />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        v-else
+                        class="text-primary"
+                      />
                     </div>
                   </button>
                 </div>
@@ -372,11 +396,7 @@
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Ref, ref, computed, onMounted, watch } from 'vue'
-import {
-  ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'

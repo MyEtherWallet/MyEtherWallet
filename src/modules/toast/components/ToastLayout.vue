@@ -8,7 +8,12 @@
     ]"
   >
     <div class="flex w-full items-start py-3 px-2">
-      <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
+      <AppIcon
+        :name="icon"
+        variant="filled"
+        size="l"
+        :class="[iconColor, 'mt-1 ml-2 mr-1']"
+      />
       <div class="flex-1 px-2 pt-[5px] bg-white">
         <p
           :class="[
@@ -42,8 +47,11 @@
                     : `${toast.textSecondary.slice(0, 60)}...`
                 }}
               </p>
-              <ChevronDownIcon
-                class="w-5 h-5 mt-1 mx-auto"
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="s"
+                class="mt-1 mx-auto"
                 aria-hidden="true"
                 :class="{ 'rotate-180': isShownSecondaryTextInFull }"
               />
@@ -91,7 +99,7 @@
                 </p>
               </div>
             </div>
-            <ArrowLongRightIcon class="w-5 h-5" />
+            <AppIcon name="arrow-long-right" variant="filled" size="s" />
             <div class="flex items-center gap-3">
               <app-token-logo
                 :url="toast.tradeInfo.toTokenIcon"
@@ -119,14 +127,7 @@
 <script setup lang="ts">
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType, type Toast } from '@/types/notification'
-import {
-  InformationCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  ArrowLongRightIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -168,13 +169,13 @@ const borderColor = computed(() => {
 const icon = computed(() => {
   switch (props.toast.type) {
     case ToastType.Success:
-      return CheckCircleIcon
+      return 'check-circle'
     case ToastType.Error:
-      return ExclamationCircleIcon
+      return 'exclamation-circle'
     case ToastType.Warning:
-      return ExclamationTriangleIcon
+      return 'exclamation-triangle'
     default:
-      return InformationCircleIcon
+      return 'information-circle'
   }
 })
 

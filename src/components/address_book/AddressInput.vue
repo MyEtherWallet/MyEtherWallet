@@ -65,14 +65,14 @@
           v-if="adrInput !== ''"
           class="text-primary"
         >
-          <x-circle-icon class="w-6 h-6" />
+          <AppIcon name="x-circle" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
           class="text-primary"
         >
-          <users-icon class="w-6 h-6" />
+          <AppIcon name="users" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -138,8 +138,7 @@
  *  onInput,
  *  validateAddressInput } = useAddressInput(selectedChain)
  */
-import { XCircleIcon } from '@heroicons/vue/24/outline'
-import { UsersIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed, watch, nextTick, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'

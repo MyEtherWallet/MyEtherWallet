@@ -39,10 +39,13 @@
           >
             {{ accountName }}
           </span>
-          <eye-icon
+          <AppIcon
             v-if="isWatchOnly"
+            name="eye"
+            variant="filled"
+            size="xxs"
             data-test="pill-watch-only"
-            class="w-3 h-3 text-[#575757] flex-shrink-0"
+            class="text-[#575757] flex-shrink-0"
           />
           <account-connected-dot v-else data-test="pill-connected" />
         </span>
@@ -66,17 +69,21 @@
         {{ $t('multi_address.no_address_pill') }}
       </span>
     </template>
-    <chevron-down-icon class="w-5 h-5 text-black flex-shrink-0" />
+    <AppIcon
+      name="chevron-down"
+      variant="filled"
+      size="s"
+      class="text-black flex-shrink-0"
+    />
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
-import { EyeIcon } from '@heroicons/vue/16/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'

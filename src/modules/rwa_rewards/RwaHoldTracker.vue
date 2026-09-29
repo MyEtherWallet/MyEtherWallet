@@ -16,13 +16,19 @@
         class="flex items-center justify-center py-1.5 px-[7px] rounded-8 min-h-[30px] box-border"
         :class="chipClass(day)"
       >
-        <check-icon
+        <AppIcon
           v-if="chipState(day) === 'done' || chipState(day) === 'doneGrey'"
-          class="w-3.5 h-3.5 text-white"
+          name="check"
+          variant="filled"
+          size="xxs"
+          class="text-white"
         />
-        <x-mark-icon
+        <AppIcon
           v-else-if="chipState(day) === 'failed'"
-          class="w-3.5 h-3.5 text-white"
+          name="x-mark"
+          variant="filled"
+          size="xxs"
+          class="text-white"
         />
         <span
           v-else
@@ -36,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 type ChipState = 'done' | 'current' | 'pending' | 'failed' | 'doneGrey'
 

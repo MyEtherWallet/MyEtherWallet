@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ArrowRightIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
@@ -86,7 +86,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <ArrowRightIcon class="size-5" />
+          <AppIcon name="arrow-right" size="s" variant="filled" />
         </span>
       </AppBaseButton>
     </div>

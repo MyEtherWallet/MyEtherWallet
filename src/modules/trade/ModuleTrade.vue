@@ -109,8 +109,11 @@
         >
           <template #icon>
             <div class="relative">
-              <globe-asia-australia-icon
-                class="w-12 h-12 text-black"
+              <AppIcon
+                name="globe-asia-australia"
+                variant="filled"
+                size="xl"
+                class="text-black"
                 aria-hidden="true"
               />
               <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
@@ -122,8 +125,11 @@
               <span
                 class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
               >
-                <exclamation-circle-icon
-                  class="w-4 h-4 text-white"
+                <AppIcon
+                  name="exclamation-circle"
+                  variant="filled"
+                  size="xxs"
+                  class="text-white"
                   aria-hidden="true"
                 />
               </span>
@@ -215,7 +221,12 @@
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <AppIcon
+                name="arrow-down"
+                variant="filled"
+                size="s"
+                class="text-primary"
+              />
             </div>
           </div>
 
@@ -259,7 +270,12 @@
             class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
           >
             <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-primary" />
+              <AppIcon
+                name="exclamation-circle"
+                variant="filled"
+                size="s"
+                class="text-primary"
+              />
               <p class="text-primary font-medium text-s-16">
                 {{ $t('trade.market_closed') }}
               </p>
@@ -417,13 +433,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ArrowDownIcon, GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
-// 16px variant: the badge glyph is drawn at 16px in the design, and the 24px
-// icon's strokes render muddy when scaled down that far.
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 
 // Components
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'

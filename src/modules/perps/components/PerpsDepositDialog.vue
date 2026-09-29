@@ -11,7 +11,7 @@
           class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-grey-5 transition-colors mr-2"
           @click="showDepositAddress = false"
         >
-          <chevron-left-icon class="w-5 h-5" />
+          <AppIcon name="chevron-left" size="s" variant="filled" />
         </button>
         <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
           {{ $t('perps.deposit.eth-deposit-address-title') }}
@@ -154,7 +154,7 @@
                 @click="showDepositAddress = true"
               >
                 {{ $t('perps.deposit.use-deposit-address-link') }}
-                <chevron-right-icon class="w-3.5 h-3.5" />
+                <AppIcon name="chevron-right" size="xxs" variant="filled" />
               </button>
             </div>
           </div>
@@ -242,7 +242,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppDialog from '@/components/AppDialog.vue'

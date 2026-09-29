@@ -23,7 +23,7 @@
             @click="toggleSelect"
           >
             <p>{{ $t('common.more') }}</p>
-            <chevron-down-icon class="w-4 h-4 ml-1" />
+            <AppIcon name="chevron-down" size="xxs" class="ml-1" />
           </button>
         </template>
       </app-select>
@@ -56,7 +56,7 @@ import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type {
   GetWebStocksInfoPrimaryPriceChartResponse,
