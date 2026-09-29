@@ -7,8 +7,12 @@
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center text-center">
-          <div class="text-s-13 lg:text-s-16 text-info px-4 leading-p-160">
-            {{ t('send.initiated.completed-note', { symbol: displayTokenSymbol }) }}
+          <div
+            class="text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
+          >
+            {{
+              t('send.initiated.completed-note', { symbol: displayTokenSymbol })
+            }}
             <div class="inline-flex align-middle">
               <app-blockie
                 :address="snapshot.toAddress"
@@ -29,10 +33,7 @@
                   size="xxs"
                   class="inline-block align-middle text-black"
               /></a>
-              <span
-                v-else
-                class="font-mono text-s-13 lg:text-s-16"
-              >
+              <span v-else class="font-mono text-s-13 lg:text-s-16">
                 {{ truncateHash(snapshot.toAddress) }}
               </span>
             </div>
@@ -48,7 +49,7 @@
               <div class="mr-2">
                 <svg
                   v-if="notificationStatus === 'sent'"
-                  class="w-5 h-5 animate-spin text-primary"
+                  class="w-5 h-5 animate-spin text-text-brand"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -72,14 +73,14 @@
                   name="check-circle"
                   variant="filled"
                   size="s"
-                  class="text-success"
+                  class="text-text-success"
                 />
                 <AppIcon
                   v-else-if="notificationStatus === 'failed'"
                   name="x-circle"
                   variant="filled"
                   size="s"
-                  class="text-error"
+                  class="text-text-error"
                 />
               </div>
 
@@ -87,12 +88,12 @@
               <span
                 class="text-s-14 font-semibold"
                 :class="{
-                  'text-primary': notificationStatus === 'sent',
-                  'text-success': notificationStatus === 'confirmed',
-                  'text-error': notificationStatus === 'failed',
+                  'text-text-brand': notificationStatus === 'sent',
+                  'text-text-success': notificationStatus === 'confirmed',
+                  'text-text-error': notificationStatus === 'failed',
                 }"
               >
-              {{
+                {{
                   notificationStatus === 'sent'
                     ? t('send.initiated.status.pending')
                     : notificationStatus === 'confirmed'
@@ -104,11 +105,13 @@
               </span>
             </div>
 
-            <div class="flex flex-col justify-start bg-mewBg p-4 rounded-20">
+            <div
+              class="flex flex-col justify-start bg-background-brand-subtle p-4 rounded-20"
+            >
               <!-- Token Row -->
               <div class="flex items-center gap-4">
                 <div class="relative">
-                <app-token-logo
+                  <app-token-logo
                     :url="displayTokenIcon"
                     :symbol="displayTokenSymbol"
                     :address="
@@ -147,12 +150,14 @@
                       class="inline-flex !text-s-16 lg:!text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ displayAmountFiat }}</p>
+                  <p class="text-text-subtle text-s-14">
+                    {{ currencySymbol }}{{ displayAmountFiat }}
+                  </p>
                 </div>
               </div>
 
               <!-- Divider Arrow -->
-              <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
+              <div class="flex justify-start my-2 lg:my-4 mx-1.5 lg:mx-3">
                 <AppIcon name="arrow-long-down" variant="filled" />
               </div>
 
@@ -174,10 +179,14 @@
                   </div>
                 </div>
                 <div class="flex flex-col text-left">
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight font-mono">
+                  <p
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight font-mono"
+                  >
                     {{ truncateHash(snapshot.toAddress) }}
                   </p>
-                  <p class="text-info text-s-14">{{ t('send.initiated.on-chain', { chain: chainName }) }}</p>
+                  <p class="text-text-subtle text-s-14">
+                    {{ t('send.initiated.on-chain', { chain: chainName }) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -186,7 +195,7 @@
             <div class="w-full my-5 px-2 lg:px-4">
               <div class="flex justify-between items-center">
                 <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-text-subtle"
                   >{{ t('send.initiated.tx-hash') }}</span
                 >
                 <div class="flex items-center gap-2">
@@ -202,7 +211,7 @@
 
         <div class="mt-6">
           <p
-            class="text-center text-s-13 lg:text-s-16 text-info px-4 leading-p-160"
+            class="text-center text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
           >
             {{ t('send.initiated.close-window') }}
           </p>
@@ -361,14 +370,17 @@ const chainIcon = computed(() => {
 
 const blockExplorerUrl = computed(() => {
   return (
-    snapshot.chain?.blockExplorerTX?.replace('[[txHash]]', snapshot.txHash) || ''
+    snapshot.chain?.blockExplorerTX?.replace('[[txHash]]', snapshot.txHash) ||
+    ''
   )
 })
 
 const addressExplorerUrl = computed(() => {
   return (
-    snapshot.chain?.blockExplorerAddr?.replace('[[address]]', snapshot.toAddress) ||
-    ''
+    snapshot.chain?.blockExplorerAddr?.replace(
+      '[[address]]',
+      snapshot.toAddress,
+    ) || ''
   )
 })
 

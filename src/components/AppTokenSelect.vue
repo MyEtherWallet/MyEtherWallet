@@ -2,8 +2,8 @@
   <button
     :class="[
       isLoading || !selectedToken
-        ? 'bg-grey-10 animate-pulse min-w-[120px]'
-        : 'bg-white hoverNoBG shadow-button border-grey-10 border',
+        ? 'bg-background-default-hover animate-pulse min-w-[120px]'
+        : 'bg-white hoverNoBG shadow-button border-border-default border',
       'rounded-full px-1 min-h-9 transition-colors',
     ]"
     type="button"
@@ -33,7 +33,7 @@
           variant="filled"
           size="xxs"
           v-if="!isLoading"
-          class="text-info"
+          class="text-text-subtle"
         />
       </div>
     </div>
@@ -50,7 +50,7 @@
       >
         <div class="sticky top-0 bg-white z-20 pt-4">
           <div
-            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -90,13 +90,17 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
+                  <hr
+                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
+                  />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
                     :class="[
-                      option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
+                      option.value === activeSortValue
+                        ? 'bg-background-default'
+                        : '',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -111,14 +115,14 @@
                         variant="filled"
                         size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="text-primary"
+                        class="text-text-brand"
                       />
                       <AppIcon
                         name="arrow-long-down"
                         variant="filled"
                         size="s"
                         v-else
-                        class="text-primary"
+                        class="text-text-brand"
                       />
                     </div>
                   </button>
@@ -126,7 +130,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-10 w-full mb-2"></div>
+          <div class="h-px bg-background-default-hover w-full mb-2"></div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
@@ -136,7 +140,7 @@
             class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
               token.contract === selectedTokenContract
-                ? 'bg-mewBg'
+                ? 'bg-background-brand-subtle'
                 : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedToken(token)"
@@ -158,11 +162,14 @@
                     v-if="getName(token).length > 10"
                     :text="getName(token)"
                   >
-                    <h2 class="text-s-12 text-info whitespace-nowrap">
+                    <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
                       {{ truncate(getName(token), 10) }}
                     </h2>
                   </app-tooltip>
-                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
+                  <h2
+                    v-else
+                    class="text-s-12 text-text-subtle whitespace-nowrap"
+                  >
                     {{ getName(token) }}
                   </h2>
                 </div>
@@ -172,14 +179,14 @@
                   {{ currencySymbol }} {{ formatUsdBalance(token.usd_balance) }}
                 </p>
                 <div class="flex item-center justify-end gap-1">
-                  <p class="text-info text-s-12 font-normal">
+                  <p class="text-text-subtle text-text-xs">
                     {{ getBalance(token.balance) }}
                   </p>
                   <app-token-symbol
                     :symbol="token.symbol"
                     :is-stock="token.ondo !== undefined"
                     :has-gradient="false"
-                    class="text-info !text-s-12 font-normal"
+                    class="text-text-subtle !text-s-12 font-normal"
                   />
                 </div>
               </div>
@@ -187,7 +194,9 @@
           </button>
         </div>
         <div v-else>
-          <div class="flex justify-center items-center h-[400px] text-info">
+          <div
+            class="flex justify-center items-center h-[400px] text-text-subtle"
+          >
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
             </p>
@@ -203,6 +212,7 @@
 
 <script setup lang="ts">
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted, watch } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -381,9 +391,7 @@ const getBalance = (_value: string) => {
   return formatFloatingPointValue(_value).value
 }
 
-const getName = (token: TokenBalance): string => {
-  return token.ondo?.stockAlias ? token.ondo.stockAlias : token.name
-}
+const getName = (token: TokenBalance): string => getTokenDisplayName(token)
 
 const emit = defineEmits<{
   'open:selectToken': [isOpen: boolean]

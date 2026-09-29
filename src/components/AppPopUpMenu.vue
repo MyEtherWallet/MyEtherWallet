@@ -38,7 +38,7 @@
             class="fixed z-[2200] app-popup-menu-floating"
           >
             <div
-              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl border border-grey-10 overflow-hidden"
+              class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl border border-border-default overflow-hidden"
               :class="menuRadiusClass"
             >
               <slot name="menu-content" :toggleMenu="toggleMenu" />
@@ -70,7 +70,7 @@
           ]"
         >
           <div
-            class="min-w-[180px] max-w-full bg-white shadow-xl border border-grey-10 overflow-hidden"
+            class="min-w-[180px] max-w-full bg-white shadow-xl border border-border-default overflow-hidden"
             :class="menuRadiusClass"
           >
             <slot name="menu-content" :toggleMenu="toggleMenu" />

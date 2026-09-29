@@ -41,6 +41,7 @@ const toggle = () => {
       :is-stock="item.type === 'stock'"
       width="w-10"
       height="h-10"
+      no-shadow
     />
     <div class="min-w-0 flex-1">
       <AppTokenSymbol
@@ -48,7 +49,7 @@ const toggle = () => {
         :is-stock="item.type === 'stock'"
         class="block truncate text-s-16 font-bold text-black"
       />
-      <span class="block truncate text-s-14 text-[#575757]">
+      <span class="block truncate text-s-14 text-text-subtle">
         {{ item.name }}
       </span>
     </div>
@@ -63,9 +64,10 @@ const toggle = () => {
         v-if="isListed"
         name="star"
         variant="filled"
-        class="text-primary"
+        size="m"
+        class="text-text-brand"
       />
-      <AppIcon v-else name="star" class="text-[#a5a5a5]" />
+      <AppIcon v-else name="star" size="m" class="text-text-placeholder" />
     </button>
   </div>
 </template>

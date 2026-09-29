@@ -18,7 +18,9 @@
     <div
       class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 pt-4 text-center"
     >
-      <div class="size-16 rounded-full bg-[#f5f5f5] overflow-hidden shrink-0">
+      <div
+        class="size-16 rounded-full bg-background-default overflow-hidden shrink-0"
+      >
         <img
           v-if="info?.walletIcon"
           :src="info.walletIcon"
@@ -31,7 +33,7 @@
         <p class="text-s-16 font-semibold text-black leading-[22px]">
           {{ $t('multi_address.connect_address_modal.title') }}
         </p>
-        <p class="text-s-14 text-[#575757] leading-[20px]">
+        <p class="text-s-14 text-text-subtle leading-[20px]">
           {{
             $t('multi_address.connect_address_modal.subtitle', {
               wallet: info?.walletName,
@@ -39,7 +41,7 @@
           }}
         </p>
       </div>
-      <div class="w-full rounded-[24px] bg-[#f5f5f5] p-6">
+      <div class="w-full rounded-[24px] bg-background-default p-6">
         <p class="text-s-16 text-black text-center break-all leading-[22px]">
           {{ info?.address }}
         </p>
@@ -50,7 +52,7 @@
     <button
       v-if="false"
       data-test="connect-address-view-open"
-      class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
+      class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-background-brand text-white text-s-16 font-semibold flex items-center justify-center gap-2"
       @click="onOpenWallet"
     >
       {{
@@ -64,7 +66,7 @@
          (an auto-retry also fires on accountsChanged; this is the manual path). -->
     <button
       data-test="connect-address-view-retry"
-      class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
+      class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-background-brand text-white text-s-16 font-semibold flex items-center justify-center gap-2"
       @click="retry"
     >
       {{ $t('multi_address.connect_address_modal.try_again') }}

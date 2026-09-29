@@ -15,7 +15,8 @@
   />
   <div
     v-else
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-border-default rounded-16 p-5 min-h-[293px]"
+    :data-test="`rwa-hero-${status}`"
   >
     <img
       v-if="status !== 'banned'"
@@ -42,77 +43,80 @@
       class="pointer-events-none select-none absolute top-0 right-0 w-[108px] h-[120px] object-contain"
     />
 
+    <!-- HOLDING — either round: title, days left, the day grid. -->
     <template v-if="status === 'holding'">
-      <div class="relative z-10 w-full">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black max-w-[210px]"
-        >
-          {{ $t('rwaRewards.hero_holding_title') }}
+      <div class="relative z-10 w-full pr-[90px]">
+        <p class="text-heading-base text-black whitespace-pre-line">
+          {{ holdingTitle }}
+        </p>
+      </div>
+
+      <div class="relative z-10 flex flex-col gap-3 w-full">
+        <div class="flex items-center justify-between gap-2 w-full">
+          <p
+            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
+          >
+            {{ daysLeftLabel }}
+          </p>
+          <button
+            type="button"
+            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-text-brand hoverOpacity"
+            data-test="rwa-hero-more-info"
+            @click="onMoreInfo"
+          >
+            {{ $t('rwaRewards.more_info') }}
+          </button>
+        </div>
+        <rwa-hold-tracker :current="holdCurrent" :total="holdTotalDays" />
+      </div>
+    </template>
+
+    <!-- LOST — the hold was broken. Round 1 can start over; round 2 can't. -->
+    <template v-else-if="status === 'lost'">
+      <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
+        <p class="text-heading-base text-black">
+          {{ $t('rwaRewards.hero_lost_title') }}
+        </p>
+        <p class="text-s-12 leading-[18px] text-text-subtle">
+          {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
 
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker
           :current="holdCurrent"
-          :days-left-label="daysLeftLabel"
+          :failed-day="holdCurrent"
+          :total="holdTotalDays"
         />
-        <app-base-button
-          theme="neutral"
-          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
-          @click="onMoreInfo"
-        >
-          {{ $t('rwaRewards.more_info') }}
-        </app-base-button>
-      </div>
-    </template>
-
-    <template v-else-if="status === 'lost'">
-      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <!-- A season that has already ended has nothing left to count down
-             to; the countdown would sit at "0 seconds". An empty countdown
-             means `/info` returned no season end, so there is no date to show. -->
-        <p
-          v-if="!isCampaignEnded && expiresText"
-          class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
-        >
-          {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
-        </p>
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
-          {{ $t('rwaRewards.hero_lost_title') }}
-        </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
-          {{ $t('rwaRewards.hero_lost_desc') }}
-        </p>
-      </div>
-
-      <div class="relative z-10 flex flex-col gap-4 w-full">
-        <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
         <div class="flex gap-2 w-full [container-type:inline-size]">
-          <app-tooltip
-            v-if="isDisabledCta"
-            :text="disabledCtaTooltip"
-            class="flex-1"
-          >
-            <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
-              disabled
+          <template v-if="!isRoundTwoActive">
+            <app-tooltip
+              v-if="isDisabledCta"
+              :text="disabledCtaTooltip"
+              class="flex-1"
             >
-              {{ disabledCtaLabel }}
-              <AppIcon name="information-circle" class="shrink-0" />
-            </button>
-          </app-tooltip>
-          <app-base-button
-            v-else
-            class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
-            @click="onTrade"
-          >
-            {{ $t('rwaRewards.trade_again') }}
-          </app-base-button>
+              <button
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                disabled
+              >
+                {{ disabledCtaLabel }}
+                <AppIcon name="information-circle" class="shrink-0" />
+              </button>
+            </app-tooltip>
+            <app-base-button
+              v-else
+              class="flex-1 text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+              data-test="rwa-hero-trade"
+              @click="onTrade"
+            >
+              {{ tradeLabel }}
+            </app-base-button>
+          </template>
           <app-base-button
             theme="neutral"
-            class="text-s-16 font-semibold tracking-[-0.32px]"
+            :class="isRoundTwoActive ? 'w-full' : ''"
+            class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+            data-test="rwa-hero-more-info"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
@@ -121,21 +125,20 @@
       </div>
     </template>
 
+    <!-- EARNED — claimable. Round 1 points at the bonus that follows. -->
     <template v-else-if="status === 'earned'">
-      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+      <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
-          {{ $t('rwaRewards.hero_earned_desc') }}
+        <p class="text-s-12 leading-[18px] text-text-subtle">
+          {{ earnedDescription }}
         </p>
       </div>
       <rwa-claim-card
         class="relative z-10"
         variant="claim"
-        :amount-label="$t('rwaRewards.reward_amount')"
+        :amount-label="rewardLabel"
         :subtitle="subExpiresLabel"
         :claim-label="$t('rwaRewards.claim')"
         :loading="isClaiming"
@@ -143,57 +146,105 @@
       />
     </template>
 
+    <!-- CLAIMED — the season is complete for this wallet, or the first
+         reward is paid with no bonus round open (notice lives in the modal). -->
     <template v-else-if="status === 'claimed'">
-      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
-          {{ $t('rwaRewards.hero_claimed_title') }}
-        </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
-          {{ $t('rwaRewards.hero_claimed_desc') }}
-        </p>
-      </div>
-      <div class="relative z-10 flex flex-col gap-4 w-full">
-        <rwa-claim-card
-          variant="sent"
-          :amount-label="$t('rwaRewards.reward_amount')"
-          :subtitle="$t('rwaRewards.sub_sent')"
-        />
+      <template v-if="isSeasonComplete">
+        <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
+          <p
+            class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
+          >
+            {{ $t('rwaRewards.hero_done_title') }}
+          </p>
+          <p class="text-s-12 leading-[18px] text-text-subtle">
+            {{ $t('rwaRewards.hero_done_desc', { total: earnedTotalLabel }) }}
+          </p>
+        </div>
         <app-base-button
-          theme="neutral"
-          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
-          @click="onHide"
+          class="relative z-10 w-full text-s-16 font-semibold tracking-[-0.32px]"
+          data-test="rwa-hero-explore"
+          @click="onExploreRewards"
         >
-          {{ $t('rwaRewards.hide_offer') }}
+          {{ $t('rwaRewards.explore_all_rewards') }}
         </app-base-button>
-      </div>
+      </template>
+      <template v-else>
+        <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
+          <p class="text-heading-base text-black">
+            {{ $t('rwaRewards.hero_claimed_title') }}
+          </p>
+          <p class="text-s-12 leading-[18px] text-text-subtle">
+            {{ $t('rwaRewards.hero_claimed_desc', { amount: rewardLabel }) }}
+          </p>
+        </div>
+        <div class="relative z-10 flex flex-col gap-4 w-full">
+          <rwa-claim-card
+            variant="sent"
+            :amount-label="rewardLabel"
+            :subtitle="$t('rwaRewards.sub_sent')"
+          />
+          <app-base-button
+            theme="neutral"
+            class="w-full text-s-16 font-semibold tracking-[-0.32px]"
+            data-test="rwa-hero-more-info"
+            @click="onMoreInfo"
+          >
+            {{ $t('rwaRewards.more_info') }}
+          </app-base-button>
+        </div>
+      </template>
     </template>
 
+    <!-- EXPIRED — the claim window closed. Round 1 can start over. -->
     <template v-else-if="status === 'expired'">
-      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+      <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-claim-card
           variant="closed"
-          :amount-label="$t('rwaRewards.reward_amount')"
-          :subtitle="$t('rwaRewards.sub_closed')"
+          :amount-label="rewardLabel"
+          :subtitle="$t('rwaRewards.reward_expired')"
         />
-        <app-base-button
-          theme="neutral"
-          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
-          @click="onHide"
-        >
-          {{ $t('rwaRewards.hide_offer') }}
-        </app-base-button>
+        <div class="flex gap-2 w-full [container-type:inline-size]">
+          <template v-if="!isRoundTwoActive">
+            <app-tooltip
+              v-if="isDisabledCta"
+              :text="disabledCtaTooltip"
+              class="flex-1"
+            >
+              <button
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                disabled
+              >
+                {{ disabledCtaLabel }}
+                <AppIcon name="information-circle" class="shrink-0" />
+              </button>
+            </app-tooltip>
+            <app-base-button
+              v-else
+              class="flex-1 text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+              data-test="rwa-hero-trade"
+              @click="onTrade"
+            >
+              {{ tradeLabel }}
+            </app-base-button>
+          </template>
+          <app-base-button
+            theme="neutral"
+            :class="isRoundTwoActive ? 'w-full' : ''"
+            class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+            data-test="rwa-hero-more-info"
+            @click="onMoreInfo"
+          >
+            {{ $t('rwaRewards.more_info') }}
+          </app-base-button>
+        </div>
       </div>
     </template>
 
@@ -206,15 +257,15 @@
             name="lock-closed"
             variant="filled"
             size="l"
-            class="text-primary"
+            class="text-text-brand"
           />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <p class="text-text-sm text-text-subtle text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
         <app-base-button
           theme="neutral"
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          class="text-label-base"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
@@ -222,37 +273,26 @@
       </div>
     </template>
 
+    <!-- DEFAULT — the offer: both rounds spelled out. -->
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
-        <p
-          v-if="!isCampaignEnded && expiresText"
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
-        >
-          {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
-        </p>
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
-          {{ $t('rwaRewards.hero_title') }}
+        <p class="text-heading-base text-black whitespace-pre-line">
+          {{ headline }}
         </p>
       </div>
 
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <div class="flex flex-col w-full">
           <rwa-modal-step
-            v-for="(step, i) in steps"
+            v-for="(step, i) in offerSteps"
             :key="step.n"
             variant="plain"
             :number="step.n"
-            :last="i === steps.length - 1"
+            :last="i === offerSteps.length - 1"
             path-height="36px"
           >
-            <p class="text-s-14 leading-5 text-[#575757] pt-0.5">
-              {{ step.pre }}
-              <span class="font-semibold text-black tracking-[-0.28px]">{{
-                step.bold
-              }}</span
-              ><span v-if="step.post"> {{ step.post }}</span>
+            <p class="text-s-14 leading-5 text-black pt-0.5">
+              {{ step.text }}
             </p>
           </rwa-modal-step>
         </div>
@@ -264,7 +304,7 @@
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
@@ -274,13 +314,15 @@
           <app-base-button
             v-else
             class="flex-1 text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+            data-test="rwa-hero-trade"
             @click="onTrade"
           >
-            {{ $t('rwaRewards.trade_now') }}
+            {{ tradeLabel }}
           </app-base-button>
           <app-base-button
             theme="neutral"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+            data-test="rwa-hero-more-info"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
@@ -301,6 +343,7 @@ import gradientBg from '@/assets/images/rwa-rewards/card-gradient-bg.png'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc.webp'
 import peggyCrying from '@/assets/images/rwa-rewards/peggy-crying.webp'
 import peggyCool from '@/assets/images/rwa-rewards/peggy-cool-thumbsup.webp'
+import configs from '@/configs'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -322,16 +365,24 @@ const { t } = useI18n()
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
 const {
-  seasonEnd,
   status,
   activeReward,
   isClaiming,
   isHoldOfferDismissed,
   isCampaignFull,
-  isCampaignEnded,
   isUnderReview,
   canRegisterTrade,
   qualificationAmount,
+  isRoundTwoActive,
+  holdTotalDays,
+  hasRoundTwo,
+  round1HoldDays,
+  round2HoldDays,
+  totalHoldDays,
+  rewardAmountLabel,
+  round1RewardAmountLabel,
+  round2RewardAmountLabel,
+  totalRewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
@@ -342,12 +393,15 @@ const showZeroFeesOffer = computed(
   () => isTradingRestrictedInRegion.value || isHoldOfferDismissed.value,
 )
 
+const round = computed<1 | 2>(() => (isRoundTwoActive.value ? 2 : 1))
+
 // Fire a reward-offer CTA event for a main-card action
 const trackCta = (cta: string, campaign: 'hold' | 'buy_no_fees' = 'hold') =>
   analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
     campaign,
     cta,
     card_status: status.value,
+    round: round.value,
     location: 'main_card',
   })
 
@@ -366,6 +420,7 @@ const onMoreInfo = () => {
       campaign: 'hold',
       cta: 'more_info',
       card_status: status.value,
+      round: round.value,
       location: 'main_card',
     },
   )
@@ -374,6 +429,10 @@ const onMoreInfo = () => {
 const onContactSupport = () => {
   trackCta('contact_support')
   showIntercom()
+}
+const onExploreRewards = () => {
+  trackCta('explore_rewards')
+  window.open(configs.REWARDS_PAGE_URL, '_blank', 'noopener')
 }
 
 // Covers the promo CTA and the "Trade again" retry, both of which would
@@ -403,29 +462,26 @@ const onClaim = async () => {
   trackCta('claim')
   if (activeReward.value) await holdingsStore.claim(activeReward.value)
 }
-const onHide = () => {
-  trackCta('hide_offer')
-  if (activeReward.value) holdingsStore.dismiss(activeReward.value.uuid)
-}
 
 // Report the hold main-card impression once per status while it is visible
 // (when the "no fees" card takes over — geo-restricted or dismissed hold offer
 // — the hold card isn't shown, so skip; that card is tracked elsewhere).
 const lastReportedStatus = ref<string | null>(null)
 watch(
-  [status, showZeroFeesOffer],
-  ([currentStatus, zeroFees]) => {
+  [status, showZeroFeesOffer, round],
+  ([currentStatus, zeroFees, currentRound]) => {
     if (zeroFees || !currentStatus) return
-    if (lastReportedStatus.value === currentStatus) return
-    lastReportedStatus.value = currentStatus
+    const key = `${currentStatus}:${currentRound}`
+    if (lastReportedStatus.value === key) return
+    lastReportedStatus.value = key
     analytics.trackHoldRewardsMainCardEvent(
       HoldRewardsMainCardEvent.MODAL_SHOWN,
-      { status: currentStatus },
+      { status: currentStatus, round: currentRound },
     )
   },
   { immediate: true },
 )
-const { text: expiresText } = useCountdown(() => seasonEnd.value)
+
 // Strictly the reward's own claim deadline — never the season end. The two are
 // different deadlines, and `expiration_timestamp` is optional: the store reads
 // its absence as "never expires" (see `isClaimable`), so substituting the
@@ -436,19 +492,54 @@ const { text: subExpiresText } = useCountdown(
 // Nothing to say when the reward carries no deadline.
 const subExpiresLabel = computed(() =>
   activeReward.value?.expiration_timestamp
-    ? t('rwaRewards.sub_expires', { time: subExpiresText.value })
+    ? t('rwaRewards.expires_in', { time: subExpiresText.value })
     : '',
 )
 
-const HOLD_TOTAL = 14
 const holdCurrent = computed(() => {
   const start = activeReward.value?.start_timestamp
   if (!start) return 1
   const elapsed = Math.floor(
     (Date.now() - new Date(start).getTime()) / 86_400_000,
   )
-  return Math.min(Math.max(elapsed + 1, 1), HOLD_TOTAL)
+  return Math.min(Math.max(elapsed + 1, 1), holdTotalDays.value)
 })
+
+// Server-driven when the season block has landed; the campaign's advertised
+// round-1 copy otherwise.
+const round1Label = computed(
+  () => round1RewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
+const round2Label = computed(
+  () => round2RewardAmountLabel.value ?? round1Label.value,
+)
+const rewardLabel = computed(
+  () => rewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
+const earnedTotalLabel = computed(
+  () => totalRewardAmountLabel.value ?? rewardLabel.value,
+)
+
+// "Hold and get up to 25 USDC" once both rounds' amounts are known; the
+// single-round headline otherwise.
+const headline = computed(() =>
+  hasRoundTwo.value && totalRewardAmountLabel.value
+    ? t('rwaRewards.hero_title_total', { total: totalRewardAmountLabel.value })
+    : t('rwaRewards.hero_title', { amount: round1Label.value }),
+)
+const tradeLabel = computed(() =>
+  t('rwaRewards.trade_amount', { amount: qualificationAmount.value }),
+)
+
+// "Hold for 14 days. Get 10 USDC." — the active round's length and reward.
+const holdingTitle = computed(() =>
+  t(
+    'rwaRewards.hero_holding_title',
+    { count: holdTotalDays.value, amount: rewardLabel.value },
+    holdTotalDays.value,
+  ),
+)
+
 const { remainingMs: holdRemaining } = useCountdown(
   () => activeReward.value?.qualification_timestamp,
 )
@@ -459,28 +550,63 @@ const daysLeftLabel = computed(() => {
   })
 })
 
+// Round 1 points ahead at the bonus; round 2 looks back at the whole hold.
+const earnedDescription = computed(() => {
+  if (isRoundTwoActive.value)
+    return t('rwaRewards.hero_earned_desc_total', {
+      count: totalHoldDays.value,
+    })
+  const r2Days = round2HoldDays.value
+  if (hasRoundTwo.value && r2Days)
+    return t(
+      'rwaRewards.hero_earned_desc_next',
+      { amount: round2Label.value, count: r2Days },
+      r2Days,
+    )
+  return t('rwaRewards.hero_earned_desc')
+})
+
+// Both rewards paid, or the only reward on a single-round season.
+const isSeasonComplete = computed(
+  () => isRoundTwoActive.value || !hasRoundTwo.value,
+)
+
 // Computed, not a plain array: the qualification amount arrives with `/info` after
 // setup runs, and a once-evaluated array would keep showing the pre-load placeholder.
-const steps = computed<
-  { n: number; pre: string; bold: string; post?: string }[]
->(() => [
-  {
-    n: 1,
-    pre: t('rwaRewards.hero_step1'),
-    bold: t('rwaRewards.hero_step1_bold'),
-    post: t('rwaRewards.hero_step1_post', {
-      amount: qualificationAmount.value,
-    }),
-  },
-  {
-    n: 2,
-    pre: t('rwaRewards.hero_step2', { amount: qualificationAmount.value }),
-    bold: t('rwaRewards.hero_step2_bold'),
-  },
-  {
-    n: 3,
-    pre: t('rwaRewards.hero_step3'),
-    bold: t('rwaRewards.hero_step3_bold'),
-  },
-])
+const offerSteps = computed<{ n: number; text: string }[]>(() => {
+  const r1Days = round1HoldDays.value
+  const steps = [
+    {
+      n: 1,
+      text: t('rwaRewards.hero_step_trade', {
+        amount: qualificationAmount.value,
+      }),
+    },
+    {
+      n: 2,
+      text: t(
+        'rwaRewards.hero_step_hold',
+        { count: r1Days, amount: round1Label.value },
+        r1Days,
+      ),
+    },
+  ]
+  const r2Days = round2HoldDays.value
+  if (hasRoundTwo.value && r2Days) {
+    steps.push({
+      n: 3,
+      text: t(
+        'rwaRewards.hero_step_hold_more',
+        { count: r2Days, amount: round2Label.value },
+        r2Days,
+      ),
+    })
+  } else {
+    steps.push({
+      n: 3,
+      text: t('rwaRewards.hero_step_claim', { amount: round1Label.value }),
+    })
+  }
+  return steps
+})
 </script>

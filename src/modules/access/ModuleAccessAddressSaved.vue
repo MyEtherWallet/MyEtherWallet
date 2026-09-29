@@ -11,12 +11,19 @@
         class="absolute top-4 left-4 flex items-center justify-center size-8 rounded-full hoverNoBG"
         @click="onBack"
       >
-        <AppIcon name="chevron-left" variant="filled" size="s" class="text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </button>
     </template>
     <template #content>
       <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">
-        <div class="size-16 rounded-full bg-[#f5f5f5] overflow-hidden shrink-0">
+        <div
+          class="size-16 rounded-full bg-background-default overflow-hidden shrink-0"
+        >
           <img
             v-if="info?.walletIcon"
             :src="info.walletIcon"
@@ -26,13 +33,17 @@
           />
         </div>
         <div class="flex flex-col gap-2 w-full">
-          <h2 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
+          <h2 class="text-heading-base text-black">
             {{ titleLead }}<br />{{
               $t('multi_address.address_saved.title_suffix')
             }}
           </h2>
-          <p class="text-s-14 text-[#575757] leading-[20px]">
-            {{ $t('multi_address.address_saved.subtitle', { wallet: info?.walletName }) }}
+          <p class="text-s-14 text-text-subtle leading-[20px]">
+            {{
+              $t('multi_address.address_saved.subtitle', {
+                wallet: info?.walletName,
+              })
+            }}
           </p>
         </div>
         <div class="flex flex-col gap-2 w-full">
@@ -41,15 +52,23 @@
           <button
             v-if="false"
             data-test="address-saved-open"
-            class="h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
+            class="h-12 w-full rounded-[24px] bg-background-brand text-white text-s-16 font-semibold flex items-center justify-center gap-2"
             @click="onOpenWallet"
           >
-            {{ $t('multi_address.address_saved.open_wallet', { wallet: info?.walletName }) }}
-            <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" />
+            {{
+              $t('multi_address.address_saved.open_wallet', {
+                wallet: info?.walletName,
+              })
+            }}
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </button>
           <button
             data-test="address-saved-retry"
-            class="h-12 w-full rounded-[24px] bg-[#e6e6e6] text-black text-s-16 font-semibold"
+            class="h-12 w-full rounded-[24px] bg-background-default-hover text-black text-s-16 font-semibold"
             @click="onTryAgain"
           >
             {{ $t('multi_address.address_saved.try_again') }}

@@ -5,19 +5,19 @@
     <div class="flex items-center gap-3 w-full">
       <img :src="usdcIcon" alt="" class="w-8 h-8 shrink-0" />
       <div class="flex flex-col flex-1 min-w-0">
-        <p
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
-        >
+        <p class="text-label-sm text-black">
           {{ amountLabel }}
         </p>
-        <p v-if="subtitle" class="text-s-12 leading-[18px] text-[#575757]">
+        <p v-if="subtitle" class="text-s-12 leading-[18px] text-text-subtle">
           {{ subtitle }}
         </p>
       </div>
       <div
         v-if="variant === 'sent' || variant === 'closed'"
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
-        :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
+        :class="
+          variant === 'sent' ? 'bg-background-success' : 'bg-background-error'
+        "
       >
         <AppIcon
           v-if="variant === 'sent'"
@@ -40,6 +40,7 @@
       v-if="variant === 'claim'"
       :is-loading="loading"
       class="w-full text-s-16 font-semibold tracking-[-0.32px]"
+      data-test="rwa-claim-card-button"
       @click="onClick"
     >
       {{ buttonLabel }}

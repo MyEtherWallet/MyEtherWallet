@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center gap-3 w-full">
-    <p class="text-info">{{ $t('common.add_funds_to_proceed') }}</p>
+    <p class="text-text-subtle">{{ $t('common.add_funds_to_proceed') }}</p>
     <app-base-button v-if="isNativeBuyable" class="!w-full" @click="buyBtn">
       <div class="flex gap-2 items-center justify-center">
         <icon-buy

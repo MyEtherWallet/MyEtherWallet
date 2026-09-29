@@ -41,7 +41,7 @@
         v-show="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
+        class="fixed z-[2102] w-96 max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
         :class="view === 'connect-address' ? 'h-[440px]' : 'h-[720px]'"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
@@ -65,7 +65,7 @@
               <!-- Section 1: network pill + active-account card -->
               <div class="shrink-0 p-4">
                 <div
-                  class="bg-surface-hover rounded-20 overflow-hidden transition-colors has-[[data-test=network-row]:hover]:bg-[#e6e6e6]"
+                  class="bg-background-default rounded-20 overflow-hidden transition-colors has-[[data-test=network-row]:hover]:bg-background-default-hover"
                 >
                   <button
                     data-test="network-row"
@@ -91,6 +91,7 @@
                     <AppIcon
                       name="chevron-right"
                       variant="filled"
+                      size="m"
                       class="text-black flex-shrink-0"
                     />
                   </button>
@@ -119,7 +120,7 @@
                     <p class="text-s-16 font-semibold text-black">
                       {{ $t('multi_address.no_address_title') }}
                     </p>
-                    <p class="mt-1 text-s-14 text-[#575757]">
+                    <p class="mt-1 text-s-14 text-text-subtle">
                       {{ $t('multi_address.no_address_subtitle') }}
                     </p>
                   </div>
@@ -130,12 +131,10 @@
                     data-test="over-cap-note"
                     class="flex flex-col items-center gap-1 p-5 text-center"
                   >
-                    <p
-                      class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]"
-                    >
+                    <p class="text-label-base text-black">
                       {{ $t('multi_address.cap_note_title') }}
                     </p>
-                    <p class="text-s-14 text-[#575757] leading-5">
+                    <p class="text-s-14 text-text-subtle leading-5">
                       {{ $t('multi_address.cap_note_description') }}
                     </p>
                   </div>
@@ -152,7 +151,7 @@
                         class="flex items-center justify-between w-full px-4 py-3 text-left"
                         @click="toggleGroup(group.type)"
                       >
-                        <span class="text-s-14 text-[#575757] leading-5">
+                        <span class="text-s-14 text-text-subtle leading-5">
                           {{
                             $t('multi_address.saved_group', {
                               type: group.label,
@@ -164,7 +163,7 @@
                           name="chevron-down"
                           variant="filled"
                           size="s"
-                          class="text-[#575757] flex-shrink-0 transition-transform duration-200"
+                          class="text-text-subtle flex-shrink-0 transition-transform duration-200"
                           :class="{ 'rotate-180': !collapsed[group.type] }"
                         />
                       </button>
@@ -197,7 +196,7 @@
                       </expand-transition>
                     </div>
                   </template>
-                  <p v-else class="text-center text-info py-6">
+                  <p v-else class="text-center text-text-subtle py-6">
                     {{ $t('multi_address.empty') }}
                   </p>
                   <div class="pb-10" />
@@ -228,7 +227,7 @@
                   class="mb-4 flex items-center gap-2 px-2"
                 >
                   <div class="flex-1 min-w-0">
-                    <p class="text-s-12 text-[#575757] leading-[18px]">
+                    <p class="text-s-12 text-text-subtle leading-[18px]">
                       {{
                         $t('multi_address.detected_wallet', {
                           wallet: detectedWalletName,
@@ -246,20 +245,20 @@
                         :src="detectedWalletIcon"
                         alt=""
                         aria-hidden="true"
-                        class="size-[22px] rounded-full object-contain bg-[#f5f5f5] p-[3px] shrink-0"
+                        class="size-[22px] rounded-full object-contain bg-background-default p-[3px] shrink-0"
                       />
                     </div>
                     <p
                       v-if="detectedMessage"
                       data-test="detected-message"
-                      class="text-s-12 text-error mt-1"
+                      class="text-s-12 text-text-error mt-1"
                     >
                       {{ detectedMessage }}
                     </p>
                   </div>
                   <button
                     data-test="save-detected"
-                    class="h-10 px-3 border-[1.5px] border-primary rounded-[24px] text-primary text-s-14 font-semibold shrink-0"
+                    class="h-10 px-3 border-[1.5px] border-border-brand rounded-[24px] text-text-brand text-s-14 font-semibold shrink-0"
                     @click="saveDetected"
                   >
                     {{ $t('multi_address.save_address') }}
@@ -268,7 +267,7 @@
 
                 <button
                   data-test="add-address"
-                  class="w-full h-12 rounded-24 bg-[#e6e6e6] flex items-center justify-center text-s-16 font-semibold text-black"
+                  class="w-full h-12 rounded-24 bg-background-default-hover flex items-center justify-center text-s-16 font-semibold text-black"
                   @click="onAdd"
                 >
                   {{ $t('multi_address.connect_another') }}

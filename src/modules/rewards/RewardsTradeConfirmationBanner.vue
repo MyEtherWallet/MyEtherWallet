@@ -3,7 +3,7 @@
     <button
       v-if="showBanner"
       class="w-full hoverNoBG rounded-16 flex items-center justify-between border border-solid p-4 gap-5"
-      :class="qualifies ? 'border-success' : 'border-grey-10'"
+      :class="qualifies ? 'border-border-success' : 'border-border-default'"
       @click="onClick"
     >
       <!-- Variation 1: Trade qualifies for rewards -->
@@ -11,7 +11,8 @@
         <AppIcon
           name="check-circle"
           variant="filled"
-          class="text-success shrink-0"
+          size="m"
+          class="text-text-success shrink-0"
         />
         <p class="text-s-14 font-semibold">
           {{ t('rewards.trade_qualifies') }}
@@ -23,16 +24,17 @@
         <AppIcon
           name="exclamation-circle"
           variant="filled"
-          class="text-warning shrink-0"
+          size="m"
+          class="text-text-warning shrink-0"
         />
         <div class="text-left">
           <p class="font-semibold">{{ t('rewards.trade_not_eligible') }}</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
+          <p v-if="isCashout && canClaimHold" class="text-text-subtle mt-0.5">
             {{ t('rewards.cashout_not_qualify') }}
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
-          <p v-else class="text-info mt-[2px]">
+          <p v-else class="text-text-subtle mt-0.5">
             {{ t('rewards.trade_more_to_qualify', { amount: amountNeeded }) }}
           </p>
         </div>
@@ -72,14 +74,15 @@ const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
 )
 const holdingsStore = useHoldingsStore()
-const { status, canRegisterTrade, qualificationUsd } =
-  storeToRefs(holdingsStore)
+const { status, canRetryTrade, qualificationUsd } = storeToRefs(holdingsStore)
 
 // Only surface the hold campaign while a new trade can still be registered for
-// it — otherwise fall through to the trade campaign.
+// it — otherwise fall through to the trade campaign. `canRetryTrade` also
+// keeps a terminal round 2 (lost/expired) from re-offering: there's no retry
+// after the second round.
 const canClaimHold = computed(
   () =>
-    canRegisterTrade.value &&
+    canRetryTrade.value &&
     (status.value === 'default' ||
       status.value === 'expired' ||
       status.value === 'lost'),

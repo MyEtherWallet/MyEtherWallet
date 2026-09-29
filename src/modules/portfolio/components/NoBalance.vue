@@ -12,7 +12,7 @@
             {{ $t('portfolio.no_balance.title') }}
           </p>
 
-          <p class="text-s-15 xl:text-s-17 text-info leading-relaxed">
+          <p class="text-s-15 xl:text-s-17 text-text-subtle leading-relaxed">
             {{
               $t('portfolio.no_balance.description', {
                 currencyName: selectedChain?.currencyName,
@@ -46,7 +46,11 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <AppIcon name="qr-code" size="xxs" class="xl:size-5 text-primary" />
+              <AppIcon
+                name="qr-code"
+                size="xxs"
+                class="xl:size-5 text-text-brand"
+              />
               <p>
                 {{ $t('portfolio.no_balance.deposit') }}
                 {{ selectedChain?.currencyName }}

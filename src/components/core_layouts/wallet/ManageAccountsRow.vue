@@ -2,7 +2,7 @@
   <div
     ref="rowRef"
     class="flex items-center gap-3 pl-4 pr-2 py-4 rounded-16 transition-colors"
-    :class="isActive ? 'bg-surface-hover' : 'hover:bg-grey-5'"
+    :class="isActive ? 'bg-background-default' : 'hover:bg-background-default'"
   >
     <button
       data-test="row-body"
@@ -19,7 +19,7 @@
           is-flat
           class="rounded-full"
           :class="{
-            'ring-2 ring-[#05c0a5] ring-offset-1 ring-offset-white':
+            'ring-2 ring-border-success ring-offset-1 ring-offset-white':
               isActive && account.kind === 'signing',
           }"
         />
@@ -35,7 +35,7 @@
             variant="filled"
             size="xxs"
             data-test="row-watch-only"
-            class="flex-shrink-0 text-[#575757]"
+            class="flex-shrink-0 text-text-subtle"
           />
           <account-connected-dot v-else size="md" data-test="row-connected" />
         </div>
@@ -43,7 +43,7 @@
              a custom label (a default-named row's bold label already IS the address). -->
         <div
           class="text-s-12 truncate"
-          :class="isActive ? 'text-black' : 'text-info'"
+          :class="isActive ? 'text-black' : 'text-text-subtle'"
         >
           <template
             v-if="
@@ -60,12 +60,14 @@
     <div
       v-if="balanceLoading || balance"
       class="text-right flex-shrink-0 text-s-14"
-      :class="isActive ? 'text-black' : 'text-info'"
+      :class="isActive ? 'text-black' : 'text-text-subtle'"
     >
       <!-- Active row skeletons whenever loading (stale-safe on switch); other rows
            show their cached balance and only skeleton when none exists yet. -->
       <template v-if="balanceLoading && (isActive || !balance)">
-        <span class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded" />
+        <span
+          class="inline-block w-12 h-3 bg-background-default-hover animate-pulse rounded"
+        />
       </template>
       <template v-else-if="balance"
         >${{ formatFiat(balance.usdValue) }}</template

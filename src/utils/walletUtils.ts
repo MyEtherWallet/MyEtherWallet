@@ -42,6 +42,14 @@ export const isUserRejectionError = (error: unknown): boolean => {
   )
 }
 
+export const isInsufficientFundsError = (error: unknown): boolean => {
+  const message = (error as { message?: string })?.message?.toLowerCase() ?? ''
+  return (
+    message.includes('insufficient funds') ||
+    message.includes('gas required exceeds allowance')
+  )
+}
+
 /**
  * Map a raw hardware-wallet (Ledger) error message to a friendly, localized
  * string. Hardware SDKs surface low-level messages such as

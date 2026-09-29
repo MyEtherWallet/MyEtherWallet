@@ -5,12 +5,10 @@
   >
     <template #title>
       <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
-        <h1
-          class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]"
-        >
+        <h1 class="text-heading-base text-black">
           {{ $t('multi_address.rename.title') }}
         </h1>
-        <p class="text-s-16 text-[#575757] leading-[22px]">
+        <p class="text-s-16 text-text-subtle leading-[22px]">
           {{ $t('multi_address.rename.subtitle') }}
         </p>
       </div>
@@ -25,8 +23,10 @@
             v-model="draft"
             data-test="rename-modal-input"
             :placeholder="$t('multi_address.rename.placeholder')"
-            class="h-12 w-full rounded-[24px] border px-5 text-s-14 text-black outline-none placeholder:text-[#a5a5a5]"
-            :class="isDuplicate ? 'border-error' : 'border-[#e6e6e6]'"
+            class="h-12 w-full rounded-[24px] border px-5 text-s-14 text-black outline-none placeholder:text-text-placeholder"
+            :class="
+              isDuplicate ? 'border-border-error' : 'border-border-default'
+            "
             @keyup.enter="save"
           />
           <div
@@ -38,9 +38,9 @@
               name="exclamation-circle"
               variant="filled"
               size="xxs"
-              class="shrink-0 text-error"
+              class="shrink-0 text-text-error"
             />
-            <p class="text-s-12 text-error leading-[18px]">
+            <p class="text-s-12 text-text-error leading-[18px]">
               {{ $t('multi_address.rename.duplicate') }}
             </p>
           </div>
@@ -50,8 +50,8 @@
           class="h-12 w-full rounded-[24px] text-s-16 font-semibold transition-colors"
           :class="
             isDisabled
-              ? 'bg-[#f5f5f5] text-[#767676] cursor-not-allowed'
-              : 'bg-primary text-white'
+              ? 'bg-background-default text-text-muted cursor-not-allowed'
+              : 'bg-background-brand text-white'
           "
           :disabled="isDisabled"
           @click="save"

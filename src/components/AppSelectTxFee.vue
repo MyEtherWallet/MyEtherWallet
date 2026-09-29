@@ -6,10 +6,10 @@
       :disabled="!hasFees"
     >
       <div class="flex items-center gap-2">
-        <p class="text-info font-medium">{{ $t('common.fee') }}:</p>
+        <p class="text-text-subtle font-medium">{{ $t('common.fee') }}:</p>
         <div
           v-if="!hasFees"
-          class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
+          class="bg-background-default-hover rounded-full animate-pulse min-w-20 h-4"
         ></div>
         <p v-else-if="hasFiatEstimates" class="font-medium text-black">
           {{ selectedFeeFiat }}
@@ -20,17 +20,17 @@
       <div class="flex items-center gap-2">
         <div
           v-if="!hasFees"
-          class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
+          class="bg-background-default-hover rounded-full animate-pulse w-24 h-4"
         ></div>
         <template v-else-if="hasFiatEstimates">
-          <span class="text-info font-medium">
+          <span class="text-text-subtle font-medium">
             {{ selectedFeeNative }}
           </span>
           <AppIcon
             name="chevron-down"
             variant="filled"
             size="xxs"
-            class="text-info"
+            class="text-text-subtle"
           />
         </template>
       </div>
@@ -42,7 +42,7 @@
       <transition name="fade" mode="out-in">
         <div
           v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
-          class="text-error text-s-12 leading-tight"
+          class="text-text-error text-s-12 leading-tight"
         >
           <!-- TODO Add PROPER LINK -->
           <div v-if="isNotEnoughBalance">
@@ -53,7 +53,7 @@
                 })
               }}
               <button
-                class="text-primary cursor-pointer underline underline-offset-2"
+                class="text-text-brand cursor-pointer underline underline-offset-2"
                 @click="openBuyPanel"
               >
                 {{
@@ -76,7 +76,7 @@
     >
       <template #content>
         <div class="mx-2 xs:mx-6 mb-6">
-          <p class="text-info mx-4 sm:mx-3 mb-5">
+          <p class="text-text-subtle mx-4 sm:mx-3 mb-5">
             {{ $t('select_fee.description') }}
           </p>
           <!-- fee options -->
@@ -86,8 +86,8 @@
               :key="fee.id"
               :class="[
                 gasPriceType === fee.id
-                  ? 'border-primary outline outline-primary bg-grey-5'
-                  : ' border-grey-outline',
+                  ? 'border-border-brand outline outline-border-brand bg-background-default'
+                  : ' border-border-strong',
                 'border-1 w-full  rounded-2xl hoverNoBG p-2 xs:p-4 min-h-[90px] ',
               ]"
               @click="setFee(fee.id)"
@@ -95,7 +95,7 @@
               <div class="flex items-center">
                 <div
                   :class="[
-                    { 'text-primary': gasPriceType === fee.id },
+                    { 'text-text-brand': gasPriceType === fee.id },
                     ' mr-2 xs:mr-4',
                   ]"
                 >
@@ -123,7 +123,7 @@
                 <div class="flex flex-col text-left">
                   <span class="text-[16px] font-medium">{{ fee.title }}</span>
 
-                  <span class="text-info text-xs mt-1">{{
+                  <span class="text-text-subtle text-xs mt-1">{{
                     fee.description
                   }}</span>
                 </div>
@@ -131,7 +131,9 @@
                   <p class="font-medium">
                     {{ fee.fiatValue }}
                   </p>
-                  <span class="text-info text-xs"> {{ fee.nativeValue }}</span>
+                  <span class="text-text-subtle text-xs">
+                    {{ fee.nativeValue }}</span
+                  >
                 </div>
               </div>
             </button>
@@ -268,8 +270,7 @@ const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
     ) {
       // Return a default BTC estimate body
       return {} as unknown as
-        | EstimatesRequestBody
-        | GetBtcTransactionEstimateBody
+        EstimatesRequestBody | GetBtcTransactionEstimateBody
     }
     /**
      * Right now bitcoin wallets are only fetched when the user is logged in.

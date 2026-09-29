@@ -36,13 +36,17 @@
         :class="position"
       >
         <div
-          class="p-1.5 min-w-[200px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
+          class="p-1.5 min-w-[200px] max-w-full bg-white shadow-xl rounded-3xl border border-border-default overflow-hidden"
         >
-          <div v-if="useVueRouter" class="grid grid-cols-1 gap-1">
+          <div
+            v-if="useVueRouter"
+            class="grid grid-cols-1 gap-1 mew-scrollbar"
+            :style="listStyle"
+          >
             <template v-for="option in options" :key="option.value">
               <a
                 v-if="option.external"
-                class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+                class="flex items-center px-4 h-12 hover:bg-background-default hover:text-text-brand rounded-2xl text-s-14 font-medium text-text-subtle transition-colors"
                 role="option"
                 :id="option.value"
                 :href="option.value"
@@ -53,8 +57,8 @@
               </a>
               <router-link
                 v-else
-                class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
-                active-class="bg-grey-5 !text-primary"
+                class="flex items-center px-4 h-12 hover:bg-background-default hover:text-text-brand rounded-2xl text-s-14 font-medium text-text-subtle transition-colors"
+                active-class="bg-background-default !text-text-brand"
                 role="option"
                 :id="option.value"
                 :to="{ name: option.value }"
@@ -64,11 +68,15 @@
               </router-link>
             </template>
           </div>
-          <div v-else-if="useLink" class="grid grid-cols-1 gap-1">
+          <div
+            v-else-if="useLink"
+            class="grid grid-cols-1 gap-1 mew-scrollbar"
+            :style="listStyle"
+          >
             <a
               v-for="option in options"
               :key="option.value"
-              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+              class="flex items-center px-4 h-12 hover:bg-background-default hover:text-text-brand rounded-2xl text-s-14 font-medium text-text-subtle transition-colors"
               role="option"
               :id="option.value"
               :href="option.value"
@@ -78,16 +86,20 @@
               {{ option.label }}
             </a>
           </div>
-          <div v-else class="grid grid-cols-1 gap-1">
+          <div
+            v-else
+            class="grid grid-cols-1 gap-1 mew-scrollbar"
+            :style="listStyle"
+          >
             <button
               v-for="option in options"
               :key="option.value"
               :class="[
                 {
-                  'bg-grey-5 text-primary':
+                  'bg-background-default text-text-brand':
                     selected && option.value === selected.value,
                 },
-                'flex text-left items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
+                'flex text-left items-center px-4 h-12 hover:bg-background-default hover:text-text-brand rounded-2xl text-s-14 font-medium text-text-subtle transition-colors',
               ]"
               role="option"
               :id="option.value"
@@ -99,7 +111,7 @@
                 variant="filled"
                 size="xxs"
                 v-if="selected && option.value === selected.value"
-                class="ml-auto text-primary px-2 -mr-3"
+                class="ml-auto text-text-brand px-2 -mr-3"
               />
             </button>
           </div>
@@ -135,7 +147,7 @@
  *
  */
 import AppIcon from '@/components/icon/AppIcon.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
@@ -184,7 +196,27 @@ const props = defineProps({
     type: String,
     default: '-left-4',
   },
+  /**
+   * @maxVisibleItems Cap the dropdown to this many rows before it scrolls.
+   * 0 (default) means no cap — the list grows to fit every option.
+   */
+  maxVisibleItems: {
+    type: Number,
+    default: 0,
+  },
 })
+
+// Each option row is h-12 (48px) with a gap-1 (4px) between rows.
+const OPTION_HEIGHT = 48
+const OPTION_GAP = 4
+const listStyle = computed(() =>
+  props.maxVisibleItems > 0
+    ? {
+        maxHeight: `${props.maxVisibleItems * OPTION_HEIGHT + (props.maxVisibleItems - 1) * OPTION_GAP}px`,
+        overflowY: 'auto' as const,
+      }
+    : {},
+)
 
 /**
  * @target The target element for the dropdown.

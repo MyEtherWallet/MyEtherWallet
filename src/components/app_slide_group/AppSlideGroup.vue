@@ -3,13 +3,13 @@
     <div
       class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
       :class="{
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1]  before:pointer-events-none':
           blurFront && !edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-background-default after:to-transparent  after:pointer-events-none  after:z-[1]':
           blurEnd && !edgeNav,
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1] before:pointer-events-none':
           blurFront && edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-background-default after:to-transparent after:pointer-events-none after:z-[1]':
           blurEnd && edgeNav,
         'order-2': paginateLocation === 'top',
       }"

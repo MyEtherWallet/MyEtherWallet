@@ -85,7 +85,7 @@
               name="check"
               size="s"
               v-if="linkCopied"
-              class="shrink-0 text-success"
+              class="shrink-0 text-text-success"
             />
             <AppIcon v-else name="clipboard" size="s" class="shrink-0" />
             {{ linkCopied ? $t('common.copied') : $t('common.copy_link') }}

@@ -17,7 +17,7 @@ defineOptions({ inheritAttrs: false })
 <template>
   <div class="w-full h-full flex items-center justify-center">
     <div
-      class="w-3/4 h-3/4 flex items-center justify-center text-t-default [&_svg]:w-full [&_svg]:h-full"
+      class="w-3/4 h-3/4 flex items-center justify-center text-text-default [&_svg]:w-full [&_svg]:h-full"
     >
       <slot />
     </div>

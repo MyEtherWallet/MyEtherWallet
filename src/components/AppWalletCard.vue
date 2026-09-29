@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-background-contrast-default rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
         :class="{ 'mew-card-readable': !useDynamicContrast }"
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
@@ -29,7 +29,7 @@
                   <!-- TODO: add ens resolution-->
                   <p v-if="!isWatchOnly">{{ t('common.my_wallet') }}</p>
                   <p v-else>
-                    <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
+                    <IconWatchOnly class="inline-block w-3 h-3" />
                     {{ t('common.watch_only') }}
                   </p>
                   <AppIcon
@@ -51,7 +51,7 @@
                         name="qr-code"
                         variant="filled"
                         size="s"
-                        class="inline-block mr-2 text-primary"
+                        class="inline-block mr-2 text-text-brand"
                       />
                       {{ $t('view_paper_wallet') }}
                     </li>
@@ -63,12 +63,14 @@
                       <AppIcon
                         name="user-group"
                         size="s"
-                        class="inline-block mr-2 text-primary"
+                        class="inline-block mr-2 text-text-brand"
                       />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
+                  <hr
+                    class="h-px bg-background-default-hover border-0 w-full my-2"
+                  />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
@@ -77,7 +79,7 @@
                       <AppIcon
                         name="trash"
                         size="s"
-                        class="inline-block mr-2 text-error"
+                        class="inline-block mr-2 text-text-error"
                       />
                       {{
                         isWatchOnly
@@ -150,7 +152,7 @@
             class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
           ></div>
           <button
-            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-1.5 px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
             {{ isWatchOnly ? t('common.connect') : t('common.disconnect') }}

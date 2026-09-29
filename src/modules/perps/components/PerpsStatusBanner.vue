@@ -8,7 +8,7 @@
   <div
     v-if="showBanner"
     role="status"
-    class="flex items-center gap-2 w-full px-4 py-3 rounded-16 bg-warning-10 border-1 border-warning-10"
+    class="flex items-center gap-2 w-full px-4 py-3 rounded-16 bg-background-warning-subtle border-1 border-border-warning"
   >
     <!--
       The amber lives in the tinted shell and the icon rather than the text:
@@ -19,7 +19,7 @@
     <AppIcon
       name="exclamation-triangle"
       size="s"
-      class="shrink-0 text-warning"
+      class="shrink-0 text-text-warning"
       aria-hidden="true"
     />
     <p class="text-s-14">{{ $t('perps.status.unavailable') }}</p>

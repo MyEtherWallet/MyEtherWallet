@@ -3,7 +3,9 @@
     <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between">
       <div>
         <div class="flex items-center gap-2">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-12"
+          >
             {{ $t('perps.portfolio.account-balance-label') }}
           </p>
           <app-btn-icon
@@ -16,7 +18,7 @@
             <AppIcon
               name="arrow-path"
               size="xxs"
-              class="text-info"
+              class="text-text-subtle"
               :class="{ 'animate-spin': loading }"
             />
           </app-btn-icon>
@@ -25,7 +27,7 @@
           {{ walletBalance }}
         </p>
         <p
-          class="text-info font-bold tracking-sp-06 uppercase text-s-11 mt-2 mb-2"
+          class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11 mt-2 mb-2"
         >
           {{ $t('perps.balance.realized-pnl-label') }}
         </p>
@@ -67,28 +69,36 @@
           </AppBaseButton>
         </div>
       </div>
-      <hr class="my-5 border-t-1 border-grey-5 sm:hidden lg:flex" />
+      <hr class="my-5 border-t-1 border-border-subtle sm:hidden lg:flex" />
       <div class="flex flex-col gap-4 w-full max-w-[300px] lg:max-w-none">
         <div class="flex items-center justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11"
+          >
             {{ $t('perps.balance.total-cross-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ marginBalance }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11"
+          >
             {{ $t('perps.balance.available-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ availableMargin }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11"
+          >
             {{ $t('perps.balance.used-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ usedMargin }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11"
+          >
             {{ $t('perps.balance.margin-ratio-label') }}
           </p>
           <p :class="marginRatioColorClass" class="ml-2 font-medium">
@@ -96,7 +106,9 @@
           </p>
         </div>
         <div class="flex items-start justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+          <p
+            class="text-text-subtle font-bold tracking-sp-06 uppercase text-s-11"
+          >
             {{ $t('perps.balance.unrealized-pnl-label') }}
           </p>
           <div class="flex justify-end flex-col items-start">
@@ -112,7 +124,7 @@
           </div>
         </div>
         <app-btn-text
-          class="mt-1 text-s-13 text-primary mr-auto -ml-3"
+          class="mt-1 text-s-13 text-text-brand mr-auto -ml-3"
           @click="showBalanceDialog = true"
         >
           {{ $t('perps.portfolio.view-more') }}

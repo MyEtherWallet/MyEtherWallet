@@ -45,11 +45,14 @@
               <div class="flex items-center gap-1.5 min-w-0">
                 <p
                   v-if="i.contract && i.contract !== 'N/A'"
-                  class="text-info text-s-12 tracking-sp-06 truncate max-w-[120px] xs:max-w-[200px]"
+                  class="text-text-subtle text-s-12 tracking-sp-06 truncate max-w-[120px] xs:max-w-[200px]"
                 >
                   {{ truncateAddress(i.contract, 8) }}
                 </p>
-                <p v-else class="text-info text-s-12 tracking-sp-06 italic">
+                <p
+                  v-else
+                  class="text-text-subtle text-s-12 tracking-sp-06 italic"
+                >
                   {{ $t('crypto.native_token') }}
                 </p>
                 <app-btn-copy
@@ -65,10 +68,10 @@
           </div>
           <div
             v-if="selectedChain?.name === i.chainName"
-            class="shrink-0 flex items-center bg-primary/10 px-[6px] py-1 rounded-full border border-primary/20"
+            class="shrink-0 flex items-center bg-background-brand/10 px-1.5 py-1 rounded-full border border-border-brand/20"
           >
             <span
-              class="uppercase text-[8px] font-bold text-primary leading-none tracking-sp-06"
+              class="uppercase text-[8px] font-bold text-text-brand leading-none tracking-sp-06"
             >
               {{ $t('crypto.current_chain') }}
             </span>

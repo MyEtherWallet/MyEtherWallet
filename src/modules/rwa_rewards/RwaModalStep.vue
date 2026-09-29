@@ -14,7 +14,7 @@
           name="check"
           variant="filled"
           size="xxs"
-          :class="variant === 'done' ? 'text-white' : 'text-[#a5a5a5]'"
+          :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'"
         />
         <AppIcon
           v-else-if="variant === 'failed'"
@@ -25,15 +25,17 @@
         />
         <span
           v-else
-          class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
-          :class="variant === 'current' ? 'text-[#0b53bf]' : 'text-black'"
+          class="text-label-sm"
+          :class="variant === 'current' ? 'text-text-brand' : 'text-black'"
           >{{ number }}</span
         >
       </div>
       <div
         v-if="!last"
         class="w-0.5 flex-1 my-0.5 rounded-[3px]"
-        :class="connectorBlue ? 'bg-[#0b53bf]' : 'bg-[#e6e6e6]'"
+        :class="
+          connectorBlue ? 'bg-background-brand' : 'bg-background-default-hover'
+        "
       ></div>
     </div>
     <div class="flex-1 min-w-0">
@@ -61,15 +63,15 @@ const props = withDefaults(
 const circleClass = computed(() => {
   switch (props.variant) {
     case 'done':
-      return 'bg-[#0b53bf]'
+      return 'bg-background-brand'
     case 'doneGrey':
-      return 'bg-[#e6e6e6]'
+      return 'bg-background-default-hover'
     case 'current':
-      return 'border-2 border-[#0b53bf]'
+      return 'border-2 border-border-brand'
     case 'failed':
-      return 'bg-[#e40c58]'
+      return 'bg-background-error'
     default:
-      return 'bg-[#e6e6e6]'
+      return 'bg-background-default-hover'
   }
 })
 </script>

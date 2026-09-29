@@ -19,7 +19,7 @@
     </div>
     <div
       v-if="isLoading || !hasData"
-      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface rounded-12 w-[60%]"
+      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-background-default-hover rounded-12 w-[60%]"
     />
     <div
       v-else
@@ -33,8 +33,8 @@
           :url="iconUrl"
           :symbol="symbol"
           :is-stock="isStock"
-          width="w-10 xs:w-[56px]"
-          height="h-10 xs:h-[56px]"
+          width="w-10 xs:w-14"
+          height="h-10 xs:h-14"
         />
         <div class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4">
           <app-token-logo
@@ -75,19 +75,19 @@
               v-if="priceChangeNum < 0"
               name="arrow-trending-down"
               size="xxs"
-              class="inline-block text-error"
+              class="inline-block text-text-error"
             />
             <AppIcon
               v-else
               name="arrow-trending-up"
               size="xxs"
-              class="inline-block text-success"
+              class="inline-block text-text-success"
             />
             <span
               :class="[
                 {
-                  'text-success': priceChangeNum >= 0,
-                  'text-error': priceChangeNum < 0,
+                  'text-text-success': priceChangeNum >= 0,
+                  'text-text-error': priceChangeNum < 0,
                 },
                 'ml-1 text-s-14 xs:text-s-17',
               ]"
@@ -98,7 +98,7 @@
         </div>
         <p
           v-if="!isLoading && existsOnCurrentChain"
-          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+          class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-text-subtle"
         >
           {{ $t('crypto.on_chain', { chain: selectedChain?.name }) }}
         </p>

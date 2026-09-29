@@ -1,7 +1,7 @@
 <template>
   <div
     ref="wrapperEl"
-    class="relative min-w-0 w-[240px]"
+    class="relative min-w-0 w-60"
     :class="isOpen ? 'z-[2]' : ''"
     @keydown="trapFocus"
   >
@@ -10,23 +10,23 @@
       type="button"
       :aria-label="$t('search.placeholder')"
       class="w-10 h-10 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
+      :class="isOpen ? 'bg-white' : 'bg-background-brand-subtle'"
       @click="open"
     >
-      <AppIcon name="magnifying-glass" size="s" class="text-info" />
+      <AppIcon name="magnifying-glass" size="s" class="text-text-subtle" />
     </button>
     <div
       v-else
       class="flex items-center gap-2 h-10 px-4 rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
+      :class="isOpen ? 'bg-white' : 'bg-background-brand-subtle'"
     >
-      <AppIcon name="magnifying-glass" size="xxs" class="text-info" />
+      <AppIcon name="magnifying-glass" size="xxs" class="text-text-subtle" />
       <input
         v-model="query"
         type="text"
         :placeholder="$t('search.placeholder')"
         :aria-label="$t('search.placeholder')"
-        class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-info"
+        class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-text-subtle"
         @focus="open"
         @click="open"
       />

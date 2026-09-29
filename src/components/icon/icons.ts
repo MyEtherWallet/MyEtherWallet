@@ -183,6 +183,7 @@ import {
   TagIcon as TagOutline,
   WrenchScrewdriverIcon as WrenchScrewdriverOutline,
   LanguageIcon as LanguageOutline,
+  RectangleGroupIcon as RectangleGroupOutline,
 } from '@heroicons/vue/24/outline'
 
 // Heroicons — style=filled (Figma) → 24/solid
@@ -287,6 +288,7 @@ import {
   TagIcon as TagSolid,
   WrenchScrewdriverIcon as WrenchScrewdriverSolid,
   LanguageIcon as LanguageSolid,
+  RectangleGroupIcon as RectangleGroupSolid,
 } from '@heroicons/vue/24/solid'
 
 // Custom glyphs not in Heroicons — authored SFCs, currentColor, viewBox 24.
@@ -605,6 +607,10 @@ export const icons = {
     filled: WrenchScrewdriverSolid,
   },
   language: { stroke: LanguageOutline, filled: LanguageSolid },
+  'rectangle-group': {
+    stroke: RectangleGroupOutline,
+    filled: RectangleGroupSolid,
+  },
 } as const satisfies Record<string, IconEntry>
 
 export type IconName = keyof typeof icons

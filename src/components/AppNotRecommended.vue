@@ -1,8 +1,14 @@
 <template>
-  <div class="p-4 sm:p-6 bg-error-7 border-1 border-error-10 rounded-16 w-full">
+  <div
+    class="p-4 sm:p-6 bg-background-error-subtle border-1 border-border-error-subtle rounded-16 w-full"
+  >
     <div class="flex items-center">
       <!-- icon container -->
-      <AppIcon name="exclamation-triangle" class="mr-2 text-error" />
+      <AppIcon
+        name="exclamation-triangle"
+        size="m"
+        class="mr-2 text-text-error"
+      />
       <h3 class="font-bold">{{ title || $t('common.not_recommended') }}</h3>
     </div>
 

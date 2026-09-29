@@ -8,10 +8,7 @@
       <div class="flex flex-col gap-8 pt-8 pb-8">
         <!-- Header -->
         <div class="flex flex-col gap-1 pr-10">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{ t('purchase.sell.provider.title', { amount: formattedCrypto }) }}
           </h2>
         </div>
@@ -23,12 +20,12 @@
           aria-live="polite"
         >
           <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+            class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
           />
         </div>
 
         <!-- Error -->
-        <p v-else-if="error" class="text-error text-s-14 text-center py-8">
+        <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
           {{ error }}
         </p>
 
@@ -36,19 +33,15 @@
         <template v-else-if="quote">
           <!-- Provider card (mirrors a single provider entry from BuyProviderModal) -->
           <div
-            class="w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase border-2 border-black"
+            class="w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 border-black"
           >
             <div
               class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
             >
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-              >
+              <p class="text-label-base text-black">
                 {{ formattedFiat }}
               </p>
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-info"
-              >
+              <p class="text-label-base text-text-subtle">
                 ≈ {{ formattedCrypto }}
               </p>
             </div>
@@ -63,43 +56,43 @@
           <!-- Summary -->
           <div class="flex flex-col gap-2">
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.sell.provider.youll_send') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedCrypto }}
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <div class="h-px bg-background-default-hover" />
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.sell.provider.youll_receive') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedFiat }}
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <div class="h-px bg-background-default-hover" />
           </div>
 
           <!-- Quote freshness -->
           <p
             v-if="cooldownSeconds !== null"
-            class="text-error text-s-12 text-center -my-4"
+            class="text-text-error text-s-12 text-center -my-4"
             aria-live="polite"
           >
             {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
           </p>
           <p
             v-else-if="quoteExpired"
-            class="text-info text-s-12 text-center -my-4"
+            class="text-text-subtle text-s-12 text-center -my-4"
             aria-live="polite"
           >
             {{ t('purchase.quote.expired_refreshing') }}
           </p>
           <p
             v-else-if="quoteCountdown"
-            class="text-info text-s-12 text-center -my-4"
+            class="text-text-subtle text-s-12 text-center -my-4"
           >
             {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
           </p>
@@ -120,7 +113,7 @@
               />
             </span>
           </app-base-button>
-          <p class="text-info text-s-12 text-center -mt-5">
+          <p class="text-text-subtle text-s-12 text-center -mt-5">
             {{
               t('purchase.select_provider.redirect', {
                 provider: providerNameFormatted,
@@ -194,7 +187,10 @@ watch(
 watch(isOpen, (open, wasOpen) => {
   if (wasOpen && !open) {
     if (offerShown.value && !proceeded.value) {
-      analytics.trackSellEvent(SellOfferEvent.OFFER_CANCELED, buildOfferPayload())
+      analytics.trackSellEvent(
+        SellOfferEvent.OFFER_CANCELED,
+        buildOfferPayload(),
+      )
     }
     offerShown.value = false
     errorTracked.value = false

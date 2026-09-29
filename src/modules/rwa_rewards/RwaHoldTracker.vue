@@ -1,9 +1,6 @@
 <template>
   <div class="w-full">
-    <p
-      v-if="daysLeftLabel"
-      class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
-    >
+    <p v-if="daysLeftLabel" class="text-label-sm text-black">
       {{ daysLeftLabel }}
     </p>
     <div
@@ -30,12 +27,9 @@
           size="xxs"
           class="text-white"
         />
-        <span
-          v-else
-          class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
-          :class="numberClass(day)"
-          >{{ day }}</span
-        >
+        <span v-else class="text-label-xs" :class="numberClass(day)">{{
+          day
+        }}</span>
       </div>
     </div>
   </div>
@@ -70,18 +64,18 @@ const chipState = (day: number): ChipState => {
 const chipClass = (day: number) => {
   switch (chipState(day)) {
     case 'done':
-      return 'bg-[#0b53bf]'
+      return 'bg-background-brand'
     case 'current':
-      return 'bg-white/70 border-2 border-[#0b53bf]'
+      return 'bg-white/70 border-2 border-border-brand'
     case 'failed':
-      return 'bg-[#e40c58]'
+      return 'bg-background-error'
     case 'doneGrey':
-      return 'bg-grey-subtle'
+      return 'bg-background-decorative-neutral'
     default:
-      return 'bg-[#e6e6e6]'
+      return 'bg-background-default-hover'
   }
 }
 
 const numberClass = (day: number) =>
-  chipState(day) === 'current' ? 'text-[#0b53bf]' : 'text-[#575757]'
+  chipState(day) === 'current' ? 'text-text-brand' : 'text-text-subtle'
 </script>

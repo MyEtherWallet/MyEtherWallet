@@ -39,11 +39,11 @@
                   v-model="searchInput"
                   class="grow"
                   :placeholder="$t('common.search_by_name_or_address')"
-                  bg-class="bg-surface"
+                  bg-class="bg-background-default-hover"
                 />
                 <app-base-button
                   size="medium"
-                  class="!px-5 !min-h-[40px] !text-s-15"
+                  class="!px-5 !min-h-10 !text-s-15"
                   @click="showAddAddress = true"
                 >
                   {{ $t('common.add') }}
@@ -110,7 +110,7 @@
               />
               <p
                 v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
-                class="text-s-17 mb-2 px-2 mt-6 text-info text-center"
+                class="text-s-17 mb-2 px-2 mt-6 text-text-subtle text-center"
               >
                 {{ $t('address_book.no_saved_addresses') }}
               </p>

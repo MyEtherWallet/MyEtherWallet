@@ -24,9 +24,9 @@
     <div
       ref="scrollContainer"
       :class="[
-        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[80px]',
+        'flex w-full mr-[60px] xs:mr-20',
         // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
         // shell whose <main> scrolls internally), so the app-level scroll must be
         // off for it — otherwise the page double-scrolls and the sidebar drifts.
@@ -48,10 +48,10 @@
           <div
             :class="[
               'min-h-[600px]',
-              // The new Home's sections own their padding (AppHomeSection has
-              // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
-              // the hero's top padding stacks on the wrapper's. Other routes
-              // keep the shared page padding.
+              // The new Home's sections own their padding (AppHomeSection uses
+              // the shared page gutter px-3 xs:px-5), so the wrapper adds none —
+              // else the hero's top padding stacks on the wrapper's. Other
+              // routes keep the shared page padding.
               isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >

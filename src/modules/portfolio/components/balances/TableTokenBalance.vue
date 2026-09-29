@@ -1,13 +1,13 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-grey-5"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-border-subtle"
     >
       <div
         class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"
       >
         <div
-          class="flex grow justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[500px]"
+          class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
@@ -39,8 +39,8 @@
                   class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
                   :class="
                     !hideLowBalance
-                      ? 'bg-primary border-primary'
-                      : 'border-grey-30'
+                      ? 'bg-background-brand border-border-brand'
+                      : 'border-border-hover'
                   "
                 >
                   <svg
@@ -76,7 +76,9 @@
         class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2"
       >
         <div class="lg:text-right">
-          <p class="font-bold text-info uppercase tracking-sp-06 text-s-14">
+          <p
+            class="font-bold text-text-subtle uppercase tracking-sp-06 text-s-14"
+          >
             {{ $t('portfolio.table.total_value') }}
           </p>
           <p
@@ -87,7 +89,7 @@
           </p>
           <div
             v-else
-            class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
+            class="bg-background-default animate-pulse w-[100px] h-6 rounded-lg"
           ></div>
         </div>
       </div>
@@ -99,7 +101,7 @@
         <!-- Header-->
         <thead class="bg-white">
           <tr
-            class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
+            class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 border-b border-border-subtle font-bold"
           >
             <!-- Watchlist -->
             <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
@@ -116,13 +118,19 @@
                 @click="setHeaderSort(SortValueString.NAME)"
               >
                 {{ $t('portfolio.table.token_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'desc'
                   "
                 />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'asc'
@@ -143,14 +151,20 @@
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
                 {{ $t('portfolio.table.market_cap_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
                 />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
@@ -171,14 +185,20 @@
                 @click="setHeaderSort(SortValueString.PRICE)"
               >
                 {{ $t('portfolio.table.price_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
                 />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
@@ -199,14 +219,20 @@
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
                 {{ $t('portfolio.table.24h_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
                 />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
@@ -228,14 +254,20 @@
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
                 {{ $t('portfolio.table.balance_header') }}
-                <AppIcon name="arrow-long-down" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
                 />
-                <AppIcon name="arrow-long-up" variant="filled" size="xxs"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
@@ -246,7 +278,7 @@
             </th>
             <!-- Actions -->
             <th
-              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
+              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-40 xl:w-[180px] 2xl:w-[200px]"
             ></th>
           </tr>
         </thead>
@@ -269,14 +301,22 @@
               <button
                 v-if="getWatchlistId(token)"
                 @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
                 <!-- changes icon when active -->
-                <AppIcon name="star" size="xxs"
+                <AppIcon
+                  name="star"
+                  size="xxs"
                   class="cursor-pointer"
                   v-if="!isWatchListed(getWatchlistId(token))"
                 />
-                <AppIcon name="star" variant="filled" size="xxs" v-else class="cursor-pointer" />
+                <AppIcon
+                  name="star"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="cursor-pointer"
+                />
               </button>
             </td>
             <!-- Name -->
@@ -302,14 +342,14 @@
                     v-if="getTokenName(token).length > 20"
                   >
                     <p
-                      class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ getTokenName(token) }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
-                    class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                    class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                   >
                     {{ getTokenName(token) }}
                   </p>
@@ -341,8 +381,8 @@
                       ? parsePercent(
                           token.price_change_percentage_24h,
                         ).includes('-')
-                        ? 'text-error'
-                        : 'text-success'
+                        ? 'text-text-error'
+                        : 'text-text-success'
                       : 'text-black',
                   ]"
                 >
@@ -371,9 +411,9 @@
               <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12 mt-0.5">
+              <p class="text-text-subtle text-s-12 mt-0.5">
                 {{ formatFloatingPointValue(token.balance).value }}
-                <span class="uppercase font-normal text-info">{{
+                <span class="uppercase font-normal text-text-subtle">{{
                   truncate(token.symbol, 7)
                 }}</span>
               </p>
@@ -394,23 +434,32 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        variant="filled"
+                        size="s"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                     >
                       <button
                         v-if="getWatchlistId(token)"
                         class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                         @click.stop="[setWatchlistToken(token), toggleMenu()]"
                       >
-                        <AppIcon name="star" size="xxs"
+                        <AppIcon
+                          name="star"
+                          size="xxs"
                           class="cursor-pointer"
                           v-if="!isWatchListed(getWatchlistId(token))"
                         />
-                        <AppIcon name="star" variant="filled" size="xxs"
+                        <AppIcon
+                          name="star"
+                          variant="filled"
+                          size="xxs"
                           v-else
                           class="cursor-pointer"
                         />
@@ -427,7 +476,7 @@
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                        class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -436,7 +485,7 @@
                           @click.stop="[buyBtn(token, true), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <icon-buy class="text-primary w-4 h-4 mr-2" />
+                          <icon-buy class="text-text-brand w-4 h-4 mr-2" />
                           <p>{{ $t('common.buy') }}</p>
                         </li>
                         <template v-if="token.ondo !== undefined">
@@ -444,7 +493,7 @@
                             @click.stop="[tradeBtn(token, true), toggleMenu()]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-trade class="text-primary w-4 h-4 mr-2" />
+                            <icon-trade class="text-text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('portfolio.table.trade') }}</p>
                           </li>
                         </template>
@@ -453,7 +502,7 @@
                             @click.stop="[swapBtn(token, true), toggleMenu()]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <icon-swap class="text-primary w-4 h-4 mr-2" />
+                            <icon-swap class="text-text-brand w-4 h-4 mr-2" />
                             <p>{{ $t('common.swap') }}</p>
                           </li>
                         </template>
@@ -466,7 +515,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <AppIcon name="pencil" variant="filled" size="xxs" class="mr-2" />
+                          <AppIcon
+                            name="pencil"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.edit') }}</p>
                         </li>
                         <li
@@ -476,7 +530,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <AppIcon name="trash" variant="filled" size="xxs" class="mr-2" />
+                          <AppIcon
+                            name="trash"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.delete') }}</p>
                         </li>
                       </ul>
@@ -486,7 +545,7 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-[160px] ml-auto"
+                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-40 ml-auto"
               >
                 <app-base-button
                   v-if="token.ondo !== undefined"
@@ -545,17 +604,22 @@
           paginatedArray.length === 0 &&
           props.view === 'watchlist'
         "
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
         <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >{{ $t('portfolio.table.discover_more_tokens') }}
-          <AppIcon name="arrow-long-up" variant="filled" size="xxs" class="rotate-90 inline-flex" />
+          <AppIcon
+            name="arrow-long-up"
+            variant="filled"
+            size="xxs"
+            class="rotate-90 inline-flex"
+          />
         </router-link>
       </div>
       <div
         v-if="paginatedArray.length === 0 && props.view === 'custom'"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">{{ $t('portfolio.table.empty_custom') }}</p>
         <app-base-button size="medium" @click="openAddCustom">{{
@@ -564,7 +628,7 @@
       </div>
       <div
         v-if="paginatedArray.length === 0 && props.view === 'stocks'"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">
           {{ $t('portfolio.table.empty_stocks') }}
@@ -577,7 +641,7 @@
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
         <p class="mb-1 lg:mt-10">
           {{ $t('portfolio.table.no_results', { query: searchInput }) }}
@@ -588,19 +652,22 @@
         <div
           v-for="n in Number(activeShownItems.value)"
           :key="n"
-          class="flex w-full h-[56px] py-2"
+          class="flex w-full h-14 py-2"
         >
           <div
-            class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
+            class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
           ></div>
         </div>
       </div>
     </div>
 
     <div
-      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
     >
-      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
+      <div
+        v-if="!isLoading"
+        class="text-text-subtle order-3 xs:order-1 mb-4 xs:mb-0"
+      >
         {{
           $t('portfolio.table.results_of', {
             count: getCurrentViewableItemsIndex,
@@ -618,8 +685,10 @@
         </app-btn-icon>
         <div class="flex items-center gap-2">
           <span class="text-black">{{ currentPage + 1 }}</span>
-          <span class="text-info">{{ $t('portfolio.table.page_of') }}</span>
-          <span class="text-info">{{ totalPages }}</span>
+          <span class="text-text-subtle">{{
+            $t('portfolio.table.page_of')
+          }}</span>
+          <span class="text-text-subtle">{{ totalPages }}</span>
         </div>
         <app-btn-icon
           :disabled="!isLoading && currentPage + 1 >= totalPages"
@@ -639,11 +708,16 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-border-default hover:border-border-hover transition-colors"
               @click="toggleSelect"
             >
               <span>{{ activeShownItems.label }}</span>
-              <AppIcon name="chevron-down" variant="filled" size="xxs" class="text-info" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
@@ -816,14 +890,16 @@ const formatStock = (
   item: GetWebStocksWatchlistResponseStock,
 ): DisplayToken => {
   return {
-    name: item.underlyingMarket.name,
+    // Portfolio tokens have no single underlying market, so the API sends
+    // underlyingMarket as null and the alias carries the display name.
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     logo_url: item.iconPngUrl || item.iconSvgUrl || '',
     price: item.primaryMarket.price ? Number(item.primaryMarket.price) : 0,
     price_change_percentage_24h: item.primaryMarket.priceChangePercentage24h
       ? Number(item.primaryMarket.priceChangePercentage24h)
       : 0,
-    market_cap: item.underlyingMarket.marketCap
+    market_cap: item.underlyingMarket?.marketCap
       ? Number(item.underlyingMarket.marketCap)
       : 0,
     sparkline_in_7d: item.primaryMarket.sparkline24h || [],
@@ -840,7 +916,7 @@ const formatStock = (
         symbol: item.primaryMarket.symbol,
       },
       underlyingMarket: {
-        name: item.underlyingMarket.name,
+        name: item.underlyingMarket?.name,
       },
     },
   } as DisplayToken
@@ -972,6 +1048,10 @@ const tokens = computed<DisplayToken[]>(() => {
             price_change_percentage_24h: token.priceChangePercentage24h || 0,
             sparkline_in_7d: token.sparklineIn7d || [],
             logo_url: token.logoUrl || '',
+            // Watchlist tokens return ondo: null for non-stocks. Downstream
+            // stock checks use `ondo !== undefined`, so keep null out or they
+            // treat it as a stock and read primaryMarket off null.
+            ondo: token.ondo ?? undefined,
           } as DisplayToken
         }) || []
 
@@ -1094,7 +1174,7 @@ const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
   usePaginate<DisplayToken>(tokens, shownItems)
 
 const getTableHeight = computed(() =>
-  shownItems.value === 5 ? 'min-h-[320px]' : 'min-h-[596px]',
+  shownItems.value === 5 ? 'min-h-80' : 'min-h-[596px]',
 )
 
 const getCurrentViewableItemsIndex = computed(() =>
@@ -1107,7 +1187,7 @@ const getCurrentViewableItemsIndex = computed(() =>
 // A token has a "primary" action (trade / swap) in the desktop actions cell.
 // Used so a lone button spans the full actions width and rows stay aligned.
 const hasPrimaryAction = (token: DisplayToken): boolean =>
-  token.ondo !== undefined || currentChainhasSwapSupport.value
+  !!token.ondo || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'balance_table',
@@ -1119,7 +1199,7 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
 }
 
 const getTokenRoute = (token: DisplayToken) => {
-  if (token.ondo !== undefined) {
+  if (token.ondo) {
     return {
       name: STOCK_INFO_ROUTE_NAMES.home,
       params: { symbol: token.ondo.primaryMarket.symbol },
@@ -1132,7 +1212,7 @@ const getTokenRoute = (token: DisplayToken) => {
 }
 
 const onTokenLinkClick = (token: DisplayToken) => {
-  if (token.ondo === undefined) {
+  if (!token.ondo) {
     tokenInfoStore.setTokenInfo(token)
   }
 }
@@ -1147,7 +1227,7 @@ const getWatchlistId = (token: DisplayToken): string => {
 }
 
 const isTokenStock = (token: DisplayToken): boolean => {
-  return token.ondo !== undefined && !!token.ondo?.primaryMarket?.symbol
+  return !!token.ondo?.primaryMarket?.symbol
 }
 
 const setWatchlistToken = (token: DisplayToken) => {
@@ -1191,7 +1271,7 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
     location: 'balance_table',
     token: token.symbol,
     isMobile,
-    stock: token.ondo?.underlyingMarket.name,
+    stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')

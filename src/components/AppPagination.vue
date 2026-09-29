@@ -22,7 +22,7 @@ const go = (p: number) => {
 
 <template>
   <div data-test="pagination" class="w-full">
-    <div class="border-t border-grey-10" />
+    <div class="border-t border-border-default" />
     <div class="mt-6 flex items-center gap-3">
       <p class="flex-1 text-s-16 text-black">
         <!-- Consumers pass a localized label; falls back to "page / pages". -->
@@ -34,7 +34,7 @@ const go = (p: number) => {
         data-test="prev"
         type="button"
         :disabled="isFirst"
-        class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue - 1)"
       >
         <AppIcon name="chevron-left" variant="filled" />
@@ -43,7 +43,7 @@ const go = (p: number) => {
         data-test="next"
         type="button"
         :disabled="isLast"
-        class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue + 1)"
       >
         <AppIcon name="chevron-right" variant="filled" />

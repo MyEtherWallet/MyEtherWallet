@@ -3,13 +3,13 @@
     <a
       :href="helpLink"
       target="_blank"
-      class="block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      class="block text-text-subtle text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
     >
       <AppIcon
         name="question-mark-circle"
         variant="filled"
         size="s"
-        class="sm:size-6 inline-block mr-1 text-t-default"
+        class="sm:size-6 inline-block mr-1 text-text-default"
       />
       <span class="underline"> {{ title }} </span>
     </a>

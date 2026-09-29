@@ -6,7 +6,7 @@
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5' : 'top-2',
-        inFocusInput ? 'text-primary' : 'text-info',
+        inFocusInput ? 'text-text-brand' : 'text-text-subtle',
       ]"
       @click="searchInput?.focus()"
     >
@@ -18,21 +18,17 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-colors',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
+        inputClass,
       ]"
       :aria-label="placeholder || $t('common.search')"
       :placeholder="placeholder || $t('common.search')"
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
-    <div
-      :class="[
-        'absolute right-3 flex align-center',
-        size === 'compact' ? 'top-2.5' : 'top-1',
-      ]"
-    >
+    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
       <app-btn-icon
         @click="clearInputValue"
         :class="[
@@ -44,7 +40,7 @@
         <AppIcon
           name="x-circle"
           :size="size === 'compact' ? 's' : 'm'"
-          class="text-primary"
+          class="text-text-brand"
       /></app-btn-icon>
     </div>
   </div>
@@ -84,6 +80,10 @@ defineProps({
   size: {
     type: String as PropType<'default' | 'compact'>,
     default: 'default',
+  },
+  inputClass: {
+    type: String,
+    default: '',
   },
 })
 

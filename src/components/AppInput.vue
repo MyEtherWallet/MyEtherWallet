@@ -26,7 +26,7 @@
             isFloating
               ? [
                   'block text-xs font-semibold leading-[18px] tracking-[-0.24px] truncate',
-                  disabled ? 'text-grey-subtle' : 'text-t-subtle',
+                  disabled ? 'text-text-placeholder' : 'text-text-subtle',
                 ]
               : 'sr-only'
           "
@@ -44,8 +44,8 @@
           :aria-invalid="!disabled && hasError"
           :aria-describedby="showFeedback ? feedbackId : undefined"
           :class="[
-            'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-grey-subtle',
-            disabled ? 'text-grey-subtle' : 'text-black',
+            'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-text-placeholder',
+            disabled ? 'text-text-placeholder' : 'text-black',
           ]"
           autocomplete="off"
           @focus="setInFocusInput()"
@@ -69,7 +69,7 @@
           @click="clearInputValue"
           :label="$t('common.clear_icon')"
         >
-          <AppIcon name="x-circle" size="s" class="text-primary" />
+          <AppIcon name="x-circle" size="s" class="text-text-brand" />
         </app-btn-icon>
         <app-btn-icon
           v-if="showReveal"
@@ -84,7 +84,7 @@
             :name="!showPassword ? 'eye-slash' : 'eye'"
             variant="filled"
             size="s"
-            class="text-primary"
+            class="text-text-brand"
           />
         </app-btn-icon>
       </div>
@@ -100,9 +100,9 @@
         <AppIcon
           name="exclamation-circle"
           size="s"
-          class="shrink-0 text-error"
+          class="shrink-0 text-text-error"
         />
-        <p class="text-xs leading-[18px] text-error min-w-0 break-words">
+        <p class="text-xs leading-[18px] text-text-error min-w-0 break-words">
           {{ errorMessage || $t('common.required') }}
         </p>
       </div>
@@ -253,19 +253,21 @@ const onInput = () => {
  -------------------------*/
 const surfaceClass = computed(() => {
   const base = 'box-border transition-colors'
-  const ring = hasError.value ? 'border-error' : 'border-primary'
+  const ring = hasError.value ? 'border-border-error' : 'border-border-brand'
 
   if (props.surface === 'alternative') {
     const rest = `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default`
     if (props.disabled) return rest
     if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
     // Resting line is 1px border-default; becomes the full 2px grey border on hover.
-    return `${rest} hover:ring-0 hover:border-grey-subtle`
+    return `${rest} hover:ring-0 hover:border-border-hover`
   }
 
-  if (props.disabled) return `${base} bg-bgBase border-2 border-transparent`
-  if (inFocusInput.value) return `${base} bg-bgBase border-2 ${ring}`
-  return `${base} bg-bgBase border-2 border-transparent hover:border-grey-subtle`
+  if (props.disabled)
+    return `${base} bg-background-default border-2 border-transparent`
+  if (inFocusInput.value)
+    return `${base} bg-background-default border-2 ${ring}`
+  return `${base} bg-background-default border-2 border-transparent hover:border-border-hover`
 })
 
 /**------------------------
