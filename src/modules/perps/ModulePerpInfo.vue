@@ -5,7 +5,9 @@
       <div
         class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-20 h-5 w-5"
       >
-        <!-- <app-btn-icon icon="share" label="Share" /> -->
+        <!-- <app-btn-icon label="Share">
+          <share-icon class="h-5 w-5" />
+        </app-btn-icon> -->
       </div>
       <div class="px-4 lg:px-10 py-0 flex items-start gap-4">
         <app-token-logo

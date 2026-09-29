@@ -226,11 +226,12 @@
             <!-- Refresh -->
             <!-- <app-tooltip text="Refresh deposit address">
               <app-btn-icon
-                icon="arrow-path"
                 label="Refresh deposit address"
                 :disabled="loading"
                 @click="fetchDepositAddress"
-                />
+                >
+                <arrow-path-icon class="w-[18px] h-[18px]" />
+                </app-btn-icon>
             </app-tooltip> -->
           </div>
         </template>
