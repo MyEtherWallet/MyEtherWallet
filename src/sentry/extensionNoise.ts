@@ -302,16 +302,16 @@ export function isIndexedDbMutationError(err: unknown): boolean {
   )
 }
 /* Whether an error is a Web Bluetooth "GATT Server is disconnected"
-  * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
-  * operation runs after the device has disconnected.The Ledger BLE transport
-  * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
-  * fire - and - forgets`characteristic.stopNotifications()` after the device drops
-  * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
-  * call is detached from any promise the app awaits, it surfaces as an unhandled
-  * rejection, and the connect flow already shows the user a "Failed to connect"
-  * toast — so it is external, unactionable Sentry noise.The frames are bundled
-  * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
-  * browser - native(minification - proof) message instead.
+ * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
+ * operation runs after the device has disconnected.The Ledger BLE transport
+ * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+ * fire - and - forgets`characteristic.stopNotifications()` after the device drops
+ * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
+ * call is detached from any promise the app awaits, it surfaces as an unhandled
+ * rejection, and the connect flow already shows the user a "Failed to connect"
+ * toast — so it is external, unactionable Sentry noise.The frames are bundled
+ * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
+ * browser - native(minification - proof) message instead.
  */
 export function isBluetoothGattDisconnectedError(err: unknown): boolean {
   if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
@@ -339,8 +339,7 @@ export function isLockedDeviceError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
   const e = err as { name?: unknown; message?: unknown }
   if (e.name === 'LockedDeviceError') return true
-  const message =
-    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  const message = typeof e.message === 'string' ? e.message.toLowerCase() : ''
   return message.includes('0x5515') || message.includes('locked device')
 }
 
@@ -403,7 +402,9 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
  * "connection is closed" shapes already suppressed elsewhere. Handles both the
  * Error-object and bare-string payload shapes.
  */
-export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+export function isWalletConnectSubscribeInterruptedError(
+  err: unknown,
+): boolean {
   const MESSAGE = 'Connection interrupted while trying to subscribe'
   if (typeof err === 'string') return err.includes(MESSAGE)
   if (!err || typeof err !== 'object') return false

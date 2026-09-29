@@ -11,7 +11,7 @@
 withDefaults(
   defineProps<{ selected: boolean; bg?: string; disabled?: boolean }>(),
   {
-    bg: 'bg-[#f5f5f5]',
+    bg: 'bg-background-default',
     disabled: false,
   },
 )
@@ -29,7 +29,7 @@ defineEmits<{ toggle: [] }>()
       selected ? '!border-black' : 'border-transparent',
       disabled
         ? 'cursor-not-allowed opacity-40'
-        : !selected && 'hover:border-grey-outline',
+        : !selected && 'hover:border-border-strong',
     ]"
     @click="$emit('toggle')"
   >

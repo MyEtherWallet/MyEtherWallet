@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { WatchlistCategory } from '@/modules/home/composables/useWatchlistCategories'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineProps<{
@@ -33,7 +32,9 @@ const toggle = (id: string) => {
       :step="2"
       show-back
       :title="t('homePage.hero.watchlist.onboarding.industries.subtitle')"
-      :description="t('homePage.hero.watchlist.onboarding.industries.description')"
+      :description="
+        t('homePage.hero.watchlist.onboarding.industries.description')
+      "
       @back="$emit('back')"
       @close="$emit('close')"
     />
@@ -47,7 +48,7 @@ const toggle = (id: string) => {
       <span
         v-for="n in 8"
         :key="n"
-        class="h-[54px] animate-pulse rounded-2xl bg-[#f0f0f0]"
+        class="h-[54px] animate-pulse rounded-2xl bg-background-skeleton"
       />
     </div>
 
@@ -56,10 +57,12 @@ const toggle = (id: string) => {
     <div
       v-else-if="!categories.length"
       data-test="industries-empty"
-      class="mt-6 flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+      class="mt-6 flex min-h-40 flex-col items-center justify-center py-6 text-center"
     >
-      <ExclamationCircleIcon class="size-6 text-[#575757]" />
-      <p class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]">
+      <AppIcon name="exclamation-circle" class="text-text-subtle" />
+      <p
+        class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
+      >
         {{ t('homePage.hero.watchlist.onboarding.industries.empty') }}
       </p>
     </div>
@@ -76,7 +79,7 @@ const toggle = (id: string) => {
         class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
         aria-hidden="true"
       />
-      <div class="mew-scrollbar max-h-[320px] overflow-y-auto py-2 pr-1">
+      <div class="mew-scrollbar max-h-80 overflow-y-auto py-2 pr-1">
         <div class="grid grid-cols-2 gap-3">
           <WatchlistSelectableCard
             v-for="category in categories"
@@ -96,7 +99,7 @@ const toggle = (id: string) => {
       <button
         type="button"
         data-test="industries-skip"
-        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-primary"
+        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-text-brand"
         @click="$emit('skip')"
       >
         {{ t('homePage.hero.watchlist.onboarding.skip') }}
@@ -117,7 +120,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <ChevronRightIcon class="size-5" />
+          <AppIcon name="chevron-right" variant="filled" size="s" />
         </span>
       </AppBaseButton>
     </div>

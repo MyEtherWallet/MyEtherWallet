@@ -1,13 +1,18 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon :label="$t('menu.open-notifications')" width="w-[40px]" height="h-[40px]" @click="togglePopup">
+    <app-btn-icon
+      :label="$t('menu.open-notifications')"
+      width="w-10"
+      height="h-10"
+      @click="togglePopup"
+    >
       <div class="relative">
-        <bell-icon class="w-6 h-6" />
+        <AppIcon name="bell" variant="filled" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
-          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-primary rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
+          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-background-brand rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-1"
         >
           {{ unseenNotificationsCount }}
         </div>
@@ -45,7 +50,7 @@
 
               <span
                 v-if="unseenNotificationsCount > 0"
-                class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
+                class="bg-background-brand text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
               >
                 {{ unseenNotificationsCount }}
               </span>
@@ -62,13 +67,21 @@
             <div class="flex items-center gap-2">
               <app-tooltip
                 v-if="!isMobile"
-                :text="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin_to_keep_open')"
+                :text="
+                  isPinned
+                    ? $t('notifications_module.unpin')
+                    : $t('notifications_module.pin_to_keep_open')
+                "
                 position="top-left"
               >
                 <app-btn-icon
-                  :label="isPinned ? $t('notifications_module.unpin') : $t('notifications_module.pin')"
+                  :label="
+                    isPinned
+                      ? $t('notifications_module.unpin')
+                      : $t('notifications_module.pin')
+                  "
                   @click="isPinned = !isPinned"
-                  class="text-primary"
+                  class="text-text-brand"
                 >
                   <img
                     :src="pinIcon"
@@ -94,7 +107,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, nextTick, onMounted } from 'vue'
 import { analytics, NotificationEvent } from '@/analytics'
-import { BellIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { storeToRefs } from 'pinia'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'

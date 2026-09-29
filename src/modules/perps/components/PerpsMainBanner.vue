@@ -88,7 +88,9 @@
     </div>
 
     <div class="relative text-center mx-auto">
-      <p class="text-primary font-bold text-s-11 uppercase tracking-sp-06 mb-3">
+      <p
+        class="text-text-brand font-bold text-s-11 uppercase tracking-sp-06 mb-3"
+      >
         {{ $t('perps.banner.sign-in-prompt') }}
       </p>
       <h2
@@ -96,7 +98,9 @@
       >
         {{ $t('perps.banner.title') }}
       </h2>
-      <p class="text-info text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto">
+      <p
+        class="text-text-subtle text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto"
+      >
         {{ $t('perps.banner.description') }}
       </p>
 
@@ -173,7 +177,7 @@
         Takes precedence over the network/wallet notices below: the region block
         outranks them, since resolving either one still leaves perps unavailable.
       -->
-      <p v-if="isPerpsRestricted" class="text-error text-s-14 mt-3">
+      <p v-if="isPerpsRestricted" class="text-text-error text-s-14 mt-3">
         {{ $t('perps.restricted.banner-notice') }}
         <a
           :href="perpsHelpUrl"
@@ -187,11 +191,11 @@
       </p>
       <p
         v-else-if="!isOnEthereum && isUnisatWallet"
-        class="text-info text-s-12 mt-3"
+        class="text-text-subtle text-s-12 mt-3"
       >
         {{ $t('perps.banner.unisat-not-supported') }}
       </p>
-      <p v-else-if="!isOnEthereum" class="text-info text-s-13 mt-3">
+      <p v-else-if="!isOnEthereum" class="text-text-subtle text-s-13 mt-3">
         {{ $t('perps.banner.eth-only-notice') }}
       </p>
     </div>

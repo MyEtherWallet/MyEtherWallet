@@ -7,17 +7,17 @@
     <template #title>
       <app-btn-icon
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-bgBase"
+        class="absolute top-6 right-6 bg-background-default"
         height="h-8"
         width="w-8"
         @click="model = false"
       >
-        <x-mark-icon class="w-6 h-6" />
+        <AppIcon name="x-mark" />
       </app-btn-icon>
     </template>
     <template #content>
       <div
-        class="flex flex-col gap-6 items-center justify-center h-full px-6 py-[112px]"
+        class="flex flex-col gap-6 items-center justify-center h-full px-6 py-28"
       >
         <div class="flex flex-col gap-2 items-center justify-center w-full">
           <h1
@@ -37,7 +37,7 @@
         </div>
 
         <div
-          class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-bgBase"
+          class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-background-default"
         >
           <div class="flex items-center justify-center gap-3 w-full">
             <div class="flex flex-1 min-w-0 items-center gap-1">
@@ -51,8 +51,10 @@
                 theme="dark"
                 position="top"
               >
-                <information-circle-icon
-                  class="w-[18px] h-[18px] text-black cursor-pointer"
+                <AppIcon
+                  name="information-circle"
+                  size="xs"
+                  class="text-black cursor-pointer"
                 />
               </app-tooltip>
             </div>
@@ -62,22 +64,24 @@
               class="flex flex-col items-end gap-1 flex-none"
             >
               <div
-                class="h-[18px] w-[88px] rounded-8 bg-neutral-200 animate-pulse"
+                class="h-[18px] w-[88px] rounded-8 bg-background-skeleton animate-pulse"
               />
               <div
-                class="h-[14px] w-[56px] rounded-8 bg-neutral-200 animate-pulse"
+                class="h-3.5 w-14 rounded-8 bg-background-skeleton animate-pulse"
               />
             </div>
             <div
               v-else-if="hasFailed"
               class="flex flex-col items-end flex-none"
             >
-              <p class="text-s-14 leading-[20px] text-error whitespace-nowrap">
+              <p
+                class="text-s-14 leading-[20px] text-text-error whitespace-nowrap"
+              >
                 {{ $t('trade.approve_spending.fee_unavailable') }}
               </p>
               <button
                 type="button"
-                class="text-s-14 font-semibold leading-[20px] text-primary hoverNoBG"
+                class="text-s-14 font-semibold leading-[20px] text-text-brand hoverNoBG"
                 @click="refetchFee"
               >
                 {{ $t('common.retry') }}
@@ -91,7 +95,7 @@
               </p>
               <p
                 v-if="fiatFee"
-                class="text-s-14 leading-[20px] text-info whitespace-nowrap"
+                class="text-s-14 leading-[20px] text-text-subtle whitespace-nowrap"
               >
                 {{ approx(fiatFee) }}
               </p>
@@ -112,7 +116,7 @@
         <app-base-button @click="emit('approve')">
           <span class="flex items-center gap-2">
             {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon name="arrow-top-right-on-square" size="s" />
           </span>
         </app-base-button>
       </div>
@@ -123,11 +127,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  InformationCircleIcon,
-  XMarkIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
@@ -140,6 +139,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useApprovalFee } from '../composables/useApprovalFee'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // No submitting state: clicking Approve flips the flow step synchronously,
 // which closes this modal and opens the waiting-approval one.
 const props = withDefaults(

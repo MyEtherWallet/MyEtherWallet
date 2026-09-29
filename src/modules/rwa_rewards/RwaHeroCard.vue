@@ -15,7 +15,7 @@
   />
   <div
     v-else
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-border-default rounded-16 p-5 min-h-[293px]"
     :data-test="`rwa-hero-${status}`"
   >
     <img
@@ -46,9 +46,7 @@
     <!-- HOLDING — either round: title, days left, the day grid. -->
     <template v-if="status === 'holding'">
       <div class="relative z-10 w-full pr-[90px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ holdingTitle }}
         </p>
       </div>
@@ -62,7 +60,7 @@
           </p>
           <button
             type="button"
-            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-primary hoverOpacity"
+            class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-text-brand hoverOpacity"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"
           >
@@ -76,12 +74,10 @@
     <!-- LOST — the hold was broken. Round 1 can start over; round 2 can't. -->
     <template v-else-if="status === 'lost'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
@@ -101,11 +97,11 @@
               class="flex-1"
             >
               <button
-                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
                 disabled
               >
                 {{ disabledCtaLabel }}
-                <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+                <AppIcon name="information-circle" class="shrink-0" />
               </button>
             </app-tooltip>
             <app-base-button
@@ -133,12 +129,10 @@
     <!-- EARNED — claimable. Round 1 points at the bonus that follows. -->
     <template v-else-if="status === 'earned'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ earnedDescription }}
         </p>
       </div>
@@ -163,7 +157,7 @@
           >
             {{ $t('rwaRewards.hero_done_title') }}
           </p>
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <p class="text-s-12 leading-[18px] text-text-subtle">
             {{ $t('rwaRewards.hero_done_desc', { total: earnedTotalLabel }) }}
           </p>
         </div>
@@ -177,12 +171,10 @@
       </template>
       <template v-else>
         <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-          <p
-            class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-          >
+          <p class="text-heading-base text-black">
             {{ $t('rwaRewards.hero_claimed_title') }}
           </p>
-          <p class="text-s-12 leading-[18px] text-[#575757]">
+          <p class="text-s-12 leading-[18px] text-text-subtle">
             {{ $t('rwaRewards.hero_claimed_desc', { amount: rewardLabel }) }}
           </p>
         </div>
@@ -207,12 +199,10 @@
     <!-- EXPIRED — the claim window closed. Round 1 can start over. -->
     <template v-else-if="status === 'expired'">
       <div class="relative z-10 flex flex-col gap-1 max-w-[220px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p class="text-s-12 leading-[18px] text-[#575757]">
+        <p class="text-s-12 leading-[18px] text-text-subtle">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
@@ -231,11 +221,11 @@
               class="flex-1"
             >
               <button
-                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+                class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
                 disabled
               >
                 {{ disabledCtaLabel }}
-                <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+                <AppIcon name="information-circle" class="shrink-0" />
               </button>
             </app-tooltip>
             <app-base-button
@@ -265,14 +255,19 @@
         class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
         <div class="flex flex-col items-center gap-4">
-          <lock-closed-icon class="w-7 h-7 text-primary" />
-          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
+          <AppIcon
+            name="lock-closed"
+            variant="filled"
+            size="l"
+            class="text-text-brand"
+          />
+          <p class="text-text-sm text-text-subtle text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
         <app-base-button
           theme="neutral"
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          class="text-label-base"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
@@ -283,9 +278,7 @@
     <!-- DEFAULT — the offer: both rounds spelled out. -->
     <template v-else>
       <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
-        >
+        <p class="text-heading-base text-black whitespace-pre-line">
           {{ headline }}
         </p>
       </div>
@@ -314,11 +307,11 @@
             class="flex-1"
           >
             <button
-              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-background-default text-text-muted text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
-              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
+              <AppIcon name="information-circle" class="shrink-0" />
             </button>
           </app-tooltip>
           <app-base-button
@@ -347,8 +340,6 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import gradientBg from '@/assets/images/rwa-rewards/card-gradient-bg.png'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc.webp'
@@ -365,6 +356,7 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   HoldRewardsMainCardEvent,

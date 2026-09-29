@@ -8,14 +8,14 @@
         ? ''
         : showIsStock
           ? 'p-[1.2px]  bg-stock-gradient'
-          : 'border border-grey-5',
+          : 'border border-border-subtle',
     ]"
   >
     <div
       class="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center"
       :class="[
         { 'bg-white': image && !isLoading },
-        { 'bg-surface-light': !image || isLoading },
+        { 'bg-background-alternative': !image || isLoading },
         { 'shadow-token': !noShadow },
         { 'animate-pulse': isLoading },
       ]"
@@ -25,7 +25,10 @@
         class="absolute inset-0 flex items-center justify-center"
       >
         <span
-          :class="['text-info font-medium uppercase leading-none', getTextSize]"
+          :class="[
+            'text-text-subtle font-medium uppercase leading-none',
+            getTextSize,
+          ]"
         >
           {{ getSymbol() }}
         </span>
