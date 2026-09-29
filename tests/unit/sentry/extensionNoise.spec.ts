@@ -78,9 +78,9 @@ describe('isExtensionOrProviderError', () => {
   })
 
   it('is false for non-benign provider-looking codes (e.g. -32603 internal)', () => {
-    expect(isExtensionOrProviderError({ code: -32603, message: 'Internal' })).toBe(
-      false,
-    )
+    expect(
+      isExtensionOrProviderError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
   })
 
   it('is false for non-object inputs', () => {
@@ -193,9 +193,9 @@ describe('isProviderNotFoundError', () => {
 
   it('is false for a genuine app error', () => {
     expect(isProviderNotFoundError(new Error('boom'))).toBe(false)
-    expect(
-      isProviderNotFoundError({ name: 'TypeError', message: 'x' }),
-    ).toBe(false)
+    expect(isProviderNotFoundError({ name: 'TypeError', message: 'x' })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -273,7 +273,9 @@ describe('isTrezorHandshakeError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(false)
+    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -481,9 +483,9 @@ describe('isRainbowKitNotFoundError', () => {
     expect(isRainbowKitNotFoundError(new Error('not found rainbowkit'))).toBe(
       true,
     )
-    expect(
-      isRainbowKitNotFoundError({ message: 'not found rainbowkit' }),
-    ).toBe(true)
+    expect(isRainbowKitNotFoundError({ message: 'not found rainbowkit' })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -585,7 +587,8 @@ describe('isMetaMaskSdkDecryptError', () => {
 
   it('ignores an unrelated metamask-sdk error', () => {
     const err = new Error('some other failure')
-    err.stack = 'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
+    err.stack =
+      'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
     expect(isMetaMaskSdkDecryptError(err)).toBe(false)
   })
 
@@ -677,9 +680,9 @@ describe('isIndexedDbMutationError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(
-      isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 }),
-    ).toBe(false)
+    expect(isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -725,15 +728,15 @@ describe('isExpectedTradeClientError', () => {
         }),
       ),
     ).toBe(false)
-    expect(isExpectedTradeClientError(new Error('Some genuine 5xx failure'))).toBe(
-      false,
-    )
+    expect(
+      isExpectedTradeClientError(new Error('Some genuine 5xx failure')),
+    ).toBe(false)
   })
 
   it('is false for a genuine app error carrying unrelated properties', () => {
-    expect(
-      isExpectedTradeClientError({ message: 'boom', code: 500 }),
-    ).toBe(false)
+    expect(isExpectedTradeClientError({ message: 'boom', code: 500 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -801,9 +804,9 @@ describe('isCoinNotFoundApiError', () => {
   })
 
   it('is false for other mew-api 400s that happen to mention "not found"', () => {
-    expect(
-      isCoinNotFoundApiError(new Error('Address not found: 0x0.')),
-    ).toBe(false)
+    expect(isCoinNotFoundApiError(new Error('Address not found: 0x0.'))).toBe(
+      false,
+    )
   })
 
   it('is false for a genuine app error', () => {
@@ -880,7 +883,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
   })
 
   it('is true for the serialized production payload (plain object with message)', () => {
-    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -903,7 +908,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
       ),
     ).toBe(false)
     expect(
-      isWalletConnectSubscribeInterruptedError(new Error('Connection is closed')),
+      isWalletConnectSubscribeInterruptedError(
+        new Error('Connection is closed'),
+      ),
     ).toBe(false)
   })
 
@@ -911,8 +918,12 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError(null)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError(undefined)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(
+      false,
+    )
+    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
+      false,
+    )
   })
 })
 

@@ -36,8 +36,14 @@
         class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
       >
-        <StarSolidIcon v-if="favorite" class="size-5 text-primary" />
-        <StarOutlineIcon v-else class="size-5 text-[#575757]" />
+        <AppIcon
+          name="star"
+          variant="filled"
+          size="s"
+          v-if="favorite"
+          class="text-text-brand"
+        />
+        <AppIcon name="star" size="s" v-else class="text-text-subtle" />
       </button>
     </div>
 
@@ -46,7 +52,7 @@
       <!-- Description reserves a fixed 3-line block whether present, short, or
            absent, so every card stays the same height regardless of content. -->
       <div
-        class="line-clamp-4 h-[86px] leading-5 text-[#575757] text-s-14"
+        class="line-clamp-4 h-[86px] leading-5 text-text-subtle text-s-14"
         data-test="listing-description"
       >
         <p
@@ -63,7 +69,7 @@
     <div class="flex w-full items-start gap-6">
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ colOneLabel }}
         </p>
@@ -76,7 +82,7 @@
 
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ colTwoLabel }}
         </p>
@@ -88,7 +94,7 @@
       </div>
       <div class="flex min-w-0 flex-1 flex-col">
         <p
-          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-[#575757]"
+          class="text-s-11 uppercase leading-[15px] tracking-[0.6px] text-text-subtle"
         >
           {{ colThreeLabel }}
         </p>
@@ -99,9 +105,10 @@
           >
             {{ colThreeText }}
           </p>
-          <component
-            :is="colThreeArrowIcon"
-            class="size-3"
+          <AppIcon
+            :name="colThreeArrowIcon"
+            variant="filled"
+            size="xxs"
             :class="colThreeColor"
           />
         </div>
@@ -117,7 +124,7 @@
       type="button"
       data-test="listing-trade"
       :disabled="tradeDisabled"
-      class="flex h-10 w-full items-center justify-center rounded-3xl bg-grey-5 text-s-14 font-semibold tracking-[-0.28px] text-primary transition-colors hover:bg-grey-10 disabled:cursor-not-allowed disabled:text-[#a5a5a5] disabled:hover:bg-grey-5"
+      class="flex h-10 w-full items-center justify-center rounded-3xl bg-background-default text-s-14 font-semibold tracking-[-0.28px] text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:text-text-placeholder disabled:hover:bg-background-default"
       @click.stop="$emit('trade')"
     >
       {{ tradeLabel }}
@@ -127,12 +134,10 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/20/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface Props {
   logo?: string
   symbol: string
@@ -163,10 +168,10 @@ defineEmits<{
 }>()
 
 const up = computed(() => (props.colThree ?? 0) >= 0)
-const colThreeColor = computed(() => (up.value ? 'text-success' : 'text-error'))
-const colThreeArrowIcon = computed(() =>
-  up.value ? ArrowUpIcon : ArrowDownIcon,
+const colThreeColor = computed(() =>
+  up.value ? 'text-text-success' : 'text-text-error',
 )
+const colThreeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
 const colThreeText = computed(() =>
   props.colThree != null ? `${Math.abs(props.colThree).toFixed(1)}%` : '',
 )

@@ -5,7 +5,7 @@
       @click="sidebarIsOpen = !sidebarIsOpen"
       :label="$t('menu.open-menu')"
     >
-      <Bars3Icon class="w-8 h-8" />
+      <AppIcon name="bars-3" variant="filled" size="l" />
     </app-btn-icon>
     <!-- Background -->
     <teleport to="#app">
@@ -49,7 +49,7 @@
                 :alt="t('home')"
                 width="280"
                 height="96"
-                class="w-[94px] h-[32px] flex-none object-contain"
+                class="w-[94px] h-8 flex-none object-contain"
               />
               <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>
@@ -75,12 +75,15 @@
                   key="app-learn-menu"
                 >
                   <div class="mr-3 opacity-80">
-                    <book-open-icon class="w-4 h-4" />
+                    <AppIcon name="book-open" variant="filled" size="xxs" />
                   </div>
                   {{ t('learn') }}
-                  <chevron-down-icon
+                  <AppIcon
+                    name="chevron-down"
+                    variant="filled"
+                    size="xxs"
                     :class="[
-                      'ml-auto w-4 h-4 transition-transform',
+                      'ml-auto transition-transform',
                       { 'rotate-180': isOpenLearnMenu },
                     ]"
                   />
@@ -118,7 +121,7 @@
                 <!--  DIVIDER -->
                 <hr
                   v-if="!isWalletConnected"
-                  class="h-px bg-grey-10 border-0 w-full my-3"
+                  class="h-px bg-background-default-hover border-0 w-full my-3"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->
@@ -159,11 +162,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import {
-  Bars3Icon,
-  BookOpenIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'

@@ -16,7 +16,7 @@
   >
     <template #title>
       <div
-        class="flex flex-col gap-1 items-center justify-center w-full min-h-[80px] px-6 pt-6 pb-4"
+        class="flex flex-col gap-1 items-center justify-center w-full min-h-20 px-6 pt-6 pb-4"
       >
         <h1
           id="dialogTitle"
@@ -26,34 +26,34 @@
         </h1>
         <p
           v-if="side === 'buy'"
-          class="text-s-16 leading-[22px] text-[#575757] text-center"
+          class="text-s-16 leading-[22px] text-text-subtle text-center"
         >
           {{ $t('trade.select_asset.subtitle') }}
         </p>
       </div>
       <app-btn-icon
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-bgBase"
+        class="absolute top-6 right-6 bg-background-default"
         height="h-8"
         width="w-8"
         @click="isOpen = false"
       >
-        <x-mark-icon class="w-6 h-6" />
+        <AppIcon name="x-mark" />
       </app-btn-icon>
     </template>
     <template #content>
       <div class="flex h-full flex-col">
         <div
           :class="[
-            sectionHeader ? 'pb-[2px]' : 'pb-6',
+            sectionHeader ? 'pb-0.5' : 'pb-6',
             'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
           ]"
         >
           <app-search-input
             v-model="searchInput"
             size="compact"
-            bg-class="bg-bgBase"
-            input-class="!text-s-14 placeholder:text-neutral-500"
+            bg-class="bg-background-default"
+            input-class="!text-s-14 placeholder:text-text-placeholder"
             :placeholder="$t('select_token.search')"
           />
           <p
@@ -65,7 +65,7 @@
         </div>
 
         <div
-          class="flex flex-1 flex-col gap-[2px] overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
+          class="flex flex-1 flex-col gap-0.5 overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
         >
           <template v-for="asset in searchResults" :key="asset.address">
             <p
@@ -101,9 +101,13 @@
                 />
                 <span
                   v-if="isSelected(asset)"
-                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
+                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-background-skeleton"
                 >
-                  <check-circle-icon class="w-6 h-6 flex-none text-black" />
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    class="flex-none text-black"
+                  />
                 </span>
               </div>
 
@@ -120,7 +124,7 @@
                   class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
                 />
                 <p
-                  class="text-s-14 leading-[20px] text-[#575757] truncate max-w-full"
+                  class="text-s-14 leading-[20px] text-text-subtle truncate max-w-full"
                 >
                   {{ asset.name }}
                 </p>
@@ -137,12 +141,15 @@
                   class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
                 >
                   <span
-                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-orange-600"
+                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-text-warning"
                   >
                     {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
                   </span>
-                  <information-circle-icon
-                    class="w-[18px] h-[18px] text-orange-600"
+                  <AppIcon
+                    name="information-circle"
+                    variant="filled"
+                    size="xs"
+                    class="text-text-warning"
                   />
                 </span>
               </app-tooltip>
@@ -155,7 +162,7 @@
                 </p>
                 <p
                   :class="[
-                    side === 'buy' ? changeColor(asset) : 'text-[#575757]',
+                    side === 'buy' ? changeColor(asset) : 'text-text-subtle',
                     'text-s-14 leading-[20px] whitespace-nowrap',
                   ]"
                 >
@@ -167,7 +174,7 @@
 
           <p
             v-if="!searchResults.length"
-            class="text-s-14 leading-[20px] text-info text-center py-6"
+            class="text-s-14 leading-[20px] text-text-subtle text-center py-6"
           >
             {{
               searchInput
@@ -186,9 +193,6 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
-import { CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/solid'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
@@ -213,6 +217,7 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber
   fiatValueFormatted: string
@@ -361,7 +366,9 @@ const firstUnavailableAsset = computed(() =>
 )
 
 const changeColor = (asset: DisplayAsset) =>
-  (asset.priceChangePercentage24h ?? 0) < 0 ? 'text-error' : 'text-success-600'
+  (asset.priceChangePercentage24h ?? 0) < 0
+    ? 'text-text-error'
+    : 'text-text-success'
 
 const isSelected = (asset: DisplayAsset) =>
   selectedToken.value?.address?.toLowerCase() === asset.address?.toLowerCase()

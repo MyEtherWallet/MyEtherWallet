@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full flex items-center justify-between bg-white border-1 border-grey-10 rounded-full px-3 py-2"
+    class="w-full flex items-center justify-between bg-white border-1 border-border-default rounded-full px-3 py-2"
   >
     <div class="relative flex items-center gap-1">
       <p
@@ -12,8 +12,8 @@
         {{ $t(`trade.market_status.${status}`) }}
       </p>
       <template v-if="isLimited">
-        <p class="text-s-12 text-info leading-[18px]">•</p>
-        <p class="text-s-12 text-info leading-[18px]">
+        <p class="text-s-12 text-text-subtle leading-[18px]">•</p>
+        <p class="text-s-12 text-text-subtle leading-[18px]">
           {{ $t('trade.market_status.limited') }}
         </p>
       </template>
@@ -25,7 +25,7 @@
           class="flex items-center justify-center w-5 h-5 rounded-[10px] hoverNoBG"
           @click="infoOpen = !infoOpen"
         >
-          <InformationCircleIcon class="w-4 h-4" />
+          <AppIcon name="information-circle" size="xxs" />
         </button>
         <trade-market-status-popover
           v-if="infoOpen"
@@ -39,24 +39,19 @@
         />
       </span>
     </div>
-    <p class="text-s-12 text-info leading-[18px]">{{ untilText }}</p>
+    <p class="text-s-12 text-text-subtle leading-[18px]">{{ untilText }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { onClickOutside, onKeyStroke } from '@vueuse/core'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import TradeMarketStatusPopover from './TradeMarketStatusPopover.vue'
 import type { TimelineSessionRanges } from './TradeMarketTimeline.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 export type MarketStatusVariant =
-  | 'regular'
-  | 'premarket'
-  | 'postmarket'
-  | 'overnight'
-  | 'weekend'
-  | 'paused'
+  'regular' | 'premarket' | 'postmarket' | 'overnight' | 'weekend' | 'paused'
 
 const props = defineProps<{
   status: MarketStatusVariant
@@ -88,7 +83,7 @@ const isLimited = computed(() =>
 )
 
 const statusColorClass = computed(() => {
-  if (props.status === 'paused') return 'text-info'
-  return isLimited.value ? 'text-orange-600' : 'text-success-600'
+  if (props.status === 'paused') return 'text-text-subtle'
+  return isLimited.value ? 'text-text-warning' : 'text-text-success'
 })
 </script>

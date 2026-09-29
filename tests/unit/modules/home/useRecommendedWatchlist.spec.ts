@@ -11,14 +11,15 @@ vi.mock('@/composables/useFetchMewApi', () => ({
   useFetchMewApi: () => ({
     useMEWFetch: (url: string) => {
       calls.push(String(url))
-      return { get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }) }
+      return {
+        get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }),
+      }
     },
   }),
 }))
 
-const { useRecommendedWatchlist } = await import(
-  '@/modules/home/composables/useRecommendedWatchlist'
-)
+const { useRecommendedWatchlist } =
+  await import('@/modules/home/composables/useRecommendedWatchlist')
 
 describe('useRecommendedWatchlist (MEW-2130)', () => {
   beforeEach(() => {
@@ -51,6 +52,19 @@ describe('useRecommendedWatchlist (MEW-2130)', () => {
       { id: 'STOCK:AAPLon', symbol: 'AAPLon', name: 'Apple Inc.', logoUrl: 'a.png', type: 'stock', watchlistId: 'AAPLon' }, // prettier-ignore
       { id: 'CRYPTO:tether', symbol: 'usdt', name: 'Tether', logoUrl: 't.png', type: 'crypto', watchlistId: 'tether' }, // prettier-ignore
     ])
+  })
+
+  it('sends the step-1 markets as the types param alongside categories', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations(['STOCK:Equities', 'CRYPTO:all'], ['STOCK', 'CRYPTO'])
+    expect(calls[0]).toContain('categories=')
+    expect(calls[0]).toContain(`types=${encodeURIComponent('STOCK,CRYPTO')}`)
+  })
+
+  it('sends types alone when only markets are scoped (no categories)', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations([], ['CRYPTO'])
+    expect(calls[0]).toBe('/v1/web/watchlist/assets?types=CRYPTO')
   })
 
   it('flips isLoading true while fetching then false when done', async () => {

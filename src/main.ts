@@ -190,8 +190,7 @@ pinia.use(
     // (and potentially sensitive material) that must never leave the client.
     stateTransformer: state => {
       const walletStore = state.walletStore as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (walletStore && 'wallet' in walletStore) {
         return {
           ...state,

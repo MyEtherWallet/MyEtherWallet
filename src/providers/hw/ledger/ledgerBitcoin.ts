@@ -1,4 +1,3 @@
-import type Transport from '@ledgerhq/hw-transport'
 import BtcApp from '@ledgerhq/hw-app-btc'
 import { serializeTransactionOutputs } from '@ledgerhq/hw-app-btc/lib-es/serializeTransaction'
 import { NetworkNames } from '@enkryptcom/types'
@@ -49,10 +48,13 @@ function compressPubkey(pub: Buffer): Buffer {
   return Buffer.concat([Buffer.from([prefix]), pub.subarray(1, 33)])
 }
 
+/**
+ * Bitcoin-app wrapper. Like LedgerEthereum it never caches the transport — see
+ * that class for why — and resolves the live one per operation.
+ */
 export class LedgerBitcoin {
   readonly network: NetworkNames
   readonly isSegwit: boolean
-  private transport: Transport | null = null
   private HDNodes: Record<string, HDKey> = {}
 
   constructor(network: NetworkNames) {
@@ -62,13 +64,12 @@ export class LedgerBitcoin {
   }
 
   async init(): Promise<boolean> {
-    this.transport = await getLedgerTransport()
+    await getLedgerTransport()
     return true
   }
 
   async isConnected(): Promise<boolean> {
-    if (!this.transport) await this.init()
-    this.transport = await ensureLedgerApp(this.transport!, this.network)
+    await ensureLedgerApp(await getLedgerTransport(), this.network)
     return true
   }
 
@@ -82,9 +83,8 @@ export class LedgerBitcoin {
     if (!btcSupportedPaths[this.network]) {
       throw new Error('ledger-bitcoin: Invalid network name')
     }
-    if (!this.transport) await this.init()
     const isHardenedLeaf = options.pathType.basePath.split('/').length - 1 === 2
-    const btc = new BtcApp({ transport: this.transport! })
+    const btc = new BtcApp({ transport: await getLedgerTransport() })
     const format = this.isSegwit ? 'bech32' : 'legacy'
 
     if (!isHardenedLeaf) {
@@ -122,8 +122,7 @@ export class LedgerBitcoin {
     if (options.type === 'bip322-simple') {
       throw new Error('ledger-bitcoin: bip322-simple signing is not supported')
     }
-    if (!this.transport) await this.init()
-    const btc = new BtcApp({ transport: this.transport! })
+    const btc = new BtcApp({ transport: await getLedgerTransport() })
     const fullPath = options.pathType.path.replace('{index}', options.pathIndex)
     const result = await btc.signMessage(fullPath, options.message.toString('hex'))
     const v = result.v + 27 + 4
@@ -135,8 +134,7 @@ export class LedgerBitcoin {
   }
 
   async signTransaction(options: BtcSignTransactionRequest): Promise<string> {
-    if (!this.transport) await this.init()
-    const btc = new BtcApp({ transport: this.transport! })
+    const btc = new BtcApp({ transport: await getLedgerTransport() })
     const { rawTxs, psbtTx } = options.transaction
 
     const txOutputs = psbtTx.txOutputs.map(out => {

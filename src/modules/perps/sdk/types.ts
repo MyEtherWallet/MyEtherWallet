@@ -53,7 +53,9 @@ interface MarginInfo {
   positionBracketUsd: string
 }
 
-export type TradingPair = Required<components['schemas']['PerpsTradingPair']> & {
+export type TradingPair = Required<
+  components['schemas']['PerpsTradingPair']
+> & {
   pair: {
     base: string
     quote: string

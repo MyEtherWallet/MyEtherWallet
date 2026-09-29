@@ -15,9 +15,7 @@
         />
         <div class="flex flex-col p-6 gap-10">
           <div class="flex flex-col gap-4">
-            <h1
-              class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black text-center"
-            >
+            <h1 class="text-heading-xl text-black text-center">
               {{
                 $t('rwaRewards.announcement_title', {
                   amount: announcementAmount,
@@ -25,7 +23,7 @@
               }}
             </h1>
             <p
-              class="text-s-16 font-normal leading-[22px] text-[#575757] text-center whitespace-pre-line"
+              class="text-text-base text-text-subtle text-center whitespace-pre-line"
             >
               {{
                 $t('rwaRewards.announcement_desc', {

@@ -3,9 +3,13 @@
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('portfolio.your_balances') }}</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('portfolio.your_balances') }}
+      </h1>
       <!--Filter Lists-->
-      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+      <div
+        class="hidden lg:flex lg:items-center bg-background-default rounded-full"
+      >
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="allTokensFilterOptions"
@@ -25,7 +29,9 @@
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+          <div
+            class="bg-background-default-hover rounded-full p-1 w-full xs:w-auto"
+          >
             <button
               class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
               @click="toggleSelect"
@@ -34,7 +40,12 @@
                 <span class="text-s-16 font-medium">{{
                   selectedCryptoFilter.label
                 }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="ml-1"
+                />
               </div>
             </button>
           </div>
@@ -58,7 +69,6 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -69,6 +79,7 @@ import {
 } from './helpers'
 import { useChainsStore } from '@/stores/chainsStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const chainStore = useChainsStore()
 const walletStore = useWalletStore()

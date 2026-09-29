@@ -19,7 +19,7 @@
         >
           <div
             v-if="hoveredIndex === index"
-            class="absolute -inset-x-0.5 top-0 h-3 rounded-full bg-grey-10"
+            class="absolute -inset-x-0.5 top-0 h-3 rounded-full bg-background-default-hover"
           />
           <div
             :class="[
@@ -30,7 +30,7 @@
           />
           <div
             v-if="hoveredIndex === index"
-            class="absolute bottom-[14px] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
+            class="absolute bottom-3.5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
           >
             <div class="bg-white rounded-16 p-4 whitespace-nowrap">
               <p
@@ -60,7 +60,7 @@
       </div>
       <div class="relative w-full h-[18px]">
         <p
-          class="absolute top-0 -translate-x-1/2 text-s-12 text-grey-subtle leading-[18px] whitespace-nowrap"
+          class="absolute top-0 -translate-x-1/2 text-s-12 text-text-placeholder leading-[18px] whitespace-nowrap"
           :style="{ left: `clamp(30px, ${markerPct}%, calc(100% - 30px))` }"
         >
           {{ timeLabel }}
@@ -91,10 +91,10 @@ const { t } = useI18n()
 
 const hoveredIndex = ref<number | null>(null)
 
-const ORANGE = 'bg-orange-600'
-const GREEN = 'bg-success-600'
-const ORANGE_TEXT = 'text-orange-600'
-const GREEN_TEXT = 'text-success-600'
+const ORANGE = 'bg-background-warning'
+const GREEN = 'bg-background-success'
+const ORANGE_TEXT = 'text-text-warning'
+const GREEN_TEXT = 'text-text-success'
 
 const segments = computed(() => {
   const session = (key: SessionKey) => ({

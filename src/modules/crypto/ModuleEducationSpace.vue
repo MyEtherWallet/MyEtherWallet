@@ -1,6 +1,6 @@
 <template>
   <section
-    class="rounded-2xl text-center shadow-sm bg-gradient-to-t from-blue-3 to-blue-2 flex items-center cursor-pointer relative"
+    class="rounded-2xl text-center shadow-sm bg-gradient-to-t from-background-decorative-blue to-background-decorative-blue-strong flex items-center cursor-pointer relative"
     :class="{
       'h-[190px] w-full': full,
       'h-[145px]': !full,
@@ -15,7 +15,9 @@
     />
     <div class="text-left pl-[35%] w-full">
       <h3 class="text-white text-s-24">{{ $t('crypto.mewtopia') }}</h3>
-      <p class="text-white text-s-12" v-if="full">{{ $t('crypto.mewtopia_subtitle') }}</p>
+      <p class="text-white text-s-12" v-if="full">
+        {{ $t('crypto.mewtopia_subtitle') }}
+      </p>
     </div>
   </section>
 </template>
