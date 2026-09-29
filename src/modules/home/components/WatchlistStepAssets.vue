@@ -2,13 +2,6 @@
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useVirtualList } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-import {
-  PlusIcon,
-  CheckIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/20/solid'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -20,6 +13,7 @@ import type { RecommendedAsset } from './watchlistOnboarding'
 import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
 import { WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 // Stepped-conveyor loader: 7 asset logos sit in fixed slots (biggest in the
@@ -187,7 +181,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         <p class="text-s-24 font-bold leading-[26px] text-black">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingTitle') }}
         </p>
-        <p class="text-s-16 text-[#575757]">
+        <p class="text-s-16 text-text-subtle">
           {{ t('homePage.hero.watchlist.onboarding.assets.loadingSubtitle') }}
         </p>
       </div>
@@ -212,7 +206,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         v-model="query"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
         bg-class="bg-white"
-        class="mt-5 shrink-0 rounded-full border border-[#e6e6e6]"
+        class="mt-5 shrink-0 rounded-full border border-border-default"
       />
 
       <!-- Token list: caps at a fraction of the viewport and scrolls inside that
@@ -243,10 +237,14 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             <div
               v-for="n in INITIAL_COUNT"
               :key="n"
-              class="flex h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
+              class="flex h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-transparent bg-white"
             >
-              <div class="size-10 animate-pulse rounded-full bg-[#f0f0f0]" />
-              <div class="h-[22px] w-16 animate-pulse rounded bg-[#f0f0f0]" />
+              <div
+                class="size-10 animate-pulse rounded-full bg-background-skeleton"
+              />
+              <div
+                class="h-[22px] w-16 animate-pulse rounded bg-background-skeleton"
+              />
             </div>
           </div>
 
@@ -256,11 +254,11 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           <div
             v-else-if="!visibleAssets.length"
             data-test="assets-empty"
-            class="flex min-h-[160px] flex-col items-center justify-center py-6 text-center"
+            class="flex min-h-40 flex-col items-center justify-center py-6 text-center"
           >
-            <ExclamationCircleIcon class="size-6 text-[#575757]" />
+            <AppIcon name="exclamation-circle" class="text-text-subtle" />
             <p
-              class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-[#575757]"
+              class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
             >
               {{
                 query.trim()
@@ -272,7 +270,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               v-if="query.trim()"
               type="button"
               data-test="assets-clear-search"
-              class="mt-6 rounded-full bg-[#f5f5f5] px-6 py-3 text-s-16 font-semibold text-primary"
+              class="mt-6 rounded-full bg-background-default px-6 py-3 text-s-16 font-semibold text-text-brand"
               @click="query = ''"
             >
               {{ t('homePage.hero.watchlist.onboarding.assets.clearSearch') }}
@@ -295,7 +293,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                 :selected="selected.includes(asset.id)"
                 :disabled="isDisabled(asset)"
                 bg="bg-white"
-                class="flex h-[96px] flex-col items-center justify-center gap-2"
+                class="flex h-24 flex-col items-center justify-center gap-2"
                 @toggle="toggle(asset.id)"
               >
                 <span class="relative">
@@ -312,16 +310,18 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                     class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
                     :class="
                       selected.includes(asset.id)
-                        ? 'bg-success text-white'
-                        : 'bg-[#e6e6e6] text-black'
+                        ? 'bg-background-success text-white'
+                        : 'bg-background-default-hover text-black'
                     "
                     aria-hidden="true"
                   >
-                    <CheckIcon
+                    <AppIcon
                       v-if="selected.includes(asset.id)"
-                      class="size-3.5"
+                      name="check"
+                      variant="filled"
+                      size="xxs"
                     />
-                    <PlusIcon v-else class="size-3.5" />
+                    <AppIcon v-else name="plus" variant="filled" size="xxs" />
                   </span>
                 </span>
                 <AppTokenSymbol
@@ -338,7 +338,10 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
       <!-- Show more divider (only while there is a hidden remainder). Kept
            outside the scroll area so its spacing to the footer is exact. -->
       <div v-if="hasMore" class="mt-6 flex shrink-0 items-center gap-5">
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <span
+          class="h-px flex-1 bg-background-default-hover"
+          aria-hidden="true"
+        />
         <button
           type="button"
           data-test="assets-show-more"
@@ -346,9 +349,12 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           @click="showAll = true"
         >
           {{ t('search.show_more') }}
-          <ChevronDownIcon class="size-4" />
+          <AppIcon name="chevron-down" variant="filled" size="xxs" />
         </button>
-        <span class="h-px flex-1 bg-[#e6e6e6]" aria-hidden="true" />
+        <span
+          class="h-px flex-1 bg-background-default-hover"
+          aria-hidden="true"
+        />
       </div>
 
       <div class="mt-6 flex shrink-0 items-center justify-between gap-4">
@@ -359,7 +365,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             v-for="a in chipAssets"
             :key="a.id"
             data-test="selected-chip"
-            class="flex h-8 min-w-0 items-center gap-1 rounded-full bg-[#f5f5f5] py-1 pl-1 pr-3"
+            class="flex h-8 min-w-0 items-center gap-1 rounded-full bg-background-default py-1 pl-1 pr-3"
           >
             <AppTokenLogo
               :url="a.logoUrl"
@@ -370,7 +376,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               no-shadow
             />
             <span
-              class="max-w-[80px] truncate text-s-12 font-semibold text-black"
+              class="max-w-20 truncate text-s-12 font-semibold text-black"
             >
               {{ a.symbol }}
             </span>
@@ -383,7 +389,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           >
             <span
               data-test="selected-chip-more"
-              class="flex h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-[#f5f5f5] px-3 text-s-12 font-semibold text-black"
+              class="flex h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-background-default px-3 text-s-12 font-semibold text-black"
             >
               {{
                 t('homePage.hero.watchlist.onboarding.assets.moreCount', {
@@ -411,7 +417,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         >
           <span class="flex items-center gap-2">
             {{ t('homePage.hero.watchlist.onboarding.continue') }}
-            <ChevronRightIcon class="size-5" />
+            <AppIcon name="chevron-right" variant="filled" size="s" />
           </span>
         </AppBaseButton>
       </div>

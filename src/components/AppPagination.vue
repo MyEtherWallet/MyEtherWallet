@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
-const props = defineProps<{ modelValue: number; total: number; perPage: number }>()
+const props = defineProps<{
+  modelValue: number
+  total: number
+  perPage: number
+}>()
 const emit = defineEmits<{ 'update:modelValue': [page: number] }>()
 
 const pageCount = computed(() =>
@@ -18,7 +22,7 @@ const go = (p: number) => {
 
 <template>
   <div data-test="pagination" class="w-full">
-    <div class="border-t border-grey-10" />
+    <div class="border-t border-border-default" />
     <div class="mt-6 flex items-center gap-3">
       <p class="flex-1 text-s-16 text-black">
         <!-- Consumers pass a localized label; falls back to "page / pages". -->
@@ -30,19 +34,19 @@ const go = (p: number) => {
         data-test="prev"
         type="button"
         :disabled="isFirst"
-        class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue - 1)"
       >
-        <ChevronLeftIcon class="size-6" />
+        <AppIcon name="chevron-left" variant="filled" />
       </button>
       <button
         data-test="next"
         type="button"
         :disabled="isLast"
-        class="flex size-10 items-center justify-center rounded-full bg-[#e6e6e6] text-black transition hover:bg-[#dcdcdc] disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue + 1)"
       >
-        <ChevronRightIcon class="size-6" />
+        <AppIcon name="chevron-right" variant="filled" />
       </button>
     </div>
   </div>

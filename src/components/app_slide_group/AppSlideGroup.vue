@@ -3,13 +3,13 @@
     <div
       class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
       :class="{
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1]  before:pointer-events-none':
           blurFront && !edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-background-default after:to-transparent  after:pointer-events-none  after:z-[1]':
           blurEnd && !edgeNav,
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1] before:pointer-events-none':
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1] before:pointer-events-none':
           blurFront && edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-appBackground after:to-transparent after:pointer-events-none after:z-[1]':
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-background-default after:to-transparent after:pointer-events-none after:z-[1]':
           blurEnd && edgeNav,
         'order-2': paginateLocation === 'top',
       }"
@@ -45,7 +45,7 @@
         class="absolute left-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
         @click="scrollToPreviousGroup"
       >
-        <ChevronLeftIcon class="size-5" />
+        <AppIcon name="chevron-left" variant="filled" size="s" />
       </button>
       <button
         v-if="edgeNav && blurEnd"
@@ -54,7 +54,7 @@
         class="absolute right-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
         @click="scrollToNextGroup"
       >
-        <ChevronRightIcon class="size-5" />
+        <AppIcon name="chevron-right" variant="filled" size="s" />
       </button>
     </div>
     <div
@@ -70,7 +70,7 @@
         class="ml-auto"
         @click="scrollToPreviousGroup"
       >
-        <ChevronLeftIcon class="w-4 h-4" />
+        <AppIcon name="chevron-left" variant="filled" size="xxs" />
       </app-btn-icon>
       <app-btn-icon
         v-if="!allIsVisible && !edgeNav"
@@ -78,7 +78,7 @@
         :label="$t('common.next_page')"
         @click="scrollToNextGroup"
       >
-        <ChevronRightIcon class="w-4 h-4" />
+        <AppIcon name="chevron-right" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
   </div>
@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import AppSlideItem from './AppSlideItem.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   computed,
   ref,
@@ -143,7 +143,10 @@ const updateEdges = () => {
   atEnd.value = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
 }
 watch(scrollX, updateEdges)
-watch(() => props.totalItems, () => nextTick(updateEdges))
+watch(
+  () => props.totalItems,
+  () => nextTick(updateEdges),
+)
 useResizeObserver(scrollContainer, updateEdges)
 onMounted(() => nextTick(updateEdges))
 

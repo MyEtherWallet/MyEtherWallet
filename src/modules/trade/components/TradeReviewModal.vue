@@ -22,7 +22,7 @@
               {{ $t('trade.review_modal.trade_provider') }}
             </p>
             <div
-              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-bgBase"
+              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-background-default"
             >
               <img :src="oneInchLogo" alt="" class="w-6 h-6 rounded-full" />
               <span
@@ -39,7 +39,9 @@
             >
               {{ $t('trade.review_modal.estimated_summary') }}
             </p>
-            <div class="w-full flex flex-col gap-4 p-4 rounded-16 bg-bgBase">
+            <div
+              class="w-full flex flex-col gap-4 p-4 rounded-16 bg-background-default"
+            >
               <div class="flex items-center gap-3">
                 <p
                   class="flex-1 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
@@ -62,12 +64,14 @@
                       theme="dark"
                       position="top"
                     >
-                      <information-circle-icon
-                        class="w-[18px] h-[18px] text-black cursor-pointer"
+                      <AppIcon
+                        name="information-circle"
+                        size="xs"
+                        class="text-black cursor-pointer"
                       />
                     </app-tooltip>
                   </div>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     ≈ {{ currencySymbol }}{{ fromAmountFiat }}
                   </p>
                 </div>
@@ -81,7 +85,7 @@
                 />
               </div>
 
-              <div class="h-px w-full bg-grey-divider"></div>
+              <div class="h-px w-full bg-border-default"></div>
 
               <div class="flex items-center gap-3">
                 <div class="flex-1 flex flex-col">
@@ -90,7 +94,7 @@
                   >
                     {{ $t('trade.review_modal.you_receive') }}
                   </p>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     {{ $t('trade.review_modal.value_estimated') }}
                   </p>
                 </div>
@@ -105,7 +109,7 @@
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
                   </p>
-                  <p class="text-s-14 leading-[20px] text-info">
+                  <p class="text-s-14 leading-[20px] text-text-subtle">
                     ≈ {{ currencySymbol }}{{ toAmountFiat }}
                   </p>
                 </div>
@@ -122,9 +126,11 @@
               <expand-transition>
                 <div v-if="isBreakdownOpen">
                   <div class="flex flex-col gap-4">
-                    <div class="h-px w-full bg-grey-divider"></div>
+                    <div class="h-px w-full bg-border-default"></div>
                     <div class="flex items-center gap-2">
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
+                      <p
+                        class="flex-1 text-s-16 leading-[22px] text-text-subtle"
+                      >
                         {{ $t('trade.review_modal.min_receive') }}
                       </p>
                       <p
@@ -146,7 +152,9 @@
                       :key="row.label"
                       class="flex items-center gap-2"
                     >
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
+                      <p
+                        class="flex-1 text-s-16 leading-[22px] text-text-subtle"
+                      >
                         {{ row.label }}
                       </p>
                       <p
@@ -170,8 +178,11 @@
                     ? $t('trade.review_modal.close_breakdown')
                     : $t('trade.review_modal.expand_breakdown')
                 }}
-                <chevron-down-icon
-                  class="w-4 h-4 transition-transform"
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="transition-transform"
                   :class="{ 'rotate-180': isBreakdownOpen }"
                 />
               </span>
@@ -200,7 +211,7 @@
             v-if="expiresAt"
             keypath="trade.review_modal.quote_refreshes_in"
             tag="p"
-            class="text-s-14 leading-[20px] text-info"
+            class="text-s-14 leading-[20px] text-text-subtle"
           >
             <template #time>
               <span
@@ -219,8 +230,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import AppDialog from '@/components/AppDialog.vue'
@@ -242,6 +251,7 @@ import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/o
 import { useTradeBreakdown } from '@/modules/trade/composables/useTradeBreakdown'
 import { analytics, TradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })

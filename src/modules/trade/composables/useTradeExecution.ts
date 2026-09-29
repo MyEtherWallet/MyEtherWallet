@@ -29,11 +29,7 @@ import type { TradeForm } from './useTradeForm'
 const isDevMode = Configs.IS_DEV_MODE
 
 export type TradeFlowStep =
-  | 'idle'
-  | 'approvalIntro'
-  | 'approving'
-  | 'review'
-  | 'processing'
+  'idle' | 'approvalIntro' | 'approving' | 'review' | 'processing'
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (error instanceof Error && error.message) return error.message

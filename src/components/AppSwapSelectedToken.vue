@@ -8,8 +8,8 @@
     <button
       :class="[
         isLoading || !selectedToken
-          ? 'bg-grey-10 animate-pulse min-w-[120px]'
-          : 'bg-white hoverNoBG shadow-button border-grey-10 border',
+          ? 'bg-background-default-hover animate-pulse min-w-[120px]'
+          : 'bg-white hoverNoBG shadow-button border-border-default border',
         'rounded-full px-1 min-h-9 transition-colors',
       ]"
       type="button"
@@ -44,7 +44,12 @@
           "
         />
         <div class="ml-1 min-w-4 h-4">
-          <chevron-down-icon v-if="!isLoading" class="text-info" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            v-if="!isLoading"
+            class="text-text-subtle"
+          />
         </div>
       </div>
     </button>
@@ -64,7 +69,7 @@
       >
         <div class="sticky top-0 bg-white z-20 pt-2">
           <div
-            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -80,11 +85,20 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortLabel }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4 shrink-0"
+                    class="shrink-0"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="shrink-0"
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -95,13 +109,17 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
+                  <hr
+                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
+                  />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
                     :class="[
-                      option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
+                      option.value === activeSortValue
+                        ? 'bg-background-default'
+                        : '',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -111,18 +129,27 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
+                        class="text-text-brand"
                       />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        v-else
+                        class="text-text-brand"
+                      />
                     </div>
                   </button>
                 </div>
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-10 w-full mb-2"></div>
+          <div class="h-px bg-background-default-hover w-full mb-2"></div>
         </div>
 
         <!-- Stablecoins & Recently searched, pinned to the top of the results -->
@@ -131,7 +158,7 @@
           class="mb-3"
         >
           <div v-if="recentlySearchedResults.length" class="mb-3">
-            <p class="text-s-12 font-medium text-info mb-1.5 px-2">
+            <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
               {{ $t('select_token.recently_viewed') }}
             </p>
             <div class="flex items-center gap-1.5 flex-wrap">
@@ -139,7 +166,7 @@
                 v-for="token in recentlySearchedResults"
                 :key="`recent-${token.address}`"
                 type="button"
-                class="flex items-center hoverNoBG bg-grey-5 rounded-full py-1 pl-1 pr-3 transition-colors"
+                class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
                 @click="setSelectedToken(token)"
               >
                 <app-token-logo
@@ -168,7 +195,7 @@
           </div>
 
           <div v-if="stablecoinResults.length">
-            <p class="text-s-12 font-medium text-info mb-1.5 px-2">
+            <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
               {{ $t('crypto.stablecoins') }}
             </p>
             <div class="flex items-center gap-1.5 flex-wrap">
@@ -176,7 +203,7 @@
                 v-for="token in stablecoinResults"
                 :key="`stablecoin-${token.address}`"
                 type="button"
-                class="flex items-center hoverNoBG bg-grey-5 rounded-full py-1 pl-1 pr-3 transition-colors"
+                class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
                 @click="setSelectedToken(token)"
               >
                 <app-token-logo
@@ -204,7 +231,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-grey-10 w-full mt-3"></div>
+          <div class="h-px bg-background-default-hover w-full mt-3"></div>
         </div>
 
         <div v-if="enabledResults.length" class="flex flex-col gap-1">
@@ -214,7 +241,7 @@
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
               token.address === selectedToken?.address
-                ? '!bg-mewBg'
+                ? '!bg-background-brand-subtle'
                 : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedToken(token)"
@@ -242,11 +269,14 @@
                     "
                   />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2 class="text-s-12 text-info whitespace-nowrap">
+                    <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
                       {{ truncate(token.name, 20) }}
                     </h2>
                   </app-tooltip>
-                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
+                  <h2
+                    v-else
+                    class="text-s-12 text-text-subtle whitespace-nowrap"
+                  >
                     {{ token.name }}
                   </h2>
                 </div>
@@ -257,7 +287,7 @@
                     {{ currencySymbol }}
                     {{ formatUsdBalance(token.usd_balance) }}
                   </p>
-                  <p class="text-info text-s-12">
+                  <p class="text-text-subtle text-s-12">
                     {{ getBalance(token?.balance || '0', token.decimals) }}
                     {{ truncate(token.symbol, 7) }}
                   </p>
@@ -273,7 +303,7 @@
                       token.balance &&
                       token.usd_balance > 0
                     "
-                    class="text-info text-s-12"
+                    class="text-text-subtle text-s-12"
                   >
                     {{ getBalance(token?.balance || '0', token.decimals) }}
                     {{ truncate(token.symbol, 7) }}
@@ -284,7 +314,9 @@
           </button>
         </div>
         <div v-else-if="!disabledResults.length">
-          <div class="flex justify-center items-center h-[400px] text-grey-30">
+          <div
+            class="flex justify-center items-center h-[400px] text-text-placeholder"
+          >
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
             </p>
@@ -296,7 +328,7 @@
 
         <!-- Disabled group (e.g. "Trading paused for this session") -->
         <div v-if="disabledResults.length" class="mt-5">
-          <p class="text-s-12 font-medium text-info mb-2 px-2">
+          <p class="text-s-12 font-medium text-text-subtle mb-2 px-2">
             {{ disabledGroupLabel }}
           </p>
           <div class="flex flex-col gap-1">
@@ -327,7 +359,7 @@
                         : undefined
                     "
                   />
-                  <h2 class="text-s-12 text-info whitespace-nowrap">
+                  <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
                     {{ truncate(token.name, 20) }}
                   </h2>
                 </div>
@@ -345,7 +377,7 @@
         <div>
           <div
             v-show="tokens.length > paginatedTokens.length && !searchInput"
-            class="h-[44px] w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-grey-5 rounded-full mt-1 mb-5"
+            class="h-11 w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
             :class="{
               'cursor-pointer': !loadingMoreItems,
             }"
@@ -354,7 +386,7 @@
             <svg
               v-if="loadingMoreItems"
               aria-hidden="true"
-              class="w-6 h-6 text-primary animate-spin fill-white mx-auto"
+              class="w-6 h-6 text-text-brand animate-spin fill-white mx-auto"
               viewBox="0 0 100 101"
               width="24"
               height="24"
@@ -370,7 +402,10 @@
                 fill="currentFill"
               />
             </svg>
-            <p v-else class="text-s-15 font-medium text-grey-70 cursor-pointer">
+            <p
+              v-else
+              class="text-s-15 font-medium text-text-subtle cursor-pointer"
+            >
               {{ $t('common.load_more') }}
             </p>
           </div>
@@ -384,11 +419,6 @@
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Ref, ref, computed, onMounted, watch } from 'vue'
-import {
-  ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -413,6 +443,7 @@ import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,

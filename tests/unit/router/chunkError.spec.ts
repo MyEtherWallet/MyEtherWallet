@@ -38,9 +38,7 @@ describe('isChunkLoadError', () => {
       ),
     ).toBe(true)
     expect(
-      isChunkLoadError(
-        new Error('error loading dynamically imported module'),
-      ),
+      isChunkLoadError(new Error('error loading dynamically imported module')),
     ).toBe(true)
   })
 
@@ -56,8 +54,12 @@ describe('isChunkLoadError', () => {
   })
 
   it('exposes the shared message list used by the Sentry ignoreErrors filter', () => {
-    expect(CHUNK_LOAD_ERROR_MESSAGES).toContain('Importing a module script failed')
-    expect(CHUNK_LOAD_ERROR_MESSAGES).toContain('is not a valid JavaScript MIME type')
+    expect(CHUNK_LOAD_ERROR_MESSAGES).toContain(
+      'Importing a module script failed',
+    )
+    expect(CHUNK_LOAD_ERROR_MESSAGES).toContain(
+      'is not a valid JavaScript MIME type',
+    )
     expect(CHUNK_LOAD_ERROR_MESSAGES).toContain('Unable to preload CSS')
   })
 })

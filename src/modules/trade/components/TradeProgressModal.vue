@@ -22,8 +22,11 @@
               no-shadow
             />
           </div>
-          <arrows-right-left-icon
-            class="absolute left-[48px] top-[10px] w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
+          <AppIcon
+            name="arrows-right-left"
+            variant="filled"
+            size="s"
+            class="absolute left-12 top-2.5 transition-transform duration-300 motion-reduce:transition-none"
             :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
           <div
@@ -42,12 +45,24 @@
           <span
             class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
             :class="[
-              isFailed ? 'bg-error' : 'bg-success-600',
+              isFailed ? 'bg-background-error' : 'bg-background-success',
               isSettled ? 'scale-100' : 'scale-0',
             ]"
           >
-            <x-mark-icon v-if="isFailed" class="w-3.5 h-3.5 text-white" />
-            <check-icon v-else class="w-3.5 h-3.5 text-white" />
+            <AppIcon
+              name="x-mark"
+              variant="filled"
+              size="xxs"
+              v-if="isFailed"
+              class="text-white"
+            />
+            <AppIcon
+              name="check"
+              variant="filled"
+              size="xxs"
+              v-else
+              class="text-white"
+            />
           </span>
         </div>
 
@@ -55,14 +70,14 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ title }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-info">
+          <p class="text-s-16 leading-[22px] text-text-subtle">
             {{ subtitle }}
           </p>
         </div>
 
         <app-base-button
           theme="neutral"
-          class="!bg-bgBase !text-primary !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
+          class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
           @click="model = false"
         >
           {{ $t('trade.progress_modal.close_screen') }}
@@ -70,7 +85,7 @@
 
         <p
           v-if="status === 'pending'"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-info whitespace-pre-line"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
         >
           {{ $t('trade.progress_modal.background_note') }}
         </p>
@@ -87,7 +102,11 @@
             class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
           >
             {{ $t('view_in_block_explorer') }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </a>
         </transition>
       </div>
@@ -99,12 +118,6 @@
 import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import {
-  ArrowsRightLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  CheckIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -115,6 +128,7 @@ import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const model = defineModel<boolean>('isOpen', { default: false })
 

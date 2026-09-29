@@ -7,17 +7,15 @@
       width="w-8"
       @click="onPrev"
     >
-      <ChevronLeftIcon class="w-4 h-4" />
+      <AppIcon name="chevron-left" size="xxs" variant="filled" />
     </app-btn-icon>
-    <span class="px-2 text-s-12 text-info font-medium">
-      <template v-if="totalPages !== undefined"
-        >{{
-          t('perps.pagination.page-of', {
-            current: currentPage + 1,
-            total: totalPages,
-          })
-        }}</template
-      >
+    <span class="px-2 text-s-12 text-text-subtle font-medium">
+      <template v-if="totalPages !== undefined">{{
+        t('perps.pagination.page-of', {
+          current: currentPage + 1,
+          total: totalPages,
+        })
+      }}</template>
       <template v-else>{{
         t('perps.pagination.page', { current: currentPage + 1 })
       }}</template>
@@ -29,7 +27,7 @@
       width="w-8"
       @click="onNext"
     >
-      <ChevronRightIcon class="w-4 h-4" />
+      <AppIcon name="chevron-right" size="xxs" variant="filled" />
     </app-btn-icon>
   </div>
 </template>
@@ -38,7 +36,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 
@@ -71,7 +69,8 @@ const canPrev = computed(() =>
 const canNext = computed(() =>
   props.hasNext !== undefined
     ? props.hasNext
-    : props.totalPages !== undefined && props.currentPage + 1 < props.totalPages,
+    : props.totalPages !== undefined &&
+      props.currentPage + 1 < props.totalPages,
 )
 
 function scrollToTarget() {
