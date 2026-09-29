@@ -131,6 +131,26 @@
         </div>
       </div>
     </div>
+
+    <!-- Native order whose deposit landed but 1inch never accepted the order -->
+    <div v-if="order.status === 'unsubmitted'" class="mb-4">
+      <p class="text-s-12 text-error">
+        {{ $t('notifications_module.unsubmitted_note') }}
+      </p>
+      <app-base-button
+        size="small"
+        class="mt-2"
+        :disabled="recovering"
+        :is-loading="recovering"
+        @click="$emit('recover', order)"
+      >
+        {{
+          recovering
+            ? $t('notifications_module.recovering_funds')
+            : $t('notifications_module.recover_funds')
+        }}
+      </app-base-button>
+    </div>
     <div class="flex justify-space-between items-center">
       <app-btn-text
         @click="showMoreDetails = !showMoreDetails"
@@ -198,6 +218,46 @@
           </span>
         </div>
 
+        <!-- Native escrow deposit -->
+        <div
+          v-if="order.depositTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.deposit_tx') }}</span
+          >
+          <a
+            :href="depositExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.depositTxHash) }}
+            <arrow-up-right-icon class="w-2 h-2" />
+          </a>
+        </div>
+
+        <!-- Deposit reclaimed from an unsubmitted order -->
+        <div
+          v-if="order.recoveryTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.recovery_tx') }}</span
+          >
+          <a
+            :href="recoveryExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.recoveryTxHash) }}
+            <arrow-up-right-icon class="w-2 h-2" />
+          </a>
+        </div>
+
         <!-- Filled Transaction -->
         <div
           v-if="order.status === 'filled' && order.fills.length > 0"
@@ -238,6 +298,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
@@ -247,11 +308,15 @@ const props = defineProps<{
   order: SavedTradeOrder
   remainingTime: number
   seen?: boolean
+  /** A recovery transaction for this order is in flight. */
+  recovering?: boolean
 }>()
 
 // Emits
 defineEmits<{
   remove: [hash: string]
+  /** Reclaim the escrow deposit of an `unsubmitted` native order. */
+  recover: [order: SavedTradeOrder]
 }>()
 
 const { formatFiat } = useCurrency()
@@ -277,6 +342,7 @@ const statusBadgeClass = computed(() => {
       return 'bg-primary'
     case 'cancelled':
     case 'expired':
+    case 'unsubmitted':
       return 'bg-error'
     default:
       return 'bg-grey-30'
@@ -287,6 +353,14 @@ const explorerLink = computed(() => {
   if (props.order.fills.length === 0) return ''
   return getTradeExplorerLink(props.order.chainId, props.order.fills[0].txHash)
 })
+
+const depositExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.depositTxHash ?? ''),
+)
+
+const recoveryExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.recoveryTxHash ?? ''),
+)
 
 // Format countdown time
 const formatCountdown = (seconds: number): string => {

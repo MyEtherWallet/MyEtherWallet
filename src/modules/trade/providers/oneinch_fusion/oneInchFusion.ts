@@ -2,10 +2,17 @@ import {
   Address,
   FusionSDK,
   NativeOrdersFactory,
+  NativeOrdersImpl,
   NetworkEnum,
   type OrderParams,
   type QuoteParams,
 } from '@1inch/fusion-sdk'
+import {
+  NativeOrderUnsubmittedError,
+  type NativeOrderRecoveryParams,
+  type SubmitOrderHooks,
+  type SubmitOrderResult,
+} from './nativeOrderError'
 
 import type {
   OrderStatusOutputType,
@@ -77,6 +84,22 @@ export const fusionErrorMessage = (e: unknown): string | null => {
   if (localized) return i18n.global.t(localized)
   return data?.description || null
 }
+
+export {
+  NativeOrderUnsubmittedError,
+  type NativeOrderRecoveryParams,
+  type SubmitOrderHooks,
+  type SubmitOrderResult,
+}
+
+const isRetryableRelayerError = (e: unknown): boolean => {
+  if (isAxiosNetworkError(e)) return true
+  const status = (e as AxiosError)?.response?.status
+  return typeof status === 'number' && status >= 500
+}
+
+const sleep = (ms: number) =>
+  new Promise<void>(resolve => setTimeout(resolve, ms))
 
 const HARDCODED_ETH_TOKENS: Array<{ address: string; cgId: string }> = []
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
@@ -247,12 +270,21 @@ class OneInchFusion {
     }
   }
 
-  async submitOrder(config: QuoteInputType) {
+  /**
+   * Delays between relayer submission attempts for a native order whose
+   * deposit is already in flight. Exposed so tests can zero them.
+   */
+  static RELAYER_RETRY_DELAYS_MS: number[] = [1000, 2000]
+
+  async submitOrder(
+    config: QuoteInputType,
+    hooks: SubmitOrderHooks = {},
+  ): Promise<SubmitOrderResult> {
     try {
       const preparedOrder = await this.sdk.createOrder(
         getFusionParams(config) as OrderParams,
       )
-      if (config.fromTokenAddress !== NATIVE_ADDRESS) {
+      if (config.fromTokenAddress.toLowerCase() !== NATIVE_ADDRESS) {
         const info = await this.sdk.submitOrder(
           preparedOrder.order,
           preparedOrder.quoteId,
@@ -260,58 +292,62 @@ class OneInchFusion {
         return {
           hash: info.orderHash,
         }
-      } else {
-        const info = await this.sdk.submitNativeOrder(
+      }
+
+      // Native (ETH/BNB) order. The order's `maker` is a per-order proxy that
+      // must be funded through the factory's `create` call; 1inch keeps the
+      // order "unpublished" until that transaction mines. The deposit is
+      // therefore broadcast FIRST: if the user rejects the wallet prompt, or the
+      // send fails, nothing has reached the relayer and there is no phantom
+      // order. Only once the deposit is in flight is the order handed to the
+      // relayer. The native signature is deterministic (no wallet prompt), so
+      // this ordering costs the user nothing.
+      const maker = new Address(config.fromAddress)
+      const nativeOrder = preparedOrder.order.build()
+      // Prefer the factory the quoter bound this order to; the SDK constant is
+      // only a fallback for an older quoter response.
+      const factory = preparedOrder.nativeOrderFactory
+        ? new NativeOrdersFactory(preparedOrder.nativeOrderFactory)
+        : NativeOrdersFactory.default(this.networkEnum())
+      const depositCall = factory.create(maker, nativeOrder)
+      const depositTxHash = await this.signAndSend(
+        config.fromAddress,
+        depositCall,
+      )
+      hooks.onDepositSent?.(depositTxHash)
+
+      let orderHash: string
+      try {
+        const info = await this.submitNativeOrderWithRetry(
           preparedOrder.order,
-          new Address(config.fromAddress),
+          maker,
           preparedOrder.quoteId,
         )
-        const factory = NativeOrdersFactory.default(
-          this.chain.id === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
-        )
-        const call = factory.create(
-          new Address(config.fromAddress),
-          preparedOrder.order.build(),
-        )
-        const tx = await prepareTransactionRequest(this.publicClient, {
-          data: call.data as `0x${string}`,
-          to: call.to.toString() as `0x${string}`,
-          account: config.fromAddress as `0x${string}`,
-          value: call.value,
-          chain: this.chain,
+        orderHash = info.orderHash
+      } catch (relayerError) {
+        // The ETH is on its way to the proxy but 1inch has no order for it. The
+        // caller must keep these details so the user can reclaim the funds.
+        throw new NativeOrderUnsubmittedError({
+          orderHash: preparedOrder.hash,
+          depositTxHash,
+          proxyAddress: nativeOrder.maker,
+          nativeOrder,
+          cause: relayerError,
         })
-        const serialized = serializeTransaction(
-          tx as Parameters<typeof serializeTransaction>[0],
-        )
-        let hash = ''
-        if (isSignableWallet(this.wallet)) {
-          if (!this.wallet.SignTransaction) {
-            throw new Error('The connected wallet cannot sign transactions')
-          }
-          const signedTx = await this.wallet.SignTransaction(serialized)
-          hash = await this.publicClient.sendRawTransaction({
-            serializedTransaction: signedTx.signed,
-          })
-        } else {
-          if (!this.wallet.SendTransaction) {
-            throw new Error('The connected wallet cannot send transactions')
-          }
-          hash = await this.wallet.SendTransaction(serialized)
-        }
-        return this.publicClient
-          .waitForTransactionReceipt({ hash: hash as `0x${string}` })
-          .then(res => {
-            if (res.status === 'success')
-              return {
-                hash: info.orderHash,
-              }
-            else
-              throw new Error(
-                i18n.global.t('trade.error.native-transaction-failed'),
-              )
-          })
       }
+
+      const receipt = await this.publicClient.waitForTransactionReceipt({
+        hash: depositTxHash as `0x${string}`,
+      })
+      if (receipt.status !== 'success') {
+        // The order is on the relayer but its proxy was never funded; it cannot
+        // be filled and will expire on its own, so nothing else to clean up.
+        throw new Error(i18n.global.t('trade.error.native-transaction-failed'))
+      }
+      return { hash: orderHash, depositTxHash }
     } catch (e: unknown) {
+      // Already carries everything the caller needs; do not flatten it.
+      if (e instanceof NativeOrderUnsubmittedError) throw e
       // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
       // pair / invalid order) — so the caller (confirmTrade) can surface them
       // to the user while skipping Sentry capture. The previous catch re-threw
@@ -360,7 +396,8 @@ class OneInchFusion {
   }
 
   async setApproval(fromAddress: string, tokenAddress: string) {
-    const tx = await prepareTransactionRequest(this.publicClient, {
+    const hash = await this.signAndSend(fromAddress, {
+      to: tokenAddress,
       data: encodeFunctionData({
         abi: erc20Abi,
         functionName: 'approve',
@@ -370,34 +407,93 @@ class OneInchFusion {
             '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
           ),
         ],
-      }) as `0x${string}`,
-      to: tokenAddress as `0x${string}`,
-      account: fromAddress as `0x${string}`,
-      chain: this.chain,
+      }),
     })
-    const serialized = serializeTransaction(
-      tx as Parameters<typeof serializeTransaction>[0],
-    )
-    let hash = ''
-    if (isSignableWallet(this.wallet)) {
-      if (!this.wallet.SignTransaction) {
-        throw new Error('The connected wallet cannot sign transactions')
-      }
-      const signedTx = await this.wallet.SignTransaction(serialized)
-      hash = await this.publicClient.sendRawTransaction({
-        serializedTransaction: signedTx.signed,
-      })
-    } else {
-      if (!this.wallet.SendTransaction) {
-        throw new Error('The connected wallet cannot send transactions')
-      }
-      hash = await this.wallet.SendTransaction(serialized)
-    }
     return this.publicClient
       .waitForTransactionReceipt({ hash: hash as `0x${string}` })
       .then(res => {
         return res.transactionHash
       })
+  }
+
+  /**
+   * Reclaims the ETH of a native order whose deposit landed but which 1inch
+   * never accepted (see `NativeOrderUnsubmittedError`). Calls `cancelOrder` on
+   * the order's proxy, which refunds the maker. Resolves with the cancel
+   * transaction hash once it has mined successfully.
+   */
+  async cancelNativeOrder(params: NativeOrderRecoveryParams): Promise<string> {
+    const impl = new NativeOrdersImpl(new Address(params.proxyAddress))
+    const call = impl.cancel(
+      new Address(params.fromAddress),
+      params.nativeOrder,
+    )
+    const hash = await this.signAndSend(params.fromAddress, call)
+    const receipt = await this.publicClient.waitForTransactionReceipt({
+      hash: hash as `0x${string}`,
+    })
+    if (receipt.status !== 'success') {
+      throw new Error(i18n.global.t('trade.error.recover-funds-failed'))
+    }
+    return receipt.transactionHash
+  }
+
+  private networkEnum(): NetworkEnum {
+    return this.chain.id === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE
+  }
+
+  /**
+   * Hands a native order to the relayer, retrying transient failures (network
+   * errors, 5xx). A 4xx is final: the relayer has judged the order itself.
+   */
+  private async submitNativeOrderWithRetry(
+    order: Parameters<FusionSDK['submitNativeOrder']>[0],
+    maker: Address,
+    quoteId: string,
+  ) {
+    const delays = OneInchFusion.RELAYER_RETRY_DELAYS_MS
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await this.sdk.submitNativeOrder(order, maker, quoteId)
+      } catch (e) {
+        if (attempt >= delays.length || !isRetryableRelayerError(e)) throw e
+        await sleep(delays[attempt]!)
+      }
+    }
+  }
+
+  /**
+   * Prepares, signs (or hands to the wallet) and broadcasts a call from
+   * `fromAddress`. Resolves with the transaction hash as soon as it is
+   * broadcast; callers decide whether to wait for the receipt.
+   */
+  private async signAndSend(
+    fromAddress: string,
+    call: { to: string | Address; data: string; value?: bigint },
+  ): Promise<string> {
+    const tx = await prepareTransactionRequest(this.publicClient, {
+      data: call.data as `0x${string}`,
+      to: call.to.toString() as `0x${string}`,
+      account: fromAddress as `0x${string}`,
+      value: call.value,
+      chain: this.chain,
+    })
+    const serialized = serializeTransaction(
+      tx as Parameters<typeof serializeTransaction>[0],
+    )
+    if (isSignableWallet(this.wallet)) {
+      if (!this.wallet.SignTransaction) {
+        throw new Error('The connected wallet cannot sign transactions')
+      }
+      const signedTx = await this.wallet.SignTransaction(serialized)
+      return this.publicClient.sendRawTransaction({
+        serializedTransaction: signedTx.signed,
+      })
+    }
+    if (!this.wallet.SendTransaction) {
+      throw new Error('The connected wallet cannot send transactions')
+    }
+    return this.wallet.SendTransaction(serialized)
   }
 }
 

@@ -58,7 +58,11 @@
       "received": "You received {amount}",
       "failed_title": "Trade not completed",
       "cancelled_subtitle": "The order was cancelled",
-      "expired_subtitle": "The order expired without being filled"
+      "expired_subtitle": "The order expired without being filled",
+      "depositing_title": "Confirm the deposit in your wallet",
+      "depositing_subtitle": "Your {symbol} is deposited to 1inch escrow before the order is placed",
+      "unsubmitted_title": "Order not placed",
+      "unsubmitted_subtitle": "Your deposit was sent but 1inch did not accept the order. You can recover your funds from Notifications."
     },
     "status": {
       "pending": "Pending",
@@ -91,7 +95,9 @@
       "fusion-network-not-supported": "Fusion: network not supported",
       "failed-fetch-quote-1inch": "Failed to fetch quote from 1inch",
       "native-transaction-failed": "Native Transaction Failed",
-      "failed-submit-order-1inch": "Failed to submit order to 1inch"
+      "failed-submit-order-1inch": "Failed to submit order to 1inch",
+      "order-unsubmitted": "Your deposit was sent but 1inch did not accept the order. Recover your funds from Notifications.",
+      "recover-funds-failed": "Could not recover the deposit"
     },
     "market_status": {
       "regular": "Regular market",

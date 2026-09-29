@@ -58,7 +58,11 @@
       "received": "Recibiste {amount}",
       "failed_title": "Operación no completada",
       "cancelled_subtitle": "La orden fue cancelada",
-      "expired_subtitle": "La orden expiró sin completarse"
+      "expired_subtitle": "La orden expiró sin completarse",
+      "depositing_title": "Confirma el depósito en tu wallet",
+      "depositing_subtitle": "Tu {symbol} se deposita en el escrow de 1inch antes de colocar la orden",
+      "unsubmitted_title": "Orden no colocada",
+      "unsubmitted_subtitle": "Tu depósito se envió pero 1inch no aceptó la orden. Puedes recuperar tus fondos desde Notificaciones."
     },
     "status": {
       "pending": "Pendiente",
@@ -89,6 +93,8 @@
       "failed-fetch-quote-1inch": "No se pudo obtener la cotización de 1inch",
       "native-transaction-failed": "La transacción nativa falló",
       "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch",
+      "order-unsubmitted": "Tu depósito se envió pero 1inch no aceptó la orden. Recupera tus fondos desde Notificaciones.",
+      "recover-funds-failed": "No se pudo recuperar el depósito",
       "not_enough_balance": "Saldo insuficiente",
       "minimum_not_reached": "Mínimo no alcanzado",
       "remove_decimals": "Elimina {count} decimal | Elimina {count} decimales"
