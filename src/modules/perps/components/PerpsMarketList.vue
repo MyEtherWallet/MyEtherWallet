@@ -207,10 +207,6 @@
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
                 <AppBtnIcon
-                  icon="star"
-                  :icon-variant="
-                    watchlist.has(contract.baseCurrency) ? 'filled' : 'stroke'
-                  "
                   :label="
                     watchlist.has(contract.baseCurrency)
                       ? $t('perps.market-list.remove-from-watchlist')
@@ -222,7 +218,15 @@
                       : 'text-text-subtle'
                   "
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
-                />
+                >
+                  <AppIcon
+                    name="star"
+                    :variant="
+                      watchlist.has(contract.baseCurrency) ? 'filled' : 'stroke'
+                    "
+                    size="xxs"
+                  />
+                </AppBtnIcon>
               </td>
               <!-- Name -->
               <td class="px-1 py-2" colspan="2">
@@ -331,11 +335,15 @@
                   >
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
-                        icon="ellipsis-vertical"
-                        icon-variant="filled"
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                      />
+                      >
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          size="s"
+                          variant="filled"
+                        />
+                      </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div

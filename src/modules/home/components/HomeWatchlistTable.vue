@@ -304,12 +304,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                aligned. -->
           <AppBtnIcon
             data-test="watchlist-remove"
-            icon="star"
-            icon-variant="filled"
             :label="t('homePage.hero.watchlist.table.remove')"
             class="-m-1.5 text-text-brand"
             @click="remove(row)"
-          />
+          >
+            <AppIcon name="star" variant="filled" size="s" />
+          </AppBtnIcon>
 
           <!-- Token — a focusable link so keyboard users can open the drawer
                (the row-body click is a mouse convenience layered on top). -->
@@ -459,14 +459,18 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               <div class="relative min-[780px]:hidden">
                 <AppBtnIcon
                   data-test="watchlist-menu"
-                  icon="ellipsis-horizontal"
-                  icon-variant="filled"
                   :label="t('homePage.hero.watchlist.table.moreActions')"
                   class="text-text-subtle"
                   @click="
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
-                />
+                >
+                  <AppIcon
+                    name="ellipsis-horizontal"
+                    variant="filled"
+                    size="s"
+                  />
+                </AppBtnIcon>
                 <template v-if="openMenuKey === row.key">
                   <div
                     class="fixed inset-0 z-10"

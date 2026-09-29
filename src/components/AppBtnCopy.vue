@@ -1,14 +1,17 @@
 <template>
   <app-btn-icon
     @click="copyClick"
-    icon="clipboard-document"
     :size="size"
     :label="label ?? $t('common.copy')"
-  />
+  >
+    <AppIcon name="clipboard-document" :size="iconSize" />
+  </app-btn-icon>
 </template>
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import AppBtnIcon from './AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import type { IconSize } from '@/components/icon/icons'
 import type { BtnIconSize } from './btnIconTypes'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
@@ -25,7 +28,7 @@ const toastStore = useToastStore()
  * <app-btn-copy copyValue="0x1234"  />
  *
  * @example Small copy button with a custom label
- * <app-btn-copy size="s" copyValue="0x1234" label="Copy Important value: 1234" />
+ * <app-btn-copy size="s" icon-size="xxs" copyValue="0x1234" label="Copy Important value: 1234" />
  */
 const props = defineProps({
   /**
@@ -44,6 +47,10 @@ const props = defineProps({
   size: {
     type: String as PropType<BtnIconSize>,
     default: 'm',
+  },
+  iconSize: {
+    type: String as PropType<IconSize>,
+    default: 's',
   },
 })
 const emit = defineEmits<{

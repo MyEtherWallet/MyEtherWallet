@@ -40,13 +40,16 @@ import {
  * so a disabled button never fires it. `cursor-default!` needs the important
  * flag to beat the unlayered global `button { cursor: pointer }` in main.css.
  *
- * Pass `icon` for a registry glyph (sized to the button). Use the default slot
- * for custom artwork the registry doesn't have, or when a design needs a glyph
- * off the button's size (pagination keeps its 16px chevrons in an `<AppIcon>`).
+ * Two ways to fill it. `icon` renders a registry glyph at the library size for
+ * the button (S 16, M 24, L 32). The default slot takes an `<AppIcon>` at any
+ * size, or custom artwork: app call sites use the slot so each keeps the glyph
+ * size it was designed with (the library sizes read too heavy in product).
  * `href` renders an external link with the same look.
  *
  * @example <AppBtnIcon icon="x-mark" :label="t('common.close')" @click="close" />
- * @example <AppBtnIcon icon="chevron-left" variant="filled" size="l" :label="t('common.previous_page')" />
+ * @example <AppBtnIcon variant="filled" size="l" :label="t('common.previous_page')">
+ *   <AppIcon name="chevron-left" variant="filled" size="xxs" />
+ * </AppBtnIcon>
  */
 withDefaults(
   defineProps<{

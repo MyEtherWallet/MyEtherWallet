@@ -2,12 +2,12 @@
   <div class="h-full flex flex-col gap-6">
     <div class="flex items-start gap-3 pr-12 flex-none">
       <app-btn-icon
-        icon="chevron-left"
-        icon-variant="filled"
         :label="$t('common.back')"
         class="flex-none -ml-1 text-black"
         @click="emit('back')"
-      />
+      >
+        <AppIcon name="chevron-left" variant="filled" size="s" />
+      </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
         <h2 class="text-heading-xl">
           {{ $t('purchase.select_token.filter_title') }}

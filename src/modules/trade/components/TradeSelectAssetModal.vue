@@ -32,12 +32,13 @@
         </p>
       </div>
       <app-btn-icon
-        icon="x-mark"
         variant="filled"
         :label="$t('common.close')"
         class="absolute top-6 right-6"
         @click="isOpen = false"
-      />
+      >
+        <AppIcon name="x-mark" />
+      </app-btn-icon>
     </template>
     <template #content>
       <div class="flex h-full flex-col">
@@ -189,6 +190,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'

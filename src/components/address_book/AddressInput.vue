@@ -60,19 +60,20 @@
       <!-- Action Buttons  -->
       <div class="absolute top-3 right-3 flex items-center gap-1">
         <app-btn-icon
-          icon="x-circle"
           :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
           class="text-text-brand"
-        />
+        >
+          <AppIcon name="x-circle" />
+        </app-btn-icon>
         <app-btn-icon
-          icon="users"
-          icon-variant="filled"
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
           class="text-text-brand"
-        />
+        >
+          <AppIcon name="users" variant="filled" />
+        </app-btn-icon>
       </div>
     </div>
     <!-- Error Messages OR Resolved Address -->
@@ -142,6 +143,7 @@ import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
 import type { Chain } from '@/mew_api/types'
 import { storeToRefs } from 'pinia'

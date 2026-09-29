@@ -59,6 +59,7 @@
                   v-if="i.contract && i.contract !== 'N/A'"
                   :copy-value="i.contract"
                   size="s"
+                  icon-size="xxs"
                 />
               </div>
             </div>

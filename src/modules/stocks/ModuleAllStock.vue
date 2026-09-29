@@ -183,10 +183,6 @@
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
                 <AppBtnIcon
-                  icon="star"
-                  :icon-variant="
-                    isWatchListed(token.coinId) ? 'filled' : 'stroke'
-                  "
                   :label="
                     isWatchListed(token.coinId)
                       ? $t('common.remove_from_watchlist')
@@ -198,7 +194,13 @@
                       : 'text-text-subtle'
                   "
                   @click.stop="setWatchlistToken(token.coinId)"
-                />
+                >
+                  <AppIcon
+                    name="star"
+                    :variant="isWatchListed(token.coinId) ? 'filled' : 'stroke'"
+                    size="xxs"
+                  />
+                </AppBtnIcon>
               </td>
               <!-- Name -->
               <td class="px-1 py-1" colspan="2">
@@ -306,11 +308,15 @@
                   >
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
-                        icon="ellipsis-vertical"
-                        icon-variant="filled"
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                      />
+                      >
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
+                      </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div

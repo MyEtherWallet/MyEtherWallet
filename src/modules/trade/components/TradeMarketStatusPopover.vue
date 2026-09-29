@@ -39,13 +39,13 @@
         :session-ranges="timelineRanges"
       />
       <AppBtnIcon
-        icon="x-mark"
-        icon-variant="filled"
         size="s"
         :label="$t('common.close')"
         class="absolute right-1 top-1"
         @click="emit('close')"
-      />
+      >
+        <AppIcon name="x-mark" variant="filled" size="xxs" />
+      </AppBtnIcon>
     </div>
   </div>
 </template>
@@ -54,6 +54,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'

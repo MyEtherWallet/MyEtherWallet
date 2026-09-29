@@ -35,10 +35,11 @@
           model !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
-        icon="x-circle"
         class="text-text-brand"
         :label="$t('common.clear_icon')"
-      />
+      >
+        <AppIcon name="x-circle" :size="size === 'compact' ? 's' : 'm'" />
+      </app-btn-icon>
     </div>
   </div>
 </template>

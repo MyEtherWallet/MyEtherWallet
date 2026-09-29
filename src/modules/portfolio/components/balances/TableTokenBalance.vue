@@ -18,11 +18,11 @@
         >
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
-              icon="ellipsis-vertical"
-              icon-variant="filled"
               :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
-            />
+            >
+              <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
+            </app-btn-icon>
           </template>
           <template #menu-content="{ toggleMenu }">
             <div class="px-2 py-3 bg-white rounded-xl min-w-[230px]">
@@ -298,10 +298,6 @@
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
               <app-btn-icon
                 v-if="getWatchlistId(token)"
-                icon="star"
-                :icon-variant="
-                  isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
-                "
                 :label="
                   isWatchListed(getWatchlistId(token))
                     ? $t('common.remove_from_watchlist')
@@ -309,7 +305,15 @@
                 "
                 class="text-black"
                 @click.stop="setWatchlistToken(token)"
-              />
+              >
+                <AppIcon
+                  name="star"
+                  :variant="
+                    isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                  "
+                  size="xxs"
+                />
+              </app-btn-icon>
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -421,11 +425,15 @@
                 >
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
-                      icon="ellipsis-vertical"
-                      icon-variant="filled"
                       :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
-                    />
+                    >
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        variant="filled"
+                        size="s"
+                      />
+                    </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
@@ -568,17 +576,17 @@
                 v-else
               >
                 <app-btn-icon
-                  icon="pencil"
-                  icon-variant="filled"
                   :label="$t('common.edit')"
                   @click.stop="customTokenAction('edit', token)"
-                />
+                >
+                  <AppIcon name="pencil" variant="filled" size="xxs" />
+                </app-btn-icon>
                 <app-btn-icon
-                  icon="trash"
-                  icon-variant="filled"
                   :label="$t('common.delete')"
                   @click.stop="customTokenAction('delete', token)"
-                />
+                >
+                  <AppIcon name="trash" variant="filled" size="s" />
+                </app-btn-icon>
               </div>
             </td>
           </tr>

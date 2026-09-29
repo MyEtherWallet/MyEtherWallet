@@ -15,12 +15,13 @@
         <div class="w-8 ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
-            icon="arrow-left"
             size="l"
             :label="$t('create_wallet.back_to_connect_options')"
             class="mr-auto mt-4"
             @click="createStore.setCurrentView('default')"
-          />
+          >
+            <AppIcon name="arrow-left" size="s" />
+          </app-btn-icon>
         </div>
         <div
           :class="

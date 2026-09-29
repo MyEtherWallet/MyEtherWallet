@@ -8,12 +8,12 @@
     <template v-if="showDepositAddress && showIsLive" #title>
       <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
         <app-btn-icon
-          icon="chevron-left"
-          icon-variant="filled"
           :label="$t('common.back')"
           class="mr-2"
           @click="showDepositAddress = false"
-        />
+        >
+          <AppIcon name="chevron-left" variant="filled" size="s" />
+        </app-btn-icon>
         <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
           {{ $t('perps.deposit.eth-deposit-address-title') }}
         </h1>

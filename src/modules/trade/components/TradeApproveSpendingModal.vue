@@ -6,12 +6,13 @@
   >
     <template #title>
       <app-btn-icon
-        icon="x-mark"
         variant="filled"
         :label="$t('common.close')"
         class="absolute top-6 right-6"
         @click="model = false"
-      />
+      >
+        <AppIcon name="x-mark" />
+      </app-btn-icon>
     </template>
     <template #content>
       <div
@@ -127,6 +128,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'

@@ -41,13 +41,13 @@
 
         <!-- Dismiss button -->
         <AppBtnIcon
-          icon="x-mark"
-          icon-variant="filled"
           size="s"
           :label="$t('trade.weekend.dismiss_tooltip')"
           class="absolute top-2 right-2 text-text-subtle"
           @click="emit('dismiss')"
-        />
+        >
+          <AppIcon name="x-mark" variant="filled" size="xxs" />
+        </AppBtnIcon>
       </div>
     </transition>
   </teleport>
@@ -66,6 +66,7 @@
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = withDefaults(
   defineProps<{

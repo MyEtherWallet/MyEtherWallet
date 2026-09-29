@@ -199,11 +199,12 @@
         class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
-          icon="chevron-double-right"
           :label="$t('common.close_side_menu')"
           class="md:hidden flex-none ml-3"
           @click="walletMenu.setIsOpenSideMenu(false)"
-        />
+        >
+          <AppIcon name="chevron-double-right" size="s" />
+        </app-btn-icon>
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
             <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />

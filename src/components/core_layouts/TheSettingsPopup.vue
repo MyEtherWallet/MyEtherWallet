@@ -2,12 +2,12 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
-      icon="cog-6-tooth"
-      icon-variant="filled"
       size="l"
       :label="$t('menu.open-settings')"
       @click="togglePopup"
-    />
+    >
+      <AppIcon name="cog-6-tooth" variant="filled" />
+    </app-btn-icon>
 
     <!-- Headless network selector (mobile): owns the chain dialog. It renders
          in front of the settings popup (z above the popup's z-[2101]) so the
@@ -298,12 +298,12 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
-                  icon="chevron-left"
-                  icon-variant="filled"
                   size="s"
                   :label="$t('common.back')"
                   @click="view = 'main'"
-                />
+                >
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
+                </app-btn-icon>
                 <span class="text-text-base text-black">
                   {{ $t('settings.select_transaction_fee') }}
                 </span>
@@ -373,12 +373,12 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
-                  icon="chevron-left"
-                  icon-variant="filled"
                   size="s"
                   :label="$t('common.back')"
                   @click="view = 'main'"
-                />
+                >
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
+                </app-btn-icon>
                 <span class="text-s-16 font-bold leading-[22px] text-black">
                   {{ $t('settings.select_currency') }}
                 </span>
@@ -459,12 +459,12 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
-                  icon="chevron-left"
-                  icon-variant="filled"
                   size="s"
                   :label="$t('common.back')"
                   @click="view = 'main'"
-                />
+                >
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
+                </app-btn-icon>
                 <span class="text-text-base text-black">
                   {{ $t('settings.select_language') }}
                 </span>

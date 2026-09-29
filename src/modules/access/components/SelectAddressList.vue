@@ -33,12 +33,13 @@
                 @click.stop
               />
               <app-btn-icon
-                icon="arrow-top-right-on-square"
                 :href="blockExplorerUrl(walletList[i - 1].address)"
                 :label="$t('select_address_list.view_in_explorer')"
                 class="text-text-brand ml-1 xs:ml-0"
                 @click.stop
-              />
+              >
+                <AppIcon name="arrow-top-right-on-square" size="s" />
+              </app-btn-icon>
             </div>
             <p class="text-xs text-text-subtle">
               {{ walletList[i - 1].balance }}

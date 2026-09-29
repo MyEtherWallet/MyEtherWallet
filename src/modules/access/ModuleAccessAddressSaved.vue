@@ -7,12 +7,12 @@
     <template #title>
       <AppBtnIcon
         data-test="address-saved-back"
-        icon="chevron-left"
-        icon-variant="filled"
         :label="$t('common.back')"
         class="absolute top-4 left-4 text-black"
         @click="onBack"
-      />
+      >
+        <AppIcon name="chevron-left" variant="filled" size="s" />
+      </AppBtnIcon>
     </template>
     <template #content>
       <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">

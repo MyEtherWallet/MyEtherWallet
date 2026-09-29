@@ -69,12 +69,16 @@ const changeText = computed(() =>
       </p>
       <AppBtnIcon
         data-test="listing-favorite"
-        icon="star"
-        :icon-variant="favorite ? 'filled' : 'stroke'"
         :label="favoriteLabel"
         :class="favorite ? 'text-text-brand' : 'text-text-subtle'"
         @click.stop="$emit('toggle-favorite')"
-      />
+      >
+        <AppIcon
+          name="star"
+          :variant="favorite ? 'filled' : 'stroke'"
+          size="s"
+        />
+      </AppBtnIcon>
     </div>
 
     <!-- B. Name block -->

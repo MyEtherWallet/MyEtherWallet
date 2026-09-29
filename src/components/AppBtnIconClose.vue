@@ -1,13 +1,11 @@
 <template>
-  <app-btn-icon
-    @click="closeClick"
-    icon="x-mark"
-    icon-variant="filled"
-    :label="label ?? $t('common.close')"
-  />
+  <app-btn-icon @click="closeClick" :label="label ?? $t('common.close')">
+    <AppIcon name="x-mark" variant="filled" />
+  </app-btn-icon>
 </template>
 <script setup lang="ts">
 import AppBtnIcon from './AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 /**
  * @description A close icon button component. Other AppBtnIcon props

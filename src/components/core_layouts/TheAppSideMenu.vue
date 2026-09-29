@@ -3,10 +3,10 @@
     <!-- OPEN Mobile Menu-->
     <app-btn-icon
       @click="sidebarIsOpen = !sidebarIsOpen"
-      icon="bars-3"
-      icon-variant="filled"
       :label="$t('menu.open-menu')"
-    />
+    >
+      <AppIcon name="bars-3" variant="filled" size="l" />
+    </app-btn-icon>
     <!-- Background -->
     <teleport to="#app">
       <transition

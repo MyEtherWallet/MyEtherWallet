@@ -31,8 +31,6 @@
 
       <AppBtnIcon
         data-test="listing-favorite"
-        icon="star"
-        :icon-variant="favorite ? 'filled' : 'stroke'"
         :label="
           favorite
             ? $t('common.remove_from_watchlist')
@@ -40,7 +38,13 @@
         "
         :class="favorite ? 'text-text-brand' : 'text-text-subtle'"
         @click.stop="$emit('toggle-favorite')"
-      />
+      >
+        <AppIcon
+          name="star"
+          :variant="favorite ? 'filled' : 'stroke'"
+          size="s"
+        />
+      </AppBtnIcon>
     </div>
 
     <!-- B. Name block -->
@@ -131,6 +135,7 @@
 import { computed } from 'vue'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 

@@ -6,9 +6,8 @@
       size="l"
       @click="togglePopup"
     >
-      <!-- slot, not the icon prop: the unseen-count badge overlays the glyph -->
       <div class="relative">
-        <AppIcon name="bell" variant="filled" size="l" />
+        <AppIcon name="bell" variant="filled" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"

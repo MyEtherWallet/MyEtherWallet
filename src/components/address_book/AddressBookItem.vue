@@ -33,18 +33,20 @@
     <div class="ml-auto flex items-center justify-end gap-1">
       <app-btn-icon
         v-if="!isSelectable"
-        icon="pencil"
         :label="$t('common.edit')"
         class="text-text-brand"
         @click="editAddress(adr)"
-      />
+      >
+        <AppIcon name="pencil" size="s" />
+      </app-btn-icon>
       <app-btn-icon
         v-if="!isSelectable"
-        icon="trash"
         :label="$t('common.delete')"
         class="text-text-brand"
         @click="deleteAddress(adr)"
-      />
+      >
+        <AppIcon name="trash" size="s" />
+      </app-btn-icon>
       <AppIcon
         v-if="isSelected"
         name="check"

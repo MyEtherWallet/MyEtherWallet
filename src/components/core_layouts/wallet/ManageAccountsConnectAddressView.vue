@@ -3,13 +3,13 @@
     <div class="shrink-0 flex items-center">
       <AppBtnIcon
         data-test="connect-address-view-back"
-        icon="chevron-left"
-        icon-variant="filled"
         size="l"
         :label="$t('common.back')"
         class="text-black"
         @click="onBack"
-      />
+      >
+        <AppIcon name="chevron-left" variant="filled" size="s" />
+      </AppBtnIcon>
     </div>
     <div
       class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 pt-4 text-center"

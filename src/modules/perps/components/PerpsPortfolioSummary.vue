@@ -14,7 +14,6 @@
             size="s"
             @click="onRefreshBalance"
           >
-            <!-- slot, not the icon prop: the spin belongs on the glyph -->
             <AppIcon
               name="arrow-path"
               size="xxs"

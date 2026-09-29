@@ -8,12 +8,12 @@
         >
       </h3>
       <app-btn-icon
-        icon="bars-3"
-        icon-variant="filled"
         :label="$t('access_wallet.sort_and_filter')"
         class="md-header:hidden"
         @click="openFilterSortModal = true"
-      />
+      >
+        <AppIcon name="bars-3" variant="filled" />
+      </app-btn-icon>
     </div>
     <div class="flex mb-4 sm:mb-6 justify-between items-center gap-3 flex-wrap">
       <!-- Search and Sort -->
@@ -83,6 +83,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   type WalletConfig,
   SortBy,
