@@ -32,7 +32,7 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
           :placement="p"
           :text="`Tooltip ${p}`"
         >
-          <AppChip variant="surface" :label="p" />
+          <AppChip :label="p" />
         </AppTooltip>
       </div>
     </section>
@@ -43,27 +43,27 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
         class="flex flex-wrap gap-10 rounded-12 border border-border-default p-16"
       >
         <AppTooltip text="Text only">
-          <AppChip variant="surface" label="Text" />
+          <AppChip label="Text" />
         </AppTooltip>
 
         <AppTooltip>
           <template #content>
-            <span class="font-bold text-white">Custom slot</span>
+            <span class="font-bold text-text-inverted">Custom slot</span>
           </template>
-          <AppChip variant="surface" label="Slot only" />
+          <AppChip label="Slot only" />
         </AppTooltip>
 
         <AppTooltip text="With text">
           <template #content>
-            <span class="font-bold text-white">★</span>
+            <span class="font-bold text-text-inverted">★</span>
           </template>
-          <AppChip variant="surface" label="Text + slot" />
+          <AppChip label="Text + slot" />
         </AppTooltip>
 
         <AppTooltip
           text="A longer tooltip message that keeps going until it wraps at the maximum width of the bubble."
         >
-          <AppChip variant="surface" label="Long text" />
+          <AppChip label="Long text" />
         </AppTooltip>
       </div>
     </section>
@@ -76,10 +76,10 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
         class="flex justify-between rounded-12 border border-border-default p-4"
       >
         <AppTooltip placement="left" text="Flips to the right near the edge">
-          <AppChip variant="surface" label="Left" />
+          <AppChip label="Left" />
         </AppTooltip>
         <AppTooltip placement="right" text="Flips to the left near the edge">
-          <AppChip variant="surface" label="Right" />
+          <AppChip label="Right" />
         </AppTooltip>
       </div>
     </section>
