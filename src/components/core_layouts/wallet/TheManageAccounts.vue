@@ -365,6 +365,7 @@ import {
   useAccountBalances,
   BALANCE_TTL_MS,
   type AccountBalance,
+  type BalanceEntry,
 } from '@/composables/useAccountBalances'
 import { useWalletStore } from '@/stores/walletStore'
 import { useProviderStore } from '@/stores/providerStore'
@@ -639,6 +640,17 @@ const detectedMessage = ref('')
 
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
+// One saved-address balance request. Carries what the batch endpoint needs for
+// the selected network (chain id for EVM, name for Bitcoin) and the chain's fiat
+// price to value the native balance it returns.
+const balanceEntry = (address: string): BalanceEntry => ({
+  chainName: chainName(),
+  address,
+  nativePrice: chainsStore.selectedChain?.price ?? 0,
+  chainId: chainsStore.selectedChain?.chainID,
+  chainType: chainsStore.selectedChain?.type,
+})
+
 // Viewport-driven fetching: a saved address's balance is (re)fetched only while
 // it is visible in the popup list AND missing/older than the TTL. Rows report
 // their visibility; we debounce so a quick scroll-past doesn't fire a request,
@@ -652,11 +664,7 @@ const fetchTimers = new Map<string, ReturnType<typeof setTimeout>>()
 // skeleton — appears immediately for a chain that has no cached balance yet.
 const fetchVisibleNow = (acc: SavedAccount): void => {
   if (isActive(acc) || !isCompatible(acc)) return
-  void fetchIfStale({
-    chainName: chainName(),
-    address: acc.address,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void fetchIfStale(balanceEntry(acc.address))
 }
 
 // Debounced variant for scroll: a quick scroll-past shouldn't fire a request.
@@ -698,10 +706,10 @@ const refreshVisible = (): void => {
 }
 
 // On a network switch the IntersectionObserver won't re-fire (rows don't move), so
-// re-fetch the visible rows for the newly-selected chain. Debounced: each visible
-// row is one /balances call, so flipping quickly through several networks would
-// otherwise burst (N addresses × M networks) — instead we only fetch the chain the
-// user lands on. chainSwitchPending keeps the skeleton up during the settle, and
+// re-fetch the visible rows for the newly-selected chain. Debounced: the visible
+// rows become one batched balances call per network, so flipping quickly through
+// several networks would otherwise burst (one call × M networks) — instead we only
+// fetch the chain the user lands on. chainSwitchPending keeps the skeleton up during the settle, and
 // the per-(chain, address) cache makes revisiting a network within the TTL free.
 const NETWORK_SWITCH_DEBOUNCE_MS = 500
 let switchTimer: ReturnType<typeof setTimeout> | undefined
@@ -853,11 +861,7 @@ const refresh = (acc: SavedAccount): void => {
     void walletStore.refreshBalances()
     return
   }
-  void refreshOne({
-    chainName: chainName(),
-    address: acc.address,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void refreshOne(balanceEntry(acc.address))
 }
 const openExplorer = (acc: SavedAccount): void => {
   const url = chainsStore.selectedChain?.blockExplorerAddr?.replace(
@@ -897,11 +901,7 @@ const saveDetected = (): void => {
   detectedMessage.value = ''
   // Pull + cache the newly-saved address once now, so it shows a balance right
   // away and isn't re-fetched on later opens (it's non-active → cache-served).
-  void refreshOne({
-    chainName: chainName(),
-    address: detectedAddress.value,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void refreshOne(balanceEntry(detectedAddress.value))
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DETECTED_SAVED)
   walletStore.clearDetectedAddress()
 }
