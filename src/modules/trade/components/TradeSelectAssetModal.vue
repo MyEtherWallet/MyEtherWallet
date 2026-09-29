@@ -32,14 +32,12 @@
         </p>
       </div>
       <app-btn-icon
+        icon="x-mark"
+        variant="filled"
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-background-default"
-        height="h-8"
-        width="w-8"
+        class="absolute top-6 right-6"
         @click="isOpen = false"
-      >
-        <x-mark-icon class="w-6 h-6" />
-      </app-btn-icon>
+      />
     </template>
     <template #content>
       <div class="flex h-full flex-col">
@@ -187,7 +185,6 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 import { CheckCircleIcon } from '@heroicons/vue/24/solid'
 import { InformationCircleIcon } from '@heroicons/vue/24/solid'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'

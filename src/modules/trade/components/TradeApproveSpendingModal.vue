@@ -6,14 +6,12 @@
   >
     <template #title>
       <app-btn-icon
+        icon="x-mark"
+        variant="filled"
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-background-default"
-        height="h-8"
-        width="w-8"
+        class="absolute top-6 right-6"
         @click="model = false"
-      >
-        <x-mark-icon class="w-6 h-6" />
-      </app-btn-icon>
+      />
     </template>
     <template #content>
       <div
@@ -123,7 +121,6 @@ import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import {
   InformationCircleIcon,
-  XMarkIcon,
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
