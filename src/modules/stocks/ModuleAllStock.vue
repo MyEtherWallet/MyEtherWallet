@@ -313,17 +313,11 @@
                   >
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
+                        icon="ellipsis-vertical"
+                        icon-variant="filled"
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
-                      >
-                        <AppIcon
-                          name="ellipsis-vertical"
-                          variant="filled"
-                          size="s"
-                        />
-                      </app-btn-icon>
+                      />
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
@@ -399,25 +393,23 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            icon="chevron-left"
+            icon-variant="filled"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click.stop="previousPage"
-          >
-            <AppIcon name="chevron-left" variant="filled" size="xxs" />
-          </app-btn-icon>
+          />
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            icon="chevron-right"
+            icon-variant="filled"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click.stop="nextPage"
-          >
-            <AppIcon name="chevron-right" variant="filled" size="xxs" />
-          </app-btn-icon>
+          />
         </div>
       </div>
       <select-chain-dialog
