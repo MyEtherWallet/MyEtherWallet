@@ -226,7 +226,7 @@ onBeforeUnmount(close)
       :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
     >
       <div
-        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-background-info px-2 py-1 text-center text-s-12 font-semibold leading-p-150 text-white shadow-button-elevated"
+        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-background-info px-2 py-1 text-center text-label-xs text-text-inverted shadow-button-elevated"
       >
         <span v-if="$slots.content" class="shrink-0"
           ><slot name="content"
@@ -246,10 +246,15 @@ onBeforeUnmount(close)
           viewBox="0 0 12 10"
           class="block h-2.5 w-3 fill-current"
         >
-          <path d="M0 0h12L6 10z" />
+          <!-- Figma polygon (12×8.11, rounded tip); the rest of the 10px box is the gap to the trigger. -->
+          <path
+            d="M4.28501 7.14169C5.06182 8.43637 6.93818 8.43637 7.71499 7.14169L12 0H0L4.28501 7.14169Z"
+          />
         </svg>
         <svg v-else viewBox="0 0 10 12" class="block h-3 w-2.5 fill-current">
-          <path d="M0 0v12L10 6z" />
+          <path
+            d="M7.14169 4.28501C8.43637 5.06182 8.43637 6.93818 7.14169 7.71499L0 12V0L7.14169 4.28501Z"
+          />
         </svg>
       </span>
     </div>
