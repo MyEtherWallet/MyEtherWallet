@@ -6,14 +6,12 @@
       </h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
         <app-btn-icon
+          icon="chevron-left"
+          icon-variant="filled"
           :disabled="isLoading || currentPage === 0"
           :label="t('common.previous_page')"
           @click="prevPage"
-          height="h-8"
-          width="w-8"
-        >
-          <AppIcon name="chevron-left" variant="filled" size="xxs" />
-        </app-btn-icon>
+        />
 
         <span class="px-2 text-s-12 text-text-subtle font-medium">{{
           t('portfolio.gains_and_losses.page_of', {
@@ -22,14 +20,12 @@
           })
         }}</span>
         <app-btn-icon
+          icon="chevron-right"
+          icon-variant="filled"
           :disabled="isLoading || currentPage + 1 >= totalPages"
           :label="t('common.next_page')"
           @click="nextPage"
-          height="h-8"
-          width="w-8"
-        >
-          <AppIcon name="chevron-right" variant="filled" size="xxs" />
-        </app-btn-icon>
+        />
       </div>
     </div>
     <app-sheet
