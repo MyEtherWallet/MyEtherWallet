@@ -54,6 +54,19 @@ describe('useRecommendedWatchlist (MEW-2130)', () => {
     ])
   })
 
+  it('sends the step-1 markets as the types param alongside categories', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations(['STOCK:Equities', 'CRYPTO:all'], ['STOCK', 'CRYPTO'])
+    expect(calls[0]).toContain('categories=')
+    expect(calls[0]).toContain(`types=${encodeURIComponent('STOCK,CRYPTO')}`)
+  })
+
+  it('sends types alone when only markets are scoped (no categories)', async () => {
+    const { fetchRecommendations } = useRecommendedWatchlist()
+    await fetchRecommendations([], ['CRYPTO'])
+    expect(calls[0]).toBe('/v1/web/watchlist/assets?types=CRYPTO')
+  })
+
   it('flips isLoading true while fetching then false when done', async () => {
     const { isLoading, fetchRecommendations } = useRecommendedWatchlist()
     const pending = fetchRecommendations(['STOCK:Equities'])

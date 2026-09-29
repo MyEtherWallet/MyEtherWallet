@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
+import { useVirtualList } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -38,8 +39,11 @@ const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ done: []; back: []; close: [] }>()
 
-// Search + progressive reveal. A query shows all matches (no cap); otherwise the
-// first INITIAL_COUNT show and "Show more" reveals the rest.
+// Search + curated reveal. A query shows all matches; otherwise the first
+// INITIAL_COUNT show and "Show more" reveals the rest. The recommendation set can
+// be large (up to a couple thousand), so the visible list is virtualized: only the
+// rows in and near the scroll viewport are mounted, keeping the DOM flat no matter
+// how many assets come back.
 const INITIAL_COUNT = 12
 const query = ref('')
 const showAll = ref(false)
@@ -62,6 +66,32 @@ const hasMore = computed(
     !showAll.value &&
     filtered.value.length > INITIAL_COUNT,
 )
+// Virtualize by row: chunk the visible assets into rows of GRID_COLUMNS and mount
+// only the rows near the viewport. ROW_HEIGHT = card (96px) + the 8px gap below it.
+const GRID_COLUMNS = 4
+const ROW_HEIGHT = 104
+const assetRows = computed(() => {
+  const rows: RecommendedAsset[][] = []
+  for (let i = 0; i < visibleAssets.value.length; i += GRID_COLUMNS) {
+    rows.push(visibleAssets.value.slice(i, i + GRID_COLUMNS))
+  }
+  return rows
+})
+const {
+  list: visibleRows,
+  containerProps,
+  wrapperProps,
+  scrollTo,
+} = useVirtualList(assetRows, { itemHeight: ROW_HEIGHT, overscan: 6 })
+
+// Reset the reveal when the result set changes (query typed/cleared, new
+// recommendations) so "showAll" never sticks across a different list. Snap the
+// virtual list back to the top too: after collapsing, a stale scroll offset from
+// the previously expanded list can leave useVirtualList rendering an empty window.
+watch([query, () => props.assets], () => {
+  showAll.value = false
+  scrollTo(0)
+})
 
 // Search-loading: while the user is typing a query, show skeleton cards (Figma)
 // until results settle. The filter is client-side today, so a short debounce
@@ -193,7 +223,10 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           class="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3 bg-gradient-to-t from-white to-transparent"
           aria-hidden="true"
         />
-        <div class="mew-scrollbar max-h-[45vh] overflow-y-auto py-2 pr-1">
+        <div
+          v-bind="containerProps"
+          class="mew-scrollbar max-h-[45vh] overflow-y-auto py-2 pr-1"
+        >
           <!-- Search skeleton (Figma): a full grid of placeholder cards while a
                query's results settle. -->
           <div
@@ -244,51 +277,60 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             </button>
           </div>
 
-          <div v-else v-auto-animate class="grid grid-cols-4 gap-2">
-            <WatchlistSelectableCard
-              v-for="asset in visibleAssets"
-              :key="asset.id"
-              data-test="asset-card"
-              :selected="selected.includes(asset.id)"
-              :disabled="isDisabled(asset)"
-              bg="bg-white"
-              class="flex h-24 flex-col items-center justify-center gap-2"
-              @toggle="toggle(asset.id)"
+          <!-- Virtualized rows: only those near the viewport are mounted. Each row
+               is a 4-col grid; ROW_HEIGHT accounts for the card plus the gap below
+               it (pb-2), so the virtual offsets line up with the rendered rows. -->
+          <div v-else v-bind="wrapperProps">
+            <div
+              v-for="{ index, data } in visibleRows"
+              :key="index"
+              class="grid grid-cols-4 gap-2 pb-2"
             >
-              <span class="relative">
-                <AppTokenLogo
-                  :url="asset.logoUrl"
+              <WatchlistSelectableCard
+                v-for="asset in data"
+                :key="asset.id"
+                data-test="asset-card"
+                :selected="selected.includes(asset.id)"
+                :disabled="isDisabled(asset)"
+                bg="bg-white"
+                class="flex h-24 flex-col items-center justify-center gap-2"
+                @toggle="toggle(asset.id)"
+              >
+                <span class="relative">
+                  <AppTokenLogo
+                    :url="asset.logoUrl"
+                    :symbol="asset.symbol"
+                    :is-stock="asset.type === 'stock'"
+                    width="w-10"
+                    height="h-10"
+                    no-shadow
+                  />
+                  <!-- Add/added badge overlapping the avatar (Figma). -->
+                  <span
+                    class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
+                    :class="
+                      selected.includes(asset.id)
+                        ? 'bg-background-success text-white'
+                        : 'bg-background-default-hover text-black'
+                    "
+                    aria-hidden="true"
+                  >
+                    <AppIcon
+                      v-if="selected.includes(asset.id)"
+                      name="check"
+                      variant="filled"
+                      size="xxs"
+                    />
+                    <AppIcon v-else name="plus" variant="filled" size="xxs" />
+                  </span>
+                </span>
+                <AppTokenSymbol
                   :symbol="asset.symbol"
                   :is-stock="asset.type === 'stock'"
-                  width="w-10"
-                  height="h-10"
-                  no-shadow
+                  class="max-w-full text-center text-s-16 font-semibold text-black"
                 />
-                <!-- Add/added badge overlapping the avatar (Figma). -->
-                <span
-                  class="absolute -left-1 -top-1 flex size-[22px] items-center justify-center rounded-full border-2 border-white"
-                  :class="
-                    selected.includes(asset.id)
-                      ? 'bg-background-success text-white'
-                      : 'bg-background-default-hover text-black'
-                  "
-                  aria-hidden="true"
-                >
-                  <AppIcon
-                    name="check"
-                    variant="filled"
-                    size="xxs"
-                    v-if="selected.includes(asset.id)"
-                  />
-                  <AppIcon name="plus" variant="filled" size="xxs" v-else />
-                </span>
-              </span>
-              <AppTokenSymbol
-                :symbol="asset.symbol"
-                :is-stock="asset.type === 'stock'"
-                class="max-w-full text-center text-s-16 font-semibold text-black"
-              />
-            </WatchlistSelectableCard>
+              </WatchlistSelectableCard>
+            </div>
           </div>
         </div>
       </div>

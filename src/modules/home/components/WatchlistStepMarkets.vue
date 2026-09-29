@@ -23,15 +23,16 @@ const MARKET_LOGOS: Record<WatchlistMarketId, string[]> = {
   crypto: [crypto1, crypto2, crypto3],
 }
 
-// Selected market ids (multi-select). Continue enables with at least one.
+// Selected market id (single-select: stocks OR crypto, never both). Kept as an
+// array so the downstream markets → API-types mapping stays unchanged; it holds
+// at most one id. Continue enables once a market is picked.
 const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ continue: []; skip: []; close: [] }>()
 
+// Picking a market replaces any other pick; picking the selected one clears it.
 const toggle = (id: string) => {
-  selected.value = selected.value.includes(id)
-    ? selected.value.filter(x => x !== id)
-    : [...selected.value, id]
+  selected.value = selected.value.includes(id) ? [] : [id]
 }
 </script>
 
@@ -44,7 +45,7 @@ const toggle = (id: string) => {
       @close="$emit('close')"
     />
 
-    <div class="mt-6 grid grid-cols-2 gap-3">
+    <div class="mt-6 grid grid-cols-2 gap-3" role="radiogroup">
       <WatchlistSelectableCard
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
