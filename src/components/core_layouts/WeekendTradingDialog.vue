@@ -22,7 +22,7 @@
           </div>
           <h1 class="text-s-28 font-bold leading-8 tracking-tight">
             {{ $t('trade.weekend.dialog_headline') }}
-            <span class="text-primary">{{
+            <span class="text-text-brand">{{
               $t('trade.weekend.dialog_headline_highlight')
             }}</span>
           </h1>
@@ -30,7 +30,7 @@
         <!-- Footer: body + actions (mt on mobile where height is auto and
              justify-between gives no gap; reset at xs+ where height is fixed) -->
         <div class="flex flex-col gap-5 mt-8 xs:mt-0">
-          <p class="text-s-16 leading-[22px] text-info">
+          <p class="text-s-16 leading-[22px] text-text-subtle">
             {{
               $t('trade.weekend.dialog_body', {
                 tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
@@ -39,13 +39,13 @@
           </p>
           <div class="flex gap-2">
             <button
-              class="flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold"
+              class="flex-1 h-12 rounded-24 bg-background-brand text-white text-s-16 font-semibold"
               @click="onTradeNow"
             >
               {{ $t('trade.weekend.trade_now') }}
             </button>
             <button
-              class="flex-1 h-12 rounded-24 bg-grey-10 text-black text-s-16 font-semibold"
+              class="flex-1 h-12 rounded-24 bg-background-default-hover text-black text-s-16 font-semibold"
               @click="onGotIt"
             >
               {{ $t('common.got_it') }}
@@ -68,7 +68,6 @@ import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnou
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
-import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
 import qqq from '@/assets/images/weekend-trading/qqq.png'
 import googl from '@/assets/images/weekend-trading/googl.png'
@@ -110,11 +109,9 @@ onMounted(async () => {
   await fetchTradingRestriction()
   if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
-    if (
-      !isWalletUnlocked.value &&
-      (route.name === ROUTES_ACCESS.ACCESS.NAME ||
-        route.name === ROUTES_CREATE_WALLET.CREATE_WALLET.NAME)
-    ) {
+    // Only overlay records carry `meta.walletFlow`, and there is one per host page, so
+    // this replaces two now-insufficient fixed-name comparisons.
+    if (!isWalletUnlocked.value && route.meta.walletFlow) {
       showAfter.value = true
     } else {
       openDialog()

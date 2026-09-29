@@ -1,9 +1,7 @@
 <template>
   <div class="w-full" v-if="isWalletConnected">
     <div class="flex flex-wrap items-center w-full justify-between mb-1 px-1">
-      <h2
-        class="text-s-14 xs:text-s-18 font-bold max-w-[160px] xs:max-w-none pl-2"
-      >
+      <h2 class="text-s-14 xs:text-s-18 font-bold max-w-40 xs:max-w-none pl-2">
         {{ title }}
       </h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
@@ -14,12 +12,15 @@
           height="h-8"
           width="w-8"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" variant="filled" size="xxs" />
         </app-btn-icon>
 
-        <span class="px-2 text-s-12 text-info font-medium"
-          >{{ t('portfolio.gains_and_losses.page_of', { current: currentPage + 1, total: totalPages }) }}</span
-        >
+        <span class="px-2 text-s-12 text-text-subtle font-medium">{{
+          t('portfolio.gains_and_losses.page_of', {
+            current: currentPage + 1,
+            total: totalPages,
+          })
+        }}</span>
         <app-btn-icon
           :disabled="isLoading || currentPage + 1 >= totalPages"
           :label="t('common.next_page')"
@@ -27,7 +28,7 @@
           height="h-8"
           width="w-8"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" variant="filled" size="xxs" />
         </app-btn-icon>
       </div>
     </div>
@@ -36,11 +37,15 @@
       sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
     >
       <div
-        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
+        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-text-subtle tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >
         <p class="col-span-2">{{ t('portfolio.table.token_header') }}</p>
-        <p class="col-span-1">{{ t('portfolio.gains_and_losses.price_24h_header') }}</p>
-        <p class="text-right col-span-1">{{ t('portfolio.gains_and_losses.gain_loss_header') }}</p>
+        <p class="col-span-1">
+          {{ t('portfolio.gains_and_losses.price_24h_header') }}
+        </p>
+        <p class="text-right col-span-1">
+          {{ t('portfolio.gains_and_losses.gain_loss_header') }}
+        </p>
       </div>
       <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow
@@ -54,7 +59,7 @@
           v-if="type === 'stock' && allStocks.length === 0"
           class="flex flex-col items-center justify-center p-6 text-center"
         >
-          <p class="text-s-14 text-info mb-4">
+          <p class="text-s-14 text-text-subtle mb-4">
             {{ t('portfolio.gains_and_losses.empty_stocks') }}
           </p>
           <app-base-button
@@ -69,7 +74,7 @@
         <div
           v-for="token in 4"
           :key="`loading-gains-and-losses-${token}`"
-          class="bg-grey-10 animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
+          class="bg-background-default-hover animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
         ></div>
       </div>
     </app-sheet>
@@ -81,10 +86,14 @@
               ? ROUTES_MAIN.STOCKS.NAME
               : ROUTES_MAIN.CRYPTO.NAME,
         }"
-        class="font-bold text-s-14 transition-colors duration-300 hover:text-primary flex items-center px-1"
+        class="font-bold text-s-14 transition-colors duration-300 hover:text-text-brand flex items-center px-1"
       >
         {{ buttonText }}
-        <arrow-long-up-icon class="rotate-90 w-4 h-4 ml-1.5"
+        <AppIcon
+          name="arrow-long-up"
+          variant="filled"
+          size="xxs"
+          class="rotate-90 ml-1.5"
       /></router-link>
     </div>
   </div>
@@ -99,11 +108,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import { usePaginate } from '@/composables/usePaginate'
 import { ROUTES_MAIN } from '@/router/routeNames'

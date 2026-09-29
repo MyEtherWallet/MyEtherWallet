@@ -1,64 +1,39 @@
 <template>
-  <div>
+  <div
+    class="flex flex-col -mx-4 -mb-6 sm:-mt-6 min-h-[calc(100%+24px)] sm:min-h-[calc(100%+48px)]"
+  >
+    <div class="flex flex-col gap-1 pt-8 px-5 w-full max-w-[540px] mx-auto">
+      <p class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
+        {{ $t('trade.title') }}
+      </p>
+      <p class="text-s-12 text-text-subtle leading-[18px]">
+        {{ $t('trade.subtitle') }}
+      </p>
+    </div>
     <div
       :class="[
-        'static w-full flex flex-col items-center justify-items-stretch gap-3',
+        'static w-full flex flex-col items-center justify-items-stretch gap-3 p-5',
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner location="small-banner-trade" />
-
-        <!-- Header stays at full opacity when blocked: only the form below the
-             unavailable card is dimmed. -->
-        <div class="flex items-end justify-between mb-2 px-4">
-          <div>
-            <p class="font-bold text-s-28">{{ $t('trade.title') }}</p>
-            <p class="text-info text-s-12 ml-1">
-              {{ $t('trade.subtitle') }}
-            </p>
-          </div>
-          <app-btn-text
-            v-if="
-              isTradingSessionOpen &&
-              isCurrentNetworkSupported &&
-              !isTradingRestrictedInRegion
-            "
-            class="text-primary text-s-14 pb-1"
-            @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
-          >
-        </div>
-        <!-- Market Closed -->
-        <app-unavailable-card
-          v-if="
-            !isLoading &&
-            marketStatus &&
-            !isTradingSessionOpen &&
-            isCurrentNetworkSupported
-          "
-          accent="primary"
+        <trade-market-status-pill
+          :status="pillStatus"
+          :until-text="untilText"
+          :next-open-text="nextOpenText"
+          :day-label="dayLabel"
+          :marker-pct="markerPct"
+          :time-label="timeLabel"
+          :session-ranges="sessionRanges"
           class="mb-3"
-          :title="$t('trade.market_closed')"
-          :description="marketStatus.reason?.message"
-        >
-          <template #action>
-            <div class="text-center">
-              <p
-                v-if="countdownText"
-                class="font-medium text-s-16 mb-1 tabular-nums"
-              >
-                {{ $t('trade.opens_in', { countdown: countdownText }) }}
-              </p>
-              <p class="text-grey-50 text-s-11 mt-1">
-                {{ formatNextOpen(marketStatus.nextOpen) }}
-              </p>
-            </div>
-          </template>
-        </app-unavailable-card>
+        />
 
         <!-- Network Not Supported -->
         <app-unavailable-card
-          v-if="!isLoading && !isCurrentNetworkSupported"
+          v-if="
+            !isLoading &&
+            !isCurrentNetworkSupported &&
+            !isTradingRestrictedInRegion
+          "
           class="mb-3"
           :title="$t('trade.network_not_supported')"
           :description="
@@ -75,7 +50,7 @@
               <button
                 v-for="chain in supportedChainsList"
                 :key="chain.name"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                class="flex items-center gap-2 px-4 py-2 bg-background-brand-subtle hover:bg-background-brand-subtle-hover font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
                 @click="switchToNetwork(chain)"
               >
                 <app-token-logo
@@ -84,6 +59,7 @@
                   :sumbol="chain.nameLong"
                   width="w-5"
                   height="h-5"
+                  no-shadow
                 />
                 <span>{{ chain.nameLong || chain.name }}</span>
               </button>
@@ -93,20 +69,19 @@
 
         <!-- Trading Restricted -->
         <app-unavailable-card
-          v-if="
-            !isLoading &&
-            isTradingRestrictedInRegion &&
-            isCurrentNetworkSupported
-          "
+          v-if="!isLoading && isTradingRestrictedInRegion"
           class="mb-3"
           :title="$t('trade.trading_not_available')"
           :description="$t('trade.trading_restricted')"
         >
           <template #icon>
             <div class="relative">
-              <globe-asia-australia-icon
-                class="w-12 h-12 text-black"
+              <AppIcon
+                name="globe-asia-australia"
+                variant="filled"
+                size="xxl"
                 aria-hidden="true"
+                class="text-black"
               />
               <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
@@ -115,11 +90,14 @@
               -->
 
               <span
-                class="absolute -top-2 -right-2 p-1 rounded-full bg-error border-2 border-white flex items-center justify-center"
+                class="absolute -top-2 -right-2 p-1 rounded-full bg-background-error border-2 border-white flex items-center justify-center"
               >
-                <exclamation-circle-icon
-                  class="w-4 h-4 text-white"
+                <AppIcon
+                  name="exclamation-circle"
+                  variant="filled"
+                  size="xxs"
                   aria-hidden="true"
+                  class="text-white"
                 />
               </span>
             </div>
@@ -133,207 +111,58 @@
         </app-unavailable-card>
 
         <div :class="['relative transition-all duration-300', blockedClass]">
-          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
-            <select-chain-for-app
-              :can-store="false"
-              :passed-chains="fromChains"
-              :preselected-chain="selectedFromChain"
-              @update:selected-chain="setFromChain"
-            />
-          </div>
-          <!-- From Section -->
-          <div
+          <trade-amount-card
             v-if="supportedNetwork"
-            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
-          >
-            <p class="text-s-12 mb-1 font-bold ml-3">
-              {{ $t('trade.you_are_selling') }}
-            </p>
+            v-model:amount="fromAmount"
+            v-model:selected-token="fromTokenModel"
+            v-model:error="fromAmountError"
+            side="sell"
+            :external-loading="isLoading || !swapLoaded"
+            :fiat-loading="isLoadingQuote"
+            :balance-error="isInsufficientBalanceError"
+            :tokens="fromTokens"
+            :show-balance="isWalletConnected"
+            :network-name="selectedFromChain?.name"
+            :is-pristine="isPristine"
+            :disabled-tokens="disabledTokenAddresses"
+            :max-disabled="isNativeFromToken"
+            @percent="setPercentageAmount"
+            @select:token="onFromTokenSelected"
+          />
 
-            <div>
-              <app-swap-enter-amount
-                v-model:amount="fromAmount"
-                v-model:selected-token="fromTokenModel"
-                v-model:error="fromAmountError"
-                @select:token="onFromTokenSelected"
-                :external-loading="isLoading || !swapLoaded"
-                :tokens="fromTokens"
-                :show-balance="isWalletConnected"
-                :network-name="selectedFromChain?.name"
-                :is-pristine="isPristine"
-                :disabled-tokens="disabledTokenAddresses"
-                sort-context="trade"
-                class="mt-2"
-              >
-                <!-- Percentage Buttons -->
-
-                <template #header>
-                  <div
-                    v-if="isWalletConnected && fromTokenSelected"
-                    class="flex justify-end gap-2 -mt-2 mr-1 mb-4"
-                  >
-                    <button
-                      v-for="pct in [25, 50, 75, 100]"
-                      :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                      :disabled="
-                        pct === 100 &&
-                        fromTokenSelected?.address === MAIN_TOKEN_CONTRACT
-                      "
-                      :class="{
-                        'opacity-40 cursor-not-allowed':
-                          pct === 100 &&
-                          fromTokenSelected?.address === MAIN_TOKEN_CONTRACT,
-                      }"
-                      @click="setPercentageAmount(pct)"
-                    >
-                      {{ pct === 100 ? $t('common.max') : `${pct}%` }}
-                    </button>
-                  </div></template
-                ></app-swap-enter-amount
-              >
-            </div>
-          </div>
-
-          <!-- Arrow Button -->
-          <div class="relative h-0 z-10 flex justify-center items-center">
-            <!-- <button
-              :aria-label="$t('trade.swap_from_to')"
-              :class="[
-                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
-              ]"
-              @click="swapTokens"
-            >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </button> -->
-            <!-- Arrow Button -->
+          <div class="relative h-0 z-10 flex justify-center">
             <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+              aria-hidden="true"
+              class="absolute top-1.5 -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <AppIcon name="arrow-down" variant="filled" size="s" />
             </div>
           </div>
 
-          <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">
-              {{ $t('trade.you_are_buying') }}
-            </p>
-            <app-swap-enter-amount
-              v-model:amount="toAmount"
-              v-model:selected-token="toTokenModel"
-              v-model:error="toAmountError"
-              @select:token="onToTokenSelected"
-              :external-loading="isLoadingQuote"
-              :show-balance="false"
-              :tokens="toTokenSantized"
-              :readonly="true"
-              :network-name="selectedFromChain?.name"
-              :is-estimate="true"
-              :is-from-view="false"
-              :is-pristine="isPristine"
-              :disabled-tokens="disabledTokenAddresses"
-              sort-context="trade"
-              class="mt-2"
-            />
-          </div>
-        </div>
-
-        <!-- Market Closed Banner - Centered Overlay -->
-        <div
-          v-if="
-            !isLoading &&
-            marketStatus &&
-            !isTradingSessionOpen &&
-            isCurrentNetworkSupported &&
-            !isTradingRestrictedInRegion
-          "
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-        >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">
-                {{ $t('trade.market_closed') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{ marketStatus.reason?.message }}
-            </p>
-            <div class="text-center">
-              <p
-                v-if="countdownText"
-                class="font-medium text-s-16 mb-1 tabular-nums"
-              >
-                {{ $t('trade.opens_in', { countdown: countdownText }) }}
-              </p>
-              <p class="text-grey-50 text-s-11 mt-1">
-                {{ formatNextOpen(marketStatus.nextOpen) }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Network Not Supported Banner - Centered Overlay -->
-        <div
-          v-if="
-            !isLoading &&
-            !isCurrentNetworkSupported &&
-            !isTradingRestrictedInRegion
-          "
-          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-        >
-          <div
-            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
-          >
-            <div class="flex items-center gap-2 justify-center mb-2">
-              <exclamation-circle-icon class="w-5 h-5 text-warning" />
-              <p class="text-warning font-medium text-s-16">
-                {{ $t('trade.network_not_supported') }}
-              </p>
-            </div>
-            <p class="text-info text-s-14 text-center mb-4">
-              {{
-                $t('trade.trading_not_available_on', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-              }}
-            </p>
-            <div class="flex flex-col items-center justify-center">
-              <div class="">
-                <button
-                  v-for="chain in supportedChainsList.reverse()"
-                  :key="chain.name"
-                  class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
-                  @click="switchToNetwork(chain)"
-                >
-                  <app-token-logo
-                    v-if="chain.icon"
-                    :url="chain.icon"
-                    :sumbol="chain.nameLong"
-                    width="w-5"
-                    height="h-5"
-                  />
-                  <span>{{ chain.nameLong || chain.name }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <trade-amount-card
+            v-model:amount="toAmount"
+            v-model:selected-token="toTokenModel"
+            v-model:error="toAmountError"
+            side="buy"
+            :external-loading="isLoadingQuote"
+            :tokens="toTokenSantized"
+            :show-balance="isWalletConnected"
+            :network-name="selectedFromChain?.name"
+            :is-pristine="isPristine"
+            :disabled-tokens="disabledTokenAddresses"
+            class="mt-3"
+            @select:token="onToTokenSelected"
+          />
         </div>
       </div>
 
       <!-- Error Display -->
       <div
-        v-if="!isLoading && displayGeneralError"
+        v-if="!isLoading && displayGeneralError && !isPairUnavailable"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
+        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
-        <p class="text-error text-s-14 text-center break-words">
+        <p class="text-text-error text-s-14 text-center break-words">
           {{ displayGeneralError }}
         </p>
       </div>
@@ -347,9 +176,9 @@
           nonTradeableAssetMessage
         "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-background-warning-subtle border border-border-warning rounded-12 mb-2"
       >
-        <p class="text-warning text-s-14 text-center">
+        <p class="text-text-warning text-s-14 text-center">
           <app-token-symbol
             :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
             :address="
@@ -369,16 +198,11 @@
         </p>
       </div>
 
-      <div
-        :class="[
-          'w-full max-w-[340px] transition-all duration-300',
-          blockedClass,
-        ]"
-      >
+      <div class="w-full max-w-[340px] transition-all duration-300">
         <app-base-button
           v-if="!isWalletConnected || isWatchOnly"
           class="w-full"
-          :disabled="!supportedNetwork"
+          :disabled="!supportedNetwork || isTradeBlocked"
           @click="connectWalletForTrade"
         >
           {{ $t('connect_wallet') }}
@@ -390,52 +214,55 @@
               source="trade"
               class="mb-5 -mt-1"
             />
+            <button
+              v-else-if="isTradeDisabled"
+              type="button"
+              disabled
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-text-muted text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+            >
+              {{ ctaDisabledLabel }}
+            </button>
             <app-base-button
               v-else
-              class="w-full"
-              :disabled="isTradeDisabled || isApproving"
-              @click="needsApproval ? handleApprove() : openTradeModal()"
+              class="w-full !font-semibold !py-[13px] text-s-16 leading-[22px] tracking-[-0.32px]"
+              @click="startTradeFlow"
             >
-              <span
-                v-if="isApproving"
-                class="flex items-center justify-center gap-2"
-              >
-                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                    fill="none"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                {{ $t('trade.approving') }}
-              </span>
-              <span v-else>{{
-                needsApproval ? $t('common.approve') : $t('trade.trade_button')
-              }}</span>
+              {{ $t('trade.review_trade') }}
             </app-base-button>
           </transition>
+
+          <div
+            v-if="isPairUnavailable && isTradingSessionOpen"
+            class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
+          >
+            <AppIcon
+              name="exclamation-triangle"
+              variant="filled"
+              size="s"
+              class="flex-none text-text-warning"
+            />
+            <p class="text-s-14 leading-[20px] text-black">
+              {{ $t('trade.pair_unavailable.notice') }}
+            </p>
+          </div>
         </div>
       </div>
-      <app-need-help
-        :title="$t('trade.need_help')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mx-auto"
-        :class="blockedClass"
-      />
+    </div>
+
+    <div v-if="showHelpLink" class="mt-auto flex justify-center px-5 pb-5">
+      <a
+        href="https://help.myetherwallet.com/en/article/what-is-gas"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex h-10 items-center px-3 rounded-24 text-text-brand text-s-14 font-semibold tracking-[-0.28px] hoverNoBG"
+      >
+        {{ $t('trade.need_help') }}
+      </a>
     </div>
 
     <!-- Trade Quote Modal -->
-    <trade-quote-modal
-      v-model:is-open="quoteModalOpen"
+    <trade-review-modal
+      v-model:is-open="reviewModalOpen"
       :quote="currentQuote"
       :from-token="fromTokenSelected"
       :to-token="toTokenSelected"
@@ -443,48 +270,50 @@
       :loading="txProceeding"
       :chain="selectedFromChain"
       :is-cashout="isCashOutTradableAsset"
+      :expires-at="quoteExpiresAt"
+      :suppress-decline-tracking="quoteRefreshFailed"
       @confirm="confirmTrade"
-      @cancel="quoteModalOpen = false"
+      @expired="refreshExpiredQuote"
     />
 
-    <!-- Trade Initiated Modal -->
-    <trade-initiated-modal
-      v-model:is-open="tradeInitiatedOpen"
+    <trade-progress-modal
+      v-model:is-open="progressModalOpen"
       :order-hash="orderHash"
       :from-chain="selectedFromChain"
       :from-token="fromTokenSelected"
       :to-token="toTokenSelected"
-      :from-amount="fromAmount"
-      :to-amount="toAmount"
     />
+
+    <trade-approve-spending-modal
+      v-model:is-open="approvalIntroOpen"
+      :token-symbol="fromTokenSelected?.symbol"
+      :token-address="fromTokenSelected?.address"
+      :chain-id="selectedFromChain?.chainID"
+      @approve="confirmApproval"
+    />
+
+    <trade-waiting-approval-modal v-model:is-open="waitingApprovalOpen" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ArrowDownIcon, GlobeAsiaAustraliaIcon } from '@heroicons/vue/24/solid'
-// 16px variant: the badge glyph is drawn at 16px in the design, and the 24px
-// icon's strokes render muddy when scaled down that far.
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
-import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-
-// Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
-import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
-import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
-import TradeQuoteModal from './components/TradeQuoteModal.vue'
-import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
+import TradeAmountCard from './components/TradeAmountCard.vue'
+import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
+import TradeReviewModal from './components/TradeReviewModal.vue'
+import TradeProgressModal from './components/TradeProgressModal.vue'
+import TradeWaitingApprovalModal from './components/TradeWaitingApprovalModal.vue'
+import TradeApproveSpendingModal from './components/TradeApproveSpendingModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
-
+import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
+import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useTradeModule } from './composables/useTradeModule'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const {
   selectedChain,
   swapLoaded,
@@ -499,15 +328,11 @@ const {
   toAmount,
   toAmountError,
   isPristine,
-  marketStatus,
   isTradingSessionOpen,
   tradingRestrictedHelpUrl,
-  countdownText,
-  formatNextOpen,
   supportedNetwork,
   isCurrentNetworkSupported,
   supportedChainsList,
-  fromChains,
   fromTokens,
   toTokenSantized,
   displayGeneralError,
@@ -520,24 +345,46 @@ const {
   fromAmountError,
   isTradeDisabled,
   currentQuote,
-  needsApproval,
-  isApproving,
   txProceeding,
-  quoteModalOpen,
-  tradeInitiatedOpen,
+  approvalIntroOpen,
+  waitingApprovalOpen,
+  reviewModalOpen,
+  progressModalOpen,
+  quoteExpiresAt,
+  quoteRefreshFailed,
+  refreshExpiredQuote,
+  ctaDisabledLabel,
+  showHelpLink,
+  isInsufficientBalanceError,
+  isPairUnavailable,
+  pillStatus,
+  untilText,
+  nextOpenText,
+  dayLabel,
+  markerPct,
+  timeLabel,
+  sessionRanges,
   orderHash,
-  handleApprove,
-  openTradeModal,
+  startTradeFlow,
+  confirmApproval,
   confirmTrade,
-  clearValues,
-  setFromChain,
   switchToNetwork,
   setPercentageAmount,
   connectWalletForTrade,
   blockedClass,
+  isTradeBlocked,
   onFromTokenSelected,
   onToTokenSelected,
 } = useTradeModule()
+
+// Case-insensitive: the swap list can return a checksummed native sentinel,
+// and an exact-match miss here would let MAX select the entire native balance
+// with nothing reserved for gas.
+const isNativeFromToken = computed(
+  () =>
+    fromTokenSelected.value?.address?.toLowerCase() ===
+    MAIN_TOKEN_CONTRACT.toLowerCase(),
+)
 
 // The token selects are `v-model`-bound but hold `null` when nothing is picked,
 // which the child prop types as `undefined`.

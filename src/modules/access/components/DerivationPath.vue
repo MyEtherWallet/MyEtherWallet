@@ -6,7 +6,9 @@
     >
       <div class="flex items-center">
         <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p
+            class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
+          >
             {{ $t('derivation_path.title') }}
           </p>
           <p
@@ -14,12 +16,17 @@
             class="text-ellipsis truncate font-medium text-sm"
           >
             {{ selectedPath.label }}
-            <span class="text-info text-s-12 leading-[16px]">
+            <span class="text-text-subtle text-s-12 leading-[16px]">
               - {{ selectedPath.path }}</span
             >
           </p>
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="ml-auto mr-1"
+        />
       </div>
     </button>
 
@@ -51,7 +58,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-grey-10 border-0 w-full" />
+                <hr class="h-px bg-background-default-hover border-0 w-full" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -63,13 +70,15 @@
                 >
                   <div class="flex justify-between items-center w-full">
                     <p>{{ path.label }}</p>
-                    <p class="text-info">{{ path.path }}</p>
+                    <p class="text-text-subtle">{{ path.path }}</p>
                   </div>
                 </button>
               </div>
               <!-- Seacrh not found-->
               <div v-else>
-                <div class="flex justify-center mt-10 h-[400px] text-info">
+                <div
+                  class="flex justify-center mt-10 h-[400px] text-text-subtle"
+                >
                   <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
@@ -92,7 +101,7 @@
                   $t('common.add')
                 }}</app-base-button>
                 <app-btn-text
-                  class="text-primary mt-4"
+                  class="text-text-brand mt-4"
                   is-large
                   @click="setShowAddPath(false)"
                   >{{ $t('common.cancel') }}</app-btn-text
@@ -111,7 +120,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
@@ -123,7 +132,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
 
@@ -135,11 +144,13 @@ defineProps({
   },
 })
 
-const chainStore = useChainsStore()
+// The chain picked in the access dialog drives the path list — not the app's
+// global network, which may still be a different chain (or type) at this point.
+const accessStore = useAccessStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(accessStore)
 // TODO: handle DOT and SOL later on
 const defaultPath = isEvmChain.value
   ? Bip44Paths[WALLET_TYPES.MNEMONIC]
@@ -180,7 +191,7 @@ watch(
 
 watch(
   () => selectedChain.value,
-  (newValue: Chain | undefined) => {
+  (newValue: Chain | null) => {
     if (newValue) {
       setPaths()
       // reset search input
@@ -190,6 +201,10 @@ watch(
 )
 
 const setPaths = () => {
+  // No chain selected yet (the dialog's chain is null until it opens): nothing
+  // to reconcile against, and falling through would overwrite the stored
+  // derivation with the Ethereum default.
+  if (!selectedChain.value) return
   if (selectedDerivation.value) {
     selectedPath.value = selectedDerivation.value
   }

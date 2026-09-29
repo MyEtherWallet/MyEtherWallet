@@ -15,7 +15,9 @@
       >
         <!-- Search -->
         <div class="sticky top-0 bg-white z-20">
-          <div class="flex items-center mb-2 bg-mewBg rounded-full p-1">
+          <div
+            class="flex items-center mb-2 bg-background-brand-subtle rounded-full p-1"
+          >
             <app-search-input
               v-model="searchInput"
               class="grow"
@@ -23,7 +25,7 @@
               bg-class="bg-transparent"
             />
           </div>
-          <div class="h-px bg-grey-10 w-full mb-2"></div>
+          <div class="h-px bg-background-default-hover w-full mb-2"></div>
         </div>
         <!-- Search Result-->
         <div
@@ -36,7 +38,7 @@
             class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
             :class="[
               chain.name === selectedChain?.name
-                ? 'bg-mewBg'
+                ? 'bg-background-brand-subtle'
                 : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedChain(chain)"
@@ -53,14 +55,16 @@
                   />
                   <div
                     v-else
-                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                    class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
                   ></div>
                 </div>
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
-              <check-icon
+              <AppIcon
+                name="check"
+                variant="filled"
                 v-if="chain.name === selectedChain?.name"
-                class="w-6 h-6 text-[#2F80ED]"
+                class="text-text-brand"
               />
             </div>
           </button>
@@ -68,10 +72,8 @@
             v-if="notSupportedChains.length"
             class="flex items-center gap-1 pl-5 pt-5 pb-1"
           >
-            <app-tooltip
-              :text="$t('select_chain.incompatible_tooltip')"
-            >
-              <p class="text-s-16 font-medium text-info">
+            <app-tooltip :text="$t('select_chain.incompatible_tooltip')">
+              <p class="text-s-16 font-medium text-text-subtle">
                 {{ $t('select_chain.incompatible_title') }}
               </p></app-tooltip
             >
@@ -93,7 +95,7 @@
                   />
                   <div
                     v-else
-                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                    class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
                   ></div>
                 </div>
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
@@ -103,7 +105,7 @@
         </div>
         <!-- Search not found-->
         <div v-else>
-          <div class="flex justify-center mt-10 h-[400px] text-info">
+          <div class="flex justify-center mt-10 h-[400px] text-text-subtle">
             <p>{{ $t('common.not_found.chains') }}</p>
           </div>
         </div>
@@ -135,13 +137,13 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const prop = defineProps({
   selectedChain: {
     type: Object as () => Chain | null,
@@ -198,9 +200,7 @@ const setSelectedChain = (chain: Chain) => {
 /** -------------------------------
  * Dialog
  -------------------------------*/
-const openDialog = defineModel('isOpen', {
-  default: false,
-})
+const openDialog = defineModel<boolean>('isOpen', { default: false })
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }
@@ -255,7 +255,13 @@ const searchResults = computed<Chain[]>(() => {
     const currentChainType =
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
     chainsToSearch = currentChainType
-      ? _chains.filter(chain => chain.type === currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type === currentChainType ||
+            // Keep the "All networks" option regardless of the current chain
+            // type so has-all callers never lose it (its type is EVM).
+            (prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : _chains
   } else {
     chainsToSearch = _chains
@@ -263,14 +269,21 @@ const searchResults = computed<Chain[]>(() => {
 
   if (!searchInput.value || searchInput.value === '') {
     const sortedChains = sortChains(chainsToSearch)
-    if (!prop.selectedChain) {
-      return sortedChains
+    const ordered = prop.selectedChain
+      ? // Put selected chain first, then sorted chains (removing duplicate)
+        [
+          prop.selectedChain,
+          ...sortedChains.filter(c => c.name !== prop.selectedChain?.name),
+        ]
+      : sortedChains
+    // Pin the "All networks" option to the top when the caller opts in
+    // (has-all), so it stays first regardless of the current selection/sort.
+    if (prop.hasAll) {
+      const allName = ALL_CHAINS.value.name
+      const all = ordered.find(c => c.name === allName)
+      if (all) return [all, ...ordered.filter(c => c.name !== allName)]
     }
-    // Put selected chain first, then sorted chains (removing duplicate)
-    const filtered = sortedChains.filter(
-      c => c.name !== prop.selectedChain?.name,
-    )
-    return [prop.selectedChain, ...filtered]
+    return ordered
   }
   const beginsWith = chainsToSearch.filter(chain => {
     return chain.nameLong
@@ -299,7 +312,13 @@ const notSupportedChains = computed<Chain[]>(() => {
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
 
     const _otherChains = currentChainType
-      ? _chains.filter(chain => chain.type !== currentChainType)
+      ? _chains.filter(
+          chain =>
+            chain.type !== currentChainType &&
+            // "All networks" stays in the compatible list (see searchResults),
+            // so never surface it under the incompatible section.
+            !(prop.hasAll && chain.name === ALL_CHAINS.value.name),
+        )
       : []
 
     if (!searchInput.value || searchInput.value === '') {

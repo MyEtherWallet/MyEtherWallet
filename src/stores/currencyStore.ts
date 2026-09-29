@@ -8,39 +8,41 @@ import * as Sentry from '@sentry/vue'
 
 export interface SupportedCurrency {
   code: string
-  /** Country / region label shown next to the code in the selector. */
-  name: string
 }
 
 /**
  * App-wide display currencies. USD is the base currency all prices arrive in.
  * USD/EUR/GBP are listed first, the rest alphabetically by code.
+ *
+ * The country / region label shown next to each code in the selector is
+ * localized via i18n (`settings.currency_country.<code>`), so it is not
+ * stored here — keep this list and that i18n block in sync.
  */
 export const SUPPORTED_CURRENCIES: SupportedCurrency[] = [
-  { code: 'USD', name: 'United States' },
-  { code: 'EUR', name: 'France, Germany, Italy, Netherlands' },
-  { code: 'GBP', name: 'United Kingdom' },
-  { code: 'AED', name: 'United Arab Emirates' },
-  { code: 'AUD', name: 'Australia' },
-  { code: 'BDT', name: 'Bangladesh' },
-  { code: 'BRL', name: 'Brazil' },
-  { code: 'CAD', name: 'Canada' },
-  { code: 'CHF', name: 'Switzerland' },
-  { code: 'CNY', name: 'China' },
-  { code: 'HKD', name: 'Hong Kong' },
-  { code: 'IDR', name: 'Indonesia' },
-  { code: 'INR', name: 'India' },
-  { code: 'JPY', name: 'Japan' },
-  { code: 'KRW', name: 'South Korea' },
-  { code: 'MXN', name: 'Mexico' },
-  { code: 'PKR', name: 'Pakistan' },
-  { code: 'PLN', name: 'Poland' },
-  { code: 'SGD', name: 'Singapore' },
-  { code: 'THB', name: 'Thailand' },
-  { code: 'TRY', name: 'Turkey' },
-  { code: 'TWD', name: 'Taiwan' },
-  { code: 'UAH', name: 'Ukraine' },
-  { code: 'VND', name: 'Vietnam' },
+  { code: 'USD' },
+  { code: 'EUR' },
+  { code: 'GBP' },
+  { code: 'AED' },
+  { code: 'AUD' },
+  { code: 'BDT' },
+  { code: 'BRL' },
+  { code: 'CAD' },
+  { code: 'CHF' },
+  { code: 'CNY' },
+  { code: 'HKD' },
+  { code: 'IDR' },
+  { code: 'INR' },
+  { code: 'JPY' },
+  { code: 'KRW' },
+  { code: 'MXN' },
+  { code: 'PKR' },
+  { code: 'PLN' },
+  { code: 'SGD' },
+  { code: 'THB' },
+  { code: 'TRY' },
+  { code: 'TWD' },
+  { code: 'UAH' },
+  { code: 'VND' },
 ]
 
 const SUPPORTED_CODES = new Set(SUPPORTED_CURRENCIES.map(c => c.code))

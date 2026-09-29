@@ -16,7 +16,7 @@
             :alt="t('home')"
             width="280"
             height="96"
-            class="w-[140px] h-[48px] flex-none object-contain"
+            class="w-[140px] h-12 flex-none object-contain"
           />
           <img
             v-else
@@ -41,7 +41,7 @@
             :key="index"
             :to="{ name: item.routeName }"
             class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-surface"
+            active-class="bg-background-default-hover"
             v-ripple
           >
             {{ item.title }}
@@ -62,7 +62,12 @@
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
-              <chevron-down-icon class="w-4 h-4 ml-2" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="ml-2"
+              />
             </button>
           </template>
         </app-select>
@@ -75,7 +80,7 @@
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
           v-else-if="isRestoringWallet"
-          class="w-[160px] h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
+          class="w-40 h-10 rounded-[20px] bg-background-default-hover animate-pulse shrink-0"
           aria-hidden="true"
         />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
@@ -83,8 +88,10 @@
         <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
-            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
-            :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
+            v-if="
+              !isWalletConnected && !isRestoringWallet && !hasAnySavedAccount
+            "
+            :to="createRoute"
             class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
             @click="
               analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
@@ -100,8 +107,10 @@
           </router-link>
           <!-- Connect wallet button -->
           <router-link
-            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
-            :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+            v-if="
+              !isWalletConnected && !isRestoringWallet && !hasAnySavedAccount
+            "
+            :to="accessRoute"
             @click="
               analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
                 source: 'Header_Connect',
@@ -141,16 +150,13 @@ import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ROUTES_MAIN,
-  ROUTES_ACCESS,
-  ROUTES_CREATE_WALLET,
-} from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
+import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
@@ -170,6 +176,9 @@ const { isWalletConnected } = storeToRefs(store)
 const { setWatchOnlyIfExist } = store
 const { selectedChain } = storeToRefs(chainStore)
 const { refreshDetectedAddress } = useDetectedAddress()
+// Both CTAs open the flow over the CURRENT page (/stocks/access, not /portfolio/access),
+// so cancelling returns the user here instead of rerouting them.
+const { accessRoute, createRoute } = useWalletFlowRoute()
 const watchOnlyStore = useWatchOnlyStore()
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 // The perps nav entry is no longer gated on region — perps renders a blocked

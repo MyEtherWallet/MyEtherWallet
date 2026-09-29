@@ -34,6 +34,7 @@
           :primary-label="holdCardCta.label"
           :primary-cta="holdCardCta.id"
           :primary-disabled="holdPrimaryDisabled"
+          :round="round"
           :secondary-label="$t('rwaRewards.more_info')"
           @primary="onHoldPrimary"
           @secondary="onMoreInfo"
@@ -58,7 +59,7 @@
       ></div>
       <button
         v-show="canScrollLeft"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-border-default bg-white z-[2]"
         :aria-label="$t('rwaRewards.previous')"
         @click="scrollPrev"
       >
@@ -79,7 +80,7 @@
       ></div>
       <button
         v-show="canScrollRight"
-        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-border-default bg-white z-[2]"
         :aria-label="$t('rwaRewards.next')"
         @click="scrollNext"
       >
@@ -121,10 +122,26 @@ const {
   activeReward,
   seasonEnd,
   canRegisterTrade,
+  canRetryTrade,
   isCampaignEnded,
   isUnderReview,
   isClaiming,
+  qualificationAmount,
+  isRoundTwoActive,
+  holdTotalDays,
+  rewardAmountLabel,
+  totalRewardAmountLabel,
 } = storeToRefs(holdingsStore)
+
+const round = computed<1 | 2>(() => (isRoundTwoActive.value ? 2 : 1))
+// Server-driven when the season block has landed; the campaign's advertised
+// round-1 copy otherwise.
+const rewardLabel = computed(
+  () => rewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
+const totalLabel = computed(
+  () => totalRewardAmountLabel.value ?? rewardLabel.value,
+)
 const { isWatchOnly } = storeToRefs(useWalletStore())
 const { openAccessDialog } = useAccessStore()
 
@@ -162,10 +179,12 @@ const onTradeInfo = () => {
   isTradeInfoOpen.value = true
 }
 
+// Null for a missing or unparseable date, so callers can drop the copy rather
+// than render a countdown of "0 days".
 const daysUntil = (ts?: string | null) => {
-  if (!ts) return 0
+  if (!ts) return null
   const ms = new Date(ts).getTime()
-  if (Number.isNaN(ms)) return 0
+  if (Number.isNaN(ms)) return null
   return Math.max(0, Math.ceil((ms - Date.now()) / 86_400_000))
 }
 
@@ -174,6 +193,8 @@ const holdCardStatus = computed<
   | 'holding'
   | 'claimed'
   | 'claimable'
+  | 'lost'
+  | 'expired'
   | 'paused'
   | 'full'
   | 'ended'
@@ -189,13 +210,17 @@ const holdCardStatus = computed<
   if (status.value === 'earned') return 'claimable'
   if (status.value === 'holding') return 'holding'
   if (status.value === 'claimed') return 'claimed'
+  // A finished entry keeps its own badge in either round; whether it can be
+  // retried is decided by the CTA (round 1 only, and only while the season
+  // still registers trades).
+  if (status.value === 'lost') return 'lost'
+  if (status.value === 'expired') return 'expired'
   if (status.value === 'temporarilyPaused') return 'paused'
   if (status.value === 'campaignFull') return 'full'
   if (status.value === 'campaignEnded') return 'ended'
   if (status.value === 'banned') return 'banned'
   if (status.value === 'notEligible') return 'notEligible'
-  // A finished entry (lost/expired) keeps its own status, but the offer can
-  // still be closed to new trades — surface why, rather than "ends in N days".
+  // The offer can be closed to new trades — surface why, rather than "ends in N days".
   if (!canRegisterTrade.value) return isCampaignEnded.value ? 'ended' : 'full'
   return 'ongoing'
 })
@@ -206,26 +231,46 @@ const holdCardStatus = computed<
 const holdCardDescription = computed(() =>
   holdCardStatus.value === 'full'
     ? t('rwaRewards.maxed_out_description')
-    : t('rwaRewards.hold_description'),
+    : t('rwaRewards.hold_description', {
+        amount: qualificationAmount.value,
+        total: totalLabel.value,
+      }),
 )
 
 // `id` is the stable value reported to analytics; the label is localized and
-// would otherwise split one funnel across every locale.
-const holdCardCta = computed(() => {
-  // Stays "Claim" even for an address that can't sign yet: the click routes
-  // through the login it needs, so the offer never reads as unavailable.
-  if (holdCardStatus.value === 'claimable')
-    return { label: t('rwaRewards.claim'), id: 'claim' }
-  if (holdCardStatus.value === 'full')
-    return { label: t('rwaRewards.continue'), id: 'continue_mew_mobile' }
-  return { label: t('rwaRewards.trade'), id: 'trade' }
+// would otherwise split one funnel across every locale. An empty label hides
+// the button — the terminal states only keep "More info".
+const holdCardCta = computed<{ label: string; id: string }>(() => {
+  switch (holdCardStatus.value) {
+    // Stays "Claim" even for an address that can't sign yet: the click routes
+    // through the login it needs, so the offer never reads as unavailable.
+    case 'claimable':
+      return {
+        label: t('rwaRewards.claim_amount', { amount: rewardLabel.value }),
+        id: 'claim',
+      }
+    case 'holding':
+      return { label: t('rwaRewards.check_progress'), id: 'check_progress' }
+    case 'claimed':
+      return { label: '', id: 'claimed' }
+    // Round 1 can be started over; a finished round 2 is terminal.
+    case 'lost':
+    case 'expired':
+      return canRetryTrade.value
+        ? { label: t('rwaRewards.trade_again'), id: 'trade_again' }
+        : { label: '', id: holdCardStatus.value }
+    case 'full':
+      return { label: t('rwaRewards.continue'), id: 'continue_mew_mobile' }
+    default:
+      return { label: t('rwaRewards.trade'), id: 'trade' }
+  }
 })
 
 // Only the states with something actionable keep a live button, and the claim
 // is held closed while one is already in flight.
 const holdPrimaryDisabled = computed(
   () =>
-    !['ongoing', 'holding', 'claimable', 'full'].includes(
+    !['ongoing', 'holding', 'claimable', 'full', 'lost', 'expired'].includes(
       holdCardStatus.value,
     ) ||
     (holdCardStatus.value === 'claimable' && isClaiming.value),
@@ -245,6 +290,10 @@ const onHoldPrimary = async () => {
     await holdingsStore.claim(reward)
     return
   }
+  if (holdCardStatus.value === 'holding') {
+    onMoreInfo()
+    return
+  }
   if (holdCardStatus.value === 'full') {
     window.open(configs.MEW_MOBILE_DOWNLOAD_URL, '_blank', 'noopener')
     return
@@ -252,27 +301,55 @@ const onHoldPrimary = async () => {
   onTradeCampaign()
 }
 
+// "2 weeks" when the hold is a whole number of weeks, "10 days" otherwise.
+const heldForDuration = computed(() => {
+  const days = holdTotalDays.value
+  if (days > 0 && days % 7 === 0) {
+    const weeks = days / 7
+    return `${weeks} ${t('rwaRewards.unit_week', weeks)}`
+  }
+  return `${days} ${t('rwaRewards.unit_day', days)}`
+})
+
 const holdCardStatusText = computed(() => {
-  if (holdCardStatus.value === 'holding')
-    return t('rwaRewards.hold_for_more_days', {
-      count: daysUntil(activeReward.value?.qualification_timestamp),
-    })
-  if (holdCardStatus.value === 'claimable')
-    return t('rwaRewards.claim_your_reward')
-  if (holdCardStatus.value === 'claimed') return t('rwaRewards.already_claimed')
-  if (holdCardStatus.value === 'paused')
-    return t('rwaRewards.temporarily_paused')
-  // Per design, the maxed-out card carries the "Campaign ended" badge — the web
-  // side of the campaign is over even though the season is still running.
-  if (holdCardStatus.value === 'full') return t('rwaRewards.campaign_ended')
-  if (holdCardStatus.value === 'underReview')
-    return t('rwaRewards.under_review')
-  if (holdCardStatus.value === 'ended') return t('rwaRewards.campaign_ended')
-  if (holdCardStatus.value === 'banned')
-    return t('rwaRewards.modal_banned_title')
-  if (holdCardStatus.value === 'notEligible')
-    return t('rwaRewards.modal_not_eligible_title')
-  return t('rwaRewards.ends_in_days', { count: daysUntil(seasonEnd.value) })
+  switch (holdCardStatus.value) {
+    case 'holding': {
+      const count = daysUntil(activeReward.value?.qualification_timestamp) ?? 0
+      return t(
+        'rwaRewards.hold_for_more_days',
+        { count, amount: rewardLabel.value },
+        count,
+      )
+    }
+    case 'claimable':
+      return t('rwaRewards.held_for', { duration: heldForDuration.value })
+    case 'claimed':
+      return t('rwaRewards.reward_claimed')
+    case 'lost':
+      return t('rwaRewards.not_held_long_enough')
+    case 'expired':
+      return t('rwaRewards.reward_expired')
+    case 'paused':
+      return t('rwaRewards.temporarily_paused')
+    // Per design, the maxed-out card carries the "Trading period ended" badge —
+    // the web side of the campaign is over even though the season is still running.
+    case 'full':
+    case 'ended':
+      return t('rwaRewards.campaign_ended')
+    case 'underReview':
+      return t('rwaRewards.under_review')
+    case 'banned':
+      return t('rwaRewards.modal_banned_title')
+    case 'notEligible':
+      return t('rwaRewards.modal_not_eligible_title')
+    default: {
+      // `/info` can come back without a season end. There is no countdown to
+      // show then, so the badge is left empty and the card hides it entirely.
+      const daysLeft = daysUntil(seasonEnd.value)
+      if (daysLeft === null) return ''
+      return t('rwaRewards.ends_in_days', { count: daysLeft }, daysLeft)
+    }
+  }
 })
 </script>
 

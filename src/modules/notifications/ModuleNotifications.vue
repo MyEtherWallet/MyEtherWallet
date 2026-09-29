@@ -54,7 +54,7 @@
         />
         <hr
           v-if="index < filteredNotifications.length - 1"
-          class="border-t border-grey-10 mt-4"
+          class="border-t border-border-default mt-4"
         />
       </div>
       <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
@@ -63,7 +63,7 @@
       <app-btn-text
         v-if="notificationsCount > 1"
         @click="deleteAllNotifications"
-        class="text-primary text-s-14"
+        class="text-text-brand text-s-14"
       >
         {{ $t('common.delete_all') }}
       </app-btn-text>
@@ -85,6 +85,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
+import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { ToastType } from '@/types/notification'
@@ -106,6 +107,7 @@ import {
   isBridgeNotification,
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
@@ -170,6 +172,7 @@ const walletStore = useWalletStore()
 const toastStore = useToastStore()
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
+const { selectedChain } = storeToRefs(useChainsStore())
 const rewardsStore = useRewardsStore()
 const {
   fetchUserRewards,
@@ -249,22 +252,88 @@ const deleteAllNotifications = () => {
       tradeOrdersStore.clearAllNotificationsForAddress(walletAddress.value)
   }
 }
-// Fetch balances after status changes
-const fetchBalances = () => {
+// Fetch balances after status changes. `silent` skips the shared loading
+// flag so a background refetch does not flash skeletons across the app.
+const fetchBalances = async ({ silent = false } = {}): Promise<void> => {
   if (!walletAddress.value) {
-    setIsLoadingBalances(false)
+    if (!silent) setIsLoadingBalances(false)
     return
   }
-  setIsLoadingBalances(true)
-  wallet.value
-    ?.getBalance()
-    .then((balances: TokenBalancesRaw) => {
-      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-    })
-    .catch((error: unknown) => {
-      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+  if (!silent) setIsLoadingBalances(true)
+  try {
+    const balances: TokenBalancesRaw | undefined =
+      await wallet.value?.getBalance()
+    if (balances) {
+      await useBalanceHandler(
+        balances,
+        setTokens,
+        silent ? () => {} : setIsLoadingBalances,
+      )
+    } else if (!silent) {
       setIsLoadingBalances(false)
-    })
+    }
+  } catch (error: unknown) {
+    if (import.meta.env.MODE !== 'production')
+      console.error('Balance fetch failed:', error)
+    if (!silent) setIsLoadingBalances(false)
+  }
+}
+
+// A filled order is reported by 1inch as soon as the fill tx lands, but the
+// balance API is indexer-backed and can lag it by several seconds. A single
+// refetch at that moment often returns the pre-trade balances, so the user
+// sees the "trade completed" toast while their sell token is still unspent.
+// Re-poll silently with backoff until either traded token's balance moves.
+const FILL_BALANCE_RETRY_DELAYS_MS = [3_000, 6_000, 12_000, 24_000]
+const fillRefreshTimers = new Set<number>()
+
+const stopFillRefreshRetries = () => {
+  fillRefreshTimers.forEach(timer => clearTimeout(timer))
+  fillRefreshTimers.clear()
+}
+
+const wait = (ms: number) =>
+  new Promise<void>(resolve => {
+    const timer = window.setTimeout(() => {
+      fillRefreshTimers.delete(timer)
+      resolve()
+    }, ms)
+    fillRefreshTimers.add(timer)
+  })
+
+const tradedBalancesSnapshot = (order: SavedTradeOrder) => ({
+  from: walletStore.getTokenBalance(order.fromTokenAddress || '')?.balanceWei,
+  to: walletStore.getTokenBalance(order.toTokenAddress || '')?.balanceWei,
+})
+
+const refreshBalancesAfterFill = async (order: SavedTradeOrder) => {
+  const before = tradedBalancesSnapshot(order)
+  await fetchBalances()
+  // Rewards depend on holdings; re-check them right after the first fetch, as
+  // before, rather than behind a retry loop that may run for ~45s or be
+  // cancelled on unmount.
+  void refreshRewards()
+
+  // The balance API serves the currently selected chain. If the user moved to
+  // another chain while the order was pending, the snapshot is not comparable
+  // and retrying would only burn requests — the switch back refetches anyway.
+  const onOrderChain =
+    parseInt(selectedChain.value?.chainID || '0') === order.chainId
+  if (!onOrderChain) return
+
+  const fillReflected = () => {
+    const now = tradedBalancesSnapshot(order)
+    return now.from !== before.from || now.to !== before.to
+  }
+
+  for (const delay of FILL_BALANCE_RETRY_DELAYS_MS) {
+    if (fillReflected()) return
+    await wait(delay)
+    // Bail if the wallet changed or the component went away mid-wait.
+    if (walletAddress.value?.toLowerCase() !== order.fromAddress.toLowerCase())
+      return
+    await fetchBalances({ silent: true })
+  }
 }
 
 // Runtime state (not persisted)
@@ -381,56 +450,82 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
   if (status.status === 'filled' && status.finalToAmount) {
     analytics.trackTradeEventStatus(TradeEventStatus.SUCCESS, analyticsPayload)
-    const finalAmount = formatFloatingPointValue(
-      formatUnits(status.finalToAmount, order.toDecimals),
-    ).value
+    // Raw decimal string — display sites format it, and the diff below parses
+    // it back. A grouped display string ("1,234.56") parses as 1 and produced
+    // nonsense fill-vs-expected percentages.
+    const finalAmount = formatUnits(status.finalToAmount, order.toDecimals)
     updates.finalToAmount = finalAmount
 
-    // Calculate percentage difference
-    const expected = parseFloat(order.expectedToAmount)
-    const actual = parseFloat(finalAmount)
-    if (expected > 0) {
-      updates.percentageDiff = ((actual - expected) / expected) * 100
+    // Orders persisted before the raw format may still hold display strings;
+    // BigNumber reads those as NaN and the diff is skipped, not fabricated.
+    const expected = BigNumber(order.expectedToAmount)
+    const actual = BigNumber(finalAmount)
+    if (expected.isGreaterThan(0) && !actual.isNaN()) {
+      updates.percentageDiff = actual
+        .minus(expected)
+        .dividedBy(expected)
+        .times(100)
+        .toNumber()
     }
 
     // Mark as unseen when status changes to filled (important update)
     updates.seen = false
 
+    if (order.rewardRegistered && !order.rewardToastShown) {
+      toastStore.addToastMessage({
+        text: t(
+          'rwaRewards.register_success',
+          { count: holdingsStore.round1HoldDays },
+          holdingsStore.round1HoldDays,
+        ),
+        type: ToastType.Success,
+      })
+      updates.rewardToastShown = true
+    }
+
     // Stop polling for this order
     stopPolling(hash)
-    if (!isNotificationsOpen.value) {
-      // Show success toast with trade info
+    toastStore.removeToastById(`trade-processing-${hash}`)
+    if (
+      !isNotificationsOpen.value &&
+      tradeOrdersStore.activeModalOrderHash !== hash
+    ) {
       toastStore.addToastMessage({
-        type: ToastType.Success,
-        text: t('notifications_module.toast_trade_filled'),
+        id: `trade-completed-${hash}`,
+        variant: 'dark',
+        text: t('trade.toast.trade_completed'),
+        textSecondary: t('trade.toast.received_total', {
+          amount: `${formatFloatingPointValue(finalAmount).value} ${order.toSymbol}`,
+        }),
         duration: 10000,
-        tradeInfo: {
-          fromToken: order.fromSymbol,
-          fromtTokenIcon: order.fromTokenIcon || '',
-          fromTokenIsStock: stocksStore.isStock(
-            order.fromTokenAddress || '',
-            order.chainName,
-          ),
-          fromAmount: formatFloatingPointValue(order.fromAmount).value,
-          toToken: order.toSymbol,
+        tradeStatus: {
+          kind: 'completed',
           toTokenIcon: order.toTokenIcon || '',
+          toSymbol: order.toSymbol,
           toTokenIsStock: stocksStore.isStock(
             order.toTokenAddress || '',
             order.chainName,
           ),
-          toAmount: formatFloatingPointValue(finalAmount).value,
         },
+        link: status.fills?.length
+          ? {
+              title: t('view_in_block_explorer'),
+              url: getTradeExplorerLink(order.chainId, status.fills[0].txHash),
+              isButton: true,
+            }
+          : undefined,
       })
     }
 
-    // Refresh balances after trade order is filled
-    consolidatedCall()
+    // Refresh balances after trade order is filled (with indexer-lag retries)
+    void refreshBalancesAfterFill(order)
   }
 
   if (status.status === 'cancelled' || status.status === 'expired') {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
+    toastStore.removeToastById(`trade-processing-${hash}`)
     if (earnedPotentialReward) {
       setEarnedPotentialReward(false)
     }
@@ -439,8 +534,10 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         ? TradeEventStatus.CANCELLED
         : TradeEventStatus.EXPIRED
     analytics.trackTradeEventStatus(event, analyticsPayload)
-    // Show error toast with trade info
-    if (!isNotificationsOpen.value) {
+    if (
+      !isNotificationsOpen.value &&
+      tradeOrdersStore.activeModalOrderHash !== hash
+    ) {
       toastStore.addToastMessage({
         type: ToastType.Error,
         text:
@@ -719,11 +816,15 @@ const updateNotificationStatus = (
   consolidatedCall()
 }
 
-const consolidatedCall = async () => {
-  await fetchBalances()
+const refreshRewards = async () => {
   await fetchUserRewards()
   await fetchEligibility()
   await checkRewards()
+}
+
+const consolidatedCall = async () => {
+  await fetchBalances()
+  await refreshRewards()
 }
 
 // Get the correct transaction status URL based on chain
@@ -821,6 +922,7 @@ let unsubscribe: (() => void) | null = null
 onUnmounted(() => {
   Object.keys(pollIntervals).forEach(stopPolling)
   Object.keys(statusPollIntervals).forEach(stopStatusPolling)
+  stopFillRefreshRetries()
   stopCountdown()
   unsubscribe?.()
 })
@@ -842,6 +944,7 @@ watch(
     // Stop all current polling
     Object.keys(pollIntervals).forEach(stopPolling)
     Object.keys(statusPollIntervals).forEach(stopStatusPolling)
+    stopFillRefreshRetries()
     stopCountdown()
     remainingTimes.value = {}
 

@@ -42,6 +42,14 @@ export const isUserRejectionError = (error: unknown): boolean => {
   )
 }
 
+export const isInsufficientFundsError = (error: unknown): boolean => {
+  const message = (error as { message?: string })?.message?.toLowerCase() ?? ''
+  return (
+    message.includes('insufficient funds') ||
+    message.includes('gas required exceeds allowance')
+  )
+}
+
 /**
  * Map a raw hardware-wallet (Ledger) error message to a friendly, localized
  * string. Hardware SDKs surface low-level messages such as
@@ -74,19 +82,44 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  // USB interface already claimed — Ledger Live, another tab, or a transport of
+  // ours that was never released (WebUSB: "Unable to claim interface")
+  if (
+    message.includes('unable to claim interface') ||
+    message.includes('claiminterface') ||
+    message.includes('interface is in use')
+  ) {
+    return t('common.error.ledger_interface_busy')
+  }
   // Transient Trezor connect state (APP-MEW-WEB-P5)
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')
   }
+  if (isDeviceInterfaceBusyError(raw)) {
+    return t('common.error.ledger_device_busy')
+  }
   return undefined
+}
+
+export const isDeviceInterfaceBusyError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return /claim\s*interface/.test(message)
 }
 
 /**
  * A transient Trezor Connect failure: the popup/iframe returned `success`
  * with an empty payload, so `@enkryptcom/hw-wallets` runs an unguarded
- * `Buffer.from(undefined)` and throws a cryptic TypeError (or "popup failed
- * to open"). Retrying usually succeeds, so this is safe to surface as a
+ * conversion on the missing field and throws a cryptic TypeError (or "popup
+ * failed to open"). Retrying usually succeeds, so this is safe to surface as a
  * friendly "reconnect" message rather than reporting it as noise.
+ *
+ * Known empty-payload shapes:
+ *  - signMessage:     `Buffer.from(undefined)` → "The first argument must be
+ *    one of type string, Buffer, ..." (MEW-2080).
+ *  - signTransaction: `BigInt(result.payload.v)` where `v` is undefined →
+ *    "Cannot convert undefined to a BigInt" (APP-MEW-WEB-56 / MEW-2198).
  */
 export const isTransientTrezorError = (error: unknown): boolean => {
   const message = (
@@ -94,6 +127,7 @@ export const isTransientTrezorError = (error: unknown): boolean => {
   ).toLowerCase()
   return (
     message.includes('popup failed to open') ||
-    message.includes('the first argument must be one of type string, buffer')
+    message.includes('the first argument must be one of type string, buffer') ||
+    message.includes('cannot convert undefined to a bigint')
   )
 }

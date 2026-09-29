@@ -7,8 +7,7 @@ import {
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { STOCK_INFO_ROUTE } from './routeStockInfo'
 import { PERP_INFO_ROUTE } from './routePerpInfo'
-import { ACCESS_ROUTES } from './routesAccess'
-import { CREATE_ROUTES } from './routesCreate'
+import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
 
@@ -24,21 +23,87 @@ const ViewHome = () => import('@/views/ViewHome.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
+  // DEV-only design-library previews. A sidebar shell (ViewDevLayout) lists the
+  // components that have a preview; each renders in its <router-view>. Never
+  // registered in production builds. noWalletFlow: these are previews, not app
+  // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
+  ...(import.meta.env.MODE !== 'production'
+    ? [
+        {
+          path: '/dev',
+          component: () => import('@/views/ViewDevLayout.vue'),
+          meta: { noAuth: true, noWalletFlow: true },
+          children: [
+            {
+              path: '',
+              name: 'DevIndex',
+              component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'sizes',
+              name: 'DevSizes',
+              component: () => import('@/views/ViewSizesShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'colors',
+              name: 'DevColors',
+              component: () => import('@/views/ViewColorPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'button',
+              name: 'DevButton',
+              component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'typography',
+              name: 'DevTypography',
+              component: () => import('@/views/ViewTypographyShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'icons',
+              name: 'DevIcons',
+              component: () => import('@/views/ViewIconShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+          ],
+        },
+      ]
+    : []),
   {
-    // New public Home is the root; disconnected users land here.
+    // New public Home is the root; disconnected users land here. It hosts its
+    // own token/stock-info drawer children so clicks from the Home sections
+    // (watchlist, New Listings, Market News) open the drawer in place at
+    // `/token/:tokenId` / `/stock/:symbol` instead of routing to another page.
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: ViewHome,
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.homePage,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.homePage,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     // The wallet portfolio moved off the root. It stays reachable without a
     // wallet (`noAuth`) so disconnected users get its connect-wallet state
     // (ViewPortfolio renders <connect-wallet> when !isWalletConnected) instead
-    // of being bounced to Home. Its connect/create and token/stock-info
-    // children inherit `noAuth` — all are meant to be reachable disconnected.
+    // of being bounced to Home. Its token/stock-info children inherit `noAuth` —
+    // all are meant to be reachable disconnected. The connect/create children
+    // are no longer listed here: they are appended to EVERY page route by
+    // withWalletFlowRoutes below, so the flow opens over wherever the user is.
     path: ROUTES_MAIN.PORTFOLIO.PATH,
     name: ROUTES_MAIN.PORTFOLIO.NAME,
     component: PortfolioView,
@@ -46,8 +111,6 @@ const DefaultRoutes = <RouteNameCollection>[
       noAuth: true,
     },
     children: [
-      CREATE_ROUTES,
-      ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,
         ...TOKEN_INFO_ROUTE,
@@ -176,8 +239,15 @@ const DefaultRoutes = <RouteNameCollection>[
     component: NotFoundView,
     meta: {
       noAuth: true,
+      // ViewNotFound has no <router-view/> outlet and '/:pathMatch(.*)*/access' is a
+      // nonsense matcher, so this page opts out of the connect/create overlays. The
+      // CTAs fall back to the canonical '/access' / '/create' (useWalletFlowRoute).
+      noWalletFlow: true,
     },
   },
 ]
 
-export default DefaultRoutes
+/** The undecorated page tree, without the connect/create overlays. For tests. */
+export const PAGE_ROUTES = DefaultRoutes
+
+export default withWalletFlowRoutes(DefaultRoutes)

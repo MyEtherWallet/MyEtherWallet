@@ -1,7 +1,10 @@
-import { ROUTES_CREATE_WALLET } from './routeNames'
-import { type RouterOptions } from 'vue-router'
+import { WALLET_FLOW_ROUTES, walletFlowRouteName } from './routeNames'
 import { CREATE_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
-import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import type {
+  RouteRecordRaw,
+  RouteLocationNormalized,
+  NavigationGuardNext,
+} from 'vue-router'
 
 const ViewCreateWallet = () => import('@/views/ViewCreateWallet.vue')
 
@@ -10,29 +13,33 @@ const beforeRouteEnter = (
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) => {
-  //NOTE: IF this will be changed, ensure onMounted in ViewAccessWallet is changed accordingly
+  //NOTE: IF this will be changed, ensure onMounted in ViewCreateWallet is changed accordingly
+  const type = to.query.type
   if (
-    to.query.type &&
-    typeof to.query.type === 'string' &&
-    CREATE_WALLET_VIEWS.includes(
-      to.query.type as (typeof CREATE_WALLET_VIEWS)[number],
-    )
+    typeof type === 'string' &&
+    CREATE_WALLET_VIEWS.includes(type as (typeof CREATE_WALLET_VIEWS)[number])
   ) {
     next()
-  } else {
-    next({
-      name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME,
-      query: { type: 'default' },
-    })
+    return
   }
+  if (typeof to.name !== 'string') {
+    next()
+    return
+  }
+  // See the identical guard in routesAccess.ts for why `params` must be forwarded.
+  next({
+    name: to.name,
+    params: to.params,
+    query: { ...to.query, type: 'default' },
+  })
 }
-type RouteOption = RouterOptions['routes'][0]
-export const CREATE_ROUTES = <RouteOption>{
-  path: ROUTES_CREATE_WALLET.CREATE_WALLET.PATH,
-  name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME,
-  component: ViewCreateWallet,
-  beforeEnter: beforeRouteEnter,
-  meta: {
-    noAuth: true,
-  },
-}
+
+/** Create-wallet overlay, mounted as a child of `hostRouteName`'s record. */
+export const createRouteFor = (hostRouteName: string): RouteRecordRaw =>
+  ({
+    path: WALLET_FLOW_ROUTES.create.PATH,
+    name: walletFlowRouteName(hostRouteName, 'create'),
+    component: ViewCreateWallet,
+    beforeEnter: beforeRouteEnter,
+    meta: { noAuth: true, walletFlow: 'create' },
+  }) as RouteRecordRaw

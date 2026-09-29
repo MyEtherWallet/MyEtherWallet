@@ -7,8 +7,12 @@
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center text-center">
-          <div class="text-s-13 lg:text-s-16 text-info px-4 leading-p-160">
-            {{ t('send.initiated.completed-note', { symbol: displayTokenSymbol }) }}
+          <div
+            class="text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
+          >
+            {{
+              t('send.initiated.completed-note', { symbol: displayTokenSymbol })
+            }}
             <div class="inline-flex align-middle">
               <app-blockie
                 :address="snapshot.toAddress"
@@ -23,13 +27,13 @@
                 class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
               >
                 {{ truncateHash(snapshot.toAddress) }}
-                <arrow-up-right-icon
-                  class="w-3 h-3 inline-block align-middle text-black"
+                <AppIcon
+                  name="arrow-up-right"
+                  variant="filled"
+                  size="xxs"
+                  class="inline-block align-middle text-black"
               /></a>
-              <span
-                v-else
-                class="font-mono text-s-13 lg:text-s-16"
-              >
+              <span v-else class="font-mono text-s-13 lg:text-s-16">
                 {{ truncateHash(snapshot.toAddress) }}
               </span>
             </div>
@@ -45,7 +49,7 @@
               <div class="mr-2">
                 <svg
                   v-if="notificationStatus === 'sent'"
-                  class="w-5 h-5 animate-spin text-primary"
+                  class="w-5 h-5 animate-spin text-text-brand"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -64,13 +68,19 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <check-circle-icon
+                <AppIcon
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
                   v-else-if="notificationStatus === 'confirmed'"
-                  class="w-5 h-5 text-success"
+                  class="text-text-success"
                 />
-                <x-circle-icon
+                <AppIcon
+                  name="x-circle"
+                  variant="filled"
+                  size="s"
                   v-else-if="notificationStatus === 'failed'"
-                  class="w-5 h-5 text-error"
+                  class="text-text-error"
                 />
               </div>
 
@@ -78,12 +88,12 @@
               <span
                 class="text-s-14 font-semibold"
                 :class="{
-                  'text-primary': notificationStatus === 'sent',
-                  'text-success': notificationStatus === 'confirmed',
-                  'text-error': notificationStatus === 'failed',
+                  'text-text-brand': notificationStatus === 'sent',
+                  'text-text-success': notificationStatus === 'confirmed',
+                  'text-text-error': notificationStatus === 'failed',
                 }"
               >
-              {{
+                {{
                   notificationStatus === 'sent'
                     ? t('send.initiated.status.pending')
                     : notificationStatus === 'confirmed'
@@ -95,11 +105,13 @@
               </span>
             </div>
 
-            <div class="flex flex-col justify-start bg-mewBg p-4 rounded-20">
+            <div
+              class="flex flex-col justify-start bg-background-brand-subtle p-4 rounded-20"
+            >
               <!-- Token Row -->
               <div class="flex items-center gap-4">
                 <div class="relative">
-                <app-token-logo
+                  <app-token-logo
                     :url="displayTokenIcon"
                     :symbol="displayTokenSymbol"
                     :address="
@@ -138,13 +150,15 @@
                       class="inline-flex !text-s-16 lg:!text-s-20 !font-bold !leading-tight"
                     />
                   </p>
-                  <p class="text-info text-s-14">{{ currencySymbol }}{{ displayAmountFiat }}</p>
+                  <p class="text-text-subtle text-s-14">
+                    {{ currencySymbol }}{{ displayAmountFiat }}
+                  </p>
                 </div>
               </div>
 
               <!-- Divider Arrow -->
-              <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
-                <arrow-long-down-icon class="w-6 h-6" />
+              <div class="flex justify-start my-2 lg:my-4 mx-1.5 lg:mx-3">
+                <AppIcon name="arrow-long-down" variant="filled" />
               </div>
 
               <!-- To Address Row -->
@@ -165,10 +179,14 @@
                   </div>
                 </div>
                 <div class="flex flex-col text-left">
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight font-mono">
+                  <p
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight font-mono"
+                  >
                     {{ truncateHash(snapshot.toAddress) }}
                   </p>
-                  <p class="text-info text-s-14">{{ t('send.initiated.on-chain', { chain: chainName }) }}</p>
+                  <p class="text-text-subtle text-s-14">
+                    {{ t('send.initiated.on-chain', { chain: chainName }) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -177,7 +195,7 @@
             <div class="w-full my-5 px-2 lg:px-4">
               <div class="flex justify-between items-center">
                 <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-text-subtle"
                   >{{ t('send.initiated.tx-hash') }}</span
                 >
                 <div class="flex items-center gap-2">
@@ -193,7 +211,7 @@
 
         <div class="mt-6">
           <p
-            class="text-center text-s-13 lg:text-s-16 text-info px-4 leading-p-160"
+            class="text-center text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
           >
             {{ t('send.initiated.close-window') }}
           </p>
@@ -212,8 +230,11 @@
               rel="noopener noreferrer"
               class="group underline inline-block"
               >{{ t('send.initiated.check-explorer') }}
-              <arrow-long-right-icon
-                class="inline-block align-middle w-4 h-4 ml-1 transition-transform group-hover:translate-x-1"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="xxs"
+                class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1"
               />
             </a>
           </p>
@@ -234,13 +255,6 @@ import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { ArrowLongDownIcon } from '@heroicons/vue/24/solid'
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-} from '@heroicons/vue/24/solid'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'
 import { type HexPrefixedString } from '@/providers/types'
@@ -249,6 +263,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import createIcon from '@/providers/ethereum/blockies'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()
@@ -355,14 +370,17 @@ const chainIcon = computed(() => {
 
 const blockExplorerUrl = computed(() => {
   return (
-    snapshot.chain?.blockExplorerTX?.replace('[[txHash]]', snapshot.txHash) || ''
+    snapshot.chain?.blockExplorerTX?.replace('[[txHash]]', snapshot.txHash) ||
+    ''
   )
 })
 
 const addressExplorerUrl = computed(() => {
   return (
-    snapshot.chain?.blockExplorerAddr?.replace('[[address]]', snapshot.toAddress) ||
-    ''
+    snapshot.chain?.blockExplorerAddr?.replace(
+      '[[address]]',
+      snapshot.toAddress,
+    ) || ''
   )
 })
 

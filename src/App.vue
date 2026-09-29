@@ -57,8 +57,10 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import Intercom from '@intercom/messenger-js-sdk'
-import { useMarketStatus } from './modules/trade/composables/useMarketStatus'
-const { fetchMarketStatus } = useMarketStatus()
+import { useMarketStatusStore } from '@/stores/marketStatusStore'
+// One-shot warm-up: with no consumer acquired, this updates state and
+// schedules nothing (polling is refcounted by the surfaces that need it).
+const { fetchMarketStatus } = useMarketStatusStore()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -76,6 +78,7 @@ const {
   walletAddress,
   isWalletConnected,
   isWalletUnlocked,
+  isConnectingWallet,
   hasMissingBalances,
   userProperties,
 } = storeToRefs(store)
@@ -104,7 +107,22 @@ const { isPending, start, stop } = useTimeoutFn(() => {
   fetchBalances()
 }, 300000)
 
+// Fetches requested in the same turn collapse into one request: a connect sets
+// the wallet object, resolves its address a microtask later, and may switch the
+// network alongside — each of which used to fire the (rate limited) balances
+// endpoint. Only the newest request's result is applied.
+let balanceFetchTimer: ReturnType<typeof setTimeout> | null = null
+let balanceFetchGeneration = 0
 const fetchBalances = () => {
+  if (balanceFetchTimer) return
+  balanceFetchTimer = setTimeout(() => {
+    balanceFetchTimer = null
+    runFetchBalances()
+  }, 0)
+}
+
+const runFetchBalances = () => {
+  const generation = ++balanceFetchGeneration
   if (!walletAddress.value) {
     setIsLoadingBalances(false)
     return
@@ -114,6 +132,7 @@ const fetchBalances = () => {
   wallet.value
     ?.getBalance()
     .then((balances: TokenBalancesRaw) => {
+      if (generation !== balanceFetchGeneration) return
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
       if (hasMissingBalances.value) {
         // Refetch balances after 5 minutes if there are missing balances
@@ -132,7 +151,9 @@ const fetchBalances = () => {
       }
     })
     .catch((error: unknown) => {
-      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      if (generation !== balanceFetchGeneration) return
+      if (import.meta.env.MODE !== 'production')
+        console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
       // Keep the retry loop alive: a transient failure shouldn't permanently
       // stop the timer when balances are still missing from a prior load.
@@ -142,17 +163,27 @@ const fetchBalances = () => {
     })
 }
 
+// Balances follow the wallet object as well as its address: connecting a signing
+// wallet over a watch-only one keeps the address but swaps the wallet (and often
+// the network), and that swap is what must trigger the refetch.
 watch(
-  () => walletAddress.value,
-  newWallet => {
-    if (newWallet) {
+  [walletAddress, wallet],
+  ([address]) => {
+    if (address) {
       fetchBalances()
-      holdingsStore.startPolling(newWallet)
     } else {
       setTokens([])
       setIsLoadingBalances(false)
-      holdingsStore.stopPolling()
     }
+  },
+  { immediate: true },
+)
+
+watch(
+  () => walletAddress.value,
+  newWallet => {
+    if (newWallet) holdingsStore.startPolling(newWallet)
+    else holdingsStore.stopPolling()
   },
   { immediate: true },
 )
@@ -189,6 +220,10 @@ onFetchResponse(() => {
 watch(
   () => selectedChain.value,
   newChain => {
+    // A connect flow is landing a wallet on this chain (it sets the network,
+    // then setWallet resolves): the wallet watcher above fetches once for it,
+    // so don't also fetch for the wallet that is about to be replaced.
+    if (isConnectingWallet.value) return
     if (newChain && isWalletConnected.value) {
       if (newChain.chainID) {
         wallet.value?.updateChainId(newChain.chainID)
@@ -235,7 +270,14 @@ onMounted(() => {
     if (type !== 'order') return
     const order = item as SavedTradeOrder
     if (order.hash && order.chainId != null) {
-      holdingsStore.register(order.hash, order.chainId, order.usdValue)
+      holdingsStore
+        .register(order.hash, order.chainId, order.usdValue)
+        .then(registered => {
+          if (!registered) return
+          tradeOrdersStore.updateOrder(order.fromAddress, order.hash, {
+            rewardRegistered: true,
+          })
+        })
     }
   })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {

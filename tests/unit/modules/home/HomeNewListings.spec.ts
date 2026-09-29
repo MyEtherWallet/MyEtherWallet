@@ -20,11 +20,13 @@ const i18n = createI18n({
 // under primaryMarket/underlyingMarket, not flat name/symbol/changePercent.
 // `price` is a raw numeric string per the API schema (e.g. "172.34"), with no
 // currency symbol — formatting is HomeNewListings' job, via useCurrency below.
+// `stockAlias` is the human-readable display name ("Apple Inc") and takes
+// precedence over underlyingMarket.name on every stock surface.
 vi.mock('@/stores/stocksStore', () => ({
   useStocksStore: () => ({
     newlyAdded: [
       {
-        stockAlias: 'AAPL',
+        stockAlias: 'Apple Inc',
         iconPngUrl: undefined,
         primaryMarket: {
           symbol: 'AAPL',
@@ -35,7 +37,7 @@ vi.mock('@/stores/stocksStore', () => ({
         underlyingMarket: { name: 'Apple', volume24h: '0', marketCap: '0' },
       },
       {
-        stockAlias: 'TSLA',
+        stockAlias: 'Tesla Inc',
         iconPngUrl: undefined,
         primaryMarket: {
           symbol: 'TSLA',
@@ -158,11 +160,12 @@ describe('HomeNewListings', () => {
     const w = mountIt()
     const cards = w.findAll('[data-test="listing-card"]')
     expect(cards[0].text()).toContain('AAPL')
-    expect(cards[0].text()).toContain('Apple')
-    expect(cards[0].find('.text-success').exists()).toBe(true)
+    // The display name is the stockAlias, not the underlying market name.
+    expect(cards[0].text()).toContain('Apple Inc')
+    expect(cards[0].find('.text-text-success').exists()).toBe(true)
     expect(cards[1].text()).toContain('TSLA')
-    expect(cards[1].text()).toContain('Tesla')
-    expect(cards[1].find('.text-error').exists()).toBe(true)
+    expect(cards[1].text()).toContain('Tesla Inc')
+    expect(cards[1].find('.text-text-error').exists()).toBe(true)
   })
 
   it('formats the raw price string via useCurrency before handing it to the card', () => {
@@ -274,7 +277,7 @@ describe('HomeNewListings', () => {
     const favorite = mountIt()
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-favorite"]')
-    expect(favorite.find('.text-primary').exists()).toBe(true)
+    expect(favorite.find('.text-text-brand').exists()).toBe(true)
     isWatchListed.mockReturnValue(false)
   })
 })

@@ -12,7 +12,7 @@
     >
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 bg-black/40 overscroll-none overflow-hidden min-w-[320px] min-h-lvh mt-[68px] sm:mt-[76px]"
+        class="cursor-pointer fixed inset-0 bg-black/40 overscroll-none overflow-hidden min-w-80 min-h-lvh mt-[68px] sm:mt-[76px]"
         :class="zIndexOverlay"
         @click="closeDialog()"
         aria-hidden
@@ -22,7 +22,7 @@
     <div
       v-if="isOpen"
       :class="[
-        isOpenSideMenu ? 'mr-[455px]' : 'mr-[60px] xs:mr-[80px]',
+        isOpenSideMenu ? 'mr-[455px]' : 'mr-[60px] xs:mr-20',
         zIndexContainer,
       ]"
       class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none overflow-y-auto scrollbar-hide no-scrollbar mt-[69px] sm:mt-[77px]"
@@ -47,7 +47,7 @@
         >
           <app-btn-icon-close
             @click="closeDialog()"
-            class="absolute top-2 sm:top-4 right-4 min-w-[32px]"
+            class="absolute top-2 sm:top-4 right-4 min-w-8"
           />
           <div>
             <slot name="content" />
@@ -70,6 +70,7 @@ import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { pageParentRouteName } from '@/router/routeHierarchy'
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const walletMenu = useWalletMenuStore()
@@ -116,14 +117,11 @@ const closeDialog = () => {
   isOpen.value = false
   hasShadow.value = true
   isOverflowHidden.value = false
-  if (route.matched.length > 1) {
-    // The parent route is the second to last item in the matched array
-    const parentRouteName = route.matched[route.matched.length - 2].name
-
-    router.push({ name: parentRouteName })
-  } else {
-    router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
-  }
+  // Not `matched[matched.length - 2]`: a connect/create overlay can be a child of this
+  // dialog's own record (e.g. /crypto/token/peaq-2/access), which would make that index
+  // the dialog itself. pageParentRouteName filters the overlay layer out first.
+  const parentRouteName = pageParentRouteName(route)
+  router.push({ name: parentRouteName ?? ROUTES_MAIN.PORTFOLIO.NAME })
 }
 onBeforeUnmount(() => {
   isOverflowHidden.value = false

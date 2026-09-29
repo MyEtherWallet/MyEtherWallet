@@ -1,19 +1,16 @@
 <template>
   <div class="h-full flex flex-col gap-6">
     <div class="flex flex-col gap-1 pr-12 flex-none">
-      <h2
-        id="dialogTitle"
-        class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-      >
+      <h2 id="dialogTitle" class="text-heading-xl">
         {{ $t('purchase.select_token.title') }}
       </h2>
-      <p class="text-s-16 text-info leading-[22px]">
+      <p class="text-s-16 text-text-subtle leading-[22px]">
         {{ $t('purchase.select_token.subtitle') }}
       </p>
     </div>
 
     <div
-      class="flex items-center gap-2 h-12 px-1 bg-bgMuted rounded-24 flex-none"
+      class="flex items-center gap-2 h-12 px-1 bg-background-default-hover rounded-24 flex-none"
     >
       <app-search-input
         v-model="searchInput"
@@ -30,7 +27,12 @@
         <span class="text-s-13 font-medium whitespace-nowrap">
           {{ filterButtonLabel }}
         </span>
-        <chevron-right-icon class="w-4 h-4 text-black" />
+        <AppIcon
+          name="chevron-right"
+          variant="filled"
+          size="xxs"
+          class="text-black"
+        />
       </button>
     </div>
 
@@ -40,7 +42,7 @@
       aria-live="polite"
     >
       <span
-        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+        class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
       />
     </div>
     <ul v-else role="listbox" class="flex-1 overflow-y-auto">
@@ -72,24 +74,27 @@
             <p class="text-s-16 font-semibold text-black truncate">
               {{ entry.token.symbol }}
             </p>
-            <p class="text-s-12 text-info truncate">
+            <p class="text-s-12 text-text-subtle truncate">
               {{ entry.token.name }}
             </p>
           </div>
           <span
-            class="text-s-11 font-bold tracking-sp-06 uppercase text-info whitespace-nowrap flex-none"
+            class="text-s-11 font-bold tracking-sp-06 uppercase text-text-subtle whitespace-nowrap flex-none"
           >
             {{ entry.network.name }}
           </span>
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
             v-if="isSelectedToken(entry)"
-            class="w-5 h-5 text-primary flex-none"
+            class="text-text-brand flex-none"
           />
         </button>
       </li>
       <li
         v-if="filteredEntries.length === 0"
-        class="text-info text-s-14 text-center py-10"
+        class="text-text-subtle text-s-14 text-center py-10"
       >
         {{ $t('purchase.select_token.no_results') }}
       </li>
@@ -100,7 +105,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { storeToRefs } from 'pinia'
@@ -113,6 +117,7 @@ import {
 import type { PurchaseAsset } from '@/types/buyToken'
 import type { BuyNetwork } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   networks: BuyNetwork[]
   selectedToken: PurchaseAsset | null
@@ -146,7 +151,12 @@ const allEntries = computed<Entry[]>(() =>
       key: `${network.chain}-${token.symbol}`,
       network,
       token,
-      tokenIcon: getPurchaseTokenIcon(token, network.tokens, chainsStore, coinImages.value),
+      tokenIcon: getPurchaseTokenIcon(
+        token,
+        network.tokens,
+        chainsStore,
+        coinImages.value,
+      ),
       chainIcon: getPurchaseChainIcon(
         network.chain,
         network.tokens,
@@ -159,7 +169,10 @@ const allEntries = computed<Entry[]>(() =>
 const filteredEntries = computed<Entry[]>(() => {
   const term = searchInput.value.trim().toLowerCase()
   return allEntries.value.filter(entry => {
-    if (props.compatibleChains?.length && !props.compatibleChains.includes(entry.network.chain)) {
+    if (
+      props.compatibleChains?.length &&
+      !props.compatibleChains.includes(entry.network.chain)
+    ) {
       return false
     }
     if (props.networkFilter && entry.network.chain !== props.networkFilter) {

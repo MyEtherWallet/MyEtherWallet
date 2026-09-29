@@ -24,10 +24,13 @@
     <div
       ref="scrollContainer"
       :class="[
-        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[80px]',
-        isOverflowHidden
+        'flex w-full mr-[60px] xs:mr-20',
+        // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
+        // shell whose <main> scrolls internally), so the app-level scroll must be
+        // off for it — otherwise the page double-scrolls and the sidebar drifts.
+        isOverflowHidden || isDevPlayground
           ? 'overflow-hidden'
           : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
@@ -36,20 +39,26 @@
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
+        <main
+          :class="[
+            'basis-full w-full relative',
+            isDevPlayground ? '' : 'max-w-[1440px] mx-auto',
+          ]"
+        >
           <div
             :class="[
               'min-h-[600px]',
-              // The new Home's sections own their padding (AppHomeSection has
-              // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
-              // the hero's top padding stacks on the wrapper's. Other routes
-              // keep the shared page padding.
-              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
+              // The new Home's sections own their padding (AppHomeSection uses
+              // the shared page gutter px-3 xs:px-5), so the wrapper adds none —
+              // else the hero's top padding stacks on the wrapper's. Other
+              // routes keep the shared page padding.
+              isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
             <router-view />
           </div>
           <MewFooter
+            v-if="!isDevPlayground"
             :use-i18n="useI18n"
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
@@ -60,17 +69,21 @@
             class="px-3 xs:px-5"
           />
           <div
+            v-if="!isDevPlayground"
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
               class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
-              :href="configs.VINATGE"
+              :href="configs.VINTAGE"
               target="_blank"
               rel="noopener noreferrer"
             >
               {{ t('common.old_version_link') }}
-              <arrow-long-right-icon
-                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="s"
+                class="text-black inline-block group-hover:translate-x-1 transition-transform"
               />
             </a>
           </div>
@@ -93,15 +106,19 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { pageRouteName } from '@/router/routeHierarchy'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)
+const accessStore = useAccessStore()
+const { isOpenAccessDialog } = storeToRefs(accessStore)
 const { t } = useI18n()
 
 const analyticsStore = useAnalyticsStore()
@@ -127,16 +144,48 @@ const router = useRouter()
 // When the wallet is disconnected/removed, return the user to the public Home.
 // (Connecting does NOT auto-navigate — the user opens their portfolio manually
 // via the header logo or the hero CTA.)
+// Deferred while the connect dialog is open: switching there to a chain type
+// with no saved address (ETH → BTC to connect a first BTC wallet) nulls the
+// active wallet, and redirecting at that moment would unmount the /access route
+// view and tear the dialog down mid-flow. The disconnect is remembered instead
+// and applied when the dialog closes (below).
+let pendingDisconnectRedirect = false
 watch(isWalletConnected, connected => {
-  if (!connected) {
+  if (connected) {
+    pendingDisconnectRedirect = false
+    return
+  }
+  if (isOpenAccessDialog.value) {
+    pendingDisconnectRedirect = true
+  } else {
     router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 })
 
+// Apply a disconnect redirect deferred during the dialog. A connection made
+// through the dialog cancels it: setWallet bumps isConnectingWallet before the
+// flows close the dialog, so "in flight" is visible here even though the wallet
+// itself lands asynchronously. flush 'post' so this runs after ViewAccessWallet's
+// own close navigation back to the host page — issued second, the Home push wins.
+watch(
+  isOpenAccessDialog,
+  open => {
+    if (open || !pendingDisconnectRedirect) return
+    pendingDisconnectRedirect = false
+    if (isWalletConnected.value || isConnectingWallet.value) return
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
+  },
+  { flush: 'post' },
+)
+
+// pageRouteName, not route.name: the connect/create overlays are children of every
+// page, so a bare route.name stops matching while one is open and the page underneath
+// would visibly reflow behind the modal.
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
+  const page = pageRouteName(route)
+  if (page === ROUTES_MAIN.PORTFOLIO.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background '
-  } else if (route.name === ROUTES_MAIN.EARN.NAME) {
+  } else if (page === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
   } else {
     return ''
@@ -145,7 +194,13 @@ const backgroundClass = computed(() => {
 
 // The Home page ('/') keeps the layout max-width but drops the shared
 // horizontal padding, so its sections own their padding.
-const isNewHome = computed(() => route.name === ROUTES_MAIN.HOME.NAME)
+const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
+
+// DEV-only design-library playground (MEW-2271) renders full-bleed: no wrapper
+// padding or max-width, so its sidebar sits flush against the viewport edge.
+const isDevPlayground = computed(
+  () => route.path === '/dev' || route.path.startsWith('/dev/'),
+)
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)

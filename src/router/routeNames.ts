@@ -6,14 +6,6 @@ export type RouteName = {
   PATH: string
 }
 
-const ROUTES_ACCESS: RouteNameCollection = {
-  ACCESS: { NAME: 'Access', PATH: 'access' },
-}
-
-const ROUTES_CREATE_WALLET: RouteNameCollection = {
-  CREATE_WALLET: { NAME: 'CreateWallet', PATH: '/create' },
-}
-
 const ROUTES_MAIN: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '/' },
   //A-Z
@@ -30,10 +22,61 @@ const ROUTES_MAIN: RouteNameCollection = {
   STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
   PORTFOLIO: { NAME: 'Portfolio', PATH: '/portfolio' },
 }
+
+/**
+ * Canonical connect / create-wallet routes. Both PATHs are RELATIVE so the records can
+ * nest under any host page (see routesWalletFlow.ts); hosted by Home (path '/') they
+ * resolve to the standalone '/access' and '/create'.
+ *
+ * Deliberately un-annotated (no `: RouteNameCollection`): that type's index signature
+ * lets a typo like `ROUTES_ACCESS.ACCESS_TREZOR.NAME` compile against a key that does
+ * not exist. Inferring the literal type makes it a type error instead.
+ */
+const ROUTES_ACCESS = {
+  ACCESS: { NAME: 'Access', PATH: 'access' },
+}
+
+const ROUTES_CREATE_WALLET = {
+  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create' },
+}
+
+type WalletFlowKind = 'access' | 'create'
+
+const WALLET_FLOW_ROUTES: Record<
+  WalletFlowKind,
+  { PATH: string; SUFFIX: string }
+> = {
+  access: { PATH: ROUTES_ACCESS.ACCESS.PATH, SUFFIX: '-access' },
+  create: { PATH: ROUTES_CREATE_WALLET.CREATE_WALLET.PATH, SUFFIX: '-create' },
+}
+
+const CANONICAL_WALLET_FLOW_NAME: Record<WalletFlowKind, string> = {
+  access: ROUTES_ACCESS.ACCESS.NAME,
+  create: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME,
+}
+
+/**
+ * Connect ("access") and create-wallet are modal overlays that can open on top of ANY
+ * page, so one record per host page is generated (routesWalletFlow.ts). Home hosts the
+ * canonical standalone pair — '/access' and '/create', names 'Access' and 'CreateWallet'
+ * — and every other host gets a name suffixed from its own: 'Stocks' -> 'Stocks-access'.
+ */
+const walletFlowRouteName = (
+  hostRouteName: string,
+  kind: WalletFlowKind,
+): string =>
+  hostRouteName === ROUTES_MAIN.HOME.NAME
+    ? CANONICAL_WALLET_FLOW_NAME[kind]
+    : `${hostRouteName}${WALLET_FLOW_ROUTES[kind].SUFFIX}`
+
 const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {
   crypto: 'token-info-crypto',
   home: 'token-info-home',
+  // The public Home ('/') hosts its own token/stock-info drawer so clicks from
+  // its sections (watchlist, New Listings, Market News) open in place instead
+  // of routing to /portfolio or /crypto. See routesDefault.ts.
+  homePage: 'token-info-home-page',
   stocks: 'token-info-stocks',
   earn: 'token-info-earn',
   verify: 'token-info-verify',
@@ -42,6 +85,7 @@ const TOKEN_INFO_ROUTE_NAMES = {
 const STOCK_INFO = { PATH: 'stock/:symbol' }
 const STOCK_INFO_ROUTE_NAMES = {
   home: 'home-stock-info',
+  homePage: 'home-page-stock-info',
   crypto: 'crypto-stock-info',
   stocks: 'stocks-stock-info',
   earn: 'earn-stock-info',
@@ -65,6 +109,8 @@ export {
   ROUTES_CREATE_WALLET,
   ROUTES_SEND,
   ROUTES_ACCESS,
+  WALLET_FLOW_ROUTES,
+  walletFlowRouteName,
   TOKEN_INFO,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO,
@@ -72,3 +118,4 @@ export {
   PERP_INFO,
   PERP_INFO_ROUTE_NAME,
 }
+export type { WalletFlowKind }
