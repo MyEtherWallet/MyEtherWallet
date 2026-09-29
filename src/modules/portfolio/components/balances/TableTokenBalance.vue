@@ -23,7 +23,7 @@
               height="h-7"
               width="w-7"
             >
-              <ellipsis-vertical-icon class="w-5 h-5" />
+              <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
             </app-btn-icon>
           </template>
           <template #menu-content="{ toggleMenu }">
@@ -118,15 +118,19 @@
                 @click="setHeaderSort(SortValueString.NAME)"
               >
                 {{ $t('portfolio.table.token_header') }}
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'asc'
@@ -147,15 +151,21 @@
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
                 {{ $t('portfolio.table.market_cap_header') }}
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'asc'
@@ -175,15 +185,21 @@
                 @click="setHeaderSort(SortValueString.PRICE)"
               >
                 {{ $t('portfolio.table.price_header') }}
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'asc'
@@ -203,15 +219,21 @@
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
                 {{ $t('portfolio.table.24h_header') }}
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'asc'
@@ -232,15 +254,21 @@
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
                 {{ $t('portfolio.table.balance_header') }}
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'asc'
@@ -276,11 +304,19 @@
                 class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
                 <!-- changes icon when active -->
-                <star-outline-icon
-                  class="h-4 w-4 cursor-pointer"
+                <AppIcon
+                  name="star"
+                  size="xxs"
+                  class="cursor-pointer"
                   v-if="!isWatchListed(getWatchlistId(token))"
                 />
-                <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                <AppIcon
+                  name="star"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="cursor-pointer"
+                />
               </button>
             </td>
             <!-- Name -->
@@ -398,7 +434,11 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <ellipsis-vertical-icon class="w-5 h-5" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        variant="filled"
+                        size="s"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
@@ -410,13 +450,18 @@
                         class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                         @click.stop="[setWatchlistToken(token), toggleMenu()]"
                       >
-                        <star-outline-icon
-                          class="h-4 w-4 cursor-pointer"
+                        <AppIcon
+                          name="star"
+                          size="xxs"
+                          class="cursor-pointer"
                           v-if="!isWatchListed(getWatchlistId(token))"
                         />
-                        <star-solid-icon
+                        <AppIcon
+                          name="star"
+                          variant="filled"
+                          size="xxs"
                           v-else
-                          class="h-4 w-4 cursor-pointer"
+                          class="cursor-pointer"
                         />
                         <span class="ml-2">{{
                           isWatchListed(getWatchlistId(token))
@@ -470,7 +515,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <pencil-icon class="w-4 h-4 mr-2" />
+                          <AppIcon
+                            name="pencil"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.edit') }}</p>
                         </li>
                         <li
@@ -480,7 +530,12 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <trash-icon class="w-4 h-4 mr-2" />
+                          <AppIcon
+                            name="trash"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
                           <p>{{ $t('common.delete') }}</p>
                         </li>
                       </ul>
@@ -530,13 +585,13 @@
                   :label="$t('common.edit')"
                   @click.stop="customTokenAction('edit', token)"
                 >
-                  <pencil-icon class="w-4 h-4" />
+                  <AppIcon name="pencil" variant="filled" size="xxs" />
                 </app-btn-icon>
                 <app-btn-icon
                   :label="$t('common.delete')"
                   @click.stop="customTokenAction('delete', token)"
                 >
-                  <trash-icon class="w-5 h-5" />
+                  <AppIcon name="trash" variant="filled" size="s" />
                 </app-btn-icon>
               </div>
             </td>
@@ -554,7 +609,12 @@
         <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >{{ $t('portfolio.table.discover_more_tokens') }}
-          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+          <AppIcon
+            name="arrow-long-up"
+            variant="filled"
+            size="xxs"
+            class="rotate-90 inline-flex"
+          />
         </router-link>
       </div>
       <div
@@ -621,7 +681,7 @@
           :label="$t('common.previous_page')"
           @click.stop="prevPage"
         >
-          <chevron-left-icon class="w-4 h-4" />
+          <AppIcon name="chevron-left" variant="filled" size="xxs" />
         </app-btn-icon>
         <div class="flex items-center gap-2">
           <span class="text-black">{{ currentPage + 1 }}</span>
@@ -635,7 +695,7 @@
           :label="$t('common.next_page')"
           @click.stop="nextPage"
         >
-          <chevron-right-icon class="w-4 h-4" />
+          <AppIcon name="chevron-right" variant="filled" size="xxs" />
         </app-btn-icon>
       </div>
 
@@ -652,7 +712,12 @@
               @click="toggleSelect"
             >
               <span>{{ activeShownItems.label }}</span>
-              <chevron-down-icon class="w-4 h-4 text-text-subtle" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
@@ -681,21 +746,10 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
-import {
-  StarIcon as StarSolidIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisVerticalIcon,
-  PencilIcon,
-  TrashIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 
 // Composables & Utils
 import { usePaginate } from '@/composables/usePaginate'

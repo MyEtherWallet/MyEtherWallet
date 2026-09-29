@@ -27,7 +27,12 @@
         <span class="text-s-13 font-medium whitespace-nowrap">
           {{ filterButtonLabel }}
         </span>
-        <chevron-right-icon class="w-4 h-4 text-black" />
+        <AppIcon
+          name="chevron-right"
+          variant="filled"
+          size="xxs"
+          class="text-black"
+        />
       </button>
     </div>
 
@@ -78,9 +83,12 @@
           >
             {{ entry.network.name }}
           </span>
-          <check-circle-icon
+          <AppIcon
             v-if="isSelectedToken(entry)"
-            class="w-5 h-5 text-text-brand flex-none"
+            name="check-circle"
+            variant="filled"
+            size="s"
+            class="text-text-brand flex-none"
           />
         </button>
       </li>
@@ -97,7 +105,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { storeToRefs } from 'pinia'

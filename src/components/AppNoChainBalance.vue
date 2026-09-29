@@ -29,8 +29,10 @@
             })
           }}
         </p>
-        <ArrowLongRightIcon
-          class="w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-1 transition-transform"
+        <AppIcon
+          name="arrow-long-right"
+          size="xxs"
+          class="xl:size-5 group-hover:translate-x-1 transition-transform"
         />
       </div>
     </app-btn-text>
@@ -40,7 +42,7 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center">
-        <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-white" />
+        <AppIcon name="qr-code" size="xxs" class="xl:size-5 text-white" />
         <p>
           {{
             $t('common.deposit_currency', {
@@ -56,7 +58,7 @@
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from './AppBtnText.vue'
-import { ArrowLongRightIcon, QrCodeIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'

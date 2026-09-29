@@ -20,7 +20,7 @@
             class="!w-10 !h-10 mr-auto mt-4"
             @click="createStore.setCurrentView('default')"
           >
-            <arrow-left-icon class="w-5 h-5" />
+            <AppIcon name="arrow-left" size="s" />
           </app-btn-icon>
         </div>
         <div
@@ -233,7 +233,7 @@
                   >
                     {{ $t('create_wallet.get_enkrypt') }}
                   </p>
-                  <arrow-long-right-icon class="w-6 h-6 text-white" />
+                  <AppIcon name="arrow-long-right" class="text-white" />
                 </div>
               </a>
             </div>
@@ -275,8 +275,10 @@
                   class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
                 >
                   {{ $t('create_wallet.buy_hardware_wallet') }}
-                  <arrow-long-right-icon
-                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  <AppIcon
+                    name="arrow-long-right"
+                    size="s"
+                    class="lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
                   />
                 </div>
               </button>
@@ -316,8 +318,10 @@
                   class="text-s-14 lg:text-s-16 text-center font-medium border-[0.5px] rounded-full px-2 lg:px-4 py-1"
                 >
                   {{ $t('create_wallet.create_software_wallet') }}
-                  <arrow-long-right-icon
-                    class="w-5 h-5 lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
+                  <AppIcon
+                    name="arrow-long-right"
+                    size="s"
+                    class="lg:ml-2 transition-transform group-hover:translate-x-1 inline-flex"
                   />
                 </div>
               </button>
@@ -384,7 +388,7 @@
 <script setup lang="ts">
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowLeftIcon, ArrowLongRightIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'

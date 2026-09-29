@@ -3,15 +3,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
-import {
-  StarIcon as StarSolidIcon,
-  PlusIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ChevronDownIcon,
-  Bars2Icon,
-  EllipsisHorizontalIcon,
-} from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -152,7 +144,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
         @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <PlusIcon class="size-[18px]" />
+        <AppIcon name="plus" size="xs" variant="filled" />
       </button>
     </div>
 
@@ -177,7 +169,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             @click="isCategoryOpen = !isCategoryOpen"
           >
             {{ t(CATEGORIES.find(c => c.value === category)!.labelKey) }}
-            <ChevronDownIcon class="size-5" />
+            <AppIcon name="chevron-down" size="s" variant="filled" />
           </button>
           <template v-if="isCategoryOpen">
             <div
@@ -213,7 +205,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
         @click="isAddOpen = true"
       >
         {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <PlusIcon class="size-[18px]" />
+        <AppIcon name="plus" size="xs" variant="filled" />
       </button>
     </div>
 
@@ -282,7 +274,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <Bars2Icon class="size-4 text-text-placeholder" />
+            <AppIcon
+              name="bars-2"
+              size="xxs"
+              variant="filled"
+              class="text-text-placeholder"
+            />
           </span>
           <span
             class="drag-handle absolute left-2 top-1/2 hidden -translate-y-1/2 pointer-events-none opacity-0 transition-opacity min-[780px]:flex"
@@ -293,7 +290,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <Bars2Icon class="size-4 text-text-placeholder" />
+            <AppIcon
+              name="bars-2"
+              size="xxs"
+              variant="filled"
+              class="text-text-placeholder"
+            />
           </span>
 
           <!-- Star toggle (remove). Grows a light circular background on hover
@@ -305,7 +307,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-background-default-hover"
             @click="remove(row)"
           >
-            <StarSolidIcon class="size-5" />
+            <AppIcon name="star" size="s" variant="filled" />
           </button>
 
           <!-- Token — a focusable link so keyboard users can open the drawer
@@ -387,8 +389,13 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 "
               >
                 {{ changeLabel(row.change) }}
-                <ArrowDownIcon v-if="row.change < 0" class="size-3" />
-                <ArrowUpIcon v-else class="size-3" />
+                <AppIcon
+                  v-if="row.change < 0"
+                  name="arrow-down"
+                  size="xxs"
+                  variant="filled"
+                />
+                <AppIcon v-else name="arrow-up" size="xxs" variant="filled" />
               </span>
               <TableSparkline
                 v-if="row.sparkline.length"
@@ -422,8 +429,13 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 "
               >
                 {{ changeLabel(row.change) }}
-                <ArrowDownIcon v-if="row.change < 0" class="size-3" />
-                <ArrowUpIcon v-else class="size-3" />
+                <AppIcon
+                  v-if="row.change < 0"
+                  name="arrow-down"
+                  size="xxs"
+                  variant="filled"
+                />
+                <AppIcon v-else name="arrow-up" size="xxs" variant="filled" />
               </span>
             </template>
           </div>
@@ -453,7 +465,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
                 >
-                  <EllipsisHorizontalIcon class="size-5" />
+                  <AppIcon
+                    name="ellipsis-horizontal"
+                    size="s"
+                    variant="filled"
+                  />
                 </button>
                 <template v-if="openMenuKey === row.key">
                   <div

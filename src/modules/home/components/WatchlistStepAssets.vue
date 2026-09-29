@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  PlusIcon,
-  CheckIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/20/solid'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -229,7 +223,11 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
             data-test="assets-empty"
             class="flex min-h-40 flex-col items-center justify-center py-6 text-center"
           >
-            <ExclamationCircleIcon class="size-6 text-text-subtle" />
+            <AppIcon
+              name="exclamation-circle"
+              size="m"
+              class="text-text-subtle"
+            />
             <p
               class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
             >
@@ -280,11 +278,13 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                   "
                   aria-hidden="true"
                 >
-                  <CheckIcon
+                  <AppIcon
                     v-if="selected.includes(asset.id)"
-                    class="size-3.5"
+                    name="check"
+                    size="xxs"
+                    variant="filled"
                   />
-                  <PlusIcon v-else class="size-3.5" />
+                  <AppIcon v-else name="plus" size="xxs" variant="filled" />
                 </span>
               </span>
               <AppTokenSymbol
@@ -311,7 +311,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
           @click="showAll = true"
         >
           {{ t('search.show_more') }}
-          <ChevronDownIcon class="size-4" />
+          <AppIcon name="chevron-down" size="xxs" variant="filled" />
         </button>
         <span
           class="h-px flex-1 bg-background-default-hover"
@@ -376,7 +376,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         >
           <span class="flex items-center gap-2">
             {{ t('homePage.hero.watchlist.onboarding.continue') }}
-            <ChevronRightIcon class="size-5" />
+            <AppIcon name="chevron-right" size="s" variant="filled" />
           </span>
         </AppBaseButton>
       </div>

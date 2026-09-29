@@ -37,7 +37,7 @@
         class="text-text-brand hover:bg-background-brand/10"
         @click="editAddress(adr)"
       >
-        <PencilIcon class="w-5 h-5" />
+        <AppIcon name="pencil" size="s" />
       </app-btn-icon>
       <app-btn-icon
         v-if="!isSelectable"
@@ -45,9 +45,14 @@
         class="text-text-brand hover:bg-background-brand/10"
         @click="deleteAddress(adr)"
       >
-        <TrashIcon class="w-5 h-5" />
+        <AppIcon name="trash" size="s" />
       </app-btn-icon>
-      <CheckIcon v-if="isSelected" class="text-text-brand w-6 h-6" />
+      <AppIcon
+        v-if="isSelected"
+        name="check"
+        size="m"
+        class="text-text-brand"
+      />
     </div>
   </div>
 </template>
@@ -55,7 +60,7 @@
 <script lang="ts" setup>
 import { type Address } from '@/stores/addressBook'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
-import { PencilIcon, TrashIcon, CheckIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBlockie from '@components/AppBlockie.vue'
 import { truncateAddress } from '@/utils/filters'
 import { useChainsStore } from '@/stores/chainsStore'

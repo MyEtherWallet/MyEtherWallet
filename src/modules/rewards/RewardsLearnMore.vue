@@ -23,41 +23,62 @@
                   : 'bg-background-default'
               "
             >
-              <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-text-brand"
+              <AppIcon
                 v-if="item.icon === 'swap'"
+                name="arrow-path-rounded-square"
+                size="xxs"
+                class="text-text-brand"
               />
-              <trophy-icon
+              <AppIcon
                 v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-text-brand"
+                name="trophy"
+                variant="filled"
+                size="xxs"
+                class="text-text-brand"
               />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
                 class="w-4 h-4 text-text-brand"
               />
-              <currency-dollar-icon
+              <AppIcon
                 v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-text-brand"
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                class="text-text-brand"
               />
-              <calendar-icon
+              <AppIcon
                 v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-text-muted"
+                name="calendar"
+                variant="filled"
+                size="xxs"
+                class="text-text-muted"
               />
-              <wallet-icon
+              <AppIcon
                 v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-text-muted"
+                name="wallet"
+                size="xxs"
+                class="text-text-muted"
               />
-              <banknotes-icon
+              <AppIcon
                 v-else-if="item.icon === 'wallet-balance'"
-                class="w-4 h-4 text-text-muted"
+                name="banknotes"
+                size="xxs"
+                class="text-text-muted"
               />
-              <currency-dollar-icon
+              <AppIcon
                 v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-text-muted"
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
+                class="text-text-muted"
               />
-              <face-frown-icon
+              <AppIcon
                 v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-text-muted"
+                name="face-frown"
+                variant="filled"
+                size="xxs"
+                class="text-text-muted"
               />
             </div>
             <p class="text-s-14 text-text-subtle leading-snug pt-1">
@@ -103,18 +124,8 @@ import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import {
-  TrophyIcon,
-  CalendarIcon,
-  CurrencyDollarIcon,
-  FaceFrownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  ArrowPathRoundedSquareIcon,
-  BanknotesIcon,
-  WalletIcon,
-} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'

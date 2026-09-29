@@ -202,7 +202,12 @@
               v-if="showNotice"
               class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-background-default"
             >
-              <lock-closed-icon class="w-6 h-6 text-text-brand shrink-0" />
+              <AppIcon
+                name="lock-closed"
+                variant="filled"
+                size="m"
+                class="text-text-brand shrink-0"
+              />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">{{ noticeTitle }}</p>
                 <p :class="bodyText">{{ noticeDesc }}</p>
@@ -254,6 +259,7 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -262,7 +268,6 @@ import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
 import { useRewardSteps } from '@/modules/rwa_rewards/composables/useRewardSteps'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'

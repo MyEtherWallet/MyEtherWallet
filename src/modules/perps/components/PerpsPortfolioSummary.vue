@@ -15,8 +15,10 @@
             width="w-6"
             @click="onRefreshBalance"
           >
-            <ArrowPathIcon
-              class="w-4 h-4 text-text-subtle"
+            <AppIcon
+              name="arrow-path"
+              size="xxs"
+              class="text-text-subtle"
               :class="{ 'animate-spin': loading }"
             />
           </app-btn-icon>
@@ -139,7 +141,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'

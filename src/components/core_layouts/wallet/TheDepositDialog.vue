@@ -74,7 +74,10 @@
               target="_blank"
               class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
             >
-              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-text-brand" />
+              <AppIcon
+                name="arrow-top-right-on-square"
+                class="text-text-brand"
+              />
             </a>
           </div>
         </div>
@@ -92,7 +95,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { watch, computed } from 'vue'
 import { analytics, DepositEvent } from '@/analytics'
 

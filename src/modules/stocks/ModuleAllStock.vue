@@ -33,7 +33,12 @@
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedCryptoFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-text-subtle" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="shrink-0 text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
@@ -63,12 +68,14 @@
                   @click="setHeaderSort('NAME')"
                 >
                   {{ $t('stocks.name') }}
-                  <arrow-up-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="headerSort === 'NAME' && tableDirection === 'asc'"
                   />
-                  <arrow-down-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="headerSort === 'NAME' && tableDirection === 'desc'"
                   />
                 </div>
@@ -85,14 +92,16 @@
                   @click="setHeaderSort('MARKET_CAP')"
                 >
                   {{ $t('stocks.market_cap') }}
-                  <arrow-up-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                     "
                   />
-                  <arrow-down-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === 'MARKET_CAP' && tableDirection === 'desc'
                     "
@@ -111,14 +120,16 @@
                   @click="setHeaderSort('VOLUME_24H')"
                 >
                   {{ $t('stocks.twenty_four_h_volume') }}
-                  <arrow-up-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === 'VOLUME_24H' && tableDirection === 'asc'
                     "
                   />
-                  <arrow-down-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === 'VOLUME_24H' && tableDirection === 'desc'
                     "
@@ -143,12 +154,14 @@
                   @click="setHeaderSort('PRICE')"
                 >
                   {{ $t('stocks.price') }}
-                  <arrow-up-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
                   />
-                  <arrow-down-icon
-                    class="w-3.5 h-3.5"
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
                   />
                 </div>
@@ -179,13 +192,18 @@
                   class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
                   <!-- changes color when active -->
-                  <star-outline-icon
-                    class="h-4 w-4 cursor-pointer"
+                  <AppIcon
+                    name="star"
+                    size="xxs"
+                    class="cursor-pointer"
                     v-if="!isWatchListed(token.coinId)"
                   />
-                  <star-solid-icon
+                  <AppIcon
                     v-else
-                    class="h-4 w-4 cursor-pointer text-text-brand"
+                    name="star"
+                    variant="filled"
+                    size="xxs"
+                    class="cursor-pointer text-text-brand"
                   />
                 </button>
               </td>
@@ -300,7 +318,11 @@
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </template>
                     <template #menu-content="{ toggleMenu }">
@@ -352,7 +374,7 @@
             @click="selectedCryptoFilter = cryptoFilterOptions[0]"
           >
             {{ $t('stocks.discover_more_stocks') }}
-            <arrow-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
           </button>
         </div>
         <!-- Loading State -->
@@ -384,7 +406,7 @@
             :label="$t('common.previous_page')"
             @click.stop="previousPage"
           >
-            <chevron-left-icon class="w-4 h-4" />
+            <AppIcon name="chevron-left" variant="filled" size="xxs" />
           </app-btn-icon>
           <app-btn-icon
             class="bg-background-default"
@@ -394,7 +416,7 @@
             :label="$t('common.next_page')"
             @click.stop="nextPage"
           >
-            <chevron-right-icon class="w-4 h-4" />
+            <AppIcon name="chevron-right" variant="filled" size="xxs" />
           </app-btn-icon>
         </div>
       </div>
@@ -420,18 +442,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  StarIcon as StarSolidIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisVerticalIcon,
-} from '@heroicons/vue/24/solid'
-import {
-  StarIcon as StarOutlineIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-} from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
