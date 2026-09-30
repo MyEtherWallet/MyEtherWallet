@@ -27,7 +27,7 @@ const props = withDefaults(
     disabled?: boolean
     label?: string
   }>(),
-  { indeterminate: false, disabled: false, label: undefined },
+  { label: undefined },
 )
 
 const model = defineModel<boolean>({ default: false })
