@@ -371,7 +371,7 @@
             <AppInputFeedback
               v-if="!limitPrice || parseFloat(limitPrice) === 0"
               type="error"
-              class="mb-1"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.target-required') }}
             </AppInputFeedback>
@@ -380,21 +380,21 @@
                 isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
               type="error"
-              class="mb-1"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.invalid-price') }}
             </AppInputFeedback>
             <AppInputFeedback
               v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
               type="error"
-              class="mb-1"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.price-max', { max: '$10,000,000' }) }}
             </AppInputFeedback>
             <AppInputFeedback
               v-else-if="limitPricePrecisionError"
               type="error"
-              class="mb-1"
+              class="mb-1 px-0!"
             >
               {{
                 quoteDecimals === 0
@@ -408,7 +408,7 @@
             <AppInputFeedback
               v-else-if="limitPriceOutOfTolerance"
               type="error"
-              class="mb-1"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.out-of-tolerance') }}
             </AppInputFeedback>
@@ -495,7 +495,7 @@
               <AppInputFeedback
                 v-if="marginPrecisionError"
                 type="error"
-                class="mb-1"
+                class="mb-1 px-0!"
               >
                 {{ $t('perps.errors.margin-precision') }}
               </AppInputFeedback>
@@ -505,7 +505,7 @@
                   isNaN(Number(inputAmount))
                 "
                 type="error"
-                class="mb-1"
+                class="mb-1 px-0!"
               >
                 {{
                   isNaN(Number(inputAmount))
@@ -519,7 +519,7 @@
                   positionSizeUsd < minOrderAmount
                 "
                 type="error"
-                class="mb-1"
+                class="mb-1 px-0!"
               >
                 {{
                   $t('perps.errors.min-amount', {
@@ -713,7 +713,7 @@
               <AppInputFeedback
                 v-if="closeAmountPrecisionError"
                 type="error"
-                class="mb-1"
+                class="mb-1 px-0!"
               >
                 {{ $t('perps.errors.amount-precision') }}
               </AppInputFeedback>
