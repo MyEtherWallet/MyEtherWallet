@@ -110,9 +110,7 @@ const hasError = computed(
     hasRequiredError.value ||
     props.feedback?.type === 'error',
 )
-const showFeedback = computed(
-  () => hasError.value || !!props.feedback?.message,
-)
+const showFeedback = computed(() => hasError.value || !!props.feedback?.message)
 
 watch(inFocusInput, value => {
   if (!value) {
