@@ -25,13 +25,12 @@
     </div>
 
     <div class="relative z-10 flex flex-col items-start justify-center gap-3">
-      <div
+      <AppTag
         v-if="effectiveStatusText"
-        class="py-1 px-2 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
-        :style="{ color: statusBadge.text, background: statusBadge.bg }"
-      >
-        {{ effectiveStatusText }}
-      </div>
+        :type="statusTagType"
+        variant="subtle"
+        :label="effectiveStatusText"
+      />
       <div
         v-if="primaryLabel || secondaryLabel"
         class="flex items-center gap-2"
@@ -75,6 +74,8 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import AppTag from '@/components/tag/AppTag.vue'
+import type { TagType } from '@/components/tag/types'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 import illusTrade from '@/assets/images/rwa-rewards/hero-claimed.webp'
 import illusHold from '@/assets/images/rwa-rewards/hero-holding.webp'
@@ -222,22 +223,23 @@ const illustrationSrc = computed(() => {
   return (isGrey ? grey : normal)[props.illustration]
 })
 
-const statusBadge = computed(
-  () =>
-    ({
-      ongoing: { text: '#005ae5', bg: '#d6edff' },
-      holding: { text: '#005ae5', bg: '#d6edff' },
-      claimable: { text: '#067f71', bg: '#c8fff1' },
-      noRewards: { text: '#bb5602', bg: '#ffedc5' },
-      claimed: { text: '#067f71', bg: '#c8fff1' },
-      lost: { text: '#cc0452', bg: '#ffdbe3' },
-      expired: { text: '#cc0452', bg: '#ffdbe3' },
-      paused: { text: '#bb5602', bg: '#ffedc5' },
-      full: { text: '#cc0452', bg: '#ffdbe3' },
-      ended: { text: '#cc0452', bg: '#ffdbe3' },
-      underReview: { text: '#bb5602', bg: '#ffedc5' },
-      banned: { text: '#cc0452', bg: '#ffdbe3' },
-      notEligible: { text: '#cc0452', bg: '#ffdbe3' },
-    })[effectiveStatus.value ?? 'ongoing'],
+const STATUS_TAG_TYPE: Record<RwaRewardStatus, TagType> = {
+  ongoing: 'branded',
+  holding: 'branded',
+  claimable: 'success',
+  claimed: 'success',
+  noRewards: 'warning',
+  paused: 'warning',
+  underReview: 'warning',
+  lost: 'danger',
+  expired: 'danger',
+  full: 'danger',
+  ended: 'danger',
+  banned: 'danger',
+  notEligible: 'danger',
+}
+
+const statusTagType = computed(
+  () => STATUS_TAG_TYPE[effectiveStatus.value ?? 'ongoing'],
 )
 </script>
