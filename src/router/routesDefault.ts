@@ -71,6 +71,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'checkbox',
+              name: 'DevCheckbox',
+              component: () => import('@/views/ViewCheckboxShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'chip',
               name: 'DevChip',
               component: () => import('@/views/ViewChipShowcase.vue'),
