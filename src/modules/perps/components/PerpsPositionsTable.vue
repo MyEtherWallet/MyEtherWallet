@@ -467,21 +467,12 @@
               </td>
               <!-- Status -->
               <td class="px-1 py-3 hidden lg:table-cell">
-                <p
-                  :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
-                    order.status === 'open' || order.status === 'pending'
-                      ? 'text-text-brand'
-                      : order.status === 'fullyfilled'
-                        ? 'text-text-success'
-                        : order.status === 'canceled' ||
-                            order.status === 'untriggered'
-                          ? 'text-text-subtle'
-                          : '',
-                  ]"
-                >
-                  {{ $t(formatOrderStatus(order.status)) }}
-                </p>
+                <app-tag
+                  :type="orderStatusTagType(order.status)"
+                  variant="subtle"
+                  class="-ml-2 mt-1"
+                  :label="$t(formatOrderStatus(order.status))"
+                />
               </td>
               <!-- Type -->
               <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
@@ -652,31 +643,22 @@
                       <p class="font-bold truncate">
                         {{ getBase(fill.market) }}
                       </p>
-                      <p
-                        :class="[
-                          fill.direction?.toLowerCase().includes('long')
-                            ? 'text-text-success'
-                            : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-px bg-background-default-hover lg:hidden',
-                        ]"
-                      >
-                        {{ $t(directionKey(fill.direction)) }}
-                      </p>
+                      <app-tag
+                        :type="fillDirectionTagType(fill.direction)"
+                        variant="subtle"
+                        class="-ml-1 mt-1 lg:hidden"
+                        :label="$t(directionKey(fill.direction))"
+                      />
                     </div>
                   </div>
                 </td>
                 <!-- Direction -->
                 <td class="px-1 py-3 hidden lg:table-cell">
-                  <span
-                    :class="[
-                      fill.direction?.toLowerCase().includes('long')
-                        ? 'text-text-success'
-                        : 'text-text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover',
-                    ]"
-                  >
-                    {{ $t(directionKey(fill.direction)) }}
-                  </span>
+                  <app-tag
+                    :type="fillDirectionTagType(fill.direction)"
+                    variant="subtle"
+                    :label="$t(directionKey(fill.direction))"
+                  />
                 </td>
                 <!-- Time -->
                 <td
@@ -912,6 +894,7 @@ import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -938,8 +921,10 @@ import {
   formatDate,
   getOrderPrice,
   formatOrderStatus,
+  orderStatusTagType,
   formatOrderType,
   directionKey,
+  fillDirectionTagType,
   withdrawalStatusColor,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'

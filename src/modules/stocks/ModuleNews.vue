@@ -49,13 +49,12 @@
                     : ''
                 }}
               </p>
-              <span
+              <AppTag
                 v-for="ticker in article.tickers || []"
                 :key="ticker"
-                class="text-s-9 font-semibold tracking-sp-06 uppercase text-text-subtle bg-background-brand-subtle px-2 py-px rounded"
-              >
-                {{ ticker }}
-              </span>
+                variant="subtle"
+                :label="ticker"
+              />
             </div>
           </div>
         </a>
@@ -75,6 +74,7 @@
 import AppSheet from '@/components/AppSheet.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'

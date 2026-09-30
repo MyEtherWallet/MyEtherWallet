@@ -244,11 +244,11 @@
                       <span class="font-semibold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
-                      <span
-                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >
-                        {{ contract.defaultLeverage }}x
-                      </span>
+                      <AppTag
+                        variant="subtle"
+                        class="shrink-0"
+                        :label="`${contract.defaultLeverage}x`"
+                      />
                     </div>
                     <span class="text-text-subtle text-s-12 truncate block">{{
                       contract.longName
@@ -705,6 +705,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import {
   analytics,
   PerpsChangeLeverageEvent,
