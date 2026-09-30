@@ -118,7 +118,7 @@ import {
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
-import type { FeedbackType } from '@/components/input_feedback/types'
+import type { InputFeedback } from '@/components/input_feedback/types'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { INPUT_SIZE_SPEC, type InputSize } from '@/components/inputSizes'
 
@@ -162,7 +162,7 @@ const props = defineProps({
   },
   /** Success / warning / helper row; `errorMessage` wins when both are set. */
   feedback: {
-    type: Object as PropType<{ type: FeedbackType; message: string }>,
+    type: Object as PropType<InputFeedback>,
     required: false,
   },
   type: {
@@ -224,7 +224,7 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? props.label)
 const hasRequiredError = ref(false)
 const hasError = computed(
   () =>
-    (!!props.errorMessage && props.errorMessage !== '') ||
+    !!props.errorMessage ||
     hasRequiredError.value ||
     props.feedback?.type === 'error',
 )

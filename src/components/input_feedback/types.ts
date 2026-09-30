@@ -3,6 +3,9 @@ import type { IconName } from '@/components/icon/icons'
 export const FEEDBACK_TYPES = ['error', 'success', 'warning', 'text'] as const
 export type FeedbackType = (typeof FEEDBACK_TYPES)[number]
 
+/** The `feedback` prop on AppInput / AppTextField. */
+export type InputFeedback = { type: FeedbackType; message: string }
+
 /** Fixed per type (Figma `_feedback / _base`); `text` has no icon. */
 export const FEEDBACK_ICON: Record<Exclude<FeedbackType, 'text'>, IconName> = {
   error: 'exclamation-circle',
