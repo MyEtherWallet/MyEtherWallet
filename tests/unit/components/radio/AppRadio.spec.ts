@@ -64,21 +64,27 @@ describe('AppRadio', () => {
     expect((b.element as HTMLInputElement).checked).toBe(true)
   })
 
-  it('disabled: sets the attribute, uses explicit disabled colours and no hover halo', () => {
+  it('disabled: sets the attribute, never emits, uses explicit disabled colours and no hover halo', async () => {
     const off = mountRadio({ disabled: true })
     expect(off.get('input').attributes('disabled')).toBeDefined()
+    await off.get('input').trigger('change')
+    expect(off.emitted('update:modelValue')).toBeUndefined()
     expect(off.get(circle()).classes()).toContain('bg-background-disabled')
-    expect(off.get(circle()).classes()).not.toContain('group-hover:ring-4')
+    expect(off.get(circle()).classes()).not.toContain(
+      'group-hover/radio:ring-4',
+    )
 
     const on = mountRadio({ disabled: true, modelValue: 'eth' })
     expect(on.get(circle()).classes()).toContain('bg-background-brand-disabled')
   })
 
   it('shows the hover halo only on an enabled, unselected radio', () => {
-    expect(mountRadio().get(circle()).classes()).toContain('group-hover:ring-4')
+    expect(mountRadio().get(circle()).classes()).toContain(
+      'group-hover/radio:ring-4',
+    )
     expect(
       mountRadio({ modelValue: 'eth' }).get(circle()).classes(),
-    ).not.toContain('group-hover:ring-4')
+    ).not.toContain('group-hover/radio:ring-4')
   })
 
   it('forwards attrs to the input, but class to the row', () => {

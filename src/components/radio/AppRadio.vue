@@ -49,7 +49,7 @@ const circleClass = computed(() => {
   }
   return checked.value
     ? 'bg-background-brand border-transparent'
-    : 'bg-background-formfield border-border-strong group-hover:ring-4 group-hover:ring-background-default-hover'
+    : 'bg-background-formfield border-border-strong group-hover/radio:ring-4 group-hover/radio:ring-background-default-hover'
 })
 </script>
 
@@ -57,7 +57,7 @@ const circleClass = computed(() => {
   <label
     :for="inputId"
     :class="[
-      'group inline-flex items-start gap-2',
+      'group/radio inline-flex items-start gap-2',
       disabled ? 'cursor-default' : 'cursor-pointer',
       $attrs.class,
     ]"
