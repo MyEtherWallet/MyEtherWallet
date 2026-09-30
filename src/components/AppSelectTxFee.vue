@@ -273,8 +273,7 @@ const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
     ) {
       // Return a default BTC estimate body
       return {} as unknown as
-        | EstimatesRequestBody
-        | GetBtcTransactionEstimateBody
+        EstimatesRequestBody | GetBtcTransactionEstimateBody
     }
     /**
      * Right now bitcoin wallets are only fetched when the user is logged in.
