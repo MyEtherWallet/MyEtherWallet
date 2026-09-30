@@ -77,6 +77,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'tag',
+              name: 'DevTag',
+              component: () => import('@/views/ViewTagShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'icons',
               name: 'DevIcons',
               component: () => import('@/views/ViewIconShowcase.vue'),
