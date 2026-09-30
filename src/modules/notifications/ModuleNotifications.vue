@@ -50,7 +50,9 @@
           :remaining-time="
             getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
           "
+          :recovering="recoveringHashes.has(item.hash)"
           @remove="removeNotification"
+          @recover="recoverFunds"
         />
         <hr
           v-if="index < filteredNotifications.length - 1"
@@ -85,6 +87,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
+import { NativeDepositNotConfirmedError } from '@/modules/trade/providers/oneinch_fusion/nativeOrderError'
 import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -120,9 +123,12 @@ import {
   analytics,
   SwapEventStatus,
   SendEventStatus,
+  TradeEventError,
   TradeEventStatus,
   type TradeEventStatusPayload,
 } from '@/analytics'
+import { isUserRejectionError } from '@/utils/walletUtils'
+import { truncateAddress } from '@/utils/filters'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -616,6 +622,135 @@ const removeNotification = (hash: string) => {
 
   if (orders.value.length === 0) {
     stopCountdown()
+  }
+}
+
+// Reclaim the escrow deposit of a native order that 1inch never accepted
+// (status `unsubmitted`): cancels the order on its proxy, which refunds the
+// maker. One recovery per order at a time; the card disables its button.
+const recoveringHashes = ref(new Set<string>())
+const recoverFunds = async (order: SavedTradeOrder) => {
+  const address = walletAddress.value
+  if (!address || !wallet.value) return
+  if (!order.proxyAddress || !order.nativeOrder) return
+  if (recoveringHashes.value.has(order.hash)) return
+
+  // The cancel must be signed by the order's maker on the order's chain. A
+  // mismatched account or network would either be rejected by the proxy or,
+  // for wallets that send on their connected chain, broadcast to the wrong
+  // network — so tell the user what to switch instead of submitting.
+  if (address.toLowerCase() !== order.fromAddress.toLowerCase()) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('notifications_module.toast_recover_wrong_account'),
+      textSecondary: t(
+        'notifications_module.toast_recover_wrong_account_hint',
+        {
+          address: truncateAddress(order.fromAddress),
+        },
+      ),
+      duration: 10000,
+    })
+    return
+  }
+  if (Number(selectedChain.value?.chainID) !== order.chainId) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('notifications_module.toast_recover_wrong_network'),
+      textSecondary: t(
+        'notifications_module.toast_recover_wrong_network_hint',
+        {
+          network: order.chainName,
+        },
+      ),
+      duration: 10000,
+    })
+    return
+  }
+
+  recoveringHashes.value = new Set([...recoveringHashes.value, order.hash])
+
+  const analyticsPayload: TradeEventStatusPayload = {
+    orderHash: order.hash,
+    fromAmount: order.fromAmount,
+    fromAmountUSD: order.usdValue ?? '',
+    toAmount: order.expectedToAmount,
+    toAmountUSD: order.toUsdValue ?? '',
+    fromToken: order.fromSymbol,
+    toToken: order.toSymbol,
+    network: order.chainName,
+    tradePair: `${order.fromSymbol}-${order.toSymbol}`,
+  }
+
+  try {
+    const { default: OneInchFusion } =
+      await import('@/modules/trade/providers/oneinch_fusion/oneInchFusion')
+    const fusion = new OneInchFusion(wallet.value, order.chainId)
+    const recoveryTxHash = await fusion.cancelNativeOrder({
+      proxyAddress: order.proxyAddress,
+      nativeOrder: order.nativeOrder,
+      fromAddress: order.fromAddress,
+      depositTxHash: order.depositTxHash,
+    })
+    tradeOrdersStore.updateOrder(address, order.hash, {
+      status: 'recovered',
+      recoveryTxHash,
+      seen: false,
+    })
+    analytics.trackTradeEventStatus(TradeEventStatus.FUNDS_RECOVERED, {
+      ...analyticsPayload,
+      txHash: recoveryTxHash,
+    })
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: t('notifications_module.toast_trade_recovered'),
+      duration: 10000,
+    })
+    fetchBalances()
+  } catch (e) {
+    if (isUserRejectionError(e)) {
+      toastStore.addToastMessage({
+        text: t('common.error.user_canceled_request'),
+        type: ToastType.Info,
+      })
+      return
+    }
+    if (e instanceof NativeDepositNotConfirmedError) {
+      if (e.reason === 'reverted') {
+        // The proxy was never funded: nothing to recover, so stop offering it.
+        tradeOrdersStore.updateOrder(address, order.hash, {
+          status: 'failed',
+          seen: false,
+        })
+      }
+      toastStore.addToastMessage({
+        type: e.reason === 'reverted' ? ToastType.Error : ToastType.Info,
+        text: t(
+          e.reason === 'reverted'
+            ? 'notifications_module.toast_recover_deposit_failed'
+            : 'notifications_module.toast_recover_deposit_pending',
+        ),
+        textSecondary: e.message,
+        duration: 10000,
+      })
+      return
+    }
+    const errorMsg = e instanceof Error ? e.message : String(e)
+    captureException(e, SENTRY_MODULE_TAGS.NOTIFICATIONS)
+    analytics.trackTradeEventError(TradeEventError.RECOVER_ERROR, {
+      ...analyticsPayload,
+      errorMsg,
+    })
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('notifications_module.toast_trade_recover_failed'),
+      textSecondary: errorMsg,
+      duration: 10000,
+    })
+  } finally {
+    const next = new Set(recoveringHashes.value)
+    next.delete(order.hash)
+    recoveringHashes.value = next
   }
 }
 
