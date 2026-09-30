@@ -3,7 +3,7 @@
     v-if="message || $slots.default"
     :role="type === 'error' ? 'alert' : 'status'"
     :class="[
-      'flex w-full min-h-6 items-center gap-1 px-4 text-text-xs',
+      'flex w-full min-w-0 min-h-6 items-center gap-1 px-4 text-text-xs',
       FEEDBACK_CLASS[type],
     ]"
   >

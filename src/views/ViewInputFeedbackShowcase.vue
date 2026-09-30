@@ -19,6 +19,10 @@ const LABEL = {
 const LONG =
   'This address has never received funds on this network. Double-check it before you send, transfers to the wrong address cannot be reversed.'
 
+// Unbroken, so the row has to shrink beside the Clear button to wrap it.
+const UNBROKEN =
+  'Signature mismatch: 0x3a6e1b2c9f4d8e7a5b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b'
+
 const address = ref('0x742d35Cc6634C0532925a3b844Bc454e4438f44e')
 const amount = ref('12')
 const name = ref('')
@@ -94,7 +98,7 @@ const message = ref('Hello MEW')
         <AppTextField
           v-model="message"
           placeholder="Message"
-          error-message="Invalid signature"
+          :error-message="UNBROKEN"
         />
         <AppTextField
           v-model="message"
