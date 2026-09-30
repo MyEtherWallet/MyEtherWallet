@@ -49,7 +49,7 @@ const someSelected = computed(() => networks.value.some(n => n.checked))
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Type × State</h2>
       <div
-        class="inline-grid w-fit grid-cols-[auto_repeat(4,80px)] items-center gap-y-6 rounded-12 border border-border-default bg-background-alternative p-6"
+        class="inline-grid w-fit grid-cols-5 items-center gap-6 rounded-12 border border-border-default bg-background-alternative p-6"
       >
         <span />
         <span
