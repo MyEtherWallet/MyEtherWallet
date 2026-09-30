@@ -108,12 +108,13 @@
         </div>
       </transition>
       <transition name="fade" mode="out-in">
-        <p
+        <!-- Inside the card padding, so no side inset of its own -->
+        <AppInputFeedback
           v-if="hasError && !isLoading && !isOpenSelectToken && !isPristine"
-          class="text-text-error text-s-12 leading-p-130 mt-1"
-        >
-          {{ errorMessage }}
-        </p>
+          type="error"
+          :message="errorMessage"
+          class="mt-1 px-0!"
+        />
       </transition>
     </div>
   </div>
@@ -124,6 +125,7 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { ref, computed, type PropType, watch, nextTick } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
