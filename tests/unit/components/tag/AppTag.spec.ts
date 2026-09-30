@@ -24,7 +24,9 @@ describe('AppTag', () => {
   for (const type of TAG_TYPES) {
     for (const variant of TAG_VARIANTS) {
       it(`applies the ${type} × ${variant} classes`, () => {
-        const wrapper = mount(AppTag, { props: { label: 'Tag', type, variant } })
+        const wrapper = mount(AppTag, {
+          props: { label: 'Tag', type, variant },
+        })
         for (const cls of TAG_CLASSES[type][variant].split(' ')) {
           expect(wrapper.classes()).toContain(cls)
         }
@@ -32,7 +34,7 @@ describe('AppTag', () => {
     }
   }
 
-  it('renders 18px icons only for the icon props that are set', () => {
+  it('renders filled 18px icons only for the icon props that are set', () => {
     const none = mount(AppTag, { props: { label: 'Tag' } })
     expect(none.findAllComponents(AppIcon)).toHaveLength(0)
 
@@ -40,14 +42,17 @@ describe('AppTag', () => {
       props: { label: 'Tag', leadingIcon: 'check', trailingIcon: 'x-mark' },
     })
     const icons = both.findAllComponents(AppIcon)
-    expect(icons.map((i) => i.props('name'))).toEqual(['check', 'x-mark'])
-    expect(icons.every((i) => i.props('size') === 'xs')).toBe(true)
+    expect(icons.map(i => i.props('name'))).toEqual(['check', 'x-mark'])
+    for (const icon of icons) {
+      expect(icon.props('size')).toBe('xs')
+      expect(icon.props('variant')).toBe('filled')
+    }
 
     const trailingOnly = mount(AppTag, {
       props: { label: 'Tag', trailingIcon: 'x-mark' },
     })
     expect(
-      trailingOnly.findAllComponents(AppIcon).map((i) => i.props('name')),
+      trailingOnly.findAllComponents(AppIcon).map(i => i.props('name')),
     ).toEqual(['x-mark'])
   })
 
