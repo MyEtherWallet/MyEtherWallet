@@ -64,7 +64,8 @@ export function useRecommendedWatchlist(): {
       const query = params.toString()
       const url = query ? `${ASSETS_URL}?${query}` : ASSETS_URL
       const { data } = await useMEWFetch(url).get().json<RawWatchlistAsset[]>()
-      if (requestId === latestRequest) assets.value = (data.value ?? []).map(toRecommended)
+      if (requestId === latestRequest)
+        assets.value = (data.value ?? []).map(toRecommended)
     } catch {
       if (requestId === latestRequest) assets.value = []
     } finally {

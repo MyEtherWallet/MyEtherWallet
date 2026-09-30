@@ -4,15 +4,6 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
-import {
-  StarIcon as StarSolidIcon,
-  PlusIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ChevronDownIcon,
-  Bars2Icon,
-  EllipsisHorizontalIcon,
-} from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
@@ -25,6 +16,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
 // none to show); this component renders + handles per-row actions, search,
 // category filter, "Show more" and manual drag-reordering.
@@ -109,8 +101,7 @@ const changeLabel = (change: number) =>
 // (Figma). The action opens the wallet side panel in place; it must not
 // navigate away from the home page.
 const actionKey = (row: WatchlistRow) => {
-  if (row.removeType !== 'crypto')
-    return 'homePage.hero.watchlist.table.trade'
+  if (row.removeType !== 'crypto') return 'homePage.hero.watchlist.table.trade'
   return row.cta === 'bridge'
     ? 'homePage.hero.watchlist.table.bridge'
     : 'homePage.hero.watchlist.table.swap'
@@ -170,11 +161,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new-mobile"
           :disabled="isWatchlistFull"
-          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <PlusIcon class="size-[18px]" />
+          <AppIcon name="plus" variant="filled" size="xs" />
         </button>
       </AppTooltip>
     </div>
@@ -189,18 +180,18 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-[#f5f5f5]"
-          class="w-full rounded-full min-[780px]:w-[240px]"
+          bg-class="bg-background-default"
+          class="w-full rounded-full min-[780px]:w-60"
         />
         <div class="relative shrink-0 self-start">
           <button
             type="button"
             data-test="watchlist-category"
-            class="flex h-10 items-center gap-1 rounded-full bg-[#f5f5f5] pl-4 pr-3 text-s-16 font-semibold text-black"
+            class="flex h-10 items-center gap-1 rounded-full bg-background-default pl-4 pr-3 text-s-16 font-semibold text-black"
             @click="isCategoryOpen = !isCategoryOpen"
           >
             {{ t(CATEGORIES.find(c => c.value === category)!.labelKey) }}
-            <ChevronDownIcon class="size-5" />
+            <AppIcon name="chevron-down" variant="filled" size="s" />
           </button>
           <template v-if="isCategoryOpen">
             <div
@@ -209,7 +200,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               @click="isCategoryOpen = false"
             />
             <ul
-              class="absolute left-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-grey-outline/40 bg-white py-1 shadow-lg"
+              class="absolute left-0 z-20 mt-1 min-w-40 overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
             >
               <li v-for="c in CATEGORIES" :key="c.value">
                 <button
@@ -217,7 +208,9 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                   data-test="category-option"
                   :data-value="c.value"
                   class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium"
-                  :class="category === c.value ? 'text-primary' : 'text-black'"
+                  :class="
+                    category === c.value ? 'text-text-brand' : 'text-black'
+                  "
                   @click="setCategory(c.value)"
                 >
                   {{ t(c.labelKey) }}
@@ -240,20 +233,20 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new"
           :disabled="isWatchlistFull"
-          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-primary px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <PlusIcon class="size-[18px]" />
+          <AppIcon name="plus" variant="filled" size="xs" />
         </button>
       </AppTooltip>
     </div>
 
-    <div class="mt-6 h-px w-full bg-grey-outline/40" aria-hidden="true" />
+    <div class="mt-6 h-px w-full bg-border-strong/40" aria-hidden="true" />
 
     <!-- Column headers (spacers keep them aligned with the row cells). -->
     <div
-      class="mt-4 flex items-center gap-2 px-2 pb-2 text-s-11 uppercase tracking-wide text-[#575757]"
+      class="mt-4 flex items-center gap-2 px-2 pb-2 text-s-11 uppercase tracking-wide text-text-subtle"
     >
       <!-- Mobile reserves the always-on drag handle; desktop reveals it on hover. -->
       <span class="w-4 shrink-0 min-[780px]:hidden" aria-hidden="true" />
@@ -273,14 +266,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <span class="w-[100px]">
         {{ t('homePage.hero.watchlist.table.columns.price') }}
       </span>
-      <span class="w-8 shrink-0 min-[780px]:w-[96px]" aria-hidden="true" />
+      <span class="w-8 shrink-0 min-[780px]:w-24" aria-hidden="true" />
     </div>
 
     <!-- Empty (search / category with no match). -->
     <p
       v-if="!displayRows.length"
       data-test="watchlist-empty"
-      class="py-10 text-center text-s-14 text-[#575757]"
+      class="py-10 text-center text-s-14 text-text-subtle"
     >
       {{ t('homePage.hero.watchlist.addModal.empty') }}
     </p>
@@ -299,7 +292,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <template #item="{ element: row }">
         <li
           data-test="watchlist-row"
-          class="group relative flex cursor-pointer items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-surface-hover"
+          class="group relative flex cursor-pointer items-center gap-2 rounded-xl px-2 py-3 transition-[padding,background-color] duration-200 ease-out hover:bg-background-default"
           :class="{ 'min-[780px]:hover:pl-7': !dragDisabled }"
           @click="openInfo(row, $event)"
         >
@@ -314,7 +307,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <Bars2Icon class="size-4 text-[#a5a5a5]" />
+            <AppIcon
+              name="bars-2"
+              variant="filled"
+              size="xxs"
+              class="text-text-placeholder"
+            />
           </span>
           <span
             class="drag-handle absolute left-2 top-1/2 hidden -translate-y-1/2 pointer-events-none opacity-0 transition-opacity min-[780px]:flex"
@@ -325,7 +323,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             "
             :aria-label="t('homePage.hero.watchlist.table.dragLabel')"
           >
-            <Bars2Icon class="size-4 text-[#a5a5a5]" />
+            <AppIcon
+              name="bars-2"
+              variant="filled"
+              size="xxs"
+              class="text-text-placeholder"
+            />
           </span>
 
           <!-- Star toggle (remove). Grows a light circular background on hover
@@ -334,10 +337,10 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             type="button"
             data-test="watchlist-remove"
             :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-[#ededed]"
+            class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-background-default-hover"
             @click="remove(row)"
           >
-            <StarSolidIcon class="size-5" />
+            <AppIcon name="star" variant="filled" size="s" />
           </button>
 
           <!-- Token — a focusable link so keyboard users can open the drawer
@@ -346,18 +349,18 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             :to="row.route"
             data-test="watchlist-row-link"
             :aria-label="row.name || row.symbol || undefined"
-            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg no-underline outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+            class="flex min-w-0 flex-1 items-center gap-2 rounded-lg no-underline outline-offset-2 focus-visible:outline-2 focus-visible:outline-border-brand"
           >
             <template v-if="row.loading">
               <span
-                class="size-10 shrink-0 animate-pulse rounded-full bg-[#f0f0f0]"
+                class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
               />
               <div class="min-w-0 space-y-1.5">
                 <span
-                  class="block h-4 w-16 animate-pulse rounded bg-[#f0f0f0]"
+                  class="block h-4 w-16 animate-pulse rounded bg-background-skeleton"
                 />
                 <span
-                  class="block h-3 w-24 animate-pulse rounded bg-[#f0f0f0]"
+                  class="block h-3 w-24 animate-pulse rounded bg-background-skeleton"
                 />
               </div>
             </template>
@@ -376,7 +379,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                   :is-stock="row.isStock"
                   class="block truncate text-s-16 font-semibold text-black"
                 />
-                <span class="block truncate text-s-14 text-[#575757]">
+                <span class="block truncate text-s-14 text-text-subtle">
                   {{ row.name }}
                 </span>
               </div>
@@ -389,7 +392,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           >
             <span
               v-if="row.loading"
-              class="inline-block h-4 w-16 animate-pulse rounded bg-[#f0f0f0]"
+              class="inline-block h-4 w-16 animate-pulse rounded bg-background-skeleton"
             />
             <template v-else>{{ row.marketCapDisplay || '—' }}</template>
           </span>
@@ -400,7 +403,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           >
             <span
               v-if="row.loading"
-              class="inline-block h-4 w-16 animate-pulse rounded bg-[#f0f0f0]"
+              class="inline-block h-4 w-16 animate-pulse rounded bg-background-skeleton"
             />
             <template v-else>{{ row.volumeDisplay || '—' }}</template>
           </span>
@@ -409,16 +412,23 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           <div class="hidden w-[130px] flex-col gap-1 xl:flex">
             <span
               v-if="row.loading"
-              class="h-4 w-20 animate-pulse rounded bg-[#f0f0f0]"
+              class="h-4 w-20 animate-pulse rounded bg-background-skeleton"
             />
             <template v-else>
               <span
                 class="flex items-center gap-0.5 text-s-12 font-semibold"
-                :class="row.change < 0 ? 'text-error' : 'text-success'"
+                :class="
+                  row.change < 0 ? 'text-text-error' : 'text-text-success'
+                "
               >
                 {{ changeLabel(row.change) }}
-                <ArrowDownIcon v-if="row.change < 0" class="size-3" />
-                <ArrowUpIcon v-else class="size-3" />
+                <AppIcon
+                  name="arrow-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
+                />
+                <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
               <TableSparkline
                 v-if="row.sparkline.length"
@@ -439,7 +449,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           >
             <span
               v-if="row.loading"
-              class="inline-block h-4 w-12 animate-pulse rounded bg-[#f0f0f0]"
+              class="inline-block h-4 w-12 animate-pulse rounded bg-background-skeleton"
             />
             <template v-else>
               <span class="text-s-16 font-semibold text-black">
@@ -447,26 +457,33 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               </span>
               <span
                 class="flex items-center gap-0.5 text-s-12 font-semibold xl:hidden"
-                :class="row.change < 0 ? 'text-error' : 'text-success'"
+                :class="
+                  row.change < 0 ? 'text-text-error' : 'text-text-success'
+                "
               >
                 {{ changeLabel(row.change) }}
-                <ArrowDownIcon v-if="row.change < 0" class="size-3" />
-                <ArrowUpIcon v-else class="size-3" />
+                <AppIcon
+                  name="arrow-down"
+                  variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
+                />
+                <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
             </template>
           </div>
 
           <!-- Actions: a Trade/Swap button (≥780px), a kebab menu below. -->
-          <div class="flex w-8 shrink-0 justify-end min-[780px]:w-[96px]">
+          <div class="flex w-8 shrink-0 justify-end min-[780px]:w-24">
             <span
               v-if="row.loading"
-              class="h-9 w-8 animate-pulse rounded-full bg-[#f0f0f0] min-[780px]:w-[96px]"
+              class="h-9 w-8 animate-pulse rounded-full bg-background-skeleton min-[780px]:w-24"
             />
             <template v-else>
               <button
                 type="button"
                 data-test="watchlist-trade"
-                class="hidden w-[96px] rounded-full bg-[#f5f5f5] py-2 text-s-16 font-semibold text-primary transition-colors group-hover:bg-white min-[780px]:block"
+                class="hidden w-24 rounded-full bg-background-default py-2 text-s-16 font-semibold text-text-brand transition-colors group-hover:bg-white min-[780px]:block"
                 @click="actionCall(row)"
               >
                 {{ t(actionKey(row)) }}
@@ -476,12 +493,16 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                   type="button"
                   data-test="watchlist-menu"
                   :aria-label="t('homePage.hero.watchlist.table.moreActions')"
-                  class="hoverNoBG flex size-8 items-center justify-center rounded-full text-[#575757]"
+                  class="hoverNoBG flex size-8 items-center justify-center rounded-full text-text-subtle"
                   @click="
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
                 >
-                  <EllipsisHorizontalIcon class="size-5" />
+                  <AppIcon
+                    name="ellipsis-horizontal"
+                    variant="filled"
+                    size="s"
+                  />
                 </button>
                 <template v-if="openMenuKey === row.key">
                   <div
@@ -490,7 +511,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     @click.stop="openMenuKey = null"
                   />
                   <ul
-                    class="absolute right-0 z-20 mt-1 min-w-[160px] overflow-hidden rounded-2xl border border-grey-outline/40 bg-white py-1 shadow-lg"
+                    class="absolute right-0 z-20 mt-1 min-w-40 overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
                   >
                     <li>
                       <button
@@ -510,7 +531,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     <li>
                       <button
                         type="button"
-                        class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-error"
+                        class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-text-error"
                         @click="
                           () => {
                             remove(row)
@@ -532,7 +553,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
 
     <!-- Show more (expand to full length). -->
     <div v-if="hasMore" class="mt-4 flex items-center gap-4">
-      <span class="h-px flex-1 bg-grey-outline/40" aria-hidden="true" />
+      <span class="h-px flex-1 bg-border-strong/40" aria-hidden="true" />
       <button
         type="button"
         data-test="watchlist-show-more"
@@ -543,7 +564,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           t('homePage.hero.watchlist.table.showMore', { count: hiddenCount })
         }}
       </button>
-      <span class="h-px flex-1 bg-grey-outline/40" aria-hidden="true" />
+      <span class="h-px flex-1 bg-border-strong/40" aria-hidden="true" />
     </div>
 
     <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />

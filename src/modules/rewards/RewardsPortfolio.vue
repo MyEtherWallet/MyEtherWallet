@@ -5,7 +5,7 @@
       v-if="!hadInitialLoad"
       class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
     >
-      <p class="text-center text-s-14 text-info">
+      <p class="text-center text-s-14 text-text-subtle">
         {{ t('rewards.loading') }}
       </p>
     </div>
@@ -20,7 +20,9 @@
           <h3 class="text-s-20 font-bold leading-none">
             {{ t('rewards.earn_rewards_title') }}
           </h3>
-          <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
+          <p
+            class="text-s-16 text-text-subtle leading-[22px] mt-2 max-w-[295px]"
+          >
             {{
               t('rewards.portfolio_trade_description', { min: minSpendTrade })
             }}
@@ -41,7 +43,7 @@
           :class="
             isOpenSideMenu
               ? 'xl:hidden 2xl:block 2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block xl:w-[80px] xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
+              : 'xl:block xl:w-20 xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
           "
         />
       </div>
@@ -75,12 +77,12 @@
       />
 
       <!-- Not Eligible State -->
-      <div v-else class="border-t border-grey-10 pt-4 pb-1">
-        <p class="text-s-14 font-semibold text-error leading-5">
+      <div v-else class="border-t border-border-default pt-4 pb-1">
+        <p class="text-s-14 font-semibold text-text-error leading-5">
           {{ t('rewards.not_eligible_for_rewards') }}
         </p>
         <button
-          class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
+          class="mt-4 bg-background-default text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
           @click="onConnectAddress"
         >
           {{ t('rewards.connect_another_address') }}
@@ -91,7 +93,7 @@
         alt=""
         width="650"
         height="292"
-        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
+        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-5 mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
         :class="[isOpenSideMenu ? '' : 'xl:hidden']"
       />
 
@@ -261,30 +263,30 @@ const onConnectAddress = () => {
 }
 
 .confetti-piece {
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 2px;
 }
 
 .confetti-piece:nth-child(3n) {
   background: #7b61ff;
-  width: 6px;
-  height: 12px;
+  width: var(--size-1-5);
+  height: var(--size-3);
   border-radius: 1px;
   transform: rotate(45deg);
 }
 
 .confetti-piece:nth-child(3n + 1) {
   background: #3b82f6;
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 50%;
 }
 
 .confetti-piece:nth-child(3n + 2) {
   background: #fbbf24;
-  width: 5px;
-  height: 14px;
+  width: 5px; /* off-scale: decorative confetti, no size token */
+  height: var(--size-3-5);
   border-radius: 1px;
   transform: rotate(-30deg);
 }

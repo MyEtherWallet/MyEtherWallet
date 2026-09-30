@@ -11,14 +11,15 @@ vi.mock('@/composables/useFetchMewApi', () => ({
   useFetchMewApi: () => ({
     useMEWFetch: (url: string) => {
       calls.push(String(url))
-      return { get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }) }
+      return {
+        get: () => ({ json: () => Promise.resolve({ data: ref(ASSETS) }) }),
+      }
     },
   }),
 }))
 
-const { useRecommendedWatchlist } = await import(
-  '@/modules/home/composables/useRecommendedWatchlist'
-)
+const { useRecommendedWatchlist } =
+  await import('@/modules/home/composables/useRecommendedWatchlist')
 
 describe('useRecommendedWatchlist (MEW-2130)', () => {
   beforeEach(() => {

@@ -37,7 +37,7 @@ describe('TradeAmountCard', () => {
   it('scopes the hover highlight to the amount value, not the whole card', () => {
     const card = mountCard()
     expect(card.classes()).toContain(
-      'has-[.amount-value:hover]:border-grey-subtle',
+      'has-[.amount-value:hover]:border-border-hover',
     )
     expect(card.find('.amount-value input').exists()).toBe(true)
   })
@@ -110,13 +110,13 @@ describe('TradeAmountCard', () => {
       })
       vi.advanceTimersByTime(1000)
       await nextTick()
-      expect(balanceRow(outOfBalance).classes()).toContain('text-error')
+      expect(balanceRow(outOfBalance).classes()).toContain('text-text-error')
 
       const belowMinimum = mountCard({ balanceError: false })
       await belowMinimum.setProps({ amount: '3', error: 'Enter +5 USDC' })
       vi.advanceTimersByTime(1000)
       await nextTick()
-      expect(balanceRow(belowMinimum).classes()).toContain('text-info')
+      expect(balanceRow(belowMinimum).classes()).toContain('text-text-subtle')
     } finally {
       vi.useRealTimers()
     }
@@ -134,11 +134,11 @@ describe('TradeAmountCard', () => {
         card.findAll('p').find(row => row.text().startsWith('Balance'))!
       expect(card.find('svg.animate-spin').exists()).toBe(true)
       expect(card.text()).not.toContain('Not enough balance')
-      expect(balanceRow().classes()).toContain('text-info')
+      expect(balanceRow().classes()).toContain('text-text-subtle')
 
       await card.setProps({ fiatLoading: false })
       expect(card.text()).toContain('Not enough balance')
-      expect(balanceRow().classes()).toContain('text-error')
+      expect(balanceRow().classes()).toContain('text-text-error')
     } finally {
       vi.useRealTimers()
     }

@@ -7,7 +7,13 @@ import type { RecommendedAsset } from '@/modules/home/components/watchlistOnboar
 // Fixed recommendations covering all three buckets (finish() reads these).
 const ASSETS: RecommendedAsset[] = [
   { id: 'eth', symbol: 'ETH', name: 'Ethereum', type: 'crypto', watchlistId: 'ethereum' }, // prettier-ignore
-  { id: 'aapl', symbol: 'AAPLon', name: 'Apple', type: 'stock', watchlistId: 'AAPL' },
+  {
+    id: 'aapl',
+    symbol: 'AAPLon',
+    name: 'Apple',
+    type: 'stock',
+    watchlistId: 'AAPL',
+  },
   { id: 'btc', symbol: 'BTC', name: 'Bitcoin perp', type: 'perp', watchlistId: 'BTC' }, // prettier-ignore
 ]
 const fetchRecommendations = vi.fn()
@@ -72,7 +78,7 @@ vi.mock('@/modules/home/components/WatchlistStepAssets.vue', () => ({
     props: { assets: Array, isLoading: Boolean, modelValue: Array },
     emits: ['done', 'back', 'update:modelValue'],
     template:
-      '<div><button data-test="pick" @click="$emit(\'update:modelValue\', [\'eth\',\'aapl\',\'btc\'])">pick</button>' +
+      "<div><button data-test=\"pick\" @click=\"$emit('update:modelValue', ['eth','aapl','btc'])\">pick</button>" +
       '<button data-test="s3-back" @click="$emit(\'back\')">back</button>' +
       '<button data-test="done" @click="$emit(\'done\')">done</button></div>',
   },

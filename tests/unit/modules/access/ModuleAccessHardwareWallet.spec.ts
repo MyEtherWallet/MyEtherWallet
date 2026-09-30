@@ -133,6 +133,8 @@ vi.mock('@/providers/hw/ledger/transport', () => ({
       h.resolveTransport = resolve
     }),
   getLedgerBLETransport: vi.fn(),
+  closeLedgerTransport: vi.fn(async () => undefined),
+  isLedgerInterfaceBusyError: () => false,
   isWebUSBSupported: async () => true,
   isWebBLESupported: async () => false,
 }))

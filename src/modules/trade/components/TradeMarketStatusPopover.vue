@@ -12,8 +12,8 @@
         <p class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]">
           {{ title }}
         </p>
-        <p class="text-s-12 text-info leading-[18px]">{{ body }}</p>
-        <p class="text-s-12 text-info leading-[18px]">
+        <p class="text-s-12 text-text-subtle leading-[18px]">{{ body }}</p>
+        <p class="text-s-12 text-text-subtle leading-[18px]">
           <a
             :href="marketHoursHelpUrl"
             target="_blank"
@@ -24,8 +24,11 @@
           {{ $t('trade.market_status_popover.learn_more_suffix') }}
         </p>
       </div>
-      <div class="w-full border-t border-grey-10" />
-      <p v-if="status === 'weekend'" class="text-s-12 text-info leading-[18px]">
+      <div class="w-full border-t border-border-default" />
+      <p
+        v-if="status === 'weekend'"
+        class="text-s-12 text-text-subtle leading-[18px]"
+      >
         {{ nextOpenText }}
       </p>
       <trade-market-timeline
@@ -40,7 +43,7 @@
         class="absolute right-1 top-1 flex w-6 h-6 items-center justify-center rounded-full hoverNoBG"
         @click="emit('close')"
       >
-        <XMarkIcon class="w-4 h-4" />
+        <AppIcon name="x-mark" variant="filled" size="xxs" />
       </button>
     </div>
   </div>
@@ -49,7 +52,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'
@@ -60,6 +62,7 @@ import {
 } from '../common/marketDisplay'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     status: MarketStatusVariant

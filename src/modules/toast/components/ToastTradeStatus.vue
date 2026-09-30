@@ -3,7 +3,7 @@
     role="alert"
     :class="[
       isXS ? 'w-[95%] mx-auto' : 'w-[360px]',
-      'bg-bgInfo rounded-16 p-3 flex items-start gap-3 mt-4',
+      'bg-background-info rounded-16 p-3 flex items-start gap-3 mt-4',
     ]"
   >
     <app-spinner
@@ -27,9 +27,12 @@
           class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-white flex items-center gap-1"
         >
           {{ toast.text }}
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="xs"
             v-if="toast.tradeStatus?.kind === 'completed'"
-            class="w-[18px] h-[18px] text-success-600"
+            class="text-text-success"
           />
         </p>
         <p
@@ -44,7 +47,7 @@
         :href="toast.link.url"
         target="_blank"
         rel="noopener"
-        class="self-start bg-primary rounded-24 px-3 py-1 text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-white"
+        class="self-start bg-background-brand rounded-24 px-3 py-1 text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-white"
       >
         {{ toast.link.title }}
       </a>
@@ -56,20 +59,20 @@
       :aria-label="$t('common.close')"
       @click="dismiss"
     >
-      <x-mark-icon class="w-4 h-4" />
+      <AppIcon name="x-mark" variant="filled" size="xxs" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from 'vue'
-import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import AppSpinner from '@/components/AppSpinner.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { Toast } from '@/types/notification'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   toast: Toast
   index: number
