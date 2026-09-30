@@ -87,6 +87,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
+import { NativeDepositNotConfirmedError } from '@/modules/trade/providers/oneinch_fusion/nativeOrderError'
 import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -689,6 +690,7 @@ const recoverFunds = async (order: SavedTradeOrder) => {
       proxyAddress: order.proxyAddress,
       nativeOrder: order.nativeOrder,
       fromAddress: order.fromAddress,
+      depositTxHash: order.depositTxHash,
     })
     tradeOrdersStore.updateOrder(address, order.hash, {
       status: 'recovered',
@@ -710,6 +712,26 @@ const recoverFunds = async (order: SavedTradeOrder) => {
       toastStore.addToastMessage({
         text: t('common.error.user_canceled_request'),
         type: ToastType.Info,
+      })
+      return
+    }
+    if (e instanceof NativeDepositNotConfirmedError) {
+      if (e.reason === 'reverted') {
+        // The proxy was never funded: nothing to recover, so stop offering it.
+        tradeOrdersStore.updateOrder(address, order.hash, {
+          status: 'failed',
+          seen: false,
+        })
+      }
+      toastStore.addToastMessage({
+        type: e.reason === 'reverted' ? ToastType.Error : ToastType.Info,
+        text: t(
+          e.reason === 'reverted'
+            ? 'notifications_module.toast_recover_deposit_failed'
+            : 'notifications_module.toast_recover_deposit_pending',
+        ),
+        textSecondary: e.message,
+        duration: 10000,
       })
       return
     }

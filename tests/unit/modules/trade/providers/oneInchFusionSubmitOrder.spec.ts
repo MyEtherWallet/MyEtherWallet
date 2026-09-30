@@ -88,6 +88,7 @@ vi.mock('@1inch/fusion-sdk', () => {
 
 const sendRawTransaction = vi.fn()
 const waitForTransactionReceipt = vi.fn()
+const getTransactionReceipt = vi.fn()
 vi.mock('viem', async importOriginal => ({
   ...(await importOriginal<typeof import('viem')>()),
   createPublicClient: () => ({
@@ -98,6 +99,10 @@ vi.mock('viem', async importOriginal => ({
     waitForTransactionReceipt: (...args: unknown[]) => {
       calls.push('receipt')
       return waitForTransactionReceipt(...args)
+    },
+    getTransactionReceipt: (...args: unknown[]) => {
+      calls.push('deposit-receipt')
+      return getTransactionReceipt(...args)
     },
     readContract: vi.fn(),
     call: vi.fn(),
@@ -115,6 +120,7 @@ vi.mock('@/utils/walletUtils', async importOriginal => ({
 }))
 
 import OneInchFusion, {
+  NativeDepositNotConfirmedError,
   NativeOrderUnsubmittedError,
 } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import type { WalletInterface } from '@/providers/common/walletInterface'
@@ -388,5 +394,48 @@ describe('OneInchFusion.cancelNativeOrder', () => {
         fromAddress: USER,
       }),
     ).rejects.toThrow('Could not recover the deposit')
+  })
+
+  describe('with the deposit hash', () => {
+    const params = {
+      proxyAddress: PROXY,
+      nativeOrder: NATIVE_ORDER,
+      fromAddress: USER,
+      depositTxHash: DEPOSIT_TX,
+    }
+
+    it('checks the deposit receipt before signing the cancel', async () => {
+      getTransactionReceipt.mockResolvedValue({ status: 'success' })
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      const hash = await fusion.cancelNativeOrder(params)
+
+      expect(getTransactionReceipt).toHaveBeenCalledWith({ hash: DEPOSIT_TX })
+      expect(calls).toEqual(['deposit-receipt', 'sign', 'send', 'receipt'])
+      expect(hash).toBe(CANCEL_TX)
+    })
+
+    it('blocks the cancel while the deposit is still pending', async () => {
+      getTransactionReceipt.mockRejectedValue(new Error('receipt not found'))
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      const error = await fusion.cancelNativeOrder(params).catch(e => e)
+
+      expect(error).toBeInstanceOf(NativeDepositNotConfirmedError)
+      expect(error.reason).toBe('pending')
+      expect(calls).toEqual(['deposit-receipt'])
+      expect(sendRawTransaction).not.toHaveBeenCalled()
+    })
+
+    it('blocks the cancel when the deposit reverted', async () => {
+      getTransactionReceipt.mockResolvedValue({ status: 'reverted' })
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      const error = await fusion.cancelNativeOrder(params).catch(e => e)
+
+      expect(error).toBeInstanceOf(NativeDepositNotConfirmedError)
+      expect(error.reason).toBe('reverted')
+      expect(sendRawTransaction).not.toHaveBeenCalled()
+    })
   })
 })

@@ -23,7 +23,8 @@
       "cancelled": "Cancelled",
       "expired": "Expired",
       "unsubmitted": "Not placed",
-      "recovered": "Funds recovered"
+      "recovered": "Funds recovered",
+      "failed": "Failed"
     },
     "unsubmitted_note": "Your deposit reached 1inch escrow but the order was not accepted. Recover your funds to get them back.",
     "recover_funds": "Recover funds",
@@ -33,6 +34,8 @@
     "toast_trade_unsubmitted": "Trade order not placed",
     "toast_trade_recovered": "Funds recovered",
     "toast_trade_recover_failed": "Could not recover funds",
+    "toast_recover_deposit_pending": "Deposit not confirmed yet",
+    "toast_recover_deposit_failed": "Deposit failed, nothing to recover",
     "toast_recover_wrong_account": "Wrong account",
     "toast_recover_wrong_account_hint": "Switch to the account that placed this order ({address}) to recover the funds.",
     "toast_recover_wrong_network": "Wrong network",

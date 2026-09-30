@@ -23,7 +23,8 @@
       "cancelled": "Cancelada",
       "expired": "Expirada",
       "unsubmitted": "No colocada",
-      "recovered": "Fondos recuperados"
+      "recovered": "Fondos recuperados",
+      "failed": "Fallida"
     },
     "unsubmitted_note": "Tu depósito llegó al escrow de 1inch pero la orden no fue aceptada. Recupera tus fondos para recibirlos de vuelta.",
     "recover_funds": "Recuperar fondos",
@@ -33,6 +34,8 @@
     "toast_trade_unsubmitted": "Orden de operación no colocada",
     "toast_trade_recovered": "Fondos recuperados",
     "toast_trade_recover_failed": "No se pudieron recuperar los fondos",
+    "toast_recover_deposit_pending": "El depósito aún no está confirmado",
+    "toast_recover_deposit_failed": "El depósito falló, no hay nada que recuperar",
     "toast_recover_wrong_account": "Cuenta incorrecta",
     "toast_recover_wrong_account_hint": "Cambia a la cuenta que realizó esta orden ({address}) para recuperar los fondos.",
     "toast_recover_wrong_network": "Red incorrecta",

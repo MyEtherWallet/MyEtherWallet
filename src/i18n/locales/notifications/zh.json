@@ -23,7 +23,8 @@
       "cancelled": "已取消",
       "expired": "已过期",
       "unsubmitted": "未提交",
-      "recovered": "资金已取回"
+      "recovered": "资金已取回",
+      "failed": "失败"
     },
     "unsubmitted_note": "您的存款已到达 1inch 托管合约，但订单未被接受。请取回资金。",
     "recover_funds": "取回资金",
@@ -33,6 +34,8 @@
     "toast_trade_unsubmitted": "交易订单未提交",
     "toast_trade_recovered": "资金已取回",
     "toast_trade_recover_failed": "无法取回资金",
+    "toast_recover_deposit_pending": "存款尚未确认",
+    "toast_recover_deposit_failed": "存款失败，没有可取回的资金",
     "toast_recover_wrong_account": "账户不匹配",
     "toast_recover_wrong_account_hint": "请切换到下单账户（{address}）以取回资金。",
     "toast_recover_wrong_network": "网络不匹配",

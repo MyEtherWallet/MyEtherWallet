@@ -8,6 +8,7 @@ import {
   type QuoteParams,
 } from '@1inch/fusion-sdk'
 import {
+  NativeDepositNotConfirmedError,
   NativeOrderUnsubmittedError,
   type NativeOrderRecoveryParams,
   type SubmitOrderHooks,
@@ -86,6 +87,7 @@ export const fusionErrorMessage = (e: unknown): string | null => {
 }
 
 export {
+  NativeDepositNotConfirmedError,
   NativeOrderUnsubmittedError,
   type NativeOrderRecoveryParams,
   type SubmitOrderHooks,
@@ -427,8 +429,15 @@ class OneInchFusion {
    * never accepted (see `NativeOrderUnsubmittedError`). Calls `cancelOrder` on
    * the order's proxy, which refunds the maker. Resolves with the cancel
    * transaction hash once it has mined successfully.
+   *
+   * When `depositTxHash` is given, the deposit must have mined successfully
+   * first: cancelling an unfunded proxy only produces a second failing
+   * transaction, and the persisted order may predate that check.
    */
   async cancelNativeOrder(params: NativeOrderRecoveryParams): Promise<string> {
+    if (params.depositTxHash) {
+      await this.assertDepositConfirmed(params.depositTxHash)
+    }
     const impl = new NativeOrdersImpl(new Address(params.proxyAddress))
     const call = impl.cancel(
       new Address(params.fromAddress),
@@ -446,6 +455,27 @@ class OneInchFusion {
 
   private networkEnum(): NetworkEnum {
     return this.chain.id === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE
+  }
+
+  /**
+   * Rejects unless the deposit has a successful receipt right now. This does
+   * not wait for a pending deposit: the user is told to try again instead.
+   */
+  private async assertDepositConfirmed(depositTxHash: string): Promise<void> {
+    let status: string
+    try {
+      const receipt = await this.publicClient.getTransactionReceipt({
+        hash: depositTxHash as `0x${string}`,
+      })
+      status = receipt.status
+    } catch {
+      // Not mined yet, or the receipt could not be fetched: either way the
+      // deposit is unconfirmed and the cancel would be premature.
+      throw new NativeDepositNotConfirmedError('pending')
+    }
+    if (status !== 'success') {
+      throw new NativeDepositNotConfirmedError('reverted')
+    }
   }
 
   /**

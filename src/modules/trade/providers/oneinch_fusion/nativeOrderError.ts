@@ -26,6 +26,32 @@ export interface NativeOrderRecoveryParams {
   nativeOrder: LimitOrderV4Struct
   /** The user's address, the real maker behind the proxy. */
   fromAddress: string
+  /**
+   * The escrow deposit. When given, the cancel is only sent once this has
+   * mined successfully (see `NativeDepositNotConfirmedError`).
+   */
+  depositTxHash?: string
+}
+
+/**
+ * Thrown by `cancelNativeOrder` when the deposit it would reclaim has not been
+ * confirmed: still `pending` (no receipt yet, or it could not be fetched) or
+ * `reverted` (the proxy was never funded, so there is nothing to recover).
+ */
+export class NativeDepositNotConfirmedError extends Error {
+  readonly reason: 'pending' | 'reverted'
+
+  constructor(reason: 'pending' | 'reverted') {
+    super(
+      i18n.global.t(
+        reason === 'reverted'
+          ? 'trade.error.native-transaction-failed'
+          : 'trade.error.deposit-not-confirmed',
+      ),
+    )
+    this.name = 'NativeDepositNotConfirmedError'
+    this.reason = reason
+  }
 }
 
 /**

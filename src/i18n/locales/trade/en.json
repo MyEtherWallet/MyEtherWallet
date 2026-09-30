@@ -97,7 +97,8 @@
       "native-transaction-failed": "Native Transaction Failed",
       "failed-submit-order-1inch": "Failed to submit order to 1inch",
       "order-unsubmitted": "Your deposit was sent but 1inch did not accept the order. Recover your funds from Notifications.",
-      "recover-funds-failed": "Could not recover the deposit"
+      "recover-funds-failed": "Could not recover the deposit",
+      "deposit-not-confirmed": "The deposit has not been confirmed on-chain yet. Try again once it has mined."
     },
     "market_status": {
       "regular": "Regular market",

@@ -95,6 +95,7 @@
       "failed-submit-order-1inch": "向 1inch 提交订单失败",
       "order-unsubmitted": "存款已发送，但 1inch 未接受该订单。请在“通知”中取回资金。",
       "recover-funds-failed": "无法取回存款",
+      "deposit-not-confirmed": "存款尚未在链上确认。请在其上链后重试。",
       "not_enough_balance": "余额不足",
       "minimum_not_reached": "未达到最低金额",
       "remove_decimals": "请减少 {count} 位小数 | 请减少 {count} 位小数"

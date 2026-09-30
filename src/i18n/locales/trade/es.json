@@ -95,6 +95,7 @@
       "failed-submit-order-1inch": "No se pudo enviar la orden a 1inch",
       "order-unsubmitted": "Tu depósito se envió pero 1inch no aceptó la orden. Recupera tus fondos desde Notificaciones.",
       "recover-funds-failed": "No se pudo recuperar el depósito",
+      "deposit-not-confirmed": "El depósito aún no se ha confirmado en la cadena. Inténtalo de nuevo cuando se haya minado.",
       "not_enough_balance": "Saldo insuficiente",
       "minimum_not_reached": "Mínimo no alcanzado",
       "remove_decimals": "Elimina {count} decimal | Elimina {count} decimales"
