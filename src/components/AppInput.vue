@@ -92,20 +92,15 @@
 
     <!-- Feedback row — focus-independent; never rendered while disabled -->
     <transition name="fade">
-      <div
+      <AppInputFeedback
         v-if="showFeedback"
         :id="feedbackId"
-        class="flex items-center gap-1 min-h-6 px-4"
-      >
-        <AppIcon
-          name="exclamation-circle"
-          size="s"
-          class="shrink-0 text-text-error"
-        />
-        <p class="text-xs leading-[18px] text-text-error min-w-0 break-words">
-          {{ errorMessage || $t('common.required') }}
-        </p>
-      </div>
+        :type="hasError ? 'error' : feedback?.type"
+        :message="
+          errorMessage ||
+          (hasRequiredError ? $t('common.required') : feedback?.message)
+        "
+      />
     </transition>
   </div>
 </template>
@@ -122,6 +117,8 @@ import {
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
+import type { FeedbackType } from '@/components/input_feedback/types'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { INPUT_SIZE_SPEC, type InputSize } from '@/components/inputSizes'
 
@@ -161,6 +158,11 @@ const props = defineProps({
   },
   errorMessage: {
     type: String,
+    required: false,
+  },
+  /** Success / warning / helper row; `errorMessage` wins when both are set. */
+  feedback: {
+    type: Object as PropType<{ type: FeedbackType; message: string }>,
     required: false,
   },
   type: {
@@ -223,10 +225,13 @@ const hasRequiredError = ref(false)
 const hasError = computed(
   () =>
     (!!props.errorMessage && props.errorMessage !== '') ||
-    hasRequiredError.value,
+    hasRequiredError.value ||
+    props.feedback?.type === 'error',
 )
 // Disabled fields never show the feedback row (no error variants in Figma).
-const showFeedback = computed(() => !props.disabled && hasError.value)
+const showFeedback = computed(
+  () => !props.disabled && (hasError.value || !!props.feedback?.message),
+)
 
 watch(inFocusInput, value => {
   if (!value) {
