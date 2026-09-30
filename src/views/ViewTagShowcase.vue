@@ -71,7 +71,9 @@ import { TAG_TYPES, TAG_VARIANTS } from '@/components/tag/types'
 
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Contrast on a dark surface</h2>
-      <div class="flex flex-wrap items-center gap-4 rounded-12 bg-black p-6">
+      <div
+        class="flex flex-wrap items-center gap-4 rounded-12 bg-background-contrast-default p-6"
+      >
         <AppTag
           v-for="type in TAG_TYPES"
           :key="type"

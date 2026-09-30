@@ -45,7 +45,9 @@ export const TAG_CLASSES: Record<TagType, Record<TagVariant, string>> = {
     contrast: 'bg-background-alternative text-text-brand',
   },
   neutral: {
-    strong: 'bg-black text-text-inverted',
+    // neutral/black is theme-fixed, so its text stays white too: text-inverted
+    // flips to black in the dark theme and would vanish on it.
+    strong: 'bg-black text-white',
     subtle: 'bg-background-default-hover text-text-default',
     contrast: 'bg-background-alternative text-text-default',
   },
