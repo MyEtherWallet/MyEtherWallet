@@ -325,8 +325,17 @@ class OneInchFusion {
         )
         orderHash = info.orderHash
       } catch (relayerError) {
-        // The ETH is on its way to the proxy but 1inch has no order for it. The
-        // caller must keep these details so the user can reclaim the funds.
+        // 1inch has no order for this deposit. Whether there is anything to
+        // reclaim depends on the deposit itself: a reverted `create` never
+        // funded the proxy, so offering recovery would only produce a second
+        // failing transaction. Only a mined, successful deposit is reported as
+        // unsubmitted-and-recoverable; an unknown receipt (RPC failure) keeps
+        // the recovery path open rather than risk stranding funds.
+        if ((await this.depositSucceeded(depositTxHash)) === false) {
+          throw new Error(
+            i18n.global.t('trade.error.native-transaction-failed'),
+          )
+        }
         throw new NativeOrderUnsubmittedError({
           orderHash: preparedOrder.hash,
           depositTxHash,
@@ -336,14 +345,11 @@ class OneInchFusion {
         })
       }
 
-      const receipt = await this.publicClient.waitForTransactionReceipt({
-        hash: depositTxHash as `0x${string}`,
-      })
-      if (receipt.status !== 'success') {
-        // The order is on the relayer but its proxy was never funded; it cannot
-        // be filled and will expire on its own, so nothing else to clean up.
-        throw new Error(i18n.global.t('trade.error.native-transaction-failed'))
-      }
+      // The relayer holds the order; 1inch keeps it unpublished until the
+      // deposit mines, and it expires on its own if that deposit fails. Return
+      // the accepted hash now so the caller persists and tracks the order —
+      // waiting for the receipt here meant a dropped RPC connection lost an
+      // order that was already live on 1inch.
       return { hash: orderHash, depositTxHash }
     } catch (e: unknown) {
       // Already carries everything the caller needs; do not flatten it.
@@ -440,6 +446,24 @@ class OneInchFusion {
 
   private networkEnum(): NetworkEnum {
     return this.chain.id === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE
+  }
+
+  /**
+   * Whether the native deposit mined successfully. Resolves `undefined` when
+   * the receipt could not be fetched, so callers can tell "reverted" apart
+   * from "unknown".
+   */
+  private async depositSucceeded(
+    depositTxHash: string,
+  ): Promise<boolean | undefined> {
+    try {
+      const receipt = await this.publicClient.waitForTransactionReceipt({
+        hash: depositTxHash as `0x${string}`,
+      })
+      return receipt.status === 'success'
+    } catch {
+      return undefined
+    }
   }
 
   /**

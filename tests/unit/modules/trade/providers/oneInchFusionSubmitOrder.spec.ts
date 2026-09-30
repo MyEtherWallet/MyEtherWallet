@@ -180,9 +180,21 @@ describe('OneInchFusion.submitOrder', () => {
 
       const result = await fusion.submitOrder(nativeConfig(), { onDepositSent })
 
-      expect(calls).toEqual(['sign', 'send', 'hook', 'relayer', 'receipt'])
+      expect(calls).toEqual(['sign', 'send', 'hook', 'relayer'])
       expect(onDepositSent).toHaveBeenCalledWith(DEPOSIT_TX)
       expect(result).toEqual({ hash: ORDER_HASH, depositTxHash: DEPOSIT_TX })
+    })
+
+    it('returns the accepted order without waiting for the deposit receipt', async () => {
+      // The order is live on 1inch as soon as the relayer accepts it; a slow or
+      // failing receipt must not stop the caller from saving and tracking it.
+      waitForTransactionReceipt.mockRejectedValue(new Error('socket closed'))
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      const result = await fusion.submitOrder(nativeConfig())
+
+      expect(result).toEqual({ hash: ORDER_HASH, depositTxHash: DEPOSIT_TX })
+      expect(waitForTransactionReceipt).not.toHaveBeenCalled()
     })
 
     it('funds the proxy through the factory the quoter bound the order to', async () => {
@@ -282,15 +294,43 @@ describe('OneInchFusion.submitOrder', () => {
       expect(submitNativeOrder).toHaveBeenCalledTimes(3)
     })
 
-    it('fails the trade when the deposit reverts on-chain', async () => {
+    it('confirms the deposit mined before reporting the order as recoverable', async () => {
+      submitNativeOrder.mockRejectedValue(axiosError(400))
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      await expect(fusion.submitOrder(nativeConfig())).rejects.toBeInstanceOf(
+        NativeOrderUnsubmittedError,
+      )
+      expect(calls).toEqual(['sign', 'send', 'relayer', 'receipt'])
+      expect(waitForTransactionReceipt).toHaveBeenCalledWith({
+        hash: DEPOSIT_TX,
+      })
+    })
+
+    it('does not offer recovery when the relayer refused and the deposit reverted', async () => {
+      // A reverted `create` never funded the proxy: there is nothing to
+      // reclaim, so this is a plain failed trade, not an unsubmitted order.
+      submitNativeOrder.mockRejectedValue(axiosError(400))
       waitForTransactionReceipt.mockResolvedValue({
         status: 'reverted',
         transactionHash: DEPOSIT_TX,
       })
       const fusion = new OneInchFusion(makeWallet(), 1)
 
-      await expect(fusion.submitOrder(nativeConfig())).rejects.toThrow(
-        'Native Transaction Failed',
+      const error = await fusion.submitOrder(nativeConfig()).catch(e => e)
+
+      expect(error).not.toBeInstanceOf(NativeOrderUnsubmittedError)
+      expect(error.message).toBe('Native Transaction Failed')
+    })
+
+    it('keeps recovery open when the deposit receipt cannot be fetched', async () => {
+      // Unknown is not "failed": the ETH may well be in the proxy.
+      submitNativeOrder.mockRejectedValue(axiosError(400))
+      waitForTransactionReceipt.mockRejectedValue(new Error('socket closed'))
+      const fusion = new OneInchFusion(makeWallet(), 1)
+
+      await expect(fusion.submitOrder(nativeConfig())).rejects.toBeInstanceOf(
+        NativeOrderUnsubmittedError,
       )
     })
   })

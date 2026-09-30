@@ -109,6 +109,7 @@ import {
   isBridgeNotification,
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
@@ -126,6 +127,7 @@ import {
   type TradeEventStatusPayload,
 } from '@/analytics'
 import { isUserRejectionError } from '@/utils/walletUtils'
+import { truncateAddress } from '@/utils/filters'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -175,6 +177,7 @@ const walletStore = useWalletStore()
 const toastStore = useToastStore()
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
+const { selectedChain } = storeToRefs(useChainsStore())
 const rewardsStore = useRewardsStore()
 const {
   fetchUserRewards,
@@ -564,6 +567,40 @@ const recoverFunds = async (order: SavedTradeOrder) => {
   if (!address || !wallet.value) return
   if (!order.proxyAddress || !order.nativeOrder) return
   if (recoveringHashes.value.has(order.hash)) return
+
+  // The cancel must be signed by the order's maker on the order's chain. A
+  // mismatched account or network would either be rejected by the proxy or,
+  // for wallets that send on their connected chain, broadcast to the wrong
+  // network — so tell the user what to switch instead of submitting.
+  if (address.toLowerCase() !== order.fromAddress.toLowerCase()) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('notifications_module.toast_recover_wrong_account'),
+      textSecondary: t(
+        'notifications_module.toast_recover_wrong_account_hint',
+        {
+          address: truncateAddress(order.fromAddress),
+        },
+      ),
+      duration: 10000,
+    })
+    return
+  }
+  if (Number(selectedChain.value?.chainID) !== order.chainId) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('notifications_module.toast_recover_wrong_network'),
+      textSecondary: t(
+        'notifications_module.toast_recover_wrong_network_hint',
+        {
+          network: order.chainName,
+        },
+      ),
+      duration: 10000,
+    })
+    return
+  }
+
   recoveringHashes.value = new Set([...recoveringHashes.value, order.hash])
 
   const analyticsPayload: TradeEventStatusPayload = {
