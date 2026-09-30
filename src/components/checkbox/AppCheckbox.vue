@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs, type StyleValue } from 'vue'
+import { computed, nextTick, ref, useAttrs, type StyleValue } from 'vue'
 import AppIcon from '@components/icon/AppIcon.vue'
 
 /**
@@ -33,16 +33,29 @@ const props = withDefaults(
 const model = defineModel<boolean>({ default: false })
 
 const attrs = useAttrs()
-const split = computed(() => {
+const forwarded = computed(() => {
   const { class: cls, style, ...input } = attrs
-  return { root: { class: cls, style: style as StyleValue }, input }
+  return { label: { class: cls, style: style as StyleValue }, input }
 })
+
+// A native click flips `checked` and clears `indeterminate` on the element.
+// Once the parent has reacted, put the DOM back to what is painted so a parent
+// that keeps its state (or a select-all that stays mixed) is still announced
+// right; Vue only re-patches these when the bound values change.
+const inputEl = ref<HTMLInputElement>()
+const syncInput = async () => {
+  await nextTick()
+  if (!inputEl.value) return
+  inputEl.value.checked = model.value
+  inputEl.value.indeterminate = props.indeterminate
+}
 
 const isOn = computed(() => model.value || props.indeterminate)
 
 // Hover draws a 4px halo flush to the box (ring = box-shadow, so the 20px box
 // never shifts); focus draws a 2px outline 4px out. Focus wins over hover:
-// peer-* variants sort after group-* in Tailwind, so ring-0 beats ring-4.
+// peer-* variants sort after group-* in Tailwind, so ring-0 beats ring-4. The
+// group is named so a hoverable row the checkbox sits in doesn't light it up.
 const boxClass = computed(() => {
   if (props.disabled) {
     return isOn.value
@@ -50,9 +63,9 @@ const boxClass = computed(() => {
       : 'border border-border-disabled bg-background-disabled'
   }
   return [
-    'group-hover:ring-4 group-hover:ring-background-default-hover peer-focus-visible:ring-0',
+    'group-hover/checkbox:ring-4 group-hover/checkbox:ring-background-default-hover peer-focus-visible:ring-0',
     isOn.value
-      ? 'bg-background-brand group-hover:bg-background-brand-hover'
+      ? 'bg-background-brand group-hover/checkbox:bg-background-brand-hover'
       : 'border border-border-strong bg-background-formfield',
   ]
 })
@@ -60,8 +73,8 @@ const boxClass = computed(() => {
 
 <template>
   <label
-    v-bind="split.root"
-    class="group inline-flex items-start gap-2 text-text-sm"
+    v-bind="forwarded.label"
+    class="group/checkbox inline-flex items-start gap-2 text-text-sm"
     :class="
       disabled
         ? 'cursor-default text-text-disabled'
@@ -69,12 +82,14 @@ const boxClass = computed(() => {
     "
   >
     <input
-      v-bind="split.input"
+      v-bind="forwarded.input"
+      ref="inputEl"
       v-model="model"
       type="checkbox"
       class="peer sr-only"
       :indeterminate="indeterminate"
       :disabled="disabled"
+      @change="syncInput"
     />
     <span
       aria-hidden="true"
