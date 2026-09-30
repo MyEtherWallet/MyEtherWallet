@@ -108,7 +108,7 @@ const hasError = computed(
   () =>
     !!props.errorMessage ||
     hasRequiredError.value ||
-    props.feedback?.type === 'error',
+    (props.feedback?.type === 'error' && !!props.feedback.message),
 )
 const showFeedback = computed(() => hasError.value || !!props.feedback?.message)
 

@@ -226,7 +226,7 @@ const hasError = computed(
   () =>
     !!props.errorMessage ||
     hasRequiredError.value ||
-    props.feedback?.type === 'error',
+    (props.feedback?.type === 'error' && !!props.feedback.message),
 )
 // Disabled fields never show the feedback row (no error variants in Figma).
 const showFeedback = computed(

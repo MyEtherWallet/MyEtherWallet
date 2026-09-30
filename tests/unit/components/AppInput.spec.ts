@@ -133,6 +133,13 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('aria-invalid')).toBe('true')
   })
 
+  it('empty feedback renders no row and no dangling aria-describedby', () => {
+    const w = mountInput({ feedback: { type: 'error', message: '' } })
+    const input = w.get('input')
+    expect(input.attributes('aria-invalid')).toBe('false')
+    expect(input.attributes('aria-describedby')).toBeUndefined()
+  })
+
   it('errorMessage wins over feedback', () => {
     const w = mountInput({
       errorMessage: 'Bad',
