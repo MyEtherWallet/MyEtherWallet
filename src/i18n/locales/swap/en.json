@@ -73,7 +73,7 @@
       "unknown-provider": "Unknown provider",
       "offers": "Offer | {count} other offers",
       "offer_from": "Offer from { provider }",
-      "best-rate": "best rate",
+      "best-rate": "Best rate",
       "rate": "Rate",
       "approve-tx-on-device": "Approve Tx on your device",
       "title-swap": "Swap",
