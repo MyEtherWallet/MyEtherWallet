@@ -121,10 +121,11 @@
                     <span class="font-bold text-s-15 whitespace-nowrap">{{
                       contract.baseCurrency
                     }}</span>
-                    <span
-                      class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >{{ getMarketLeverage(contract) }}x</span
-                    >
+                    <app-tag
+                      variant="subtle"
+                      class="shrink-0"
+                      :label="`${getMarketLeverage(contract)}x`"
+                    />
                   </div>
                   <span class="text-text-subtle text-s-12">{{
                     getMarketDisplayName(contract)
@@ -173,6 +174,7 @@ import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import type {
   MarketSortValue,
   SortDirection,

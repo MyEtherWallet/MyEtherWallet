@@ -196,23 +196,12 @@
           <div
             class="order-3 xs:order-2 basis-full xs:basis-auto -ml-1 xs:ml-0"
           >
-            <span
-              :class="[
-                marketPosition.direction === 'long'
-                  ? 'text-text-success'
-                  : 'text-text-error',
-                ' capitalize bg-background-default-hover px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
-              ]"
-            >
-              {{
-                marketPosition.direction === 'long'
-                  ? $t('perps.trade.long')
-                  : marketPosition.direction === 'short'
-                    ? $t('perps.trade.short')
-                    : marketPosition.direction
-              }}
-              {{ marketPosition.leverage }}x
-            </span>
+            <app-tag
+              :type="marketPosition.direction === 'long' ? 'success' : 'danger'"
+              variant="subtle"
+              class="sm:ml-2"
+              :label="positionTagLabel"
+            />
           </div>
 
           <app-select
@@ -595,21 +584,12 @@
                   </td>
                   <!-- Status -->
                   <td class="px-1 py-3 hidden 2xl:table-cell">
-                    <p
-                      :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
-                        order.status === 'open' || order.status === 'pending'
-                          ? 'text-text-brand '
-                          : order.status === 'fullyfilled'
-                            ? ' text-text-success'
-                            : order.status === 'canceled' ||
-                                order.status === 'untriggered'
-                              ? ' text-text-subtle'
-                              : '',
-                      ]"
-                    >
-                      {{ $t(formatOrderStatus(order.status)) }}
-                    </p>
+                    <app-tag
+                      :type="orderStatusTagType(order.status)"
+                      variant="subtle"
+                      class="-ml-2 mt-1"
+                      :label="$t(formatOrderStatus(order.status))"
+                    />
                   </td>
                   <!-- Type -->
                   <td
@@ -617,21 +597,12 @@
                   >
                     <p>{{ $t(formatOrderType(order.type)) }}</p>
 
-                    <p
-                      :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-px bg-background-default-hover',
-                        order.status === 'open' || order.status === 'pending'
-                          ? 'text-text-brand '
-                          : order.status === 'fullyfilled'
-                            ? ' text-text-success'
-                            : order.status === 'canceled' ||
-                                order.status === 'untriggered'
-                              ? ' text-text-subtle'
-                              : '',
-                      ]"
-                    >
-                      {{ $t(formatOrderStatus(order.status)) }}
-                    </p>
+                    <app-tag
+                      :type="orderStatusTagType(order.status)"
+                      variant="subtle"
+                      class="-ml-2 mt-1 2xl:hidden"
+                      :label="$t(formatOrderStatus(order.status))"
+                    />
                   </td>
                   <!-- Price -->
                   <td class="px-1 py-3 text-right font-normal text-s-14">
@@ -804,16 +775,12 @@
                       <p class="text-s-12 text-text-subtle mb-1">
                         {{ formatDate(fill.time) }}
                       </p>
-                      <p
-                        :class="[
-                          fill.direction?.toLowerCase().includes('long')
-                            ? 'text-text-success'
-                            : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover -ml-1',
-                        ]"
-                      >
-                        {{ $t(directionKey(fill.direction)) }}
-                      </p>
+                      <app-tag
+                        :type="fillDirectionTagType(fill.direction)"
+                        variant="subtle"
+                        class="-ml-1"
+                        :label="$t(directionKey(fill.direction))"
+                      />
                     </td>
                     <td class="px-1 py-3 text-right font-normal text-s-14">
                       <p>{{ formatPrice(fill.price) }}</p>
@@ -979,6 +946,7 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -1042,8 +1010,10 @@ import {
   getOrderPrice,
   formatDate,
   formatOrderStatus,
+  orderStatusTagType,
   formatOrderType,
   directionKey,
+  fillDirectionTagType,
 } from './utils/formatters'
 import {
   getLogoUrl,
@@ -1162,6 +1132,19 @@ const stockDescription = computed(
 const marketPosition = computed(() => {
   const pos = positions.value.filter(p => p.market === props.market)
   return pos.length ? pos[0] : undefined
+})
+
+// "Long 10x" / "Short 5x"; an unmapped raw direction is capitalized as is.
+const positionTagLabel = computed(() => {
+  const pos = marketPosition.value
+  if (!pos) return ''
+  const side =
+    pos.direction === 'long'
+      ? t('perps.trade.long')
+      : pos.direction === 'short'
+        ? t('perps.trade.short')
+        : pos.direction.charAt(0).toUpperCase() + pos.direction.slice(1)
+  return `${side} ${pos.leverage}x`
 })
 
 // Mark price
