@@ -71,6 +71,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'tab-bar',
+              name: 'DevTabBar',
+              component: () => import('@/views/ViewTabBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'tab-item',
               name: 'DevTabItem',
               component: () => import('@/views/ViewTabItemShowcase.vue'),
