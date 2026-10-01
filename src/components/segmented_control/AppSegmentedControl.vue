@@ -78,7 +78,8 @@ const onKeydown = (event: KeyboardEvent) => {
       :aria-label="label"
       class="flex"
       :class="{
-        'no-scrollbar -m-1 min-w-0 flex-1 overflow-x-auto p-1': fullWidth,
+        'no-scrollbar -m-1 min-w-0 flex-1 overflow-x-auto rounded-3xl p-1':
+          fullWidth,
       }"
       @keydown="onKeydown"
     >
