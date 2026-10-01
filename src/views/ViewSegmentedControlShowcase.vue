@@ -21,40 +21,42 @@ const forcedHover = (size: SegmentSize) =>
   SEGMENT_SIZE[size].hover.replace('hover:', '')
 
 const FIGMA_ITEMS: SegmentItem[] = [
-  { id: 'a', label: 'Segment', trailingIcon: 'chevron-down' },
-  { id: 'b', label: 'Segment', trailingIcon: 'chevron-down' },
-  { id: 'c', label: 'Segment', trailingIcon: 'chevron-down' },
+  { value: 'a', label: 'Segment', trailingIcon: 'chevron-down' },
+  { value: 'b', label: 'Segment', trailingIcon: 'chevron-down' },
+  { value: 'c', label: 'Segment', trailingIcon: 'chevron-down' },
 ]
 const PLAIN_ITEMS: SegmentItem[] = [
-  { id: 'a', label: 'All' },
-  { id: 'b', label: 'Stocks' },
-  { id: 'c', label: 'Crypto' },
+  { value: 'a', label: 'All' },
+  { value: 'b', label: 'Stocks' },
+  { value: 'c', label: 'Crypto' },
 ]
 const figmaSelected = ref({ default: 'a', small: 'a' })
 const plainSelected = ref({ default: 'b', small: 'b' })
 
 const RANGES = [
-  { id: '1d', label: '1D' },
-  { id: '1w', label: '1W' },
-  { id: '1m', label: '1M' },
-  { id: '1y', label: '1Y' },
+  { value: '1d', label: '1D' },
+  { value: '1w', label: '1W' },
+  { value: '1m', label: '1M' },
+  { value: '1y', label: '1Y' },
 ] as const
-type RangeId = (typeof RANGES)[number]['id']
+type RangeId = (typeof RANGES)[number]['value']
 const range = ref<RangeId>('1w')
-const rangePanel = computed(() => RANGES.find(r => r.id === range.value)?.label)
+const rangePanel = computed(
+  () => RANGES.find(r => r.value === range.value)?.label,
+)
 
 const TABS = [
-  { id: 'orders', label: 'Orders' },
-  { id: 'fills', label: 'Fills' },
+  { value: 'orders', label: 'Orders' },
+  { value: 'fills', label: 'Fills' },
 ]
 const tab = ref('orders')
 const COUNTS: Record<string, number> = { orders: 3, fills: 12 }
 
 const category = ref('all')
 const CATEGORIES = [
-  { id: 'all', label: 'All' },
-  { id: 'trades', label: 'Trades' },
-  { id: 'swaps', label: 'Swaps' },
+  { value: 'all', label: 'All' },
+  { value: 'trades', label: 'Trades' },
+  { value: 'swaps', label: 'Swaps' },
 ]
 </script>
 
@@ -158,7 +160,7 @@ const CATEGORIES = [
         >
           <template #label="{ item }">
             {{ item.label }}
-            <span class="ml-1 text-text-subtle">{{ COUNTS[item.id] }}</span>
+            <span class="ml-1 text-text-subtle">{{ COUNTS[item.value] }}</span>
           </template>
         </AppSegmentedControl>
         <AppSegmentedControl

@@ -3,9 +3,9 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import AppSegmentedControl from '@/components/segmented_control/AppSegmentedControl.vue'
 
 const items = [
-  { id: '1d', label: '1D' },
-  { id: '1w', label: '1W' },
-  { id: '1m', label: '1M' },
+  { value: '1d', label: '1D' },
+  { value: '1w', label: '1W' },
+  { value: '1m', label: '1M' },
 ]
 
 let wrapper: VueWrapper | undefined
@@ -16,8 +16,8 @@ const mountControl = (props = {}, slots = {}) => {
       items,
       modelValue: '1w',
       label: 'Chart range',
-      'onUpdate:modelValue': (id: string) =>
-        wrapper!.setProps({ modelValue: id }),
+      'onUpdate:modelValue': (value: string) =>
+        wrapper!.setProps({ modelValue: value }),
       ...props,
     },
     slots,
@@ -28,7 +28,7 @@ const mountControl = (props = {}, slots = {}) => {
 
 const radios = (w: VueWrapper) => w.findAll('[role="radio"]')
 const emitted = (w: VueWrapper) =>
-  (w.emitted('update:modelValue') ?? []).map(([id]) => id)
+  (w.emitted('update:modelValue') ?? []).map(([value]) => value)
 
 afterEach(() => wrapper?.unmount())
 
@@ -59,7 +59,7 @@ describe('AppSegmentedControl', () => {
     expect(radios(w)[0].attributes('tabindex')).toBe('0')
   })
 
-  it('emits the clicked id', async () => {
+  it('emits the clicked value', async () => {
     const w = mountControl()
     await radios(w)[2].trigger('click')
     expect(emitted(w)).toEqual(['1m'])
@@ -112,7 +112,7 @@ describe('AppSegmentedControl', () => {
       { size: 'small' },
       {
         avatar:
-          '<template #avatar="{ item, size }"><i class="av">{{ item.id }}-{{ size }}</i></template>',
+          '<template #avatar="{ item, size }"><i class="av">{{ item.value }}-{{ size }}</i></template>',
       },
     )
     expect(w.findAll('.av').map(a => a.text())).toEqual([

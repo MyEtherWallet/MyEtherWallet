@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TId extends string">
+<script setup lang="ts" generic="TValue extends string">
 /**
  * SegmentedControl (Figma: MEW Web App — Design Library › SegmentedControl,
  * 274:2749). "Group of segments that lets users switch between a small set of
@@ -7,7 +7,7 @@
  * track after the segments but outside the radiogroup (e.g. a "More" select).
  *
  * @example
- * <AppSegmentedControl v-model="range" :items="[{ id: '1d', label: '1D' }]" size="small" label="Chart range" />
+ * <AppSegmentedControl v-model="range" :items="[{ value: '1d', label: '1D' }]" size="small" label="Chart range" />
  */
 import { computed, ref } from 'vue'
 import type { AvatarSize } from '@components/avatar/types'
@@ -16,7 +16,7 @@ import type { SegmentItem, SegmentSize } from './types'
 
 const props = withDefaults(
   defineProps<{
-    items: SegmentItem<TId>[]
+    items: SegmentItem<TValue>[]
     size?: SegmentSize
     /** Accessible name of the radiogroup. */
     label?: string
@@ -26,26 +26,27 @@ const props = withDefaults(
   { size: 'default', label: undefined, fullWidth: false },
 )
 
-const model = defineModel<TId>({ required: true })
+const model = defineModel<TValue>({ required: true })
 
 defineSlots<{
   default?: () => unknown
-  label?: (props: { item: SegmentItem<TId> }) => unknown
-  avatar?: (props: { item: SegmentItem<TId>; size: AvatarSize }) => unknown
+  label?: (props: { item: SegmentItem<TValue> }) => unknown
+  avatar?: (props: { item: SegmentItem<TValue>; size: AvatarSize }) => unknown
 }>()
 
 const groupRef = ref<HTMLElement | null>(null)
 
 // Roving tabindex: only the selected segment is reachable with Tab
-const focusableId = computed(
+const focusableValue = computed(
   () =>
-    props.items.find(item => item.id === model.value)?.id ?? props.items[0]?.id,
+    props.items.find(item => item.value === model.value)?.value ??
+    props.items[0]?.value,
 )
 
 const onKeydown = (event: KeyboardEvent) => {
   const count = props.items.length
   const current = Math.max(
-    props.items.findIndex(item => item.id === model.value),
+    props.items.findIndex(item => item.value === model.value),
     0,
   )
   const next = {
@@ -58,7 +59,7 @@ const onKeydown = (event: KeyboardEvent) => {
   }[event.key]
   if (next === undefined || !count) return
   event.preventDefault()
-  model.value = props.items[next].id
+  model.value = props.items[next].value
   groupRef.value?.querySelectorAll<HTMLElement>('[role="radio"]')[next]?.focus()
 }
 </script>
@@ -79,13 +80,13 @@ const onKeydown = (event: KeyboardEvent) => {
     >
       <AppSegment
         v-for="item in items"
-        :key="item.id"
+        :key="item.value"
         :size="size"
-        :selected="item.id === model"
+        :selected="item.value === model"
         :trailing-icon="item.trailingIcon"
-        :tabindex="item.id === focusableId ? 0 : -1"
+        :tabindex="item.value === focusableValue ? 0 : -1"
         :class="{ 'flex-1': fullWidth }"
-        @click="model = item.id"
+        @click="model = item.value"
       >
         <template v-if="$slots.avatar" #avatar="{ size: avatarSize }">
           <slot name="avatar" :item="item" :size="avatarSize" />

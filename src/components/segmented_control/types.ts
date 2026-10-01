@@ -3,8 +3,8 @@ import type { IconName } from '@components/icon/icons'
 
 export type SegmentSize = 'default' | 'small'
 
-export interface SegmentItem<TId extends string = string> {
-  id: TId
+export interface SegmentItem<TValue extends string = string> {
+  value: TValue
   label: string
   trailingIcon?: IconName
 }
