@@ -67,8 +67,8 @@ const onKeydown = (event: KeyboardEvent) => {
 <template>
   <div
     data-testid="segmented-control"
-    class="items-center gap-1.5 rounded-3xl bg-background-default p-1"
-    :class="fullWidth ? 'flex w-full' : 'inline-flex'"
+    class="flex items-center gap-1.5 rounded-3xl bg-background-default p-1"
+    :class="fullWidth ? 'w-full' : 'w-fit'"
   >
     <div
       ref="groupRef"
