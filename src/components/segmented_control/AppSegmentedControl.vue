@@ -70,12 +70,16 @@ const onKeydown = (event: KeyboardEvent) => {
     class="flex items-center gap-1.5 rounded-3xl bg-background-default p-1"
     :class="fullWidth ? 'w-full' : 'w-fit'"
   >
+    <!-- fullWidth scrolls when segments outgrow the track; the -m-1/p-1 pair
+         keeps the focus ring (2px offset + 2px) inside the scroll box. -->
     <div
       ref="groupRef"
       role="radiogroup"
       :aria-label="label"
       class="flex"
-      :class="{ 'flex-1': fullWidth }"
+      :class="{
+        'no-scrollbar -m-1 min-w-0 flex-1 overflow-x-auto p-1': fullWidth,
+      }"
       @keydown="onKeydown"
     >
       <AppSegment

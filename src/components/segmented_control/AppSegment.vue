@@ -31,7 +31,7 @@ withDefaults(
     role="radio"
     :aria-checked="selected"
     data-testid="segment"
-    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm text-text-default transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
+    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm text-text-default transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
     :class="[
       SEGMENT_SIZE[size].box,
       selected ? 'bg-background-alternative' : SEGMENT_SIZE[size].hover,

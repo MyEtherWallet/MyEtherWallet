@@ -138,4 +138,15 @@ describe('AppSegmentedControl', () => {
     )
     expect(radios(w).every(r => r.classes().includes('flex-1'))).toBe(true)
   })
+
+  it('scrolls the segments sideways when fullWidth content overflows', () => {
+    const w = mountControl({ fullWidth: true })
+    expect(w.get('[role="radiogroup"]').classes()).toEqual(
+      expect.arrayContaining(['min-w-0', 'overflow-x-auto']),
+    )
+    const fit = mountControl()
+    expect(fit.get('[role="radiogroup"]').classes()).not.toContain(
+      'overflow-x-auto',
+    )
+  })
 })
