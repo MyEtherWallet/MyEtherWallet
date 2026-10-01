@@ -70,9 +70,10 @@ const onSelect = (id: string) => {
         </label>
       </div>
       <div
-        class="flex justify-end overflow-hidden rounded-12 border border-border-default bg-background-default"
+        class="flex h-160 justify-end overflow-hidden rounded-12 border border-border-default bg-background-default"
       >
         <AppActionBar
+          class="h-full"
           :items="items"
           :active-id="activeId"
           :expanded="expanded"
