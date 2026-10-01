@@ -1,12 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ref, reactive, unref } from 'vue'
 import type { Ref } from 'vue'
-import type {
-  Contract,
-  PerpsBalance,
-  Position,
-  TradingPair,
-} from '@/modules/perps/sdk/types'
+import type { Contract, PerpsBalance, Position, TradingPair } from '@/modules/perps/sdk/types'
 
 // ── Mocks ────────────────────────────────────────────────────
 // usePerpsTradeForm pulls in the whole perps stack (auth, markets,
@@ -114,9 +109,9 @@ vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
 // The holder is hoisted (plain object, no vue); the real ref is created inside
 // the mock factory — which runs at require time, when the top-level `ref`
 // import is already initialized — so `filteredMarketList` recomputes on change.
-const mockContracts = vi.hoisted(() => ({
-  contracts: null as unknown as Ref<Contract[]>,
-}))
+const mockContracts = vi.hoisted(
+  () => ({ contracts: null as unknown as Ref<Contract[]> }),
+)
 vi.mock('@/modules/perps/composables/usePerpsMarkets', () => {
   mockContracts.contracts = ref<Contract[]>([])
   return {

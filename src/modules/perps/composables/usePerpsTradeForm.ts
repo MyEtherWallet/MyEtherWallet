@@ -27,11 +27,7 @@ import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
-import {
-  formatUsd,
-  hasInvalidPrecision,
-  decimalPlaces,
-} from '../utils/formatters'
+import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
 import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
 import {
   takeProfitError,
@@ -78,6 +74,7 @@ export function triggerOrderPriceErrorKey(msg: string): string | null {
   return `perps.errors.${leg}-trigger-order-${side}`
 }
 
+
 const leverage = ref(20)
 // Add-mode staged leverage: the value the user picks in the leverage dialog
 // before it is persisted to the API (which only happens at submit time via
@@ -111,7 +108,8 @@ export function usePerpsTradeForm() {
   // "Max reasonable Price") without context.
   const SLIPPAGE_REJECTION_PATTERN =
     /rejecting\s+market\s+order.*reasonable\s+price/i
-  const SLIPPAGE_REJECTION_MESSAGE = t('perps.errors.order-rejected-too-far')
+  const SLIPPAGE_REJECTION_MESSAGE =
+    t('perps.errors.order-rejected-too-far')
 
   // ── State ──────────────────────────────────────────────────
 
@@ -168,7 +166,7 @@ export function usePerpsTradeForm() {
   const marketSortIsUserSet = ref(false)
   const manageMode = computed({
     get: () => walletMenuStore.selectedTradeManageMode,
-    set: v => walletMenuStore.setSelectedTradeManageMode(v),
+    set: (v) => walletMenuStore.setSelectedTradeManageMode(v),
   })
   const closeAmount = ref('')
   const closeSliderValue = ref(0)
@@ -304,20 +302,15 @@ export function usePerpsTradeForm() {
     // For a new position every open position is "other". The balance
     // response provides this total from the same engine snapshot as
     // marginBalance, avoiding a mixed balance/positions refresh.
-    if (
-      !activePosition.value &&
-      Number.isFinite(reportedTotalMaintenanceMargin)
-    ) {
+    if (!activePosition.value && Number.isFinite(reportedTotalMaintenanceMargin)) {
       return reportedTotalMaintenanceMargin
     }
 
-    const positionsWithoutActive = positions.value.filter(item => {
+    const positionsWithoutActive = positions.value.filter((item) => {
       return item.market !== activePosition.value?.market
     })
     const margin = positionsWithoutActive.reduce((acc, currentValue) => {
-      const maintenanceMargin = parseFloat(
-        currentValue.maintenanceMargin || '0',
-      )
+      const maintenanceMargin = parseFloat(currentValue.maintenanceMargin || '0')
       return acc + (Number.isFinite(maintenanceMargin) ? maintenanceMargin : 0)
     }, 0)
     return margin
@@ -412,8 +405,7 @@ export function usePerpsTradeForm() {
         maintenanceMarginOtherPositions.value -
         sideNotionalValue +
         maintenanceAmount.value
-      const denominator =
-        newQuantity * maintenanceMarginRate.value - sideQuantity
+      const denominator = newQuantity * maintenanceMarginRate.value - sideQuantity
       if (denominator === 0) return 0
 
       const price = numerator / denominator
@@ -606,7 +598,8 @@ export function usePerpsTradeForm() {
     const oldSize = activePosition.value?.netQuantity ?? '0'
     const oldSizeNum = parseFloat(oldSize)
     const placedNum = parseFloat(placedSize)
-    const newSize = closePct >= 100 ? 0 : Math.max(oldSizeNum - placedNum, 0)
+    const newSize =
+      closePct >= 100 ? 0 : Math.max(oldSizeNum - placedNum, 0)
     return {
       assetName: fullMarketName.value,
       orderDirection: closeSide,
@@ -703,8 +696,7 @@ export function usePerpsTradeForm() {
       closeSliderValue.value = 0
       triggerRefresh()
     } catch (e: any) {
-      const rawMsg =
-        e?.message || e?.toString() || t('perps.errors.close-position-failed')
+      const rawMsg = e?.message || e?.toString() || t('perps.errors.close-position-failed')
       closeError.value = SLIPPAGE_REJECTION_PATTERN.test(rawMsg)
         ? SLIPPAGE_REJECTION_MESSAGE
         : rawMsg
@@ -863,10 +855,7 @@ export function usePerpsTradeForm() {
       return t('perps.trade.enter-target-price')
     }
     const amt = parseFloat(inputAmount.value)
-    if (
-      availableMargin.value * effectiveLeverage.value <
-      minOrderAmount.value
-    ) {
+    if (availableMargin.value * effectiveLeverage.value < minOrderAmount.value) {
       return t('perps.errors.min-margin-required', {
         amount: formatUsd(minOrderAmount.value),
       })
@@ -1141,7 +1130,9 @@ export function usePerpsTradeForm() {
       )
     } catch (e: any) {
       leverageError.value =
-        e?.message || e?.toString() || t('perps.errors.save-leverage-failed')
+        e?.message ||
+        e?.toString() ||
+        t('perps.errors.save-leverage-failed')
       perpsToasts.toastFailedToSetLeverage()
       const failPayload: PerpsChangeLeverageFailPayload = {
         ...payload,
@@ -1174,8 +1165,7 @@ export function usePerpsTradeForm() {
       const res = await perpsClient.getLeverage(fullMarketName.value)
 
       if (res.success && res.result?.length) {
-        const parsed =
-          parseInt(res.result[0].leverage) || marketMaxLeverage.value
+        const parsed = parseInt(res.result[0].leverage) || marketMaxLeverage.value
         leverage.value = Math.min(parsed, marketMaxLeverage.value)
       }
     } catch (e) {
@@ -1357,7 +1347,10 @@ export function usePerpsTradeForm() {
       slAmount: sl !== null ? String(sl) : undefined,
       slPercentageDiffFromCurrent: sl !== null ? pricePct(sl) : undefined,
     }
-    void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_SAVE, savePayload)
+    void analytics.trackPerpsTpSlEvent(
+      PerpsTpSlEvent.CLICKED_SAVE,
+      savePayload,
+    )
     takeProfitPrice.value = tp
     stopLossPrice.value = sl
     justSavedAutoClose = true
@@ -1547,10 +1540,7 @@ export function usePerpsTradeForm() {
         size: orderSize.value,
         category: orderType.value,
         market: displayMarket,
-        price:
-          orderType.value === 'limit'
-            ? (limitPrice.value ?? undefined)
-            : undefined,
+        price: orderType.value === 'limit' ? (limitPrice.value ?? undefined) : undefined,
       })
       if (slPrice !== null) {
         const args = buildSlTpArgs(slPrice)
@@ -1596,9 +1586,7 @@ export function usePerpsTradeForm() {
         ? t(triggerOrderPriceKey)
         : SLIPPAGE_REJECTION_PATTERN.test(msg)
           ? SLIPPAGE_REJECTION_MESSAGE
-          : error?.message ||
-            error?.toString() ||
-            t('perps.errors.order-failed')
+          : error?.message || error?.toString() || t('perps.errors.order-failed')
       orderError.value = errorMessage
       const failPayload: PerpsTradeOrderFailPayload = {
         ...tradePayload,
