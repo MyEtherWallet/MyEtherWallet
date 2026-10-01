@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ref, reactive, unref } from 'vue'
 import type { Ref } from 'vue'
-import type { Contract, PerpsBalance, Position, TradingPair } from '@/modules/perps/sdk/types'
+import type {
+  Contract,
+  PerpsBalance,
+  Position,
+  TradingPair,
+} from '@/modules/perps/sdk/types'
 
 // ── Mocks ────────────────────────────────────────────────────
 // usePerpsTradeForm pulls in the whole perps stack (auth, markets,
@@ -109,9 +114,9 @@ vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
 // The holder is hoisted (plain object, no vue); the real ref is created inside
 // the mock factory — which runs at require time, when the top-level `ref`
 // import is already initialized — so `filteredMarketList` recomputes on change.
-const mockContracts = vi.hoisted(
-  () => ({ contracts: null as unknown as Ref<Contract[]> }),
-)
+const mockContracts = vi.hoisted(() => ({
+  contracts: null as unknown as Ref<Contract[]>,
+}))
 vi.mock('@/modules/perps/composables/usePerpsMarkets', () => {
   mockContracts.contracts = ref<Contract[]>([])
   return {
@@ -282,16 +287,16 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
     expect(longCalls()).toBeGreaterThan(before)
   })
 
-  it('builds marketFilterTabs labels from i18n keys while keeping keys stable', () => {
+  it('builds marketFilterTabs labels from i18n keys while keeping values stable', () => {
     const form = usePerpsTradeForm()
     expect(form.marketFilterTabs).toEqual([
-      { key: 'all', label: 'perps.select-market.filter-tab-all' },
-      { key: 'Equities', label: 'perps.select-market.filter-tab-equities' },
+      { value: 'all', label: 'perps.select-market.filter-tab-all' },
+      { value: 'Equities', label: 'perps.select-market.filter-tab-equities' },
       {
-        key: 'Commodities',
+        value: 'Commodities',
         label: 'perps.select-market.filter-tab-commodities',
       },
-      { key: 'Indices', label: 'perps.select-market.filter-tab-indices' },
+      { value: 'Indices', label: 'perps.select-market.filter-tab-indices' },
     ])
   })
 

@@ -218,7 +218,9 @@
         "failed": "Fallido",
         "cancelled": "Cancelada",
         "unknown": "Desconocido"
-      }
+      },
+      "tabs-label": "Actividad de trading",
+      "order-filter-label": "Estado de la orden"
     },
     "order": {
       "type-label": "Tipo",
