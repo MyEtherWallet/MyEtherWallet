@@ -37,10 +37,10 @@ defineSlots<{
 const groupRef = ref<HTMLElement | null>(null)
 
 // Roving tabindex: only the selected segment is reachable with Tab
-const focusableValue = computed(
-  () =>
-    props.items.find(item => item.value === model.value)?.value ??
-    props.items[0]?.value,
+const focusableValue = computed(() =>
+  props.items.some(item => item.value === model.value)
+    ? model.value
+    : props.items[0]?.value,
 )
 
 const onKeydown = (event: KeyboardEvent) => {
