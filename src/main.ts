@@ -22,6 +22,7 @@ import {
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -109,6 +110,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isBluetoothGattDisconnectedError(originalException) ||
         isCoinNotFoundApiError(originalException) ||
+        // EIP-6963 `announceProvider` with a null/malformed `detail` from a
+        // buggy/hostile extension — crashes mipd/wagmi provider discovery and
+        // MEW's own providerStore.addProvider with a null-`info` deref; not an
+        // app bug (APP-MEW-WEB-1JM / 1JN / 1JG / MEW-2257).
+        isEip6963NullProviderError(originalException) ||
         isExpectedTradeClientError(originalException) ||
         isExtensionContextInvalidatedError(originalException) ||
         isExtensionOrProviderError(originalException) ||
@@ -190,8 +196,7 @@ pinia.use(
     // (and potentially sensitive material) that must never leave the client.
     stateTransformer: state => {
       const walletStore = state.walletStore as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (walletStore && 'wallet' in walletStore) {
         return {
           ...state,

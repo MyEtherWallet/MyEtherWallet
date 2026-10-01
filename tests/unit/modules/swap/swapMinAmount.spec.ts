@@ -47,9 +47,9 @@ describe('smallestMinFromDisplay', () => {
     // of rendering a misleading 0.00000001 POL (MEW-2293).
     const rangoPlaceholder = 1n
     const changellyReal = parseUnits('445.9768161', 18)
-    expect(
-      smallestMinFromDisplay([rangoPlaceholder, changellyReal], 18),
-    ).toBe('445.98')
+    expect(smallestMinFromDisplay([rangoPlaceholder, changellyReal], 18)).toBe(
+      '445.98',
+    )
   })
 
   it('treats a bare 0 minimum as a placeholder too', () => {
@@ -204,15 +204,22 @@ describe('output fiat floor', () => {
   })
 
   it('cannot scale a worthless or zero input', () => {
-    expect(inputForOutputFloor(0n, outputUsd(dustOut, 18, ethPrice)!)).toBeNull()
-    expect(inputForOutputFloor(parseUnits('1', 18), outputUsd(0n, 18, ethPrice)!)).toBeNull()
+    expect(
+      inputForOutputFloor(0n, outputUsd(dustOut, 18, ethPrice)!),
+    ).toBeNull()
+    expect(
+      inputForOutputFloor(parseUnits('1', 18), outputUsd(0n, 18, ethPrice)!),
+    ).toBeNull()
   })
 
   it('a synthesized floor minimum resolves like a declared one', async () => {
     // Only Rango answered (placeholder min) but under the floor; its scaled
     // input becomes the ceiling and, with no servable probe, the shown minimum.
     const entered = parseUnits('0.007', 18)
-    const synthesized = inputForOutputFloor(entered, outputUsd(dustOut, 18, ethPrice)!)!
+    const synthesized = inputForOutputFloor(
+      entered,
+      outputUsd(dustOut, 18, ethPrice)!,
+    )!
     const display = await resolveServableMinDisplay(
       entered,
       [1n, synthesized],

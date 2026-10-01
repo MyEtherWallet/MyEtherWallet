@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
-import { WATCHLIST_MARKETS, type WatchlistMarketId } from './watchlistOnboarding'
+import {
+  WATCHLIST_MARKETS,
+  type WatchlistMarketId,
+} from './watchlistOnboarding'
 import stocks1 from '@/assets/images/watchlist/market-stocks-1.png'
 import stocks2 from '@/assets/images/watchlist/market-stocks-2.png'
 import stocks3 from '@/assets/images/watchlist/market-stocks-3.png'
@@ -12,6 +14,7 @@ import crypto1 from '@/assets/images/watchlist/market-crypto-1.png'
 import crypto2 from '@/assets/images/watchlist/market-crypto-2.png'
 import crypto3 from '@/assets/images/watchlist/market-crypto-3.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 // Decorative overlapping logo clusters per market (exported from Figma).
@@ -20,15 +23,16 @@ const MARKET_LOGOS: Record<WatchlistMarketId, string[]> = {
   crypto: [crypto1, crypto2, crypto3],
 }
 
-// Selected market ids (multi-select). Continue enables with at least one.
+// Selected market id (single-select: stocks OR crypto, never both). Kept as an
+// array so the downstream markets → API-types mapping stays unchanged; it holds
+// at most one id. Continue enables once a market is picked.
 const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ continue: []; skip: []; close: [] }>()
 
+// Picking a market replaces any other pick; picking the selected one clears it.
 const toggle = (id: string) => {
-  selected.value = selected.value.includes(id)
-    ? selected.value.filter(x => x !== id)
-    : [...selected.value, id]
+  selected.value = selected.value.includes(id) ? [] : [id]
 }
 </script>
 
@@ -41,7 +45,7 @@ const toggle = (id: string) => {
       @close="$emit('close')"
     />
 
-    <div class="mt-6 grid grid-cols-2 gap-3">
+    <div class="mt-6 grid grid-cols-2 gap-3" role="radiogroup">
       <WatchlistSelectableCard
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
@@ -51,7 +55,11 @@ const toggle = (id: string) => {
         @toggle="toggle(market.id)"
       >
         <span class="text-s-16 font-semibold text-black">
-          {{ t(`homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`) }}
+          {{
+            t(
+              `homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`,
+            )
+          }}
         </span>
         <!-- Overlapping round asset avatars (Figma logos, 24px with card-bg ring). -->
         <span class="flex items-center" aria-hidden="true">
@@ -63,7 +71,9 @@ const toggle = (id: string) => {
             class="size-6 rounded-full border"
             :class="[
               i > 0 ? '-ml-2' : '',
-              selected.includes(market.id) ? 'border-white' : 'border-[#f5f5f5]',
+              selected.includes(market.id)
+                ? 'border-white'
+                : 'border-background-default',
             ]"
           />
         </span>
@@ -74,7 +84,7 @@ const toggle = (id: string) => {
       <button
         type="button"
         data-test="markets-skip"
-        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-primary"
+        class="hoverNoBG rounded-full px-4 py-3 text-s-16 font-semibold text-text-brand"
         @click="$emit('skip')"
       >
         {{ t('homePage.hero.watchlist.onboarding.skip') }}
@@ -95,7 +105,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <ChevronRightIcon class="size-5" />
+          <AppIcon name="chevron-right" variant="filled" size="s" />
         </span>
       </AppBaseButton>
     </div>

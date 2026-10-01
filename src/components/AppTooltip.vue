@@ -5,7 +5,10 @@
     v-element-hover="[onHover, { delayLeave: 300 }]"
   >
     <slot>
-      <information-circle-icon class="h-6 w-6 p-1 cursor-pointer text-info" />
+      <AppIcon
+        name="information-circle"
+        class="p-1 cursor-pointer text-text-subtle"
+      />
     </slot>
     <teleport to="#app">
       <transition name="fade" mode="out-in">
@@ -16,7 +19,7 @@
           class="fixed p-3 text-s-12 font-semibold leading-[18px] tracking-[-0.24px] text-center shadow-button shadow-button-elevated w-max z-[2101]"
           :class="[
             theme === 'dark'
-              ? 'bg-bgInfo text-white rounded-8 max-w-[240px]'
+              ? 'bg-background-info text-white rounded-8 max-w-[240px]'
               : 'bg-white rounded-16 max-w-[300px]',
             {
               'right-top': position === 'top-right',
@@ -34,7 +37,9 @@
               position === 'top'
                 ? [
                     'top-full left-1/2 -translate-x-1/2 border-t-[10px] border-x-[6px] border-x-transparent',
-                    theme === 'dark' ? 'border-t-bgInfo' : 'border-t-white',
+                    theme === 'dark'
+                      ? 'border-t-background-info'
+                      : 'border-t-white',
                   ]
                 : [
                     'top-1/2 -translate-y-1/2 border-y-[6px] border-y-transparent',
@@ -43,10 +48,10 @@
                       : 'right-full border-r-[10px]',
                     position === 'left'
                       ? theme === 'dark'
-                        ? 'border-l-bgInfo'
+                        ? 'border-l-background-info'
                         : 'border-l-white'
                       : theme === 'dark'
-                        ? 'border-r-bgInfo'
+                        ? 'border-r-background-info'
                         : 'border-r-white',
                   ],
               'absolute h-0 w-0',
@@ -61,7 +66,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { vElementHover } from '@vueuse/components'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const show = ref(false)
 const visible = ref(false)
 
@@ -102,7 +107,9 @@ const hasArrow = computed(
 const tooltipRef = ref<HTMLElement | null>(null)
 const tooltipActivatorRef = ref<HTMLElement | null>(null)
 const onHover = (hovered: boolean) => {
-  if (hovered) {
+  // No text → nothing to show (lets callers wrap an element and enable the
+  // tooltip only conditionally by toggling `text`).
+  if (hovered && props.text) {
     show.value = true
     onHoverActive()
   } else {

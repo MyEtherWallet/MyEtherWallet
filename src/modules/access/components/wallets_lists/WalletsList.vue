@@ -12,14 +12,14 @@
         class="md-header:hidden"
         @click="openFilterSortModal = true"
       >
-        <Bars3Icon class="h-6 w-6" />
+        <AppIcon name="bars-3" variant="filled" />
       </app-btn-icon>
     </div>
     <div class="flex mb-4 sm:mb-6 justify-between items-center gap-3 flex-wrap">
       <!-- Search and Sort -->
       <div
         :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
-        class="flex grow gap-1 justify-between items-center bg-surface rounded-full p-1"
+        class="flex grow gap-1 justify-between items-center bg-background-default-hover rounded-full p-1"
       >
         <app-search-input
           v-model="searchInput"
@@ -60,7 +60,7 @@
     </div>
     <div
       v-else
-      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-info"
+      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-text-subtle"
     >
       {{ $t('access_wallet.not_found') }} {{ searchInput }}
     </div>
@@ -91,7 +91,7 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
-import { Bars3Icon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 import { storeToRefs } from 'pinia'

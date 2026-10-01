@@ -7,13 +7,18 @@
       >
         {{ t('stocks.oip_title') }}
       </h2>
-      <p class="mt-2 text-s-16 leading-[22px] text-[#575757] max-w-[600px]">
+      <p class="mt-2 text-s-16 leading-[22px] text-text-subtle max-w-[600px]">
         {{ t('stocks.oip_description') }}
         <a
           href="https://ondo.finance//intelligent-portfolios"
           class="px-1 text-black font-medium hover:underline inline-flex items-center gap-1"
           >{{ t('stocks.oip_learn_more') }}
-          <ArrowRightIcon class="size-[22px]" />
+          <AppIcon
+            name="arrow-right"
+            variant="filled"
+            size="s"
+            class="font-bold"
+          />
         </a>
       </p>
     </div>
@@ -57,8 +62,7 @@ import { useCurrency } from '@/composables/useCurrency'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
 import OipCard from './components/OipCard.vue'
-import { ArrowRightIcon } from '@heroicons/vue/20/solid'
-
+import AppIcon from '@/components/icon/AppIcon.vue'
 // Shape the OIP listings map onto for the card. The stats row shows what the
 // OIP payload carries (category / YTD / model provider) — there is no market
 // cap or 24h volume for a portfolio token.

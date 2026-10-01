@@ -22,8 +22,11 @@
               no-shadow
             />
           </div>
-          <arrows-right-left-icon
-            class="absolute left-[48px] top-[10px] w-5 h-5 transition-transform duration-300 motion-reduce:transition-none"
+          <AppIcon
+            name="arrows-right-left"
+            variant="filled"
+            size="s"
+            class="absolute left-12 top-2.5 transition-transform duration-300 motion-reduce:transition-none"
             :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
           <div
@@ -42,12 +45,24 @@
           <span
             class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
             :class="[
-              isFailed ? 'bg-error' : 'bg-success-600',
+              isFailed ? 'bg-background-error' : 'bg-background-success',
               isSettled ? 'scale-100' : 'scale-0',
             ]"
           >
-            <x-mark-icon v-if="isFailed" class="w-3.5 h-3.5 text-white" />
-            <check-icon v-else class="w-3.5 h-3.5 text-white" />
+            <AppIcon
+              name="x-mark"
+              variant="filled"
+              size="xxs"
+              v-if="isFailed"
+              class="text-white"
+            />
+            <AppIcon
+              name="check"
+              variant="filled"
+              size="xxs"
+              v-else
+              class="text-white"
+            />
           </span>
         </div>
 
@@ -55,22 +70,22 @@
           <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
             {{ title }}
           </h2>
-          <p class="text-s-16 leading-[22px] text-info">
+          <p class="text-s-16 leading-[22px] text-text-subtle">
             {{ subtitle }}
           </p>
         </div>
 
         <app-base-button
           theme="neutral"
-          class="!bg-bgBase !text-primary !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
+          class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
           @click="model = false"
         >
           {{ $t('trade.progress_modal.close_screen') }}
         </app-base-button>
 
         <p
-          v-if="status === 'pending'"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-info whitespace-pre-line"
+          v-if="status === 'pending' && !isDepositing"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
         >
           {{ $t('trade.progress_modal.background_note') }}
         </p>
@@ -87,7 +102,11 @@
             class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
           >
             {{ $t('view_in_block_explorer') }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </a>
         </transition>
       </div>
@@ -99,12 +118,6 @@
 import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import {
-  ArrowsRightLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  CheckIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -115,6 +128,7 @@ import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import type { Chain } from '@/mew_api/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const model = defineModel<boolean>('isOpen', { default: false })
 
@@ -123,6 +137,11 @@ const props = defineProps<{
   fromToken: NewTokenInfo | null
   toToken: NewTokenInfo | null
   fromChain?: Chain
+  /**
+   * A native (ETH/BNB) order is waiting for the user to confirm its escrow
+   * deposit in the wallet. There is no saved order yet at that point.
+   */
+  depositPending?: boolean
 }>()
 
 const walletStore = useWalletStore()
@@ -196,8 +215,14 @@ const toLogo = computed(() =>
 )
 
 const status = computed(() => order.value?.status ?? 'pending')
+// Only meaningful before the order exists: once it is saved (pending or
+// unsubmitted) the deposit prompt is over.
+const isDepositing = computed(() => !order.value && !!props.depositPending)
 const isFailed = computed(
-  () => status.value === 'cancelled' || status.value === 'expired',
+  () =>
+    status.value === 'cancelled' ||
+    status.value === 'expired' ||
+    status.value === 'unsubmitted',
 )
 const isSettled = computed(() => status.value === 'filled' || isFailed.value)
 
@@ -208,19 +233,28 @@ const receivedText = computed(() => {
 })
 
 const title = computed(() => {
+  if (isDepositing.value) return t('trade.progress_modal.depositing_title')
   if (status.value === 'filled')
     return t('trade.progress_modal.completed_title')
+  if (status.value === 'unsubmitted')
+    return t('trade.progress_modal.unsubmitted_title')
   if (isFailed.value) return t('trade.progress_modal.failed_title')
   return t('trade.progress_modal.processing_title')
 })
 
 const subtitle = computed(() => {
+  if (isDepositing.value)
+    return t('trade.progress_modal.depositing_subtitle', {
+      symbol: fromLogo.value.symbol ?? '',
+    })
   if (status.value === 'filled')
     return t('trade.progress_modal.received', { amount: receivedText.value })
   if (status.value === 'cancelled')
     return t('trade.progress_modal.cancelled_subtitle')
   if (status.value === 'expired')
     return t('trade.progress_modal.expired_subtitle')
+  if (status.value === 'unsubmitted')
+    return t('trade.progress_modal.unsubmitted_subtitle')
   return t('trade.progress_modal.processing_subtitle')
 })
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import stockSpot from '@/assets/images/watchlist/stock-spot.png'
 import stockIbm from '@/assets/images/watchlist/stock-ibm.png'
 import stockNke from '@/assets/images/watchlist/stock-nke.png'
 import stockLly from '@/assets/images/watchlist/stock-lly.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineEmits<{
@@ -28,7 +28,7 @@ defineEmits<{
     role="button"
     tabindex="0"
     :aria-label="t('homePage.hero.watchlist.title')"
-    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-[#e6e6e6]"
+    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-background-default-hover"
     @click="$emit('begin')"
     @keydown.enter="$emit('begin')"
     @keydown.space.prevent="$emit('begin')"
@@ -66,12 +66,10 @@ defineEmits<{
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ t('homePage.hero.watchlist.title') }}
         </p>
-        <p class="text-s-16 leading-[22px] text-[#575757]">
+        <p class="text-s-16 leading-[22px] text-text-subtle">
           {{ t('homePage.hero.watchlist.subtitle') }}
         </p>
       </div>
@@ -82,7 +80,7 @@ defineEmits<{
       class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
     >
       {{ t('homePage.hero.watchlist.begin') }}
-      <ChevronRightIcon class="size-[22px]" />
+      <AppIcon name="chevron-right" variant="filled" />
     </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
