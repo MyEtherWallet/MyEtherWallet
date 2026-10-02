@@ -50,7 +50,7 @@
                   </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
-                <hr class="h-px bg-border-strong border-0 w-full mt-1 mb-2" />
+                <app-divider variant="alternative" class="mb-1" />
                 <button
                   v-for="option in sortOptions"
                   :key="option.value"
@@ -178,6 +178,7 @@ import type {
   SortDirection,
   MarketSortOption,
 } from '../composables/usePerpsTradeForm'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 

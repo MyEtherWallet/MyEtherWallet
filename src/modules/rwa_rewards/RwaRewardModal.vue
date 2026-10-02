@@ -223,7 +223,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-background-default-hover w-full"></div>
+          <app-divider class="-my-1" />
 
           <div class="flex items-center justify-between gap-4 w-full">
             <!-- A season that has already ended has nothing left to count down
@@ -271,6 +271,7 @@ import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()

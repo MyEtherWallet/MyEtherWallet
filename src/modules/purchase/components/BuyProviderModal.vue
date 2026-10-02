@@ -114,7 +114,7 @@
                 {{ formattedFiatAmount }}
               </span>
             </div>
-            <div class="h-px bg-background-default-hover" />
+            <app-divider class="-my-1" />
             <div class="flex items-center justify-between">
               <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_receive') }}
@@ -134,7 +134,7 @@
                 </span>
               </span>
             </div>
-            <div class="h-px bg-background-default-hover" />
+            <app-divider class="-my-1" />
           </div>
 
           <!-- Quote freshness -->
@@ -210,6 +210,7 @@ import type {
   BuyOfferPayloadShared,
   ProviderName,
 } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps<{
   quotes: BuyQuote[]
