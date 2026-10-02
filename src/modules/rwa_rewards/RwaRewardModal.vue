@@ -258,6 +258,7 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -271,7 +272,6 @@ import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
 const { isWatchOnly } = storeToRefs(useWalletStore())

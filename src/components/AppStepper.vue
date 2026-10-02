@@ -59,8 +59,8 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   steps: {
     type: Array as () => string[],

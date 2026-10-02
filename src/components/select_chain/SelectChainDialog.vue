@@ -139,7 +139,7 @@ import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 

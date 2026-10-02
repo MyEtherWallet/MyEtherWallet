@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
+import configs from '@/configs'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',
@@ -47,6 +48,48 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'avatar',
+              name: 'DevAvatar',
+              component: () => import('@/views/ViewAvatarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'content-group',
+              name: 'DevContentGroup',
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'input',
+              name: 'DevInput',
+              component: () => import('@/views/ViewInputPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'picker',
+              name: 'DevPicker',
+              component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'chip',
+              name: 'DevChip',
+              component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'icons',
+              name: 'DevIcons',
+              component: () => import('@/views/ViewIconShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tooltip',
+              name: 'DevTooltip',
+              component: () => import('@/views/ViewTooltipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'colors',
               name: 'DevColors',
               component: () => import('@/views/ViewColorPreview.vue'),
@@ -62,12 +105,6 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'typography',
               name: 'DevTypography',
               component: () => import('@/views/ViewTypographyShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'icons',
-              name: 'DevIcons',
-              component: () => import('@/views/ViewIconShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
           ],

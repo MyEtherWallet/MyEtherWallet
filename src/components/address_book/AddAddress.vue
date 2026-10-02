@@ -16,8 +16,9 @@
     <app-input
       ref="nameInput"
       v-model="name"
-      :placeholder="$t('common.enter_name')"
-      :errorMessage="nameErrorMessages"
+      surface="alternative"
+      :label="$t('common.enter_name')"
+      :error-message="nameErrorMessages"
       is-required
       @focus="setNameInFocusInput()"
       @blur="startNameOutOfFocusTimeout"

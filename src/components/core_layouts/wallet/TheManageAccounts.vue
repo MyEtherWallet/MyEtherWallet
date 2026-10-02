@@ -379,8 +379,8 @@ import {
   type SavedAccount,
 } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const GAP = 24
 
 const { t } = useI18n()

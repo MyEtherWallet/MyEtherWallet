@@ -79,8 +79,8 @@ import { watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const emit = defineEmits<{ back: [] }>()
 
 const accessStore = useAccessStore()

@@ -16,8 +16,8 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script lang="ts" setup>
+import AppIcon from '@/components/icon/AppIcon.vue'
 defineProps({
   title: {
     type: String,

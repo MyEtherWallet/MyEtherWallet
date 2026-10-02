@@ -3,8 +3,8 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import heroBannerBg from '@/assets/images/backgrounds/hero-banner-bg.jpg'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const { t } = useI18n()
 const router = useRouter()
 

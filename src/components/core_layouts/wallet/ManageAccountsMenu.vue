@@ -123,8 +123,9 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
+import AppIcon from '@/components/icon/AppIcon.vue'
+
 type MenuAction =
   'rename' | 'copy' | 'refresh' | 'paper' | 'explorer' | 'disconnect' | 'remove'
 

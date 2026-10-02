@@ -61,8 +61,6 @@
                     <app-tooltip
                       v-if="isFromAmountTruncated"
                       :text="fromAmountFull"
-                      theme="dark"
-                      position="top"
                     >
                       <AppIcon
                         name="information-circle"
@@ -236,7 +234,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppSpinner from '@/components/AppSpinner.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'

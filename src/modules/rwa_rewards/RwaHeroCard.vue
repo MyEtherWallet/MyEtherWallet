@@ -93,7 +93,6 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
@@ -217,7 +216,6 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
@@ -303,7 +301,6 @@
           <app-tooltip
             v-if="isDisabledCta"
             :text="disabledCtaTooltip"
-            position="middle"
             class="flex-1"
           >
             <button
@@ -354,7 +351,7 @@ import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import {

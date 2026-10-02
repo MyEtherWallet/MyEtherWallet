@@ -566,7 +566,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -603,8 +603,8 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 

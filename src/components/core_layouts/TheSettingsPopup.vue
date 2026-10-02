@@ -251,7 +251,6 @@
                       }}</span>
                       <app-tooltip
                         :text="$t('settings.usage_analytics_tooltip')"
-                        position="middle"
                       >
                         <AppIcon
                           name="question-mark-circle"
@@ -550,7 +549,7 @@ import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
 import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
