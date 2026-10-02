@@ -8,8 +8,8 @@
   >
     <app-spinner
       v-if="toast.tradeStatus?.kind === 'processing'"
-      size-class="w-6 h-6"
-      class="text-white"
+      :size="24"
+      color="inverted"
     />
     <app-token-logo
       v-else
@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from 'vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'

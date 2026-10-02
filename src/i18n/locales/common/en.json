@@ -140,6 +140,7 @@
     "confirm": "Confirm",
     "approve": "Approve",
     "processing": "Processing...",
+    "loading": "Loading",
     "save": "Save",
     "enter_name": "Enter name",
     "enter_address": "Enter Address",
