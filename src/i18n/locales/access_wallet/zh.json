@@ -21,7 +21,8 @@
       "all": "全部",
       "hardware": "硬件",
       "mobile": "移动",
-      "software": "软件"
+      "software": "软件",
+      "label": "钱包类型"
     },
     "back_to_connect_options": "返回连接选项",
     "connect_wallet_title": "连接钱包",
