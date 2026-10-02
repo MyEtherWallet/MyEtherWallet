@@ -90,6 +90,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'toggle',
+              name: 'DevToggle',
+              component: () => import('@/views/ViewToggleShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'colors',
               name: 'DevColors',
               component: () => import('@/views/ViewColorPreview.vue'),
