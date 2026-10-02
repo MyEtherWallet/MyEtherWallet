@@ -1,6 +1,7 @@
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import useBalanceHandler from '@/utils/balanceHandler'
+import configs from '@/configs'
 
 /**
  * Re-fetch the connected wallet's balances on demand (the "refresh" affordance
@@ -26,7 +27,7 @@ export function useRefreshBalances(): {
   const { wallet, walletAddress } = storeToRefs(walletStore)
   const { setTokens, setIsLoadingBalances } = walletStore
 
-  const noop = () => { }
+  const noop = () => {}
 
   const refreshBalances = ({ silent = false }: RefreshBalancesOptions = {}) => {
     if (!walletAddress.value) {
@@ -44,7 +45,8 @@ export function useRefreshBalances(): {
         )
       })
       .catch((error: unknown) => {
-        if (import.meta.env.MODE !== 'production') console.error('Balance fetch failed:', error)
+        if (configs.BUILD_MODE !== 'production')
+          console.error('Balance fetch failed:', error)
         if (!silent) setIsLoadingBalances(false)
       })
   }

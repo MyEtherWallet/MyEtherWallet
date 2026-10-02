@@ -8,6 +8,7 @@ import AvatarCryptoAsset from './types/AvatarCryptoAsset.vue'
 import AvatarIcon from './types/AvatarIcon.vue'
 import AvatarAccount from './types/AvatarAccount.vue'
 import AvatarInitial from './types/AvatarInitial.vue'
+import configs from '@/configs'
 import {
   AVATAR_SIZES,
   badgePositionStyle,
@@ -111,10 +112,7 @@ const connectedRingStyle = computed(() => ({
 
 // Single-badge rule (Figma guideline): warn in dev, render the first.
 watchEffect(() => {
-  if (
-    import.meta.env.MODE !== 'production' &&
-    activePositions.value.length > 1
-  ) {
+  if (configs.BUILD_MODE !== 'production' && activePositions.value.length > 1) {
     console.warn(
       `[AppAvatar] Only one badge may be active at a time; got ${activePositions.value.length} (${activePositions.value.join(', ')}). Rendering the first.`,
     )
