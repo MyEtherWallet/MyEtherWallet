@@ -68,9 +68,7 @@
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full my-2"
-                  />
+                  <app-divider class="my-1" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
@@ -191,6 +189,7 @@ import {
 import * as Sentry from '@sentry/vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void

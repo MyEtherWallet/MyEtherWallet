@@ -71,6 +71,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'divider',
+              name: 'DevDivider',
+              component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'chip',
               name: 'DevChip',
               component: () => import('@/views/ViewChipShowcase.vue'),

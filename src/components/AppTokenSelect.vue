@@ -89,9 +89,7 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
-                  />
+                  <app-divider class="mb-1" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
@@ -129,7 +127,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-background-default-hover w-full mb-2"></div>
+          <app-divider class="-mt-1 mb-1" />
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
@@ -232,6 +230,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps({
   externalLoading: {
     type: Boolean,

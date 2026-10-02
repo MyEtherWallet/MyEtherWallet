@@ -379,8 +379,9 @@
                               : $t('perps.market-list.add-to-watchlist')
                           }}</span>
                         </button>
-                        <hr
-                          class="h-px bg-border-strong border-0 w-full my-2 xs:hidden"
+                        <app-divider
+                          variant="alternative"
+                          class="my-1 xs:hidden"
                         />
                         <ul>
                           <template v-if="getPosition(contract.market)">
@@ -716,6 +717,7 @@ import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
 } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
