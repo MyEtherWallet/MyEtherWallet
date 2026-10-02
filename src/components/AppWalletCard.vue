@@ -190,6 +190,7 @@ import * as Sentry from '@sentry/vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import configs from '@/configs'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -226,7 +227,7 @@ const fetchBalances = () => {
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
     })
     .catch((error: unknown) => {
-      if (import.meta.env.MODE !== 'production')
+      if (configs.BUILD_MODE !== 'production')
         console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
     })
