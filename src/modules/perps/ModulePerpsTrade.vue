@@ -368,29 +368,33 @@
           </div>
 
           <transition name="fade" mode="out-in">
-            <div
+            <AppInputFeedback
               v-if="!limitPrice || parseFloat(limitPrice) === 0"
-              class="text-text-error text-s-12 mb-1"
+              type="error"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.target-required') }}
-            </div>
-            <div
+            </AppInputFeedback>
+            <AppInputFeedback
               v-else-if="
                 isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
-              class="text-text-error text-s-12 mb-1"
+              type="error"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.invalid-price') }}
-            </div>
-            <div
+            </AppInputFeedback>
+            <AppInputFeedback
               v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
-              class="text-text-error text-s-12 mb-1"
+              type="error"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.price-max', { max: '$10,000,000' }) }}
-            </div>
-            <div
+            </AppInputFeedback>
+            <AppInputFeedback
               v-else-if="limitPricePrecisionError"
-              class="text-text-error text-s-12 mb-1"
+              type="error"
+              class="mb-1 px-0!"
             >
               {{
                 quoteDecimals === 0
@@ -400,13 +404,14 @@
                       count: quoteDecimals,
                     })
               }}
-            </div>
-            <div
+            </AppInputFeedback>
+            <AppInputFeedback
               v-else-if="limitPriceOutOfTolerance"
-              class="text-text-error text-s-12 mb-1"
+              type="error"
+              class="mb-1 px-0!"
             >
               {{ $t('perps.errors.out-of-tolerance') }}
-            </div>
+            </AppInputFeedback>
           </transition>
 
           <div class="flex justify-start gap-2 mt-1">
@@ -487,38 +492,41 @@
 
             <!-- Error State -->
             <transition name="fade" mode="out-in">
-              <div
+              <AppInputFeedback
                 v-if="marginPrecisionError"
-                class="text-text-error text-s-12 mb-1"
+                type="error"
+                class="mb-1 px-0!"
               >
                 {{ $t('perps.errors.margin-precision') }}
-              </div>
-              <div
+              </AppInputFeedback>
+              <AppInputFeedback
                 v-else-if="
                   Number(inputAmount || '0') > availableMargin ||
                   isNaN(Number(inputAmount))
                 "
-                class="text-text-error text-s-12 mb-1"
+                type="error"
+                class="mb-1 px-0!"
               >
                 {{
                   isNaN(Number(inputAmount))
                     ? $t('perps.errors.invalid-amount')
                     : $t('perps.errors.insufficient-margin')
                 }}
-              </div>
-              <div
+              </AppInputFeedback>
+              <AppInputFeedback
                 v-else-if="
                   Number(inputAmount || '0') > 0 &&
                   positionSizeUsd < minOrderAmount
                 "
-                class="text-text-error text-s-12 mb-1"
+                type="error"
+                class="mb-1 px-0!"
               >
                 {{
                   $t('perps.errors.min-amount', {
                     amount: formatUsd(minOrderAmount),
                   })
                 }}
-              </div>
+              </AppInputFeedback>
             </transition>
 
             <!-- Slider -->
@@ -702,12 +710,13 @@
               }}
             </p>
             <transition name="fade" mode="out-in">
-              <div
+              <AppInputFeedback
                 v-if="closeAmountPrecisionError"
-                class="text-text-error text-s-12 mb-1"
+                type="error"
+                class="mb-1 px-0!"
               >
                 {{ $t('perps.errors.amount-precision') }}
-              </div>
+              </AppInputFeedback>
             </transition>
             <!--slider -->
             <input
@@ -944,6 +953,7 @@ import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import {
   analytics,
   ConnectWalletEvent,
