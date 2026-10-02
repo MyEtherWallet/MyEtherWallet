@@ -8,6 +8,8 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
+import { buildWalletConnectQrData } from '@/modules/access/common/walletConnectQrUri'
+import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
@@ -286,9 +288,16 @@ export const useConnectWallet = () => {
       return
     }
     connector.onDisconnect()
+    const rkDetails = (connector as unknown as { rkDetails?: Wallet }).rkDetails
     connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
+        // Encode the clicked wallet's universal link (when it exposes one) so a
+        // native-camera scan opens that wallet instead of the OS default `wc:`
+        // handler. Falls back to the raw uri. (MEW-2288)
+        wagmiWalletData.value = buildWalletConnectQrData(
+          rkDetails,
+          msg.data as string,
+        )
         accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
