@@ -31,11 +31,26 @@
         />
         <AppAvatar
           type="icon"
-          size="m"
+          size="xl"
+          :background="false"
+          badge-top
           class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <template #icon>
-            <img :src="PLATFORM_LOGO[platform]" alt="" class="size-5" />
+            <span
+              class="flex size-full items-center justify-center rounded-full bg-background-decorative-green text-white"
+            >
+              <span
+                data-testid="qr-platform-glyph"
+                class="size-1/2 bg-current"
+                :style="glyphMask(PLATFORM_LOGO[platform])"
+              />
+            </span>
+          </template>
+          <template #badge>
+            <AppAvatarBadge type="network">
+              <img :src="MewLogo" alt="" class="size-full" />
+            </AppAvatarBadge>
           </template>
         </AppAvatar>
       </div>
@@ -45,11 +60,14 @@
         v-for="store in STORE_ORDER"
         :key="store"
         :data-testid="`store-${store}`"
-        :theme="store === platform ? 'secondary' : 'neutral'"
+        theme="secondary"
         @click="openStore(store)"
       >
         <span class="flex items-center justify-center gap-2">
-          <img :src="PLATFORM_LOGO[store]" alt="" class="size-5" />
+          <span
+            class="size-4 bg-current"
+            :style="glyphMask(PLATFORM_LOGO[store])"
+          />
           {{ t(`access_wallet.download_mobile.get_${store}`) }}
         </span>
       </AppBaseButton>
@@ -64,9 +82,11 @@ import QrcodeVue from 'qrcode.vue'
 import AppSegmentedControl from '@/components/segmented_control/AppSegmentedControl.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppleLogo from '@/assets/images/access/apple.svg'
 import AndroidLogo from '@/assets/images/access/android.svg'
+import MewLogo from '@/assets/images/access/mew-app.webp'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 
 type Platform = 'ios' | 'android'
@@ -92,6 +112,12 @@ const storeUrl: Record<Platform, string> = {
 
 const { t } = useI18n()
 const platform = ref<Platform>('ios')
+
+/** Paints a brand logo in the current text colour (white in the QR, brand on the buttons). */
+const glyphMask = (url: string) => {
+  const mask = `url("${url}") center / contain no-repeat`
+  return { mask, WebkitMask: mask }
+}
 
 const openStore = (store: Platform) =>
   window.open(storeUrl[store], '_blank', 'noopener,noreferrer')
