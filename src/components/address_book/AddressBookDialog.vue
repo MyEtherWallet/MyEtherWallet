@@ -52,17 +52,14 @@
             </div>
 
             <!-- Filters -->
-            <app-btn-group
-              v-model:selected="selectedListItem"
-              :btn-list="addressList"
-              class="mt-6 mb-4 px-4 sm:px-6"
-              size="medium"
-              variant="outline"
-            >
-              <template #btn-content="{ data }">
-                {{ data.name }}
-              </template>
-            </app-btn-group>
+            <div class="mt-6 mb-4 px-4 sm:px-6">
+              <AppSegmentedControl
+                v-model="selectedListItem"
+                :items="addressList"
+                size="small"
+                :label="$t('address_book.title')"
+              />
+            </div>
             <div class="px-3 sm:px-5">
               <!-- Compatible -->
               <p
@@ -70,7 +67,7 @@
                 class="font-medium text-s-17 mb-2 px-2"
               >
                 {{
-                  selectedListItem.id === 'recent'
+                  selectedListItem === 'recent'
                     ? $t('address_book.recent_transactions')
                     : $t('address_book.chain_addresses', {
                         chain: network?.nameLong || selectedChain?.nameLong,
@@ -149,11 +146,11 @@
  *
  */
 import AddAddress from './AddAddress.vue'
-import { ref, computed, watch, type PropType } from 'vue'
+import { ref, computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
-import AppBtnGroup from '../AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import { storeToRefs } from 'pinia'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
 import AppDialog from '@components/AppDialog.vue'
@@ -195,22 +192,12 @@ const isOpen = defineModel<boolean>('isOpen', {
  * Address List
  -------------------------*/
 
-interface AddressListItem {
-  name: string
-  id: string
-}
-
-const addressList = computed<AddressListItem[]>(() => [
-  { name: t('address_book.recent'), id: 'recent' },
-  { name: t('address_book.saved'), id: 'addresses' },
+const addressList = computed(() => [
+  { label: t('address_book.recent'), value: 'recent' },
+  { label: t('address_book.saved'), value: 'addresses' },
 ])
 
-const selectedListItem = ref<AddressListItem>(addressList.value[0])
-
-watch(addressList, newList => {
-  const refreshed = newList.find(item => item.id === selectedListItem.value.id)
-  if (refreshed) selectedListItem.value = refreshed
-})
+const selectedListItem = ref('recent')
 
 /**------------------------
  * Items
@@ -220,7 +207,7 @@ const adrBook = useAddressBookStore()
 const { addressBook } = storeToRefs(adrBook)
 
 const deleteAddress = (adr: Address) => {
-  if (selectedListItem.value.id === 'recent') {
+  if (selectedListItem.value === 'recent') {
     adrBook.removeRecentAddress(adr, _chain.value?.name)
   } else {
     adrBook.removeAddress(adr, adr.chainType)
@@ -243,7 +230,7 @@ const deduplicate = (list: Address[]) => {
 
 const currentAddressBook = computed<Address[]>(() => {
   let list: Address[] = []
-  if (selectedListItem.value.id === 'recent') {
+  if (selectedListItem.value === 'recent') {
     list = addressBook.value.recent[_chain.value?.name || ''] || []
     list = list.map(adr => {
       const saved = adrBook.inAddressBook(adr.address, _chain.value?.type || '')
@@ -259,7 +246,7 @@ const currentAddressBook = computed<Address[]>(() => {
 })
 
 const otherAddressBook = computed(() => {
-  if (selectedListItem.value.id === 'recent') return []
+  if (selectedListItem.value === 'recent') return []
 
   const keys = Object.keys(addressBook.value.saved).filter(
     key => key !== _chain.value?.type,

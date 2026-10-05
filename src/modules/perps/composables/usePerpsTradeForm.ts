@@ -987,13 +987,13 @@ export function usePerpsTradeForm() {
 
   // ── Market selector ────────────────────────────────────────
   const marketFilterTabs = [
-    { key: 'all', label: t('perps.select-market.filter-tab-all') },
-    { key: 'Equities', label: t('perps.select-market.filter-tab-equities') },
+    { value: 'all', label: t('perps.select-market.filter-tab-all') },
+    { value: 'Equities', label: t('perps.select-market.filter-tab-equities') },
     {
-      key: 'Commodities',
+      value: 'Commodities',
       label: t('perps.select-market.filter-tab-commodities'),
     },
-    { key: 'Indices', label: t('perps.select-market.filter-tab-indices') },
+    { value: 'Indices', label: t('perps.select-market.filter-tab-indices') },
   ]
 
   const marketSortOptions: MarketSortOption[] = [
