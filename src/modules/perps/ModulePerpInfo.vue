@@ -234,10 +234,8 @@
                 </div>
               </button>
               <app-btn-icon
-                class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
+                class="xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
                 :label="$t('perps.info.manage-position-label')"
-                height="h-7 xs:h-8"
-                width="w-7 xs:w-8"
                 @click="toggleSelect"
               >
                 <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
@@ -667,8 +665,6 @@
                         <template #menu-button="{ toggleMenu }">
                           <app-btn-icon
                             :label="$t('perps.market-list.action-menu-label')"
-                            height="h-7 xs:h-8"
-                            width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
                           >
                             <AppIcon
@@ -715,8 +711,6 @@
                       <app-btn-icon
                         v-else
                         :label="$t('perps.positions.view-order-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
                       >
@@ -840,8 +834,6 @@
                     <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                       <app-btn-icon
                         :label="$t('perps.positions.view-fill-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         class="ml-auto"
                         @click="openFillDialog(fill)"
                       >

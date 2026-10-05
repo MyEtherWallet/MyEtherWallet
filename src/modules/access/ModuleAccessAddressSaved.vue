@@ -5,19 +5,14 @@
     class="w-full sm:max-w-[400px] sm:mx-auto"
   >
     <template #title>
-      <button
+      <AppBtnIcon
         data-test="address-saved-back"
-        aria-label="back"
-        class="absolute top-4 left-4 flex items-center justify-center size-8 rounded-full hoverNoBG"
+        :label="$t('common.back')"
+        class="absolute top-4 left-4 text-black"
         @click="onBack"
       >
-        <AppIcon
-          name="chevron-left"
-          variant="filled"
-          size="s"
-          class="text-black"
-        />
-      </button>
+        <AppIcon name="chevron-left" variant="filled" size="s" />
+      </AppBtnIcon>
     </template>
     <template #content>
       <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">
@@ -82,6 +77,7 @@
 <script setup lang="ts">
 import { computed, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'

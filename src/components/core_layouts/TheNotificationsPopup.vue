@@ -3,8 +3,7 @@
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
     <app-btn-icon
       :label="$t('menu.open-notifications')"
-      width="w-10"
-      height="h-10"
+      size="l"
       @click="togglePopup"
     >
       <div class="relative">

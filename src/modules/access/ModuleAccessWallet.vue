@@ -18,12 +18,12 @@
         <div class="w-8 sm:ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
-            icon="icon-arrow-left"
+            size="l"
             :label="$t('access_wallet.back_to_connect_options')"
-            class="!w-10 !h-10 mr-auto mt-4"
+            class="mr-auto mt-4"
             @click="accessStore.setCurrentView('default')"
           >
-            <AppIcon name="arrow-right" size="s" class="rotate-180" />
+            <AppIcon name="arrow-left" size="s" />
           </app-btn-icon>
         </div>
         <div
