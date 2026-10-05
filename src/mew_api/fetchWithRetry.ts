@@ -1,5 +1,5 @@
 import Configs from '@/configs'
-const isDevMode = import.meta.env.MODE !== 'production'
+const isDevMode = Configs.BUILD_MODE !== 'production'
 
 export const fetchWithRetry = async <T>(
   url: RequestInfo,

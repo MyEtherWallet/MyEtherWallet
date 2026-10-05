@@ -152,7 +152,7 @@ const runFetchBalances = () => {
     })
     .catch((error: unknown) => {
       if (generation !== balanceFetchGeneration) return
-      if (import.meta.env.MODE !== 'production')
+      if (configs.BUILD_MODE !== 'production')
         console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
       // Keep the retry loop alive: a transient failure shouldn't permanently

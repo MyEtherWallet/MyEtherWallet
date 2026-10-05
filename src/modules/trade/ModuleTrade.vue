@@ -279,6 +279,7 @@
     <trade-progress-modal
       v-model:is-open="progressModalOpen"
       :order-hash="orderHash"
+      :deposit-pending="depositPending"
       :from-chain="selectedFromChain"
       :from-token="fromTokenSelected"
       :to-token="toTokenSelected"
@@ -365,6 +366,7 @@ const {
   timeLabel,
   sessionRanges,
   orderHash,
+  depositPending,
   startTradeFlow,
   confirmApproval,
   confirmTrade,
