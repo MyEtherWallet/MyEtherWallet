@@ -51,7 +51,7 @@
       "google": "Continue with Google",
       "or": "or",
       "email_label": "Email",
-      "email_placeholder": "you@email.com",
+      "email_placeholder": "you{'@'}email.com",
       "continue": "Continue",
       "protected_by": "Protected by",
       "download_official": "Download MEW Official wallets",
