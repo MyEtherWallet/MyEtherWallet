@@ -4,13 +4,13 @@ import {
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 
-export type WalletTab = 'popular' | 'hardware' | 'mobile' | 'advanced'
-export const WALLET_TABS: readonly WalletTab[] = [
+export const WALLET_TABS = [
   'popular',
   'hardware',
   'mobile',
   'advanced',
-]
+] as const
+export type WalletTab = (typeof WALLET_TABS)[number]
 
 export type WalletStatus = 'recent' | 'detected' | 'official'
 export interface TabWallet {
