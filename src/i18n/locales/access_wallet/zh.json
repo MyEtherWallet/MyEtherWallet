@@ -116,39 +116,8 @@
     }
   },
   "access_wallet_keystore": {
-    "title": "使用 Keystore 文件访问钱包",
-    "upload_keystore": "上传 Keystore 文件",
-    "enter_password": "输入密码",
-    "select_keystore_file_title": "选择您的 Keystore 文件",
-    "select_keystore_file_description": "请选择可解锁您钱包的 Keystore 文件。",
-    "enter_password_title": "输入密码",
-    "enter_password_description": "输入您的密码以解锁钱包。",
-    "keystore_file_alt": "Keystore 文件",
-    "select_keystore": "选择 Keystore 文件",
-    "invalid_password": "密码无效",
-    "error_reading_file": "读取文件出错。请重试。",
-    "invalid_keystore_file": "Keystore 文件无效。请重试。",
     "something_went_wrong": "出错了",
     "error_accessing_wallet": "访问钱包时出错。请重试。"
-  },
-  "access_wallet_recovery_phrase": {
-    "title": "使用恢复短语访问钱包",
-    "enter_phrase": "输入您的短语",
-    "invalid_phrase": "短语无效",
-    "do_you_have_an_extra_word": "您有额外的单词吗？",
-    "enter_extra_word": "输入额外单词",
-    "extra_word_known_as": "也称为“口令短语”或“第 13/25 个单词”",
-    "step": {
-      "step1": {
-        "short": "输入短语",
-        "title": "输入您的恢复短语",
-        "description": "也称为助记词短语，您可以使用 12、15、18、21 或 24 个单词的短语来访问钱包。请按短语中实际的单词数量逐一输入。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
-      }
-    }
   },
   "access_wallet_trezor": {
     "title": "使用 Trezor 访问钱包",
@@ -183,8 +152,6 @@
     "connect_bluetooth": "或通过蓝牙连接"
   },
   "access_wallet_private_key": {
-    "title": "使用私钥访问钱包",
-    "enter_private_key": "输入您的私钥",
     "private_key_input_label": "私钥输入",
     "invalid_private_key": "私钥无效"
   },
@@ -205,13 +172,9 @@
   },
   "derivation_path": {
     "title": "派生路径",
-    "description": "选择您钱包的派生路径。如果不确定，请保留默认设置。",
-    "add_path": "添加路径",
     "select_path": "选择派生路径",
     "search": "按标签或路径搜索",
     "not_found": "未找到派生路径：",
-    "enter_label": "输入标签",
-    "enter_path": "输入路径",
     "label_exists": "派生标签已存在！",
     "added_successfully": "自定义派生路径添加成功！",
     "invalid_path": "无效的派生路径！"

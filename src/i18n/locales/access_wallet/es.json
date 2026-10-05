@@ -116,39 +116,8 @@
     }
   },
   "access_wallet_keystore": {
-    "title": "Acceder a la billetera con archivo Keystore",
-    "upload_keystore": "Subir Keystore",
-    "enter_password": "Ingresar contraseña",
-    "select_keystore_file_title": "Selecciona tu archivo Keystore",
-    "select_keystore_file_description": "Selecciona el archivo Keystore que desbloquea tu billetera.",
-    "enter_password_title": "Ingresar contraseña",
-    "enter_password_description": "Ingresa tu contraseña para desbloquear tu billetera.",
-    "keystore_file_alt": "Archivo Keystore",
-    "select_keystore": "Seleccionar Keystore",
-    "invalid_password": "Contraseña no válida",
-    "error_reading_file": "Error al leer el archivo. Inténtalo de nuevo.",
-    "invalid_keystore_file": "Archivo Keystore no válido. Inténtalo de nuevo.",
     "something_went_wrong": "Algo salió mal",
     "error_accessing_wallet": "Hubo un error al acceder a la billetera. Inténtalo de nuevo."
-  },
-  "access_wallet_recovery_phrase": {
-    "title": "Acceder a la billetera con frase de recuperación",
-    "enter_phrase": "Ingresa tu frase",
-    "invalid_phrase": "Frase no válida",
-    "do_you_have_an_extra_word": "¿Tienes una palabra adicional?",
-    "enter_extra_word": "Ingresar palabra adicional",
-    "extra_word_known_as": "También conocida como \"frase de contraseña\" o \"palabra 13/25\"",
-    "step": {
-      "step1": {
-        "short": "Ingresar frase",
-        "title": "Ingresa tu frase de recuperación",
-        "description": "También llamada frase mnemotécnica, puedes usar una frase de 12, 15, 18, 21 o 24 palabras para acceder a tu billetera. Solo ingresa todas las palabras que tengas en tu frase."
-      },
-      "step2": {
-        "short": "dirección y red",
-        "title": "Selecciona la dirección y la red"
-      }
-    }
   },
   "access_wallet_trezor": {
     "title": "Acceder a la billetera con Trezor",
@@ -183,8 +152,6 @@
     "connect_bluetooth": "o conecta por Bluetooth"
   },
   "access_wallet_private_key": {
-    "title": "Acceder a la billetera con clave privada",
-    "enter_private_key": "Ingresa tu clave privada",
     "private_key_input_label": "campo de clave privada",
     "invalid_private_key": "Clave privada no válida"
   },
@@ -205,13 +172,9 @@
   },
   "derivation_path": {
     "title": "Ruta de derivación",
-    "description": "Selecciona la ruta de derivación para tu billetera. Si no estás seguro, déjala como predeterminada.",
-    "add_path": "Agregar ruta",
     "select_path": "Seleccionar ruta de derivación",
     "search": "Buscar por etiqueta o ruta",
     "not_found": "No se encontraron rutas de derivación:",
-    "enter_label": "Ingresa la etiqueta",
-    "enter_path": "Ingresa la ruta",
     "label_exists": "¡La etiqueta de derivación ya existe!",
     "added_successfully": "¡Ruta de derivación personalizada añadida correctamente!",
     "invalid_path": "¡Ruta de derivación no válida!"
