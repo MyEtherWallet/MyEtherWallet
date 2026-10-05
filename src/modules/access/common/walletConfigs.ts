@@ -236,14 +236,3 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     },
   },
 }
-
-export enum SortBy {
-  POPULAR = 'popular',
-  A_Z = 'a-z',
-  Z_A = 'z-a',
-}
-
-export interface Filter {
-  name: string
-  value: WalletConfigType | 'all'
-}

@@ -3,27 +3,9 @@
     "title": "访问 MEW 投资组合",
     "need_help": "访问钱包需要帮助？",
     "search_wallet": "搜索您的钱包",
-    "select_wallet": "选择您的钱包",
     "recent": "最近使用",
     "detected": "已检测到",
-    "all_wallets": {
-      "title": "所有钱包",
-      "description": "Ledger、私钥、Keystore 文件、移动钱包，应有尽有"
-    },
     "not_found": "未找到钱包：",
-    "sort": {
-      "popular": "热门",
-      "name_a_z": "名称 A-Z",
-      "name_z_a": "名称 Z-A"
-    },
-    "sort_and_filter": "排序和筛选",
-    "filter": {
-      "all": "全部",
-      "hardware": "硬件",
-      "mobile": "移动",
-      "software": "软件",
-      "label": "钱包类型"
-    },
     "back_to_connect_options": "返回连接选项",
     "connect_wallet_title": "连接钱包",
     "connect_with": "使用{method}连接",
@@ -37,7 +19,6 @@
       "mnemonic": "恢复（助记词）短语",
       "private_key": "私钥"
     },
-    "official_badge_alt": "MyEtherWallet 官方",
     "help": {
       "keystore": "如何连接您的 Keystore 钱包",
       "private_key": "如何使用私钥连接",

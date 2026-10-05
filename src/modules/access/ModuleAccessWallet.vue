@@ -1,68 +1,76 @@
 <template>
   <app-dialog
     v-model:is-open="bigDialogOpen"
-    :class="[
-      'w-full max-h-[95vh]',
-      currentView === 'mnemonic' ||
-      currentView === 'keystore' ||
-      currentView === 'private_key'
-        ? 'max-w-[800px]'
-        : '!max-w-[900px]',
-    ]"
-    bg="bg-background-default"
-    has-title-underline
+    :class="['w-full max-h-[95vh]', dialogWidth]"
+    :bg="isNewView ? 'bg-white' : 'bg-background-default'"
+    :has-title-underline="!isNewView"
+    hide-close
     @close-dialog="closeAccess()"
   >
     <template #title>
-      <div class="flex w-full flex-col sm:flex-row px-4 xs:px-6">
-        <div class="w-8 sm:ml-[-12px]">
+      <div class="flex w-full flex-col gap-1 px-4 pt-4 sm:px-6 sm:pt-6">
+        <header class="flex w-full items-center gap-2">
           <app-btn-icon
             v-if="currentView !== 'default'"
-            size="l"
+            variant="filled"
+            size="m"
             :label="$t('access_wallet.back_to_connect_options')"
-            class="mr-auto mt-4"
-            @click="accessStore.setCurrentView('default')"
+            class="shrink-0"
+            @click="goBack"
           >
-            <AppIcon name="arrow-left" size="s" />
+            <AppIcon name="chevron-left" size="xs" />
           </app-btn-icon>
-        </div>
-        <div
-          :class="
-            currentView === 'default'
-              ? 'mt-4 sm:items-center justify-center'
-              : 'sm:items-center justify-center'
-          "
-          class="flex flex-col w-full sm:mt-6 sm:mb-2"
-        >
-          <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
+          <span v-else class="size-8 shrink-0" aria-hidden="true" />
+          <h1
+            class="grow text-center text-lg font-semibold leading-p-150 sm:text-xl"
+          >
             {{ getTitle }}
           </h1>
-          <app-need-help
-            :title="helpLinkText"
-            help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-          />
-        </div>
+          <app-btn-icon
+            variant="filled"
+            size="m"
+            :label="$t('common.close')"
+            class="shrink-0"
+            @click="accessStore.closeAccessDialog()"
+          >
+            <AppIcon name="x-mark" size="xs" />
+          </app-btn-icon>
+        </header>
+        <app-need-help
+          v-if="!isNewView"
+          class="self-center"
+          :title="helpLinkText"
+          help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
+        />
       </div>
     </template>
     <template #content>
-      <div class="px-4 xs:px-6 pb-6">
-        <div v-if="currentView === 'default'">
-          <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
-            <div>
-              <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
-                {{ $t('common.select_network') }}
-              </h2>
-              <select-chain-for-app
-                is-btn-group
-                :can-store="false"
-                :preselected-chain="selectedChain"
-                @update:selected-chain="updateChain"
-              />
-            </div>
+      <div class="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
+        <div v-if="currentView === 'default'" class="flex flex-col gap-4">
+          <NetworkChips :selected="selectedChain" @select="updateChain" />
+          <WalletTabs />
+          <div class="sticky bottom-0 flex flex-col gap-4 bg-white pt-2">
+            <AppDivider />
+            <AccessCell :title="$t('common.dont_have_wallet')">
+              <template #avatar>
+                <AppAvatar type="icon" size="m">
+                  <template #icon><AppIcon name="plus" size="xs" /></template>
+                </AppAvatar>
+              </template>
+              <template #trailing>
+                <AppBaseButton
+                  theme="secondary"
+                  size="small"
+                  @click="accessStore.setCurrentView('sign_up')"
+                >
+                  {{ $t('access_wallet.sign_up.cta') }}
+                </AppBaseButton>
+              </template>
+            </AccessCell>
           </div>
-          <WalletsDefaultList class="mt-10 mb-12" />
-          <WalletsList />
         </div>
+        <AccessSignUp v-else-if="currentView === 'sign_up'" />
+        <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
         <module-access-keystore v-else-if="currentView === 'keystore'" />
         <module-access-private-key v-else-if="currentView === 'private_key'" />
         <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
@@ -81,10 +89,19 @@
   <module-access-address-saved />
 </template>
 <script setup lang="ts">
-import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
-import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
+import NetworkChips from '@/modules/access/components/NetworkChips.vue'
+import WalletTabs from '@/modules/access/components/WalletTabs.vue'
+import AccessCell from '@/modules/access/components/AccessCell.vue'
+import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
+import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import {
+  parentView,
+  type WalletView,
+} from '@/modules/access/common/walletConfigs'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -134,6 +151,31 @@ const closeAccess = () => {
   accessStore.setCurrentView('default')
 }
 
+const goBack = () => {
+  accessStore.setCurrentView(parentView(currentView.value))
+}
+
+/** Views built on the new onboarding design (white surface, no help link). */
+const NEW_VIEWS: WalletView[] = ['default', 'sign_up', 'download_mobile']
+const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
+
+// Existing method views keep their widths until MEW-2338 restyles them.
+const dialogWidth = computed(() => {
+  switch (currentView.value) {
+    case 'default':
+    case 'sign_up':
+      return 'max-w-[560px]'
+    case 'download_mobile':
+      return 'max-w-[480px]'
+    case 'mnemonic':
+    case 'keystore':
+    case 'private_key':
+      return 'max-w-[800px]'
+    default:
+      return '!max-w-[900px]'
+  }
+})
+
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
@@ -164,6 +206,12 @@ useWalletFlowUrlSync(isOpenAccessDialog, 'access', currentView)
  * UI Elements
  -------------------------------*/
 const getTitle = computed(() => {
+  if (currentView.value === 'default' || currentView.value === 'sign_up') {
+    return t('access_wallet.login_title')
+  }
+  if (currentView.value === 'download_mobile') {
+    return t('access_wallet.download_mobile.title')
+  }
   let method = ''
   switch (currentView.value) {
     case 'keystore':

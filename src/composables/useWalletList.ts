@@ -169,7 +169,7 @@ export const useWalletList = () => {
         // Merge wcWallet first so the static walletConfigs UI metadata
         // (icon, name, type) wins. The wagmi connector can expose `icon`
         // as undefined or a non-function value, which used to overwrite
-        // the static MewLogo and crash BtnWallet's resolveImg.
+        // the static MewLogo and break WalletCard's icon resolution.
         defaultWallets.push(Object.assign({}, wcWallet, wallet))
       } else {
         defaultWallets.push(wallet)

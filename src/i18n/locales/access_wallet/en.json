@@ -3,27 +3,9 @@
     "title": "Access MEW Portfolio",
     "need_help": "Need help accessing your wallet?",
     "search_wallet": "Search for your wallet",
-    "select_wallet": "Select your wallet",
     "recent": "Recent",
     "detected": "Detected",
-    "all_wallets": {
-      "title": "All Wallets",
-      "description": "Ledger, private key, keystore, mobile wallets, we have it all"
-    },
     "not_found": "Wallet not found:",
-    "sort": {
-      "popular": "Popular",
-      "name_a_z": "Name A-Z",
-      "name_z_a": "Name Z-A"
-    },
-    "sort_and_filter": "Sort & Filter",
-    "filter": {
-      "all": "All",
-      "hardware": "Hardware",
-      "mobile": "Mobile",
-      "software": "Software",
-      "label": "Wallet type"
-    },
     "back_to_connect_options": "back to connect options",
     "connect_wallet_title": "Connect Wallet",
     "connect_with": "Connect with {method}",
@@ -37,7 +19,6 @@
       "mnemonic": "Recovery (mnemonic) Phrase",
       "private_key": "Private Key"
     },
-    "official_badge_alt": "Official MyEtherWallet",
     "help": {
       "keystore": "How to connect your keystore wallet",
       "private_key": "How to connect with your private key",

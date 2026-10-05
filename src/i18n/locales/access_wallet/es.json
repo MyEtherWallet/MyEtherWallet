@@ -3,27 +3,9 @@
     "title": "Acceder al portafolio de MEW",
     "need_help": "¿Necesitas ayuda para acceder a tu billetera?",
     "search_wallet": "Busca tu billetera",
-    "select_wallet": "Selecciona tu billetera",
     "recent": "Recientes",
     "detected": "Detectadas",
-    "all_wallets": {
-      "title": "Todas las billeteras",
-      "description": "Ledger, clave privada, keystore, billeteras móviles, lo tenemos todo"
-    },
     "not_found": "Billetera no encontrada:",
-    "sort": {
-      "popular": "Populares",
-      "name_a_z": "Nombre A-Z",
-      "name_z_a": "Nombre Z-A"
-    },
-    "sort_and_filter": "Ordenar y filtrar",
-    "filter": {
-      "all": "Todas",
-      "hardware": "Hardware",
-      "mobile": "Móviles",
-      "software": "Software",
-      "label": "Tipo de billetera"
-    },
     "back_to_connect_options": "volver a las opciones de conexión",
     "connect_wallet_title": "Conectar billetera",
     "connect_with": "Conectar con {method}",
@@ -37,7 +19,6 @@
       "mnemonic": "Frase de recuperación (mnemotécnica)",
       "private_key": "Clave privada"
     },
-    "official_badge_alt": "MyEtherWallet oficial",
     "help": {
       "keystore": "Cómo conectar tu billetera con Keystore",
       "private_key": "Cómo conectar con tu clave privada",
