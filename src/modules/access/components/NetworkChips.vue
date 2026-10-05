@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center gap-2 overflow-x-auto"
+    class="flex items-center gap-2 overflow-x-auto no-scrollbar"
     role="group"
     :aria-label="t('access_wallet.networks.label')"
   >
