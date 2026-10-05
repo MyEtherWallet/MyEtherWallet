@@ -147,7 +147,7 @@ const unlock = async () => {
     privateKeyInput.value = ''
     accessStore.setCurrentView('default')
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
-      walletName: 'privateKey',
+      walletName: walletConfigs.privateKey.id,
       walletType: walletConfigs.privateKey.type[0],
       network: selectedChain.value?.name,
     })

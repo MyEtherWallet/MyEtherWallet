@@ -120,6 +120,7 @@
       <AppInput
         v-else
         v-model="password"
+        data-private
         type="password"
         :label="$t('access_wallet.advanced.password_label')"
         :placeholder="$t('access_wallet.advanced.password_placeholder')"
@@ -285,7 +286,7 @@ const unlock = async () => {
     setSelectedNetwork(selectedChain.value?.name || '')
     accessStore.setCurrentView('default')
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
-      walletName: 'keystore',
+      walletName: walletConfigs.keystore.id,
       walletType: walletConfigs.keystore.type[0],
       network: selectedChain.value?.name,
     })

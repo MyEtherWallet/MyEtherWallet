@@ -160,4 +160,14 @@ describe('ModuleAccessKeystore', () => {
     expect(h.setWallet).toHaveBeenCalledTimes(1)
     expect(h.closeAccessDialog).toHaveBeenCalled()
   })
+
+  it('keeps the password out of session replays and analytics', async () => {
+    const w = mountIt()
+    await upload(w, JSON.stringify(V3))
+    // AppInput puts fallthrough attrs on its wrapper; Sentry `block` and the
+    // Amplitude mask both cover the matched element's subtree.
+    expect(
+      w.get('input[type="password"]').element.closest('[data-private]'),
+    ).not.toBeNull()
+  })
 })

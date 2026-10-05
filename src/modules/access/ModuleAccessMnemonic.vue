@@ -352,7 +352,7 @@ const access = async () => {
     }
     setSelectedNetwork(selectedChain.value?.name || '')
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
-      walletName: 'mnemonic',
+      walletName: walletConfigs.mnemonic.id,
       walletType: walletConfigs.mnemonic.type[0],
       network: selectedChain.value?.name,
     })
