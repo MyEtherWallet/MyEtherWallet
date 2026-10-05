@@ -12,6 +12,7 @@
       :title="title"
       :description="description"
       size="m"
+      no-wrap
       class="grow min-w-0"
     />
     <slot name="trailing" />

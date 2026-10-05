@@ -201,6 +201,30 @@ const unlockKeystore = async (
   return getWalletFromPrivKeyFile(newFile, pw)
 }
 
+/**
+ * True when parsed JSON has the shape of a keystore `unlockKeystore` can open
+ * (same format detection as getWalletFromPrivKeyFile, keys case-insensitive).
+ */
+const isKeystoreFile = (json: unknown): boolean => {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) return false
+  const fields = Object.fromEntries(
+    Object.entries(json).map(([key, value]) => [key.toLowerCase(), value]),
+  )
+  return (
+    fields.encseed != null ||
+    fields.crypto != null ||
+    fields.hash != null ||
+    fields.publisher === 'MyEtherwallet'
+  )
+}
+
+/**
+ * Wrong password vs. a keystore we can't decrypt (corrupt / unsupported). The
+ * wallet library reports a bad password as "... possibly wrong passphrase".
+ */
+const isWrongKeystorePassword = (error: unknown): boolean =>
+  /possibly wrong passphrase/i.test((error as Error)?.message ?? '')
+
 const isPrivateKey = (key: string) => {
   const priv = key ? key.replace('0x', '') : ''
   return key !== '' && isHexString('0x' + priv, 32)
@@ -209,6 +233,8 @@ const isPrivateKey = (key: string) => {
 export type { EthSaleKeystore, V3Keystore, MEWKeystore }
 export {
   unlockKeystore,
+  isKeystoreFile,
+  isWrongKeystorePassword,
   getMinPriorityFee,
   getBufferFromHex,
   bufferToHex,

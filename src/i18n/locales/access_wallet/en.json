@@ -83,7 +83,23 @@
       "banner_private_key": "Your Private Key is never stored. You'll re-enter it if you reload the app or disconnect.",
       "private_key_label": "Private Key",
       "private_key_placeholder": "Paste your Private Key",
-      "invalid_private_key": "Not a valid Private Key — expect 64 hex characters"
+      "invalid_private_key": "Not a valid Private Key — expect 64 hex characters",
+      "banner_keystore": "Your file is never stored. You'll re-enter it if you reload the app or disconnect.",
+      "drop_title": "Drop your keystore file here",
+      "drop_or": "or",
+      "browse_files": "browse files",
+      "invalid_file_title": "Invalid keystore file",
+      "invalid_file_hint": "Choose a .json keystore file, or",
+      "try_again": "try again",
+      "continue": "Continue",
+      "change": "Change",
+      "keystore_version": "Keystore v{version}",
+      "keystore_kind": "Keystore",
+      "password_label": "Password",
+      "password_placeholder": "Keystore password",
+      "incorrect_password": "Incorrect password. Check it and try again",
+      "cannot_decrypt_title": "Can't decrypt this file",
+      "cannot_decrypt_text": "The password may be wrong, or the file is damaged"
     }
   },
   "access_wallet_keystore": {

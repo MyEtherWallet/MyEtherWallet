@@ -83,7 +83,23 @@
       "banner_private_key": "您的私钥不会被存储。如果重新加载应用或断开连接，需要重新输入。",
       "private_key_label": "私钥",
       "private_key_placeholder": "粘贴您的私钥",
-      "invalid_private_key": "私钥无效：应为 64 个十六进制字符"
+      "invalid_private_key": "私钥无效：应为 64 个十六进制字符",
+      "banner_keystore": "您的文件不会被存储。如果重新加载应用或断开连接，需要重新上传。",
+      "drop_title": "将 keystore 文件拖放到此处",
+      "drop_or": "或",
+      "browse_files": "浏览文件",
+      "invalid_file_title": "无效的 keystore 文件",
+      "invalid_file_hint": "请选择 .json 格式的 keystore 文件，或",
+      "try_again": "重试",
+      "continue": "继续",
+      "change": "更换",
+      "keystore_version": "Keystore v{version}",
+      "keystore_kind": "Keystore",
+      "password_label": "密码",
+      "password_placeholder": "Keystore 密码",
+      "incorrect_password": "密码错误，请检查后重试",
+      "cannot_decrypt_title": "无法解密此文件",
+      "cannot_decrypt_text": "密码可能错误，或文件已损坏"
     }
   },
   "access_wallet_keystore": {

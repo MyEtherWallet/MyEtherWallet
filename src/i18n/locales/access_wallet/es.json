@@ -83,7 +83,23 @@
       "banner_private_key": "Tu clave privada nunca se guarda. Tendrás que volver a introducirla si recargas la app o te desconectas.",
       "private_key_label": "Clave privada",
       "private_key_placeholder": "Pega tu clave privada",
-      "invalid_private_key": "Clave privada no válida: se esperan 64 caracteres hexadecimales"
+      "invalid_private_key": "Clave privada no válida: se esperan 64 caracteres hexadecimales",
+      "banner_keystore": "Tu archivo nunca se guarda. Tendrás que volver a cargarlo si recargas la app o te desconectas.",
+      "drop_title": "Suelta aquí tu archivo keystore",
+      "drop_or": "o",
+      "browse_files": "busca el archivo",
+      "invalid_file_title": "Archivo keystore no válido",
+      "invalid_file_hint": "Elige un archivo keystore .json, o",
+      "try_again": "inténtalo de nuevo",
+      "continue": "Continuar",
+      "change": "Cambiar",
+      "keystore_version": "Keystore v{version}",
+      "keystore_kind": "Keystore",
+      "password_label": "Contraseña",
+      "password_placeholder": "Contraseña del keystore",
+      "incorrect_password": "Contraseña incorrecta. Revísala e inténtalo de nuevo",
+      "cannot_decrypt_title": "No se puede descifrar este archivo",
+      "cannot_decrypt_text": "La contraseña puede ser incorrecta o el archivo está dañado"
     }
   },
   "access_wallet_keystore": {
