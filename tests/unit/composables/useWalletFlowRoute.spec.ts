@@ -225,4 +225,43 @@ describe('useWalletFlowUrlSync', () => {
     await flushPromises()
     expect(router.currentRoute.value.fullPath).toBe('/stocks')
   })
+
+  it('follows in-dialog steps so a refresh reopens where the user is', async () => {
+    const view = ref('keystore')
+    await setupSync('/stocks/access?type=keystore', 'access', ref(true), view)
+    view.value = 'default' // header Back
+    await nextTick()
+    await flushPromises()
+    expect(router.currentRoute.value.query.type).toBe('default')
+  })
+
+  it('persists sign-up and clears it again on Back', async () => {
+    const view = ref('default')
+    await setupSync(
+      '/stocks/access?type=default&walletTab=hardware',
+      'access',
+      ref(true),
+      view,
+    )
+    view.value = 'sign_up'
+    await nextTick()
+    await flushPromises()
+    expect(router.currentRoute.value.query).toMatchObject({
+      type: 'sign_up',
+      walletTab: 'hardware',
+    })
+    view.value = 'default'
+    await nextTick()
+    await flushPromises()
+    expect(router.currentRoute.value.query.type).toBe('default')
+  })
+
+  it('leaves the URL alone while the dialog is closed', async () => {
+    const view = ref('default')
+    await setupSync('/stocks', 'access', ref(false), view)
+    view.value = 'keystore'
+    await nextTick()
+    await flushPromises()
+    expect(router.currentRoute.value.fullPath).toBe('/stocks')
+  })
 })
