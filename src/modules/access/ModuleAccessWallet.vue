@@ -124,6 +124,7 @@ import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
 import { computed, watch } from 'vue'
 import { useWalletFlowUrlSync } from '@/composables/useWalletFlowRoute'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
@@ -204,22 +205,46 @@ const dialogWidth = computed(() => {
  -------------------------------*/
 const { selectedChain } = storeToRefs(accessStore)
 const chainsStore = useChainsStore()
-const { selectedChain: storeSelectedChain } = storeToRefs(chainsStore)
+const { selectedChain: storeSelectedChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
+const route = useRoute()
+const router = useRouter()
+
+/** The active network pill, remembered in the URL (?walletNetwork=) like the tab. */
+const routeChain = computed(() =>
+  chains.value.find(chain => chain.name === route.query.walletNetwork),
+)
 
 const updateChain = (chain: Chain) => {
   accessStore.setSelectedChain(chain)
   globalStore.setSelectedNetwork(chain.name)
+  if (route.meta.walletFlow === 'access') {
+    void router.replace({
+      query: { ...route.query, walletNetwork: chain.name },
+    })
+  }
 }
 
 watch(
   () => isOpenAccessDialog.value,
   (newVal: boolean) => {
-    if (newVal && storeSelectedChain.value) {
-      accessStore.setSelectedChain(storeSelectedChain.value)
+    const chain = routeChain.value ?? storeSelectedChain.value
+    if (newVal && chain) {
+      accessStore.setSelectedChain(chain)
     }
   },
 )
+
+// On a refresh the chain list can arrive after the dialog opened.
+watch(routeChain, chain => {
+  if (
+    isOpenAccessDialog.value &&
+    chain &&
+    chain.name !== selectedChain.value?.name
+  ) {
+    accessStore.setSelectedChain(chain)
+  }
+})
 
 // Callers open this dialog by store flag, so the URL is synced from here — the one
 // component that owns it. See useWalletFlowUrlSync.

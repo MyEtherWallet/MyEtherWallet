@@ -53,7 +53,9 @@ export const useWalletFlowRoute = () => {
   const closeWalletFlowRoute = () => {
     const query = { ...route.query }
     delete query.type
-    delete query.walletTab // the connect modal's tab, see WalletTabs
+    // The connect modal's remembered tab and network (WalletTabs / ModuleAccessWallet).
+    delete query.walletTab
+    delete query.walletNetwork
     return router.push({ name: hostRouteName.value, query })
   }
 

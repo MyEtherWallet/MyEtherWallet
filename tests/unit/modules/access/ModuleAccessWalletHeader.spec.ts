@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
@@ -43,6 +43,26 @@ const setCurrentView = vi.fn((view: string) => {
   currentView.value = view
 })
 const closeAccessDialog = vi.fn()
+const setSelectedChain = vi.fn()
+const CHAINS = [
+  { name: 'ETHEREUM', nameLong: 'Ethereum', type: 'EVM' },
+  { name: 'POLYGON', nameLong: 'Polygon', type: 'EVM' },
+]
+const route = reactive<{
+  query: Record<string, unknown>
+  meta: Record<string, unknown>
+}>({
+  query: {},
+  meta: { walletFlow: 'access' },
+})
+const replace = vi.fn(({ query }: { query: Record<string, unknown> }) => {
+  route.query = query
+})
+vi.mock('vue-router', async orig => ({
+  ...(await orig<typeof import('vue-router')>()),
+  useRoute: () => route,
+  useRouter: () => ({ replace }),
+}))
 vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({
     currentView,
@@ -53,12 +73,12 @@ vi.mock('@/stores/accessStore', () => ({
     connectAddressInfo: ref(null),
     selectedChain: ref(null),
     setCurrentView,
-    setSelectedChain: vi.fn(),
+    setSelectedChain,
     closeAccessDialog,
   }),
 }))
 vi.mock('@/stores/chainsStore', () => ({
-  useChainsStore: () => ({ selectedChain: ref(null) }),
+  useChainsStore: () => ({ selectedChain: ref(null), chains: ref(CHAINS) }),
 }))
 vi.mock('@/stores/globalStore', () => ({
   useGlobalStore: () => ({ setSelectedNetwork: vi.fn() }),
@@ -78,6 +98,8 @@ let wrapper: VueWrapper | undefined
 const mountAt = (view: string, step = 1) => {
   currentView.value = view
   accessStep.value = step
+  setSelectedChain.mockClear()
+  replace.mockClear()
   isOpenAccessDialog.value = true
   setCurrentView.mockClear()
   closeAccessDialog.mockClear()
@@ -138,5 +160,25 @@ describe('ModuleAccessWallet header', () => {
     expect(setCurrentView).not.toHaveBeenCalled()
     await back(w).trigger('click')
     expect(setCurrentView).toHaveBeenCalledWith('default')
+  })
+
+  it('remembers the picked network in the URL', async () => {
+    route.query = { type: 'default' }
+    const w = mountAt('default')
+    w.findComponent({ name: 'NetworkChips' }).vm.$emit('select', CHAINS[1])
+    expect(replace).toHaveBeenLastCalledWith({
+      query: { type: 'default', walletNetwork: 'POLYGON' },
+    })
+  })
+
+  it('restores the network from the URL when the dialog opens', async () => {
+    route.query = { type: 'default', walletNetwork: 'POLYGON' }
+    isOpenAccessDialog.value = false
+    const w = mountAt('default')
+    isOpenAccessDialog.value = false
+    await w.vm.$nextTick()
+    isOpenAccessDialog.value = true
+    await w.vm.$nextTick()
+    expect(setSelectedChain).toHaveBeenLastCalledWith(CHAINS[1])
   })
 })
