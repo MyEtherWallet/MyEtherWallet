@@ -107,10 +107,48 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(input.attributes('aria-invalid')).toBe('true')
     const describedby = input.attributes('aria-describedby')
     expect(describedby).toBeTruthy()
-    const feedback = w
-      .findAll('div')
-      .find(d => d.attributes('id') === describedby)
-    expect(feedback?.text()).toContain('Bad')
+    expect(w.get(`[id="${describedby}"]`).text()).toContain('Bad')
+  })
+
+  it('renders non-error feedback without flagging the field invalid', () => {
+    const w = mountInput({
+      feedback: { type: 'success', message: 'Address verified' },
+      modelValue: 'vitalik.eth',
+    })
+    const input = w.get('input')
+    expect(input.attributes('aria-invalid')).toBe('false')
+    const row = w.get(`[id="${input.attributes('aria-describedby')}"]`)
+    expect(row.text()).toContain('Address verified')
+    expect(row.classes()).toContain('text-text-success')
+    expect(row.attributes('role')).toBe('status')
+  })
+
+  it('feedback of type error flags the field and shows its own message', () => {
+    const w = mountInput({
+      feedback: { type: 'error', message: 'Taken' },
+      modelValue: 'x',
+    })
+    expect(w.text()).toContain('Taken')
+    expect(w.text()).not.toContain('Required')
+    expect(w.get('input').attributes('aria-invalid')).toBe('true')
+  })
+
+  it('empty feedback renders no row and no dangling aria-describedby', () => {
+    const w = mountInput({ feedback: { type: 'error', message: '' } })
+    const input = w.get('input')
+    expect(input.attributes('aria-invalid')).toBe('false')
+    expect(input.attributes('aria-describedby')).toBeUndefined()
+  })
+
+  it('errorMessage wins over feedback', () => {
+    const w = mountInput({
+      errorMessage: 'Bad',
+      feedback: { type: 'warning', message: 'Careful' },
+      modelValue: 'x',
+    })
+    expect(w.text()).toContain('Bad')
+    expect(w.text()).not.toContain('Careful')
+    expect(w.get('input').attributes('aria-invalid')).toBe('true')
   })
 
   it('disabled + filled keeps the float label in disabled grey; no feedback row', () => {
