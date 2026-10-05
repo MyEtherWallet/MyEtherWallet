@@ -60,7 +60,7 @@
                   :copy-value="i.contract"
                   width="w-6"
                   height="h-6"
-                  icon-class="w-3.5 h-3.5"
+                  size="xxs"
                   class="hoverNoBG"
                 />
               </div>

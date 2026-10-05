@@ -26,11 +26,20 @@
                 @click="toggleMenu"
               >
                 <span>{{ activeSortLabel }}</span>
-                <arrow-long-up-icon
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   v-if="sortDirection === 'asc'"
-                  class="w-4 h-4 shrink-0"
+                  class="shrink-0"
                 />
-                <arrow-long-down-icon v-else class="w-4 h-4 shrink-0" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="shrink-0"
+                />
               </button>
             </template>
             <template #menu-content="{ toggleMenu }">
@@ -52,14 +61,16 @@
                   @click="[$emit('setSort', option.value), toggleMenu()]"
                 >
                   {{ option.label }}
-                  <component
-                    :is="
+                  <AppIcon
+                    :name="
                       sortValue === option.value && sortDirection === 'asc'
-                        ? ArrowLongUpIcon
-                        : ArrowLongDownIcon
+                        ? 'arrow-long-up'
+                        : 'arrow-long-down'
                     "
+                    variant="filled"
+                    size="s"
                     v-if="sortValue === option.value"
-                    class="ml-auto w-5 h-5 text-text-brand"
+                    class="ml-auto text-text-brand"
                   />
                 </button>
               </div>
@@ -152,7 +163,6 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowLongUpIcon, ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
@@ -162,6 +172,7 @@ import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type {
   MarketSortValue,
   SortDirection,

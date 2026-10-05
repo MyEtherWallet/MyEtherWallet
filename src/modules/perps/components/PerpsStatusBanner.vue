@@ -16,9 +16,11 @@
       unreadable for body copy. Near-black text on the amber shell reads as an
       amber banner without failing contrast.
     -->
-    <exclamation-triangle-icon
-      class="w-5 h-5 shrink-0 text-text-warning"
+    <AppIcon
+      name="exclamation-triangle"
+      size="s"
       aria-hidden="true"
+      class="shrink-0 text-text-warning"
     />
     <p class="text-s-14">{{ $t('perps.status.unavailable') }}</p>
   </div>
@@ -26,9 +28,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { usePerpsStatus } from '../composables/usePerpsStatus'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { isServiceUnavailable } = usePerpsStatus()
 const { isPerpsRestricted } = usePerpsRestriction()

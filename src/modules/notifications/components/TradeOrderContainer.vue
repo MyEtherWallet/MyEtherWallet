@@ -59,7 +59,12 @@
           </p>
         </div>
       </div>
-      <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <div class="flex items-center gap-2">
         <app-token-logo
           v-if="order.toTokenIcon"
@@ -131,15 +136,37 @@
         </div>
       </div>
     </div>
+
+    <!-- Native order whose deposit landed but 1inch never accepted the order -->
+    <div v-if="order.status === 'unsubmitted'" class="mb-4">
+      <p class="text-s-12 text-text-error">
+        {{ $t('notifications_module.unsubmitted_note') }}
+      </p>
+      <app-base-button
+        size="small"
+        class="mt-2"
+        :disabled="recovering"
+        :is-loading="recovering"
+        @click="$emit('recover', order)"
+      >
+        {{
+          recovering
+            ? $t('notifications_module.recovering_funds')
+            : $t('notifications_module.recover_funds')
+        }}
+      </app-base-button>
+    </div>
     <div class="flex justify-space-between items-center">
       <app-btn-text
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <chevron-down-icon
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
           :class="[
-            'transition-transform w-3 h-3 ml-2',
+            'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
           ]"
         />
@@ -150,7 +177,7 @@
         @click="$emit('remove', order.hash)"
         class="ml-auto -mr-2"
       >
-        <trash-icon class="w-4 h-4" />
+        <AppIcon name="trash" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
 
@@ -200,6 +227,46 @@
           </span>
         </div>
 
+        <!-- Native escrow deposit -->
+        <div
+          v-if="order.depositTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.deposit_tx') }}</span
+          >
+          <a
+            :href="depositExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.depositTxHash) }}
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
+          </a>
+        </div>
+
+        <!-- Deposit reclaimed from an unsubmitted order -->
+        <div
+          v-if="order.recoveryTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.recovery_tx') }}</span
+          >
+          <a
+            :href="recoveryExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.recoveryTxHash) }}
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
+          </a>
+        </div>
+
         <!-- Filled Transaction -->
         <div
           v-if="order.status === 'filled' && order.fills.length > 0"
@@ -216,7 +283,7 @@
             class="font-mono hover:underline flex items-center gap-1 text-s-12"
           >
             {{ truncateHash(order.fills[0].txHash) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
       </div>
@@ -227,12 +294,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/solid'
 import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
@@ -240,20 +301,26 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // Props
 const props = defineProps<{
   order: SavedTradeOrder
   remainingTime: number
   seen?: boolean
+  /** A recovery transaction for this order is in flight. */
+  recovering?: boolean
 }>()
 
 // Emits
 defineEmits<{
   remove: [hash: string]
+  /** Reclaim the escrow deposit of an `unsubmitted` native order. */
+  recover: [order: SavedTradeOrder]
 }>()
 
 const { formatFiat } = useCurrency()
@@ -279,6 +346,7 @@ const statusBadgeClass = computed(() => {
       return 'bg-background-brand'
     case 'cancelled':
     case 'expired':
+    case 'unsubmitted':
       return 'bg-background-error'
     default:
       return 'bg-background-default-pressed'
@@ -289,6 +357,14 @@ const explorerLink = computed(() => {
   if (props.order.fills.length === 0) return ''
   return getTradeExplorerLink(props.order.chainId, props.order.fills[0].txHash)
 })
+
+const depositExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.depositTxHash ?? ''),
+)
+
+const recoveryExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.recoveryTxHash ?? ''),
+)
 
 // Format countdown time
 const formatCountdown = (seconds: number): string => {

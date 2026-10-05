@@ -202,7 +202,11 @@
               v-if="showNotice"
               class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-background-default"
             >
-              <lock-closed-icon class="w-6 h-6 text-text-brand shrink-0" />
+              <AppIcon
+                name="lock-closed"
+                variant="filled"
+                class="text-text-brand shrink-0"
+              />
               <div class="flex flex-col gap-0.5 flex-1">
                 <p :class="titleText">{{ noticeTitle }}</p>
                 <p :class="bodyText">{{ noticeDesc }}</p>
@@ -254,6 +258,7 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -262,11 +267,9 @@ import { useCountdown } from '@/modules/rwa_rewards/composables/useCountdown'
 import { useRewardSteps } from '@/modules/rwa_rewards/composables/useRewardSteps'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
-import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
-import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
@@ -298,7 +301,7 @@ const {
   rewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { t } = useI18n()
-const rewardsPageUrl = configs.REWARDS_PAGE_URL
+const rewardsPageUrl = 'https://myetherwallet.com/terms-of-service'
 
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are

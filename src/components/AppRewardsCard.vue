@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/24/outline'
 import type { RouteLocationRaw } from 'vue-router'
 import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
 import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
 import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     title: string
@@ -80,7 +80,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
         </p>
       </div>
       <span class="flex shrink-0 items-center p-2">
-        <ChevronRightIcon class="size-6 text-text-brand" />
+        <AppIcon name="chevron-right" class="text-text-brand" />
       </span>
     </div>
   </component>

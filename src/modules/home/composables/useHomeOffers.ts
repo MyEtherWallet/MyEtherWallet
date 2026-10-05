@@ -1,5 +1,5 @@
 import { shallowRef, type Ref, type Component } from 'vue'
-import { CurrencyDollarIcon } from '@heroicons/vue/24/solid'
+import { icons } from '@/components/icon/icons'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import type { WalletPanel } from '@/stores/walletMenuStore'
 
@@ -33,7 +33,7 @@ export function useHomeOffers(): {
     {
       id: 'buy',
       categoryKey: 'homePage.offers.category.buy',
-      icon: CurrencyDollarIcon,
+      icon: icons['currency-dollar'].filled,
       titleKey: 'homePage.offers.items.buy.title',
       highlightKey: 'homePage.offers.items.buy.highlight',
       gradient: 'blue',

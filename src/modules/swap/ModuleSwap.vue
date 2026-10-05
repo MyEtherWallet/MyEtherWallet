@@ -110,7 +110,12 @@
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-text-brand" />
+              <AppIcon
+                name="arrow-down"
+                variant="filled"
+                size="s"
+                class="text-text-brand"
+              />
             </div>
           </div>
 
@@ -257,9 +262,8 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
-
 // Components
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'

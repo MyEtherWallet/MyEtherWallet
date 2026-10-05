@@ -21,7 +21,12 @@
             >
           </p>
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="ml-auto mr-1"
+        />
       </div>
     </button>
 
@@ -78,7 +83,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { useDerivationStore } from '@/stores/derivationStore'

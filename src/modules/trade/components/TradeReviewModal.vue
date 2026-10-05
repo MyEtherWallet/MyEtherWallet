@@ -49,16 +49,26 @@
                   {{ $t('trade.review_modal.you_pay') }}
                 </p>
                 <div class="flex flex-col items-end min-w-0">
-                  <p
+                  <div
                     class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] flex items-center gap-1"
                   >
-                    {{ fromAmount }}
+                    {{ fromAmountDisplay }}
                     <app-token-symbol
                       :symbol="fromToken?.symbol || 'UNKNOWN'"
                       :address="tokenAddress(fromToken)"
                       class="!text-s-16 !font-semibold !leading-[22px]"
                     />
-                  </p>
+                    <app-tooltip
+                      v-if="isFromAmountTruncated"
+                      :text="fromAmountFull"
+                    >
+                      <AppIcon
+                        name="information-circle"
+                        size="xs"
+                        class="text-black cursor-pointer"
+                      />
+                    </app-tooltip>
+                  </div>
                   <p class="text-s-14 leading-[20px] text-text-subtle">
                     ≈ {{ currencySymbol }}{{ fromAmountFiat }}
                   </p>
@@ -166,8 +176,11 @@
                     ? $t('trade.review_modal.close_breakdown')
                     : $t('trade.review_modal.expand_breakdown')
                 }}
-                <chevron-down-icon
-                  class="w-4 h-4 transition-transform"
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="transition-transform"
                   :class="{ 'rotate-180': isBreakdownOpen }"
                 />
               </span>
@@ -215,13 +228,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppSpinner from '@/components/AppSpinner.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
@@ -236,6 +249,7 @@ import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/o
 import { useTradeBreakdown } from '@/modules/trade/composables/useTradeBreakdown'
 import { analytics, TradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
@@ -320,6 +334,28 @@ const toAmountUsd = computed(() => {
     .multipliedBy(props.toToken?.price || 0)
     .toFixed(2)
 })
+
+// Display capped at 6 decimals (rounded down); full value lives in the tooltip.
+const FROM_AMOUNT_MAX_DECIMALS = 6
+
+const fromAmountFull = computed(() =>
+  props.fromAmount ? new BigNumber(props.fromAmount).toFormat() : '0',
+)
+
+const isFromAmountTruncated = computed(
+  () =>
+    !!props.fromAmount &&
+    (new BigNumber(props.fromAmount).decimalPlaces() ?? 0) >
+      FROM_AMOUNT_MAX_DECIMALS,
+)
+
+const fromAmountDisplay = computed(() =>
+  props.fromAmount
+    ? new BigNumber(props.fromAmount)
+        .decimalPlaces(FROM_AMOUNT_MAX_DECIMALS, BigNumber.ROUND_DOWN)
+        .toFormat()
+    : '0',
+)
 
 const fromAmountFiat = computed(() => {
   if (!props.fromAmount) return '0.00'

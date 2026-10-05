@@ -4,13 +4,7 @@ import { useIntervalFn, useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { EyeIcon, EyeSlashIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ArrowRightIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -183,10 +177,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
             class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
             @click="toggleHideBalances"
           >
-            <component
-              :is="hideBalances ? EyeSlashIcon : EyeIcon"
-              class="size-6"
-            />
+            <AppIcon :name="hideBalances ? 'eye-slash' : 'eye'" />
           </button>
         </AppTooltip>
         <AppTooltip :text="t('homePage.hero.refreshTooltip')">
@@ -197,8 +188,8 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
             class="hoverNoBG flex size-10 items-center justify-center rounded-3xl"
             @click="onRefresh"
           >
-            <ArrowPathIcon
-              class="size-6"
+            <AppIcon
+              name="arrow-path"
               :class="{ 'animate-spin': isRefreshing }"
             />
           </button>
@@ -319,7 +310,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           @click="openPanel('purchase')"
         >
           {{ t('homePage.hero.buyCrypto') }}
-          <CurrencyDollarIcon class="size-[22px]" />
+          <AppIcon name="currency-dollar" size="m" variant="filled" />
         </button>
       </div>
 
@@ -341,9 +332,10 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           class="flex items-center gap-1 text-heading-base"
           data-test="hero-today"
         >
-          <component
-            :is="isUp ? ArrowUpIcon : ArrowDownIcon"
-            class="size-[22px]"
+          <AppIcon
+            :name="isUp ? 'arrow-up' : 'arrow-down'"
+            variant="filled"
+            size="m"
             :class="
               hideBalances
                 ? 'text-text-placeholder'
@@ -371,7 +363,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           @click="goToPortfolio"
         >
           {{ t('homePage.hero.goToPortfolio') }}
-          <ArrowRightIcon class="size-[22px]" />
+          <AppIcon name="arrow-right" size="m" variant="filled" />
         </button>
       </div>
     </template>

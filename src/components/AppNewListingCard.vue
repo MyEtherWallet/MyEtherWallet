@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/20/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface Props {
   logo?: string
   symbol: string
@@ -38,7 +36,7 @@ const up = computed(() => (props.change ?? 0) >= 0)
 const changeColor = computed(() =>
   up.value ? 'text-text-success' : 'text-text-error',
 )
-const changeArrowIcon = computed(() => (up.value ? ArrowUpIcon : ArrowDownIcon))
+const changeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
 const changeText = computed(() =>
   props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
 )
@@ -72,8 +70,14 @@ const changeText = computed(() =>
         class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
         @click.stop="$emit('toggle-favorite')"
       >
-        <StarSolidIcon v-if="favorite" class="size-5 text-text-brand" />
-        <StarOutlineIcon v-else class="size-5 text-text-subtle" />
+        <AppIcon
+          name="star"
+          variant="filled"
+          size="s"
+          v-if="favorite"
+          class="text-text-brand"
+        />
+        <AppIcon name="star" size="s" v-else class="text-text-subtle" />
       </button>
     </div>
 
@@ -121,9 +125,10 @@ const changeText = computed(() =>
           <p class="text-label-sm" :class="changeColor">
             {{ changeText }}
           </p>
-          <component
-            :is="changeArrowIcon"
-            class="size-4"
+          <AppIcon
+            :name="changeArrowIcon"
+            variant="filled"
+            size="xxs"
             :class="changeColor"
           />
         </div>
