@@ -5,7 +5,7 @@
     :aria-label="t('access_wallet.networks.label')"
   >
     <AppChip
-      v-for="chain in pinnedChains"
+      v-for="chain in chipChains"
       :key="chain.name"
       data-testid="network-chip"
       surface="alternative"
@@ -26,23 +26,7 @@
       @update:open="search = ''"
     >
       <template #menu-button="{ toggleMenu }">
-        <AppChip
-          v-if="extraChain"
-          data-testid="network-more"
-          surface="alternative"
-          :label="extraChain.nameLong"
-          selected
-          show-icon
-          aria-pressed="true"
-          class="shrink-0"
-          @click="toggleMenu"
-        >
-          <template #avatar="{ size }">
-            <AppAvatar type="network" :size="size" :chain="extraChain.name" />
-          </template>
-        </AppChip>
         <AppBtnIcon
-          v-else
           data-testid="network-more"
           variant="filled"
           size="m"
@@ -97,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppChip from '@/components/chip/AppChip.vue'
@@ -125,8 +109,21 @@ const pinnedChains = computed(() =>
 const otherChains = computed(() =>
   chains.value.filter(chain => !PINNED_CHAIN_NAMES.includes(chain.name)),
 )
-const extraChain = computed(() =>
-  otherChains.value.find(chain => chain.name === props.selected?.name),
+// A network picked from the menu stays as a chip until another one replaces it,
+// so switching to a pinned chain and back doesn't make it disappear.
+const addedChain = ref<Chain>()
+watch(
+  () => props.selected?.name,
+  name => {
+    const extra = otherChains.value.find(chain => chain.name === name)
+    if (extra) addedChain.value = extra
+  },
+  { immediate: true },
+)
+const chipChains = computed(() =>
+  addedChain.value
+    ? [...pinnedChains.value, addedChain.value]
+    : pinnedChains.value,
 )
 
 const search = ref('')

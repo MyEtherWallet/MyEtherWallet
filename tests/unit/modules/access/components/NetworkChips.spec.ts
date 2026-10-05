@@ -80,13 +80,29 @@ describe('NetworkChips', () => {
     expect(w.emitted('select')?.[0]).toEqual([CHAINS[4]])
   })
 
-  it('shows the extra chain as a selected chip', () => {
+  it('shows the extra chain as a selected chip and keeps the "+" button', () => {
     const w = mountChips(CHAINS[4])
+    expect(chips(w).map(c => c.text())).toEqual([
+      'Ethereum',
+      'Bitcoin',
+      'BNB Smart Chain',
+      'Arbitrum',
+      'Polygon',
+    ])
     expect(
-      w.find('[data-testid="network-chip"][aria-pressed="true"]').exists(),
-    ).toBe(false)
-    const more = w.get('[data-testid="network-more"]')
-    expect(more.text()).toBe('Polygon')
-    expect(more.attributes('aria-pressed')).toBe('true')
+      w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
+    ).toBe('Polygon')
+    expect(w.get('[data-testid="network-more"]').text()).toBe('')
+  })
+
+  it('keeps an added network after selecting a pinned one', async () => {
+    const w = mountChips(CHAINS[4])
+    await w.setProps({ selected: CHAINS[0] })
+    expect(chips(w).map(c => c.text())).toContain('Polygon')
+    expect(
+      w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
+    ).toBe('Ethereum')
+    await chips(w)[4].trigger('click')
+    expect(w.emitted('select')?.at(-1)).toEqual([CHAINS[4]])
   })
 })
