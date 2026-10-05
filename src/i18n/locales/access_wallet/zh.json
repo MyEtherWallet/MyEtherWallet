@@ -72,6 +72,19 @@
       "more": "更多网络",
       "search": "搜索网络",
       "not_found": "未找到网络"
+    },
+    "login_title": "登录/注册",
+    "sign_up": {
+      "cta": "注册",
+      "google": "使用 Google 继续",
+      "or": "或",
+      "email_label": "电子邮箱",
+      "email_placeholder": "you@email.com",
+      "continue": "继续",
+      "protected_by": "安全保障：",
+      "download_official": "下载 MEW 官方钱包",
+      "ios_android": "iOS 和 Android",
+      "browser_extension": "浏览器扩展"
     }
   },
   "access_wallet_keystore": {

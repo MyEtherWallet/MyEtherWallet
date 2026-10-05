@@ -72,6 +72,19 @@
       "more": "More networks",
       "search": "Search networks",
       "not_found": "No networks found"
+    },
+    "login_title": "Log in/Sign Up",
+    "sign_up": {
+      "cta": "Sign Up",
+      "google": "Continue with Google",
+      "or": "or",
+      "email_label": "Email",
+      "email_placeholder": "you@email.com",
+      "continue": "Continue",
+      "protected_by": "Protected by",
+      "download_official": "Download MEW Official wallets",
+      "ios_android": "iOS & Android",
+      "browser_extension": "Browser extension"
     }
   },
   "access_wallet_keystore": {
