@@ -51,13 +51,12 @@ const options = (w: VueWrapper) =>
   w.findAll('[data-testid="network-option"]').map(o => o.text())
 
 describe('NetworkChips', () => {
-  it('renders the four pinned chains with the selected one pressed', () => {
+  it('renders the three pinned chains with the selected one pressed', () => {
     const w = mountChips()
     expect(chips(w).map(c => c.text())).toEqual([
       'Ethereum',
       'Bitcoin',
       'BNB Smart Chain',
-      'Arbitrum',
     ])
     expect(
       w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
@@ -73,7 +72,7 @@ describe('NetworkChips', () => {
   it('lists only the other chains in the menu and filters by search', async () => {
     const w = mountChips()
     await w.get('[data-testid="network-more"]').trigger('click')
-    expect(options(w)).toEqual(['Polygon', 'Base'])
+    expect(options(w)).toEqual(['Arbitrum', 'Polygon', 'Base'])
     await w.get('[data-testid="network-menu"] input').setValue('pol')
     expect(options(w)).toEqual(['Polygon'])
     await w.get('[data-testid="network-option"]').trigger('click')
@@ -86,7 +85,6 @@ describe('NetworkChips', () => {
       'Ethereum',
       'Bitcoin',
       'BNB Smart Chain',
-      'Arbitrum',
       'Polygon',
     ])
     expect(
@@ -102,7 +100,7 @@ describe('NetworkChips', () => {
     expect(
       w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
     ).toBe('Ethereum')
-    await chips(w)[4].trigger('click')
+    await chips(w)[3].trigger('click')
     expect(w.emitted('select')?.at(-1)).toEqual([CHAINS[4]])
   })
 })

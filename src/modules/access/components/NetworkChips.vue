@@ -93,8 +93,8 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import type { Chain } from '@/mew_api/types'
 
-/** Chains always shown as chips (Figma: Ethereum, Bitcoin, Binance, Arbitrum). */
-const PINNED_CHAIN_NAMES = ['ETHEREUM', 'BITCOIN', 'BSC', 'ARBITRUM']
+/** Chains always shown as chips; everything else lives in the "+" menu. */
+const PINNED_CHAIN_NAMES = ['ETHEREUM', 'BITCOIN', 'BSC']
 
 const props = defineProps<{ selected: Chain | null }>()
 const emit = defineEmits<{ select: [chain: Chain] }>()
