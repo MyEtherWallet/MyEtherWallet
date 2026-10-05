@@ -99,7 +99,20 @@
       "password_placeholder": "Keystore password",
       "incorrect_password": "Incorrect password. Check it and try again",
       "cannot_decrypt_title": "Can't decrypt this file",
-      "cannot_decrypt_text": "The password may be wrong, or the file is damaged"
+      "cannot_decrypt_text": "The password may be wrong, or the file is damaged",
+      "banner_phrase": "Your phrase is never stored. You'll re-enter it if you reload the app or disconnect and connect again.",
+      "phrase_placeholder": "Enter your recovery phrase",
+      "phrase_helper": "Use 12, 15, 18, 21 or 24 words, separated by single spaces",
+      "invalid_phrase": "Not a valid phrase — check the word order",
+      "add_passphrase": "Add passphrase",
+      "passphrase": "Passphrase",
+      "network": "Network",
+      "derivation_path": "Derivation path",
+      "search_paths": "Search by label or path",
+      "no_paths": "No paths found",
+      "balances_error": "Couldn't load balances — you can still connect",
+      "retry": "Retry",
+      "show_more": "Show more addresses"
     }
   },
   "access_wallet_keystore": {

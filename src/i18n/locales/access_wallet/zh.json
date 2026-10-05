@@ -99,7 +99,20 @@
       "password_placeholder": "Keystore 密码",
       "incorrect_password": "密码错误，请检查后重试",
       "cannot_decrypt_title": "无法解密此文件",
-      "cannot_decrypt_text": "密码可能错误，或文件已损坏"
+      "cannot_decrypt_text": "密码可能错误，或文件已损坏",
+      "banner_phrase": "您的助记词不会被存储。如果重新加载应用或断开后重新连接，需要重新输入。",
+      "phrase_placeholder": "输入您的助记词",
+      "phrase_helper": "使用 12、15、18、21 或 24 个单词，以单个空格分隔",
+      "invalid_phrase": "助记词无效，请检查单词顺序",
+      "add_passphrase": "添加密码短语",
+      "passphrase": "密码短语",
+      "network": "网络",
+      "derivation_path": "派生路径",
+      "search_paths": "按名称或路径搜索",
+      "no_paths": "未找到路径",
+      "balances_error": "无法加载余额，但仍可连接",
+      "retry": "重试",
+      "show_more": "显示更多地址"
     }
   },
   "access_wallet_keystore": {

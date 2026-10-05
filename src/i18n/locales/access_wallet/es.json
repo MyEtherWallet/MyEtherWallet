@@ -99,7 +99,20 @@
       "password_placeholder": "Contraseña del keystore",
       "incorrect_password": "Contraseña incorrecta. Revísala e inténtalo de nuevo",
       "cannot_decrypt_title": "No se puede descifrar este archivo",
-      "cannot_decrypt_text": "La contraseña puede ser incorrecta o el archivo está dañado"
+      "cannot_decrypt_text": "La contraseña puede ser incorrecta o el archivo está dañado",
+      "banner_phrase": "Tu frase nunca se guarda. Tendrás que volver a introducirla si recargas la app o te desconectas y vuelves a conectarte.",
+      "phrase_placeholder": "Introduce tu frase de recuperación",
+      "phrase_helper": "Usa 12, 15, 18, 21 o 24 palabras separadas por un solo espacio",
+      "invalid_phrase": "Frase no válida: revisa el orden de las palabras",
+      "add_passphrase": "Añadir passphrase",
+      "passphrase": "Passphrase",
+      "network": "Red",
+      "derivation_path": "Ruta de derivación",
+      "search_paths": "Buscar por nombre o ruta",
+      "no_paths": "No se encontraron rutas",
+      "balances_error": "No se pudieron cargar los saldos; aun así puedes conectarte",
+      "retry": "Reintentar",
+      "show_more": "Mostrar más direcciones"
     }
   },
   "access_wallet_keystore": {
