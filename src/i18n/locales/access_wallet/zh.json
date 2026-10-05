@@ -59,7 +59,14 @@
       "connect_request_pending": "连接请求已在处理中，请检查您的钱包扩展程序",
       "network_not_supported": "您的钱包不支持所选网络。请切换到受支持的网络或在钱包中启用它。"
     },
-    "official": "官方"
+    "official": "官方",
+    "tabs": {
+      "label": "连接方式",
+      "popular": "热门",
+      "hardware": "硬件",
+      "mobile": "移动端",
+      "advanced": "高级"
+    }
   },
   "access_wallet_keystore": {
     "title": "使用 Keystore 文件访问钱包",

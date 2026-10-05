@@ -59,7 +59,14 @@
       "connect_request_pending": "Ya hay una solicitud de conexión pendiente, revisa la extensión de tu billetera",
       "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera."
     },
-    "official": "Oficial"
+    "official": "Oficial",
+    "tabs": {
+      "label": "Métodos de conexión",
+      "popular": "Populares",
+      "hardware": "Hardware",
+      "mobile": "Móvil",
+      "advanced": "Avanzado"
+    }
   },
   "access_wallet_keystore": {
     "title": "Acceder a la billetera con archivo Keystore",
