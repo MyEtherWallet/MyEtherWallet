@@ -153,7 +153,9 @@
     "get_wallet": "Obtener una billetera",
     "scan_qr_code": "Escanea el código QR con { walletName } para conectar.",
     "or_copy_link": "O copia el enlace",
-    "need_help": "Cómo conectar tu billetera"
+    "need_help": "Cómo conectar tu billetera",
+    "need_help_short": "¿Necesitas ayuda?",
+    "go_to_help_center": "Ir al Centro de ayuda"
   },
   "web3_wallet": {
     "opening_wallet": "Abriendo { walletName }",

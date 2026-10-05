@@ -167,7 +167,12 @@ const goBack = () => {
 }
 
 /** Views built on the new onboarding design (white surface, no help link). */
-const NEW_VIEWS: WalletView[] = ['default', 'sign_up', 'download_mobile']
+const NEW_VIEWS: WalletView[] = [
+  'default',
+  'sign_up',
+  'download_mobile',
+  'wallet_connect',
+]
 const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
 
 // Existing method views keep their widths until MEW-2338 restyles them.
@@ -177,6 +182,7 @@ const dialogWidth = computed(() => {
     case 'sign_up':
       return 'max-w-[560px]'
     case 'download_mobile':
+    case 'wallet_connect':
       return 'max-w-[480px]'
     case 'mnemonic':
     case 'keystore':

@@ -153,7 +153,9 @@
     "get_wallet": "获取钱包",
     "scan_qr_code": "使用 { walletName } 扫描二维码以连接。",
     "or_copy_link": "或复制链接",
-    "need_help": "如何连接您的钱包"
+    "need_help": "如何连接您的钱包",
+    "need_help_short": "需要帮助？",
+    "go_to_help_center": "前往帮助中心"
   },
   "web3_wallet": {
     "opening_wallet": "正在打开 { walletName }",
