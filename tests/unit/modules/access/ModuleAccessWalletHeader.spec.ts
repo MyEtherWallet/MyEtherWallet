@@ -38,6 +38,7 @@ vi.mock('pinia', async orig => ({
 
 const currentView = ref('default')
 const isOpenAccessDialog = ref(true)
+const accessStep = ref(1)
 const setCurrentView = vi.fn((view: string) => {
   currentView.value = view
 })
@@ -46,6 +47,7 @@ vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({
     currentView,
     isOpenAccessDialog,
+    accessStep,
     clickedWeb3Wallet: ref(undefined),
     addressSavedInfo: ref(null),
     connectAddressInfo: ref(null),
@@ -73,8 +75,9 @@ const i18n = createI18n({
 })
 
 let wrapper: VueWrapper | undefined
-const mountAt = (view: string) => {
+const mountAt = (view: string, step = 1) => {
   currentView.value = view
+  accessStep.value = step
   isOpenAccessDialog.value = true
   setCurrentView.mockClear()
   closeAccessDialog.mockClear()
@@ -115,5 +118,25 @@ describe('ModuleAccessWallet header', () => {
     expect(isOpenAccessDialog.value).toBe(false)
     expect(setCurrentView).toHaveBeenCalledWith('default')
     expect(closeAccessDialog).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['keystore', 1, 'access_wallet.advanced.keystore_title'],
+    ['keystore', 2, 'access_wallet.advanced.password_title'],
+    ['mnemonic', 1, 'access_wallet.advanced.phrase_title'],
+    ['mnemonic', 2, 'access_wallet.advanced.address_title'],
+    ['private_key', 1, 'access_wallet.advanced.private_key_title'],
+  ])('titles %s step %i', (view, step, key) => {
+    const w = mountAt(view, step)
+    expect(title(w)).toBe(key)
+  })
+
+  it('goes back to step 1 inside an advanced flow before leaving it', async () => {
+    const w = mountAt('keystore', 2)
+    await back(w).trigger('click')
+    expect(accessStep.value).toBe(1)
+    expect(setCurrentView).not.toHaveBeenCalled()
+    await back(w).trigger('click')
+    expect(setCurrentView).toHaveBeenCalledWith('default')
   })
 })

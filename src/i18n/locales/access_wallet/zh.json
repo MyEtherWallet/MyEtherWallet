@@ -72,6 +72,13 @@
       "get_ios": "在 iOS 上获取",
       "get_android": "在 Android 上获取",
       "qr_label": "用于下载 {platform} 版 MEW Mobile 的二维码"
+    },
+    "advanced": {
+      "keystore_title": "使用 Keystore 连接",
+      "password_title": "输入密码",
+      "phrase_title": "使用助记词连接",
+      "address_title": "选择地址",
+      "private_key_title": "使用私钥连接"
     }
   },
   "access_wallet_keystore": {

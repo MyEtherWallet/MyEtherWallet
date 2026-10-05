@@ -134,6 +134,7 @@ const accessStore = useAccessStore()
 const {
   isOpenAccessDialog,
   currentView,
+  accessStep,
   clickedWeb3Wallet,
   addressSavedInfo,
   connectAddressInfo,
@@ -163,6 +164,10 @@ const closeDialog = () => {
 }
 
 const goBack = () => {
+  if (accessStep.value > 1) {
+    accessStep.value -= 1
+    return
+  }
   accessStore.setCurrentView(parentView(currentView.value))
 }
 
@@ -172,22 +177,23 @@ const NEW_VIEWS: WalletView[] = [
   'sign_up',
   'download_mobile',
   'wallet_connect',
+  'keystore',
+  'mnemonic',
+  'private_key',
 ]
 const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
 
-// Existing method views keep their widths until MEW-2338 restyles them.
 const dialogWidth = computed(() => {
   switch (currentView.value) {
     case 'default':
     case 'sign_up':
+    case 'keystore':
+    case 'private_key':
       return 'max-w-[560px]'
     case 'download_mobile':
     case 'wallet_connect':
-      return 'max-w-[480px]'
     case 'mnemonic':
-    case 'keystore':
-    case 'private_key':
-      return 'max-w-[800px]'
+      return 'max-w-[480px]'
     default:
       return '!max-w-[900px]'
   }
@@ -222,6 +228,19 @@ useWalletFlowUrlSync(isOpenAccessDialog, 'access', currentView)
 /**-------------------------------
  * UI Elements
  -------------------------------*/
+/** Header title per step for the advanced (multi-step) access flows. */
+const ADVANCED_TITLES: Partial<Record<WalletView, string[]>> = {
+  keystore: [
+    'access_wallet.advanced.keystore_title',
+    'access_wallet.advanced.password_title',
+  ],
+  mnemonic: [
+    'access_wallet.advanced.phrase_title',
+    'access_wallet.advanced.address_title',
+  ],
+  private_key: ['access_wallet.advanced.private_key_title'],
+}
+
 const getTitle = computed(() => {
   if (currentView.value === 'default' || currentView.value === 'sign_up') {
     return t('access_wallet.login_title')
@@ -229,6 +248,8 @@ const getTitle = computed(() => {
   if (currentView.value === 'download_mobile') {
     return t('access_wallet.download_mobile.title')
   }
+  const stepTitle = ADVANCED_TITLES[currentView.value]?.[accessStep.value - 1]
+  if (stepTitle) return t(stepTitle)
   let method = ''
   switch (currentView.value) {
     case 'keystore':

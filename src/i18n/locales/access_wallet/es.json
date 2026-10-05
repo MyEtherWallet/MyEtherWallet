@@ -72,6 +72,13 @@
       "get_ios": "Obtener en iOS",
       "get_android": "Obtener en Android",
       "qr_label": "Código QR para descargar MEW Mobile para {platform}"
+    },
+    "advanced": {
+      "keystore_title": "Conectar con keystore",
+      "password_title": "Introduce tu contraseña",
+      "phrase_title": "Conectar con frase de recuperación",
+      "address_title": "Elige una dirección",
+      "private_key_title": "Conectar con clave privada"
     }
   },
   "access_wallet_keystore": {
