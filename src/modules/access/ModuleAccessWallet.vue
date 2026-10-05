@@ -52,17 +52,10 @@
     </template>
     <template #content>
       <div class="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
-        <!-- Min height keeps short tabs (Hardware, Advanced, empty search) from
-             collapsing the modal; the footer sits at the bottom of it. -->
-        <div
-          v-if="currentView === 'default'"
-          class="flex min-h-[480px] flex-col gap-4"
-        >
+        <div v-if="currentView === 'default'" class="flex flex-col gap-4">
           <NetworkChips :selected="selectedChain" @select="updateChain" />
           <WalletTabs />
-          <div
-            class="sticky bottom-0 mt-auto flex flex-col gap-4 bg-white pt-2"
-          >
+          <div class="sticky bottom-0 flex flex-col gap-4 bg-white pt-2">
             <AppDivider />
             <AccessCell :title="$t('common.dont_have_wallet')">
               <template #avatar>
