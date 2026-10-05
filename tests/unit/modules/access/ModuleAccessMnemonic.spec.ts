@@ -23,8 +23,18 @@ const h = vi.hoisted(() => ({
   track: vi.fn(),
   getWallet: vi.fn(),
 }))
+const built = vi.hoisted(() => ({
+  evm: [] as Record<string, unknown>[],
+  btc: [] as Record<string, unknown>[],
+}))
 const accessStep = ref(1)
-const selectedChain = ref<typeof ETH | null>(ETH)
+const selectedChain = ref<{
+  name: string
+  nameLong: string
+  type: string
+  chainID?: string
+  currencyName?: string
+} | null>(ETH)
 const selectedDerivation = ref({
   label: 'Ethereum',
   path: "m/44'/60'/0'/0",
@@ -81,12 +91,20 @@ vi.mock('@/modules/access/common/bip44', () => ({
 }))
 vi.mock('@/providers/ethereum/mnemonicToWallet', () => ({
   default: class {
+    constructor(options: Record<string, unknown>) {
+      built.evm.push(options)
+    }
     getWallet = h.getWallet
   },
 }))
 vi.mock('@/providers/bitcoin/mnemonicToBitcoinWallet', () => ({
   default: class {
-    static getSupportedPaths = () => []
+    static getSupportedPaths = () => [
+      { label: 'Bitcoin', path: "m/84'/0'/0'/0", type: 'BITCOIN' },
+    ]
+    constructor(options: Record<string, unknown>) {
+      built.btc.push(options)
+    }
     getWallet = h.getWallet
   },
 }))
@@ -130,6 +148,14 @@ const rows = (w: VueWrapper) => w.findAll('[data-testid="address-row"]')
 
 beforeEach(() => {
   accessStep.value = 1
+  selectedChain.value = ETH
+  selectedDerivation.value = {
+    label: 'Ethereum',
+    path: "m/44'/60'/0'/0",
+    type: 'EVM',
+  }
+  built.evm.length = 0
+  built.btc.length = 0
   Object.values(h).forEach(fn => fn.mockReset())
   h.getWallet.mockImplementation(async (i: number) => ({
     getAddress: async () => address(i),
@@ -205,5 +231,68 @@ describe('ModuleAccessMnemonic', () => {
     expect(h.getWallet).toHaveBeenLastCalledWith(2)
     expect(h.setWallet).toHaveBeenCalledTimes(1)
     expect(h.closeAccessDialog).toHaveBeenCalled()
+  })
+
+  it('ignores a typed passphrase once the toggle is off', async () => {
+    const w = mountIt()
+    await w.get('[role="switch"]').trigger('click')
+    await w.get('input[type="password"]').setValue('foo')
+    await w.get('[role="switch"]').trigger('click')
+    await toStep2(w)
+    expect(built.evm.at(-1)).toMatchObject({ extraWord: '' })
+  })
+
+  it('submits the phrase with Enter', async () => {
+    const w = mountIt()
+    await w.get('textarea').setValue(VALID_PHRASE)
+    await w.get('textarea').trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+    expect(accessStep.value).toBe(2)
+  })
+
+  it('submits from the passphrase input with Enter', async () => {
+    const w = mountIt()
+    await w.get('textarea').setValue(VALID_PHRASE)
+    await w.get('[role="switch"]').trigger('click')
+    const passphrase = w.get('input[type="password"]')
+    await passphrase.setValue('salt')
+    await passphrase.trigger('keydown', { key: 'Enter' })
+    await passphrase.trigger('keyup', { key: 'Enter' })
+    await flushPromises()
+    expect(accessStep.value).toBe(2)
+    expect(built.evm.at(-1)).toMatchObject({ extraWord: 'salt' })
+  })
+
+  it('re-derives on a new path and blocks Connect until it has', async () => {
+    vi.useFakeTimers()
+    const w = mountIt()
+    await toStep2(w)
+    selectedDerivation.value = {
+      label: 'Ledger',
+      path: "m/44'/60'/0'",
+      type: 'EVM',
+    }
+    await flushPromises()
+    expect(
+      w.get('[data-testid="phrase-connect"]').attributes('disabled'),
+    ).toBeDefined()
+    await vi.advanceTimersByTimeAsync(600)
+    await flushPromises()
+    expect(built.evm.at(-1)).toMatchObject({ basePath: "m/44'/60'/0'" })
+    expect(
+      w.get('[data-testid="phrase-connect"]').attributes('disabled'),
+    ).toBeUndefined()
+  })
+
+  it('builds the Bitcoin wallet for a non-EVM chain, as before', async () => {
+    selectedChain.value = {
+      name: 'SOLANA',
+      nameLong: 'Solana',
+      type: 'SOLANA',
+    }
+    const w = mountIt()
+    await toStep2(w)
+    expect(built.btc).toHaveLength(1)
+    expect(built.evm).toHaveLength(0)
   })
 })

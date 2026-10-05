@@ -10,6 +10,7 @@
       />
       <AppTextField
         v-model="mnemonic"
+        @keydown.enter.prevent="unlockWallet"
         data-private
         :placeholder="$t('access_wallet.advanced.phrase_placeholder')"
         :error-message="
@@ -33,6 +34,8 @@
       <AppInput
         v-if="hasExtraWord"
         v-model="extraWord"
+        :submit-disabled="!isValid"
+        @enter="unlockWallet"
         data-private
         type="password"
         :label="$t('access_wallet.advanced.passphrase')"
@@ -100,7 +103,7 @@
       <AppBaseButton
         data-testid="phrase-connect"
         class="w-full"
-        :disabled="!walletList.length"
+        :disabled="!walletList.length || derivationPending"
         :is-loading="isUnlockingWallet"
         @click="access"
       >
@@ -230,7 +233,13 @@ const isLoadingWalletList = ref(false)
 const balancesError = ref(false)
 const selectedIndex = ref(0)
 /** Path the current wallet was derived with, so the watcher only rebuilds on a real change. */
-let builtPath = ''
+const builtFor = ref({ chain: '', path: '' })
+/** The picked chain or path hasn't been derived yet (re-derive is debounced). */
+const derivationPending = computed(
+  () =>
+    builtFor.value.chain !== (selectedChain.value?.name ?? '') ||
+    builtFor.value.path !== (selectedDerivation.value?.path ?? ''),
+)
 
 const unlockWallet = () => {
   if (!isValid.value) return
@@ -239,13 +248,18 @@ const unlockWallet = () => {
     mnemonic: formattedMnemonic.value,
     basePath: selectedDerivation.value?.path || ethereumPath.path,
     chainId: selectedChain.value?.chainID ?? '1',
-    extraWord: extraWord.value,
+    // A passphrase typed and then toggled off must not leak into derivation.
+    extraWord: hasExtraWord.value ? extraWord.value : '',
     chainName: selectedChain.value?.name || 'ETHEREUM',
   }
-  wallet.value = isBitcoin.value
-    ? new MnemonicToBitcoinWallet(options)
-    : new MnemonicToWallet(options)
-  builtPath = options.basePath
+  wallet.value =
+    selectedChain.value?.type === 'EVM'
+      ? new MnemonicToWallet(options)
+      : new MnemonicToBitcoinWallet(options)
+  builtFor.value = {
+    chain: selectedChain.value?.name ?? '',
+    path: selectedDerivation.value?.path ?? '',
+  }
   accessStep.value = 2
   loadAddresses(true)
 }
@@ -314,13 +328,16 @@ watchDebounced(
   () => [selectedChain.value?.name, selectedDerivation.value?.path] as const,
   ([chainName, path], [oldChainName]) => {
     if (accessStep.value !== 2 || !wallet.value) return
-    if (path !== builtPath) {
+    if (path !== builtFor.value.path) {
       unlockWallet() // new derivation path → rebuild the wallet
     } else if (chainName !== oldChainName) {
       syncPathToChain()
       // Same family keeps the path, so only balances change; a family switch
       // changed the path above and the next run of this watcher rebuilds.
-      if (selectedDerivation.value?.path === builtPath) loadAddresses(true)
+      if (selectedDerivation.value?.path === builtFor.value.path) {
+        builtFor.value = { ...builtFor.value, chain: chainName ?? '' }
+        loadAddresses(true)
+      }
     }
   },
   { debounce: 500 },
