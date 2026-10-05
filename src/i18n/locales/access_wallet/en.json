@@ -100,7 +100,6 @@
       "passphrase": "Passphrase",
       "network": "Network",
       "derivation_path": "Derivation path",
-      "search_paths": "Search by label or path",
       "no_paths": "No paths found",
       "balances_error": "Couldn't load balances — you can still connect",
       "retry": "Retry",

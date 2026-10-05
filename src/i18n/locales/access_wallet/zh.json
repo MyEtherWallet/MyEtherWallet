@@ -100,7 +100,6 @@
       "passphrase": "密码短语",
       "network": "网络",
       "derivation_path": "派生路径",
-      "search_paths": "按名称或路径搜索",
       "no_paths": "未找到路径",
       "balances_error": "无法加载余额，但仍可连接",
       "retry": "重试",

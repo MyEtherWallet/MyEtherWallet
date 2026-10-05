@@ -12,7 +12,7 @@
       :title="title"
       :description="description"
       size="m"
-      no-wrap
+      :no-wrap="truncate"
       class="grow min-w-0"
     />
     <slot name="trailing" />
@@ -31,7 +31,9 @@ withDefaults(
     title: string
     description?: string
     as?: 'div' | 'button' | 'a'
+    /** Single-line title/description with ellipsis (e.g. long file names). */
+    truncate?: boolean
   }>(),
-  { description: undefined, as: 'div' },
+  { description: undefined, as: 'div', truncate: false },
 )
 </script>

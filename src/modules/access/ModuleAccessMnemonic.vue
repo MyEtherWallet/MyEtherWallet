@@ -76,7 +76,7 @@
           :label="$t('access_wallet.advanced.derivation_path')"
           :items="paths"
           :model-value="selectedDerivation"
-          :search-placeholder="$t('access_wallet.advanced.search_paths')"
+          :search-placeholder="$t('derivation_path.search')"
           :empty-text="$t('access_wallet.advanced.no_paths')"
           :item-key="pathKey"
           :search-text="pathSearchText"

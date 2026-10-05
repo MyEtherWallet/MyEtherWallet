@@ -3,6 +3,8 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AccessStepIndicator from '@/modules/access/components/AccessStepIndicator.vue'
 import AccessDropdown from '@/modules/access/components/AccessDropdown.vue'
+import AccessCell from '@/modules/access/components/AccessCell.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -85,5 +87,19 @@ describe('AccessDropdown', () => {
     await w.get('[data-testid="dropdown-menu"] input').setValue('zzz')
     expect(options(w)).toEqual([])
     expect(w.get('[data-testid="dropdown-menu"]').text()).toContain('Nothing')
+  })
+})
+
+describe('AccessCell', () => {
+  it('wraps long text by default and truncates only when asked', () => {
+    wrapper = mount(AccessCell, {
+      props: { title: 'Extensión de navegador' },
+    })
+    expect(wrapper.findComponent(AppContentGroup).props('noWrap')).toBe(false)
+    wrapper.unmount()
+    wrapper = mount(AccessCell, {
+      props: { title: 'UTC--2026-09-02.json', truncate: true },
+    })
+    expect(wrapper.findComponent(AppContentGroup).props('noWrap')).toBe(true)
   })
 })

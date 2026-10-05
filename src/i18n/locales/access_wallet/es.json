@@ -100,7 +100,6 @@
       "passphrase": "Passphrase",
       "network": "Red",
       "derivation_path": "Ruta de derivación",
-      "search_paths": "Buscar por nombre o ruta",
       "no_paths": "No se encontraron rutas",
       "balances_error": "No se pudieron cargar los saldos; aun así puedes conectarte",
       "retry": "Reintentar",

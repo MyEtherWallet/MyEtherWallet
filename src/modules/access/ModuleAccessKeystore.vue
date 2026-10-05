@@ -82,7 +82,11 @@
 
     <!-- Step 2: unlock it -->
     <template v-else>
-      <AccessCell :title="fileInfo.name" :description="fileInfo.description">
+      <AccessCell
+        truncate
+        :title="fileInfo.name"
+        :description="fileInfo.description"
+      >
         <template #avatar>
           <AppAvatar type="icon" size="l">
             <template #icon><AppIcon name="document" /></template>
