@@ -14,7 +14,7 @@
             v-if="currentView !== 'default'"
             variant="filled"
             size="m"
-            :label="$t('access_wallet.back_to_connect_options')"
+            :label="$t('common.back')"
             class="shrink-0"
             @click="goBack"
           >
@@ -31,7 +31,7 @@
             size="m"
             :label="$t('common.close')"
             class="shrink-0"
-            @click="accessStore.closeAccessDialog()"
+            @click="closeDialog"
           >
             <AppIcon name="x-mark" size="xs" />
           </app-btn-icon>
@@ -98,10 +98,8 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import {
-  parentView,
-  type WalletView,
-} from '@/modules/access/common/walletConfigs'
+import { parentView } from '@/modules/access/common/accessViews'
+import type { WalletView } from '@/modules/access/common/walletConfigs'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -149,6 +147,13 @@ const bigDialogOpen = computed<boolean>({
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')
+}
+
+// Same as a backdrop close: hide and reset the view, but keep the add-account
+// intent (closeAccessDialog would clear it).
+const closeDialog = () => {
+  bigDialogOpen.value = false
+  closeAccess()
 }
 
 const goBack = () => {

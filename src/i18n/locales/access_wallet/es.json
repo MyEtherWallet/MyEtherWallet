@@ -6,7 +6,6 @@
     "recent": "Recientes",
     "detected": "Detectadas",
     "not_found": "Billetera no encontrada:",
-    "back_to_connect_options": "volver a las opciones de conexión",
     "connect_wallet_title": "Conectar billetera",
     "connect_with": "Conectar con {method}",
     "method": {

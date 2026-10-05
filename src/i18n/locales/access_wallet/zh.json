@@ -6,7 +6,6 @@
     "recent": "最近使用",
     "detected": "已检测到",
     "not_found": "未找到钱包：",
-    "back_to_connect_options": "返回连接选项",
     "connect_wallet_title": "连接钱包",
     "connect_with": "使用{method}连接",
     "method": {

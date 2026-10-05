@@ -6,7 +6,6 @@
     "recent": "Recent",
     "detected": "Detected",
     "not_found": "Wallet not found:",
-    "back_to_connect_options": "back to connect options",
     "connect_wallet_title": "Connect Wallet",
     "connect_with": "Connect with {method}",
     "method": {
