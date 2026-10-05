@@ -1,7 +1,13 @@
 <template>
   <app-dialog
     v-model:is-open="bigDialogOpen"
-    :class="['w-full max-h-[95vh]', dialogWidth]"
+    :class="[
+      'w-full max-h-[95vh]',
+      dialogWidth,
+      // Pin the top so switching network/tab/search grows the modal downward
+      // instead of re-centering it. 36px container padding + 10vh offset.
+      isNewView && 'self-start sm:mt-[10vh] sm:max-h-[calc(90vh-72px)]',
+    ]"
     :bg="isNewView ? 'bg-white' : 'bg-background-default'"
     :has-title-underline="!isNewView"
     hide-close
