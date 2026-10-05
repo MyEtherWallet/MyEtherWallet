@@ -12,9 +12,8 @@ vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({ setCurrentView }),
 }))
 
-const { default: AccessSignUp } = await import(
-  '@/modules/access/components/AccessSignUp.vue'
-)
+const { default: AccessSignUp } =
+  await import('@/modules/access/components/AccessSignUp.vue')
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -66,12 +65,12 @@ describe('AccessSignUp', () => {
     const w = mountSignUp()
     await w.get('[data-testid="download-mew-mobile"]').trigger('click')
     expect(setCurrentView).toHaveBeenCalledWith('download_mobile')
-    expect(w.get('[data-testid="download-enkrypt"]').attributes()).toMatchObject(
-      {
-        href: 'https://enkrypt.com',
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      },
-    )
+    expect(
+      w.get('[data-testid="download-enkrypt"]').attributes(),
+    ).toMatchObject({
+      href: 'https://enkrypt.com',
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    })
   })
 })

@@ -11,9 +11,8 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   },
 }))
 
-const { selectTabWallets, walletKey } = await import(
-  '@/modules/access/common/walletTabs'
-)
+const { selectTabWallets, walletKey } =
+  await import('@/modules/access/common/walletTabs')
 
 type W = Parameters<typeof walletKey>[0]
 const cfg = (id: string, name: string, type: string[], extra = {}): W =>

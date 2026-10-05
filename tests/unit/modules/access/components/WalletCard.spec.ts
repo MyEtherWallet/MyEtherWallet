@@ -17,9 +17,8 @@ vi.mock('@/analytics', () => ({
   },
 }))
 
-const { default: WalletCard } = await import(
-  '@/modules/access/components/WalletCard.vue'
-)
+const { default: WalletCard } =
+  await import('@/modules/access/components/WalletCard.vue')
 
 const i18n = createI18n({
   legacy: false,
@@ -36,7 +35,8 @@ const mountCard = (props: Record<string, unknown>) =>
       stubs: {
         AppAvatar: {
           props: ['type'],
-          template: '<span class="avatar" :data-type="type"><slot name="icon" /></span>',
+          template:
+            '<span class="avatar" :data-type="type"><slot name="icon" /></span>',
         },
       },
     },
@@ -68,7 +68,12 @@ describe('WalletCard', () => {
 
   it('uses an icon avatar for advanced methods', () => {
     const w = mountCard({
-      wallet: { id: 'keystore', name: 'Keystore', icon: '', type: ['software'] },
+      wallet: {
+        id: 'keystore',
+        name: 'Keystore',
+        icon: '',
+        type: ['software'],
+      },
     })
     expect(w.get('.avatar').attributes('data-type')).toBe('icon')
   })

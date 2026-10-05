@@ -13,7 +13,11 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
 const walletsForTab = vi.fn((tab: string, search: string) =>
   search === 'none'
     ? []
-    : [{ wallet: { id: `${tab}-1`, name: `${tab} wallet`, icon: '', type: [] } }],
+    : [
+        {
+          wallet: { id: `${tab}-1`, name: `${tab} wallet`, icon: '', type: [] },
+        },
+      ],
 )
 vi.mock('@/composables/useWalletList', () => ({
   useWalletList: () => ({ walletsForTab }),
@@ -23,9 +27,8 @@ vi.mock('@/modules/access/composables/useConnectWallet', () => ({
   useConnectWallet: () => ({ connect }),
 }))
 
-const { default: WalletTabs } = await import(
-  '@/modules/access/components/WalletTabs.vue'
-)
+const { default: WalletTabs } =
+  await import('@/modules/access/components/WalletTabs.vue')
 const i18n = createI18n({
   legacy: false,
   locale: 'en',

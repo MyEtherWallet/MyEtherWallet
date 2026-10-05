@@ -25,9 +25,8 @@ vi.mock('pinia', async orig => ({
   storeToRefs: (store: unknown) => store,
 }))
 
-const { default: NetworkChips } = await import(
-  '@/modules/access/components/NetworkChips.vue'
-)
+const { default: NetworkChips } =
+  await import('@/modules/access/components/NetworkChips.vue')
 const i18n = createI18n({
   legacy: false,
   locale: 'en',

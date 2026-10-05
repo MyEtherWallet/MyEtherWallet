@@ -67,7 +67,12 @@
           @click="accessStore.setCurrentView('download_mobile')"
         >
           <template #avatar>
-            <AppAvatar type="wallet" size="m" :url="MewLogo" name="MEW Mobile" />
+            <AppAvatar
+              type="wallet"
+              size="m"
+              :url="MewLogo"
+              name="MEW Mobile"
+            />
           </template>
           <template #trailing>
             <AppIcon name="qr-code" size="s" class="text-text-subtle" />
@@ -83,7 +88,12 @@
           rel="noopener noreferrer"
         >
           <template #avatar>
-            <AppAvatar type="wallet" size="m" :url="EnkryptLogo" name="Enkrypt" />
+            <AppAvatar
+              type="wallet"
+              size="m"
+              :url="EnkryptLogo"
+              name="Enkrypt"
+            />
           </template>
           <template #trailing>
             <AppIcon

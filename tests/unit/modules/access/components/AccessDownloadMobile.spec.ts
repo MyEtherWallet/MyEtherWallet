@@ -19,9 +19,8 @@ vi.mock('qrcode.vue', () => ({
   },
 }))
 
-const { default: AccessDownloadMobile } = await import(
-  '@/modules/access/components/AccessDownloadMobile.vue'
-)
+const { default: AccessDownloadMobile } =
+  await import('@/modules/access/components/AccessDownloadMobile.vue')
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
