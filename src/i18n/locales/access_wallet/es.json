@@ -78,7 +78,12 @@
       "password_title": "Introduce tu contraseña",
       "phrase_title": "Conectar con frase de recuperación",
       "address_title": "Elige una dirección",
-      "private_key_title": "Conectar con clave privada"
+      "private_key_title": "Conectar con clave privada",
+      "banner_title": "Solo para usuarios con experiencia.",
+      "banner_private_key": "Tu clave privada nunca se guarda. Tendrás que volver a introducirla si recargas la app o te desconectas.",
+      "private_key_label": "Clave privada",
+      "private_key_placeholder": "Pega tu clave privada",
+      "invalid_private_key": "Clave privada no válida: se esperan 64 caracteres hexadecimales"
     }
   },
   "access_wallet_keystore": {

@@ -78,7 +78,12 @@
       "password_title": "输入密码",
       "phrase_title": "使用助记词连接",
       "address_title": "选择地址",
-      "private_key_title": "使用私钥连接"
+      "private_key_title": "使用私钥连接",
+      "banner_title": "仅限有经验的用户。",
+      "banner_private_key": "您的私钥不会被存储。如果重新加载应用或断开连接，需要重新输入。",
+      "private_key_label": "私钥",
+      "private_key_placeholder": "粘贴您的私钥",
+      "invalid_private_key": "私钥无效：应为 64 个十六进制字符"
     }
   },
   "access_wallet_keystore": {

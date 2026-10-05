@@ -1,46 +1,37 @@
 <template>
-  <div class="flex justify-center w-full">
-    <div
-      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-3"
+  <div class="flex flex-col gap-5">
+    <AccessBanner
+      :title="$t('access_wallet.advanced.banner_title')"
+      :text="$t('access_wallet.advanced.banner_private_key')"
+    />
+    <app-input
+      v-model="privateKeyInput"
+      data-private
+      :label="$t('access_wallet.advanced.private_key_label')"
+      :placeholder="$t('access_wallet.advanced.private_key_placeholder')"
+      type="password"
+      :aria-label="$t('access_wallet_private_key.private_key_input_label')"
+      :disabled="isUnlocking"
+      :submit-disabled="submitIsDisabled"
+      :error-message="errorMessages"
+      @enter="unlock"
+    />
+    <app-base-button
+      class="w-full"
+      :disabled="submitIsDisabled"
+      :is-loading="isUnlocking"
+      @click="unlock"
     >
-      <app-not-recommended />
-      <app-sheet class="mt-1">
-        <div class="mt-5 flex flex-col align-center">
-          <app-input
-            v-model="privateKeyInput"
-            surface="alternative"
-            data-private
-            :label="$t('access_wallet_private_key.enter_private_key')"
-            type="password"
-            is-required
-            :aria-label="
-              $t('access_wallet_private_key.private_key_input_label')
-            "
-            @enter="unlock"
-            :submit-disabled="submitIsDisabled"
-            :error-message="errorMessages"
-          />
-          <div class="flex align-center justify-center">
-            <app-base-button
-              @click="unlock"
-              :disabled="submitIsDisabled"
-              class="w-full xs:w-auto xs:min-w-[250px]"
-            >
-              {{ $t('create_wallet.connect') }}
-            </app-base-button>
-          </div>
-        </div>
-      </app-sheet>
-      <!-- TODO: add link-->
-      <ButtonNoWallet class="mt-5" />
-    </div>
+      {{ $t('create_wallet.connect') }}
+    </app-base-button>
+    <AccessHelpFooter />
   </div>
 </template>
 
 <script setup lang="ts">
 import { isValidPrivate } from '@ethereumjs/util'
-import ButtonNoWallet from './components/ButtonNoWallet.vue'
-import AppSheet from '@/components/AppSheet.vue'
+import AccessBanner from './components/AccessBanner.vue'
+import AccessHelpFooter from './components/AccessHelpFooter.vue'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
@@ -50,7 +41,6 @@ import BitcoinPrivateKey from '@/providers/bitcoin/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
@@ -71,6 +61,9 @@ const { t } = useI18n()
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
 const privateKeyInput = ref('')
+const isUnlocking = ref(false)
+/** Pasted keys often carry stray whitespace or a trailing newline. */
+const keyValue = computed(() => privateKeyInput.value.trim())
 const accessStore = useAccessStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(accessStore)
 const globalStore = useGlobalStore()
@@ -83,26 +76,28 @@ const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 
 const submitIsDisabled = computed<boolean>(() => {
-  return privateKeyInput.value === '' || !isValidPrivateKey.value
+  return keyValue.value === '' || !isValidPrivateKey.value || isUnlocking.value
 })
 
 const errorMessages = computed<string>(() => {
   //Error will be thrown by input component if empty
-  if (privateKeyInput.value === '') {
+  if (keyValue.value === '') {
     return ''
   }
 
   if (!isValidPrivateKey.value) {
-    return t('access_wallet_private_key.invalid_private_key')
+    return isEvmChain.value
+      ? t('access_wallet.advanced.invalid_private_key')
+      : t('access_wallet_private_key.invalid_private_key')
   }
 
   return ''
 })
 
 const strippedHexPrivateKey = computed<string>(() => {
-  return privateKeyInput.value.substr(0, 2) === '0x'
-    ? privateKeyInput.value.replace('0x', '')
-    : privateKeyInput.value
+  return keyValue.value.startsWith('0x')
+    ? keyValue.value.replace('0x', '')
+    : keyValue.value
 })
 
 const isValidPrivateKey = computed<boolean>(() => {
@@ -111,7 +106,7 @@ const isValidPrivateKey = computed<boolean>(() => {
       const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
         ? strippedHexPrivateKey.value
         : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
-      return isPrivateKey(privateKeyInput.value) && isValidPrivate(privateKey)
+      return isPrivateKey(keyValue.value) && isValidPrivate(privateKey)
     }
     decode(strippedHexPrivateKey.value)
     return true
@@ -122,7 +117,9 @@ const isValidPrivateKey = computed<boolean>(() => {
 
 const unlock = async () => {
   // TODO: remove hardcoded network id
+  if (submitIsDisabled.value) return
   let wallet
+  isUnlocking.value = true
   try {
     if (isEvmChain.value) {
       wallet = new EthereumPrivateKey(
@@ -164,6 +161,8 @@ const unlock = async () => {
       type: ToastType.Error,
     })
     captureException(error, SENTRY_MODULE_TAGS.ACCESS)
+  } finally {
+    isUnlocking.value = false
   }
 }
 </script>

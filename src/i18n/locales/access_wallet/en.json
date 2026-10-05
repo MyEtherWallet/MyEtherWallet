@@ -78,7 +78,12 @@
       "password_title": "Enter your password",
       "phrase_title": "Connect with Recovery Phrase",
       "address_title": "Choose an address",
-      "private_key_title": "Connect with Private Key"
+      "private_key_title": "Connect with Private Key",
+      "banner_title": "For experienced users only.",
+      "banner_private_key": "Your Private Key is never stored. You'll re-enter it if you reload the app or disconnect.",
+      "private_key_label": "Private Key",
+      "private_key_placeholder": "Paste your Private Key",
+      "invalid_private_key": "Not a valid Private Key — expect 64 hex characters"
     }
   },
   "access_wallet_keystore": {
