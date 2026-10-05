@@ -21,6 +21,8 @@ export const ACCESS_WALLET_VIEWS = [
   'private_key',
   'wallet_connect',
   'web3_wallet',
+  'sign_up',
+  'download_mobile',
 ] as const
 
 export const CREATE_WALLET_VIEWS = ['default', 'buy', 'mnemonic'] as const
@@ -28,6 +30,13 @@ export const CREATE_WALLET_VIEWS = ['default', 'buy', 'mnemonic'] as const
 export type CreateWalletView = (typeof CREATE_WALLET_VIEWS)[number]
 
 export type WalletView = (typeof ACCESS_WALLET_VIEWS)[number]
+
+/** Back-button target per view; anything not listed goes back to the chooser. */
+const PARENT_VIEW: Partial<Record<WalletView, WalletView>> = {
+  download_mobile: 'sign_up',
+}
+export const parentView = (view: WalletView): WalletView =>
+  PARENT_VIEW[view] ?? 'default'
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -182,6 +191,11 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isOfficial: true,
     isWC: true,
     walletViewType: 'wallet_connect',
+    downloadUrls: {
+      ios: 'https://apps.apple.com/app/mew-crypto-wallet-buy-eth/id1464614025',
+      android:
+        'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet',
+    },
   },
   enkrypt: {
     id: 'enkrypt',
