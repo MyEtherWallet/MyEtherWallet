@@ -66,16 +66,13 @@
               </div>
             </div>
           </div>
-          <div
+          <AppTag
             v-if="selectedChain?.name === i.chainName"
-            class="shrink-0 flex items-center bg-background-brand/10 px-1.5 py-1 rounded-full border border-border-brand/20"
-          >
-            <span
-              class="uppercase text-[8px] font-bold text-text-brand leading-none tracking-sp-06"
-            >
-              {{ $t('crypto.current_chain') }}
-            </span>
-          </div>
+            type="branded"
+            variant="subtle"
+            :label="$t('crypto.current_chain')"
+            class="shrink-0"
+          />
           <app-base-button
             v-else-if="!isStockView && canBridge(i)"
             size="small"
@@ -97,6 +94,7 @@ import { type PropType } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import { truncateAddress } from '@/utils/filters'
 import { type TokenSupportedChain } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'

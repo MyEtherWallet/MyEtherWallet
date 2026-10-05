@@ -142,12 +142,12 @@
                             })
                           }}
                         </p>
-                        <p
+                        <AppTag
                           v-if="idx === 0"
-                          class="bg-background-brand text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
-                        >
-                          {{ t('swap.swap-offer.best-rate') }}
-                        </p>
+                          type="branded"
+                          :label="t('swap.swap-offer.best-rate')"
+                          class="ml-1"
+                        />
                       </div>
                       <div
                         class="font-semibold text-s-14 flex items-center gap-1"
@@ -314,6 +314,7 @@ import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 

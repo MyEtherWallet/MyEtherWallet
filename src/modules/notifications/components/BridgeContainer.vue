@@ -10,16 +10,18 @@
           class="rounded-full bg-background-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
-      <div
-        :class="bridgeStatus.color"
-        class="ml-2 px-2.5 py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+      <AppTag
+        :type="bridgeStatus.type"
+        :variant="bridgeStatus.variant"
+        :label="$t(bridgeStatus.labelKey)"
+        class="ml-2"
       >
-        <div
-          v-if="bridgeStatus.key === 'pending'"
-          class="bg-white w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
-        ></div>
-        {{ $t(bridgeStatus.labelKey) }}
-      </div>
+        <template v-if="bridgeStatus.key === 'pending'" #leading>
+          <span
+            class="ml-1 bg-current w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
+          ></span>
+        </template>
+      </AppTag>
     </div>
 
     <!-- From / To with Chain info -->
@@ -226,6 +228,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import { getTxNotificationStatus } from '../utils/txStatus'
 import type { BridgeNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -258,37 +262,7 @@ const truncateHash = (hash: string): string => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`
 }
 
-const bridgeStatus = computed(() => {
-  const status = props.bridge.status.toLowerCase()
-  const now = Math.floor(Date.now() / 1000)
-  const hoursAgo48 = 48 * 60 * 60
-  const isOlderThan48Hours = now - props.bridge.createdAt > hoursAgo48
-
-  if (status === 'sent') {
-    if (isOlderThan48Hours) {
-      return {
-        key: 'possibly_dropped',
-        labelKey: 'notifications_module.status.possibly_dropped',
-        color: 'bg-background-default-hover',
-      }
-    }
-    return {
-      key: 'pending',
-      labelKey: 'notifications_module.status.pending',
-      color: 'bg-background-brand',
-    }
-  } else if (status === 'failed') {
-    return {
-      key: 'failed',
-      labelKey: 'notifications_module.status.failed',
-      color: 'bg-background-error',
-    }
-  } else {
-    return {
-      key: 'successful',
-      labelKey: 'notifications_module.status.successful',
-      color: 'bg-background-success',
-    }
-  }
-})
+const bridgeStatus = computed(() =>
+  getTxNotificationStatus(props.bridge.status, props.bridge.createdAt),
+)
 </script>
