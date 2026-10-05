@@ -115,6 +115,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'radio',
+              name: 'DevRadio',
+              component: () => import('@/views/ViewRadioShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'tooltip',
               name: 'DevTooltip',
               component: () => import('@/views/ViewTooltipShowcase.vue'),

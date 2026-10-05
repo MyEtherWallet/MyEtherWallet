@@ -25,6 +25,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },
       { name: 'Picker', to: '/dev/picker' },
+      { name: 'Radio Button', to: '/dev/radio' },
       { name: 'Segmented Control', to: '/dev/segmented-control' },
       { name: 'Tab Bar', to: '/dev/tab-bar' },
       { name: 'Tab Item', to: '/dev/tab-item' },
