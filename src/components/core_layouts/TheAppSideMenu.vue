@@ -119,9 +119,9 @@
                   />
                 </div>
                 <!--  DIVIDER -->
-                <hr
+                <app-divider
                   v-if="!isWalletConnected"
-                  class="h-px bg-background-default-hover border-0 w-full my-3"
+                  class="my-2"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->
@@ -171,6 +171,7 @@ import { storeToRefs } from 'pinia'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useAccessStore } from '@/stores/accessStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const store = useWalletStore()

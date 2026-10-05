@@ -58,7 +58,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-background-default-hover border-0 w-full" />
+                <app-divider class="-my-1" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -137,6 +137,7 @@ import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 defineProps({
