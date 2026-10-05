@@ -1,0 +1,86 @@
+<template>
+  <button
+    type="button"
+    class="flex w-full h-16 items-center gap-3 rounded-16 bg-background-default p-4 text-left transition-colors hover:bg-background-default-hover cursor-pointer"
+    @click="select"
+  >
+    <AppAvatar v-if="advancedIcon" type="icon" size="m">
+      <template #icon><AppIcon :name="advancedIcon" size="xs" /></template>
+    </AppAvatar>
+    <AppAvatar
+      v-else
+      type="wallet"
+      size="m"
+      :url="iconUrl"
+      :name="displayName"
+    />
+    <AppContentGroup
+      :title="displayName"
+      size="m"
+      no-wrap
+      class="grow min-w-0"
+    />
+    <span v-if="status" class="shrink-0 text-xs text-text-subtle">
+      {{ $t(STATUS_KEY[status]) }}
+    </span>
+  </button>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import { analytics } from '@/analytics'
+import { ConnectWalletEvent } from '@/analytics/events'
+import configs from '@/configs'
+import type { WalletConfig } from '@/modules/access/common/walletConfigs'
+import {
+  ADVANCED_WALLET_ICONS,
+  type WalletStatus,
+  walletKey,
+} from '@/modules/access/common/walletTabs'
+
+const props = defineProps<{ wallet: WalletConfig; status?: WalletStatus }>()
+const emit = defineEmits<{ select: [wallet: WalletConfig] }>()
+const { t } = useI18n()
+
+const STATUS_KEY: Record<WalletStatus, string> = {
+  recent: 'access_wallet.recent',
+  detected: 'access_wallet.detected',
+  official: 'access_wallet.official',
+}
+
+const displayName = computed(() =>
+  props.wallet.nameKey ? t(props.wallet.nameKey) : props.wallet.name,
+)
+const advancedIcon = computed(
+  () => ADVANCED_WALLET_ICONS[walletKey(props.wallet)],
+)
+
+const iconUrl = ref<string | undefined>(
+  typeof props.wallet.icon === 'string' ? props.wallet.icon : undefined,
+)
+onMounted(async () => {
+  const { icon } = props.wallet
+  if (typeof icon !== 'function') return
+  try {
+    iconUrl.value = await icon()
+  } catch (error) {
+    // The logo is a lazily imported chunk; failing to load it (network blip, stale
+    // chunk after a redeploy, content blockers) is expected and non-actionable.
+    // AppAvatar falls back to initials, so don't report it as noise.
+    if (configs.BUILD_MODE !== 'production') {
+      console.error('Error loading wallet image:', props.wallet.name, error)
+    }
+  }
+})
+
+const select = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.SELECT_WALLET, {
+    walletName: props.wallet.name,
+  })
+  emit('select', props.wallet)
+}
+</script>

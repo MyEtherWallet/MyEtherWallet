@@ -58,7 +58,8 @@
       "connection_timed_out": "Se agotó el tiempo de conexión. Inténtalo de nuevo.",
       "connect_request_pending": "Ya hay una solicitud de conexión pendiente, revisa la extensión de tu billetera",
       "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera."
-    }
+    },
+    "official": "Oficial"
   },
   "access_wallet_keystore": {
     "title": "Acceder a la billetera con archivo Keystore",
