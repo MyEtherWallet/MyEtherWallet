@@ -29,30 +29,28 @@
           :size="288"
           class="block h-auto w-full"
         />
-        <AppAvatar
-          type="icon"
-          size="xl"
-          :background="false"
-          badge-top
-          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        <span
+          class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
         >
-          <template #icon>
-            <span
-              class="flex size-full items-center justify-center rounded-full bg-background-decorative-green text-white"
-            >
+          <AppAvatar type="icon" size="xl" :background="false" badge-top>
+            <template #icon>
               <span
-                data-testid="qr-platform-glyph"
-                class="size-1/2 bg-current"
-                :style="glyphMask(PLATFORM_LOGO[platform])"
-              />
-            </span>
-          </template>
-          <template #badge>
-            <AppAvatarBadge type="network">
-              <img :src="MewLogo" alt="" class="size-full" />
-            </AppAvatarBadge>
-          </template>
-        </AppAvatar>
+                class="flex size-full items-center justify-center rounded-full bg-background-decorative-green text-white"
+              >
+                <span
+                  data-testid="qr-platform-glyph"
+                  class="size-1/2 bg-current"
+                  :style="glyphMask(PLATFORM_LOGO[platform])"
+                />
+              </span>
+            </template>
+            <template #badge>
+              <AppAvatarBadge type="network">
+                <img :src="MewLogo" alt="" class="size-full" />
+              </AppAvatarBadge>
+            </template>
+          </AppAvatar>
+        </span>
       </div>
     </section>
     <div class="grid grid-cols-2 gap-3">
@@ -61,9 +59,10 @@
         :key="store"
         :data-testid="`store-${store}`"
         theme="secondary"
+        class="!px-4"
         @click="openStore(store)"
       >
-        <span class="flex items-center justify-center gap-2">
+        <span class="flex items-center justify-center gap-2 whitespace-nowrap">
           <span
             class="size-4 bg-current"
             :style="glyphMask(PLATFORM_LOGO[store])"
