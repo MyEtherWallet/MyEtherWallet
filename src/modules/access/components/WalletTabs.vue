@@ -19,7 +19,7 @@
     <div v-if="wallets.length" class="grid grid-cols-1 gap-3 xs:grid-cols-2">
       <WalletCard
         v-for="{ wallet, status } in wallets"
-        :key="walletKey(wallet)"
+        :key="wallet.id"
         :wallet="wallet"
         :status="status"
         @select="connect"
@@ -40,11 +40,7 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import WalletCard from './WalletCard.vue'
 import { useWalletList } from '@/composables/useWalletList'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
-import {
-  WALLET_TABS,
-  type WalletTab,
-  walletKey,
-} from '@/modules/access/common/walletTabs'
+import { WALLET_TABS, type WalletTab } from '@/modules/access/common/walletTabs'
 
 const { t } = useI18n()
 const { walletsForTab } = useWalletList()

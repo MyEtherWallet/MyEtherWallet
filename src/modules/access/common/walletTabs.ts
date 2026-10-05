@@ -110,7 +110,12 @@ export const selectTabWallets = ({
     return [...starts, ...contains].map(withStatus)
   }
 
-  const byKey = new Map(wallets.map(w => [walletKey(w), w]))
+  // First entry wins: static configs come first, so the Ledger device keeps the
+  // 'ledger' slot even though Ledger Mobile inherits rkDetails.id === 'ledger'.
+  const byKey = new Map<string, WalletConfig>()
+  wallets.forEach(w => {
+    if (!byKey.has(walletKey(w))) byKey.set(walletKey(w), w)
+  })
   const curated = TAB_WALLET_IDS[tab]
     .map(id => byKey.get(id))
     .filter((w): w is WalletConfig => !!w)

@@ -138,6 +138,21 @@ describe('selectTabWallets', () => {
     expect(names(r)).toEqual(['Enkrypt', 'UniSat'])
   })
 
+  it('keeps the Ledger device in Hardware when Ledger Mobile shares its RainbowKit id', () => {
+    // useWalletList spreads the RK connector into Ledger Mobile, so it keeps
+    // rkDetails.id === 'ledger' and comes after the static configs.
+    const ledgerMobile = {
+      ...rk('ledger', 'Ledger Mobile', ['mobile']),
+      id: 'ledger-mobile',
+    } as W
+    const r = selectTabWallets({
+      ...base,
+      wallets: [...POOL, ledgerMobile],
+      tab: 'hardware',
+    })
+    expect(r.map(x => x.wallet.id)).toEqual(['ledger', 'trezor'])
+  })
+
   it('skips curated ids missing from the pool', () => {
     const pool = POOL.filter(w => w.name !== 'MetaMask' && w.name !== 'Trezor')
     expect(
