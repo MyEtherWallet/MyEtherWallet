@@ -34,7 +34,7 @@
     >
       <AppAvatar type="account" size="l" :address="entry.address" />
       <AppContentGroup
-        :title="shortAddress(entry.address)"
+        :title="truncateAddress(entry.address)"
         :description="balanceText(entry.balance)"
         size="m"
         no-wrap
@@ -83,6 +83,7 @@ import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppRadio from '@/components/radio/AppRadio.vue'
 import type { SelectAddress } from '../types/selectAddress'
+import { truncateAddress } from '@/utils/filters'
 
 const props = defineProps<{
   entries: SelectAddress[]
@@ -92,10 +93,6 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ 'show-more': []; retry: [] }>()
 const selected = defineModel<number>({ required: true })
-
-/** 0xeC1B…e726 — "0x" plus 4 characters on each side. */
-const shortAddress = (address: string) =>
-  `${address.slice(0, 6)}…${address.slice(-4)}`
 
 const balanceText = (balance: string) =>
   balance ? `${balance} ${props.currency ?? ''}`.trim() : '--'

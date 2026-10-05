@@ -252,15 +252,6 @@ const getTitle = computed(() => {
   if (stepTitle) return t(stepTitle)
   let method = ''
   switch (currentView.value) {
-    case 'keystore':
-      method = t('access_wallet.method.keystore')
-      break
-    case 'private_key':
-      method = t('access_wallet.method.private_key')
-      break
-    case 'mnemonic':
-      method = t('access_wallet.method.mnemonic_phrase')
-      break
     case 'ledger':
       method = 'Ledger'
       break
@@ -282,12 +273,6 @@ const getTitle = computed(() => {
 
 const helpLinkText = computed(() => {
   switch (currentView.value) {
-    case 'keystore':
-      return t('access_wallet.help.keystore')
-    case 'private_key':
-      return t('access_wallet.help.private_key')
-    case 'mnemonic':
-      return t('access_wallet.help.mnemonic')
     case 'ledger':
       return t('access_wallet.help.ledger')
     case 'trezor':

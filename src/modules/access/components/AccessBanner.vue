@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+// Local Banner (Alert) until the DS one exists; AppWarning is the legacy yellow warning.
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 

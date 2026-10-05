@@ -8,20 +8,12 @@
     "not_found": "未找到钱包：",
     "connect_wallet_title": "连接钱包",
     "connect_with": "使用{method}连接",
-    "method": {
-      "keystore": "Keystore 文件",
-      "private_key": "私钥",
-      "mnemonic_phrase": "助记词"
-    },
     "wallet_name": {
       "keystore": "Keystore 文件",
       "mnemonic": "恢复（助记词）短语",
       "private_key": "私钥"
     },
     "help": {
-      "keystore": "如何连接您的 Keystore 钱包",
-      "private_key": "如何使用私钥连接",
-      "mnemonic": "如何使用恢复短语连接",
       "ledger": "如何连接您的 Ledger 钱包",
       "trezor": "如何连接您的 Trezor 钱包",
       "default": "连接钱包需要帮助吗？"
@@ -113,6 +105,10 @@
       "balances_error": "无法加载余额，但仍可连接",
       "retry": "重试",
       "show_more": "显示更多地址"
+    },
+    "help_footer": {
+      "need_help": "需要帮助？",
+      "go_to_help_center": "前往帮助中心"
     }
   },
   "access_wallet_keystore": {
@@ -161,9 +157,7 @@
     "get_wallet": "获取钱包",
     "scan_qr_code": "使用 { walletName } 扫描二维码以连接。",
     "or_copy_link": "或复制链接",
-    "need_help": "如何连接您的钱包",
-    "need_help_short": "需要帮助？",
-    "go_to_help_center": "前往帮助中心"
+    "need_help": "如何连接您的钱包"
   },
   "web3_wallet": {
     "opening_wallet": "正在打开 { walletName }",

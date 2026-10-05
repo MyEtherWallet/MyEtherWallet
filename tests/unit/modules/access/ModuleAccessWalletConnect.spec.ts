@@ -70,7 +70,7 @@ describe('ModuleAccessWalletConnect', () => {
   it('links the footer to the help center in a new tab', () => {
     clickedWalletConnect.value = { walletName: 'MEW Mobile' }
     const w = mountIt()
-    const link = w.get('[data-testid="wc-help-center"]')
+    const link = w.get('[data-testid="help-center"]')
     expect(link.attributes('href')).toContain('help.myetherwallet.com')
     expect(link.attributes('target')).toBe('_blank')
   })

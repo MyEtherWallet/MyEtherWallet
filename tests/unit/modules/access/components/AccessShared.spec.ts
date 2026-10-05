@@ -17,7 +17,10 @@ afterEach(() => wrapper?.unmount())
 
 describe('AccessStepIndicator', () => {
   it('fills one segment per completed step', () => {
-    wrapper = mount(AccessStepIndicator, { props: { step: 1 } })
+    wrapper = mount(AccessStepIndicator, {
+      props: { step: 1 },
+      global: { plugins: [i18n] },
+    })
     const segments = wrapper.findAll('[data-testid="step-segment"]')
     expect(segments).toHaveLength(2)
     expect(segments.map(s => s.classes('bg-background-brand'))).toEqual([

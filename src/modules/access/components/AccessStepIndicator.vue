@@ -2,6 +2,7 @@
   <div
     class="flex gap-1.5"
     role="progressbar"
+    :aria-label="$t('common.step_of', { current: step, total })"
     aria-valuemin="1"
     :aria-valuemax="total"
     :aria-valuenow="step"
@@ -17,5 +18,6 @@
 </template>
 
 <script setup lang="ts">
+// Segmented bar from the onboarding designs; AppStepper is the legacy labelled stepper.
 withDefaults(defineProps<{ step: number; total?: number }>(), { total: 2 })
 </script>

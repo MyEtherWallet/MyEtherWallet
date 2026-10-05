@@ -8,20 +8,12 @@
     "not_found": "Billetera no encontrada:",
     "connect_wallet_title": "Conectar billetera",
     "connect_with": "Conectar con {method}",
-    "method": {
-      "keystore": "Keystore",
-      "private_key": "clave privada",
-      "mnemonic_phrase": "frase mnemotécnica"
-    },
     "wallet_name": {
       "keystore": "Keystore",
       "mnemonic": "Frase de recuperación (mnemotécnica)",
       "private_key": "Clave privada"
     },
     "help": {
-      "keystore": "Cómo conectar tu billetera con Keystore",
-      "private_key": "Cómo conectar con tu clave privada",
-      "mnemonic": "Cómo conectar con tu frase de recuperación",
       "ledger": "Cómo conectar tu billetera Ledger",
       "trezor": "Cómo conectar tu billetera Trezor",
       "default": "¿Necesitas ayuda para conectar tu billetera?"
@@ -113,6 +105,10 @@
       "balances_error": "No se pudieron cargar los saldos; aun así puedes conectarte",
       "retry": "Reintentar",
       "show_more": "Mostrar más direcciones"
+    },
+    "help_footer": {
+      "need_help": "¿Necesitas ayuda?",
+      "go_to_help_center": "Ir al Centro de ayuda"
     }
   },
   "access_wallet_keystore": {
@@ -161,9 +157,7 @@
     "get_wallet": "Obtener una billetera",
     "scan_qr_code": "Escanea el código QR con { walletName } para conectar.",
     "or_copy_link": "O copia el enlace",
-    "need_help": "Cómo conectar tu billetera",
-    "need_help_short": "¿Necesitas ayuda?",
-    "go_to_help_center": "Ir al Centro de ayuda"
+    "need_help": "Cómo conectar tu billetera"
   },
   "web3_wallet": {
     "opening_wallet": "Abriendo { walletName }",

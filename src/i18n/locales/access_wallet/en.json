@@ -8,20 +8,12 @@
     "not_found": "Wallet not found:",
     "connect_wallet_title": "Connect Wallet",
     "connect_with": "Connect with {method}",
-    "method": {
-      "keystore": "keystore",
-      "private_key": "private key",
-      "mnemonic_phrase": "mnemonic phrase"
-    },
     "wallet_name": {
       "keystore": "Keystore",
       "mnemonic": "Recovery (mnemonic) Phrase",
       "private_key": "Private Key"
     },
     "help": {
-      "keystore": "How to connect your keystore wallet",
-      "private_key": "How to connect with your private key",
-      "mnemonic": "How to connect with your recovery phrase",
       "ledger": "How to connect your Ledger wallet",
       "trezor": "How to connect your Trezor wallet",
       "default": "Need Help connecting your wallet?"
@@ -113,6 +105,10 @@
       "balances_error": "Couldn't load balances — you can still connect",
       "retry": "Retry",
       "show_more": "Show more addresses"
+    },
+    "help_footer": {
+      "need_help": "Need help?",
+      "go_to_help_center": "Go to Help Center"
     }
   },
   "access_wallet_keystore": {
@@ -162,9 +158,7 @@
     "get_wallet": "Get a wallet",
     "scan_qr_code": "Scan QR code with { walletName } to connect.",
     "or_copy_link": "OR copy link",
-    "need_help": "How to connect your wallet",
-    "need_help_short": "Need help?",
-    "go_to_help_center": "Go to Help Center"
+    "need_help": "How to connect your wallet"
   },
   "web3_wallet": {
     "opening_wallet": "Opening { walletName }",
