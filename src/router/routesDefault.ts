@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
+import configs from '@/configs'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',
@@ -38,6 +39,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: '',
               name: 'DevIndex',
               component: () => import('@/views/ViewDevIndex.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'sizes',
+              name: 'DevSizes',
+              component: () => import('@/views/ViewSizesShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -71,6 +78,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'icons',
+              name: 'DevIcons',
+              component: () => import('@/views/ViewIconShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'tooltip',
               name: 'DevTooltip',
               component: () => import('@/views/ViewTooltipShowcase.vue'),
@@ -88,18 +101,37 @@ const DefaultRoutes = <RouteNameCollection>[
               component: () => import('@/views/ViewButtonPreview.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
+            {
+              path: 'typography',
+              name: 'DevTypography',
+              component: () => import('@/views/ViewTypographyShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
           ],
         },
       ]
     : []),
   {
-    // New public Home is the root; disconnected users land here.
+    // New public Home is the root; disconnected users land here. It hosts its
+    // own token/stock-info drawer children so clicks from the Home sections
+    // (watchlist, New Listings, Market News) open the drawer in place at
+    // `/token/:tokenId` / `/stock/:symbol` instead of routing to another page.
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: ViewHome,
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.homePage,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.homePage,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     // The wallet portfolio moved off the root. It stays reachable without a

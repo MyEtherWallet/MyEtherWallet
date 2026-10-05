@@ -1,5 +1,6 @@
 {
   "common": {
+    "watchlist_limit_reached": "每个关注列表最多可保存 {max} 个项目。",
     "search": "搜索",
     "swap": "兑换",
     "bridge": "跨链桥",
@@ -37,6 +38,8 @@
       "chains": "未找到链"
     },
     "all_chains": "所有链",
+    "all_networks": "所有网络",
+    "showing_page": "显示第 {current} 页，共 {total} 页",
     "edit": "编辑",
     "delete": "删除",
     "token_count": "暂无代币 | 1 个代币 | {count} 个代币",
@@ -54,7 +57,9 @@
       "user_canceled_request": "用户已取消请求",
       "ledger_locked": "您的 Ledger 已锁定。请解锁后重试。",
       "ledger_app_not_open": "请在您的 Ledger 上打开以太坊应用后重试。",
+      "ledger_interface_busy": "其他应用或浏览器标签页（例如 Ledger Live）正在使用您的 Ledger。请关闭它，重新连接设备后重试。",
       "trezor_read_failed": "无法从 Trezor 读取您的地址。请重新连接设备后重试。",
+      "ledger_device_busy": "另一个应用正在使用您的 Ledger。请关闭 Ledger Live 或其他已连接的标签页后重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",

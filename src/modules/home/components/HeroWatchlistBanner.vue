@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import stockSpot from '@/assets/images/watchlist/stock-spot.png'
 import stockIbm from '@/assets/images/watchlist/stock-ibm.png'
 import stockNke from '@/assets/images/watchlist/stock-nke.png'
 import stockLly from '@/assets/images/watchlist/stock-lly.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineEmits<{
@@ -20,9 +20,18 @@ defineEmits<{
 </script>
 
 <template>
+  <!-- The whole banner is the launch target (not just the CTA): one interactive
+       surface with a button role + keyboard support, so the inner CTA is a plain
+       visual affordance rather than a nested button. -->
   <div
     data-test="hero-watchlist-banner"
-    class="relative flex items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6"
+    role="button"
+    tabindex="0"
+    :aria-label="t('homePage.hero.watchlist.title')"
+    class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-background-default-hover"
+    @click="$emit('begin')"
+    @keydown.enter="$emit('begin')"
+    @keydown.space.prevent="$emit('begin')"
   >
     <div class="flex min-w-0 flex-1 items-center gap-6">
       <!-- Overlapping stock logos (SPOT clipped at the left, under the fade) -->
@@ -57,9 +66,7 @@ defineEmits<{
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
-        <p
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-        >
+        <p class="text-heading-base text-black">
           {{ t('homePage.hero.watchlist.title') }}
         </p>
         <p class="text-s-16 leading-[22px] text-text-subtle">
@@ -68,19 +75,18 @@ defineEmits<{
       </div>
     </div>
 
-    <button
-      type="button"
+    <span
       data-test="hero-watchlist-begin"
       class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
-      @click="$emit('begin')"
     >
       {{ t('homePage.hero.watchlist.begin') }}
-      <ChevronRightIcon class="size-[22px]" />
-    </button>
+      <AppIcon name="chevron-right" variant="filled" />
+    </span>
 
-    <!-- White fade on the left edge (over the avatars), per Figma. -->
+    <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
+         tracks the banner background so it stays seamless on hover (#e6e6e6). -->
     <div
-      class="pointer-events-none absolute inset-y-0 left-0 w-[104px] bg-gradient-to-l from-transparent to-white"
+      class="pointer-events-none absolute inset-y-0 left-0 w-[104px] bg-gradient-to-l from-transparent to-white transition-colors group-hover:to-[#e6e6e6]"
       aria-hidden="true"
     />
   </div>

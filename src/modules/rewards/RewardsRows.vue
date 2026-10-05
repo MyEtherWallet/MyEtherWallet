@@ -8,7 +8,7 @@
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
-      <div class="flex items-center gap-3 min-w-[160px]">
+      <div class="flex items-center gap-3 min-w-40">
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
@@ -72,7 +72,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-[6px] border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-1.5 border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
@@ -82,8 +82,10 @@
             time: swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset,
           })
         }}
-        <clock-icon
-          class="w-3.5 h-3.5 ml-auto"
+        <AppIcon
+          name="clock"
+          size="xxs"
+          class="ml-auto"
           :class="{
             '2xl:hidden 3xl:block': isOpenSideMenu,
           }"
@@ -99,7 +101,7 @@
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
-      <div class="flex items-center gap-3 min-w-[160px]">
+      <div class="flex items-center gap-3 min-w-40">
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
@@ -171,7 +173,7 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-[6px] border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-text-placeholder font-medium px-3 py-1.5 border-[1.5px] border-dashed border-border-hover rounded-full max-w-[150px]"
         :class="{
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
@@ -185,8 +187,10 @@
                 : timeUntilHourReset,
           })
         }}
-        <clock-icon
-          class="w-3.5 h-3.5 ml-auto"
+        <AppIcon
+          name="clock"
+          size="xxs"
+          class="ml-auto"
           :class="{
             '2xl:hidden 3xl:block': isOpenSideMenu,
           }"
@@ -198,7 +202,7 @@
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ClockIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'

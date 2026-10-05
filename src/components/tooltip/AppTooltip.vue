@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, useId, nextTick, watch, onBeforeUnmount } from 'vue'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
+import {
+  ref,
+  computed,
+  useId,
+  useSlots,
+  nextTick,
+  watch,
+  onBeforeUnmount,
+} from 'vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   PLACEMENT_FLEX,
   ARROW_BEFORE,
@@ -55,6 +63,7 @@ const effectivePlacement = ref<TooltipPlacement>(props.placement)
 const pos = ref({ x: 0, y: 0 })
 
 const hasText = computed(() => props.text !== '')
+const slots = useSlots()
 const isVertical = computed(
   () =>
     effectivePlacement.value === 'top' || effectivePlacement.value === 'bottom',
@@ -119,6 +128,9 @@ function onKeydown(e: KeyboardEvent) {
 
 function open() {
   if (props.disabled) return
+  // Nothing to show without text or content: lets callers wrap an element and
+  // enable the tooltip conditionally by toggling `text` (ported from develop).
+  if (!hasText.value && !slots.content) return
   clearTimeout(hideTimer)
   if (visible.value) return
   visible.value = true
@@ -208,7 +220,7 @@ onBeforeUnmount(close)
         class="inline-flex rounded-full text-text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
         data-testid="tooltip-default-trigger"
       >
-        <InformationCircleIcon class="size-6 p-1 cursor-pointer" />
+        <AppIcon name="information-circle" class="p-1 cursor-pointer" />
       </span>
     </slot>
   </span>

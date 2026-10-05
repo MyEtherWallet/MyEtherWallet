@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = defineProps<{
   modelValue: number
@@ -37,7 +37,7 @@ const go = (p: number) => {
         class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue - 1)"
       >
-        <ChevronLeftIcon class="size-6" />
+        <AppIcon name="chevron-left" variant="filled" />
       </button>
       <button
         data-test="next"
@@ -46,7 +46,7 @@ const go = (p: number) => {
         class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
         @click="go(props.modelValue + 1)"
       >
-        <ChevronRightIcon class="size-6" />
+        <AppIcon name="chevron-right" variant="filled" />
       </button>
     </div>
   </div>

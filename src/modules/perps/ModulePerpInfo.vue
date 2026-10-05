@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="pb-3 xs:pb-5">
       <div
-        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px] h-5 w-5"
+        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-20 h-5 w-5"
       >
         <!-- <app-btn-icon label="Share">
           <share-icon class="h-5 w-5" />
@@ -13,8 +13,8 @@
         <app-token-logo
           :url="getLogoUrl(baseCurrency)"
           :symbol="baseCurrency"
-          width="w-10 xs:w-[56px]"
-          height="h-10 xs:h-[56px]"
+          width="w-10 xs:w-14"
+          height="h-10 xs:h-14"
         />
         <div class="flex flex-col">
           <h1
@@ -30,13 +30,17 @@
               {{ formatPrice(currentPrice) }}
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
-              <ArrowTrendingDownIcon
+              <AppIcon
+                name="arrow-trending-down"
+                size="xxs"
                 v-if="priceChangePercent < 0"
-                class="w-4 h-4 inline-block text-text-error"
+                class="inline-block text-text-error"
               />
-              <ArrowTrendingUpIcon
+              <AppIcon
+                name="arrow-trending-up"
+                size="xxs"
                 v-else
-                class="w-4 h-4 inline-block text-text-success"
+                class="inline-block text-text-success"
               />
               <span
                 :class="[
@@ -85,14 +89,14 @@
                   @click="toggleSelect"
                 >
                   <p>{{ $t('perps.info.more-label') }}</p>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </button>
               </template>
             </app-select>
           </template>
         </app-btn-group>
       </div>
-      <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
+      <div class="h-[200px] sm:h-80 px-4 lg:px-10 py-6">
         <chart-price
           v-if="!chartLoading && chartLabels.length > 0"
           :labels="chartLabels"
@@ -226,7 +230,7 @@
               >
                 <div class="flex items-center">
                   <span>{{ $t('perps.positions.manage-label') }}</span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
               <app-btn-icon
@@ -236,7 +240,7 @@
                 width="w-7 xs:w-8"
                 @click="toggleSelect"
               >
-                <ellipsis-vertical-icon class="w-5 h-5" />
+                <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
               </app-btn-icon>
             </template>
           </app-select>
@@ -299,9 +303,11 @@
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}
-          <chevron-down-icon
-            class="w-4 h-4 ml-1 inline-block align-middle"
-            :class="{ 'rotate-180 ': showPositionMore }"
+          <AppIcon
+            name="chevron-down"
+            size="xxs"
+            class="ml-1 inline-block align-middle"
+            :class="{ 'rotate-180': showPositionMore }"
           />
         </app-btn-text>
         <transition name="fade" mode="out-in">
@@ -470,7 +476,7 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
             </div>
@@ -567,7 +573,7 @@
                 >
                   <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-text-subtle text-s-12 mb-[2px]">
+                    <p class="text-text-subtle text-s-12 mb-0.5">
                       {{ formatDate(order.createdAt) }}
                     </p>
                     <p
@@ -591,7 +597,7 @@
                   <td class="px-1 py-3 hidden 2xl:table-cell">
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
                         order.status === 'open' || order.status === 'pending'
                           ? 'text-text-brand '
                           : order.status === 'fullyfilled'
@@ -613,7 +619,7 @@
 
                     <p
                       :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-background-default-hover',
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-px bg-background-default-hover',
                         order.status === 'open' || order.status === 'pending'
                           ? 'text-text-brand '
                           : order.status === 'fullyfilled'
@@ -665,12 +671,16 @@
                             width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
                           >
-                            <ellipsis-vertical-icon class="w-5 h-5" />
+                            <AppIcon
+                              name="ellipsis-vertical"
+                              variant="filled"
+                              size="s"
+                            />
                           </app-btn-icon>
                         </template>
                         <template #menu-content="{ toggleMenu }">
                           <div
-                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                           >
                             <ul>
                               <li
@@ -710,7 +720,11 @@
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </div>
                   </td>
@@ -795,7 +809,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-text-success'
                             : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-background-default-hover -ml-1',
+                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover -ml-1',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -831,7 +845,11 @@
                         class="ml-auto"
                         @click="openFillDialog(fill)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </td>
                   </tr>
@@ -969,18 +987,12 @@ import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderCon
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
-import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import { PERPS_CHART_INTERVALS, getPerpsChartRange } from './utils/chart'
 
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/outline'
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
 import { capturePerps } from './sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
@@ -1003,6 +1015,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,

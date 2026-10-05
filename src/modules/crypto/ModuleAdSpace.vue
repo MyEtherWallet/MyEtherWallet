@@ -1,6 +1,6 @@
 <template>
   <section
-    class="rounded-2xl bg-background-brand text-white p-6 text-center shadow-sm min-h-[80px] w-full flex flex-col justify-between"
+    class="rounded-2xl bg-background-brand text-white p-6 text-center shadow-sm min-h-20 w-full flex flex-col justify-between"
   >
     <h3 class="font-semibold text-s-24">
       {{ $t('crypto.solana_staking_title') }}

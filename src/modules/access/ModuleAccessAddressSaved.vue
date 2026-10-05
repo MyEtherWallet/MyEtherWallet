@@ -11,7 +11,12 @@
         class="absolute top-4 left-4 flex items-center justify-center size-8 rounded-full hoverNoBG"
         @click="onBack"
       >
-        <chevron-left-icon class="w-5 h-5 text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </button>
     </template>
     <template #content>
@@ -28,9 +33,7 @@
           />
         </div>
         <div class="flex flex-col gap-2 w-full">
-          <h2
-            class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]"
-          >
+          <h2 class="text-heading-base text-black">
             {{ titleLead }}<br />{{
               $t('multi_address.address_saved.title_suffix')
             }}
@@ -57,7 +60,11 @@
                 wallet: info?.walletName,
               })
             }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+            />
           </button>
           <button
             data-test="address-saved-retry"
@@ -75,14 +82,11 @@
 <script setup lang="ts">
 import { computed, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  ChevronLeftIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { truncateAddress } from '@/utils/filters'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const accessStore = useAccessStore()
 const { addressSavedInfo: info } = storeToRefs(accessStore)

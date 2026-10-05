@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/24/outline'
 import type { RouteLocationRaw } from 'vue-router'
 import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
 import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
 import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     title: string
@@ -59,7 +59,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
       <span
         v-if="category"
         data-test="rewards-category"
-        class="text-s-12 font-semibold tracking-[-0.24px] text-text-brand"
+        class="text-label-xs text-text-brand"
         >{{ category }}</span
       >
     </div>
@@ -68,7 +68,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     <div class="relative flex items-end gap-4">
       <!-- Compact (mobile / side-panel-open) headline; full size on wide layout. -->
       <div
-        class="flex min-w-0 flex-1 flex-col gap-1 text-s-20 font-bold leading-[22px] tracking-[-0.4px] @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
+        class="flex min-w-0 flex-1 flex-col gap-1 text-heading-base @min-[1296px]:text-s-28 @min-[1296px]:leading-8 @min-[1296px]:tracking-[-0.84px]"
       >
         <p data-test="rewards-title" class="text-black">{{ title }}</p>
         <p
@@ -80,7 +80,7 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
         </p>
       </div>
       <span class="flex shrink-0 items-center p-2">
-        <ChevronRightIcon class="size-6 text-text-brand" />
+        <AppIcon name="chevron-right" class="text-text-brand" />
       </span>
     </div>
   </component>

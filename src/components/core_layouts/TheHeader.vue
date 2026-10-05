@@ -16,7 +16,7 @@
             :alt="t('home')"
             width="280"
             height="96"
-            class="w-[140px] h-[48px] flex-none object-contain"
+            class="w-[140px] h-12 flex-none object-contain"
           />
           <img
             v-else
@@ -62,7 +62,12 @@
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
-              <chevron-down-icon class="w-4 h-4 ml-2" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="ml-2"
+              />
             </button>
           </template>
         </app-select>
@@ -75,7 +80,7 @@
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
           v-else-if="isRestoringWallet"
-          class="w-[160px] h-10 rounded-[20px] bg-background-default-hover animate-pulse shrink-0"
+          class="w-40 h-10 rounded-[20px] bg-background-default-hover animate-pulse shrink-0"
           aria-hidden="true"
         />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
@@ -145,7 +150,7 @@ import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'

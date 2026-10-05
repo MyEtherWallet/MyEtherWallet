@@ -48,7 +48,7 @@
                 class="text-text-brand hoverOpacity"
                 @click="updateMnemonic"
               >
-                <arrow-path-icon class="inline w-5 h-5 mr-1" />
+                <AppIcon name="arrow-path" size="s" class="inline mr-1" />
                 {{ $t('create_wallet.mnemonic.update') }}
               </app-btn-text>
             </div>
@@ -187,7 +187,11 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <check-icon class="w-10 h-10 text-text-brand stroke-[3px] mb-4" />
+              <AppIcon
+                name="check"
+                size="xl"
+                class="text-text-brand stroke-[3px] mb-4"
+              />
               <h3
                 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
@@ -203,18 +207,20 @@
             <div class="pt-4 pb-2">
               <div class="flex flex-col items-center justify-center gap-4">
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[240px]"
+                  class="w-full xs:w-auto xs:min-w-60"
                   @click="closeCreateOpenAccess()"
                 >
                   {{ $t('connect_wallet') }}
                 </app-base-button>
                 <app-btn-text
-                  class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
+                  class="w-full xs:w-auto xs:min-w-60 flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
                   {{ $t('create_wallet.mnemonic.create_another_wallet') }}
-                  <arrow-long-right-icon
-                    class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                  <AppIcon
+                    name="arrow-long-right"
+                    size="s"
+                    class="ml-2 transition-transform group-hover:translate-x-1"
                   />
                 </app-btn-text>
               </div>
@@ -238,13 +244,12 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
-import { ArrowPathIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const { closeCreateDialog } = useCreateStore()

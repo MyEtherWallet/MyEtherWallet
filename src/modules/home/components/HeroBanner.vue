@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { ChartBarSquareIcon } from '@heroicons/vue/24/solid'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import heroBannerBg from '@/assets/images/backgrounds/hero-banner-bg.jpg'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -30,11 +30,14 @@ const onLearnMore = () => {
     class="flex flex-wrap items-center gap-4 overflow-hidden rounded-2xl border border-white bg-cover bg-center bg-no-repeat p-4"
     :style="{ backgroundImage: bannerBackground }"
   >
-    <ChartBarSquareIcon class="size-8 shrink-0 text-text-brand" />
+    <AppIcon
+      name="chart-bar-square"
+      variant="filled"
+      size="l"
+      class="shrink-0 text-text-brand"
+    />
     <div class="flex min-w-0 flex-1 flex-col">
-      <p
-        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-      >
+      <p class="text-label-base text-black">
         {{ t('homePage.hero.banner.title') }}
       </p>
       <p class="text-s-14 leading-5 text-black">

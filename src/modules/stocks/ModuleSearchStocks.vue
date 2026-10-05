@@ -16,7 +16,7 @@
       <div class="flex items-center justify-center flex-col">
         <div
           ref="focusTarget"
-          class="flex grow gap-4 justify-between items-center p-[6px] bg-background-default-hover !w-full md:w-auto max-w-[500px] rounded-full relative"
+          class="flex grow gap-4 justify-between items-center p-1.5 bg-background-default-hover !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
             v-model="searchInput"
@@ -33,7 +33,7 @@
                 <div
                   v-if="isLoading"
                   key="search_is_loading"
-                  class="h-[64px] flex items-center justify-center"
+                  class="h-16 flex items-center justify-center"
                 >
                   <svg
                     aria-hidden="true"
@@ -81,15 +81,15 @@
                           :is-stock="true"
                         />
                         <app-tooltip
-                          :text="stock.underlyingMarket.name"
-                          v-if="stock.underlyingMarket.name.length > 12"
+                          :text="getStockName(stock)"
+                          v-if="getStockName(stock).length > 12"
                         >
                           <p class="text-s-12 text-text-subtle truncate">
-                            {{ stock.underlyingMarket.name }}
+                            {{ getStockName(stock) }}
                           </p>
                         </app-tooltip>
                         <p v-else class="text-s-12 text-text-subtle truncate">
-                          {{ stock.underlyingMarket.name }}
+                          {{ getStockName(stock) }}
                         </p>
                       </div>
                       <div class="flex flex-col items-end flex-none">
@@ -118,10 +118,13 @@
                   <p
                     v-if="showNoDataMessage"
                     key="search_no_data_message"
-                    class="text-s-14 text-text-subtle flex items-center justify-center text-wrap break-all h-[64px]"
+                    class="text-s-14 text-text-subtle flex items-center justify-center text-wrap break-all h-16"
                   >
-                    <exclamation-circle-icon
-                      class="inline-block w-5 h-5 text-text-muted mr-1"
+                    <AppIcon
+                      name="exclamation-circle"
+                      variant="filled"
+                      size="s"
+                      class="inline-block text-text-muted mr-1"
                     />
                     {{
                       $t('stocks.no_results_found_for', { query: searchInput })
@@ -261,8 +264,6 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useFocusWithin, watchDebounced } from '@vueuse/core'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
-
 // Components
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -282,6 +283,7 @@ import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { formatFiat } = useCurrency()
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)
@@ -303,7 +305,7 @@ const results = computed(() => {
   const data = searchData.value || []
   return fuzzySearchByKeys(
     data,
-    ['primaryMarket.symbol', 'underlyingMarket.name'],
+    ['primaryMarket.symbol', 'stockAlias', 'underlyingMarket.name'],
     searchInput.value,
   )
 })
@@ -321,6 +323,10 @@ const showNoDataMessage = computed(() => {
     searchInput.value && searchInput.value !== '' && results.value.length === 0
   )
 })
+
+const getStockName = (stock: GetWebStocksSummaryResponse[number]) => {
+  return stock.stockAlias || stock.underlyingMarket?.name || ''
+}
 
 watchDebounced(
   focused,

@@ -28,7 +28,12 @@
         :is-stock="selectedToken.ondo !== undefined"
       />
       <div class="ml-1 min-w-4 h-4">
-        <chevron-down-icon v-if="!isLoading" class="text-text-subtle" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          v-if="!isLoading"
+          class="text-text-subtle"
+        />
       </div>
     </div>
   </button>
@@ -60,11 +65,20 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortLabel }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4 shrink-0"
+                    class="shrink-0"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="shrink-0"
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -85,7 +99,7 @@
                       option.value === activeSortValue
                         ? 'bg-background-default'
                         : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -95,13 +109,19 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-text-brand"
+                        class="text-text-brand"
                       />
-                      <ArrowLongDownIcon
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
                         v-else
-                        class="w-5 h-5 text-text-brand"
+                        class="text-text-brand"
                       />
                     </div>
                   </button>
@@ -158,7 +178,7 @@
                   {{ currencySymbol }} {{ formatUsdBalance(token.usd_balance) }}
                 </p>
                 <div class="flex item-center justify-end gap-1">
-                  <p class="text-text-subtle text-s-12 font-normal">
+                  <p class="text-text-subtle text-text-xs">
                     {{ getBalance(token.balance) }}
                   </p>
                   <app-token-symbol
@@ -191,13 +211,9 @@
 
 <script setup lang="ts">
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted, watch } from 'vue'
-import {
-  ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -215,6 +231,7 @@ import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   externalLoading: {
     type: Boolean,
@@ -373,9 +390,7 @@ const getBalance = (_value: string) => {
   return formatFloatingPointValue(_value).value
 }
 
-const getName = (token: TokenBalance): string => {
-  return token.ondo?.stockAlias ? token.ondo.stockAlias : token.name
-}
+const getName = (token: TokenBalance): string => getTokenDisplayName(token)
 
 const emit = defineEmits<{
   'open:selectToken': [isOpen: boolean]

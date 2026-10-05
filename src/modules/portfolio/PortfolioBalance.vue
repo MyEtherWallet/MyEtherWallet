@@ -17,7 +17,7 @@
           class="flex-wrap"
         >
           <template #btn-content="{ data }">
-            <span class="px-2">{{ $t(data.label) }}</span>
+            <span class="px-2">{{ data.label }}</span>
           </template>
         </app-btn-group>
       </div>
@@ -38,9 +38,14 @@
             >
               <div class="flex items-center justify-between">
                 <span class="text-s-16 font-medium">{{
-                  $t(selectedCryptoFilter.label)
+                  selectedCryptoFilter.label
                 }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="ml-1"
+                />
               </div>
             </button>
           </div>
@@ -64,19 +69,32 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { BALANCE_FILTER, type BalanceFilterOption } from './helpers'
+import {
+  BALANCE_FILTER,
+  type BalanceFilter,
+  type BalanceFilterOption,
+} from './helpers'
 import { useChainsStore } from '@/stores/chainsStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+const { t } = useI18n()
 const chainStore = useChainsStore()
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const { isBitcoinChain } = storeToRefs(chainStore)
 
-const allTokensFilterOptions = computed(() => {
-  const filter = BALANCE_FILTER
+/**
+ * BALANCE_FILTER holds i18n keys as labels. AppSelect renders `option.label`
+ * verbatim, so translate here before handing the options to the UI.
+ */
+const allTokensFilterOptions = computed<BalanceFilterOption[]>(() => {
+  const filter = BALANCE_FILTER.map(option => ({
+    ...option,
+    label: t(option.label),
+  }))
   //remove custom option for bitcoin chain
   if (isBitcoinChain.value) {
     return filter.filter(option => option.value !== 'custom')
@@ -85,9 +103,20 @@ const allTokensFilterOptions = computed(() => {
   return filter
 })
 
-const selectedCryptoFilter = ref<BalanceFilterOption>(
-  allTokensFilterOptions.value[0],
-)
+const selectedFilterValue = ref<BalanceFilter>(BALANCE_FILTER[0].value)
+
+/**
+ * Tracked by value so the label re-translates when the locale changes.
+ */
+const selectedCryptoFilter = computed<BalanceFilterOption>({
+  get: () =>
+    allTokensFilterOptions.value.find(
+      option => option.value === selectedFilterValue.value,
+    ) ?? allTokensFilterOptions.value[0],
+  set: option => {
+    selectedFilterValue.value = option.value
+  },
+})
 
 const showTableTokens = computed(() => {
   return (
@@ -99,8 +128,8 @@ const showTableTokens = computed(() => {
 })
 
 watch(isBitcoinChain, (newVal: boolean) => {
-  if (newVal && selectedCryptoFilter.value.value === 'custom') {
-    selectedCryptoFilter.value = allTokensFilterOptions.value[0]
+  if (newVal && selectedFilterValue.value === 'custom') {
+    selectedFilterValue.value = allTokensFilterOptions.value[0].value
   }
 })
 </script>

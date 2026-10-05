@@ -1,10 +1,7 @@
 <template>
   <div class="h-full flex flex-col gap-6">
     <div class="flex flex-col gap-1 pr-12 flex-none">
-      <h2
-        id="dialogTitle"
-        class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-      >
+      <h2 id="dialogTitle" class="text-heading-xl">
         {{ $t('purchase.select_token.title') }}
       </h2>
       <p class="text-s-16 text-text-subtle leading-[22px]">
@@ -30,7 +27,12 @@
         <span class="text-s-13 font-medium whitespace-nowrap">
           {{ filterButtonLabel }}
         </span>
-        <chevron-right-icon class="w-4 h-4 text-black" />
+        <AppIcon
+          name="chevron-right"
+          variant="filled"
+          size="xxs"
+          class="text-black"
+        />
       </button>
     </div>
 
@@ -81,9 +83,12 @@
           >
             {{ entry.network.name }}
           </span>
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
             v-if="isSelectedToken(entry)"
-            class="w-5 h-5 text-text-brand flex-none"
+            class="text-text-brand flex-none"
           />
         </button>
       </li>
@@ -100,7 +105,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { storeToRefs } from 'pinia'
@@ -113,6 +117,7 @@ import {
 import type { PurchaseAsset } from '@/types/buyToken'
 import type { BuyNetwork } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   networks: BuyNetwork[]
   selectedToken: PurchaseAsset | null

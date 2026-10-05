@@ -8,10 +8,7 @@
       <div class="flex flex-col gap-8 pt-8 pb-8">
         <!-- Header -->
         <div class="flex flex-col gap-1 pr-10">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{ t('purchase.sell.provider.title', { amount: formattedCrypto }) }}
           </h2>
         </div>
@@ -41,14 +38,10 @@
             <div
               class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
             >
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-              >
+              <p class="text-label-base text-black">
                 {{ formattedFiat }}
               </p>
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-text-subtle"
-              >
+              <p class="text-label-base text-text-subtle">
                 ≈ {{ formattedCrypto }}
               </p>
             </div>
@@ -66,7 +59,7 @@
               <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.sell.provider.youll_send') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedCrypto }}
               </span>
             </div>
@@ -75,7 +68,7 @@
               <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.sell.provider.youll_receive') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedFiat }}
               </span>
             </div>
@@ -112,8 +105,11 @@
           >
             <span class="flex items-center justify-center gap-2">
               {{ t('purchase.sell.provider.continue') }}
-              <arrow-top-right-on-square-icon
-                class="w-[22px] h-[22px] flex-none"
+              <AppIcon
+                name="arrow-top-right-on-square"
+                variant="filled"
+                size="s"
+                class="flex-none"
               />
             </span>
           </app-base-button>
@@ -133,7 +129,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import {

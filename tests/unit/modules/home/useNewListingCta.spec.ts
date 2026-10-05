@@ -90,6 +90,31 @@ describe('useNewListingCta', () => {
     ).toBe('swap')
   })
 
+  it("returns 'bridge' for a contract only on another swap-capable chain (matches the drawer)", () => {
+    // Previously this returned 'swap' (any contract chain counted), but the
+    // token-info drawer bridges a coin that isn't on the current chain.
+    chain.swapSupported = name => name === 'Solana'
+    expect(
+      useNewListingCta().resolve({
+        symbol: 'X',
+        name: 'X',
+        chains: contractOn('Solana'),
+        nativeChains: [],
+      }),
+    ).toBe('bridge')
+  })
+
+  it("returns 'none' for a contract-only chain with no contract address", () => {
+    // Addressless contract entry can't be bridged, so it must not advertise Bridge.
+    chain.swapSupported = name => name === 'Solana'
+    expect(
+      useNewListingCta().resolve({
+        chains: [{ chainName: 'Solana' }],
+        nativeChains: [],
+      }),
+    ).toBe('none')
+  })
+
   it("returns 'bridge' when native to another swap-capable chain, not on the current one", () => {
     chain.swapSupported = name => name === 'Solana'
     expect(
@@ -156,7 +181,34 @@ describe('useNewListingCta', () => {
       'X',
       'X',
       token.nativeChains,
+      token.chains,
     )
     expect(openSwapForToken).not.toHaveBeenCalled()
+  })
+
+  it('run bridges a contract-only coin, forwarding its contract chains', () => {
+    chain.swapSupported = name => name === 'Solana'
+    const token = {
+      symbol: 'X',
+      name: 'X',
+      chains: contractOn('Solana'),
+      nativeChains: [],
+    }
+    useNewListingCta().run(token)
+    expect(openBridgeForToken).toHaveBeenCalledWith('X', 'X', [], token.chains)
+    expect(openSwapForToken).not.toHaveBeenCalled()
+  })
+
+  it("run opens Swap as the fallback for a 'none' CTA (no dead-end)", () => {
+    // No swap-capable chain resolves to 'none', but the button is still enabled,
+    // so run must open a panel (Swap) rather than doing nothing.
+    useNewListingCta().run({
+      symbol: 'X',
+      name: 'X',
+      chains: [],
+      nativeChains: [],
+    })
+    expect(openSwapForToken).toHaveBeenCalledWith('X', 'X', [], [])
+    expect(openBridgeForToken).not.toHaveBeenCalled()
   })
 })

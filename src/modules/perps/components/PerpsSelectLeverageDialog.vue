@@ -29,8 +29,10 @@
               "
               @click="$emit('update:modelValue', Math.max(1, modelValue - 1))"
             >
-              <MinusIcon
-                class="w-5 h-5"
+              <AppIcon
+                name="minus"
+                size="s"
+                variant="filled"
                 :class="{ '!opacity-30': modelValue <= 1 }"
               />
             </button>
@@ -76,7 +78,7 @@
                 )
               "
             >
-              <PlusIcon class="w-5 h-5" />
+              <AppIcon name="plus" size="s" variant="filled" />
             </button>
           </div>
 
@@ -161,7 +163,7 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
-import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppWarning from '@/components/AppWarning.vue'
@@ -223,8 +225,8 @@ const sliderFillPct = computed(() => {
 <style scoped>
 .leverage-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--color-background-brand);
   cursor: pointer;
@@ -233,8 +235,8 @@ const sliderFillPct = computed(() => {
 }
 
 .leverage-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: var(--size-4);
+  height: var(--size-4);
   border-radius: 50%;
   background: var(--color-background-brand);
   cursor: pointer;

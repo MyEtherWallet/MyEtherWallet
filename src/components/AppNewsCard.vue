@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   title: string
   source?: string
@@ -53,13 +53,13 @@ const dateLabel = computed(
         target="_blank"
         rel="noopener noreferrer"
         data-test="news-title"
-        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-text-brand group-hover:underline"
+        class="line-clamp-3 w-full text-[18px] font-semibold capitalize leading-6 tracking-[-0.36px] text-black after:absolute after:inset-0 group-hover:text-text-brand group-hover:underline group-has-[.news-ticker:hover]:text-black group-has-[.news-ticker:hover]:no-underline"
       >
         {{ title }}
       </a>
       <p
         v-if="description"
-        class="line-clamp-3 w-full text-s-16 leading-[22px] text-text-subtle group-hover:text-black"
+        class="line-clamp-3 w-full text-s-16 leading-[22px] text-text-subtle group-hover:text-black group-has-[.news-ticker:hover]:text-text-subtle"
       >
         {{ description }}
       </p>
@@ -70,7 +70,7 @@ const dateLabel = computed(
       v-if="ticker"
       :to="tokenTo"
       data-test="news-ticker"
-      class="flex w-fit shrink-0 items-center gap-2"
+      class="news-ticker flex w-fit shrink-0 items-center gap-2"
       :class="
         tokenTo ? 'relative z-10 transition-opacity hover:opacity-80' : ''
       "
@@ -89,8 +89,11 @@ const dateLabel = computed(
       />
     </component>
 
-    <ArrowTopRightOnSquareIcon
-      class="pointer-events-none absolute right-6 top-6 size-5 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100"
+    <AppIcon
+      name="arrow-top-right-on-square"
+      variant="filled"
+      size="s"
+      class="pointer-events-none absolute right-6 top-6 text-text-subtle opacity-0 transition-opacity group-hover:opacity-100 group-has-[.news-ticker:hover]:opacity-0"
     />
   </div>
 </template>

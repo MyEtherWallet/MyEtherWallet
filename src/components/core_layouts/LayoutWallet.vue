@@ -6,7 +6,7 @@
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
           : '!border-border-default',
         'border-white',
-        '  w-[60px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        '  w-[60px] xs:w-20 bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
       ]"
     >
       <div>
@@ -17,8 +17,12 @@
               @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
               class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
-              <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
-              <ChevronDoubleRightIcon v-else class="w-5 h-5" />
+              <AppIcon
+                name="chevron-double-left"
+                size="s"
+                v-if="!isOpenSideMenu"
+              />
+              <AppIcon name="chevron-double-right" size="s" v-else />
             </button>
             <!-- Trade button -->
             <button
@@ -37,7 +41,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.trade') }}
@@ -59,7 +63,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
@@ -81,7 +85,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.perps') }}
@@ -103,7 +107,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.bridge') }}
@@ -117,13 +121,14 @@
               ]"
               @click="openDepositDialog = true"
             >
-              <QrCodeIcon
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              <AppIcon
+                name="qr-code"
+                :class="['mb-1 text-text-brand xs:size-7']"
               />
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -145,7 +150,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -167,7 +172,7 @@
               <p
                 :class="[
                   actionTextSizeClass,
-                  'text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -194,14 +199,14 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"
           class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
-          <ChevronDoubleRightIcon class="w-5 h-5" />
+          <AppIcon name="chevron-double-right" size="s" />
         </app-btn-icon>
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
@@ -252,11 +257,6 @@ import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
-  QrCodeIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-} from '@heroicons/vue/24/outline'
-import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
@@ -268,6 +268,7 @@ import { pageRouteName } from '@/router/routeHierarchy'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
 

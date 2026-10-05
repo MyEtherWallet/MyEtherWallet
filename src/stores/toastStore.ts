@@ -74,6 +74,10 @@ export const useToastStore = defineStore('toastStore', () => {
   const removeToastMessage = (index: number) => {
     messages.value.splice(index, 1)
   }
+  const removeToastById = (id: string) => {
+    const index = messages.value.findIndex(message => message.id === id)
+    if (index >= 0) messages.value.splice(index, 1)
+  }
 
   const showRewardToast = ref(false)
 
@@ -85,6 +89,7 @@ export const useToastStore = defineStore('toastStore', () => {
     messages,
     addToastMessage,
     removeToastMessage,
+    removeToastById,
     showRewardToast,
     toggleRewardToast,
   }

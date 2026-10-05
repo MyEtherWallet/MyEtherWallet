@@ -139,9 +139,12 @@
             @click="showMoreDetails = !showMoreDetails"
           >
             {{ $t('common.more_details') }}
-            <chevron-down-icon
+            <AppIcon
+              name="chevron-down"
+              variant="filled"
+              size="xxs"
               :class="[
-                'transition-transform w-4 h-4 ml-2',
+                'transition-transform ml-2',
                 { 'rotate-180': showMoreDetails },
               ]"
             />
@@ -272,7 +275,7 @@ import {
 import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from '@/providers/ethereum/utils'
@@ -466,6 +469,11 @@ const confirmTransaction = async () => {
           textSecondary: getLocalizedWalletError(msg) ?? errorMessage,
         })
 
+        // Close the verify dialog on failure so stale tx details (from
+        // address, amounts) don't linger behind the error toast.
+        openModal.value = false
+        model.value = false
+
         captureException(e instanceof Error ? e : new Error(msg), {
           ...SENTRY_MODULE_TAGS.SEND,
           extra: {
@@ -504,6 +512,8 @@ const confirmTransaction = async () => {
       text: t('send.toast.tx-send-failed'),
       textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
+    openModal.value = false
+    model.value = false
     // A transient Trezor empty-payload signing failure (APP-MEW-WEB-56) is
     // surfaced to the user as a friendly "reconnect" toast above and is safe to
     // retry, so don't report it to Sentry as a crash.

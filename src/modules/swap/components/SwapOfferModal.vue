@@ -64,8 +64,8 @@
                     ? { address: toToken.address, network: toChain.name }
                     : undefined
                 "
-                width="w-8 lg:w-[48px]"
-                height="h-8 lg:h-[48px]"
+                width="w-8 lg:w-12"
+                height="h-8 lg:h-12"
               />
               <div
                 class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"
@@ -205,9 +205,12 @@
                           )
                         }}%)
                       </span>
-                      <CheckIcon
+                      <AppIcon
+                        name="check"
+                        variant="filled"
+                        size="s"
                         v-if="item.quote.provider === selectedQuote?.provider"
-                        class="w-5 h-5 text-text-brand"
+                        class="text-text-brand"
                       />
                       <div v-else class="w-4 h-4" />
                     </div>
@@ -302,7 +305,6 @@ import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
-import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
@@ -311,6 +313,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 

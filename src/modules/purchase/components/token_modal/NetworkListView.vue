@@ -6,10 +6,15 @@
         class="flex-none -ml-1"
         @click="emit('back')"
       >
-        <chevron-left-icon class="w-5 h-5 text-black" />
+        <AppIcon
+          name="chevron-left"
+          variant="filled"
+          size="s"
+          class="text-black"
+        />
       </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
-        <h2 class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]">
+        <h2 class="text-heading-xl">
           {{ $t('purchase.select_token.filter_title') }}
         </h2>
         <p class="text-s-16 text-text-subtle leading-[22px]">
@@ -54,9 +59,12 @@
           <span class="text-s-16 font-semibold text-black flex-1">
             {{ $t('purchase.select_token.filter_all_networks') }}
           </span>
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
             v-if="currentFilter === null"
-            class="w-5 h-5 text-text-brand flex-none"
+            class="text-text-brand flex-none"
           />
         </button>
       </li>
@@ -77,9 +85,12 @@
           <span class="text-s-16 font-semibold text-black flex-1 truncate">
             {{ network.name }}
           </span>
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="s"
             v-if="currentFilter === network.chain"
-            class="w-5 h-5 text-text-brand flex-none"
+            class="text-text-brand flex-none"
           />
         </button>
       </li>
@@ -122,7 +133,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ChevronLeftIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
@@ -130,6 +140,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { getPurchaseChainIcon } from '../../helpers/purchaseIcons'
 import type { BuyNetwork } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   networks: BuyNetwork[]
   currentFilter: string | null

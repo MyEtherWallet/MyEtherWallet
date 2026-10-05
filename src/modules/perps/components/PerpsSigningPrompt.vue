@@ -35,8 +35,7 @@
           </p>
           <pre
             class="bg-background-brand-subtle rounded-12 p-3 text-s-12 text-black font-mono break-all whitespace-pre-wrap max-h-44 overflow-y-auto"
-            >{{ message }}</pre
-          >
+            >{{ message }}</pre>
         </div>
 
         <!-- Hardware wallet hint -->

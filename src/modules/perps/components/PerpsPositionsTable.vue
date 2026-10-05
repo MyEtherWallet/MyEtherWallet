@@ -76,7 +76,12 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-2" />
+                  <AppIcon
+                    name="chevron-down"
+                    size="xxs"
+                    variant="filled"
+                    class="ml-2"
+                  />
                 </div>
               </button>
             </div>
@@ -245,7 +250,11 @@
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          size="s"
+                          variant="filled"
+                        />
                       </app-btn-icon>
                       <AppBaseButton
                         class="hidden lg:flex"
@@ -259,7 +268,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <ul>
                           <li
@@ -460,7 +469,7 @@
               <td class="px-1 py-3 hidden lg:table-cell">
                 <p
                   :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
                     order.status === 'open' || order.status === 'pending'
                       ? 'text-text-brand'
                       : order.status === 'fullyfilled'
@@ -515,12 +524,16 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <ellipsis-vertical-icon class="w-5 h-5" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        size="s"
+                        variant="filled"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                     >
                       <ul>
                         <li
@@ -555,7 +568,7 @@
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
                 >
-                  <chevron-right-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-right" size="s" variant="filled" />
                 </app-btn-icon>
               </td>
             </tr>
@@ -644,7 +657,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-text-success'
                             : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-background-default-hover lg:hidden',
+                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-px bg-background-default-hover lg:hidden',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -659,7 +672,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-text-success'
                         : 'text-text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-background-default-hover',
+                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover',
                     ]"
                   >
                     {{ $t(directionKey(fill.direction)) }}
@@ -698,7 +711,7 @@
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
-                    <chevron-right-icon class="w-5 h-5" />
+                    <AppIcon name="chevron-right" size="s" variant="filled" />
                   </app-btn-icon>
                 </td>
               </tr>
@@ -891,11 +904,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ChevronDownIcon,
-  EllipsisVerticalIcon,
-  ChevronRightIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'

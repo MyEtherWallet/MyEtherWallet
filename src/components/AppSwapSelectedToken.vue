@@ -1,46 +1,59 @@
 <template>
-  <button
-    :class="[
-      isLoading || !selectedToken
-        ? 'bg-background-default-hover animate-pulse min-w-[120px]'
-        : 'bg-white hoverNoBG shadow-button border-border-default border',
-      'rounded-full px-1 min-h-9 transition-colors',
-    ]"
-    type="button"
-    @click="showAllTokens = true"
-    :aria-label="$t('select_token.title')"
-    :disabled="isLoading || !selectedToken"
+  <slot
+    name="trigger"
+    :open="openSelectToken"
+    :is-loading="isLoading"
+    :selected-token="selectedToken"
   >
-    <div
-      v-if="!isLoading && selectedToken"
-      class="flex flex-nowrap items-center"
+    <button
+      :class="[
+        isLoading || !selectedToken
+          ? 'bg-background-default-hover animate-pulse min-w-[120px]'
+          : 'bg-white hoverNoBG shadow-button border-border-default border',
+        'rounded-full px-1 min-h-9 transition-colors',
+      ]"
+      type="button"
+      @click="openSelectToken"
+      :aria-label="$t('select_token.title')"
+      :disabled="isLoading || !selectedToken"
     >
-      <app-token-logo
-        :url="selectedToken.logoURI"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-        width="w-7"
-        height="h-7"
-        class="mr-2"
-      />
-      <app-token-symbol
-        v-if="!isLoading"
-        :symbol="selectedToken.symbol"
-        :address="
-          networkName
-            ? { address: selectedToken.address, network: networkName }
-            : undefined
-        "
-      />
-      <div class="ml-1 min-w-4 h-4">
-        <chevron-down-icon v-if="!isLoading" class="text-text-subtle" />
+      <div
+        v-if="!isLoading && selectedToken"
+        class="flex flex-nowrap items-center"
+      >
+        <app-token-logo
+          :url="selectedToken.logoURI"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+          width="w-7"
+          height="h-7"
+          :no-shadow="noLogoShadow"
+          class="mr-2"
+        />
+        <app-token-symbol
+          v-if="!isLoading"
+          :symbol="selectedToken.symbol"
+          :address="
+            networkName
+              ? { address: selectedToken.address, network: networkName }
+              : undefined
+          "
+        />
+        <div class="ml-1 min-w-4 h-4">
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            v-if="!isLoading"
+            class="text-text-subtle"
+          />
+        </div>
       </div>
-    </div>
-  </button>
+    </button>
+  </slot>
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
@@ -72,11 +85,20 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortLabel }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4 shrink-0"
+                    class="shrink-0"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="shrink-0"
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -97,7 +119,7 @@
                       option.value === activeSortValue
                         ? 'bg-background-default'
                         : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -107,13 +129,19 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-text-brand"
+                        class="text-text-brand"
                       />
-                      <ArrowLongDownIcon
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
                         v-else
-                        class="w-5 h-5 text-text-brand"
+                        class="text-text-brand"
                       />
                     </div>
                   </button>
@@ -151,6 +179,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -187,6 +216,7 @@
                   "
                   width="w-6"
                   height="h-6"
+                  :no-shadow="noLogoShadow"
                   class="mr-1.5 shrink-0"
                 />
                 <app-token-symbol
@@ -226,6 +256,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -316,6 +347,7 @@
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
+                  :no-shadow="noLogoShadow"
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
@@ -345,7 +377,7 @@
         <div>
           <div
             v-show="tokens.length > paginatedTokens.length && !searchInput"
-            class="h-[44px] w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
+            class="h-11 w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
             :class="{
               'cursor-pointer': !loadingMoreItems,
             }"
@@ -387,11 +419,6 @@
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Ref, ref, computed, onMounted, watch } from 'vue'
-import {
-  ChevronDownIcon,
-  ArrowLongDownIcon,
-  ArrowLongUpIcon,
-} from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -416,6 +443,7 @@ import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,
@@ -449,6 +477,10 @@ const props = defineProps({
   disabledGroupTitle: {
     type: String,
     required: false,
+  },
+  noLogoShadow: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -489,6 +521,9 @@ const tokens = computed<NewTokenInfo[]>(() => {
 })
 
 const showAllTokens = ref(false)
+const openSelectToken = () => {
+  showAllTokens.value = true
+}
 const searchInput = ref('')
 // Debounced query drives the (expensive) sort + fuzzy search so heavy work runs
 // after the user pauses typing instead of on every keystroke — the untouched

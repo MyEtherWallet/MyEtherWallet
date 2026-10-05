@@ -5,9 +5,13 @@
     target="_blank"
     :aria-label="label"
     :class="[
-      'rounded-full !cursor-pointer p-1 flex items-center justify-center ',
+      'rounded-full !cursor-pointer p-1 flex items-center justify-center transition-colors duration-300',
       { 'invert brightness-100': isWhite },
-      disabled ? 'text-text-placeholder' : 'hoverNoBG',
+      disabled
+        ? 'text-text-placeholder'
+        : filled
+          ? 'bg-background-default hover:bg-background-default-hover'
+          : 'hoverNoBG',
       height,
       width,
     ]"
@@ -40,13 +44,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * @filled - solid grey background (grey-5, darker on hover) instead of the
+   * default transparent hoverNoBG treatment.
+   */
+  filled: {
+    type: Boolean,
+    default: false,
+  },
   height: {
     type: String,
-    default: 'h-[32px]',
+    default: 'h-8',
   },
   width: {
     type: String,
-    default: 'w-[32px]',
+    default: 'w-8',
   },
 })
 

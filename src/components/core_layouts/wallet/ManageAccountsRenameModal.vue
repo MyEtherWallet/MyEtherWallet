@@ -5,9 +5,7 @@
   >
     <template #title>
       <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
-        <h1
-          class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]"
-        >
+        <h1 class="text-heading-base text-black">
           {{ $t('multi_address.rename.title') }}
         </h1>
         <p class="text-s-16 text-text-subtle leading-[22px]">
@@ -36,7 +34,12 @@
             data-test="rename-modal-error"
             class="flex items-center gap-1.5 px-1"
           >
-            <exclamation-circle-icon class="w-4 h-4 shrink-0 text-text-error" />
+            <AppIcon
+              name="exclamation-circle"
+              variant="filled"
+              size="xxs"
+              class="shrink-0 text-text-error"
+            />
             <p class="text-s-12 text-text-error leading-[18px]">
               {{ $t('multi_address.rename.duplicate') }}
             </p>
@@ -62,8 +65,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
 import AppDialog from '@/components/AppDialog.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const props = defineProps<{

@@ -1,6 +1,8 @@
 <template>
   <div
     class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-[220px] p-5 rounded-16"
+    :data-test="`rwa-offer-card-${campaign}`"
+    :data-status="effectiveStatus"
   >
     <img
       :src="illustrationSrc"
@@ -10,21 +12,14 @@
 
     <div class="relative z-10 flex flex-col max-w-[250px] gap-2">
       <div class="flex flex-col">
-        <p
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-        >
+        <p class="text-label-base text-black">
           {{ title }}
         </p>
-        <p
-          class="text-s-14 font-normal leading-5 text-text-subtle whitespace-pre-line"
-        >
+        <p class="text-text-sm text-text-subtle whitespace-pre-line">
           {{ description }}
         </p>
       </div>
-      <p
-        v-if="footnote"
-        class="text-s-12 font-normal leading-[18px] text-text-subtle"
-      >
+      <p v-if="footnote" class="text-text-xs text-text-subtle">
         {{ footnote }}
       </p>
     </div>
@@ -95,6 +90,10 @@ export type RwaRewardStatus =
   | 'claimable'
   | 'noRewards'
   | 'claimed'
+  /** The hold was broken before it completed. */
+  | 'lost'
+  /** Qualified, but the claim window closed. */
+  | 'expired'
   | 'paused'
   /** Web budget accounted for while the season is still running. */
   | 'full'
@@ -119,6 +118,8 @@ const props = defineProps<{
   primaryCta?: string
   primaryDisabled?: boolean
   secondaryLabel?: string
+  /** Which reward round the card is showing — `card_status` is shared. */
+  round?: 1 | 2
 }>()
 
 const emit = defineEmits<{ primary: []; secondary: [] }>()
@@ -190,6 +191,7 @@ const clickPrimary = () => {
     campaign: props.campaign,
     cta: props.primaryCta ?? props.primaryLabel ?? '',
     card_status: effectiveStatus.value,
+    round: props.round,
     location: 'offers_carousel',
   })
   emit('primary')
@@ -202,6 +204,7 @@ const clickSecondary = () => {
       campaign: props.campaign,
       cta: props.secondaryLabel ?? '',
       card_status: effectiveStatus.value,
+      round: props.round,
       location: 'offers_carousel',
     },
   )
@@ -227,6 +230,8 @@ const statusBadge = computed(
       claimable: { text: '#067f71', bg: '#c8fff1' },
       noRewards: { text: '#bb5602', bg: '#ffedc5' },
       claimed: { text: '#067f71', bg: '#c8fff1' },
+      lost: { text: '#cc0452', bg: '#ffdbe3' },
+      expired: { text: '#cc0452', bg: '#ffdbe3' },
       paused: { text: '#bb5602', bg: '#ffedc5' },
       full: { text: '#cc0452', bg: '#ffdbe3' },
       ended: { text: '#cc0452', bg: '#ffdbe3' },

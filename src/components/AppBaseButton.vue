@@ -27,7 +27,7 @@
           aria-hidden="true"
           :class="[
             'animate-spin  mx-auto',
-            { 'w-4 h-4 mt-[2px]': size === BtnSize.SMALL },
+            { 'w-4 h-4 mt-0.5': size === BtnSize.SMALL },
             { 'w-5 h-5': size === BtnSize.MEDIUM },
             { 'w-6 h-6  top-[25%]': size === BtnSize.LARGE },
             isOutline
@@ -88,7 +88,9 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
+    type: String as PropType<
+      'primary' | 'secondary' | 'error' | 'success' | 'neutral'
+    >,
     default: 'primary',
   },
 })
@@ -98,6 +100,14 @@ const themeStyle = computed(() => {
     if (props.isOutline)
       return 'border border-2 border-border-brand text-text-brand bg-transparent'
     return 'text-white bg-background-brand'
+  }
+
+  // Tonal secondary: muted grey fill with primary-colored label, no border.
+  // Label is 600 and the fill turns solid white on hover (QA MEW-2324).
+  if (props.theme === 'secondary') {
+    if (props.isOutline)
+      return 'border border-2 border-border-default text-text-brand bg-transparent font-semibold hover:bg-white hover:!opacity-100'
+    return 'text-text-brand bg-background-default font-semibold hover:bg-white hover:!opacity-100'
   }
 
   if (props.theme === 'success') {

@@ -3,11 +3,11 @@
     <!-- Settings Button -->
     <app-btn-icon
       :label="$t('menu.open-settings')"
-      width="w-[40px]"
-      height="h-[40px]"
+      width="w-10"
+      height="h-10"
       @click="togglePopup"
     >
-      <cog6-tooth-icon class="w-6 h-6" />
+      <AppIcon name="cog-6-tooth" variant="filled" />
     </app-btn-icon>
 
     <!-- Headless network selector (mobile): owns the chain dialog. It renders
@@ -62,9 +62,7 @@
               }"
             >
               <!-- Title -->
-              <h3
-                class="self-stretch text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
-              >
+              <h3 class="self-stretch text-heading-base text-black">
                 {{ $t('settings.title') }}
               </h3>
 
@@ -92,13 +90,15 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <globe-alt-icon
-                      class="w-5 h-5 text-text-brand flex-shrink-0"
+                    <AppIcon
+                      name="globe-alt"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black capitalize"
-                      >{{ $t('common.network') }}</span
-                    >
+                    <span class="text-text-base text-black capitalize">{{
+                      $t('common.network')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2 min-w-0">
                     <img
@@ -110,11 +110,14 @@
                       width="20"
                     />
                     <span
-                      class="text-s-14 font-normal leading-[20px] text-text-subtle truncate max-w-[120px]"
+                      class="text-text-sm text-text-subtle truncate max-w-[120px]"
                       >{{ selectedChain?.nameLong }}</span
                     >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-text-subtle flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -127,13 +130,15 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <banknotes-icon
-                      class="w-5 h-5 text-text-brand flex-shrink-0"
+                    <AppIcon
+                      name="banknotes"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.currency') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.currency')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
                     <app-token-logo
@@ -144,12 +149,14 @@
                       height="h-5"
                       class="flex-shrink-0"
                     />
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-text-subtle"
-                      >{{ selectedCurrency }}</span
-                    >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-text-subtle flex-shrink-0"
+                    <span class="text-text-sm text-text-subtle">{{
+                      selectedCurrency
+                    }}</span>
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -162,21 +169,25 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <language-icon
-                      class="w-5 h-5 text-text-brand flex-shrink-0"
+                    <AppIcon
+                      name="language"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.language') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.language')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-text-subtle"
-                      >{{ selectedLanguageAbbr }}</span
-                    >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-text-subtle flex-shrink-0"
+                    <span class="text-text-sm text-text-subtle">{{
+                      selectedLanguageAbbr
+                    }}</span>
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -189,21 +200,25 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex items-center gap-2.5">
-                    <currency-dollar-icon
-                      class="w-5 h-5 text-text-brand flex-shrink-0"
+                    <AppIcon
+                      name="currency-dollar"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
                     />
-                    <span
-                      class="text-s-16 font-normal leading-[22px] text-black"
-                      >{{ $t('settings.default_fee') }}</span
-                    >
+                    <span class="text-text-base text-black">{{
+                      $t('settings.default_fee')
+                    }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span
-                      class="text-s-14 font-normal leading-[20px] text-text-subtle"
-                      >{{ selectedFeeLabel }}</span
-                    >
-                    <chevron-right-icon
-                      class="w-4 h-4 text-text-subtle flex-shrink-0"
+                    <span class="text-text-sm text-text-subtle">{{
+                      selectedFeeLabel
+                    }}</span>
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      size="xxs"
+                      class="text-text-subtle flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -224,19 +239,24 @@
                 <!-- Usage analytics -->
                 <div class="flex w-full h-6 justify-between items-center">
                   <div class="flex items-center gap-2.5">
-                    <circle-stack-icon
-                      class="w-5 h-5 text-text-brand flex-shrink-0"
+                    <AppIcon
+                      name="circle-stack"
+                      variant="filled"
+                      size="s"
+                      class="text-text-brand flex-shrink-0"
                     />
                     <div class="flex items-center gap-1">
-                      <span
-                        class="text-s-16 font-normal leading-[22px] text-black"
-                        >{{ $t('settings.usage_analytics') }}</span
-                      >
+                      <span class="text-text-base text-black">{{
+                        $t('settings.usage_analytics')
+                      }}</span>
                       <app-tooltip
                         :text="$t('settings.usage_analytics_tooltip')"
                       >
-                        <question-mark-circle-icon
-                          class="w-4 h-4 text-text-placeholder flex-shrink-0 cursor-pointer"
+                        <AppIcon
+                          name="question-mark-circle"
+                          variant="filled"
+                          size="xxs"
+                          class="text-text-placeholder flex-shrink-0 cursor-pointer"
                         />
                       </app-tooltip>
                     </div>
@@ -284,17 +304,15 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-text-base text-black">
                   {{ $t('settings.select_transaction_fee') }}
                 </span>
               </div>
 
               <!-- Description -->
-              <p
-                class="self-stretch text-s-14 font-normal leading-[20px] text-text-subtle"
-              >
+              <p class="self-stretch text-text-sm text-text-subtle">
                 {{ $t('settings.fee_description') }}
               </p>
 
@@ -313,23 +331,22 @@
                 >
                   <div class="flex-1 flex flex-col gap-1">
                     <div class="flex items-center gap-0.5">
-                      <span
-                        class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-black"
-                        >{{ option.label }}</span
-                      >
-                      <span
-                        class="text-s-14 font-normal leading-[20px] text-text-placeholder"
-                      >
+                      <span class="text-label-sm text-black">{{
+                        option.label
+                      }}</span>
+                      <span class="text-text-sm text-text-placeholder">
                         – {{ option.price }}</span
                       >
                     </div>
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-subtle"
-                      >{{ option.description }}</span
-                    >
+                    <span class="text-text-xs text-text-subtle">{{
+                      option.description
+                    }}</span>
                   </div>
-                  <check-circle-icon
-                    class="w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="flex-shrink-0 transition-colors duration-150"
                     :class="
                       selectedFee === option.id
                         ? 'text-text-brand'
@@ -363,7 +380,7 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
                 <span class="text-s-16 font-bold leading-[22px] text-black">
                   {{ $t('settings.select_currency') }}
@@ -371,16 +388,14 @@
               </div>
 
               <!-- Description -->
-              <p
-                class="self-stretch text-s-14 font-normal leading-[20px] text-text-subtle"
-              >
+              <p class="self-stretch text-text-sm text-text-subtle">
                 {{ $t('settings.currency_description') }}
               </p>
 
               <!-- Currency options -->
               <div
                 ref="currencyListRef"
-                class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2"
+                class="flex flex-col gap-1 w-full max-h-80 overflow-y-auto -mx-2 px-2"
               >
                 <div
                   v-for="option in currencyOptions"
@@ -410,13 +425,15 @@
                       class="text-s-14 font-semibold leading-[20px] text-black flex-shrink-0"
                       >{{ option.code }}</span
                     >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-placeholder truncate"
-                      >{{ option.name }}</span
-                    >
+                    <span class="text-text-xs text-text-placeholder truncate">{{
+                      option.name
+                    }}</span>
                   </div>
-                  <check-circle-icon
-                    class="relative w-5 h-5 flex-shrink-0 transition-colors duration-150"
+                  <AppIcon
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="relative flex-shrink-0 transition-colors duration-150"
                     :class="
                       selectedCurrency === option.code
                         ? 'text-text-brand'
@@ -450,9 +467,9 @@
                   height="h-6"
                   @click="view = 'main'"
                 >
-                  <chevron-left-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-left" variant="filled" size="s" />
                 </app-btn-icon>
-                <span class="text-s-16 font-normal leading-[22px] text-black">
+                <span class="text-text-base text-black">
                   {{ $t('settings.select_language') }}
                 </span>
               </div>
@@ -473,20 +490,20 @@
                   class="flex w-full items-center gap-1 border-y border-border-default py-3"
                 >
                   <div class="flex flex-1 min-w-0 items-center gap-1">
-                    <span
-                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                      >{{ selectedLanguageOption.label }}</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-subtle"
-                      >/</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-subtle"
-                      >{{ selectedLanguageOption.native }}</span
-                    >
+                    <span class="text-label-base text-black">{{
+                      selectedLanguageOption.label
+                    }}</span>
+                    <span class="text-text-xs text-text-subtle">/</span>
+                    <span class="text-text-xs text-text-subtle">{{
+                      selectedLanguageOption.native
+                    }}</span>
                   </div>
-                  <check-icon class="w-5 h-5 text-text-brand flex-shrink-0" />
+                  <AppIcon
+                    name="check"
+                    variant="filled"
+                    size="s"
+                    class="text-text-brand flex-shrink-0"
+                  />
                 </div>
 
                 <!-- Full language list -->
@@ -500,18 +517,13 @@
                     class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                   />
                   <div class="relative flex flex-1 min-w-0 items-center gap-1">
-                    <span
-                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                      >{{ language.label }}</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-subtle"
-                      >/</span
-                    >
-                    <span
-                      class="text-s-12 font-normal leading-[18px] text-text-subtle"
-                      >{{ language.native }}</span
-                    >
+                    <span class="text-label-base text-black">{{
+                      language.label
+                    }}</span>
+                    <span class="text-text-xs text-text-subtle">/</span>
+                    <span class="text-text-xs text-text-subtle">{{
+                      language.native
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -526,21 +538,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import {
-  CurrencyDollarIcon,
-  CircleStackIcon,
-  ChevronLeftIcon,
-  CheckCircleIcon,
-  CheckIcon,
-  LanguageIcon,
-  GlobeAltIcon,
-  BanknotesIcon,
-} from '@heroicons/vue/20/solid'
-import {
-  ChevronRightIcon,
-  QuestionMarkCircleIcon,
-} from '@heroicons/vue/16/solid'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
@@ -556,6 +553,7 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
@@ -626,7 +624,10 @@ const currencyOptions = computed(() => {
   const rest = SUPPORTED_CURRENCIES.filter(
     c => c.code !== selectedCurrency.value,
   )
-  return [...active, ...rest]
+  return [...active, ...rest].map(c => ({
+    code: c.code,
+    name: t(`settings.currency_country.${c.code}`),
+  }))
 })
 
 const selectCurrency = (code: string) => {

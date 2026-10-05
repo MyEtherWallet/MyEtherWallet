@@ -41,7 +41,7 @@
         v-show="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
+        class="fixed z-[2102] w-96 max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
         :class="view === 'connect-address' ? 'h-[440px]' : 'h-[720px]'"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
@@ -88,8 +88,10 @@
                         {{ chainsStore.selectedChain?.nameLong }}
                       </span>
                     </div>
-                    <chevron-right-icon
-                      class="w-6 h-6 text-black flex-shrink-0"
+                    <AppIcon
+                      name="chevron-right"
+                      variant="filled"
+                      class="text-black flex-shrink-0"
                     />
                   </button>
                   <manage-accounts-card
@@ -128,9 +130,7 @@
                     data-test="over-cap-note"
                     class="flex flex-col items-center gap-1 p-5 text-center"
                   >
-                    <p
-                      class="text-s-16 font-semibold text-black tracking-[-0.32px] leading-[22px]"
-                    >
+                    <p class="text-label-base text-black">
                       {{ $t('multi_address.cap_note_title') }}
                     </p>
                     <p class="text-s-14 text-text-subtle leading-5">
@@ -158,8 +158,11 @@
                           }}
                           ({{ group.accounts.length }})
                         </span>
-                        <chevron-down-icon
-                          class="w-5 h-5 text-text-subtle flex-shrink-0 transition-transform duration-200"
+                        <AppIcon
+                          name="chevron-down"
+                          variant="filled"
+                          size="s"
+                          class="text-text-subtle flex-shrink-0 transition-transform duration-200"
                           :class="{ 'rotate-180': !collapsed[group.type] }"
                         />
                       </button>
@@ -345,7 +348,6 @@ import {
 import { onClickOutside, useWindowSize, useIntervalFn } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
@@ -363,6 +365,7 @@ import {
   useAccountBalances,
   BALANCE_TTL_MS,
   type AccountBalance,
+  type BalanceEntry,
 } from '@/composables/useAccountBalances'
 import { useWalletStore } from '@/stores/walletStore'
 import { useProviderStore } from '@/stores/providerStore'
@@ -376,6 +379,7 @@ import {
   type SavedAccount,
 } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const GAP = 24
 
@@ -636,6 +640,17 @@ const detectedMessage = ref('')
 
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
+// One saved-address balance request. Carries what the batch endpoint needs for
+// the selected network (chain id for EVM, name for Bitcoin) and the chain's fiat
+// price to value the native balance it returns.
+const balanceEntry = (address: string): BalanceEntry => ({
+  chainName: chainName(),
+  address,
+  nativePrice: chainsStore.selectedChain?.price ?? 0,
+  chainId: chainsStore.selectedChain?.chainID,
+  chainType: chainsStore.selectedChain?.type,
+})
+
 // Viewport-driven fetching: a saved address's balance is (re)fetched only while
 // it is visible in the popup list AND missing/older than the TTL. Rows report
 // their visibility; we debounce so a quick scroll-past doesn't fire a request,
@@ -649,11 +664,7 @@ const fetchTimers = new Map<string, ReturnType<typeof setTimeout>>()
 // skeleton — appears immediately for a chain that has no cached balance yet.
 const fetchVisibleNow = (acc: SavedAccount): void => {
   if (isActive(acc) || !isCompatible(acc)) return
-  void fetchIfStale({
-    chainName: chainName(),
-    address: acc.address,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void fetchIfStale(balanceEntry(acc.address))
 }
 
 // Debounced variant for scroll: a quick scroll-past shouldn't fire a request.
@@ -695,10 +706,10 @@ const refreshVisible = (): void => {
 }
 
 // On a network switch the IntersectionObserver won't re-fire (rows don't move), so
-// re-fetch the visible rows for the newly-selected chain. Debounced: each visible
-// row is one /balances call, so flipping quickly through several networks would
-// otherwise burst (N addresses × M networks) — instead we only fetch the chain the
-// user lands on. chainSwitchPending keeps the skeleton up during the settle, and
+// re-fetch the visible rows for the newly-selected chain. Debounced: the visible
+// rows become one batched balances call per network, so flipping quickly through
+// several networks would otherwise burst (one call × M networks) — instead we only
+// fetch the chain the user lands on. chainSwitchPending keeps the skeleton up during the settle, and
 // the per-(chain, address) cache makes revisiting a network within the TTL free.
 const NETWORK_SWITCH_DEBOUNCE_MS = 500
 let switchTimer: ReturnType<typeof setTimeout> | undefined
@@ -850,11 +861,7 @@ const refresh = (acc: SavedAccount): void => {
     void walletStore.refreshBalances()
     return
   }
-  void refreshOne({
-    chainName: chainName(),
-    address: acc.address,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void refreshOne(balanceEntry(acc.address))
 }
 const openExplorer = (acc: SavedAccount): void => {
   const url = chainsStore.selectedChain?.blockExplorerAddr?.replace(
@@ -865,7 +872,12 @@ const openExplorer = (acc: SavedAccount): void => {
   openDialog.value = false
 }
 const copy = (address: string): void => {
-  void navigator.clipboard.writeText(address)
+  // Some mobile browsers (e.g. VivoBrowser on Android) reject clipboard writes
+  // when permission is denied; swallow it so it doesn't escape as an unhandled
+  // promise rejection. The row/card already shows optimistic copy feedback.
+  void navigator.clipboard.writeText(address).catch(() => {
+    /* clipboard permission denied — nothing to recover */
+  })
 }
 const saveDetected = (): void => {
   if (!detectedAddress.value) return
@@ -889,11 +901,7 @@ const saveDetected = (): void => {
   detectedMessage.value = ''
   // Pull + cache the newly-saved address once now, so it shows a balance right
   // away and isn't re-fetched on later opens (it's non-active → cache-served).
-  void refreshOne({
-    chainName: chainName(),
-    address: detectedAddress.value,
-    nativePrice: chainsStore.selectedChain?.price ?? 0,
-  })
+  void refreshOne(balanceEntry(detectedAddress.value))
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DETECTED_SAVED)
   walletStore.clearDetectedAddress()
 }

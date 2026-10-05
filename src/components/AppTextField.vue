@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-[160px] px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-text-placeholder focus:outline-none focus:ring-0',
+        'w-full h-40 px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-text-placeholder focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"
@@ -21,7 +21,11 @@
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
       <template v-if="showFeedback">
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-text-error" />
+        <AppIcon
+          name="exclamation-circle"
+          size="s"
+          class="shrink-0 text-text-error"
+        />
         <p
           :id="feedbackId"
           class="text-xs leading-[18px] text-text-error min-w-0 break-words"
@@ -42,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch, useId, type PropType } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 
 defineOptions({ inheritAttrs: false })
