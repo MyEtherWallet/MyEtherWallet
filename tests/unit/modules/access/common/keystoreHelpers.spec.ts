@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
+  isCorruptKeystoreError,
   isKeystoreFile,
-  isWrongKeystorePassword,
 } from '@/modules/access/common/helpers'
 
 describe('isKeystoreFile', () => {
@@ -23,22 +23,31 @@ describe('isKeystoreFile', () => {
   )
 })
 
-describe('isWrongKeystorePassword', () => {
-  it('flags the wallet library wrong-passphrase errors', () => {
-    expect(
-      isWrongKeystorePassword(
-        new Error('Key derivation failed - possibly wrong passphrase'),
-      ),
-    ).toBe(true)
-    expect(
-      isWrongKeystorePassword(
-        new Error('Decoded key mismatch - possibly wrong passphrase'),
-      ),
-    ).toBe(true)
+describe('isCorruptKeystoreError', () => {
+  it.each([
+    'Unsupported kdf',
+    'Unsupported key derivation scheme',
+    'Unsupported parameters to PBKDF2',
+    'Unsupported EtherWallet key format',
+    'Not a V3 wallet',
+    'Not a V1 Wallet',
+    'Only md5 is supported in evp_kdf',
+    'Invalid private key length',
+  ])('treats "%s" as a file it cannot decrypt', message => {
+    expect(isCorruptKeystoreError(new Error(message))).toBe(true)
   })
 
-  it('treats anything else as a file it cannot decrypt', () => {
-    expect(isWrongKeystorePassword(new Error('Unsupported kdf'))).toBe(false)
-    expect(isWrongKeystorePassword('boom')).toBe(false)
+  it.each([
+    'Key derivation failed - possibly wrong passphrase',
+    'Decoded key mismatch - possibly wrong passphrase',
+    'bad decrypt',
+    'Password must be at least 7 characters',
+    'Invalid private key or address',
+  ])('treats "%s" as a wrong password', message => {
+    expect(isCorruptKeystoreError(new Error(message))).toBe(false)
+  })
+
+  it('treats non-errors as a wrong password', () => {
+    expect(isCorruptKeystoreError('boom')).toBe(false)
   })
 })

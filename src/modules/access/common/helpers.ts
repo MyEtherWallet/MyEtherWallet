@@ -219,11 +219,15 @@ const isKeystoreFile = (json: unknown): boolean => {
 }
 
 /**
- * Wrong password vs. a keystore we can't decrypt (corrupt / unsupported). The
- * wallet library reports a bad password as "... possibly wrong passphrase".
+ * A keystore we can't decrypt (unsupported / corrupt format) vs. anything else,
+ * which the UI treats as a wrong password. Matches the format errors thrown by
+ * @ethereumjs/wallet and fromMyEtherWalletV2; wrong-password failures vary by
+ * format (mismatch, cipher padding, length checks), so they're the fallback.
  */
-const isWrongKeystorePassword = (error: unknown): boolean =>
-  /possibly wrong passphrase/i.test((error as Error)?.message ?? '')
+const CORRUPT_KEYSTORE_ERROR =
+  /unsupported|not a v\d|only md5|invalid private key length/i
+const isCorruptKeystoreError = (error: unknown): boolean =>
+  CORRUPT_KEYSTORE_ERROR.test((error as Error)?.message ?? '')
 
 const isPrivateKey = (key: string) => {
   const priv = key ? key.replace('0x', '') : ''
@@ -234,7 +238,7 @@ export type { EthSaleKeystore, V3Keystore, MEWKeystore }
 export {
   unlockKeystore,
   isKeystoreFile,
-  isWrongKeystorePassword,
+  isCorruptKeystoreError,
   getMinPriorityFee,
   getBufferFromHex,
   bufferToHex,

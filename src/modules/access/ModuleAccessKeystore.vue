@@ -163,7 +163,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import {
   isKeystoreFile,
-  isWrongKeystorePassword,
+  isCorruptKeystoreError,
   unlockKeystore,
   type V3Keystore,
   type EthSaleKeystore,
@@ -292,10 +292,10 @@ const unlock = async () => {
     })
     accessStore.closeAccessDialog()
   } catch (error) {
-    if (isWrongKeystorePassword(error)) {
-      passwordError.value = t('access_wallet.advanced.incorrect_password')
-    } else {
+    if (isCorruptKeystoreError(error)) {
       cannotDecrypt.value = true
+    } else {
+      passwordError.value = t('access_wallet.advanced.incorrect_password')
     }
   } finally {
     isUnlocking.value = false
