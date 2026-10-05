@@ -85,6 +85,13 @@
       "download_official": "Download MEW Official wallets",
       "ios_android": "iOS & Android",
       "browser_extension": "Browser extension"
+    },
+    "download_mobile": {
+      "title": "Download MEW Mobile App",
+      "download_for": "Download for",
+      "get_ios": "Get it on iOS",
+      "get_android": "Get it on Android",
+      "qr_label": "QR code to download MEW Mobile for {platform}"
     }
   },
   "access_wallet_keystore": {

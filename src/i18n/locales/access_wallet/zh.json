@@ -85,6 +85,13 @@
       "download_official": "下载 MEW 官方钱包",
       "ios_android": "iOS 和 Android",
       "browser_extension": "浏览器扩展"
+    },
+    "download_mobile": {
+      "title": "下载 MEW Mobile 应用",
+      "download_for": "下载平台",
+      "get_ios": "在 iOS 上获取",
+      "get_android": "在 Android 上获取",
+      "qr_label": "用于下载 {platform} 版 MEW Mobile 的二维码"
     }
   },
   "access_wallet_keystore": {
