@@ -55,18 +55,7 @@
         </a>
       </div>
     </section>
-    <p class="text-center text-sm text-text-subtle">
-      {{ $t('wc_dialog.need_help_short') }}
-      <a
-        data-testid="wc-help-center"
-        class="ml-1 font-semibold text-text-brand"
-        :href="HELP_URL"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{ $t('wc_dialog.go_to_help_center') }}
-      </a>
-    </p>
+    <AccessHelpFooter />
   </div>
 </template>
 
@@ -77,10 +66,8 @@ import QrcodeVue from 'qrcode.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppSpinner from '@/components/AppSpinner.vue'
+import AccessHelpFooter from './components/AccessHelpFooter.vue'
 import { useAccessStore } from '@/stores/accessStore'
-
-const HELP_URL =
-  'https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio'
 
 const { clickedWalletConnect } = storeToRefs(useAccessStore())
 
