@@ -66,6 +66,12 @@
       "hardware": "硬件",
       "mobile": "移动端",
       "advanced": "高级"
+    },
+    "networks": {
+      "label": "网络",
+      "more": "更多网络",
+      "search": "搜索网络",
+      "not_found": "未找到网络"
     }
   },
   "access_wallet_keystore": {

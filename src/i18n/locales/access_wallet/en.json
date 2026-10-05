@@ -66,6 +66,12 @@
       "hardware": "Hardware",
       "mobile": "Mobile",
       "advanced": "Advanced"
+    },
+    "networks": {
+      "label": "Networks",
+      "more": "More networks",
+      "search": "Search networks",
+      "not_found": "No networks found"
     }
   },
   "access_wallet_keystore": {
