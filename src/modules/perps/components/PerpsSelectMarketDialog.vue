@@ -27,17 +27,17 @@
               >
                 <span>{{ activeSortLabel }}</span>
                 <AppIcon
-                  v-if="sortDirection === 'asc'"
                   name="arrow-long-up"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-if="sortDirection === 'asc'"
                   class="shrink-0"
                 />
                 <AppIcon
-                  v-else
                   name="arrow-long-down"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-else
                   class="shrink-0"
                 />
               </button>
@@ -163,7 +163,6 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
@@ -173,6 +172,7 @@ import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type {
   MarketSortValue,
   SortDirection,

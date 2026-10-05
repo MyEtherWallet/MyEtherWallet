@@ -31,15 +31,15 @@
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
               <AppIcon
-                v-if="priceChangePercent < 0"
                 name="arrow-trending-down"
                 size="xxs"
+                v-if="priceChangePercent < 0"
                 class="inline-block text-text-error"
               />
               <AppIcon
-                v-else
                 name="arrow-trending-up"
                 size="xxs"
+                v-else
                 class="inline-block text-text-success"
               />
               <span
@@ -238,7 +238,7 @@
                 :label="$t('perps.info.manage-position-label')"
                 @click="toggleSelect"
               >
-                <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
+                <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
               </app-btn-icon>
             </template>
           </app-select>
@@ -305,7 +305,7 @@
             name="chevron-down"
             size="xxs"
             class="ml-1 inline-block align-middle"
-            :class="{ 'rotate-180 ': showPositionMore }"
+            :class="{ 'rotate-180': showPositionMore }"
           />
         </app-btn-text>
         <transition name="fade" mode="out-in">
@@ -669,8 +669,8 @@
                           >
                             <AppIcon
                               name="ellipsis-vertical"
-                              size="s"
                               variant="filled"
+                              size="s"
                             />
                           </app-btn-icon>
                         </template>
@@ -716,8 +716,8 @@
                       >
                         <AppIcon
                           name="chevron-right"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </div>
@@ -839,8 +839,8 @@
                       >
                         <AppIcon
                           name="chevron-right"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </td>
@@ -979,7 +979,6 @@ import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderCon
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
@@ -1008,6 +1007,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,

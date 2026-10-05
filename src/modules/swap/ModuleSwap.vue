@@ -262,7 +262,6 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
-
 // Components
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'

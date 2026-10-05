@@ -97,11 +97,11 @@ import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const prop = defineProps({
   isBtnGroup: {
     type: Boolean,

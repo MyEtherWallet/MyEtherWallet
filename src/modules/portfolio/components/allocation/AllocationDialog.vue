@@ -74,15 +74,15 @@
                         name="arrow-long-up"
                         variant="filled"
                         size="s"
-                        class="text-text-brand"
                         v-if="activeSortDirection === SortDirection.ASC"
+                        class="text-text-brand"
                       />
                       <AppIcon
                         name="arrow-long-down"
                         variant="filled"
                         size="s"
-                        class="text-text-brand"
                         v-else
+                        class="text-text-brand"
                       />
                     </div>
                   </button>
@@ -139,7 +139,6 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
@@ -152,6 +151,7 @@ const { currencySymbol } = useCurrency()
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useRouter } from 'vue-router'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,

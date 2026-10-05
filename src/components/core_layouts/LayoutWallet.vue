@@ -18,11 +18,11 @@
               class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
               <AppIcon
-                v-if="!isOpenSideMenu"
                 name="chevron-double-left"
                 size="s"
+                v-if="!isOpenSideMenu"
               />
-              <AppIcon v-else name="chevron-double-right" size="s" />
+              <AppIcon name="chevron-double-right" size="s" v-else />
             </button>
             <!-- Trade button -->
             <button
@@ -121,7 +121,10 @@
               ]"
               @click="openDepositDialog = true"
             >
-              <AppIcon name="qr-code" class="mb-1 xs:size-8 text-text-brand" />
+              <AppIcon
+                name="qr-code"
+                :class="['mb-1 text-text-brand xs:size-7']"
+              />
               <p
                 :class="[
                   actionTextSizeClass,
@@ -253,7 +256,6 @@ import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -266,6 +268,7 @@ import { pageRouteName } from '@/router/routeHierarchy'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
 

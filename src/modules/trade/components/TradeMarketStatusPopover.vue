@@ -54,7 +54,6 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'
@@ -65,6 +64,7 @@ import {
 } from '../common/marketDisplay'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     status: MarketStatusVariant

@@ -47,7 +47,6 @@
           <AppIcon
             name="chevron-down"
             variant="filled"
-            size="xxs"
             v-if="!isLoading"
             class="text-text-subtle"
           />
@@ -420,7 +419,6 @@
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Ref, ref, computed, onMounted, watch } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -445,6 +443,7 @@ import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,

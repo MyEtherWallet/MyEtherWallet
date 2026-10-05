@@ -4,7 +4,7 @@
     <AppIcon
       name="bell"
       variant="filled"
-      size="xl"
+      size="xxl"
       class="text-text-placeholder mx-auto mb-3"
     />
     <p class="text-text-subtle text-s-14">

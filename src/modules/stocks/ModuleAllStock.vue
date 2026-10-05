@@ -433,7 +433,6 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
@@ -459,6 +458,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 const walletMenu = useWalletMenuStore()

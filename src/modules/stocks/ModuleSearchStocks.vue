@@ -122,8 +122,8 @@
                   >
                     <AppIcon
                       name="exclamation-circle"
-                      size="s"
                       variant="filled"
+                      size="s"
                       class="inline-block text-text-muted mr-1"
                     />
                     {{
@@ -264,8 +264,6 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useFocusWithin, watchDebounced } from '@vueuse/core'
-import AppIcon from '@/components/icon/AppIcon.vue'
-
 // Components
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -285,6 +283,7 @@ import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { formatFiat } = useCurrency()
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)

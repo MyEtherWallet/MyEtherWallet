@@ -57,7 +57,6 @@ import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type {
   GetWebTokenPriceChartByCoinResponse,
@@ -78,6 +77,7 @@ const { isXS } = useAppBreakpoints()
  * Chart Filter
  --------------------*/
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 interface Item {

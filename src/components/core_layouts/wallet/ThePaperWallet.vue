@@ -132,7 +132,6 @@ import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

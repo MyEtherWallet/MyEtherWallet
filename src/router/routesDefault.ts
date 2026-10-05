@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
+import configs from '@/configs'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',

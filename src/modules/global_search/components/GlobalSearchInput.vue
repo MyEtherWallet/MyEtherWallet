@@ -37,11 +37,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { onClickOutside, useElementSize } from '@vueuse/core'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchPopover from './GlobalSearchPopover.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const COMPACT_WIDTH_THRESHOLD = 200
 

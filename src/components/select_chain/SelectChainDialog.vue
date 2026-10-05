@@ -61,10 +61,9 @@
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
               <AppIcon
-                v-if="chain.name === selectedChain?.name"
                 name="check"
                 variant="filled"
-                size="m"
+                v-if="chain.name === selectedChain?.name"
                 class="text-text-brand"
               />
             </div>
@@ -138,13 +137,13 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const prop = defineProps({
   selectedChain: {
     type: Object as () => Chain | null,

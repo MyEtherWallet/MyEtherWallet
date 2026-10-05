@@ -145,7 +145,6 @@
 </template>
 
 <script setup lang="ts">
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
@@ -173,6 +172,7 @@ import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const walletMenu = useWalletMenuStore()
 const { formatFiat } = useCurrency()
 

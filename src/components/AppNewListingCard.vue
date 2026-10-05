@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface Props {
   logo?: string
   symbol: string

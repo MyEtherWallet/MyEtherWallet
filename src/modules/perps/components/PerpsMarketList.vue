@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <!--
+    @container: the wallet side panel pushes the page content instead of
+    overlaying it from the xl viewport up, so viewport breakpoints lie about
+    how much room the table really has. Column visibility is driven by this
+    element's width instead. Thresholds equal the old md / lg / xl viewport
+    breakpoints with the panel closed (viewport - 80px rail - 40px page gutter):
+    700px = md (820), 904px = lg (1024), 1160px = xl (1280).
+  -->
+  <div class="@container">
     <div class="bg-white rounded-16 py-4 px-2 sm:px-4">
       <!-- Title -->
       <h1 class="text-s-20 xs:text-s-24 font-bold px-2 pt-2 pb-4">
@@ -34,8 +42,8 @@
               </span>
               <AppIcon
                 name="chevron-down"
-                size="xxs"
                 variant="filled"
+                size="xxs"
                 class="shrink-0 text-text-subtle"
               />
             </button>
@@ -81,54 +89,54 @@
                 >
                   {{ $t('perps.market-list.column-name') }}
                   <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'desc'
                     "
-                    name="arrow-down"
-                    size="xxs"
                   />
                   <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'asc'
                     "
-                    name="arrow-up"
-                    size="xxs"
                   />
                 </div>
               </th>
               <!-- Market Cap -->
               <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 @min-[700px]:w-[140px]"
                 @click="setHeaderSort(SortValue.MARKET_CAP)"
               >
                 <div
-                  class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
+                  class="flex items-center gap-1 relative font-normal justify-end text-right @min-[904px]:justify-start @min-[904px]:text-left"
                   :class="{
                     'text-black': headerSort === SortValue.MARKET_CAP,
                   }"
                 >
                   {{ $t('perps.market-list.column-market-cap') }}
                   <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'desc'
                     "
-                    name="arrow-down"
-                    size="xxs"
                   />
                   <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
                       tableDirection === 'asc'
                     "
-                    name="arrow-up"
-                    size="xxs"
                   />
                 </div>
               </th>
               <!-- Volume -->
               <th
-                class="hidden xl:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
+                class="hidden @min-[1160px]:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 @click="setHeaderSort(SortValue.VOLUME)"
               >
                 <div
@@ -139,61 +147,61 @@
                 >
                   {{ $t('perps.market-list.column-volume') }}
                   <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'desc'
                     "
-                    name="arrow-down"
-                    size="xxs"
                   />
                   <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.VOLUME &&
                       tableDirection === 'asc'
                     "
-                    name="arrow-up"
-                    size="xxs"
                   />
                 </div>
               </th>
               <!-- 24H Change -->
-              <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
+              <th class="hidden @min-[1160px]:table-cell px-1 pb-4 w-[140px]">
                 <div class="text-left font-normal">
                   {{ $t('perps.market-list.column-24h-change') }}
                 </div>
               </th>
               <!-- Price -->
               <th
-                class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
+                class="hidden @min-[700px]:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
                 @click="setHeaderSort(SortValue.PRICE)"
               >
                 <div
-                  class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
+                  class="flex items-center gap-1 justify-end @min-[904px]:justify-start relative text-right @min-[904px]:text-left font-normal"
                   :class="{
                     'text-black': headerSort === SortValue.PRICE,
                   }"
                 >
                   {{ $t('perps.market-list.column-price') }}
                   <AppIcon
+                    name="arrow-down"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.PRICE &&
                       tableDirection === 'desc'
                     "
-                    name="arrow-down"
-                    size="xxs"
                   />
                   <AppIcon
+                    name="arrow-up"
+                    size="xxs"
                     v-if="
                       headerSort === SortValue.PRICE && tableDirection === 'asc'
                     "
-                    name="arrow-up"
-                    size="xxs"
                   />
                 </div>
               </th>
               <!-- Actions -->
               <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[216px]"
+                class="@min-[904px]:pr-4 pb-4 text-right w-7 xs:w-10 @min-[700px]:w-12 @min-[904px]:w-[216px]"
               ></th>
             </tr>
           </thead>
@@ -256,13 +264,13 @@
               </td>
               <!-- Market Cap -->
               <td
-                class="px-1 py-2 text-right lg:text-left text-s-14 text-black"
+                class="px-1 py-2 text-right @min-[904px]:text-left text-s-14 text-black"
               >
                 <p class="font-semibold">
                   {{ formatVolume(contract.openInterestUsd) }}
                 </p>
                 <p
-                  class="text-s-12 font-semibold md:hidden"
+                  class="text-s-12 font-semibold @min-[700px]:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
                       ? 'text-text-success'
@@ -274,12 +282,12 @@
               </td>
               <!-- Volume -->
               <td
-                class="hidden xl:table-cell px-1 py-2 text-left font-semibold text-s-14 text-black"
+                class="hidden @min-[1160px]:table-cell px-1 py-2 text-left font-semibold text-s-14 text-black"
               >
                 {{ formatVolume(contract.usdVolume) }}
               </td>
               <!-- 24H Change -->
-              <td class="hidden xl:table-cell px-1 py-1 text-left">
+              <td class="hidden @min-[1160px]:table-cell px-1 py-1 text-left">
                 <div class="flex flex-col items-start justify-center py-2">
                   <p
                     class="text-s-13 font-semibold mb-1"
@@ -306,15 +314,15 @@
               </td>
               <!-- Price -->
               <td
-                class="hidden md:table-cell pl-1 pr-1 py-2 text-right lg:text-left"
+                class="hidden @min-[700px]:table-cell pl-1 pr-1 py-2 text-right @min-[904px]:text-left"
               >
                 <p
-                  class="text-right lg:text-left font-semibold text-s-14 text-black"
+                  class="text-right @min-[904px]:text-left font-semibold text-s-14 text-black"
                 >
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
                 <p
-                  class="text-s-12 font-semibold xl:hidden"
+                  class="text-s-12 font-semibold @min-[1160px]:hidden"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
                       ? 'text-text-success'
@@ -325,9 +333,11 @@
                 </p>
               </td>
               <!-- Actions -->
-              <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
+              <td
+                class="@min-[904px]:pr-2 py-1 rounded-r-12 relative text-right"
+              >
                 <div
-                  class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
+                  class="flex items-center justify-end @min-[904px]:hidden ml-auto -mr-1 @min-[700px]:mr-auto"
                 >
                   <app-pop-up-menu
                     :placeholder="$t('perps.market-list.actions-menu-label')"
@@ -340,8 +350,8 @@
                       >
                         <AppIcon
                           name="ellipsis-vertical"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </template>
@@ -357,16 +367,16 @@
                           ]"
                         >
                           <AppIcon
-                            v-if="!watchlist.has(contract.baseCurrency)"
                             name="star"
                             size="xxs"
+                            v-if="!watchlist.has(contract.baseCurrency)"
                             class="cursor-pointer"
                           />
                           <AppIcon
-                            v-else
                             name="star"
-                            size="xxs"
                             variant="filled"
+                            size="xxs"
+                            v-else
                             class="cursor-pointer"
                           />
                           <span class="ml-2">{{
@@ -462,7 +472,9 @@
                     </template>
                   </app-pop-up-menu>
                 </div>
-                <div class="hidden lg:flex flex-row gap-2 justify-end">
+                <div
+                  class="hidden @min-[904px]:flex flex-row gap-2 justify-end"
+                >
                   <template v-if="getPosition(contract.market)">
                     <app-pop-up-menu
                       :placeholder="$t('perps.market-list.actions-menu-label')"
@@ -617,7 +629,7 @@
               :label="$t('common.previous_page')"
               @click="prevPage"
             >
-              <AppIcon name="chevron-left" size="xxs" variant="filled" />
+              <AppIcon name="chevron-left" variant="filled" size="xxs" />
             </app-btn-icon>
             <app-btn-icon
               variant="filled"
@@ -626,7 +638,7 @@
               :label="$t('common.next_page')"
               @click="nextPage"
             >
-              <AppIcon name="chevron-right" size="xxs" variant="filled" />
+              <AppIcon name="chevron-right" variant="filled" size="xxs" />
             </app-btn-icon>
           </div>
         </div>
@@ -636,16 +648,16 @@
         >
           <p
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"
-            class="mb-1 text-center lg:mt-10"
+            class="mb-1 text-center @min-[904px]:mt-10"
           >
             {{ $t('perps.market-list.no-watchlist') }}
           </p>
-          <p v-if="searchQuery" class="mb-1 text-center lg:my-10">
+          <p v-if="searchQuery" class="mb-1 text-center @min-[904px]:my-10">
             {{ $t('perps.market-list.no-results', { query: searchQuery }) }}
           </p>
           <button
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"
-            class="underline lg:mb-10"
+            class="underline @min-[904px]:mb-10"
             @click="selectedFilterValue = 'all'"
           >
             {{ $t('perps.market-list.discover-markets') }}
@@ -670,7 +682,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
@@ -699,6 +710,7 @@ import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   PerpsChangeLeverageEvent,
@@ -866,22 +878,22 @@ const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
   {
     header: t('perps.market-list.column-volume'),
     align: 'right',
-    hidden: 'hidden xl:table-cell',
+    hidden: 'hidden @min-[1160px]:table-cell',
   },
   {
     header: t('perps.market-list.column-24h-change'),
     align: 'right',
-    hidden: 'hidden xl:table-cell',
+    hidden: 'hidden @min-[1160px]:table-cell',
   },
   {
     header: t('perps.market-list.column-price'),
     align: 'right',
-    hidden: 'hidden md:table-cell',
+    hidden: 'hidden @min-[700px]:table-cell',
   },
   {
     header: '',
     align: 'right',
-    hidden: 'hidden lg:table-cell lg:w-[216px]',
+    hidden: 'hidden @min-[904px]:table-cell @min-[904px]:w-[216px]',
   },
 ])
 

@@ -244,12 +244,12 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const { closeCreateDialog } = useCreateStore()

@@ -67,7 +67,6 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
 const props = withDefaults(
   defineProps<{
     /** Required by the `anchor` placement; ignored by `bottom-left`. */

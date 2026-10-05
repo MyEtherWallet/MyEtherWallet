@@ -35,8 +35,8 @@
               </span>
               <AppIcon
                 name="chevron-down"
-                size="xxs"
                 variant="filled"
+                size="xxs"
                 class="shrink-0 text-text-subtle"
               />
             </button>
@@ -62,8 +62,8 @@
           </div>
           <AppIcon
             name="chevron-down"
-            size="xxs"
             variant="filled"
+            size="xxs"
             class="shrink-0 text-text-subtle"
           />
         </button>
@@ -340,8 +340,8 @@
                       >
                         <AppIcon
                           name="ellipsis-vertical"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </template>
@@ -357,14 +357,14 @@
                           <AppIcon
                             name="star"
                             size="xxs"
-                            class="cursor-pointer"
                             v-if="!isWatchListed(getWatchlistId(token))"
+                            class="cursor-pointer"
                           />
                           <AppIcon
-                            v-else
                             name="star"
-                            size="xxs"
                             variant="filled"
+                            size="xxs"
+                            v-else
                             class="cursor-pointer"
                           />
                           <span class="ml-2">{{
@@ -524,7 +524,7 @@
             :label="$t('common.previous_page')"
             @click="previousPage"
           >
-            <AppIcon name="chevron-left" size="xxs" variant="filled" />
+            <AppIcon name="chevron-left" variant="filled" size="xxs" />
           </app-btn-icon>
           <app-btn-icon
             variant="filled"
@@ -533,7 +533,7 @@
             :label="$t('common.next_page')"
             @click="nextPage"
           >
-            <AppIcon name="chevron-right" size="xxs" variant="filled" />
+            <AppIcon name="chevron-right" variant="filled" size="xxs" />
           </app-btn-icon>
         </div>
       </div>
@@ -564,7 +564,6 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -597,6 +596,7 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()

@@ -534,7 +534,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
@@ -550,6 +549,7 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
@@ -620,7 +620,10 @@ const currencyOptions = computed(() => {
   const rest = SUPPORTED_CURRENCIES.filter(
     c => c.code !== selectedCurrency.value,
   )
-  return [...active, ...rest]
+  return [...active, ...rest].map(c => ({
+    code: c.code,
+    name: t(`settings.currency_country.${c.code}`),
+  }))
 })
 
 const selectCurrency = (code: string) => {

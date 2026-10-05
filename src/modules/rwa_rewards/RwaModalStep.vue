@@ -10,17 +10,17 @@
         :class="circleClass"
       >
         <AppIcon
-          v-if="variant === 'done' || variant === 'doneGrey'"
           name="check"
           variant="filled"
           size="xxs"
+          v-if="variant === 'done' || variant === 'doneGrey'"
           :class="variant === 'done' ? 'text-white' : 'text-text-placeholder'"
         />
         <AppIcon
-          v-else-if="variant === 'failed'"
           name="x-mark"
           variant="filled"
           size="xxs"
+          v-else-if="variant === 'failed'"
           class="text-white"
         />
         <span
@@ -47,7 +47,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
 const props = withDefaults(
   defineProps<{
     variant: 'done' | 'doneGrey' | 'current' | 'plain' | 'failed'

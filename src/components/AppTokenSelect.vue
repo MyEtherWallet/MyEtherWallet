@@ -31,7 +31,6 @@
         <AppIcon
           name="chevron-down"
           variant="filled"
-          size="xxs"
           v-if="!isLoading"
           class="text-text-subtle"
         />
@@ -215,7 +214,6 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted, watch } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -233,6 +231,7 @@ import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   externalLoading: {
     type: Boolean,

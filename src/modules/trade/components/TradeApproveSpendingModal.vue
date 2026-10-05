@@ -48,8 +48,10 @@
               <app-tooltip
                 :text="$t('trade.approve_spending.network_fee_tooltip')"
               >
-                <information-circle-icon
-                  class="w-[18px] h-[18px] text-black cursor-pointer"
+                <AppIcon
+                  name="information-circle"
+                  size="xs"
+                  class="text-black cursor-pointer"
                 />
               </app-tooltip>
             </div>
@@ -59,9 +61,11 @@
               class="flex flex-col items-end gap-1 flex-none"
             >
               <div
-                class="h-[18px] w-[88px] rounded-8 bg-neutral-200 animate-pulse"
+                class="h-[18px] w-[88px] rounded-8 bg-background-skeleton animate-pulse"
               />
-              <div class="h-3.5 w-14 rounded-8 bg-neutral-200 animate-pulse" />
+              <div
+                class="h-3.5 w-14 rounded-8 bg-background-skeleton animate-pulse"
+              />
             </div>
             <div
               v-else-if="hasFailed"
@@ -109,7 +113,7 @@
         <app-base-button @click="emit('approve')">
           <span class="flex items-center gap-2">
             {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
-            <arrow-top-right-on-square-icon class="w-5 h-5" />
+            <AppIcon name="arrow-top-right-on-square" size="s" />
           </span>
         </app-base-button>
       </div>
@@ -120,10 +124,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-  InformationCircleIcon,
-  ArrowTopRightOnSquareIcon,
-} from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'

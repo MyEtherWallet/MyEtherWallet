@@ -69,7 +69,6 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -80,6 +79,7 @@ import {
 } from './helpers'
 import { useChainsStore } from '@/stores/chainsStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const chainStore = useChainsStore()
 const walletStore = useWalletStore()
