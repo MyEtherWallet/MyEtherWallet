@@ -125,6 +125,14 @@ describe('useWalletFlowRoute', () => {
     await closeWalletFlowRoute()
     expect(router.currentRoute.value.fullPath).toBe('/crypto?category=defi')
   })
+
+  it('drops the remembered wallet tab on close so the next open starts fresh', async () => {
+    const { closeWalletFlowRoute } = await setup(
+      '/crypto/access?category=defi&type=default&walletTab=hardware',
+    )
+    await closeWalletFlowRoute()
+    expect(router.currentRoute.value.fullPath).toBe('/crypto?category=defi')
+  })
 })
 
 /**

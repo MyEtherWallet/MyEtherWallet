@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import AppTabBar from '@/components/tabs/AppTabBar.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -46,7 +47,19 @@ const { t } = useI18n()
 const { walletsForTab } = useWalletList()
 const { connect } = useConnectWallet()
 
-const tab = ref<WalletTab>('popular')
+// The tab lives in the URL (?walletTab=) so coming back from a connect step
+// (Ledger, keystore, …) restores it; closing the overlay drops it.
+const route = useRoute()
+const router = useRouter()
+const isWalletTab = (value: unknown): value is WalletTab =>
+  WALLET_TABS.includes(value as WalletTab)
+const tab = computed<WalletTab>({
+  get: () =>
+    isWalletTab(route.query.walletTab) ? route.query.walletTab : 'popular',
+  set: walletTab => {
+    void router.replace({ query: { ...route.query, walletTab } })
+  },
+})
 const search = ref('')
 // Advanced has no search box, so a leftover query must not filter it.
 watch(tab, () => {
