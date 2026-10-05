@@ -1,25 +1,29 @@
 <template>
   <div
-    class="flex items-center gap-2 overflow-x-auto no-scrollbar"
+    class="flex items-center gap-2"
     role="group"
     :aria-label="t('access_wallet.networks.label')"
   >
-    <AppChip
-      v-for="chain in chipChains"
-      :key="chain.name"
-      data-testid="network-chip"
-      surface="alternative"
-      :label="chain.nameLong"
-      :selected="chain.name === selected?.name"
-      :aria-pressed="chain.name === selected?.name"
-      class="shrink-0"
-      @click="emit('select', chain)"
-    >
-      <template #avatar="{ size }">
-        <AppAvatar type="network" :size="size" :chain="chain.name" />
-      </template>
-    </AppChip>
+    <!-- Chips scroll; the "+" stays outside so an added network can't push it out of view. -->
+    <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar">
+      <AppChip
+        v-for="chain in chipChains"
+        :key="chain.name"
+        data-testid="network-chip"
+        surface="alternative"
+        :label="chain.nameLong"
+        :selected="chain.name === selected?.name"
+        :aria-pressed="chain.name === selected?.name"
+        class="shrink-0"
+        @click="emit('select', chain)"
+      >
+        <template #avatar="{ size }">
+          <AppAvatar type="network" :size="size" :chain="chain.name" />
+        </template>
+      </AppChip>
+    </div>
     <AppPopUpMenu
+      class="shrink-0"
       teleport
       location="left"
       menu-radius-class="rounded-16"
