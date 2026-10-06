@@ -74,7 +74,6 @@
         v-if="fileInvalid"
         data-testid="keystore-continue"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         disabled
       >
         {{ $t('access_wallet.advanced.continue') }}
@@ -137,7 +136,6 @@
       <AppBaseButton
         data-testid="keystore-connect"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         :disabled="submitIsDisabled"
         :is-loading="isUnlocking"
         @click="unlock"
@@ -151,7 +149,6 @@
 </template>
 
 <script setup lang="ts">
-import { PRIMARY_DISABLED_CLASS } from '@/modules/access/common/buttonStyles'
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'

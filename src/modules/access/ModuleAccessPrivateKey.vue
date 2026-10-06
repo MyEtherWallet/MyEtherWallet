@@ -18,7 +18,6 @@
     />
     <app-base-button
       class="w-full"
-      :class="PRIMARY_DISABLED_CLASS"
       :disabled="submitIsDisabled"
       :is-loading="isUnlocking"
       @click="unlock"
@@ -30,7 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { PRIMARY_DISABLED_CLASS } from '@/modules/access/common/buttonStyles'
 import { isValidPrivate } from '@ethereumjs/util'
 import AccessBanner from './components/AccessBanner.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'

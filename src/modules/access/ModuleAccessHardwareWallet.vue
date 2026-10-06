@@ -19,7 +19,6 @@
         v-if="currentView !== 'ledger' || usbSupported"
         data-testid="hw-connect"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         :is-loading="connectingWallet"
         :disabled="connectingWallet"
         @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
@@ -95,7 +94,6 @@
       <AppBaseButton
         data-testid="hw-access"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         :disabled="walletList.length === 0 || isLoadingWalletList"
         :is-loading="isUnlockingWallet"
         @click="access"
@@ -127,7 +125,6 @@ import AccessStepIndicator from './components/AccessStepIndicator.vue'
 import AccessDropdown from './components/AccessDropdown.vue'
 import AccessAddressList from './components/AccessAddressList.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'
-import { PRIMARY_DISABLED_CLASS } from '@/modules/access/common/buttonStyles'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { type SelectAddress } from './types/selectAddress'

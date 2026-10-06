@@ -43,7 +43,6 @@
       <AppBaseButton
         data-testid="phrase-continue"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         :disabled="!isValid"
         @click="unlockWallet"
       >
@@ -104,7 +103,6 @@
       <AppBaseButton
         data-testid="phrase-connect"
         class="w-full"
-        :class="PRIMARY_DISABLED_CLASS"
         :disabled="!walletList.length || derivationPending"
         :is-loading="isUnlockingWallet"
         @click="access"
@@ -118,7 +116,6 @@
 </template>
 
 <script setup lang="ts">
-import { PRIMARY_DISABLED_CLASS } from '@/modules/access/common/buttonStyles'
 import { computed, ref, shallowRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { validateMnemonic } from 'bip39'
