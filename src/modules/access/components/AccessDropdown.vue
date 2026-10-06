@@ -61,9 +61,10 @@
                 <slot name="item" :item="item" />
                 <AppIcon
                   v-if="isSelected(item)"
-                  name="check"
-                  size="xs"
-                  class="ml-auto shrink-0 text-text-brand"
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
+                  class="ml-auto shrink-0 text-icon-default"
                 />
               </button>
             </li>
