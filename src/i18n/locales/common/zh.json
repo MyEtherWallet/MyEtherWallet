@@ -140,6 +140,7 @@
     "confirm": "确认",
     "approve": "授权",
     "processing": "处理中...",
+    "loading": "加载中",
     "save": "保存",
     "enter_name": "输入名称",
     "enter_address": "输入地址",
