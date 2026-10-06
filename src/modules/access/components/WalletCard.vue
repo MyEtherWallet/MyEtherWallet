@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
@@ -59,23 +59,28 @@ const advancedIcon = computed(
   () => ADVANCED_WALLET_ICONS[walletKey(props.wallet)],
 )
 
-const iconUrl = ref<string | undefined>(
-  typeof props.wallet.icon === 'string' ? props.wallet.icon : undefined,
-)
-onMounted(async () => {
-  const { icon } = props.wallet
-  if (typeof icon !== 'function') return
-  try {
-    iconUrl.value = await icon()
-  } catch (error) {
-    // The logo is a lazily imported chunk; failing to load it (network blip, stale
-    // chunk after a redeploy, content blockers) is expected and non-actionable.
-    // AppAvatar falls back to initials, so don't report it as noise.
-    if (configs.BUILD_MODE !== 'production') {
-      console.error('Error loading wallet image:', props.wallet.name, error)
+const iconUrl = ref<string | undefined>()
+// Follow the wallet prop (not just the first one) so a reused card never keeps
+// another wallet's logo.
+watch(
+  () => props.wallet.icon,
+  async icon => {
+    iconUrl.value = typeof icon === 'string' ? icon : undefined
+    if (typeof icon !== 'function') return
+    try {
+      const url = await icon()
+      if (props.wallet.icon === icon) iconUrl.value = url
+    } catch (error) {
+      // The logo is a lazily imported chunk; failing to load it (network blip, stale
+      // chunk after a redeploy, content blockers) is expected and non-actionable.
+      // AppAvatar falls back to initials, so don't report it as noise.
+      if (configs.BUILD_MODE !== 'production') {
+        console.error('Error loading wallet image:', props.wallet.name, error)
+      }
     }
-  }
-})
+  },
+  { immediate: true },
+)
 
 const select = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.SELECT_WALLET, {

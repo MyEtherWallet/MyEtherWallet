@@ -135,4 +135,31 @@ describe('WalletTabs', () => {
     expect(grid.classes()).toContain('overflow-y-auto')
     expect(grid.classes().some(c => c.startsWith('max-h-'))).toBe(true)
   })
+
+  it('keeps each tab list intact when connectors share an id', async () => {
+    const card = (name: string) => ({
+      wallet: { id: 'injected', name, icon: '', type: [] },
+    })
+    walletsForTab.mockImplementation((tab: string) =>
+      tab === 'mobile' ? [card('C'), card('D')] : [card('A'), card('B')],
+    )
+    // A card that freezes the wallet it was created for, like the real logo
+    // resolution: if Vue reuses it for another wallet, the old name shows.
+    const FrozenCard = {
+      props: ['wallet', 'status'],
+      setup(props: { wallet: { name: string } }) {
+        return { createdFor: props.wallet.name }
+      },
+      template: '<button class="card">{{ createdFor }}</button>',
+    }
+    const w = mount(WalletTabs, {
+      attachTo: document.body,
+      global: { plugins: [i18n], stubs: { WalletCard: FrozenCard } },
+    })
+    wrapper = w
+    await w.findAll('[role="tab"]')[2].trigger('click')
+    expect(w.findAll('.card').map(c => c.text())).toEqual(['C', 'D'])
+    await w.findAll('[role="tab"]')[0].trigger('click')
+    expect(w.findAll('.card').map(c => c.text())).toEqual(['A', 'B'])
+  })
 })

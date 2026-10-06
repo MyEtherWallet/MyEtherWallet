@@ -34,9 +34,9 @@ const mountCard = (props: Record<string, unknown>) =>
       plugins: [i18n],
       stubs: {
         AppAvatar: {
-          props: ['type'],
+          props: ['type', 'url'],
           template:
-            '<span class="avatar" :data-type="type"><slot name="icon" /></span>',
+            '<span class="avatar" :data-type="type" :data-url="url"><slot name="icon" /></span>',
         },
       },
     },
@@ -76,5 +76,13 @@ describe('WalletCard', () => {
       },
     })
     expect(w.get('.avatar').attributes('data-type')).toBe('icon')
+  })
+
+  it('follows a new wallet prop instead of keeping the old logo', async () => {
+    const w = mountCard({ wallet: metaMask })
+    await w.setProps({
+      wallet: { ...metaMask, id: 'io.rabby', name: 'Rabby', icon: 'rabby.svg' },
+    })
+    expect(w.get('.avatar').attributes('data-url')).toBe('rabby.svg')
   })
 })

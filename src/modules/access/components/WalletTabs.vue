@@ -24,9 +24,11 @@
       data-testid="wallet-grid"
       class="mew-scrollbar -mx-1 grid min-h-[136px] grid-cols-1 content-start gap-3 overflow-y-auto px-1 max-h-[calc(95vh-350px)] xs:grid-cols-2 sm:max-h-[calc(90vh-440px)]"
     >
+      <!-- Keyed by name: connector ids repeat (injected / WalletConnect-based
+           wallets), while each tab list is already unique by name. -->
       <WalletCard
         v-for="{ wallet, status } in wallets"
-        :key="wallet.id"
+        :key="wallet.name"
         :wallet="wallet"
         :status="status"
         @select="connect"
