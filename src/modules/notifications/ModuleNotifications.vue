@@ -2,16 +2,15 @@
   <div>
     <div class="space-y-3 overflow-scroll max-h-[500px]">
       <!-- Category Filter -->
-      <app-btn-group
-        v-model:selected="selectedCategory"
-        :btn-list="categories"
-        size="xs"
-        has-full-width
+      <AppSegmentedControl
+        v-model="selectedCategory"
+        :items="categories"
+        size="small"
+        :label="$t('notifications_module.filter_label')"
+        full-width
       >
-        <template #btn-content="{ data }">
-          {{ $t(data.label) }}
-        </template>
-      </app-btn-group>
+        <template #label="{ item }">{{ $t(item.label) }}</template>
+      </AppSegmentedControl>
 
       <div
         v-for="(item, index) in filteredNotifications"
@@ -77,7 +76,7 @@
 import { ref, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 //Components
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import TransactionContainer from './components/TransactionContainer.vue'
 import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
@@ -154,10 +153,10 @@ const categories: CategoryOption[] = [
   { value: 'bridge', label: 'notifications_module.filter_bridge' },
 ]
 
-const selectedCategory = ref<CategoryOption>(categories[0])
+const selectedCategory = ref<CategoryOption['value']>('all')
 
 const emptyText = computed<string | undefined>(() => {
-  const category = selectedCategory.value.value
+  const category = selectedCategory.value
   switch (category) {
     case 'trade':
       return t('notifications_module.empty_trade')
@@ -214,7 +213,7 @@ const notificationsCount = computed(() => {
 // Clear all notifications via child component
 const deleteAllNotifications = () => {
   if (!walletAddress.value) return
-  switch (selectedCategory.value.value) {
+  switch (selectedCategory.value) {
     case 'trade':
       // Stop polling for trade orders
       Object.keys(pollIntervals).forEach(stopPolling)
@@ -356,13 +355,13 @@ const notifications = computed<NotificationItem[]>(() => {
 
 // Filter notifications based on selected category
 const filteredNotifications = computed<NotificationItem[]>(() => {
-  if (selectedCategory.value.value === 'all') {
+  if (selectedCategory.value === 'all') {
     return notifications.value
   }
-  if (selectedCategory.value.value === 'txs') {
+  if (selectedCategory.value === 'txs') {
     return notifications.value.filter(item => isTransactionNotification(item))
   }
-  if (selectedCategory.value.value === 'trade') {
+  if (selectedCategory.value === 'trade') {
     return notifications.value.filter(
       item =>
         !isTransactionNotification(item) &&
@@ -370,10 +369,10 @@ const filteredNotifications = computed<NotificationItem[]>(() => {
         !isBridgeNotification(item),
     )
   }
-  if (selectedCategory.value.value === 'swap') {
+  if (selectedCategory.value === 'swap') {
     return notifications.value.filter(item => isSwapNotification(item))
   }
-  if (selectedCategory.value.value === 'bridge') {
+  if (selectedCategory.value === 'bridge') {
     return notifications.value.filter(item => isBridgeNotification(item))
   }
   return notifications.value

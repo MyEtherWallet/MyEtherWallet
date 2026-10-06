@@ -205,7 +205,8 @@
     "chart_1m": "1m",
     "chart_3m": "3m",
     "chart_1y": "1y",
-    "chart_all": "all"
+    "chart_all": "all",
+    "chart_range": "Chart range"
   },
   "deposit": "Deposit",
   "learn": "Learn",

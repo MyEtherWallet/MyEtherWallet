@@ -287,16 +287,16 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
     expect(longCalls()).toBeGreaterThan(before)
   })
 
-  it('builds marketFilterTabs labels from i18n keys while keeping keys stable', () => {
+  it('builds marketFilterTabs labels from i18n keys while keeping values stable', () => {
     const form = usePerpsTradeForm()
     expect(form.marketFilterTabs).toEqual([
-      { key: 'all', label: 'perps.select-market.filter-tab-all' },
-      { key: 'Equities', label: 'perps.select-market.filter-tab-equities' },
+      { value: 'all', label: 'perps.select-market.filter-tab-all' },
+      { value: 'Equities', label: 'perps.select-market.filter-tab-equities' },
       {
-        key: 'Commodities',
+        value: 'Commodities',
         label: 'perps.select-market.filter-tab-commodities',
       },
-      { key: 'Indices', label: 'perps.select-market.filter-tab-indices' },
+      { value: 'Indices', label: 'perps.select-market.filter-tab-indices' },
     ])
   })
 

@@ -203,7 +203,8 @@
     "chart_1m": "1月",
     "chart_3m": "3月",
     "chart_1y": "1年",
-    "chart_all": "全部"
+    "chart_all": "全部",
+    "chart_range": "图表时间范围"
   },
   "deposit": "充值",
   "learn": "学习",
