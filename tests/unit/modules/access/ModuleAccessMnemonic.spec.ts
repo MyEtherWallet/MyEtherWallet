@@ -198,6 +198,19 @@ describe('ModuleAccessMnemonic', () => {
     expect(h.fetchNativeBalances).toHaveBeenCalledTimes(1)
   })
 
+  it('scrolls only the address list; pickers, Connect and the error stay put', async () => {
+    h.fetchNativeBalances.mockRejectedValueOnce(new Error('429'))
+    const w = mountIt()
+    await toStep2(w)
+    const scroll = w.get('[data-testid="address-scroll"]')
+    expect(scroll.classes()).toContain('overflow-y-auto')
+    expect(scroll.classes().some(c => c.startsWith('max-h-'))).toBe(true)
+    expect(scroll.findAll('[data-testid="address-row"]')).toHaveLength(5)
+    expect(scroll.find('[data-testid="show-more"]').exists()).toBe(true)
+    expect(scroll.find('[data-testid="balances-error"]').exists()).toBe(false)
+    expect(scroll.find('[data-testid="phrase-connect"]').exists()).toBe(false)
+  })
+
   it('appends five more addresses on "Show more"', async () => {
     const w = mountIt()
     await toStep2(w)
