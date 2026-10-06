@@ -51,42 +51,56 @@
       </div>
     </template>
     <template #content>
-      <div class="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
-        <div v-if="currentView === 'default'" class="flex flex-col gap-4">
-          <NetworkChips :selected="selectedChain" @select="updateChain" />
-          <WalletTabs />
-          <div class="sticky bottom-0 flex flex-col gap-4 bg-white pt-2">
-            <AppDivider />
-            <AccessCell :title="$t('common.dont_have_wallet')">
-              <template #avatar>
-                <AppAvatar type="icon" size="m">
-                  <template #icon><AppIcon name="plus" size="xs" /></template>
-                </AppAvatar>
-              </template>
-              <template #trailing>
-                <AppBaseButton
-                  theme="secondary"
-                  size="small"
-                  @click="accessStore.setCurrentView('sign_up')"
-                >
-                  {{ $t('access_wallet.sign_up.cta') }}
-                </AppBaseButton>
-              </template>
-            </AccessCell>
+      <!-- Height follows the measured content and animates between steps, like
+           TheSettingsPopup. `clip` (not hidden) keeps the sticky footer working. -->
+      <div
+        class="overflow-clip"
+        :style="{
+          height: contentHeight > 0 ? `${contentHeight}px` : undefined,
+          transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
+        }"
+      >
+        <div ref="contentRef" class="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
+          <div v-if="currentView === 'default'" class="flex flex-col gap-4">
+            <NetworkChips :selected="selectedChain" @select="updateChain" />
+            <WalletTabs />
+            <div class="sticky bottom-0 flex flex-col gap-4 bg-white pt-2">
+              <AppDivider />
+              <AccessCell :title="$t('common.dont_have_wallet')">
+                <template #avatar>
+                  <AppAvatar type="icon" size="m">
+                    <template #icon><AppIcon name="plus" size="xs" /></template>
+                  </AppAvatar>
+                </template>
+                <template #trailing>
+                  <AppBaseButton
+                    theme="secondary"
+                    size="small"
+                    @click="accessStore.setCurrentView('sign_up')"
+                  >
+                    {{ $t('access_wallet.sign_up.cta') }}
+                  </AppBaseButton>
+                </template>
+              </AccessCell>
+            </div>
           </div>
+          <AccessSignUp v-else-if="currentView === 'sign_up'" />
+          <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
+          <module-access-keystore v-else-if="currentView === 'keystore'" />
+          <module-access-private-key
+            v-else-if="currentView === 'private_key'"
+          />
+          <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
+          <module-access-hardware-wallet
+            v-else-if="currentView === 'ledger' || currentView === 'trezor'"
+          />
+          <module-access-wallet-connect
+            v-else-if="currentView === 'wallet_connect'"
+          />
+          <module-access-web3-wallet
+            v-else-if="currentView === 'web3_wallet'"
+          />
         </div>
-        <AccessSignUp v-else-if="currentView === 'sign_up'" />
-        <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
-        <module-access-keystore v-else-if="currentView === 'keystore'" />
-        <module-access-private-key v-else-if="currentView === 'private_key'" />
-        <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
-        <module-access-hardware-wallet
-          v-else-if="currentView === 'ledger' || currentView === 'trezor'"
-        />
-        <module-access-wallet-connect
-          v-else-if="currentView === 'wallet_connect'"
-        />
-        <module-access-web3-wallet v-else-if="currentView === 'web3_wallet'" />
       </div>
     </template>
   </app-dialog>
@@ -121,10 +135,11 @@ import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useWalletFlowUrlSync } from '@/composables/useWalletFlowRoute'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { useResizeObserver } from '@vueuse/core'
 
 const { t } = useI18n()
 
@@ -184,20 +199,16 @@ const NEW_VIEWS: WalletView[] = [
 ]
 const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
 
-const dialogWidth = computed(() => {
-  switch (currentView.value) {
-    case 'default':
-    case 'sign_up':
-    case 'keystore':
-    case 'private_key':
-      return 'max-w-[560px]'
-    case 'download_mobile':
-    case 'wallet_connect':
-    case 'mnemonic':
-      return 'max-w-[480px]'
-    default:
-      return '!max-w-[900px]'
-  }
+// Every redesigned step keeps the chooser's width so the modal doesn't jump.
+const dialogWidth = computed(() =>
+  isNewView.value ? 'max-w-[560px]' : '!max-w-[900px]',
+)
+
+/** Measured content height, animated by the wrapper in the content slot. */
+const contentRef = ref<HTMLElement | null>(null)
+const contentHeight = ref(0)
+useResizeObserver(contentRef, () => {
+  contentHeight.value = contentRef.value?.offsetHeight ?? 0
 })
 
 /**-------------------------------

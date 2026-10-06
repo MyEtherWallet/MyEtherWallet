@@ -181,4 +181,19 @@ describe('ModuleAccessWallet header', () => {
     await w.vm.$nextTick()
     expect(setSelectedChain).toHaveBeenLastCalledWith(CHAINS[1])
   })
+
+  it.each([
+    'default',
+    'sign_up',
+    'download_mobile',
+    'wallet_connect',
+    'keystore',
+    'mnemonic',
+    'private_key',
+  ])('keeps the chooser width on %s', view => {
+    const w = mountAt(view)
+    expect(w.findComponent({ name: 'AppDialog' }).classes()).toContain(
+      'max-w-[560px]',
+    )
+  })
 })
