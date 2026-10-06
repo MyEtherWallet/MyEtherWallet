@@ -1,104 +1,117 @@
 <template>
-  <div class="flex justify-center w-full">
-    <div class="max-w-[640px] w-full flex flex-col items-center justify-center">
-      <app-sheet class="mt-6">
-        <div>
-          <app-stepper
-            :steps="walletSteps"
-            :description="walletStepsDescription"
-            :active-step="activeStep"
-            @update:active-step="backStep"
-          >
-            <div v-if="activeStep === 0">
-              <app-step-description
-                :description="walletStepsDescription[0]"
-                :activeStep="activeStep"
-              />
-              <div
-                class="flex flex-col items-center justify-center mt-10 gap-3"
-              >
-                <app-base-button
-                  v-if="currentView !== 'ledger' || usbSupported"
-                  @click="
-                    currentView === 'ledger' ? connectViaUSB() : unlockWallet()
-                  "
-                  :is-loading="connectingWallet"
-                  :disabled="connectingWallet"
-                >
-                  {{
-                    currentView === 'ledger'
-                      ? t('access_wallet_ledger.connect_usb')
-                      : connectButtonText
-                  }}
-                </app-base-button>
-                <span
-                  v-if="currentView === 'ledger' && bleSupported"
-                  class="underline cursor-pointer text-sm"
-                  @click="!connectingWallet && connectViaBluetooth()"
-                >
-                  {{ t('access_wallet_ledger.connect_bluetooth') }}
-                </span>
-              </div>
-            </div>
-            <!-- Select Network, Address, DP -->
-            <div v-if="activeStep === 1">
-              <app-step-description
-                :description="walletStepsDescription[1]"
-                :activeStep="activeStep"
-              />
-              <div
-                class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
-              >
-                <select-chain-for-app
-                  :can-store="false"
-                  :preselected-chain="selectedChain"
-                  @update:selected-chain="updateChain"
-                />
-                <hardware-wallet-derivation
-                  :paths="paths"
-                  :wallet-type="selectedHwWalletType"
-                />
-              </div>
-              <select-address-list
-                v-model="selectedIndex"
-                :walletList="walletList as SelectAddress[]"
-                :isLoading="isLoadingWalletList"
-                class="mt-5"
-                @nextpage="setPage(true)"
-                @prevpage="setPage(false)"
-              />
-              <div class="flex items-center flex-col justify-center">
-                <app-base-button
-                  @click="access"
-                  :disabled="walletList.length === 0 || isLoadingWalletList"
-                  class="mt-10"
-                  :is-loading="isUnlockingWallet"
-                >
-                  {{ $t('common.access_wallet') }}
-                </app-base-button>
-                <app-btn-text
-                  @click="backStep"
-                  is-large
-                  class="mt-2 text-text-brand"
-                >
-                  {{ $t('common.back') }}
-                </app-btn-text>
-              </div>
-            </div>
-          </app-stepper>
-        </div>
-      </app-sheet>
-      <!-- TODO: add link-->
-      <ButtonNoWallet class="mt-5" />
-    </div>
+  <div class="flex flex-col gap-5">
+    <AccessStepIndicator :step="accessStep" />
+
+    <!-- Step 1: plug in / pair the device -->
+    <template v-if="accessStep === 1">
+      <div class="flex flex-col items-center gap-4 py-4 text-center">
+        <img
+          v-if="deviceMark"
+          :src="deviceMark"
+          alt=""
+          class="size-16 rounded-full"
+        />
+        <p class="text-sm text-text-subtle">
+          {{ stepDescription }}
+        </p>
+      </div>
+      <AppBaseButton
+        v-if="currentView !== 'ledger' || usbSupported"
+        data-testid="hw-connect"
+        class="w-full"
+        :class="PRIMARY_DISABLED_CLASS"
+        :is-loading="connectingWallet"
+        :disabled="connectingWallet"
+        @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
+      >
+        {{
+          currentView === 'ledger'
+            ? t('access_wallet_ledger.connect_usb')
+            : t('access_wallet_trezor.connect')
+        }}
+      </AppBaseButton>
+      <button
+        v-if="currentView === 'ledger' && bleSupported"
+        type="button"
+        data-testid="hw-connect-bluetooth"
+        class="mx-auto text-sm font-semibold text-text-brand cursor-pointer disabled:cursor-default disabled:opacity-50"
+        :disabled="connectingWallet"
+        @click="connectViaBluetooth"
+      >
+        {{ t('access_wallet_ledger.connect_bluetooth') }}
+      </button>
+    </template>
+
+    <!-- Step 2: pick network, path and address -->
+    <template v-else>
+      <div class="grid grid-cols-1 gap-2 xs:grid-cols-2">
+        <AccessDropdown
+          :label="$t('access_wallet.advanced.network')"
+          :items="deviceChains"
+          :model-value="selectedChain ?? undefined"
+          :search-placeholder="$t('access_wallet.networks.search')"
+          :empty-text="$t('access_wallet.networks.not_found')"
+          :item-key="chainKey"
+          :search-text="chainSearchText"
+          @update:model-value="updateChain"
+        >
+          <template #selected="{ item }">
+            <AppAvatar v-if="item" type="network" size="s" :chain="item.name" />
+            <span class="truncate">{{ item?.nameLong }}</span>
+          </template>
+          <template #item="{ item }">
+            <AppAvatar type="network" size="s" :chain="item.name" />
+            <span class="text-sm">{{ item.nameLong }}</span>
+          </template>
+        </AccessDropdown>
+        <AccessDropdown
+          :label="$t('access_wallet.advanced.derivation_path')"
+          :items="paths"
+          :model-value="selectedDerivation"
+          :search-placeholder="$t('derivation_path.search')"
+          :empty-text="$t('access_wallet.advanced.no_paths')"
+          :item-key="pathKey"
+          :search-text="pathSearchText"
+          @update:model-value="setSelectedDerivation"
+        >
+          <template #selected="{ item }">
+            <span class="truncate">{{ item?.path }}</span>
+          </template>
+          <template #item="{ item }">
+            <span class="grow font-semibold">{{ item.label }}</span>
+            <span class="shrink-0 text-text-subtle">{{ item.path }}</span>
+          </template>
+        </AccessDropdown>
+      </div>
+      <AccessAddressList
+        v-model="selectedIndex"
+        :entries="walletList"
+        :is-loading="isLoadingWalletList"
+        :balances-error="balancesError"
+        :currency="selectedChain?.currencyName"
+        @show-more="showMore"
+        @retry="retryBalances"
+      />
+      <AppBaseButton
+        data-testid="hw-access"
+        class="w-full"
+        :class="PRIMARY_DISABLED_CLASS"
+        :disabled="walletList.length === 0 || isLoadingWalletList"
+        :is-loading="isUnlockingWallet"
+        @click="access"
+      >
+        {{ $t('create_wallet.connect') }}
+      </AppBaseButton>
+    </template>
+
+    <AccessHelpFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
-import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import {
   ref,
+  shallowRef,
   watch,
   markRaw,
   computed,
@@ -107,17 +120,17 @@ import {
   onUnmounted,
   nextTick,
 } from 'vue'
-import type { ComputedRef, Ref } from 'vue'
-import AppStepper from '@/components/AppStepper.vue'
-import AppStepDescription from '@/components/AppStepDescription.vue'
+import type { ComputedRef } from 'vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import SelectAddressList from './components/SelectAddressList.vue'
-import { type StepDescription } from '@/types/components/appStepper'
+import AccessStepIndicator from './components/AccessStepIndicator.vue'
+import AccessDropdown from './components/AccessDropdown.vue'
+import AccessAddressList from './components/AccessAddressList.vue'
+import AccessHelpFooter from './components/AccessHelpFooter.vue'
+import { PRIMARY_DISABLED_CLASS } from '@/modules/access/common/buttonStyles'
+import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { type SelectAddress } from './types/selectAddress'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import {
   walletConfigs,
   WalletConfigType,
@@ -187,7 +200,9 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
  * Access Store and Chain in the store
  -------------------------*/
 const accessStore = useAccessStore()
-const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
+const { currentView, selectedChain, isEvmChain, accessStep } =
+  storeToRefs(accessStore)
+const { chains } = storeToRefs(useChainsStore())
 
 // Reuse one Trezor manager for the whole session: creating a fresh manager on
 // every connect / chain / derivation change re-ran the process-wide
@@ -203,6 +218,10 @@ let hwWalletInstance: HWManager | null = createHwManager()
 const updateChain = (chain: Chain) => {
   accessStore.setSelectedChain(chain)
 }
+const chainKey = (chain: Chain) => chain.name
+const chainSearchText = (chain: Chain) => chain.nameLong
+const pathKey = (path: PathType) => `${path.label}:${path.path}`
+const pathSearchText = (path: PathType) => `${path.label} ${path.path}`
 
 /**------------------------
  * Derivation Path
@@ -221,11 +240,6 @@ const setSelectedDerivationSilently = async (path: PathType) => {
   suppressPathWatcher = false
 }
 
-/**------------------------
- * Steps
- -------------------------*/
-const activeStep = ref(0)
-
 /**
  * Wallet identifier
  *
@@ -243,60 +257,11 @@ const selectedHwWalletType = computed(() => {
   }
 })
 
-const connectButtonText = computed(() => {
-  switch (currentView.value) {
-    case 'trezor':
-      return t('access_wallet_trezor.connect')
-    case 'ledger':
-      return t('access_wallet_ledger.connect')
-    default:
-      return ''
-  }
-})
-
-const walletStepsDescription: Ref<StepDescription[]> = computed(() => {
-  switch (currentView.value) {
-    case 'trezor':
-      return [
-        {
-          title: t('access_wallet_trezor.step.step1.title'),
-          description: t('access_wallet_trezor.step.step1.description'),
-        },
-        {
-          title: t('access_wallet_trezor.step.step2.title'),
-        },
-      ]
-    case 'ledger':
-      return [
-        {
-          title: t('access_wallet_ledger.step.step1.title'),
-          description: t('access_wallet_ledger.step.step1.description'),
-        },
-        {
-          title: t('access_wallet_ledger.step.step2.title'),
-        },
-      ]
-    default:
-      return []
-  }
-})
-
-const walletSteps = computed(() => {
-  switch (currentView.value) {
-    case 'trezor':
-      return [
-        t('access_wallet_trezor.step.step1.short'),
-        t('access_wallet_trezor.step.step2.short'),
-      ]
-    case 'ledger':
-      return [
-        t('access_wallet_ledger.step.step1.short'),
-        t('access_wallet_ledger.step.step2.short'),
-      ]
-    default:
-      return []
-  }
-})
+const stepDescription = computed(() =>
+  currentView.value === 'trezor'
+    ? t('access_wallet_trezor.step.step1.description')
+    : t('access_wallet_ledger.step.step1.description'),
+)
 
 const selectedDerivation: ComputedRef<PathType | undefined> = computed(() => {
   switch (currentView.value) {
@@ -319,10 +284,6 @@ const setSelectedDerivation = (path: PathType) => {
   } else if (currentView.value === 'ledger') {
     setSelectedLedgerDerivation(path)
   }
-}
-
-const backStep = () => {
-  activeStep.value = 0
 }
 
 const connectingWallet = ref(false)
@@ -392,7 +353,7 @@ const unlockWallet = async () => {
     }
 
     // Only advance to step 2 after all validations pass
-    activeStep.value = 1
+    accessStep.value = 2
     void loadList()
   } catch (e) {
     if (isStale()) return
@@ -490,10 +451,11 @@ const connectViaBluetooth = async () => {
 /**------------------------
  *  Wallet List
  ------------------------*/
-const walletList = ref<SelectAddress[]>([])
+// Shallow: keeps the device wallet instances out of deep reactivity.
+const walletList = shallowRef<SelectAddress[]>([])
 const isLoadingWalletList = ref(true)
 const selectedIndex = ref(0)
-const page = ref(0)
+const balancesError = ref(false)
 const toastStore = useToastStore()
 
 // Bumped on every load (and every scheduled reload) so a superseded load stops
@@ -520,26 +482,58 @@ const scheduleLoadList = () => {
   cancelScheduledLoad()
   loadListGeneration++
   isLoadingWalletList.value = true
-  page.value = 0
   scheduledLoad = setTimeout(() => {
     scheduledLoad = null
-    void loadList(0)
+    void loadList()
   }, RELOAD_SETTLE_MS)
 }
 
-const loadList = async (pageIndex: number = 0) => {
+// One batched request against the chain picked in this dialog, instead of a
+// per-address token-list fetch (5x the calls to a rate-limited endpoint, and
+// against the app's global chain). Throws on failure; the addresses stay
+// connectable with a 0 balance and the list offers a retry.
+const fetchBalances = async (entries: SelectAddress[]) => {
+  const chain = selectedChain.value
+  const type = chain?.type ?? 'EVM'
+  const balances = await fetchNativeBalances(
+    { name: chain?.name ?? 'ETHEREUM', type, chainID: chain?.chainID ?? '1' },
+    entries.map(e => e.address),
+  )
+  for (const entry of entries) {
+    const raw = balances.get(entry.address.toLowerCase())
+    if (raw !== undefined) entry.balance = formatNativeBalance(raw, type)
+  }
+}
+
+const retryBalances = async () => {
+  const generation = loadListGeneration
+  try {
+    await fetchBalances(walletList.value)
+    if (generation !== loadListGeneration) return
+    // New array so the shallow list re-renders the updated balances.
+    walletList.value = [...walletList.value]
+    balancesError.value = false
+  } catch {
+    // Still failing: the retry link stays.
+  }
+}
+
+/** Reads the next five addresses; `append` keeps the ones already listed ("Show more"). */
+const loadList = async (append = false) => {
   // The chain and derivation watchers call us after a 1s wait.
   if (isUnmounted) return
   cancelScheduledLoad()
   const generation = ++loadListGeneration
   const isStale = () => generation !== loadListGeneration
   isLoadingWalletList.value = true
-  walletList.value = []
-  const startIndex = pageIndex * 5
+  if (!append) {
+    walletList.value = []
+    balancesError.value = false
+  }
+  const startIndex = walletList.value.length
   const chain = selectedChain.value
   const chainId = chain?.chainID ?? '1'
   const chainName = chain?.name ?? 'ETHEREUM'
-  const chainType = chain?.type ?? 'EVM'
   const networkName = chainToEnum[chainName] ?? 'Ethereum'
   const instance = wallet.value
     ? wallet.value.getWalletInstance?.()
@@ -588,30 +582,16 @@ const loadList = async (pageIndex: number = 0) => {
     }
     if (isStale()) return
 
-    // One batched request for the page against the chain picked in this dialog,
-    // instead of a per-address token-list fetch (5x the calls to a rate-limited
-    // endpoint, and against the app's global chain rather than this one). A
-    // failure here must not block access: the addresses show with a 0 balance.
+    let balancesFailed = false
     try {
-      const balances = await fetchNativeBalances(
-        { name: chainName, type: chainType, chainID: chainId },
-        entries.map(e => e.address),
-      )
-      if (isStale()) return
-      for (const entry of entries) {
-        const raw = balances.get(entry.address.toLowerCase())
-        if (raw !== undefined) {
-          entry.balance = formatNativeBalance(raw, chainType)
-        }
-      }
-    } catch (e) {
-      console.error('Error fetching balances:', e)
+      await fetchBalances(entries)
+    } catch {
+      balancesFailed = true
     }
-
-    walletList.value = entries
-    if (entries.length > 0) {
-      selectedIndex.value = entries[0].index
-    }
+    if (isStale()) return
+    balancesError.value = balancesFailed
+    walletList.value = append ? [...walletList.value, ...entries] : entries
+    if (!append && entries.length > 0) selectedIndex.value = entries[0].index
   } catch (e) {
     if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
@@ -640,7 +620,7 @@ watch(
     if (newValue === null) return
     // Only the address step has a list to rebuild; on the connect step the new
     // chain is simply picked up by unlockWallet.
-    if (activeStep.value !== 1) return
+    if (accessStep.value !== 2) return
 
     paths.value = []
     // Invalidate the load in flight right away and hold the path watcher: every
@@ -722,11 +702,7 @@ watch(
   },
 )
 
-const setPage = (isNext: boolean) => {
-  if (!isNext && page.value === 0) return
-  page.value = isNext ? page.value + 1 : page.value - 1
-  loadList(page.value)
-}
+const showMore = () => loadList(true)
 
 /** ------------------------
  * Access Wallet
@@ -743,6 +719,14 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
       return null
   }
 })
+const deviceMark = computed(() => {
+  const icon = walletConfig.value?.icon
+  return typeof icon === 'string' ? icon : undefined
+})
+/** Only the networks this device's app can sign for. */
+const deviceChains = computed(() =>
+  chains.value.filter(chain => walletConfig.value?.canSupport?.(chain) ?? true),
+)
 const { closeAccessDialog } = useAccessStore()
 
 // Set once a wallet from this flow was handed to the store: its Ledger

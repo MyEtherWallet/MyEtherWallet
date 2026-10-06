@@ -14,8 +14,6 @@
       "private_key": "Private key"
     },
     "help": {
-      "ledger": "How to connect your Ledger wallet",
-      "trezor": "How to connect your Trezor wallet",
       "default": "Need Help connecting your wallet?"
     },
     "toast": {
@@ -115,35 +113,22 @@
     "error_accessing_wallet": "There was an error accessing the wallet. Please try again."
   },
   "access_wallet_trezor": {
-    "title": "Access Wallet with Trezor",
     "step": {
       "step1": {
-        "short": "Connect Trezor",
         "title": "Connect your Trezor",
         "description": "Connect your Trezor to your computer. Follow the instructions in the Trezor connection tab."
-      },
-      "step2": {
-        "short": "address & network",
-        "title": "Select address and network"
       }
     },
     "connect": "Connect your Trezor",
     "not_supported": "Trezor is not supported on this browser. Please use a Chromium-based browser (such as Chrome, Brave, or Edge) on desktop to connect your Trezor."
   },
   "access_wallet_ledger": {
-    "title": "Access Wallet with Ledger",
     "step": {
       "step1": {
-        "short": "Connect Ledger",
         "title": "Connect your Ledger",
         "description": "Connect your Ledger to your computer. Follow the instructions on your Ledger device."
-      },
-      "step2": {
-        "short": "address & network",
-        "title": "Select address and network"
       }
     },
-    "connect": "Connect your Ledger",
     "connect_usb": "Connect your Ledger via USB",
     "connect_bluetooth": "or connect via Bluetooth"
   },

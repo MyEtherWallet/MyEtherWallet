@@ -148,6 +148,10 @@ describe('ModuleAccessWallet header', () => {
     ['mnemonic', 1, 'access_wallet.advanced.phrase_title'],
     ['mnemonic', 2, 'access_wallet.advanced.address_title'],
     ['private_key', 1, 'access_wallet.advanced.private_key_title'],
+    ['ledger', 1, 'access_wallet_ledger.step.step1.title'],
+    ['ledger', 2, 'access_wallet.advanced.address_title'],
+    ['trezor', 1, 'access_wallet_trezor.step.step1.title'],
+    ['trezor', 2, 'access_wallet.advanced.address_title'],
   ])('titles %s step %i', (view, step, key) => {
     const w = mountAt(view, step)
     expect(title(w)).toBe(key)
@@ -190,6 +194,8 @@ describe('ModuleAccessWallet header', () => {
     'keystore',
     'mnemonic',
     'private_key',
+    'ledger',
+    'trezor',
   ])('keeps the chooser width on %s', view => {
     const w = mountAt(view)
     expect(w.findComponent({ name: 'AppDialog' }).classes()).toContain(

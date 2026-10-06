@@ -45,7 +45,7 @@
         <app-need-help
           v-if="!isNewView"
           class="self-center"
-          :title="helpLinkText"
+          :title="$t('access_wallet.help.default')"
           help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
         />
       </div>
@@ -196,6 +196,8 @@ const NEW_VIEWS: WalletView[] = [
   'keystore',
   'mnemonic',
   'private_key',
+  'ledger',
+  'trezor',
 ]
 const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
 
@@ -275,6 +277,14 @@ const ADVANCED_TITLES: Partial<Record<WalletView, string[]>> = {
     'access_wallet.advanced.address_title',
   ],
   private_key: ['access_wallet.advanced.private_key_title'],
+  ledger: [
+    'access_wallet_ledger.step.step1.title',
+    'access_wallet.advanced.address_title',
+  ],
+  trezor: [
+    'access_wallet_trezor.step.step1.title',
+    'access_wallet.advanced.address_title',
+  ],
 }
 
 const getTitle = computed(() => {
@@ -288,12 +298,6 @@ const getTitle = computed(() => {
   if (stepTitle) return t(stepTitle)
   let method = ''
   switch (currentView.value) {
-    case 'ledger':
-      method = 'Ledger'
-      break
-    case 'trezor':
-      method = 'Trezor'
-      break
     case 'wallet_connect':
     case 'web3_wallet':
       method = clickedWeb3Wallet.value?.name || ''
@@ -305,16 +309,5 @@ const getTitle = computed(() => {
   return method
     ? t('access_wallet.connect_with', { method })
     : t('access_wallet.connect_wallet_title')
-})
-
-const helpLinkText = computed(() => {
-  switch (currentView.value) {
-    case 'ledger':
-      return t('access_wallet.help.ledger')
-    case 'trezor':
-      return t('access_wallet.help.trezor')
-    default:
-      return t('access_wallet.help.default')
-  }
 })
 </script>

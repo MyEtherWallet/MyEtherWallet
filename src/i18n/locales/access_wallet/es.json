@@ -14,8 +14,6 @@
       "private_key": "Clave privada"
     },
     "help": {
-      "ledger": "Cómo conectar tu billetera Ledger",
-      "trezor": "Cómo conectar tu billetera Trezor",
       "default": "¿Necesitas ayuda para conectar tu billetera?"
     },
     "toast": {
@@ -115,34 +113,21 @@
     "error_accessing_wallet": "Hubo un error al acceder a la billetera. Inténtalo de nuevo."
   },
   "access_wallet_trezor": {
-    "title": "Acceder a la billetera con Trezor",
     "step": {
       "step1": {
-        "short": "Conectar Trezor",
         "title": "Conecta tu Trezor",
         "description": "Conecta tu Trezor a la computadora. Sigue las instrucciones en la pestaña de conexión de Trezor."
-      },
-      "step2": {
-        "short": "dirección y red",
-        "title": "Selecciona la dirección y la red"
       }
     },
     "connect": "Conecta tu Trezor"
   },
   "access_wallet_ledger": {
-    "title": "Acceder a la billetera con Ledger",
     "step": {
       "step1": {
-        "short": "Conectar Ledger",
         "title": "Conecta tu Ledger",
         "description": "Conecta tu Ledger a la computadora. Sigue las instrucciones en tu dispositivo Ledger."
-      },
-      "step2": {
-        "short": "dirección y red",
-        "title": "Selecciona la dirección y la red"
       }
     },
-    "connect": "Conecta tu Ledger",
     "connect_usb": "Conecta tu Ledger por USB",
     "connect_bluetooth": "o conecta por Bluetooth"
   },

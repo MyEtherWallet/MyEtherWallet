@@ -14,8 +14,6 @@
       "private_key": "私钥"
     },
     "help": {
-      "ledger": "如何连接您的 Ledger 钱包",
-      "trezor": "如何连接您的 Trezor 钱包",
       "default": "连接钱包需要帮助吗？"
     },
     "toast": {
@@ -115,34 +113,21 @@
     "error_accessing_wallet": "访问钱包时出错。请重试。"
   },
   "access_wallet_trezor": {
-    "title": "使用 Trezor 访问钱包",
     "step": {
       "step1": {
-        "short": "连接 Trezor",
         "title": "连接您的 Trezor",
         "description": "将您的 Trezor 连接到电脑。按照 Trezor 连接标签页中的说明操作。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
       }
     },
     "connect": "连接您的 Trezor"
   },
   "access_wallet_ledger": {
-    "title": "使用 Ledger 访问钱包",
     "step": {
       "step1": {
-        "short": "连接 Ledger",
         "title": "连接您的 Ledger",
         "description": "将您的 Ledger 连接到电脑。按照 Ledger 设备上的说明操作。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
       }
     },
-    "connect": "连接您的 Ledger",
     "connect_usb": "通过 USB 连接您的 Ledger",
     "connect_bluetooth": "或通过蓝牙连接"
   },
