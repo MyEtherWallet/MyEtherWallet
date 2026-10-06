@@ -18,6 +18,8 @@
     "step": "Step {number}",
     "step_of": "Step {current} of {total}",
     "close_side_menu": "close side menu",
+    "open_side_menu": "open side menu",
+    "wallet_actions": "Wallet actions",
     "old_version_link": "Old version of MEW Portfolio here",
     "processing_tokens_title": "Sit tight!",
     "processing_tokens_description": "We are processing more tokens in your wallet. We'll update your balances soon.",
@@ -203,7 +205,8 @@
     "chart_1m": "1m",
     "chart_3m": "3m",
     "chart_1y": "1y",
-    "chart_all": "all"
+    "chart_all": "all",
+    "chart_range": "Chart range"
   },
   "deposit": "Deposit",
   "learn": "Learn",

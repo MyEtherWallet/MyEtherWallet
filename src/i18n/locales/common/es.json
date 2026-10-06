@@ -18,6 +18,8 @@
     "step": "Paso {number}",
     "step_of": "Paso {current} de {total}",
     "close_side_menu": "cerrar menú lateral",
+    "open_side_menu": "abrir menú lateral",
+    "wallet_actions": "Acciones de la billetera",
     "old_version_link": "Versión anterior de MEW Portfolio aquí",
     "processing_tokens_title": "¡Un momento!",
     "processing_tokens_description": "Estamos procesando más tokens en tu billetera. Actualizaremos tus saldos pronto.",
@@ -201,7 +203,8 @@
     "chart_1m": "1m",
     "chart_3m": "3m",
     "chart_1y": "1a",
-    "chart_all": "todo"
+    "chart_all": "todo",
+    "chart_range": "Rango del gráfico"
   },
   "deposit": "Depositar",
   "learn": "Aprender",

@@ -123,7 +123,7 @@ const SAMPLE = {
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Badge × Size</h2>
       <p class="text-s-12 text-text-subtle">
-        Network / Icon badge: 12 · 14 · 18 · 20 · 22 (xs→xl). Status: 8 fixed.
+        Network / Icon badge: 14 · 16 · 20 · 22 · 24 (xs→xl). Status: 10 fixed.
       </p>
       <div class="overflow-x-auto">
         <table class="border-separate border-spacing-x-12 border-spacing-y-10">

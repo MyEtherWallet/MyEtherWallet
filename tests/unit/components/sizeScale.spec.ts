@@ -82,11 +82,11 @@ describe('size scale (MEW-2364)', () => {
 
 describe('avatar geometry resolves through the scale unchanged', () => {
   it('keeps the exact Figma boxes after wiring to SIZE[]', () => {
-    expect(AVATAR_SIZES.xs).toEqual({ box: 18, badgeBox: 12 })
-    expect(AVATAR_SIZES.s).toEqual({ box: 24, badgeBox: 14 })
-    expect(AVATAR_SIZES.m).toEqual({ box: 32, badgeBox: 18 })
-    expect(AVATAR_SIZES.l).toEqual({ box: 40, badgeBox: 20 })
-    expect(AVATAR_SIZES.xl).toEqual({ box: 48, badgeBox: 22 })
-    expect(STATUS_BADGE_BOX).toBe(8)
+    expect(AVATAR_SIZES.xs).toEqual({ box: 18, badgeBox: 14 })
+    expect(AVATAR_SIZES.s).toEqual({ box: 24, badgeBox: 16 })
+    expect(AVATAR_SIZES.m).toEqual({ box: 32, badgeBox: 20 })
+    expect(AVATAR_SIZES.l).toEqual({ box: 40, badgeBox: 22 })
+    expect(AVATAR_SIZES.xl).toEqual({ box: 48, badgeBox: 24 })
+    expect(STATUS_BADGE_BOX).toBe(10)
   })
 })

@@ -48,6 +48,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'action-bar',
+              name: 'DevActionBar',
+              component: () => import('@/views/ViewActionBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'avatar',
               name: 'DevAvatar',
               component: () => import('@/views/ViewAvatarShowcase.vue'),
@@ -75,6 +81,13 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'divider',
               name: 'DevDivider',
               component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'segmented-control',
+              name: 'DevSegmentedControl',
+              component: () =>
+                import('@/views/ViewSegmentedControlShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

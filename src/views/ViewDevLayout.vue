@@ -15,6 +15,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
   {
     title: 'Components',
     items: [
+      { name: 'Action Bar', to: '/dev/action-bar' },
       { name: 'Avatar', to: '/dev/avatar' },
       { name: 'Button', to: '/dev/button' },
       { name: 'Chip', to: '/dev/chip' },
@@ -23,6 +24,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Icon', to: '/dev/icons' },
       { name: 'Input', to: '/dev/input' },
       { name: 'Picker', to: '/dev/picker' },
+      { name: 'Segmented Control', to: '/dev/segmented-control' },
       { name: 'Tooltip', to: '/dev/tooltip' },
     ],
   },
