@@ -8,13 +8,22 @@
     }"
   >
     <slot name="avatar" />
-    <AppContentGroup
-      :title="title"
-      :description="description"
-      size="m"
-      :no-wrap="truncate"
-      class="grow min-w-0"
-    />
+    <span class="flex min-w-0 grow flex-col">
+      <span
+        data-testid="cell-title"
+        class="text-base font-semibold text-text-default"
+        :class="{ truncate }"
+      >
+        {{ title }}
+      </span>
+      <span
+        v-if="description"
+        class="text-sm text-text-subtle"
+        :class="{ truncate }"
+      >
+        {{ description }}
+      </span>
+    </span>
     <slot name="trailing" />
   </component>
 </template>
@@ -24,7 +33,6 @@
  * Local stand-in for the design-library Cell (Alternative / S) until #5766
  * lands; swap the call sites to AppCell then.
  */
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 
 withDefaults(
   defineProps<{

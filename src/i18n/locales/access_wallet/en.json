@@ -10,8 +10,8 @@
     "connect_with": "Connect with {method}",
     "wallet_name": {
       "keystore": "Keystore",
-      "mnemonic": "Recovery (mnemonic) Phrase",
-      "private_key": "Private Key"
+      "mnemonic": "Recovery Phrase",
+      "private_key": "Private key"
     },
     "help": {
       "ledger": "How to connect your Ledger wallet",

@@ -10,7 +10,7 @@
     "connect_with": "使用{method}连接",
     "wallet_name": {
       "keystore": "Keystore 文件",
-      "mnemonic": "恢复（助记词）短语",
+      "mnemonic": "助记词",
       "private_key": "私钥"
     },
     "help": {

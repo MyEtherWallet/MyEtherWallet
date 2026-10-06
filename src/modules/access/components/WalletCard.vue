@@ -4,13 +4,10 @@
     class="flex w-full h-16 items-center gap-3 rounded-16 bg-background-default p-4 text-left transition-colors hover:bg-background-default-hover cursor-pointer"
     @click="select"
   >
-    <AppAvatar v-if="advancedIcon" type="icon" size="m">
-      <template #icon><AppIcon :name="advancedIcon" size="xs" /></template>
-    </AppAvatar>
     <!-- Round brand marks (Ledger, Trezor) already fill their circle; the wallet
          avatar would inset them as if they were square logos. -->
     <img
-      v-else-if="wallet.roundIcon && iconUrl"
+      v-if="wallet.roundIcon && iconUrl"
       :src="iconUrl"
       alt=""
       class="size-8 shrink-0 rounded-full"
@@ -37,16 +34,11 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
 import configs from '@/configs'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
-import {
-  ADVANCED_WALLET_ICONS,
-  type WalletStatus,
-  walletKey,
-} from '@/modules/access/common/walletTabs'
+import type { WalletStatus } from '@/modules/access/common/walletTabs'
 
 const props = defineProps<{ wallet: WalletConfig; status?: WalletStatus }>()
 const emit = defineEmits<{ select: [wallet: WalletConfig] }>()
@@ -61,10 +53,6 @@ const STATUS_KEY: Record<WalletStatus, string> = {
 const displayName = computed(() =>
   props.wallet.nameKey ? t(props.wallet.nameKey) : props.wallet.name,
 )
-const advancedIcon = computed(
-  () => ADVANCED_WALLET_ICONS[walletKey(props.wallet)],
-)
-
 const iconUrl = ref<string | undefined>()
 // Follow the wallet prop (not just the first one) so a reused card never keeps
 // another wallet's logo.

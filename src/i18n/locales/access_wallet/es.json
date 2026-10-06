@@ -10,7 +10,7 @@
     "connect_with": "Conectar con {method}",
     "wallet_name": {
       "keystore": "Keystore",
-      "mnemonic": "Frase de recuperación (mnemotécnica)",
+      "mnemonic": "Frase de recuperación",
       "private_key": "Clave privada"
     },
     "help": {

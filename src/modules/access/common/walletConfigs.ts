@@ -3,9 +3,9 @@ import UnisatLogo from '@/assets/images/access/unisat.webp'
 import MewLogo from '@/assets/images/access/mew-app.webp'
 import LedgerLogo from '@/assets/images/access/ledger.svg'
 import TrezorLogo from '@/assets/images/access/trezor.svg'
-import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
-import KeystoreLogo from '@/assets/images/access/keystore.webp'
-import MnemonicLogo from '@/assets/images/access/phrase.webp'
+import PrivateKeyLogo from '@/assets/images/access/private-key.svg'
+import KeystoreLogo from '@/assets/images/access/keystore.svg'
+import MnemonicLogo from '@/assets/images/access/recovery-phrase.svg'
 import HWWallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
 import { NetworkNames } from '@enkryptcom/types'
@@ -156,6 +156,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Keystore',
     nameKey: 'access_wallet.wallet_name.keystore',
     icon: KeystoreLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'keystore',
     canSupport: keystoreSupportNetwork,
@@ -165,6 +166,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Recovery (mnemonic) Phrase',
     nameKey: 'access_wallet.wallet_name.mnemonic',
     icon: MnemonicLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'mnemonic',
     canSupport: () => true,
@@ -174,6 +176,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Private Key',
     nameKey: 'access_wallet.wallet_name.private_key',
     icon: PrivateKeyLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'private_key',
     canSupport: privateKeySupportNetwork,

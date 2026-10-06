@@ -29,7 +29,7 @@
         @drop.prevent="onDrop"
       >
         <AppAvatar type="icon" size="l" badge-bottom>
-          <template #icon><AppIcon name="document" /></template>
+          <template #icon><AppIcon name="keystore" /></template>
           <template #badge>
             <AppAvatarBadge type="icon">
               <AppIcon
@@ -89,7 +89,7 @@
       >
         <template #avatar>
           <AppAvatar type="icon" size="l">
-            <template #icon><AppIcon name="document" /></template>
+            <template #icon><AppIcon name="keystore" /></template>
           </AppAvatar>
         </template>
         <template #trailing>

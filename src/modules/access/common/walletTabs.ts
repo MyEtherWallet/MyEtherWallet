@@ -1,4 +1,3 @@
-import type { IconName } from '@/components/icon/icons'
 import {
   type WalletConfig,
   WalletConfigType,
@@ -45,13 +44,6 @@ const TAB_WALLET_IDS: Record<WalletTab, string[]> = {
     'rainbow',
   ],
   advanced: ['privateKey', 'mnemonic', 'keystore'],
-}
-
-/** Advanced methods render an icon avatar instead of a wallet logo. */
-export const ADVANCED_WALLET_ICONS: Record<string, IconName> = {
-  privateKey: 'key',
-  mnemonic: 'lock-closed',
-  keystore: 'document',
 }
 
 /** Search pool per tab: Popular leaves out hardware and advanced methods. */

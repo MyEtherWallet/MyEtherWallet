@@ -4,7 +4,6 @@ import { createI18n } from 'vue-i18n'
 import AccessStepIndicator from '@/modules/access/components/AccessStepIndicator.vue'
 import AccessDropdown from '@/modules/access/components/AccessDropdown.vue'
 import AccessCell from '@/modules/access/components/AccessCell.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -91,15 +90,19 @@ describe('AccessDropdown', () => {
 })
 
 describe('AccessCell', () => {
-  it('wraps long text by default and truncates only when asked', () => {
+  it('sets a semibold title and truncates only when asked', () => {
     wrapper = mount(AccessCell, {
-      props: { title: 'Extensión de navegador' },
+      props: { title: 'Extensión de navegador', description: 'Browser' },
     })
-    expect(wrapper.findComponent(AppContentGroup).props('noWrap')).toBe(false)
+    const title = wrapper.get('[data-testid="cell-title"]')
+    expect(title.classes()).toContain('font-semibold')
+    expect(title.classes()).not.toContain('truncate')
     wrapper.unmount()
     wrapper = mount(AccessCell, {
       props: { title: 'UTC--2026-09-02.json', truncate: true },
     })
-    expect(wrapper.findComponent(AppContentGroup).props('noWrap')).toBe(true)
+    expect(wrapper.get('[data-testid="cell-title"]').classes()).toContain(
+      'truncate',
+    )
   })
 })

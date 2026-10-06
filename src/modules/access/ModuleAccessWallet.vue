@@ -68,18 +68,20 @@
               <AppDivider />
               <AccessCell :title="$t('common.dont_have_wallet')">
                 <template #avatar>
-                  <AppAvatar type="icon" size="m">
-                    <template #icon><AppIcon name="plus" size="xs" /></template>
-                  </AppAvatar>
+                  <span
+                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white"
+                  >
+                    <AppIcon name="plus" size="xs" />
+                  </span>
                 </template>
                 <template #trailing>
-                  <AppBaseButton
-                    theme="secondary"
-                    size="small"
+                  <button
+                    type="button"
+                    class="shrink-0 text-base font-semibold text-text-brand cursor-pointer"
                     @click="accessStore.setCurrentView('sign_up')"
                   >
                     {{ $t('access_wallet.sign_up.cta') }}
-                  </AppBaseButton>
+                  </button>
                 </template>
               </AccessCell>
             </div>
@@ -116,8 +118,6 @@ import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import { parentView } from '@/modules/access/common/accessViews'
 import type { WalletView } from '@/modules/access/common/walletConfigs'
 import AppDialog from '@/components/AppDialog.vue'

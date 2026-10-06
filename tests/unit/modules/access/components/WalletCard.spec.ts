@@ -66,18 +66,6 @@ describe('WalletCard', () => {
     })
   })
 
-  it('uses an icon avatar for advanced methods', () => {
-    const w = mountCard({
-      wallet: {
-        id: 'keystore',
-        name: 'Keystore',
-        icon: '',
-        type: ['software'],
-      },
-    })
-    expect(w.get('.avatar').attributes('data-type')).toBe('icon')
-  })
-
   it('follows a new wallet prop instead of keeping the old logo', async () => {
     const w = mountCard({ wallet: metaMask })
     await w.setProps({
