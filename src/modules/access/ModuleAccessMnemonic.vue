@@ -92,7 +92,7 @@
           </template>
         </AccessDropdown>
       </div>
-      <MnemonicAddressList
+      <AccessAddressList
         v-model="selectedIndex"
         :entries="walletList"
         :is-loading="isLoadingWalletList"
@@ -133,7 +133,7 @@ import AccessBanner from './components/AccessBanner.vue'
 import AccessDropdown from './components/AccessDropdown.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'
 import AccessStepIndicator from './components/AccessStepIndicator.vue'
-import MnemonicAddressList from './components/MnemonicAddressList.vue'
+import AccessAddressList from './components/AccessAddressList.vue'
 import { type SelectAddress } from './types/selectAddress'
 import Bip44Paths from './common/bip44'
 import {

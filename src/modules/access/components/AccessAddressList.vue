@@ -42,7 +42,7 @@
       />
       <AppRadio
         v-model="selected"
-        name="mnemonic-address"
+        name="access-address"
         :value="entry.index"
         :aria-label="entry.address"
       />
