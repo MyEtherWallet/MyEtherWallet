@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { ref } from 'vue'
-import { mount, type VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
 const chain = (name: string, nameLong: string) => ({
@@ -79,28 +79,39 @@ describe('NetworkChips', () => {
     expect(w.emitted('select')?.[0]).toEqual([CHAINS[4]])
   })
 
-  it('shows the extra chain as a selected chip and keeps the "+" button', () => {
+  it('turns the "+" into a pill with the picked network instead of adding a chip', () => {
     const w = mountChips(CHAINS[4])
-    expect(chips(w).map(c => c.text())).toEqual([
-      'Ethereum',
-      'Bitcoin',
-      'BNB Smart Chain',
-      'Polygon',
-    ])
+    expect(chips(w)).toHaveLength(3)
     expect(
-      w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
-    ).toBe('Polygon')
-    expect(w.get('[data-testid="network-more"]').text()).toBe('')
+      w.find('[data-testid="network-chip"][aria-pressed="true"]').exists(),
+    ).toBe(false)
+    const more = w.get('[data-testid="network-more"]')
+    expect(more.get('app-avatar-stub').attributes('chain')).toBe('POLYGON')
+    expect(more.classes()).toContain('border-black')
   })
 
-  it('keeps an added network after selecting a pinned one', async () => {
+  it('keeps the picked network in the pill after selecting a pinned one', async () => {
     const w = mountChips(CHAINS[4])
     await w.setProps({ selected: CHAINS[0] })
-    expect(chips(w).map(c => c.text())).toContain('Polygon')
+    const more = w.get('[data-testid="network-more"]')
+    expect(more.get('app-avatar-stub').attributes('chain')).toBe('POLYGON')
+    expect(more.classes()).not.toContain('border-black')
     expect(
       w.get('[data-testid="network-chip"][aria-pressed="true"]').text(),
     ).toBe('Ethereum')
-    await chips(w)[3].trigger('click')
-    expect(w.emitted('select')?.at(-1)).toEqual([CHAINS[4]])
+  })
+
+  it('marks the selected network in the menu', async () => {
+    const scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = scrollIntoView
+    const w = mountChips(CHAINS[4])
+    await w.get('[data-testid="network-more"]').trigger('click')
+    await flushPromises()
+    const [arbitrum, polygon] = w.findAll('[data-testid="network-option"]')
+    expect(polygon.classes()).toContain('bg-background-default')
+    expect(polygon.find('svg').exists()).toBe(true)
+    expect(arbitrum.classes()).not.toContain('bg-background-default')
+    expect(arbitrum.find('svg').exists()).toBe(false)
+    expect(scrollIntoView.mock.contexts[0]).toBe(polygon.element)
   })
 })

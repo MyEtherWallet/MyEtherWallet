@@ -7,7 +7,7 @@
     <!-- Chips scroll; the "+" stays outside so an added network can't push it out of view. -->
     <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar">
       <AppChip
-        v-for="chain in chipChains"
+        v-for="chain in pinnedChains"
         :key="chain.name"
         data-testid="network-chip"
         surface="alternative"
@@ -27,10 +27,30 @@
       teleport
       location="left"
       menu-radius-class="rounded-16"
-      @update:open="search = ''"
+      @update:open="onOpen"
     >
       <template #menu-button="{ toggleMenu }">
+        <!-- Once a network is picked from the menu, the "+" becomes a pill showing it
+             (selected border while it is the active one) and keeps opening the menu. -->
+        <button
+          v-if="addedChain"
+          type="button"
+          data-testid="network-more"
+          class="flex h-8 shrink-0 items-center gap-2 rounded-full border bg-background-default pl-1 pr-2 cursor-pointer transition-colors hover:bg-background-default-hover"
+          :class="
+            addedChain.name === selected?.name
+              ? 'border-black'
+              : 'border-transparent'
+          "
+          :aria-label="t('access_wallet.networks.more')"
+          aria-haspopup="menu"
+          @click="toggleMenu"
+        >
+          <AppAvatar type="network" size="s" :chain="addedChain.name" />
+          <AppIcon name="chevron-down" size="xs" />
+        </button>
         <AppBtnIcon
+          v-else
           data-testid="network-more"
           variant="filled"
           size="m"
@@ -59,16 +79,27 @@
               />
             </template>
           </AppInput>
-          <ul class="overflow-y-auto">
+          <ul ref="listRef" class="overflow-y-auto">
             <li v-for="chain in menuChains" :key="chain.name">
               <button
                 type="button"
                 data-testid="network-option"
+                :aria-current="chain.name === selected?.name || undefined"
                 class="flex h-12 w-full items-center gap-3 rounded-12 px-3 text-left text-sm hover:bg-background-default-hover cursor-pointer"
+                :class="{
+                  'bg-background-default': chain.name === selected?.name,
+                }"
                 @click="pick(chain, toggleMenu)"
               >
                 <AppAvatar type="network" size="s" :chain="chain.name" />
                 {{ chain.nameLong }}
+                <AppIcon
+                  v-if="chain.name === selected?.name"
+                  name="check-circle"
+                  variant="filled"
+                  size="s"
+                  class="ml-auto shrink-0 text-icon-default"
+                />
               </button>
             </li>
           </ul>
@@ -85,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppChip from '@/components/chip/AppChip.vue'
@@ -113,8 +144,8 @@ const pinnedChains = computed(() =>
 const otherChains = computed(() =>
   chains.value.filter(chain => !PINNED_CHAIN_NAMES.includes(chain.name)),
 )
-// A network picked from the menu stays as a chip until another one replaces it,
-// so switching to a pinned chain and back doesn't make it disappear.
+// A network picked from the menu stays in the "+" pill until another one replaces
+// it, so switching to a pinned chain and back doesn't make it disappear.
 const addedChain = ref<Chain>()
 watch(
   () => props.selected?.name,
@@ -124,13 +155,20 @@ watch(
   },
   { immediate: true },
 )
-const chipChains = computed(() =>
-  addedChain.value
-    ? [...pinnedChains.value, addedChain.value]
-    : pinnedChains.value,
-)
 
 const search = ref('')
+const listRef = ref<HTMLElement | null>(null)
+const onOpen = (open: boolean) => {
+  search.value = ''
+  // Open on the current pick, not at the top of the long list.
+  if (open) {
+    void nextTick(() =>
+      listRef.value
+        ?.querySelector('[aria-current="true"]')
+        ?.scrollIntoView({ block: 'nearest' }),
+    )
+  }
+}
 const menuChains = computed(() => {
   const query = search.value.trim().toLowerCase()
   return query
