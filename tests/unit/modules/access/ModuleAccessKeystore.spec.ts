@@ -170,4 +170,14 @@ describe('ModuleAccessKeystore', () => {
       w.get('input[type="password"]').element.closest('[data-private]'),
     ).not.toBeNull()
   })
+
+  it('uses the light brand disabled style on its primary buttons', async () => {
+    const w = mountIt()
+    await upload(w, JSON.stringify({ hello: 'world' }), 'notes.json')
+    expect(w.get('[data-testid="keystore-continue"]').classes()).toContain(
+      'aria-disabled:!bg-background-brand/40',
+    )
+    accessStep.value = 2
+    await flushPromises()
+  })
 })
