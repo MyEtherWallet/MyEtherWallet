@@ -78,10 +78,22 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'divider',
+              name: 'DevDivider',
+              component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'segmented-control',
               name: 'DevSegmentedControl',
               component: () =>
                 import('@/views/ViewSegmentedControlShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'spinner',
+              name: 'DevSpinner',
+              component: () => import('@/views/ViewSpinnerShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

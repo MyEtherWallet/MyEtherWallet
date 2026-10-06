@@ -53,9 +53,9 @@
           @remove="removeNotification"
           @recover="recoverFunds"
         />
-        <hr
+        <app-divider
           v-if="index < filteredNotifications.length - 1"
-          class="border-t border-border-default mt-4"
+          class="mt-3 -mb-1"
         />
       </div>
       <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
@@ -83,6 +83,7 @@ import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
