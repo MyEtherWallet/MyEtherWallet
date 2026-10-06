@@ -16,7 +16,14 @@
         <AppIcon name="magnifying-glass" size="s" class="text-text-subtle" />
       </template>
     </AppInput>
-    <div v-if="wallets.length" class="grid grid-cols-1 gap-3 xs:grid-cols-2">
+    <!-- Only the wallet grid scrolls; network chips, tabs, search and the sign-up
+         footer stay put. The cap is the dialog's max height minus those fixed parts
+         (measured ~335px on mobile, ~359px + the 72px top offset from sm, plus a buffer). -->
+    <div
+      v-if="wallets.length"
+      data-testid="wallet-grid"
+      class="mew-scrollbar -mx-1 grid min-h-[136px] grid-cols-1 content-start gap-3 overflow-y-auto px-1 max-h-[calc(95vh-350px)] xs:grid-cols-2 sm:max-h-[calc(90vh-440px)]"
+    >
       <WalletCard
         v-for="{ wallet, status } in wallets"
         :key="wallet.id"

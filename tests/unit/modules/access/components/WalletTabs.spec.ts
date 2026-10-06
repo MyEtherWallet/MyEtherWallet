@@ -128,4 +128,11 @@ describe('WalletTabs', () => {
       'access_wallet.tabs.popular',
     )
   })
+
+  it('makes the wallet grid the only scrolling area', () => {
+    const w = mountTabs()
+    const grid = w.get('[data-testid="wallet-grid"]')
+    expect(grid.classes()).toContain('overflow-y-auto')
+    expect(grid.classes().some(c => c.startsWith('max-h-'))).toBe(true)
+  })
 })

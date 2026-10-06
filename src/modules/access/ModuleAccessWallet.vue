@@ -64,7 +64,7 @@
           <div v-if="currentView === 'default'" class="flex flex-col gap-4">
             <NetworkChips :selected="selectedChain" @select="updateChain" />
             <WalletTabs />
-            <div class="sticky bottom-0 flex flex-col gap-4 bg-white pt-2">
+            <div class="flex flex-col gap-4 pt-2">
               <AppDivider />
               <AccessCell :title="$t('common.dont_have_wallet')">
                 <template #avatar>
