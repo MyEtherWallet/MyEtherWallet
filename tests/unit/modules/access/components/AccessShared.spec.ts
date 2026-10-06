@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest'
-import { mount, type VueWrapper } from '@vue/test-utils'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AccessStepIndicator from '@/modules/access/components/AccessStepIndicator.vue'
 import AccessDropdown from '@/modules/access/components/AccessDropdown.vue'
@@ -78,6 +78,21 @@ describe('AccessDropdown', () => {
     expect(w.emitted('update:modelValue')?.[0]).toEqual([ITEMS[1]])
     // AppPopUpMenu hides with v-show, so the menu stays mounted but invisible.
     expect(w.get('[data-testid="dropdown-menu"]').isVisible()).toBe(false)
+  })
+
+  it('marks the selected option and scrolls it into view on open', async () => {
+    const scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = scrollIntoView
+    const w = mountDropdown(ITEMS[2])
+    await w.get('[data-testid="dropdown-trigger"]').trigger('click')
+    await flushPromises()
+    const [eth, , btc] = w.findAll('[data-testid="dropdown-option"]')
+    expect(btc.attributes('aria-selected')).toBe('true')
+    expect(btc.classes()).toContain('bg-background-default')
+    expect(btc.find('svg').exists()).toBe(true)
+    expect(eth.classes()).not.toContain('bg-background-default')
+    expect(eth.find('svg').exists()).toBe(false)
+    expect(scrollIntoView.mock.contexts[0]).toBe(btc.element)
   })
 
   it('shows the empty text when nothing matches', async () => {

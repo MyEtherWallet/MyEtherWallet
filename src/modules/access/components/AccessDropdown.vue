@@ -42,19 +42,29 @@
               />
             </template>
           </AppInput>
-          <ul class="overflow-y-auto" role="listbox" :aria-label="label">
+          <ul
+            ref="listRef"
+            class="overflow-y-auto"
+            role="listbox"
+            :aria-label="label"
+          >
             <li v-for="item in filtered" :key="itemKey(item)">
               <button
                 type="button"
                 role="option"
                 data-testid="dropdown-option"
                 class="flex min-h-[54px] w-full items-center gap-3 rounded-12 px-3 text-left cursor-pointer hover:bg-background-default-hover"
-                :aria-selected="
-                  !!modelValue && itemKey(item) === itemKey(modelValue)
-                "
+                :class="{ 'bg-background-default': isSelected(item) }"
+                :aria-selected="isSelected(item)"
                 @click="pick(item, toggleMenu)"
               >
                 <slot name="item" :item="item" />
+                <AppIcon
+                  v-if="isSelected(item)"
+                  name="check"
+                  size="xs"
+                  class="ml-auto shrink-0 text-text-brand"
+                />
               </button>
             </li>
           </ul>
@@ -72,7 +82,7 @@
  * Local stand-in for the design-library Dropdown M + MenuList (not built yet):
  * a labelled trigger that opens a searchable list. Swap for the DS pair later.
  */
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -91,10 +101,22 @@ const emit = defineEmits<{ 'update:modelValue': [item: T] }>()
 
 const isOpen = ref(false)
 const search = ref('')
+const listRef = ref<HTMLElement | null>(null)
 const onOpen = (open: boolean) => {
   isOpen.value = open
   search.value = ''
+  // Long lists (networks): open on the current pick, not at the top.
+  if (open) {
+    void nextTick(() =>
+      listRef.value
+        ?.querySelector('[aria-selected="true"]')
+        ?.scrollIntoView({ block: 'nearest' }),
+    )
+  }
 }
+
+const isSelected = (item: T) =>
+  !!props.modelValue && props.itemKey(item) === props.itemKey(props.modelValue)
 
 const filtered = computed(() => {
   const query = search.value.trim().toLowerCase()
