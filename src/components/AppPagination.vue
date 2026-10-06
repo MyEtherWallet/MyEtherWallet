@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps<{
   modelValue: number
@@ -22,7 +23,7 @@ const go = (p: number) => {
 
 <template>
   <div data-test="pagination" class="w-full">
-    <div class="border-t border-border-default" />
+    <app-divider class="-my-1" />
     <div class="mt-6 flex items-center gap-3">
       <p class="flex-1 text-s-16 text-black">
         <!-- Consumers pass a localized label; falls back to "page / pages". -->

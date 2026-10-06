@@ -1,46 +1,57 @@
 <template>
-  <label class="inline-flex !cursor-pointer hoverOpacityHasBG">
-    <span v-if="!isRight" class="text8 pr-2">{{ label }}</span>
-    <button
+  <button
+    type="button"
+    role="switch"
+    :aria-checked="model"
+    :disabled="disabled"
+    :class="[
+      'flex h-6 w-[43px] shrink-0 items-center rounded-full p-[3px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background-default disabled:pointer-events-none disabled:opacity-40',
+      model
+        ? 'bg-background-brand hover:bg-background-brand-hover'
+        : 'bg-background-toggle hover:bg-background-default-hover',
+    ]"
+    @click="toggle"
+  >
+    <span
+      aria-hidden="true"
       :class="[
-        model ? 'bg-background-brand' : 'bg-background-toggle',
-        ' w-11 h-6  rounded-full px-1 ',
+        'size-[18px] rounded-full bg-background-alternative transition-transform duration-150',
+        { 'translate-x-[19px]': model },
       ]"
-      @click="model = !model"
-    >
-      <div
-        aria-hidden="true"
-        :class="[
-          { 'translate-x-[125%]': model },
-          'h-4 w-4 rounded-full bg-white transition-transform',
-        ]"
-      ></div>
-    </button>
-    <span v-if="isRight" class="text8 pl-2">{{ label }}</span>
-  </label>
+    />
+  </button>
 </template>
 
 <script setup lang="ts">
 /**
- * Toggle Button Component
+ * Design-library Toggle (MEW-1974, Figma node 628-190): 43×24 switch whose
+ * 18px knob slides between off and on. Hover is CSS only; label/description
+ * text lives outside — pair it with a Cell or Content Group.
  *
  * @example
- * <app-toggle v-model="model" label="Label" />
- *
- * @example label on the right
- * <app-toggle v-model="model" label="Label" is-right />
+ * <app-toggle v-model="enabled" aria-label="Enable notifications" />
  */
-defineProps({
-  /** @label Label of the toggle button */
-  label: {
-    type: String,
-    required: true,
-  },
-  /** @isRight position of the label is set to be on the right */
-  isRight: {
-    type: Boolean,
-    default: false,
-  },
-})
+const props = withDefaults(
+  defineProps<{
+    /** Prevents the switch value from being changed. Not in Figma yet. */
+    disabled?: boolean
+  }>(),
+  { disabled: false },
+)
+
+const emit = defineEmits<{
+  /** Emits the new value after the switch changes. */
+  change: [value: boolean]
+}>()
+
 const model = defineModel<boolean>({ required: true })
+
+// Native <button> already turns Enter / Space into a click.
+const toggle = () => {
+  if (props.disabled) return
+
+  const value = !model.value
+  model.value = value
+  emit('change', value)
+}
 </script>

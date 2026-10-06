@@ -1,264 +1,308 @@
 <template>
-  <div class="flex justify-center w-full">
-    <div
-      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-3"
-    >
-      <app-not-recommended />
-      <app-sheet class="mt-1">
-        <app-stepper
-          :steps="steps"
-          :description="stepDescription"
-          :active-step="activeStep"
-          @update:active-step="backStep"
-        >
-          <div v-if="activeStep === 0">
-            <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
-              <div>
-                <app-step-description
-                  :description="stepDescription[0]"
-                  :activeStep="activeStep"
-                />
-                <img
-                  src="@/assets/images/access/keystore-file.jpg"
-                  :alt="$t('access_wallet_keystore.keystore_file_alt')"
-                  class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
-                  width="300"
-                  height="285"
-                />
-                <app-base-button
-                  @click="clickUpload"
-                  class="mt-5 mx-auto xs:mt-8 w-full xs:w-auto"
-                >
-                  {{ $t('access_wallet_keystore.select_keystore') }}
-                </app-base-button>
-                <input
-                  ref="jsonInput"
-                  type="file"
-                  name="file"
-                  :aria-label="
-                    $t('access_wallet_keystore.select_keystore_file_title')
-                  "
-                  style="display: none"
-                  @change="uploadKeystoreFile"
-                />
-              </div>
-              <img
-                src="@/assets/images/access/keystore-file.jpg"
-                :alt="$t('access_wallet_keystore.keystore_file_alt')"
-                class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
-                width="300"
-                height="285"
-              />
-            </div>
+  <div class="flex flex-col gap-5">
+    <AccessStepIndicator :step="accessStep" />
 
-            <div v-if="fileError.value" class="text-text-error mt-4">
-              {{ fileError.description }}
-            </div>
-          </div>
-          <div v-if="activeStep === 1">
-            <app-step-description
-              :description="stepDescription[1]"
-              :activeStep="activeStep"
-            />
-            <app-input
-              v-model="password"
-              surface="alternative"
-              data-private
-              :label="$t('access_wallet_keystore.enter_password')"
-              type="password"
-              :error-message="errorPassword"
-              is-required
-              class="mt-7"
-              @enter="enterPassword"
-              :submit-disabled="submitIsDisabled"
-            />
-            <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
-              <app-base-button
-                @click="backStep"
-                is-outline
-                class="!min-w-[120px]"
-              >
-                {{ $t('common.back') }}
-              </app-base-button>
-              <app-base-button
-                @click="enterPassword"
-                class="!min-w-[120px]"
-                :disabled="submitIsDisabled"
-                :is-loading="isUnlockingKeystore"
-              >
-                {{ $t('create_wallet.connect') }}
-              </app-base-button>
-            </div>
-          </div>
-        </app-stepper>
-      </app-sheet>
-      <!-- TODO: add link-->
-      <ButtonNoWallet class="mt-5" />
-    </div>
+    <!-- Step 1: pick the keystore file -->
+    <template v-if="accessStep === 1">
+      <AccessBanner
+        :title="$t('access_wallet.advanced.banner_title')"
+        :text="$t('access_wallet.advanced.banner_keystore')"
+      />
+      <div
+        role="button"
+        tabindex="0"
+        data-testid="keystore-dropzone"
+        class="flex cursor-pointer flex-col items-center gap-4 border-[1.5px] border-dashed px-6 py-8 text-center transition-colors"
+        :class="
+          fileInvalid
+            ? 'rounded-12 border-border-error bg-background-error-subtle'
+            : [
+                'rounded-16 bg-white',
+                isDragging ? 'border-border-brand' : 'border-border-default',
+              ]
+        "
+        :aria-label="$t('access_wallet.advanced.drop_title')"
+        @click="browse"
+        @keydown.enter.space.prevent="browse"
+        @dragover.prevent="isDragging = true"
+        @dragleave.prevent="isDragging = false"
+        @drop.prevent="onDrop"
+      >
+        <AppAvatar type="icon" size="l" badge-bottom>
+          <template #icon><AppIcon name="keystore" /></template>
+          <template #badge>
+            <AppAvatarBadge type="icon">
+              <AppIcon
+                :name="fileInvalid ? 'x-mark' : 'plus'"
+                :class="{ 'text-icon-error': fileInvalid }"
+              />
+            </AppAvatarBadge>
+          </template>
+        </AppAvatar>
+        <div v-if="fileInvalid" data-testid="keystore-invalid">
+          <p class="text-base font-semibold text-text-error">
+            {{ $t('access_wallet.advanced.invalid_file_title') }}
+          </p>
+          <p class="text-sm text-text-subtle">
+            {{ $t('access_wallet.advanced.invalid_file_hint') }}
+            <span class="font-semibold text-text-brand">
+              {{ $t('access_wallet.advanced.try_again') }}
+            </span>
+          </p>
+        </div>
+        <div v-else>
+          <p class="text-base font-semibold">
+            {{ $t('access_wallet.advanced.drop_title') }}
+          </p>
+          <p class="text-sm text-text-subtle">
+            {{ $t('access_wallet.advanced.drop_or') }}
+            <span class="font-semibold text-text-brand">
+              {{ $t('access_wallet.advanced.browse_files') }}
+            </span>
+          </p>
+        </div>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".json,application/json"
+          class="hidden"
+          data-testid="keystore-file-input"
+          @change="onFileChange"
+        />
+      </div>
+      <AppBaseButton
+        v-if="fileInvalid"
+        data-testid="keystore-continue"
+        class="w-full"
+        disabled
+      >
+        {{ $t('access_wallet.advanced.continue') }}
+      </AppBaseButton>
+    </template>
+
+    <!-- Step 2: unlock it -->
+    <template v-else>
+      <AccessCell
+        truncate
+        :title="fileInfo.name"
+        :description="fileInfo.description"
+      >
+        <template #avatar>
+          <AppAvatar type="icon" size="l">
+            <template #icon><AppIcon name="keystore" /></template>
+          </AppAvatar>
+        </template>
+        <template #trailing>
+          <button
+            type="button"
+            class="shrink-0 text-[13px] font-semibold text-text-brand cursor-pointer"
+            @click="changeFile"
+          >
+            {{ $t('access_wallet.advanced.change') }}
+          </button>
+        </template>
+      </AccessCell>
+      <div
+        v-if="cannotDecrypt"
+        data-testid="keystore-error-card"
+        role="alert"
+        class="flex flex-col items-center gap-2 rounded-16 bg-background-error-subtle p-6 text-center"
+      >
+        <AppIcon
+          name="exclamation-triangle"
+          variant="filled"
+          size="l"
+          class="text-icon-error"
+        />
+        <p class="text-base font-semibold text-text-error">
+          {{ $t('access_wallet.advanced.cannot_decrypt_title') }}
+        </p>
+        <p class="text-sm text-text-subtle">
+          {{ $t('access_wallet.advanced.cannot_decrypt_text') }}
+        </p>
+      </div>
+      <AppInput
+        v-else
+        v-model="password"
+        data-private
+        type="password"
+        :label="$t('access_wallet.advanced.password_label')"
+        :placeholder="$t('access_wallet.advanced.password_placeholder')"
+        :disabled="isUnlocking"
+        :error-message="passwordError"
+        :submit-disabled="submitIsDisabled"
+        @enter="unlock"
+      />
+      <AppBaseButton
+        data-testid="keystore-connect"
+        class="w-full"
+        :disabled="submitIsDisabled"
+        :is-loading="isUnlocking"
+        @click="unlock"
+      >
+        {{ $t('create_wallet.connect') }}
+      </AppBaseButton>
+    </template>
+
+    <AccessHelpFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import ButtonNoWallet from './components/ButtonNoWallet.vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { watchDebounced } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInput from '@/components/AppInput.vue'
+import AccessBanner from './components/AccessBanner.vue'
+import AccessCell from './components/AccessCell.vue'
+import AccessHelpFooter from './components/AccessHelpFooter.vue'
+import AccessStepIndicator from './components/AccessStepIndicator.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import {
+  isKeystoreFile,
+  isCorruptKeystoreError,
   unlockKeystore,
   type V3Keystore,
   type EthSaleKeystore,
   type MEWKeystore,
 } from '@/modules/access/common/helpers'
 import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
-import AppStepper from '@/components/AppStepper.vue'
-import AppStepDescription from '@/components/AppStepDescription.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import { type StepDescription } from '@/types/components/appStepper'
-import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import { useAccessStore } from '@/stores/accessStore'
-import { useGlobalStore } from '@/stores/globalStore'
-import AppSheet from '@/components/AppSheet.vue'
 import { analytics, ConnectWalletEvent } from '@/analytics'
-import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
 const accessStore = useAccessStore()
-const { selectedChain } = storeToRefs(accessStore)
-const globalStore = useGlobalStore()
-const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
-/**------------------------
- * Steps
- -------------------------*/
-const activeStep = ref(0)
-const steps = computed(() => [
-  t('access_wallet_keystore.upload_keystore'),
-  t('access_wallet_keystore.enter_password'),
-])
-const stepDescription = computed<StepDescription[]>(() => [
-  {
-    title: t('access_wallet_keystore.select_keystore_file_title'),
-    description: t('access_wallet_keystore.select_keystore_file_description'),
-  },
-  {
-    title: t('access_wallet_keystore.enter_password_title'),
-    description: t('access_wallet_keystore.enter_password_description'),
-  },
-])
+const { selectedChain, accessStep } = storeToRefs(accessStore)
+const { setSelectedNetwork } = useGlobalStore()
+const { setWallet } = useWalletStore()
+const { addWallet } = useRecentWalletsStore()
 
 /**------------------------
- * Keystore Upload
+ * Step 1: keystore file
  -------------------------*/
+type Keystore = EthSaleKeystore | V3Keystore | MEWKeystore
+const fileInput = ref<HTMLInputElement | null>(null)
+const keystore = ref<Keystore | null>(null)
+const fileInfo = ref({ name: '', description: '' })
+const fileInvalid = ref(false)
+const isDragging = ref(false)
 
-const jsonInput = ref<HTMLInputElement | null>(null)
-const keystore = ref<EthSaleKeystore | V3Keystore | MEWKeystore | null>()
-const fileError = reactive({
-  value: false,
-  description: '',
-})
-const clickUpload = () => {
-  if (!jsonInput.value) return
-  jsonInput.value.value = ''
-  jsonInput.value.click()
+const browse = () => {
+  if (!fileInput.value) return
+  fileInput.value.value = ''
+  fileInput.value.click()
 }
 
-//TODO ERROR HANDLING
-const uploadKeystoreFile = async (evt: Event) => {
-  fileError.value = false
-  const input = evt.target as HTMLInputElement
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0]
+const readFileText = (file: File) =>
+  new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
-    reader.onerror = () => {
-      fileError.description = t('access_wallet_keystore.error_reading_file')
-      fileError.value = true
-    }
+    reader.onerror = () => reject(reader.error)
+    reader.onload = () => resolve(String(reader.result))
+    reader.readAsText(file)
+  })
 
-    reader.onload = async () => {
-      try {
-        keystore.value = keystore.value = JSON.parse(
-          Buffer.from(reader.result as ArrayBuffer).toString('utf8'),
-        )
-        activeStep.value = 1
-        if (jsonInput.value) jsonInput.value.value = '' // clear file input
-      } catch {
-        fileError.description = t(
-          'access_wallet_keystore.invalid_keystore_file',
-        )
-        fileError.value = true
-      }
-    }
-    reader.readAsArrayBuffer(file)
+const describeFile = (file: File, json: Record<string, unknown>) => {
+  const size = `${Math.max(1, Math.round(file.size / 1024))} KB`
+  const version = json.version ?? json.Version
+  const kind = version
+    ? t('access_wallet.advanced.keystore_version', { version })
+    : t('access_wallet.advanced.keystore_kind')
+  return `${size} · ${kind}`
+}
+
+const loadFile = async (file?: File) => {
+  isDragging.value = false
+  if (!file) return
+  try {
+    const json = JSON.parse(await readFileText(file))
+    if (!isKeystoreFile(json)) throw new Error('Not a keystore')
+    keystore.value = json
+    fileInfo.value = { name: file.name, description: describeFile(file, json) }
+    fileInvalid.value = false
+    accessStep.value = 2
+  } catch {
+    fileInvalid.value = true
   }
-  // if (jsonInput.value) {
-  //   jsonInput.value.value = '' // clear file input
-  // }
-  // activeStep.value = 1
 }
-const resetKeystore = () => {
-  keystore.value = null
-}
+
+const onFileChange = (evt: Event) =>
+  loadFile((evt.target as HTMLInputElement).files?.[0])
+const onDrop = (evt: DragEvent) => loadFile(evt.dataTransfer?.files?.[0])
 
 /**------------------------
- * Keystore Password
+ * Step 2: password
  -------------------------*/
-const walletStore = useWalletStore()
-const recentWalletsStore = useRecentWalletsStore()
-const { addWallet } = recentWalletsStore
-const { setWallet } = walletStore
-
 const password = ref('')
-const errorPassword = ref('')
-const isUnlockingKeystore = ref(false)
-watchDebounced(password, () => {
-  errorPassword.value = ''
+const passwordError = ref('')
+const cannotDecrypt = ref(false)
+const isUnlocking = ref(false)
+
+watch(password, () => {
+  passwordError.value = ''
 })
 
-const submitIsDisabled = computed<boolean>(() => {
-  return password.value === '' || errorPassword.value !== ''
+const submitIsDisabled = computed(
+  () =>
+    password.value === '' ||
+    passwordError.value !== '' ||
+    cannotDecrypt.value ||
+    isUnlocking.value,
+)
+
+const reset = () => {
+  keystore.value = null
+  password.value = ''
+  passwordError.value = ''
+  cannotDecrypt.value = false
+}
+
+// The header's Back (or "Change") returns to step 1 with a clean slate.
+watch(accessStep, step => {
+  if (step === 1) reset()
 })
 
-const enterPassword = async () => {
+const changeFile = () => {
+  accessStep.value = 1
+}
+
+const unlock = async () => {
+  if (submitIsDisabled.value || !keystore.value) return
+  isUnlocking.value = true
   try {
-    isUnlockingKeystore.value = true
     const res = await unlockKeystore(
-      keystore.value as unknown as V3Keystore,
+      keystore.value as V3Keystore,
       password.value,
     )
-    if (res) {
-      const wallet = new PrivateKeyWallet(
-        Buffer.from(res.getPrivateKey()),
-        selectedChain.value?.chainID || '1',
-      )
-      resetKeystore()
-      setWallet(wallet, 'keystore', walletConfigs.keystore.type[0])
-      addWallet(walletConfigs.keystore)
-      setSelectedChainGlobalStore(selectedChain.value?.name || '')
-      isUnlockingKeystore.value = false
-      accessStore.setCurrentView('default')
-      analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
-        walletName: 'keystore',
-        walletType: walletConfigs.keystore.type[0],
-        network: selectedChain.value?.name,
-      })
-      accessStore.closeAccessDialog()
+    const wallet = new PrivateKeyWallet(
+      Buffer.from(res.getPrivateKey()),
+      selectedChain.value?.chainID || '1',
+    )
+    reset()
+    setWallet(wallet, 'keystore', walletConfigs.keystore.type[0])
+    addWallet(walletConfigs.keystore)
+    setSelectedNetwork(selectedChain.value?.name || '')
+    accessStore.setCurrentView('default')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: walletConfigs.keystore.id,
+      walletType: walletConfigs.keystore.type[0],
+      network: selectedChain.value?.name,
+    })
+    accessStore.closeAccessDialog()
+  } catch (error) {
+    if (isCorruptKeystoreError(error)) {
+      cannotDecrypt.value = true
+    } else {
+      passwordError.value = t('access_wallet.advanced.incorrect_password')
     }
-  } catch {
-    errorPassword.value = t('access_wallet_keystore.invalid_password')
-    isUnlockingKeystore.value = false
+  } finally {
+    isUnlocking.value = false
   }
-}
-
-/**------------------------
- * Back Step
- -------------------------*/
-const backStep = () => {
-  activeStep.value = 0
-  password.value = ''
-  resetKeystore()
 }
 </script>

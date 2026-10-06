@@ -1,392 +1,381 @@
 <template>
-  <div class="flex justify-center w-full">
-    <div
-      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-1"
-    >
-      <app-not-recommended class="mb-4 w-full" />
-      <app-sheet sheet-class="px-4 sm:px-6 lg:px-10">
-        <app-stepper
-          :steps="steps"
-          :description="stepDescription"
-          :active-step="activeStep"
-          @update:active-step="backStep"
+  <div class="flex flex-col gap-5">
+    <AccessStepIndicator :step="accessStep" />
+
+    <!-- Step 1: enter the phrase -->
+    <template v-if="accessStep === 1">
+      <AccessBanner
+        :title="$t('access_wallet.advanced.banner_title')"
+        :text="$t('access_wallet.advanced.banner_phrase')"
+      />
+      <AppTextField
+        v-model="mnemonic"
+        @keydown.enter.prevent="unlockWallet"
+        data-private
+        :placeholder="$t('access_wallet.advanced.phrase_placeholder')"
+        :error-message="
+          hasMnemonicError ? $t('access_wallet.advanced.invalid_phrase') : ''
+        "
+        :feedback="{
+          type: 'text',
+          message: $t('access_wallet.advanced.phrase_helper'),
+        }"
+      />
+      <div class="flex items-center gap-2">
+        <AppIcon name="lock-closed" size="xxs" class="text-text-subtle" />
+        <span class="grow text-sm">
+          {{ $t('access_wallet.advanced.add_passphrase') }}
+        </span>
+        <AppToggle
+          v-model="hasExtraWord"
+          :aria-label="$t('access_wallet.advanced.add_passphrase')"
+        />
+      </div>
+      <AppInput
+        v-if="hasExtraWord"
+        v-model="extraWord"
+        :submit-disabled="!isValid"
+        @enter="unlockWallet"
+        data-private
+        type="password"
+        :label="$t('access_wallet.advanced.passphrase')"
+      />
+      <AppBaseButton
+        data-testid="phrase-continue"
+        class="w-full"
+        :disabled="!isValid"
+        @click="unlockWallet"
+      >
+        {{ $t('access_wallet.advanced.continue') }}
+      </AppBaseButton>
+    </template>
+
+    <!-- Step 2: pick network, path and address -->
+    <template v-else>
+      <div class="grid grid-cols-1 gap-2 xs:grid-cols-2">
+        <AccessDropdown
+          :label="$t('access_wallet.advanced.network')"
+          :items="mnemonicChains"
+          :model-value="selectedChain ?? undefined"
+          :search-placeholder="$t('access_wallet.networks.search')"
+          :empty-text="$t('access_wallet.networks.not_found')"
+          :item-key="chainKey"
+          :search-text="chainSearchText"
+          @update:model-value="accessStore.setSelectedChain"
         >
-          <!-- Enter Mnemonic -->
-          <div v-if="activeStep === 0">
-            <app-step-description
-              :description="stepDescription[0]"
-              :activeStep="activeStep"
-            />
-            <app-text-field
-              v-model="mnemonic"
-              surface="alternative"
-              data-private
-              :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
-              class="mt-4"
-              is-required
-              :error-message="
-                hasMnemonicError
-                  ? $t('access_wallet_recovery_phrase.invalid_phrase')
-                  : ''
-              "
-            />
-            <div
-              class="flex items-center justify-between gap-4 mt-8 mb-8 w-full px-1"
-            >
-              <div>
-                <p class="font-bold text-s-16 tracking-tight leading-none mb-1">
-                  {{
-                    $t(
-                      'access_wallet_recovery_phrase.do_you_have_an_extra_word',
-                    )
-                  }}
-                </p>
-                <p class="text-s-14 text-text-subtle italic">
-                  {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
-                </p>
-              </div>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
-            </div>
-            <!-- Extra Word -->
-            <expand-transition>
-              <div v-if="hasExtraWord" class="mb-8">
-                <app-input
-                  v-model="extraWord"
-                  surface="alternative"
-                  data-private
-                  :label="$t('access_wallet_recovery_phrase.enter_extra_word')"
-                />
-              </div>
-            </expand-transition>
-            <div class="flex items-center justify-center">
-              <app-base-button
-                @click="unlockWallet"
-                :disabled="!isValid"
-                class="w-full xs:w-auto xs:min-w-[250px]"
-              >
-                {{ $t('common.next') }}
-              </app-base-button>
-            </div>
-          </div>
-          <!-- Select Network, Address, DP -->
-          <div v-if="activeStep === 1">
-            <app-step-description
-              :description="stepDescription[1]"
-              :activeStep="activeStep"
-            />
-            <div
-              class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
-            >
-              <select-chain-for-app
-                :preselected-chain="selectedChain"
-                :can-store="false"
-                @update:selected-chain="updateChain"
-              />
-              <derivation-path />
-            </div>
-            <select-address-list
-              v-model="selectedIndex"
-              :walletList="walletList as SelectAddress[]"
-              :isLoading="isLoadingWalletList"
-              class="mt-5"
-              @nextpage="setPage(true)"
-              @prevpage="setPage(false)"
-            />
-            <div
-              class="flex flex-col sm:flex-row-reverse items-center justify-center gap-3 mt-10 lg:mt-14"
-            >
-              <app-base-button
-                @click="access"
-                :disabled="!isValid"
-                class="w-full xs:w-auto xs:min-w-[180px]"
-                :is-loading="isUnlockingWallet"
-              >
-                {{ $t('common.access_wallet') }}
-              </app-base-button>
-              <app-base-button
-                :is-outline="true"
-                class="w-full xs:w-auto xs:min-w-[180px]"
-                @click="backStep"
-              >
-                {{ $t('common.back') }}
-              </app-base-button>
-            </div>
-          </div>
-        </app-stepper>
-      </app-sheet>
-      <ButtonNoWallet class="mt-5" />
-    </div>
+          <template #selected="{ item }">
+            <AppAvatar v-if="item" type="network" size="s" :chain="item.name" />
+            <span class="truncate">{{ item?.nameLong }}</span>
+          </template>
+          <template #item="{ item }">
+            <AppAvatar type="network" size="s" :chain="item.name" />
+            <span class="text-sm">{{ item.nameLong }}</span>
+          </template>
+        </AccessDropdown>
+        <AccessDropdown
+          :label="$t('access_wallet.advanced.derivation_path')"
+          :items="paths"
+          :model-value="selectedDerivation"
+          :search-placeholder="$t('derivation_path.search')"
+          :empty-text="$t('access_wallet.advanced.no_paths')"
+          :item-key="pathKey"
+          :search-text="pathSearchText"
+          @update:model-value="setSelectedDerivation"
+        >
+          <template #selected="{ item }">
+            <span class="truncate">{{ item?.path }}</span>
+          </template>
+          <template #item="{ item }">
+            <span class="grow font-semibold">{{ item.label }}</span>
+            <span class="shrink-0 text-text-subtle">{{ item.path }}</span>
+          </template>
+        </AccessDropdown>
+      </div>
+      <AccessAddressList
+        v-model="selectedIndex"
+        :entries="walletList"
+        :is-loading="isLoadingWalletList"
+        :balances-error="balancesError"
+        :currency="selectedChain?.currencyName"
+        @show-more="loadAddresses(false)"
+        @retry="retryBalances"
+      />
+      <AppBaseButton
+        data-testid="phrase-connect"
+        class="w-full"
+        :disabled="!walletList.length || derivationPending"
+        :is-loading="isUnlockingWallet"
+        @click="access"
+      >
+        {{ $t('create_wallet.connect') }}
+      </AppBaseButton>
+    </template>
+
+    <AccessHelpFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import AppStepper from '@/components/AppStepper.vue'
-import AppStepDescription from '@/components/AppStepDescription.vue'
+import { computed, ref, shallowRef, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { validateMnemonic } from 'bip39'
+import { watchDebounced } from '@vueuse/core'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppTextField from '@/components/AppTextField.vue'
 import AppToggle from '@/components/AppToggle.vue'
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import SelectAddressList from './components/SelectAddressList.vue'
-import AppSheet from '@/components/AppSheet.vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import ButtonNoWallet from './components/ButtonNoWallet.vue'
-
-import { type StepDescription } from '@/types/components/appStepper'
-import { validateMnemonic } from 'bip39'
-import { watchDebounced } from '@vueuse/core'
-import { useWalletStore } from '@/stores/walletStore'
+import AccessBanner from './components/AccessBanner.vue'
+import AccessDropdown from './components/AccessDropdown.vue'
+import AccessHelpFooter from './components/AccessHelpFooter.vue'
+import AccessStepIndicator from './components/AccessStepIndicator.vue'
+import AccessAddressList from './components/AccessAddressList.vue'
+import { type SelectAddress } from './types/selectAddress'
+import Bip44Paths from './common/bip44'
+import {
+  ethereum as ethereumPath,
+  type DerivationPath,
+} from './common/configs/configPaths'
+import {
+  WALLET_TYPES,
+  walletConfigs,
+} from '@/modules/access/common/walletConfigs'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import MnemonicToBitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
-import { type SelectAddress } from './types/selectAddress'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import DerivationPath from './components/DerivationPath.vue'
-import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { useI18n } from 'vue-i18n'
-import { useDerivationStore } from '@/stores/derivationStore'
-import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useDerivationStore } from '@/stores/derivationStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useWalletStore } from '@/stores/walletStore'
 import type { Chain } from '@/mew_api/types'
 import {
   fetchNativeBalances,
   formatNativeBalance,
 } from '@/composables/useNativeBalances'
-import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
-const { t } = useI18n()
-/**------------------------
- * Access Store and Chain in the store
- -------------------------*/
 const accessStore = useAccessStore()
-const { selectedChain } = storeToRefs(accessStore)
-
-const updateChain = (chain: Chain) => {
-  accessStore.setSelectedChain(chain)
-}
-/**------------------------
- * Steps
- -------------------------*/
-const activeStep = ref(0)
-const steps = [
-  t('access_wallet_recovery_phrase.step.step1.short'),
-  t('access_wallet_recovery_phrase.step.step2.short'),
-]
-const stepDescription: StepDescription[] = [
-  {
-    title: t('access_wallet_recovery_phrase.step.step1.title'),
-    description: t('access_wallet_recovery_phrase.step.step1.description'),
-  },
-  {
-    title: t('access_wallet_recovery_phrase.step.step2.title'),
-  },
-]
-
-const backStep = () => {
-  activeStep.value = 0
-  wallet.value = null
-  mnemonic.value = ''
-  extraWord.value = ''
-  hasExtraWord.value = false
-}
+const { selectedChain, accessStep } = storeToRefs(accessStore)
+const { chains } = storeToRefs(useChainsStore())
+const derivationStore = useDerivationStore()
+const { selectedDerivation } = storeToRefs(derivationStore)
+const { setSelectedDerivation } = derivationStore
+const { setSelectedNetwork } = useGlobalStore()
+const { setWallet } = useWalletStore()
+const { addWallet } = useRecentWalletsStore()
 
 /**------------------------
- * Extra Word
+ * Step 1: phrase + passphrase
  -------------------------*/
-
-const hasExtraWord = ref(false)
-const extraWordToggleString = computed(() =>
-  hasExtraWord.value ? t('common.yes') : t('common.no'),
-)
-const extraWord = ref('')
-
-/**------------------------
- * Path
- -------------------------*/
-const defaultPath = "m/44'/60'/0'/0"
-
-/**------------------------
- * Mnemonic phrase
- -------------------------*/
-
 const mnemonic = ref('')
 const hasMnemonicError = ref(false)
+const hasExtraWord = ref(false)
+const extraWord = ref('')
 
 const formattedMnemonic = computed(() => {
   const words = mnemonic.value.match(/\b(\w+)\b/g)
-  if (!words) return ''
-  return words.join(' ')
+  return words ? words.join(' ') : ''
 })
-
-const isValid = computed<boolean>(() => {
-  return validateMnemonic(formattedMnemonic.value)
-})
+const isValid = computed(() => validateMnemonic(formattedMnemonic.value))
 
 watchDebounced(
   mnemonic,
   () => {
-    if (mnemonic.value === '') {
-      hasMnemonicError.value = false
-    } else {
-      hasMnemonicError.value = !isValid.value
-    }
+    hasMnemonicError.value = mnemonic.value !== '' && !isValid.value
   },
   { debounce: 2000 },
 )
 
-const wallet = ref<MnemonicToWallet | MnemonicToBitcoinWallet | null>(null)
-const derivationStore = useDerivationStore()
+/**------------------------
+ * Step 2: network + derivation path
+ -------------------------*/
+const isBitcoin = computed(() => selectedChain.value?.type === 'BITCOIN')
 
-const { selectedDerivation } = storeToRefs(derivationStore)
+/** Mnemonic wallets exist for EVM and Bitcoin-family chains only. */
+const mnemonicChains = computed(() =>
+  chains.value.filter(
+    chain => chain.type === 'EVM' || chain.type === 'BITCOIN',
+  ),
+)
+const chainKey = (chain: Chain) => chain.name
+const chainSearchText = (chain: Chain) => chain.nameLong
+
+const paths = computed<DerivationPath[]>(() =>
+  isBitcoin.value
+    ? MnemonicToBitcoinWallet.getSupportedPaths(
+        selectedChain.value?.name ?? 'BITCOIN',
+      )
+    : Bip44Paths[WALLET_TYPES.MNEMONIC],
+)
+const pathKey = (path: DerivationPath) => `${path.label}:${path.path}`
+const pathSearchText = (path: DerivationPath) => `${path.label} ${path.path}`
+
+// A stored path from another chain family can't derive on this chain: fall back
+// to the chain's default (Ethereum's for EVM, the first supported one for Bitcoin).
+const syncPathToChain = () => {
+  if (!selectedChain.value) return
+  const current = selectedDerivation.value
+  const supported = paths.value.some(path => path.path === current?.path)
+  if (current?.type === selectedChain.value.type && supported) return
+  setSelectedDerivation(isBitcoin.value ? paths.value[0] : ethereumPath)
+}
+
+/**------------------------
+ * Wallet + address list
+ -------------------------*/
+const PAGE_SIZE = 5
+const wallet = ref<MnemonicToWallet | MnemonicToBitcoinWallet | null>(null)
+// Replaced, never mutated; shallow keeps wallet instances out of deep reactivity.
+const walletList = shallowRef<SelectAddress[]>([])
+const isLoadingWalletList = ref(false)
+const balancesError = ref(false)
+const selectedIndex = ref(0)
+/** Path the current wallet was derived with, so the watcher only rebuilds on a real change. */
+const builtFor = ref({ chain: '', path: '' })
+/** The picked chain or path hasn't been derived yet (re-derive is debounced). */
+const derivationPending = computed(
+  () =>
+    builtFor.value.chain !== (selectedChain.value?.name ?? '') ||
+    builtFor.value.path !== (selectedDerivation.value?.path ?? ''),
+)
 
 const unlockWallet = () => {
-  if (isValid.value) {
-    const options = {
-      mnemonic: formattedMnemonic.value,
-      basePath: selectedDerivation.value?.path || defaultPath,
-      chainId: selectedChain.value?.chainID ?? '1',
-      extraWord: extraWord.value,
-      chainName: selectedChain.value?.name || 'ETHEREUM',
-    }
-    wallet.value =
-      selectedChain.value?.type === 'EVM'
-        ? new MnemonicToWallet(options)
-        : new MnemonicToBitcoinWallet(options)
-    loadList(0)
-    activeStep.value = 1
+  if (!isValid.value) return
+  syncPathToChain()
+  const options = {
+    mnemonic: formattedMnemonic.value,
+    basePath: selectedDerivation.value?.path || ethereumPath.path,
+    chainId: selectedChain.value?.chainID ?? '1',
+    // A passphrase typed and then toggled off must not leak into derivation.
+    extraWord: hasExtraWord.value ? extraWord.value : '',
+    chainName: selectedChain.value?.name || 'ETHEREUM',
+  }
+  wallet.value =
+    selectedChain.value?.type === 'EVM'
+      ? new MnemonicToWallet(options)
+      : new MnemonicToBitcoinWallet(options)
+  builtFor.value = {
+    chain: selectedChain.value?.name ?? '',
+    path: selectedDerivation.value?.path ?? '',
+  }
+  accessStep.value = 2
+  loadAddresses(true)
+}
+
+// Bumped on every list reset so a superseded load (chain / path change) stops
+// before it writes into the newer list or fires its balance request.
+let listGeneration = 0
+
+const loadBalances = async (entries: SelectAddress[]) => {
+  const chain = selectedChain.value
+  if (!entries.length || !chain) return
+  const generation = listGeneration
+  try {
+    const balances = await fetchNativeBalances(
+      chain,
+      entries.map(entry => entry.address),
+    )
+    if (generation !== listGeneration) return
+    const indexes = new Set(entries.map(entry => entry.index))
+    walletList.value = walletList.value.map(entry => {
+      if (!indexes.has(entry.index)) return entry
+      const raw = balances.get(entry.address.toLowerCase())
+      return {
+        ...entry,
+        balance: raw === undefined ? '0' : formatNativeBalance(raw, chain.type),
+      }
+    })
+    balancesError.value = false
+  } catch {
+    // Addresses stay connectable without balances (e.g. a rate-limited endpoint).
+    if (generation === listGeneration) balancesError.value = true
   }
 }
 
-watchDebounced<[Chain | undefined, DerivationPathType | undefined]>(
-  () =>
-    [selectedChain.value, selectedDerivation.value] as [
-      Chain | undefined,
-      DerivationPathType | undefined,
-    ],
-  (
-    newValue: [Chain | undefined, DerivationPathType | undefined],
-    oldValue: [Chain | undefined, DerivationPathType | undefined],
-  ) => {
-    // verify if values actually changed
-    const chainChanged = newValue[0]?.name !== oldValue[0]?.name
-    const derivationChanged = newValue[1]?.path !== oldValue[1]?.path
+const retryBalances = () => loadBalances(walletList.value)
 
-    if (chainChanged && !derivationChanged) {
-      loadList()
-    } else if (
-      (derivationChanged && chainChanged) ||
-      (!chainChanged && derivationChanged)
-    ) {
-      unlockWallet()
+const loadAddresses = async (reset: boolean) => {
+  if (reset) {
+    listGeneration++
+    walletList.value = []
+    balancesError.value = false
+  }
+  const generation = listGeneration
+  isLoadingWalletList.value = true
+  const start = walletList.value.length
+  const entries: SelectAddress[] = []
+  for (let i = start; i < start + PAGE_SIZE; i++) {
+    const instance = await wallet.value?.getWallet(i)
+    if (generation !== listGeneration) return
+    if (instance) {
+      entries.push({
+        address: await instance.getAddress(),
+        index: i,
+        balance: '',
+      })
+    }
+  }
+  if (generation !== listGeneration) return
+  walletList.value = [...walletList.value, ...entries]
+  if (reset && entries.length) selectedIndex.value = entries[0].index
+  isLoadingWalletList.value = false
+  await loadBalances(entries)
+}
+
+watchDebounced(
+  () => [selectedChain.value?.name, selectedDerivation.value?.path] as const,
+  ([chainName, path], [oldChainName]) => {
+    if (accessStep.value !== 2 || !wallet.value) return
+    if (path !== builtFor.value.path) {
+      unlockWallet() // new derivation path → rebuild the wallet
+    } else if (chainName !== oldChainName) {
+      syncPathToChain()
+      // Same family keeps the path, so only balances change; a family switch
+      // changed the path above and the next run of this watcher rebuilds.
+      if (selectedDerivation.value?.path === builtFor.value.path) {
+        builtFor.value = { ...builtFor.value, chain: chainName ?? '' }
+        loadAddresses(true)
+      }
     }
   },
   { debounce: 500 },
 )
 
-/**------------------------
- *  Wallet List
- ------------------------*/
-const walletList = ref<SelectAddress[]>([])
-const isLoadingWalletList = ref(true)
-const selectedIndex = ref(0)
-const page = ref(0)
-
-// Bumped on every load so a superseded one (chain / path change, fast paging,
-// the derivation component re-syncing the stored path on mount) stops before it
-// fires its balance request and never writes into the newer list.
-let loadListGeneration = 0
-
-const loadList = async (pageIndex: number = 0) => {
-  const generation = ++loadListGeneration
-  const isStale = () => generation !== loadListGeneration
-  isLoadingWalletList.value = true
+// Going back to step 1 (header Back) starts over, like the old Back button.
+watch(accessStep, step => {
+  if (step !== 1) return
+  listGeneration++
+  wallet.value = null
   walletList.value = []
-  const startIndex = pageIndex * 5
-  const chain = selectedChain.value
+  mnemonic.value = ''
+  extraWord.value = ''
+  hasExtraWord.value = false
+})
 
-  const entries: SelectAddress[] = []
-  for (let i = startIndex; i < startIndex + 5; i++) {
-    const walletInstance = await wallet.value?.getWallet(i)
-    if (isStale()) return
-    if (walletInstance) {
-      entries.push({
-        address: await walletInstance.getAddress(),
-        index: i,
-        balance: '0',
-      })
-    }
-  }
-
-  // One batched request for the whole page (EVM and Bitcoin alike) against the
-  // chain picked in this dialog. A failure here (e.g. the endpoint's rate
-  // limit) must not block access: the addresses still show, with a 0 balance.
-  if (entries.length > 0 && chain) {
-    try {
-      const balances = await fetchNativeBalances(
-        chain,
-        entries.map(e => e.address),
-      )
-      if (isStale()) return
-      for (const entry of entries) {
-        const raw = balances.get(entry.address.toLowerCase())
-        if (raw !== undefined) {
-          entry.balance = formatNativeBalance(raw, chain.type)
-        }
-      }
-    } catch (e) {
-      console.error('Error fetching balances:', e)
-    }
-  }
-
-  if (isStale()) return
-  walletList.value = entries
-  if (entries.length > 0) {
-    selectedIndex.value = entries[0].index
-  }
-  isLoadingWalletList.value = false
-}
-
-const setPage = (isNext: boolean) => {
-  if (!isNext && page.value === 0) return
-  page.value = isNext ? page.value + 1 : page.value - 1
-  loadList(page.value)
-}
-
-/** ------------------------
- * Access Wallet
- ------------------------*/
-
-const recentWalletsStore = useRecentWalletsStore()
-const { addWallet } = recentWalletsStore
-const walletStore = useWalletStore()
-const { setWallet } = walletStore
+/**------------------------
+ * Connect
+ -------------------------*/
 const isUnlockingWallet = ref(false)
-const globalStore = useGlobalStore()
-const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
 const access = async () => {
   isUnlockingWallet.value = true
-
-  await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
-    if (wallet) {
-      setWallet(wallet, 'mnemonic', walletConfigs.mnemonic.type[0])
+  try {
+    const instance = await wallet.value?.getWallet(selectedIndex.value)
+    if (instance) {
+      setWallet(instance, 'mnemonic', walletConfigs.mnemonic.type[0])
       addWallet(walletConfigs.mnemonic)
     }
-  })
-  setSelectedChainGlobalStore(selectedChain.value?.name || '')
-
-  isUnlockingWallet.value = false
-  analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
-    walletName: 'mnemonic',
-    walletType: walletConfigs.mnemonic.type[0],
-    network: selectedChain.value?.name,
-  })
-  accessStore.closeAccessDialog()
+    setSelectedNetwork(selectedChain.value?.name || '')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: walletConfigs.mnemonic.id,
+      walletType: walletConfigs.mnemonic.type[0],
+      network: selectedChain.value?.name,
+    })
+    accessStore.closeAccessDialog()
+  } finally {
+    isUnlockingWallet.value = false
+  }
 }
 </script>

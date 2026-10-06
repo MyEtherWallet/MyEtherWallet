@@ -54,9 +54,11 @@ vi.mock('@enkryptcom/hw-wallets', () => {
 vi.mock('@/stores/accessStore', async () => {
   const { ref, computed } = await import('vue')
   const currentView = ref('ledger')
+  const accessStep = ref(1)
   const selectedChain = ref({ chainID: '1', name: 'ETHEREUM', type: 'EVM' })
   const store = {
     currentView,
+    accessStep,
     selectedChain,
     isEvmChain: computed(() => selectedChain.value?.type === 'EVM'),
     setSelectedChain: vi.fn(),
@@ -78,6 +80,10 @@ vi.mock('@/stores/derivationStore', async () => {
     setSelectedLedgerDerivation: vi.fn(),
   }
   return { useDerivationStore: () => store }
+})
+vi.mock('@/stores/chainsStore', async () => {
+  const { ref } = await import('vue')
+  return { useChainsStore: () => ({ chains: ref([]) }) }
 })
 vi.mock('@/stores/walletStore', async () => {
   const { ref } = await import('vue')
@@ -145,17 +151,11 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { resetTrezorManager } from '@/providers/hw/trezorManager'
 
 const stubs = {
-  AppSheet: { template: '<div><slot /></div>' },
-  AppStepper: { template: '<div><slot /></div>' },
-  AppStepDescription: { template: '<div />' },
   AppBaseButton: {
     template: '<button @click="$emit(\'click\')"><slot /></button>',
   },
-  AppBtnText: { template: '<button><slot /></button>' },
-  SelectAddressList: { template: '<div />' },
-  SelectChainForApp: { template: '<div />' },
-  HardwareWalletDerivation: { template: '<div />' },
-  ButtonNoWallet: { template: '<div />' },
+  AccessDropdown: { template: '<div />' },
+  AccessAddressList: { template: '<div />' },
 }
 
 const factory = () =>
@@ -175,6 +175,7 @@ beforeEach(() => {
     { basePath: "m/44'/60'/0'", path: "m/44'/60'/0'/0", label: 'Ethereum' },
   ])
   useAccessStore().setCurrentView('ledger')
+  useAccessStore().accessStep.value = 1
   useAccessStore().selectedChain.value = {
     chainID: '1',
     name: 'ETHEREUM',

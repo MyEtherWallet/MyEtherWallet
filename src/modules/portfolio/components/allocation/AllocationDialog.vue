@@ -50,9 +50,7 @@
                     </p>
                     <app-btn-icon-close @click="toggleMenu" />
                   </div>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
-                  />
+                  <app-divider class="mb-1" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
@@ -156,6 +154,7 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps<{
   /**

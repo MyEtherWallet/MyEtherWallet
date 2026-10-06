@@ -5,10 +5,14 @@
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
       { 'bg-white': isOutline },
+      // Disabled primary: brand at 40% under the white label (design #A0BCF0;
+      // no DS token matches, and brand/40 follows the brand in dark mode).
       disabled
         ? isOutline
           ? '!border-border-disabled !text-text-disabled'
-          : '!bg-background-disabled'
+          : theme === 'primary'
+            ? '!bg-background-brand/40'
+            : '!bg-background-disabled'
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',

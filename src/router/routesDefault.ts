@@ -66,9 +66,40 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'input-feedback',
+              name: 'DevInputFeedback',
+              component: () => import('@/views/ViewInputFeedbackShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'divider',
+              name: 'DevDivider',
+              component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tab-bar',
+              name: 'DevTabBar',
+              component: () => import('@/views/ViewTabBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tab-item',
+              name: 'DevTabItem',
+              component: () => import('@/views/ViewTabItemShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'segmented-control',
+              name: 'DevSegmentedControl',
+              component: () =>
+                import('@/views/ViewSegmentedControlShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -84,9 +115,21 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'radio',
+              name: 'DevRadio',
+              component: () => import('@/views/ViewRadioShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'tooltip',
               name: 'DevTooltip',
               component: () => import('@/views/ViewTooltipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toggle',
+              name: 'DevToggle',
+              component: () => import('@/views/ViewToggleShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -99,6 +142,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'button',
               name: 'DevButton',
               component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'btn-icon',
+              name: 'DevBtnIcon',
+              component: () => import('@/views/ViewBtnIconShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

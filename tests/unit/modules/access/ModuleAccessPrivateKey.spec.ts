@@ -93,7 +93,7 @@ import ModuleAccessPrivateKey from '@/modules/access/ModuleAccessPrivateKey.vue'
 
 const AppInput = {
   name: 'AppInput',
-  props: ['modelValue', 'submitDisabled'],
+  props: ['modelValue', 'submitDisabled', 'errorMessage'],
   emits: ['update:modelValue', 'enter'],
   template:
     '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
@@ -102,7 +102,8 @@ const stubs = {
   AppInput,
   AppSheet: { template: '<div><slot /></div>' },
   AppNotRecommended: { template: '<div />' },
-  ButtonNoWallet: { template: '<div />' },
+  AccessBanner: { template: '<div />' },
+  AccessHelpFooter: { template: '<div />' },
   AppBaseButton: {
     props: ['disabled'],
     template: '<button :disabled="disabled"><slot /></button>',
@@ -149,5 +150,22 @@ describe('ModuleAccessPrivateKey', () => {
     w.findComponent(AppInput).vm.$emit('enter')
     await Promise.resolve()
     expect(h.setWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('trims whitespace around a pasted key before validating and connecting', async () => {
+    expect(await submitDisabledFor(`  ${VALID_KEY}\n`)).toBe(false)
+    const w = factory()
+    await w.get('input').setValue(` ${VALID_KEY} `)
+    w.findComponent(AppInput).vm.$emit('enter')
+    await Promise.resolve()
+    expect(h.setWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('explains the expected format for an invalid EVM key', async () => {
+    const w = factory()
+    await w.get('input').setValue('0x1234')
+    expect(w.findComponent(AppInput).props('errorMessage')).toBe(
+      'access_wallet.advanced.invalid_private_key',
+    )
   })
 })

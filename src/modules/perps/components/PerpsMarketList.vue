@@ -214,29 +214,27 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
+                <AppBtnIcon
+                  :label="
                     watchlist.has(contract.baseCurrency)
                       ? $t('perps.market-list.remove-from-watchlist')
                       : $t('perps.market-list.add-to-watchlist')
                   "
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
+                  :class="
+                    watchlist.has(contract.baseCurrency)
+                      ? 'text-text-brand'
+                      : 'text-text-subtle'
+                  "
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
                 >
                   <AppIcon
                     name="star"
+                    :variant="
+                      watchlist.has(contract.baseCurrency) ? 'filled' : 'stroke'
+                    "
                     size="xxs"
-                    v-if="!watchlist.has(contract.baseCurrency)"
-                    class="cursor-pointer"
                   />
-                  <AppIcon
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                </AppBtnIcon>
               </td>
               <!-- Name -->
               <td class="px-1 py-2" colspan="2">
@@ -349,8 +347,6 @@
                       <app-btn-icon
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -389,8 +385,9 @@
                               : $t('perps.market-list.add-to-watchlist')
                           }}</span>
                         </button>
-                        <hr
-                          class="h-px bg-border-strong border-0 w-full my-2 xs:hidden"
+                        <app-divider
+                          variant="alternative"
+                          class="my-1 xs:hidden"
                         />
                         <ul>
                           <template v-if="getPosition(contract.market)">
@@ -627,9 +624,8 @@
           </span>
           <div class="flex items-center gap-2">
             <app-btn-icon
-              class="bg-background-default"
-              height="h-10"
-              width="w-10"
+              variant="filled"
+              size="l"
               :disabled="currentPage === 0"
               :label="$t('common.previous_page')"
               @click="prevPage"
@@ -637,9 +633,8 @@
               <AppIcon name="chevron-left" variant="filled" size="xxs" />
             </app-btn-icon>
             <app-btn-icon
-              class="bg-background-default"
-              height="h-10"
-              width="w-10"
+              variant="filled"
+              size="l"
               :disabled="currentPage >= totalPages - 1"
               :label="$t('common.next_page')"
               @click="nextPage"
@@ -728,6 +723,7 @@ import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
 } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()

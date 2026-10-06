@@ -201,7 +201,8 @@
     "chart_1m": "1m",
     "chart_3m": "3m",
     "chart_1y": "1a",
-    "chart_all": "todo"
+    "chart_all": "todo",
+    "chart_range": "Rango del gráfico"
   },
   "deposit": "Depositar",
   "learn": "Aprender",

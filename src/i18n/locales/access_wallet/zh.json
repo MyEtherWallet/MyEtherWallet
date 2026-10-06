@@ -3,46 +3,17 @@
     "title": "访问 MEW 投资组合",
     "need_help": "访问钱包需要帮助？",
     "search_wallet": "搜索您的钱包",
-    "select_wallet": "选择您的钱包",
     "recent": "最近使用",
     "detected": "已检测到",
-    "all_wallets": {
-      "title": "所有钱包",
-      "description": "Ledger、私钥、Keystore 文件、移动钱包，应有尽有"
-    },
     "not_found": "未找到钱包：",
-    "sort": {
-      "popular": "热门",
-      "name_a_z": "名称 A-Z",
-      "name_z_a": "名称 Z-A"
-    },
-    "sort_and_filter": "排序和筛选",
-    "filter": {
-      "all": "全部",
-      "hardware": "硬件",
-      "mobile": "移动",
-      "software": "软件"
-    },
-    "back_to_connect_options": "返回连接选项",
     "connect_wallet_title": "连接钱包",
     "connect_with": "使用{method}连接",
-    "method": {
-      "keystore": "Keystore 文件",
-      "private_key": "私钥",
-      "mnemonic_phrase": "助记词"
-    },
     "wallet_name": {
       "keystore": "Keystore 文件",
-      "mnemonic": "恢复（助记词）短语",
+      "mnemonic": "助记词",
       "private_key": "私钥"
     },
-    "official_badge_alt": "MyEtherWallet 官方",
     "help": {
-      "keystore": "如何连接您的 Keystore 钱包",
-      "private_key": "如何使用私钥连接",
-      "mnemonic": "如何使用恢复短语连接",
-      "ledger": "如何连接您的 Ledger 钱包",
-      "trezor": "如何连接您的 Trezor 钱包",
       "default": "连接钱包需要帮助吗？"
     },
     "toast": {
@@ -57,78 +28,110 @@
       "connection_timed_out": "连接超时。请重试。",
       "connect_request_pending": "连接请求已在处理中，请检查您的钱包扩展程序",
       "network_not_supported": "您的钱包不支持所选网络。请切换到受支持的网络或在钱包中启用它。"
+    },
+    "official": "官方",
+    "tabs": {
+      "label": "连接方式",
+      "popular": "热门",
+      "hardware": "硬件",
+      "mobile": "移动端",
+      "advanced": "高级"
+    },
+    "networks": {
+      "label": "网络",
+      "more": "更多网络",
+      "search": "搜索网络",
+      "not_found": "未找到网络"
+    },
+    "login_title": "登录/注册",
+    "sign_up": {
+      "cta": "注册",
+      "google": "使用 Google 继续",
+      "or": "或",
+      "email_label": "电子邮箱",
+      "email_placeholder": "you{'@'}email.com",
+      "continue": "继续",
+      "protected_by": "安全保障：",
+      "download_official": "下载 MEW 官方钱包",
+      "ios_android": "iOS 和 Android",
+      "browser_extension": "浏览器扩展"
+    },
+    "download_mobile": {
+      "title": "下载 MEW Mobile 应用",
+      "download_for": "下载平台",
+      "get_ios": "在 iOS 上获取",
+      "get_android": "在 Android 上获取",
+      "qr_label": "用于下载 {platform} 版 MEW Mobile 的二维码"
+    },
+    "advanced": {
+      "keystore_title": "使用 Keystore 连接",
+      "password_title": "输入密码",
+      "phrase_title": "使用助记词连接",
+      "address_title": "选择地址",
+      "private_key_title": "使用私钥连接",
+      "banner_title": "仅限有经验的用户。",
+      "banner_private_key": "您的私钥不会被存储。如果重新加载应用或断开连接，需要重新输入。",
+      "private_key_label": "私钥",
+      "private_key_placeholder": "粘贴您的私钥",
+      "invalid_private_key": "私钥无效：应为 64 个十六进制字符",
+      "banner_keystore": "您的文件不会被存储。如果重新加载应用或断开连接，需要重新上传。",
+      "drop_title": "将 keystore 文件拖放到此处",
+      "drop_or": "或",
+      "browse_files": "浏览文件",
+      "invalid_file_title": "无效的 keystore 文件",
+      "invalid_file_hint": "请选择 .json 格式的 keystore 文件，或",
+      "try_again": "重试",
+      "continue": "继续",
+      "change": "更换",
+      "keystore_version": "Keystore v{version}",
+      "keystore_kind": "Keystore",
+      "password_label": "密码",
+      "password_placeholder": "Keystore 密码",
+      "incorrect_password": "密码错误，请检查后重试",
+      "cannot_decrypt_title": "无法解密此文件",
+      "cannot_decrypt_text": "密码可能错误，或文件已损坏",
+      "banner_phrase": "您的助记词不会被存储。如果重新加载应用或断开后重新连接，需要重新输入。",
+      "phrase_placeholder": "输入您的助记词",
+      "phrase_helper": "使用 12、15、18、21 或 24 个单词，以单个空格分隔",
+      "invalid_phrase": "助记词无效，请检查单词顺序",
+      "add_passphrase": "添加密码短语",
+      "passphrase": "密码短语",
+      "network": "网络",
+      "derivation_path": "派生路径",
+      "no_paths": "未找到路径",
+      "balances_error": "无法加载余额，但仍可连接",
+      "retry": "重试",
+      "show_more": "显示更多地址"
+    },
+    "help_footer": {
+      "need_help": "需要帮助？",
+      "go_to_help_center": "前往帮助中心"
     }
   },
   "access_wallet_keystore": {
-    "title": "使用 Keystore 文件访问钱包",
-    "upload_keystore": "上传 Keystore 文件",
-    "enter_password": "输入密码",
-    "select_keystore_file_title": "选择您的 Keystore 文件",
-    "select_keystore_file_description": "请选择可解锁您钱包的 Keystore 文件。",
-    "enter_password_title": "输入密码",
-    "enter_password_description": "输入您的密码以解锁钱包。",
-    "keystore_file_alt": "Keystore 文件",
-    "select_keystore": "选择 Keystore 文件",
-    "invalid_password": "密码无效",
-    "error_reading_file": "读取文件出错。请重试。",
-    "invalid_keystore_file": "Keystore 文件无效。请重试。",
     "something_went_wrong": "出错了",
     "error_accessing_wallet": "访问钱包时出错。请重试。"
   },
-  "access_wallet_recovery_phrase": {
-    "title": "使用恢复短语访问钱包",
-    "enter_phrase": "输入您的短语",
-    "invalid_phrase": "短语无效",
-    "do_you_have_an_extra_word": "您有额外的单词吗？",
-    "enter_extra_word": "输入额外单词",
-    "extra_word_known_as": "也称为“口令短语”或“第 13/25 个单词”",
-    "step": {
-      "step1": {
-        "short": "输入短语",
-        "title": "输入您的恢复短语",
-        "description": "也称为助记词短语，您可以使用 12、15、18、21 或 24 个单词的短语来访问钱包。请按短语中实际的单词数量逐一输入。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
-      }
-    }
-  },
   "access_wallet_trezor": {
-    "title": "使用 Trezor 访问钱包",
     "step": {
       "step1": {
-        "short": "连接 Trezor",
         "title": "连接您的 Trezor",
         "description": "将您的 Trezor 连接到电脑。按照 Trezor 连接标签页中的说明操作。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
       }
     },
     "connect": "连接您的 Trezor"
   },
   "access_wallet_ledger": {
-    "title": "使用 Ledger 访问钱包",
     "step": {
       "step1": {
-        "short": "连接 Ledger",
         "title": "连接您的 Ledger",
         "description": "将您的 Ledger 连接到电脑。按照 Ledger 设备上的说明操作。"
-      },
-      "step2": {
-        "short": "地址和网络",
-        "title": "选择地址和网络"
       }
     },
-    "connect": "连接您的 Ledger",
     "connect_usb": "通过 USB 连接您的 Ledger",
     "connect_bluetooth": "或通过蓝牙连接"
   },
   "access_wallet_private_key": {
-    "title": "使用私钥访问钱包",
-    "enter_private_key": "输入您的私钥",
     "private_key_input_label": "私钥输入",
     "invalid_private_key": "私钥无效"
   },
@@ -147,13 +150,9 @@
   },
   "derivation_path": {
     "title": "派生路径",
-    "description": "选择您钱包的派生路径。如果不确定，请保留默认设置。",
-    "add_path": "添加路径",
     "select_path": "选择派生路径",
     "search": "按标签或路径搜索",
     "not_found": "未找到派生路径：",
-    "enter_label": "输入标签",
-    "enter_path": "输入路径",
     "label_exists": "派生标签已存在！",
     "added_successfully": "自定义派生路径添加成功！",
     "invalid_path": "无效的派生路径！"

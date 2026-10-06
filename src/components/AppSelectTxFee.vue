@@ -37,35 +37,37 @@
     </button>
     <div
       v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
-      class="min-h-6 flex items-center px-4 mt-1"
+      class="min-h-6 mt-1"
     >
       <transition name="fade" mode="out-in">
-        <div
-          v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
-          class="text-text-error text-s-12 leading-tight"
+        <AppInputFeedback
+          v-if="
+            isWalletConnected &&
+            gasFeeError &&
+            (!isNotEnoughBalance || hasChainBalance)
+          "
+          type="error"
+          :message="gasFeeError"
         >
           <!-- TODO Add PROPER LINK -->
-          <div v-if="isNotEnoughBalance">
-            <p v-if="hasChainBalance">
+          <template v-if="isNotEnoughBalance" #default>
+            {{
+              $t('common.not_enough_balance_to_cover_fee', {
+                symbol: selectedChain?.currencyName || 'ETH',
+              })
+            }}
+            <button
+              class="text-text-brand cursor-pointer underline underline-offset-2"
+              @click="openBuyPanel"
+            >
               {{
-                $t('common.not_enough_balance_to_cover_fee', {
+                $t('common.buy_more', {
                   symbol: selectedChain?.currencyName || 'ETH',
                 })
               }}
-              <button
-                class="text-text-brand cursor-pointer underline underline-offset-2"
-                @click="openBuyPanel"
-              >
-                {{
-                  $t('common.buy_more', {
-                    symbol: selectedChain?.currencyName || 'ETH',
-                  })
-                }}
-              </button>
-            </p>
-          </div>
-          <p v-else>{{ gasFeeError }}</p>
-        </div>
+            </button>
+          </template>
+        </AppInputFeedback>
       </transition>
     </div>
 
@@ -148,6 +150,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
