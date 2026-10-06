@@ -85,4 +85,28 @@ describe('WalletCard', () => {
     })
     expect(w.get('.avatar').attributes('data-url')).toBe('rabby.svg')
   })
+
+  it('draws full-bleed round marks edge to edge instead of inset in an avatar', () => {
+    const w = mountCard({
+      wallet: {
+        id: 'ledger',
+        name: 'Ledger',
+        icon: 'ledger.svg',
+        type: ['hardware'],
+        roundIcon: true,
+      },
+    })
+    expect(w.find('.avatar').exists()).toBe(false)
+    const img = w.get('img')
+    expect(img.attributes('src')).toBe('ledger.svg')
+    expect(img.classes()).toEqual(
+      expect.arrayContaining(['size-8', 'rounded-full']),
+    )
+  })
+
+  it('sets the wallet name in semibold', () => {
+    const w = mountCard({ wallet: metaMask })
+    const name = w.findAll('span').find(s => s.text() === 'MetaMask')
+    expect(name?.classes()).toContain('font-semibold')
+  })
 })

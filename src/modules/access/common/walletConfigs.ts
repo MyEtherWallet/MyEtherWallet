@@ -1,8 +1,8 @@
 import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
 import UnisatLogo from '@/assets/images/access/unisat.webp'
 import MewLogo from '@/assets/images/access/mew-app.webp'
-import LedgerLogo from '@/assets/images/access/ledger.webp'
-import TrezorLogo from '@/assets/images/access/trezor.webp'
+import LedgerLogo from '@/assets/images/access/ledger.svg'
+import TrezorLogo from '@/assets/images/access/trezor.svg'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
@@ -90,6 +90,8 @@ export type WalletConfig = {
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
+  /** The icon is already a full-bleed circle; draw it edge to edge, not inset. */
+  roundIcon?: boolean
   walletViewType?: WalletView
   downloadUrls?: downloadUrls
   canSupport?: (chain?: Chain) => boolean
@@ -135,6 +137,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'ledger',
     name: 'Ledger',
     icon: LedgerLogo,
+    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: ledgerSupportNetwork,
     walletViewType: 'ledger',
@@ -143,6 +146,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
+    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: trezorSupportNetwork,
     walletViewType: 'trezor',

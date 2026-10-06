@@ -7,6 +7,14 @@
     <AppAvatar v-if="advancedIcon" type="icon" size="m">
       <template #icon><AppIcon :name="advancedIcon" size="xs" /></template>
     </AppAvatar>
+    <!-- Round brand marks (Ledger, Trezor) already fill their circle; the wallet
+         avatar would inset them as if they were square logos. -->
+    <img
+      v-else-if="wallet.roundIcon && iconUrl"
+      :src="iconUrl"
+      alt=""
+      class="size-8 shrink-0 rounded-full"
+    />
     <AppAvatar
       v-else
       type="wallet"
@@ -14,12 +22,11 @@
       :url="iconUrl"
       :name="displayName"
     />
-    <AppContentGroup
-      :title="displayName"
-      size="m"
-      no-wrap
-      class="grow min-w-0"
-    />
+    <span
+      class="grow min-w-0 truncate text-base font-semibold text-text-default"
+    >
+      {{ displayName }}
+    </span>
     <span v-if="status" class="shrink-0 text-xs text-text-subtle">
       {{ $t(STATUS_KEY[status]) }}
     </span>
@@ -30,7 +37,6 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
