@@ -30,15 +30,10 @@
     "no_rewards_left": "No quedan recompensas",
     "swap_button": "Intercambiar {amount}",
     "trade_button": "Operar {amount}",
-    "back_in": "Vuelve en {time}",
-    "market_is_closed": "El mercado está cerrado",
     "info_make_trade": "Realiza una operación de más de ${min}.",
-    "info_first_users": "Sé uno de los primeros {count} usuarios por hora, por operación.",
     "info_earn_per_trade": "Gana ${amount} USDC por operación.",
-    "info_one_reward_period": "Hasta una recompensa por billetera por período de campaña de {days} días, enviada directamente a tu billetera",
     "info_no_sybil": "Las billeteras sospechosas de explotar el programa de recompensas mediante ataques Sybil (crear múltiples cuentas para reclamar más recompensas) u otras tácticas manipuladoras serán descalificadas.",
-    "info_wallet_age": "La billetera debe tener al menos 3 semanas de antigüedad (con respecto a la fecha actual) y mantener un saldo mínimo de 0.005 ETH.",
-    "info_min_usdc_balance": "La billetera debe mantener un saldo mínimo de {amount} USDC.",
+    "info_wallet_age": "La billetera debe tener al menos {weeks} semanas de antigüedad (con respecto a la fecha actual).",
     "info_no_cashout": "Las transacciones de retiro no califican.",
     "coming_soon_title": "Recompensas muy pronto",
     "coming_soon_body": "Estamos preparando la próxima campaña de recompensas. Sigue a @myetherwallet en X para recibir novedades y próximos anuncios.",
@@ -59,8 +54,22 @@
     "trade_not_eligible": "Esta operación no es elegible para recompensas",
     "cashout_not_qualify": "Las transacciones de retiro no califican para recompensas.",
     "trade_more_to_qualify": "Opera ${amount} más para calificar",
-    "portfolio_trade_description": "Las primeras 15 operaciones de más de ${min} cada hora reciben 5 en recompensas en USDC. Una vez por semana por billetera.",
+    "portfolio_trade_description": "Las primeras 15 operaciones de más de ${min} cada hora reciben 5 USDC en recompensas. Una vez por semana por billetera.",
     "not_eligible_for_rewards": "No elegible para recompensas",
-    "connect_another_address": "Conectar otra dirección"
+    "connect_another_address": "Conectar otra dirección",
+    "rewards_paused": "Las recompensas están pausadas temporalmente",
+    "checking_eligibility": "Verificando elegibilidad",
+    "claim_requested": "¡Recompensa solicitada! Llegará a tu billetera en breve.",
+    "claim_rejected": "Esta operación no obtuvo una recompensa",
+    "claim_reason": {
+      "REWARD_EXPIRED": "El plazo para reclamar esta operación ha terminado.",
+      "MAKER_INELIGIBLE": "Esta billetera no es elegible para recompensas en este momento.",
+      "SPEND_TOO_LOW": "La operación fue inferior al monto mínimo.",
+      "REWARDS_DEACTIVATED": "El programa de recompensas está pausado actualmente."
+    },
+    "info_first_users": "Sé uno de los primeros {count} usuarios recompensados por hora.",
+    "info_one_reward_period": "Hasta una recompensa por billetera por período de campaña de {days} días, enviada directamente a tu billetera.",
+    "info_min_rwa_balance": "La billetera debe haber mantenido al menos ${amount} en activos RWA hace {weeks} semanas (contando desde la fecha actual).",
+    "min_rwa_balance_required": "Requiere ${amount} en RWA hace {weeks} semanas"
   }
 }

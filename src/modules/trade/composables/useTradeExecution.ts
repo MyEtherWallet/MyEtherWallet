@@ -478,8 +478,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const minSpendBN = BigNumber(minSpendTrade.value)
       const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
       if (fromUsdValue.gt(minimumSpend)) {
-        const canEarn =
-          await rewardsStore.checkAvailabilityAfterTransaction('trade')
+        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {

@@ -30,15 +30,10 @@
     "no_rewards_left": "No rewards left",
     "swap_button": "Swap {amount}",
     "trade_button": "Trade {amount}",
-    "back_in": "Back in {time}",
-    "market_is_closed": "Market is closed",
     "info_make_trade": "Make a trade over ${min}.",
-    "info_first_users": "Be among the first {count} users per hour, per trade.",
     "info_earn_per_trade": "Earn ${amount} USDC per trade.",
-    "info_one_reward_period": "Up to one reward per wallet per {days} day campaign period, sent directly to your wallet",
     "info_no_sybil": "Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.",
-    "info_wallet_age": "The wallet must be at least 3 weeks old (relative to the current date) and hold a minimum balance of 0.005 ETH.",
-    "info_min_usdc_balance": "The wallet must hold a minimum balance of {amount} USDC.",
+    "info_wallet_age": "The wallet must be at least {weeks} weeks old (relative to the current date).",
     "info_no_cashout": "Cash out transactions do not qualify.",
     "coming_soon_title": "Rewards coming soon",
     "coming_soon_body": "We're preparing the next rewards campaign. Follow @myetherwallet on X for updates and upcoming announcements.",
@@ -59,8 +54,22 @@
     "trade_not_eligible": "This trade isn't eligible for rewards",
     "cashout_not_qualify": "Cash out transactions don't qualify for rewards.",
     "trade_more_to_qualify": "Trade ${amount} more to qualify",
-    "portfolio_trade_description": "The first 15 trades over ${min} every hour receive 5 in USDC in rewards. Once per week per wallet.",
+    "portfolio_trade_description": "The first 15 trades over ${min} every hour receive 5 USDC in rewards. Once per week per wallet.",
     "not_eligible_for_rewards": "Not eligible for rewards",
-    "connect_another_address": "Connect another address"
+    "connect_another_address": "Connect another address",
+    "rewards_paused": "Rewards are temporarily paused",
+    "checking_eligibility": "Checking eligibility",
+    "claim_requested": "Reward requested! It will arrive in your wallet shortly.",
+    "claim_rejected": "This trade didn't earn a reward",
+    "claim_reason": {
+      "REWARD_EXPIRED": "The claim window for this trade has closed.",
+      "MAKER_INELIGIBLE": "This wallet is not eligible for rewards right now.",
+      "SPEND_TOO_LOW": "The trade was below the minimum amount.",
+      "REWARDS_DEACTIVATED": "The rewards program is currently paused."
+    },
+    "info_first_users": "Be among the first {count} users rewarded per hour.",
+    "info_one_reward_period": "Up to one reward per wallet per {days} day campaign period, sent directly to your wallet.",
+    "info_min_rwa_balance": "The wallet must have held at least ${amount} in RWA assets {weeks} weeks ago (rolling from the current date).",
+    "min_rwa_balance_required": "Needs ${amount} RWA balance {weeks} weeks ago"
   }
 }

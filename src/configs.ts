@@ -26,7 +26,21 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
-  MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
+  MEW_REWARDS_API_URL: 'https://mew-rewards-v2-dev.ethvm.dev',
+  /**
+   * Trade-rewards campaign parameters the rewards API does not expose. The
+   * backend enforces its own spend threshold on claim (`SPEND_TOO_LOW`), so
+   * these only drive the copy and the pre-trade "qualifies" banner — keep
+   * them in step with the campaign.
+   */
+  MEW_REWARDS_MIN_SPEND_USD: 250,
+  MEW_REWARDS_REWARD_USD: 5,
+  /** RWA balance (USD) the wallet must have held `MEW_REWARDS_RWA_LOOKBACK_WEEKS` ago, on a rolling basis. */
+  MEW_REWARDS_MIN_RWA_BALANCE_USD: 100,
+  MEW_REWARDS_RWA_LOOKBACK_WEEKS: 2,
+  MEW_REWARDS_MIN_WALLET_AGE_WEEKS: 2,
+  MEW_REWARDS_PER_HOUR: 15,
+  MEW_REWARDS_PERIOD_DAYS: 7,
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
   RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,

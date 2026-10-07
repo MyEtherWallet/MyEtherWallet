@@ -95,8 +95,9 @@ vi.mock('@/stores/rewardsStore', async () => {
     useRewardsStore: defineStore('rewards', () => ({
       isBanned: r(false),
       isEligible: r(true),
-      eligibilityV2: r(null),
-      tradeMarketClosed: r(false),
+      eligibility: r(null),
+      isRewardsPaused: r(false),
+      isSyncing: r(false),
       tradeClaimed: r(false),
       tradeNoRewards: r(false),
       tradeRemainingCount: r(null),

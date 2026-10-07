@@ -51,25 +51,13 @@
       <!-- Reward Rows -->
       <rewards-rows
         v-if="!isBanned"
-        :swap-claimed="swapClaimed"
-        :swap-no-rewards="swapNoRewards"
-        :swap-remaining-pct="swapRemainingPct"
-        :swap-remaining-count="swapRemainingCount"
-        :swap-total="swapTotal"
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
-        :trade-market-closed="tradeMarketClosed"
+        :trade-paused="isRewardsPaused"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilRewardHourReset"
-        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
-        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
-        :time-until-market-open="timeUntilMarketOpen"
-        :has-swap="false"
-        :has-trade="true"
         :min-spend-trade="minSpendTrade"
-        @swap="goToSwap"
         @trade="goToTrade"
         class="max-w-[360px] 2xl:max-w-none"
         :class="[isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : 'mt-5']"
@@ -100,28 +88,13 @@
       <rewards-learn-more
         v-model:is-open="isLearnMoreOpen"
         location="main-banner"
-        :swap-claimed="swapClaimed"
-        :swap-no-rewards="swapNoRewards"
-        :swap-remaining-pct="swapRemainingPct"
-        :swap-remaining-count="swapRemainingCount"
-        :swap-total="swapTotal"
-        :trade-claimed="tradeClaimed"
-        :trade-no-rewards="tradeNoRewards"
-        :trade-market-closed="tradeMarketClosed"
-        :trade-remaining-pct="tradeRemainingPct"
-        :trade-remaining-count="tradeRemainingCount"
-        :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilRewardHourReset"
-        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
-        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
-        :time-until-market-open="timeUntilMarketOpen"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
@@ -134,10 +107,8 @@ import { analytics, RewardsEvent } from '@/analytics'
 import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useMarketStatusStore } from '@/stores/marketStatusStore'
 
 const { t } = useI18n()
-
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 const { setWalletPanel } = walletMenuStore
@@ -147,78 +118,21 @@ const toastStore = useToastStore()
 const rewardsStore = useRewardsStore()
 const {
   hadInitialLoad,
-  eligibilityV2,
-  swapClaimed,
   tradeClaimed,
-  swapNoRewards,
   tradeNoRewards,
-  tradeMarketClosed,
-  swapTotal,
-  swapRemainingPct,
-  swapRemainingCount,
+  isRewardsPaused,
   tradeTotal,
   tradeRemainingPct,
   tradeRemainingCount,
-  nextHourStart,
   isBanned,
   minSpendTrade,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
-const timeUntilRewardHourReset = ref('--')
-const timeUntilSwapNextEligible = ref('--')
-const timeUntilTradeNextEligible = ref('--')
-let countdownTimer: ReturnType<typeof setInterval> | null = null
-
-const marketStatusStore = useMarketStatusStore()
-const { countdownText: timeUntilMarketOpen } = storeToRefs(marketStatusStore)
-
-function formatDiff(ms: number): string {
-  const d = Math.floor(ms / 86_400_000)
-  if (d > 0) return `${d} d`
-  const h = Math.floor(ms / 3_600_000)
-  if (h > 0) return `${h}h`
-  const m = Math.floor(ms / 60_000)
-  return `${m} min`
-}
-
-function updateCountdowns() {
-  const hourTarget = nextHourStart.value
-  timeUntilRewardHourReset.value = hourTarget
-    ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
-    : '--'
-
-  timeUntilSwapNextEligible.value = eligibilityV2.value?.swap.nextEligibleDate
-    ? formatDiff(
-        Math.max(
-          0,
-          new Date(eligibilityV2.value?.swap.nextEligibleDate).getTime() -
-            Date.now(),
-        ),
-      )
-    : '--'
-  timeUntilTradeNextEligible.value = eligibilityV2.value?.trade.nextEligibleDate
-    ? formatDiff(
-        Math.max(
-          0,
-          new Date(eligibilityV2.value?.trade.nextEligibleDate).getTime() -
-            Date.now(),
-        ),
-      )
-    : '--'
-}
 
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
   rewardsStore.fetchPool()
-  marketStatusStore.acquire()
-  updateCountdowns()
-  countdownTimer = setInterval(updateCountdowns, 60_000)
-})
-
-onUnmounted(() => {
-  if (countdownTimer) clearInterval(countdownTimer)
-  marketStatusStore.release()
 })
 
 const navigateTo = (panel: 'swap' | 'trade') => {
@@ -231,13 +145,6 @@ const navigateTo = (panel: 'swap' | 'trade') => {
   if (!isOpenSideMenu.value) {
     walletMenuStore.setIsOpenSideMenu(true)
   }
-}
-
-const goToSwap = () => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
-    location: 'main-banner',
-  })
-  navigateTo('swap')
 }
 
 const goToTrade = () => {
