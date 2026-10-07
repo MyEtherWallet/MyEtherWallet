@@ -9,10 +9,10 @@ import {
 
 // _Avatar badge (1852:356). One circle, 1px solid white border, centered content.
 //   Network — white bg, no padding, logo fills the box (bottom-right).
-//   Icon    — #e6e6e6 bg, 1px padding, holds a glyph (top-left).
-//   Status  — a fixed 8px white dot-holder (top-right), same at every size.
+//   Icon    — grey bg (contrast: dark bg) 1px padding, holds a glyph (top-left).
+//   Status  — a fixed 10px white dot-holder (top-right), same at every size.
 // The parent (AppAvatar) sizes + positions the wrapper from the size table;
-// Network / Icon fill it, Status renders its fixed 8px dot centered inside.
+// Network / Icon fill it, Status renders its fixed 10px dot centered inside.
 withDefaults(
   defineProps<{
     type: AvatarBadgeType
@@ -22,9 +22,11 @@ withDefaults(
   { tone: 'default' },
 )
 
+// Icon badge fill per tone, semantic tokens only. `contrast` is the Cell's
+// selected check (Figma background/contrast-default with text/inverted).
 const ICON_TONE_CLASS: Record<AvatarBadgeTone, string> = {
-  default: 'bg-avatar-badge-icon-bg text-t-default',
-  contrast: 'bg-bgContrast text-white',
+  default: 'bg-background-default-hover text-text-default',
+  contrast: 'bg-background-contrast-default text-text-inverted',
 }
 
 const statusStyle = {

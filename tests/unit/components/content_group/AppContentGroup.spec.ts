@@ -39,38 +39,40 @@ describe('AppContentGroup', () => {
     const light = mount(AppContentGroup, {
       props: { title: 'T', description: 'D' },
     })
-    expect(light.get(title()).classes()).toContain('text-t-default')
-    expect(light.get(description()).classes()).toContain('text-info')
+    expect(light.get(title()).classes()).toContain('text-text-default')
+    expect(light.get(description()).classes()).toContain('text-text-subtle')
 
     const dark = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', tone: 'inverse' },
     })
-    expect(dark.get(title()).classes()).toContain('text-white')
-    expect(dark.get(title()).classes()).not.toContain('text-t-default')
-    expect(dark.get(description()).classes()).toContain('text-white/70')
+    expect(dark.get(title()).classes()).toContain('text-text-inverted')
+    expect(dark.get(title()).classes()).not.toContain('text-text-default')
+    expect(dark.get(description()).classes()).toContain(
+      'text-text-inverted-subtle',
+    )
   })
 
-  it('size "m" uses label/base (16) title and text/sm (14) description', () => {
+  it('size "m" uses the label/base title and text/sm description tokens', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', size: 'm' },
     })
-    expect(wrapper.get(title()).classes()).toContain('text-s-16')
-    expect(wrapper.get(description()).classes()).toContain('text-s-14')
+    expect(wrapper.get(title()).classes()).toContain('text-label-base')
+    expect(wrapper.get(description()).classes()).toContain('text-text-sm')
   })
 
-  it('size "l" uses heading/base (20) title and text/base (16) description', () => {
+  it('size "l" uses the heading/base title and text/base description tokens', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', size: 'l' },
     })
-    expect(wrapper.get(title()).classes()).toContain('text-s-20')
-    expect(wrapper.get(description()).classes()).toContain('text-s-16')
+    expect(wrapper.get(title()).classes()).toContain('text-heading-base')
+    expect(wrapper.get(description()).classes()).toContain('text-text-base')
   })
 
-  it('default weights: title emphasized, description regular', () => {
+  it('default weights: the title token keeps its emphasis, description regular', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', size: 'm' },
     })
-    expect(wrapper.get(title()).classes()).toContain('font-medium')
+    expect(wrapper.get(title()).classes()).not.toContain('font-normal')
     expect(wrapper.get(description()).classes()).toContain('font-normal')
   })
 

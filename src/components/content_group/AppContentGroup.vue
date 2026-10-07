@@ -3,7 +3,6 @@ import { computed, useSlots } from 'vue'
 import {
   TITLE_SIZE_CLASS,
   DESCRIPTION_SIZE_CLASS,
-  TITLE_WEIGHT_CLASS,
   TONE_TITLE_CLASS,
   TONE_DESCRIPTION_CLASS,
   type ContentGroupAlign,
@@ -16,9 +15,9 @@ import {
  * reused inside Pickers, Cells, rows, cards, Toasts and Modal headers — building
  * it once lets those compose it instead of re-implementing the layout.
  *
- * Colours come from `tone`: `default` (title `t-default`, description `info`) for
- * light surfaces, `inverse` (white / white-70) for dark ones such as a Toast or
- * a dark modal header. The spans set their colour explicitly, so a wrapper's
+ * Colours come from `tone`: `default` (title `text/default`, description `text/subtle`) for
+ * light surfaces, `inverse` (`text/inverted` / `text/inverted-subtle`) for dark
+ * ones such as a Toast or a dark modal header. The spans set their colour explicitly, so a wrapper's
  * `text-*` class would never reach them — use `tone` instead. The `inverted`
  * prop swaps only the *weights*, not the colour.
  */
@@ -63,10 +62,12 @@ const rowJustifyClass = computed(() =>
   props.align === 'right' ? 'justify-end' : 'justify-start',
 )
 
+// The size token already carries the emphasised weight (label/base 600,
+// heading/base 700); `inverted` overrides that slot with `font-normal`.
 const titleClass = computed(() => [
   TITLE_SIZE_CLASS[props.size],
   TONE_TITLE_CLASS[props.tone],
-  props.inverted ? 'font-normal' : TITLE_WEIGHT_CLASS[props.size],
+  props.inverted ? 'font-normal' : '',
 ])
 
 const descriptionClass = computed(() => [
@@ -87,12 +88,12 @@ const descriptionClass = computed(() => [
     <template v-if="loading">
       <div class="py-[5px]">
         <div
-          class="inline-block h-3 w-[35px] rounded-[4px] bg-grey-10 animate-pulse"
+          class="inline-block h-3 w-[35px] rounded-[4px] bg-background-skeleton animate-pulse"
         ></div>
       </div>
       <div v-if="hasDescription" class="py-[5px]">
         <div
-          class="inline-block h-3 w-[79px] rounded-[4px] bg-grey-10 animate-pulse"
+          class="inline-block h-3 w-[79px] rounded-[4px] bg-background-skeleton animate-pulse"
         ></div>
       </div>
     </template>
