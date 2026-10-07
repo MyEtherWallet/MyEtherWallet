@@ -33,6 +33,10 @@ describe('AppChip', () => {
   it('uses the label/sm type style', () => {
     const wrapper = mount(AppChip, { props: { label: 'ETH' } })
     expect(wrapper.get(root()).classes()).toContain('text-label-sm')
+    // Figma keeps the label on one line (e.g. zh "中间价" must not wrap in h-8).
+    expect(wrapper.get('[data-testid="chip-label"]').classes()).toContain(
+      'whitespace-nowrap',
+    )
   })
 
   it('announces a menu chip as a menu button, not a toggle', () => {

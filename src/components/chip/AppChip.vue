@@ -62,7 +62,9 @@ const borderClass = computed(() =>
       <slot name="avatar" :size="avatarSize" />
     </span>
 
-    <span class="px-2" data-testid="chip-label">{{ label }}</span>
+    <span class="whitespace-nowrap px-2" data-testid="chip-label">{{
+      label
+    }}</span>
 
     <span
       v-if="showIcon"
