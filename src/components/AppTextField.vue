@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-40 px-4 py-3 rounded-12 resize-none text-sm leading-5 text-text-default placeholder:text-text-placeholder focus:outline-none focus:ring-0',
+        'w-full h-40 px-4 py-3 rounded-12 resize-none text-text-sm text-text-default placeholder:text-text-placeholder focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"
@@ -28,7 +28,7 @@
         />
         <p
           :id="feedbackId"
-          class="text-xs leading-[18px] text-text-error min-w-0 break-words"
+          class="text-text-xs text-text-error min-w-0 break-words"
         >
           {{ errorMessage || $t('common.required') }}
         </p>
@@ -68,9 +68,9 @@ const props = defineProps({
     required: true,
   },
   /**
-   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
-   * it disappears on the grey app background); 'alternative' is white with a
-   * 1px border (used on white cards/dialogs today, also works on grey).
+   * Figma "Style": 'default' is the background/default fill (for white
+   * surfaces — it disappears on the app background); 'alternative' is the
+   * background/alternative fill with a 1px border/default line (cards/dialogs).
    */
   surface: {
     type: String as PropType<InputSurface>,

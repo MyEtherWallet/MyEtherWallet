@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <!-- Field box — fixed height, constant 1px border so the ring never shifts it -->
+    <!-- Field box — fixed height; state lines are inset rings, so nothing shifts -->
     <div
       :class="[
         'flex items-center gap-2 w-full rounded-12 px-4',
@@ -25,7 +25,7 @@
           :class="
             isFloating
               ? [
-                  'block text-xs font-semibold leading-[18px] tracking-[-0.24px] truncate',
+                  'block text-label-xs truncate',
                   disabled ? 'text-text-disabled' : 'text-text-subtle',
                 ]
               : 'sr-only'
@@ -44,8 +44,10 @@
           :aria-invalid="!disabled && hasError"
           :aria-describedby="showFeedback ? feedbackId : undefined"
           :class="[
-            'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-text-placeholder',
-            disabled ? 'text-text-disabled' : 'text-text-default',
+            'w-full bg-transparent focus:outline-none focus:ring-0 text-text-sm',
+            disabled
+              ? 'text-text-disabled placeholder:text-text-disabled'
+              : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
           @focus="setInFocusInput()"
@@ -102,7 +104,7 @@
           size="s"
           class="shrink-0 text-text-error"
         />
-        <p class="text-xs leading-[18px] text-text-error min-w-0 break-words">
+        <p class="text-text-xs text-text-error min-w-0 break-words">
           {{ errorMessage || $t('common.required') }}
         </p>
       </div>
@@ -146,9 +148,9 @@ const props = defineProps({
     default: 'large',
   },
   /**
-   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
-   * it disappears on the grey app background); 'alternative' is white with a
-   * 1px border (used on white cards/dialogs today, also works on grey).
+   * Figma "Style": 'default' is the background/default fill (for white
+   * surfaces — it disappears on the app background); 'alternative' is the
+   * background/alternative fill with a 1px border/default line (cards/dialogs).
    */
   surface: {
     type: String as PropType<InputSurface>,

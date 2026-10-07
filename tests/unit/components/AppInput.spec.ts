@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppInput from '@/components/AppInput.vue'
+import { INPUT_SURFACES } from '@/components/inputSizes'
 
 const i18n = createI18n({
   legacy: false,
@@ -50,8 +51,8 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     const label = w.get('label')
     expect(label.classes()).not.toContain('sr-only')
     expect(label.classes()).toContain('text-text-subtle')
-    // Figma label/xs is DM Sans 600 (semibold).
-    expect(label.classes()).toContain('font-semibold')
+    // Figma label/xs: DM Sans 600 · 12/18 · -2%.
+    expect(label.classes()).toContain('text-label-xs')
   })
 
   it('Small never renders a visible label row, even when filled', () => {
@@ -79,31 +80,32 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('placeholder')).toBe('Recipient')
   })
 
-  it('maps surface to semantic bg + resting border tokens', () => {
-    const def = field(mountInput({ surface: 'default' }))
-    expect(def.classes()).toContain('bg-background-default')
-    expect(def.classes()).toContain('border-transparent')
-    const alt = field(mountInput({ surface: 'alternative' }))
-    expect(alt.classes()).toContain('bg-background-alternative')
-    // Figma Alternative rests on a real 1px border at the outer edge.
-    expect(alt.classes()).toContain('border')
-    expect(alt.classes()).toContain('border-border-default')
-    expect(alt.classes()).not.toContain('ring-inset')
+  it('maps surface to semantic bg + resting line tokens', () => {
+    const def = field(mountInput({ surface: 'default' })).classes()
+    expect(def).toContain('bg-background-default')
+    // Figma Default has no resting line.
+    expect(def).not.toContain('inset-ring')
+    const alt = field(mountInput({ surface: 'alternative' })).classes()
+    expect(alt).toContain('bg-background-alternative')
+    // Figma Alternative rests on a 1px border/default line at the outer edge.
+    expect(alt).toContain('inset-ring')
+    expect(alt).toContain('inset-ring-border-default')
   })
 
-  it('keeps a constant 1px border; hover/focus add the 2nd px as an inset ring', async () => {
-    for (const surface of ['default', 'alternative'] as const) {
+  it('draws every state line as an inset ring — no CSS border, no shift', async () => {
+    for (const surface of INPUT_SURFACES) {
       const w = mountInput({ surface, modelValue: 'x' })
       const rest = field(w).classes()
-      // A 1px → 2px border swap would shift the content; never use border-2.
-      expect(rest).not.toContain('border-2')
-      expect(rest).toContain('hover:border-border-hover')
+      // A real border takes layout space (content would sit at 17-18px, and
+      // a 1px -> 2px swap shifts it); the ring keeps padding at exactly 16px.
+      expect(rest.some(c => /^border(-\d)?$/.test(c))).toBe(false)
+      expect(rest).toContain('hover:inset-ring-2')
       expect(rest).toContain('hover:inset-ring-border-hover')
 
       await w.get('input').trigger('focus')
       const focus = field(w).classes()
-      expect(focus).not.toContain('border-2')
-      expect(focus).toContain('border-border-brand')
+      expect(focus.some(c => /^border(-\d)?$/.test(c))).toBe(false)
+      expect(focus).toContain('inset-ring-2')
       expect(focus).toContain('inset-ring-border-brand')
     }
   })
@@ -119,11 +121,10 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
       modelValue: '0x',
     })
     // Unfocused: no red ring, but the feedback row is shown.
-    expect(field(w).classes()).not.toContain('border-border-error')
+    expect(field(w).classes()).not.toContain('inset-ring-border-error')
     expect(w.text()).toContain('Enter a valid address')
     // Focus: ring turns error red.
     await w.get('input').trigger('focus')
-    expect(field(w).classes()).toContain('border-border-error')
     expect(field(w).classes()).toContain('inset-ring-border-error')
   })
 
@@ -151,6 +152,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(label.classes()).not.toContain('sr-only')
     expect(label.classes()).toContain('text-text-disabled')
     expect(w.get('input').classes()).toContain('text-text-disabled')
+    expect(w.get('input').classes()).toContain('placeholder:text-text-disabled')
     expect(w.text()).not.toContain('Bad')
     expect(w.find('[aria-label="Clear"]').exists()).toBe(false)
     // A disabled field must not announce an invalid state — there is no error
