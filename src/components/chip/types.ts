@@ -14,6 +14,6 @@ export type ChipSurface = 'default' | 'alternative'
  * pseudo-states in AppChip.
  */
 export const CHIP_SURFACE_BG_CLASS: Record<ChipSurface, string> = {
-  default: 'bg-white',
+  default: 'bg-background-alternative',
   alternative: 'bg-background-default',
 }
