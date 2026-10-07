@@ -93,7 +93,7 @@ describe('AppPicker', () => {
     const alt = mount(AppPicker, {
       props: { title: 'T', surface: 'alternative' },
     })
-    expect(alt.get(root()).classes()).toContain('bg-bgBase')
+    expect(alt.get(root()).classes()).toContain('bg-background-default')
   })
 
   it('shows the Content Group skeleton and ignores clicks while loading', () => {

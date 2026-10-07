@@ -1,12 +1,14 @@
 <template>
   <div class="relative">
-    <magnifying-glass-icon
+    <AppIcon
+      name="magnifying-glass"
+      :size="size === 'compact' ? 's' : 'm'"
+      @click="searchInput?.focus()"
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
-        size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
-        inFocusInput ? 'text-primary' : 'text-info',
+        size === 'compact' ? 'top-2.5' : 'top-2',
+        inFocusInput ? 'text-text-brand' : 'text-text-subtle',
       ]"
-      @click="searchInput?.focus()"
     />
 
     <input
@@ -14,21 +16,17 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-colors',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
+        inputClass,
       ]"
       :aria-label="placeholder || $t('common.search')"
       :placeholder="placeholder || $t('common.search')"
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
-    <div
-      :class="[
-        'absolute right-3 flex align-center',
-        size === 'compact' ? 'top-2.5' : 'top-1',
-      ]"
-    >
+    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
       <app-btn-icon
         @click="clearInputValue"
         :class="[
@@ -37,8 +35,10 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon
-          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
+        <AppIcon
+          name="x-circle"
+          :size="size === 'compact' ? 's' : 'm'"
+          class="text-text-brand"
       /></app-btn-icon>
     </div>
   </div>
@@ -47,9 +47,7 @@
 <script setup lang="ts">
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { XCircleIcon } from '@heroicons/vue/24/outline'
-
+import AppIcon from '@/components/icon/AppIcon.vue'
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.
  *
@@ -79,6 +77,10 @@ defineProps({
   size: {
     type: String as PropType<'default' | 'compact'>,
     default: 'default',
+  },
+  inputClass: {
+    type: String,
+    default: '',
   },
 })
 

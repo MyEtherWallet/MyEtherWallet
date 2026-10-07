@@ -28,8 +28,10 @@ const changeText = (change: number) =>
 <template>
   <div
     data-test="hero-trending-card"
-    class="flex w-full min-w-0 flex-col gap-4 rounded-2xl bg-white px-2 py-3"
+    class="flex w-full min-w-0 flex-col gap-4 rounded-2xl bg-background-alternative px-2 py-3"
   >
+    <!-- Header: title on the left, "Last 24h" on the right. px-3 keeps its
+         content aligned with the rows now that the card padding is 8px. -->
     <div class="flex w-full items-end justify-between px-3 py-2">
       <button
         type="button"
@@ -38,16 +40,17 @@ const changeText = (change: number) =>
         @click="router.push(seeAllTo)"
       >
         <span
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black transition-colors group-hover:text-primary"
+          class="text-label-base text-text-default transition-colors group-hover:text-text-brand"
         >
           {{ title }}
         </span>
       </button>
-      <span class="text-s-14 leading-5 text-t-subtle">
+      <span class="text-text-sm text-text-subtle">
         {{ t('homePage.hero.last24h') }}
       </span>
     </div>
 
+    <!-- Body: 4px gap between rows, each row a small design-library Cell. -->
     <div class="flex w-full flex-col gap-1">
       <template v-if="isLoading">
         <AppCell
@@ -65,7 +68,7 @@ const changeText = (change: number) =>
       <p
         v-else-if="!items.length"
         data-test="trending-empty"
-        class="px-3 py-2 text-s-14 text-t-subtle"
+        class="px-3 py-2 text-text-sm text-text-subtle"
       >
         {{ t('homePage.hero.empty') }}
       </p>
@@ -91,18 +94,16 @@ const changeText = (change: number) =>
           <AppTokenSymbol
             :symbol="item.symbol"
             :is-stock="item.isStock"
-            class="!text-s-16 !font-semibold tracking-[-0.32px] text-black"
+            class="!text-label-base text-text-default"
           />
         </template>
         <template #accessory>
-          <p
-            class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-          >
+          <p class="text-label-base text-text-default">
             {{ formatFiat(item.price).display }}
           </p>
           <p
-            class="text-s-14 leading-5 tracking-[-0.28px]"
-            :class="isUp(item.change) ? 'text-success' : 'text-error'"
+            class="text-text-sm"
+            :class="isUp(item.change) ? 'text-text-success' : 'text-text-error'"
             data-test="token-list-row-change"
           >
             {{ changeText(item.change) }}

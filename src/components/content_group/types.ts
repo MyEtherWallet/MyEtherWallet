@@ -4,34 +4,30 @@ export type ContentGroupAlign = 'left' | 'right'
 export type ContentGroupTone = 'default' | 'inverse'
 
 /**
- * Content Group typography (design library, MEW-2271). Its Figma section is
- * "not published", so these map the Figma tokens to the closest current-system
- * utilities and are centralized here for a one-line swap once design finalizes:
- *   label/base = 16 · heading/base = 20 · text/sm = 14 · text/base = 16
+ * Content Group typography (design library, MEW-2271), bound to the published
+ * Typography tokens (MEW-2031, `main.css` @theme). Each token carries size,
+ * line-height, tracking and weight, so one class is the whole style:
+ *   m → title label/base (16/22 · 600) · description text/sm (14/20 · 400)
+ *   l → title heading/base (20/22 · 700) · description text/base (16/22 · 400)
+ * `inverted` only swaps the weights via `font-*`, which override the token's slot.
  */
 export const TITLE_SIZE_CLASS: Record<ContentGroupSize, string> = {
-  m: 'text-s-16', // label/base
-  l: 'text-s-20', // heading/base
+  m: 'text-label-base',
+  l: 'text-heading-base',
 }
 
 export const DESCRIPTION_SIZE_CLASS: Record<ContentGroupSize, string> = {
-  m: 'text-s-14', // text/sm
-  l: 'text-s-16', // text/base
-}
-
-/** Default (non-inverted) title weight: label/base = medium, heading/base = semibold. */
-export const TITLE_WEIGHT_CLASS: Record<ContentGroupSize, string> = {
-  m: 'font-medium',
-  l: 'font-semibold',
+  m: 'text-text-sm',
+  l: 'text-text-base',
 }
 
 /** Title / description colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
 export const TONE_TITLE_CLASS: Record<ContentGroupTone, string> = {
-  default: 'text-t-default',
-  inverse: 'text-white',
+  default: 'text-text-default',
+  inverse: 'text-text-inverted',
 }
 
 export const TONE_DESCRIPTION_CLASS: Record<ContentGroupTone, string> = {
-  default: 'text-info',
-  inverse: 'text-white/70',
+  default: 'text-text-subtle',
+  inverse: 'text-text-inverted-subtle',
 }

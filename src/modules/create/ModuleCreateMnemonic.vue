@@ -45,16 +45,16 @@
                 />
               </div>
               <app-btn-text
-                class="text-primary hoverOpacity"
+                class="text-text-brand hoverOpacity"
                 @click="updateMnemonic"
               >
-                <arrow-path-icon class="inline w-5 h-5 mr-1" />
+                <AppIcon name="arrow-path" size="s" class="inline mr-1" />
                 {{ $t('create_wallet.mnemonic.update') }}
               </app-btn-text>
             </div>
             <div
               data-private
-              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
+              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-background-default/50"
             >
               <div
                 class="grid grid-cols-2 gap-x-4 gap-y-3 w-full max-w-[500px]"
@@ -64,7 +64,7 @@
                   :key="index"
                   class="flex items-center bg-white/80 px-4 py-2 rounded-12 shadow-sm"
                 >
-                  <span class="text-info text-s-12 w-6 shrink-0"
+                  <span class="text-text-subtle text-s-12 w-6 shrink-0"
                     >{{ index + 1 }}.</span
                   >
                   <span class="font-medium text-s-17">{{ phrase }}</span>
@@ -92,7 +92,7 @@
                 <!-- First Sample -->
                 <div v-if="generatedVerifySamples.length">
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-text-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -100,16 +100,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleOneSelected"
-                    :btn-list="generatedVerifySamples[0].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleOneSelected"
+                    :items="generatedVerifySamples[0].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[0].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
                 <!-- Second Sample -->
                 <div
@@ -118,7 +119,7 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-text-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -126,16 +127,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleTwoSelected"
-                    :btn-list="generatedVerifySamples[1].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleTwoSelected"
+                    :items="generatedVerifySamples[1].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[1].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
                 <!-- Third Sample -->
                 <div
@@ -144,7 +146,7 @@
                   "
                 >
                   <p
-                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                    class="text-s-12 mb-2 text-text-subtle font-bold uppercase tracking-wider px-1"
                   >
                     {{
                       $t('create_wallet.mnemonic.select_word', {
@@ -152,16 +154,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleThreeSelected"
-                    :btn-list="generatedVerifySamples[2].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleThreeSelected"
+                    :items="generatedVerifySamples[2].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[2].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
               </div>
               <div
@@ -187,14 +190,18 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <check-icon class="w-10 h-10 text-primary stroke-[3px] mb-4" />
+              <AppIcon
+                name="check"
+                size="xl"
+                class="text-text-brand stroke-[3px] mb-4"
+              />
               <h3
                 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
                 {{ stepDescription[2].title }}
               </h3>
               <p
-                class="text-s-14 sm:text-s-16 text-info leading-p-150 text-center"
+                class="text-s-14 sm:text-s-16 text-text-subtle leading-p-150 text-center"
               >
                 {{ stepDescription[2].description }}
               </p>
@@ -203,18 +210,20 @@
             <div class="pt-4 pb-2">
               <div class="flex flex-col items-center justify-center gap-4">
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[240px]"
+                  class="w-full xs:w-auto xs:min-w-60"
                   @click="closeCreateOpenAccess()"
                 >
                   {{ $t('connect_wallet') }}
                 </app-base-button>
                 <app-btn-text
-                  class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
+                  class="w-full xs:w-auto xs:min-w-60 flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
                   {{ $t('create_wallet.mnemonic.create_another_wallet') }}
-                  <arrow-long-right-icon
-                    class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                  <AppIcon
+                    name="arrow-long-right"
+                    size="s"
+                    class="ml-2 transition-transform group-hover:translate-x-1"
                   />
                 </app-btn-text>
               </div>
@@ -232,19 +241,18 @@ import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
-import { ArrowPathIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const { closeCreateDialog } = useCreateStore()
@@ -313,7 +321,8 @@ const sampleArray = (array: number[]) => {
 }
 
 interface VerifyItem {
-  originalIndex: number
+  /** Original word index as a string: words can repeat in a mnemonic. */
+  value: string
   label: string
 }
 interface VerifySample {
@@ -339,7 +348,7 @@ const generatedVerifySamples = computed<VerifySample[]>(() => {
     itemsIndexes.forEach(idx => usedIndexes.add(idx))
     const indexToVerify = itemsIndexes[0]
     const items = shuffleArray(itemsIndexes).map(idx => ({
-      originalIndex: idx,
+      value: String(idx),
       label: totalWords[idx],
     }))
 
@@ -355,9 +364,16 @@ const generatedVerifySamples = computed<VerifySample[]>(() => {
 /**------------------------
  * Selected Options
  -------------------------*/
-const sampleOneSelected = ref<VerifyItem | null>(null)
-const sampleTwoSelected = ref<VerifyItem | null>(null)
-const sampleThreeSelected = ref<VerifyItem | null>(null)
+const sampleOneSelected = ref('')
+const sampleTwoSelected = ref('')
+const sampleThreeSelected = ref('')
+
+// New samples mean new words: drop picks made against the previous ones
+watch(generatedVerifySamples, () => {
+  sampleOneSelected.value = ''
+  sampleTwoSelected.value = ''
+  sampleThreeSelected.value = ''
+})
 
 const verifyMnemonic = computed(() => {
   let isValid = false
@@ -367,12 +383,12 @@ const verifyMnemonic = computed(() => {
     sampleThreeSelected.value
   ) {
     isValid =
-      sampleOneSelected.value.originalIndex ===
-        generatedVerifySamples.value[0].indexToVerify &&
-      sampleTwoSelected.value.originalIndex ===
-        generatedVerifySamples.value[1].indexToVerify &&
-      sampleThreeSelected.value.originalIndex ===
-        generatedVerifySamples.value[2].indexToVerify
+      sampleOneSelected.value ===
+        String(generatedVerifySamples.value[0].indexToVerify) &&
+      sampleTwoSelected.value ===
+        String(generatedVerifySamples.value[1].indexToVerify) &&
+      sampleThreeSelected.value ===
+        String(generatedVerifySamples.value[2].indexToVerify)
   }
 
   return isValid

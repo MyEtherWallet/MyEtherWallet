@@ -2,7 +2,11 @@ import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import AppCell from '@/components/AppCell.vue'
-import { CELL_SIZE_SPEC } from '@/components/cellSizes'
+import {
+  CELL_SIZE_SPEC,
+  CELL_SURFACE_BG_CLASS,
+  CELL_SURFACE_INTERACTIVE_CLASS,
+} from '@/components/cellSizes'
 import { AVATAR_SIZES } from '@/components/avatar/types'
 
 const avatarSlot = {
@@ -18,20 +22,39 @@ const mountCell = (props: Record<string, unknown> = {}, slots = {}) =>
   })
 
 describe('AppCell — design-library Cell (MEW-2195)', () => {
-  it('defaults to the white surface variant at medium size', () => {
+  it('defaults to the white (background/alternative) surface at medium size', () => {
     const cls = mountCell().classes()
-    expect(cls).toContain('bg-white')
-    expect(cls).toContain('hover:bg-bgSurface-hover')
-    expect(cls).toContain('active:bg-bgSurface-pressed')
+    expect(cls).toContain('bg-background-alternative')
+    expect(cls).toContain('hover:bg-background-alternative-hover')
+    expect(cls).toContain('active:bg-background-alternative-pressed')
     expect(cls).toContain(CELL_SIZE_SPEC.medium.cell.split(' ')[0])
   })
 
-  it('renders variant="base" on the grey background with its own hover pair', () => {
-    const cls = mountCell({ variant: 'base' }).classes()
-    expect(cls).toContain('bg-bgBase')
-    expect(cls).toContain('hover:bg-bgBase-hover')
-    expect(cls).toContain('active:bg-bgBase-pressed')
-    expect(cls).not.toContain('bg-white')
+  it('renders surface="alternative" on the grey background/default with its own hover pair', () => {
+    const cls = mountCell({ surface: 'alternative' }).classes()
+    expect(cls).toContain('bg-background-default')
+    expect(cls).toContain('hover:bg-background-default-hover')
+    expect(cls).toContain('active:bg-background-default-pressed')
+    expect(cls).not.toContain('bg-background-alternative')
+  })
+
+  it('only binds semantic colour tokens (no raw or legacy palette classes)', () => {
+    const all = [
+      ...Object.values(CELL_SURFACE_BG_CLASS),
+      ...Object.values(CELL_SURFACE_INTERACTIVE_CLASS),
+    ]
+      .join(' ')
+      .split(' ')
+    for (const cls of all) {
+      expect(cls).toMatch(/^(hover:|active:)?bg-background-/)
+    }
+  })
+
+  it('shows the brand focus border only while interactive', () => {
+    expect(mountCell().classes()).toContain('focus-visible:border-border-focus')
+    expect(mountCell({ interactive: false }).classes()).not.toContain(
+      'focus-visible:border-border-focus',
+    )
   })
 
   it('hands the avatar slot the Avatar size that matches the cell size', () => {
@@ -97,15 +120,15 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     await w.trigger('click')
     expect(w.emitted('click')).toBeUndefined()
     expect(w.classes()).toContain('opacity-30')
-    expect(w.classes()).toContain('bg-white')
-    expect(w.classes()).not.toContain('hover:bg-bgSurface-hover')
+    expect(w.classes()).toContain('bg-background-alternative')
+    expect(w.classes()).not.toContain('hover:bg-background-alternative-hover')
     expect(w.attributes('role')).toBeUndefined()
     expect(w.attributes('aria-disabled')).toBe('true')
   })
 
   it('opts out of hover, cursor and button role when interactive=false', async () => {
     const w = mountCell({ interactive: false })
-    expect(w.classes()).not.toContain('hover:bg-bgSurface-hover')
+    expect(w.classes()).not.toContain('hover:bg-background-alternative-hover')
     expect(w.classes()).not.toContain('cursor-pointer')
     expect(w.attributes('role')).toBeUndefined()
     await w.trigger('click')
@@ -118,7 +141,8 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     const { badgeBox } = AVATAR_SIZES[CELL_SIZE_SPEC.medium.avatar]
     expect(badge.attributes('style')).toContain(`width: ${badgeBox}px`)
     expect(badge.find('svg').exists()).toBe(true)
-    expect(badge.find('.bg-bgContrast').exists()).toBe(true)
+    expect(badge.find('.bg-background-contrast-default').exists()).toBe(true)
+    expect(badge.find('.text-text-inverted').exists()).toBe(true)
   })
 
   it('renders no selected badge without selection or without an avatar', () => {

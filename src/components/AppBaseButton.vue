@@ -7,8 +7,8 @@
       { 'bg-white': isOutline },
       disabled
         ? isOutline
-          ? '!border-grey-outline !text-grey-50'
-          : '!bg-grey-outline'
+          ? '!border-border-disabled !text-text-disabled'
+          : '!bg-background-disabled'
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
@@ -27,11 +27,11 @@
           aria-hidden="true"
           :class="[
             'animate-spin  mx-auto',
-            { 'w-4 h-4 mt-[2px]': size === BtnSize.SMALL },
+            { 'w-4 h-4 mt-0.5': size === BtnSize.SMALL },
             { 'w-5 h-5': size === BtnSize.MEDIUM },
             { 'w-6 h-6  top-[25%]': size === BtnSize.LARGE },
             isOutline
-              ? 'text-primary  fill-white/70'
+              ? 'text-text-brand  fill-white/70'
               : 'text-white/30  fill-white',
           ]"
           viewBox="0 0 100 101"
@@ -88,7 +88,9 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error' | 'success' | 'neutral'>,
+    type: String as PropType<
+      'primary' | 'secondary' | 'error' | 'success' | 'neutral'
+    >,
     default: 'primary',
   },
 })
@@ -96,28 +98,36 @@ const props = defineProps({
 const themeStyle = computed(() => {
   if (props.theme === 'primary') {
     if (props.isOutline)
-      return 'border border-2 border-primary text-primary bg-transparent'
-    return 'text-white bg-primary'
+      return 'border border-2 border-border-brand text-text-brand bg-transparent'
+    return 'text-white bg-background-brand'
+  }
+
+  // Tonal secondary: muted grey fill with primary-colored label, no border.
+  // Label is 600 and the fill turns solid white on hover (QA MEW-2324).
+  if (props.theme === 'secondary') {
+    if (props.isOutline)
+      return 'border border-2 border-border-default text-text-brand bg-transparent font-semibold hover:bg-white hover:!opacity-100'
+    return 'text-text-brand bg-background-default font-semibold hover:bg-white hover:!opacity-100'
   }
 
   if (props.theme === 'success') {
     if (props.isOutline)
-      return 'border border-2 border-success text-success bg-transparent'
-    return 'text-white bg-success'
+      return 'border border-2 border-border-success text-text-success bg-transparent'
+    return 'text-white bg-background-success'
   }
 
   if (props.theme === 'error') {
     if (props.isOutline)
-      return 'border border-2 border-error text-error bg-transparent'
-    return 'text-white bg-error'
+      return 'border border-2 border-border-error text-text-error bg-transparent'
+    return 'text-white bg-background-error'
   }
   if (props.theme === 'neutral') {
     if (props.isOutline)
-      return 'border border-2 border-grey-outline text-black bg-transparent'
-    return 'text-black bg-bgMuted'
+      return 'border border-2 border-border-default text-black bg-transparent'
+    return 'text-black bg-background-default-hover'
   }
 
-  return 'text-white bg-primary'
+  return 'text-white bg-background-brand'
 })
 const emit = defineEmits(['click'])
 const onClick = () => {

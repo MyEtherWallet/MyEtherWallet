@@ -3,7 +3,8 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': (inFocusInput || isOpenSelectToken) && !readonly,
+      'ring-2 ring-border-brand':
+        (inFocusInput || isOpenSelectToken) && !readonly,
     }"
     @click="setInFocusInput"
   >
@@ -12,8 +13,8 @@
       <p
         v-if="!isFromView && !isLoading && amount"
         :class="{
-          'text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-info': isLoading,
+          'text-text-error': hasError && !isOpenSelectToken && !isPristine,
+          'animate-pulse text-text-subtle': isLoading,
           '!text-s-24':
             amount &&
             amount.toString().length > 7 &&
@@ -31,8 +32,8 @@
         ref="amountInput"
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
-          'text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-info': isLoading,
+          'text-text-error': hasError && !isOpenSelectToken && !isPristine,
+          'animate-pulse text-text-subtle': isLoading,
           '!text-s-24':
             amount &&
             amount.toString().length > 7 &&
@@ -70,15 +71,15 @@
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
-          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+          class="h-5 flex bg-background-default-hover rounded-full w-1/2"
         ></div>
         <div v-else class="flex justify-between items-center">
           <div
             class="text-sm"
             :class="[
               hasError && !isOpenSelectToken && !isPristine
-                ? 'text-error'
-                : 'text-info',
+                ? 'text-text-error'
+                : 'text-text-subtle',
             ]"
           >
             {{ balanceFiatOrError }}
@@ -88,9 +89,9 @@
             class="flex items-baseline gap-2 whitespace-nowrap"
           >
             <div
-              class="text-s-12 leading-p-120 text-info transition-colors"
+              class="text-s-12 leading-p-120 text-text-subtle transition-colors"
               :class="{
-                'text-primary':
+                'text-text-brand':
                   (inFocusInput || isOpenSelectToken) &&
                   (!hasError || isPristine),
               }"
@@ -100,7 +101,7 @@
             </div>
             <slot name="balance-action" />
           </div>
-          <div v-else class="text-s-12 text-info transition-colors h-5">
+          <div v-else class="text-s-12 text-text-subtle transition-colors h-5">
             {{ $t('common.price') }}:
             <span>{{ currencySymbol }}{{ tokenPrice }}</span>
           </div>
@@ -109,7 +110,7 @@
       <transition name="fade" mode="out-in">
         <p
           v-if="hasError && !isLoading && !isOpenSelectToken && !isPristine"
-          class="text-error text-s-12 leading-p-130 mt-1"
+          class="text-text-error text-s-12 leading-p-130 mt-1"
         >
           {{ errorMessage }}
         </p>
