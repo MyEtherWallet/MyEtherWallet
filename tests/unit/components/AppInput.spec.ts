@@ -79,13 +79,38 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(w.get('input').attributes('placeholder')).toBe('Recipient')
   })
 
-  it('maps surface to bg + resting border', () => {
-    expect(field(mountInput({ surface: 'default' })).classes()).toContain(
-      'bg-background-default',
-    )
+  it('maps surface to semantic bg + resting border tokens', () => {
+    const def = field(mountInput({ surface: 'default' }))
+    expect(def.classes()).toContain('bg-background-default')
+    expect(def.classes()).toContain('border-transparent')
     const alt = field(mountInput({ surface: 'alternative' }))
-    expect(alt.classes()).toContain('bg-white')
-    expect(alt.classes()).toContain('ring-border-default')
+    expect(alt.classes()).toContain('bg-background-alternative')
+    // Figma Alternative rests on a real 1px border at the outer edge.
+    expect(alt.classes()).toContain('border')
+    expect(alt.classes()).toContain('border-border-default')
+    expect(alt.classes()).not.toContain('ring-inset')
+  })
+
+  it('keeps a constant 1px border; hover/focus add the 2nd px as an inset ring', async () => {
+    for (const surface of ['default', 'alternative'] as const) {
+      const w = mountInput({ surface, modelValue: 'x' })
+      const rest = field(w).classes()
+      // A 1px → 2px border swap would shift the content; never use border-2.
+      expect(rest).not.toContain('border-2')
+      expect(rest).toContain('hover:border-border-hover')
+      expect(rest).toContain('hover:inset-ring-border-hover')
+
+      await w.get('input').trigger('focus')
+      const focus = field(w).classes()
+      expect(focus).not.toContain('border-2')
+      expect(focus).toContain('border-border-brand')
+      expect(focus).toContain('inset-ring-border-brand')
+    }
+  })
+
+  it('renders the value in text/default', () => {
+    const w = mountInput({ modelValue: 'x' })
+    expect(w.get('input').classes()).toContain('text-text-default')
   })
 
   it('shows the error ring on focus only; unfocused keeps its normal border', async () => {
@@ -99,6 +124,7 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     // Focus: ring turns error red.
     await w.get('input').trigger('focus')
     expect(field(w).classes()).toContain('border-border-error')
+    expect(field(w).classes()).toContain('inset-ring-border-error')
   })
 
   it('wires aria-invalid and aria-describedby to the feedback row', () => {
@@ -123,7 +149,8 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     // Figma Disabled + Filled still shows the label, in text/disabled grey.
     const label = w.get('label')
     expect(label.classes()).not.toContain('sr-only')
-    expect(label.classes()).toContain('text-text-placeholder')
+    expect(label.classes()).toContain('text-text-disabled')
+    expect(w.get('input').classes()).toContain('text-text-disabled')
     expect(w.text()).not.toContain('Bad')
     expect(w.find('[aria-label="Clear"]').exists()).toBe(false)
     // A disabled field must not announce an invalid state — there is no error

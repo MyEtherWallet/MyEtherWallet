@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <!-- Field box — fixed height, 2px box-border so the ring never shifts it -->
+    <!-- Field box — fixed height, constant 1px border so the ring never shifts it -->
     <div
       :class="[
         'flex items-center gap-2 w-full rounded-12 px-4',
@@ -26,7 +26,7 @@
             isFloating
               ? [
                   'block text-xs font-semibold leading-[18px] tracking-[-0.24px] truncate',
-                  disabled ? 'text-text-placeholder' : 'text-text-subtle',
+                  disabled ? 'text-text-disabled' : 'text-text-subtle',
                 ]
               : 'sr-only'
           "
@@ -45,7 +45,7 @@
           :aria-describedby="showFeedback ? feedbackId : undefined"
           :class="[
             'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-text-placeholder',
-            disabled ? 'text-text-placeholder' : 'text-black',
+            disabled ? 'text-text-disabled' : 'text-text-default',
           ]"
           autocomplete="off"
           @focus="setInFocusInput()"
@@ -123,7 +123,12 @@ import {
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
-import { INPUT_SIZE_SPEC, type InputSize } from '@/components/inputSizes'
+import {
+  INPUT_SIZE_SPEC,
+  inputSurfaceClass,
+  type InputSize,
+  type InputSurface,
+} from '@/components/inputSizes'
 
 /**
  * Shared text input, rebuilt against the design-library `Input` component
@@ -146,7 +151,7 @@ const props = defineProps({
    * 1px border (used on white cards/dialogs today, also works on grey).
    */
   surface: {
-    type: String as PropType<'default' | 'alternative'>,
+    type: String as PropType<InputSurface>,
     default: 'default',
   },
   /** Float label (Large) and the associated a11y label for every size. */
@@ -244,31 +249,16 @@ const onInput = () => {
 }
 
 /**------------------------
- * Surface — bg + border colour by state. The border is always 2px on both
- * surfaces so hover/focus never shift the content. The Alternative surface's
- * resting 1px line is an inset ring drawn inside the transparent 2px border
- * (a real 1px border would nudge the text by 1px on hover). The error ring is
- * focus-only; an unfocused errored field keeps its normal border and is
- * signalled by the feedback row alone.
+ * Surface — bg + border by state (see inputSurfaceClass)
  -------------------------*/
-const surfaceClass = computed(() => {
-  const base = 'box-border transition-colors'
-  const ring = hasError.value ? 'border-border-error' : 'border-border-brand'
-
-  if (props.surface === 'alternative') {
-    const rest = `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default`
-    if (props.disabled) return rest
-    if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    // Resting line is 1px border-default; becomes the full 2px grey border on hover.
-    return `${rest} hover:ring-0 hover:border-border-hover`
-  }
-
-  if (props.disabled)
-    return `${base} bg-background-default border-2 border-transparent`
-  if (inFocusInput.value)
-    return `${base} bg-background-default border-2 ${ring}`
-  return `${base} bg-background-default border-2 border-transparent hover:border-border-hover`
-})
+const surfaceClass = computed(() =>
+  inputSurfaceClass({
+    surface: props.surface,
+    focused: inFocusInput.value,
+    error: hasError.value,
+    disabled: props.disabled,
+  }),
+)
 
 /**------------------------
  * Trailing actions (built-in clear + password reveal)
