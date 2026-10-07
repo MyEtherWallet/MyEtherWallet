@@ -14,9 +14,10 @@ import {
 
 const VARIANTS = Object.keys(BTN_ICON_VARIANT_CLASS) as BtnIconVariant[]
 const SIZES = Object.keys(BTN_ICON_SIZE) as BtnIconSize[]
-// Every style on a light surface; the contrast styles again on the dark panel
-// they are built for.
+// Contrast styles are for dark surfaces only, so each panel shows just the
+// styles built for it.
 const CONTRAST = VARIANTS.filter(v => v.endsWith('contrast'))
+const LIGHT = VARIANTS.filter(v => !CONTRAST.includes(v))
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const CONTRAST = VARIANTS.filter(v => v.endsWith('contrast'))
       <div
         class="flex flex-col gap-4 rounded-12 border border-border-default bg-white p-6"
       >
-        <div v-for="v in VARIANTS" :key="v" class="flex items-center gap-8">
+        <div v-for="v in LIGHT" :key="v" class="flex items-center gap-8">
           <span class="w-36 text-s-14 font-medium">{{ v }}</span>
           <AppBtnIcon :variant="v" icon="x-mark" :label="`${v} default`" />
           <AppBtnIcon
