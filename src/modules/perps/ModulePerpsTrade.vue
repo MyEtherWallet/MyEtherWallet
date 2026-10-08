@@ -792,7 +792,7 @@
           <app-base-button
             class="w-full"
             :disabled="isServiceUnavailable"
-            @click="login(PerpsEventSource.TRADE)"
+            @click="signIn(PerpsEventSource.TRADE)"
           >
             {{ $t('perps.trade.sign-in') }}
           </app-base-button>
@@ -1059,7 +1059,7 @@ const onLimitPriceInput = (e: Event) => {
 const {
   // Auth
   token,
-  login,
+  signIn,
   // Market info
   displaySymbol,
   currentPrice,

@@ -46,8 +46,15 @@ vi.mock('vue-i18n', () => {
   }
 })
 
+// Shared so the sign-in tests (MEW-2470) can set the current route and assert
+// on navigation.
+const routerMock = vi.hoisted(() => ({
+  push: vi.fn(),
+  route: { matched: [] as { name: string }[] },
+}))
 vi.mock('vue-router', () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push: routerMock.push }),
+  useRoute: () => routerMock.route,
 }))
 
 const walletMenuState = reactive<Record<string, unknown>>({
@@ -101,10 +108,11 @@ const mockPerpsState = vi.hoisted(
     }) as const,
 )
 
+const loginMock = vi.hoisted(() => vi.fn())
 vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsAuth: () => ({
     token: ref(null),
-    login: vi.fn(),
+    login: loginMock,
     triggerRefresh: vi.fn(),
   }),
   usePerpsBalance: () => ({ balance: mockPerpsState.balance }),
@@ -440,6 +448,29 @@ describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
     expect(form.displaySymbol.value).toBe('NOTLISTED')
     mockContracts.contracts.value = [makeContract('BTC-USD')]
     expect(form.displaySymbol.value).toBe('BTC')
+  })
+})
+
+describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    routerMock.route.matched = []
+  })
+
+  it('navigates to the perps page and starts the login when outside perps', () => {
+    routerMock.route.matched = [{ name: 'Home' }]
+    const form = usePerpsTradeForm()
+    form.signIn('trade')
+    expect(routerMock.push).toHaveBeenCalledWith({ name: 'Perps' })
+    expect(loginMock).toHaveBeenCalledWith('trade')
+  })
+
+  it('stays on the market drawer (a perps child route) and only logs in', () => {
+    routerMock.route.matched = [{ name: 'Perps' }, { name: 'perps-perp-info' }]
+    const form = usePerpsTradeForm()
+    form.signIn('trade')
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith('trade')
   })
 })
 

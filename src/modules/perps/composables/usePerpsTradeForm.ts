@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import {
@@ -10,6 +10,7 @@ import {
   PerpsClosePositionEvent,
 } from '@/analytics'
 import type {
+  PerpsEventSource,
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
   PerpsTpSlSavePayload,
@@ -22,6 +23,7 @@ import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { capturePerps } from '../sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { usePerpsAuth, usePerpsBalance } from './usePerpsAuth'
 import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
@@ -89,6 +91,7 @@ export function usePerpsTradeForm() {
   const { t } = useI18n()
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
+  const route = useRoute()
   const { token, login, triggerRefresh } = usePerpsAuth()
   const { balance } = usePerpsBalance()
   const { markets, isLoading: marketsLoading } = usePerpsMarkets()
@@ -1109,6 +1112,17 @@ export function usePerpsTradeForm() {
     router.push({ path: `/perps/perp/${contract.market}` })
   }
 
+  // The side panel's sign-in CTA shows on every page, so take the user to the
+  // perps page, where the sign-in progress and then their portfolio show up
+  // (MEW-2470). Already inside perps (incl. the market drawer child route), we
+  // stay put.
+  function signIn(source?: PerpsEventSource) {
+    if (!route.matched.some(r => r.name === ROUTES_MAIN.PERPS.NAME)) {
+      router.push({ name: ROUTES_MAIN.PERPS.NAME })
+    }
+    return login(source)
+  }
+
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
     tempLeverage.value = Math.min(leverage.value, marketMaxLeverage.value)
@@ -1800,7 +1814,7 @@ export function usePerpsTradeForm() {
   return {
     // Auth
     token,
-    login,
+    signIn,
     // Market info
     displaySymbol,
     currentPrice,
