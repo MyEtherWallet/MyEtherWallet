@@ -108,10 +108,10 @@ vi.mock('@/modules/home/composables/useWatchlistRows', () => ({
     refresh: refreshWatchlist,
   }),
 }))
-vi.mock('@/modules/home/components/HomeWatchlistOnboardingDialog.vue', () => ({
+vi.mock('@/modules/home/components/AddToWatchlistDialog.vue', () => ({
   default: {
     props: ['isOpen'],
-    template: '<div data-test="onboarding-dialog" :data-open="isOpen" />',
+    template: '<div data-test="add-dialog" :data-open="isOpen" />',
   },
 }))
 
@@ -176,7 +176,6 @@ describe('HomeHero (MEW-2094)', () => {
     const w = mountHero()
     expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(true)
     expect(w.find('[data-test="home-watchlist-table"]').exists()).toBe(false)
-    expect(w.find('[data-test="onboarding-dialog"]').exists()).toBe(true)
   })
 
   it('replaces the banner with the table once rows resolve', () => {
@@ -187,14 +186,12 @@ describe('HomeHero (MEW-2094)', () => {
     expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
   })
 
-  it('opens the onboarding wizard when the banner emits begin', async () => {
+  it('opens the add-to-watchlist modal when the banner emits begin', async () => {
     const w = mountHero()
-    expect(
-      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
-    ).toBe('false')
+    expect(w.find('[data-test="add-dialog"]').exists()).toBe(false)
     await w.find('[data-test="hero-watchlist-banner"]').trigger('click')
-    expect(
-      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
-    ).toBe('true')
+    expect(w.find('[data-test="add-dialog"]').attributes('data-open')).toBe(
+      'true',
+    )
   })
 })

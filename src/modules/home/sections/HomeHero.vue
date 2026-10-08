@@ -12,7 +12,7 @@ import HeroBanner from '@/modules/home/components/HeroBanner.vue'
 import RwaHomeBanner from '@/modules/rwa_rewards/RwaHomeBanner.vue'
 import HeroWatchlistBanner from '@/modules/home/components/HeroWatchlistBanner.vue'
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
-import HomeWatchlistOnboardingDialog from '@/modules/home/components/HomeWatchlistOnboardingDialog.vue'
+import AddToWatchlistDialog from '@/modules/home/components/AddToWatchlistDialog.vue'
 import type { TrendingRowItem } from '@/modules/home/components/heroTrending'
 import {
   ROUTES_MAIN,
@@ -51,11 +51,9 @@ const showWatchlistTable = computed(
     (watchlist.isLoading.value || watchlistRows.value.length > 0),
 )
 
-// Opens the build-your-watchlist onboarding wizard.
-const isOnboardingOpen = ref(false)
-const onWatchlistBegin = () => {
-  isOnboardingOpen.value = true
-}
+// The banner opens the add-to-watchlist modal (mounted on demand, like the
+// table's "Add asset").
+const isAddOpen = ref(false)
 
 // Card 2 — stocks: reuse the overview `trending` already fetched by ViewHome.
 const stocksStore = useStocksStore()
@@ -144,11 +142,8 @@ onMounted(fetchTrending)
         />
       </div>
     </div>
-    <HeroWatchlistBanner
-      v-if="!showWatchlistTable"
-      @begin="onWatchlistBegin"
-    />
+    <HeroWatchlistBanner v-if="!showWatchlistTable" @begin="isAddOpen = true" />
     <HomeWatchlistTable v-else :rows="watchlistRows" />
-    <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
+    <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
   </div>
 </template>

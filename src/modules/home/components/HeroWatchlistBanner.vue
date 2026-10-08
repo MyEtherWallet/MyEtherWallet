@@ -9,8 +9,7 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineEmits<{
-  // Starts the "build your watchlist" onboarding flow. The flow itself is not
-  // built yet, so the parent handles this as a placeholder for now.
+  // The parent opens the add-to-watchlist modal.
   begin: []
 }>()
 
