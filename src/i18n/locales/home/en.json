@@ -54,14 +54,18 @@
         },
         "addModal": {
           "title": "Add to watchlist",
-          "subtitle": "Search and add assets you are interested in",
           "searchPlaceholder": "Search",
           "empty": "No assets found",
+          "allStocks": "All stocks",
+          "allCrypto": "All crypto",
+          "more": "More",
+          "categories": "Categories",
+          "selectAssets": "Select assets to add",
+          "addAssets": "Add {count} asset | Add {count} assets",
+          "update": "Update watchlist",
           "tabs": {
-            "all": "All",
             "stocks": "Stocks",
-            "crypto": "Crypto",
-            "perps": "Perpetuals"
+            "crypto": "Crypto"
           }
         }
       }

@@ -54,14 +54,18 @@
         },
         "addModal": {
           "title": "添加到关注列表",
-          "subtitle": "搜索并添加您感兴趣的资产",
           "searchPlaceholder": "搜索",
           "empty": "未找到资产",
+          "allStocks": "全部股票",
+          "allCrypto": "全部加密货币",
+          "more": "更多",
+          "categories": "类别",
+          "selectAssets": "选择要添加的资产",
+          "addAssets": "添加 {count} 个资产",
+          "update": "更新关注列表",
           "tabs": {
-            "all": "全部",
             "stocks": "股票",
-            "crypto": "加密货币",
-            "perps": "永续合约"
+            "crypto": "加密货币"
           }
         }
       }

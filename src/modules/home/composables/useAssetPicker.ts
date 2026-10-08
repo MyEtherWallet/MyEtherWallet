@@ -1,13 +1,7 @@
-import { ref, computed, watch, type Ref, type ComputedRef } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useDebounceFn } from '@vueuse/core'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import {
-  usePerpsContracts,
-  usePerpsMarkets,
-} from '@/modules/perps/composables/usePerpsMarkets'
-import { getLogoUrl } from '@/modules/perps/utils/market'
-import type { Contract, TradingPair } from '@/modules/perps/sdk/types'
 import type {
   GetWebTokensTableResponse,
   GetWebTokensTableResponseToken,
@@ -15,7 +9,7 @@ import type {
   GetWebStocksTableResponseItem,
 } from '@/mew_api/types'
 
-export type AssetPickerTab = 'all' | 'stocks' | 'crypto' | 'perps'
+export type AssetPickerTab = 'stocks' | 'crypto'
 
 export interface AssetPickerItem {
   /** Unique across markets: `${type}-${watchlistId}`. */
@@ -23,18 +17,30 @@ export interface AssetPickerItem {
   symbol: string
   name: string
   logoUrl?: string
-  type: 'crypto' | 'stock' | 'perp'
-  /** Value handed to the store: coinId | stock symbol | baseCurrency. */
+  type: 'crypto' | 'stock'
+  /** Value handed to the store: coinId | stock symbol. */
   watchlistId: string
+  price?: number
+  /** 24h change in percent. */
+  change?: number
 }
 
 const PER_PAGE = 50
+
+// Crypto "categories" that are really a sort on the 24h change (same as the
+// /crypto filter), not an API `category=`.
+const CRYPTO_SORT_CATEGORIES: Record<string, string> = {
+  topGainers: 'PRICE_CHANGE_PERCENTAGE_24H_DESC',
+  topLosers: 'PRICE_CHANGE_PERCENTAGE_24H_ASC',
+}
 
 // --- Pure mappers (exported for tests) -------------------------------------
 
 export const mapCryptoItem = (
   t: GetWebTokensTableResponseToken,
 ): AssetPickerItem => {
+  const price = t.price ?? undefined
+  const change = t.priceChangePercentage24h ?? undefined
   // Ondo tokenized stocks live in the crypto table but belong to the stock
   // watchlist bucket (mirrors ModuleExploreCrypto.getWatchlistId).
   if (t.ondo) {
@@ -45,6 +51,8 @@ export const mapCryptoItem = (
       logoUrl: t.logoUrl ?? undefined,
       type: 'stock',
       watchlistId: t.ondo.primaryMarket.symbol,
+      price,
+      change,
     }
   }
   return {
@@ -54,6 +62,8 @@ export const mapCryptoItem = (
     logoUrl: t.logoUrl ?? undefined,
     type: 'crypto',
     watchlistId: t.coinId,
+    price,
+    change,
   }
 }
 
@@ -66,29 +76,13 @@ export const mapStockItem = (
   logoUrl: s.iconPngUrl || s.iconSvgUrl || undefined,
   type: 'stock',
   watchlistId: s.primaryMarket.symbol,
+  price: s.primaryMarket.price ? Number(s.primaryMarket.price) : undefined,
+  change: s.primaryMarket.priceChangePercentage24h
+    ? parseFloat(s.primaryMarket.priceChangePercentage24h)
+    : undefined,
 })
 
-export const mapPerpItem = (
-  c: Contract,
-  pair?: TradingPair,
-): AssetPickerItem => ({
-  key: `perp-${c.baseCurrency}`,
-  symbol: c.baseCurrency,
-  name: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
-  logoUrl: getLogoUrl(c.baseCurrency),
-  type: 'perp',
-  watchlistId: c.baseCurrency,
-})
-
-export const matchesQuery = (item: AssetPickerItem, q: string): boolean => {
-  if (!q) return true
-  const s = q.toLowerCase()
-  return (
-    item.symbol.toLowerCase().includes(s) || item.name.toLowerCase().includes(s)
-  )
-}
-
-/** Keep the first occurrence of each key (stocks/crypto before perps). */
+/** Keep the first occurrence of each key (stocks before crypto). */
 export const dedupeItems = (items: AssetPickerItem[]): AssetPickerItem[] => {
   const seen = new Set<string>()
   const out: AssetPickerItem[] = []
@@ -103,91 +97,85 @@ export const dedupeItems = (items: AssetPickerItem[]): AssetPickerItem[] => {
 // --- Composable ------------------------------------------------------------
 
 /**
- * Backs the "Add to watchlist" modal (MEW-2130). Given the active tab + search
- * query, returns a unified, searchable asset list. Crypto/stocks come from the
- * paginated table endpoints (server search); perps are filtered in memory from
- * the live contracts singleton.
+ * Backs the "Add to watchlist" modal. Lists the active tab's market filtered by
+ * the picked category ('all' = no filter). A search query ignores both and
+ * searches stocks + crypto together (the modal hides tabs and chips while
+ * typing).
  */
 export function useAssetPicker(
   tab: Ref<AssetPickerTab>,
+  category: Ref<string>,
   query: Ref<string>,
-): { items: ComputedRef<AssetPickerItem[]>; isLoading: Ref<boolean> } {
+): { items: Ref<AssetPickerItem[]>; isLoading: Ref<boolean> } {
   const { useMEWFetch } = useFetchMewApi()
 
-  const serverItems = ref<AssetPickerItem[]>([])
+  const items = ref<AssetPickerItem[]>([])
   const isLoading = ref(false)
   let loadToken = 0
 
-  const fetchCrypto = async (q: string): Promise<AssetPickerItem[]> => {
-    const url = `/v1/web/tokens-table?page=1&perPage=${PER_PAGE}&sort=MARKET_CAP_DESC&search=${encodeURIComponent(q)}`
-    const { data } = await useMEWFetch(url)
+  const fetchCrypto = async (
+    search: string,
+    cat: string,
+  ): Promise<AssetPickerItem[]> => {
+    const params = new URLSearchParams({
+      page: '1',
+      perPage: String(PER_PAGE),
+      sort: CRYPTO_SORT_CATEGORIES[cat] ?? 'MARKET_CAP_DESC',
+      search,
+    })
+    if (cat !== 'all' && !CRYPTO_SORT_CATEGORIES[cat])
+      params.set('category', cat)
+    const { data } = await useMEWFetch(`/v1/web/tokens-table?${params}`)
       .get()
       .json<GetWebTokensTableResponse>()
     return (data.value?.items ?? []).map(mapCryptoItem)
   }
 
-  const fetchStocks = async (q: string): Promise<AssetPickerItem[]> => {
-    const url = `/v1/web/pages/stocks/table?page=1&perPage=${PER_PAGE}&sort=MARKET_CAP_DESC&search=${encodeURIComponent(q)}`
-    const { data } = await useMEWFetch(url)
+  const fetchStocks = async (
+    search: string,
+    cat: string,
+  ): Promise<AssetPickerItem[]> => {
+    const params = new URLSearchParams({
+      page: '1',
+      perPage: String(PER_PAGE),
+      sort: 'MARKET_CAP_DESC',
+      search,
+    })
+    if (cat !== 'all') params.set('category', cat)
+    const { data } = await useMEWFetch(`/v1/web/pages/stocks/table?${params}`)
       .get()
       .json<GetWebStocksTableResponse>()
     return (data.value?.items ?? []).map(mapStockItem)
   }
 
-  const loadServer = async () => {
-    if (tab.value === 'perps') {
-      serverItems.value = []
-      return
-    }
+  const load = async () => {
     const token = ++loadToken
     isLoading.value = true
     try {
-      let next: AssetPickerItem[] = []
-      if (tab.value === 'crypto') next = await fetchCrypto(query.value)
-      else if (tab.value === 'stocks') next = await fetchStocks(query.value)
-      else {
-        const [c, s] = await Promise.all([
-          fetchCrypto(query.value),
-          fetchStocks(query.value),
+      const q = query.value.trim()
+      let next: AssetPickerItem[]
+      if (q) {
+        const [s, c] = await Promise.all([
+          fetchStocks(q, 'all'),
+          fetchCrypto(q, 'all'),
         ])
-        next = [...s, ...c]
+        next = dedupeItems([...s, ...c])
+      } else if (tab.value === 'stocks') {
+        next = await fetchStocks('', category.value)
+      } else {
+        next = await fetchCrypto('', category.value)
       }
-      if (token === loadToken) serverItems.value = next
+      if (token === loadToken) items.value = next
     } catch {
-      if (token === loadToken) serverItems.value = []
+      if (token === loadToken) items.value = []
     } finally {
       if (token === loadToken) isLoading.value = false
     }
   }
-  const debouncedLoad = useDebounceFn(loadServer, 300)
 
-  // Perps contracts/markets singletons. Acquired during setup (they inject()
-  // the WS lifecycle); on non-perps routes this only fetches snapshots, no
-  // socket. This composable is only instantiated when the modal is open (the
-  // dialog is mounted on demand), so nothing runs while it's closed.
-  const { contracts: perpsContracts } = usePerpsContracts()
-  const { markets: perpsMarkets } = usePerpsMarkets()
-
-  // Perps are only shown when the perps tab is active. The "all" tab is
-  // stocks + crypto only (perps was removed from the add-to-watchlist modal).
-  const perpsItems = computed<AssetPickerItem[]>(() => {
-    if (tab.value !== 'perps') return []
-    const marketMap = new Map(perpsMarkets.value.map(p => [p.market, p]))
-    return perpsContracts.value
-      .filter(c => !c.disabled)
-      .map(c => mapPerpItem(c, marketMap.get(c.market)))
-      .filter(item => matchesQuery(item, query.value))
-  })
-
-  const items = computed<AssetPickerItem[]>(() => {
-    if (tab.value === 'perps') return perpsItems.value
-    if (tab.value === 'all') return dedupeItems(serverItems.value)
-    return serverItems.value
-  })
-
-  // Tab switch loads immediately; query typing is debounced.
-  watch(tab, loadServer, { immediate: true })
-  watch(query, debouncedLoad)
+  // Tab / category changes load immediately; query typing is debounced.
+  watch([tab, category], load, { immediate: true })
+  watch(query, useDebounceFn(load, 300))
 
   return { items, isLoading }
 }

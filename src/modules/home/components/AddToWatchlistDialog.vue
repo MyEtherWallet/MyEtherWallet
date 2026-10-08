@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AssetPickerRow from './AssetPickerRow.vue'
+import { sectors } from '@/modules/home/sectors'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import type { AppSelectOption } from '@/types/components/appSelect'
 import {
   useAssetPicker,
+  type AssetPickerItem,
   type AssetPickerTab,
 } from '@/modules/home/composables/useAssetPicker'
 
@@ -13,67 +21,215 @@ const isOpen = defineModel<boolean>('isOpen', { required: true })
 
 const { t } = useI18n()
 
-const TABS: { id: AssetPickerTab; labelKey: string }[] = [
-  { id: 'all', labelKey: 'all' },
-  { id: 'stocks', labelKey: 'stocks' },
-  { id: 'crypto', labelKey: 'crypto' },
-]
+const TABS: AssetPickerTab[] = ['stocks', 'crypto']
 
-const tab = ref<AssetPickerTab>('all')
+// Categories shown as chips next to "All" (Figma order); the rest of the tab's
+// categories sit under "More". Values + labels come from the home sectors
+// config, which mirrors the /stocks and /crypto filters.
+const FEATURED: Record<AssetPickerTab, string[]> = {
+  stocks: ['TECHNOLOGY', 'EQUITIES'],
+  crypto: ['stablecoins', 'topGainers'],
+}
+const ALL_LABEL_KEY: Record<AssetPickerTab, string> = {
+  stocks: 'homePage.hero.watchlist.addModal.allStocks',
+  crypto: 'homePage.hero.watchlist.addModal.allCrypto',
+}
+
+const tab = ref<AssetPickerTab>('stocks')
+const category = ref('all')
 const query = ref('')
-const { items, isLoading } = useAssetPicker(tab, query)
+const { items, isLoading } = useAssetPicker(tab, category, query)
+
+// Typing searches every market, so tabs and chips step aside.
+const isSearching = computed(() => !!query.value.trim())
+
+// Categories differ per market, so a tab switch starts from "All" again (set in
+// the same tick so the picker fetches once).
+const selectTab = (id: AssetPickerTab) => {
+  tab.value = id
+  category.value = 'all'
+}
+
+const tabCategories = computed<AppSelectOption[]>(() =>
+  sectors
+    .filter(s => s.market === tab.value && s.filter)
+    .map(s => ({ value: s.filter as string, label: t(s.labelKey) })),
+)
+const chipOptions = computed<AppSelectOption[]>(() => [
+  { value: 'all', label: t(ALL_LABEL_KEY[tab.value]) },
+  ...FEATURED[tab.value].flatMap(v =>
+    tabCategories.value.filter(c => c.value === v),
+  ),
+])
+const moreOptions = computed(() =>
+  tabCategories.value.filter(c => !FEATURED[tab.value].includes(c.value)),
+)
+const isMoreOpen = ref(false)
+// The More chip turns into the picked category (Figma); unset otherwise.
+const moreSelected = computed<AppSelectOption | undefined>({
+  get: () => moreOptions.value.find(o => o.value === category.value),
+  set: option => {
+    if (option) category.value = option.value
+  },
+})
+
+// --- Selection --------------------------------------------------------------
+// Picks are a draft over the stored watchlist: already-listed assets start
+// selected, and `flipped` holds the assets whose state the user changed (kept
+// across tabs, categories and searches). Confirm applies them to the store.
+const watchlistStore = useWatchlistStore()
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+
+const isListed = (item: AssetPickerItem) =>
+  (item.type === 'stock'
+    ? watchListedStocks
+    : watchListedTokens
+  ).value.includes(item.watchlistId)
+
+const flipped = reactive(new Map<string, AssetPickerItem>())
+const isSelected = (item: AssetPickerItem) =>
+  isListed(item) !== flipped.has(item.key)
+const toggle = (item: AssetPickerItem) => {
+  if (flipped.has(item.key)) flipped.delete(item.key)
+  else flipped.set(item.key, item)
+}
+
+const addCount = computed(
+  () => [...flipped.values()].filter(item => !isListed(item)).length,
+)
+const confirmLabel = computed(() => {
+  if (addCount.value)
+    return t('homePage.hero.watchlist.addModal.addAssets', addCount.value)
+  return t(
+    flipped.size
+      ? 'homePage.hero.watchlist.addModal.update'
+      : 'homePage.hero.watchlist.addModal.selectAssets',
+  )
+})
+
+const confirm = () => {
+  const changes = [...flipped.values()]
+  // Removals first so they free room under the per-bucket cap before adding.
+  const ordered = [
+    ...changes.filter(isListed),
+    ...changes.filter(item => !isListed(item)),
+  ]
+  for (const item of ordered)
+    watchlistStore.setWatchlistItem(item.watchlistId, item.type === 'stock')
+  isOpen.value = false
+}
 </script>
 
 <template>
   <AppDialog
     v-model:is-open="isOpen"
     class="sm:mx-auto sm:w-full sm:max-w-[480px]"
+    close-class="top-6 right-6"
     data-test="add-to-watchlist-dialog"
   >
+    <template #title>
+      <h2
+        id="dialogTitle"
+        class="w-full px-14 pb-5 pt-7 text-center text-heading-base text-black"
+      >
+        {{ t('homePage.hero.watchlist.addModal.title') }}
+      </h2>
+    </template>
     <template #content>
-      <div class="flex flex-col px-6 pt-6">
-        <h2 class="text-s-24 font-bold text-black">
-          {{ t('homePage.hero.watchlist.addModal.title') }}
-        </h2>
-        <p class="mt-1 text-s-16 text-text-subtle">
-          {{ t('homePage.hero.watchlist.addModal.subtitle') }}
-        </p>
-
+      <div class="flex flex-col px-6">
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"
-          class="mt-5"
         />
 
-        <!-- Tabs -->
-        <div
-          class="mt-5 flex gap-6 border-b border-border-strong/40"
-          role="tablist"
-        >
-          <button
-            v-for="tabItem in TABS"
-            :key="tabItem.id"
-            type="button"
-            role="tab"
-            data-test="picker-tab"
-            :aria-selected="tab === tabItem.id"
-            class="-mb-px border-b-2 pb-2 text-s-16 font-semibold transition-colors"
-            :class="
-              tab === tabItem.id
-                ? 'border-black text-black'
-                : 'border-transparent text-text-subtle'
-            "
-            @click="tab = tabItem.id"
+        <template v-if="!isSearching">
+          <div
+            class="mt-6 flex gap-3 border-b border-border-default"
+            role="tablist"
           >
-            {{ t(`homePage.hero.watchlist.addModal.tabs.${tabItem.labelKey}`) }}
-          </button>
-        </div>
+            <button
+              v-for="id in TABS"
+              :key="id"
+              type="button"
+              role="tab"
+              data-test="picker-tab"
+              :aria-selected="tab === id"
+              class="-mb-px border-b px-2 pb-2 text-label-base transition-colors"
+              :class="
+                tab === id
+                  ? 'border-border-selected text-black'
+                  : 'border-transparent text-text-muted'
+              "
+              @click="selectTab(id)"
+            >
+              {{ t(`homePage.hero.watchlist.addModal.tabs.${id}`) }}
+            </button>
+          </div>
 
-        <!-- List: fixed height so the modal never resizes between tabs or
-             loading/loaded (QA). Sits flush under the tabs (no top gap) and only
-             this area scrolls; pr keeps the star off the scrollbar. -->
-        <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
+          <div
+            role="group"
+            :aria-label="t('homePage.hero.watchlist.addModal.categories')"
+            class="mt-6 flex flex-wrap gap-2"
+          >
+            <button
+              v-for="option in chipOptions"
+              :key="option.value"
+              type="button"
+              data-test="picker-chip"
+              :aria-pressed="category === option.value"
+              class="flex h-8 items-center rounded-full border bg-background-default px-3 text-label-sm text-black transition-colors hover:bg-background-default-hover"
+              :class="
+                category === option.value
+                  ? 'border-border-selected'
+                  : 'border-transparent'
+              "
+              @click="category = option.value"
+            >
+              {{ option.label }}
+            </button>
+            <AppSelect
+              v-model:selected="moreSelected"
+              v-model:open="isMoreOpen"
+              :options="moreOptions"
+              position="left-0"
+              :max-visible-items="5"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  type="button"
+                  data-test="picker-more"
+                  :aria-pressed="!!moreSelected"
+                  :aria-expanded="isMoreOpen"
+                  class="flex h-8 items-center rounded-full border pl-3 pr-2 text-label-sm text-black transition-colors hover:bg-background-default-hover"
+                  :class="[
+                    moreSelected
+                      ? 'border-border-selected'
+                      : 'border-transparent',
+                    isMoreOpen
+                      ? 'bg-background-default-pressed'
+                      : 'bg-background-default',
+                  ]"
+                  @click="toggleSelect"
+                >
+                  {{
+                    moreSelected?.label ??
+                    t('homePage.hero.watchlist.addModal.more')
+                  }}
+                  <AppIcon name="chevron-down" size="xs" class="ml-1" />
+                </button>
+              </template>
+            </AppSelect>
+          </div>
+        </template>
+
+        <!-- Fixed height so the modal never resizes between tabs, categories or
+             loading/loaded; it takes over the tabs + chips space while
+             searching. Only this area scrolls. -->
+        <div
+          class="mew-scrollbar mt-6 flex flex-col gap-0.5 overflow-y-auto"
+          :class="isSearching ? 'h-[458px]' : 'h-[348px]'"
+        >
           <div
             v-if="isLoading"
             data-test="picker-loading"
@@ -96,7 +252,19 @@ const { items, isLoading } = useAssetPicker(tab, query)
             v-else
             :key="item.key"
             :item="item"
+            :selected="isSelected(item)"
+            @toggle="toggle(item)"
           />
+        </div>
+
+        <div class="py-6">
+          <AppBaseButton
+            class="w-full"
+            :disabled="!flipped.size"
+            @click="confirm"
+          >
+            {{ confirmLabel }}
+          </AppBaseButton>
         </div>
       </div>
     </template>
