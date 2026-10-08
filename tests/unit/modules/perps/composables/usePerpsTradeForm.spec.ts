@@ -158,6 +158,8 @@ import {
   usePerpsTradeForm,
   triggerOrderPriceErrorKey,
 } from '@/modules/perps/composables/usePerpsTradeForm'
+import { PerpsEventSource } from '@/analytics/events'
+import { ROUTES_MAIN, PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 
 describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
   beforeEach(() => {
@@ -458,19 +460,24 @@ describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
   })
 
   it('navigates to the perps page and starts the login when outside perps', () => {
-    routerMock.route.matched = [{ name: 'Home' }]
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
     const form = usePerpsTradeForm()
-    form.signIn('trade')
-    expect(routerMock.push).toHaveBeenCalledWith({ name: 'Perps' })
-    expect(loginMock).toHaveBeenCalledWith('trade')
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: ROUTES_MAIN.PERPS.NAME,
+    })
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
   })
 
   it('stays on the market drawer (a perps child route) and only logs in', () => {
-    routerMock.route.matched = [{ name: 'Perps' }, { name: 'perps-perp-info' }]
+    routerMock.route.matched = [
+      { name: ROUTES_MAIN.PERPS.NAME },
+      { name: PERP_INFO_ROUTE_NAME },
+    ]
     const form = usePerpsTradeForm()
-    form.signIn('trade')
+    form.signIn(PerpsEventSource.TRADE)
     expect(routerMock.push).not.toHaveBeenCalled()
-    expect(loginMock).toHaveBeenCalledWith('trade')
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
   })
 })
 
