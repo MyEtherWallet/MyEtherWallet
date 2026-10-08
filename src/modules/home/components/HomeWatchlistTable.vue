@@ -161,11 +161,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new-mobile"
           :disabled="isWatchlistFull"
-          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-default pl-4 pr-3 text-label-sm text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <AppIcon name="plus" variant="filled" size="xs" />
+          <AppIcon name="plus-small" size="xs" />
         </button>
       </AppTooltip>
     </div>
@@ -233,11 +233,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new"
           :disabled="isWatchlistFull"
-          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-default pl-4 pr-3 text-label-sm text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <AppIcon name="plus" variant="filled" size="xs" />
+          <AppIcon name="plus-small" size="xs" />
         </button>
       </AppTooltip>
     </div>
