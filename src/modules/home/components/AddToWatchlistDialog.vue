@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppSelect from '@/components/AppSelect.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -73,12 +73,14 @@ const moreOptions = computed(() =>
   tabCategories.value.filter(c => !FEATURED[tab.value].includes(c.value)),
 )
 // The More chip turns into the picked category (Figma); unset otherwise.
-const moreSelected = computed<AppSelectOption | undefined>({
-  get: () => moreOptions.value.find(o => o.value === category.value),
-  set: option => {
-    if (option) category.value = option.value
-  },
-})
+const moreSelected = computed(() =>
+  moreOptions.value.find(o => o.value === category.value),
+)
+const isMoreOpen = ref(false)
+const pickMore = (value: string, closeMenu: () => void) => {
+  category.value = value
+  closeMenu()
+}
 
 // --- Selection --------------------------------------------------------------
 // Picks are a draft over the stored watchlist: already-listed assets start
@@ -189,28 +191,28 @@ const confirm = () => {
             >
               {{ option.label }}
             </button>
-            <AppSelect
-              v-model:selected="moreSelected"
-              :options="moreOptions"
-              position="left-0"
-              :max-visible-items="5"
+            <!-- Teleported so the dialog's scroll box can't clip the menu. -->
+            <AppPopUpMenu
+              location="left"
+              teleport
+              @update:open="isMoreOpen = $event"
             >
-              <template #select-button="{ toggleSelect, openSelect }">
+              <template #menu-button="{ toggleMenu }">
                 <button
                   type="button"
                   data-test="picker-more"
                   :aria-pressed="!!moreSelected"
-                  :aria-expanded="openSelect"
+                  :aria-expanded="isMoreOpen"
                   class="flex h-8 items-center rounded-full border pl-3 pr-2 text-label-sm text-black transition-colors hover:bg-background-default-hover"
                   :class="[
                     moreSelected
                       ? 'border-border-selected'
                       : 'border-transparent',
-                    openSelect
+                    isMoreOpen
                       ? 'bg-background-default-pressed'
                       : 'bg-background-default',
                   ]"
-                  @click="toggleSelect"
+                  @click="toggleMenu"
                 >
                   {{
                     moreSelected?.label ??
@@ -219,52 +221,120 @@ const confirm = () => {
                   <AppIcon name="chevron-down" size="xs" class="ml-1" />
                 </button>
               </template>
-            </AppSelect>
+              <template #menu-content="{ toggleMenu }">
+                <div
+                  role="listbox"
+                  data-test="picker-more-menu"
+                  :aria-label="t('homePage.hero.watchlist.addModal.categories')"
+                  class="mew-scrollbar flex max-h-64 w-[300px] max-w-full flex-col gap-1 overflow-y-auto p-1.5"
+                >
+                  <button
+                    v-for="option in moreOptions"
+                    :key="option.value"
+                    type="button"
+                    role="option"
+                    :aria-selected="category === option.value"
+                    class="flex h-12 shrink-0 items-center rounded-2xl px-4 text-left text-s-14 font-medium transition-colors hover:bg-background-default hover:text-text-brand"
+                    :class="
+                      category === option.value
+                        ? 'bg-background-default text-text-brand'
+                        : 'text-text-subtle'
+                    "
+                    @click="pickMore(option.value, toggleMenu)"
+                  >
+                    {{ option.label }}
+                    <AppIcon
+                      v-if="category === option.value"
+                      name="check"
+                      class="ml-auto"
+                    />
+                  </button>
+                </div>
+              </template>
+            </AppPopUpMenu>
           </div>
         </template>
 
-        <!-- Fixed height so the modal never resizes between tabs, categories or
-             loading/loaded; it takes over the tabs + chips space while
-             searching. Only this area scrolls. -->
-        <div
-          class="mew-scrollbar mt-6 flex flex-col gap-0.5 overflow-y-auto"
-          :class="isSearching ? 'h-[458px]' : 'h-[348px]'"
-        >
+        <!-- Edgeless list: rows scroll up under the chips/search and down
+             behind the footer button, softened by white fades (same idea as
+             AppSlideGroup, vertical). Fixed height so the modal never resizes
+             between tabs, categories or loading; it takes over the tabs + chips
+             space while searching. pt/pb keep the first/last row clear of the
+             fade and the button. -->
+        <div class="relative">
           <div
-            v-if="isLoading"
-            data-test="picker-loading"
-            class="flex h-full items-center justify-center"
+            class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-6 bg-gradient-to-b from-white to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            class="mew-scrollbar flex flex-col gap-0.5 overflow-y-auto pb-24 pt-6"
+            :class="isSearching ? 'h-[578px]' : 'h-[468px]'"
           >
-            <span
-              class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
-              aria-hidden="true"
+            <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
+            <template v-if="isLoading">
+              <div
+                v-for="n in 6"
+                :key="n"
+                data-test="picker-skeleton"
+                class="flex h-[68px] shrink-0 items-center gap-3 p-3"
+                aria-hidden="true"
+              >
+                <div class="flex w-7 shrink-0 justify-center">
+                  <div
+                    class="size-4 animate-pulse rounded-full bg-background-skeleton"
+                  />
+                </div>
+                <div
+                  class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
+                />
+                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                  <div
+                    class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+                  />
+                  <div
+                    class="h-3.5 w-24 animate-pulse rounded bg-background-skeleton"
+                  />
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                  <div
+                    class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+                  />
+                  <div
+                    class="h-3.5 w-10 animate-pulse rounded bg-background-skeleton"
+                  />
+                </div>
+              </div>
+            </template>
+            <p
+              v-else-if="!items.length"
+              data-test="picker-empty"
+              class="py-16 text-center text-s-14 text-text-subtle"
+            >
+              {{ t('homePage.hero.watchlist.addModal.empty') }}
+            </p>
+            <AssetPickerRow
+              v-for="item in items"
+              v-else
+              :key="item.key"
+              :item="item"
+              :selected="isSelected(item)"
+              @toggle="toggle(item)"
             />
           </div>
-          <p
-            v-else-if="!items.length"
-            data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-text-subtle"
-          >
-            {{ t('homePage.hero.watchlist.addModal.empty') }}
-          </p>
-          <AssetPickerRow
-            v-for="item in items"
-            v-else
-            :key="item.key"
-            :item="item"
-            :selected="isSelected(item)"
-            @toggle="toggle(item)"
-          />
-        </div>
 
-        <div class="py-6">
-          <AppBaseButton
-            class="w-full"
-            :disabled="!flipped.size"
-            @click="confirm"
+          <!-- Footer floats over the list's bottom edge on a white fade. The
+               disabled state keeps the brand fill, only dimmed (Figma). -->
+          <div
+            class="absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-white from-75% to-transparent pb-6 pt-6"
           >
-            {{ confirmLabel }}
-          </AppBaseButton>
+            <AppBaseButton
+              class="w-full disabled:!bg-background-brand disabled:opacity-40"
+              :disabled="!flipped.size"
+              @click="confirm"
+            >
+              {{ confirmLabel }}
+            </AppBaseButton>
+          </div>
         </div>
       </div>
     </template>

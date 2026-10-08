@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref, type Ref } from 'vue'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises, enableAutoUnmount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import { setActivePinia, createPinia } from 'pinia'
 import type { AssetPickerItem } from '@/modules/home/composables/useAssetPicker'
@@ -111,6 +111,8 @@ const chips = (w: ReturnType<typeof mountDialog>) =>
 const confirm = (w: ReturnType<typeof mountDialog>) =>
   w.get('[data-test="picker-confirm"]')
 
+enableAutoUnmount(afterEach)
+
 describe('AddToWatchlistDialog', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -165,8 +167,14 @@ describe('AddToWatchlistDialog', () => {
   it('picks a category from "More" and shows it on the More chip', async () => {
     const w = mountDialog()
     await w.get('[data-test="picker-more"]').trigger('click')
-    const etf = w.findAll('[role="option"]').find(o => o.text() === 'ETF')!
-    await etf.trigger('click')
+    // The menu is teleported to <body> so the dialog's scroll box can't clip it.
+    const menu = document.body.querySelector('[data-test="picker-more-menu"]')!
+    expect(w.element.contains(menu)).toBe(false)
+    const etf = [...menu.querySelectorAll<HTMLElement>('[role="option"]')].find(
+      o => o.textContent?.trim() === 'ETF',
+    )!
+    etf.click()
+    await flushPromises()
     expect(pickerArgs.category.value).toBe('ETF')
     const more = w.get('[data-test="picker-more"]')
     expect(more.text()).toBe('ETF')
@@ -183,11 +191,11 @@ describe('AddToWatchlistDialog', () => {
     expect(w.find('[data-test="picker-more"]').exists()).toBe(false)
   })
 
-  it('shows the loading spinner and the empty state', () => {
+  it('shows skeleton rows while loading, and the empty state after', () => {
     isLoading.value = true
-    expect(mountDialog().find('[data-test="picker-loading"]').exists()).toBe(
-      true,
-    )
+    const loading = mountDialog()
+    expect(loading.findAll('[data-test="picker-skeleton"]').length).toBe(6)
+    expect(loading.find('[data-test="asset-picker-row"]').exists()).toBe(false)
     isLoading.value = false
     expect(mountDialog().find('[data-test="picker-empty"]').exists()).toBe(true)
   })
