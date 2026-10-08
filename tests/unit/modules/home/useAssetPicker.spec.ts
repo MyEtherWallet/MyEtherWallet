@@ -177,4 +177,18 @@ describe('useAssetPicker', () => {
       'crypto-ethereum',
     ])
   })
+
+  it('reloads the tab right away when the search is cleared', async () => {
+    const { q } = setup('stocks')
+    q.value = 'a'
+    await nextTick()
+    vi.advanceTimersByTime(300)
+    await flushPromises()
+    calls.length = 0
+    q.value = ''
+    await nextTick()
+    await flushPromises()
+    expect(calls).toHaveLength(1)
+    expect(calls[0]).toContain('/v1/web/pages/stocks/table')
+  })
 })

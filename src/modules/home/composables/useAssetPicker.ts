@@ -173,9 +173,11 @@ export function useAssetPicker(
     }
   }
 
-  // Tab / category changes load immediately; query typing is debounced.
+  // Tab / category changes and clearing the search load immediately; typing is
+  // debounced.
+  const debouncedLoad = useDebounceFn(load, 300)
   watch([tab, category], load, { immediate: true })
-  watch(query, useDebounceFn(load, 300))
+  watch(query, q => (q.trim() ? debouncedLoad() : load()))
 
   return { items, isLoading }
 }

@@ -55,6 +55,7 @@ vi.mock('@/modules/home/components/AssetPickerRow.vue', () => ({
 
 import AddToWatchlistDialog from '@/modules/home/components/AddToWatchlistDialog.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useToastStore } from '@/stores/toastStore'
 
 const i18n = createI18n({
   legacy: false,
@@ -119,7 +120,7 @@ describe('AddToWatchlistDialog', () => {
   })
 
   it('shows the Stocks and Crypto tabs with Stocks selected', () => {
-    const tabs = mountDialog().findAll('[data-test="picker-tab"]')
+    const tabs = mountDialog().findAll('[data-test="tab-bar-item"]')
     expect(tabs.map(t => t.text())).toEqual([
       'homePage.hero.watchlist.addModal.tabs.stocks',
       'homePage.hero.watchlist.addModal.tabs.crypto',
@@ -151,7 +152,7 @@ describe('AddToWatchlistDialog', () => {
   it('swaps the categories and resets to "all" when the tab changes', async () => {
     const w = mountDialog()
     await chips(w)[1].trigger('click')
-    await w.findAll('[data-test="picker-tab"]')[1].trigger('click')
+    await w.findAll('[data-test="tab-bar-item"]')[1].trigger('click')
     expect(pickerArgs.tab.value).toBe('crypto')
     expect(pickerArgs.category.value).toBe('all')
     expect(chips(w).map(c => c.text())).toEqual([
@@ -177,7 +178,7 @@ describe('AddToWatchlistDialog', () => {
     const w = mountDialog()
     await w.get('[data-test="search"]').setValue('app')
     expect(pickerArgs.query.value).toBe('app')
-    expect(w.find('[data-test="picker-tab"]').exists()).toBe(false)
+    expect(w.find('[data-test="tab-bar-item"]').exists()).toBe(false)
     expect(w.find('[data-test="picker-chip"]').exists()).toBe(false)
     expect(w.find('[data-test="picker-more"]').exists()).toBe(false)
   })
@@ -217,11 +218,47 @@ describe('AddToWatchlistDialog', () => {
     items.value = [ETH]
     const w = mountDialog()
     await w.get('[data-test="asset-picker-row"]').trigger('click')
-    await w.findAll('[data-test="picker-tab"]')[1].trigger('click')
+    await w.findAll('[data-test="tab-bar-item"]')[1].trigger('click')
     expect(confirm(w).text()).toBe('Add 1 asset')
     expect(
       w.get('[data-test="asset-picker-row"]').attributes('aria-pressed'),
     ).toBe('true')
+  })
+
+  it('keeps the category when the active tab is clicked again', async () => {
+    const w = mountDialog()
+    await chips(w)[1].trigger('click')
+    await w.findAll('[data-test="tab-bar-item"]')[0].trigger('click')
+    expect(pickerArgs.category.value).toBe('TECHNOLOGY')
+  })
+
+  it('blocks picks past the per-bucket cap and warns', async () => {
+    const store = useWatchlistStore()
+    store.watchListedStocks = Array.from({ length: 25 }, (_, i) => `S${i}`)
+    const listed: AssetPickerItem = {
+      ...AAPL,
+      key: 'stock-S0',
+      symbol: 'S0',
+      watchlistId: 'S0',
+    }
+    items.value = [AAPL, listed]
+    const w = mountDialog()
+    const rows = w.findAll('[data-test="asset-picker-row"]')
+
+    await rows[0].trigger('click')
+    expect(rows[0].attributes('aria-pressed')).toBe('false')
+    expect(confirm(w).attributes('disabled')).toBeDefined()
+    expect(useToastStore().messages).toHaveLength(1)
+
+    // Un-picking a listed stock frees the slot.
+    await rows[1].trigger('click')
+    await rows[0].trigger('click')
+    expect(rows[0].attributes('aria-pressed')).toBe('true')
+    // Crypto has its own bucket.
+    items.value = [ETH]
+    await flushPromises()
+    await w.get('[data-test="asset-picker-row"]').trigger('click')
+    expect(confirm(w).text()).toBe('Add 2 assets')
   })
 
   it('preselects watchlisted assets and saves the changes on confirm', async () => {

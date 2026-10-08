@@ -5,11 +5,12 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppTabBar from '@/components/AppTabBar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AssetPickerRow from './AssetPickerRow.vue'
 import { sectors } from '@/modules/home/sectors'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import type { AppSelectOption } from '@/types/components/appSelect'
 import {
   useAssetPicker,
@@ -43,12 +44,19 @@ const { items, isLoading } = useAssetPicker(tab, category, query)
 // Typing searches every market, so tabs and chips step aside.
 const isSearching = computed(() => !!query.value.trim())
 
-// Categories differ per market, so a tab switch starts from "All" again (set in
-// the same tick so the picker fetches once).
-const selectTab = (id: AssetPickerTab) => {
-  tab.value = id
-  category.value = 'all'
-}
+// AppTabBar is index-based. Categories differ per market, so a tab switch
+// starts from "All" again (set in the same tick so the picker fetches once).
+const tabIndex = computed({
+  get: () => TABS.indexOf(tab.value),
+  set: index => {
+    if (TABS[index] === tab.value) return
+    tab.value = TABS[index]
+    category.value = 'all'
+  },
+})
+const tabLabels = computed(() =>
+  TABS.map(id => t(`homePage.hero.watchlist.addModal.tabs.${id}`)),
+)
 
 const tabCategories = computed<AppSelectOption[]>(() =>
   sectors
@@ -64,7 +72,6 @@ const chipOptions = computed<AppSelectOption[]>(() => [
 const moreOptions = computed(() =>
   tabCategories.value.filter(c => !FEATURED[tab.value].includes(c.value)),
 )
-const isMoreOpen = ref(false)
 // The More chip turns into the picked category (Figma); unset otherwise.
 const moreSelected = computed<AppSelectOption | undefined>({
   get: () => moreOptions.value.find(o => o.value === category.value),
@@ -79,19 +86,34 @@ const moreSelected = computed<AppSelectOption | undefined>({
 // across tabs, categories and searches). Confirm applies them to the store.
 const watchlistStore = useWatchlistStore()
 const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const { setWatchlistItem, notifyWatchlistFull } = watchlistStore
 
+const bucket = (type: AssetPickerItem['type']) =>
+  (type === 'stock' ? watchListedStocks : watchListedTokens).value
 const isListed = (item: AssetPickerItem) =>
-  (item.type === 'stock'
-    ? watchListedStocks
-    : watchListedTokens
-  ).value.includes(item.watchlistId)
+  bucket(item.type).includes(item.watchlistId)
 
 const flipped = reactive(new Map<string, AssetPickerItem>())
 const isSelected = (item: AssetPickerItem) =>
   isListed(item) !== flipped.has(item.key)
+
+// Bucket size once the draft is applied: the store caps each bucket, so the
+// draft can't pick past it either.
+const draftSize = (type: AssetPickerItem['type']) =>
+  [...flipped.values()]
+    .filter(item => item.type === type)
+    .reduce((n, item) => n + (isListed(item) ? -1 : 1), bucket(type).length)
+
 const toggle = (item: AssetPickerItem) => {
-  if (flipped.has(item.key)) flipped.delete(item.key)
-  else flipped.set(item.key, item)
+  if (flipped.has(item.key)) {
+    flipped.delete(item.key)
+    return
+  }
+  if (!isListed(item) && draftSize(item.type) >= WATCHLIST_MAX) {
+    notifyWatchlistFull()
+    return
+  }
+  flipped.set(item.key, item)
 }
 
 const addCount = computed(
@@ -115,7 +137,7 @@ const confirm = () => {
     ...changes.filter(item => !isListed(item)),
   ]
   for (const item of ordered)
-    watchlistStore.setWatchlistItem(item.watchlistId, item.type === 'stock')
+    setWatchlistItem(item.watchlistId, item.type === 'stock')
   isOpen.value = false
 }
 </script>
@@ -144,28 +166,7 @@ const confirm = () => {
         />
 
         <template v-if="!isSearching">
-          <div
-            class="mt-6 flex gap-3 border-b border-border-default"
-            role="tablist"
-          >
-            <button
-              v-for="id in TABS"
-              :key="id"
-              type="button"
-              role="tab"
-              data-test="picker-tab"
-              :aria-selected="tab === id"
-              class="-mb-px border-b px-2 pb-2 text-label-base transition-colors"
-              :class="
-                tab === id
-                  ? 'border-border-selected text-black'
-                  : 'border-transparent text-text-muted'
-              "
-              @click="selectTab(id)"
-            >
-              {{ t(`homePage.hero.watchlist.addModal.tabs.${id}`) }}
-            </button>
-          </div>
+          <AppTabBar v-model="tabIndex" :tabs="tabLabels" class="mt-6" />
 
           <div
             role="group"
@@ -190,23 +191,22 @@ const confirm = () => {
             </button>
             <AppSelect
               v-model:selected="moreSelected"
-              v-model:open="isMoreOpen"
               :options="moreOptions"
               position="left-0"
               :max-visible-items="5"
             >
-              <template #select-button="{ toggleSelect }">
+              <template #select-button="{ toggleSelect, openSelect }">
                 <button
                   type="button"
                   data-test="picker-more"
                   :aria-pressed="!!moreSelected"
-                  :aria-expanded="isMoreOpen"
+                  :aria-expanded="openSelect"
                   class="flex h-8 items-center rounded-full border pl-3 pr-2 text-label-sm text-black transition-colors hover:bg-background-default-hover"
                   :class="[
                     moreSelected
                       ? 'border-border-selected'
                       : 'border-transparent',
-                    isMoreOpen
+                    openSelect
                       ? 'bg-background-default-pressed'
                       : 'bg-background-default',
                   ]"

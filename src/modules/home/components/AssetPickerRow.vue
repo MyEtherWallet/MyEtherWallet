@@ -51,7 +51,7 @@ const changeText = computed(() => {
       no-shadow
       class="shrink-0"
     />
-    <div class="min-w-0 flex-1">
+    <span class="min-w-0 flex-1">
       <AppTokenSymbol
         :symbol="item.symbol"
         :is-stock="item.type === 'stock'"
@@ -60,8 +60,8 @@ const changeText = computed(() => {
       <span class="block truncate text-text-sm text-text-subtle">
         {{ item.name }}
       </span>
-    </div>
-    <div class="flex shrink-0 flex-col items-end">
+    </span>
+    <span class="flex shrink-0 flex-col items-end">
       <span
         v-if="item.price != null"
         data-test="picker-price"
@@ -77,6 +77,6 @@ const changeText = computed(() => {
       >
         {{ changeText }}
       </span>
-    </div>
+    </span>
   </button>
 </template>

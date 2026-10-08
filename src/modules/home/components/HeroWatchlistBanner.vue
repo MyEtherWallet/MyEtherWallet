@@ -10,7 +10,7 @@ const { t } = useI18n()
 
 defineEmits<{
   // The parent opens the add-to-watchlist modal.
-  begin: []
+  add: []
 }>()
 
 // Decorative sample stock logos (SPOT / IBM / NKE / LLY), exported from Figma.
@@ -28,9 +28,9 @@ defineEmits<{
     tabindex="0"
     :aria-label="t('homePage.hero.watchlist.title')"
     class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-background-default-hover"
-    @click="$emit('begin')"
-    @keydown.enter="$emit('begin')"
-    @keydown.space.prevent="$emit('begin')"
+    @click="$emit('add')"
+    @keydown.enter="$emit('add')"
+    @keydown.space.prevent="$emit('add')"
   >
     <div class="flex min-w-0 flex-1 items-center gap-6">
       <!-- Overlapping stock logos (SPOT clipped at the left, under the fade) -->
@@ -75,7 +75,7 @@ defineEmits<{
     </div>
 
     <span
-      data-test="hero-watchlist-begin"
+      data-test="hero-watchlist-cta"
       class="flex h-12 shrink-0 items-center gap-2 rounded-3xl pl-4 pr-6 text-s-16 font-semibold tracking-[-0.32px] text-black"
     >
       <AppIcon name="plus" />

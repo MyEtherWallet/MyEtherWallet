@@ -84,9 +84,9 @@ vi.mock('@/modules/rwa_rewards/RwaHomeBanner.vue', () => ({
 }))
 vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
   default: {
-    emits: ['begin'],
+    emits: ['add'],
     template:
-      '<button data-test="hero-watchlist-banner" @click="$emit(\'begin\')" />',
+      '<button data-test="hero-watchlist-banner" @click="$emit(\'add\')" />',
   },
 }))
 vi.mock('@/modules/home/components/HomeWatchlistTable.vue', () => ({
@@ -186,7 +186,7 @@ describe('HomeHero (MEW-2094)', () => {
     expect(w.find('[data-test="hero-watchlist-banner"]').exists()).toBe(false)
   })
 
-  it('opens the add-to-watchlist modal when the banner emits begin', async () => {
+  it('opens the add-to-watchlist modal when the banner emits add', async () => {
     const w = mountHero()
     expect(w.find('[data-test="add-dialog"]').exists()).toBe(false)
     await w.find('[data-test="hero-watchlist-banner"]').trigger('click')

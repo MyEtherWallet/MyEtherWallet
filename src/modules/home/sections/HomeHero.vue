@@ -142,7 +142,7 @@ onMounted(fetchTrending)
         />
       </div>
     </div>
-    <HeroWatchlistBanner v-if="!showWatchlistTable" @begin="isAddOpen = true" />
+    <HeroWatchlistBanner v-if="!showWatchlistTable" @add="isAddOpen = true" />
     <HomeWatchlistTable v-else :rows="watchlistRows" />
     <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
   </div>
