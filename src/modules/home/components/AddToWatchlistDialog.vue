@@ -226,7 +226,7 @@ const confirm = () => {
                   role="listbox"
                   data-test="picker-more-menu"
                   :aria-label="t('homePage.hero.watchlist.addModal.categories')"
-                  class="mew-scrollbar flex max-h-64 w-[300px] max-w-full flex-col gap-1 overflow-y-auto p-1.5"
+                  class="mew-scrollbar flex max-h-64 w-48 max-w-full flex-col gap-1 overflow-y-auto p-1.5"
                 >
                   <button
                     v-for="option in moreOptions"
