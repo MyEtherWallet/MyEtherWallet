@@ -30,8 +30,9 @@ const configs = {
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
   RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,
-  /** Rewards marketing page: terms & conditions and the full rewards list. */
+  /** Rewards marketing page: the full rewards list. */
   REWARDS_PAGE_URL: 'https://myetherwallet.com/rewards',
+  TERMS_OF_SERVICE_URL: 'https://www.myetherwallet.com/terms-of-service',
   MEW_MOBILE_DOWNLOAD_URL: 'https://download.mewwallet.com',
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
