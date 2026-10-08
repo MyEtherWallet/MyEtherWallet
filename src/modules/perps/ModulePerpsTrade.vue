@@ -791,6 +791,7 @@
                at the top of the panel says why the button is dead. -->
           <app-base-button
             class="w-full"
+            :is-loading="isAuthenticating"
             :disabled="isServiceUnavailable"
             @click="signIn(PerpsEventSource.TRADE)"
           >
@@ -957,6 +958,7 @@ import {
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const {
+  isAuthenticating,
   showSigningPrompt,
   signingMessage,
   isHardwareWalletSigning,
