@@ -73,6 +73,11 @@ describe('AssetPickerRow', () => {
     expect(downChange.classes()).toContain('text-text-error')
   })
 
+  it('shows a flat 24h change as an unsigned 0%', () => {
+    const w = mountRow({ item: { ...item, change: 0 } })
+    expect(w.get('[data-test="picker-change"]').text()).toBe('0%')
+  })
+
   it('omits price and change when the API has none', () => {
     const w = mountRow({
       item: { ...item, price: undefined, change: undefined },

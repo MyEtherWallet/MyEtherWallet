@@ -16,6 +16,8 @@ const { formatFiat } = useCurrency()
 const changeText = computed(() => {
   const { change } = props.item
   if (change == null) return ''
+  // formatPercentageValue returns a bare '0' (no %) for zero.
+  if (change === 0) return '0%'
   return `${change < 0 ? '-' : '+'}${formatPercentageValue(Math.abs(change)).value}`
 })
 </script>
