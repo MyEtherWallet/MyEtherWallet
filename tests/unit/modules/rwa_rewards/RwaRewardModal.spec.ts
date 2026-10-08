@@ -364,7 +364,9 @@ describe('RwaRewardModal', () => {
       expect(flat(modal)).toContain('Ends in')
       const terms = modal.get('[data-test="rwa-modal-terms"]')
       expect(terms.text()).toBe('Terms & conditions')
-      expect(terms.attributes('href')).toBe('https://myetherwallet.com/rewards')
+      expect(terms.attributes('href')).toBe(
+        'https://www.myetherwallet.com/terms-of-service',
+      )
       expect(terms.attributes('target')).toBe('_blank')
     })
 
