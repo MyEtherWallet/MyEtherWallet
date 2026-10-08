@@ -15,8 +15,8 @@ const i18n = createI18n({
         hero: {
           watchlist: {
             title: 'Build your watchlist',
-            subtitle: 'Find assets to follow based on your interests',
-            begin: "Let's begin",
+            subtitle: 'Find and follow assets you’d like to keep an eye on',
+            addAssets: 'Add assets',
           },
         },
       },
@@ -27,12 +27,14 @@ const i18n = createI18n({
 const mountBanner = () =>
   mount(HeroWatchlistBanner, { global: { plugins: [i18n] } })
 
-describe('HeroWatchlistBanner (MEW-2094 watchlist onboarding)', () => {
-  it('renders the title, subtitle and begin CTA', () => {
+describe('HeroWatchlistBanner', () => {
+  it('renders the title, subtitle and "Add assets" CTA', () => {
     const w = mountBanner()
     expect(w.text()).toContain('Build your watchlist')
-    expect(w.text()).toContain('Find assets to follow')
-    expect(w.find('[data-test="hero-watchlist-begin"]').exists()).toBe(true)
+    expect(w.text()).toContain('Find and follow assets')
+    expect(w.get('[data-test="hero-watchlist-begin"]').text()).toBe(
+      'Add assets',
+    )
   })
 
   it('renders four decorative stock avatars', () => {

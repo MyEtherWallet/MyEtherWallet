@@ -30,8 +30,8 @@
       },
       "watchlist": {
         "title": "Arma tu lista de seguimiento",
-        "subtitle": "Encuentra activos para seguir según tus intereses",
-        "begin": "Empecemos",
+        "subtitle": "Encuentra y sigue los activos que quieras tener a la vista",
+        "addAssets": "Agregar activos",
         "table": {
           "title": "Lista de seguimiento",
           "moreActions": "Más acciones",

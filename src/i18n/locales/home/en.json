@@ -30,8 +30,8 @@
       },
       "watchlist": {
         "title": "Build your watchlist",
-        "subtitle": "Find assets to follow based on your interests",
-        "begin": "Let's begin",
+        "subtitle": "Find and follow assets you’d like to keep an eye on",
+        "addAssets": "Add assets",
         "table": {
           "title": "Watchlist",
           "moreActions": "More actions",

@@ -47,21 +47,21 @@ defineEmits<{
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
         <img
           :src="stockNke"
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
         <img
           :src="stockLly"
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
@@ -76,10 +76,10 @@ defineEmits<{
 
     <span
       data-test="hero-watchlist-begin"
-      class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
+      class="flex h-12 shrink-0 items-center gap-2 rounded-3xl pl-4 pr-6 text-s-16 font-semibold tracking-[-0.32px] text-black"
     >
-      {{ t('homePage.hero.watchlist.begin') }}
-      <AppIcon name="chevron-right" variant="filled" />
+      <AppIcon name="plus" />
+      {{ t('homePage.hero.watchlist.addAssets') }}
     </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
