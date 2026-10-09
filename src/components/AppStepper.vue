@@ -46,9 +46,10 @@
             >
           </div>
         </div>
-        <hr
+        <app-divider
           v-if="index !== steps.length - 1"
-          class="h-px bg-border-strong border-0 w-full"
+          variant="alternative"
+          class="-my-1"
         />
       </div>
     </div>
@@ -59,8 +60,9 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps({
   steps: {
     type: Array as () => string[],

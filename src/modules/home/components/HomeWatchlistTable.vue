@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
@@ -154,7 +154,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
             : ''
         "
-        position="bottom-left"
+        placement="bottom"
         class="shrink-0 min-[780px]:hidden"
       >
         <button
@@ -226,7 +226,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
             : ''
         "
-        position="bottom-left"
+        placement="bottom"
         class="hidden shrink-0 min-[780px]:block"
       >
         <button

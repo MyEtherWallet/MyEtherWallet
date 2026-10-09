@@ -83,8 +83,8 @@ import { analytics, GlobalSearchEvent } from '@/analytics'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchSection from './GlobalSearchSection.vue'
 import RecentlyViewedChips from './RecentlyViewedChips.vue'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const props = withDefaults(defineProps<{ isCompact?: boolean }>(), {
   isCompact: false,
 })

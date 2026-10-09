@@ -109,9 +109,7 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
-                  />
+                  <app-divider class="mb-1" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
@@ -149,7 +147,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-background-default-hover w-full mb-2"></div>
+          <app-divider class="-mt-1 mb-1" />
         </div>
 
         <!-- Stablecoins & Recently searched, pinned to the top of the results -->
@@ -231,7 +229,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-background-default-hover w-full mt-3"></div>
+          <app-divider class="mt-2 -mb-1" />
         </div>
 
         <div v-if="enabledResults.length" class="flex flex-col gap-1">
@@ -426,7 +424,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
@@ -444,6 +442,7 @@ import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,

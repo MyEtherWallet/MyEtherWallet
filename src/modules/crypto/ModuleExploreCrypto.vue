@@ -378,7 +378,7 @@
                               : $t('common.add_to_watchlist')
                           }}</span>
                         </button>
-                        <hr
+                        <app-divider
                           v-if="
                             isBuyableOnCompatibleChain(token.coinId) ||
                             token.ondo !== null ||
@@ -386,7 +386,7 @@
                             token.chains.length > 0 ||
                             getTokenIsCurrentNative(token)
                           "
-                          class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                          class="my-1 xs:hidden"
                         />
 
                         <ul>
@@ -566,7 +566,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -603,8 +603,9 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 

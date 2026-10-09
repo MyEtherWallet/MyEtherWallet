@@ -133,8 +133,7 @@
               <app-tooltip
                 v-if="pauseReasonOf(asset)"
                 :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
-                theme="dark"
-                position="right"
+                placement="right"
                 class="flex-none"
               >
                 <span
@@ -200,7 +199,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'

@@ -86,8 +86,8 @@ import AppDialog from '@/components/AppDialog.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { truncateAddress } from '@/utils/filters'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const accessStore = useAccessStore()
 const { addressSavedInfo: info } = storeToRefs(accessStore)
 

@@ -1,188 +1,21 @@
 <template>
   <div class="relative">
-    <div
+    <app-action-bar
+      ref="actionBar"
+      :items="actionItems"
+      :active-id="isOpenSideMenu ? walletPanel : null"
+      :expanded="isOpenSideMenu"
       :class="[
-        hasShadow && !isOpenSideMenu
-          ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
-          : '!border-border-default',
-        'border-white',
-        '  w-[60px] xs:w-20 bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        {
+          'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]':
+            hasShadow && !isOpenSideMenu,
+        },
+        'fixed right-0 top-[69px] sm:top-[77px] z-[50] h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
-    >
-      <div>
-        <div class="w-full flex flex-col items-center mb-1">
-          <!-- Actions -->
-          <div class="mt-1 px-1 w-full">
-            <button
-              @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
-              class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
-            >
-              <AppIcon
-                name="chevron-double-left"
-                size="s"
-                v-if="!isOpenSideMenu"
-              />
-              <AppIcon name="chevron-double-right" size="s" v-else />
-            </button>
-            <!-- Trade button -->
-            <button
-              ref="tradeBtnRef"
-              @click="openPanel('trade')"
-              :class="[
-                walletPanel === 'trade' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-trade
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.trade') }}
-              </p>
-            </button>
-            <!-- Swap button -->
-            <button
-              @click="openPanel('swap')"
-              :class="[
-                walletPanel === 'swap' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12  flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-swap
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.swap') }}
-              </p>
-            </button>
-            <!-- Perps button -->
-            <button
-              @click="openPanel('perps')"
-              :class="[
-                walletPanel === 'perps' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-perps
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.perps') }}
-              </p>
-            </button>
-            <!-- Bridge button -->
-            <button
-              @click="openPanel('bridge')"
-              :class="[
-                walletPanel === 'bridge' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-bridge
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.bridge') }}
-              </p>
-            </button>
-            <!-- Deposit button -->
-            <button
-              v-if="isWalletConnected"
-              :class="[
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center hoverNoBG w-full',
-              ]"
-              @click="openDepositDialog = true"
-            >
-              <AppIcon
-                name="qr-code"
-                :class="['mb-1 text-text-brand xs:size-7']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('deposit') }}
-              </p>
-            </button>
-            <!-- Send button -->
-            <button
-              @click="openPanel('send')"
-              :class="[
-                walletPanel === 'send' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-send
-                :class="['mb-1 mt-1 w-5 h-5 xs:w-6 xs:h-6 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.send') }}
-              </p>
-            </button>
-            <!-- Buy/Sell button -->
-            <button
-              @click="openPanel('purchase')"
-              :class="[
-                walletPanel === 'purchase' && isOpenSideMenu
-                  ? 'bg-background-brand-subtle'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-            >
-              <icon-buy
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
-              />
-              <p
-                :class="[
-                  actionTextSizeClass,
-                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('common.buy_sell') }}
-              </p>
-            </button>
-          </div>
-        </div>
-      </div>
-      <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
-    </div>
+      @select="onSelect"
+      @toggle="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
+    />
+    <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
     <!-- Modules -->
     <transition
       enter-from-class="opacity-0 translate-x-full"
@@ -240,22 +73,19 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore, type WalletPanel } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import IconSend from '@/assets/icons/core_menu/icon-send.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppActionBar from '@/components/action_bar/AppActionBar.vue'
+import type { ActionBarItem } from '@/components/action_bar/types'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -269,15 +99,8 @@ import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const walletMenu = useWalletMenuStore()
-
-// Spanish labels are longer; shrink the side-menu action button text so they fit
-const actionTextSizeClass = computed(() =>
-  locale.value === 'es'
-    ? 'text-[7px] xs:text-s-8 text-wrap'
-    : 'text-s-9 xs:text-s-11',
-)
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
@@ -337,8 +160,35 @@ const openPanel = (panel: WalletPanel) => {
   })
 }
 
-const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
+
+// Deposit opens a dialog, not a side-menu panel, so it is never active.
+type ActionId = WalletPanel | 'deposit'
+const actionItems = computed(() => {
+  const items: ActionBarItem<ActionId>[] = [
+    { id: 'trade', icon: 'chart-bar', label: t('common.trade') },
+    { id: 'swap', icon: 'arrow-path-rounded-square', label: t('common.swap') },
+    { id: 'perps', icon: 'perpetuals', label: t('common.perps') },
+    { id: 'bridge', icon: 'arrow-uturn-right', label: t('common.bridge') },
+    { id: 'deposit', icon: 'arrow-down-tray', label: t('deposit') },
+    { id: 'send', icon: 'paper-airplane', label: t('common.send') },
+    { id: 'purchase', icon: 'currency-dollar', label: t('common.buy_sell') },
+  ]
+  return isWalletConnected.value
+    ? items
+    : items.filter(item => item.id !== 'deposit')
+})
+
+const onSelect = (id: ActionId) => {
+  if (id === 'deposit') openDepositDialog.value = true
+  else openPanel(id)
+}
+
+// MarketingTooltip anchors on the Trade button inside the rail.
+const actionBar = useTemplateRef<ComponentPublicInstance>('actionBar')
+const tradeBtnRef = computed<HTMLElement | null>(
+  () => actionBar.value?.$el.querySelector('[data-action-id="trade"]') ?? null,
+)
 
 const comingSoon = computed(() => t('common.coming_soon'))
 </script>

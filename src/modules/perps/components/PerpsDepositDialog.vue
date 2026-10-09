@@ -56,16 +56,15 @@
                   </div>
                 </template>
                 <template #footer>
-                  <!-- Percentage Pills -->
+                  <!-- Percentage presets: design-library Chips on the grey
+                       amount surface (white `default` fill). -->
                   <div class="flex gap-2 mt-5">
-                    <button
+                    <app-chip
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      :label="pct === 100 ? $t('perps.deposit.max') : pct + '%'"
                       @click="setAmountPercent(pct)"
-                    >
-                      {{ pct === 100 ? $t('perps.deposit.max') : pct + '%' }}
-                    </button>
+                    />
                   </div>
                 </template>
               </app-enter-amount>
@@ -224,7 +223,7 @@
             </p>
             <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
-            <!-- <app-tooltip text="Refresh deposit address" position="top-left">
+            <!-- <app-tooltip text="Refresh deposit address">
               <app-btn-icon
                 label="Refresh deposit address"
                 :disabled="loading"
@@ -250,6 +249,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import {
   perpsClient,
   USDC_ADDRESS,

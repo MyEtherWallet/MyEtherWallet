@@ -66,8 +66,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const props = defineProps<{
   currentName?: string

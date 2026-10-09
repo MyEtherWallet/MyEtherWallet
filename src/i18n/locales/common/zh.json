@@ -18,6 +18,8 @@
     "step": "第 {number} 步",
     "step_of": "第 {current} 步，共 {total} 步",
     "close_side_menu": "关闭侧边菜单",
+    "open_side_menu": "打开侧边菜单",
+    "wallet_actions": "钱包操作",
     "old_version_link": "在此访问旧版 MEW Portfolio",
     "processing_tokens_title": "请稍候！",
     "processing_tokens_description": "我们正在处理您钱包中的更多代币，稍后将更新您的余额。",
@@ -138,6 +140,7 @@
     "confirm": "确认",
     "approve": "授权",
     "processing": "处理中...",
+    "loading": "加载中",
     "save": "保存",
     "enter_name": "输入名称",
     "enter_address": "输入地址",
@@ -201,7 +204,8 @@
     "chart_1m": "1月",
     "chart_3m": "3月",
     "chart_1y": "1年",
-    "chart_all": "全部"
+    "chart_all": "全部",
+    "chart_range": "图表时间范围"
   },
   "deposit": "充值",
   "learn": "学习",

@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import i18n from '@/i18n'
 import ToastTradeStatus from '@/modules/toast/components/ToastTradeStatus.vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import { useToastStore } from '@/stores/toastStore'
 import type { Toast } from '@/types/notification'
 

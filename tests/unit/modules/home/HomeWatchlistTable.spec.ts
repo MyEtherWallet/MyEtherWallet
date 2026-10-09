@@ -65,9 +65,9 @@ vi.mock('@/components/AppSearchInput.vue', () => ({
       '<input data-test="search" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
   },
 }))
-vi.mock('@/components/AppTooltip.vue', () => ({
+vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
   default: {
-    props: ['text', 'position'],
+    props: ['text', 'placement'],
     template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
   },
 }))
@@ -91,10 +91,7 @@ vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
 }))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
-import {
-  useWatchlistStore,
-  WATCHLIST_MAX,
-} from '@/stores/watchlistTableStore'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const i18n = createI18n({
