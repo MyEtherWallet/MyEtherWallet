@@ -92,7 +92,7 @@ export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
   const route = useRoute()
-  const { token, login, triggerRefresh } = usePerpsAuth()
+  const { token, login, triggerRefresh, isWalletConnected } = usePerpsAuth()
   const { balance } = usePerpsBalance()
   const { markets, isLoading: marketsLoading } = usePerpsMarkets()
   const { contracts } = usePerpsContracts()
@@ -1115,9 +1115,13 @@ export function usePerpsTradeForm() {
   // The side panel's sign-in CTA shows on every page, so take the user to the
   // perps page, where the sign-in progress and then their portfolio show up
   // (MEW-2470). Already inside perps (incl. the market drawer child route), we
-  // stay put.
+  // stay put. Without a connected wallet login() bails out, so the page stays
+  // as it is too.
   function signIn(source?: PerpsEventSource) {
-    if (!route.matched.some(r => r.name === ROUTES_MAIN.PERPS.NAME)) {
+    if (
+      isWalletConnected.value &&
+      !route.matched.some(r => r.name === ROUTES_MAIN.PERPS.NAME)
+    ) {
       router.push({ name: ROUTES_MAIN.PERPS.NAME })
     }
     return login(source)

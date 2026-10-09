@@ -109,11 +109,15 @@ const mockPerpsState = vi.hoisted(
 )
 
 const loginMock = vi.hoisted(() => vi.fn())
+const mockAuthState = vi.hoisted(() => ({
+  isWalletConnected: { value: true } as Ref<boolean>,
+}))
 vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsAuth: () => ({
     token: ref(null),
     login: loginMock,
     triggerRefresh: vi.fn(),
+    isWalletConnected: mockAuthState.isWalletConnected,
   }),
   usePerpsBalance: () => ({ balance: mockPerpsState.balance }),
 }))
@@ -457,6 +461,7 @@ describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     routerMock.route.matched = []
+    mockAuthState.isWalletConnected.value = true
   })
 
   it('navigates to the perps page and starts the login when outside perps', () => {
@@ -474,6 +479,15 @@ describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
       { name: ROUTES_MAIN.PERPS.NAME },
       { name: PERP_INFO_ROUTE_NAME },
     ]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
+  })
+
+  it('leaves the page alone when no wallet is connected', () => {
+    mockAuthState.isWalletConnected.value = false
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
     const form = usePerpsTradeForm()
     form.signIn(PerpsEventSource.TRADE)
     expect(routerMock.push).not.toHaveBeenCalled()
