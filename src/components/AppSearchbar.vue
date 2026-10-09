@@ -16,13 +16,20 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-text-default rounded-full h-10 w-full py-1 transition-shadow',
         size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
+        // Keyboard Focus gets the DS brand ring (same rule as Input); clicking
+        // in or typing is Active, so the icon and field stay as in Figma.
+        inFocusInput && !isActive ? 'inset-ring-2 inset-ring-border-brand' : '',
         inputClass,
       ]"
       :aria-label="placeholder || $t('common.search')"
       :placeholder="placeholder || $t('common.search')"
+      @pointerdown="setActive()"
+      @focus="setInFocusInput()"
+      @blur="startOutOfFocusTimeout()"
+      @input="setActive()"
     />
     <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
       <app-btn-icon
@@ -45,6 +52,7 @@
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import { useInFocusInput } from '@/composables/useInFocusInput'
 /**
  * @description AppSearchbar component, used to display a search input field with a clear button.
  *
@@ -88,12 +96,20 @@ defineProps({
  */
 const model = defineModel()
 const searchInput = ref<HTMLElement | null>(null)
+const {
+  inFocusInput,
+  isActive,
+  setActive,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(searchInput)
 
 /**
  * clear the input value, set focus to the input field
  */
 const clearInputValue = () => {
-  searchInput.value?.focus()
+  setActive()
+  setInFocusInput()
   nextTick(() => {
     model.value = ''
   })

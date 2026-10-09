@@ -77,3 +77,29 @@ describe('AppSearchbar — design-library Searchbar (MEW-1971)', () => {
     expect(clear.classes()).toContain('text-icon-default')
   })
 })
+
+describe('AppSearchbar — review follow-ups (MEW-1971)', () => {
+  const mountFull = (props: Record<string, unknown> = {}) => {
+    i18n.global.locale.value = 'en'
+    return mount(AppSearchbar, { props, global: { plugins: [i18n] } })
+  }
+
+  it('shows the brand ring on keyboard focus only, like Input', async () => {
+    const w = mountFull({ modelValue: '' })
+    const input = w.get('input')
+    await input.trigger('focus') // Tab in
+    expect(input.classes()).toContain('inset-ring-border-brand')
+    await input.trigger('input') // typing → Active
+    expect(input.classes()).not.toContain('inset-ring-border-brand')
+
+    const clicked = mountFull({ modelValue: '' }).get('input')
+    await clicked.trigger('pointerdown')
+    await clicked.trigger('focus') // click in → Active straight away
+    expect(clicked.classes()).not.toContain('inset-ring-border-brand')
+  })
+
+  it('hides the clear button when the model is undefined', () => {
+    const w = mountFull() // no modelValue at all
+    expect(w.get('[aria-label="Clear"]').classes()).toContain('hidden')
+  })
+})
