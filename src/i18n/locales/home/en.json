@@ -115,17 +115,33 @@
     "offers": {
       "title": "Exclusive Offers",
       "subtitle": "Get rewarded for using MEW!",
-      "category": { "trade": "Trade", "buy": "Buy", "hold": "Hold" },
+      "category": {
+        "trade": "Trade",
+        "buy": "Buy",
+        "hold": "Hold"
+      },
       "items": {
-        "trade": { "title": "Trade +$500", "highlight": "Earn 5 USDC" },
-        "buy": { "title": "Buy crypto", "highlight": "Pay zero MEW fees" },
-        "hold": { "title": "Trade & Hold", "highlight": "Earn 10 USDC" }
+        "trade": {
+          "title": "Trade +${min}",
+          "highlight": "Earn 5 USDC"
+        },
+        "buy": {
+          "title": "Buy crypto",
+          "highlight": "Pay zero MEW fees"
+        },
+        "hold": {
+          "title": "Trade & Hold",
+          "highlight": "Earn 10 USDC"
+        }
       }
     },
     "listings": {
       "title": "New Listings",
       "subtitle": "Discover the latest stocks and crypto tokens in the market.",
-      "tab": { "stocks": "Stocks", "crypto": "Crypto" },
+      "tab": {
+        "stocks": "Stocks",
+        "crypto": "Crypto"
+      },
       "stat": {
         "marketCap": "Mkt cap",
         "change24h": "24h",

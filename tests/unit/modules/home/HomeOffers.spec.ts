@@ -10,6 +10,11 @@ const openModal = vi.fn()
 vi.mock('@/stores/holdingsStore', () => ({
   useHoldingsStore: () => ({ openModal }),
 }))
+// The trade offer headline reads the campaign minimum from the rewards store.
+vi.mock('@/stores/rewardsStore', async () => {
+  const { ref } = await import('vue')
+  return { useRewardsStore: () => ({ minSpendTrade: ref('250') }) }
+})
 // The trade-info modal self-fetches rewards data on mount — stub it.
 vi.mock('@/modules/rwa_rewards/RwaTradeInfoModal.vue', () => ({
   default: {

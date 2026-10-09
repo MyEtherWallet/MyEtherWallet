@@ -80,11 +80,11 @@ import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import Configs from '@/configs'
+import { useRewardsStore } from '@/stores/rewardsStore'
 
 const walletMenuStore = useWalletMenuStore()
 const { t } = useI18n()
-const rewardAmount = Configs.MEW_REWARDS_REWARD_USD
+const { rewardAmount } = storeToRefs(useRewardsStore())
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 
 const props = defineProps<{

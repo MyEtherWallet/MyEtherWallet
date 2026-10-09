@@ -145,6 +145,9 @@ const rewardsStore = useRewardsStore()
 const {
   isBanned,
   minSpendTrade,
+  rewardAmount,
+  minRwaBalanceUsd,
+  holdDurationLabel,
   tradeClaimed,
   tradeNoRewards,
   isRewardsPaused,
@@ -155,13 +158,11 @@ const {
 
 const { t } = useI18n()
 
-// Rewards program parameters live in configs so copy and thresholds move together.
-const REWARD_AMOUNT = Configs.MEW_REWARDS_REWARD_USD
+// Minimums and the reward come from the rules endpoint via the store; these
+// are the terms the endpoint does not carry.
 const MAX_USERS_PER_HOUR = Configs.MEW_REWARDS_PER_HOUR
 const CAMPAIGN_PERIOD_DAYS = Configs.MEW_REWARDS_PERIOD_DAYS
 const MIN_WALLET_AGE_WEEKS = Configs.MEW_REWARDS_MIN_WALLET_AGE_WEEKS
-const MIN_RWA_BALANCE_USD = Configs.MEW_REWARDS_MIN_RWA_BALANCE_USD
-const RWA_LOOKBACK_WEEKS = Configs.MEW_REWARDS_RWA_LOOKBACK_WEEKS
 
 watch(isOpenModel, val => {
   if (val) {
@@ -182,7 +183,7 @@ const infoItems = computed(() => [
   },
   {
     icon: 'currency-dollar',
-    text: t('rewards.info_earn_per_trade', { amount: REWARD_AMOUNT }),
+    text: t('rewards.info_earn_per_trade', { amount: rewardAmount.value }),
   },
   {
     icon: 'calendar',
@@ -195,8 +196,8 @@ const infoItems = computed(() => [
   {
     icon: 'wallet-balance',
     text: t('rewards.info_min_rwa_balance', {
-      amount: MIN_RWA_BALANCE_USD,
-      weeks: RWA_LOOKBACK_WEEKS,
+      amount: minRwaBalanceUsd.value,
+      duration: holdDurationLabel.value,
     }),
   },
   {

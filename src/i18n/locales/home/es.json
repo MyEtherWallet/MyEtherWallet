@@ -115,17 +115,33 @@
     "offers": {
       "title": "Ofertas exclusivas",
       "subtitle": "¡Gana recompensas por usar MEW!",
-      "category": { "trade": "Trading", "buy": "Comprar", "hold": "Mantener" },
+      "category": {
+        "trade": "Trading",
+        "buy": "Comprar",
+        "hold": "Mantener"
+      },
       "items": {
-        "trade": { "title": "Opera +$500", "highlight": "Gana 5 USDC" },
-        "buy": { "title": "Compra cripto", "highlight": "Cero comisiones MEW" },
-        "hold": { "title": "Opera y mantén", "highlight": "Gana 10 USDC" }
+        "trade": {
+          "title": "Opera +${min}",
+          "highlight": "Gana 5 USDC"
+        },
+        "buy": {
+          "title": "Compra cripto",
+          "highlight": "Cero comisiones MEW"
+        },
+        "hold": {
+          "title": "Opera y mantén",
+          "highlight": "Gana 10 USDC"
+        }
       }
     },
     "listings": {
       "title": "Nuevas cotizaciones",
       "subtitle": "Descubre las últimas acciones y tokens de criptomonedas en el mercado.",
-      "tab": { "stocks": "Acciones", "crypto": "Cripto" },
+      "tab": {
+        "stocks": "Acciones",
+        "crypto": "Cripto"
+      },
       "stat": {
         "marketCap": "Cap. mercado",
         "change24h": "24 h",

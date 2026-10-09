@@ -26,8 +26,18 @@ type ClaimError = components['schemas']['ClaimError']
 type ApiError = components['schemas']['Error']
 type GetAddressRewardsResponse =
   components['schemas']['GetAddressRewardsResponse']
+type Rules = components['schemas']['Rules']
+type Rule = components['schemas']['Rule']
+type HoldAndTradeRule = components['schemas']['HoldAndTrade']
 
-export type { Reward, RewardStatus, IneligibilityReason, ClaimFailReason }
+export type {
+  Reward,
+  RewardStatus,
+  IneligibilityReason,
+  ClaimFailReason,
+  Rule,
+  HoldAndTradeRule,
+}
 
 /**
  * Why a claim did not go through. Backend reasons come straight from
@@ -43,6 +53,8 @@ export type TradeRewardClaimResult =
     }
 
 const REWARDS_BASE_URL = Configs.MEW_REWARDS_API_URL
+const FALLBACK_RULES = Configs.MEW_REWARDS_FALLBACK_RULES
+const DAY_MS = 24 * 60 * 60 * 1000
 
 /** Chains the rewards API pays out on, keyed by chain id. */
 const REWARDS_NETWORK_BY_CHAIN_ID: Record<number, RewardsNetwork> = {
@@ -107,7 +119,8 @@ const fetchRewards = async <T>(
   path: string,
   init: RequestInit = {},
 ): Promise<T> => {
-  const response = await fetch(`${REWARDS_BASE_URL}${path}`, {
+  const url = path.startsWith('http') ? path : `${REWARDS_BASE_URL}${path}`
+  const response = await fetch(url, {
     mode: 'cors',
     ...init,
     headers: {
@@ -167,17 +180,76 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   const pool = ref<RewardsPool | null>(null)
+  const rules = ref<Rules | null>(null)
   const eligibility = ref<Eligibility | null>(null)
   const rewards = ref<Reward[]>([])
   const isLoadingPool = ref(false)
+  const isLoadingRules = ref(false)
   const isLoadingEligibility = ref(false)
   const isLoadingRewards = ref(false)
   const hadInitialLoad = ref(false)
 
   /** ------------------------------------------------------------------
+   * Rules — the campaign parameters (minimum trade, maintained balance,
+   * reward). Served by the backend; the config fallbacks only cover the
+   * first paint and a failed fetch.
+   * ------------------------------------------------------------------ */
+  const activeRule = computed<Rule | null>(() => rules.value?.active ?? null)
+  const holdAndTradeRule = computed<HoldAndTradeRule | null>(() =>
+    activeRule.value?.type === 'HOLD_AND_TRADE' ? activeRule.value : null,
+  )
+  const campaignStartedAt = computed(() => activeRule.value?.startedAt ?? null)
+
+  /** Numeric minimum trade (USD) — the claim gate compares against this. */
+  const minSpendUsd = computed(
+    () =>
+      holdAndTradeRule.value?.minTradeAmountUsd ?? FALLBACK_RULES.MIN_SPEND_USD,
+  )
+  /** Display form of the minimum trade, whole dollars. */
+  const minSpendTrade = computed(() => Math.ceil(minSpendUsd.value).toString())
+  const rewardAmount = computed(
+    () =>
+      holdAndTradeRule.value?.rewardAmountMain ?? FALLBACK_RULES.REWARD_AMOUNT,
+  )
+  const rewardAsset = computed(
+    () => holdAndTradeRule.value?.rewardAsset ?? FALLBACK_RULES.REWARD_ASSET,
+  )
+  const minRwaBalanceUsd = computed(
+    () =>
+      holdAndTradeRule.value?.minMaintainedBalanceUsd ??
+      FALLBACK_RULES.MIN_RWA_BALANCE_USD,
+  )
+  const holdDurationDays = computed(() => {
+    const ms = holdAndTradeRule.value?.minMaintainedBalanceDurationMs
+    if (ms == null || !Number.isFinite(ms) || ms <= 0)
+      return FALLBACK_RULES.HOLD_DURATION_DAYS
+    return Math.max(1, Math.round(ms / DAY_MS))
+  })
+  /** "2 weeks" when the hold is a whole number of weeks, "10 days" otherwise. */
+  const holdDurationLabel = computed(() => {
+    const days = holdDurationDays.value
+    if (days % 7 === 0) {
+      const weeks = days / 7
+      return `${weeks} ${i18n.global.t('rwaRewards.unit_week', weeks)}`
+    }
+    return `${days} ${i18n.global.t('rwaRewards.unit_day', days)}`
+  })
+
+  const fetchRules = async () => {
+    isLoadingRules.value = true
+    try {
+      rules.value = await fetchRewards<Rules>(Configs.MEW_REWARDS_RULES_URL)
+    } catch (error) {
+      console.error('Failed to fetch reward rules:', error)
+    } finally {
+      isLoadingRules.value = false
+    }
+  }
+
+  /** ------------------------------------------------------------------
    * Pool — one global counter for the campaign (`total` / `remaining`).
    * ------------------------------------------------------------------ */
-  const toCount = (value: string | undefined): number | null => {
+  const toCount = (value: string | number | undefined): number | null => {
     if (value == null) return null
     const n = Number(value)
     return Number.isFinite(n) ? n : null
@@ -245,8 +317,13 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       hasReason('ALL_REWARDS_GRANTED') ||
       (pool.value !== null && !isPoolOpen.value),
   )
-  /** The backend has switched rewards off. */
-  const isRewardsPaused = computed(() => hasReason('DEACTIVATED'))
+  /** The backend has switched rewards off — by rule, by pool, or per address. */
+  const isRewardsPaused = computed(
+    () =>
+      hasReason('DEACTIVATED') ||
+      activeRule.value?.type === 'DEACTIVATED' ||
+      pool.value?.type === 'DEACTIVATED',
+  )
   /** The address's balance history is still being indexed; eligibility is not known yet. */
   const isSyncing = computed(
     () => hasReason('NO_SNAPSHOTS') || hasReason('SYNCING'),
@@ -281,10 +358,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     return isEligible.value
   })
   const canClaimReward = canClaimTradeReward
-
-  const minSpendTrade = computed(() =>
-    Math.ceil(Configs.MEW_REWARDS_MIN_SPEND_USD).toString(),
-  )
 
   /**
    * Called right after a trade order is submitted: refresh eligibility and, if
@@ -435,10 +508,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     // backend about it. Only a known-too-low value is gated: an order saved
     // without a USD value is still sent, and the backend decides (`SPEND_TOO_LOW`).
     const usdValue = Number(order.usdValue)
-    if (
-      Number.isFinite(usdValue) &&
-      usdValue < Configs.MEW_REWARDS_MIN_SPEND_USD
-    ) {
+    if (Number.isFinite(usdValue) && usdValue < minSpendUsd.value) {
       setClaimState(order, { status: 'rejected', reason: 'SPEND_TOO_LOW' })
       return { ok: false, reason: 'SPEND_TOO_LOW', retryable: false }
     }
@@ -563,7 +633,12 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   )
 
   const fetchAll = async () => {
-    await Promise.all([fetchPool(), fetchEligibility(), fetchUserRewards()])
+    await Promise.all([
+      fetchRules(),
+      fetchPool(),
+      fetchEligibility(),
+      fetchUserRewards(),
+    ])
     hadInitialLoad.value = true
     checkRewards()
     startPoolPoll()
@@ -573,10 +648,25 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     () =>
       isLoadingEligibility.value ||
       isLoadingRewards.value ||
-      isLoadingPool.value,
+      isLoadingPool.value ||
+      isLoadingRules.value,
   )
 
   return {
+    // Rules
+    rules,
+    activeRule,
+    holdAndTradeRule,
+    campaignStartedAt,
+    minSpendUsd,
+    minSpendTrade,
+    rewardAmount,
+    rewardAsset,
+    minRwaBalanceUsd,
+    holdDurationDays,
+    holdDurationLabel,
+    isLoadingRules,
+    fetchRules,
     // Pool
     pool,
     isPoolOpen,
@@ -600,7 +690,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     checkAvailabilityAfterTransaction,
     canClaimReward,
     canClaimTradeReward,
-    minSpendTrade,
     // User rewards
     rewards,
     hasRewards,

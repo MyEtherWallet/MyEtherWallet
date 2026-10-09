@@ -1,6 +1,9 @@
 const mewWalletUrl =
   import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
+// Rewards V2 backend. Dev deployment until the prod one is up.
+const rewardsApiUrl = 'https://mew-rewards-v2-dev.ethvm.dev'
+
 // Strapi serves uploads from the host root (`/uploads/...`), not from `/api`,
 // so the host is the shared constant and the API path hangs off it.
 const strapiUrl = import.meta.env.VITE_STRAPI_URL || 'https://strapi.mewapi.io'
@@ -26,18 +29,26 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
-  MEW_REWARDS_API_URL: 'https://mew-rewards-v2-dev.ethvm.dev',
+  /** Rewards V2 API. Dev deployment for now — swap for prod when it ships. */
+  MEW_REWARDS_API_URL: rewardsApiUrl,
   /**
-   * Trade-rewards campaign parameters the rewards API does not expose. The
-   * backend enforces its own spend threshold on claim (`SPEND_TOO_LOW`), so
-   * these only drive the copy and the pre-trade "qualifies" banner — keep
-   * them in step with the campaign.
+   * Campaign rules: minimum trade, minimum maintained balance and how long it
+   * must be held, reward asset and amount. Kept as its own entry so it can be
+   * repointed without touching the rest of the API.
    */
-  MEW_REWARDS_MIN_SPEND_USD: 250,
-  MEW_REWARDS_REWARD_USD: 5,
-  /** RWA balance (USD) the wallet must have held `MEW_REWARDS_RWA_LOOKBACK_WEEKS` ago, on a rolling basis. */
-  MEW_REWARDS_MIN_RWA_BALANCE_USD: 100,
-  MEW_REWARDS_RWA_LOOKBACK_WEEKS: 2,
+  MEW_REWARDS_RULES_URL: `${rewardsApiUrl}/v1/rewards/rules`,
+  /**
+   * Shown until `/v1/rewards/rules` answers; the live rule overrides every
+   * value here. Keep in step with the campaign so the first paint is right.
+   */
+  MEW_REWARDS_FALLBACK_RULES: {
+    MIN_SPEND_USD: 250,
+    REWARD_AMOUNT: '5',
+    REWARD_ASSET: 'USDC',
+    MIN_RWA_BALANCE_USD: 100,
+    HOLD_DURATION_DAYS: 14,
+  },
+  /** Program terms the rules endpoint does not carry. */
   MEW_REWARDS_MIN_WALLET_AGE_WEEKS: 2,
   MEW_REWARDS_PER_HOUR: 15,
   MEW_REWARDS_PERIOD_DAYS: 7,

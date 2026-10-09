@@ -76,7 +76,6 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
-import Configs from '@/configs'
 import illusTrade from '@/assets/images/rwa-rewards/hero-claimed.webp'
 import illusHold from '@/assets/images/rwa-rewards/hero-holding.webp'
 import illusFees from '@/assets/images/rwa-rewards/hero-earned.webp'
@@ -136,6 +135,8 @@ const {
   isRewardsPaused,
   isSyncing,
   isBalanceTooLow,
+  minRwaBalanceUsd,
+  holdDurationLabel,
   tradeClaimed,
   tradeNoRewards,
   tradeRemainingCount,
@@ -176,8 +177,8 @@ const tradeStatusText = computed(() => {
       // The balance rule is the one a user can act on, so name it.
       return isBalanceTooLow.value
         ? t('rewards.min_rwa_balance_required', {
-            amount: Configs.MEW_REWARDS_MIN_RWA_BALANCE_USD,
-            weeks: Configs.MEW_REWARDS_RWA_LOOKBACK_WEEKS,
+            amount: minRwaBalanceUsd.value,
+            duration: holdDurationLabel.value,
           })
         : t('rwaRewards.modal_not_eligible_title')
     default: {

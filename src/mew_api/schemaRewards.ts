@@ -180,6 +180,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rewards/pool/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getDetailedRewardsPool"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rewards/rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getRules"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/networks/{network}/orders/{orderHash}": {
         parameters: {
             query?: never;
@@ -253,7 +285,7 @@ export interface components {
          * @description Why an address is not (yet) eligible.
          * @enum {string}
          */
-        IneligibilityReason: "NO_BALANCE" | "BALANCE_TOO_LOW" | "NO_SNAPSHOTS" | "SYNCING" | "ALREADY_GRANTED" | "ALL_REWARDS_GRANTED" | "BLOCKLISTED" | "DEACTIVATED";
+        IneligibilityReason: "NO_BALANCE" | "BALANCE_TOO_LOW" | "NO_SNAPSHOTS" | "SYNCING" | "ALREADY_GRANTED" | "ALL_REWARDS_GRANTED" | "BLOCKLISTED" | "DEACTIVATED" | "ONLY_DEVS";
         Eligibility: {
             eligible: boolean;
             reasons: components["schemas"]["IneligibilityReason"][];
@@ -328,9 +360,103 @@ export interface components {
                 reason: components["schemas"]["ClaimFailReason"];
             };
         };
-        RewardsPool: {
-            total: string;
-            remaining: string;
+        DeactivatedRewardPool: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "DEACTIVATED";
+            total: number;
+            granted: number;
+            remaining: number;
+        };
+        HoldAndTradeRewardPool: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "HOLD_AND_TRADE";
+            total: number;
+            granted: number;
+            remaining: number;
+        };
+        RewardsPool: components["schemas"]["DeactivatedRewardPool"] | components["schemas"]["HoldAndTradeRewardPool"];
+        DetailedDeactivatedRewardPool: {
+            /** @enum {string} */
+            type: "DEACTIVATED";
+            total: number;
+            granted: number;
+            remaining: number;
+        };
+        /** @enum {string} */
+        RewardAsset: "USDC";
+        DetailedHoldAndTradeRewardPoolNetwork: {
+            network: components["schemas"]["Network"];
+            address: components["schemas"]["EthereumAddress"];
+            native: {
+                symbol: string;
+                decimals: number;
+                balanceAtomic: string;
+                balanceMain: string;
+                balanceUsd: number;
+                priceUsd: number;
+                minFundedUsd: number;
+                isFunded: boolean;
+            };
+            reward: {
+                asset?: components["schemas"]["RewardAsset"];
+                address: null | components["schemas"]["EthereumAddress"];
+                symbol: string;
+                decimals: number;
+                balanceAtomic: string;
+                balanceMain: string;
+                balanceUsd: number;
+                priceUsd: number;
+                minMain: string;
+                minFundedUsd: number;
+                isFunded: boolean;
+            };
+        };
+        DetailedHoldAndTradeRewardPool: {
+            /** @enum {string} */
+            type: "HOLD_AND_TRADE";
+            total: number;
+            granted: number;
+            remaining: number;
+            isFunded: boolean;
+            networks: components["schemas"]["DetailedHoldAndTradeRewardPoolNetwork"][];
+        };
+        DetailedRewardsPool: components["schemas"]["DetailedDeactivatedRewardPool"] | components["schemas"]["DetailedHoldAndTradeRewardPool"];
+        Deactivated: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "DEACTIVATED";
+            /** Format: date-time */
+            startedAt: string;
+        };
+        /** @enum {string} */
+        RuleType: "DEACTIVATED" | "HOLD_AND_TRADE";
+        HoldAndTrade: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "HOLD_AND_TRADE";
+            /** Format: date-time */
+            startedAt: string;
+            minMaintainedBalanceDurationMs: number;
+            minMaintainedBalanceUsd: number;
+            minTradeAmountUsd: number;
+            rewardAsset: components["schemas"]["RewardAsset"];
+            rewardAmountMain?: string;
+        };
+        Rule: components["schemas"]["Deactivated"] | components["schemas"]["HoldAndTrade"];
+        Rules: {
+            prev: null | components["schemas"]["Rule"];
+            active: components["schemas"]["Rule"];
+            next: null | components["schemas"]["Rule"];
         };
         OrderCounterparty: {
             contract: null | components["schemas"]["EthereumAddress"];
@@ -666,6 +792,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RewardsPool"];
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getDetailedRewardsPool: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Global rewards pool state detailed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailedRewardsPool"];
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getRules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Rewards rules. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Rules"];
                 };
             };
             429: components["responses"]["RateLimited"];

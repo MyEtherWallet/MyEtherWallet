@@ -69,7 +69,7 @@
     },
     "info_first_users": "Sé uno de los primeros {count} usuarios recompensados por hora.",
     "info_one_reward_period": "Hasta una recompensa por billetera por período de campaña de {days} días, enviada directamente a tu billetera.",
-    "info_min_rwa_balance": "La billetera debe haber mantenido al menos ${amount} en activos RWA hace {weeks} semanas (contando desde la fecha actual).",
-    "min_rwa_balance_required": "Requiere ${amount} en RWA hace {weeks} semanas"
+    "info_min_rwa_balance": "La billetera debe haber mantenido al menos ${amount} en activos RWA hace {duration} (contando desde la fecha actual).",
+    "min_rwa_balance_required": "Requiere ${amount} en RWA hace {duration}"
   }
 }
