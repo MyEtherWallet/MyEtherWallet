@@ -8,6 +8,7 @@
         surfaceClass,
         { 'cursor-not-allowed': disabled },
       ]"
+      @pointerdown="setTyping()"
     >
       <div
         v-if="$slots.leading"
@@ -61,7 +62,7 @@
         v-if="$slots.trailing || showClear || showReveal"
         :inert="disabled || undefined"
         :class="[
-          'flex items-center gap-1 shrink-0',
+          'flex items-center shrink-0',
           { 'opacity-40 pointer-events-none': disabled },
         ]"
       >
@@ -70,8 +71,9 @@
           v-if="showClear"
           @click="clearInputValue"
           :label="$t('common.clear_icon')"
+          v-bind="TRAILING_BTN"
         >
-          <AppIcon name="x-circle" size="s" class="text-text-brand" />
+          <AppIcon name="x-circle" size="s" class="text-icon-default" />
         </app-btn-icon>
         <app-btn-icon
           v-if="showReveal"
@@ -81,12 +83,13 @@
               ? $t('common.show_password')
               : $t('common.hide_password')
           "
+          v-bind="TRAILING_BTN"
         >
           <AppIcon
             :name="!showPassword ? 'eye-slash' : 'eye'"
             variant="filled"
             size="s"
-            class="text-text-brand"
+            class="text-icon-default"
           />
         </app-btn-icon>
       </div>
@@ -207,8 +210,13 @@ const spec = computed(() => INPUT_SIZE_SPEC[props.size])
 /**------------------------
  * Focus State
  -------------------------*/
-const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
-  useInFocusInput(baseInput)
+const {
+  inFocusInput,
+  isTyping,
+  setTyping,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(baseInput)
 
 /**------------------------
  * Value / label float
@@ -245,6 +253,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
+  setTyping()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -257,6 +266,7 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
+    typing: isTyping.value,
     error: hasError.value,
     disabled: props.disabled,
   }),
@@ -265,6 +275,8 @@ const surfaceClass = computed(() =>
 /**------------------------
  * Trailing actions (built-in clear + password reveal)
  -------------------------*/
+// Figma Button Icon: 20px icon + 3px padding (26px), siblings packed with no gap.
+const TRAILING_BTN = { width: 'w-auto', height: 'h-auto', class: '!p-[3px]' }
 const showClear = computed(() => hasValue.value && !props.disabled)
 const showReveal = computed(() => props.type === 'password' && !props.disabled)
 

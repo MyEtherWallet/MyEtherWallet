@@ -110,6 +110,40 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     }
   })
 
+  it('typing (Figma Active) drops the focus ring; keyboard focus keeps it', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    const input = w.get('input')
+    // Keyboard focus (no pointer) is Figma Focus: ringed.
+    await input.trigger('focus')
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
+    // Typing is Figma Active: caret only, no brand ring and no hover ring.
+    await input.trigger('input')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('hover:inset-ring-border-hover')
+  })
+
+  it('pointer focus enters Active straight away (no ring), errors included', async () => {
+    const w = mountInput({ modelValue: 'x', errorMessage: 'Bad' })
+    await field(w).trigger('pointerdown')
+    await w.get('input').trigger('focus')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('inset-ring-border-error')
+    // The feedback row still carries the error.
+    expect(w.text()).toContain('Bad')
+  })
+
+  it('renders trailing actions in icon/default, packed with no gap', () => {
+    const w = mountInput({ type: 'password', modelValue: 'secret' })
+    for (const label of ['Clear', 'Show']) {
+      const btn = w.get(`[aria-label="${label}"]`)
+      expect(btn.get('svg').classes()).toContain('text-icon-default')
+      // Figma Button Icon: 20px icon + 3px padding, siblings touch.
+      expect(btn.classes()).toContain('!p-[3px]')
+    }
+    const row = w.get('[aria-label="Clear"]').element.parentElement!
+    expect(row.className).not.toMatch(/\bgap-/)
+  })
+
   it('renders the value in text/default', () => {
     const w = mountInput({ modelValue: 'x' })
     expect(w.get('input').classes()).toContain('text-text-default')

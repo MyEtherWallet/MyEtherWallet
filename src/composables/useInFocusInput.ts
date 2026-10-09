@@ -6,6 +6,15 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    * Focus State
    -------------------------*/
   const inFocusInput = ref(false)
+  /**
+   * Figma "Active" state: the user is editing (pointer focus or typing), so the
+   * field shows only the caret. Keyboard focus before any edit is "Focus" and
+   * keeps the ring. Resets when the field loses focus.
+   */
+  const isTyping = ref(false)
+  const setTyping = () => {
+    isTyping.value = true
+  }
 
   /**
    * Destructures the `useTimeoutFn` function to handle the out-of-focus timeout for the input field.
@@ -26,6 +35,7 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
   } = useTimeoutFn(
     () => {
       inFocusInput.value = false
+      isTyping.value = false
     },
     150,
     { immediate: false },
@@ -54,6 +64,8 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
   })
   return {
     inFocusInput,
+    isTyping,
+    setTyping,
     setInFocusInput,
     startOutOfFocusTimeout,
   }

@@ -26,3 +26,17 @@ describe('AppTextField — design-library surface (MEW-1971)', () => {
     expect(textarea.classes()).toContain('inset-ring-border-brand')
   })
 })
+
+describe('AppTextField — typing state (MEW-1971)', () => {
+  it('drops the focus ring while typing (Figma Active)', async () => {
+    const w = mount(AppTextField, {
+      props: { placeholder: 'Message' },
+      global: { plugins: [i18n] },
+    })
+    const textarea = w.get('textarea')
+    await textarea.trigger('focus')
+    expect(textarea.classes()).toContain('inset-ring-border-brand')
+    await textarea.trigger('input')
+    expect(textarea.classes()).not.toContain('inset-ring-border-brand')
+  })
+})
