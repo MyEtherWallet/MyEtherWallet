@@ -12,7 +12,7 @@
         <div
           class="flex gap-2 justify-between items-center mb-2 mx-4 bg-background-default-hover rounded-full p-1"
         >
-          <app-search-input
+          <app-searchbar
             :model-value="search"
             class="grow"
             bg-class="bg-transparent"
@@ -165,7 +165,7 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'

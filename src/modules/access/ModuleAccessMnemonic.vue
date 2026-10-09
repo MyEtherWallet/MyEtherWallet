@@ -17,7 +17,7 @@
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
-            <app-text-field
+            <app-text-area
               v-model="mnemonic"
               surface="alternative"
               data-private
@@ -128,7 +128,7 @@ import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextArea from '@/components/AppTextArea.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'

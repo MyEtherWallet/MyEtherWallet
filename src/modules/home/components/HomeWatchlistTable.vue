@@ -7,7 +7,7 @@ import draggable from 'vuedraggable'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
@@ -177,7 +177,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <div
         class="flex flex-col gap-2 min-[780px]:flex-row min-[780px]:items-center"
       >
-        <AppSearchInput
+        <AppSearchbar
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"

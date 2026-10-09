@@ -18,7 +18,7 @@
           <div
             class="flex items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
               v-model="searchInput"
               class="grow"
               :placeholder="$t('select_chain.search_placeholder')"
@@ -138,7 +138,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'

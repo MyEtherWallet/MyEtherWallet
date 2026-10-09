@@ -10,7 +10,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchInput"
           bg-class="bg-background-default"
           size="compact"
@@ -559,7 +559,7 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'

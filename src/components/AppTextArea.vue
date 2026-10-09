@@ -17,6 +17,7 @@
       autocomplete="off"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
+      @pointerdown="setActive()"
       @input="onInput"
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
@@ -58,9 +59,9 @@ defineOptions({ inheritAttrs: false })
  * textarea height. No float label — a textarea has no filled/label state.
  *
  * @example Basic
- * <app-text-field v-model="model" placeholder="Message" />
+ * <app-text-area v-model="model" placeholder="Message" />
  * @example On a white card/dialog
- * <app-text-field v-model="model" surface="alternative" placeholder="Message" />
+ * <app-text-area v-model="model" surface="alternative" placeholder="Message" />
  */
 const props = defineProps({
   placeholder: {
@@ -94,8 +95,13 @@ const model = defineModel<string>()
 const baseInput = ref<HTMLElement | null>(null)
 const feedbackId = useId()
 
-const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
-  useInFocusInput(baseInput)
+const {
+  inFocusInput,
+  isActive,
+  setActive,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(baseInput)
 
 const hasValue = computed(() => model.value != null && model.value !== '')
 
@@ -120,6 +126,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -132,11 +139,13 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
+    active: isActive.value,
     error: hasError.value,
   }),
 )
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

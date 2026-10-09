@@ -49,7 +49,7 @@
             'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
           ]"
         >
-          <app-search-input
+          <app-searchbar
             v-model="searchInput"
             size="compact"
             bg-class="bg-background-default"
@@ -196,7 +196,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'

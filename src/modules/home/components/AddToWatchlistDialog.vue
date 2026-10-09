@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AssetPickerRow from './AssetPickerRow.vue'
 import {
   useAssetPicker,
@@ -39,7 +39,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
           {{ t('homePage.hero.watchlist.addModal.subtitle') }}
         </p>
 
-        <AppSearchInput
+        <AppSearchbar
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Component preview for AppInput, AppTextField and AppSearchInput.
+// Component preview for AppInput (Text area and Searchbar have their own pages).
 // Reachable at /dev/input via the design-library shell (registered in routesDefault.ts).
 //
 // Renders every AppInput axis (size × surface × state) so the rebuild can be
@@ -7,8 +7,6 @@
 // ring, Large float-label vs Small no-label, 80/64 error height, disabled.
 import { reactive } from 'vue'
 import AppInput from '@components/AppInput.vue'
-import AppTextField from '@components/AppTextField.vue'
-import AppSearchInput from '@components/AppSearchInput.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { INPUT_SIZES } from '@components/inputSizes'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -73,12 +71,6 @@ const models = reactive<Record<string, string>>({})
 for (const surface of surfaces)
   for (const size of sizes)
     for (const v of variants) models[`${surface}-${size}-${v.key}`] = v.value
-
-const textFieldModel = reactive({
-  default: '',
-  alternative: 'A signed message',
-})
-const searchModel = reactive({ default: '', alternative: '' })
 </script>
 
 <template>
@@ -86,9 +78,9 @@ const searchModel = reactive({ default: '', alternative: '' })
     <header>
       <h1 class="text-s-28 font-semibold">AppInput — design library</h1>
       <p class="text-s-14 text-text-muted mt-1">
-        Hover / focus the Default-row fields to see the border ring. The error
-        ring is focus-only; blurred errored fields keep their normal border and
-        show the feedback row.
+        Tab into a field to see the Focus ring (red when errored). Clicking in
+        or typing is the Active state: caret only, no ring. Blurred errored
+        fields keep their normal line and show the feedback row.
       </p>
     </header>
 
@@ -136,51 +128,16 @@ const searchModel = reactive({ default: '', alternative: '' })
                 />
               </template>
               <template v-if="v.trailing" #trailing>
-                <AppBtnIcon label="Paste">
-                  <AppIcon name="clipboard" size="s" class="text-text-brand" />
+                <AppBtnIcon label="Paste" width="w-[26px]" height="h-[26px]">
+                  <AppIcon
+                    name="clipboard"
+                    size="s"
+                    class="text-icon-default"
+                  />
                 </AppBtnIcon>
               </template>
             </AppInput>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="space-y-4">
-      <h2 class="text-s-20 font-semibold">AppTextField</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="p-6 rounded-20 bg-white border border-border-default">
-          <p class="text-s-12 text-text-muted mb-2">surface = default</p>
-          <AppTextField
-            v-model="textFieldModel.default"
-            placeholder="Message to sign"
-          />
-        </div>
-        <div
-          class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
-        >
-          <p class="text-s-12 text-text-muted mb-2">surface = alternative</p>
-          <AppTextField
-            v-model="textFieldModel.alternative"
-            surface="alternative"
-            placeholder="Message to sign"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section class="space-y-4">
-      <h2 class="text-s-20 font-semibold">AppSearchInput</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-          class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
-        >
-          <p class="text-s-12 text-text-muted mb-2">on grey app bg</p>
-          <AppSearchInput v-model="searchModel.default" />
-        </div>
-        <div class="p-6 rounded-20 bg-white border border-border-default">
-          <p class="text-s-12 text-text-muted mb-2">on white card</p>
-          <AppSearchInput v-model="searchModel.alternative" />
         </div>
       </div>
     </section>

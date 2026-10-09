@@ -35,7 +35,7 @@
             <!-- Search -->
             <div class="sticky top-0 bg-white z-10 pt-2">
               <div class="px-4 sm:px-6 flex items-center gap-3">
-                <app-search-input
+                <app-searchbar
                   v-model="searchInput"
                   class="grow"
                   :placeholder="$t('common.search_by_name_or_address')"
@@ -148,7 +148,7 @@
 import AddAddress from './AddAddress.vue'
 import { ref, computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppBaseButton from '../AppBaseButton.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import { storeToRefs } from 'pinia'

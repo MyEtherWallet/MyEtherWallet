@@ -110,6 +110,41 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     }
   })
 
+  it('typing (Figma Active) drops the focus ring; keyboard focus keeps it', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    const input = w.get('input')
+    // Keyboard focus (no pointer) is Figma Focus: ringed.
+    await input.trigger('focus')
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
+    // Typing is Figma Active: caret only, no brand ring and no hover ring.
+    await input.trigger('input')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('hover:inset-ring-border-hover')
+  })
+
+  it('pointer focus enters Active straight away (no ring), errors included', async () => {
+    const w = mountInput({ modelValue: 'x', errorMessage: 'Bad' })
+    await w.get('input').trigger('pointerdown')
+    await w.get('input').trigger('focus')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('inset-ring-border-error')
+    // The feedback row still carries the error.
+    expect(w.text()).toContain('Bad')
+  })
+
+  it('renders trailing actions in icon/default, packed with no gap', () => {
+    const w = mountInput({ type: 'password', modelValue: 'secret' })
+    for (const label of ['Clear', 'Show']) {
+      const btn = w.get(`[aria-label="${label}"]`)
+      expect(btn.get('svg').classes()).toContain('text-icon-default')
+      // Figma Button Icon: 20px icon + 3px padding, siblings touch.
+      expect(btn.classes()).toContain('w-[26px]')
+      expect(btn.classes()).toContain('h-[26px]')
+    }
+    const row = w.get('[aria-label="Clear"]').element.parentElement!
+    expect(row.className).not.toMatch(/\bgap-/)
+  })
+
   it('renders the value in text/default', () => {
     const w = mountInput({ modelValue: 'x' })
     expect(w.get('input').classes()).toContain('text-text-default')
@@ -224,5 +259,26 @@ describe('AppInput submit-on-Enter gate (MEW-2185)', () => {
     const w = mountInput()
     await w.get('input').trigger('keyup', { key: 'Enter' })
     expect(w.emitted('enter')).toHaveLength(1)
+  })
+})
+
+describe('AppInput Active vs Focus edge cases (MEW-1971)', () => {
+  it('a press on the field padding does not leave a stale Active flag', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    await field(w).trigger('pointerdown') // padding, not the <input>
+    await w.get('input').trigger('focus') // later keyboard focus
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
+  })
+})
+
+describe('AppInput Active reset on blur (MEW-1971)', () => {
+  it('a quick blur + Tab back is keyboard Focus again', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    const input = w.get('input')
+    await input.trigger('pointerdown')
+    await input.trigger('focus')
+    await input.trigger('blur') // inside the 150ms grace window…
+    await input.trigger('focus') // …Tab back in
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
   })
 })
