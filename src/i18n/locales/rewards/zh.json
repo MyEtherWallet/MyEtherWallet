@@ -65,11 +65,13 @@
       "REWARD_EXPIRED": "此笔交易的申领期已结束。",
       "MAKER_INELIGIBLE": "该钱包目前没有获得奖励的资格。",
       "SPEND_TOO_LOW": "交易金额低于最低要求。",
-      "REWARDS_DEACTIVATED": "奖励计划目前已暂停。"
+      "REWARDS_DEACTIVATED": "奖励计划目前已暂停。",
+      "MAKER_SYNCING": "我们仍在检查该钱包的资格。申领将自动重试。"
     },
     "info_first_users": "成为每小时前 {count} 名获得奖励的用户之一。",
     "info_one_reward_period": "每个钱包在 {days} 天的活动期间内最多可获得一份奖励，直接发送到您的钱包。",
     "info_min_rwa_balance": "钱包在 {duration} 前（以当前日期滚动计算）必须持有至少 ${amount} 的 RWA 资产。",
-    "min_rwa_balance_required": "需要 {duration} 前持有 ${amount} RWA 余额"
+    "min_rwa_balance_required": "需要 {duration} 前持有 ${amount} RWA 余额",
+    "claim_pending_sync": "奖励申领暂缓"
   }
 }

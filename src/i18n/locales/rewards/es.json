@@ -65,11 +65,13 @@
       "REWARD_EXPIRED": "El plazo para reclamar esta operación ha terminado.",
       "MAKER_INELIGIBLE": "Esta billetera no es elegible para recompensas en este momento.",
       "SPEND_TOO_LOW": "La operación fue inferior al monto mínimo.",
-      "REWARDS_DEACTIVATED": "El programa de recompensas está pausado actualmente."
+      "REWARDS_DEACTIVATED": "El programa de recompensas está pausado actualmente.",
+      "MAKER_SYNCING": "Seguimos verificando la elegibilidad de esta billetera. El reclamo se reintentará automáticamente."
     },
     "info_first_users": "Sé uno de los primeros {count} usuarios recompensados por hora.",
     "info_one_reward_period": "Hasta una recompensa por billetera por período de campaña de {days} días, enviada directamente a tu billetera.",
     "info_min_rwa_balance": "La billetera debe haber mantenido al menos ${amount} en activos RWA hace {duration} (contando desde la fecha actual).",
-    "min_rwa_balance_required": "Requiere ${amount} en RWA hace {duration}"
+    "min_rwa_balance_required": "Requiere ${amount} en RWA hace {duration}",
+    "claim_pending_sync": "Reclamo de recompensa en espera"
   }
 }

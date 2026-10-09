@@ -78,13 +78,27 @@ const TERMINAL_REWARD_STATUSES: readonly RewardStatus[] = [
 const isTerminalStatus = (status: RewardStatus) =>
   TERMINAL_REWARD_STATUSES.includes(status)
 
-/** Claim rejections the user can act on, so they get a toast; the rest are logged only. */
-const USER_FACING_CLAIM_REASONS: readonly ClaimFailReason[] = [
+/** Claim rejections with their own copy; any other reason falls back to the backend's message. */
+const TRANSLATED_CLAIM_REASONS: readonly ClaimFailReason[] = [
   'REWARD_EXPIRED',
   'MAKER_INELIGIBLE',
   'SPEND_TOO_LOW',
   'REWARDS_DEACTIVATED',
 ]
+
+/**
+ * `MAKER_INELIGIBLE` carries the address's eligibility reason in its message
+ * ("... ineligible to receive rewards: NO_SNAPSHOTS"). These two mean the
+ * wallet simply hasn't been indexed yet, so the claim is retried once it has.
+ */
+const TRANSIENT_INELIGIBILITY: readonly IneligibilityReason[] = [
+  'NO_SNAPSHOTS',
+  'SYNCING',
+]
+
+const CLAIM_RETRY_INTERVAL_MS = 60_000
+/** ~15 minutes of waiting for the wallet to be indexed before giving up on an automatic retry. */
+const CLAIM_RETRY_MAX_ATTEMPTS = 15
 
 /** Only a recently filled order is worth a late claim — anything older is expired server-side anyway. */
 const LATE_CLAIM_WINDOW_MS = 3 * 24 * 60 * 60 * 1000
@@ -113,6 +127,15 @@ const apiErrorMessage = (body: unknown): string | null => {
 const claimFailReason = (body: unknown): ClaimFailReason | null => {
   const err = (body as Partial<ClaimError> | null)?.error
   return err && typeof err.reason === 'string' ? err.reason : null
+}
+
+/** The ineligibility reason a `MAKER_INELIGIBLE` claim error names, if any. */
+const makerIneligibilityReason = (
+  body: unknown,
+): IneligibilityReason | null => {
+  const message = apiErrorMessage(body) ?? ''
+  const match = message.match(/:\s*([A-Z_]+)\s*$/)
+  return (match?.[1] as IneligibilityReason | undefined) ?? null
 }
 
 const fetchRewards = async <T>(
@@ -200,10 +223,18 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   )
   const campaignStartedAt = computed(() => activeRule.value?.startedAt ?? null)
 
-  /** Numeric minimum trade (USD) — the claim gate compares against this. */
+  /**
+   * Minimum trade (USD) straight from the active rule, null until the rules
+   * have loaded. Every gate uses this one: the fallback below is for copy only,
+   * so a stale constant can never decide what gets claimed or checked.
+   */
+  const ruleMinSpendUsd = computed<number | null>(() => {
+    const min = holdAndTradeRule.value?.minTradeAmountUsd
+    return typeof min === 'number' && Number.isFinite(min) ? min : null
+  })
+  /** Minimum trade for display, with the config fallback until the rule lands. */
   const minSpendUsd = computed(
-    () =>
-      holdAndTradeRule.value?.minTradeAmountUsd ?? FALLBACK_RULES.MIN_SPEND_USD,
+    () => ruleMinSpendUsd.value ?? FALLBACK_RULES.MIN_SPEND_USD,
   )
   /** Display form of the minimum trade, whole dollars. */
   const minSpendTrade = computed(() => Math.ceil(minSpendUsd.value).toString())
@@ -427,10 +458,44 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     })
   }
 
-  const claimReasonText = (reason: ClaimFailReason): string | undefined =>
-    USER_FACING_CLAIM_REASONS.includes(reason)
+  const claimReasonText = (reason: ClaimFailReason, fallback: string | null) =>
+    TRANSLATED_CLAIM_REASONS.includes(reason)
       ? t(`rewards.claim_reason.${reason}`)
-      : undefined
+      : (fallback ?? undefined)
+
+  /**
+   * Re-attempt a claim the backend refused only because the wallet wasn't
+   * indexed yet: poll eligibility until the sync reasons clear, then claim
+   * again with the order's current saved state.
+   */
+  const claimRetryTimers = new Map<string, ReturnType<typeof setInterval>>()
+
+  const stopClaimRetry = (orderHash: string) => {
+    const timer = claimRetryTimers.get(orderHash)
+    if (timer) {
+      clearInterval(timer)
+      claimRetryTimers.delete(orderHash)
+    }
+  }
+
+  const scheduleClaimRetry = (
+    order: Pick<SavedTradeOrder, 'hash' | 'fromAddress'>,
+  ) => {
+    if (claimRetryTimers.has(order.hash)) return
+    let attempts = 0
+    const timer = setInterval(async () => {
+      attempts += 1
+      await fetchEligibility()
+      if (isSyncing.value && attempts < CLAIM_RETRY_MAX_ATTEMPTS) return
+      stopClaimRetry(order.hash)
+      if (isSyncing.value) return
+      const current = tradeOrdersStore
+        .getOrdersByAddress(order.fromAddress)
+        .find(o => o.hash === order.hash)
+      if (current) await claimTradeReward(current)
+    }, CLAIM_RETRY_INTERVAL_MS)
+    claimRetryTimers.set(order.hash, timer)
+  }
 
   const onRewarded = (order: Pick<SavedTradeOrder, 'hash' | 'fromAddress'>) => {
     setClaimState(order, { status: 'rewarded' })
@@ -505,10 +570,17 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     }
 
     // A trade under the campaign minimum can never earn, so don't ask the
-    // backend about it. Only a known-too-low value is gated: an order saved
-    // without a USD value is still sent, and the backend decides (`SPEND_TOO_LOW`).
+    // backend about it. The threshold is the served rule, never the config
+    // fallback: if the rules haven't loaded, fetch them now, and if that still
+    // yields nothing the order is sent and the backend decides (`SPEND_TOO_LOW`).
+    // An order saved without a USD value is sent for the same reason.
+    if (ruleMinSpendUsd.value === null) await fetchRules()
     const usdValue = Number(order.usdValue)
-    if (Number.isFinite(usdValue) && usdValue < minSpendUsd.value) {
+    if (
+      ruleMinSpendUsd.value !== null &&
+      Number.isFinite(usdValue) &&
+      usdValue < ruleMinSpendUsd.value
+    ) {
       setClaimState(order, { status: 'rejected', reason: 'SPEND_TOO_LOW' })
       return { ok: false, reason: 'SPEND_TOO_LOW', retryable: false }
     }
@@ -539,16 +611,41 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         }
         if (error.status === 422) {
           const reason = claimFailReason(error.body) ?? 'ORDER_INVALID_DATA'
-          setClaimState(order, { status: 'rejected', reason })
-          setEarnedPotentialReward(false)
-          const detail = claimReasonText(reason)
-          if (detail) {
+          const ineligibility =
+            reason === 'MAKER_INELIGIBLE'
+              ? makerIneligibilityReason(error.body)
+              : null
+
+          // Not a verdict yet: the wallet's balance history is still being
+          // indexed. Keep the claim retryable and come back once it is.
+          if (
+            ineligibility &&
+            TRANSIENT_INELIGIBILITY.includes(ineligibility)
+          ) {
+            setClaimState(order, {
+              status: 'failed',
+              reason: `${reason}:${ineligibility}`,
+            })
             toastStore.addToastMessage({
-              text: t('rewards.claim_rejected'),
-              textSecondary: detail,
+              text: t('rewards.claim_pending_sync'),
+              textSecondary: t('rewards.claim_reason.MAKER_SYNCING'),
               type: ToastType.Info,
             })
+            scheduleClaimRetry(order)
+            fetchEligibility()
+            return { ok: false, reason, retryable: true }
           }
+
+          setClaimState(order, {
+            status: 'rejected',
+            reason: ineligibility ? `${reason}:${ineligibility}` : reason,
+          })
+          setEarnedPotentialReward(false)
+          toastStore.addToastMessage({
+            text: t('rewards.claim_rejected'),
+            textSecondary: claimReasonText(reason, apiErrorMessage(error.body)),
+            type: ToastType.Info,
+          })
           fetchEligibility()
           return { ok: false, reason, retryable: false }
         }
@@ -615,6 +712,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** Watch wallet address changes and refetch */
   watch(walletAddress, newAddress => {
     rewardStatusPolls.forEach((_, hash) => stopRewardStatusPoll(hash))
+    claimRetryTimers.forEach((_, hash) => stopClaimRetry(hash))
     if (newAddress && !isBitcoinChain.value) {
       fetchEligibility()
       fetchUserRewards()
@@ -658,6 +756,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     activeRule,
     holdAndTradeRule,
     campaignStartedAt,
+    ruleMinSpendUsd,
     minSpendUsd,
     minSpendTrade,
     rewardAmount,

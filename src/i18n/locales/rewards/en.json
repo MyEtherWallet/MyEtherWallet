@@ -65,11 +65,13 @@
       "REWARD_EXPIRED": "The claim window for this trade has closed.",
       "MAKER_INELIGIBLE": "This wallet is not eligible for rewards right now.",
       "SPEND_TOO_LOW": "The trade was below the minimum amount.",
-      "REWARDS_DEACTIVATED": "The rewards program is currently paused."
+      "REWARDS_DEACTIVATED": "The rewards program is currently paused.",
+      "MAKER_SYNCING": "We're still checking this wallet's eligibility. The claim will be retried automatically."
     },
     "info_first_users": "Be among the first {count} users rewarded per hour.",
     "info_one_reward_period": "Up to one reward per wallet per {days} day campaign period, sent directly to your wallet.",
     "info_min_rwa_balance": "The wallet must have held at least ${amount} in RWA assets {duration} ago (rolling from the current date).",
-    "min_rwa_balance_required": "Needs ${amount} RWA balance {duration} ago"
+    "min_rwa_balance_required": "Needs ${amount} RWA balance {duration} ago",
+    "claim_pending_sync": "Reward claim on hold"
   }
 }
