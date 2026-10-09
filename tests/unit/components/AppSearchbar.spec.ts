@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount, shallowMount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 
 const i18n = createI18n({
@@ -15,12 +15,12 @@ const i18n = createI18n({
 })
 
 const mountInput = (props: Record<string, unknown> = {}) =>
-  shallowMount(AppSearchInput, {
+  shallowMount(AppSearchbar, {
     props,
     global: { plugins: [i18n] },
   })
 
-describe('AppSearchInput placeholder localization (MEW-2047)', () => {
+describe('AppSearchbar placeholder localization (MEW-2047)', () => {
   it('falls back to the localized common.search when no placeholder is passed (en)', () => {
     i18n.global.locale.value = 'en'
     const input = mountInput().find('input')
@@ -49,10 +49,10 @@ describe('AppSearchInput placeholder localization (MEW-2047)', () => {
   })
 })
 
-describe('AppSearchInput — design-library Searchbar (MEW-1971)', () => {
+describe('AppSearchbar — design-library Searchbar (MEW-1971)', () => {
   const mountFull = (props: Record<string, unknown> = {}) => {
     i18n.global.locale.value = 'en'
-    return mount(AppSearchInput, { props, global: { plugins: [i18n] } })
+    return mount(AppSearchbar, { props, global: { plugins: [i18n] } })
   }
 
   it('defaults to the Figma Default fill (background/formfield)', () => {

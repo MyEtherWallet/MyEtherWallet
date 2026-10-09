@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Component preview for AppInput, AppTextField and AppSearchInput.
+// Component preview for AppInput, AppTextArea and AppSearchbar.
 // Reachable at /dev/input via the design-library shell (registered in routesDefault.ts).
 //
 // Renders every AppInput axis (size × surface × state) so the rebuild can be
@@ -7,8 +7,8 @@
 // ring, Large float-label vs Small no-label, 80/64 error height, disabled.
 import { reactive } from 'vue'
 import AppInput from '@components/AppInput.vue'
-import AppTextField from '@components/AppTextField.vue'
-import AppSearchInput from '@components/AppSearchInput.vue'
+import AppTextArea from '@components/AppTextArea.vue'
+import AppSearchbar from '@components/AppSearchbar.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { INPUT_SIZES } from '@components/inputSizes'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -147,11 +147,11 @@ const searchModel = reactive({ default: '', alternative: '' })
     </section>
 
     <section class="space-y-4">
-      <h2 class="text-s-20 font-semibold">AppTextField</h2>
+      <h2 class="text-s-20 font-semibold">AppTextArea</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="p-6 rounded-20 bg-white border border-border-default">
           <p class="text-s-12 text-text-muted mb-2">surface = default</p>
-          <AppTextField
+          <AppTextArea
             v-model="textFieldModel.default"
             placeholder="Message to sign"
           />
@@ -160,7 +160,7 @@ const searchModel = reactive({ default: '', alternative: '' })
           class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
         >
           <p class="text-s-12 text-text-muted mb-2">surface = alternative</p>
-          <AppTextField
+          <AppTextArea
             v-model="textFieldModel.alternative"
             surface="alternative"
             placeholder="Message to sign"
@@ -170,17 +170,17 @@ const searchModel = reactive({ default: '', alternative: '' })
     </section>
 
     <section class="space-y-4">
-      <h2 class="text-s-20 font-semibold">AppSearchInput</h2>
+      <h2 class="text-s-20 font-semibold">AppSearchbar</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           class="p-6 rounded-20 bg-background-default border border-dashed border-border-default"
         >
           <p class="text-s-12 text-text-muted mb-2">on grey app bg</p>
-          <AppSearchInput v-model="searchModel.default" />
+          <AppSearchbar v-model="searchModel.default" />
         </div>
         <div class="p-6 rounded-20 bg-white border border-border-default">
           <p class="text-s-12 text-text-muted mb-2">on white card</p>
-          <AppSearchInput v-model="searchModel.alternative" />
+          <AppSearchbar v-model="searchModel.alternative" />
         </div>
       </div>
     </section>

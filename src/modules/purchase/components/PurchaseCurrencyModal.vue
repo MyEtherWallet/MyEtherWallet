@@ -16,7 +16,7 @@
         <div
           class="flex items-center h-12 px-1 bg-white border-4 border-border-default rounded-24 flex-none"
         >
-          <app-search-input
+          <app-searchbar
             v-model="searchInput"
             size="compact"
             bg-class="bg-transparent"
@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 import { fuzzySearchByKeys } from '@/utils/searchArray'

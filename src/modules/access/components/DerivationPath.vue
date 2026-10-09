@@ -47,7 +47,7 @@
               <!-- Seacrh -->
               <div class="sticky top-0 bg-white z-10 pt-2">
                 <div class="mb-1 flex items-center gap-2">
-                  <app-search-input
+                  <app-searchbar
                     bg-class="bg-background-alternative"
                     v-model="searchInput"
                     class="grow"
@@ -125,7 +125,7 @@ import AppInput from '@/components/AppInput.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'
 import {

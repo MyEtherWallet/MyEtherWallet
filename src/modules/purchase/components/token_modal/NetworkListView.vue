@@ -26,7 +26,7 @@
     <div
       class="flex items-center h-12 px-1 bg-white border-4 border-border-default rounded-24 flex-none"
     >
-      <app-search-input
+      <app-searchbar
         v-model="searchInput"
         size="compact"
         bg-class="bg-transparent"
@@ -134,7 +134,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getPurchaseChainIcon } from '../../helpers/purchaseIcons'

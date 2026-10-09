@@ -4,7 +4,7 @@
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('sign-message')">
         <div class="flex items-center flex-col gap-1 pt-6">
-          <app-text-field
+          <app-text-area
             v-model="message"
             surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_sign')"
@@ -77,7 +77,7 @@
 import { ref, computed } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextArea from '@/components/AppTextArea.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'

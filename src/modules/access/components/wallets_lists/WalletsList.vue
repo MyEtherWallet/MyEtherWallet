@@ -21,7 +21,7 @@
         :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
         class="flex grow gap-1 justify-between items-center bg-background-default-hover rounded-full p-1"
       >
-        <app-search-input
+        <app-searchbar
           bg-class="bg-background-alternative"
           v-model="searchInput"
           :class="{ 'md-header:max-w-[315px]': !isOpenSideMenu }"
@@ -74,7 +74,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSearchbar from '@components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'

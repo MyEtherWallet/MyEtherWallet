@@ -48,10 +48,10 @@ import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 /**
- * @description AppSearchInput component, used to display a search input field with a clear button.
+ * @description AppSearchbar component, used to display a search input field with a clear button.
  *
  * @example
- * <app-search-input v-model="searchInput" />
+ * <app-searchbar v-model="searchInput" />
  */
 
 defineProps({

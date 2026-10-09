@@ -475,7 +475,7 @@
               </div>
 
               <!-- Search -->
-              <app-search-input
+              <app-searchbar
                 v-model="languageQuery"
                 size="compact"
                 bg-class="bg-background-default"
@@ -550,7 +550,7 @@ import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'

@@ -2,7 +2,7 @@
  * Centralized input geometry + surface.
  *
  * Mirrors the design-library `Input` Figma component (Size × Style), the single
- * source of truth for field geometry and surface. AppInput and AppTextField
+ * source of truth for field geometry and surface. AppInput and AppTextArea
  * read from here so a size or surface tweak lands in one place.
  *
  * Both sizes share the 16px inline padding, 8px row gap, 12px radius and 14/20
@@ -52,7 +52,7 @@ const INPUT_SURFACE_SPEC: Record<InputSurface, InputSurfaceSpec> = {
 
 /**
  * Field surface classes (fill + line by state), shared by AppInput and
- * AppTextField.
+ * AppTextArea.
  *
  * Every line is an inset ring, never a CSS border: a ring takes no layout
  * space, so the 1px rest → 2px hover/focus change never moves the content and
