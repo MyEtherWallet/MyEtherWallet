@@ -28,7 +28,8 @@
       <app-btn-icon
         @click="clearInputValue"
         :class="[
-          model !== '' ? 'opacity-100' : 'hidden',
+          // Empty or not yet bound (undefined) → no clear action.
+          model ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
         :label="$t('common.clear_icon')"
