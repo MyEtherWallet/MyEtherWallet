@@ -490,10 +490,10 @@
                           size="small"
                           class="min-w-[136px] !px-3 !py-2"
                           :disabled="isWatchOnly"
-                          :theme="
+                          :tone="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
-                              : 'error'
+                              : 'danger'
                           "
                           @click="
                             onManagePositionClick(
@@ -580,7 +580,7 @@
                     <app-base-button
                       size="small"
                       class="w-24 !px-3 !py-2"
-                      theme="success"
+                      tone="success"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -594,7 +594,7 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      theme="error"
+                      tone="danger"
                       class="w-24 !px-3 !py-2"
                       :disabled="isPerpsRestricted"
                       @click="

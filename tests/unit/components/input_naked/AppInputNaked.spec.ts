@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 
 // jsdom has no layout or canvas: fix the root at 200px, 10px per character per 16px of font
 const rootWidth = ref(200)
@@ -23,6 +23,7 @@ const mountInput = (props: Record<string, unknown> = {}, attrs = {}) =>
   mount(AppInputNaked, {
     props: { modelValue: '', label: 'Amount', ...props },
     attrs,
+    global: { stubs: { AppSpinner: true } },
   })
 
 describe('AppInputNaked', () => {

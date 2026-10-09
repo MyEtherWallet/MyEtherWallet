@@ -76,7 +76,7 @@
         </div>
 
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
           @click="model = false"
         >

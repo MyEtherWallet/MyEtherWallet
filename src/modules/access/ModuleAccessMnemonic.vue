@@ -107,7 +107,7 @@
                 {{ $t('common.access_wallet') }}
               </app-base-button>
               <app-base-button
-                :is-outline="true"
+                type="secondary"
                 class="w-full xs:w-auto xs:min-w-[180px]"
                 @click="backStep"
               >

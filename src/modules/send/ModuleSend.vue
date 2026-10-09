@@ -4,10 +4,12 @@
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-4 px-4">
           <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
             class="text-text-brand text-s-15 pb-1"
             @click="resetSendModule"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
         <div
@@ -127,7 +129,6 @@ import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {

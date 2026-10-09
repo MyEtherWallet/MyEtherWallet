@@ -449,7 +449,7 @@
                   <app-base-button
                     v-if="token.ondo !== null"
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="tradeBtn(token)"
                     >{{ $t('crypto.trade') }}
@@ -457,7 +457,7 @@
                   <app-base-button
                     v-else-if="getIsBridgeable(token)"
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="bridgeBtn(token)"
                     >{{ $t('crypto.bridge') }}
@@ -469,7 +469,7 @@
                         getTokenIsCurrentNative(token))
                     "
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="swapBtn(token)"
                     >{{ $t('common.swap') }}

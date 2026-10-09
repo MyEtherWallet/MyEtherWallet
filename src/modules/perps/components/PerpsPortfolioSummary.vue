@@ -55,7 +55,7 @@
             {{ $t('perps.deposit.title') }}
           </AppBaseButton>
           <AppBaseButton
-            is-outline
+            type="secondary"
             @click="$emit('withdraw')"
             class="w-full"
             size="medium"
@@ -123,12 +123,14 @@
             </p>
           </div>
         </div>
-        <app-btn-text
+        <app-base-button
+          type="link"
+          size="small"
           class="mt-1 text-s-13 text-text-brand mr-auto -ml-3"
           @click="showBalanceDialog = true"
         >
           {{ $t('perps.portfolio.view-more') }}
-        </app-btn-text>
+        </app-base-button>
       </div>
     </div>
   </app-sheet>
@@ -143,7 +145,6 @@ import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import PerpsBalanceDetailsDialog from './PerpsBalanceDetailsDialog.vue'

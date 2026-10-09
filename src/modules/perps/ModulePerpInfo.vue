@@ -296,7 +296,9 @@
             </p>
           </div>
         </div>
-        <app-btn-text
+        <app-base-button
+          type="tertiary"
+          surface="alternative"
           size="medium"
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
@@ -307,7 +309,7 @@
             class="ml-1 inline-block align-middle"
             :class="{ 'rotate-180': showPositionMore }"
           />
-        </app-btn-text>
+        </app-base-button>
         <transition name="fade" mode="out-in">
           <div
             v-if="showPositionMore"
@@ -984,7 +986,6 @@ import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import { PERPS_CHART_INTERVALS, getPerpsChartRange } from './utils/chart'

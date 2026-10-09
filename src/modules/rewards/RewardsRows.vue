@@ -64,7 +64,7 @@
       <app-base-button
         v-if="!swapClaimed && !swapNoRewards"
         size="small"
-        is-outline
+        type="secondary"
         class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
@@ -165,7 +165,7 @@
       <app-base-button
         v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
         size="small"
-        is-outline
+        type="secondary"
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
