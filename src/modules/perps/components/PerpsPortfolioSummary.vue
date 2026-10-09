@@ -11,8 +11,7 @@
           <app-btn-icon
             :label="$t('refresh_balance')"
             :disabled="loading"
-            height="h-6"
-            width="w-6"
+            size="s"
             @click="onRefreshBalance"
           >
             <AppIcon

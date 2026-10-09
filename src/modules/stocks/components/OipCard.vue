@@ -29,22 +29,22 @@
         </p>
       </div>
 
-      <button
-        type="button"
-        :aria-label="$t('common.add_to_watchlist')"
+      <AppBtnIcon
         data-test="listing-favorite"
-        class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
+        :label="
+          favorite
+            ? $t('common.remove_from_watchlist')
+            : $t('common.add_to_watchlist')
+        "
+        :class="favorite ? 'text-text-brand' : 'text-text-subtle'"
         @click.stop="$emit('toggle-favorite')"
       >
         <AppIcon
           name="star"
-          variant="filled"
+          :variant="favorite ? 'filled' : 'stroke'"
           size="s"
-          v-if="favorite"
-          class="text-text-brand"
         />
-        <AppIcon name="star" size="s" v-else class="text-text-subtle" />
-      </button>
+      </AppBtnIcon>
     </div>
 
     <!-- B. Name block -->
@@ -134,6 +134,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 

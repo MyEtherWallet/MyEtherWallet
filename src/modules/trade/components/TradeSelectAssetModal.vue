@@ -32,10 +32,9 @@
         </p>
       </div>
       <app-btn-icon
+        variant="filled"
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-background-default"
-        height="h-8"
-        width="w-8"
+        class="absolute top-6 right-6"
         @click="isOpen = false"
       >
         <AppIcon name="x-mark" />
@@ -196,6 +195,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -216,7 +216,6 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber
   fiatValueFormatted: string

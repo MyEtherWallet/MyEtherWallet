@@ -18,6 +18,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Action Bar', to: '/dev/action-bar' },
       { name: 'Avatar', to: '/dev/avatar' },
       { name: 'Button', to: '/dev/button' },
+      { name: 'Button Icon', to: '/dev/btn-icon' },
       { name: 'Chip', to: '/dev/chip' },
       { name: 'Content Group', to: '/dev/content-group' },
       { name: 'Divider', to: '/dev/divider' },

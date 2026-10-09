@@ -127,6 +127,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'btn-icon',
+              name: 'DevBtnIcon',
+              component: () => import('@/views/ViewBtnIconShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'typography',
               name: 'DevTypography',
               component: () => import('@/views/ViewTypographyShowcase.vue'),
