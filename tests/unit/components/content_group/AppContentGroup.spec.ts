@@ -144,6 +144,20 @@ describe('AppContentGroup', () => {
     expect(wrapper.find(title()).exists()).toBe(false)
   })
 
+  it('passes size "xs" to the icon/avatar slots for every group size', () => {
+    for (const size of ['m', 'l'] as const) {
+      const wrapper = mount(AppContentGroup, {
+        props: { title: 'T', description: 'D', size },
+        slots: {
+          'title-icon': '<i data-testid="ti">{{ params.size }}</i>',
+          'description-icon': '<i data-testid="di">{{ params.size }}</i>',
+        },
+      })
+      expect(wrapper.get('[data-testid="ti"]').text()).toBe('xs')
+      expect(wrapper.get('[data-testid="di"]').text()).toBe('xs')
+    }
+  })
+
   it('renders the icon/avatar slots after the text (trailing only)', () => {
     for (const align of ['left', 'right'] as const) {
       const wrapper = mount(AppContentGroup, {

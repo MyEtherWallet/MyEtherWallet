@@ -75,13 +75,13 @@ const combos = sizeAlign.flatMap(c =>
             :size="c.size"
             :align="c.align"
           >
-            <template #title-icon>
-              <AppIcon name="star" size="xs" />
-              <AppAvatar type="account" size="xs" :address="ADDRESS" />
+            <template #title-icon="{ size }">
+              <AppIcon name="star" :size="size" />
+              <AppAvatar type="account" :size="size" :address="ADDRESS" />
             </template>
-            <template #description-icon>
-              <AppIcon name="star" size="xs" />
-              <AppAvatar type="account" size="xs" :address="ADDRESS" />
+            <template #description-icon="{ size }">
+              <AppIcon name="star" :size="size" />
+              <AppAvatar type="account" :size="size" :address="ADDRESS" />
             </template>
           </AppContentGroup>
         </div>

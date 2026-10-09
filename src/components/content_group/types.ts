@@ -31,9 +31,3 @@ export const TONE_SUPPORTING_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-subtle',
   inverse: 'text-white/70',
 }
-
-/** Gap between the title and description rows (loading included): M none, L 4px. */
-export const ROW_GAP_CLASS: Record<ContentGroupSize, string> = {
-  m: '',
-  l: 'gap-1',
-}

@@ -5,7 +5,6 @@ import {
   SUPPORTING_TEXT_CLASS,
   TONE_EMPHASIS_CLASS,
   TONE_SUPPORTING_CLASS,
-  ROW_GAP_CLASS,
   type ContentGroupAlign,
   type ContentGroupSize,
   type ContentGroupTone,
@@ -24,8 +23,8 @@ import {
  * supporting style and the description the emphasis one.
  *
  * The `title-icon` / `description-icon` slots trail their line (the design
- * never puts them on the left) and take an Icon and/or Avatar at size `xs`
- * (18px) whatever the group `size`.
+ * never puts them on the left) and take an Icon and/or Avatar. Both slots pass
+ * `size` ('xs', 18px) for the consumer to bind, whatever the group `size`.
  */
 const props = withDefaults(
   defineProps<{
@@ -52,6 +51,8 @@ const props = withDefaults(
 )
 
 const slots = useSlots()
+// Icon and Avatar both name their 18px size 'xs'; slots pass it as `size`.
+const SLOT_SIZE = 'xs' as const
 // An empty string counts as "no description": it would otherwise render a blank
 // second row (and a skeleton bar while loading) plus the row gap.
 const hasDescription = computed(() => !!props.description)
@@ -92,9 +93,9 @@ const descriptionClass = computed(() => [
   <div
     data-testid="cg-root"
     class="flex flex-col min-w-0"
-    :class="[alignClass, ROW_GAP_CLASS[size]]"
+    :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: skeleton bars keep line height stable (12px tall, 4px radius). -->
+    <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes. -->
     <template v-if="loading">
       <div class="py-[5px]">
         <div
@@ -121,7 +122,7 @@ const descriptionClass = computed(() => [
           v-if="slots['title-icon']"
           class="flex shrink-0 items-center gap-1"
         >
-          <slot name="title-icon" />
+          <slot name="title-icon" :size="SLOT_SIZE" />
         </span>
       </div>
 
@@ -141,7 +142,7 @@ const descriptionClass = computed(() => [
           v-if="slots['description-icon']"
           class="flex shrink-0 items-center gap-1"
         >
-          <slot name="description-icon" />
+          <slot name="description-icon" :size="SLOT_SIZE" />
         </span>
       </div>
     </template>
