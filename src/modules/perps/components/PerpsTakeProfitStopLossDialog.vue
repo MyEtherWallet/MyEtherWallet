@@ -47,12 +47,14 @@
                   })
                 }}
               </p>
-              <app-btn-text
+              <app-base-button
+                type="link"
+                size="small"
                 class="text-text-brand text-s-12 sm:text-s-14"
                 @click="removeTakeProfit"
               >
                 {{ $t('perps.auto-close.remove') }}
-              </app-btn-text>
+              </app-base-button>
             </div>
             <perps-amount
               v-model:amount="takeProfitPrice"
@@ -127,12 +129,14 @@
                   })
                 }}
               </p>
-              <app-btn-text
+              <app-base-button
+                type="link"
+                size="small"
                 class="text-text-brand text-s-12 sm:text-s-14"
                 @click="removeStopLoss"
               >
                 {{ $t('perps.auto-close.remove') }}
-              </app-btn-text>
+              </app-base-button>
             </div>
             <perps-amount
               v-model:amount="stopLossPrice"
@@ -201,9 +205,15 @@
           >
             {{ $t('perps.auto-close.save') }}
           </app-base-button>
-          <app-btn-text class="mx-auto w-full" is-large @click="isOpen = false">
+          <app-base-button
+            type="tertiary"
+            surface="alternative"
+            size="large"
+            class="mx-auto w-full"
+            @click="isOpen = false"
+          >
             {{ $t('perps.auto-close.cancel') }}
-          </app-btn-text>
+          </app-base-button>
         </div>
       </div>
     </template>
@@ -215,7 +225,6 @@ import { ref, watch, computed, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'

@@ -345,7 +345,7 @@
                 <div class="hidden lg:flex justify-end">
                   <app-base-button
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="tradeBtn(token)"
                     >{{ $t('stocks.trade') }}

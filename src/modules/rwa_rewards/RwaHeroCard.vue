@@ -113,7 +113,7 @@
             </app-base-button>
           </template>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             :class="isRoundTwoActive ? 'w-full' : ''"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
@@ -184,7 +184,7 @@
             :subtitle="$t('rwaRewards.sub_sent')"
           />
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="w-full text-s-16 font-semibold tracking-[-0.32px]"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"
@@ -236,7 +236,7 @@
             </app-base-button>
           </template>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             :class="isRoundTwoActive ? 'w-full' : ''"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
@@ -264,7 +264,7 @@
           </p>
         </div>
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="text-label-base"
           @click="onContactSupport"
         >
@@ -320,7 +320,7 @@
             {{ tradeLabel }}
           </app-base-button>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"

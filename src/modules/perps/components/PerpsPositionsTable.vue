@@ -257,7 +257,7 @@
                         size="small"
                         :disabled="isWatchOnly"
                         @click="toggleMenu"
-                        :theme="pos.direction === 'long' ? 'success' : 'error'"
+                        :tone="pos.direction === 'long' ? 'success' : 'danger'"
                       >
                         {{ $t('perps.positions.manage-label') }}
                       </AppBaseButton>

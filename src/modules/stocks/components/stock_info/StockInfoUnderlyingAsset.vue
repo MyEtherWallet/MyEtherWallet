@@ -1,6 +1,5 @@
 <template>
   <div
-    class=""
     :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
   >
     <h2

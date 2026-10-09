@@ -16,7 +16,10 @@
         </p>
       </div>
     </app-base-button>
-    <app-btn-text
+    <app-base-button
+      type="tertiary"
+      surface="alternative"
+      size="small"
       v-if="isNativeBuyable"
       class="mt-1 !min-w-[200px] group transition-transform"
       @click="openDepositDialog = true"
@@ -35,7 +38,7 @@
           class="group-hover:translate-x-1 transition-transform xl:size-5"
         />
       </div>
-    </app-btn-text>
+    </app-base-button>
     <app-base-button
       v-if="!isNativeBuyable"
       class="w-full"
@@ -57,7 +60,6 @@
 </template>
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from './AppBtnText.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'

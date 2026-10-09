@@ -50,7 +50,7 @@
         <div v-if="isWaitingForConfirm" class="flex gap-3">
           <AppBaseButton
             class="flex-1 rounded-full border border-border-hover py-2.5 text-s-14 font-medium text-text-subtle hoverOpacity"
-            is-outline
+            type="secondary"
             @click="$emit('cancel')"
           >
             {{ $t('perps.confirm.cancel') }}

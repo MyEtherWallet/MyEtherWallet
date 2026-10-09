@@ -61,18 +61,21 @@
       <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     </div>
     <div class="flex justify-center">
-      <app-btn-text
+      <app-base-button
+        type="link"
+        size="small"
         v-if="notificationsCount > 1"
         @click="deleteAllNotifications"
         class="text-text-brand text-s-14"
       >
         {{ $t('common.delete_all') }}
-      </app-btn-text>
+      </app-base-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { ref, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 //Components
@@ -82,7 +85,6 @@ import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 
 //Helpers

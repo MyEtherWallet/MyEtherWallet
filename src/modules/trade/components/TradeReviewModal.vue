@@ -166,7 +166,10 @@
               </expand-transition>
             </div>
 
-            <app-btn-text
+            <app-base-button
+              type="tertiary"
+              surface="alternative"
+              size="small"
               class="!text-black text-s-14 font-semibold tracking-[-0.28px]"
               @click="isBreakdownOpen = !isBreakdownOpen"
             >
@@ -184,7 +187,7 @@
                   :class="{ 'rotate-180': isBreakdownOpen }"
                 />
               </span>
-            </app-btn-text>
+            </app-base-button>
           </div>
         </div>
 
@@ -232,7 +235,6 @@ import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
