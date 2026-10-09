@@ -28,6 +28,7 @@ vi.mock('@/stores/rewardsStore', () => ({
   useRewardsStore: () => ({
     checkAvailabilityAfterTransaction: vi.fn(async () => false),
     minSpendTrade: ref('250'),
+    ruleMinSpendUsd: ref(250),
   }),
 }))
 

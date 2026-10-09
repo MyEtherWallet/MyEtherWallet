@@ -6,12 +6,17 @@ import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
 import { useHomeOffers, type HomeOffer } from '../composables/useHomeOffers'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
+import { storeToRefs } from 'pinia'
 import peggyAstronaut from '@/assets/images/home/offers/peggy-astronaut.svg'
 
 const { t } = useI18n()
 const { offers } = useHomeOffers()
 const walletMenu = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
+// The trade offer's headline carries the campaign minimum, which lives in
+// configs via the rewards store so it moves with the terms dialog and banner.
+const { minSpendTrade } = storeToRefs(useRewardsStore())
 
 // Reuse the Portfolio "Rewards & offers" popups: the trade offer opens the
 // "Trade and get 5 USDC" learn-more modal (Portfolio's trade card), the hold
@@ -46,7 +51,7 @@ const onOfferClick = (offer: HomeOffer) => {
         :key="o.id"
         :category="t(o.categoryKey)"
         :icon="o.icon"
-        :title="t(o.titleKey)"
+        :title="t(o.titleKey, { min: minSpendTrade })"
         :highlight="t(o.highlightKey)"
         :gradient="o.gradient"
         @click="onOfferClick(o)"

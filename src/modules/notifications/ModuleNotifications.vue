@@ -182,9 +182,10 @@ const { selectedChain } = storeToRefs(useChainsStore())
 const rewardsStore = useRewardsStore()
 const {
   fetchUserRewards,
+  fetchEligibility,
   setEarnedPotentialReward,
   checkRewards,
-  fetchEligibility,
+  claimUnclaimedFilledOrders,
 } = rewardsStore
 const { earnedPotentialReward } = storeToRefs(rewardsStore)
 const holdingsStore = useHoldingsStore()
@@ -476,6 +477,11 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     // Mark as unseen when status changes to filled (important update)
     updates.seen = false
+
+    // Trade-and-earn: a filled order is what the rewards API accepts a claim
+    // for. Fire-and-forget — the store persists the outcome on the order and
+    // handles its own toasts and follow-up polling.
+    void rewardsStore.claimTradeReward({ ...order, ...updates })
 
     if (order.rewardRegistered && !order.rewardToastShown) {
       toastStore.addToastMessage({
@@ -1088,6 +1094,9 @@ watch(
       startPollingForPendingOrders(newAddress)
       // Resume polling for pending notifications (transactions, swaps, bridges)
       startPollingForPendingNotifications(newAddress)
+      // Orders that filled while the app was closed never had their reward
+      // claimed; catch those up now.
+      void claimUnclaimedFilledOrders(newAddress)
     }
   },
   { immediate: true },

@@ -92,26 +92,14 @@
 
         <rewards-rows
           v-if="!isBanned"
-          :swap-claimed="swapClaimed"
-          :swap-no-rewards="swapNoRewards"
-          :swap-remaining-pct="swapRemainingPct"
-          :swap-remaining-count="swapRemainingCount"
-          :swap-total="swapTotal"
           :trade-claimed="tradeClaimed"
           :trade-no-rewards="tradeNoRewards"
-          :trade-market-closed="tradeMarketClosed"
+          :trade-paused="isRewardsPaused"
           :trade-remaining-pct="tradeRemainingPct"
           :trade-remaining-count="tradeRemainingCount"
           :trade-total="tradeTotal"
-          :time-until-hour-reset="timeUntilHourReset"
-          :time-until-swap-next-eligible="timeUntilSwapNextEligible"
-          :time-until-trade-next-eligible="timeUntilTradeNextEligible"
-          :time-until-market-open="timeUntilMarketOpen"
           :min-spend-trade="minSpendTrade"
           class="mt-0"
-          :has-swap="false"
-          :has-trade="true"
-          @swap="onNavigate('swap')"
           @trade="onNavigate('trade')"
         />
       </div>
@@ -131,29 +119,15 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+import Configs from '@/configs'
+
 const props = defineProps<{
   location?:
     | 'main-banner'
     | 'small-banner-swap'
     | 'small-banner-trade'
     | 'small-banner-bridge'
-  swapClaimed: boolean | null
-  swapNoRewards: boolean
-  swapRemainingPct: number
-  swapRemainingCount: number | null
-  swapTotal: number | null
-  tradeClaimed: boolean | null
-  tradeNoRewards: boolean
-  tradeMarketClosed: boolean
-  tradeRemainingPct: number
-  tradeRemainingCount: number | null
-  tradeTotal: number | null
-  timeUntilHourReset: string
-  timeUntilSwapNextEligible: string
-  timeUntilTradeNextEligible: string
-  timeUntilMarketOpen: string
 }>()
 
 const isOpenModel = defineModel('isOpen', {
@@ -167,18 +141,28 @@ const { setWalletPanel } = walletMenu
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
-
 const rewardsStore = useRewardsStore()
-const { isBanned, minSpendTrade } = storeToRefs(rewardsStore)
+const {
+  isBanned,
+  minSpendTrade,
+  rewardAmount,
+  minRwaBalanceUsd,
+  holdDurationLabel,
+  tradeClaimed,
+  tradeNoRewards,
+  isRewardsPaused,
+  tradeRemainingPct,
+  tradeRemainingCount,
+  tradeTotal,
+} = storeToRefs(rewardsStore)
 
 const { t } = useI18n()
 
-// Rewards program parameters — update these to change the displayed values
-const MIN_TRADE_AMOUNT = 25
-const MAX_USERS_PER_HOUR = 15
-const REWARD_AMOUNT = 5
-const CAMPAIGN_PERIOD_DAYS = 7
-const MIN_USDC_HOLD_BALANCE = 50
+// Minimums and the reward come from the rules endpoint via the store; these
+// are the terms the endpoint does not carry.
+const MAX_USERS_PER_HOUR = Configs.MEW_REWARDS_PER_HOUR
+const CAMPAIGN_PERIOD_DAYS = Configs.MEW_REWARDS_PERIOD_DAYS
+const MIN_WALLET_AGE_WEEKS = Configs.MEW_REWARDS_MIN_WALLET_AGE_WEEKS
 
 watch(isOpenModel, val => {
   if (val) {
@@ -191,25 +175,15 @@ watch(isOpenModel, val => {
 const infoItems = computed(() => [
   {
     icon: 'swap',
-    text: t('rewards.info_make_trade', {
-      min: minSpendTrade.value || MIN_TRADE_AMOUNT,
-    }),
+    text: t('rewards.info_make_trade', { min: minSpendTrade.value }),
   },
-  // {
-  //   icon: 'trade',
-  //   text: t('rewards.earn_rewards_description', {
-  //     trade_count: 10,
-  //     trade_minimum: 25,
-  //     reward_amount: 5,
-  //   }),
-  // },
   {
     icon: 'trade',
     text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
   },
   {
     icon: 'currency-dollar',
-    text: t('rewards.info_earn_per_trade', { amount: REWARD_AMOUNT }),
+    text: t('rewards.info_earn_per_trade', { amount: rewardAmount.value }),
   },
   {
     icon: 'calendar',
@@ -217,12 +191,13 @@ const infoItems = computed(() => [
   },
   {
     icon: 'wallet-icon',
-    text: t('rewards.info_wallet_age'),
+    text: t('rewards.info_wallet_age', { weeks: MIN_WALLET_AGE_WEEKS }),
   },
   {
     icon: 'wallet-balance',
-    text: t('rewards.info_min_usdc_balance', {
-      amount: MIN_USDC_HOLD_BALANCE,
+    text: t('rewards.info_min_rwa_balance', {
+      amount: minRwaBalanceUsd.value,
+      duration: holdDurationLabel.value,
     }),
   },
   {

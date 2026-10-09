@@ -89,6 +89,8 @@ export type RwaRewardStatus =
   /** Hold period complete, reward not claimed yet. */
   | 'claimable'
   | 'noRewards'
+  /** Balance history still indexing; eligibility not known yet. */
+  | 'syncing'
   | 'claimed'
   /** The hold was broken before it completed. */
   | 'lost'
@@ -129,8 +131,12 @@ const rewardsStore = useRewardsStore()
 const {
   isBanned,
   isEligible,
-  eligibilityV2,
-  tradeMarketClosed,
+  eligibility,
+  isRewardsPaused,
+  isSyncing,
+  isBalanceTooLow,
+  minRwaBalanceUsd,
+  holdDurationLabel,
   tradeClaimed,
   tradeNoRewards,
   tradeRemainingCount,
@@ -144,12 +150,13 @@ const isTradeCard = computed(() => props.illustration === 'trade')
 
 const tradeStatus = computed<RwaRewardStatus>(() => {
   if (isBanned.value) return 'banned'
-  if (tradeMarketClosed.value) return 'paused'
+  if (isRewardsPaused.value) return 'paused'
   if (tradeClaimed.value) return 'claimed'
   if (tradeNoRewards.value) return 'noRewards'
+  if (isSyncing.value) return 'syncing'
   // Only trust ineligibility once eligibility data has loaded, otherwise
   // isEligible is false by default and would flash notEligible on mount.
-  if (eligibilityV2.value && !isEligible.value) return 'notEligible'
+  if (eligibility.value && !isEligible.value) return 'notEligible'
 
   return 'ongoing'
 })
@@ -157,20 +164,26 @@ const tradeStatus = computed<RwaRewardStatus>(() => {
 const tradeStatusText = computed(() => {
   switch (tradeStatus.value) {
     case 'noRewards':
-      return t('rwaRewards.no_rewards_left_this_hour')
+      return t('rewards.no_rewards_left')
     case 'claimed':
       return t('rwaRewards.already_claimed')
     case 'paused':
       return t('rwaRewards.temporarily_paused')
+    case 'syncing':
+      return t('rewards.checking_eligibility')
     case 'banned':
       return t('rwaRewards.modal_not_eligible_title')
     case 'notEligible':
-      return t('rwaRewards.modal_not_eligible_title')
+      // The balance rule is the one a user can act on, so name it.
+      return isBalanceTooLow.value
+        ? t('rewards.min_rwa_balance_required', {
+            amount: minRwaBalanceUsd.value,
+            duration: holdDurationLabel.value,
+          })
+        : t('rwaRewards.modal_not_eligible_title')
     default: {
       const count = tradeRemainingCount.value
-      return count == null
-        ? ''
-        : t('rwaRewards.rewards_left_this_hour', { count })
+      return count == null ? '' : t('rewards.rewards_left', { count }, count)
     }
   }
 })
@@ -229,6 +242,7 @@ const statusBadge = computed(
       holding: { text: '#005ae5', bg: '#d6edff' },
       claimable: { text: '#067f71', bg: '#c8fff1' },
       noRewards: { text: '#bb5602', bg: '#ffedc5' },
+      syncing: { text: '#bb5602', bg: '#ffedc5' },
       claimed: { text: '#067f71', bg: '#c8fff1' },
       lost: { text: '#cc0452', bg: '#ffdbe3' },
       expired: { text: '#cc0452', bg: '#ffdbe3' },

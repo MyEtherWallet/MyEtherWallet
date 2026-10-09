@@ -30,15 +30,10 @@
     "no_rewards_left": "暂无奖励",
     "swap_button": "兑换 {amount}",
     "trade_button": "交易 {amount}",
-    "back_in": "{time} 后返回",
-    "market_is_closed": "市场已关闭",
     "info_make_trade": "进行一笔超过 ${min} 的交易。",
-    "info_first_users": "成为每小时每笔交易的前 {count} 名用户之一。",
     "info_earn_per_trade": "每笔交易赚取 ${amount} USDC。",
-    "info_one_reward_period": "每个钱包在 {days} 天的活动期间内最多可获得一份奖励，直接发送到您的钱包",
     "info_no_sybil": "涉嫌通过女巫攻击（创建多个账户以获取更多奖励）或其他操纵手段滥用奖励计划的钱包将被取消资格。",
-    "info_wallet_age": "钱包必须至少创建满 3 周（相对于当前日期），并持有至少 0.005 ETH 的最低余额。",
-    "info_min_usdc_balance": "钱包必须持有至少 {amount} USDC 的最低余额。",
+    "info_wallet_age": "钱包必须至少创建满 {weeks} 周（相对于当前日期）。",
     "info_no_cashout": "提现交易不符合资格。",
     "coming_soon_title": "奖励即将上线",
     "coming_soon_body": "我们正在筹备下一期奖励活动。在 X 上关注 @myetherwallet，获取最新动态和即将发布的公告。",
@@ -61,6 +56,22 @@
     "trade_more_to_qualify": "再交易 ${amount} 即可符合资格",
     "portfolio_trade_description": "每小时前 15 笔超过 ${min} 的交易可获得 5 USDC 奖励。每个钱包每周一次。",
     "not_eligible_for_rewards": "不符合奖励资格",
-    "connect_another_address": "连接其他地址"
+    "connect_another_address": "连接其他地址",
+    "rewards_paused": "奖励已暂时暂停",
+    "checking_eligibility": "正在检查资格",
+    "claim_requested": "奖励已申请！稍后将到达您的钱包。",
+    "claim_rejected": "此笔交易未获得奖励",
+    "claim_reason": {
+      "REWARD_EXPIRED": "此笔交易的申领期已结束。",
+      "MAKER_INELIGIBLE": "该钱包目前没有获得奖励的资格。",
+      "SPEND_TOO_LOW": "交易金额低于最低要求。",
+      "REWARDS_DEACTIVATED": "奖励计划目前已暂停。",
+      "MAKER_SYNCING": "我们仍在检查该钱包的资格。申领将自动重试。"
+    },
+    "info_first_users": "成为每小时前 {count} 名获得奖励的用户之一。",
+    "info_one_reward_period": "每个钱包在 {days} 天的活动期间内最多可获得一份奖励，直接发送到您的钱包。",
+    "info_min_rwa_balance": "钱包在 {duration} 前（以当前日期滚动计算）必须持有至少 ${amount} 的 RWA 资产。",
+    "min_rwa_balance_required": "需要 {duration} 前持有 ${amount} RWA 余额",
+    "claim_pending_sync": "奖励申领暂缓"
   }
 }
