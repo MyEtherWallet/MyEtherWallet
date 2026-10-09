@@ -11,9 +11,9 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    * field shows only the caret. Keyboard focus before any edit is "Focus" and
    * keeps the ring. Resets when the field loses focus.
    */
-  const isTyping = ref(false)
-  const setTyping = () => {
-    isTyping.value = true
+  const isActive = ref(false)
+  const setActive = () => {
+    isActive.value = true
   }
 
   /**
@@ -23,23 +23,33 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    * @function startOutOfFocusTimeout - Starts the out-of-focus timeout.
    * @function stopOutOfFocusTimeout - Stops the out-of-focus timeout.
    *
-   * The timeout function sets `inFocusInput` to false.
+   * The timeout function sets `inFocusInput` (and `isActive`) to false.
    *
    * @param {number} 150 - The duration of the timeout in milliseconds.
    * @param {Object} { immediate: false } - Does not start the timeout immediately.
    */
   const {
     isPending: isPendingOutOfFocusTimeout,
-    start: startOutOfFocusTimeout,
+    start: startOutOfFocusTimer,
     stop: stopOutOfFocusTimeout,
   } = useTimeoutFn(
     () => {
       inFocusInput.value = false
-      isTyping.value = false
+      isActive.value = false
     },
     150,
     { immediate: false },
   )
+
+  /**
+   * Called on blur. Active ends right away, so a quick Tab back (inside the
+   * 150ms grace window) is keyboard Focus again; the focus flag itself waits
+   * out the timeout so trailing-button clicks don't flicker the field.
+   */
+  const startOutOfFocusTimeout = () => {
+    isActive.value = false
+    startOutOfFocusTimer()
+  }
 
   /**
    * Sets the input field to be in focus.
@@ -64,8 +74,8 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
   })
   return {
     inFocusInput,
-    isTyping,
-    setTyping,
+    isActive,
+    setActive,
     setInFocusInput,
     startOutOfFocusTimeout,
   }

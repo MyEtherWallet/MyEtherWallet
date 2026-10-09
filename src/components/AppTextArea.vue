@@ -17,7 +17,7 @@
       autocomplete="off"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
-      @pointerdown="setTyping()"
+      @pointerdown="setActive()"
       @input="onInput"
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
@@ -97,8 +97,8 @@ const feedbackId = useId()
 
 const {
   inFocusInput,
-  isTyping,
-  setTyping,
+  isActive,
+  setActive,
   setInFocusInput,
   startOutOfFocusTimeout,
 } = useInFocusInput(baseInput)
@@ -126,7 +126,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
-  setTyping()
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -139,12 +139,13 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
-    typing: isTyping.value,
+    active: isActive.value,
     error: hasError.value,
   }),
 )
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

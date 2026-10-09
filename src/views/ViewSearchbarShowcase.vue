@@ -31,6 +31,18 @@ const models = reactive<Record<string, string>>({})
     </section>
 
     <section class="flex flex-col gap-4">
+      <h2 class="text-label-base">Style: Default — grey page</h2>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-default p-6"
+      >
+        <div v-for="size in SIZES" :key="size">
+          <p class="text-text-xs text-text-muted mb-1">size = {{ size }}</p>
+          <AppSearchbar v-model="models[`grey-${size}`]" :size="size" />
+        </div>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
       <h2 class="text-label-base">Style: Outline — inside a grey pill</h2>
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-alternative p-6"

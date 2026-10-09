@@ -8,7 +8,6 @@
         surfaceClass,
         { 'cursor-not-allowed': disabled },
       ]"
-      @pointerdown="setTyping()"
     >
       <div
         v-if="$slots.leading"
@@ -51,6 +50,7 @@
               : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
+          @pointerdown="setActive()"
           @focus="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
@@ -212,8 +212,8 @@ const spec = computed(() => INPUT_SIZE_SPEC[props.size])
  -------------------------*/
 const {
   inFocusInput,
-  isTyping,
-  setTyping,
+  isActive,
+  setActive,
   setInFocusInput,
   startOutOfFocusTimeout,
 } = useInFocusInput(baseInput)
@@ -253,7 +253,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
-  setTyping()
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -266,7 +266,7 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
-    typing: isTyping.value,
+    active: isActive.value,
     error: hasError.value,
     disabled: props.disabled,
   }),
@@ -276,12 +276,13 @@ const surfaceClass = computed(() =>
  * Trailing actions (built-in clear + password reveal)
  -------------------------*/
 // Figma Button Icon: 20px icon + 3px padding (26px), siblings packed with no gap.
-const TRAILING_BTN = { width: 'w-auto', height: 'h-auto', class: '!p-[3px]' }
+const TRAILING_BTN = { width: 'w-[26px]', height: 'h-[26px]' }
 const showClear = computed(() => hasValue.value && !props.disabled)
 const showReveal = computed(() => props.type === 'password' && !props.disabled)
 
 const showPassword = ref(false)
 const togglePasswordVisibility = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     showPassword.value = !showPassword.value
@@ -295,6 +296,7 @@ const inputType = computed(() => {
 })
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

@@ -128,7 +128,7 @@ for (const surface of surfaces)
                 />
               </template>
               <template v-if="v.trailing" #trailing>
-                <AppBtnIcon label="Paste">
+                <AppBtnIcon label="Paste" width="w-[26px]" height="h-[26px]">
                   <AppIcon
                     name="clipboard"
                     size="s"

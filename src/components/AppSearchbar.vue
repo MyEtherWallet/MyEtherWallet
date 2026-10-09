@@ -5,10 +5,9 @@
       :size="size === 'compact' ? 's' : 'm'"
       @click="searchInput?.focus()"
       :class="[
-        'absolute left-0 mx-3 cursor-pointer',
-        size === 'compact' ? 'top-2.5' : 'top-2',
         // Figma Searchbar keeps icon/subtle in every state (no brand on focus).
-        'text-icon-subtle',
+        'absolute left-0 mx-3 cursor-pointer text-icon-subtle',
+        size === 'compact' ? 'top-2.5' : 'top-2',
       ]"
     />
 
@@ -34,10 +33,8 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <AppIcon
-          name="x-mark"
-          :size="size === 'compact' ? 's' : 'm'"
-          class="text-icon-default"
+        <!-- Figma Searchbar clear: bare 16px cross -->
+        <AppIcon name="x-mark" size="xxs" class="text-icon-default"
       /></app-btn-icon>
     </div>
   </div>
