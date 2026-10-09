@@ -48,6 +48,7 @@
               <div class="sticky top-0 bg-white z-10 pt-2">
                 <div class="mb-1 flex items-center gap-2">
                   <app-search-input
+                    bg-class="bg-background-alternative"
                     v-model="searchInput"
                     class="grow"
                     :placeholder="$t('derivation_path.search')"

@@ -19,6 +19,7 @@
           class="flex grow gap-4 justify-between items-center p-1.5 bg-background-default-hover !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
+            bg-class="bg-background-alternative"
             v-model="searchInput"
             class="grow"
             :placeholder="$t('stocks.search_stock_name_or_ticker')"

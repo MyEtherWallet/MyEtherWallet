@@ -9,7 +9,11 @@
         <div
           class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
         >
-          <app-search-input v-model="searchInput" class="grow" />
+          <app-search-input
+            bg-class="bg-background-alternative"
+            v-model="searchInput"
+            class="grow"
+          />
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"

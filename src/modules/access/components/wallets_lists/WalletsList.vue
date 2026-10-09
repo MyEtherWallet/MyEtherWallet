@@ -22,6 +22,7 @@
         class="flex grow gap-1 justify-between items-center bg-background-default-hover rounded-full p-1"
       >
         <app-search-input
+          bg-class="bg-background-alternative"
           v-model="searchInput"
           :class="{ 'md-header:max-w-[315px]': !isOpenSideMenu }"
           class="grow"

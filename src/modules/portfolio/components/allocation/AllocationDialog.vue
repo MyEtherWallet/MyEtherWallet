@@ -16,6 +16,7 @@
             class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
           >
             <app-search-input
+              bg-class="bg-background-alternative"
               v-model="searchInput"
               class="grow"
               :placeholder="$t('select_token.search')"

@@ -7,7 +7,8 @@
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5' : 'top-2',
-        inFocusInput ? 'text-text-brand' : 'text-text-subtle',
+        // Figma Searchbar keeps icon/subtle in every state (no brand on focus).
+        'text-icon-subtle',
       ]"
     />
 
@@ -23,8 +24,6 @@
       ]"
       :aria-label="placeholder || $t('common.search')"
       :placeholder="placeholder || $t('common.search')"
-      @focus="inFocusInput = true"
-      @blur="inFocusInput = false"
     />
     <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
       <app-btn-icon
@@ -36,9 +35,9 @@
         :label="$t('common.clear_icon')"
       >
         <AppIcon
-          name="x-circle"
+          name="x-mark"
           :size="size === 'compact' ? 's' : 'm'"
-          class="text-text-brand"
+          class="text-icon-default"
       /></app-btn-icon>
     </div>
   </div>
@@ -65,11 +64,13 @@ defineProps({
     default: '',
   },
   /**
-   * @bgClass The background color of the input field.
+   * @bgClass The background color of the input field. Defaults to the Figma
+   * Searchbar Default fill (background/formfield); inside a grey pill wrapper
+   * (Figma Outline) pass `bg-background-alternative`.
    */
   bgClass: {
     type: String,
-    default: 'bg-white',
+    default: 'bg-background-formfield',
   },
   /**
    * @size 'default' (24px icon, text-17) or 'compact' (20px icon, text-15).
@@ -89,7 +90,6 @@ defineProps({
  */
 const model = defineModel()
 const searchInput = ref<HTMLElement | null>(null)
-const inFocusInput = ref(false)
 
 /**
  * clear the input value, set focus to the input field
