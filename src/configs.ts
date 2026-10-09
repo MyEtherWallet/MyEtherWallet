@@ -40,7 +40,7 @@ const configs = {
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
-  // Watchlist (home banner + table + onboarding) stays hidden unless the env var
+  // Watchlist (home banner + table + add modal) stays hidden unless the env var
   // is explicitly 'true', so it can be flipped per environment.
   SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true',
   PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev',
