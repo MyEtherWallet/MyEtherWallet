@@ -72,6 +72,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'input-naked',
+              name: 'DevInputNaked',
+              component: () => import('@/views/ViewInputNakedShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
