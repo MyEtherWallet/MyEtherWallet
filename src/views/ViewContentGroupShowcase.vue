@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // Gallery for the Content Group design-library component (MEW-2271), reachable
 // at /dev/content-group via the design-library shell — see routesDefault.ts.
-// Lets us eyeball the Size × Align × Inverted matrix, the icon slots and the
-// loading state
-// against Figma.
+// Lets us eyeball the Size × Align × Inverted matrix, the trailing icon/avatar
+// slots and the loading state per size against Figma (component set 1952:43).
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import type {
   ContentGroupAlign,
@@ -13,16 +13,22 @@ import type {
 
 const SIZES: ContentGroupSize[] = ['m', 'l']
 const ALIGNS: ContentGroupAlign[] = ['left', 'right']
+const ADDRESS = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8'
 
-const combos = SIZES.flatMap(size =>
-  ALIGNS.flatMap(align =>
-    [false, true].map(inverted => ({
-      size,
-      align,
-      inverted,
-      label: `size=${size} · align=${align} · inverted=${inverted}`,
-    })),
-  ),
+const sizeAlign = SIZES.flatMap(size =>
+  ALIGNS.map(align => ({
+    size,
+    align,
+    label: `size=${size} · align=${align}`,
+  })),
+)
+
+const combos = sizeAlign.flatMap(c =>
+  [false, true].map(inverted => ({
+    ...c,
+    inverted,
+    label: `${c.label} · inverted=${inverted}`,
+  })),
 )
 </script>
 
@@ -51,25 +57,32 @@ const combos = SIZES.flatMap(size =>
       </div>
     </section>
 
-    <!-- Icon slots populated -->
+    <!-- Trailing icon / avatar slots (always XS, 18px) -->
     <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Icon slots (18px, both lines)</h2>
-      <div class="flex gap-8">
-        <div class="border border-border-default rounded-12 p-4 bg-white">
-          <AppContentGroup title="My Wallet" description="Verified account">
-            <template #title-icon
-              ><AppIcon name="wallet" variant="filled"
-            /></template>
-            <template #description-icon
-              ><AppIcon name="check-badge" variant="filled"
-            /></template>
-          </AppContentGroup>
-        </div>
-        <div class="border border-border-default rounded-12 p-4 bg-white">
-          <AppContentGroup size="l" title="My Wallet" description="Verified">
-            <template #title-icon
-              ><AppIcon name="wallet" variant="filled"
-            /></template>
+      <h2 class="text-s-16 font-semibold">
+        Icon / Avatar slots (trailing, XS 18px)
+      </h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div
+          v-for="c in sizeAlign"
+          :key="c.label"
+          class="border border-border-default rounded-12 p-4 bg-white"
+        >
+          <p class="text-s-11 text-text-subtle mb-2">{{ c.label }}</p>
+          <AppContentGroup
+            title="Title"
+            description="Information"
+            :size="c.size"
+            :align="c.align"
+          >
+            <template #title-icon>
+              <AppIcon name="star" size="xs" />
+              <AppAvatar type="account" size="xs" :address="ADDRESS" />
+            </template>
+            <template #description-icon>
+              <AppIcon name="star" size="xs" />
+              <AppAvatar type="account" size="xs" :address="ADDRESS" />
+            </template>
           </AppContentGroup>
         </div>
       </div>
@@ -99,15 +112,23 @@ const combos = SIZES.flatMap(size =>
       </div>
     </section>
 
-    <!-- Loading state -->
+    <!-- Loading state, per size and align -->
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Loading (Skeleton)</h2>
-      <div class="flex gap-8">
-        <div class="border border-border-default rounded-12 p-4 bg-white">
-          <AppContentGroup title="Title" description="Description" loading />
-        </div>
-        <div class="border border-border-default rounded-12 p-4 bg-white">
-          <AppContentGroup title="Title only" loading />
+      <div class="grid grid-cols-2 gap-4">
+        <div
+          v-for="c in sizeAlign"
+          :key="c.label"
+          class="border border-border-default rounded-12 p-4 bg-white"
+        >
+          <p class="text-s-11 text-text-subtle mb-2">{{ c.label }}</p>
+          <AppContentGroup
+            title="Title"
+            description="Description"
+            :size="c.size"
+            :align="c.align"
+            loading
+          />
         </div>
       </div>
     </section>
