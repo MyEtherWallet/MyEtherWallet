@@ -3,7 +3,7 @@
     <app-base-button
       type="link"
       size="small"
-      class="text-primary text-s-14"
+      class="text-text-brand text-s-14"
       @click="openDialog = true"
     >
       {{ $t('common.view_all') }}</app-base-button
@@ -18,7 +18,7 @@
           class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
         >
           <div
-            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+            class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -33,11 +33,18 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <ArrowLongUpIcon
+                  <AppIcon
+                    name="arrow-long-up"
+                    variant="filled"
+                    size="xxs"
                     v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4"
                   />
-                  <ArrowLongDownIcon v-else class="w-4 h-4" />
+                  <AppIcon
+                    name="arrow-long-down"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                  />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -48,13 +55,15 @@
                     </p>
                     <app-btn-icon-close @click="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
+                  <app-divider class="mb-1" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
                     :class="[
-                      option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
+                      option.value === activeSortValue
+                        ? 'bg-background-default'
+                        : '',
+                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -64,11 +73,20 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
                     >
-                      <ArrowLongUpIcon
+                      <AppIcon
+                        name="arrow-long-up"
+                        variant="filled"
+                        size="s"
                         v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
+                        class="text-text-brand"
                       />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
+                      <AppIcon
+                        name="arrow-long-down"
+                        variant="filled"
+                        size="s"
+                        v-else
+                        class="text-text-brand"
+                      />
                     </div>
                   </button>
                 </div>
@@ -80,7 +98,7 @@
               <button
                 v-for="token in searchResults"
                 :key="token.symbol + token.id"
-                class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-grey-5"
+                class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default"
                 @click="routeToToken(token)"
               >
                 <div class="flex justify-between items-center w-full">
@@ -96,7 +114,7 @@
                         :symbol="token.symbol"
                         :is-stock="token.is_stock"
                       />
-                      <p class="text-info text-sm mt-0.5">
+                      <p class="text-text-subtle text-sm mt-0.5">
                         {{ token.stock_alias || token.name }}
                       </p>
                     </div>
@@ -105,7 +123,7 @@
                     <p class="font-medium">
                       {{ token.formattedPercentage }}
                     </p>
-                    <p class="text-info text-s-14">
+                    <p class="text-text-subtle text-s-14">
                       {{ currencySymbol }} {{ token.usdBalanceFormatted }}
                     </p>
                   </div>
@@ -120,11 +138,10 @@
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
@@ -137,10 +154,12 @@ const { currencySymbol } = useCurrency()
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useRouter } from 'vue-router'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps<{
   /**

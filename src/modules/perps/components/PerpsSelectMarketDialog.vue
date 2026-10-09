@@ -10,7 +10,7 @@
       <div class="flex flex-col">
         <!-- Search + Sort -->
         <div
-          class="flex gap-2 justify-between items-center mb-2 mx-4 bg-surface rounded-full p-1"
+          class="flex gap-2 justify-between items-center mb-2 mx-4 bg-background-default-hover rounded-full p-1"
         >
           <app-search-input
             :model-value="search"
@@ -26,11 +26,20 @@
                 @click="toggleMenu"
               >
                 <span>{{ activeSortLabel }}</span>
-                <arrow-long-up-icon
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
                   v-if="sortDirection === 'asc'"
-                  class="w-4 h-4 shrink-0"
+                  class="shrink-0"
                 />
-                <arrow-long-down-icon v-else class="w-4 h-4 shrink-0" />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="shrink-0"
+                />
               </button>
             </template>
             <template #menu-content="{ toggleMenu }">
@@ -41,23 +50,27 @@
                   </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
-                <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
+                <app-divider variant="alternative" class="mb-1" />
                 <button
                   v-for="option in sortOptions"
                   :key="option.value"
                   class="flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 text-s-15 font-medium"
-                  :class="{ 'bg-grey-5': sortValue === option.value }"
+                  :class="{
+                    'bg-background-default': sortValue === option.value,
+                  }"
                   @click="[$emit('setSort', option.value), toggleMenu()]"
                 >
                   {{ option.label }}
-                  <component
-                    :is="
+                  <AppIcon
+                    :name="
                       sortValue === option.value && sortDirection === 'asc'
-                        ? ArrowLongUpIcon
-                        : ArrowLongDownIcon
+                        ? 'arrow-long-up'
+                        : 'arrow-long-down'
                     "
+                    variant="filled"
+                    size="s"
                     v-if="sortValue === option.value"
-                    class="ml-auto w-5 h-5 text-primary"
+                    class="ml-auto text-text-brand"
                   />
                 </button>
               </div>
@@ -67,17 +80,16 @@
 
         <!-- Filter Tabs -->
         <div class="px-4 mb-1">
-          <app-segmented-control
-            :btn-list="filterTabs"
-            :selected="filterTabs.find(t => t.key === activeFilter)"
+          <AppSegmentedControl
+            :model-value="activeFilter"
+            :items="filterTabs"
             size="small"
-            has-full-width
-            @on-update:selected="tab => $emit('update:activeFilter', tab.key)"
-          >
-            <template #btn-content="{ data }">{{ data.label }}</template>
-          </app-segmented-control>
+            :label="$t('perps.info.category-label')"
+            full-width
+            @update:model-value="$emit('update:activeFilter', $event)"
+          />
         </div>
-        <hr class="border-t border-grey-5 mt-1 mx-4" />
+        <hr class="border-t border-border-subtle mt-1 mx-4" />
 
         <!-- Market List -->
         <div
@@ -89,7 +101,7 @@
             class="flex items-center justify-between w-full px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="
               contract.market === selectedMarketName
-                ? '!bg-mewBg'
+                ? '!bg-background-brand-subtle'
                 : 'bg-transparent hoverBGWhite'
             "
             :aria-pressed="contract.market === selectedMarketName"
@@ -109,11 +121,11 @@
                       contract.baseCurrency
                     }}</span>
                     <span
-                      class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                      class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
                       >{{ getMarketLeverage(contract) }}x</span
                     >
                   </div>
-                  <span class="text-info text-s-12">{{
+                  <span class="text-text-subtle text-s-12">{{
                     getMarketDisplayName(contract)
                   }}</span>
                 </div>
@@ -126,8 +138,8 @@
                   class="text-s-12 font-medium"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-success'
-                      : 'text-error'
+                      ? 'text-text-success'
+                      : 'text-text-error'
                   "
                 >
                   {{ formatPriceChange(contract.priceChangePercent) }}
@@ -137,7 +149,7 @@
           </button>
           <div
             v-if="contracts.length === 0"
-            class="text-center py-8 text-info text-s-14"
+            class="text-center py-8 text-text-subtle text-s-14"
           >
             {{ $t('perps.select-market.no-markets-found') }}
           </div>
@@ -150,21 +162,22 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowLongUpIcon, ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type {
   MarketSortValue,
   SortDirection,
   MarketSortOption,
 } from '../composables/usePerpsTradeForm'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 
@@ -174,7 +187,7 @@ const props = defineProps({
     required: true,
   },
   filterTabs: {
-    type: Array as PropType<{ key: string; label: string }[]>,
+    type: Array as PropType<{ value: string; label: string }[]>,
     required: true,
   },
   activeFilter: {

@@ -1,14 +1,14 @@
-import isEU from '@/utils/isEU';
-import { Types, createInstance, } from '@amplitude/analytics-browser'
+import isEU from '@/utils/isEU'
+import { Types, createInstance } from '@amplitude/analytics-browser'
 import { Analytics } from './amplitude'
 import { StoreConfigs } from '@/stores/configs'
 import type { AnalyticsState } from '@/stores/analyticsStore'
 import { captureException } from '@sentry/vue'
 import * as sessionReplay from '@amplitude/session-replay-browser'
-import { pageUrlEnrichmentPlugin } from "@amplitude/plugin-page-url-enrichment-browser";
-import { pageViewedEnrichmentPlugin } from './pageViewedEnrichment';
-import configs from '@/configs';
-import { safeLocalStorage } from '@/utils/safeStorage';
+import { pageUrlEnrichmentPlugin } from '@amplitude/plugin-page-url-enrichment-browser'
+import { pageViewedEnrichmentPlugin } from './pageViewedEnrichment'
+import configs from '@/configs'
+import { safeLocalStorage } from '@/utils/safeStorage'
 
 const __TMP_VERSION__ = configs.APP_VERSION
 const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
@@ -61,7 +61,7 @@ export const initAnalytics = async (): Promise<void> => {
   }
 
   const consentToTrack = getConsentToTrack()
-  const isProd = import.meta.env.MODE === 'production'
+  const isProd = configs.BUILD_MODE === 'production'
   const serverUrl = isProd
     ? 'https://analytics-web-v7.mewwallet.dev'
     : 'https://analytics-web-development-v7.mewwallet.dev'
@@ -71,8 +71,7 @@ export const initAnalytics = async (): Promise<void> => {
   amplitude.add(pageUrlEnrichmentPlugin())
   amplitude.add(pageViewedEnrichmentPlugin())
   amplitude.init(__TMP_HASHED_VERSION__, {
-    instanceName:
-      isProd ? 'mew-web-prod' : 'mew-web-dev',
+    instanceName: isProd ? 'mew-web-prod' : 'mew-web-dev',
     optOut: !consentToTrack,
     serverUrl: analyticsUrl,
     appVersion: __TMP_VERSION__,
@@ -83,9 +82,11 @@ export const initAnalytics = async (): Promise<void> => {
     },
   })
 
-  const inEU = await isEU();
+  const inEU = await isEU()
   const configUrl = inEU ? `${serverUrl}/config-eu` : `${serverUrl}/config`
-  const sessionReplayUrl = inEU ? `${serverUrl}/session-replay-eu` : `${serverUrl}/session-replay`
+  const sessionReplayUrl = inEU
+    ? `${serverUrl}/session-replay-eu`
+    : `${serverUrl}/session-replay`
 
   const sessionId = amplitude.getSessionId()
   const deviceId = amplitude.getDeviceId()
@@ -97,8 +98,8 @@ export const initAnalytics = async (): Promise<void> => {
     sessionId: sessionId,
     deviceId: deviceId,
     serverZone: inEU ? 'EU' : 'US',
-    debugMode: import.meta.env.MODE !== 'production',
-    sampleRate: .8,
+    debugMode: configs.BUILD_MODE !== 'production',
+    sampleRate: 0.8,
     privacyConfig: {
       maskSelector: ['[data-private]'],
       defaultMaskLevel: 'light',

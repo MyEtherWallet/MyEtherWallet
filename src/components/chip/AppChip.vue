@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { CHIP_SURFACE_BG_CLASS, type ChipSurface } from './types'
 import type { AvatarSize } from '@/components/avatar/types'
 
@@ -52,7 +52,7 @@ const borderClass = computed(() =>
     :aria-pressed="showIcon ? undefined : selected"
     :aria-haspopup="showIcon ? 'menu' : undefined"
     data-testid="chip"
-    class="inline-flex h-8 items-center rounded-full border px-1 text-s-14 font-medium text-t-default transition-colors duration-150 hover:bg-bgBase-hover active:bg-bgBase-pressed focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    class="inline-flex h-8 items-center rounded-full border px-1 text-s-14 font-medium text-text-default transition-colors duration-150 hover:bg-background-default-hover active:bg-background-default-pressed focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
     :class="[CHIP_SURFACE_BG_CLASS[surface], borderClass]"
     @click="emit('click', $event)"
   >
@@ -67,7 +67,7 @@ const borderClass = computed(() =>
       class="flex size-4.5 shrink-0 items-center justify-center"
       data-testid="chip-icon"
     >
-      <ChevronDownIcon class="size-full" />
+      <AppIcon name="chevron-down" size="xs" />
     </span>
   </button>
 </template>

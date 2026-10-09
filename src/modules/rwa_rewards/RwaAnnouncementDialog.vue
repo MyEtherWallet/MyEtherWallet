@@ -15,15 +15,22 @@
         />
         <div class="flex flex-col p-6 gap-10">
           <div class="flex flex-col gap-4">
-            <h1
-              class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black text-center"
-            >
-              {{ $t('rwaRewards.announcement_title') }}
+            <h1 class="text-heading-xl text-black text-center">
+              {{
+                $t('rwaRewards.announcement_title', {
+                  amount: announcementAmount,
+                })
+              }}
             </h1>
             <p
-              class="text-s-16 font-normal leading-[22px] text-[#575757] text-center whitespace-pre-line"
+              class="text-text-base text-text-subtle text-center whitespace-pre-line"
             >
-              {{ $t('rwaRewards.announcement_desc') }}
+              {{
+                $t('rwaRewards.announcement_desc', {
+                  amount: announcementAmount,
+                  count: round1HoldDays,
+                })
+              }}
             </p>
           </div>
           <app-base-button
@@ -40,8 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -56,10 +64,15 @@ import {
   RerwadsAndOffersEvent,
 } from '@/analytics'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWalletUnlocked } = storeToRefs(walletStore)
 const holdingsStore = useHoldingsStore()
-const { canRegisterTrade } = storeToRefs(holdingsStore)
+const { canRegisterTrade, round1HoldDays, round1RewardAmountLabel } =
+  storeToRefs(holdingsStore)
+const announcementAmount = computed(
+  () => round1RewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
 const announcement = useRwaAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 const globalStore = useGlobalStore()

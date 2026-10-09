@@ -17,14 +17,21 @@ type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 const isTradableAsset = (asset: unknown): asset is TradableAsset => {
   if (typeof asset !== 'object' || asset === null) return false
   const a = asset as Record<string, unknown>
+  // An asset describes what it holds in one of two ways: a single
+  // underlyingMarket (a tokenized stock or ETF) or a constituentTokens list (a
+  // portfolio token, which has no single underlying and sends underlyingMarket
+  // as null). Either shape is valid — only an asset carrying neither is
+  // unexpected and worth reporting.
+  const hasUnderlyingMarket =
+    typeof a.underlyingMarket === 'object' && a.underlyingMarket !== null
+  const hasConstituentTokens = Array.isArray(a.constituentTokens)
   return (
     typeof a.symbol === 'string' &&
     typeof a.tradable === 'boolean' &&
     (a.pause === null || (typeof a.pause === 'object' && a.pause !== null)) &&
     typeof a.primaryMarket === 'object' &&
     a.primaryMarket !== null &&
-    typeof a.underlyingMarket === 'object' &&
-    a.underlyingMarket !== null &&
+    (hasUnderlyingMarket || hasConstituentTokens) &&
     Array.isArray(a.addresses)
   )
 }

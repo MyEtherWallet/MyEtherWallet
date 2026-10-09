@@ -40,14 +40,16 @@
             class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
               verified
-                ? 'border-mew-green-text/20 text-t-default bg-success/5'
-                : 'border-error/20 text-error bg-error/5'
+                ? 'border-border-success/20 text-text-default bg-background-success/5'
+                : 'border-border-error/20 text-text-error bg-background-error/5'
             "
           >
             <div class="flex items-start gap-3">
               <div
                 class="w-2 h-2 mt-2 rounded-full shrink-0"
-                :class="verified ? 'bg-success' : 'bg-error'"
+                :class="
+                  verified ? 'bg-background-success' : 'bg-background-error'
+                "
               ></div>
               <i18n-t
                 :keypath="verifyStatusKey"

@@ -30,58 +30,58 @@ const tones = ['default', 'danger', 'success'] as const
 
 // Surfaces the secondary has to survive, for the "revisit secondary" review.
 const contexts = [
-  { label: 'App background', class: 'bg-app-background' },
+  { label: 'App background', class: 'bg-background-default' },
   { label: 'White card', class: 'bg-white' },
-  { label: 'Muted / bgBase', class: 'bg-bgBase' },
-  { label: 'Brand tint', class: 'bg-mewBg' },
+  { label: 'Muted', class: 'bg-background-default-hover' },
+  { label: 'Brand tint', class: 'bg-background-brand-subtle' },
 ] as const
 </script>
 
 <template>
-  <div class="p-10 bg-app-background min-h-screen">
+  <div class="p-10 bg-background-alternative min-h-screen">
     <h1 class="title5 mb-8">AppBaseButton — types × tones × sizes</h1>
 
     <div
       v-for="t in types"
       :key="t.label"
-      class="mb-10 border-b border-grey-10 pb-8"
+      class="mb-10 border-b border-border-default pb-8"
     >
       <h2 class="text7 mb-4">{{ t.label }}</h2>
 
       <div v-for="tone in tones" :key="tone" class="mb-6">
-        <p class="text-s-13 text-grey-50 mb-2 capitalize">{{ tone }}</p>
+        <p class="text-s-13 text-text-subtle mb-2 capitalize">{{ tone }}</p>
         <div class="grid grid-cols-[90px_repeat(4,1fr)] gap-4 items-center">
           <div></div>
           <div
             v-for="s in BTN_SIZES"
             :key="`h-${s}`"
-            class="text-s-13 text-grey-50 capitalize"
+            class="text-s-13 text-text-subtle capitalize"
           >
             {{ s }}
           </div>
 
-          <div class="text-s-13 text-grey-50">Default</div>
+          <div class="text-s-13 text-text-subtle">Default</div>
           <div v-for="s in BTN_SIZES" :key="`d-${s}`">
             <AppBaseButton v-bind="t.props" :tone="tone" :size="s"
               >Button</AppBaseButton
             >
           </div>
 
-          <div class="text-s-13 text-grey-50">Loading</div>
+          <div class="text-s-13 text-text-subtle">Loading</div>
           <div v-for="s in BTN_SIZES" :key="`l-${s}`">
             <AppBaseButton v-bind="t.props" :tone="tone" :size="s" isLoading
               >Button</AppBaseButton
             >
           </div>
 
-          <div class="text-s-13 text-grey-50">Disabled</div>
+          <div class="text-s-13 text-text-subtle">Disabled</div>
           <div v-for="s in BTN_SIZES" :key="`x-${s}`">
             <AppBaseButton v-bind="t.props" :tone="tone" :size="s" disabled
               >Button</AppBaseButton
             >
           </div>
 
-          <div class="text-s-13 text-grey-50">Icons</div>
+          <div class="text-s-13 text-text-subtle">Icons</div>
           <div v-for="s in BTN_SIZES" :key="`i-${s}`">
             <AppBaseButton v-bind="t.props" :tone="tone" :size="s">
               <template #leading><span aria-hidden="true">＋</span></template>
@@ -94,7 +94,7 @@ const contexts = [
     </div>
 
     <h2 class="title5 mb-4">Secondary in context</h2>
-    <p class="text-s-14 text-grey-50 mb-4">
+    <p class="text-s-14 text-text-subtle mb-4">
       The secondary is provisional — brand blue standing in until the approach
       is settled. Each swatch below is a real app surface it has to hold up on.
     </p>
@@ -102,9 +102,9 @@ const contexts = [
       <div
         v-for="c in contexts"
         :key="c.label"
-        :class="['p-6 rounded-20 border border-grey-10', c.class]"
+        :class="['p-6 rounded-20 border border-border-default', c.class]"
       >
-        <p class="text-s-13 text-grey-50 mb-3">{{ c.label }}</p>
+        <p class="text-s-13 text-text-subtle mb-3">{{ c.label }}</p>
         <div class="flex gap-3 items-center flex-wrap">
           <AppBaseButton type="secondary" size="medium"
             >On default</AppBaseButton
@@ -120,7 +120,7 @@ const contexts = [
     <h2 class="title5 mb-4">AppBtnGroup</h2>
     <div class="grid grid-cols-2 gap-6 mb-10">
       <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-grey-50 mb-2">Horizontal</p>
+        <p class="text-s-13 text-text-subtle mb-2">Horizontal</p>
         <AppBtnGroup>
           <AppBaseButton type="secondary" surface="alternative"
             >Cancel</AppBaseButton
@@ -129,7 +129,9 @@ const contexts = [
         </AppBtnGroup>
       </div>
       <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-grey-50 mb-2">Horizontal — with tertiary</p>
+        <p class="text-s-13 text-text-subtle mb-2">
+          Horizontal — with tertiary
+        </p>
         <AppBtnGroup>
           <AppBaseButton type="tertiary">Learn more</AppBaseButton>
           <AppBaseButton type="secondary" surface="alternative"
@@ -139,7 +141,7 @@ const contexts = [
         </AppBtnGroup>
       </div>
       <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-grey-50 mb-2">Vertical</p>
+        <p class="text-s-13 text-text-subtle mb-2">Vertical</p>
         <AppBtnGroup orientation="vertical">
           <AppBaseButton type="secondary" surface="alternative"
             >Cancel</AppBaseButton
@@ -148,7 +150,7 @@ const contexts = [
         </AppBtnGroup>
       </div>
       <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-grey-50 mb-2">Vertical — danger</p>
+        <p class="text-s-13 text-text-subtle mb-2">Vertical — danger</p>
         <AppBtnGroup orientation="vertical">
           <AppBaseButton type="secondary" surface="alternative"
             >Keep</AppBaseButton
@@ -158,7 +160,7 @@ const contexts = [
       </div>
     </div>
 
-    <p class="text-s-13 text-grey-50">
+    <p class="text-s-13 text-text-subtle">
       Hover and Pressed are pseudo-state driven — hover / click the Default row
       buttons above to see the color shift and darken. Focus is keyboard-only
       (tab to a button) and renders a 2px focus ring.

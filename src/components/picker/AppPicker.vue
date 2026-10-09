@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import {
   PICKER_SIZE_CLASS,
@@ -71,7 +71,7 @@ const rootClass = computed(() => [
     :aria-busy="loading || undefined"
     aria-haspopup="dialog"
     data-testid="picker"
-    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-bgBase-hover focus-visible:border-primary focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-background-default-hover focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
     :class="rootClass"
   >
     <span
@@ -92,10 +92,10 @@ const rootClass = computed(() => [
     />
 
     <span
-      class="flex size-4 shrink-0 items-center justify-center text-info"
+      class="flex size-4 shrink-0 items-center justify-center text-text-subtle"
       data-testid="picker-chevron"
     >
-      <ChevronRightIcon class="size-full" />
+      <AppIcon name="chevron-right" size="xxs" />
     </span>
   </button>
 </template>

@@ -7,12 +7,14 @@
           <app-base-button
             type="link"
             size="small"
-            class="text-primary text-s-15 pb-1"
+            class="text-text-brand text-s-15 pb-1"
             @click="resetSendModule"
             >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
-        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+        <div
+          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+        >
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelectedContract"
@@ -404,9 +406,7 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  | EstimatesRequestBody
-  | BitcoinQuotesRequestBody
-  | undefined => {
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&

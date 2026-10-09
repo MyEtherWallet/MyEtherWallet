@@ -1,36 +1,32 @@
 <template>
-  <app-segmented-control
-    v-model:selected="selectedChartFilter"
-    :disabled="isLoadingFetch"
-    :btn-list="isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions"
-    size="xs"
+  <AppSegmentedControl
+    :model-value="selectedChartFilter.value"
+    :items="isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions"
+    size="small"
+    :label="$t('common.chart_range')"
     class="ml-auto mb-1 sm:mb-4"
+    @update:model-value="selectChartFilter"
   >
-    <template #btn-content="{ data }">
-      {{ data.label }}
-    </template>
-    <template #custom="{ disabled }">
-      <app-select
-        v-if="isXS"
-        v-model:selected="selectedChartFilter"
-        :options="chartFilterOptions.slice(3, chartFilterOptions.length)"
-        position="-right-1"
-        class="text-s-12"
-      >
-        <template #select-button="{ toggleSelect }">
-          <button
-            class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center disabled:cursor-not-allowed disabled:opacity-40"
-            :disabled="disabled"
-            @click="toggleSelect"
-          >
-            <p>{{ $t('common.more') }}</p>
-            <chevron-down-icon class="w-4 h-4 ml-1" />
-          </button>
-        </template>
-      </app-select>
-    </template>
-  </app-segmented-control>
-  <div class="h-[200px] sm:h-[320px]">
+    <app-select
+      v-if="isXS"
+      v-model:selected="selectedChartFilter"
+      :options="chartFilterOptions.slice(3, chartFilterOptions.length)"
+      position="-right-1"
+      class="text-s-12"
+    >
+      <template #select-button="{ toggleSelect }">
+        <button
+          type="button"
+          class="flex h-7 items-center rounded-3xl px-1.5 text-label-sm text-text-default hover:bg-background-alternative-hover"
+          @click="toggleSelect"
+        >
+          <span class="px-1.5">{{ $t('common.more') }}</span>
+          <AppIcon name="chevron-down" size="s" />
+        </button>
+      </template>
+    </app-select>
+  </AppSegmentedControl>
+  <div class="h-[200px] sm:h-80">
     <chart-price
       v-if="!isLoadingFetch && !notAvailable"
       :labels="labels"
@@ -40,11 +36,11 @@
     />
     <div
       v-else
-      class="w-full bg-surface h-full rounded-lg"
+      class="w-full bg-background-default-hover h-full rounded-lg"
       :class="{ 'animate-pulse': isLoadingFetch }"
     >
       <div class="flex flex-col items-center h-full justify-center gap-2">
-        <p v-if="notAvailable" class="text-s-14 text-info">
+        <p v-if="notAvailable" class="text-s-14 text-text-subtle">
           {{ $t('common.no_data_available') }}
         </p>
       </div>
@@ -55,10 +51,9 @@
 <script setup lang="ts">
 import { computed, ref, onBeforeUnmount, watch } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type {
   GetWebTokenPriceChartByCoinResponse,
@@ -79,6 +74,7 @@ const { isXS } = useAppBreakpoints()
  * Chart Filter
  --------------------*/
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 interface Item {
@@ -95,6 +91,12 @@ const chartFilterOptions = computed<Item[]>(() => [
 ])
 
 const selectedChartFilter = ref<Item>(chartFilterOptions.value[0])
+
+const selectChartFilter = (value: WebTokenPriceChartInterval) => {
+  selectedChartFilter.value =
+    chartFilterOptions.value.find(opt => opt.value === value) ??
+    selectedChartFilter.value
+}
 
 watch(chartFilterOptions, options => {
   selectedChartFilter.value =

@@ -7,36 +7,34 @@
         <h1 class="text-s-24 xs:text-s-20 font-bold hidden lg:block">
           {{ selectedTab.label }}
         </h1>
-        <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-          <app-segmented-control
-            v-model:selected="selectedTab"
-            :btn-list="tabs"
-            size="medium"
-            class="flex-wrap"
+        <div class="hidden lg:block">
+          <AppSegmentedControl
+            v-model="activeTab"
+            :items="tabs"
+            size="small"
+            :label="$t('perps.positions.tabs-label')"
           >
-            <template #btn-content="{ data }">
-              <span class="px-2">
-                {{ data.label }}
-                <span
-                  v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info text-s-12"
-                >
-                  · {{ positions.length }}
-                </span>
-                <span
-                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
-                  class="ml-1 text-info text-s-12"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${PERPS_PAGE_SIZE}+`
-                      : openOrdersCount
-                  }}
-                </span>
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'positions' && positions.length > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                · {{ positions.length }}
+              </span>
+              <span
+                v-else-if="item.value === 'orders' && openOrdersCount > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${PERPS_PAGE_SIZE}+`
+                    : openOrdersCount
+                }}
               </span>
             </template>
-          </app-segmented-control>
+          </AppSegmentedControl>
         </div>
         <app-select
           v-model:selected="selectedTab"
@@ -46,7 +44,9 @@
           class="lg:hidden"
         >
           <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <div
+              class="bg-background-default-hover rounded-full p-1 w-full xs:w-auto"
+            >
               <button
                 class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[200px] px-5 shadow-button"
                 @click="toggleSelect"
@@ -56,13 +56,13 @@
                     {{ selectedTab.label }}
                     <span
                       v-if="activeTab === 'positions' && positions.length > 0"
-                      class="ml-1 text-info"
+                      class="ml-1 text-text-subtle"
                     >
                       · {{ positions.length }}
                     </span>
                     <span
                       v-else-if="activeTab === 'orders' && openOrdersCount > 0"
-                      class="ml-1 text-info"
+                      class="ml-1 text-text-subtle"
                     >
                       ·
                       {{
@@ -72,7 +72,12 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-2" />
+                  <AppIcon
+                    name="chevron-down"
+                    size="xxs"
+                    variant="filled"
+                    class="ml-2"
+                  />
                 </div>
               </button>
             </div>
@@ -91,14 +96,14 @@
       <template v-else-if="activeTab === 'positions'">
         <div
           v-if="positions.length === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-open-positions') }}
         </div>
         <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
             >
               <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                 {{ $t('perps.positions.market-header') }}
@@ -155,10 +160,10 @@
                     <p
                       :class="[
                         pos.direction === 'long'
-                          ? 'text-success'
+                          ? 'text-text-success'
                           : pos.direction === 'short'
-                            ? 'text-error'
-                            : 'text-info',
+                            ? 'text-text-error'
+                            : 'text-text-subtle',
                         'font-medium text-s-12 capitalize hooverOpacity cursor-pointer',
                       ]"
                       @click.stop="openLeverage(pos)"
@@ -205,7 +210,7 @@
               </td>
               <!-- Liquidation Price -->
               <td class="px-1 py-3 text-right hidden sm:table-cell">
-                <span class="text-warning font-normal text-s-14">{{
+                <span class="text-text-warning font-normal text-s-14">{{
                   formatPrice(pos.liquidationPrice)
                 }}</span>
               </td>
@@ -241,7 +246,11 @@
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
                       >
-                        <ellipsis-vertical-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          size="s"
+                          variant="filled"
+                        />
                       </app-btn-icon>
                       <AppBaseButton
                         class="hidden lg:flex"
@@ -255,7 +264,7 @@
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                       >
                         <ul>
                           <li
@@ -321,28 +330,27 @@
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
         <div class="mb-4 xs:pl-4">
-          <app-segmented-control
-            v-model:selected="selectedOrderFilter"
-            :btn-list="orderFilterTabs"
-            size="xs"
+          <AppSegmentedControl
+            v-model="selectedOrderFilterValue"
+            :items="orderFilterTabs"
+            size="small"
+            :label="$t('perps.positions.order-filter-label')"
           >
-            <template #btn-content="{ data }">
-              <span class="px-2"
-                >{{ data.label }}
-                <span
-                  v-if="data.value === 'pending' && openOrdersCount > 0"
-                  class="ml-1 text-info text-s-11"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${PERPS_PAGE_SIZE}+`
-                      : openOrdersCount
-                  }}
-                </span></span
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'pending' && openOrdersCount > 0"
+                class="ml-1 text-text-subtle text-s-11"
               >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${PERPS_PAGE_SIZE}+`
+                    : openOrdersCount
+                }}
+              </span>
             </template>
-          </app-segmented-control>
+          </AppSegmentedControl>
         </div>
         <app-table-skeleton
           v-if="ordersLoading && orders.length === 0"
@@ -351,7 +359,7 @@
         />
         <div
           v-else-if="orders.length === 0 && ordersCurrentPage === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-orders') }}
         </div>
@@ -359,7 +367,7 @@
         <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
-              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
             >
               <th
                 class="px-1 sm:pl-4 py-3 text-left font-bold xs:w-[150px] 3xl:w-auto"
@@ -410,7 +418,9 @@
                     </p>
                     <p
                       :class="[
-                        order.side === 'buy' ? 'text-success' : 'text-error',
+                        order.side === 'buy'
+                          ? 'text-text-success'
+                          : 'text-text-error',
                         ' text-s-12 capitalize xl:hidden font-medium',
                       ]"
                     >
@@ -429,7 +439,9 @@
               <td class="px-1 py-3 hidden xl:table-cell">
                 <span
                   :class="[
-                    order.side === 'buy' ? 'text-success' : 'text-error',
+                    order.side === 'buy'
+                      ? 'text-text-success'
+                      : 'text-text-error',
                     'text-s-13 capitalize font-medium',
                   ]"
                 >
@@ -443,21 +455,23 @@
                 </span>
               </td>
               <!-- Time -->
-              <td class="px-1 py-3 text-info text-s-12 hidden xs:table-cell">
+              <td
+                class="px-1 py-3 text-text-subtle text-s-12 hidden xs:table-cell"
+              >
                 {{ formatDate(order.createdAt) }}
               </td>
               <!-- Status -->
               <td class="px-1 py-3 hidden lg:table-cell">
                 <p
                   :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
                     order.status === 'open' || order.status === 'pending'
-                      ? 'text-primary'
+                      ? 'text-text-brand'
                       : order.status === 'fullyfilled'
-                        ? 'text-success'
+                        ? 'text-text-success'
                         : order.status === 'canceled' ||
                             order.status === 'untriggered'
-                          ? 'text-info'
+                          ? 'text-text-subtle'
                           : '',
                   ]"
                 >
@@ -472,7 +486,7 @@
               <td class="px-1 py-3 text-right font-normal text-s-14">
                 <p>{{ formatPrice(getOrderPrice(order)) }}</p>
 
-                <p class="text-s-12 text-info xs:hidden">
+                <p class="text-s-12 text-text-subtle xs:hidden">
                   {{ formatDate(order.createdAt) }}
                 </p>
               </td>
@@ -481,7 +495,7 @@
                 class="px-1 py-3 text-right font-normal text-s-14 hidden sm:table-cell"
               >
                 <p>{{ order.filledSize }} {{ getBase(order.market) }}</p>
-                <p class="text-s-12 text-info">
+                <p class="text-s-12 text-text-subtle">
                   {{
                     $t('perps.positions.out-of', {
                       size: order.size,
@@ -505,12 +519,16 @@
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
                     >
-                      <ellipsis-vertical-icon class="w-5 h-5" />
+                      <AppIcon
+                        name="ellipsis-vertical"
+                        size="s"
+                        variant="filled"
+                      />
                     </app-btn-icon>
                   </template>
                   <template #menu-content="{ toggleMenu }">
                     <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                     >
                       <ul>
                         <li
@@ -545,7 +563,7 @@
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
                 >
-                  <chevron-right-icon class="w-5 h-5" />
+                  <AppIcon name="chevron-right" size="s" variant="filled" />
                 </app-btn-icon>
               </td>
             </tr>
@@ -576,7 +594,7 @@
         />
         <div
           v-else-if="fills.length === 0 && fillsCurrentPage === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-fills') }}
         </div>
@@ -584,7 +602,7 @@
           <table ref="fillsTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
               >
                 <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                   {{ $t('perps.positions.market-header') }}
@@ -632,9 +650,9 @@
                       <p
                         :class="[
                           fill.direction?.toLowerCase().includes('long')
-                            ? 'text-success'
-                            : 'text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
+                            ? 'text-text-success'
+                            : 'text-text-error',
+                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-px bg-background-default-hover lg:hidden',
                         ]"
                       >
                         {{ $t(directionKey(fill.direction)) }}
@@ -647,9 +665,9 @@
                   <span
                     :class="[
                       fill.direction?.toLowerCase().includes('long')
-                        ? 'text-success'
-                        : 'text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
+                        ? 'text-text-success'
+                        : 'text-text-error',
+                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover',
                     ]"
                   >
                     {{ $t(directionKey(fill.direction)) }}
@@ -657,14 +675,14 @@
                 </td>
                 <!-- Time -->
                 <td
-                  class="px-1 py-3 text-right text-s-12 lg:text-left text-info hidden xs:table-cell"
+                  class="px-1 py-3 text-right text-s-12 lg:text-left text-text-subtle hidden xs:table-cell"
                 >
                   {{ formatDate(fill.time) }}
                 </td>
                 <!-- Price -->
                 <td class="px-1 py-3 text-right">
                   <p>{{ formatPrice(fill.price) }}</p>
-                  <p class="text-info text-s-12 xs:hidden">
+                  <p class="text-text-subtle text-s-12 xs:hidden">
                     {{ formatDate(fill.time) }}
                   </p>
                 </td>
@@ -677,7 +695,7 @@
                   <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                     {{ formatPnl(fill.pnl) }}
                   </span>
-                  <span v-else class="text-info">—</span>
+                  <span v-else class="text-text-subtle">—</span>
                 </td>
                 <!-- Actions -->
                 <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
@@ -688,7 +706,7 @@
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
-                    <chevron-right-icon class="w-5 h-5" />
+                    <AppIcon name="chevron-right" size="s" variant="filled" />
                   </app-btn-icon>
                 </td>
               </tr>
@@ -720,7 +738,7 @@
         />
         <div
           v-else-if="deposits.length === 0 && withdrawals.length === 0"
-          class="text-center py-8 text-info text-s-14"
+          class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-deposits-or-withdrawals') }}
         </div>
@@ -728,7 +746,7 @@
           <table ref="dwTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
               >
                 <th
                   class="px-1 sm:pl-4 py-3 text-left font-bold hidden xs:table-cell"
@@ -756,12 +774,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in paginatedDW" :key="item.key">
+              <tr v-for="item in paginatedDW" :key="item.key" class="">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
                     :class="[
-                      item.type === 'Deposit' ? 'text-success' : 'text-warning',
+                      item.type === 'Deposit'
+                        ? 'text-text-success'
+                        : 'text-text-warning',
                       'font-medium text-s-13',
                     ]"
                   >
@@ -781,8 +801,8 @@
                     <p
                       :class="[
                         item.type === 'Deposit'
-                          ? 'text-success'
-                          : 'text-warning',
+                          ? 'text-text-success'
+                          : 'text-text-warning',
                         'font-medium text-s-12 xs:hidden',
                       ]"
                     >
@@ -792,7 +812,7 @@
                 </td>
                 <!-- Time -->
                 <td
-                  class="px-1 py-3 text-left text-info text-s-12 hidden sm:table-cell"
+                  class="px-1 py-3 text-left text-text-subtle text-s-12 hidden sm:table-cell"
                 >
                   {{ formatDate(item.time) }}
                 </td>
@@ -805,7 +825,9 @@
                   <p class="md:hidden">
                     {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
                   </p>
-                  <p class="text-info text-s-12 md:text-black md:text-s-14">
+                  <p
+                    class="text-text-subtle text-s-12 md:text-black md:text-s-14"
+                  >
                     {{ item.size }} {{ item.coin }}
                   </p>
                 </td>
@@ -877,13 +899,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ChevronDownIcon,
-  EllipsisVerticalIcon,
-  ChevronRightIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -1191,18 +1209,7 @@ const orderFilterTabs = computed(() => [
   { label: t('perps.positions.filter-pending'), value: 'pending' },
 ])
 
-// Track the filter by value, not by object: labels are locale-dependent and
-// AppSegmentedControl compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
-const selectedOrderFilter = computed({
-  get: () =>
-    orderFilterTabs.value.find(
-      tab => tab.value === selectedOrderFilterValue.value,
-    ) ?? orderFilterTabs.value[0],
-  set: (tab: { label: string; value: string }) => {
-    selectedOrderFilterValue.value = tab.value
-  },
-})
 
 const ordersStatusFilter = computed<OrdersStatusFilter>(() =>
   selectedOrderFilterValue.value === 'pending' ? 'pending' : 'all',
@@ -1378,10 +1385,10 @@ const combinedDW = computed<CombinedDWRow[]>(() => {
       statusLabel: d.status,
       statusColor:
         d.status === 'confirmed'
-          ? 'text-success'
+          ? 'text-text-success'
           : d.status === 'pending'
-            ? 'text-warning'
-            : 'text-info',
+            ? 'text-text-warning'
+            : 'text-text-subtle',
       time: d.time,
     })
   }
@@ -1417,7 +1424,7 @@ const tabs = computed(() => [
 ])
 
 // Track the tab by value, not by object: labels are locale-dependent and
-// AppSegmentedControl/AppSelect compare the selection by structural equality.
+// AppSelect compares the selection by structural equality.
 const activeTab = ref('positions')
 const selectedTab = computed({
   get: () =>

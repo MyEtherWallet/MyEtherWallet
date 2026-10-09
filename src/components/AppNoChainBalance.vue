@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center gap-3 w-full">
-    <p class="text-info">{{ $t('common.add_funds_to_proceed') }}</p>
+    <p class="text-text-subtle">{{ $t('common.add_funds_to_proceed') }}</p>
     <app-base-button v-if="isNativeBuyable" class="!w-full" @click="buyBtn">
       <div class="flex gap-2 items-center justify-center">
         <icon-buy
@@ -32,8 +32,10 @@
             })
           }}
         </p>
-        <ArrowLongRightIcon
-          class="w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-1 transition-transform"
+        <AppIcon
+          name="arrow-long-right"
+          size="xxs"
+          class="group-hover:translate-x-1 transition-transform xl:size-5"
         />
       </div>
     </app-base-button>
@@ -43,7 +45,7 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center">
-        <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-white" />
+        <AppIcon name="qr-code" size="xxs" class="text-white xl:size-5" />
         <p>
           {{
             $t('common.deposit_currency', {
@@ -58,7 +60,6 @@
 </template>
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ArrowLongRightIcon, QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -68,6 +69,7 @@ import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.v
 import { ref, computed } from 'vue'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   source: 'send' | 'swap' | 'bridge' | 'trade'
 }>()

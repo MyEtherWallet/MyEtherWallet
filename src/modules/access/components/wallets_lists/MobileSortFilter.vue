@@ -16,9 +16,9 @@
             :key="option.value"
             :class="[
               option.value === activeFilter.value
-                ? 'border-primary text-primary'
+                ? 'border-border-brand text-text-brand'
                 : '',
-              'border border-1 border-grey-outline items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-20 text-s-17 font-medium',
             ]"
             role="option"
             :id="option.value"
@@ -28,7 +28,7 @@
           </button>
         </div>
         <!-- DIVIDER -->
-        <hr class="h-px bg-grey-10 border-0 w-full mt-7 mb-6" />
+        <app-divider class="mt-6 mb-5" />
         <!-- Sort -->
         <p class="text7 ml-3 mb-2 !font-bold">{{ $t('common.sort_by') }}:</p>
         <div class="flex flex-wrap gap-x-2 gap-y-3">
@@ -37,9 +37,9 @@
             :key="option.value"
             :class="[
               option.value === activeSort.value
-                ? 'border-primary text-primary'
+                ? 'border-border-brand text-text-brand'
                 : '',
-              'border border-1 border-grey-outline items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
+              'border border-1 border-border-strong items-center px-2 py-1 hoverNoBG rounded-32 min-w-20 text-s-17 font-medium',
             ]"
             :id="option.value"
             @click="setActiveSort(option)"
@@ -67,6 +67,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type Filter } from '@/modules/access/common/walletConfigs'
 import { type AppSelectOption } from '@/types/components/appSelect'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 interface Props {
   filterOptions: Filter[]

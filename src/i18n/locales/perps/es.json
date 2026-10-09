@@ -218,7 +218,9 @@
         "failed": "Fallido",
         "cancelled": "Cancelada",
         "unknown": "Desconocido"
-      }
+      },
+      "tabs-label": "Actividad de trading",
+      "order-filter-label": "Estado de la orden"
     },
     "order": {
       "type-label": "Tipo",
@@ -304,10 +306,11 @@
       "take-profit": "Take Profit"
     },
     "market-list": {
-      "title": "Mercados de perpetuos",
+      "title": "Explorar perpetuos",
       "search-placeholder": "Buscar",
       "filter-placeholder": "Filtrar",
       "filter-all": "Todos los mercados",
+      "all-categories": "Todas las categorías",
       "filter-stocks": "Acciones",
       "filter-commodities": "Materias primas",
       "filter-indices": "Índices",
@@ -315,6 +318,7 @@
       "column-name": "Nombre",
       "column-price": "Precio",
       "column-24h": "24H",
+      "column-24h-change": "Cambio 24 h",
       "column-volume": "Volumen",
       "column-market-cap": "Capitalización de mercado",
       "column-actions": "Acciones",
