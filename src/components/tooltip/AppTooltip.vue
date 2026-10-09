@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, useId, nextTick, watch, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  computed,
+  useId,
+  useSlots,
+  nextTick,
+  watch,
+  onBeforeUnmount,
+} from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   PLACEMENT_FLEX,
@@ -55,6 +63,7 @@ const effectivePlacement = ref<TooltipPlacement>(props.placement)
 const pos = ref({ x: 0, y: 0 })
 
 const hasText = computed(() => props.text !== '')
+const slots = useSlots()
 const isVertical = computed(
   () =>
     effectivePlacement.value === 'top' || effectivePlacement.value === 'bottom',
@@ -119,6 +128,9 @@ function onKeydown(e: KeyboardEvent) {
 
 function open() {
   if (props.disabled) return
+  // Nothing to show without text or content: lets callers wrap an element and
+  // enable the tooltip conditionally by toggling `text` (ported from develop).
+  if (!hasText.value && !slots.content) return
   clearTimeout(hideTimer)
   if (visible.value) return
   visible.value = true

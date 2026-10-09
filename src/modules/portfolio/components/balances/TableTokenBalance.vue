@@ -155,21 +155,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -189,21 +189,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -223,21 +223,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -258,21 +258,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -307,8 +307,8 @@
                 <AppIcon
                   name="star"
                   size="xxs"
-                  class="cursor-pointer"
                   v-if="!isWatchListed(getWatchlistId(token))"
+                  class="cursor-pointer"
                 />
                 <AppIcon
                   name="star"
@@ -453,8 +453,8 @@
                         <AppIcon
                           name="star"
                           size="xxs"
-                          class="cursor-pointer"
                           v-if="!isWatchListed(getWatchlistId(token))"
+                          class="cursor-pointer"
                         />
                         <AppIcon
                           name="star"
@@ -469,14 +469,14 @@
                             : $t('portfolio.table.add_to_watchlist')
                         }}</span>
                       </button>
-                      <hr
+                      <app-divider
                         v-if="
                           props.view === 'custom' ||
                           isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                        class="my-1 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -746,11 +746,9 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
-import AppIcon from '@/components/icon/AppIcon.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-
 // Composables & Utils
 import { usePaginate } from '@/composables/usePaginate'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
@@ -790,6 +788,8 @@ import { useCustomTokenStore } from '@/stores/customTokenStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 /** -------------------------------
  * Constants & Types
  -------------------------------*/

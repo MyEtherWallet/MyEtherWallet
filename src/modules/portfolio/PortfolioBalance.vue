@@ -7,19 +7,13 @@
         {{ $t('portfolio.your_balances') }}
       </h1>
       <!--Filter Lists-->
-      <div
-        class="hidden lg:flex lg:items-center bg-background-default rounded-full"
-      >
-        <app-btn-group
-          v-model:selected="selectedCryptoFilter"
-          :btn-list="allTokensFilterOptions"
-          size="large"
-          class="flex-wrap"
-        >
-          <template #btn-content="{ data }">
-            <span class="px-2">{{ data.label }}</span>
-          </template>
-        </app-btn-group>
+      <div class="hidden lg:block">
+        <AppSegmentedControl
+          v-model="selectedFilterValue"
+          :items="allTokensFilterOptions"
+          :label="$t('portfolio.balance_menu')"
+          size="default"
+        />
       </div>
       <app-select
         v-model:selected="selectedCryptoFilter"
@@ -65,11 +59,10 @@
 
 <script lang="ts" setup>
 import TableTokenBalance from './components/balances/TableTokenBalance.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -80,6 +73,7 @@ import {
 } from './helpers'
 import { useChainsStore } from '@/stores/chainsStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const chainStore = useChainsStore()
 const walletStore = useWalletStore()

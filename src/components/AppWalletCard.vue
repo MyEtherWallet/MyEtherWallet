@@ -68,9 +68,7 @@
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full my-2"
-                  />
+                  <app-divider class="my-1" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
@@ -168,7 +166,6 @@ import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { truncateAddress } from '@/utils/filters'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
@@ -191,6 +188,9 @@ import {
 } from '@/analytics'
 import * as Sentry from '@sentry/vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+import configs from '@/configs'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -227,7 +227,7 @@ const fetchBalances = () => {
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
     })
     .catch((error: unknown) => {
-      if (import.meta.env.MODE !== 'production')
+      if (configs.BUILD_MODE !== 'production')
         console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
     })

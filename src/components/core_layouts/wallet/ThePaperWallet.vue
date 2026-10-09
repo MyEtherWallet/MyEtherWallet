@@ -81,7 +81,7 @@
             }}</span>
             {{ $t('paper_wallet.tip') }}
           </p>
-          <hr class="h-px bg-background-default-hover border-0 w-full my-6" />
+          <app-divider class="my-5" />
           <!-- TODO:  add privatekey option-->
           <div class="flex justify-between items-center mx-6 mb-6">
             <img
@@ -132,7 +132,7 @@ import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
+import AppDivider from '@/components/divider/AppDivider.vue'
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

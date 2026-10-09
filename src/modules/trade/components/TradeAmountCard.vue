@@ -107,14 +107,14 @@
                 :is-stock="side === 'buy'"
                 class="!text-s-14 !font-semibold leading-[20px] tracking-[-0.28px]"
               />
-              <chevron-right-icon class="w-5 h-5" />
+              <AppIcon name="chevron-right" variant="filled" size="s" />
             </button>
           </template>
         </trade-select-asset-modal>
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isBusy" class="text-black" />
+        <app-spinner v-if="isBusy" :size="18" />
         <p
           v-else
           :id="`trade-amount-message-${side}`"
@@ -164,9 +164,8 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -179,6 +178,7 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     side: 'sell' | 'buy'

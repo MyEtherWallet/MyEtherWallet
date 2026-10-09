@@ -24,7 +24,7 @@
           {{ $t('trade.market_status_popover.learn_more_suffix') }}
         </p>
       </div>
-      <div class="w-full border-t border-border-default" />
+      <app-divider class="-my-1" />
       <p
         v-if="status === 'weekend'"
         class="text-s-12 text-text-subtle leading-[18px]"
@@ -43,7 +43,7 @@
         class="absolute right-1 top-1 flex w-6 h-6 items-center justify-center rounded-full hoverNoBG"
         @click="emit('close')"
       >
-        <XMarkIcon class="w-4 h-4" />
+        <AppIcon name="x-mark" variant="filled" size="xxs" />
       </button>
     </div>
   </div>
@@ -52,7 +52,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'
@@ -63,6 +62,8 @@ import {
 } from '../common/marketDisplay'
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = withDefaults(
   defineProps<{
     status: MarketStatusVariant

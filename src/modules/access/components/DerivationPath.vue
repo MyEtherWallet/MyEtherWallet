@@ -21,7 +21,12 @@
             >
           </p>
         </div>
-        <AppIcon name="chevron-down" variant="filled" size="xxs" class="ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="ml-auto mr-1"
+        />
       </div>
     </button>
 
@@ -53,7 +58,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-background-default-hover border-0 w-full" />
+                <app-divider class="-my-1" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -129,9 +134,10 @@ import {
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 defineProps({
@@ -141,11 +147,13 @@ defineProps({
   },
 })
 
-const chainStore = useChainsStore()
+// The chain picked in the access dialog drives the path list — not the app's
+// global network, which may still be a different chain (or type) at this point.
+const accessStore = useAccessStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(accessStore)
 // TODO: handle DOT and SOL later on
 const defaultPath = isEvmChain.value
   ? Bip44Paths[WALLET_TYPES.MNEMONIC]
@@ -186,7 +194,7 @@ watch(
 
 watch(
   () => selectedChain.value,
-  (newValue: Chain | undefined) => {
+  (newValue: Chain | null) => {
     if (newValue) {
       setPaths()
       // reset search input
@@ -196,6 +204,10 @@ watch(
 )
 
 const setPaths = () => {
+  // No chain selected yet (the dialog's chain is null until it opens): nothing
+  // to reconcile against, and falling through would overwrite the stored
+  // derivation with the Ethereum default.
+  if (!selectedChain.value) return
   if (selectedDerivation.value) {
     selectedPath.value = selectedDerivation.value
   }

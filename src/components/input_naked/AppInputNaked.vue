@@ -75,11 +75,7 @@
       ]"
       data-testid="input-naked-info"
     >
-      <AppSpinner
-        v-if="loading"
-        size-class="size-5"
-        class="text-text-default"
-      />
+      <AppSpinner v-if="loading" :size="20" />
       <template v-else>{{ infoText }}</template>
     </div>
   </div>
@@ -88,7 +84,7 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs, useId } from 'vue'
 import { useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import { measureTextWidth } from '@/utils/measureText'
 import { sanitizeAmount } from './sanitizeAmount'
 import {

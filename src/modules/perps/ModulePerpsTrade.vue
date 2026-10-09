@@ -36,10 +36,10 @@
            unreadable for copy, so the text stays near-black. -->
       <AppIcon
         name="exclamation-triangle"
-        size="xxs"
         variant="filled"
-        class="shrink-0 text-text-warning"
+        size="xxs"
         aria-hidden="true"
+        class="shrink-0 text-text-warning"
       />
       <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
     </div>
@@ -56,10 +56,10 @@
         <div class="relative">
           <AppIcon
             name="globe-asia-australia"
-            size="xl"
             variant="filled"
-            class="text-black"
+            size="xxl"
             aria-hidden="true"
+            class="text-black"
           />
           <!--
             Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
@@ -73,10 +73,10 @@
           >
             <AppIcon
               name="exclamation-circle"
-              size="s"
               variant="filled"
-              class="text-white"
+              size="s"
               aria-hidden="true"
+              class="text-white"
             />
           </span>
         </div>
@@ -145,10 +145,10 @@
               </div>
             </div>
             <AppIcon
-              v-if="!isLoading"
               name="chevron-down"
-              size="xxs"
               variant="filled"
+              size="xxs"
+              v-if="!isLoading"
               class="text-text-subtle ml-4"
             />
           </button>
@@ -205,17 +205,17 @@
             >
               {{ side.label }}
               <AppIcon
-                v-if="side.value === 'buy'"
                 name="arrow-trending-up"
-                size="xxs"
                 variant="filled"
+                size="xxs"
+                v-if="side.value === 'buy'"
                 :class="orderSide === side.value ? 'text-white' : 'text-black'"
               />
               <AppIcon
-                v-if="side.value === 'sell'"
                 name="arrow-trending-down"
-                size="xxs"
                 variant="filled"
+                size="xxs"
+                v-if="side.value === 'sell'"
                 :class="orderSide === side.value ? 'text-white' : 'text-black'"
               />
             </button>
@@ -294,10 +294,10 @@
                     </p>
                   </div>
                   <AppIcon
-                    v-if="orderType === 'market'"
                     name="check"
-                    size="s"
                     variant="filled"
+                    size="s"
+                    v-if="orderType === 'market'"
                     class="text-text-brand"
                   />
 
@@ -321,10 +321,10 @@
                     </p>
                   </div>
                   <AppIcon
-                    v-if="orderType === 'limit'"
                     name="check"
-                    size="s"
                     variant="filled"
+                    size="s"
+                    v-if="orderType === 'limit'"
                     class="text-text-brand"
                   />
                   <span v-else class="w-4 mt-0.5" />
@@ -477,7 +477,7 @@
                     manageMode === 'add' ? effectiveLeverage : leverage
                   }}&times;
                 </p>
-                <AppIcon name="chevron-down" size="xxs" variant="filled" />
+                <AppIcon name="chevron-down" variant="filled" size="xxs" />
               </button>
             </div>
             <p class="text-text-subtle text-s-12 -mt-2 mb-2 truncate">
@@ -602,7 +602,7 @@
               class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
               @click="openAutoCloseModal"
             >
-              <AppIcon name="plus-circle" size="xxs" variant="filled" />
+              <AppIcon name="plus-circle" variant="filled" size="xxs" />
               <p class="text-s-12 font-medium">
                 {{ $t('perps.trade.add-tp-sl') }}
               </p>
@@ -641,7 +641,7 @@
                 class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
                 @click="openAutoCloseModal"
               >
-                <AppIcon name="plus-circle" size="xxs" variant="filled" />
+                <AppIcon name="plus-circle" variant="filled" size="xxs" />
                 <p class="text-s-12 font-medium">
                   {{
                     takeProfitPrice === null
@@ -916,7 +916,6 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
@@ -944,6 +943,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,

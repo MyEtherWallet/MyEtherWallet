@@ -31,15 +31,15 @@
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
               <AppIcon
-                v-if="priceChangePercent < 0"
                 name="arrow-trending-down"
                 size="xxs"
+                v-if="priceChangePercent < 0"
                 class="inline-block text-text-error"
               />
               <AppIcon
-                v-else
                 name="arrow-trending-up"
                 size="xxs"
+                v-else
                 class="inline-block text-text-success"
               />
               <span
@@ -67,34 +67,32 @@
     <!-- Chart -->
     <div class="py-6">
       <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
-        <app-btn-group
-          v-model:selected="selectedInterval"
-          :btn-list="isXS ? chartIntervals.slice(0, 3) : chartIntervals"
-          size="xs"
+        <AppSegmentedControl
+          :model-value="selectedInterval.value"
+          :items="isXS ? chartIntervals.slice(0, 3) : chartIntervals"
+          size="small"
+          :label="$t('common.chart_range')"
+          @update:model-value="selectInterval"
         >
-          <template #btn-content="{ data }">
-            {{ data.label }}
-          </template>
-          <template #custom>
-            <app-select
-              v-if="isXS"
-              v-model:selected="selectedInterval"
-              :options="chartIntervals.slice(3)"
-              position="-right-1"
-              class="text-s-12"
-            >
-              <template #select-button="{ toggleSelect }">
-                <button
-                  class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
-                  @click="toggleSelect"
-                >
-                  <p>{{ $t('perps.info.more-label') }}</p>
-                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
-                </button>
-              </template>
-            </app-select>
-          </template>
-        </app-btn-group>
+          <app-select
+            v-if="isXS"
+            v-model:selected="selectedInterval"
+            :options="chartIntervals.slice(3)"
+            position="-right-1"
+            class="text-s-12"
+          >
+            <template #select-button="{ toggleSelect }">
+              <button
+                type="button"
+                class="flex h-7 items-center rounded-3xl px-1.5 text-label-sm text-text-default hover:bg-background-alternative-hover"
+                @click="toggleSelect"
+              >
+                <span class="px-1.5">{{ $t('perps.info.more-label') }}</span>
+                <AppIcon name="chevron-down" size="s" />
+              </button>
+            </template>
+          </app-select>
+        </AppSegmentedControl>
       </div>
       <div class="h-[200px] sm:h-80 px-4 lg:px-10 py-6">
         <chart-price
@@ -240,7 +238,7 @@
                 width="w-7 xs:w-8"
                 @click="toggleSelect"
               >
-                <AppIcon name="ellipsis-vertical" size="s" variant="filled" />
+                <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
               </app-btn-icon>
             </template>
           </app-select>
@@ -307,7 +305,7 @@
             name="chevron-down"
             size="xxs"
             class="ml-1 inline-block align-middle"
-            :class="{ 'rotate-180 ': showPositionMore }"
+            :class="{ 'rotate-180': showPositionMore }"
           />
         </app-btn-text>
         <transition name="fade" mode="out-in">
@@ -421,29 +419,28 @@
         class="flex flex-col items-start gap-3 bg-background-default rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
         <div class="hidden lg:flex lg:items-center">
-          <app-btn-group
-            v-model:selected="activeInfoTabObj"
-            :btn-list="infoTabs"
-            size="medium"
+          <AppSegmentedControl
+            v-model="activeInfoTab"
+            :items="infoTabs"
+            size="small"
+            :label="$t('perps.positions.tabs-label')"
             class="ml-2"
           >
-            <template #btn-content="{ data }">
-              <span>
-                {{ data.label }}
-                <span
-                  v-if="data.value === 'orders' && openOrdersCountForMarket > 0"
-                  class="ml-1 text-text-subtle text-s-12"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${OPEN_COUNT_LIMIT}+`
-                      : openOrdersCountForMarket
-                  }}
-                </span>
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'orders' && openOrdersCountForMarket > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${OPEN_COUNT_LIMIT}+`
+                    : openOrdersCountForMarket
+                }}
               </span>
             </template>
-          </app-btn-group>
+          </AppSegmentedControl>
         </div>
         <app-select
           v-model:selected="activeInfoTabObj"
@@ -490,30 +487,29 @@
             key="position-orders"
           >
             <div class="mb-4 xs:pl-4">
-              <app-btn-group
-                v-model:selected="selectedOrderFilter"
-                :btn-list="orderFilterTabs"
-                size="xs"
+              <AppSegmentedControl
+                v-model="selectedOrderFilterValue"
+                :items="orderFilterTabs"
+                size="small"
+                :label="$t('perps.positions.order-filter-label')"
               >
-                <template #btn-content="{ data }">
-                  <span class="px-2"
-                    >{{ data.label }}
-                    <span
-                      v-if="
-                        data.value === 'pending' && openOrdersCountForMarket > 0
-                      "
-                      class="ml-1 text-text-subtle text-s-11"
-                    >
-                      ·
-                      {{
-                        openOrdersCountIsCapped
-                          ? `${OPEN_COUNT_LIMIT}+`
-                          : openOrdersCountForMarket
-                      }}
-                    </span></span
+                <template #label="{ item }">
+                  {{ item.label }}
+                  <span
+                    v-if="
+                      item.value === 'pending' && openOrdersCountForMarket > 0
+                    "
+                    class="ml-1 text-text-subtle text-s-11"
                   >
+                    ·
+                    {{
+                      openOrdersCountIsCapped
+                        ? `${OPEN_COUNT_LIMIT}+`
+                        : openOrdersCountForMarket
+                    }}
+                  </span>
                 </template>
-              </app-btn-group>
+              </AppSegmentedControl>
             </div>
             <app-table-skeleton
               v-if="ordersLoading && marketOrders.length === 0"
@@ -673,8 +669,8 @@
                           >
                             <AppIcon
                               name="ellipsis-vertical"
-                              size="s"
                               variant="filled"
+                              size="s"
                             />
                           </app-btn-icon>
                         </template>
@@ -722,8 +718,8 @@
                       >
                         <AppIcon
                           name="chevron-right"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </div>
@@ -847,8 +843,8 @@
                       >
                         <AppIcon
                           name="chevron-right"
-                          size="s"
                           variant="filled"
+                          size="s"
                         />
                       </app-btn-icon>
                     </td>
@@ -975,7 +971,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -987,7 +983,6 @@ import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderCon
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
@@ -1016,6 +1011,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,
@@ -1216,18 +1212,7 @@ const orderFilterTabs = computed(() => [
   { label: t('perps.positions.filter-pending'), value: 'pending' },
 ])
 
-// Track the filter by value, not by object: labels are locale-dependent and
-// AppBtnGroup compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
-const selectedOrderFilter = computed({
-  get: () =>
-    orderFilterTabs.value.find(
-      tab => tab.value === selectedOrderFilterValue.value,
-    ) ?? orderFilterTabs.value[0],
-  set: (tab: { label: string; value: string }) => {
-    selectedOrderFilterValue.value = tab.value
-  },
-})
 
 const filteredMarketOrders = computed(() => {
   if (selectedOrderFilterValue.value === 'all') return marketOrders.value
@@ -1668,6 +1653,11 @@ const chartIntervals = computed<ChartInterval[]>(() =>
   })),
 )
 const selectedInterval = ref<ChartInterval>(chartIntervals.value[0])
+const selectInterval = (value: ChartInterval['value']) => {
+  selectedInterval.value =
+    chartIntervals.value.find(opt => opt.value === value) ??
+    selectedInterval.value
+}
 watch(chartIntervals, options => {
   selectedInterval.value =
     options.find(opt => opt.value === selectedInterval.value.value) ||

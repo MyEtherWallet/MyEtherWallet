@@ -9,7 +9,7 @@
         name="question-mark-circle"
         variant="filled"
         size="s"
-        class="sm:size-6 inline-block mr-1 text-text-default"
+        class="display inline block mr-1 text-text-default sm:size-6"
       />
       <span class="underline"> {{ title }} </span>
     </a>
@@ -18,9 +18,10 @@
 
 <script setup lang="ts">
 import AppIcon from '@/components/icon/AppIcon.vue'
+import configs from '@/configs'
 
 //Remove HelpLinks from Beta builds
-const isDevMode = import.meta.env.MODE !== 'production'
+const isDevMode = configs.BUILD_MODE !== 'production'
 
 //TODO: add Amplitude event with link + route location
 

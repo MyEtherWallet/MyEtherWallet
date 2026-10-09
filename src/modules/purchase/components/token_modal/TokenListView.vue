@@ -84,10 +84,10 @@
             {{ entry.network.name }}
           </span>
           <AppIcon
-            v-if="isSelectedToken(entry)"
             name="check-circle"
             variant="filled"
             size="s"
+            v-if="isSelectedToken(entry)"
             class="text-text-brand flex-none"
           />
         </button>
@@ -105,7 +105,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { storeToRefs } from 'pinia'
@@ -118,6 +117,7 @@ import {
 import type { PurchaseAsset } from '@/types/buyToken'
 import type { BuyNetwork } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   networks: BuyNetwork[]
   selectedToken: PurchaseAsset | null

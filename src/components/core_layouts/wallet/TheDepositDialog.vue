@@ -95,10 +95,10 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { watch, computed } from 'vue'
 import { analytics, DepositEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

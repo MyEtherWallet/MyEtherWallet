@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface Props {
   logo?: string
   symbol: string
@@ -71,13 +71,13 @@ const changeText = computed(() =>
         @click.stop="$emit('toggle-favorite')"
       >
         <AppIcon
-          v-if="favorite"
           name="star"
           variant="filled"
           size="s"
+          v-if="favorite"
           class="text-text-brand"
         />
-        <AppIcon v-else name="star" size="s" class="text-text-subtle" />
+        <AppIcon name="star" size="s" v-else class="text-text-subtle" />
       </button>
     </div>
 

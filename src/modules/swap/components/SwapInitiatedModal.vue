@@ -72,17 +72,17 @@
                   ></path>
                 </svg>
                 <AppIcon
-                  v-else-if="notificationStatus === 'confirmed'"
                   name="check-circle"
                   variant="filled"
                   size="s"
+                  v-else-if="notificationStatus === 'confirmed'"
                   class="text-text-success"
                 />
                 <AppIcon
-                  v-else-if="notificationStatus === 'failed'"
                   name="x-circle"
                   variant="filled"
                   size="s"
+                  v-else-if="notificationStatus === 'failed'"
                   class="text-text-error"
                 />
               </div>
@@ -290,7 +290,6 @@ import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'
@@ -306,6 +305,7 @@ import BigNumber from 'bignumber.js'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 const tradeOrdersStore = useTradeOrdersStore()

@@ -218,7 +218,9 @@
         "failed": "失败",
         "cancelled": "已取消",
         "unknown": "未知"
-      }
+      },
+      "tabs-label": "交易活动",
+      "order-filter-label": "订单状态"
     },
     "order": {
       "type-label": "类型",

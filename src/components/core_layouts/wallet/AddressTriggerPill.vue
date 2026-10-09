@@ -40,10 +40,10 @@
             {{ accountName }}
           </span>
           <AppIcon
-            v-if="isWatchOnly"
             name="eye"
             variant="filled"
             size="xxs"
+            v-if="isWatchOnly"
             data-test="pill-watch-only"
             class="text-text-subtle flex-shrink-0"
           />
@@ -81,7 +81,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import { useWalletStore } from '@/stores/walletStore'
@@ -89,6 +88,7 @@ import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { truncateAddress } from '@/utils/filters'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 withDefaults(defineProps<{ hover?: boolean }>(), { hover: true })
 
 const walletStore = useWalletStore()

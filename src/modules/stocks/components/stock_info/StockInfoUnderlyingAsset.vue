@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <hr class="border-border-default mb-6" />
+    <app-divider class="-mt-1 mb-5" />
 
     <div
       class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-border-default gap-y-6"
@@ -188,6 +188,7 @@ import BigNumber from 'bignumber.js'
 import type { StockUnderlyingAsset, StockDividends } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { formatFiat, currencySymbol } = useCurrency()
 

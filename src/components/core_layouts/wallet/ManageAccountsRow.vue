@@ -106,7 +106,6 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -114,6 +113,7 @@ import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsM
 import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const props = defineProps<{
   account: SavedAccount

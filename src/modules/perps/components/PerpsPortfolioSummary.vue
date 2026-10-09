@@ -141,7 +141,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -161,6 +160,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 defineProps({
   watchOnly: {
     type: Boolean,

@@ -47,12 +47,7 @@
       >
         <AppIcon name="trash" size="s" />
       </app-btn-icon>
-      <AppIcon
-        v-if="isSelected"
-        name="check"
-        size="m"
-        class="text-text-brand"
-      />
+      <AppIcon name="check" v-if="isSelected" class="text-text-brand" />
     </div>
   </div>
 </template>
@@ -60,13 +55,13 @@
 <script lang="ts" setup>
 import { type Address } from '@/stores/addressBook'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBlockie from '@components/AppBlockie.vue'
 import { truncateAddress } from '@/utils/filters'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps({
   adr: {
     type: Object as () => Address,

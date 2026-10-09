@@ -11,7 +11,6 @@
         <AppIcon
           name="check-circle"
           variant="filled"
-          size="m"
           class="text-text-success shrink-0"
         />
         <p class="text-s-14 font-semibold">
@@ -24,7 +23,6 @@
         <AppIcon
           name="exclamation-circle"
           variant="filled"
-          size="m"
           class="text-text-warning shrink-0"
         />
         <div class="text-left">
@@ -49,11 +47,10 @@
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
-
 const { t } = useI18n()
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   TradeConfirmationBannerEvent,

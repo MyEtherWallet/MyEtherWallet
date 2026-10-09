@@ -205,7 +205,6 @@
               <AppIcon
                 name="lock-closed"
                 variant="filled"
-                size="m"
                 class="text-text-brand shrink-0"
               />
               <div class="flex flex-col gap-0.5 flex-1">
@@ -224,7 +223,7 @@
             </div>
           </div>
 
-          <div class="h-px bg-background-default-hover w-full"></div>
+          <app-divider class="-my-1" />
 
           <div class="flex items-center justify-between gap-4 w-full">
             <!-- A season that has already ended has nothing left to count down
@@ -271,8 +270,8 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
-import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
@@ -303,7 +302,7 @@ const {
   rewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { t } = useI18n()
-const rewardsPageUrl = configs.REWARDS_PAGE_URL
+const rewardsPageUrl = 'https://myetherwallet.com/terms-of-service'
 
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are

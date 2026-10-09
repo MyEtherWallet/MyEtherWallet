@@ -68,6 +68,8 @@ describe('AppIcon', () => {
   })
 
   it('registers the full icon inventory, each with at least one variant', () => {
+    // 179 from the design library + app-used set, plus `rectangle-group` for the
+    // home "all" sector (registered on this branch).
     expect(ICON_NAMES).toHaveLength(180)
     for (const name of ICON_NAMES) {
       const entry = icons[name]

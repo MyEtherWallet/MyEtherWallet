@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
 // none to show); this component renders + handles per-row actions, search,
 // category filter, "Show more" and manual drag-reordering.
@@ -41,6 +43,15 @@ const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
 const router = useRouter()
 const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
+
+// The add modal only offers crypto + stocks, so once both buckets hit the limit
+// there's nothing left to add — hide the "Add asset" button.
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const isWatchlistFull = computed(
+  () =>
+    watchListedTokens.value.length >= WATCHLIST_MAX &&
+    watchListedStocks.value.length >= WATCHLIST_MAX,
+)
 
 const matchesCategory = (r: WatchlistRow) =>
   category.value === 'all' ||
@@ -137,15 +148,26 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <h2 class="min-w-0 flex-1 text-s-20 font-bold text-black">
         {{ t('homePage.hero.watchlist.table.title') }}
       </h2>
-      <button
-        type="button"
-        data-test="watchlist-add-new-mobile"
-        class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white min-[780px]:hidden"
-        @click="isAddOpen = true"
+      <AppTooltip
+        :text="
+          isWatchlistFull
+            ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
+            : ''
+        "
+        placement="bottom"
+        class="shrink-0 min-[780px]:hidden"
       >
-        {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <AppIcon name="plus" size="xs" variant="filled" />
-      </button>
+        <button
+          type="button"
+          data-test="watchlist-add-new-mobile"
+          :disabled="isWatchlistFull"
+          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          @click="isAddOpen = true"
+        >
+          {{ t('homePage.hero.watchlist.table.addAsset') }}
+          <AppIcon name="plus" variant="filled" size="xs" />
+        </button>
+      </AppTooltip>
     </div>
 
     <!-- Toolbar: search + category stacked on mobile; Add asset (desktop). -->
@@ -169,7 +191,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             @click="isCategoryOpen = !isCategoryOpen"
           >
             {{ t(CATEGORIES.find(c => c.value === category)!.labelKey) }}
-            <AppIcon name="chevron-down" size="s" variant="filled" />
+            <AppIcon name="chevron-down" variant="filled" size="s" />
           </button>
           <template v-if="isCategoryOpen">
             <div
@@ -198,15 +220,26 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           </template>
         </div>
       </div>
-      <button
-        type="button"
-        data-test="watchlist-add-new"
-        class="hidden h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white min-[780px]:flex"
-        @click="isAddOpen = true"
+      <AppTooltip
+        :text="
+          isWatchlistFull
+            ? t('common.watchlist_limit_reached', { max: WATCHLIST_MAX })
+            : ''
+        "
+        placement="bottom"
+        class="hidden shrink-0 min-[780px]:block"
       >
-        {{ t('homePage.hero.watchlist.table.addAsset') }}
-        <AppIcon name="plus" size="xs" variant="filled" />
-      </button>
+        <button
+          type="button"
+          data-test="watchlist-add-new"
+          :disabled="isWatchlistFull"
+          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          @click="isAddOpen = true"
+        >
+          {{ t('homePage.hero.watchlist.table.addAsset') }}
+          <AppIcon name="plus" variant="filled" size="xs" />
+        </button>
+      </AppTooltip>
     </div>
 
     <div class="mt-6 h-px w-full bg-border-strong/40" aria-hidden="true" />
@@ -276,8 +309,8 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           >
             <AppIcon
               name="bars-2"
-              size="xxs"
               variant="filled"
+              size="xxs"
               class="text-text-placeholder"
             />
           </span>
@@ -292,8 +325,8 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           >
             <AppIcon
               name="bars-2"
-              size="xxs"
               variant="filled"
+              size="xxs"
               class="text-text-placeholder"
             />
           </span>
@@ -307,7 +340,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-background-default-hover"
             @click="remove(row)"
           >
-            <AppIcon name="star" size="s" variant="filled" />
+            <AppIcon name="star" variant="filled" size="s" />
           </button>
 
           <!-- Token — a focusable link so keyboard users can open the drawer
@@ -390,12 +423,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               >
                 {{ changeLabel(row.change) }}
                 <AppIcon
-                  v-if="row.change < 0"
                   name="arrow-down"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
                 />
-                <AppIcon v-else name="arrow-up" size="xxs" variant="filled" />
+                <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
               <TableSparkline
                 v-if="row.sparkline.length"
@@ -430,12 +463,12 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
               >
                 {{ changeLabel(row.change) }}
                 <AppIcon
-                  v-if="row.change < 0"
                   name="arrow-down"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-if="row.change < 0"
                 />
-                <AppIcon v-else name="arrow-up" size="xxs" variant="filled" />
+                <AppIcon name="arrow-up" variant="filled" size="xxs" v-else />
               </span>
             </template>
           </div>
@@ -467,8 +500,8 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 >
                   <AppIcon
                     name="ellipsis-horizontal"
-                    size="s"
                     variant="filled"
+                    size="s"
                   />
                 </button>
                 <template v-if="openMenuKey === row.key">

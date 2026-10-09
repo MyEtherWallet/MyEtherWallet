@@ -1,17 +1,15 @@
 <template>
   <div class="relative">
-    <button
-      type="button"
-      :aria-label="placeholder || $t('common.search')"
+    <AppIcon
+      name="magnifying-glass"
+      :size="size === 'compact' ? 's' : 'm'"
+      @click="searchInput?.focus()"
       :class="[
         'absolute left-0 mx-3 cursor-pointer',
         size === 'compact' ? 'top-2.5' : 'top-2',
         inFocusInput ? 'text-text-brand' : 'text-text-subtle',
       ]"
-      @click="searchInput?.focus()"
-    >
-      <AppIcon name="magnifying-glass" :size="size === 'compact' ? 's' : 'm'" />
-    </button>
+    />
 
     <input
       ref="searchInput"
@@ -50,7 +48,6 @@
 import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.
  *

@@ -21,7 +21,8 @@
       "all": "Todas",
       "hardware": "Hardware",
       "mobile": "Móviles",
-      "software": "Software"
+      "software": "Software",
+      "label": "Tipo de billetera"
     },
     "back_to_connect_options": "volver a las opciones de conexión",
     "connect_wallet_title": "Conectar billetera",

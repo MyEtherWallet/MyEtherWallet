@@ -19,8 +19,8 @@
     <AppIcon
       name="exclamation-triangle"
       size="s"
-      class="shrink-0 text-text-warning"
       aria-hidden="true"
+      class="shrink-0 text-text-warning"
     />
     <p class="text-s-14">{{ $t('perps.status.unavailable') }}</p>
   </div>
@@ -28,9 +28,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { usePerpsStatus } from '../composables/usePerpsStatus'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { isServiceUnavailable } = usePerpsStatus()
 const { isPerpsRestricted } = usePerpsRestriction()
