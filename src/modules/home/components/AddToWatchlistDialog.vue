@@ -255,87 +255,76 @@ const confirm = () => {
           </div>
         </template>
 
-        <!-- Edgeless list: rows scroll up under the chips/search and down
-             behind the footer button, softened by white fades (same idea as
-             AppSlideGroup, vertical). Fixed height so the modal never resizes
-             between tabs, categories or loading; it takes over the tabs + chips
-             space while searching. pt/pb keep the first/last row clear of the
-             fade and the button. -->
-        <div class="relative">
-          <div
-            class="pointer-events-none absolute inset-x-0 top-0 z-[1] h-6 bg-gradient-to-b from-white to-transparent"
-            aria-hidden="true"
-          />
-          <div
-            class="mew-scrollbar flex flex-col gap-0.5 overflow-y-auto pb-24 pt-6"
-            :class="isSearching ? 'h-[578px]' : 'h-[468px]'"
-          >
-            <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
-            <template v-if="isLoading">
-              <div
-                v-for="n in 6"
-                :key="n"
-                data-test="picker-skeleton"
-                class="flex h-[68px] shrink-0 items-center gap-3 p-3"
-                aria-hidden="true"
-              >
-                <div class="flex w-7 shrink-0 justify-center">
-                  <div
-                    class="size-4 animate-pulse rounded-full bg-background-skeleton"
-                  />
-                </div>
+        <!-- Fixed height so the modal never resizes between tabs, categories
+             or loading; it takes over the tabs + chips space while searching.
+             Only this area scrolls. -->
+        <div
+          class="mew-scrollbar mt-3 flex flex-col gap-0.5 overflow-y-auto"
+          :class="isSearching ? 'h-[470px]' : 'h-[360px]'"
+        >
+          <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
+          <template v-if="isLoading">
+            <div
+              v-for="n in 6"
+              :key="n"
+              data-test="picker-skeleton"
+              class="flex h-[68px] shrink-0 items-center gap-3 p-3"
+              aria-hidden="true"
+            >
+              <div class="flex w-7 shrink-0 justify-center">
                 <div
-                  class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
+                  class="size-4 animate-pulse rounded-full bg-background-skeleton"
                 />
-                <div class="flex min-w-0 flex-1 flex-col gap-1">
-                  <div
-                    class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
-                  />
-                  <div
-                    class="h-3.5 w-24 animate-pulse rounded bg-background-skeleton"
-                  />
-                </div>
-                <div class="flex flex-col items-end gap-1">
-                  <div
-                    class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
-                  />
-                  <div
-                    class="h-3.5 w-10 animate-pulse rounded bg-background-skeleton"
-                  />
-                </div>
               </div>
-            </template>
-            <p
-              v-else-if="!items.length"
-              data-test="picker-empty"
-              class="py-16 text-center text-s-14 text-text-subtle"
-            >
-              {{ t('homePage.hero.watchlist.addModal.empty') }}
-            </p>
-            <AssetPickerRow
-              v-for="item in items"
-              v-else
-              :key="item.key"
-              :item="item"
-              :selected="isSelected(item)"
-              @toggle="toggle(item)"
-            />
-          </div>
-
-          <!-- Footer floats over the list's bottom edge on a white fade. The
-               disabled state keeps the brand fill, only dimmed (Figma). -->
-          <div
-            class="absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-white from-75% to-transparent pb-6 pt-6"
+              <div
+                class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
+              />
+              <div class="flex min-w-0 flex-1 flex-col gap-1">
+                <div
+                  class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+                />
+                <div
+                  class="h-3.5 w-24 animate-pulse rounded bg-background-skeleton"
+                />
+              </div>
+              <div class="flex flex-col items-end gap-1">
+                <div
+                  class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+                />
+                <div
+                  class="h-3.5 w-10 animate-pulse rounded bg-background-skeleton"
+                />
+              </div>
+            </div>
+          </template>
+          <p
+            v-else-if="!items.length"
+            data-test="picker-empty"
+            class="py-16 text-center text-s-14 text-text-subtle"
           >
-            <AppBaseButton
-              class="w-full disabled:!bg-background-brand disabled:opacity-40"
-              :disabled="!flipped.size"
-              @click="confirm"
-            >
-              {{ confirmLabel }}
-            </AppBaseButton>
-          </div>
+            {{ t('homePage.hero.watchlist.addModal.empty') }}
+          </p>
+          <AssetPickerRow
+            v-for="item in items"
+            v-else
+            :key="item.key"
+            :item="item"
+            :selected="isSelected(item)"
+            @toggle="toggle(item)"
+          />
         </div>
+      </div>
+
+      <!-- CTA section: 24px on every side. The disabled state keeps the brand
+           fill, only dimmed (Figma). -->
+      <div class="p-6">
+        <AppBaseButton
+          class="w-full disabled:!bg-background-brand disabled:opacity-40"
+          :disabled="!flipped.size"
+          @click="confirm"
+        >
+          {{ confirmLabel }}
+        </AppBaseButton>
       </div>
     </template>
   </AppDialog>
