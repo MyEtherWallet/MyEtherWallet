@@ -72,6 +72,18 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'text-area',
+              name: 'DevTextArea',
+              component: () => import('@/views/ViewTextAreaShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'searchbar',
+              name: 'DevSearchbar',
+              component: () => import('@/views/ViewSearchbarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
