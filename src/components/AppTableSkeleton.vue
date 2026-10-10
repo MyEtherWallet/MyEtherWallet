@@ -28,7 +28,7 @@
       <tr v-for="row in rows" :key="row">
         <td :colspan="columns.length || 1" class="px-1 sm:px-4 py-2">
           <div
-            class="h-10 bg-background-default-hover animate-pulse rounded-12"
+            class="h-10 bg-background-skeleton animate-pulse rounded-12"
           ></div>
         </td>
       </tr>
