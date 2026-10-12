@@ -1,15 +1,30 @@
 const mewWalletUrl =
   import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
-// Build target: 'production', 'test' or 'dev'. VITE_BUILD_MODE overrides it
-// per environment; without one it follows Vite's own mode (`vite build` ->
-// production, vitest -> test, anything else -> dev). Every environment switch
-// in the app reads `Configs.BUILD_MODE`; this is the only place that looks at
-// `import.meta.env.MODE`.
-const viteMode = import.meta.env.MODE
-const buildMode: string =
-  import.meta.env.VITE_BUILD_MODE ||
-  (viteMode === 'production' || viteMode === 'test' ? viteMode : 'dev')
+// Build target: 'production' or 'dev', set per environment through
+// VITE_BUILD_MODE and defaulting to 'dev' when unset. Deliberately independent
+// of Vite's own `MODE`: a release build must set VITE_BUILD_MODE=production.
+// Every environment switch in the app reads `Configs.BUILD_MODE`.
+const BUILD_MODES = ['production', 'dev'] as const
+export type BuildMode = (typeof BUILD_MODES)[number]
+
+const isBuildMode = (value: string): value is BuildMode =>
+  (BUILD_MODES as readonly string[]).includes(value)
+
+const resolveBuildMode = (): BuildMode => {
+  const value = import.meta.env.VITE_BUILD_MODE
+  if (!value) return 'dev'
+  // A misspelt value (e.g. "prod") must not silently run as dev: that would
+  // point a release at dev endpoints. Fail loudly at startup instead.
+  if (!isBuildMode(value)) {
+    throw new Error(
+      `Invalid VITE_BUILD_MODE "${value}": expected one of ${BUILD_MODES.join(', ')}`,
+    )
+  }
+  return value
+}
+
+const buildMode = resolveBuildMode()
 
 // Rewards V2 backend: prod in production builds, dev everywhere else. The
 // rules URL below hangs off it, so one override moves both.

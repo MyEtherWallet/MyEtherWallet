@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Configs from '@/configs'
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useVirtualList } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
@@ -98,7 +97,9 @@ watch([query, () => props.assets], () => {
 // until results settle. The filter is client-side today, so a short debounce
 // stands in for the latency the backend search will have — the isSearching flag
 // is what that request will drive later.
-const SEARCH_DEBOUNCE_MS = Configs.BUILD_MODE === 'test' ? 10 : 450
+// `import.meta.env.VITEST` is set by the test runner only, so unit tests get a
+// short debounce without the app carrying a test build mode.
+const SEARCH_DEBOUNCE_MS = import.meta.env.VITEST ? 10 : 450
 const isSearching = ref(false)
 let searchTimer: ReturnType<typeof setTimeout> | undefined
 watch(query, q => {
@@ -376,9 +377,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               height="h-6"
               no-shadow
             />
-            <span
-              class="max-w-20 truncate text-s-12 font-semibold text-black"
-            >
+            <span class="max-w-20 truncate text-s-12 font-semibold text-black">
               {{ a.symbol }}
             </span>
           </span>
