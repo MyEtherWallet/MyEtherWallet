@@ -38,6 +38,31 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
     </section>
 
     <section class="flex flex-col gap-4">
+      <h2 class="text-s-16 font-semibold">
+        Pinned for inspection (click to open, click again to close)
+      </h2>
+      <div
+        class="flex flex-wrap gap-x-36 gap-y-28 rounded-12 border border-border-default p-16"
+      >
+        <AppTooltip
+          v-for="p in PLACEMENTS"
+          :key="p"
+          :placement="p"
+          :trigger="['click']"
+          :text="`Tooltip ${p}`"
+        >
+          <AppChip surface="alternative" :label="p" />
+        </AppTooltip>
+        <AppTooltip
+          :trigger="['click']"
+          text="A longer tooltip message that keeps going until it wraps at the maximum width of the bubble."
+        >
+          <AppChip surface="alternative" label="Long text" />
+        </AppTooltip>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Content</h2>
       <div
         class="flex flex-wrap gap-10 rounded-12 border border-border-default p-16"
@@ -48,14 +73,14 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
 
         <AppTooltip>
           <template #content>
-            <span class="font-bold text-white">Custom slot</span>
+            <span class="font-bold text-text-inverted">Custom slot</span>
           </template>
           <AppChip surface="alternative" label="Slot only" />
         </AppTooltip>
 
         <AppTooltip text="With text">
           <template #content>
-            <span class="font-bold text-white">★</span>
+            <span class="font-bold text-text-inverted">★</span>
           </template>
           <AppChip surface="alternative" label="Text + slot" />
         </AppTooltip>
