@@ -26,6 +26,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Input Naked', to: '/dev/input-naked' },
       { name: 'Picker', to: '/dev/picker' },
       { name: 'Segmented Control', to: '/dev/segmented-control' },
+      { name: 'Slider', to: '/dev/slider' },
       { name: 'Spinner', to: '/dev/spinner' },
       { name: 'Toggle', to: '/dev/toggle' },
       { name: 'Tooltip', to: '/dev/tooltip' },
