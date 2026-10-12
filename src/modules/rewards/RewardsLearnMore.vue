@@ -88,7 +88,7 @@
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-border-default" />
+        <app-divider class="my-5" />
 
         <rewards-rows
           v-if="!isBanned"
@@ -133,6 +133,7 @@ import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps<{
   location?:
     | 'main-banner'

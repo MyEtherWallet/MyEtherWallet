@@ -60,6 +60,7 @@
     "toast_swap_successful": "Intercambio exitoso",
     "toast_swap_failed": "Intercambio fallido",
     "toast_bridge_successful": "Puente exitoso",
-    "toast_bridge_failed": "Puente fallido"
+    "toast_bridge_failed": "Puente fallido",
+    "filter_label": "Tipo de notificación"
   }
 }

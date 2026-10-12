@@ -32,7 +32,7 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
           :placement="p"
           :text="`Tooltip ${p}`"
         >
-          <AppChip :label="p" />
+          <AppChip surface="alternative" :label="p" />
         </AppTooltip>
       </div>
     </section>
@@ -51,13 +51,13 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
           :trigger="['click']"
           :text="`Tooltip ${p}`"
         >
-          <AppChip :label="p" />
+          <AppChip surface="alternative" :label="p" />
         </AppTooltip>
         <AppTooltip
           :trigger="['click']"
           text="A longer tooltip message that keeps going until it wraps at the maximum width of the bubble."
         >
-          <AppChip label="Long text" />
+          <AppChip surface="alternative" label="Long text" />
         </AppTooltip>
       </div>
     </section>
@@ -68,27 +68,27 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
         class="flex flex-wrap gap-10 rounded-12 border border-border-default p-16"
       >
         <AppTooltip text="Text only">
-          <AppChip label="Text" />
+          <AppChip surface="alternative" label="Text" />
         </AppTooltip>
 
         <AppTooltip>
           <template #content>
             <span class="font-bold text-text-inverted">Custom slot</span>
           </template>
-          <AppChip label="Slot only" />
+          <AppChip surface="alternative" label="Slot only" />
         </AppTooltip>
 
         <AppTooltip text="With text">
           <template #content>
             <span class="font-bold text-text-inverted">★</span>
           </template>
-          <AppChip label="Text + slot" />
+          <AppChip surface="alternative" label="Text + slot" />
         </AppTooltip>
 
         <AppTooltip
           text="A longer tooltip message that keeps going until it wraps at the maximum width of the bubble."
         >
-          <AppChip label="Long text" />
+          <AppChip surface="alternative" label="Long text" />
         </AppTooltip>
       </div>
     </section>
@@ -101,10 +101,10 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
         class="flex justify-between rounded-12 border border-border-default p-4"
       >
         <AppTooltip placement="left" text="Flips to the right near the edge">
-          <AppChip label="Left" />
+          <AppChip surface="alternative" label="Left" />
         </AppTooltip>
         <AppTooltip placement="right" text="Flips to the left near the edge">
-          <AppChip label="Right" />
+          <AppChip surface="alternative" label="Right" />
         </AppTooltip>
       </div>
     </section>
