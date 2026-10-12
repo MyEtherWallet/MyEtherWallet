@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
+import configs from '@/configs'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',
@@ -47,9 +48,21 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'action-bar',
+              name: 'DevActionBar',
+              component: () => import('@/views/ViewActionBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'avatar',
               name: 'DevAvatar',
               component: () => import('@/views/ViewAvatarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toggle',
+              name: 'DevToggle',
+              component: () => import('@/views/ViewToggleShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -65,9 +78,40 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'input-naked',
+              name: 'DevInputNaked',
+              component: () => import('@/views/ViewInputNakedShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'divider',
+              name: 'DevDivider',
+              component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'segmented-control',
+              name: 'DevSegmentedControl',
+              component: () =>
+                import('@/views/ViewSegmentedControlShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'spinner',
+              name: 'DevSpinner',
+              component: () => import('@/views/ViewSpinnerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'slider',
+              name: 'DevSlider',
+              component: () => import('@/views/ViewSliderShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

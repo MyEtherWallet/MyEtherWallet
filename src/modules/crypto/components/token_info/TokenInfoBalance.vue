@@ -58,10 +58,7 @@
         class="h-[42px] animate-pulse bg-background-default-hover rounded-xl w-[200px]"
       ></div>
     </div>
-    <hr
-      v-if="otherChains.length > 0"
-      class="h-px bg-background-default-hover border-0 w-full mt-6"
-    />
+    <app-divider v-if="otherChains.length > 0" class="mt-5 -mb-1" />
 
     <!-- Balance on other chains -->
     <div
@@ -161,6 +158,7 @@ import BigNumber from 'bignumber.js'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatUnits } from 'viem'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps({
   isLoading: {

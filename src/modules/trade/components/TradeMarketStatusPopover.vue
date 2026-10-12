@@ -24,7 +24,7 @@
           {{ $t('trade.market_status_popover.learn_more_suffix') }}
         </p>
       </div>
-      <div class="w-full border-t border-border-default" />
+      <app-divider class="-my-1" />
       <p
         v-if="status === 'weekend'"
         class="text-s-12 text-text-subtle leading-[18px]"
@@ -63,6 +63,7 @@ import {
 import type { MarketStatusVariant } from './TradeMarketStatusPill.vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = withDefaults(
   defineProps<{
     status: MarketStatusVariant

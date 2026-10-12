@@ -34,17 +34,14 @@
         />
       </div>
       <!-- Filter -->
-      <app-btn-group
+      <AppSegmentedControl
         v-if="isHeaderMaxAndUp"
-        v-model:selected="activeFilter"
-        :btn-list="filterOptions"
-        :is-loaded="true"
-        size="large"
-      >
-        <template #btn-content="{ data }">
-          {{ data.name }}
-        </template>
-      </app-btn-group>
+        :model-value="activeFilter.value"
+        :items="filterItems"
+        size="default"
+        :label="$t('access_wallet.filter.label')"
+        @update:model-value="selectFilter"
+      />
     </div>
     <!-- Wallets-->
     <div
@@ -81,7 +78,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   type WalletConfig,
@@ -194,6 +191,14 @@ const filterOptions: Filter[] = [
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
+const filterItems = filterOptions.map(({ name, value }) => ({
+  label: name,
+  value,
+}))
+const selectFilter = (value: Filter['value']) => {
+  activeFilter.value =
+    filterOptions.find(option => option.value === value) ?? activeFilter.value
+}
 const openFilterSortModal = ref(false)
 
 watch(isHeaderMaxAndUp, val => {

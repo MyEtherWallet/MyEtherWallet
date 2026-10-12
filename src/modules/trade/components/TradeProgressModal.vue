@@ -84,7 +84,7 @@
         </app-base-button>
 
         <p
-          v-if="status === 'pending'"
+          v-if="status === 'pending' && !isDepositing"
           class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
         >
           {{ $t('trade.progress_modal.background_note') }}
@@ -137,6 +137,11 @@ const props = defineProps<{
   fromToken: NewTokenInfo | null
   toToken: NewTokenInfo | null
   fromChain?: Chain
+  /**
+   * A native (ETH/BNB) order is waiting for the user to confirm its escrow
+   * deposit in the wallet. There is no saved order yet at that point.
+   */
+  depositPending?: boolean
 }>()
 
 const walletStore = useWalletStore()
@@ -210,8 +215,14 @@ const toLogo = computed(() =>
 )
 
 const status = computed(() => order.value?.status ?? 'pending')
+// Only meaningful before the order exists: once it is saved (pending or
+// unsubmitted) the deposit prompt is over.
+const isDepositing = computed(() => !order.value && !!props.depositPending)
 const isFailed = computed(
-  () => status.value === 'cancelled' || status.value === 'expired',
+  () =>
+    status.value === 'cancelled' ||
+    status.value === 'expired' ||
+    status.value === 'unsubmitted',
 )
 const isSettled = computed(() => status.value === 'filled' || isFailed.value)
 
@@ -222,19 +233,28 @@ const receivedText = computed(() => {
 })
 
 const title = computed(() => {
+  if (isDepositing.value) return t('trade.progress_modal.depositing_title')
   if (status.value === 'filled')
     return t('trade.progress_modal.completed_title')
+  if (status.value === 'unsubmitted')
+    return t('trade.progress_modal.unsubmitted_title')
   if (isFailed.value) return t('trade.progress_modal.failed_title')
   return t('trade.progress_modal.processing_title')
 })
 
 const subtitle = computed(() => {
+  if (isDepositing.value)
+    return t('trade.progress_modal.depositing_subtitle', {
+      symbol: fromLogo.value.symbol ?? '',
+    })
   if (status.value === 'filled')
     return t('trade.progress_modal.received', { amount: receivedText.value })
   if (status.value === 'cancelled')
     return t('trade.progress_modal.cancelled_subtitle')
   if (status.value === 'expired')
     return t('trade.progress_modal.expired_subtitle')
+  if (status.value === 'unsubmitted')
+    return t('trade.progress_modal.unsubmitted_subtitle')
   return t('trade.progress_modal.processing_subtitle')
 })
 

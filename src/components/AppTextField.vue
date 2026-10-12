@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-40 px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-text-placeholder focus:outline-none focus:ring-0',
+        'w-full h-40 px-4 py-3 rounded-12 resize-none text-text-sm text-text-default placeholder:text-text-placeholder focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"
@@ -28,7 +28,7 @@
         />
         <p
           :id="feedbackId"
-          class="text-xs leading-[18px] text-text-error min-w-0 break-words"
+          class="text-text-xs text-text-error min-w-0 break-words"
         >
           {{ errorMessage || $t('common.required') }}
         </p>
@@ -48,6 +48,7 @@
 import { ref, nextTick, computed, watch, useId, type PropType } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { inputSurfaceClass, type InputSurface } from '@/components/inputSizes'
 
 defineOptions({ inheritAttrs: false })
 
@@ -67,12 +68,12 @@ const props = defineProps({
     required: true,
   },
   /**
-   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
-   * it disappears on the grey app background); 'alternative' is white with a
-   * 1px border (used on white cards/dialogs today, also works on grey).
+   * Figma "Style": 'default' is the background/default fill (for white
+   * surfaces — it disappears on the app background); 'alternative' is the
+   * background/alternative fill with a 1px border/default line (cards/dialogs).
    */
   surface: {
-    type: String as PropType<'default' | 'alternative'>,
+    type: String as PropType<InputSurface>,
     default: 'default',
   },
   errorMessage: {
@@ -125,23 +126,15 @@ const onInput = () => {
 }
 
 /**------------------------
- * Surface — mirrors AppInput. Error ring is focus-only.
+ * Surface — shared with AppInput (see inputSurfaceClass)
  -------------------------*/
-const surfaceClass = computed(() => {
-  const base = 'box-border transition-colors resize-none'
-  const ring = hasError.value ? 'border-border-error' : 'border-border-brand'
-
-  if (props.surface === 'alternative') {
-    if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    // Constant 2px border; the resting 1px line is an inset ring so hover never
-    // shifts the text (mirrors AppInput).
-    return `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default hover:ring-0 hover:border-border-hover`
-  }
-
-  if (inFocusInput.value)
-    return `${base} bg-background-default border-2 ${ring}`
-  return `${base} bg-background-default border-2 border-transparent hover:border-border-hover`
-})
+const surfaceClass = computed(() =>
+  inputSurfaceClass({
+    surface: props.surface,
+    focused: inFocusInput.value,
+    error: hasError.value,
+  }),
+)
 
 const clearInputValue = () => {
   setInFocusInput()

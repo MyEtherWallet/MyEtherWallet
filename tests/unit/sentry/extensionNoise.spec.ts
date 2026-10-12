@@ -7,6 +7,7 @@ import {
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -924,6 +925,121 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
       false,
     )
+  })
+})
+
+describe('isEip6963NullProviderError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index-DnJdQRhG.js'
+
+  it('is true for the mipd requestProviders null-detail crash (APP-MEW-WEB-1JM)', () => {
+    // A browser extension dispatched `eip6963:announceProvider` with a null
+    // `detail`; mipd's requestProviders callback derefs `he.info`.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:13033\n` +
+          `    at de (${BUNDLE}:296:12977)\n` +
+          `    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the "destructure property info" message variant (APP-MEW-WEB-1JM)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message:
+          "Cannot destructure property 'info' of 'object null' as it is null.",
+        stack:
+          `TypeError\n    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the wagmi getProviders enumeration crash (APP-MEW-WEB-1JN)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:19605\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)\n` +
+          `    at createConfig (${BUNDLE}:296:19334)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the first-party providerStore.addProvider crash (APP-MEW-WEB-1JG)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:3925:205839\n` +
+          `    at Array.find (<anonymous>)\n` +
+          `    at Proxy.addProvider (${BUNDLE}:3925:205812)\n` +
+          `    at ${BUNDLE}:3983:107689`, // App.vue announceProvider listener
+      }),
+    ).toBe(true)
+  })
+
+  it('does NOT match an unrelated null-`info` deref in app code (no discovery frame)', () => {
+    // Same message, but the stack is ordinary app code — must keep reporting.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at renderTokenInfo (${BUNDLE}:3981:833633)\n` +
+          `    at setup (${BUNDLE}:7:64256)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('does NOT match a null-`info` deref through a generic zustand createStore frame', () => {
+    // `createStore` / `createStoreImpl` are zustand internals used well beyond
+    // provider discovery; a real null-`info` bug that merely passes through one
+    // must keep reporting. Only the wagmi-specific `createConfig` anchor counts.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at selectState (${BUNDLE}:296:88888)\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('does NOT match a different null-deref even on a discovery frame', () => {
+    // A null-`uuid` read (not `info`) in the same area is a different bug.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'uuid')",
+        stack: `TypeError\n    at requestProviders (${BUNDLE}:296:12792)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('fails open when there is no stack (never suppresses on message alone)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isEip6963NullProviderError(null)).toBe(false)
+    expect(isEip6963NullProviderError(undefined)).toBe(false)
+    expect(isEip6963NullProviderError({})).toBe(false)
+    expect(isEip6963NullProviderError('boom')).toBe(false)
+    expect(isEip6963NullProviderError({ message: 42 })).toBe(false)
   })
 })
 
