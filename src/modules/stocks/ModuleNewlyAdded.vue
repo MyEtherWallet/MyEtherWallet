@@ -5,7 +5,6 @@
 
       <div class="flex">
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage === 0"
           :label="$t('common.previous_page')"
           @click="prevPage"
@@ -13,7 +12,6 @@
           <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage >= totalPages - 1"
           :label="$t('common.next_page')"
           @click="nextPage"
@@ -41,9 +39,9 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import TokenRow from './components/TokenRow.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'

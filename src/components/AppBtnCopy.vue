@@ -1,12 +1,10 @@
 <template>
   <app-btn-icon
     @click="copyClick"
-    :is-white="props.isWhite"
+    :size="size"
     :label="label ?? $t('common.copy')"
-    :height="height"
-    :width="width"
   >
-    <AppIcon name="clipboard-document" :size="size" />
+    <AppIcon name="clipboard-document" :size="iconSize" />
   </app-btn-icon>
 </template>
 <script setup lang="ts">
@@ -14,6 +12,7 @@ import { type PropType } from 'vue'
 import AppBtnIcon from './AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import type { IconSize } from '@/components/icon/icons'
+import type { BtnIconSize } from './btnIconTypes'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
@@ -25,21 +24,13 @@ const toastStore = useToastStore()
  * @description A button that copies the copyValue to the clipboard.
  * @emits copy - When the copy button is clicked.
  *
- * @example Copy button with white icon
- * <app-btn-copy isWhite copyValue="0x1234" label="Copy Important value: 1234" />
- *
  * @example Copy button with default icon and default label
  * <app-btn-copy copyValue="0x1234"  />
  *
+ * @example Small copy button with a custom label
+ * <app-btn-copy size="s" icon-size="xxs" copyValue="0x1234" label="Copy Important value: 1234" />
  */
 const props = defineProps({
-  /**
-   * @label Whether the copy icon button should be white.
-   */
-  isWhite: {
-    default: false,
-    type: Boolean,
-  },
   /**
    * @label The aria-label for the copy button.
    */
@@ -53,15 +44,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  height: {
-    type: String,
-    default: 'h-8',
-  },
-  width: {
-    type: String,
-    default: 'w-8',
-  },
   size: {
+    type: String as PropType<BtnIconSize>,
+    default: 'm',
+  },
+  iconSize: {
     type: String as PropType<IconSize>,
     default: 's',
   },

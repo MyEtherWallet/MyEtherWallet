@@ -9,8 +9,6 @@
           :disabled="isLoading || currentPage === 0"
           :label="t('common.previous_page')"
           @click="prevPage"
-          height="h-8"
-          width="w-8"
         >
           <AppIcon name="chevron-left" variant="filled" size="xxs" />
         </app-btn-icon>
@@ -25,8 +23,6 @@
           :disabled="isLoading || currentPage + 1 >= totalPages"
           :label="t('common.next_page')"
           @click="nextPage"
-          height="h-8"
-          width="w-8"
         >
           <AppIcon name="chevron-right" variant="filled" size="xxs" />
         </app-btn-icon>
