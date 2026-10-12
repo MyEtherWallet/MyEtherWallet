@@ -1,3 +1,4 @@
+import Configs from '@/configs'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import useBalanceHandler from '@/utils/balanceHandler'
@@ -44,7 +45,7 @@ export function useRefreshBalances(): {
         )
       })
       .catch((error: unknown) => {
-        if (import.meta.env.MODE !== 'production') console.error('Balance fetch failed:', error)
+        if (Configs.BUILD_MODE !== 'production') console.error('Balance fetch failed:', error)
         if (!silent) setIsLoadingBalances(false)
       })
   }

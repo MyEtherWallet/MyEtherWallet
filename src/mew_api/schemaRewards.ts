@@ -11,31 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Root
-         * @description Returns a welcome message with the current app version.
-         */
         get: operations["getRoot"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/schema.yaml": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * OpenAPI Schema
-         * @description Returns the OpenAPI schem
-         */
-        get: operations["getSchema"];
         put?: never;
         post?: never;
         delete?: never;
@@ -51,11 +27,23 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get version
-         * @description Returns the current application version.
-         */
         get: operations["getVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/schema": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSchema"];
         put?: never;
         post?: never;
         delete?: never;
@@ -71,10 +59,6 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Health check
-         * @description Returns a simple health check status.
-         */
         get: operations["getHealth"];
         put?: never;
         post?: never;
@@ -84,22 +68,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/addresses/{address}/rewards/eligibility": {
+    "/v1/addresses/{address}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Check reward eligibility
-         * @description Determines whether a given address is eligible to receive rewards.
-         *     Eligibility is based on:
-         *     1. The reward pool being sufficiently funded (ETH and USDC).
-         *     2. The pool not having exceeded its daily spending limit.
-         *     3. The user not having received rewards within the last 24 hours.
-         */
-        get: operations["getRewardEligibility"];
+        get: operations["getAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/addresses/{address}/eligibility": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAddressEligibility"];
         put?: never;
         post?: never;
         delete?: never;
@@ -115,11 +107,55 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get user rewards
-         * @description Returns the most recent rewards (up to 10) for a given address.
-         */
-        get: operations["getUserRewards"];
+        get: operations["getAddressRewards"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/addresses/{address}/snapshots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAddressSnapshots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rewards/networks/{network}/orders/{orderHash}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["claimReward"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rewards/orders/{orderHash}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getReward"];
         put?: never;
         post?: never;
         delete?: never;
@@ -135,12 +171,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get reward pool status
-         * @description Returns the current status of the reward pool, including balances,
-         *     daily spend, and whether the pool is open for distributing rewards.
-         */
-        get: operations["getRewardPool"];
+        get: operations["getRewardsPool"];
         put?: never;
         post?: never;
         delete?: never;
@@ -149,19 +180,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v2/rewards/pool": {
+    "/v1/rewards/pool/detailed": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get reward pool status (v2)
-         * @description Returns the current status of the reward pool with swap and trade
-         *     counts tracked separately. Each type has its own independent cap.
-         */
-        get: operations["getRewardPoolV2"];
+        get: operations["getDetailedRewardsPool"];
         put?: never;
         post?: never;
         delete?: never;
@@ -170,19 +196,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v2/addresses/{address}/rewards/eligibility": {
+    "/v1/rewards/rules": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Check reward eligibility (v2)
-         * @description Determines whether a given address is eligible to receive swap and
-         *     trade rewards, reported separately.
-         */
-        get: operations["getRewardEligibilityV2"];
+        get: operations["getRules"];
         put?: never;
         post?: never;
         delete?: never;
@@ -191,18 +212,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v2/addresses/{address}/rewards": {
+    "/v1/networks/{network}/orders/{orderHash}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get user rewards (v2)
-         * @description Returns the most recent rewards (up to 10) for a given address, including the swap type of each reward.
-         */
-        get: operations["getUserRewardsV2"];
+        get: operations["getOrder"];
         put?: never;
         post?: never;
         delete?: never;
@@ -215,232 +232,305 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        EligibilityResponse: {
-            /** @description Whether the address is currently eligible for a reward. */
-            eligible: boolean;
-            /**
-             * Format: date-time
-             * @description The earliest date/time at which the address will become eligible again. Null if the address will not become eligible (e.g. pool is underfunded).
-             */
-            nextEligibleDate: string | null;
-            /** @description List of reasons the address is ineligible (empty if eligible). */
-            reasons: components["schemas"]["IneligibilityReason"][];
-        };
-        IneligibilityReason: {
-            /**
-             * @description Machine-readable reason code.
-             * @enum {string}
-             */
-            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "HOURLY_REWARD_LIMIT_REACHED" | "WEEKLY_REWARD_LIMIT_REACHED" | "THREE_DAY_REWARD_LIMIT_REACHED" | "ROLLING_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW" | "REWARDS_DISABLED" | "SWAP_REWARDS_DISABLED" | "TRADE_REWARDS_DISABLED";
-            code: number;
-            /** @description Human-readable explanation of the ineligibility reason. */
+        RootInfo: {
             message: string;
         };
-        RewardItem: {
+        Version: {
+            name: string;
+            version: string;
+            commit: string;
+            shortCommit: string;
+            buildTime: string;
+            branch: string;
+            dirty: boolean;
+        };
+        Health: {
+            /** @enum {string} */
+            status: "ok";
             /**
-             * @description Chain ID of the original swap transaction.
-             * @example 1
+             * Format: date-time
+             * @description RFC 3339 timestamp. UTC unless a `tz` is requested
              */
-            swapChainId: string;
+            timestamp: string;
+            /** @description Process uptime in seconds */
+            uptime: number;
+        };
+        /**
+         * @description Ethereum address, any casing. Normalised to lowercase by the server.
+         * @example 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+         */
+        EthereumAddressInput: string;
+        /**
+         * @description Lowercase 0x prefixed Ethereum address.
+         * @example 0xd8da6bf26964af9d7eed9e03e53415d37aa96045
+         */
+        EthereumAddress: string;
+        AddressInfo: {
+            id: null | number;
+            address: components["schemas"]["EthereumAddress"];
+        };
+        /** @description Structured, endpoint-specific detail. Validation errors use an array of field errors. */
+        ErrorDetail: {
+            [key: string]: unknown;
+        };
+        Error: {
+            error: {
+                /** @description Stable machine-readable code, e.g. VALIDATION_FAILED, NOT_FOUND. */
+                code: string;
+                message: string;
+                details: null | components["schemas"]["ErrorDetail"];
+            };
+        };
+        /**
+         * @description Why an address is not (yet) eligible.
+         * @enum {string}
+         */
+        IneligibilityReason: "NO_BALANCE" | "BALANCE_TOO_LOW" | "NO_SNAPSHOTS" | "SYNCING" | "ALREADY_GRANTED" | "ALL_REWARDS_GRANTED" | "BLOCKLISTED" | "DEACTIVATED" | "ONLY_DEVS";
+        Eligibility: {
+            eligible: boolean;
+            reasons: components["schemas"]["IneligibilityReason"][];
+        };
+        /**
+         * Format: date-time
+         * @description RFC 3339 timestamp.
+         */
+        TimestampInput: string;
+        AddressRewardsCursorInput: {
+            requestedAt: components["schemas"]["TimestampInput"];
+        };
+        /**
+         * @description Lowercase 0x prefixed hash in hexadecimal format.
+         * @example 0x3c9e05635969338b1c74e42f4701e3f7b7c6e13acecd2aecd1ee2f32da7287e2
+         */
+        Hash: string;
+        /** @enum {string} */
+        Network: "ETH" | "BSC";
+        /** @enum {string} */
+        RewardStatus: "REQUESTED" | "REJECTED" | "ERRORED" | "EXPIRED" | "APPROVED" | "PROCESSING" | "FAILED" | "REVOKED" | "REWARDED";
+        /** @enum {string} */
+        RewardTransactionStatus: "BROADCASTING" | "BROADCAST_FAILED" | "PENDING" | "DROPPED" | "REPLACED" | "PENDING_STUCK" | "MINED_SUCCESS" | "MINED_REVERTED";
+        /** @enum {string} */
+        FeeTier: "ECONOMY" | "REGULAR" | "FAST" | "FASTEST";
+        RewardTransaction: {
+            hash: components["schemas"]["Hash"];
+            nonce: string;
+            status: components["schemas"]["RewardTransactionStatus"];
+            replacedBy: null | components["schemas"]["Hash"];
+            /** Format: date-time */
+            broadcastAt: string;
+            feeTier: components["schemas"]["FeeTier"];
+        };
+        Reward: {
+            orderHash: components["schemas"]["Hash"];
+            network: components["schemas"]["Network"];
+            status: components["schemas"]["RewardStatus"];
+            recipientAddress: components["schemas"]["EthereumAddress"];
+            /** Format: date-time */
+            requestedAt: string;
+            transactions: components["schemas"]["RewardTransaction"][];
+        };
+        AddressRewardCursor: {
+            /** Format: date-time */
+            requestedAt: string;
+        };
+        GetAddressRewardsResponse: {
+            items: components["schemas"]["Reward"][];
+            next: null | components["schemas"]["AddressRewardCursor"];
+        };
+        Snapshot: {
+            date: string;
+            /** @description Sum of all balances in USD */
+            usdBalance: number;
+        };
+        /**
+         * @description 1Inch order hash, any casing. Normalised to lowercase by the server.
+         * @example 0x3c9e05635969338b1c74e42f4701e3f7b7c6e13acecd2aecd1ee2f32da7287e2
+         */
+        OrderHashInput: string;
+        ClaimCreated: {
+            message: string;
+        };
+        /** @enum {string} */
+        ClaimFailReason: "ORDER_NOT_FOUND" | "ORDER_FUSION_4XX_ERROR" | "ORDER_FUSION_5XX_ERROR" | "ORDER_FUSION_UNKNOWN_ERROR" | "ORDER_INVALID_DATA" | "CONTRACT_METADATA_ERROR" | "REWARD_EXPIRED" | "MAKER_INELIGIBLE" | "SPEND_TOO_LOW" | "FAILED_ORDER_STATUS" | "UNKNOWN_ORDER_STATUS" | "REWARDS_DEACTIVATED";
+        ClaimError: {
+            error: {
+                code: string;
+                message: string;
+                details: null | components["schemas"]["ErrorDetail"];
+                reason: components["schemas"]["ClaimFailReason"];
+            };
+        };
+        DeactivatedRewardPool: {
             /**
-             * @description Block number of the original swap transaction.
-             * @example 18500000
-             */
-            swapBlockNumber: string;
-            /** @description Transaction index within the swap block. */
-            swapTransactionIndex: number;
-            /**
-             * @description Block hash of the original swap (0x-prefixed hex).
-             * @example 0xabc123...
-             */
-            swapBlockHash: string;
-            /**
-             * @description Unix timestamp of the swap block.
-             * @example 1700000000
-             */
-            swapBlockTimestamp: number;
-            /**
-             * @description Transaction hash of the original swap (0x-prefixed hex).
-             * @example 0xdef456...
-             */
-            swapTransactionHash: string;
-            /**
-             * @description Current status of the reward transaction.
+             * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
-            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL" | "DROPPED";
-            /** @description Address that sent the reward (0x-prefixed hex). */
-            rewardSenderAddress: string;
-            /** @description Address that received the reward (0x-prefixed hex). */
-            rewardRecipientAddress: string;
-            /** @description Contract address of the reward asset (0x-prefixed hex). Null if the reward is in native ETH. */
-            rewardAssetAddress: string | null;
-            /** @description Reward amount in the asset's smallest unit. */
-            rewardAmount: string;
-            /** @description USD value of the reward at time of granting. */
-            rewardUsdAmount: string;
-            /**
-             * Format: date-time
-             * @description ISO 8601 timestamp of when the reward transaction was broadcast.
-             */
-            rewardBroadcastAt: string | null;
-            /** @description Block number of the confirmed reward transaction. */
-            rewardBlockNumber: string | null;
-            /** @description Block hash of the confirmed reward transaction (0x-prefixed hex). */
-            rewardBlockHash: string | null;
-            /** @description Transaction hash of the confirmed reward transaction (0x-prefixed hex). */
-            rewardTransactionHash: string | null;
-            /** @description Transaction index of the confirmed reward transaction. */
-            rewardTransactionIndex: number | null;
+            type: "DEACTIVATED";
+            total: number;
+            granted: number;
+            remaining: number;
         };
-        PoolStatusResponse: {
-            /** @description Whether the reward pool is currently open for distributing rewards. */
-            open: boolean;
+        HoldAndTradeRewardPool: {
             /**
-             * @description Current ETH balance of the distributor in USD.
-             * @example $1234.56
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
-            eth: string;
-            /**
-             * @description Current USDC balance of the distributor in USD.
-             * @example $5678.90
-             */
-            usdc: string;
-            /**
-             * Format: date-time
-             * @description Start of the next day
-             */
-            nextDayStart: string;
-            /**
-             * Format: date-time
-             * @description Start of the next hour
-             */
-            nextHourStart: string;
-            /**
-             * Format: date-time
-             * @description Start date of the current campaign
-             */
-            campaignStartDate: string;
-            /**
-             * @description The number of rewards that can be granted in a day.
-             * @example 100
-             */
-            dailyTotalRewardCount: number;
-            /**
-             * @description The number of rewards left for the day.
-             * @example 100
-             */
-            dailyRemainingRewardCount: number;
-            /**
-             * @description The number of rewards that can be granted in an hour.
-             * @example 100
-             */
-            hourlyTotalRewardCount: number;
-            /**
-             * @description The number of rewards left for the hour.
-             * @example 100
-             */
-            hourlyRemainingRewardCount: number;
-            /** @description List of reasons the pool is closed (empty if open). */
-            reasons: components["schemas"]["IneligibilityReason"][];
+            type: "HOLD_AND_TRADE";
+            total: number;
+            granted: number;
+            remaining: number;
         };
-        TypePoolStatus: {
-            /** @description Whether rewards for this type are enabled. */
-            enabled: boolean;
-            /** @description Whether the pool is currently accepting this reward type. */
-            open: boolean;
-            /** @description Number of this type of rewards distributed this week. */
-            weeklyRewardCount: number;
-            /** @description Remaining rewards of this type for the week. Null if no weekly cap. */
-            weeklyRemainingRewardCount: number | null;
-            /** @description Number of this type of rewards distributed today. */
-            dailyRewardCount: number;
-            /** @description Remaining rewards of this type for today. Null if no daily cap. */
-            dailyRemainingRewardCount: number | null;
-            /** @description Number of this type of rewards distributed this hour. */
-            hourlyRewardCount: number;
-            /** @description Remaining rewards of this type for the current hour. Null if no hourly cap. */
-            hourlyRemainingRewardCount: number | null;
-            /**
-             * @description Minimum USD spend required to qualify for this reward type.
-             * @example 49.75
-             */
-            minSpendUsd: number;
-            /** @description Reasons this type is closed (empty if open). */
-            reasons: components["schemas"]["IneligibilityReason"][];
+        RewardsPool: components["schemas"]["DeactivatedRewardPool"] | components["schemas"]["HoldAndTradeRewardPool"];
+        DetailedDeactivatedRewardPool: {
+            /** @enum {string} */
+            type: "DEACTIVATED";
+            total: number;
+            granted: number;
+            remaining: number;
         };
-        V2PoolStatusResponse: {
-            /** @description Whether either reward type is currently open. */
-            open: boolean;
-            /**
-             * @description Current ETH balance of the distributor in USD.
-             * @example $1234.56
-             */
-            eth: string;
-            /**
-             * @description Current USDC balance of the distributor in USD.
-             * @example $5678.90
-             */
-            usdc: string;
-            /**
-             * Format: date-time
-             * @description Start date of the current campaign.
-             */
-            campaignStartDate: string;
-            /**
-             * Format: date-time
-             * @description End date of the current campaign.
-             */
-            campaignEndDate: string;
-            /**
-             * Format: date-time
-             * @description Start of the next weekly period.
-             */
-            nextWeekStart: string;
-            /**
-             * Format: date-time
-             * @description Start of the next hour.
-             */
-            nextHourStart: string;
-            swap: components["schemas"]["TypePoolStatus"];
-            trade: components["schemas"]["TypePoolStatus"];
-            /** @description Shared reasons the pool is closed (applies to both types). */
-            reasons: components["schemas"]["IneligibilityReason"][];
+        /** @enum {string} */
+        RewardAsset: "USDC";
+        DetailedHoldAndTradeRewardPoolNetwork: {
+            network: components["schemas"]["Network"];
+            address: components["schemas"]["EthereumAddress"];
+            native: {
+                symbol: string;
+                decimals: number;
+                balanceAtomic: string;
+                balanceMain: string;
+                balanceUsd: number;
+                priceUsd: number;
+                minFundedUsd: number;
+                isFunded: boolean;
+            };
+            reward: {
+                asset?: components["schemas"]["RewardAsset"];
+                address: null | components["schemas"]["EthereumAddress"];
+                symbol: string;
+                decimals: number;
+                balanceAtomic: string;
+                balanceMain: string;
+                balanceUsd: number;
+                priceUsd: number;
+                minMain: string;
+                minFundedUsd: number;
+                isFunded: boolean;
+            };
         };
-        TypeEligibility: {
-            /** @description Whether the address is currently eligible for this reward type. */
-            eligible: boolean;
-            /**
-             * Format: date-time
-             * @description Earliest date the address will become eligible again. Null if not determinable.
-             */
-            nextEligibleDate: string | null;
-            /** @description Reasons the address is ineligible (empty if eligible). */
-            reasons: components["schemas"]["IneligibilityReason"][];
+        DetailedHoldAndTradeRewardPool: {
+            /** @enum {string} */
+            type: "HOLD_AND_TRADE";
+            total: number;
+            granted: number;
+            remaining: number;
+            isFunded: boolean;
+            networks: components["schemas"]["DetailedHoldAndTradeRewardPoolNetwork"][];
         };
-        V2EligibilityResponse: {
-            swap: components["schemas"]["TypeEligibility"];
-            trade: components["schemas"]["TypeEligibility"];
+        DetailedRewardsPool: components["schemas"]["DetailedDeactivatedRewardPool"] | components["schemas"]["DetailedHoldAndTradeRewardPool"];
+        Deactivated: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "DEACTIVATED";
+            /** Format: date-time */
+            startedAt: string;
         };
-        V2RewardItem: {
+        /** @enum {string} */
+        RuleType: "DEACTIVATED" | "HOLD_AND_TRADE";
+        HoldAndTrade: {
             /**
-             * @description The type of the original transaction. Null for legacy rewards created before type tracking.
-             * @enum {string|null}
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
-            swapType: "SWAP" | "TRADE" | null;
-        } & components["schemas"]["RewardItem"];
-        ErrorResponse: {
-            /**
-             * @description Machine-readable error code.
-             * @example INVALID_REQUEST_PARAMS
-             */
-            code: string;
-            /** @description Human-readable error message. */
-            message: string;
+            type: "HOLD_AND_TRADE";
+            /** Format: date-time */
+            startedAt: string;
+            minMaintainedBalanceDurationMs: number;
+            minMaintainedBalanceUsd: number;
+            minTradeAmountUsd: number;
+            rewardAsset: components["schemas"]["RewardAsset"];
+            rewardAmountMain?: string;
+        };
+        Rule: components["schemas"]["Deactivated"] | components["schemas"]["HoldAndTrade"];
+        Rules: {
+            prev: null | components["schemas"]["Rule"];
+            active: components["schemas"]["Rule"];
+            next: null | components["schemas"]["Rule"];
+        };
+        OrderCounterparty: {
+            contract: null | components["schemas"]["EthereumAddress"];
+            decimals: number;
+            amount: string;
+            usdPrice: number;
+            usdValue: number;
         };
     };
-    responses: never;
-    parameters: never;
+    responses: {
+        /** @description Request failed validation (bad address format, bad query params). */
+        ValidationFailed: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Route or entity not found. */
+        NotFound: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Too many requests. */
+        RateLimited: {
+            headers: {
+                /** @description Seconds until requests may resume. */
+                "Retry-After"?: number;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Unexpected server error. */
+        Internal: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Request conflicts with existing state (e.g. duplicate claim). */
+        Conflict: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Claim failed to process. */
+        ClaimFailed: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ClaimError"];
+            };
+        };
+    };
+    parameters: {
+        AddressPath: components["schemas"]["EthereumAddressInput"];
+        AddressRewardsCursorQuery: components["schemas"]["AddressRewardsCursorInput"];
+        LimitQuery: number;
+        NetworkPath: components["schemas"]["Network"];
+        OrderHashPath: components["schemas"]["OrderHashInput"];
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;
@@ -456,36 +546,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response */
+            /** @description Service description. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example MEW Rewards Backend! v1.0.0 */
-                        message: string;
-                    };
-                };
-            };
-        };
-    };
-    getSchema: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["RootInfo"];
                 };
             };
         };
@@ -499,22 +566,218 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response */
+            /** @description Build and version info. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example 1.0.0 */
-                        version: string;
-                    };
+                    "application/json": components["schemas"]["Version"];
+                };
+            };
+        };
+    };
+    getSchema: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description This OpenAPI document. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
                 };
             };
         };
     };
     getHealth: {
         parameters: {
+            query?: {
+                /** @description IANA timezone name, e.g. Europe/Berlin */
+                tz?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Liveness check. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    getAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["AddressPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Address overview. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddressInfo"];
+                };
+            };
+            400: components["responses"]["ValidationFailed"];
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["Internal"];
+        };
+    };
+    getAddressEligibility: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["AddressPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Eligibility status. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Eligibility"];
+                };
+            };
+            400: components["responses"]["ValidationFailed"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["Internal"];
+        };
+    };
+    getAddressRewards: {
+        parameters: {
+            query?: {
+                cursor?: components["parameters"]["AddressRewardsCursorQuery"];
+                limit?: components["parameters"]["LimitQuery"];
+            };
+            header?: never;
+            path: {
+                address: components["parameters"]["AddressPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Rewards for the address. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetAddressRewardsResponse"];
+                };
+            };
+            400: components["responses"]["ValidationFailed"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["Internal"];
+        };
+    };
+    getAddressSnapshots: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["AddressPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Balance history for the address. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Snapshot"][];
+                };
+            };
+            400: components["responses"]["ValidationFailed"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["Internal"];
+        };
+    };
+    claimReward: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                network: components["parameters"]["NetworkPath"];
+                orderHash: components["parameters"]["OrderHashPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Claim result. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaimCreated"];
+                };
+            };
+            400: components["responses"]["ValidationFailed"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ClaimFailed"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getReward: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderHash: components["parameters"]["OrderHashPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reward. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Reward"];
+                };
+            };
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getRewardsPool: {
+        parameters: {
             query?: never;
             header?: never;
             path?: never;
@@ -522,186 +785,89 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successful response */
+            /** @description Global rewards pool state. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RewardsPool"];
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getDetailedRewardsPool: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Global rewards pool state detailed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DetailedRewardsPool"];
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getRules: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Rewards rules. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Rules"];
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                network: components["parameters"]["NetworkPath"];
+                orderHash: components["parameters"]["OrderHashPath"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 1inch Fusion Order Status. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        /** @example OK */
-                        message: string;
+                        from: components["schemas"]["OrderCounterparty"];
+                        to: components["schemas"]["OrderCounterparty"];
+                        orderStatus: {
+                            [key: string]: unknown;
+                        };
                     };
                 };
             };
-        };
-    };
-    getRewardEligibility: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
-                address: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Eligibility result */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EligibilityResponse"];
-                };
-            };
-            /** @description Invalid or missing address parameter */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    getUserRewards: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
-                address: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of rewards for the address */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RewardItem"][];
-                };
-            };
-            /** @description Invalid or missing address parameter */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    getRewardPool: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Pool status */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PoolStatusResponse"];
-                };
-            };
-        };
-    };
-    getRewardPoolV2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Pool status */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["V2PoolStatusResponse"];
-                };
-            };
-        };
-    };
-    getRewardEligibilityV2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
-                address: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Eligibility result split by swap type */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["V2EligibilityResponse"];
-                };
-            };
-            /** @description Invalid or missing address parameter */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    getUserRewardsV2: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
-                address: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of rewards for the address */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["V2RewardItem"][];
-                };
-            };
-            /** @description Invalid or missing address parameter */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["RateLimited"];
         };
     };
 }

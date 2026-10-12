@@ -98,7 +98,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const rewardsStore = useRewardsStore()
   const holdingsStore = useHoldingsStore()
 
-  const { minSpendTrade } = storeToRefs(rewardsStore)
+  const { ruleMinSpendUsd } = storeToRefs(rewardsStore)
 
   const tradeFlowStep = ref<TradeFlowStep>('idle')
   const stepIs = (step: TradeFlowStep) => tradeFlowStep.value === step
@@ -475,11 +475,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const fromUsdValue = BigNumber(fromAmount.value || '0').times(
         fromTokenSelected.value?.price || 0,
       )
-      const minSpendBN = BigNumber(minSpendTrade.value)
-      const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
-      if (fromUsdValue.gt(minimumSpend)) {
-        const canEarn =
-          await rewardsStore.checkAvailabilityAfterTransaction('trade')
+      // Threshold is the served rule only. With no rule loaded there is
+      // nothing trustworthy to gate on, so the eligibility check still runs.
+      const ruleMin = ruleMinSpendUsd.value
+      if (ruleMin === null || fromUsdValue.gte(ruleMin)) {
+        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {

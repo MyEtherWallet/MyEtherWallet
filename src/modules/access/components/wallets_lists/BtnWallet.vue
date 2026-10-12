@@ -53,6 +53,7 @@
   </button>
 </template>
 <script setup lang="ts">
+import Configs from '@/configs'
 import AsyncImg from './AsyncImg.vue'
 import MobileBadge from '@/assets/images/access/wallet_types/mobileWallet.webp'
 import HardwareBadge from '@/assets/images/access/wallet_types/hardwareWallet.webp'
@@ -108,7 +109,7 @@ const resolveImg = async (_img: () => Promise<string>) => {
     // The wallet icon is lazily imported as a hashed JS chunk. Failing to load it
     // (network blip, stale chunk after a redeploy, content blockers) is expected and
     // non-actionable — AsyncImg already falls back to a placeholder. Don't report noise.
-    if (import.meta.env.MODE !== 'production') {
+    if (Configs.BUILD_MODE !== 'production') {
       console.error('Error loading wallet image:', props.wallet.name, error)
     }
   } finally {

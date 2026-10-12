@@ -57,6 +57,21 @@ export interface SavedTradeOrder {
   seen?: boolean
   rewardRegistered?: boolean
   rewardToastShown?: boolean
+  /** Trade-and-earn reward claim for this order (see rewardsStore). */
+  tradeRewardClaim?: TradeRewardClaimState
+}
+
+/**
+ * Where a filled order stands with the trade-rewards API. `requested` means
+ * the claim was accepted and the payout is in the backend's hands; `rewarded`
+ * once it has been paid; `rejected` is terminal (the backend named a reason);
+ * `failed` is a transport/server error and may be retried.
+ */
+export interface TradeRewardClaimState {
+  status: 'requested' | 'rewarded' | 'rejected' | 'failed'
+  /** Backend reason (ClaimFailReason / RewardStatus) when rejected. */
+  reason?: string
+  updatedAt: number
 }
 
 export interface TransactionNotification {

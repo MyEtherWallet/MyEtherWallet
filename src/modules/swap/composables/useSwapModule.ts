@@ -23,7 +23,6 @@ import { useToastStore } from '@/stores/toastStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
-import { useRewardsStore } from '@/stores/rewardsStore'
 import { usePairStore } from '@/stores/pairStore'
 import {
   analytics,
@@ -162,7 +161,6 @@ export function useSwapModule(): SwapModuleBindings {
   const inputStore = useInputStore()
   const toastStore = useToastStore()
   const accessStore = useAccessStore()
-  const rewardsStore = useRewardsStore()
   const pairStore = usePairStore()
   const {
     swapFromToken,
@@ -635,19 +633,8 @@ export function useSwapModule(): SwapModuleBindings {
         txHash.value = hash as HexPrefixedString
         bestOfferSelectionOpen.value = false
         swapInitiatedOpen.value = true
-        //check reward elements availability after transaction is sent
-        let canEarnReward: undefined | boolean = undefined
-
-        const fromUsdValue =
-          parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-        if (fromUsdValue > 50) {
-          const canEarn =
-            await rewardsStore.checkAvailabilityAfterTransaction('swap')
-          canEarnReward = canEarn ? true : undefined
-        }
         analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
           ...analyticsPayload,
-          canEarnReward,
           hash: hash,
         })
       }

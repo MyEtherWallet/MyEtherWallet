@@ -65,7 +65,8 @@ const props = defineProps<{
 }>()
 
 const rewardsStore = useRewardsStore()
-const { isBanned, canClaimTradeReward } = storeToRefs(rewardsStore)
+const { isBanned, canClaimTradeReward, ruleMinSpendUsd } =
+  storeToRefs(rewardsStore)
 
 const canClaimTrade = computed(
   () => canClaimTradeReward.value && isBanned.value === false,
@@ -109,20 +110,25 @@ const onClick = () => {
 }
 
 // Both thresholds come from the server, so this banner can't promise a reward the
-// backend then declines to register: the hold amount is the campaign's
-// `qualification_value` (the same value holdingsStore.register checks a trade against),
-// and the trade amount is the pool's `minSpendUsd`. 0 means "not known yet", which
-// `qualifies` below treats as not qualifying.
+// backend then declines: the hold amount is the campaign's `qualification_value`
+// (the same value holdingsStore.register checks a trade against), and the trade
+// amount is the served rule's `minTradeAmountUsd` — never the config fallback.
+// 0 means "not known yet", which `qualifies` below treats as not qualifying.
 const minSpend = computed(() =>
   canClaimHold.value
     ? (qualificationUsd.value ?? 0)
     : canClaimTrade.value
-      ? Number(rewardsStore.minSpendTrade)
+      ? (ruleMinSpendUsd.value ?? 0)
       : 0,
 )
 
-// Only render once we know the threshold, or for cash outs (which never qualify)
-const showBanner = computed(() => canClaimHold.value || canClaimTrade.value)
+// Only render once the threshold is known: a trade banner with no served rule
+// would either promise on a stale constant or tell the user to trade "$0 more".
+const showBanner = computed(
+  () =>
+    canClaimHold.value ||
+    (canClaimTrade.value && ruleMinSpendUsd.value !== null),
+)
 
 const toAmountNumber = computed(() => Number(props.tradeAmount))
 

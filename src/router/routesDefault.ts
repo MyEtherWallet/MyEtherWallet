@@ -1,3 +1,4 @@
+import Configs from '@/configs'
 import {
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(Configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',
