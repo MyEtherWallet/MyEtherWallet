@@ -3,7 +3,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import DefaultRoutes from './routesDefault'
 import { pageRouteName } from './routeHierarchy'
-import { isChunkLoadError } from './chunkError'
+import { isChunkLoadError, reloadOnceForStaleChunk } from './chunkError'
 
 // A persisted watch-only address restores into a wallet asynchronously (on the
 // chains-load), which happens after this guard runs on a fresh load. Treat it
@@ -51,12 +51,9 @@ router.beforeEach((to, from, next) => {
 
 router.onError((error, to) => {
   if (!isChunkLoadError(error)) return
-
-  const reloadKey = `chunk-reload:${to.fullPath}`
-  if (!sessionStorage.getItem(reloadKey)) {
-    sessionStorage.setItem(reloadKey, '1')
+  reloadOnceForStaleChunk(to.fullPath, () => {
     window.location.href = to.fullPath
-  }
+  })
 })
 
 export default router

@@ -469,14 +469,14 @@
                             : $t('portfolio.table.add_to_watchlist')
                         }}</span>
                       </button>
-                      <hr
+                      <app-divider
                         v-if="
                           props.view === 'custom' ||
                           isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                        class="my-1 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -789,6 +789,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 /** -------------------------------
  * Constants & Types
  -------------------------------*/

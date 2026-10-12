@@ -83,7 +83,7 @@
                 />
               </div>
 
-              <div class="h-px w-full bg-border-default"></div>
+              <app-divider class="-my-1" />
 
               <div class="flex items-center gap-3">
                 <div class="flex-1 flex flex-col">
@@ -124,7 +124,7 @@
               <expand-transition>
                 <div v-if="isBreakdownOpen">
                   <div class="flex flex-col gap-4">
-                    <div class="h-px w-full bg-border-default"></div>
+                    <app-divider class="-my-1" />
                     <div class="flex items-center gap-2">
                       <p
                         class="flex-1 text-s-16 leading-[22px] text-text-subtle"
@@ -200,7 +200,7 @@
             @click="proceedWithTrade"
           >
             <span v-if="loading" class="flex items-center gap-2 justify-center">
-              <app-spinner />
+              <app-spinner :size="18" color="inverted" />
               <span>{{ $t('common.processing') }}</span>
             </span>
             <span v-else>{{ $t('trade.review_modal.confirm_trade') }}</span>
@@ -233,7 +233,7 @@ import BigNumber from 'bignumber.js'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -250,6 +250,7 @@ import { useTradeBreakdown } from '@/modules/trade/composables/useTradeBreakdown
 import { analytics, TradeEvent } from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
