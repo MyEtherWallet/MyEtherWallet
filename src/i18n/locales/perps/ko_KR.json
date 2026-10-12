@@ -402,7 +402,9 @@
         "failed": "Failed",
         "cancelled": "Cancelled",
         "unknown": "Unknown"
-      }
+      },
+      "tabs-label": "Trading activity",
+      "order-filter-label": "Order status"
     },
     "portfolio": {
       "account-balance-label": "Perpetuals account balance",
