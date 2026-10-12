@@ -58,7 +58,11 @@
       "received": "您收到了 {amount}",
       "failed_title": "交易未完成",
       "cancelled_subtitle": "订单已被取消",
-      "expired_subtitle": "订单已过期，未能成交"
+      "expired_subtitle": "订单已过期，未能成交",
+      "depositing_title": "请在钱包中确认存款",
+      "depositing_subtitle": "下单前，您的 {symbol} 会先存入 1inch 托管合约",
+      "unsubmitted_title": "订单未提交",
+      "unsubmitted_subtitle": "存款已发送，但 1inch 未接受该订单。您可以在“通知”中取回资金。"
     },
     "status": {
       "pending": "待处理",
@@ -89,6 +93,9 @@
       "failed-fetch-quote-1inch": "从 1inch 获取报价失败",
       "native-transaction-failed": "原生交易失败",
       "failed-submit-order-1inch": "向 1inch 提交订单失败",
+      "order-unsubmitted": "存款已发送，但 1inch 未接受该订单。请在“通知”中取回资金。",
+      "recover-funds-failed": "无法取回存款",
+      "deposit-not-confirmed": "存款尚未在链上确认。请在其上链后重试。",
       "not_enough_balance": "余额不足",
       "minimum_not_reached": "未达到最低金额",
       "remove_decimals": "请减少 {count} 位小数 | 请减少 {count} 位小数"

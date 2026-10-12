@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import type { RouteLocationRaw } from 'vue-router'
 import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
 import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
 import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     title: string

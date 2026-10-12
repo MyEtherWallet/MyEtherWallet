@@ -1,72 +1,72 @@
 <template>
   <component
     :is="href ? 'a' : 'button'"
+    :type="href ? undefined : 'button'"
     :href="href"
-    target="_blank"
+    :target="href ? '_blank' : undefined"
+    :rel="href ? 'noopener noreferrer' : undefined"
+    :disabled="href ? undefined : disabled"
     :aria-label="label"
     :class="[
-      'rounded-full !cursor-pointer p-1 flex items-center justify-center transition-colors duration-300',
-      { 'invert brightness-100': isWhite },
-      disabled
-        ? 'text-text-placeholder'
-        : filled
-          ? 'bg-background-default hover:bg-background-default-hover'
-          : 'hoverNoBG',
-      height,
-      width,
+      'inline-flex shrink-0 items-center justify-center rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default! disabled:opacity-40',
+      BTN_ICON_SIZE[size].box,
+      BTN_ICON_VARIANT_CLASS[variant],
     ]"
-    @click="btnClick"
   >
-    <slot />
+    <AppIcon
+      v-if="icon"
+      :name="icon"
+      :size="BTN_ICON_SIZE[size].icon"
+      :variant="iconVariant"
+    />
+    <slot v-else />
   </component>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  /**
-   * @isWhite - if the button icon should be white
-   */
-  isWhite: {
-    default: false,
-    type: Boolean,
-  },
-  /**
-   * @label - aria label for the button
-   */
-  label: {
-    type: String,
-    required: true,
-  },
-  href: {
-    type: String,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * @filled - solid grey background (grey-5, darker on hover) instead of the
-   * default transparent hoverNoBG treatment.
-   */
-  filled: {
-    type: Boolean,
-    default: false,
-  },
-  height: {
-    type: String,
-    default: 'h-8',
-  },
-  width: {
-    type: String,
-    default: 'w-8',
-  },
-})
+import AppIcon from '@/components/icon/AppIcon.vue'
+import type { IconEntry, IconName } from '@/components/icon/icons'
+import {
+  BTN_ICON_SIZE,
+  BTN_ICON_VARIANT_CLASS,
+  type BtnIconSize,
+  type BtnIconVariant,
+} from './btnIconTypes'
 
-const emit = defineEmits<{
-  click: [payload: MouseEvent]
-}>()
-
-const btnClick = (payload: MouseEvent) => {
-  if (!props.disabled) emit('click', payload)
-}
+/**
+ * Button Icon (design library, Figma 82:15271). Icon-only button for compact
+ * actions where a label isn't needed. Hover, pressed, disabled and focus are
+ * native CSS states, not props. `@click` falls through as a native listener,
+ * so a disabled button never fires it. `cursor-default!` needs the important
+ * flag to beat the unlayered global `button { cursor: pointer }` in main.css.
+ *
+ * Two ways to fill it. `icon` renders a registry glyph at the library size for
+ * the button (S 16, M 24, L 32). The default slot takes an `<AppIcon>` at any
+ * size, or custom artwork: app call sites use the slot so each keeps the glyph
+ * size it was designed with (the library sizes read too heavy in product).
+ * `href` renders an external link with the same look.
+ *
+ * @example <AppBtnIcon icon="x-mark" :label="t('common.close')" @click="close" />
+ * @example <AppBtnIcon variant="filled" size="l" :label="t('common.previous_page')">
+ *   <AppIcon name="chevron-left" variant="filled" size="xxs" />
+ * </AppBtnIcon>
+ */
+withDefaults(
+  defineProps<{
+    /** Accessible name (required): an icon-only button has no text. Same
+     *  prop name as AppIcon `label`. */
+    label: string
+    icon?: IconName
+    iconVariant?: keyof IconEntry
+    variant?: BtnIconVariant
+    size?: BtnIconSize
+    disabled?: boolean
+    href?: string
+  }>(),
+  {
+    iconVariant: 'stroke',
+    variant: 'naked',
+    size: 'm',
+  },
+)
 </script>

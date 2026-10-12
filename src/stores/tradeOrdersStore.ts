@@ -2,9 +2,38 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { ref } from 'vue'
 
+/**
+ * A 1inch limit order as built by the SDK (all fields are decimal strings).
+ * Persisted for native orders so a funded-but-unsubmitted order can be
+ * cancelled on its proxy later to reclaim the deposit.
+ */
+export interface NativeOrderStruct {
+  salt: string
+  maker: string
+  receiver: string
+  makerAsset: string
+  takerAsset: string
+  makingAmount: string
+  takingAmount: string
+  makerTraits: string
+}
+
 export interface SavedTradeOrder {
   hash: string
+  /**
+   * 1inch order status (`pending`, `filled`, `cancelled`, `expired`), or one of
+   * MEW's own for native orders: `unsubmitted` (deposit sent, relayer refused
+   * the order, funds sit in the proxy) and `recovered` (that deposit was
+   * reclaimed through `cancelOrder`).
+   */
   status: string
+  /** Escrow deposit transaction of a native (ETH/BNB) order. */
+  depositTxHash?: string
+  /** Per-order proxy that holds a native order's deposit. */
+  proxyAddress?: string
+  nativeOrder?: NativeOrderStruct
+  /** Transaction that reclaimed an `unsubmitted` order's deposit. */
+  recoveryTxHash?: string
   fromAmount: string
   fromSymbol: string
   fromDecimals: number

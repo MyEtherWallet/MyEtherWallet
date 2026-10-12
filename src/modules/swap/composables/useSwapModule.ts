@@ -81,7 +81,11 @@ import {
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
-import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
+import {
+  isSignableWallet,
+  isUserRejectionError,
+  isInsufficientFundsError,
+} from '@/utils/walletUtils'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import { reportModuleError } from '@/utils/reportModuleError'
@@ -663,6 +667,24 @@ export function useSwapModule(): SwapModuleBindings {
           errorMsg: 'declined_by_user',
         })
         return
+      } else if (isInsufficientFundsError(e)) {
+        const insufficientFundsMessage = t(
+          'common.not_enough_balance_to_cover_fee',
+          { symbol: selectedChain.value?.currencyName },
+        )
+        generalError.value = insufficientFundsMessage
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: insufficientFundsMessage,
+          duration: 10000,
+        })
+        if (!isDevMode) {
+          analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+            ...analyticsPayload,
+            errorMsg: 'insufficient_funds_for_gas',
+          })
+        }
+        return
       } else {
         if (!isDevMode) {
           analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
@@ -702,6 +724,18 @@ export function useSwapModule(): SwapModuleBindings {
 
   // --- Pre-Swap & Quotes ---
 
+  const quotedNativeSpend = computed<bigint | undefined>(() => {
+    if (isBitcoinChain.value) return undefined
+    const quotedTransactions = (swapInfo.value?.transactions || []).filter(
+      (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+    )
+    if (quotedTransactions.length === 0) return undefined
+    return quotedTransactions.reduce(
+      (total, tx) => total + BigInt(tx.value || '0'),
+      0n,
+    )
+  })
+
   const swapFeeError = computed<string | undefined>(() => {
     if (
       !swapGasFeeQuote.value?.fees ||
@@ -726,8 +760,12 @@ export function useSwapModule(): SwapModuleBindings {
       // viem's parser. No amount means no fee shortfall to report.
       const amountBN = BigNumber(fromAmount.value)
       if (amountBN.isNaN() || amountBN.lte(0)) return undefined
-      const totalBalanceNeeded =
-        fee + parseUnits(amountBN.toFixed(), fromTokenSelected.value.decimals)
+      // Prefer the native value the quoted transactions actually send; fall
+      // back to the typed amount before a quote exists.
+      const nativeSpend =
+        quotedNativeSpend.value ??
+        parseUnits(amountBN.toFixed(), fromTokenSelected.value.decimals)
+      const totalBalanceNeeded = fee + nativeSpend
       if (totalBalanceNeeded > mainTokenBalance) {
         return 'NOT_ENOUGH_BALANCE'
       }

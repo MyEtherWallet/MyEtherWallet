@@ -91,10 +91,10 @@ const { t } = useI18n()
 
 const hoveredIndex = ref<number | null>(null)
 
-const ORANGE = 'bg-orange-600'
-const GREEN = 'bg-success-600'
-const ORANGE_TEXT = 'text-orange-600'
-const GREEN_TEXT = 'text-success-600'
+const ORANGE = 'bg-background-warning'
+const GREEN = 'bg-background-success'
+const ORANGE_TEXT = 'text-text-warning'
+const GREEN_TEXT = 'text-text-success'
 
 const segments = computed(() => {
   const session = (key: SessionKey) => ({

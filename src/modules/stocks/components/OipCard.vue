@@ -29,16 +29,22 @@
         </p>
       </div>
 
-      <button
-        type="button"
-        :aria-label="$t('common.add_to_watchlist')"
+      <AppBtnIcon
         data-test="listing-favorite"
-        class="hoverNoBG flex size-8 shrink-0 items-center justify-center rounded-full"
+        :label="
+          favorite
+            ? $t('common.remove_from_watchlist')
+            : $t('common.add_to_watchlist')
+        "
+        :class="favorite ? 'text-text-brand' : 'text-text-subtle'"
         @click.stop="$emit('toggle-favorite')"
       >
-        <StarSolidIcon v-if="favorite" class="size-5 text-text-brand" />
-        <StarOutlineIcon v-else class="size-5 text-text-subtle" />
-      </button>
+        <AppIcon
+          name="star"
+          :variant="favorite ? 'filled' : 'stroke'"
+          size="s"
+        />
+      </AppBtnIcon>
     </div>
 
     <!-- B. Name block -->
@@ -99,9 +105,10 @@
           >
             {{ colThreeText }}
           </p>
-          <component
-            :is="colThreeArrowIcon"
-            class="size-3"
+          <AppIcon
+            :name="colThreeArrowIcon"
+            variant="filled"
+            size="xxs"
             :class="colThreeColor"
           />
         </div>
@@ -127,12 +134,11 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/20/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/16/solid'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 interface Props {
   logo?: string
   symbol: string
@@ -166,9 +172,7 @@ const up = computed(() => (props.colThree ?? 0) >= 0)
 const colThreeColor = computed(() =>
   up.value ? 'text-text-success' : 'text-text-error',
 )
-const colThreeArrowIcon = computed(() =>
-  up.value ? ArrowUpIcon : ArrowDownIcon,
-)
+const colThreeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
 const colThreeText = computed(() =>
   props.colThree != null ? `${Math.abs(props.colThree).toFixed(1)}%` : '',
 )

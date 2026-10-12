@@ -79,9 +79,9 @@
               <AppIcon
                 name="globe-asia-australia"
                 variant="filled"
-                size="xl"
-                class="text-black"
+                size="xxl"
                 aria-hidden="true"
+                class="text-black"
               />
               <!--       Badge geometry is from the design: a 16px glyph, 4px of padding,
                 and a 2px white ring. The ring is what separates the red disc
@@ -96,8 +96,8 @@
                   name="exclamation-circle"
                   variant="filled"
                   size="xxs"
-                  class="text-white"
                   aria-hidden="true"
+                  class="text-white"
                 />
               </span>
             </div>
@@ -218,7 +218,7 @@
               v-else-if="isTradeDisabled"
               type="button"
               disabled
-              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-neutral-500 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-text-muted text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
             >
               {{ ctaDisabledLabel }}
             </button>
@@ -239,7 +239,7 @@
               name="exclamation-triangle"
               variant="filled"
               size="s"
-              class="flex-none text-orange-600"
+              class="flex-none text-text-warning"
             />
             <p class="text-s-14 leading-[20px] text-black">
               {{ $t('trade.pair_unavailable.notice') }}
@@ -279,6 +279,7 @@
     <trade-progress-modal
       v-model:is-open="progressModalOpen"
       :order-hash="orderHash"
+      :deposit-pending="depositPending"
       :from-chain="selectedFromChain"
       :from-token="fromTokenSelected"
       :to-token="toTokenSelected"
@@ -298,7 +299,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import TradeAmountCard from './components/TradeAmountCard.vue'
 import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
@@ -314,6 +314,7 @@ import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useTradeModule } from './composables/useTradeModule'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const {
   selectedChain,
   swapLoaded,
@@ -365,6 +366,7 @@ const {
   timeLabel,
   sessionRanges,
   orderHash,
+  depositPending,
   startTradeFlow,
   confirmApproval,
   confirmTrade,

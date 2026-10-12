@@ -87,7 +87,7 @@
               v-if="linkCopied"
               class="shrink-0 text-text-success"
             />
-            <AppIcon v-else name="clipboard" size="s" class="shrink-0" />
+            <AppIcon name="clipboard" size="s" v-else class="shrink-0" />
             {{ linkCopied ? $t('common.copied') : $t('common.copy_link') }}
           </li>
         </ul>
@@ -101,7 +101,6 @@ import { ref } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
 const props = defineProps<{
   shareText: string
   disabled?: boolean

@@ -100,16 +100,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleOneSelected"
-                    :btn-list="generatedVerifySamples[0].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleOneSelected"
+                    :items="generatedVerifySamples[0].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[0].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
                 <!-- Second Sample -->
                 <div
@@ -126,16 +127,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleTwoSelected"
-                    :btn-list="generatedVerifySamples[1].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleTwoSelected"
+                    :items="generatedVerifySamples[1].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[1].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
                 <!-- Third Sample -->
                 <div
@@ -152,16 +154,17 @@
                       })
                     }}
                   </p>
-                  <app-btn-group
-                    v-model:selected="sampleThreeSelected"
-                    :btn-list="generatedVerifySamples[2].items"
-                    :size="isMobile ? 'medium' : 'large'"
-                    has-full-width
-                  >
-                    <template #btn-content="{ data }">
-                      {{ data.label }}
-                    </template>
-                  </app-btn-group>
+                  <AppSegmentedControl
+                    v-model="sampleThreeSelected"
+                    :items="generatedVerifySamples[2].items"
+                    :size="isMobile ? 'small' : 'default'"
+                    :label="
+                      $t('create_wallet.mnemonic.select_word', {
+                        number: generatedVerifySamples[2].indexToVerify + 1,
+                      })
+                    "
+                    full-width
+                  />
                 </div>
               </div>
               <div
@@ -238,18 +241,18 @@ import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 const { closeCreateDialog } = useCreateStore()
@@ -318,7 +321,8 @@ const sampleArray = (array: number[]) => {
 }
 
 interface VerifyItem {
-  originalIndex: number
+  /** Original word index as a string: words can repeat in a mnemonic. */
+  value: string
   label: string
 }
 interface VerifySample {
@@ -344,7 +348,7 @@ const generatedVerifySamples = computed<VerifySample[]>(() => {
     itemsIndexes.forEach(idx => usedIndexes.add(idx))
     const indexToVerify = itemsIndexes[0]
     const items = shuffleArray(itemsIndexes).map(idx => ({
-      originalIndex: idx,
+      value: String(idx),
       label: totalWords[idx],
     }))
 
@@ -360,9 +364,16 @@ const generatedVerifySamples = computed<VerifySample[]>(() => {
 /**------------------------
  * Selected Options
  -------------------------*/
-const sampleOneSelected = ref<VerifyItem | null>(null)
-const sampleTwoSelected = ref<VerifyItem | null>(null)
-const sampleThreeSelected = ref<VerifyItem | null>(null)
+const sampleOneSelected = ref('')
+const sampleTwoSelected = ref('')
+const sampleThreeSelected = ref('')
+
+// New samples mean new words: drop picks made against the previous ones
+watch(generatedVerifySamples, () => {
+  sampleOneSelected.value = ''
+  sampleTwoSelected.value = ''
+  sampleThreeSelected.value = ''
+})
 
 const verifyMnemonic = computed(() => {
   let isValid = false
@@ -372,12 +383,12 @@ const verifyMnemonic = computed(() => {
     sampleThreeSelected.value
   ) {
     isValid =
-      sampleOneSelected.value.originalIndex ===
-        generatedVerifySamples.value[0].indexToVerify &&
-      sampleTwoSelected.value.originalIndex ===
-        generatedVerifySamples.value[1].indexToVerify &&
-      sampleThreeSelected.value.originalIndex ===
-        generatedVerifySamples.value[2].indexToVerify
+      sampleOneSelected.value ===
+        String(generatedVerifySamples.value[0].indexToVerify) &&
+      sampleTwoSelected.value ===
+        String(generatedVerifySamples.value[1].indexToVerify) &&
+      sampleThreeSelected.value ===
+        String(generatedVerifySamples.value[2].indexToVerify)
   }
 
   return isValid

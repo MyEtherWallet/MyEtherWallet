@@ -27,17 +27,17 @@
               >
                 <span>{{ activeSortLabel }}</span>
                 <AppIcon
-                  v-if="sortDirection === 'asc'"
                   name="arrow-long-up"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-if="sortDirection === 'asc'"
                   class="shrink-0"
                 />
                 <AppIcon
-                  v-else
                   name="arrow-long-down"
-                  size="xxs"
                   variant="filled"
+                  size="xxs"
+                  v-else
                   class="shrink-0"
                 />
               </button>
@@ -50,7 +50,7 @@
                   </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
-                <hr class="h-px bg-border-strong border-0 w-full mt-1 mb-2" />
+                <app-divider variant="alternative" class="mb-1" />
                 <button
                   v-for="option in sortOptions"
                   :key="option.value"
@@ -80,15 +80,14 @@
 
         <!-- Filter Tabs -->
         <div class="px-4 mb-1">
-          <app-btn-group
-            :btn-list="filterTabs"
-            :selected="filterTabs.find(t => t.key === activeFilter)"
+          <AppSegmentedControl
+            :model-value="activeFilter"
+            :items="filterTabs"
             size="small"
-            has-full-width
-            @on-update:selected="tab => $emit('update:activeFilter', tab.key)"
-          >
-            <template #btn-content="{ data }">{{ data.label }}</template>
-          </app-btn-group>
+            :label="$t('perps.info.category-label')"
+            full-width
+            @update:model-value="$emit('update:activeFilter', $event)"
+          />
         </div>
         <hr class="border-t border-border-subtle mt-1 mx-4" />
 
@@ -163,21 +162,22 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import type {
   MarketSortValue,
   SortDirection,
   MarketSortOption,
 } from '../composables/usePerpsTradeForm'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 
@@ -187,7 +187,7 @@ const props = defineProps({
     required: true,
   },
   filterTabs: {
-    type: Array as PropType<{ key: string; label: string }[]>,
+    type: Array as PropType<{ value: string; label: string }[]>,
     required: true,
   },
   activeFilter: {

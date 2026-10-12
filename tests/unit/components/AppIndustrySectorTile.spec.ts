@@ -15,12 +15,16 @@ describe('AppIndustrySectorTile', () => {
     })
 
   it('renders the label', () => {
-    expect(mountIt().get('[data-test="sector-label"]').text()).toBe('Technology')
+    expect(mountIt().get('[data-test="sector-label"]').text()).toBe(
+      'Technology',
+    )
   })
 
   it('applies the sector color as the tile background', () => {
     // rgb input avoids hex→rgb normalization ambiguity in jsdom.
-    const tile = mountIt({ color: 'rgb(1, 2, 3)' }).get('[data-test="sector-tile"]')
+    const tile = mountIt({ color: 'rgb(1, 2, 3)' }).get(
+      '[data-test="sector-tile"]',
+    )
     expect(tile.attributes('style')).toContain('background-color: rgb(1, 2, 3)')
   })
 

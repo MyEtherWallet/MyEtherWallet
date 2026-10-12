@@ -33,7 +33,7 @@ const SAMPLE: IconName = 'wallet'
   <div class="p-8 flex flex-col gap-10 max-w-5xl mx-auto">
     <header class="flex flex-col gap-1">
       <h1 class="text-s-24 font-bold">Icon</h1>
-      <p class="text-s-14 text-info">
+      <p class="text-s-14 text-text-subtle">
         {{ ICON_NAMES.length }} glyphs, stroke and filled, at seven sizes. Color
         comes from the parent via <code>currentColor</code>.
       </p>
@@ -41,10 +41,12 @@ const SAMPLE: IconName = 'wallet'
 
     <!-- Controls -->
     <section
-      class="flex flex-wrap items-center gap-6 rounded-12 border border-grey-10 bg-white p-4"
+      class="flex flex-wrap items-center gap-6 rounded-12 border border-border-default bg-white p-4"
     >
       <div class="flex items-center gap-2">
-        <span class="text-s-12 font-bold uppercase text-info tracking-sp-06">
+        <span
+          class="text-s-12 font-bold uppercase text-text-subtle tracking-sp-06"
+        >
           Variant
         </span>
         <button
@@ -54,8 +56,8 @@ const SAMPLE: IconName = 'wallet'
           class="rounded-8 px-3 py-1.5 text-s-14 capitalize hoverNoBG"
           :class="
             variant === v
-              ? 'bg-grey-10 font-medium text-t-default'
-              : 'text-info'
+              ? 'bg-background-default-hover font-medium text-text-default'
+              : 'text-text-subtle'
           "
           :aria-pressed="variant === v"
           @click="variant = v"
@@ -65,7 +67,9 @@ const SAMPLE: IconName = 'wallet'
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-s-12 font-bold uppercase text-info tracking-sp-06">
+        <span
+          class="text-s-12 font-bold uppercase text-text-subtle tracking-sp-06"
+        >
           Size
         </span>
         <button
@@ -74,7 +78,9 @@ const SAMPLE: IconName = 'wallet'
           type="button"
           class="rounded-8 px-2.5 py-1.5 text-s-14 uppercase hoverNoBG"
           :class="
-            size === s ? 'bg-grey-10 font-medium text-t-default' : 'text-info'
+            size === s
+              ? 'bg-background-default-hover font-medium text-text-default'
+              : 'text-text-subtle'
           "
           :aria-pressed="size === s"
           @click="size = s"
@@ -88,7 +94,7 @@ const SAMPLE: IconName = 'wallet'
         type="search"
         aria-label="Filter icons by name"
         placeholder="Filter by name…"
-        class="ml-auto w-56 rounded-8 border border-grey-10 px-3 py-1.5 text-s-14 outline-none focus:border-primary"
+        class="ml-auto w-56 rounded-8 border border-border-default px-3 py-1.5 text-s-14 outline-none focus:border-border-brand"
       />
     </section>
 
@@ -96,7 +102,7 @@ const SAMPLE: IconName = 'wallet'
     <section class="flex flex-col gap-3">
       <h2 class="text-s-16 font-semibold">Sizes</h2>
       <div
-        class="flex flex-wrap items-end gap-8 rounded-12 border border-grey-10 bg-white p-6 text-t-default"
+        class="flex flex-wrap items-end gap-8 rounded-12 border border-border-default bg-white p-6 text-text-default"
       >
         <div
           v-for="s in SIZE_NAMES"
@@ -104,7 +110,7 @@ const SAMPLE: IconName = 'wallet'
           class="flex flex-col items-center gap-2"
         >
           <AppIcon :name="SAMPLE" :size="s" :variant="variant" />
-          <span class="text-s-11 uppercase text-info">
+          <span class="text-s-11 uppercase text-text-subtle">
             {{ s }} · {{ ICON_SIZES[s] }}
           </span>
         </div>
@@ -118,29 +124,33 @@ const SAMPLE: IconName = 'wallet'
         <span
           role="status"
           :aria-label="`${filtered.length} icons`"
-          class="font-normal text-info"
+          class="font-normal text-text-subtle"
         >
           ({{ filtered.length }})
         </span>
       </h2>
       <div
-        class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 text-t-default"
+        class="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 text-text-default"
       >
         <div
           v-for="name in filtered"
           :key="name"
-          class="flex flex-col items-center gap-2 rounded-8 border border-grey-10 p-3 hoverNoBG"
+          class="flex flex-col items-center gap-2 rounded-8 border border-border-default p-3 hoverNoBG"
           :title="name"
         >
           <div class="flex h-14 items-center">
             <AppIcon :name="name" :size="size" :variant="variant" />
           </div>
-          <span class="w-full truncate text-center text-s-11 text-info">
+          <span class="w-full truncate text-center text-s-11 text-text-subtle">
             {{ name }}
           </span>
         </div>
       </div>
-      <p v-if="!filtered.length" role="status" class="text-s-14 text-info">
+      <p
+        v-if="!filtered.length"
+        role="status"
+        class="text-s-14 text-text-subtle"
+      >
         No icon matches “{{ query }}”.
       </p>
     </section>

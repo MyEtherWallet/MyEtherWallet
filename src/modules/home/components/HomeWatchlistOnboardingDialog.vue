@@ -33,6 +33,7 @@ const isLoadingStep3 = computed(
 )
 
 const activeStep = ref(0)
+// Step-1 market pick (single-select, so at most one id; empty = skipped).
 const selectedMarkets = ref<string[]>([])
 // Category ids picked in step 2 (e.g. "STOCK:Equities").
 const selectedCategoryIds = ref<string[]>([])
@@ -68,18 +69,41 @@ const backToIndustries = () => {
   selectedAssetIds.value = []
 }
 
-// Continue from step 2 → recommend the assets in the picked categories.
-const goToAssets = () => {
-  activeStep.value = 2
-  fetchRecommendations(selectedCategoryIds.value)
+// Resolve the recommendation query from the step-1 market + step-2 categories.
+// `types` carries the step-1 market(s) (CRYPTO/STOCK) so the API scopes to them.
+// Each market in play keeps the categories the user picked for it, or falls back
+// to `<TYPE>:all` when they picked none — so "crypto with no category" still means
+// "all crypto", not "all markets" (MEW-2375). Step 1 is single-select, so both
+// markets are only in play when step 1 was skipped (no pick → both types); when
+// every one of them falls back to `:all` that's everything, so we omit the
+// categories and let the API return the full set for those types.
+const recommendForSelection = () => {
+  const types = marketsToTypes(selectedMarkets.value)
+  const categoryIds = types.flatMap(type => {
+    const picked = selectedCategoryIds.value.filter(id =>
+      id.startsWith(`${type}:`),
+    )
+    return picked.length ? picked : [`${type}:all`]
+  })
+  const isEverything =
+    types.length >= 2 && categoryIds.every(id => id.endsWith(':all'))
+  if (isEverything) fetchRecommendations([], types)
+  else fetchRecommendations(categoryIds, types)
 }
 
-// Skipping either step recommends the full set: with no category picks we hit
-// /assets without the `categories` param and the API returns everything, so
-// there's no need to resolve categories first.
+// Continue from step 2 → recommend the assets for the current selection.
+const goToAssets = () => {
+  activeStep.value = 2
+  recommendForSelection()
+}
+
+// Skipping step 2 keeps the step-1 markets and treats each as "all categories",
+// so skipping with only crypto picked recommends all crypto, not the full set
+// (MEW-2376). Skipping step 1 clears the markets first, so it still recommends
+// everything (both markets → :all → no param).
 const skipToAssets = () => {
   activeStep.value = 2
-  fetchRecommendations()
+  recommendForSelection()
 }
 
 // Skip resets the skipped step's selection so navigating back from the assets

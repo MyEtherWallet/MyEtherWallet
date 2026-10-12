@@ -32,7 +32,7 @@ onMounted(() => {
   <div class="p-8 flex flex-col gap-8 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
       <h1 class="text-s-24 font-bold">Sizes</h1>
-      <p class="text-s-14 text-info">
+      <p class="text-s-14 text-text-subtle">
         The one size scale — 35 tokens, identical to Tailwind's default spacing
         (<code>w-4</code>, <code>p-2.5</code>, <code>size-10</code>). Bars are
         drawn from the <code>--size-*</code> CSS vars; px/rem come from
@@ -42,12 +42,15 @@ onMounted(() => {
 
     <p
       v-if="drift.length"
-      class="rounded-8 bg-error-10 text-error text-s-14 px-4 py-3"
+      class="rounded-8 bg-background-error-subtle text-text-error text-s-14 px-4 py-3"
     >
       ⚠︎ Drift — these CSS vars don't match sizeScale.ts:
       {{ drift.map(t => sizeVar(t)).join(', ') }}
     </p>
-    <p v-else class="rounded-8 bg-success/10 text-success text-s-14 px-4 py-3">
+    <p
+      v-else
+      class="rounded-8 bg-background-success-subtle text-text-success text-s-14 px-4 py-3"
+    >
       ✓ All 35 <code>--size-*</code> vars match <code>sizeScale.ts</code>.
     </p>
 
@@ -57,15 +60,15 @@ onMounted(() => {
         :key="String(token)"
         class="flex items-center gap-4"
       >
-        <span class="w-24 shrink-0 text-s-13 font-medium text-t-default"
+        <span class="w-24 shrink-0 text-s-13 font-medium text-text-default"
           >size/{{ token }}</span
         >
-        <span class="w-28 shrink-0 text-s-12 text-info tabular-nums">
+        <span class="w-28 shrink-0 text-s-12 text-text-subtle tabular-nums">
           {{ SIZE[token] }}px · {{ SIZE[token] / 16 }}rem
         </span>
         <span class="flex-1 min-w-0">
           <span
-            class="block h-3 rounded-[2px] bg-primary"
+            class="block h-3 rounded-[2px] bg-background-brand"
             :style="{ width: `var(${sizeVar(token)})` }"
           />
         </span>

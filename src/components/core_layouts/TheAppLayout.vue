@@ -26,7 +26,7 @@
       :class="[
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-20',
+        'flex w-full mr-20',
         // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
         // shell whose <main> scrolls internally), so the app-level scroll must be
         // off for it — otherwise the page double-scrolls and the sidebar drifts.

@@ -1,5 +1,6 @@
 import { PerpsClient } from './sdk'
 import { mainnet } from 'viem/chains'
+import configs from '@/configs'
 
 const IS_PERPS_LIVE = true
 
@@ -14,10 +15,13 @@ const PERPS_WS_URL = {
 }
 
 const perpsClient = new PerpsClient(
-  import.meta.env.MODE === 'production' ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
+  configs.BUILD_MODE === 'production'
+    ? PERPS_BASE_URL.live.url
+    : PERPS_BASE_URL.sandbox.url,
 )
 
-const perpsWsUrl = import.meta.env.MODE === 'production' ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
+const perpsWsUrl =
+  configs.BUILD_MODE === 'production' ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
 
 const SUPPORTED_NETWORK = [mainnet]
 // Perps operates on Ethereum mainnet only; the API takes chainId as a string.

@@ -32,7 +32,7 @@
         <AppIcon
           name="arrow-long-right"
           size="xxs"
-          class="xl:size-5 group-hover:translate-x-1 transition-transform"
+          class="group-hover:translate-x-1 transition-transform xl:size-5"
         />
       </div>
     </app-btn-text>
@@ -42,7 +42,7 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center">
-        <AppIcon name="qr-code" size="xxs" class="xl:size-5 text-white" />
+        <AppIcon name="qr-code" size="xxs" class="text-white xl:size-5" />
         <p>
           {{
             $t('common.deposit_currency', {
@@ -58,7 +58,6 @@
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from './AppBtnText.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -68,6 +67,7 @@ import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.v
 import { ref, computed } from 'vue'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   source: 'send' | 'swap' | 'bridge' | 'trade'
 }>()
