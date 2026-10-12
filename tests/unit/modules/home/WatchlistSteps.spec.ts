@@ -37,7 +37,7 @@ vi.mock('@/components/AppTokenSymbol.vue', () => ({
 
 // AppTooltip relies on the v-element-hover directive + teleport; stub it and
 // expose its text so the "+N more" tooltip can be asserted.
-vi.mock('@/components/AppTooltip.vue', () => ({
+vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
   default: {
     props: ['text', 'position'],
     template: '<div data-test="tooltip" :data-text="text"><slot /></div>',

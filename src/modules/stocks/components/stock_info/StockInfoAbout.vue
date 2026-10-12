@@ -59,18 +59,18 @@
             "
             class="flex gap-3 items-center -ml-1 flex-wrap"
           >
-            <div
+            <AppTag
               v-if="data.metadata.assetClass"
-              class="bg-background-brand-subtle rounded-full px-4 py-1 text-text-brand font-semibold text-s-14"
-            >
-              {{ data.metadata.assetClass }}
-            </div>
-            <div
+              type="branded"
+              variant="subtle"
+              :label="data.metadata.assetClass"
+            />
+            <AppTag
               v-if="data.metadata.instrumentType"
-              class="bg-background-brand-subtle rounded-full px-4 py-1 text-text-brand font-semibold text-s-14"
-            >
-              {{ data.metadata.instrumentType }}
-            </div>
+              type="branded"
+              variant="subtle"
+              :label="data.metadata.instrumentType"
+            />
           </div>
           <p v-else class="text-s-16 font-medium">-</p>
         </div>
@@ -115,6 +115,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import {
   formatFloatingPointValue,
   formatIntegerValue,

@@ -32,10 +32,9 @@
         </p>
       </div>
       <app-btn-icon
+        variant="filled"
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-background-default"
-        height="h-8"
-        width="w-8"
+        class="absolute top-6 right-6"
         @click="isOpen = false"
       >
         <AppIcon name="x-mark" />
@@ -133,8 +132,7 @@
               <app-tooltip
                 v-if="pauseReasonOf(asset)"
                 :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
-                theme="dark"
-                position="right"
+                placement="right"
                 class="flex-none"
               >
                 <span
@@ -197,10 +195,11 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
@@ -217,7 +216,6 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 interface DisplayAsset extends TradeAssetToken {
   fiatValue: BigNumber
   fiatValueFormatted: string

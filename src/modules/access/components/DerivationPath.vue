@@ -58,7 +58,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-background-default-hover border-0 w-full" />
+                <app-divider class="-my-1" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -87,13 +87,15 @@
             <div v-else class="px-5">
               <app-input
                 v-model="newPathLabel"
-                :placeholder="$t('derivation_path.enter_label')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_label')"
                 is-required
                 class="mt-4"
               />
               <app-input
                 v-model="newPath"
-                :placeholder="$t('derivation_path.enter_path')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_path')"
                 is-required
               />
               <div class="flex items-center flex-col justify-center mt-3">
@@ -135,6 +137,7 @@ import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 defineProps({

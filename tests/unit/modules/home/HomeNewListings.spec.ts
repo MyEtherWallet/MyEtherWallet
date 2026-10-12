@@ -137,7 +137,6 @@ describe('HomeNewListings', () => {
         stubs: {
           AppTabBar: AppTabBarStub,
           // Tooltip wraps each card; render its slot inline (skip teleport/hover).
-          AppTooltipHint: { template: '<div><slot /></div>' },
           AppSlideGroup: AppSlideGroupStub,
           // AppTokenLogo + AppTokenSymbol pull in stocksStore (Pinia)
           // internally — irrelevant to this section's mapping logic, so
@@ -277,7 +276,7 @@ describe('HomeNewListings', () => {
     const favorite = mountIt()
       .findAll('[data-test="listing-card"]')[0]
       .get('[data-test="listing-favorite"]')
-    expect(favorite.find('.text-text-brand').exists()).toBe(true)
+    expect(favorite.classes()).toContain('text-text-brand')
     isWatchListed.mockReturnValue(false)
   })
 })

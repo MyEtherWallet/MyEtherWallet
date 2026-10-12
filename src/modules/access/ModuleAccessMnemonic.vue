@@ -19,6 +19,7 @@
             />
             <app-text-field
               v-model="mnemonic"
+              surface="alternative"
               data-private
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
               class="mt-4"
@@ -44,20 +45,22 @@
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
+              <div class="flex items-center gap-2">
+                <app-toggle
+                  v-model="hasExtraWord"
+                  :aria-label="extraWordToggleString"
+                />
+                <span class="text8">{{ extraWordToggleString }}</span>
+              </div>
             </div>
             <!-- Extra Word -->
             <expand-transition>
               <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
+                  surface="alternative"
                   data-private
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
+                  :label="$t('access_wallet_recovery_phrase.enter_extra_word')"
                 />
               </div>
             </expand-transition>

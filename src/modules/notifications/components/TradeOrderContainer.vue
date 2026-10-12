@@ -16,16 +16,18 @@
       >
         {{ formatCountdown(remainingTime) }}
       </span>
-      <div
-        :class="statusBadgeClass"
-        class="ml-2 px-2.5 py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+      <AppTag
+        :type="statusTag.type"
+        :variant="statusTag.variant"
+        :label="orderStatusLabel"
+        class="ml-2"
       >
-        <div
-          v-if="order.status === 'pending'"
-          class="bg-white w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
-        ></div>
-        {{ orderStatusLabel }}
-      </div>
+        <template v-if="order.status === 'pending'" #leading>
+          <span
+            class="ml-1 bg-current w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
+          ></span>
+        </template>
+      </AppTag>
     </div>
 
     <!-- From / To -->
@@ -307,6 +309,8 @@ import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import type { TagType, TagVariant } from '@/components/tag/types'
 // Props
 const props = defineProps<{
   order: SavedTradeOrder
@@ -337,19 +341,18 @@ const orderStatusLabel = computed(() => {
   return translated !== key ? translated : props.order.status
 })
 
-// Computed classes
-const statusBadgeClass = computed(() => {
+const statusTag = computed((): { type: TagType; variant: TagVariant } => {
   switch (props.order.status.toLowerCase()) {
     case 'filled':
-      return 'bg-background-success'
+      return { type: 'success', variant: 'strong' }
     case 'pending':
-      return 'bg-background-brand'
+      return { type: 'branded', variant: 'strong' }
     case 'cancelled':
     case 'expired':
     case 'unsubmitted':
-      return 'bg-background-error'
+      return { type: 'danger', variant: 'strong' }
     default:
-      return 'bg-background-default-pressed'
+      return { type: 'neutral', variant: 'subtle' }
   }
 })
 

@@ -27,18 +27,14 @@
           </p>
         </app-tooltip>
       </div>
-      <p
-        class="px-2.5 py-0.5 leading-tight text-s-11 font-bold rounded-full bg-background-default text-text-subtle"
-      >
-        {{ i.formattedPercentage }}
-      </p>
+      <AppTag variant="subtle" :label="i.formattedPercentage" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { truncate } from '@/utils/filters'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import {
   type TokenAllocation,
   ALLOCATION_COLORS,
@@ -48,6 +44,7 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 defineProps({
   /**
    * @title The title of the dialog, not required

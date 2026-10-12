@@ -6,6 +6,7 @@
         <div class="flex items-center flex-col gap-1 pt-6">
           <app-text-field
             v-model="message"
+            surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_sign')"
             class="w-full"
           />

@@ -5,8 +5,8 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import type { AssetPickerItem } from '@/modules/home/composables/useAssetPicker'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const props = defineProps<{ item: AssetPickerItem }>()
 
 const watchlistStore = useWatchlistStore()

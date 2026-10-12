@@ -6,7 +6,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
@@ -375,16 +375,13 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               height="h-6"
               no-shadow
             />
-            <span
-              class="max-w-20 truncate text-s-12 font-semibold text-black"
-            >
+            <span class="max-w-20 truncate text-s-12 font-semibold text-black">
               {{ a.symbol }}
             </span>
           </span>
           <AppTooltip
             v-if="overflowAssets.length"
             :text="overflowNames"
-            position="middle"
             class="shrink-0"
           >
             <span

@@ -2,9 +2,8 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
+      size="l"
       :label="$t('menu.open-settings')"
-      width="w-10"
-      height="h-10"
       @click="togglePopup"
     >
       <AppIcon name="cog-6-tooth" variant="filled" />
@@ -251,7 +250,6 @@
                       }}</span>
                       <app-tooltip
                         :text="$t('settings.usage_analytics_tooltip')"
-                        position="middle"
                       >
                         <AppIcon
                           name="question-mark-circle"
@@ -300,9 +298,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -376,9 +373,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -463,9 +459,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -550,7 +545,7 @@ import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
 import { getFiatIcon } from '@/utils/fiatIcons'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 

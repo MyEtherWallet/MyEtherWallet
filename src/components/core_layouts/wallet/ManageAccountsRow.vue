@@ -30,10 +30,10 @@
             account.addressName
           }}</span>
           <AppIcon
+            v-if="account.kind === 'watchOnly'"
             name="eye"
             variant="filled"
             size="xxs"
-            v-if="account.kind === 'watchOnly'"
             data-test="row-watch-only"
             class="flex-shrink-0 text-text-subtle"
           />
@@ -113,8 +113,8 @@ import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsM
 import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const props = defineProps<{
   account: SavedAccount
   isActive: boolean

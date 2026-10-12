@@ -30,8 +30,8 @@
 import { computed } from 'vue'
 import { usePerpsStatus } from '../composables/usePerpsStatus'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const { isServiceUnavailable } = usePerpsStatus()
 const { isPerpsRestricted } = usePerpsRestriction()
 

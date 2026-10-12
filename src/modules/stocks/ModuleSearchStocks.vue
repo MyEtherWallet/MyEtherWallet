@@ -268,7 +268,7 @@ import { useFocusWithin, watchDebounced } from '@vueuse/core'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
 
 // Stores and Composables

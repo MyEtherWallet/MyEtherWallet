@@ -1,0 +1,77 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import { CHIP_SURFACE_BG_CLASS, type ChipSurface } from './types'
+import type { AvatarSize } from '@/components/avatar/types'
+
+/**
+ * Chip (design library, node 3280-20635). A compact selectable pill for quick
+ * filters and presets — network selection, Trade % presets, recent search items.
+ * It renders as a <button>, so hover, pressed and focus are native pseudo-states
+ * (never props); only the toggle state (`selected`) and `disabled` are props.
+ * Leave `selected` unbound for action chips (e.g. % presets) so they are not
+ * announced as toggles; bind it (even to false) to expose aria-pressed. An
+ * optional leading Avatar goes in the `avatar` slot (sized by the chip at 24px)
+ * and an optional trailing chevron (`showIcon`) marks a chip that opens a menu —
+ * that chip is announced as a menu button (aria-haspopup) instead of a toggle.
+ */
+const props = withDefaults(
+  defineProps<{
+    label: string
+    surface?: ChipSurface
+    selected?: boolean
+    /** Not in Figma; kept so the API is stable across contexts. */
+    disabled?: boolean
+    /** Trailing chevron, for chips that open a menu. */
+    showIcon?: boolean
+  }>(),
+  {
+    surface: 'default',
+    selected: undefined,
+    disabled: false,
+    showIcon: false,
+  },
+)
+
+const emit = defineEmits<{ click: [MouseEvent] }>()
+
+// Figma nests a 24px Avatar (size s). Typed so the `avatar` slot hands consumers
+// a real AvatarSize instead of a bare string.
+const avatarSize: AvatarSize = 's'
+
+// A permanent transparent border keeps the box stable, so `selected`
+// (border/selected) and focus (border/brand) only recolour it. Focus wins
+// over selected while focused via the more specific :focus-visible rule.
+const borderClass = computed(() =>
+  props.selected ? 'border-border-selected' : 'border-transparent',
+)
+</script>
+
+<template>
+  <button
+    type="button"
+    :disabled="disabled"
+    :aria-pressed="showIcon ? undefined : selected"
+    :aria-haspopup="showIcon ? 'menu' : undefined"
+    data-testid="chip"
+    class="inline-flex h-8 items-center justify-center rounded-full border px-1 text-label-sm text-text-default transition-colors duration-150 hover:bg-background-default-hover active:bg-background-default-pressed focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    :class="[CHIP_SURFACE_BG_CLASS[surface], borderClass]"
+    @click="emit('click', $event)"
+  >
+    <span v-if="$slots.avatar" class="shrink-0" data-testid="chip-avatar">
+      <slot name="avatar" :size="avatarSize" />
+    </span>
+
+    <span class="whitespace-nowrap px-2" data-testid="chip-label">{{
+      label
+    }}</span>
+
+    <span
+      v-if="showIcon"
+      class="flex shrink-0 items-center pr-1"
+      data-testid="chip-icon"
+    >
+      <AppIcon name="chevron-down" size="xs" />
+    </span>
+  </button>
+</template>

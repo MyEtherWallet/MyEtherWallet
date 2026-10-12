@@ -138,12 +138,12 @@
  *  onInput,
  *  validateAddressInput } = useAddressInput(selectedChain)
  */
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed, watch, nextTick, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
 import type { Chain } from '@/mew_api/types'
 import { storeToRefs } from 'pinia'

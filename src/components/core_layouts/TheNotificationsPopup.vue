@@ -3,8 +3,7 @@
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
     <app-btn-icon
       :label="$t('menu.open-notifications')"
-      width="w-10"
-      height="h-10"
+      size="l"
       @click="togglePopup"
     >
       <div class="relative">
@@ -72,7 +71,6 @@
                     ? $t('notifications_module.unpin')
                     : $t('notifications_module.pin_to_keep_open')
                 "
-                position="top-left"
               >
                 <app-btn-icon
                   :label="
@@ -114,7 +112,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '../AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications.vue'
 import {
   onClickOutside,

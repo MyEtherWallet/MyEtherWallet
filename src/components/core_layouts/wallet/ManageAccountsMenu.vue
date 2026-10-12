@@ -51,7 +51,7 @@
       />
     </button>
 
-    <div class="h-px w-full bg-background-default-hover" />
+    <app-divider class="-my-1" />
 
     <button
       data-test="menu-paper"
@@ -82,7 +82,7 @@
       />
     </button>
 
-    <div class="h-px w-full bg-background-default-hover" />
+    <app-divider class="-my-1" />
 
     <button
       v-if="kind === 'signing'"
@@ -123,10 +123,18 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+
 type MenuAction =
-  'rename' | 'copy' | 'refresh' | 'paper' | 'explorer' | 'disconnect' | 'remove'
+  | 'rename'
+  | 'copy'
+  | 'refresh'
+  | 'paper'
+  | 'explorer'
+  | 'disconnect'
+  | 'remove'
 
 const props = withDefaults(
   defineProps<{

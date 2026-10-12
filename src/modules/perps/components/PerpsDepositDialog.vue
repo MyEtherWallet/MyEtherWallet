@@ -7,12 +7,13 @@
   >
     <template v-if="showDepositAddress && showIsLive" #title>
       <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
-        <button
-          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-background-default transition-colors mr-2"
+        <app-btn-icon
+          :label="$t('common.back')"
+          class="mr-2"
           @click="showDepositAddress = false"
         >
-          <AppIcon name="chevron-left" size="s" variant="filled" />
-        </button>
+          <AppIcon name="chevron-left" variant="filled" size="s" />
+        </app-btn-icon>
         <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
           {{ $t('perps.deposit.eth-deposit-address-title') }}
         </h1>
@@ -56,16 +57,15 @@
                   </div>
                 </template>
                 <template #footer>
-                  <!-- Percentage Pills -->
+                  <!-- Percentage presets: design-library Chips on the grey
+                       amount surface (white `default` fill). -->
                   <div class="flex gap-2 mt-5">
-                    <button
+                    <app-chip
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      :label="pct === 100 ? $t('perps.deposit.max') : pct + '%'"
                       @click="setAmountPercent(pct)"
-                    >
-                      {{ pct === 100 ? $t('perps.deposit.max') : pct + '%' }}
-                    </button>
+                    />
                   </div>
                 </template>
               </app-enter-amount>
@@ -224,14 +224,14 @@
             </p>
             <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
-            <!-- <app-tooltip text="Refresh deposit address" position="top-left">
+            <!-- <app-tooltip text="Refresh deposit address">
               <app-btn-icon
                 label="Refresh deposit address"
                 :disabled="loading"
                 @click="fetchDepositAddress"
-              >
+                >
                 <arrow-path-icon class="w-[18px] h-[18px]" />
-              </app-btn-icon>
+                </app-btn-icon>
             </app-tooltip> -->
           </div>
         </template>
@@ -246,10 +246,12 @@ import QrcodeVue from 'qrcode.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import {
   perpsClient,
   USDC_ADDRESS,

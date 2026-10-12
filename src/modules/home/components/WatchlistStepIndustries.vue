@@ -4,8 +4,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { WatchlistCategory } from '@/modules/home/composables/useWatchlistCategories'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+
 const { t } = useI18n()
 
 defineProps<{
