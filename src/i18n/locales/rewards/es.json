@@ -54,7 +54,7 @@
     "trade_not_eligible": "Esta operación no es elegible para recompensas",
     "cashout_not_qualify": "Las transacciones de retiro no califican para recompensas.",
     "trade_more_to_qualify": "Opera ${amount} más para calificar",
-    "portfolio_trade_description": "Las primeras 15 operaciones de más de ${min} cada hora reciben 5 USDC en recompensas. Una vez por semana por billetera.",
+    "portfolio_trade_description": "Las primeras 15 operaciones de más de ${min} cada hora reciben {amount} USDC en recompensas. Una vez por semana por billetera.",
     "not_eligible_for_rewards": "No elegible para recompensas",
     "connect_another_address": "Conectar otra dirección",
     "rewards_paused": "Las recompensas están pausadas temporalmente",

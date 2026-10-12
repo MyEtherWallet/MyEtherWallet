@@ -54,7 +54,7 @@
     "trade_not_eligible": "This trade isn't eligible for rewards",
     "cashout_not_qualify": "Cash out transactions don't qualify for rewards.",
     "trade_more_to_qualify": "Trade ${amount} more to qualify",
-    "portfolio_trade_description": "The first 15 trades over ${min} every hour receive 5 USDC in rewards. Once per week per wallet.",
+    "portfolio_trade_description": "The first 15 trades over ${min} every hour receive {amount} USDC in rewards. Once per week per wallet.",
     "not_eligible_for_rewards": "Not eligible for rewards",
     "connect_another_address": "Connect another address",
     "rewards_paused": "Rewards are temporarily paused",

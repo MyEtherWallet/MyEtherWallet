@@ -482,10 +482,24 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     order: Pick<SavedTradeOrder, 'hash' | 'fromAddress'>,
   ) => {
     if (claimRetryTimers.has(order.hash)) return
+    // Eligibility is only fetched for the active wallet, so the retry is only
+    // meaningful while that wallet is the order's maker. Once the address
+    // changes the claim is picked up again by `claimUnclaimedFilledOrders`
+    // when the maker is selected (the failed claim stays on the order).
+    const isOrderWalletActive = () =>
+      walletAddress.value?.toLowerCase() === order.fromAddress.toLowerCase()
     let attempts = 0
     const timer = setInterval(async () => {
+      if (!isOrderWalletActive()) {
+        stopClaimRetry(order.hash)
+        return
+      }
       attempts += 1
       await fetchEligibility()
+      // The wallet may have switched while the fetch was in flight: the timer
+      // is gone and `isSyncing` now describes another address.
+      if (claimRetryTimers.get(order.hash) !== timer || !isOrderWalletActive())
+        return
       if (isSyncing.value && attempts < CLAIM_RETRY_MAX_ATTEMPTS) return
       stopClaimRetry(order.hash)
       if (isSyncing.value) return
@@ -669,6 +683,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
    * Claim for filled orders that never got one — an order can fill while the
    * app is closed, or a claim can fail on a flaky connection. Bounded to
    * recent orders so stale history is not re-submitted on every load.
+   *
+   * A claim already `requested` is included too: switching wallets stops its
+   * status poll, and `claimTradeReward` only resumes that poll for it (never
+   * re-posts), so the payout is still noticed when the maker is selected again.
    */
   const claimUnclaimedFilledOrders = async (address: string) => {
     if (isBitcoinChain.value) return
@@ -679,7 +697,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         o =>
           o.status === 'filled' &&
           o.createdAt * 1000 >= cutoff &&
-          (!o.tradeRewardClaim || o.tradeRewardClaim.status === 'failed'),
+          (!o.tradeRewardClaim ||
+            o.tradeRewardClaim.status === 'failed' ||
+            o.tradeRewardClaim.status === 'requested'),
       )
     for (const order of candidates) {
       await claimTradeReward(order)

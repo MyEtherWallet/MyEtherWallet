@@ -123,7 +123,7 @@
       "items": {
         "trade": {
           "title": "交易 +${min}",
-          "highlight": "赚取 5 USDC"
+          "highlight": "赚取 {amount} USDC"
         },
         "buy": {
           "title": "购买加密货币",

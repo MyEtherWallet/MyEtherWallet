@@ -24,7 +24,10 @@
             class="text-s-16 text-text-subtle leading-[22px] mt-2 max-w-[295px]"
           >
             {{
-              t('rewards.portfolio_trade_description', { min: minSpendTrade })
+              t('rewards.portfolio_trade_description', {
+                min: minSpendTrade,
+                amount: rewardAmount,
+              })
             }}
           </p>
           <button
@@ -126,6 +129,7 @@ const {
   tradeRemainingCount,
   isBanned,
   minSpendTrade,
+  rewardAmount,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)

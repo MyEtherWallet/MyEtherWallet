@@ -54,7 +54,7 @@
     "trade_not_eligible": "此笔交易不符合奖励资格",
     "cashout_not_qualify": "提现交易不符合奖励资格。",
     "trade_more_to_qualify": "再交易 ${amount} 即可符合资格",
-    "portfolio_trade_description": "每小时前 15 笔超过 ${min} 的交易可获得 5 USDC 奖励。每个钱包每周一次。",
+    "portfolio_trade_description": "每小时前 15 笔超过 ${min} 的交易可获得 {amount} USDC 奖励。每个钱包每周一次。",
     "not_eligible_for_rewards": "不符合奖励资格",
     "connect_another_address": "连接其他地址",
     "rewards_paused": "奖励已暂时暂停",

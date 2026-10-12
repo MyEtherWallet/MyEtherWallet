@@ -14,9 +14,10 @@ const { t } = useI18n()
 const { offers } = useHomeOffers()
 const walletMenu = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
-// The trade offer's headline carries the campaign minimum, which lives in
-// configs via the rewards store so it moves with the terms dialog and banner.
-const { minSpendTrade } = storeToRefs(useRewardsStore())
+// The trade offer's headline carries the campaign minimum and its highlight
+// the reward amount; both come from the rewards store (the served rule, with
+// the config fallback) so they move with the terms dialog and banner.
+const { minSpendTrade, rewardAmount } = storeToRefs(useRewardsStore())
 
 // Reuse the Portfolio "Rewards & offers" popups: the trade offer opens the
 // "Trade and get 5 USDC" learn-more modal (Portfolio's trade card), the hold
@@ -52,7 +53,7 @@ const onOfferClick = (offer: HomeOffer) => {
         :category="t(o.categoryKey)"
         :icon="o.icon"
         :title="t(o.titleKey, { min: minSpendTrade })"
-        :highlight="t(o.highlightKey)"
+        :highlight="t(o.highlightKey, { amount: rewardAmount })"
         :gradient="o.gradient"
         @click="onOfferClick(o)"
       />
