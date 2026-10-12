@@ -234,7 +234,7 @@
               </template>
             </p>
             <a
-              :href="rewardsPageUrl"
+              :href="configs.TERMS_OF_SERVICE_URL"
               target="_blank"
               rel="noopener"
               class="text-s-16 font-semibold tracking-[-0.32px] text-text-brand hover:underline"
@@ -269,6 +269,7 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
+import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -301,7 +302,6 @@ const {
   rewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { t } = useI18n()
-const rewardsPageUrl = 'https://myetherwallet.com/terms-of-service'
 
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
@@ -484,7 +484,7 @@ const onTrade = () => {
 }
 const onDiscoverRewards = () => {
   trackCta('discover_rewards')
-  window.open(rewardsPageUrl, '_blank', 'noopener')
+  window.open(configs.REWARDS_PAGE_URL, '_blank', 'noopener')
 }
 const onClaim = async () => {
   // A watch-only address can't sign the claim — send the user to log in with a
