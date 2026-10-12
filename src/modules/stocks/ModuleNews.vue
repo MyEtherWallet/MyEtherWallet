@@ -10,7 +10,7 @@
           :label="$t('common.previous_page')"
           @click="prevPage"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
           class=""
@@ -18,7 +18,7 @@
           :label="$t('common.next_page')"
           @click="nextPage"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" size="xxs" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -35,14 +35,14 @@
           <img
             :src="article.thumbnailUrl"
             :alt="$t('stocks.article_image')"
-            class="flex-none w-[64px] h-[64px] object-cover rounded-12"
+            class="flex-none w-16 h-16 object-cover rounded-12"
           />
           <div class="flex flex-col gap-1 w-full h-full justify-between">
             <p class="text-s-14 line-clamp-2">
               {{ article.title }}
             </p>
             <div class="flex items-center gap-2 flex-wrap">
-              <p class="text-s-11 text-info">
+              <p class="text-s-11 text-text-subtle">
                 {{
                   article.timestamp
                     ? new Date(article.timestamp).toLocaleDateString()
@@ -50,9 +50,9 @@
                 }}
               </p>
               <span
-v-for="ticker in article.tickers || []"
+                v-for="ticker in article.tickers || []"
                 :key="ticker"
-                class="text-s-9 font-semibold tracking-sp-06 uppercase text-info bg-mewBg px-2 py-[1px] rounded"
+                class="text-s-9 font-semibold tracking-sp-06 uppercase text-text-subtle bg-background-brand-subtle px-2 py-px rounded"
               >
                 {{ ticker }}
               </span>
@@ -64,7 +64,7 @@ v-for="ticker in article.tickers || []"
         <div
           v-for="token in 3"
           :key="`loading-trending-${token}`"
-          class="bg-grey-10 flex items-end justify-between rounded-16 w-full h-[60px]"
+          class="bg-background-default-hover flex items-end justify-between rounded-16 w-full h-[60px]"
         ></div>
       </div>
     </app-sheet>
@@ -74,7 +74,7 @@ v-for="ticker in article.tickers || []"
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'

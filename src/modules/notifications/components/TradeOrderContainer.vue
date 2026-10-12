@@ -2,27 +2,27 @@
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1 basis-1/4">
-        <p class="text-info uppercase text-s-9 font-bold">
+        <p class="text-text-subtle uppercase text-s-9 font-bold">
           {{ $t('notifications_module.trade_order') }}
         </p>
         <div
           v-if="!seen"
-          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+          class="rounded-full bg-background-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
       <span
         v-if="order.status === 'pending'"
-        class="text-s-12 font-mono text-primary ml-auto"
+        class="text-s-12 font-mono text-text-brand ml-auto"
       >
         {{ formatCountdown(remainingTime) }}
       </span>
       <div
         :class="statusBadgeClass"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+        class="ml-2 px-2.5 py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
           v-if="order.status === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
+          class="bg-white w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
         ></div>
         {{ orderStatusLabel }}
       </div>
@@ -59,7 +59,12 @@
           </p>
         </div>
       </div>
-      <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <div class="flex items-center gap-2">
         <app-token-logo
           v-if="order.toTokenIcon"
@@ -76,7 +81,7 @@
             v-if="order.status === 'filled' && order.finalToAmount"
             class="flex flex-col"
           >
-            <span class="text-s-12 text-info">
+            <span class="text-s-12 text-text-subtle">
               <span class="uppercase text-s-9 mr-1 opacity-80">{{
                 $t('notifications_module.est')
               }}</span>
@@ -96,7 +101,7 @@
                   class="inline-flex !text-s-12 opacity-70"
               /></span>
             </span>
-            <span class="font-bold text-s-14 text-success"
+            <span class="font-bold text-s-14 text-text-success"
               >{{ formatFloatingPointValue(order.finalToAmount).value }}
               <app-token-symbol
                 :symbol="order.toSymbol"
@@ -109,7 +114,7 @@
                     : undefined
                 "
                 :has-gradient="false"
-                class="inline-flex !text-s-14 !font-bold text-success"
+                class="inline-flex !text-s-14 !font-bold text-text-success"
             /></span>
           </p>
           <p v-else class="font-bold text-s-14">
@@ -125,11 +130,31 @@
               class="inline-flex !text-s-14 !font-bold"
             />
           </p>
-          <p v-if="order.usdValue" class="text-s-12 text-info">
+          <p v-if="order.usdValue" class="text-s-12 text-text-subtle">
             {{ formatFiat(order.usdValue).display }}
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- Native order whose deposit landed but 1inch never accepted the order -->
+    <div v-if="order.status === 'unsubmitted'" class="mb-4">
+      <p class="text-s-12 text-text-error">
+        {{ $t('notifications_module.unsubmitted_note') }}
+      </p>
+      <app-base-button
+        size="small"
+        class="mt-2"
+        :disabled="recovering"
+        :is-loading="recovering"
+        @click="$emit('recover', order)"
+      >
+        {{
+          recovering
+            ? $t('notifications_module.recovering_funds')
+            : $t('notifications_module.recover_funds')
+        }}
+      </app-base-button>
     </div>
     <div class="flex justify-space-between items-center">
       <app-btn-text
@@ -137,9 +162,11 @@
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <chevron-down-icon
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
           :class="[
-            'transition-transform w-3 h-3 ml-2',
+            'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
           ]"
         />
@@ -150,7 +177,7 @@
         @click="$emit('remove', order.hash)"
         class="ml-auto -mr-2"
       >
-        <trash-icon class="w-4 h-4" />
+        <AppIcon name="trash" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
 
@@ -162,13 +189,15 @@
           class="flex items-center justify-between pt-2"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('notifications_module.price_difference') }}</span
           >
           <span
             :class="[
               'text-s-13',
-              order.percentageDiff > 0 ? 'text-success' : 'text-error',
+              order.percentageDiff > 0
+                ? 'text-text-success'
+                : 'text-text-error',
             ]"
           >
             {{ order.percentageDiff > 0 ? '+' : ''
@@ -179,7 +208,7 @@
         <!-- Created at -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
@@ -190,12 +219,52 @@
         <!-- Order Hash -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.order_hash') }}</span
           >
           <span class="font-mono text-s-12">
             {{ truncateHash(order.hash) }}
           </span>
+        </div>
+
+        <!-- Native escrow deposit -->
+        <div
+          v-if="order.depositTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.deposit_tx') }}</span
+          >
+          <a
+            :href="depositExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.depositTxHash) }}
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
+          </a>
+        </div>
+
+        <!-- Deposit reclaimed from an unsubmitted order -->
+        <div
+          v-if="order.recoveryTxHash"
+          class="flex items-center justify-between mt-3"
+        >
+          <span
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
+            >{{ $t('notifications_module.recovery_tx') }}</span
+          >
+          <a
+            :href="recoveryExplorerLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono hover:underline flex items-center gap-1 text-s-12"
+          >
+            {{ truncateHash(order.recoveryTxHash) }}
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
+          </a>
         </div>
 
         <!-- Filled Transaction -->
@@ -204,7 +273,7 @@
           class="flex items-center justify-between mt-3"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('notifications_module.filled_in_tx') }}</span
           >
           <a
@@ -214,7 +283,7 @@
             class="font-mono hover:underline flex items-center gap-1 text-s-12"
           >
             {{ truncateHash(order.fills[0].txHash) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
       </div>
@@ -225,33 +294,33 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/solid'
-import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/configs'
+import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 // Props
 const props = defineProps<{
   order: SavedTradeOrder
   remainingTime: number
   seen?: boolean
+  /** A recovery transaction for this order is in flight. */
+  recovering?: boolean
 }>()
 
 // Emits
 defineEmits<{
   remove: [hash: string]
+  /** Reclaim the escrow deposit of an `unsubmitted` native order. */
+  recover: [order: SavedTradeOrder]
 }>()
 
 const { formatFiat } = useCurrency()
@@ -272,25 +341,30 @@ const orderStatusLabel = computed(() => {
 const statusBadgeClass = computed(() => {
   switch (props.order.status.toLowerCase()) {
     case 'filled':
-      return 'bg-success'
+      return 'bg-background-success'
     case 'pending':
-      return 'bg-primary'
+      return 'bg-background-brand'
     case 'cancelled':
     case 'expired':
-      return 'bg-error'
+    case 'unsubmitted':
+      return 'bg-background-error'
     default:
-      return 'bg-grey-30'
+      return 'bg-background-default-pressed'
   }
 })
 
 const explorerLink = computed(() => {
   if (props.order.fills.length === 0) return ''
-  const chainConfig = SUPPORTED_CHAINS.find(
-    c => c.chainId === props.order.chainId,
-  )
-  const blockExplorer = chainConfig?.chain.blockExplorers?.default?.url || ''
-  return `${blockExplorer}/tx/${props.order.fills[0].txHash}`
+  return getTradeExplorerLink(props.order.chainId, props.order.fills[0].txHash)
 })
+
+const depositExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.depositTxHash ?? ''),
+)
+
+const recoveryExplorerLink = computed(() =>
+  getTradeExplorerLink(props.order.chainId, props.order.recoveryTxHash ?? ''),
+)
 
 // Format countdown time
 const formatCountdown = (seconds: number): string => {

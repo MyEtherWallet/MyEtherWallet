@@ -8,6 +8,7 @@ import AvatarCryptoAsset from './types/AvatarCryptoAsset.vue'
 import AvatarIcon from './types/AvatarIcon.vue'
 import AvatarAccount from './types/AvatarAccount.vue'
 import AvatarInitial from './types/AvatarInitial.vue'
+import configs from '@/configs'
 import {
   AVATAR_SIZES,
   badgePositionStyle,
@@ -111,10 +112,7 @@ const connectedRingStyle = computed(() => ({
 
 // Single-badge rule (Figma guideline): warn in dev, render the first.
 watchEffect(() => {
-  if (
-    import.meta.env.MODE !== 'production' &&
-    activePositions.value.length > 1
-  ) {
+  if (configs.BUILD_MODE !== 'production' && activePositions.value.length > 1) {
     console.warn(
       `[AppAvatar] Only one badge may be active at a time; got ${activePositions.value.length} (${activePositions.value.join(', ')}). Rendering the first.`,
     )
@@ -127,7 +125,7 @@ watchEffect(() => {
     <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
     <div
       class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-      :class="{ 'bg-avatar-fallback': showFallbackBg }"
+      :class="{ 'bg-background-info-subtle': showFallbackBg }"
     >
       <component :is="typeComponent" v-bind="forwardProps">
         <slot name="icon" />
@@ -140,7 +138,7 @@ watchEffect(() => {
 
     <span
       v-if="showConnectedRing"
-      class="absolute rounded-full border-2 border-success pointer-events-none"
+      class="absolute rounded-full border-2 border-border-success pointer-events-none"
       :style="connectedRingStyle"
     />
   </div>

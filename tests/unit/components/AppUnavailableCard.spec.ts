@@ -42,7 +42,7 @@ describe('AppUnavailableCard', () => {
     it('uses a neutral 1px border', () => {
       const classes = mountCard().classes()
       expect(classes).toContain('border')
-      expect(classes).toContain('border-grey-10')
+      expect(classes).toContain('border-border-default')
     })
 
     // Sits in normal document flow; the `overlay`/absolute-positioning variant
@@ -55,20 +55,20 @@ describe('AppUnavailableCard', () => {
 
   describe('accent', () => {
     it('defaults to error, colouring the title', () => {
-      expect(mountCard().find('p').classes()).toContain('text-error')
+      expect(mountCard().find('p').classes()).toContain('text-text-error')
     })
 
     it('honours the primary accent for informational states', () => {
       // Market-closed-with-a-countdown is not a failure, so it must not read red.
       const title = mountCard({ accent: 'primary' }).find('p')
-      expect(title.classes()).toContain('text-primary')
-      expect(title.classes()).not.toContain('text-error')
+      expect(title.classes()).toContain('text-text-brand')
+      expect(title.classes()).not.toContain('text-text-error')
     })
 
     it('keeps the shell neutral regardless of accent', () => {
       const classes = mountCard({ accent: 'primary' }).classes()
-      expect(classes).toContain('border-grey-10')
-      expect(classes).not.toContain('border-primary')
+      expect(classes).toContain('border-border-default')
+      expect(classes).not.toContain('border-border-brand')
     })
   })
 

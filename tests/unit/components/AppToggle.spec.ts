@@ -15,10 +15,14 @@ describe('AppToggle', () => {
     const wrapper = mountToggle()
 
     expect(wrapper.findAll('button')).toHaveLength(1)
-    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe('false')
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'false',
+    )
 
     await wrapper.setProps({ modelValue: true })
-    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe('true')
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'true',
+    )
   })
 
   it('updates v-model and emits the new value when clicked', async () => {
@@ -61,7 +65,7 @@ describe('AppToggle', () => {
 
     expect(toggle.classes()).toContain('bg-background-toggle')
     expect(toggle.classes()).toContain('hover:bg-background-default-hover')
-    expect(toggle.classes()).toContain('focus-visible:ring-focus')
+    expect(toggle.classes()).toContain('focus-visible:ring-border-focus')
     expect(wrapper.get('span').classes()).not.toContain('translate-x-[19px]')
 
     await wrapper.setProps({ modelValue: true })

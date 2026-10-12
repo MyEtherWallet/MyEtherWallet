@@ -12,7 +12,7 @@ export type PickerSize = 's' | 'm' | 'l'
 /**
  * Figma "Style" — which surface the picker is meant to sit on. `default` is for
  * a default (grey) page and fills white; `alternative` sits on a white surface
- * and fills grey. Both darken to the shared `bgBase-hover` fill.
+ * and fills grey. Both darken to the shared `background/default-hover` fill.
  */
 export type PickerSurface = 'default' | 'alternative'
 
@@ -32,10 +32,10 @@ export const PICKER_AVATAR_SIZE: Record<PickerSize, AvatarSize> = {
 
 /**
  * Resting fill per style. Figma tokens: default = background/alternative (white),
- * alternative = background/default (#f5f5f5 → the `bgBase` token). Hover uses the
- * shared `bgBase-hover` token in AppPicker.
+ * alternative = `background/default` (#f5f5f5). Hover uses the shared
+ * `background/default-hover` token in AppPicker.
  */
 export const PICKER_SURFACE_BG_CLASS: Record<PickerSurface, string> = {
   default: 'bg-white',
-  alternative: 'bg-bgBase',
+  alternative: 'bg-background-default',
 }

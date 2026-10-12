@@ -66,17 +66,71 @@ export interface RecommendedAsset {
  */
 export const MOCK_RECOMMENDED_ASSETS: RecommendedAsset[] = [
   { id: 'usdc', symbol: 'USDC', name: 'USD Coin', type: 'crypto', watchlistId: 'usd-coin' }, // prettier-ignore
-  { id: 'spot', symbol: 'SPOTon', name: 'Spotify', type: 'stock', watchlistId: 'SPOT' },
-  { id: 'eth', symbol: 'ETH', name: 'Ethereum', type: 'crypto', watchlistId: 'ethereum' },
-  { id: 'usdt', symbol: 'USDT', name: 'Tether', type: 'crypto', watchlistId: 'tether' },
-  { id: 'nvda', symbol: 'NVDAon', name: 'NVIDIA', type: 'stock', watchlistId: 'NVDA' },
+  {
+    id: 'spot',
+    symbol: 'SPOTon',
+    name: 'Spotify',
+    type: 'stock',
+    watchlistId: 'SPOT',
+  },
+  {
+    id: 'eth',
+    symbol: 'ETH',
+    name: 'Ethereum',
+    type: 'crypto',
+    watchlistId: 'ethereum',
+  },
+  {
+    id: 'usdt',
+    symbol: 'USDT',
+    name: 'Tether',
+    type: 'crypto',
+    watchlistId: 'tether',
+  },
+  {
+    id: 'nvda',
+    symbol: 'NVDAon',
+    name: 'NVIDIA',
+    type: 'stock',
+    watchlistId: 'NVDA',
+  },
   { id: 'weth', symbol: 'WETH', name: 'Wrapped Ether', type: 'crypto', watchlistId: 'weth' }, // prettier-ignore
-  { id: 'orcl', symbol: 'ORCLon', name: 'Oracle', type: 'stock', watchlistId: 'ORCL' },
-  { id: 'uber', symbol: 'UBERon', name: 'Uber', type: 'stock', watchlistId: 'UBER' },
+  {
+    id: 'orcl',
+    symbol: 'ORCLon',
+    name: 'Oracle',
+    type: 'stock',
+    watchlistId: 'ORCL',
+  },
+  {
+    id: 'uber',
+    symbol: 'UBERon',
+    name: 'Uber',
+    type: 'stock',
+    watchlistId: 'UBER',
+  },
   { id: 'wbtc', symbol: 'WBTC', name: 'Wrapped Bitcoin', type: 'crypto', watchlistId: 'wrapped-bitcoin' }, // prettier-ignore
-  { id: 'aapl', symbol: 'AAPLon', name: 'Apple', type: 'stock', watchlistId: 'AAPL' },
-  { id: 'rddt', symbol: 'RDDTon', name: 'Reddit', type: 'stock', watchlistId: 'RDDT' },
-  { id: 'abnb', symbol: 'ABNBon', name: 'Airbnb', type: 'stock', watchlistId: 'ABNB' },
+  {
+    id: 'aapl',
+    symbol: 'AAPLon',
+    name: 'Apple',
+    type: 'stock',
+    watchlistId: 'AAPL',
+  },
+  {
+    id: 'rddt',
+    symbol: 'RDDTon',
+    name: 'Reddit',
+    type: 'stock',
+    watchlistId: 'RDDT',
+  },
+  {
+    id: 'abnb',
+    symbol: 'ABNBon',
+    name: 'Airbnb',
+    type: 'stock',
+    watchlistId: 'ABNB',
+  },
   { id: 'tsla', symbol: 'TSLAon', name: 'Tesla', type: 'stock', watchlistId: 'TSLA' }, // prettier-ignore
   { id: 'msft', symbol: 'MSFTon', name: 'Microsoft', type: 'stock', watchlistId: 'MSFT' }, // prettier-ignore
   { id: 'amzn', symbol: 'AMZNon', name: 'Amazon', type: 'stock', watchlistId: 'AMZN' }, // prettier-ignore
@@ -84,7 +138,13 @@ export const MOCK_RECOMMENDED_ASSETS: RecommendedAsset[] = [
   { id: 'meta', symbol: 'METAon', name: 'Meta', type: 'stock', watchlistId: 'META' }, // prettier-ignore
   { id: 'coin', symbol: 'COINon', name: 'Coinbase', type: 'stock', watchlistId: 'COIN' }, // prettier-ignore
   { id: 'pltr', symbol: 'PLTRon', name: 'Palantir', type: 'stock', watchlistId: 'PLTR' }, // prettier-ignore
-  { id: 'sol', symbol: 'SOL', name: 'Solana', type: 'crypto', watchlistId: 'solana' },
+  {
+    id: 'sol',
+    symbol: 'SOL',
+    name: 'Solana',
+    type: 'crypto',
+    watchlistId: 'solana',
+  },
   { id: 'link', symbol: 'LINK', name: 'Chainlink', type: 'crypto', watchlistId: 'chainlink' }, // prettier-ignore
   { id: 'uni', symbol: 'UNI', name: 'Uniswap', type: 'crypto', watchlistId: 'uniswap' }, // prettier-ignore
   { id: 'dai', symbol: 'DAI', name: 'Dai', type: 'crypto', watchlistId: 'dai' },

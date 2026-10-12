@@ -10,11 +10,14 @@ import {
   type StockBannerItem,
   type GetTradableAssetsResponse,
   type GetWebStocksInfoSummaryResponse,
+  type GetWebStocksOipsResponse,
+  type StockOipItem,
 } from '@/mew_api/types'
 
 export const useStocksStore = defineStore('stocksStore', () => {
   const { useMEWFetch } = useFetchMewApi()
   const { useMEWFetch: useMEWFetchAddresses } = useFetchMewApi()
+  const { useMEWFetch: useMEWFetchOips } = useFetchMewApi()
 
   /**------------------------
    * Stocks Overview
@@ -44,6 +47,23 @@ export const useStocksStore = defineStore('stocksStore', () => {
   )
   const banner = computed<StockBannerItem[]>(
     () => dataOverview.value?.banner || [],
+  )
+  /**------------------------
+   * OIP Stocks
+   -------------------------*/
+  const oipFetchUrl = '/v1/web/pages/stocks/oips'
+  const {
+    data: dataOips,
+    isFetching: isLoadingOips,
+    execute: fetchStocksOips,
+  } = useMEWFetchOips(oipFetchUrl, {
+    immediate: false,
+  })
+    .get()
+    .json<GetWebStocksOipsResponse>()
+
+  const oips = computed<StockOipItem[]>(() =>
+    Array.isArray(dataOips.value) ? dataOips.value : [],
   )
 
   /**------------------------
@@ -161,6 +181,10 @@ export const useStocksStore = defineStore('stocksStore', () => {
     trending,
     topMovers,
     banner,
+    // OIP
+    isLoadingOips,
+    fetchStocksOips,
+    oips,
     // Addresses
     isLoadingAddresses,
     fetchStocksAddresses,

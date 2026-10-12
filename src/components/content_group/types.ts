@@ -27,11 +27,11 @@ export const TITLE_WEIGHT_CLASS: Record<ContentGroupSize, string> = {
 
 /** Title / description colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
 export const TONE_TITLE_CLASS: Record<ContentGroupTone, string> = {
-  default: 'text-t-default',
+  default: 'text-text-default',
   inverse: 'text-white',
 }
 
 export const TONE_DESCRIPTION_CLASS: Record<ContentGroupTone, string> = {
-  default: 'text-info',
+  default: 'text-text-subtle',
   inverse: 'text-white/70',
 }

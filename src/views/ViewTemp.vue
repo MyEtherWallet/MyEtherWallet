@@ -18,8 +18,11 @@
         rel="noopener noreferrer"
         class="underline group"
         >{{ $t('coming_soon_page.previous_version') }}
-        <arrow-long-right-icon
-          class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+        <AppIcon
+          name="arrow-long-right"
+          variant="filled"
+          size="s"
+          class="text-black inline-block group-hover:translate-x-1 transition-transform"
       /></a>
     </p>
     <AppSubscribeToUpdates />
@@ -27,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 import configs from '@/configs'
 </script>

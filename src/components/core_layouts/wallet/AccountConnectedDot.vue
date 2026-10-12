@@ -13,7 +13,7 @@ withDefaults(defineProps<{ size?: 'sm' | 'md' }>(), { size: 'sm' })
     aria-hidden="true"
   >
     <span
-      class="rounded-full bg-[#05c0a5]"
+      class="rounded-full bg-background-success"
       :class="size === 'md' ? 'w-2 h-2' : 'w-1.5 h-1.5'"
     />
   </span>

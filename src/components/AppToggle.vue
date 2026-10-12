@@ -5,7 +5,7 @@
     :aria-checked="model"
     :disabled="disabled"
     :class="[
-      'app-toggle flex h-6 w-[43px] items-center rounded-full p-[3px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 disabled:cursor-not-allowed',
+      'app-toggle flex h-6 w-[43px] items-center rounded-full p-[3px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 disabled:cursor-not-allowed',
       model
         ? 'bg-background-brand hover:bg-background-brand-hover'
         : 'bg-background-toggle hover:bg-background-default-hover',

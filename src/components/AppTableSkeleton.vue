@@ -2,7 +2,7 @@
   <table class="w-full">
     <thead v-if="hasHeaders">
       <tr
-        class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+        class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
       >
         <th
           v-for="(col, i) in columns"
@@ -26,11 +26,10 @@
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row">
-        <td
-          :colspan="columns.length || 1"
-          class="px-1 sm:px-4 py-2"
-        >
-          <div class="h-10 bg-grey-10 animate-pulse rounded-12"></div>
+        <td :colspan="columns.length || 1" class="px-1 sm:px-4 py-2">
+          <div
+            class="h-10 bg-background-default-hover animate-pulse rounded-12"
+          ></div>
         </td>
       </tr>
     </tbody>

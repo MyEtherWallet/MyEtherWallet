@@ -1,8 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import {
-  FeeMarketEIP1559Transaction,
-  LegacyTransaction,
-} from '@ethereumjs/tx'
+import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { Common } from '@ethereumjs/common'
 import { bytesToHex } from '@ethereumjs/util'
 import { HWwalletType } from '@enkryptcom/types'
@@ -18,13 +15,22 @@ import type { HWManager } from '@/providers/hw/types'
 
 // A syntactically valid 65-byte signature (r || s || v). r/s are well below the
 // secp256k1 order so ethereumjs accepts them; only the shape matters here.
-const FAKE_SIG = ('0x' + '11'.repeat(32) + '22'.repeat(32) + '1c') as HexPrefixedString
+const FAKE_SIG = ('0x' +
+  '11'.repeat(32) +
+  '22'.repeat(32) +
+  '1c') as HexPrefixedString
 
 // Build an unsigned serialized tx of each type, as the MEW API would hand it.
 const legacySerialized = (chainId: number): HexPrefixedString =>
   bytesToHex(
     LegacyTransaction.fromTxData(
-      { nonce: 1, gasPrice: 1_000_000_000, gasLimit: 21_000, to: `0x${'ab'.repeat(20)}`, value: 1 },
+      {
+        nonce: 1,
+        gasPrice: 1_000_000_000,
+        gasLimit: 21_000,
+        to: `0x${'ab'.repeat(20)}`,
+        value: 1,
+      },
       { common: Common.custom({ chainId }) },
     ).serialize(),
   ) as HexPrefixedString
@@ -32,7 +38,14 @@ const legacySerialized = (chainId: number): HexPrefixedString =>
 const eip1559Serialized = (chainId: number): HexPrefixedString =>
   bytesToHex(
     FeeMarketEIP1559Transaction.fromTxData(
-      { nonce: 1, maxFeePerGas: 1_000_000_000, maxPriorityFeePerGas: 1, gasLimit: 21_000, to: `0x${'ab'.repeat(20)}`, value: 1 },
+      {
+        nonce: 1,
+        maxFeePerGas: 1_000_000_000,
+        maxPriorityFeePerGas: 1,
+        gasLimit: 21_000,
+        to: `0x${'ab'.repeat(20)}`,
+        value: 1,
+      },
       { common: Common.custom({ chainId }) },
     ).serialize(),
   ) as HexPrefixedString

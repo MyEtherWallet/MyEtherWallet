@@ -8,9 +8,9 @@
       'rounded-full !cursor-pointer p-1 flex items-center justify-center transition-colors duration-300',
       { 'invert brightness-100': isWhite },
       disabled
-        ? 'text-grey-30'
+        ? 'text-text-placeholder'
         : filled
-          ? 'bg-grey-5 hover:bg-grey-10'
+          ? 'bg-background-default hover:bg-background-default-hover'
           : 'hoverNoBG',
       height,
       width,
@@ -54,11 +54,11 @@ const props = defineProps({
   },
   height: {
     type: String,
-    default: 'h-[32px]',
+    default: 'h-8',
   },
   width: {
     type: String,
-    default: 'w-[32px]',
+    default: 'w-8',
   },
 })
 

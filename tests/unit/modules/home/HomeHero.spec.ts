@@ -77,6 +77,11 @@ vi.mock('@/modules/home/components/HeroTrendingCard.vue', () => ({
 vi.mock('@/modules/home/components/HeroBanner.vue', () => ({
   default: { template: '<div data-test="hero-banner" />' },
 }))
+// The campaign banner reads holdingsStore, which imports walletStore (Ledger
+// SDK) — inert here, it has its own spec.
+vi.mock('@/modules/rwa_rewards/RwaHomeBanner.vue', () => ({
+  default: { template: '<div data-test="rwa-home-banner" />' },
+}))
 vi.mock('@/modules/home/components/HeroWatchlistBanner.vue', () => ({
   default: {
     emits: ['begin'],
@@ -184,12 +189,12 @@ describe('HomeHero (MEW-2094)', () => {
 
   it('opens the onboarding wizard when the banner emits begin', async () => {
     const w = mountHero()
-    expect(w.find('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'false',
-    )
+    expect(
+      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
+    ).toBe('false')
     await w.find('[data-test="hero-watchlist-banner"]').trigger('click')
-    expect(w.find('[data-test="onboarding-dialog"]').attributes('data-open')).toBe(
-      'true',
-    )
+    expect(
+      w.find('[data-test="onboarding-dialog"]').attributes('data-open'),
+    ).toBe('true')
   })
 })

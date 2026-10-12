@@ -20,23 +20,19 @@
           :symbol="stock.primaryMarket.symbol"
           :is-stock="true"
         />
-        <app-tooltip
-          :text="stock.underlyingMarket.name"
-          v-if="
-            stock.underlyingMarket.name &&
-            stock.underlyingMarket.name.length > 12
-          "
-        >
-          <p class="text-s-12 text-info truncate leading-tight max-w-[120px]">
-            {{ stock.underlyingMarket.name }}
+        <app-tooltip :text="getName" v-if="getName.length > 12">
+          <p
+            class="text-s-12 text-text-subtle truncate leading-tight max-w-[120px]"
+          >
+            {{ getName }}
           </p>
         </app-tooltip>
-        <p v-else class="text-s-12 text-info truncate pr-2">
-          {{ stock.underlyingMarket.name }}
+        <p v-else class="text-s-12 text-text-subtle truncate pr-2">
+          {{ getName }}
         </p>
       </div>
     </div>
-    <div class="bg-mewBg rounded-12 mt-1 w-full">
+    <div class="bg-background-brand-subtle rounded-12 mt-1 w-full">
       <p class="text-s-16 font-semibold mt-2 ml-6">
         {{ getPrice }}
       </p>
@@ -44,10 +40,10 @@
         class="text-s-9 md:text-s-11 font-semibold leading-p-150 text-nowrap ml-6 mb-2"
         :class="{
           'text-black': !stock.primaryMarket.priceChangePercentage24h,
-          'text-error':
+          'text-text-error':
             stock.primaryMarket.priceChangePercentage24h &&
             parseFloat(stock.primaryMarket.priceChangePercentage24h) < 0,
-          'text-success':
+          'text-text-success':
             stock.primaryMarket.priceChangePercentage24h &&
             parseFloat(stock.primaryMarket.priceChangePercentage24h) >= 0,
         }"
@@ -81,6 +77,11 @@ const props = defineProps<{ stock: StockTopMoverItem }>()
 
 const { formatFiat } = useCurrency()
 
+// Portfolio tokens have no single underlying market, so the API sends
+// underlyingMarket as null and the alias carries the display name.
+const getName = computed(
+  () => props.stock.stockAlias || props.stock.underlyingMarket?.name || '',
+)
 const getPrice = computed(() => {
   return props.stock.primaryMarket.price
     ? formatFiat(props.stock.primaryMarket.price).display

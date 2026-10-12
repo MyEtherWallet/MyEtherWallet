@@ -64,7 +64,7 @@ watch(
     />
     <span
       v-else-if="!isLoading && fallbackText"
-      class="text-info font-medium uppercase leading-none"
+      class="text-text-subtle font-medium uppercase leading-none"
       :class="fallbackTextClass ?? 'text-s-12'"
     >
       {{ fallbackText.substring(0, 2) }}

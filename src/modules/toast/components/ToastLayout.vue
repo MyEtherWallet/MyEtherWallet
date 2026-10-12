@@ -8,7 +8,12 @@
     ]"
   >
     <div class="flex w-full items-start py-3 px-2">
-      <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
+      <AppIcon
+        :name="icon"
+        variant="filled"
+        size="l"
+        :class="[iconColor, 'mt-1 ml-2 mr-1']"
+      />
       <div class="flex-1 px-2 pt-[5px] bg-white">
         <p
           :class="[
@@ -24,7 +29,7 @@
             v-if="!hideSecondaryText"
             :class="[
               { 'mb-3': toast.link },
-              'text-s-14 mt-1 text-info  word-break',
+              'text-s-14 mt-1 text-text-subtle  word-break',
             ]"
           >
             {{ toast.textSecondary }}
@@ -32,7 +37,7 @@
           <div v-else>
             <button
               @click="isShownSecondaryTextInFull = !isShownSecondaryTextInFull"
-              class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+              class="-ml-4 text-s-14 py-2 px-4 text-text-subtle word-break hoverBGWhite rounded-12 text-left"
               :aria-label="$t('rewards.toggle_full_text')"
             >
               <p>
@@ -42,8 +47,11 @@
                     : `${toast.textSecondary.slice(0, 60)}...`
                 }}
               </p>
-              <ChevronDownIcon
-                class="w-5 h-5 mt-1 mx-auto"
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="s"
+                class="mt-1 mx-auto"
                 aria-hidden="true"
                 :class="{ 'rotate-180': isShownSecondaryTextInFull }"
               />
@@ -54,7 +62,7 @@
           v-if="toast.hash"
           :class="[
             { 'mb-3': toast.link },
-            'text-s-14 mt-1 text-info word-break break-all',
+            'text-s-14 mt-1 text-text-subtle word-break break-all',
           ]"
         >
           {{ toast.hash }}
@@ -65,14 +73,14 @@
           target="_blank"
           :class="[
             toast.link.isButton
-              ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
+              ? 'py-2  px-4 text-s-15 bg-background-brand hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
               : 'underline',
           ]"
           >{{ toast.link.title }}</a
         >
         <div class="mt-4 -ml-4" v-if="toast.tradeInfo">
           <div
-            class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-grey-10 border-1 px-3 py-2"
+            class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-border-default border-1 px-3 py-2"
           >
             <div class="flex items-center gap-3">
               <app-token-logo
@@ -86,12 +94,12 @@
                   :symbol="toast.tradeInfo.fromToken"
                   :is-stock="toast.tradeInfo.fromTokenIsStock"
                 />
-                <p class="text-nowrap text-info text-s-14">
+                <p class="text-nowrap text-text-subtle text-s-14">
                   {{ toast.tradeInfo.fromAmount }}
                 </p>
               </div>
             </div>
-            <ArrowLongRightIcon class="w-5 h-5" />
+            <AppIcon name="arrow-long-right" variant="filled" size="s" />
             <div class="flex items-center gap-3">
               <app-token-logo
                 :url="toast.tradeInfo.toTokenIcon"
@@ -103,7 +111,7 @@
                   :symbol="toast.tradeInfo.toToken"
                   :is-stock="toast.tradeInfo.toTokenIsStock"
                 />
-                <p class="text-nowrap text-info text-s-14">
+                <p class="text-nowrap text-text-subtle text-s-14">
                   {{ toast.tradeInfo.toAmount }}
                 </p>
               </div>
@@ -119,14 +127,7 @@
 <script setup lang="ts">
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType, type Toast } from '@/types/notification'
-import {
-  InformationCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  ArrowLongRightIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -152,13 +153,13 @@ const toastStore = useToastStore()
 const borderColor = computed(() => {
   switch (props.toast.type) {
     case ToastType.Success:
-      return 'from-success'
+      return 'from-background-success'
     case ToastType.Error:
-      return 'from-error'
+      return 'from-background-error'
     case ToastType.Warning:
-      return 'from-warning'
+      return 'from-background-warning'
     default:
-      return 'from-primary'
+      return 'from-background-brand'
   }
 })
 
@@ -168,13 +169,13 @@ const borderColor = computed(() => {
 const icon = computed(() => {
   switch (props.toast.type) {
     case ToastType.Success:
-      return CheckCircleIcon
+      return 'check-circle'
     case ToastType.Error:
-      return ExclamationCircleIcon
+      return 'exclamation-circle'
     case ToastType.Warning:
-      return ExclamationTriangleIcon
+      return 'exclamation-triangle'
     default:
-      return InformationCircleIcon
+      return 'information-circle'
   }
 })
 
@@ -184,13 +185,13 @@ const icon = computed(() => {
 const iconColor = computed(() => {
   switch (props.toast.type) {
     case ToastType.Success:
-      return 'text-success'
+      return 'text-text-success'
     case ToastType.Error:
-      return 'text-error'
+      return 'text-text-error'
     case ToastType.Warning:
-      return 'text-warning'
+      return 'text-text-warning'
     default:
-      return 'text-primary'
+      return 'text-text-brand'
   }
 })
 

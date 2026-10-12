@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="flex items-center gap-1.5 text-black hover:text-info transition-colors duration-300 pl-3 -ml-2 pr-2 -mr-2 py-2.5 -my-1.5"
+    class="flex items-center gap-1.5 text-black hover:text-text-subtle transition-colors duration-300 pl-3 -ml-2 pr-2 -mr-2 py-2.5 -my-1.5"
     @click="emit('click')"
   >
     <app-token-logo
@@ -14,13 +14,18 @@
     <span class="text-s-11 font-bold tracking-sp-06 uppercase">
       {{ currency }}
     </span>
-    <chevron-right-icon class="w-[15px] h-[15px] flex-none" />
+    <AppIcon
+      name="chevron-right"
+      variant="filled"
+      size="xxs"
+      class="flex-none"
+    />
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 

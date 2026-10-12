@@ -9,14 +9,14 @@
           :label="$t('common.previous_page')"
           @click="previousPage"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
           :disabled="isLoading || currentPage + 1 >= totalPages"
           :label="$t('common.next_page')"
           @click="nextPage"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" size="xxs" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -32,7 +32,7 @@
         <div
           v-for="token in 3"
           :key="`loading-trending-${token}`"
-          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[48px]"
+          class="basis-full bg-background-default-hover flex items-end justify-between rounded-16 w-full h-12"
         ></div>
       </div>
     </app-sheet>
@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 defineProps<{
   title: string

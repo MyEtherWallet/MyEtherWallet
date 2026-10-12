@@ -1,6 +1,27 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import { computed, ref, unref } from 'vue'
+
+// The assets grid virtualizes its rows (useVirtualList). jsdom has no layout, so
+// the observer would measure a 0px viewport and mount ~0 rows; render every row
+// instead so the card-count assertions stay deterministic. scrollTo is spied so we
+// can assert the list snaps back to the top when the recommendations change.
+const virtualScrollTo = vi.hoisted(() => vi.fn())
+vi.mock('@vueuse/core', async importOriginal => {
+  const actual = await importOriginal<typeof import('@vueuse/core')>()
+  return {
+    ...actual,
+    useVirtualList: (source: unknown) => ({
+      list: computed(() =>
+        (unref(source) as unknown[]).map((data, index) => ({ data, index })),
+      ),
+      containerProps: { ref: ref(null), onScroll: () => {}, style: {} },
+      wrapperProps: computed(() => ({ style: {} })),
+      scrollTo: virtualScrollTo,
+    }),
+  }
+})
 
 // AppTokenLogo / AppTokenSymbol import the stocks store (Ledger SDK
 // transitively). Stub them.
@@ -14,11 +35,11 @@ vi.mock('@/components/AppTokenSymbol.vue', () => ({
   },
 }))
 
-// AppTooltip teleports its bubble to body; stub it and expose its text so the
-// "+N more" tooltip can be asserted.
+// AppTooltip relies on the v-element-hover directive + teleport; stub it and
+// expose its text so the "+N more" tooltip can be asserted.
 vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
   default: {
-    props: ['text', 'placement'],
+    props: ['text', 'position'],
     template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
   },
 }))
@@ -59,6 +80,18 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
     const enabled = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
     await enabled.get('[data-test="markets-continue"]').trigger('click')
     expect(enabled.emitted('continue')).toHaveLength(1)
+  })
+
+  it('is single-select: picking the other market replaces the current one', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: ['stocks'] })
+    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto'])
+  })
+
+  it('clicking the selected market clears the pick', async () => {
+    const w = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
+    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    expect(w.emitted('update:modelValue')?.[0][0]).toEqual([])
   })
 
   it('emits skip from the Skip button regardless of selection', async () => {
@@ -166,6 +199,19 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
       MOCK_RECOMMENDED_ASSETS.length,
     )
     expect(w.find('[data-test="assets-show-more"]').exists()).toBe(false)
+  })
+
+  it('snaps the virtual list back to the top when recommendations change (CodeRabbit)', async () => {
+    const w = mountWith(WatchlistStepAssets, {
+      assets: MOCK_RECOMMENDED_ASSETS,
+      isLoading: false,
+      modelValue: [],
+    })
+    virtualScrollTo.mockClear()
+    // New recommendations arriving must reset the scroll offset, or useVirtualList
+    // can keep a stale offset from the previously expanded list and show nothing.
+    await w.setProps({ assets: MOCK_RECOMMENDED_ASSETS.slice(0, 5) })
+    expect(virtualScrollTo).toHaveBeenCalledWith(0)
   })
 
   it('gates Done on selection and emits done', async () => {
@@ -279,5 +325,45 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     })
     expect(w.findAll('[data-test="selected-chip"]').length).toBe(1)
     expect(w.find('[data-test="selected-chip-more"]').exists()).toBe(false)
+  })
+
+  it('disables unselected cards once a category hits the 25 cap (MEW-2360)', async () => {
+    const crypto = Array.from({ length: 25 }, (_, i) => ({
+      id: `c${i}`,
+      symbol: `C${i}`,
+      name: `Coin ${i}`,
+      type: 'crypto',
+      watchlistId: `c${i}`,
+    }))
+    const assets = [
+      ...crypto,
+      {
+        id: 'cx',
+        symbol: 'CX',
+        name: 'Coin X',
+        type: 'crypto',
+        watchlistId: 'cx',
+      },
+      {
+        id: 's1',
+        symbol: 'S1',
+        name: 'Stock 1',
+        type: 'stock',
+        watchlistId: 's1',
+      },
+    ]
+    const w = mountWith(WatchlistStepAssets, {
+      assets,
+      isLoading: false,
+      modelValue: crypto.map(c => c.id), // 25 crypto already selected
+    })
+    await w.get('[data-test="assets-show-more"]').trigger('click')
+    const cards = w.findAll('[data-test="asset-card"]')
+    expect(cards).toHaveLength(27)
+    // Selected crypto stays enabled (so it can be toggled off); the extra
+    // unselected crypto is capped; the stock is a different category, still open.
+    expect(cards[0].attributes('disabled')).toBeUndefined()
+    expect(cards[25].attributes('disabled')).toBeDefined()
+    expect(cards[26].attributes('disabled')).toBeUndefined()
   })
 })

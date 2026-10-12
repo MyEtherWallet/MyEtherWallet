@@ -7,6 +7,11 @@ vi.mock('@/modules/perps/composables/usePerpsMarkets', () => ({
 vi.mock('@/modules/perps/utils/market', () => ({
   getLogoUrl: (base: string) => `logo-${base}`,
 }))
+// useNewListingCta pulls the swap stack (Ledger hw-wallets); the pure mappers
+// under test don't touch it, so stub it out of the module graph.
+vi.mock('@/modules/home/composables/useNewListingCta', () => ({
+  useNewListingCta: () => ({ resolve: () => 'swap', run: () => {} }),
+}))
 // useCurrency → currencyStore → @/analytics (hardware SDK). Stub it out; the
 // pure mappers take formatters by injection anyway.
 vi.mock('@/composables/useCurrency', () => ({
@@ -16,9 +21,8 @@ vi.mock('@/composables/useCurrency', () => ({
   }),
 }))
 
-const { mapTokenRow, mapStockRow, mapPerpRow, placeholderRow } = await import(
-  '@/modules/home/composables/useWatchlistRows'
-)
+const { mapTokenRow, mapStockRow, mapPerpRow, placeholderRow } =
+  await import('@/modules/home/composables/useWatchlistRows')
 const { TOKEN_INFO_ROUTE_NAMES, STOCK_INFO_ROUTE_NAMES, PERP_INFO_ROUTE_NAME } =
   await import('@/router/routeNames')
 
@@ -58,7 +62,7 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
       removeId: 'ethereum',
     })
     expect(row.route).toEqual({
-      name: TOKEN_INFO_ROUTE_NAMES.home,
+      name: TOKEN_INFO_ROUTE_NAMES.homePage,
       params: { tokenId: 'ethereum' },
     })
   })
@@ -95,7 +99,7 @@ describe('useWatchlistRows mappers (MEW-2130)', () => {
       removeId: 'AAPL',
     })
     expect(row.route).toEqual({
-      name: STOCK_INFO_ROUTE_NAMES.home,
+      name: STOCK_INFO_ROUTE_NAMES.homePage,
       params: { symbol: 'AAPL' },
     })
   })

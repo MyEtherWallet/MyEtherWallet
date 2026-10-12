@@ -24,9 +24,9 @@
     <div
       ref="scrollContainer"
       :class="[
-        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[80px]',
+        'flex w-full mr-20',
         // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
         // shell whose <main> scrolls internally), so the app-level scroll must be
         // off for it — otherwise the page double-scrolls and the sidebar drifts.
@@ -48,10 +48,10 @@
           <div
             :class="[
               'min-h-[600px]',
-              // The new Home's sections own their padding (AppHomeSection has
-              // px-8 py-8 = 32px on all sides), so the wrapper adds none — else
-              // the hero's top padding stacks on the wrapper's. Other routes
-              // keep the shared page padding.
+              // The new Home's sections own their padding (AppHomeSection uses
+              // the shared page gutter px-3 xs:px-5), so the wrapper adds none —
+              // else the hero's top padding stacks on the wrapper's. Other
+              // routes keep the shared page padding.
               isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
@@ -79,8 +79,11 @@
               rel="noopener noreferrer"
             >
               {{ t('common.old_version_link') }}
-              <arrow-long-right-icon
-                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="s"
+                class="text-black inline-block group-hover:translate-x-1 transition-transform"
               />
             </a>
           </div>
@@ -110,7 +113,7 @@ import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)

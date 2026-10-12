@@ -1,13 +1,19 @@
 <template>
   <div class="flex flex-col items-center justify-center gap-3 w-full">
-    <p class="text-info">{{ $t('common.add_funds_to_proceed') }}</p>
+    <p class="text-text-subtle">{{ $t('common.add_funds_to_proceed') }}</p>
     <app-base-button v-if="isNativeBuyable" class="!w-full" @click="buyBtn">
       <div class="flex gap-2 items-center justify-center">
         <icon-buy
           class="w-5 h-5 xl:w-6 xl:h-6 text-white"
           dollar-icon-color="rgb(0,90,229,1)"
         />
-        <p>{{ $t('common.buy_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
+        <p>
+          {{
+            $t('common.buy_currency', {
+              currency: selectedChain?.currencyName ?? '',
+            })
+          }}
+        </p>
       </div>
     </app-base-button>
     <app-btn-text
@@ -16,9 +22,17 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center group">
-        <p>{{ $t('common.or_deposit_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
-        <ArrowLongRightIcon
-          class="w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-1 transition-transform"
+        <p>
+          {{
+            $t('common.or_deposit_currency', {
+              currency: selectedChain?.currencyName ?? '',
+            })
+          }}
+        </p>
+        <AppIcon
+          name="arrow-long-right"
+          size="xxs"
+          class="group-hover:translate-x-1 transition-transform xl:size-5"
         />
       </div>
     </app-btn-text>
@@ -28,8 +42,14 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center">
-        <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-white" />
-        <p>{{ $t('common.deposit_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
+        <AppIcon name="qr-code" size="xxs" class="text-white xl:size-5" />
+        <p>
+          {{
+            $t('common.deposit_currency', {
+              currency: selectedChain?.currencyName ?? '',
+            })
+          }}
+        </p>
       </div>
     </app-base-button>
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
@@ -38,7 +58,6 @@
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from './AppBtnText.vue'
-import { ArrowLongRightIcon, QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -48,6 +67,7 @@ import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.v
 import { ref, computed } from 'vue'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   source: 'send' | 'swap' | 'bridge' | 'trade'
 }>()

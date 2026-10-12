@@ -15,8 +15,8 @@ const variants = [
 <template>
   <div class="mx-auto flex max-w-3xl flex-col gap-10 p-8">
     <div>
-      <h1 class="text-s-24 font-bold text-t-default">Toggle</h1>
-      <p class="mt-2 text-s-14 text-info">
+      <h1 class="text-s-24 font-bold text-text-default">Toggle</h1>
+      <p class="mt-2 text-s-14 text-text-subtle">
         43 × 24 switch states from the design library.
       </p>
     </div>
@@ -27,23 +27,28 @@ const variants = [
         <div
           v-for="variant in variants"
           :key="variant.label"
-          class="flex flex-col items-center gap-3 rounded-12 border border-grey-10 bg-white p-4"
+          class="flex flex-col items-center gap-3 rounded-12 border border-border-default bg-white p-4"
         >
           <app-toggle
             :model-value="variant.value"
             :class="{ 'is-forced-hover': variant.forcedHover }"
             :aria-label="variant.label"
           />
-          <span class="text-s-12 text-info">{{ variant.label }}</span>
+          <span class="text-s-12 text-text-subtle">{{ variant.label }}</span>
         </div>
       </div>
     </section>
 
-    <section class="rounded-12 border border-grey-10 bg-white p-5">
+    <section class="rounded-12 border border-border-default bg-white p-5">
       <h2 class="text-s-16 font-semibold">Interactive</h2>
       <div class="mt-4 flex items-center gap-3">
-        <app-toggle v-model="interactiveValue" aria-label="Interactive toggle" />
-        <output class="text-s-14 text-info">{{ interactiveValue ? 'On' : 'Off' }}</output>
+        <app-toggle
+          v-model="interactiveValue"
+          aria-label="Interactive toggle"
+        />
+        <output class="text-s-14 text-text-subtle">{{
+          interactiveValue ? 'On' : 'Off'
+        }}</output>
       </div>
     </section>
   </div>

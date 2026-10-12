@@ -4,7 +4,7 @@
 // Lets us eyeball the Size × Align × Inverted matrix, the icon slots and the
 // loading state
 // against Figma.
-import { WalletIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import type {
   ContentGroupAlign,
@@ -37,9 +37,9 @@ const combos = SIZES.flatMap(size =>
         <div
           v-for="c in combos"
           :key="c.label"
-          class="border border-grey-10 rounded-12 p-4 bg-white"
+          class="border border-border-default rounded-12 p-4 bg-white"
         >
-          <p class="text-s-11 text-info mb-2">{{ c.label }}</p>
+          <p class="text-s-11 text-text-subtle mb-2">{{ c.label }}</p>
           <AppContentGroup
             title="Ethereum"
             description="The world computer, secured by proof of stake."
@@ -55,15 +55,21 @@ const combos = SIZES.flatMap(size =>
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Icon slots (18px, both lines)</h2>
       <div class="flex gap-8">
-        <div class="border border-grey-10 rounded-12 p-4 bg-white">
+        <div class="border border-border-default rounded-12 p-4 bg-white">
           <AppContentGroup title="My Wallet" description="Verified account">
-            <template #title-icon><WalletIcon /></template>
-            <template #description-icon><CheckBadgeIcon /></template>
+            <template #title-icon
+              ><AppIcon name="wallet" variant="filled"
+            /></template>
+            <template #description-icon
+              ><AppIcon name="check-badge" variant="filled"
+            /></template>
           </AppContentGroup>
         </div>
-        <div class="border border-grey-10 rounded-12 p-4 bg-white">
+        <div class="border border-border-default rounded-12 p-4 bg-white">
           <AppContentGroup size="l" title="My Wallet" description="Verified">
-            <template #title-icon><WalletIcon /></template>
+            <template #title-icon
+              ><AppIcon name="wallet" variant="filled"
+            /></template>
           </AppContentGroup>
         </div>
       </div>
@@ -73,13 +79,17 @@ const combos = SIZES.flatMap(size =>
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Overflow (constrained to 180px)</h2>
       <div class="flex gap-8">
-        <div class="w-[180px] border border-grey-10 rounded-12 p-4 bg-white">
+        <div
+          class="w-[180px] border border-border-default rounded-12 p-4 bg-white"
+        >
           <AppContentGroup
             title="A very long title that should ellipsis"
             description="A long description that is allowed to wrap onto multiple lines by default."
           />
         </div>
-        <div class="w-[180px] border border-grey-10 rounded-12 p-4 bg-white">
+        <div
+          class="w-[180px] border border-border-default rounded-12 p-4 bg-white"
+        >
           <AppContentGroup
             title="A very long title that should ellipsis"
             description="A long single-line description with ellipsis"
@@ -93,10 +103,10 @@ const combos = SIZES.flatMap(size =>
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Loading (Skeleton)</h2>
       <div class="flex gap-8">
-        <div class="border border-grey-10 rounded-12 p-4 bg-white">
+        <div class="border border-border-default rounded-12 p-4 bg-white">
           <AppContentGroup title="Title" description="Description" loading />
         </div>
-        <div class="border border-grey-10 rounded-12 p-4 bg-white">
+        <div class="border border-border-default rounded-12 p-4 bg-white">
           <AppContentGroup title="Title only" loading />
         </div>
       </div>

@@ -45,20 +45,20 @@ describe('AppNewListingCard', () => {
 
   it('renders success color and an up arrow when change >= 0', () => {
     const w = mountIt({ change: 2 })
-    expect(w.find('.text-success').exists()).toBe(true)
-    expect(w.find('.text-error').exists()).toBe(false)
+    expect(w.find('.text-text-success').exists()).toBe(true)
+    expect(w.find('.text-text-error').exists()).toBe(false)
   })
 
   it('renders error color and a down arrow when change < 0', () => {
     const w = mountIt({ change: -2 })
-    expect(w.find('.text-error').exists()).toBe(true)
-    expect(w.find('.text-success').exists()).toBe(false)
+    expect(w.find('.text-text-error').exists()).toBe(true)
+    expect(w.find('.text-text-success').exists()).toBe(false)
   })
 
   it('does not render change column contents when change is unset', () => {
     const w = mountIt({ change: undefined })
-    expect(w.find('.text-success').exists()).toBe(false)
-    expect(w.find('.text-error').exists()).toBe(false)
+    expect(w.find('.text-text-success').exists()).toBe(false)
+    expect(w.find('.text-text-error').exists()).toBe(false)
   })
 
   it('emits trade (and not select) when the trade button is clicked', async () => {

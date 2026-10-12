@@ -36,7 +36,7 @@ const mark = computed(() => MARKS[props.method])
 
 <template>
   <div
-    class="relative w-[27px] h-[18px] rounded-[3px] border border-avatar-card-border bg-white overflow-hidden flex items-center justify-center"
+    class="relative w-[27px] h-[18px] rounded-[3px] border border-border-default bg-white overflow-hidden flex items-center justify-center"
   >
     <img
       :src="mark.src"

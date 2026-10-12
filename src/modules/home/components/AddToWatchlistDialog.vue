@@ -35,20 +35,20 @@ const { items, isLoading } = useAssetPicker(tab, query)
         <h2 class="text-s-24 font-bold text-black">
           {{ t('homePage.hero.watchlist.addModal.title') }}
         </h2>
-        <p class="mt-1 text-s-16 text-[#575757]">
+        <p class="mt-1 text-s-16 text-text-subtle">
           {{ t('homePage.hero.watchlist.addModal.subtitle') }}
         </p>
 
         <AppSearchInput
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-[#f5f5f5]"
+          bg-class="bg-background-default"
           class="mt-5"
         />
 
         <!-- Tabs -->
         <div
-          class="mt-5 flex gap-6 border-b border-grey-outline/40"
+          class="mt-5 flex gap-6 border-b border-border-strong/40"
           role="tablist"
         >
           <button
@@ -62,7 +62,7 @@ const { items, isLoading } = useAssetPicker(tab, query)
             :class="
               tab === tabItem.id
                 ? 'border-black text-black'
-                : 'border-transparent text-[#575757]'
+                : 'border-transparent text-text-subtle'
             "
             @click="tab = tabItem.id"
           >
@@ -80,14 +80,14 @@ const { items, isLoading } = useAssetPicker(tab, query)
             class="flex h-full items-center justify-center"
           >
             <span
-              class="size-8 animate-spin rounded-full border-2 border-[#e6e6e6] border-t-black"
+              class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
               aria-hidden="true"
             />
           </div>
           <p
             v-else-if="!items.length"
             data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-[#575757]"
+            class="py-16 text-center text-s-14 text-text-subtle"
           >
             {{ t('homePage.hero.watchlist.addModal.empty') }}
           </p>

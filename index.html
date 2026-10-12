@@ -4,8 +4,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="theme-color" content="#0B2840" />
+  <!-- Browser chrome tint = background/base for the active theme. A media-query
+       pair can only track the OS, so this is one tag driven by JS instead: seeded
+       by the pre-paint script below and kept in sync by stores/globalStore.ts,
+       which is what makes it follow an explicit in-app override too. -->
+  <meta name="theme-color" content="#f5f5f5" />
   <meta name="referrer" content="origin" />
+
+  <!-- Applies the stored theme BEFORE first paint. Vue only mounts after the
+       browser has already painted, so without this a dark-mode user sees a
+       white flash on every load. Mirrors the `mew-theme` key that useColorMode
+       writes in stores/globalStore.ts (a raw string: "auto" | "light" | "dark").
+       Keep the two in sync. -->
+  <script>
+    (function () {
+      var dark = false
+      try {
+        // Only an explicit stored 'dark' counts. prefers-color-scheme is
+        // deliberately ignored so this agrees with globalStore's `light`
+        // default — reading the OS here would paint dark, then Vue would mount
+        // and snap back to light.
+        dark = localStorage.getItem('mew-theme') === 'dark'
+      } catch (e) {
+        // localStorage can throw outright in sandboxed iframes and strict
+        // privacy modes (see utils/safeStorage.ts) — fall through to light.
+      }
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+      var meta = document.querySelector('meta[name="theme-color"]')
+      if (meta) meta.setAttribute('content', dark ? '#1a1a1a' : '#f5f5f5')
+    })()
+  </script>
   <meta name="description"
     content="MyEtherWallet (MEW) is a free, open-source, client-side interface for generating Ethereum wallets & more. Interact with the Ethereum blockchain easily & securely." />
   <meta property="og:title" content="MyEtherWallet.com: Your Key to Ethereum" />

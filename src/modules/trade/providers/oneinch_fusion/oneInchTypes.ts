@@ -10,8 +10,13 @@ export interface QuoteOutputType {
   startAmount: bigint
   endAmount?: bigint
   avgAmount?: bigint
-  fee?: bigint
-  feeDecimals?: number
+  auctionDurationSeconds?: number
+  slippage?: number
+  tokenFee?: bigint
+  marketReturn?: bigint
+  /** Price impact in percent as reported by 1inch; positive means a worse rate. */
+  priceImpact?: number
+  usdPrices?: { fromToken: string; toToken: string }
 }
 
 export interface OrderStatusOutputType {

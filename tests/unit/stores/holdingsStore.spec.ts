@@ -412,6 +412,72 @@ describe('qualification threshold (server-driven)', () => {
   })
 })
 
+describe('register', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const connectWallet = async () => {
+    const { useWalletStore } = await import('@/stores/walletStore')
+    useWalletStore().walletAddress = ADDRESS
+  }
+
+  const registerFlow = async (usdValue: string) => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(ok({ msg: 'ok' }))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const store = useHoldingsStore()
+    const registered = await store.register('0xhash', 1, usdValue)
+    return { registered, fetchMock, toastSpy }
+  }
+
+  it('resolves true on a 200 without announcing anything yet', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('600')
+
+    expect(registered).toBe(true)
+    expect(String(fetchMock.mock.calls[1][0])).toContain(
+      '/register?hash=0xhash&chainId=1',
+    )
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false below the qualification threshold without calling /register', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('100')
+
+    expect(registered).toBe(false)
+    expect(
+      fetchMock.mock.calls.some(call => String(call[0]).includes('/register')),
+    ).toBe(false)
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false and warns when the request fails', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(fail(500))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const registered = await useHoldingsStore().register('0xhash', 1, '600')
+
+    expect(registered).toBe(false)
+    expect(toastSpy).toHaveBeenCalledTimes(1)
+  })
+})
+
 /**------------------------
  * Season 2 — second reward round. Fixtures mirror the API doc's payloads:
  * the claimed round-1 entry stays in `claimed` while the round-2 entry moves
@@ -1176,5 +1242,244 @@ describe('holdingsStore — round 2', () => {
     expect(store.status).toBe('claimed')
     expect(store.round2Status).toBe('CLAIMED')
     expect(store.round2Summary?.complete).toBe(true)
+  })
+})
+
+/**------------------------
+ * Per-round reward amounts and hold lengths. The UI headlines the two rounds
+ * together ("up to 25 USDC") and names each round's own amount, so it needs
+ * all three labels regardless of which round is currently active.
+ -------------------------*/
+describe('holdingsStore — per-round amounts and hold lengths', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('labels each round from its own denominations, and both together', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+    expect(store.totalRewardAmountLabel).toBe('11 USDC')
+  })
+
+  it('exposes both hold lengths and their sum', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    // Round 1 has no server field; round 2 is whatever the payload says.
+    expect(store.round1HoldDays).toBe(14)
+    expect(store.round2HoldDays).toBe(5)
+    expect(store.totalHoldDays).toBe(19)
+    expect(store.hasRoundTwo).toBe(true)
+  })
+
+  it('reports a single-round season as having no second round', async () => {
+    const store = await load(
+      campaignBody({
+        info: season({
+          rounds: 1,
+          rewards: [{ id: USDC_ETH, amount: '0x989680' }],
+        }),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.hasRoundTwo).toBe(false)
+    expect(store.round2HoldDays).toBeNull()
+    expect(store.round2RewardAmountLabel).toBeNull()
+    // With nothing to add, the "up to" total is just the one reward.
+    expect(store.totalRewardAmountLabel).toBe('10 USDC')
+    expect(store.totalHoldDays).toBe(14)
+  })
+
+  it('refuses to add rewards paid in different tokens', async () => {
+    const DAI_ETH = 'crypto:1:0x6b175474e89094c44da98b954eedeac495271d0f'
+    const store = await load(
+      campaignBody({
+        info: seasonTwo({
+          round2: {
+            days_to_hold: 5,
+            days_to_claim: 14,
+            rewards: [{ id: DAI_ETH, amount: '0xde0b6b3a7640000' }],
+          },
+        }),
+        metas: [
+          ...metas,
+          {
+            id: DAI_ETH,
+            name: 'DAI',
+            symbol: 'DAI',
+            icon: '',
+            crypto: {
+              ids: ['1:0x6b175474e89094c44da98b954eedeac495271d0f'],
+              decimals: [18],
+              price: '1',
+              market_data: { change: '0' },
+            },
+          },
+        ],
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 DAI')
+    // "10 USDC + 1 DAI" is not a number — callers fall back to one round.
+    expect(store.totalRewardAmountLabel).toBeNull()
+  })
+
+  it('stays null until the metas needed for decimals arrive', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBeNull()
+    expect(store.round2RewardAmountLabel).toBeNull()
+    expect(store.totalRewardAmountLabel).toBeNull()
+  })
+
+  it('takes decimals from the reward’s own chain, not the first listed', async () => {
+    // One meta spanning both chains, with BSC (18) listed first — reading
+    // index 0 for an Ethereum reward would render 10 USDC as a dust amount.
+    const multiChainMeta = [
+      {
+        id: USDC_ETH,
+        name: 'USDC',
+        symbol: 'USDC',
+        icon: '',
+        crypto: {
+          ids: [
+            '56:0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+            '1:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          ],
+          decimals: [18, 6],
+          price: '1',
+          market_data: { change: '0' },
+        },
+      },
+    ]
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas: multiChainMeta,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+  })
+
+  it('follows the active round for the shared label', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        pending: [entryR2()],
+        round2: {
+          eligible: true,
+          status: 'PENDING',
+          uuid: R2_UUID,
+          parent_uuid: R1_UUID,
+          start_timestamp: '2026-09-08T21:25:21.460Z',
+          qualification_timestamp: '2026-09-08T21:30:21.460Z',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.isRoundTwoActive).toBe(true)
+    // The active label switches, but each round's own label stays readable so
+    // round-1 copy ("you claimed 10 USDC") survives into the bonus round.
+    expect(store.rewardAmountLabel).toBe('1 USDC')
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+  })
+})
+
+describe('holdingsStore — claim failures that invalidate our snapshot', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const claimable = () =>
+    campaignBody({
+      info: seasonTwo(),
+      metas,
+      qualified: [
+        entry({
+          is_qualified: true,
+          expiration_timestamp: '2099-01-01T00:00:00Z',
+        }),
+      ],
+    } as unknown as Partial<RwaInfoResponse>)
+
+  /** Fails the claim with `status`, then counts the `/info` re-reads. */
+  const claimWith = async (status: number) => {
+    const fetchMock = vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('/claim')
+            ? fail(status, { msg: 'nope' })
+            : ok(claimable()),
+        ),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+    const store = useHoldingsStore()
+    await store.fetchInfo(ADDRESS)
+
+    const { useWalletStore } = await import('@/stores/walletStore')
+    const walletStore = useWalletStore()
+    // @ts-expect-error minimal signer stub for the claim path
+    walletStore.wallet = {
+      getAddress: async () => ADDRESS,
+      SignMessage: async () => '0xsigned',
+    }
+
+    const result = await store.claim(store.activeReward!)
+    const infoCalls = fetchMock.mock.calls.filter(c =>
+      String(c[0]).includes('/info'),
+    ).length
+    return { result, infoCalls }
+  }
+
+  it.each([
+    [404, 'notClaimable'],
+    [409, 'alreadyClaimed'],
+    [410, 'windowClosed'],
+    // A kill-switch mid-session: without a re-read the Claim button stays live
+    // and the user keeps signing claims the server will not accept.
+    [423, 'locked'],
+  ])('re-reads /info after a %i and reports %s', async (status, errorKey) => {
+    const { result, infoCalls } = await claimWith(status)
+    expect(result).toEqual({ success: false, errorKey })
+    // One for the initial load, one because the refusal invalidated it.
+    expect(infoCalls).toBe(2)
+  })
+
+  it('leaves the snapshot alone for a failure that says nothing about it', async () => {
+    const { result, infoCalls } = await claimWith(500)
+    expect(result).toEqual({ success: false, errorKey: 'generic' })
+    expect(infoCalls).toBe(1)
   })
 })

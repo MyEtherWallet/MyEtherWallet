@@ -11,7 +11,7 @@
       :aria-invalid="hasError"
       :aria-describedby="showFeedback ? feedbackId : undefined"
       :class="[
-        'w-full h-[160px] px-4 py-3 rounded-12 text-sm leading-5 text-black placeholder:text-grey-subtle focus:outline-none focus:ring-0',
+        'w-full h-40 px-4 py-3 rounded-12 resize-none text-text-sm text-text-default placeholder:text-text-placeholder focus:outline-none focus:ring-0',
         surfaceClass,
       ]"
       autocomplete="off"
@@ -21,10 +21,14 @@
     />
     <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
       <template v-if="showFeedback">
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
+        <AppIcon
+          name="exclamation-circle"
+          size="s"
+          class="shrink-0 text-text-error"
+        />
         <p
           :id="feedbackId"
-          class="text-xs leading-[18px] text-error min-w-0 break-words"
+          class="text-text-xs text-text-error min-w-0 break-words"
         >
           {{ errorMessage || $t('common.required') }}
         </p>
@@ -32,7 +36,7 @@
       <button
         v-if="hasValue && !readonly"
         @click="clearInputValue"
-        class="text-s-14 font-medium text-primary hoverOpacity ml-auto px-2"
+        class="text-s-14 font-medium text-text-brand hoverOpacity ml-auto px-2"
       >
         {{ $t('common.clear') }}
       </button>
@@ -42,8 +46,9 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch, useId, type PropType } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { inputSurfaceClass, type InputSurface } from '@/components/inputSizes'
 
 defineOptions({ inheritAttrs: false })
 
@@ -63,12 +68,12 @@ const props = defineProps({
     required: true,
   },
   /**
-   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
-   * it disappears on the grey app background); 'alternative' is white with a
-   * 1px border (used on white cards/dialogs today, also works on grey).
+   * Figma "Style": 'default' is the background/default fill (for white
+   * surfaces — it disappears on the app background); 'alternative' is the
+   * background/alternative fill with a 1px border/default line (cards/dialogs).
    */
   surface: {
-    type: String as PropType<'default' | 'alternative'>,
+    type: String as PropType<InputSurface>,
     default: 'default',
   },
   errorMessage: {
@@ -121,22 +126,15 @@ const onInput = () => {
 }
 
 /**------------------------
- * Surface — mirrors AppInput. Error ring is focus-only.
+ * Surface — shared with AppInput (see inputSurfaceClass)
  -------------------------*/
-const surfaceClass = computed(() => {
-  const base = 'box-border transition-colors resize-none'
-  const ring = hasError.value ? 'border-error' : 'border-primary'
-
-  if (props.surface === 'alternative') {
-    if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    // Constant 2px border; the resting 1px line is an inset ring so hover never
-    // shifts the text (mirrors AppInput).
-    return `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default hover:ring-0 hover:border-grey-subtle`
-  }
-
-  if (inFocusInput.value) return `${base} bg-bgBase border-2 ${ring}`
-  return `${base} bg-bgBase border-2 border-transparent hover:border-grey-subtle`
-})
+const surfaceClass = computed(() =>
+  inputSurfaceClass({
+    surface: props.surface,
+    focused: inFocusInput.value,
+    error: hasError.value,
+  }),
+)
 
 const clearInputValue = () => {
   setInFocusInput()

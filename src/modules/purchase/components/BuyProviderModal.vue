@@ -8,17 +8,14 @@
       <div class="flex flex-col gap-8 pt-8 pb-8">
         <!-- Header (close button is rendered by AppDialog at top-4 right-4) -->
         <div class="flex flex-col gap-1 pr-10">
-          <h2
-            id="dialogTitle"
-            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
-          >
+          <h2 id="dialogTitle" class="text-heading-xl">
             {{
               t('purchase.select_provider.title', {
                 amount: formattedFiatAmount,
               })
             }}
           </h2>
-          <p class="text-s-16 text-info leading-[22px]">
+          <p class="text-s-16 text-text-subtle leading-[22px]">
             {{
               t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
             }}
@@ -32,12 +29,12 @@
           aria-live="polite"
         >
           <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+            class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
           />
         </div>
 
         <!-- Error -->
-        <p v-else-if="error" class="text-error text-s-14 text-center py-8">
+        <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
           {{ error }}
         </p>
 
@@ -52,17 +49,17 @@
             >
               <span
                 v-if="index === 0"
-                class="absolute -top-[14px] left-1/2 -translate-x-1/2 bg-success text-white text-s-14 font-semibold leading-[20px] tracking-[-0.28px] px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
+                class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-background-success text-white text-label-sm px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
               >
                 {{ t('purchase.select_provider.best_value') }}
               </span>
               <button
                 type="button"
                 :class="[
-                  'w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase border-2 transition-colors',
+                  'w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 transition-colors',
                   selectedIndex === index
                     ? 'border-black'
-                    : 'border-transparent hover:bg-transparent hover:border-grey-10',
+                    : 'border-transparent hover:bg-transparent hover:border-border-default',
                 ]"
                 @click="selectedIndex = index"
               >
@@ -70,15 +67,11 @@
                 <div
                   class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
                 >
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                  >
+                  <p class="text-label-base text-black">
                     {{ formattedCryptoAmount(quote) }}
                     {{ quote.crypto_currency }}
                   </p>
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-info"
-                  >
+                  <p class="text-label-base text-text-subtle">
                     ≈ {{ formattedFiatReceive(quote) }}
                   </p>
                 </div>
@@ -91,12 +84,12 @@
                         quote.payment_methods,
                       )"
                       :key="method.alt"
-                      class="bg-white border border-grey-10 rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
+                      class="bg-white border border-border-default rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
                     >
                       <img
                         :src="method.src"
                         :alt="method.alt"
-                        class="max-w-[19px] max-h-[14px] object-contain"
+                        class="max-w-[19px] max-h-3.5 object-contain"
                       />
                     </div>
                   </div>
@@ -114,25 +107,25 @@
           <!-- Summary -->
           <div class="flex flex-col gap-2">
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_pay') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{ formattedFiatAmount }}
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <app-divider class="-my-1" />
             <div class="flex items-center justify-between">
-              <span class="text-s-12 text-info leading-[18px]">
+              <span class="text-s-12 text-text-subtle leading-[18px]">
                 {{ t('purchase.select_provider.youll_receive') }}
               </span>
-              <span class="text-s-12 font-semibold tracking-[-0.24px]">
+              <span class="text-label-xs">
                 {{
                   selectedQuote
                     ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`
                     : ''
                 }}
-                <span class="text-info font-normal">
+                <span class="text-text-subtle font-normal">
                   {{
                     selectedQuote
                       ? `(≈ ${formattedFiatReceive(selectedQuote)})`
@@ -141,27 +134,27 @@
                 </span>
               </span>
             </div>
-            <div class="h-px bg-grey-10" />
+            <app-divider class="-my-1" />
           </div>
 
           <!-- Quote freshness -->
           <p
             v-if="cooldownSeconds !== null"
-            class="text-error text-s-12 text-center -my-4"
+            class="text-text-error text-s-12 text-center -my-4"
             aria-live="polite"
           >
             {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
           </p>
           <p
             v-else-if="quoteExpired"
-            class="text-info text-s-12 text-center -my-4"
+            class="text-text-subtle text-s-12 text-center -my-4"
             aria-live="polite"
           >
             {{ t('purchase.quote.expired_refreshing') }}
           </p>
           <p
             v-else-if="quoteCountdown"
-            class="text-info text-s-12 text-center -my-4"
+            class="text-text-subtle text-s-12 text-center -my-4"
           >
             {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
           </p>
@@ -174,12 +167,15 @@
           >
             <span class="flex items-center justify-center gap-2">
               {{ t('purchase.select_provider.continue') }}
-              <arrow-top-right-on-square-icon
-                class="w-[22px] h-[22px] flex-none"
+              <AppIcon
+                name="arrow-top-right-on-square"
+                variant="filled"
+                size="s"
+                class="flex-none"
               />
             </span>
           </app-base-button>
-          <p class="text-info text-s-12 text-center -mt-5">
+          <p class="text-text-subtle text-s-12 text-center -mt-5">
             {{
               t('purchase.select_provider.redirect', {
                 provider: providerNameFormatted,
@@ -195,7 +191,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import {
@@ -214,6 +210,7 @@ import type {
   BuyOfferPayloadShared,
   ProviderName,
 } from '@/analytics'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps<{
   quotes: BuyQuote[]
@@ -239,9 +236,7 @@ watch(
   () => props.quotes,
   (quotes, oldQuotes) => {
     const previous = oldQuotes?.[selectedIndex.value]?.provider
-    const index = previous
-      ? quotes.findIndex(q => q.provider === previous)
-      : -1
+    const index = previous ? quotes.findIndex(q => q.provider === previous) : -1
     selectedIndex.value = index >= 0 ? index : 0
   },
 )
