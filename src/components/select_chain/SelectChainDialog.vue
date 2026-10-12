@@ -25,7 +25,7 @@
               bg-class="bg-transparent"
             />
           </div>
-          <div class="h-px bg-background-default-hover w-full mb-2"></div>
+          <app-divider class="-mt-1 mb-1" />
         </div>
         <!-- Search Result-->
         <div
@@ -144,6 +144,7 @@ import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const prop = defineProps({
   selectedChain: {
     type: Object as () => Chain | null,

@@ -47,42 +47,42 @@ describe('avatar geometry (types.ts)', () => {
   })
 
   it('matches the Figma M reference positions', () => {
-    // box 32, badgeBox 18, offset 3.96 → far = 32 - 18 + 3.96 = 17.96
+    // box 32, badgeBox 20, offset 4.4 → far = 32 - 20 + 4.4 = 16.4
     expect(badgePositionStyle('m', 'top')).toMatchObject({
-      top: '-3.96px',
-      left: '17.96px',
-      width: '18px',
-      height: '18px',
+      top: '-4.4px',
+      left: '16.4px',
+      width: '20px',
+      height: '20px',
     })
     expect(badgePositionStyle('m', 'bottom')).toMatchObject({
-      top: '17.96px',
-      left: '17.96px',
+      top: '16.4px',
+      left: '16.4px',
     })
     expect(badgePositionStyle('m', 'topLeft')).toMatchObject({
-      top: '-3.96px',
-      left: '-3.96px',
+      top: '-4.4px',
+      left: '-4.4px',
     })
     expect(badgePositionStyle('m', 'bottomLeft')).toMatchObject({
-      top: '17.96px',
-      left: '-3.96px',
+      top: '16.4px',
+      left: '-4.4px',
     })
   })
 
   it('network/icon badge box matches the design sizes per avatar size', () => {
     const expected: Record<AvatarSize, number> = {
-      xs: 12,
-      s: 14,
-      m: 18,
-      l: 20,
-      xl: 22,
+      xs: 14,
+      s: 16,
+      m: 20,
+      l: 22,
+      xl: 24,
     }
     for (const size of SIZES) {
       expect(AVATAR_SIZES[size].badgeBox).toBe(expected[size])
     }
   })
 
-  it('status badge is a fixed 8px at every size', () => {
-    expect(STATUS_BADGE_BOX).toBe(8)
+  it('status badge is a fixed 10px at every size', () => {
+    expect(STATUS_BADGE_BOX).toBe(10)
   })
 })
 
@@ -186,12 +186,12 @@ describe('AppAvatar', () => {
     const withBg = mount(AppAvatar, {
       props: { type: 'initial', initial: 'A' },
     })
-    expect(withBg.find('.bg-avatar-fallback').exists()).toBe(true)
+    expect(withBg.find('.bg-background-info-subtle').exists()).toBe(true)
 
     const iconNoBg = mount(AppAvatar, {
       props: { type: 'icon', background: false },
     })
-    expect(iconNoBg.find('.bg-avatar-fallback').exists()).toBe(false)
+    expect(iconNoBg.find('.bg-background-info-subtle').exists()).toBe(false)
   })
 
   it('positions a single badge slot at the requested corner', () => {

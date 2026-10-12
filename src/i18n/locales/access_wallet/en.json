@@ -21,7 +21,8 @@
       "all": "All",
       "hardware": "Hardware",
       "mobile": "Mobile",
-      "software": "Software"
+      "software": "Software",
+      "label": "Wallet type"
     },
     "back_to_connect_options": "back to connect options",
     "connect_wallet_title": "Connect Wallet",

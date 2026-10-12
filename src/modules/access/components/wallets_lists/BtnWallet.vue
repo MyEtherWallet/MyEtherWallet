@@ -65,6 +65,7 @@ import {
 import { onMounted, ref } from 'vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
+import configs from '@/configs'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -108,7 +109,7 @@ const resolveImg = async (_img: () => Promise<string>) => {
     // The wallet icon is lazily imported as a hashed JS chunk. Failing to load it
     // (network blip, stale chunk after a redeploy, content blockers) is expected and
     // non-actionable — AsyncImg already falls back to a placeholder. Don't report noise.
-    if (import.meta.env.MODE !== 'production') {
+    if (configs.BUILD_MODE !== 'production') {
       console.error('Error loading wallet image:', props.wallet.name, error)
     }
   } finally {

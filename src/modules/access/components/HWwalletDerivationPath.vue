@@ -52,7 +52,7 @@
                   :placeholder="$t('derivation_path.search')"
                 />
               </div>
-              <hr class="h-px bg-background-default-hover border-0 w-full" />
+              <app-divider class="-my-1" />
             </div>
             <!-- Seacrh Result-->
             <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -90,6 +90,7 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType } from '@enkryptcom/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps({
   isBtnGroup: {

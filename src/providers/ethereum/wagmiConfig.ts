@@ -75,7 +75,7 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
   // `providers` field. Pin the array to the 3.x type: 2.x connector functions
   // are assignable to it (they accept a superset config), the reverse is not.
   const allConnectors: CreateConnectorFn[] = [...connectorsLocal]
-  if (import.meta.env.MODE !== 'production') {
+  if (Configs.BUILD_MODE !== 'production') {
     const testAddress = import.meta.env.VITE_TEST_ADDRESS as string | undefined
     if (testAddress) {
       const mConnector = mock({
