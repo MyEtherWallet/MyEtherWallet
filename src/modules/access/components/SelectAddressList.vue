@@ -4,13 +4,14 @@
       class="border border-border-strong rounded-2xl p-1 xs:p-4 flex flex-col gap-1"
     >
       <div v-for="i in 5" :key="i">
-        <button
+        <div
           v-if="!isLoading && walletList[i - 1]"
+          data-testid="address-row"
           :class="[
             walletList[i - 1].index === model
               ? 'bg-background-default'
               : 'hoverNoBG',
-            'flex px-2 xs:px-4 py-2 items-center gap-1 xs:gap-2 xs:gap-5 w-full rounded-2xl  min-h-12',
+            'flex px-2 xs:px-4 py-2 items-center gap-1 xs:gap-2 xs:gap-5 w-full rounded-2xl  min-h-12 cursor-pointer',
           ]"
           @click="model = walletList[i - 1].index"
           v-ripple
@@ -46,23 +47,14 @@
               {{ selectedChain?.currencyName || 'Eth' }}
             </p>
           </div>
-          <div
-            :class="[
-              {
-                'bg-background-brand': walletList[i - 1].index === model,
-              },
-              'border border-border-brand border-2 w-5 h-5 ml-auto rounded-full flex items-center justify-center transition-colors',
-            ]"
-          >
-            <AppIcon
-              v-if="walletList[i - 1].index === model"
-              name="check"
-              variant="filled"
-              size="xxs"
-              class="text-white"
-            />
-          </div>
-        </button>
+          <AppRadio
+            v-model="model"
+            name="select-address"
+            :value="walletList[i - 1].index"
+            :aria-label="walletList[i - 1].address"
+            class="ml-auto"
+          />
+        </div>
         <div
           v-else
           class="min-h-12 animate-pulse bg-background-default my-2 rounded-2xl"
@@ -94,6 +86,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppRadio from '@/components/radio/AppRadio.vue'
 import { truncateAddress } from '@/utils/filters'
 import { type SelectAddress } from '../types/selectAddress'
 import { useChainsStore } from '@/stores/chainsStore'
