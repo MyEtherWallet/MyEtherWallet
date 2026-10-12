@@ -31,7 +31,7 @@ const stateClass = computed(() => {
     role="tab"
     :aria-selected="selected"
     :disabled="disabled"
-    class="flex flex-col items-center justify-center border-b px-2 pb-2 text-label-base break-words focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
+    class="flex flex-col items-center justify-center border-b px-2 pb-2 text-left text-label-base break-words focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
     :class="stateClass"
     data-testid="tab-item"
   >
