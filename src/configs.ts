@@ -79,7 +79,6 @@ const configs = {
     HOLD_DURATION_DAYS: 14,
   },
   /** Program terms the rules endpoint does not carry. */
-  MEW_REWARDS_MIN_WALLET_AGE_WEEKS: 2,
   MEW_REWARDS_PER_HOUR: 15,
   MEW_REWARDS_PERIOD_DAYS: 7,
   STRAPI_CMS_URL: strapiUrl,

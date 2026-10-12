@@ -55,12 +55,6 @@
                 class="text-text-muted"
               />
               <AppIcon
-                name="wallet"
-                size="xxs"
-                v-else-if="item.icon === 'wallet-icon'"
-                class="text-text-muted"
-              />
-              <AppIcon
                 name="banknotes"
                 size="xxs"
                 v-else-if="item.icon === 'wallet-balance'"
@@ -147,7 +141,6 @@ const {
   minSpendTrade,
   rewardAmount,
   minRwaBalanceUsd,
-  holdDurationLabel,
   tradeClaimed,
   tradeNoRewards,
   isRewardsPaused,
@@ -162,7 +155,6 @@ const { t } = useI18n()
 // are the terms the endpoint does not carry.
 const MAX_USERS_PER_HOUR = Configs.MEW_REWARDS_PER_HOUR
 const CAMPAIGN_PERIOD_DAYS = Configs.MEW_REWARDS_PERIOD_DAYS
-const MIN_WALLET_AGE_WEEKS = Configs.MEW_REWARDS_MIN_WALLET_AGE_WEEKS
 
 watch(isOpenModel, val => {
   if (val) {
@@ -190,15 +182,8 @@ const infoItems = computed(() => [
     text: t('rewards.info_one_reward_period', { days: CAMPAIGN_PERIOD_DAYS }),
   },
   {
-    icon: 'wallet-icon',
-    text: t('rewards.info_wallet_age', { weeks: MIN_WALLET_AGE_WEEKS }),
-  },
-  {
     icon: 'wallet-balance',
-    text: t('rewards.info_min_rwa_balance', {
-      amount: minRwaBalanceUsd.value,
-      duration: holdDurationLabel.value,
-    }),
+    text: t('rewards.info_min_rwa_balance', { amount: minRwaBalanceUsd.value }),
   },
   {
     icon: 'currency-dollar-gray',
