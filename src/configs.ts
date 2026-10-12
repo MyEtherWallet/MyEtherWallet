@@ -1,8 +1,13 @@
 const mewWalletUrl =
   import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
-// Rewards V2 backend. Dev deployment until the prod one is up.
-const rewardsApiUrl = 'https://mew-rewards-v2-dev.ethvm.dev'
+// Rewards V2 backend: prod in production builds, dev everywhere else. The
+// rules URL below hangs off it, so one override moves both.
+const rewardsApiUrl =
+  import.meta.env.VITE_MEW_REWARDS_API ||
+  (import.meta.env.MODE === 'production'
+    ? 'https://mew-rewards-v2-prod.ethvm.dev'
+    : 'https://mew-rewards-v2-dev.ethvm.dev')
 
 // Strapi serves uploads from the host root (`/uploads/...`), not from `/api`,
 // so the host is the shared constant and the API path hangs off it.
@@ -29,7 +34,7 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
-  /** Rewards V2 API. Dev deployment for now — swap for prod when it ships. */
+  /** Rewards V2 API, selected by build mode (see `rewardsApiUrl`). */
   MEW_REWARDS_API_URL: rewardsApiUrl,
   /**
    * Campaign rules: minimum trade, minimum maintained balance and how long it
