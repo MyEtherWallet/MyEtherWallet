@@ -289,6 +289,9 @@ import {
   WrenchScrewdriverIcon as WrenchScrewdriverSolid,
   LanguageIcon as LanguageSolid,
   RectangleGroupIcon as RectangleGroupSolid,
+  ArrowDownTrayIcon as ArrowDownTraySolid,
+  ArrowPathRoundedSquareIcon as ArrowPathRoundedSquareSolid,
+  ArrowUturnRightIcon as ArrowUturnRightSolid,
 } from '@heroicons/vue/24/solid'
 
 // Custom glyphs not in Heroicons — authored SFCs, currentColor, viewBox 24.
@@ -489,7 +492,10 @@ export const icons = {
   'arrow-down-on-square': { stroke: ArrowDownOnSquareOutline },
   'arrow-down-on-square-stack': { stroke: ArrowDownOnSquareStackOutline },
   'arrow-down-right': { stroke: ArrowDownRightOutline },
-  'arrow-down-tray': { stroke: ArrowDownTrayOutline },
+  'arrow-down-tray': {
+    stroke: ArrowDownTrayOutline,
+    filled: ArrowDownTraySolid,
+  },
   'arrow-left': { stroke: ArrowLeftOutline },
   'arrow-left-circle': { stroke: ArrowLeftCircleOutline },
   'arrow-left-end-on-rectangle': { stroke: ArrowLeftEndOnRectangleOutline },
@@ -500,7 +506,10 @@ export const icons = {
   'arrow-long-right': { stroke: ArrowLongRightOutline },
   'arrow-long-up': { stroke: ArrowLongUpOutline },
   'arrow-path': { stroke: ArrowPathOutline },
-  'arrow-path-rounded-square': { stroke: ArrowPathRoundedSquareOutline },
+  'arrow-path-rounded-square': {
+    stroke: ArrowPathRoundedSquareOutline,
+    filled: ArrowPathRoundedSquareSolid,
+  },
   'arrow-right': { stroke: ArrowRightOutline },
   'arrow-right-circle': { stroke: ArrowRightCircleOutline },
   'arrow-right-end-on-rectangle': { stroke: ArrowRightEndOnRectangleOutline },
@@ -524,7 +533,10 @@ export const icons = {
   'arrow-up-tray': { stroke: ArrowUpTrayOutline },
   'arrow-uturn-down': { stroke: ArrowUturnDownOutline },
   'arrow-uturn-left': { stroke: ArrowUturnLeftOutline },
-  'arrow-uturn-right': { stroke: ArrowUturnRightOutline },
+  'arrow-uturn-right': {
+    stroke: ArrowUturnRightOutline,
+    filled: ArrowUturnRightSolid,
+  },
   'arrow-uturn-up': { stroke: ArrowUturnUpOutline },
   'arrows-pointing-in': { stroke: ArrowsPointingInOutline },
   'arrows-pointing-out': { stroke: ArrowsPointingOutOutline },

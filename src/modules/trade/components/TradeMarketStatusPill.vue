@@ -25,7 +25,7 @@
           class="flex items-center justify-center w-5 h-5 rounded-[10px] hoverNoBG"
           @click="infoOpen = !infoOpen"
         >
-          <InformationCircleIcon class="w-4 h-4" />
+          <AppIcon name="information-circle" size="xxs" />
         </button>
         <trade-market-status-popover
           v-if="infoOpen"
@@ -46,10 +46,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { onClickOutside, onKeyStroke } from '@vueuse/core'
-import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import TradeMarketStatusPopover from './TradeMarketStatusPopover.vue'
 import type { TimelineSessionRanges } from './TradeMarketTimeline.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 export type MarketStatusVariant =
   'regular' | 'premarket' | 'postmarket' | 'overnight' | 'weekend' | 'paused'
 
@@ -84,6 +84,6 @@ const isLimited = computed(() =>
 
 const statusColorClass = computed(() => {
   if (props.status === 'paused') return 'text-text-subtle'
-  return isLimited.value ? 'text-orange-600' : 'text-success-600'
+  return isLimited.value ? 'text-text-warning' : 'text-text-success'
 })
 </script>

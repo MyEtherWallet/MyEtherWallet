@@ -171,6 +171,10 @@ export const TradeEventError = {
   OFFER_ERROR: 'Trade_Offer_Error',
   SIGN_ERROR: 'Trade_Sign_Error',
   APPROVAL_ERROR: 'Trade_Approval_Error',
+  /** Native deposit was sent but the relayer refused the order afterwards. */
+  RELAYER_ERROR: 'Trade_Relayer_Error',
+  /** Reclaiming an unsubmitted native order's deposit failed. */
+  RECOVER_ERROR: 'Trade_Recover_Error',
 } as const
 export type TradeEventError =
   (typeof TradeEventError)[keyof typeof TradeEventError]
@@ -184,6 +188,10 @@ export const TradeEventStatus = {
   CANCELLED: 'Trade_Cancelled',
   EXPIRED: 'Trade_Expired',
   INITIATED: 'Trade_Initiated',
+  /** Native deposit in flight, relayer never accepted the order. */
+  UNSUBMITTED: 'Trade_Unsubmitted',
+  /** Deposit of an unsubmitted native order reclaimed by the user. */
+  FUNDS_RECOVERED: 'Trade_Funds_Recovered',
 } as const
 
 export type TradeEventStatus =

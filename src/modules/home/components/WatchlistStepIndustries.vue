@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
 import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
 import type { WatchlistCategory } from '@/modules/home/composables/useWatchlistCategories'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 
@@ -59,7 +59,7 @@ const toggle = (id: string) => {
       data-test="industries-empty"
       class="mt-6 flex min-h-40 flex-col items-center justify-center py-6 text-center"
     >
-      <AppIcon name="exclamation-circle" size="m" class="text-text-subtle" />
+      <AppIcon name="exclamation-circle" class="text-text-subtle" />
       <p
         class="mt-4 max-w-[300px] text-s-16 font-normal leading-[22px] text-text-subtle"
       >
@@ -120,7 +120,7 @@ const toggle = (id: string) => {
       >
         <span class="flex items-center gap-2">
           {{ t('homePage.hero.watchlist.onboarding.continue') }}
-          <AppIcon name="chevron-right" size="s" variant="filled" />
+          <AppIcon name="chevron-right" variant="filled" size="s" />
         </span>
       </AppBaseButton>
     </div>

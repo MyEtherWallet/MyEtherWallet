@@ -45,7 +45,8 @@ const props = withDefaults(
 // renders nothing.
 const entry = computed<IconEntry | undefined>(() => icons[props.name])
 const component = computed(
-  () => entry.value?.[props.variant] ?? entry.value?.stroke ?? entry.value?.filled,
+  () =>
+    entry.value?.[props.variant] ?? entry.value?.stroke ?? entry.value?.filled,
 )
 const sizeClass = computed(() => ICON_SIZE_CLASS[props.size])
 const isLabelled = computed(() => !!props.label)

@@ -22,6 +22,23 @@ describe('AppChip', () => {
     expect(el.getAttribute('aria-pressed')).toBe('true')
   })
 
+  it('only exposes aria-pressed when selected is bound (toggle use)', () => {
+    const action = mount(AppChip, { props: { label: '25%' } })
+    expect(action.get(root()).attributes()).not.toHaveProperty('aria-pressed')
+
+    const toggle = mount(AppChip, { props: { label: '25%', selected: false } })
+    expect(toggle.get(root()).attributes('aria-pressed')).toBe('false')
+  })
+
+  it('uses the label/sm type style', () => {
+    const wrapper = mount(AppChip, { props: { label: 'ETH' } })
+    expect(wrapper.get(root()).classes()).toContain('text-label-sm')
+    // Figma keeps the label on one line (e.g. zh "中间价" must not wrap in h-8).
+    expect(wrapper.get('[data-testid="chip-label"]').classes()).toContain(
+      'whitespace-nowrap',
+    )
+  })
+
   it('announces a menu chip as a menu button, not a toggle', () => {
     const wrapper = mount(AppChip, {
       props: { label: 'All networks', showIcon: true, selected: true },
@@ -31,9 +48,9 @@ describe('AppChip', () => {
     expect(el.hasAttribute('aria-pressed')).toBe(false)
   })
 
-  it('fills white on the default surface and grey on the alternative surface', () => {
+  it('fills background/alternative on the default surface and grey on the alternative surface', () => {
     const base = mount(AppChip, { props: { label: 'ETH', surface: 'default' } })
-    expect(base.get(root()).classes()).toContain('bg-white')
+    expect(base.get(root()).classes()).toContain('bg-background-alternative')
 
     const surface = mount(AppChip, {
       props: { label: 'ETH', surface: 'alternative' },
@@ -43,7 +60,7 @@ describe('AppChip', () => {
 
   it('outlines a selected chip and stays borderless otherwise', () => {
     const selected = mount(AppChip, { props: { label: 'ETH', selected: true } })
-    expect(selected.get(root()).classes()).toContain('border-black')
+    expect(selected.get(root()).classes()).toContain('border-border-selected')
 
     const resting = mount(AppChip, { props: { label: 'ETH' } })
     expect(resting.get(root()).classes()).toContain('border-transparent')
@@ -51,7 +68,8 @@ describe('AppChip', () => {
 
   it('shows the trailing chevron only when showIcon is set', () => {
     const withIcon = mount(AppChip, { props: { label: 'ETH', showIcon: true } })
-    expect(withIcon.find(icon()).exists()).toBe(true)
+    // Figma: 18px icon with 4px right padding.
+    expect(withIcon.get(icon()).classes()).toContain('pr-1')
 
     const without = mount(AppChip, { props: { label: 'ETH' } })
     expect(without.find(icon()).exists()).toBe(false)

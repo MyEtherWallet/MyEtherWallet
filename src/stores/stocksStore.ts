@@ -62,7 +62,9 @@ export const useStocksStore = defineStore('stocksStore', () => {
     .get()
     .json<GetWebStocksOipsResponse>()
 
-  const oips = computed<StockOipItem[]>(() => dataOips.value || [])
+  const oips = computed<StockOipItem[]>(() =>
+    Array.isArray(dataOips.value) ? dataOips.value : [],
+  )
 
   /**------------------------
    * Stocks Addresses

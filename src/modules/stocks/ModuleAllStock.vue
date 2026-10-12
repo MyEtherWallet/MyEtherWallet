@@ -182,30 +182,25 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
+                <AppBtnIcon
+                  :label="
                     isWatchListed(token.coinId)
                       ? $t('common.remove_from_watchlist')
                       : $t('common.add_to_watchlist')
                   "
+                  :class="
+                    isWatchListed(token.coinId)
+                      ? 'text-text-brand'
+                      : 'text-text-subtle'
+                  "
                   @click.stop="setWatchlistToken(token.coinId)"
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
-                  <!-- changes color when active -->
                   <AppIcon
                     name="star"
+                    :variant="isWatchListed(token.coinId) ? 'filled' : 'stroke'"
                     size="xxs"
-                    class="cursor-pointer"
-                    v-if="!isWatchListed(token.coinId)"
                   />
-                  <AppIcon
-                    v-else
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                </AppBtnIcon>
               </td>
               <!-- Name -->
               <td class="px-1 py-1" colspan="2">
@@ -315,8 +310,6 @@
                       <app-btn-icon
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -399,9 +392,8 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click.stop="previousPage"
@@ -409,9 +401,8 @@
             <AppIcon name="chevron-left" variant="filled" size="xxs" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click.stop="nextPage"
@@ -442,7 +433,6 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
@@ -468,6 +458,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 const walletMenu = useWalletMenuStore()

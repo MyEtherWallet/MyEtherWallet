@@ -8,8 +8,8 @@
   >
     <app-spinner
       v-if="toast.tradeStatus?.kind === 'processing'"
-      size-class="w-6 h-6"
-      class="text-white"
+      :size="24"
+      color="inverted"
     />
     <app-token-logo
       v-else
@@ -27,9 +27,12 @@
           class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-white flex items-center gap-1"
         >
           {{ toast.text }}
-          <check-circle-icon
+          <AppIcon
+            name="check-circle"
+            variant="filled"
+            size="xs"
             v-if="toast.tradeStatus?.kind === 'completed'"
-            class="w-[18px] h-[18px] text-success-600"
+            class="text-text-success"
           />
         </p>
         <p
@@ -56,20 +59,20 @@
       :aria-label="$t('common.close')"
       @click="dismiss"
     >
-      <x-mark-icon class="w-4 h-4" />
+      <AppIcon name="x-mark" variant="filled" size="xxs" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from 'vue'
-import { CheckCircleIcon, XMarkIcon } from '@heroicons/vue/24/solid'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { Toast } from '@/types/notification'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   toast: Toast
   index: number

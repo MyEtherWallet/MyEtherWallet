@@ -337,7 +337,6 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import gradientBg from '@/assets/images/rwa-rewards/card-gradient-bg.png'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc.webp'
@@ -354,6 +353,7 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   HoldRewardsMainCardEvent,

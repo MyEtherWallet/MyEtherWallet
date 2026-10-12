@@ -2,9 +2,8 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
+      size="l"
       :label="$t('menu.open-settings')"
-      width="w-10"
-      height="h-10"
       @click="togglePopup"
     >
       <AppIcon name="cog-6-tooth" variant="filled" />
@@ -299,9 +298,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -375,9 +373,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -462,9 +459,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -538,7 +534,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
@@ -554,6 +549,7 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
 
 const appLayoutStore = useAppLayoutStore()
@@ -624,7 +620,10 @@ const currencyOptions = computed(() => {
   const rest = SUPPORTED_CURRENCIES.filter(
     c => c.code !== selectedCurrency.value,
   )
-  return [...active, ...rest]
+  return [...active, ...rest].map(c => ({
+    code: c.code,
+    name: t(`settings.currency_country.${c.code}`),
+  }))
 })
 
 const selectCurrency = (code: string) => {

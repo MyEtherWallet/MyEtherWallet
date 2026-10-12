@@ -1,1 +1,14 @@
-npx devmoji -e --edit
+# Git passes the commit message file as $1. devmoji's --edit flag ignores it and
+# hardcodes .git/COMMIT_EDITMSG, which does not exist inside a git worktree
+# (.git is a pointer file there), so pipe the message through devmoji ourselves.
+# devmoji is cosmetic (adds the emoji to the conventional-commit header), so a
+# failure to run it (e.g. offline npx) must not block the commit.
+MSG_FILE="$1"
+[ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ] || exit 0
+TMP="$(mktemp)" || exit 0
+if npx --yes devmoji --no-color < "$MSG_FILE" > "$TMP" 2>/dev/null && [ -s "$TMP" ]; then
+  mv "$TMP" "$MSG_FILE"
+else
+  rm -f "$TMP"
+fi
+exit 0

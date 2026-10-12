@@ -43,6 +43,7 @@ const configs = {
   // Watchlist (home banner + table + onboarding) stays hidden unless the env var
   // is explicitly 'true', so it can be flipped per environment.
   SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true',
+  BUILD_MODE: import.meta.env.VITE_BUILD_MODE || 'dev',
 }
 
 export default configs

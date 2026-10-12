@@ -24,16 +24,16 @@
               "
             >
               <AppIcon
-                v-if="item.icon === 'swap'"
                 name="arrow-path-rounded-square"
                 size="xxs"
+                v-if="item.icon === 'swap'"
                 class="text-text-brand"
               />
               <AppIcon
-                v-else-if="item.icon === 'trophy'"
                 name="trophy"
                 variant="filled"
                 size="xxs"
+                v-else-if="item.icon === 'trophy'"
                 class="text-text-brand"
               />
               <trade-icon
@@ -41,43 +41,43 @@
                 class="w-4 h-4 text-text-brand"
               />
               <AppIcon
-                v-else-if="item.icon === 'currency-dollar'"
                 name="currency-dollar"
                 variant="filled"
                 size="xxs"
+                v-else-if="item.icon === 'currency-dollar'"
                 class="text-text-brand"
               />
               <AppIcon
-                v-else-if="item.icon === 'calendar'"
                 name="calendar"
                 variant="filled"
                 size="xxs"
+                v-else-if="item.icon === 'calendar'"
                 class="text-text-muted"
               />
               <AppIcon
-                v-else-if="item.icon === 'wallet-icon'"
                 name="wallet"
                 size="xxs"
+                v-else-if="item.icon === 'wallet-icon'"
                 class="text-text-muted"
               />
               <AppIcon
-                v-else-if="item.icon === 'wallet-balance'"
                 name="banknotes"
                 size="xxs"
+                v-else-if="item.icon === 'wallet-balance'"
                 class="text-text-muted"
               />
               <AppIcon
-                v-else-if="item.icon === 'currency-dollar-gray'"
                 name="currency-dollar"
                 variant="filled"
                 size="xxs"
+                v-else-if="item.icon === 'currency-dollar-gray'"
                 class="text-text-muted"
               />
               <AppIcon
-                v-else-if="item.icon === 'face-frown'"
                 name="face-frown"
                 variant="filled"
                 size="xxs"
+                v-else-if="item.icon === 'face-frown'"
                 class="text-text-muted"
               />
             </div>
@@ -88,7 +88,7 @@
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-border-default" />
+        <app-divider class="my-5" />
 
         <rewards-rows
           v-if="!isBanned"
@@ -124,7 +124,6 @@ import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -133,6 +132,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps<{
   location?:
     | 'main-banner'

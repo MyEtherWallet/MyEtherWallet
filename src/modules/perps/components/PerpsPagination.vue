@@ -3,8 +3,6 @@
     <app-btn-icon
       :disabled="disabled || !canPrev"
       :label="t('perps.pagination.previous-page')"
-      height="h-8"
-      width="w-8"
       @click="onPrev"
     >
       <AppIcon name="chevron-left" size="xxs" variant="filled" />
@@ -23,8 +21,6 @@
     <app-btn-icon
       :disabled="disabled || !canNext"
       :label="t('perps.pagination.next-page')"
-      height="h-8"
-      width="w-8"
       @click="onNext"
     >
       <AppIcon name="chevron-right" size="xxs" variant="filled" />

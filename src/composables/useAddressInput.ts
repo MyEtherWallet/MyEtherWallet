@@ -95,9 +95,16 @@ export const useAddressInput = (
       } else {
         const _network = unref(network)
         const _networkName = _network?.name || undefined
+        // A name-like input can pass validateAddressInput() (valid ENS syntax)
+        // but still fail to resolve, leaving a non-address string here. Only
+        // checksum a real address; otherwise leave it empty so the final
+        // validateAddressInput() shows the "invalid address" message instead of
+        // toChecksumAddress throwing an unhandled InvalidAddressError.
         const locResolvedAddr = isBitcoinChain.value
           ? adrInput.value
-          : toChecksumAddress(adrInput.value, _networkName)
+          : isAddress(adrInput.value, _networkName)
+            ? toChecksumAddress(adrInput.value, _networkName)
+            : ''
         resolvedAddress.value = locResolvedAddr
       }
     }

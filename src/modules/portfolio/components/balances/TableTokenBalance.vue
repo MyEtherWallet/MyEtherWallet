@@ -20,8 +20,6 @@
             <app-btn-icon
               :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
-              height="h-7"
-              width="w-7"
             >
               <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
             </app-btn-icon>
@@ -155,21 +153,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -189,21 +187,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PRICE &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -223,21 +221,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -258,21 +256,21 @@
                   name="arrow-long-down"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
+                  class="absolute -right-4"
                 />
                 <AppIcon
                   name="arrow-long-up"
                   variant="filled"
                   size="xxs"
-                  class="absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'asc'
                   "
+                  class="absolute -right-4"
                 />
               </div>
             </th>
@@ -298,26 +296,24 @@
           >
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <button
+              <app-btn-icon
                 v-if="getWatchlistId(token)"
+                :label="
+                  isWatchListed(getWatchlistId(token))
+                    ? $t('common.remove_from_watchlist')
+                    : $t('common.add_to_watchlist')
+                "
+                class="text-black"
                 @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
-                <!-- changes icon when active -->
                 <AppIcon
                   name="star"
+                  :variant="
+                    isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                  "
                   size="xxs"
-                  class="cursor-pointer"
-                  v-if="!isWatchListed(getWatchlistId(token))"
                 />
-                <AppIcon
-                  name="star"
-                  variant="filled"
-                  size="xxs"
-                  v-else
-                  class="cursor-pointer"
-                />
-              </button>
+              </app-btn-icon>
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -431,8 +427,6 @@
                     <app-btn-icon
                       :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"
@@ -453,8 +447,8 @@
                         <AppIcon
                           name="star"
                           size="xxs"
-                          class="cursor-pointer"
                           v-if="!isWatchListed(getWatchlistId(token))"
+                          class="cursor-pointer"
                         />
                         <AppIcon
                           name="star"
@@ -469,14 +463,14 @@
                             : $t('portfolio.table.add_to_watchlist')
                         }}</span>
                       </button>
-                      <hr
+                      <app-divider
                         v-if="
                           props.view === 'custom' ||
                           isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                        class="my-1 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -746,11 +740,9 @@ import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
-import AppIcon from '@/components/icon/AppIcon.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-
 // Composables & Utils
 import { usePaginate } from '@/composables/usePaginate'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
@@ -790,6 +782,8 @@ import { useCustomTokenStore } from '@/stores/customTokenStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 /** -------------------------------
  * Constants & Types
  -------------------------------*/

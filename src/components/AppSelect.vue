@@ -109,7 +109,7 @@
               <AppIcon
                 name="check"
                 variant="filled"
-                size="xxs"
+                size="l"
                 v-if="selected && option.value === selected.value"
                 class="ml-auto text-text-brand px-2 -mr-3"
               />
@@ -146,12 +146,12 @@
  *   :emit-only="true" @select-option="selectHandler" />
  *
  */
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const emit = defineEmits<{
   (e: 'select-option'): void
 }>()

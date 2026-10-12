@@ -3,6 +3,8 @@ import { nextTick } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { StoreConfigs } from '@/stores/configs'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification/index'
 
 describe('watchlistTableStore — perps bucket (MEW-2130)', () => {
   beforeEach(() => {
@@ -101,5 +103,36 @@ describe('watchlistTableStore — 25-item cap (MEW-2360)', () => {
     expect(store.watchListedTokens.length).toBe(WATCHLIST_MAX)
     expect(store.watchListedTokens).toContain('coin-new')
     expect(store.watchListedTokens).not.toContain('coin-0')
+  })
+})
+
+describe('watchlistTableStore — limit toast (MEW-2374)', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+
+  it('surfaces the limit toast once for a batch overflow, as a warning', () => {
+    const store = useWatchlistStore()
+    // Reject several adds in one run (mirrors the onboarding batch).
+    for (let i = 0; i < WATCHLIST_MAX + 5; i++) {
+      store.setWatchlistItem(`coin-${i}`, false)
+    }
+    const toasts = useToastStore().messages
+    expect(toasts).toHaveLength(1)
+    expect(toasts[0].type).toBe(ToastType.Warning)
+  })
+
+  it('shows the toast again after the earlier one is dismissed', () => {
+    const store = useWatchlistStore()
+    const toast = useToastStore()
+    for (let i = 0; i < WATCHLIST_MAX + 1; i++) {
+      store.setWatchlistItem(`coin-${i}`, false)
+    }
+    expect(toast.messages).toHaveLength(1)
+    // Once the previous toast clears, a new rejection surfaces a fresh one.
+    toast.removeToastMessage(0)
+    store.setWatchlistItem('coin-extra', false)
+    expect(toast.messages).toHaveLength(1)
   })
 })

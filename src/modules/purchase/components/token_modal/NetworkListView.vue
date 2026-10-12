@@ -3,15 +3,10 @@
     <div class="flex items-start gap-3 pr-12 flex-none">
       <app-btn-icon
         :label="$t('common.back')"
-        class="flex-none -ml-1"
+        class="flex-none -ml-1 text-black"
         @click="emit('back')"
       >
-        <AppIcon
-          name="chevron-left"
-          variant="filled"
-          size="s"
-          class="text-black"
-        />
+        <AppIcon name="chevron-left" variant="filled" size="s" />
       </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
         <h2 class="text-heading-xl">
@@ -60,10 +55,10 @@
             {{ $t('purchase.select_token.filter_all_networks') }}
           </span>
           <AppIcon
-            v-if="currentFilter === null"
             name="check-circle"
             variant="filled"
             size="s"
+            v-if="currentFilter === null"
             class="text-text-brand flex-none"
           />
         </button>
@@ -86,10 +81,10 @@
             {{ network.name }}
           </span>
           <AppIcon
-            v-if="currentFilter === network.chain"
             name="check-circle"
             variant="filled"
             size="s"
+            v-if="currentFilter === network.chain"
             class="text-text-brand flex-none"
           />
         </button>
@@ -133,7 +128,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
@@ -141,6 +135,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { getPurchaseChainIcon } from '../../helpers/purchaseIcons'
 import type { BuyNetwork } from '@/stores/purchaseStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = defineProps<{
   networks: BuyNetwork[]
   currentFilter: string | null

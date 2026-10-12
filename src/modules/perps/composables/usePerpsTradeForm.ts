@@ -195,9 +195,26 @@ export function usePerpsTradeForm() {
     { immediate: true },
   )
 
-  const activeMarket = computed(
-    () => walletMenuStore.selectedTradeTokenSymbol || 'AAPL-USD',
-  )
+  // `selectedTradeTokenSymbol` is shared with the Trade panel, which can leave a
+  // symbol there that has no perps market (any asset the perps venue doesn't
+  // list). Only honour it when a contract exists for it; otherwise start from
+  // the first contract, as an empty prefill does. The store is left untouched
+  // so switching back to Trade still restores the user's pick there.
+  const findContractForSymbol = (symbol: string | null) => {
+    if (!symbol) return undefined
+    const base = symbol.split('-')[0].toUpperCase()
+    return contracts.value.find(c => c.baseCurrency.toUpperCase() === base)
+  }
+
+  const activeMarket = computed(() => {
+    const stored = walletMenuStore.selectedTradeTokenSymbol
+    // Before the contracts arrive there is nothing to validate against, so keep
+    // the stored symbol rather than flashing the default for a valid market.
+    if (stored && (!contracts.value.length || findContractForSymbol(stored))) {
+      return stored
+    }
+    return contracts.value[0]?.baseCurrency ?? 'AAPL-USD'
+  })
   const displaySymbol = computed(() => activeMarket.value.split('-')[0])
   const fullMarketName = computed(() => {
     const match = markets.value.find(m => m.pair.base === displaySymbol.value)
@@ -970,13 +987,13 @@ export function usePerpsTradeForm() {
 
   // ── Market selector ────────────────────────────────────────
   const marketFilterTabs = [
-    { key: 'all', label: t('perps.select-market.filter-tab-all') },
-    { key: 'Equities', label: t('perps.select-market.filter-tab-equities') },
+    { value: 'all', label: t('perps.select-market.filter-tab-all') },
+    { value: 'Equities', label: t('perps.select-market.filter-tab-equities') },
     {
-      key: 'Commodities',
+      value: 'Commodities',
       label: t('perps.select-market.filter-tab-commodities'),
     },
-    { key: 'Indices', label: t('perps.select-market.filter-tab-indices') },
+    { value: 'Indices', label: t('perps.select-market.filter-tab-indices') },
   ]
 
   const marketSortOptions: MarketSortOption[] = [

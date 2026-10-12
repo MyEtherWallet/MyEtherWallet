@@ -4,11 +4,7 @@
   >
     <div class="flex items-center">
       <!-- icon container -->
-      <AppIcon
-        name="exclamation-triangle"
-        size="m"
-        class="mr-2 text-text-error"
-      />
+      <AppIcon name="exclamation-triangle" class="mr-2 text-text-error" />
       <h3 class="font-bold">{{ title || $t('common.not_recommended') }}</h3>
     </div>
 
