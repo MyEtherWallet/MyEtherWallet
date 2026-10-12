@@ -29,7 +29,7 @@
               </p>
               <app-btn-copy
                 :copyValue="walletList[i - 1].address"
-                class="hidden xs:block text-text-brand ml-4"
+                class="hidden xs:inline-flex text-text-brand ml-4"
                 @click.stop
               />
               <app-btn-icon

@@ -80,6 +80,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   type WalletConfig,
   SortBy,
@@ -88,7 +89,6 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 import { storeToRefs } from 'pinia'

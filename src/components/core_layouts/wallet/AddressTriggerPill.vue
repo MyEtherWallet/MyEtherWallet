@@ -39,13 +39,15 @@
           >
             {{ accountName }}
           </span>
+          <!-- ponytail: 12px is below the icon scale (min xxs 16); size-3! overrides
+               it for this pill only. Add a scale token if more sites need 12px. -->
           <AppIcon
             name="eye"
             variant="filled"
             size="xxs"
             v-if="isWatchOnly"
             data-test="pill-watch-only"
-            class="text-text-subtle flex-shrink-0"
+            class="size-3! text-text-subtle flex-shrink-0"
           />
           <account-connected-dot v-else data-test="pill-connected" />
         </span>
@@ -72,7 +74,7 @@
     <AppIcon
       name="chevron-down"
       variant="filled"
-      size="s"
+      size="xxs"
       class="text-black flex-shrink-0"
     />
   </button>

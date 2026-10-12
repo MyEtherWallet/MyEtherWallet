@@ -2,9 +2,8 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
+      size="l"
       :label="$t('menu.open-settings')"
-      width="w-10"
-      height="h-10"
       @click="togglePopup"
     >
       <AppIcon name="cog-6-tooth" variant="filled" />
@@ -299,9 +298,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -375,9 +373,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />
@@ -462,9 +459,8 @@
               <!-- Header: back + title -->
               <div class="flex items-center gap-2">
                 <app-btn-icon
+                  size="s"
                   :label="$t('common.back')"
-                  width="w-6"
-                  height="h-6"
                   @click="view = 'main'"
                 >
                   <AppIcon name="chevron-left" variant="filled" size="s" />

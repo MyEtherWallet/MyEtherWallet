@@ -242,9 +242,7 @@
                       <app-btn-icon
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
-                        class="flex lg:hidden"
+                        class="lg:hidden"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -516,8 +514,6 @@
                     <app-btn-icon
                       :label="$t('perps.market-list.action-menu-label')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"
@@ -558,8 +554,6 @@
                 <app-btn-icon
                   v-else
                   :label="$t('perps.positions.view-order-details-label')"
-                  height="h-7 xs:h-8"
-                  width="w-7 xs:w-8"
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
                 >
@@ -701,8 +695,6 @@
                 <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                   <app-btn-icon
                     :label="$t('perps.positions.view-fill-details-label')"
-                    height="h-7 xs:h-8"
-                    width="w-7 xs:w-8"
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
