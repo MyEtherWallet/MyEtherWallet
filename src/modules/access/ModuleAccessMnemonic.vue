@@ -46,7 +46,10 @@
                 </p>
               </div>
               <div class="flex items-center gap-2">
-                <app-toggle v-model="hasExtraWord" />
+                <app-toggle
+                  v-model="hasExtraWord"
+                  :aria-label="extraWordToggleString"
+                />
                 <span class="text8">{{ extraWordToggleString }}</span>
               </div>
             </div>

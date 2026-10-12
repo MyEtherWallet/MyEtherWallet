@@ -40,17 +40,6 @@ const ROUTES_CREATE_WALLET = {
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create' },
 }
 
-const ROUTES_DEV = {
-  INDEX: { NAME: 'DevIndex', PATH: '/dev' },
-  AVATAR: { NAME: 'DevAvatar', PATH: 'avatar' },
-  CHIP: { NAME: 'DevChip', PATH: 'chip' },
-  CONTENT_GROUP: { NAME: 'DevContentGroup', PATH: 'content-group' },
-  INPUT: { NAME: 'DevInput', PATH: 'input' },
-  PICKER: { NAME: 'DevPicker', PATH: 'picker' },
-  TOGGLE: { NAME: 'DevToggle', PATH: 'toggle' },
-  TOOLTIP: { NAME: 'DevTooltip', PATH: 'tooltip' },
-}
-
 type WalletFlowKind = 'access' | 'create'
 
 const WALLET_FLOW_ROUTES: Record<
@@ -118,7 +107,6 @@ const ROUTES_SEND: RouteNameCollection = {
 export {
   ROUTES_MAIN,
   ROUTES_CREATE_WALLET,
-  ROUTES_DEV,
   ROUTES_SEND,
   ROUTES_ACCESS,
   WALLET_FLOW_ROUTES,
