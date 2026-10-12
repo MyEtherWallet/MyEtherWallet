@@ -280,7 +280,7 @@ const fetchBalances = async ({ silent = false } = {}): Promise<void> => {
       setIsLoadingBalances(false)
     }
   } catch (error: unknown) {
-    if (import.meta.env.MODE !== 'production')
+    if (Configs.BUILD_MODE !== 'production')
       console.error('Balance fetch failed:', error)
     if (!silent) setIsLoadingBalances(false)
   }

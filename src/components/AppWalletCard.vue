@@ -164,6 +164,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import Configs from '@/configs'
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -227,7 +228,7 @@ const fetchBalances = () => {
       useBalanceHandler(balances, setTokens, setIsLoadingBalances)
     })
     .catch((error: unknown) => {
-      if (import.meta.env.MODE !== 'production')
+      if (Configs.BUILD_MODE !== 'production')
         console.error('Balance fetch failed:', error)
       setIsLoadingBalances(false)
     })

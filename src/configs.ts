@@ -1,11 +1,21 @@
 const mewWalletUrl =
   import.meta.env.VITE_MEW_WALLET_API || 'https://qa.mewwallet.dev'
 
+// Build target: 'production', 'test' or 'dev'. VITE_BUILD_MODE overrides it
+// per environment; without one it follows Vite's own mode (`vite build` ->
+// production, vitest -> test, anything else -> dev). Every environment switch
+// in the app reads `Configs.BUILD_MODE`; this is the only place that looks at
+// `import.meta.env.MODE`.
+const viteMode = import.meta.env.MODE
+const buildMode: string =
+  import.meta.env.VITE_BUILD_MODE ||
+  (viteMode === 'production' || viteMode === 'test' ? viteMode : 'dev')
+
 // Rewards V2 backend: prod in production builds, dev everywhere else. The
 // rules URL below hangs off it, so one override moves both.
 const rewardsApiUrl =
   import.meta.env.VITE_MEW_REWARDS_API ||
-  (import.meta.env.MODE === 'production'
+  (buildMode === 'production'
     ? 'https://mew-rewards-v2-prod.ethvm.dev'
     : 'https://mew-rewards-v2-dev.ethvm.dev')
 
@@ -73,7 +83,7 @@ const configs = {
   // Watchlist (home banner + table + onboarding) stays hidden unless the env var
   // is explicitly 'true', so it can be flipped per environment.
   SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true',
-  BUILD_MODE: import.meta.env.VITE_BUILD_MODE || 'dev',
+  BUILD_MODE: buildMode,
 }
 
 export default configs

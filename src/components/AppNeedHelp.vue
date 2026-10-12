@@ -16,10 +16,12 @@
   </div>
 </template>
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 <script setup lang="ts">
+import Configs from '@/configs'
+import AppIcon from '@/components/icon/AppIcon.vue'
+
 //Remove HelpLinks from Beta builds
-const isDevMode = import.meta.env.MODE !== 'production'
+const isDevMode = Configs.BUILD_MODE !== 'production'
 
 //TODO: add Amplitude event with link + route location
 
