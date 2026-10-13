@@ -1,10 +1,13 @@
 {
   "purchase": {
+    "title": "买入与卖出",
+    "description": "任意加密资产",
+    "on_network": "{network} 网络",
     "buy": {
       "title": "购买",
-      "youre_buying": "您正在购买",
+      "you_are_paying": "您将支付",
       "enter_amount": "输入数量",
-      "continue": "继续",
+      "continue": "查看购买",
       "connect_wallet": "连接钱包",
       "no_quotes": "未找到报价",
       "need_help": "购买需要帮助？",
@@ -18,14 +21,12 @@
     },
     "sell": {
       "title": "出售",
-      "youre_selling": "您正在出售",
-      "your_balance": "您的余额：",
+      "you_are_selling": "您将出售",
+      "balance": "余额：{amount}",
       "enter_amount": "输入数量",
-      "continue": "继续",
+      "continue": "查看出售",
       "connect_wallet": "连接钱包",
       "need_help": "出售需要帮助？",
-      "network_fee": "网络费用",
-      "network_fee_tooltip": "{chain} 网络中的费用以 {symbol} 收取",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持出售。请切换到受支持的网络。",
       "error": {
@@ -40,7 +41,7 @@
         "continue": "继续"
       }
     },
-    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
     "min": "最低",
     "max": "最高",
     "bank": "银行",

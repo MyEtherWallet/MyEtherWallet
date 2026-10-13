@@ -41,6 +41,8 @@ const props = withDefaults(
     address?: string
     background?: boolean
     name?: string
+    /** Image fit for remote-logo types; `cover` for non-square art. */
+    fit?: 'contain' | 'cover'
   }>(),
   {
     size: 'm',
@@ -82,6 +84,7 @@ const forwardProps = computed(() => ({
   address: props.address,
   background: props.background,
   name: props.name,
+  fit: props.fit,
 }))
 
 const activePositions = computed(() => {

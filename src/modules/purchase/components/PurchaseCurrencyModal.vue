@@ -74,6 +74,7 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
+import { getCurrencyName } from '../helpers/currencyName'
 
 const props = defineProps<{
   currencies: string[]
@@ -93,24 +94,12 @@ watch(isOpen, value => {
   if (value) searchInput.value = ''
 })
 
-const currencyDisplayNames = new Intl.DisplayNames(['en'], {
-  type: 'currency',
-})
-
-const currencyName = (code: string): string => {
-  try {
-    return currencyDisplayNames.of(code) ?? code
-  } catch {
-    return code
-  }
-}
-
 const filteredCurrencies = computed(() => {
   const term = searchInput.value.trim()
   if (!term) return [...props.currencies].sort((a, b) => a.localeCompare(b))
   const items = props.currencies.map(code => ({
     code,
-    name: currencyName(code),
+    name: getCurrencyName(code),
   }))
   return fuzzySearchByKeys(items, ['code', 'name'], term).map(item => item.code)
 })

@@ -172,6 +172,19 @@ describe('AppAvatar', () => {
     }
   })
 
+  it('forwards `fit` to the remote image, contain by default', () => {
+    const contain = mount(AppAvatar, {
+      props: { type: 'cryptoAsset', symbol: 'USD' },
+    })
+    expect(contain.findComponent(AvatarRemoteImage).props('fit')).toBe(
+      undefined,
+    )
+    const cover = mount(AppAvatar, {
+      props: { type: 'cryptoAsset', symbol: 'USD', fit: 'cover' },
+    })
+    expect(cover.findComponent(AvatarRemoteImage).props('fit')).toBe('cover')
+  })
+
   it('mounts the child that matches `type`', () => {
     const initial = mount(AppAvatar, {
       props: { type: 'initial', initial: 'A' },
