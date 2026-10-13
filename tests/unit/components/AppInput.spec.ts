@@ -136,10 +136,10 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     const w = mountInput({ type: 'password', modelValue: 'secret' })
     for (const label of ['Clear', 'Show']) {
       const btn = w.get(`[aria-label="${label}"]`)
-      expect(btn.get('svg').classes()).toContain('text-icon-default')
+      // AppBtnIcon tint: the glyph inherits currentColor from the button.
+      expect(btn.classes()).toContain('text-icon-default')
       // Figma Button Icon: 20px icon + 3px padding, siblings touch.
-      expect(btn.classes()).toContain('w-[26px]')
-      expect(btn.classes()).toContain('h-[26px]')
+      expect(btn.classes()).toContain('size-[26px]!')
     }
     const row = w.get('[aria-label="Clear"]').element.parentElement!
     expect(row.className).not.toMatch(/\bgap-/)

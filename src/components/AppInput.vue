@@ -70,26 +70,25 @@
         <app-btn-icon
           v-if="showClear"
           @click="clearInputValue"
+          :class="TRAILING_BTN_CLASS"
           :label="$t('common.clear_icon')"
-          v-bind="TRAILING_BTN"
         >
-          <AppIcon name="x-circle" size="s" class="text-icon-default" />
+          <AppIcon name="x-circle" size="s" />
         </app-btn-icon>
         <app-btn-icon
           v-if="showReveal"
           @click="togglePasswordVisibility"
+          :class="TRAILING_BTN_CLASS"
           :label="
             !showPassword
               ? $t('common.show_password')
               : $t('common.hide_password')
           "
-          v-bind="TRAILING_BTN"
         >
           <AppIcon
             :name="!showPassword ? 'eye-slash' : 'eye'"
             variant="filled"
             size="s"
-            class="text-icon-default"
           />
         </app-btn-icon>
       </div>
@@ -275,8 +274,10 @@ const surfaceClass = computed(() =>
 /**------------------------
  * Trailing actions (built-in clear + password reveal)
  -------------------------*/
-// Figma Button Icon: 20px icon + 3px padding (26px), siblings packed with no gap.
-const TRAILING_BTN = { width: 'w-[26px]', height: 'h-[26px]' }
+// Figma Input trailing Button Icon: 20px glyph + 3px padding (26px, between the
+// library S 22 and M 32 boxes), siblings packed with no gap. icon/default tint
+// on the button; the glyph inherits it.
+const TRAILING_BTN_CLASS = 'size-[26px]! text-icon-default'
 const showClear = computed(() => hasValue.value && !props.disabled)
 const showReveal = computed(() => props.type === 'password' && !props.disabled)
 

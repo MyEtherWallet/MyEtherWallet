@@ -24,8 +24,6 @@
             <app-btn-icon
               :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
-              height="h-7"
-              width="w-7"
             >
               <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
             </app-btn-icon>
@@ -302,26 +300,24 @@
           >
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <button
+              <app-btn-icon
                 v-if="getWatchlistId(token)"
+                :label="
+                  isWatchListed(getWatchlistId(token))
+                    ? $t('common.remove_from_watchlist')
+                    : $t('common.add_to_watchlist')
+                "
+                class="text-black"
                 @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
-                <!-- changes icon when active -->
                 <AppIcon
                   name="star"
+                  :variant="
+                    isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                  "
                   size="xxs"
-                  v-if="!isWatchListed(getWatchlistId(token))"
-                  class="cursor-pointer"
                 />
-                <AppIcon
-                  name="star"
-                  variant="filled"
-                  size="xxs"
-                  v-else
-                  class="cursor-pointer"
-                />
-              </button>
+              </app-btn-icon>
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -435,8 +431,6 @@
                     <app-btn-icon
                       :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"

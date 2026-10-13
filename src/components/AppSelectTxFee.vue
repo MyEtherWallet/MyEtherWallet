@@ -529,7 +529,8 @@ const displayFees = computed<DisplayFee[]>(() => {
 
 const hasFees = computed(() => {
   if (props.fees) {
-    return Object.keys(props.fees.fees).length > 0 && !props.isLoadingFees
+    // SwapOfferModal passes {} when there's no gas quote yet (APP-MEW-WEB-16F)
+    return Object.keys(props.fees.fees ?? {}).length > 0 && !props.isLoadingFees
   }
   return (
     feesReady.value &&

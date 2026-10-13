@@ -39,11 +39,11 @@
           model ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
+        class="text-icon-default"
         :label="$t('common.clear_icon')"
-      >
-        <!-- Figma Searchbar clear: bare 16px cross -->
-        <AppIcon name="x-mark" size="xxs" class="text-icon-default"
-      /></app-btn-icon>
+        icon="x-mark"
+        size="s"
+      />
     </div>
   </div>
 </template>

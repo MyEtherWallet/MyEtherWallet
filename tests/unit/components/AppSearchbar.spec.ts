@@ -74,7 +74,9 @@ describe('AppSearchbar — design-library Searchbar (MEW-1971)', () => {
     const clear = w.get('[aria-label="Clear"]').findComponent(AppIcon)
     expect(clear.props('name')).toBe('x-mark')
     expect(clear.props('size')).toBe('xxs') // Figma: 16px
-    expect(clear.classes()).toContain('text-icon-default')
+    expect(w.get('[aria-label="Clear"]').classes()).toContain(
+      'text-icon-default',
+    )
   })
 })
 
