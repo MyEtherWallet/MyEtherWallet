@@ -800,8 +800,9 @@
                at the top of the panel says why the button is dead. -->
           <app-base-button
             class="w-full"
+            :is-loading="isAuthenticating"
             :disabled="isServiceUnavailable"
-            @click="login(PerpsEventSource.TRADE)"
+            @click="signIn(PerpsEventSource.TRADE)"
           >
             {{ $t('perps.trade.sign-in') }}
           </app-base-button>
@@ -967,6 +968,7 @@ import {
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const {
+  isAuthenticating,
   showSigningPrompt,
   signingMessage,
   isHardwareWalletSigning,
@@ -1069,7 +1071,7 @@ const onLimitPriceInput = (e: Event) => {
 const {
   // Auth
   token,
-  login,
+  signIn,
   // Market info
   displaySymbol,
   currentPrice,
