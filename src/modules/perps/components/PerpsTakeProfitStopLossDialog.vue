@@ -78,12 +78,12 @@
               </template>
             </perps-amount>
             <transition name="fade" mode="out-in">
-              <div
+              <AppInputFeedback
                 v-if="takeProfitError"
-                class="text-text-error text-s-12 mt-1 pl-3"
-              >
-                {{ takeProfitError }}
-              </div>
+                type="error"
+                :message="takeProfitError"
+                class="mt-1"
+              />
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-text-subtle">{{
@@ -158,12 +158,12 @@
               </template>
             </perps-amount>
             <transition name="fade" mode="out-in">
-              <div
+              <AppInputFeedback
                 v-if="stopLossError"
-                class="text-text-error text-s-12 mt-1 pl-3"
-              >
-                {{ stopLossError }}
-              </div>
+                type="error"
+                :message="stopLossError"
+                class="mt-1"
+              />
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-text-subtle">{{
@@ -220,6 +220,7 @@ import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })

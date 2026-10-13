@@ -40,3 +40,30 @@ describe('AppTextArea — typing state (MEW-1971)', () => {
     expect(textarea.classes()).not.toContain('inset-ring-border-brand')
   })
 })
+
+const mountFeedbackField = (props: Record<string, unknown> = {}) =>
+  mount(AppTextArea, {
+    props: { placeholder: 'Message', ...props },
+    global: { plugins: [i18n] },
+  })
+
+describe('AppTextArea feedback row (MEW-2402)', () => {
+  it('renders errorMessage as an error row described by the textarea', () => {
+    const w = mountFeedbackField({ errorMessage: 'Invalid signature' })
+    const textarea = w.get('textarea')
+    expect(textarea.attributes('aria-invalid')).toBe('true')
+    const row = w.get(`[id="${textarea.attributes('aria-describedby')}"]`)
+    expect(row.text()).toContain('Invalid signature')
+    expect(row.attributes('role')).toBe('alert')
+  })
+
+  it('renders a success feedback without flagging the field invalid', () => {
+    const w = mountFeedbackField({
+      feedback: { type: 'success', message: 'Signature verified' },
+    })
+    const textarea = w.get('textarea')
+    expect(textarea.attributes('aria-invalid')).toBe('false')
+    const row = w.get(`[id="${textarea.attributes('aria-describedby')}"]`)
+    expect(row.classes()).toContain('text-text-success')
+  })
+})
