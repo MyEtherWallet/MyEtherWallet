@@ -9,7 +9,11 @@
         <div
           class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
         >
-          <app-search-input v-model="searchInput" class="grow" />
+          <app-searchbar
+            bg-class="bg-background-alternative"
+            v-model="searchInput"
+            class="grow"
+          />
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
@@ -20,8 +24,6 @@
             <app-btn-icon
               :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
-              height="h-7"
-              width="w-7"
             >
               <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
             </app-btn-icon>
@@ -298,26 +300,24 @@
           >
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <button
+              <app-btn-icon
                 v-if="getWatchlistId(token)"
+                :label="
+                  isWatchListed(getWatchlistId(token))
+                    ? $t('common.remove_from_watchlist')
+                    : $t('common.add_to_watchlist')
+                "
+                class="text-black"
                 @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
               >
-                <!-- changes icon when active -->
                 <AppIcon
                   name="star"
+                  :variant="
+                    isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                  "
                   size="xxs"
-                  v-if="!isWatchListed(getWatchlistId(token))"
-                  class="cursor-pointer"
                 />
-                <AppIcon
-                  name="star"
-                  variant="filled"
-                  size="xxs"
-                  v-else
-                  class="cursor-pointer"
-                />
-              </button>
+              </app-btn-icon>
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -431,8 +431,6 @@
                     <app-btn-icon
                       :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"
@@ -469,14 +467,14 @@
                             : $t('portfolio.table.add_to_watchlist')
                         }}</span>
                       </button>
-                      <hr
+                      <app-divider
                         v-if="
                           props.view === 'custom' ||
                           isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                        class="my-1 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -735,14 +733,14 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
@@ -789,6 +787,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 /** -------------------------------
  * Constants & Types
  -------------------------------*/

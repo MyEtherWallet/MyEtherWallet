@@ -18,14 +18,14 @@
           <div
             class="flex items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
               v-model="searchInput"
               class="grow"
               :placeholder="$t('select_chain.search_placeholder')"
               bg-class="bg-transparent"
             />
           </div>
-          <div class="h-px bg-background-default-hover w-full mb-2"></div>
+          <app-divider class="-mt-1 mb-1" />
         </div>
         <!-- Search Result-->
         <div
@@ -138,12 +138,13 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const prop = defineProps({
   selectedChain: {
     type: Object as () => Chain | null,

@@ -12,7 +12,7 @@
         <div
           class="flex gap-2 justify-between items-center mb-2 mx-4 bg-background-default-hover rounded-full p-1"
         >
-          <app-search-input
+          <app-searchbar
             :model-value="search"
             class="grow"
             bg-class="bg-transparent"
@@ -50,7 +50,7 @@
                   </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
-                <hr class="h-px bg-border-strong border-0 w-full mt-1 mb-2" />
+                <app-divider variant="alternative" class="mb-1" />
                 <button
                   v-for="option in sortOptions"
                   :key="option.value"
@@ -80,15 +80,14 @@
 
         <!-- Filter Tabs -->
         <div class="px-4 mb-1">
-          <app-btn-group
-            :btn-list="filterTabs"
-            :selected="filterTabs.find(t => t.key === activeFilter)"
+          <AppSegmentedControl
+            :model-value="activeFilter"
+            :items="filterTabs"
             size="small"
-            has-full-width
-            @on-update:selected="tab => $emit('update:activeFilter', tab.key)"
-          >
-            <template #btn-content="{ data }">{{ data.label }}</template>
-          </app-btn-group>
+            :label="$t('perps.info.category-label')"
+            full-width
+            @update:model-value="$emit('update:activeFilter', $event)"
+          />
         </div>
         <hr class="border-t border-border-subtle mt-1 mx-4" />
 
@@ -121,10 +120,11 @@
                     <span class="font-bold text-s-15 whitespace-nowrap">{{
                       contract.baseCurrency
                     }}</span>
-                    <span
-                      class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >{{ getMarketLeverage(contract) }}x</span
-                    >
+                    <app-tag
+                      variant="subtle"
+                      class="shrink-0"
+                      :label="`${getMarketLeverage(contract)}x`"
+                    />
                   </div>
                   <span class="text-text-subtle text-s-12">{{
                     getMarketDisplayName(contract)
@@ -165,19 +165,21 @@ import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import type {
   MarketSortValue,
   SortDirection,
   MarketSortOption,
 } from '../composables/usePerpsTradeForm'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 
@@ -187,7 +189,7 @@ const props = defineProps({
     required: true,
   },
   filterTabs: {
-    type: Array as PropType<{ key: string; label: string }[]>,
+    type: Array as PropType<{ value: string; label: string }[]>,
     required: true,
   },
   activeFilter: {

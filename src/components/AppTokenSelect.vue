@@ -51,7 +51,7 @@
           <div
             class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
               v-model="searchInput"
               class="grow"
               bg-class="bg-transparent"
@@ -89,9 +89,7 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr
-                    class="h-px bg-background-default-hover border-0 w-full mt-1 mb-2"
-                  />
+                  <app-divider class="mb-1" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
@@ -129,7 +127,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-background-default-hover w-full mb-2"></div>
+          <app-divider class="-mt-1 mb-1" />
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
@@ -218,10 +216,10 @@ import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from './AppSearchInput.vue'
+import AppSearchbar from './AppSearchbar.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -232,6 +230,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps({
   externalLoading: {
     type: Boolean,

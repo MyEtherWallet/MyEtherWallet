@@ -114,19 +114,15 @@
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isBusy" class="text-black" />
-        <p
+        <app-spinner v-if="isBusy" :size="18" />
+        <!-- Inside the card padding, so no side inset of its own -->
+        <AppInputFeedback
           v-else
           :id="`trade-amount-message-${side}`"
-          :role="showError ? 'alert' : undefined"
-          aria-live="polite"
-          :class="[
-            showError ? 'text-text-error' : 'text-text-subtle',
-            'text-s-12 leading-[18px] truncate',
-          ]"
-        >
-          {{ showError ? errorMessage : fiatText }}
-        </p>
+          :type="showError ? 'error' : 'text'"
+          :message="showError ? errorMessage : fiatText"
+          class="px-0!"
+        />
         <p
           v-if="showBalance"
           :class="[
@@ -165,7 +161,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -179,6 +175,7 @@ import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 const props = withDefaults(
   defineProps<{
     side: 'sell' | 'buy'

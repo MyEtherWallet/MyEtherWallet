@@ -21,7 +21,8 @@
         :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
         class="flex grow gap-1 justify-between items-center bg-background-default-hover rounded-full p-1"
       >
-        <app-search-input
+        <app-searchbar
+          bg-class="bg-background-alternative"
           v-model="searchInput"
           :class="{ 'md-header:max-w-[315px]': !isOpenSideMenu }"
           class="grow"
@@ -34,17 +35,14 @@
         />
       </div>
       <!-- Filter -->
-      <app-btn-group
+      <AppSegmentedControl
         v-if="isHeaderMaxAndUp"
-        v-model:selected="activeFilter"
-        :btn-list="filterOptions"
-        :is-loaded="true"
-        size="large"
-      >
-        <template #btn-content="{ data }">
-          {{ data.name }}
-        </template>
-      </app-btn-group>
+        :model-value="activeFilter.value"
+        :items="filterItems"
+        size="default"
+        :label="$t('access_wallet.filter.label')"
+        @update:model-value="selectFilter"
+      />
     </div>
     <!-- Wallets-->
     <div
@@ -76,13 +74,14 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSearchbar from '@components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   type WalletConfig,
   SortBy,
@@ -91,7 +90,6 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 import { storeToRefs } from 'pinia'
@@ -194,6 +192,14 @@ const filterOptions: Filter[] = [
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
+const filterItems = filterOptions.map(({ name, value }) => ({
+  label: name,
+  value,
+}))
+const selectFilter = (value: Filter['value']) => {
+  activeFilter.value =
+    filterOptions.find(option => option.value === value) ?? activeFilter.value
+}
 const openFilterSortModal = ref(false)
 
 watch(isHeaderMaxAndUp, val => {

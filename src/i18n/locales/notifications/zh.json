@@ -60,6 +60,7 @@
     "toast_swap_successful": "兑换成功",
     "toast_swap_failed": "兑换失败",
     "toast_bridge_successful": "跨链成功",
-    "toast_bridge_failed": "跨链失败"
+    "toast_bridge_failed": "跨链失败",
+    "filter_label": "通知类型"
   }
 }
