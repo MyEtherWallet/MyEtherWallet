@@ -64,9 +64,9 @@
             <!-- Copy -->
             <app-btn-copy
               :copy-value="walletAddress"
-              class="!min-w-10 h-10 text-text-brand"
-            >
-            </app-btn-copy>
+              size="l"
+              class="text-text-brand"
+            />
             <!-- Block Explorer Link -->
             <a
               :href="getExplorerLink"

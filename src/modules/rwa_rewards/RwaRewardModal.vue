@@ -14,7 +14,8 @@
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <app-btn-icon-close
-          class="absolute top-4 right-4 z-20 bg-background-default"
+          variant="filled"
+          class="absolute top-4 right-4 z-20"
           @close="holdingsStore.closeModal()"
         />
 
@@ -153,12 +154,13 @@
                           : $t('rwaRewards.claim')
                       }}
                     </app-base-button>
-                    <span
+                    <AppTag
                       v-else
-                      class="shrink-0 py-1 px-2 rounded-8 bg-background-error-subtle text-text-error text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
-                    >
-                      {{ $t('rwaRewards.reward_expired') }}
-                    </span>
+                      type="danger"
+                      variant="subtle"
+                      class="shrink-0"
+                      :label="$t('rwaRewards.reward_expired')"
+                    />
                   </div>
                   <template v-if="step.state === 'failed' && !isRoundTwoActive">
                     <app-base-button
@@ -259,6 +261,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'

@@ -47,12 +47,12 @@
               :key="quote.provider"
               class="relative"
             >
-              <span
+              <AppTag
                 v-if="index === 0"
-                class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-background-success text-white text-label-sm px-1.5 py-0.5 rounded-[5px] whitespace-nowrap z-10"
-              >
-                {{ t('purchase.select_provider.best_value') }}
-              </span>
+                type="success"
+                :label="t('purchase.select_provider.best_value')"
+                class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"
+              />
               <button
                 type="button"
                 :class="[
@@ -192,6 +192,7 @@
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import {
