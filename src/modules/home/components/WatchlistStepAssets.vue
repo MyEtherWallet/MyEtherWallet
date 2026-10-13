@@ -3,7 +3,7 @@ import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useVirtualList } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
@@ -202,7 +202,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
         @close="$emit('close')"
       />
 
-      <AppSearchInput
+      <AppSearchbar
         v-model="query"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
         bg-class="bg-white"

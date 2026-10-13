@@ -61,12 +61,13 @@
         </div>
       </transition>
       <transition name="fade" mode="out-in">
-        <p
+        <!-- Inside the card padding, so no side inset of its own -->
+        <AppInputFeedback
           v-if="!!error && !isLoading && !isOpenSelectToken && !isPristine"
-          class="text-text-error text-s-12 leading-p-130 mt-1"
-        >
-          {{ error }}
-        </p>
+          type="error"
+          :message="error"
+          class="mt-1 px-0!"
+        />
       </transition>
     </div>
     <slot name="footer" />
@@ -80,6 +81,7 @@ import { watch, ref, computed, type PropType, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'

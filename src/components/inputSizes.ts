@@ -2,7 +2,7 @@
  * Centralized input geometry + surface.
  *
  * Mirrors the design-library `Input` Figma component (Size × Style), the single
- * source of truth for field geometry and surface. AppInput and AppTextField
+ * source of truth for field geometry and surface. AppInput and AppTextArea
  * read from here so a size or surface tweak lands in one place.
  *
  * Both sizes share the 16px inline padding, 8px row gap, 12px radius and 14/20
@@ -52,28 +52,31 @@ const INPUT_SURFACE_SPEC: Record<InputSurface, InputSurfaceSpec> = {
 
 /**
  * Field surface classes (fill + line by state), shared by AppInput and
- * AppTextField.
+ * AppTextArea.
  *
  * Every line is an inset ring, never a CSS border: a ring takes no layout
  * space, so the 1px rest → 2px hover/focus change never moves the content and
- * the inline padding stays exactly 16px. The error colour is focus-only: an
- * unfocused errored field keeps its normal line and is signalled by the
- * feedback row alone.
+ * the inline padding stays exactly 16px. The ring is Focus-only: while editing
+ * (Figma "Active": pointer focus or typing) the field keeps its resting line with no ring or hover, and
+ * an unfocused errored field keeps its normal line, signalled by the feedback
+ * row alone.
  */
 export const inputSurfaceClass = ({
   surface,
   focused,
+  active = false,
   error,
   disabled = false,
 }: {
   surface: InputSurface
   focused: boolean
+  active?: boolean
   error: boolean
   disabled?: boolean
 }): string => {
   const { bg, rest } = INPUT_SURFACE_SPEC[surface]
   const base = `box-border transition-shadow ${bg}`
-  if (disabled) return `${base} ${rest}`
+  if (disabled || (focused && active)) return `${base} ${rest}`
   if (focused)
     return error
       ? `${base} inset-ring-2 inset-ring-border-error`

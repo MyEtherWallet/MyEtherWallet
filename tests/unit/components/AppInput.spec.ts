@@ -110,6 +110,41 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     }
   })
 
+  it('typing (Figma Active) drops the focus ring; keyboard focus keeps it', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    const input = w.get('input')
+    // Keyboard focus (no pointer) is Figma Focus: ringed.
+    await input.trigger('focus')
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
+    // Typing is Figma Active: caret only, no brand ring and no hover ring.
+    await input.trigger('input')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('hover:inset-ring-border-hover')
+  })
+
+  it('pointer focus enters Active straight away (no ring), errors included', async () => {
+    const w = mountInput({ modelValue: 'x', errorMessage: 'Bad' })
+    await w.get('input').trigger('pointerdown')
+    await w.get('input').trigger('focus')
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).not.toContain('inset-ring-border-error')
+    // The feedback row still carries the error.
+    expect(w.text()).toContain('Bad')
+  })
+
+  it('renders trailing actions in icon/default, packed with no gap', () => {
+    const w = mountInput({ type: 'password', modelValue: 'secret' })
+    for (const label of ['Clear', 'Show']) {
+      const btn = w.get(`[aria-label="${label}"]`)
+      // AppBtnIcon tint: the glyph inherits currentColor from the button.
+      expect(btn.classes()).toContain('text-icon-default')
+      // Figma Button Icon: 20px icon + 3px padding, siblings touch.
+      expect(btn.classes()).toContain('size-[26px]!')
+    }
+    const row = w.get('[aria-label="Clear"]').element.parentElement!
+    expect(row.className).not.toMatch(/\bgap-/)
+  })
+
   it('renders the value in text/default', () => {
     const w = mountInput({ modelValue: 'x' })
     expect(w.get('input').classes()).toContain('text-text-default')
@@ -134,10 +169,48 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(input.attributes('aria-invalid')).toBe('true')
     const describedby = input.attributes('aria-describedby')
     expect(describedby).toBeTruthy()
-    const feedback = w
-      .findAll('div')
-      .find(d => d.attributes('id') === describedby)
-    expect(feedback?.text()).toContain('Bad')
+    expect(w.get(`[id="${describedby}"]`).text()).toContain('Bad')
+  })
+
+  it('renders non-error feedback without flagging the field invalid', () => {
+    const w = mountInput({
+      feedback: { type: 'success', message: 'Address verified' },
+      modelValue: 'vitalik.eth',
+    })
+    const input = w.get('input')
+    expect(input.attributes('aria-invalid')).toBe('false')
+    const row = w.get(`[id="${input.attributes('aria-describedby')}"]`)
+    expect(row.text()).toContain('Address verified')
+    expect(row.classes()).toContain('text-text-success')
+    expect(row.attributes('role')).toBe('status')
+  })
+
+  it('feedback of type error flags the field and shows its own message', () => {
+    const w = mountInput({
+      feedback: { type: 'error', message: 'Taken' },
+      modelValue: 'x',
+    })
+    expect(w.text()).toContain('Taken')
+    expect(w.text()).not.toContain('Required')
+    expect(w.get('input').attributes('aria-invalid')).toBe('true')
+  })
+
+  it('empty feedback renders no row and no dangling aria-describedby', () => {
+    const w = mountInput({ feedback: { type: 'error', message: '' } })
+    const input = w.get('input')
+    expect(input.attributes('aria-invalid')).toBe('false')
+    expect(input.attributes('aria-describedby')).toBeUndefined()
+  })
+
+  it('errorMessage wins over feedback', () => {
+    const w = mountInput({
+      errorMessage: 'Bad',
+      feedback: { type: 'warning', message: 'Careful' },
+      modelValue: 'x',
+    })
+    expect(w.text()).toContain('Bad')
+    expect(w.text()).not.toContain('Careful')
+    expect(w.get('input').attributes('aria-invalid')).toBe('true')
   })
 
   it('disabled + filled keeps the float label in disabled grey; no feedback row', () => {
@@ -224,5 +297,26 @@ describe('AppInput submit-on-Enter gate (MEW-2185)', () => {
     const w = mountInput()
     await w.get('input').trigger('keyup', { key: 'Enter' })
     expect(w.emitted('enter')).toHaveLength(1)
+  })
+})
+
+describe('AppInput Active vs Focus edge cases (MEW-1971)', () => {
+  it('a press on the field padding does not leave a stale Active flag', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    await field(w).trigger('pointerdown') // padding, not the <input>
+    await w.get('input').trigger('focus') // later keyboard focus
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
+  })
+})
+
+describe('AppInput Active reset on blur (MEW-1971)', () => {
+  it('a quick blur + Tab back is keyboard Focus again', async () => {
+    const w = mountInput({ modelValue: 'x' })
+    const input = w.get('input')
+    await input.trigger('pointerdown')
+    await input.trigger('focus')
+    await input.trigger('blur') // inside the 150ms grace window…
+    await input.trigger('focus') // …Tab back in
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
   })
 })
