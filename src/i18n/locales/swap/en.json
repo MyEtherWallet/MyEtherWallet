@@ -38,6 +38,7 @@
       "too-many-decimals": "Amount has too many decimals",
       "invalid-amount": "Invalid amount",
       "pair-not-available": "Pair currently not available",
+      "quote-failed": "Unable to get a quote for this amount. Try a different amount or token pair.",
       "recipient-required": "Recipient address is required for bridging",
       "invalid-address": "Invalid address"
     },
