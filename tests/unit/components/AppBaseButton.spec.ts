@@ -14,8 +14,8 @@ const mountIt = (props = {}, slots = {}) =>
 describe('AppBaseButton', () => {
   it('defaults to a primary large button', () => {
     const cls = mountIt().classes()
-    expect(cls).toContain('bg-primary')
-    expect(cls).toContain('text-white')
+    expect(cls).toContain('bg-background-brand')
+    expect(cls).toContain('text-text-on-brand')
     expect(cls).toContain(BTN_SIZE_SPEC.large.padding.split(' ')[0])
   })
 
@@ -26,41 +26,45 @@ describe('AppBaseButton', () => {
 
   it('renders secondary on the default surface as grey with a brand label', () => {
     const cls = mountIt({ type: 'secondary' }).classes()
-    expect(cls).toContain('bg-bgBase')
-    expect(cls).toContain('text-primary')
+    expect(cls).toContain('bg-background-default')
+    expect(cls).toContain('text-text-brand')
   })
 
   it('renders secondary on the alternative surface as white', () => {
     const cls = mountIt({ type: 'secondary', surface: 'alternative' }).classes()
-    expect(cls).toContain('bg-white')
-    expect(cls).toContain('text-primary')
+    expect(cls).toContain('bg-background-alternative')
+    expect(cls).toContain('text-text-brand')
   })
 
-  it('renders tertiary transparent, brand on default and black on alternative', () => {
-    expect(mountIt({ type: 'tertiary' }).classes()).toContain('text-primary')
+  it('renders tertiary transparent, brand on default and default text on alternative', () => {
+    expect(mountIt({ type: 'tertiary' }).classes()).toContain('text-text-brand')
     expect(
       mountIt({ type: 'tertiary', surface: 'alternative' }).classes(),
-    ).toContain('text-black')
+    ).toContain('text-text-default')
   })
 
   it('drops padding for the link type', () => {
     const cls = mountIt({ type: 'link' }).classes()
-    expect(cls).toContain('text-primary')
+    expect(cls).toContain('text-text-brand')
     expect(cls).not.toContain(BTN_SIZE_SPEC.large.padding.split(' ')[0])
   })
 
   it('applies the danger tone per type', () => {
-    expect(mountIt({ tone: 'danger' }).classes()).toContain('bg-error')
+    expect(mountIt({ tone: 'danger' }).classes()).toContain(
+      'bg-background-error',
+    )
     expect(mountIt({ type: 'secondary', tone: 'danger' }).classes()).toContain(
-      'bg-error-subtle',
+      'bg-background-error-subtle',
     )
     expect(mountIt({ type: 'link', tone: 'danger' }).classes()).toContain(
-      'text-error',
+      'text-text-error',
     )
   })
 
   it('keeps the success tone for the perps long/short pairing', () => {
-    expect(mountIt({ tone: 'success' }).classes()).toContain('bg-success')
+    expect(mountIt({ tone: 'success' }).classes()).toContain(
+      'bg-background-success',
+    )
   })
 
   it.each(['small', 'medium', 'large', 'xlarge'] as const)(

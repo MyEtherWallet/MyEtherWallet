@@ -1,10 +1,39 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import { computed } from 'vue'
+import { ref } from 'vue'
+
+/**
+ * A 1inch limit order as built by the SDK (all fields are decimal strings).
+ * Persisted for native orders so a funded-but-unsubmitted order can be
+ * cancelled on its proxy later to reclaim the deposit.
+ */
+export interface NativeOrderStruct {
+  salt: string
+  maker: string
+  receiver: string
+  makerAsset: string
+  takerAsset: string
+  makingAmount: string
+  takingAmount: string
+  makerTraits: string
+}
 
 export interface SavedTradeOrder {
   hash: string
+  /**
+   * 1inch order status (`pending`, `filled`, `cancelled`, `expired`), or one of
+   * MEW's own for native orders: `unsubmitted` (deposit sent, relayer refused
+   * the order, funds sit in the proxy) and `recovered` (that deposit was
+   * reclaimed through `cancelOrder`).
+   */
   status: string
+  /** Escrow deposit transaction of a native (ETH/BNB) order. */
+  depositTxHash?: string
+  /** Per-order proxy that holds a native order's deposit. */
+  proxyAddress?: string
+  nativeOrder?: NativeOrderStruct
+  /** Transaction that reclaimed an `unsubmitted` order's deposit. */
+  recoveryTxHash?: string
   fromAmount: string
   fromSymbol: string
   fromDecimals: number
@@ -26,6 +55,8 @@ export interface SavedTradeOrder {
   chainName: string
   fromAddress: string
   seen?: boolean
+  rewardRegistered?: boolean
+  rewardToastShown?: boolean
 }
 
 export interface TransactionNotification {
@@ -158,6 +189,8 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   ) => {
     subscribers.forEach(callback => callback(item, type))
   }
+  const activeModalOrderHash = ref<string | null>(null)
+
   const tradeOrders = useLocalStorage<TradeOrdersByAddress>(
     'tradeOrders',
     {},
@@ -226,11 +259,6 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     return [...orders, ...txs, ...swapList, ...bridgeList].sort(
       (a, b) => b.createdAt - a.createdAt,
     )
-  }
-
-  // Get orders for address as a computed (reactive)
-  const ordersForAddress = (address: string) => {
-    return computed(() => getOrdersByAddress(address))
   }
 
   // Add a new order
@@ -694,13 +722,13 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     transactions,
     swaps,
     bridges,
+    activeModalOrderHash,
     subscribe,
     getOrdersByAddress,
     getTransactionsByAddress,
     getSwapsByAddress,
     getBridgesByAddress,
     getAllNotifications,
-    ordersForAddress,
     addOrder,
     updateOrder,
     removeOrder,

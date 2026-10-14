@@ -5,7 +5,7 @@
       <app-sheet :title="$t('verify-message')">
         <div class="flex flex-col gap-1 pt-6">
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
-          <app-text-field
+          <app-text-area
             v-model="message"
             surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_verify')"
@@ -23,7 +23,7 @@
             class="w-full mb-4"
           />
 
-          <app-text-field
+          <app-text-area
             v-model="signature"
             surface="alternative"
             :placeholder="$t('sign_message.enter_signature_to_verify')"
@@ -40,14 +40,16 @@
             class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
               verified
-                ? 'border-mew-green-text/20 text-t-default bg-success/5'
-                : 'border-error/20 text-error bg-error/5'
+                ? 'border-border-success/20 text-text-default bg-background-success/5'
+                : 'border-border-error/20 text-text-error bg-background-error/5'
             "
           >
             <div class="flex items-start gap-3">
               <div
                 class="w-2 h-2 mt-2 rounded-full shrink-0"
-                :class="verified ? 'bg-success' : 'bg-error'"
+                :class="
+                  verified ? 'bg-background-success' : 'bg-background-error'
+                "
               ></div>
               <i18n-t
                 :keypath="verifyStatusKey"
@@ -82,7 +84,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextArea from '@/components/AppTextArea.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'

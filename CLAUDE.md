@@ -65,7 +65,6 @@ src/
 | `AppBtnText.vue`      | Text-only button (no background)                           |
 | `AppBtnIcon.vue`      | Icon-only button                                           |
 | `AppBtnIconClose.vue` | Close/dismiss icon button                                  |
-| `AppBtnGroup.vue`     | Container to group related buttons                         |
 | `AppBtnCopy.vue`      | Button that copies text to clipboard                       |
 
 ### Inputs & Forms
@@ -73,8 +72,8 @@ src/
 | Component                | Purpose                                     |
 | ------------------------ | ------------------------------------------- |
 | `AppInput.vue`           | Base text input                             |
-| `AppTextField.vue`       | Extended text field with label/error slots  |
-| `AppSearchInput.vue`     | Input with search icon                      |
+| `AppTextArea.vue`        | Multi-line text area with error feedback    |
+| `AppSearchbar.vue`       | Search field with search icon + clear       |
 | `AppSelect.vue`          | Dropdown select                             |
 | `AppTokenSelect.vue`     | Token-aware dropdown (shows logos, symbols) |
 | `AppToggle.vue`          | Toggle switch (boolean)                     |
@@ -159,6 +158,11 @@ src/
 - `WelcomeDialog.vue`, `TheGdprBanner.vue`
 - `TheNotificationsPopup.vue`, `TheSettingsPopup.vue`
 - `wallet/` → `TheAddressMenu.vue`, `TheCurrentNetwork.vue`, `TheDepositDialog.vue`, `ThePaperWallet.vue`
+
+**`segmented_control/`**
+
+- `AppSegmentedControl.vue` — pill group to switch between related views or filters (radiogroup, `v-model` + `items`)
+- `AppSegment.vue` — single segment, rendered by the control
 
 **`select_chain/`**
 

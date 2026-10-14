@@ -11,7 +11,7 @@
       <div
         v-if="visible"
         :style="isAnchored ? anchoredStyle : undefined"
-        class="fixed z-[200] w-[360px] min-h-[144px] bg-white rounded-20 shadow-[0px_16px_36px_-6px_rgba(0,0,0,0.45)] p-4"
+        class="fixed z-[200] w-[360px] min-h-36 bg-white rounded-20 shadow-[0px_16px_36px_-6px_rgba(0,0,0,0.45)] p-4"
         :class="
           isAnchored
             ? 'origin-right'
@@ -24,7 +24,7 @@
              anchored placement has something to point at. -->
         <svg
           v-if="isAnchored"
-          class="absolute top-1/2 -right-[14px] -translate-y-1/2 drop-shadow-[3px_2px_3px_rgba(0,0,0,0.28)]"
+          class="absolute top-1/2 -right-3.5 -translate-y-1/2 drop-shadow-[3px_2px_3px_rgba(0,0,0,0.28)]"
           width="14"
           height="20"
           viewBox="0 0 14 20"
@@ -40,13 +40,14 @@
         <slot />
 
         <!-- Dismiss button -->
-        <button
-          class="absolute top-2 right-2 p-1 rounded-full hoverNoBG"
-          :aria-label="$t('trade.weekend.dismiss_tooltip')"
+        <AppBtnIcon
+          size="s"
+          :label="$t('trade.weekend.dismiss_tooltip')"
+          class="absolute top-2 right-2 text-text-subtle"
           @click="emit('dismiss')"
         >
-          <XMarkIcon class="w-4 h-4 text-info" />
-        </button>
+          <AppIcon name="x-mark" variant="filled" size="xxs" />
+        </AppBtnIcon>
       </div>
     </transition>
   </teleport>
@@ -64,8 +65,8 @@
  * and what to render inside.
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { XMarkIcon } from '@heroicons/vue/20/solid'
-
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     /** Required by the `anchor` placement; ignored by `bottom-left`. */

@@ -22,6 +22,7 @@ import {
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -30,7 +31,9 @@ import {
   isInvalidWalletAddressError,
   isLockedDeviceError,
   isMetaMaskSdkDecryptError,
+  isMetaMaskSdkUndefinedProviderError,
   isProviderNotFoundError,
+  isProviderProxyRemoveListenerError,
   isRainbowKitNotFoundError,
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
@@ -38,6 +41,10 @@ import {
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
+import {
+  CHUNK_LOAD_ERROR_MESSAGES,
+  installStaleChunkReload,
+} from '@/router/chunkError'
 
 const app = createApp(App)
 
@@ -58,9 +65,13 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'TypeError: Load failed',
       // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
       // assets that no longer exist after a redeploy. These are already
-      // auto-recovered by router.onError (reload once), so they are noise.
-      'Unable to preload CSS',
-      'Failed to fetch dynamically imported module',
+      // auto-recovered (reload once) by router.onError for route chunks and
+      // by installStaleChunkReload for imports inside libraries, so they are
+      // noise.
+      // Covers every browser wording of the same failure (Safari "Importing a
+      // module script failed" APP-MEW-WEB-A5, "text/html ... MIME type"
+      // APP-MEW-WEB-B8, "Unable to preload CSS" APP-MEW-WEB-1K6).
+      ...CHUNK_LOAD_ERROR_MESSAGES,
       // WalletConnect benign rejections when the user abandons the connection flow
       'Proposal expired',
       'Pairing expired',
@@ -104,6 +115,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isBluetoothGattDisconnectedError(originalException) ||
         isCoinNotFoundApiError(originalException) ||
+        // EIP-6963 `announceProvider` with a null/malformed `detail` from a
+        // buggy/hostile extension — crashes mipd/wagmi provider discovery and
+        // MEW's own providerStore.addProvider with a null-`info` deref; not an
+        // app bug (APP-MEW-WEB-1JM / 1JN / 1JG / MEW-2257).
+        isEip6963NullProviderError(originalException) ||
         isExpectedTradeClientError(originalException) ||
         isExtensionContextInvalidatedError(originalException) ||
         isExtensionOrProviderError(originalException) ||
@@ -113,7 +129,17 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // shown to the user as a toast; unactionable noise (APP-MEW-WEB-BH).
         isLockedDeviceError(originalException) ||
         isMetaMaskSdkDecryptError(originalException) ||
+        // MetaMask SDK "SDK state invalid -- undefined provider" — thrown inside
+        // the bundled SDK when it loses the mobile-app connection and
+        // activeProvider is undefined; no app frame, no user affected
+        // (APP-MEW-WEB-SN / MEW-2297).
+        isMetaMaskSdkUndefinedProviderError(originalException) ||
         isProviderNotFoundError(originalException) ||
+        // V8 Proxy-invariant TypeError when wagmi reads `removeListener` off a
+        // `window.ethereum` a browser extension wrapped in a non-compliant
+        // Proxy — fire-and-forget inside wagmi's connector setup, no fixable
+        // MEW frame, external noise (APP-MEW-WEB-1K8 / MEW-2298).
+        isProviderProxyRemoveListenerError(originalException) ||
         isRainbowKitNotFoundError(originalException) ||
         isStorageQuotaExceededError(originalException) ||
         isTransactionReceiptTimeoutError(originalException) ||
@@ -175,8 +201,7 @@ pinia.use(
     // (and potentially sensitive material) that must never leave the client.
     stateTransformer: state => {
       const walletStore = state.walletStore as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (walletStore && 'wallet' in walletStore) {
         return {
           ...state,
@@ -199,6 +224,10 @@ pinia.use(
 
 app.use(pinia)
 app.use(router)
+// Reload once on stale-deploy chunk 404s that happen outside the router (see
+// router/chunkError.ts). Installed before mount so the first lazy import is
+// already covered.
+installStaleChunkReload()
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 app.use(autoAnimatePlugin)

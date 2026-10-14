@@ -92,10 +92,11 @@ describe('connect/create overlay routes (appended to every page)', () => {
     expect(new Set(names).size).toBe(names.length)
   })
 
-  it('covers 21 hosts with 42 overlay records', () => {
+  it('covers 23 hosts with 46 overlay records', () => {
     // A canary: if this drifts, a page route was added without an outlet or a host
-    // silently stopped being decorated.
-    expect(hosts).toHaveLength(21)
-    expect(overlays).toHaveLength(42)
+    // silently stopped being decorated. (Home hosts its own token/stock-info
+    // drawer children — MEW-2360 — which add two more hosts.)
+    expect(hosts).toHaveLength(23)
+    expect(overlays).toHaveLength(46)
   })
 })

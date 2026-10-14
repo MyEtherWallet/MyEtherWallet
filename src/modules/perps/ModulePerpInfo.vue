@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col w-full divide-y divide-grey-10">
+  <div class="flex flex-col w-full divide-y divide-border-default">
     <!-- Header -->
     <div class="pb-3 xs:pb-5">
       <div
-        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px] h-5 w-5"
+        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-20 h-5 w-5"
       >
         <!-- <app-btn-icon label="Share">
           <share-icon class="h-5 w-5" />
@@ -13,8 +13,8 @@
         <app-token-logo
           :url="getLogoUrl(baseCurrency)"
           :symbol="baseCurrency"
-          width="w-10 xs:w-[56px]"
-          height="h-10 xs:h-[56px]"
+          width="w-10 xs:w-14"
+          height="h-10 xs:h-14"
         />
         <div class="flex flex-col">
           <h1
@@ -30,19 +30,23 @@
               {{ formatPrice(currentPrice) }}
             </p>
             <div v-if="priceChangePercent !== null" class="inline-block ml-2">
-              <ArrowTrendingDownIcon
+              <AppIcon
+                name="arrow-trending-down"
+                size="xxs"
                 v-if="priceChangePercent < 0"
-                class="w-4 h-4 inline-block text-error"
+                class="inline-block text-text-error"
               />
-              <ArrowTrendingUpIcon
+              <AppIcon
+                name="arrow-trending-up"
+                size="xxs"
                 v-else
-                class="w-4 h-4 inline-block text-success"
+                class="inline-block text-text-success"
               />
               <span
                 :class="[
                   {
-                    'text-success': priceChangePercent >= 0,
-                    'text-error': priceChangePercent < 0,
+                    'text-text-success': priceChangePercent >= 0,
+                    'text-text-error': priceChangePercent < 0,
                   },
                   'ml-1 text-s-14 xs:text-s-17',
                 ]"
@@ -52,7 +56,7 @@
             </div>
           </div>
           <p
-            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-text-subtle"
           >
             {{ $t('perps.info.perpetual-label') }}
           </p>
@@ -63,36 +67,34 @@
     <!-- Chart -->
     <div class="py-6">
       <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
-        <app-segmented-control
-          v-model:selected="selectedInterval"
-          :btn-list="isXS ? chartIntervals.slice(0, 3) : chartIntervals"
-          size="xs"
+        <AppSegmentedControl
+          :model-value="selectedInterval.value"
+          :items="isXS ? chartIntervals.slice(0, 3) : chartIntervals"
+          size="small"
+          :label="$t('common.chart_range')"
+          @update:model-value="selectInterval"
         >
-          <template #btn-content="{ data }">
-            {{ data.label }}
-          </template>
-          <template #custom>
-            <app-select
-              v-if="isXS"
-              v-model:selected="selectedInterval"
-              :options="chartIntervals.slice(3)"
-              position="-right-1"
-              class="text-s-12"
-            >
-              <template #select-button="{ toggleSelect }">
-                <button
-                  class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
-                  @click="toggleSelect"
-                >
-                  <p>{{ $t('perps.info.more-label') }}</p>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
-                </button>
-              </template>
-            </app-select>
-          </template>
-        </app-segmented-control>
+          <app-select
+            v-if="isXS"
+            v-model:selected="selectedInterval"
+            :options="chartIntervals.slice(3)"
+            position="-right-1"
+            class="text-s-12"
+          >
+            <template #select-button="{ toggleSelect }">
+              <button
+                type="button"
+                class="flex h-7 items-center rounded-3xl px-1.5 text-label-sm text-text-default hover:bg-background-alternative-hover"
+                @click="toggleSelect"
+              >
+                <span class="px-1.5">{{ $t('perps.info.more-label') }}</span>
+                <AppIcon name="chevron-down" size="s" />
+              </button>
+            </template>
+          </app-select>
+        </AppSegmentedControl>
       </div>
-      <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
+      <div class="h-[200px] sm:h-80 px-4 lg:px-10 py-6">
         <chart-price
           v-if="!chartLoading && chartLabels.length > 0"
           :labels="chartLabels"
@@ -102,11 +104,11 @@
         />
         <div
           v-else
-          class="w-full bg-surface h-full rounded-lg"
+          class="w-full bg-background-default-hover h-full rounded-lg"
           :class="{ 'animate-pulse': chartLoading }"
         >
           <div class="flex flex-col items-center h-full justify-center gap-2">
-            <p v-if="!chartLoading" class="text-s-14 text-info">
+            <p v-if="!chartLoading" class="text-s-14 text-text-subtle">
               {{ $t('perps.info.no-chart-data') }}
             </p>
           </div>
@@ -117,7 +119,7 @@
         <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.order.price-label') }}
             </p>
@@ -127,7 +129,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.positions.mark-price-label') }}
             </p>
@@ -137,7 +139,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.volume-24h-label') }}
             </p>
@@ -147,7 +149,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.open-interest-label') }}
             </p>
@@ -157,7 +159,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.funding-countdown-label') }}
             </p>
@@ -169,7 +171,7 @@
                     : '—'
                 }}
               </span>
-              <span v-if="fundingCountdown" class="text-info text-s-12">
+              <span v-if="fundingCountdown" class="text-text-subtle text-s-12">
                 {{ $t('perps.info.in-label') }} {{ fundingCountdown }}
               </span>
             </p>
@@ -181,7 +183,7 @@
     <div v-if="isWalletConnected && marketPosition" class="py-6">
       <!-- Position Info -->
       <div
-        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6"
+        class="flex flex-col items-start gap-3 pt-6 bg-background-default rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6"
       >
         <div
           class="flex flex-wrap items-center justify-between xs:justify-start px-2 gap-x-3 gap-y-1 w-full"
@@ -192,23 +194,12 @@
           <div
             class="order-3 xs:order-2 basis-full xs:basis-auto -ml-1 xs:ml-0"
           >
-            <span
-              :class="[
-                marketPosition.direction === 'long'
-                  ? 'text-success'
-                  : 'text-error',
-                ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
-              ]"
-            >
-              {{
-                marketPosition.direction === 'long'
-                  ? $t('perps.trade.long')
-                  : marketPosition.direction === 'short'
-                    ? $t('perps.trade.short')
-                    : marketPosition.direction
-              }}
-              {{ marketPosition.leverage }}x
-            </span>
+            <app-tag
+              :type="marketPosition.direction === 'long' ? 'success' : 'danger'"
+              variant="subtle"
+              class="sm:ml-2"
+              :label="positionTagLabel"
+            />
           </div>
 
           <app-select
@@ -226,17 +217,15 @@
               >
                 <div class="flex items-center">
                   <span>{{ $t('perps.positions.manage-label') }}</span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
               <app-btn-icon
-                class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
+                class="xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
                 :label="$t('perps.info.manage-position-label')"
-                height="h-7 xs:h-8"
-                width="w-7 xs:w-8"
                 @click="toggleSelect"
               >
-                <ellipsis-vertical-icon class="w-5 h-5" />
+                <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
               </app-btn-icon>
             </template>
           </app-select>
@@ -252,7 +241,7 @@
         >
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.positions.value-label') }}
             </p>
@@ -262,7 +251,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.upnl-label') }}
             </p>
@@ -275,7 +264,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.liquidation-label') }}
             </p>
@@ -285,7 +274,7 @@
           </div>
           <div>
             <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
             >
               {{ $t('perps.info.quantity-label') }}
             </p>
@@ -301,19 +290,21 @@
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}
-          <chevron-down-icon
-            class="w-4 h-4 ml-1 inline-block align-middle"
-            :class="{ 'rotate-180 ': showPositionMore }"
+          <AppIcon
+            name="chevron-down"
+            size="xxs"
+            class="ml-1 inline-block align-middle"
+            :class="{ 'rotate-180': showPositionMore }"
           />
         </app-base-button>
         <transition name="fade" mode="out-in">
           <div
             v-if="showPositionMore"
-            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-grey-10 pt-3 -mt-2"
+            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-border-default pt-3 -mt-2"
           >
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.roe-label') }}
               </p>
@@ -328,7 +319,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.positions.entry-price-label') }}
               </p>
@@ -338,7 +329,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.positions.mark-price-label') }}
               </p>
@@ -349,7 +340,7 @@
 
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.balance.used-margin-label') }}
               </p>
@@ -360,7 +351,7 @@
 
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.bankruptcy-label') }}
               </p>
@@ -370,7 +361,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.maint-margin-label') }}
               </p>
@@ -380,7 +371,7 @@
             </div>
             <div>
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.info.funding-label') }}
               </p>
@@ -391,21 +382,21 @@
 
             <div v-if="marketPosition.takeProfitTriggerPrice">
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.confirm.take-profit') }}
               </p>
-              <p class="text-s-14 font-bold text-success">
+              <p class="text-s-14 font-bold text-text-success">
                 {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
               </p>
             </div>
             <div v-if="marketPosition.stopLossTriggerPrice">
               <p
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
               >
                 {{ $t('perps.confirm.stop-loss') }}
               </p>
-              <p class="text-s-14 font-bold text-error">
+              <p class="text-s-14 font-bold text-text-error">
                 {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
               </p>
             </div>
@@ -414,32 +405,31 @@
       </div>
       <!-- Market Position Info Tabs -->
       <div
-        class="flex flex-col items-start gap-3 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
+        class="flex flex-col items-start gap-3 bg-background-default rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
         <div class="hidden lg:flex lg:items-center">
-          <app-segmented-control
-            v-model:selected="activeInfoTabObj"
-            :btn-list="infoTabs"
-            size="medium"
+          <AppSegmentedControl
+            v-model="activeInfoTab"
+            :items="infoTabs"
+            size="small"
+            :label="$t('perps.positions.tabs-label')"
             class="ml-2"
           >
-            <template #btn-content="{ data }">
-              <span>
-                {{ data.label }}
-                <span
-                  v-if="data.value === 'orders' && openOrdersCountForMarket > 0"
-                  class="ml-1 text-info text-s-12"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${OPEN_COUNT_LIMIT}+`
-                      : openOrdersCountForMarket
-                  }}
-                </span>
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'orders' && openOrdersCountForMarket > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${OPEN_COUNT_LIMIT}+`
+                    : openOrdersCountForMarket
+                }}
               </span>
             </template>
-          </app-segmented-control>
+          </AppSegmentedControl>
         </div>
         <app-select
           v-model:selected="activeInfoTabObj"
@@ -449,7 +439,7 @@
           class="lg:hidden sm:mx-2 w-full sm:w-auto"
         >
           <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1">
+            <div class="bg-background-default-hover rounded-full p-1">
               <button
                 class="rounded-full bg-white py-3 w-full sm:w-auto min-w-[180px] px-5 shadow-button"
                 @click="toggleSelect"
@@ -462,7 +452,7 @@
                         activeInfoTab === 'orders' &&
                         openOrdersCountForMarket > 0
                       "
-                      class="ml-1 text-info text-s-12"
+                      class="ml-1 text-text-subtle text-s-12"
                     >
                       ·
                       {{
@@ -472,7 +462,7 @@
                       }}
                     </span>
                   </span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <AppIcon name="chevron-down" size="xxs" class="ml-1" />
                 </div>
               </button>
             </div>
@@ -486,30 +476,29 @@
             key="position-orders"
           >
             <div class="mb-4 xs:pl-4">
-              <app-segmented-control
-                v-model:selected="selectedOrderFilter"
-                :btn-list="orderFilterTabs"
-                size="xs"
+              <AppSegmentedControl
+                v-model="selectedOrderFilterValue"
+                :items="orderFilterTabs"
+                size="small"
+                :label="$t('perps.positions.order-filter-label')"
               >
-                <template #btn-content="{ data }">
-                  <span class="px-2"
-                    >{{ data.label }}
-                    <span
-                      v-if="
-                        data.value === 'pending' && openOrdersCountForMarket > 0
-                      "
-                      class="ml-1 text-info text-s-11"
-                    >
-                      ·
-                      {{
-                        openOrdersCountIsCapped
-                          ? `${OPEN_COUNT_LIMIT}+`
-                          : openOrdersCountForMarket
-                      }}
-                    </span></span
+                <template #label="{ item }">
+                  {{ item.label }}
+                  <span
+                    v-if="
+                      item.value === 'pending' && openOrdersCountForMarket > 0
+                    "
+                    class="ml-1 text-text-subtle text-s-11"
                   >
+                    ·
+                    {{
+                      openOrdersCountIsCapped
+                        ? `${OPEN_COUNT_LIMIT}+`
+                        : openOrdersCountForMarket
+                    }}
+                  </span>
                 </template>
-              </app-segmented-control>
+              </AppSegmentedControl>
             </div>
             <app-table-skeleton
               v-if="ordersLoading && marketOrders.length === 0"
@@ -520,7 +509,7 @@
               v-else-if="
                 filteredMarketOrders.length === 0 && ordersCurrentPage === 0
               "
-              class="text-center py-8 text-info text-s-14"
+              class="text-center py-8 text-text-subtle text-s-14"
             >
               {{ $t('perps.info.no-orders-for', { symbol: baseCurrency }) }}
             </div>
@@ -531,7 +520,7 @@
             >
               <thead>
                 <tr
-                  class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                  class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold border-b border-border-default"
                 >
                   <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                     {{ $t('perps.confirm.side-label') }}
@@ -569,12 +558,14 @@
                 >
                   <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-info text-s-12 mb-[2px]">
+                    <p class="text-text-subtle text-s-12 mb-0.5">
                       {{ formatDate(order.createdAt) }}
                     </p>
                     <p
                       :class="[
-                        order.side === 'buy' ? 'text-success' : 'text-error',
+                        order.side === 'buy'
+                          ? 'text-text-success'
+                          : 'text-text-error',
                         'text-s-13 capitalize font-medium',
                       ]"
                     >
@@ -589,21 +580,12 @@
                   </td>
                   <!-- Status -->
                   <td class="px-1 py-3 hidden 2xl:table-cell">
-                    <p
-                      :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
-                        order.status === 'open' || order.status === 'pending'
-                          ? 'text-primary '
-                          : order.status === 'fullyfilled'
-                            ? ' text-success'
-                            : order.status === 'canceled' ||
-                                order.status === 'untriggered'
-                              ? ' text-info'
-                              : '',
-                      ]"
-                    >
-                      {{ $t(formatOrderStatus(order.status)) }}
-                    </p>
+                    <app-tag
+                      :type="orderStatusTagType(order.status)"
+                      variant="subtle"
+                      class="-ml-2 mt-1"
+                      :label="$t(formatOrderStatus(order.status))"
+                    />
                   </td>
                   <!-- Type -->
                   <td
@@ -611,21 +593,12 @@
                   >
                     <p>{{ $t(formatOrderType(order.type)) }}</p>
 
-                    <p
-                      :class="[
-                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
-                        order.status === 'open' || order.status === 'pending'
-                          ? 'text-primary '
-                          : order.status === 'fullyfilled'
-                            ? ' text-success'
-                            : order.status === 'canceled' ||
-                                order.status === 'untriggered'
-                              ? ' text-info'
-                              : '',
-                      ]"
-                    >
-                      {{ $t(formatOrderStatus(order.status)) }}
-                    </p>
+                    <app-tag
+                      :type="orderStatusTagType(order.status)"
+                      variant="subtle"
+                      class="-ml-2 mt-1 2xl:hidden"
+                      :label="$t(formatOrderStatus(order.status))"
+                    />
                   </td>
                   <!-- Price -->
                   <td class="px-1 py-3 text-right font-normal text-s-14">
@@ -636,7 +609,7 @@
                     class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
                   >
                     <p>{{ order.filledSize }} {{ baseCurrency }}</p>
-                    <p class="text-s-12 text-info">
+                    <p class="text-s-12 text-text-subtle">
                       {{
                         $t('perps.positions.out-of', {
                           size: order.size,
@@ -661,16 +634,18 @@
                         <template #menu-button="{ toggleMenu }">
                           <app-btn-icon
                             :label="$t('perps.market-list.action-menu-label')"
-                            height="h-7 xs:h-8"
-                            width="w-7 xs:w-8"
                             @click.stop="toggleMenu"
                           >
-                            <ellipsis-vertical-icon class="w-5 h-5" />
+                            <AppIcon
+                              name="ellipsis-vertical"
+                              variant="filled"
+                              size="s"
+                            />
                           </app-btn-icon>
                         </template>
                         <template #menu-content="{ toggleMenu }">
                           <div
-                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                           >
                             <ul>
                               <li
@@ -686,7 +661,7 @@
                               </li>
                               <li
                                 v-if="showCancelButton(order)"
-                                class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
+                                class="p-2 flex items-center hoverBGWhite rounded-12 text-text-error"
                                 @click.stop="[
                                   toggleMenu(),
                                   openCancelConfirmation(order),
@@ -705,12 +680,14 @@
                       <app-btn-icon
                         v-else
                         :label="$t('perps.positions.view-order-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         :class="{ 'ml-auto': !showCancelButton(order) }"
                         @click.stop="openOrderDialog(order)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </div>
                   </td>
@@ -745,7 +722,7 @@
             />
             <div
               v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
-              class="text-center py-6 text-info text-s-14"
+              class="text-center py-6 text-text-subtle text-s-14"
             >
               {{ $t('perps.info.no-fills-for', { symbol: baseCurrency }) }}
             </div>
@@ -753,7 +730,7 @@
               <table ref="fillsTable" class="w-full text-s-14 table-fixed">
                 <thead>
                   <tr
-                    class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                    class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold border-b border-border-default"
                   >
                     <th class="px-1 sm:pl-4 py-3 text-left font-bold">
                       {{ $t('perps.positions.direction-header') }}
@@ -787,19 +764,15 @@
                     @click="openFillDialog(fill)"
                   >
                     <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                      <p class="text-s-12 text-info mb-1">
+                      <p class="text-s-12 text-text-subtle mb-1">
                         {{ formatDate(fill.time) }}
                       </p>
-                      <p
-                        :class="[
-                          fill.direction?.toLowerCase().includes('long')
-                            ? 'text-success'
-                            : 'text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
-                        ]"
-                      >
-                        {{ $t(directionKey(fill.direction)) }}
-                      </p>
+                      <app-tag
+                        :type="fillDirectionTagType(fill.direction)"
+                        variant="subtle"
+                        class="-ml-1"
+                        :label="$t(directionKey(fill.direction))"
+                      />
                     </td>
                     <td class="px-1 py-3 text-right font-normal text-s-14">
                       <p>{{ formatPrice(fill.price) }}</p>
@@ -820,18 +793,20 @@
                       <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                         {{ formatPnl(fill.pnl) }}
                       </span>
-                      <span v-else class="text-info">—</span>
+                      <span v-else class="text-text-subtle">—</span>
                     </td>
                     <!-- Actions -->
                     <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                       <app-btn-icon
                         :label="$t('perps.positions.view-fill-details-label')"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                         class="ml-auto"
                         @click="openFillDialog(fill)"
                       >
-                        <chevron-right-icon class="w-5 h-5" />
+                        <AppIcon
+                          name="chevron-right"
+                          variant="filled"
+                          size="s"
+                        />
                       </app-btn-icon>
                     </td>
                   </tr>
@@ -861,7 +836,7 @@
       <h3 class="text-s-20 font-bold mb-3">
         {{ $t('perps.info.about-symbol', { symbol: baseCurrency }) }}
       </h3>
-      <p class="text-s-14 text-info leading-relaxed">
+      <p class="text-s-14 text-text-subtle leading-relaxed">
         {{ stockDescription }}
       </p>
     </div>
@@ -874,7 +849,7 @@
       <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.asset-name-label') }}
           </p>
@@ -882,7 +857,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.ticker-label') }}
           </p>
@@ -890,7 +865,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.category-label') }}
           </p>
@@ -898,7 +873,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.high-24h-label') }}
           </p>
@@ -908,7 +883,7 @@
         </div>
         <div>
           <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold mb-1"
           >
             {{ $t('perps.info.low-24h-label') }}
           </p>
@@ -957,10 +932,11 @@
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSegmentedControl from '@/components/AppSegmentedControl.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -969,20 +945,11 @@ import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderCon
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
-import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
-import {
-  PERPS_CHART_INTERVALS,
-  getPerpsChartRange,
-} from './utils/chart'
+import { PERPS_CHART_INTERVALS, getPerpsChartRange } from './utils/chart'
 
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/outline'
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
 import { capturePerps } from './sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
@@ -1005,6 +972,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   analytics,
   ConnectWalletEvent,
@@ -1031,8 +999,10 @@ import {
   getOrderPrice,
   formatDate,
   formatOrderStatus,
+  orderStatusTagType,
   formatOrderType,
   directionKey,
+  fillDirectionTagType,
 } from './utils/formatters'
 import {
   getLogoUrl,
@@ -1153,6 +1123,19 @@ const marketPosition = computed(() => {
   return pos.length ? pos[0] : undefined
 })
 
+// "Long 10x" / "Short 5x"; an unmapped raw direction is capitalized as is.
+const positionTagLabel = computed(() => {
+  const pos = marketPosition.value
+  if (!pos) return ''
+  const side =
+    pos.direction === 'long'
+      ? t('perps.trade.long')
+      : pos.direction === 'short'
+        ? t('perps.trade.short')
+        : pos.direction.charAt(0).toUpperCase() + pos.direction.slice(1)
+  return `${side} ${pos.leverage}x`
+})
+
 // Mark price
 const markPrice = computed(() => {
   const mp = markPriceData.value[props.market]
@@ -1205,18 +1188,7 @@ const orderFilterTabs = computed(() => [
   { label: t('perps.positions.filter-pending'), value: 'pending' },
 ])
 
-// Track the filter by value, not by object: labels are locale-dependent and
-// AppSegmentedControl compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
-const selectedOrderFilter = computed({
-  get: () =>
-    orderFilterTabs.value.find(
-      tab => tab.value === selectedOrderFilterValue.value,
-    ) ?? orderFilterTabs.value[0],
-  set: (tab: { label: string; value: string }) => {
-    selectedOrderFilterValue.value = tab.value
-  },
-})
 
 const filteredMarketOrders = computed(() => {
   if (selectedOrderFilterValue.value === 'all') return marketOrders.value
@@ -1657,6 +1629,11 @@ const chartIntervals = computed<ChartInterval[]>(() =>
   })),
 )
 const selectedInterval = ref<ChartInterval>(chartIntervals.value[0])
+const selectInterval = (value: ChartInterval['value']) => {
+  selectedInterval.value =
+    chartIntervals.value.find(opt => opt.value === value) ??
+    selectedInterval.value
+}
 watch(chartIntervals, options => {
   selectedInterval.value =
     options.find(opt => opt.value === selectedInterval.value.value) ||

@@ -9,9 +9,9 @@ import {
 // _Avatar badge (1852:356). One circle, 1px solid white border, centered content.
 //   Network — white bg, no padding, logo fills the box (bottom-right).
 //   Icon    — #e6e6e6 bg, 1px padding, holds a glyph (top-left).
-//   Status  — a fixed 8px white dot-holder (top-right), same at every size.
+//   Status  — a fixed 10px white dot-holder (top-right), same at every size.
 // The parent (AppAvatar) sizes + positions the wrapper from the size table;
-// Network / Icon fill it, Status renders its fixed 8px dot centered inside.
+// Network / Icon fill it, Status renders its fixed 10px dot centered inside.
 defineProps<{
   type: AvatarBadgeType
   status?: AvatarStatus
@@ -33,7 +33,7 @@ const statusStyle = {
 
   <div
     v-else-if="type === 'icon'"
-    class="w-full h-full rounded-full border border-white bg-avatar-badge-icon-bg overflow-hidden flex items-center justify-center box-border p-px text-t-default [&_svg]:w-full [&_svg]:h-full"
+    class="w-full h-full rounded-full border border-white bg-background-default-hover overflow-hidden flex items-center justify-center box-border p-px text-text-default [&_svg]:w-full [&_svg]:h-full"
   >
     <slot />
   </div>

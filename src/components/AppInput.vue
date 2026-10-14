@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <!-- Field box — fixed height, 2px box-border so the ring never shifts it -->
+    <!-- Field box — fixed height; state lines are inset rings, so nothing shifts -->
     <div
       :class="[
         'flex items-center gap-2 w-full rounded-12 px-4',
@@ -25,8 +25,8 @@
           :class="
             isFloating
               ? [
-                  'block text-xs font-semibold leading-[18px] tracking-[-0.24px] truncate',
-                  disabled ? 'text-grey-subtle' : 'text-t-subtle',
+                  'block text-label-xs truncate',
+                  disabled ? 'text-text-disabled' : 'text-text-subtle',
                 ]
               : 'sr-only'
           "
@@ -44,10 +44,13 @@
           :aria-invalid="!disabled && hasError"
           :aria-describedby="showFeedback ? feedbackId : undefined"
           :class="[
-            'w-full bg-transparent focus:outline-none focus:ring-0 text-sm leading-5 placeholder:text-grey-subtle',
-            disabled ? 'text-grey-subtle' : 'text-black',
+            'w-full bg-transparent focus:outline-none focus:ring-0 text-text-sm',
+            disabled
+              ? 'text-text-disabled placeholder:text-text-disabled'
+              : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
+          @pointerdown="setActive()"
           @focus="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
@@ -59,7 +62,7 @@
         v-if="$slots.trailing || showClear || showReveal"
         :inert="disabled || undefined"
         :class="[
-          'flex items-center gap-1 shrink-0',
+          'flex items-center shrink-0',
           { 'opacity-40 pointer-events-none': disabled },
         ]"
       >
@@ -67,22 +70,25 @@
         <app-btn-icon
           v-if="showClear"
           @click="clearInputValue"
+          :class="TRAILING_BTN_CLASS"
           :label="$t('common.clear_icon')"
         >
-          <x-circle-icon class="w-5 h-5 text-primary" />
+          <AppIcon name="x-circle" size="s" />
         </app-btn-icon>
         <app-btn-icon
           v-if="showReveal"
           @click="togglePasswordVisibility"
+          :class="TRAILING_BTN_CLASS"
           :label="
             !showPassword
               ? $t('common.show_password')
               : $t('common.hide_password')
           "
         >
-          <component
-            :is="!showPassword ? EyeSlashIcon : EyeIcon"
-            class="w-5 h-5 text-primary"
+          <AppIcon
+            :name="!showPassword ? 'eye-slash' : 'eye'"
+            variant="filled"
+            size="s"
           />
         </app-btn-icon>
       </div>
@@ -90,16 +96,15 @@
 
     <!-- Feedback row — focus-independent; never rendered while disabled -->
     <transition name="fade">
-      <div
+      <AppInputFeedback
         v-if="showFeedback"
         :id="feedbackId"
-        class="flex items-center gap-1 min-h-6 px-4"
-      >
-        <exclamation-circle-icon class="w-5 h-5 shrink-0 text-error" />
-        <p class="text-xs leading-[18px] text-error min-w-0 break-words">
-          {{ errorMessage || $t('common.required') }}
-        </p>
-      </div>
+        :type="hasError ? 'error' : feedback?.type"
+        :message="
+          errorMessage ||
+          (hasRequiredError ? $t('common.required') : feedback?.message)
+        "
+      />
     </transition>
   </div>
 </template>
@@ -115,10 +120,16 @@ import {
   type InputTypeHTMLAttribute,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
-import { XCircleIcon, ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
+import type { InputFeedback } from '@/components/input_feedback/types'
 import { useInFocusInput } from '@/composables/useInFocusInput'
-import { INPUT_SIZE_SPEC, type InputSize } from '@/components/inputSizes'
+import {
+  INPUT_SIZE_SPEC,
+  inputSurfaceClass,
+  type InputSize,
+  type InputSurface,
+} from '@/components/inputSizes'
 
 /**
  * Shared text input, rebuilt against the design-library `Input` component
@@ -136,12 +147,12 @@ const props = defineProps({
     default: 'large',
   },
   /**
-   * Figma "Style": 'default' is a grey #f5f5f5 fill (for white surfaces —
-   * it disappears on the grey app background); 'alternative' is white with a
-   * 1px border (used on white cards/dialogs today, also works on grey).
+   * Figma "Style": 'default' is the background/default fill (for white
+   * surfaces — it disappears on the app background); 'alternative' is the
+   * background/alternative fill with a 1px border/default line (cards/dialogs).
    */
   surface: {
-    type: String as PropType<'default' | 'alternative'>,
+    type: String as PropType<InputSurface>,
     default: 'default',
   },
   /** Float label (Large) and the associated a11y label for every size. */
@@ -156,6 +167,11 @@ const props = defineProps({
   },
   errorMessage: {
     type: String,
+    required: false,
+  },
+  /** Success / warning / helper row; `errorMessage` wins when both are set. */
+  feedback: {
+    type: Object as PropType<InputFeedback>,
     required: false,
   },
   type: {
@@ -195,8 +211,13 @@ const spec = computed(() => INPUT_SIZE_SPEC[props.size])
 /**------------------------
  * Focus State
  -------------------------*/
-const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
-  useInFocusInput(baseInput)
+const {
+  inFocusInput,
+  isActive,
+  setActive,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(baseInput)
 
 /**------------------------
  * Value / label float
@@ -217,11 +238,14 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? props.label)
 const hasRequiredError = ref(false)
 const hasError = computed(
   () =>
-    (!!props.errorMessage && props.errorMessage !== '') ||
-    hasRequiredError.value,
+    !!props.errorMessage ||
+    hasRequiredError.value ||
+    (props.feedback?.type === 'error' && !!props.feedback.message),
 )
 // Disabled fields never show the feedback row (no error variants in Figma).
-const showFeedback = computed(() => !props.disabled && hasError.value)
+const showFeedback = computed(
+  () => !props.disabled && (hasError.value || !!props.feedback?.message),
+)
 
 watch(inFocusInput, value => {
   if (!value) {
@@ -233,44 +257,38 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
 }
 
 /**------------------------
- * Surface — bg + border colour by state. The border is always 2px on both
- * surfaces so hover/focus never shift the content. The Alternative surface's
- * resting 1px line is an inset ring drawn inside the transparent 2px border
- * (a real 1px border would nudge the text by 1px on hover). The error ring is
- * focus-only; an unfocused errored field keeps its normal border and is
- * signalled by the feedback row alone.
+ * Surface — bg + border by state (see inputSurfaceClass)
  -------------------------*/
-const surfaceClass = computed(() => {
-  const base = 'box-border transition-colors'
-  const ring = hasError.value ? 'border-error' : 'border-primary'
-
-  if (props.surface === 'alternative') {
-    const rest = `${base} bg-white border-2 border-transparent ring-1 ring-inset ring-border-default`
-    if (props.disabled) return rest
-    if (inFocusInput.value) return `${base} bg-white border-2 ${ring}`
-    // Resting line is 1px border-default; becomes the full 2px grey border on hover.
-    return `${rest} hover:ring-0 hover:border-grey-subtle`
-  }
-
-  if (props.disabled) return `${base} bg-bgBase border-2 border-transparent`
-  if (inFocusInput.value) return `${base} bg-bgBase border-2 ${ring}`
-  return `${base} bg-bgBase border-2 border-transparent hover:border-grey-subtle`
-})
+const surfaceClass = computed(() =>
+  inputSurfaceClass({
+    surface: props.surface,
+    focused: inFocusInput.value,
+    active: isActive.value,
+    error: hasError.value,
+    disabled: props.disabled,
+  }),
+)
 
 /**------------------------
  * Trailing actions (built-in clear + password reveal)
  -------------------------*/
+// Figma Input trailing Button Icon: 20px glyph + 3px padding (26px, between the
+// library S 22 and M 32 boxes), siblings packed with no gap. icon/default tint
+// on the button; the glyph inherits it.
+const TRAILING_BTN_CLASS = 'size-[26px]! text-icon-default'
 const showClear = computed(() => hasValue.value && !props.disabled)
 const showReveal = computed(() => props.type === 'password' && !props.disabled)
 
 const showPassword = ref(false)
 const togglePasswordVisibility = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     showPassword.value = !showPassword.value
@@ -284,6 +302,7 @@ const inputType = computed(() => {
 })
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

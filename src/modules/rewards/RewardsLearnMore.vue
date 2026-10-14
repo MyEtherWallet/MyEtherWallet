@@ -3,7 +3,7 @@
     <template #content>
       <div class="px-6 py-6 flex flex-col">
         <!-- Title -->
-        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
+        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-text-brand">Trade</h3> -->
         <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
           {{ t('rewards.learn_more_title') }}
         </h3>
@@ -17,49 +17,78 @@
           >
             <div
               class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-              :class="index < 3 ? 'bg-blue-10' : 'bg-grey-5'"
+              :class="
+                index < 3
+                  ? 'bg-background-brand-subtle'
+                  : 'bg-background-default'
+              "
             >
-              <arrow-path-rounded-square-icon
-                class="w-4 h-4 text-primary"
+              <AppIcon
+                name="arrow-path-rounded-square"
+                size="xxs"
                 v-if="item.icon === 'swap'"
+                class="text-text-brand"
               />
-              <trophy-icon
+              <AppIcon
+                name="trophy"
+                variant="filled"
+                size="xxs"
                 v-else-if="item.icon === 'trophy'"
-                class="w-4 h-4 text-primary"
+                class="text-text-brand"
               />
               <trade-icon
                 v-else-if="item.icon === 'trade'"
-                class="w-4 h-4 text-primary"
+                class="w-4 h-4 text-text-brand"
               />
-              <currency-dollar-icon
+              <AppIcon
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
                 v-else-if="item.icon === 'currency-dollar'"
-                class="w-4 h-4 text-primary"
+                class="text-text-brand"
               />
-              <calendar-icon
+              <AppIcon
+                name="calendar"
+                variant="filled"
+                size="xxs"
                 v-else-if="item.icon === 'calendar'"
-                class="w-4 h-4 text-grey-50"
+                class="text-text-muted"
               />
-              <wallet-icon
+              <AppIcon
+                name="wallet"
+                size="xxs"
                 v-else-if="item.icon === 'wallet-icon'"
-                class="w-4 h-4 text-grey-50"
+                class="text-text-muted"
               />
-              <currency-dollar-icon
+              <AppIcon
+                name="banknotes"
+                size="xxs"
+                v-else-if="item.icon === 'wallet-balance'"
+                class="text-text-muted"
+              />
+              <AppIcon
+                name="currency-dollar"
+                variant="filled"
+                size="xxs"
                 v-else-if="item.icon === 'currency-dollar-gray'"
-                class="w-4 h-4 text-grey-50"
+                class="text-text-muted"
               />
-              <face-frown-icon
+              <AppIcon
+                name="face-frown"
+                variant="filled"
+                size="xxs"
                 v-else-if="item.icon === 'face-frown'"
-                class="w-4 h-4 text-grey-50"
+                class="text-text-muted"
               />
             </div>
-            <p class="text-s-14 text-info leading-snug pt-1">
+            <p class="text-s-14 text-text-subtle leading-snug pt-1">
               {{ item.text }}
             </p>
           </div>
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-grey-10" />
+        <app-divider class="my-5" />
 
         <rewards-rows
           v-if="!isBanned"
@@ -95,17 +124,7 @@ import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import {
-  TrophyIcon,
-  CalendarIcon,
-  CurrencyDollarIcon,
-  FaceFrownIcon,
-} from '@heroicons/vue/24/solid'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  ArrowPathRoundedSquareIcon,
-  WalletIcon,
-} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -113,6 +132,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps<{
   location?:
     | 'main-banner'
@@ -158,6 +179,7 @@ const MIN_TRADE_AMOUNT = 25
 const MAX_USERS_PER_HOUR = 15
 const REWARD_AMOUNT = 5
 const CAMPAIGN_PERIOD_DAYS = 7
+const MIN_USDC_HOLD_BALANCE = 50
 
 watch(isOpenModel, val => {
   if (val) {
@@ -197,6 +219,12 @@ const infoItems = computed(() => [
   {
     icon: 'wallet-icon',
     text: t('rewards.info_wallet_age'),
+  },
+  {
+    icon: 'wallet-balance',
+    text: t('rewards.info_min_usdc_balance', {
+      amount: MIN_USDC_HOLD_BALANCE,
+    }),
   },
   {
     icon: 'currency-dollar-gray',

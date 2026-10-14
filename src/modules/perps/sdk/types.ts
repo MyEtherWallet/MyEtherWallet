@@ -18,6 +18,7 @@ export interface StatusResult {
 export interface LoginGetChallengeRequest {
   walletAddress: string
   chainId: string
+  builderCode: string
 }
 
 export interface LoginChallengeResult {
@@ -28,7 +29,6 @@ export interface LoginChallengeResult {
 export interface LoginCompleteChallengeRequest {
   id: string
   signature: string
-  builderCode: string
 }
 
 export interface LoginCompleteChallengeResult {
@@ -53,7 +53,9 @@ interface MarginInfo {
   positionBracketUsd: string
 }
 
-export type TradingPair = Required<components['schemas']['PerpsTradingPair']> & {
+export type TradingPair = Required<
+  components['schemas']['PerpsTradingPair']
+> & {
   pair: {
     base: string
     quote: string

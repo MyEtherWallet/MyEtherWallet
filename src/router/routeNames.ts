@@ -73,6 +73,10 @@ const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {
   crypto: 'token-info-crypto',
   home: 'token-info-home',
+  // The public Home ('/') hosts its own token/stock-info drawer so clicks from
+  // its sections (watchlist, New Listings, Market News) open in place instead
+  // of routing to /portfolio or /crypto. See routesDefault.ts.
+  homePage: 'token-info-home-page',
   stocks: 'token-info-stocks',
   earn: 'token-info-earn',
   verify: 'token-info-verify',
@@ -81,6 +85,7 @@ const TOKEN_INFO_ROUTE_NAMES = {
 const STOCK_INFO = { PATH: 'stock/:symbol' }
 const STOCK_INFO_ROUTE_NAMES = {
   home: 'home-stock-info',
+  homePage: 'home-page-stock-info',
   crypto: 'crypto-stock-info',
   stocks: 'stocks-stock-info',
   earn: 'earn-stock-info',

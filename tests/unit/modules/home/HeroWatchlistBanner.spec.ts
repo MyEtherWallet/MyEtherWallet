@@ -45,4 +45,16 @@ describe('HeroWatchlistBanner (MEW-2094 watchlist onboarding)', () => {
     await w.get('[data-test="hero-watchlist-begin"]').trigger('click')
     expect(w.emitted('begin')).toHaveLength(1)
   })
+
+  it('emits "begin" when clicking anywhere on the banner, not just the CTA', async () => {
+    const w = mountBanner()
+    await w.get('[data-test="hero-watchlist-banner"]').trigger('click')
+    expect(w.emitted('begin')).toHaveLength(1)
+  })
+
+  it('launches the flow via keyboard (Enter)', async () => {
+    const w = mountBanner()
+    await w.get('[data-test="hero-watchlist-banner"]').trigger('keydown.enter')
+    expect(w.emitted('begin')).toHaveLength(1)
+  })
 })

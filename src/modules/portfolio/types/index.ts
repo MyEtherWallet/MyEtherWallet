@@ -14,13 +14,18 @@ export interface TokenAllocation {
   stock_route?: string
 }
 
+/**
+ * Allocation doughnut slice colours. These feed a Chart.js canvas, which cannot
+ * resolve `var(--color-*)`, so they mirror the semantic `background/decorative-*`
+ * tokens as literals. Keep in sync with `main.css`.
+ */
 export const ALLOCATION_COLORS = [
-  'rgba(0,90,229,1)', //primary
-  '#9D00FF', //purple
-  'rgba(228,12,91,1)', //red
-  'rgba(5,192,165,1)', //teal
-  'rgba(255,165,0,1)', //orange
-  'rgba(0,0,0,0.7)', //others
+  '#005ae5', // background/decorative-blue-strong
+  '#9d00ff', // background/decorative-violet-strong
+  '#f31b6f', // background/decorative-pink
+  '#01a08c', // background/decorative-green
+  '#ffa500', // background/decorative-orange
+  '#767676', // background/decorative-neutral
 ]
 export interface TokenGainOrLoss {
   name: string

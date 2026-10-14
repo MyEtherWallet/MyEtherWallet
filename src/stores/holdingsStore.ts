@@ -15,7 +15,10 @@ import type {
   RwaClaimResponse,
   RwaClaimResult,
   RwaInfoResponse,
+  RwaRewardDenomination,
   RwaRewardItem,
+  RwaRound2State,
+  RwaRound2Summary,
   RwaStatus,
 } from '@/mew_api/schemaRwaRewards'
 import { useWalletStore } from './walletStore'
@@ -33,6 +36,13 @@ const PLATFORM = 'web'
  * keeps the offer copy from rendering a bare '$'. Keep it in step with the campaign.
  */
 const DEFAULT_QUALIFICATION_USD = '250'
+
+/**
+ * Round-1 hold length in days, for the tracker chips. Unlike round 2's
+ * `days_to_hold` there is no server field for it — keep in step with the
+ * campaign. Countdowns always use `qualification_timestamp` instead.
+ */
+const ROUND1_HOLD_DAYS = 14
 
 // base64-encode a UTF-8 string (see src/utils/crypto.ts for the codebase convention).
 const toBase64 = (value: string) =>
@@ -231,15 +241,16 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     orderHash: string,
     chainId: number | string,
     usdValue?: string,
-  ) => {
+  ): Promise<boolean> => {
     const value = new BigNumber(usdValue ?? '')
-    if (value.isNaN()) return
+    if (value.isNaN()) return false
 
     // Cheap pre-filter so an obviously non-qualifying trade costs no request.
     // Only skipped when the threshold is unknown, where the trade can't be
     // ruled out yet and the refresh below is what settles it.
     const knownThreshold = new BigNumber(qualificationValue.value ?? '')
-    if (knownThreshold.isGreaterThan(0) && value.lt(knownThreshold)) return
+    if (knownThreshold.isGreaterThan(0) && value.lt(knownThreshold))
+      return false
 
     // `/register` has no budget gate: it queues whatever hash it is given and
     // answers ok, and the budget is only enforced up to 14 days later, when the
@@ -253,14 +264,15 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
 
     // A season that isn't taking entries: the UI already shows it closed, so
     // there is nothing to tell the user here.
-    if (!canRegisterTrade.value) return
+    if (!canRegisterTrade.value) return false
 
     // Only trades worth at least the campaign's qualification_value qualify.
     // Skip silently for anything below the threshold, or when the threshold is
     // still unknown (the refresh above failed) — registering blind would show a
     // success toast for an entry that can't qualify.
     const threshold = new BigNumber(qualificationValue.value ?? '')
-    if (threshold.isNaN() || threshold.lte(0) || value.lt(threshold)) return
+    if (threshold.isNaN() || threshold.lte(0) || value.lt(threshold))
+      return false
 
     const { addToastMessage } = useToastStore()
     try {
@@ -280,20 +292,18 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
             text: i18n.global.t('rwaRewards.register_unavailable'),
             type: ToastType.Error,
           })
-          return
+          return false
         }
         throw new Error(`RWA register request failed: ${res.status}`)
       }
-      addToastMessage({
-        text: i18n.global.t('rwaRewards.register_success'),
-        type: ToastType.Success,
-      })
+      return true
     } catch {
       error.value = 'Failed to register RWA trade'
       addToastMessage({
         text: i18n.global.t('rwaRewards.register_error'),
         type: ToastType.Error,
       })
+      return false
     }
   }
 
@@ -303,6 +313,15 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     const walletStore = useWalletStore()
     const wallet = walletStore.wallet
     if (!wallet) return { success: false, errorKey: 'walletMissing' }
+
+    // One claim per round: with that round's claim already on the books, a
+    // second one can only ever answer 409 — refuse it locally so no surface
+    // can ask the user to sign for a reward that will never pay.
+    const roundAlreadyClaimed =
+      reward.round === 2 ? hasClaimedRoundTwo.value : hasClaimedRoundOne.value
+    if (roundAlreadyClaimed) {
+      return { success: false, errorKey: 'alreadyClaimed' }
+    }
 
     isClaiming.value = true
     error.value = null
@@ -337,6 +356,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
 
       if (!res.ok) {
         const errorKey = mapClaimError(res.status)
+        // These refusals mean our snapshot is stale — already claimed, no
+        // longer claimable, the window closed, or claiming was locked — so
+        // re-read `/info` rather than leave the card arguing with the server.
+        if ([404, 409, 410, 423].includes(res.status)) fetchInfo(currentAddress)
         error.value = 'Failed to claim RWA reward'
         return { success: false, errorKey }
       }
@@ -354,6 +377,10 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
         disqualified: data.disqualified,
         claimed: data.claimed,
         pending: data.pending,
+        // The round-1 claim is exactly what spawns the round-2 entry, so this
+        // is the response that first carries the summary — dropping it would
+        // hide the new round until the next poll.
+        round2: data.round2 ?? info.value?.round2,
       }
       return { success: true, response: data }
     } catch {
@@ -371,8 +398,13 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     const result = await performClaim(reward)
     const { addToastMessage } = useToastStore()
     if (result.success) {
+      const amount =
+        (reward.round === 2
+          ? round2RewardAmountLabel.value
+          : round1RewardAmountLabel.value) ??
+        i18n.global.t('rwaRewards.reward_amount')
       addToastMessage({
-        text: i18n.global.t('rwaRewards.claim_success'),
+        text: i18n.global.t('rwaRewards.claim_success', { amount }),
         type: ToastType.Success,
       })
     } else {
@@ -439,22 +471,83 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       : null
     return exp === null || Date.now() < exp
   }
-  const claimableReward = computed<RwaRewardItem | null>(
-    () => qualified.value.find(isClaimable) ?? null,
+
+  /**------------------------
+   * Rounds. A wallet can hold entries from both rounds at once (the claimed
+   * round-1 entry stays in `claimed` while round 2 runs), so the round-1 flow
+   * reads round-filtered buckets, and everything after the round-1 claim is
+   * driven by the response's top-level `round2` summary — the API doc is
+   * explicit that the second round's state must not be derived from buckets.
+   * `round` is missing on season-1 entries: treat as round 1.
+   -------------------------*/
+  const isRoundTwoEntry = (r: RwaRewardItem) => r.round === 2
+  const roundOne = (arr: RwaRewardItem[]) =>
+    arr.filter(r => !isRoundTwoEntry(r))
+
+  const pendingR1 = computed(() => roundOne(pending.value))
+  const qualifiedR1 = computed(() => roundOne(qualified.value))
+  const claimedR1 = computed(() => roundOne(claimed.value))
+  const disqualifiedR1 = computed(() => roundOne(disqualified.value))
+
+  /**
+   * Whether the wallet has claimed its one reward for a round — read from the
+   * RAW bucket, dismissal ignored. One claim per round: a claimed entry spends
+   * that round's budget whatever else the buckets hold, so no other entry of
+   * the same round may ever offer a Claim (dismissal is a display preference;
+   * it must never resurrect a dead claim).
+   */
+  const hasClaimedRoundOne = computed(
+    () => roundOne(info.value?.claimed ?? []).length > 0,
   )
-  const expiredReward = computed<RwaRewardItem | null>(
-    () => qualified.value.find(r => !isClaimable(r)) ?? null,
+  const hasClaimedRoundTwo = computed(() =>
+    (info.value?.claimed ?? []).some(isRoundTwoEntry),
   )
 
-  const activeReward = computed<RwaRewardItem | null>(
-    () =>
-      claimableReward.value ??
-      pending.value[0] ??
-      claimed.value[0] ??
-      expiredReward.value ??
-      disqualified.value[0] ??
-      null,
+  const claimableRewardR1 = computed<RwaRewardItem | null>(
+    () => qualifiedR1.value.find(isClaimable) ?? null,
   )
+  const expiredRewardR1 = computed<RwaRewardItem | null>(
+    () => qualifiedR1.value.find(r => !isClaimable(r)) ?? null,
+  )
+
+  /** Raw round-2 state, for notices (UNAVAILABLE / ELIGIBLE copy). */
+  const round2Status = computed<RwaRound2State | null>(
+    () => info.value?.round2?.status ?? null,
+  )
+
+  // The live summary — only once the wallet is actually in the second round,
+  // and not after the user hid the offer (dismissal is by entry uuid, same as
+  // round 1).
+  const round2Summary = computed<RwaRound2Summary | null>(() => {
+    const summary = info.value?.round2
+    if (!summary?.eligible) return null
+    if (summary.uuid && dismissed.value.has(summary.uuid)) return null
+    return summary
+  })
+
+  /** The round-2 entry, in whichever bucket currently holds it. */
+  const round2Entry = computed<RwaRewardItem | null>(() => {
+    const uuid = round2Summary.value?.uuid
+    if (!uuid) return null
+    return (
+      [
+        ...pending.value,
+        ...qualified.value,
+        ...claimed.value,
+        ...disqualified.value,
+      ].find(r => r.uuid === uuid) ?? null
+    )
+  })
+
+  // QUALIFIED per the server, and still inside the claim window by our clock —
+  // the summary can lag a few minutes behind a deadline between polls.
+  const round2Claimable = computed(() => {
+    const summary = round2Summary.value
+    if (summary?.status !== 'QUALIFIED') return false
+    const exp =
+      round2Entry.value?.expiration_timestamp ?? summary.expiration_timestamp
+    return !exp || Date.now() < new Date(exp).getTime()
+  })
 
   const isCampaignEnded = computed(() => {
     const end = info.value?.info?.end
@@ -490,22 +583,111 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       accessBlock.value === null,
   )
 
-  const status = computed<RwaStatus>(() => {
-    // The wallet's own progress comes first: an entry that is already holding or
-    // owed a reward is unaffected by the season closing to new entries, and a
-    // wallet under review is deliberately still shown its entries (the review is
-    // surfaced separately, via `isUnderReview`).
-    if (claimableReward.value) return 'earned'
-    if (pending.value.length) return 'holding'
-    if (claimed.value.length) return 'claimed'
-    if (expiredReward.value) return 'expired'
-    if (disqualified.value.length) return 'lost'
-    if (isUnderReview.value) return 'underReview'
-    if (isCampaignEnded.value) return 'campaignEnded'
-    if (isCampaignFull.value) return 'campaignFull'
-    if (accessBlock.value) return accessBlock.value
-    return 'default'
+  /**
+   * The one state + entry pair the card presents — `status` and `activeReward`
+   * are two views of it. Computed together, because with two rounds — and
+   * possibly several round-1 entries on different assets — the buckets hold
+   * entries the card must NOT talk about: "first pending entry" would show
+   * round-2 data under round-1 copy, and a leftover qualified sibling would
+   * keep a dead Claim button alive.
+   *
+   * The wallet's own progress outranks the season-closed states: an entry that
+   * is already holding or owed a reward is unaffected by the season closing to
+   * new entries, and a wallet under review is deliberately still shown its
+   * entries (the review is surfaced separately, via `isUnderReview`).
+   *
+   * One reward per customer: the moment any round-1 entry is claimed, that
+   * entry and its second round own the card — every other round-1 entry
+   * (still qualified, pending, expired or lost on another asset) can never
+   * pay and must not surface, least of all as a claimable button the server
+   * would refuse with 409.
+   */
+  const presentation = computed<{
+    status: RwaStatus
+    reward: RwaRewardItem | null
+  }>(() => {
+    if (hasClaimedRoundOne.value) {
+      // The user hid the offer (with legacy single-uuid dismissals this can
+      // hide just the claimed entry): the offer is spent, nothing resurfaces —
+      // least of all another entry's Claim button.
+      if (!claimedR1.value.length) return { status: 'default', reward: null }
+      const claimedFirst = claimedR1.value[0]
+      // One claim per round, round 2 included: a claimed round-2 entry ends
+      // the season for this wallet, whatever the summary says about any other
+      // round-2 entry still pending or qualifying on another track. Without
+      // this, that other entry would eventually surface a Claim button the
+      // server could only refuse.
+      if (hasClaimedRoundTwo.value) {
+        return {
+          status: 'claimed',
+          reward: claimed.value.find(isRoundTwoEntry) ?? claimedFirst,
+        }
+      }
+      // A terminal round 2 never touches the round-1 claim, but it is what
+      // the user still needs to hear about (a quietly vanished bonus reads as
+      // a bug). Reuses the round-1 statuses; `isRoundTwoActive` tells the UI
+      // which round's copy to show.
+      switch (round2Summary.value?.status) {
+        case 'PENDING':
+          return { status: 'holding', reward: round2Entry.value }
+        case 'QUALIFIED':
+          return {
+            status: round2Claimable.value ? 'earned' : 'expired',
+            reward: round2Entry.value,
+          }
+        case 'CLAIMED':
+          return {
+            status: 'claimed',
+            reward: round2Entry.value ?? claimedFirst,
+          }
+        case 'EXPIRED':
+          return {
+            status: 'expired',
+            reward: round2Entry.value ?? claimedFirst,
+          }
+        case 'DISQUALIFIED':
+          return { status: 'lost', reward: round2Entry.value ?? claimedFirst }
+        // NOT_ELIGIBLE can't coexist with a claim; ELIGIBLE and UNAVAILABLE
+        // have nothing actionable (surfaced as notices via `round2Status`);
+        // season 1 and a dismissed round 2 have no summary at all.
+        default:
+          return { status: 'claimed', reward: claimedFirst }
+      }
+    }
+    if (claimableRewardR1.value)
+      return { status: 'earned', reward: claimableRewardR1.value }
+    if (pendingR1.value.length)
+      return { status: 'holding', reward: pendingR1.value[0] }
+    if (expiredRewardR1.value)
+      return { status: 'expired', reward: expiredRewardR1.value }
+    if (disqualifiedR1.value.length)
+      return { status: 'lost', reward: disqualifiedR1.value[0] }
+    if (isUnderReview.value) return { status: 'underReview', reward: null }
+    if (isCampaignEnded.value) return { status: 'campaignEnded', reward: null }
+    if (isCampaignFull.value) return { status: 'campaignFull', reward: null }
+    if (accessBlock.value) return { status: accessBlock.value, reward: null }
+    return { status: 'default', reward: null }
   })
+
+  const status = computed<RwaStatus>(() => presentation.value.status)
+  const activeReward = computed<RwaRewardItem | null>(
+    () => presentation.value.reward,
+  )
+
+  /**
+   * Whether the state the card is showing belongs to the second round. The
+   * components keep branching on the shared `status`; this picks the copy.
+   */
+  const isRoundTwoActive = computed(() => activeReward.value?.round === 2)
+
+  /**
+   * Whether a "try again" CTA may invite a new trade. A finished second round
+   * is terminal — no retry, no round 3 — so a lost or expired round 2 must not
+   * re-offer even while the season still registers new wallets.
+   */
+  const canRetryTrade = computed(
+    () => canRegisterTrade.value && !isRoundTwoActive.value,
+  )
 
   // The "Hide this offer" button only appears in the terminal claimed/expired
   // states. Once the user hides that reward it is filtered out and `status`
@@ -564,6 +746,126 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       : new BigNumber(usd).toString()
   })
 
+  /**
+   * Chip count for the hold tracker. Round 2 reads the server's
+   * `days_to_hold`; the round-1 hold length has no server field, so the
+   * campaign constant stays. Countdown copy must keep using
+   * `qualification_timestamp` — on dev the "days" are actually minutes.
+   */
+  const holdTotalDays = computed(() => {
+    if (isRoundTwoActive.value)
+      return info.value?.info?.round2?.days_to_hold ?? ROUND1_HOLD_DAYS
+    return ROUND1_HOLD_DAYS
+  })
+
+  /** Round-2 season configuration; absent on single-round seasons. */
+  const round2Config = computed(() => info.value?.info?.round2 ?? null)
+  const hasRoundTwo = computed(() => round2Config.value !== null)
+
+  /** Round-1 hold length. No server field exists — see `ROUND1_HOLD_DAYS`. */
+  const round1HoldDays = computed(() => ROUND1_HOLD_DAYS)
+  /** Round-2 hold length from the server; null on single-round seasons. */
+  const round2HoldDays = computed<number | null>(
+    () => round2Config.value?.days_to_hold ?? null,
+  )
+  /** Both holds back to back, for "you held N days total". */
+  const totalHoldDays = computed(
+    () => ROUND1_HOLD_DAYS + (round2HoldDays.value ?? 0),
+  )
+
+  /**
+   * Resolve one denomination list to a display amount. The payout lands on the
+   * entry's chain; with no entry yet, the first denomination is shown (the
+   * amounts only differ by chain decimals). Decimals come from the meta entry
+   * for the reward's own chain — multi-chain metas keep `ids`/`decimals` as
+   * parallel arrays. Null until the season block and metas land.
+   */
+  const resolveReward = (
+    rewards: RwaRewardDenomination[] | undefined,
+  ): { amount: BigNumber; symbol: string } | null => {
+    if (!rewards?.length) return null
+    const chainId = activeReward.value?.chain_id
+    const reward =
+      (chainId != null &&
+        rewards.find(r => r.id.split(':')[1] === String(chainId))) ||
+      rewards[0]!
+    const meta = info.value?.metas?.find(m => m.id === reward.id)
+    if (!meta) return null
+    const rewardChain = reward.id.split(':')[1]
+    const chainIndex =
+      meta.crypto?.ids?.findIndex(id => id.startsWith(`${rewardChain}:`)) ?? -1
+    const decimals =
+      meta.crypto?.decimals?.[chainIndex === -1 ? 0 : chainIndex] ?? 6
+    const amount = new BigNumber(reward.amount).shiftedBy(-decimals)
+    if (amount.isNaN()) return null
+    return { amount, symbol: meta.symbol ?? '' }
+  }
+  const formatReward = (r: { amount: BigNumber; symbol: string } | null) =>
+    r ? `${r.amount.toFormat()} ${r.symbol}`.trim() : null
+
+  const round1Reward = computed(() => resolveReward(info.value?.info?.rewards))
+  const round2Reward = computed(() =>
+    resolveReward(round2Config.value?.rewards),
+  )
+
+  /** Round-1 reward, e.g. "10 USDC" — from `info.rewards`. */
+  const round1RewardAmountLabel = computed(() =>
+    formatReward(round1Reward.value),
+  )
+  /**
+   * Round-2 reward — from `info.round2.rewards`. Not final and may differ from
+   * round 1, so it is never assumed equal and never hardcoded.
+   */
+  const round2RewardAmountLabel = computed(() =>
+    formatReward(round2Reward.value),
+  )
+  /**
+   * Both rounds added up, e.g. "25 USDC", for "Hold and get up to …" copy.
+   * Only when both pay the same token; a single-round season yields round 1.
+   */
+  const totalRewardAmountLabel = computed<string | null>(() => {
+    const r1 = round1Reward.value
+    const r2 = round2Reward.value
+    if (!r1) return null
+    if (!r2 || !hasRoundTwo.value) return formatReward(r1)
+    if (r1.symbol !== r2.symbol) return null
+    return formatReward({
+      amount: r1.amount.plus(r2.amount),
+      symbol: r1.symbol,
+    })
+  })
+
+  /**
+   * Display label for the active round's reward. Round 1 reads `info.rewards`,
+   * round 2 `info.round2.rewards`. Null until the season block and metas land;
+   * callers fall back to the round-1 campaign copy.
+   */
+  const rewardAmountLabel = computed<string | null>(() =>
+    isRoundTwoActive.value
+      ? round2RewardAmountLabel.value
+      : round1RewardAmountLabel.value,
+  )
+
+  /**
+   * Hide the whole hold offer — every entry the wallet has, not just the
+   * visible one. An offer can span both rounds and, with several qualifying
+   * trades, several round-1 entries; hiding a single uuid would just hand the
+   * card to whichever sibling ranks next.
+   */
+  const dismissOffer = () => {
+    if (!info.value) return
+    for (const reward of [
+      ...(info.value.qualified ?? []),
+      ...(info.value.disqualified ?? []),
+      ...(info.value.claimed ?? []),
+      ...(info.value.pending ?? []),
+    ]) {
+      dismiss(reward.uuid)
+    }
+    const summaryUuid = info.value.round2?.uuid
+    if (summaryUuid) dismiss(summaryUuid)
+  }
+
   return {
     info,
     isLoading,
@@ -587,6 +889,20 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     hasReward,
     activeReward,
     status,
+    round2Status,
+    round2Summary,
+    isRoundTwoActive,
+    canRetryTrade,
+    holdTotalDays,
+    hasRoundTwo,
+    round1HoldDays,
+    round2HoldDays,
+    totalHoldDays,
+    rewardAmountLabel,
+    round1RewardAmountLabel,
+    round2RewardAmountLabel,
+    totalRewardAmountLabel,
+    dismissOffer,
     isCampaignFull,
     isCampaignEnded,
     isUnderReview,

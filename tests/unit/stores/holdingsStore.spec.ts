@@ -238,19 +238,17 @@ describe('holdingsStore — addressless first load', () => {
     })
 
     it('still lets the wallet response update the season block', async () => {
-      const fetchMock = vi
-        .fn()
-        .mockImplementation((url: string) =>
-          Promise.resolve(
-            String(url).includes('address')
-              ? ok(
-                  campaignBody({
-                    info: season({ end: '2100-06-01T00:00:00Z' }),
-                  }),
-                )
-              : ok(campaignBody()),
-          ),
-        )
+      const fetchMock = vi.fn().mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('address')
+            ? ok(
+                campaignBody({
+                  info: season({ end: '2100-06-01T00:00:00Z' }),
+                }),
+              )
+            : ok(campaignBody()),
+        ),
+      )
       vi.stubGlobal('fetch', fetchMock)
 
       const store = useHoldingsStore()
@@ -411,5 +409,1077 @@ describe('qualification threshold (server-driven)', () => {
       await store.fetchCampaignInfo()
       expect(store.qualificationUsd, `value ${JSON.stringify(bad)}`).toBeNull()
     }
+  })
+})
+
+describe('register', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const connectWallet = async () => {
+    const { useWalletStore } = await import('@/stores/walletStore')
+    useWalletStore().walletAddress = ADDRESS
+  }
+
+  const registerFlow = async (usdValue: string) => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(ok({ msg: 'ok' }))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const store = useHoldingsStore()
+    const registered = await store.register('0xhash', 1, usdValue)
+    return { registered, fetchMock, toastSpy }
+  }
+
+  it('resolves true on a 200 without announcing anything yet', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('600')
+
+    expect(registered).toBe(true)
+    expect(String(fetchMock.mock.calls[1][0])).toContain(
+      '/register?hash=0xhash&chainId=1',
+    )
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false below the qualification threshold without calling /register', async () => {
+    const { registered, fetchMock, toastSpy } = await registerFlow('100')
+
+    expect(registered).toBe(false)
+    expect(
+      fetchMock.mock.calls.some(call => String(call[0]).includes('/register')),
+    ).toBe(false)
+    expect(toastSpy).not.toHaveBeenCalled()
+  })
+
+  it('resolves false and warns when the request fails', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(ok(campaignBody()))
+      .mockResolvedValueOnce(fail(500))
+    vi.stubGlobal('fetch', fetchMock)
+    await connectWallet()
+    const { useToastStore } = await import('@/stores/toastStore')
+    const toastSpy = vi.spyOn(useToastStore(), 'addToastMessage')
+
+    const registered = await useHoldingsStore().register('0xhash', 1, '600')
+
+    expect(registered).toBe(false)
+    expect(toastSpy).toHaveBeenCalledTimes(1)
+  })
+})
+
+/**------------------------
+ * Season 2 — second reward round. Fixtures mirror the API doc's payloads:
+ * the claimed round-1 entry stays in `claimed` while the round-2 entry moves
+ * through the buckets, and the top-level `round2` summary is authoritative
+ * for everything after the round-1 claim.
+ -------------------------*/
+const R1_UUID = 'f3f3d13f-42cf-4686-b6d0-bdfb129202d6'
+const R2_UUID = '33d868d9-f418-4b22-9e6a-412a33a9fc55'
+const USDC_ETH = 'crypto:1:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+
+const metas = [
+  {
+    id: USDC_ETH,
+    name: 'USDC',
+    symbol: 'USDC',
+    icon: '',
+    crypto: {
+      ids: ['1:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'],
+      decimals: [6],
+      price: '1',
+      market_data: { change: '0' },
+    },
+  },
+]
+
+const entry = (over: Record<string, unknown> = {}) => ({
+  uuid: R1_UUID,
+  id: 'rwa:AAL',
+  season: 'season2',
+  round: 1,
+  address: ADDRESS,
+  chain_id: 1,
+  contract_address: '0xbe8e',
+  timestamp: '2026-09-08T21:18:43.120Z',
+  start_timestamp: '2026-09-08T21:18:43.120Z',
+  initial_timestamp: '2026-09-08T21:18:43.120Z',
+  value: '1.72',
+  current_amount: '0x1',
+  original_amount: '0x1',
+  qualifying_amount: '0x1',
+  qualification_timestamp: '2026-09-08T21:23:43.120Z',
+  is_qualified: false,
+  is_disqualified: false,
+  ...over,
+})
+
+const claimedR1 = (over: Record<string, unknown> = {}) =>
+  entry({
+    is_qualified: true,
+    status: 'CLAIMED',
+    expiration_timestamp: '2099-10-31T22:00:00.000Z',
+    round2: { uuid: R2_UUID, spawned_timestamp: '2026-09-08T21:25:22.861Z' },
+    ...over,
+  })
+
+const entryR2 = (over: Record<string, unknown> = {}) =>
+  entry({
+    uuid: R2_UUID,
+    round: 2,
+    parent_uuid: R1_UUID,
+    start_timestamp: '2026-09-08T21:25:21.460Z',
+    qualification_timestamp: '2026-09-08T21:30:21.460Z',
+    ...over,
+  })
+
+const seasonTwo = (over: Partial<RwaInfoResponse['info']> = {}) =>
+  season({
+    rounds: 2,
+    rewards: [{ id: USDC_ETH, amount: '0x989680' }], // 10 USDC @ 6 decimals
+    round2: {
+      days_to_hold: 5,
+      days_to_claim: 14,
+      rewards: [{ id: USDC_ETH, amount: '0xf4240' }], // 1 USDC @ 6 decimals
+    },
+    ...over,
+  })
+
+const load = async (body: RwaInfoResponse) => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(ok(body)))
+  const store = useHoldingsStore()
+  await store.fetchInfo(ADDRESS)
+  return store
+}
+
+describe('holdingsStore — round 2', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('keeps holding after the round-1 claim, on the round-2 entry', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        pending: [entryR2()],
+        round2: {
+          eligible: true,
+          status: 'PENDING',
+          uuid: R2_UUID,
+          parent_uuid: R1_UUID,
+          start_timestamp: '2026-09-08T21:25:21.460Z',
+          qualification_timestamp: '2026-09-08T21:30:21.460Z',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('holding')
+    expect(store.activeReward?.uuid).toBe(R2_UUID)
+    expect(store.isRoundTwoActive).toBe(true)
+    // The round-2 tracker length is the server's, not the round-1 constant.
+    expect(store.holdTotalDays).toBe(5)
+    // No new-trade invitations during or after round 2.
+    expect(store.canRetryTrade).toBe(false)
+  })
+
+  it('offers the round-2 claim on QUALIFIED, against the round-2 uuid', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        qualified: [
+          entryR2({
+            is_qualified: true,
+            expiration_timestamp: '2099-09-22T21:30:21.460Z',
+          }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'QUALIFIED',
+          uuid: R2_UUID,
+          parent_uuid: R1_UUID,
+          expiration_timestamp: '2099-09-22T21:30:21.460Z',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('earned')
+    // What the claim signs — the round-2 uuid, never the round-1 one.
+    expect(store.activeReward?.uuid).toBe(R2_UUID)
+    // The round-2 amount comes from `info.round2.rewards`, never round 1's.
+    expect(store.rewardAmountLabel).toBe('1 USDC')
+  })
+
+  it('reads QUALIFIED past its deadline as expired, before the server flips it', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        qualified: [
+          entryR2({
+            is_qualified: true,
+            expiration_timestamp: '2020-01-01T00:00:00.000Z',
+          }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'QUALIFIED',
+          uuid: R2_UUID,
+          expiration_timestamp: '2020-01-01T00:00:00.000Z',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('expired')
+    expect(store.isRoundTwoActive).toBe(true)
+  })
+
+  it('shows the loss when round 2 is disqualified — round 1 stays claimed underneath', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        disqualified: [
+          entryR2({
+            current_amount: '0',
+            is_disqualified: true,
+            disqualified_reason: 'sold_off_no_balance',
+            disqualified_timestamp: '2026-09-08T21:28:51.692Z',
+          }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'DISQUALIFIED',
+          uuid: R2_UUID,
+          parent_uuid: R1_UUID,
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('lost')
+    expect(store.activeReward?.uuid).toBe(R2_UUID)
+    expect(store.isRoundTwoActive).toBe(true)
+    // Terminal — no retry, no round 3.
+    expect(store.canRetryTrade).toBe(false)
+  })
+
+  it('settles on claimed once round 2 completes', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [
+          claimedR1(),
+          entryR2({ is_qualified: true, status: 'CLAIMED' }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'CLAIMED',
+          uuid: R2_UUID,
+          complete: true,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('claimed')
+    expect(store.activeReward?.uuid).toBe(R2_UUID)
+    expect(store.isRoundTwoActive).toBe(true)
+  })
+
+  it('keeps the claimed round-1 view when the pool ran out of a second round', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [
+          claimedR1({
+            round2: { skipped: 'BUDGET', skipped_timestamp: '2026-09-08' },
+          }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'UNAVAILABLE',
+          unavailable_reason: 'BUDGET',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('claimed')
+    expect(store.activeReward?.uuid).toBe(R1_UUID)
+    expect(store.isRoundTwoActive).toBe(false)
+    expect(store.round2Status).toBe('UNAVAILABLE')
+  })
+
+  it('treats a season-1 response (no round2 anywhere) exactly as before', async () => {
+    const store = await load(
+      campaignBody({
+        claimed: [
+          entry({
+            round: undefined,
+            is_qualified: true,
+            status: 'CLAIMED',
+          }),
+        ],
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('claimed')
+    expect(store.round2Status).toBeNull()
+    expect(store.holdTotalDays).toBe(14)
+  })
+
+  it('round 1 shows its own reward amount from info.rewards', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        pending: [entry()],
+        round2: { eligible: false, status: 'NOT_ELIGIBLE', complete: false },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('holding')
+    expect(store.isRoundTwoActive).toBe(false)
+    expect(store.rewardAmountLabel).toBe('10 USDC')
+  })
+
+  // The reported bug: two qualifying trades on different assets, claim one —
+  // the other stays `qualified` server-side (its hold completed), but "one
+  // reward per customer" means claiming it would only ever 409. No Claim
+  // button may survive the first claim.
+  describe('a second round-1 entry on another asset', () => {
+    const B_UUID = 'bbbbbbbb-0000-4000-8000-000000000bbb'
+    const qualifiedB = () =>
+      entry({
+        uuid: B_UUID,
+        id: 'rwa:MSFT',
+        is_qualified: true,
+        expiration_timestamp: '2099-10-31T22:00:00.000Z',
+      })
+
+    it('stops being claimable the moment the first reward is claimed', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1()],
+          qualified: [qualifiedB()],
+          pending: [entryR2()],
+          round2: {
+            eligible: true,
+            status: 'PENDING',
+            uuid: R2_UUID,
+            parent_uuid: R1_UUID,
+            qualification_timestamp: '2099-09-08T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      // The claimed entry's round 2 owns the card — not asset B's dead claim.
+      expect(store.status).toBe('holding')
+      expect(store.activeReward?.uuid).toBe(R2_UUID)
+      expect(store.isRoundTwoActive).toBe(true)
+    })
+
+    it('stays on the round-2 story after the other asset is traded away', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1()],
+          disqualified: [
+            entry({
+              uuid: B_UUID,
+              id: 'rwa:MSFT',
+              current_amount: '0',
+              is_disqualified: true,
+              disqualified_reason: 'sold_off_no_balance',
+            }),
+          ],
+          pending: [entryR2()],
+          round2: {
+            eligible: true,
+            status: 'PENDING',
+            uuid: R2_UUID,
+            parent_uuid: R1_UUID,
+            qualification_timestamp: '2099-09-08T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      // Selling the unrelated asset neither loses the offer nor revives a
+      // Claim button; round 2 keeps holding.
+      expect(store.status).toBe('holding')
+      expect(store.activeReward?.uuid).toBe(R2_UUID)
+    })
+
+    it('claims round 2 — not the leftover sibling — once QUALIFIED', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1()],
+          qualified: [
+            qualifiedB(),
+            entryR2({
+              is_qualified: true,
+              expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            }),
+          ],
+          round2: {
+            eligible: true,
+            status: 'QUALIFIED',
+            uuid: R2_UUID,
+            expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      expect(store.status).toBe('earned')
+      expect(store.activeReward?.uuid).toBe(R2_UUID)
+    })
+
+    it('refuses to sign a second round-1 claim locally', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1()],
+          qualified: [qualifiedB()],
+          round2: { eligible: true, status: 'UNAVAILABLE', complete: false },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      const { useWalletStore } = await import('@/stores/walletStore')
+      const walletStore = useWalletStore()
+      const sign = vi.fn(async () => '0xsigned')
+      // @ts-expect-error minimal signer stub for the claim path
+      walletStore.wallet = {
+        getAddress: async () => ADDRESS,
+        SignMessage: sign,
+      }
+
+      // Even if some surface hands over the dead sibling entry, the store
+      // refuses before asking for a signature or hitting the server.
+      const leftover = store.qualified.find(r => r.uuid === B_UUID)!
+      const result = await store.claim(leftover)
+
+      expect(result).toEqual({ success: false, errorKey: 'alreadyClaimed' })
+      expect(sign).not.toHaveBeenCalled()
+      const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>
+      expect(
+        fetchMock.mock.calls.some(c => String(c[0]).includes('/claim')),
+      ).toBe(false)
+    })
+
+    it('never revives a Claim button when a legacy dismissal hid only the claimed entry', async () => {
+      // The old "Hide this offer" stored just the visible uuid. Hiding the
+      // claimed entry must hide the whole spent offer — not promote the
+      // leftover sibling back to claimable.
+      localStorage.setItem('mew-rwa-dismissed', JSON.stringify([R1_UUID]))
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1()],
+          qualified: [qualifiedB()],
+          round2: { eligible: true, status: 'UNAVAILABLE', complete: false },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      expect(store.status).toBe('default')
+      expect(store.activeReward).toBeNull()
+      expect(store.isHoldOfferDismissed).toBe(true)
+    })
+
+    it('dismissOffer hides the leftover sibling too', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [
+            claimedR1(),
+            entryR2({ is_qualified: true, status: 'CLAIMED' }),
+          ],
+          qualified: [qualifiedB()],
+          round2: {
+            eligible: true,
+            status: 'CLAIMED',
+            uuid: R2_UUID,
+            complete: true,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      expect(store.status).toBe('claimed')
+      store.dismissOffer()
+
+      // Nothing resurfaces — least of all asset B's dead Claim button.
+      expect(store.status).toBe('default')
+      expect(store.isHoldOfferDismissed).toBe(true)
+    })
+  })
+
+  it('dismissOffer hides both rounds at once', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [
+          claimedR1(),
+          entryR2({ is_qualified: true, status: 'CLAIMED' }),
+        ],
+        round2: {
+          eligible: true,
+          status: 'CLAIMED',
+          uuid: R2_UUID,
+          complete: true,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.status).toBe('claimed')
+    store.dismissOffer()
+
+    // Neither round's terminal state resurfaces, and the hero card is told to
+    // hand the slot to the next offer.
+    expect(store.status).toBe('default')
+    expect(store.isHoldOfferDismissed).toBe(true)
+  })
+
+  it('a claim response keeps the round2 summary it just created', async () => {
+    // Start qualified on round 1.
+    const infoBody = campaignBody({
+      info: seasonTwo(),
+      metas,
+      qualified: [
+        entry({
+          is_qualified: true,
+          expiration_timestamp: '2099-10-31T22:00:00.000Z',
+        }),
+      ],
+      round2: { eligible: false, status: 'NOT_ELIGIBLE', complete: false },
+    } as unknown as Partial<RwaInfoResponse>)
+
+    // The claim answer is what spawns round 2 — the summary must survive the
+    // merge, not wait for the next poll.
+    const claimBody = {
+      msg: 'ok',
+      uuid: R1_UUID,
+      claim: {},
+      info: seasonTwo(),
+      metas,
+      qualified: [],
+      disqualified: [],
+      claimed: [claimedR1()],
+      pending: [entryR2()],
+      round2: {
+        eligible: true,
+        status: 'PENDING',
+        uuid: R2_UUID,
+        parent_uuid: R1_UUID,
+        qualification_timestamp: '2099-09-08T21:30:21.460Z',
+        complete: false,
+      },
+    }
+
+    const fetchMock = vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('/claim') ? ok(claimBody) : ok(infoBody),
+        ),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const store = useHoldingsStore()
+    await store.fetchInfo(ADDRESS)
+    expect(store.status).toBe('earned')
+
+    const { useWalletStore } = await import('@/stores/walletStore')
+    const walletStore = useWalletStore()
+    // @ts-expect-error minimal signer stub for the claim path
+    walletStore.wallet = {
+      getAddress: async () => ADDRESS,
+      SignMessage: async () => '0xsigned',
+    }
+
+    const result = await store.claim(store.activeReward!)
+    expect(result.success).toBe(true)
+
+    // What was actually signed and sent must be the ROUND-1 uuid here.
+    const claimCall = fetchMock.mock.calls.find(c =>
+      String(c[0]).includes('/claim'),
+    )!
+    const { transaction } = JSON.parse(String(claimCall[1].body))
+    expect(JSON.parse(atob(transaction))).toEqual({
+      uuid: R1_UUID,
+      platform: 'web',
+    })
+    expect(store.status).toBe('holding')
+    expect(store.activeReward?.uuid).toBe(R2_UUID)
+    expect(store.isRoundTwoActive).toBe(true)
+  })
+
+  // One claim per round, round 2 included: with a round-2 claim on the books,
+  // another round-2 entry (a second track from another asset) must never show
+  // holding progress or a Claim button — the season is over for this wallet.
+  describe('a second round-2 entry after the round-2 claim', () => {
+    const R2B_UUID = 'cccccccc-0000-4000-8000-000000000ccc'
+    const otherTrackR2 = (over: Record<string, unknown> = {}) =>
+      entryR2({
+        uuid: R2B_UUID,
+        id: 'rwa:MSFT',
+        parent_uuid: undefined,
+        ...over,
+      })
+    const claimedRoundTwo = () =>
+      entryR2({ is_qualified: true, status: 'CLAIMED' })
+
+    it('stays claimed while the other round-2 entry is pending', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1(), claimedRoundTwo()],
+          pending: [otherTrackR2()],
+          round2: {
+            eligible: true,
+            status: 'PENDING',
+            uuid: R2B_UUID,
+            qualification_timestamp: '2099-09-08T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      expect(store.status).toBe('claimed')
+      expect(store.activeReward?.uuid).toBe(R2_UUID)
+      expect(store.isRoundTwoActive).toBe(true)
+    })
+
+    it('shows no Claim button when the other round-2 entry qualifies', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1(), claimedRoundTwo()],
+          qualified: [
+            otherTrackR2({
+              is_qualified: true,
+              expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            }),
+          ],
+          round2: {
+            eligible: true,
+            status: 'QUALIFIED',
+            uuid: R2B_UUID,
+            expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      // Not 'earned' — the round-2 reward was already claimed.
+      expect(store.status).toBe('claimed')
+      expect(store.activeReward?.uuid).toBe(R2_UUID)
+    })
+
+    it('refuses to sign a second round-2 claim locally', async () => {
+      const store = await load(
+        campaignBody({
+          info: seasonTwo(),
+          metas,
+          claimed: [claimedR1(), claimedRoundTwo()],
+          qualified: [
+            otherTrackR2({
+              is_qualified: true,
+              expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            }),
+          ],
+          round2: {
+            eligible: true,
+            status: 'QUALIFIED',
+            uuid: R2B_UUID,
+            expiration_timestamp: '2099-09-22T21:30:21.460Z',
+            complete: false,
+          },
+        } as unknown as Partial<RwaInfoResponse>),
+      )
+
+      const { useWalletStore } = await import('@/stores/walletStore')
+      const walletStore = useWalletStore()
+      const sign = vi.fn(async () => '0xsigned')
+      // @ts-expect-error minimal signer stub for the claim path
+      walletStore.wallet = {
+        getAddress: async () => ADDRESS,
+        SignMessage: sign,
+      }
+
+      const leftover = store.qualified.find(r => r.uuid === R2B_UUID)!
+      const result = await store.claim(leftover)
+
+      expect(result).toEqual({ success: false, errorKey: 'alreadyClaimed' })
+      expect(sign).not.toHaveBeenCalled()
+    })
+  })
+
+  it('reclaims: the round-2 claim signs the round-2 uuid and completes the season', async () => {
+    // Round 2 qualified — the state the second Claim button renders from.
+    const infoBody = campaignBody({
+      info: seasonTwo(),
+      metas,
+      claimed: [claimedR1()],
+      qualified: [
+        entryR2({
+          is_qualified: true,
+          expiration_timestamp: '2099-09-22T21:30:21.460Z',
+        }),
+      ],
+      round2: {
+        eligible: true,
+        status: 'QUALIFIED',
+        uuid: R2_UUID,
+        parent_uuid: R1_UUID,
+        expiration_timestamp: '2099-09-22T21:30:21.460Z',
+        complete: false,
+      },
+    } as unknown as Partial<RwaInfoResponse>)
+
+    // The claim answer per the API doc: both entries claimed, summary CLAIMED.
+    const claimBody = {
+      msg: 'ok',
+      uuid: R2_UUID,
+      claim: {},
+      info: seasonTwo(),
+      metas,
+      qualified: [],
+      disqualified: [],
+      claimed: [
+        claimedR1(),
+        entryR2({
+          is_qualified: true,
+          status: 'CLAIMED',
+          claim: { round: 2, reward: { round: 2 } },
+        }),
+      ],
+      pending: [],
+      round2: {
+        eligible: true,
+        status: 'CLAIMED',
+        uuid: R2_UUID,
+        parent_uuid: R1_UUID,
+        complete: true,
+      },
+    }
+
+    const fetchMock = vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('/claim') ? ok(claimBody) : ok(infoBody),
+        ),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const store = useHoldingsStore()
+    await store.fetchInfo(ADDRESS)
+
+    // The Claim button is offered again after the first claim...
+    expect(store.status).toBe('earned')
+    expect(store.isRoundTwoActive).toBe(true)
+
+    const { useWalletStore } = await import('@/stores/walletStore')
+    const walletStore = useWalletStore()
+    // @ts-expect-error minimal signer stub for the claim path
+    walletStore.wallet = {
+      getAddress: async () => ADDRESS,
+      SignMessage: async () => '0xsigned',
+    }
+
+    const result = await store.claim(store.activeReward!)
+    expect(result.success).toBe(true)
+
+    // ...and what it signs is the ROUND-2 uuid — never the round-1 one, never
+    // parent_uuid.
+    const claimCall = fetchMock.mock.calls.find(c =>
+      String(c[0]).includes('/claim'),
+    )!
+    const { transaction } = JSON.parse(String(claimCall[1].body))
+    expect(JSON.parse(atob(transaction))).toEqual({
+      uuid: R2_UUID,
+      platform: 'web',
+    })
+
+    // Season over: both rewards paid, nothing follows.
+    expect(store.status).toBe('claimed')
+    expect(store.round2Status).toBe('CLAIMED')
+    expect(store.round2Summary?.complete).toBe(true)
+  })
+})
+
+/**------------------------
+ * Per-round reward amounts and hold lengths. The UI headlines the two rounds
+ * together ("up to 25 USDC") and names each round's own amount, so it needs
+ * all three labels regardless of which round is currently active.
+ -------------------------*/
+describe('holdingsStore — per-round amounts and hold lengths', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('labels each round from its own denominations, and both together', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+    expect(store.totalRewardAmountLabel).toBe('11 USDC')
+  })
+
+  it('exposes both hold lengths and their sum', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    // Round 1 has no server field; round 2 is whatever the payload says.
+    expect(store.round1HoldDays).toBe(14)
+    expect(store.round2HoldDays).toBe(5)
+    expect(store.totalHoldDays).toBe(19)
+    expect(store.hasRoundTwo).toBe(true)
+  })
+
+  it('reports a single-round season as having no second round', async () => {
+    const store = await load(
+      campaignBody({
+        info: season({
+          rounds: 1,
+          rewards: [{ id: USDC_ETH, amount: '0x989680' }],
+        }),
+        metas,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.hasRoundTwo).toBe(false)
+    expect(store.round2HoldDays).toBeNull()
+    expect(store.round2RewardAmountLabel).toBeNull()
+    // With nothing to add, the "up to" total is just the one reward.
+    expect(store.totalRewardAmountLabel).toBe('10 USDC')
+    expect(store.totalHoldDays).toBe(14)
+  })
+
+  it('refuses to add rewards paid in different tokens', async () => {
+    const DAI_ETH = 'crypto:1:0x6b175474e89094c44da98b954eedeac495271d0f'
+    const store = await load(
+      campaignBody({
+        info: seasonTwo({
+          round2: {
+            days_to_hold: 5,
+            days_to_claim: 14,
+            rewards: [{ id: DAI_ETH, amount: '0xde0b6b3a7640000' }],
+          },
+        }),
+        metas: [
+          ...metas,
+          {
+            id: DAI_ETH,
+            name: 'DAI',
+            symbol: 'DAI',
+            icon: '',
+            crypto: {
+              ids: ['1:0x6b175474e89094c44da98b954eedeac495271d0f'],
+              decimals: [18],
+              price: '1',
+              market_data: { change: '0' },
+            },
+          },
+        ],
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 DAI')
+    // "10 USDC + 1 DAI" is not a number — callers fall back to one round.
+    expect(store.totalRewardAmountLabel).toBeNull()
+  })
+
+  it('stays null until the metas needed for decimals arrive', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBeNull()
+    expect(store.round2RewardAmountLabel).toBeNull()
+    expect(store.totalRewardAmountLabel).toBeNull()
+  })
+
+  it('takes decimals from the reward’s own chain, not the first listed', async () => {
+    // One meta spanning both chains, with BSC (18) listed first — reading
+    // index 0 for an Ethereum reward would render 10 USDC as a dust amount.
+    const multiChainMeta = [
+      {
+        id: USDC_ETH,
+        name: 'USDC',
+        symbol: 'USDC',
+        icon: '',
+        crypto: {
+          ids: [
+            '56:0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+            '1:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          ],
+          decimals: [18, 6],
+          price: '1',
+          market_data: { change: '0' },
+        },
+      },
+    ]
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas: multiChainMeta,
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+  })
+
+  it('follows the active round for the shared label', async () => {
+    const store = await load(
+      campaignBody({
+        info: seasonTwo(),
+        metas,
+        claimed: [claimedR1()],
+        pending: [entryR2()],
+        round2: {
+          eligible: true,
+          status: 'PENDING',
+          uuid: R2_UUID,
+          parent_uuid: R1_UUID,
+          start_timestamp: '2026-09-08T21:25:21.460Z',
+          qualification_timestamp: '2026-09-08T21:30:21.460Z',
+          complete: false,
+        },
+      } as unknown as Partial<RwaInfoResponse>),
+    )
+
+    expect(store.isRoundTwoActive).toBe(true)
+    // The active label switches, but each round's own label stays readable so
+    // round-1 copy ("you claimed 10 USDC") survives into the bonus round.
+    expect(store.rewardAmountLabel).toBe('1 USDC')
+    expect(store.round1RewardAmountLabel).toBe('10 USDC')
+    expect(store.round2RewardAmountLabel).toBe('1 USDC')
+  })
+})
+
+describe('holdingsStore — claim failures that invalidate our snapshot', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    setActivePinia(createPinia())
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const claimable = () =>
+    campaignBody({
+      info: seasonTwo(),
+      metas,
+      qualified: [
+        entry({
+          is_qualified: true,
+          expiration_timestamp: '2099-01-01T00:00:00Z',
+        }),
+      ],
+    } as unknown as Partial<RwaInfoResponse>)
+
+  /** Fails the claim with `status`, then counts the `/info` re-reads. */
+  const claimWith = async (status: number) => {
+    const fetchMock = vi
+      .fn()
+      .mockImplementation((url: string) =>
+        Promise.resolve(
+          String(url).includes('/claim')
+            ? fail(status, { msg: 'nope' })
+            : ok(claimable()),
+        ),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+    const store = useHoldingsStore()
+    await store.fetchInfo(ADDRESS)
+
+    const { useWalletStore } = await import('@/stores/walletStore')
+    const walletStore = useWalletStore()
+    // @ts-expect-error minimal signer stub for the claim path
+    walletStore.wallet = {
+      getAddress: async () => ADDRESS,
+      SignMessage: async () => '0xsigned',
+    }
+
+    const result = await store.claim(store.activeReward!)
+    const infoCalls = fetchMock.mock.calls.filter(c =>
+      String(c[0]).includes('/info'),
+    ).length
+    return { result, infoCalls }
+  }
+
+  it.each([
+    [404, 'notClaimable'],
+    [409, 'alreadyClaimed'],
+    [410, 'windowClosed'],
+    // A kill-switch mid-session: without a re-read the Claim button stays live
+    // and the user keeps signing claims the server will not accept.
+    [423, 'locked'],
+  ])('re-reads /info after a %i and reports %s', async (status, errorKey) => {
+    const { result, infoCalls } = await claimWith(status)
+    expect(result).toEqual({ success: false, errorKey })
+    // One for the initial load, one because the refusal invalidated it.
+    expect(infoCalls).toBe(2)
+  })
+
+  it('leaves the snapshot alone for a failure that says nothing about it', async () => {
+    const { result, infoCalls } = await claimWith(500)
+    expect(result).toEqual({ success: false, errorKey: 'generic' })
+    expect(infoCalls).toBe(1)
   })
 })

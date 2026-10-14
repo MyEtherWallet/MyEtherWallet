@@ -171,6 +171,10 @@ export const TradeEventError = {
   OFFER_ERROR: 'Trade_Offer_Error',
   SIGN_ERROR: 'Trade_Sign_Error',
   APPROVAL_ERROR: 'Trade_Approval_Error',
+  /** Native deposit was sent but the relayer refused the order afterwards. */
+  RELAYER_ERROR: 'Trade_Relayer_Error',
+  /** Reclaiming an unsubmitted native order's deposit failed. */
+  RECOVER_ERROR: 'Trade_Recover_Error',
 } as const
 export type TradeEventError =
   (typeof TradeEventError)[keyof typeof TradeEventError]
@@ -184,6 +188,10 @@ export const TradeEventStatus = {
   CANCELLED: 'Trade_Cancelled',
   EXPIRED: 'Trade_Expired',
   INITIATED: 'Trade_Initiated',
+  /** Native deposit in flight, relayer never accepted the order. */
+  UNSUBMITTED: 'Trade_Unsubmitted',
+  /** Deposit of an unsubmitted native order reclaimed by the user. */
+  FUNDS_RECOVERED: 'Trade_Funds_Recovered',
 } as const
 
 export type TradeEventStatus =
@@ -549,18 +557,18 @@ export const ClickTokenTradeEvent = {
 
 export type ClickTokenTradePayload = {
   location:
-  | 'balance_table'
-  | 'token_details_page'
-  | 'stocks_table'
-  | 'crypto_table'
-  | 'trade_module'
-  | 'trade'
-  | 'swap'
-  | 'bridge'
-  | 'send'
-  | 'portfolio_no_balance'
-  | 'select_fee'
-  | 'hold_rewards_banner'
+    | 'balance_table'
+    | 'token_details_page'
+    | 'stocks_table'
+    | 'crypto_table'
+    | 'trade_module'
+    | 'trade'
+    | 'swap'
+    | 'bridge'
+    | 'send'
+    | 'portfolio_no_balance'
+    | 'select_fee'
+    | 'hold_rewards_banner'
 
   token?: string
   isMobile?: boolean
@@ -760,11 +768,11 @@ export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
 
 export type RewardsPayload = {
   location?:
-  | 'main-banner'
-  | 'small-banner-swap'
-  | 'small-banner-trade'
-  | 'small-banner-bridge'
-  | 'learn-more-dialog'
+    | 'main-banner'
+    | 'small-banner-swap'
+    | 'small-banner-trade'
+    | 'small-banner-bridge'
+    | 'learn-more-dialog'
   type?: 'swap' | 'trade'
 }
 // =============================================================================
@@ -785,6 +793,18 @@ export const HoldRewardsMainCardEvent = {
 
 export type HoldRewardsMainCardEventPayload = {
   status: string
+  /** Which reward round the card is showing — the statuses are shared. */
+  round?: 1 | 2
+}
+
+export const HoldRewardsHomeBannerEvent = {
+  SHOWN: 'Hold_Rewards_Home_Banner_Shown',
+  DISMISSED: 'Hold_Rewards_Home_Banner_Dismissed',
+} as const
+
+export type HoldRewardsHomeBannerEventPayload = {
+  status: string
+  round?: 1 | 2
 }
 
 export const RerwadsAndOffersEvent = {
@@ -796,15 +816,19 @@ export type RerwadsAndOffersEventPayload = {
   campaign: Campaign
   cta: string
   card_status?: string
+  /** Which reward round the surface was showing — `card_status` is shared. */
+  round?: 1 | 2
   location?:
-  | 'main-banner'
-  | 'main_card'
-  /** The offer detail modal. */
-  | 'offers_card'
-  /** A card in the "Rewards & offers" carousel. */
-  | 'offers_carousel'
-  | 'trade_confirmation'
-  | 'info_modal'
+    | 'main-banner'
+    | 'main_card'
+    /** The state-driven banner at the top of the home page. */
+    | 'home_banner'
+    /** The offer detail modal. */
+    | 'offers_card'
+    /** A card in the "Rewards & offers" carousel. */
+    | 'offers_carousel'
+    | 'trade_confirmation'
+    | 'info_modal'
 }
 
 export const TradeConfirmationBannerEvent = {
@@ -895,7 +919,8 @@ export const SellOfferEvent = {
   OFFER_CANCELED: 'Sell_Offer_Canceled',
   OFFER_PROCEED: 'Sell_Offer_Clicked_Continue',
 } as const
-export type SellOfferEvent = (typeof SellOfferEvent)[keyof typeof SellOfferEvent]
+export type SellOfferEvent =
+  (typeof SellOfferEvent)[keyof typeof SellOfferEvent]
 
 export type SellOfferPayload = SellPayloadShared & {
   moonpayRate: string

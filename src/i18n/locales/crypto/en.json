@@ -1,11 +1,13 @@
 {
   "crypto": {
-    "explore_tokens": "Explore Tokens",
+    "explore_tokens": "Explore crypto",
     "category_menu": "Category Menu",
+    "all_categories": "All categories",
     "search": "Search",
     "token": "TOKEN",
     "market_cap": "Market Cap",
     "volume": "Volume",
+    "twenty_four_h_change": "24H Change",
     "price": "Price",
     "results_count": "{current} of {total} results",
     "page_of": "{current} of {total}",
@@ -35,7 +37,7 @@
     "balance_on_other_chains": "Balance on other chains:",
     "supported_chains": "Supported Chains",
     "native_token": "Native Token",
-    "current_chain": "current chain",
+    "current_chain": "Current chain",
     "about": "About",
     "statistics": "Statistics",
     "total_supply": "Total Supply",

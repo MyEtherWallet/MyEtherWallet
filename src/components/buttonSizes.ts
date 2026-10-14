@@ -2,8 +2,8 @@
  * Centralized button sizing.
  *
  * Mirrors the `_base/Button` Figma component (Size = S / M / L / XL), which is
- * the single source of truth for button geometry. Both AppBaseButton and
- * AppSegmentedControl read from here so a size tweak lands in one place.
+ * the single source of truth for button geometry. AppBaseButton reads from
+ * here so a size tweak lands in one place.
  *
  * Horizontal padding is split the way the design is built: the button frame
  * carries `padding`, and the label wrapper inside it carries `labelPadding`.

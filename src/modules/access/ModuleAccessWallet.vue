@@ -9,7 +9,7 @@
         ? 'max-w-[800px]'
         : '!max-w-[900px]',
     ]"
-    bg="bg-appBackground"
+    bg="bg-background-default"
     has-title-underline
     @close-dialog="closeAccess()"
   >
@@ -18,12 +18,12 @@
         <div class="w-8 sm:ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
-            icon="icon-arrow-left"
+            size="l"
             :label="$t('access_wallet.back_to_connect_options')"
-            class="!w-10 !h-10 mr-auto mt-4"
+            class="mr-auto mt-4"
             @click="accessStore.setCurrentView('default')"
           >
-            <arrow-right-icon class="w-5 h-5 rotate-180" />
+            <AppIcon name="arrow-left" size="s" />
           </app-btn-icon>
         </div>
         <div
@@ -87,7 +87,7 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowRightIcon } from '@heroicons/vue/24/outline'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
