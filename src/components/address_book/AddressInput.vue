@@ -3,16 +3,25 @@
     <div class="relative">
       <!-- Blockie -->
       <div
-        class="absolute top-[13px] left-[13px] flex items-center pointer-events-none"
+        :class="[
+          filled ? 'top-4 left-4' : 'top-[13px] left-[13px]',
+          'absolute flex items-center pointer-events-none',
+        ]"
       >
         <div
           v-if="!resolvedAddress"
-          class="rounded-full bg-background-default w-8 h-8 border border-border-default"
+          :class="[
+            filled ? 'w-6 h-6 bg-white' : 'w-8 h-8 bg-background-default',
+            'rounded-full border border-border-default',
+          ]"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-8 h-8 border border-border-default"
+          :class="[
+            filled ? 'w-6 h-6' : 'w-8 h-8',
+            'rounded-full border border-border-default',
+          ]"
           height="32"
           width="32"
         />
@@ -21,7 +30,8 @@
       <label
         for="address-input"
         :class="[
-          'pointer-events-none absolute left-14 transition-all aria-hidden',
+          filled ? 'left-12' : 'left-14',
+          'pointer-events-none absolute transition-all aria-hidden',
           inFocusInput
             ? hasError && !isPristine
               ? 'text-text-error'
@@ -46,10 +56,15 @@
             '!border-border-brand !border-2': inFocusInput,
             '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
-          isRaised
-            ? 'shadow-button shadow-button-elevated'
-            : 'border border-border-strong',
-          'grow focus:outline-none focus:ring-0 bg-white text-text-default rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
+          filled
+            ? 'border-0 bg-background-default rounded-12 h-14 pl-12'
+            : [
+                isRaised
+                  ? 'shadow-button shadow-button-elevated'
+                  : 'border border-border-strong',
+                'bg-white rounded-20 h-[58px] pl-14',
+              ],
+          'grow focus:outline-none focus:ring-0 text-text-default w-full pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="resolvedLabel"
         @focus="setInFocusInput()"
@@ -179,6 +194,11 @@ const props = defineProps({
   isRaised: {
     type: Boolean,
     default: true,
+  },
+  /** Design-library "Address input / Filled": grey 56px field, no border or shadow. */
+  filled: {
+    type: Boolean,
+    default: false,
   },
   isPristine: {
     type: Boolean,
