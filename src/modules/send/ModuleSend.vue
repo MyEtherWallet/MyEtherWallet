@@ -46,6 +46,7 @@
       <!-- Fee row moves to the summary screen; the fee logic and its error stay -->
       <app-select-tx-fee
         v-if="isBitcoinChain ? hasChainBalance : true"
+        ref="feeSelector"
         hide-selector
         :fees="gasFees"
         :is-loading-fees="isLoadingFees"
@@ -91,8 +92,11 @@
       :to-amount="new BigNumber(amount).toFixed()"
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
+      :fee-loading="isRebuildingTx"
+      :fee-error="gasFeeError"
       v-model="openTxModal"
       @tx-sent="onTxSent"
+      @edit-fee="feeSelector?.openFeeModal()"
     />
     <send-initiated-modal
       v-model:send-initiated-open="sendInitiatedOpen"
@@ -629,6 +633,25 @@ const handleSubmit = async () => {
   analytics.trackSendEvent(SendEvent.CLICK_SEND, {
     token: tokenSelected.value?.symbol,
   })
+  await buildTx()
+}
+
+// A fee tier picked on the summary screen rebuilds the tx at that priority;
+// signedTx stays empty (confirm blocked) until the new one is ready.
+const feeSelector = ref<InstanceType<typeof AppSelectTxFee> | null>(null)
+const isRebuildingTx = ref(false)
+watch(selectedFee, async () => {
+  if (!openTxModal.value) return
+  signedTx.value = ''
+  isRebuildingTx.value = true
+  try {
+    await buildTx()
+  } finally {
+    isRebuildingTx.value = false
+  }
+})
+
+const buildTx = async () => {
   const latestGasFees = await getGasFeeQuotes()
   if (!wallet.value || !latestGasFees || gasFeeError.value) return
   // generate signable transaction
