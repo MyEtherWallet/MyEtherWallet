@@ -78,6 +78,7 @@ import type { ComponentPublicInstance } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore, type WalletPanel } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useTradeCampaignEntry } from '@/composables/useTradeCampaignEntry'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
@@ -127,6 +128,10 @@ onMounted(() => {
     }
   }
 })
+// Registered after the onMounted above so a marketing deep link wins over the
+// info-page default (which closes the panel below the XL breakpoint).
+useTradeCampaignEntry()
+
 watch(isMDAndUp, newVal => {
   if (
     page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
