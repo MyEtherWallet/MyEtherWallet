@@ -59,8 +59,8 @@ describe('AppSwapForm', () => {
     expect(wrapper.find('[data-testid="swap-form-arrow"]').exists()).toBe(true)
   })
 
-  it('renders the quick actions as chips, 100 as MAX, and emits the percentage', async () => {
-    const wrapper = mountForm({ quickActions: [25, 50, 75, 100] })
+  it('renders 25/50/75/MAX chips and emits the percentage', async () => {
+    const wrapper = mountForm({ showQuickActions: true })
     const buttons = wrapper.findAll(chips)
     expect(buttons.map(b => b.text())).toEqual(['25%', '50%', '75%', 'Max'])
     await buttons[1].trigger('click')
@@ -68,7 +68,19 @@ describe('AppSwapForm', () => {
     expect(wrapper.emitted('percent')).toEqual([[50], [100]])
   })
 
-  it('hides the quick actions when none are given', () => {
+  it('keeps MAX visible but disabled when maxDisabled is set', () => {
+    const wrapper = mountForm({ showQuickActions: true, maxDisabled: true })
+    const buttons = wrapper.findAll(chips)
+    expect(buttons).toHaveLength(4)
+    expect(buttons.map(b => b.attributes('disabled') !== undefined)).toEqual([
+      false,
+      false,
+      false,
+      true,
+    ])
+  })
+
+  it('hides the quick actions unless asked', () => {
     expect(mountForm().findAll(chips)).toHaveLength(0)
   })
 

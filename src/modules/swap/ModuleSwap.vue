@@ -55,7 +55,10 @@
         :to-loading="toLoadingState"
         :show-balance="isWalletConnected"
         :is-pristine="isPristine"
-        :quick-actions="quickActions"
+        :show-quick-actions="
+          isWalletConnected && !isWatchOnly && !!fromTokenSelected
+        "
+        :max-disabled="!isInternalWallet()"
         :show-from-network="!isSwapView"
         :from-chains="fromChains"
         :show-to-network="
@@ -261,14 +264,6 @@ const description = computed(() => {
   if (!isSwapView.value) return t('swap.between-chains')
   const network = selectedChain.value?.nameLong || selectedChain.value?.name
   return network ? t('swap.within-network', { network }) : undefined
-})
-
-// % presets of the from balance; Max keeps its internal-wallet gate (it
-// reserves the fee, which only internal wallets can estimate up front).
-const quickActions = computed(() => {
-  if (!isWalletConnected.value || isWatchOnly.value || !fromTokenSelected.value)
-    return []
-  return isInternalWallet() ? [25, 50, 75, 100] : [25, 50, 75]
 })
 
 const ctaLabel = computed(() => {

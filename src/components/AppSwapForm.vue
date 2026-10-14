@@ -30,8 +30,10 @@ withDefaults(
     toLoading?: boolean
     showBalance?: boolean
     isPristine?: boolean
-    /** % presets under the from amount; 100 renders as MAX. */
-    quickActions?: number[]
+    /** 25/50/75/MAX presets under the from amount. */
+    showQuickActions?: boolean
+    /** MAX stays visible but inert (it needs an internal wallet). */
+    maxDisabled?: boolean
     /** From network writes the global chain (SelectChainForApp default). */
     showFromNetwork?: boolean
     fromChains?: Chain[]
@@ -51,7 +53,8 @@ withDefaults(
     toLoading: false,
     showBalance: true,
     isPristine: false,
-    quickActions: () => [],
+    showQuickActions: false,
+    maxDisabled: false,
     showFromNetwork: false,
     fromChains: () => [],
     showToNetwork: false,
@@ -76,6 +79,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const QUICK_ACTIONS = [25, 50, 75, 100]
 const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
 </script>
 
@@ -96,11 +100,12 @@ const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
         <template v-if="showFromNetwork" #header>
           <SelectChainPicker :passed-chains="fromChains" />
         </template>
-        <template v-if="quickActions.length" #actions>
+        <template v-if="showQuickActions" #actions>
           <AppChip
-            v-for="pct in quickActions"
+            v-for="pct in QUICK_ACTIONS"
             :key="pct"
             :label="chipLabel(pct)"
+            :disabled="pct === 100 && maxDisabled"
             class="flex-1 uppercase"
             @click="emit('percent', pct)"
           />
