@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import AppInputNaked from '@components/input_naked/AppInputNaked.vue'
 import AppChip from '@components/chip/AppChip.vue'
+import AppSpinner from '@components/spinner/AppSpinner.vue'
+import { computed, useId } from 'vue'
 
 /**
  * Transaction input card (Figma: MEW - Side panel actions › Building blocks,
@@ -11,6 +13,10 @@ import AppChip from '@components/chip/AppChip.vue'
  * The picker is slotted so each action drops in its own (fiat, token, stock…).
  * Errors only recolour the input; the message itself belongs to the CTA, per
  * the design.
+ *
+ * Two rows, [value | picker] and [info | balance], instead of Input Naked's own
+ * info row: a long balance would otherwise squeeze the value and the info text
+ * would run into it.
  */
 export interface QuickAction {
   key: string | number
@@ -18,7 +24,7 @@ export interface QuickAction {
   disabled?: boolean
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /** Accessible name for the input (it has no visible label). */
     inputLabel: string
@@ -30,6 +36,8 @@ withDefaults(
     error?: boolean
     loading?: boolean
     disabled?: boolean
+    /** Output-only amount (e.g. a quote result): shown, never typed. */
+    readonly?: boolean
     maxDecimals?: number
     balance?: string
     balanceError?: boolean
@@ -42,6 +50,7 @@ withDefaults(
     error: false,
     loading: false,
     disabled: false,
+    readonly: false,
     maxDecimals: 18,
     balance: '',
     balanceError: false,
@@ -56,6 +65,20 @@ const emit = defineEmits<{
   focus: [FocusEvent]
   blur: [FocusEvent]
 }>()
+
+const infoId = `transaction-input-card-info-${useId()}`
+
+const infoText = computed(() =>
+  model.value ? props.conversion : props.infoMessage,
+)
+const hasInfoRow = computed(
+  () => props.loading || !!infoText.value || !!props.balance,
+)
+
+const infoColorClass = computed(() => {
+  if (props.disabled) return 'text-text-disabled'
+  return props.error ? 'text-text-error' : 'text-text-subtle'
+})
 </script>
 
 <template>
@@ -65,27 +88,43 @@ const emit = defineEmits<{
   >
     <p v-if="title" class="text-text-sm text-text-subtle">{{ title }}</p>
 
-    <div class="flex items-center justify-between gap-2">
-      <AppInputNaked
-        v-model="model"
-        :label="inputLabel"
-        :show-currency="false"
-        :conversion="conversion"
-        :info-message="infoMessage"
-        :error="error"
-        :loading="loading"
-        :disabled="disabled"
-        :max-decimals="maxDecimals"
-        class="flex-1 min-w-0"
-        @focus="emit('focus', $event)"
-        @blur="emit('blur', $event)"
-      />
-      <div class="flex flex-col items-end justify-center gap-2 self-stretch">
-        <slot name="picker" />
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center justify-between gap-2">
+        <AppInputNaked
+          v-model="model"
+          :label="inputLabel"
+          :show-currency="false"
+          :error="error"
+          :disabled="disabled"
+          :readonly="readonly || undefined"
+          :max-decimals="maxDecimals"
+          :aria-describedby="hasInfoRow ? infoId : undefined"
+          class="flex-1 min-w-0"
+          @focus="emit('focus', $event)"
+          @blur="emit('blur', $event)"
+        />
+        <div class="shrink-0">
+          <slot name="picker" />
+        </div>
+      </div>
+
+      <div
+        v-if="hasInfoRow"
+        class="flex items-center justify-between gap-2 h-5 text-text-sm"
+        :aria-busy="loading || undefined"
+      >
+        <div
+          :id="infoId"
+          :class="['shrink-0 whitespace-nowrap', infoColorClass]"
+          data-testid="transaction-input-card-info"
+        >
+          <AppSpinner v-if="loading" :size="20" />
+          <template v-else>{{ infoText }}</template>
+        </div>
         <p
           v-if="balance"
           :class="[
-            'text-text-sm whitespace-nowrap',
+            'min-w-0 truncate',
             balanceError ? 'text-text-error' : 'text-text-subtle',
           ]"
           data-testid="transaction-input-card-balance"

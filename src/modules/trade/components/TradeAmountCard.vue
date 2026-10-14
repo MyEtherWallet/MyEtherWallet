@@ -1,91 +1,47 @@
 <template>
-  <div
-    ref="cardEl"
-    :class="[
-      isActive
-        ? 'bg-white border-border-default'
-        : side === 'sell'
-          ? 'bg-background-default border-transparent has-[.amount-value:hover]:border-border-hover'
-          : 'bg-background-default border-transparent',
-      side === 'sell' ? 'pb-6' : 'pb-4',
-      'w-full rounded-20 flex flex-col gap-5 px-4 pt-4 border-1 transition-colors',
-    ]"
-    @click="focusInput"
+  <app-transaction-input-card
+    ref="cardRef"
+    :model-value="side === 'sell' ? amount : displayAmount"
+    :input-label="$t(`trade.${side}_label`)"
+    :readonly="side === 'buy'"
+    :conversion="infoText"
+    :info-message="infoText"
+    :error="isErrorVisible"
+    :loading="isBusy"
+    :balance="showBalance ? `${$t('common.balance')}: ${balanceText}` : ''"
+    :balance-error="isErrorVisible && side === 'sell' && errorIsBalance"
+    :quick-actions="quickActions"
+    @update:model-value="amount = $event"
+    @quick-action="emit('percent', Number($event))"
+    @focus="hasError = false"
+    @blur="applyError"
   >
-    <p class="text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase">
-      {{ $t(`trade.${side}_label`) }}
-    </p>
-
-    <div class="w-full flex flex-col gap-2">
-      <div class="w-full flex items-center justify-between gap-2">
-        <div
-          v-if="side === 'sell'"
-          ref="amountDisplayElement"
-          class="min-w-0 grow"
+    <template #picker>
+      <trade-select-asset-modal
+        v-model:selected-token="selectedToken"
+        :side="side"
+        :external-loading="isLoading"
+        :chain-tokens="tokens || []"
+        :network-name="networkName"
+        :disabled-tokens="disabledTokens"
+        @open:select-token="setIsOpenSelectToken"
+        @select:token="emit('select:token', $event)"
+      >
+        <template
+          #trigger="{ open, isLoading: tokenLoading, selectedToken: token }"
         >
-          <span class="amount-value inline-flex max-w-full">
-            <input
-              ref="amountInputElement"
-              :value="amount"
-              name="trade-amount-input"
-              type="text"
-              inputmode="decimal"
-              autocomplete="off"
-              placeholder="0"
-              :aria-invalid="showError"
-              :aria-describedby="`trade-amount-message-${side}`"
-              :style="{ width: inputWidth }"
-              :class="[
-                amountColorClass,
-                amountSizeClass,
-                'min-w-0 max-w-full bg-transparent text-s-32 font-bold leading-[36px] tracking-[-0.96px] placeholder:text-text-placeholder focus:outline-none focus:ring-0',
-              ]"
-              @focus="focusInput"
-              @keypress="checkIfNumber"
-              @input="onAmountInput"
-            />
-          </span>
-        </div>
-        <p
-          v-else
-          ref="amountDisplayElement"
-          :class="[
-            amount ? amountColorClass : 'text-text-placeholder',
-            amountSizeClass,
-            'min-w-0 grow truncate text-s-32 font-bold leading-[36px] tracking-[-0.96px]',
-          ]"
-        >
-          {{ displayAmount || '0' }}
-        </p>
-
-        <trade-select-asset-modal
-          v-model:selected-token="selectedToken"
-          :side="side"
-          :external-loading="isLoading"
-          :chain-tokens="tokens || []"
-          :network-name="networkName"
-          :disabled-tokens="disabledTokens"
-          @open:select-token="setIsOpenSelectToken"
-          @select:token="emit('select:token', $event)"
-        >
-          <template
-            #trigger="{ open, isLoading: tokenLoading, selectedToken: token }"
+          <app-picker
+            :title="token ? pickerTitle(token) : ''"
+            :loading="tokenLoading || !token"
+            :avatar="!!token && !tokenLoading"
+            size="s"
+            :aria-label="$t('select_token.title')"
+            @click.stop="open"
           >
-            <div
-              v-if="tokenLoading || !token"
-              class="h-10 w-[120px] shrink-0 rounded-20 bg-background-default-hover animate-pulse"
-            />
-            <button
-              v-else
-              type="button"
-              :aria-label="$t('select_token.title')"
-              :class="[
-                isActive ? 'bg-background-default' : 'bg-white',
-                'flex items-center gap-2 p-2 rounded-20 shrink-0 transition-colors hoverNoBG',
-              ]"
-              @click.stop="open"
-            >
+            <!-- AppTokenLogo, not AppAvatar: Ondo tokens keep their rainbow ring (MEW-2361) -->
+            <template #avatar>
               <app-token-logo
+                v-if="token"
                 :url="token.logoURI"
                 :symbol="token.symbol"
                 :address="
@@ -97,88 +53,30 @@
                 height="h-6"
                 no-shadow
               />
-              <app-token-symbol
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-                :is-stock="side === 'buy'"
-                class="!text-s-14 !font-semibold leading-[20px] tracking-[-0.28px]"
-              />
-              <AppIcon name="chevron-right" variant="filled" size="s" />
-            </button>
-          </template>
-        </trade-select-asset-modal>
-      </div>
-
-      <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isBusy" :size="18" />
-        <p
-          v-else
-          :id="`trade-amount-message-${side}`"
-          :role="showError ? 'alert' : undefined"
-          aria-live="polite"
-          :class="[
-            showError ? 'text-text-error' : 'text-text-subtle',
-            'text-s-12 leading-[18px] truncate',
-          ]"
-        >
-          {{ showError ? errorMessage : fiatText }}
-        </p>
-        <p
-          v-if="showBalance"
-          :class="[
-            isErrorVisible && side === 'sell' && errorIsBalance
-              ? 'text-text-error'
-              : 'text-text-subtle',
-            'text-s-12 leading-[18px] whitespace-nowrap',
-          ]"
-        >
-          {{ $t('common.balance') }}: {{ balanceText }}
-        </p>
-      </div>
-    </div>
-
-    <div v-if="side === 'sell'" class="w-full flex items-center gap-1">
-      <button
-        v-for="pct in [25, 50, 75, 100]"
-        :key="pct"
-        type="button"
-        :disabled="pct === 100 && maxDisabled"
-        :class="[
-          isActive ? 'bg-background-default' : 'bg-white',
-          pct === 100 && maxDisabled ? 'opacity-40 cursor-not-allowed' : '',
-          'flex-1 h-8 flex items-center justify-center px-3 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase transition-colors hoverNoBG',
-        ]"
-        @click.stop="emit('percent', pct)"
-      >
-        {{ pct === 100 ? $t('common.max') : `${pct}%` }}
-      </button>
-    </div>
-  </div>
+            </template>
+          </app-picker>
+        </template>
+      </trade-select-asset-modal>
+    </template>
+  </app-transaction-input-card>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
-import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/spinner/AppSpinner.vue'
+import { useDebounceFn } from '@vueuse/core'
+import AppTransactionInputCard from '@components/AppTransactionInputCard.vue'
+import AppPicker from '@components/picker/AppPicker.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useStocksStore } from '@/stores/stocksStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
-import { useNumericInput } from '@/composables/useNumericInput'
-import { sanitizeDecimal } from '@/utils/sanitizeDecimal'
 import { type NewTokenInfo } from '@/stores/swapStore'
-import { useInFocusInput } from '@/composables/useInFocusInput'
-import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const props = withDefaults(
   defineProps<{
     side: 'sell' | 'buy'
@@ -186,6 +84,9 @@ const props = withDefaults(
     externalLoading?: boolean
     fiatLoading?: boolean
     balanceError?: boolean
+    /** Show the error message below the amount (e.g. "Remove 2 decimals")
+     *  instead of the red conversion; the CTA always carries the message. */
+    inlineError?: boolean
     showBalance?: boolean
     isPristine?: boolean
     networkName?: string
@@ -197,6 +98,7 @@ const props = withDefaults(
     externalLoading: false,
     fiatLoading: false,
     balanceError: false,
+    inlineError: false,
     showBalance: true,
     isPristine: false,
     networkName: undefined,
@@ -213,8 +115,13 @@ const emit = defineEmits<{
 const amount = defineModel<string>('amount', { required: true })
 const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 const error = defineModel<string>('error', { default: '' })
+// Outputs: let the parent CTA follow the card's spinner and error message.
+const busy = defineModel<boolean>('busy', { default: false })
+const errorVisible = defineModel<boolean>('errorVisible', { default: false })
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
+const stocksStore = useStocksStore()
 const { formatFiat, currencySymbol } = useCurrency()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
   storeToRefs(walletStore)
@@ -229,6 +136,7 @@ const isLoading = computed(() => {
 const hasError = ref(false)
 const errorMessage = ref('')
 const errorIsBalance = ref(false)
+const errorIsInline = ref(false)
 const isErrorPending = ref(false)
 const showError = computed(
   () => hasError.value && !isOpenSelectToken.value && !props.isPristine,
@@ -238,10 +146,16 @@ const isBusy = computed(
 )
 const isErrorVisible = computed(() => showError.value && !isBusy.value)
 
+watch(isBusy, value => (busy.value = value), { immediate: true })
+watch(isErrorVisible, value => (errorVisible.value = value), {
+  immediate: true,
+})
+
 const applyError = () => {
   hasError.value = error.value !== ''
   errorMessage.value = error.value
   errorIsBalance.value = props.balanceError
+  errorIsInline.value = props.inlineError
   isErrorPending.value = false
 }
 
@@ -256,10 +170,17 @@ watch(
   },
 )
 
+const cardRef = ref<InstanceType<typeof AppTransactionInputCard> | null>(null)
+
 const isOpenSelectToken = ref(false)
 const setIsOpenSelectToken = (value: boolean) => {
   isOpenSelectToken.value = value
-  if (!value) focusInput()
+  if (!value && props.side === 'sell') {
+    nextTick(() => {
+      const root = cardRef.value?.$el as HTMLElement | undefined
+      root?.querySelector('input')?.focus()
+    })
+  }
 }
 
 const tokenBalanceRaw = computed(() =>
@@ -284,6 +205,15 @@ const fiatText = computed(() => {
   return `${currencySymbol.value}${formatFiat(safeValue.toFixed(2)).value}`
 })
 
+// On error the row turns red; it only swaps to the message when the error is
+// inline (decimals), otherwise the message lives on the CTA. Empty sell input
+// shows the "Enter amount" hint.
+const infoText = computed(() => {
+  if (showError.value && errorIsInline.value) return errorMessage.value
+  if (props.side === 'sell' && !amount.value) return t('trade.enter_amount')
+  return `≈ ${fiatText.value}`
+})
+
 const balanceText = computed(() => {
   const balance = formatFloatingPointValue(
     tokenBalanceRaw.value?.balance || 0,
@@ -291,92 +221,24 @@ const balanceText = computed(() => {
   return `${balance} ${selectedToken.value?.symbol || ''}`
 })
 
-const amountColorClass = computed(() =>
-  isErrorVisible.value && !inFocusInput.value
-    ? 'text-text-error'
-    : 'text-black',
+const quickActions = computed(() =>
+  props.side === 'sell'
+    ? [25, 50, 75, 100].map(pct => ({
+        key: pct,
+        label: pct === 100 ? t('common.max').toUpperCase() : `${pct}%`,
+        disabled: pct === 100 && props.maxDisabled,
+      }))
+    : [],
 )
 
-const cardEl = ref<HTMLElement | null>(null)
-const activeCard = ref<HTMLElement | null>(null)
-const amountDisplayElement = ref<HTMLElement | null>(null)
-const amountInputElement = ref<HTMLInputElement | null>(null)
-const { width: amountDisplayWidth } = useElementSize(amountDisplayElement)
-
-const AMOUNT_SCALES: ReadonlyArray<TextScale> = [
-  { size: 32, lineHeight: 36, tracking: -0.96 },
-  { size: 28, lineHeight: 36, tracking: -0.84 },
-  { size: 20, lineHeight: 36, tracking: -0.6 },
-  { size: 16, lineHeight: 36, tracking: -0.48 },
-]
-
-const AMOUNT_SCALE_CLASSES: Record<number, string> = {
-  32: '',
-  28: '!text-s-28 !tracking-[-0.84px]',
-  20: '!text-s-20 !tracking-[-0.6px]',
-  16: '!text-s-16 !tracking-[-0.48px]',
-}
-
-const { scale: amountScale, measureWithScale } = useTextScaler(
-  () => displayAmount.value || '0',
-  {
-    scales: AMOUNT_SCALES,
-    containerWidthPx: amountDisplayWidth,
-  },
-)
-
-const amountSizeClass = computed(
-  () => AMOUNT_SCALE_CLASSES[amountScale.value.size] ?? '',
-)
-
-const inputWidth = computed(
-  () => `${Math.ceil(measureWithScale(amount.value || '0')) + 2}px`,
-)
-
-const {
-  inFocusInput,
-  setInFocusInput: setInFocusInputElement,
-  startOutOfFocusTimeout,
-} = useInFocusInput(amountInputElement)
-
-const isActive = computed(
-  () =>
-    (inFocusInput.value || isOpenSelectToken.value) && props.side === 'sell',
-)
-
-const focusInput = () => {
-  if (props.side !== 'sell') return
-  hasError.value = false
-  activeCard.value = cardEl.value
-  nextTick(() => {
-    setInFocusInputElement()
-  })
-}
-
-onClickOutside(activeCard, () => {
-  startOutOfFocusTimeout()
-  activeCard.value = null
-  applyError()
-})
-
-// Shared handler: accepts digits and a single '.', and converts a typed ','
-// into '.' at the caret — a comma-decimal keypad could not type a decimal at
-// all with a digits-and-dot-only handler. Pasted text is sanitized in
-// onAmountInput instead.
-const { checkIfNumber } = useNumericInput(amount)
-
-const onAmountInput = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const sanitized = sanitizeDecimal(input.value)
-  if (input.value !== sanitized) {
-    // Restore the caret relative to the removed characters — assigning .value
-    // alone throws the caret to the end on every rejected character.
-    const caret = input.selectionStart ?? sanitized.length
-    const removed = input.value.length - sanitized.length
-    input.value = sanitized
-    const position = Math.max(0, Math.min(caret - removed, sanitized.length))
-    input.setSelectionRange(position, position)
-  }
-  amount.value = sanitized
+// Same casing as AppTokenSymbol: ticker uppercase, Ondo "on" suffix lowercase.
+const pickerTitle = (token: NewTokenInfo) => {
+  const isStock =
+    props.side === 'buy' ||
+    (!!props.networkName &&
+      stocksStore.isStock(token.address, props.networkName))
+  const symbol = token.symbol.toUpperCase()
+  if (!isStock) return symbol
+  return `${symbol.endsWith('ON') ? symbol.slice(0, -2) : symbol}on`
 }
 </script>

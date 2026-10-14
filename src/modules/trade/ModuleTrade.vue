@@ -2,14 +2,12 @@
   <div
     class="flex flex-col -mx-4 -mb-6 sm:-mt-6 min-h-[calc(100%+24px)] sm:min-h-[calc(100%+48px)]"
   >
-    <div class="flex flex-col gap-1 pt-8 px-5 w-full max-w-[540px] mx-auto">
-      <p class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
-        {{ $t('trade.title') }}
-      </p>
-      <p class="text-s-12 text-text-subtle leading-[18px]">
-        {{ $t('trade.subtitle') }}
-      </p>
-    </div>
+    <app-content-group
+      :title="$t('trade.title')"
+      :description="$t('trade.subtitle')"
+      size="l"
+      class="pt-8 px-5 w-full max-w-[540px] mx-auto"
+    />
     <div
       :class="[
         'static w-full flex flex-col items-center justify-items-stretch gap-3 p-5',
@@ -116,10 +114,13 @@
             v-model:amount="fromAmount"
             v-model:selected-token="fromTokenModel"
             v-model:error="fromAmountError"
+            v-model:busy="isFromAmountBusy"
+            v-model:error-visible="isFromAmountErrorVisible"
             side="sell"
             :external-loading="isLoading || !swapLoaded"
             :fiat-loading="isLoadingQuote"
             :balance-error="isInsufficientBalanceError"
+            :inline-error="isDecimalsError"
             :tokens="fromTokens"
             :show-balance="isWalletConnected"
             :network-name="selectedFromChain?.name"
@@ -130,12 +131,12 @@
             @select:token="onFromTokenSelected"
           />
 
-          <div class="relative h-0 z-10 flex justify-center">
+          <div class="relative z-10 h-2 flex items-center justify-center">
             <div
               aria-hidden="true"
-              class="absolute top-1.5 -translate-y-1/2 bg-background-default border-4 border-white rounded-12 p-2.5"
+              class="absolute size-8 flex items-center justify-center rounded-full bg-background-alternative text-icon-brand"
             >
-              <AppIcon name="arrow-down" variant="filled" size="s" />
+              <AppIcon name="arrow-down" size="xxs" />
             </div>
           </div>
 
@@ -150,7 +151,6 @@
             :network-name="selectedFromChain?.name"
             :is-pristine="isPristine"
             :disabled-tokens="disabledTokenAddresses"
-            class="mt-3"
             @select:token="onToTokenSelected"
           />
         </div>
@@ -198,7 +198,7 @@
         </p>
       </div>
 
-      <div class="w-full max-w-[340px] transition-all duration-300">
+      <div class="w-full max-w-[340px] mt-2 transition-all duration-300">
         <app-base-button
           v-if="!isWalletConnected || isWatchOnly"
           class="w-full"
@@ -214,20 +214,16 @@
               source="trade"
               class="mb-5 -mt-1"
             />
-            <button
-              v-else-if="isTradeDisabled"
-              type="button"
-              disabled
-              class="w-full h-12 flex items-center justify-center rounded-24 bg-background-default text-text-muted text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
-            >
-              {{ ctaDisabledLabel }}
-            </button>
             <app-base-button
               v-else
-              class="w-full !font-semibold !py-[13px] text-s-16 leading-[22px] tracking-[-0.32px]"
+              class="w-full"
+              :disabled="isTradeDisabled && !isCtaLoading"
+              :is-loading="isCtaLoading"
               @click="startTradeFlow"
             >
-              {{ $t('trade.review_trade') }}
+              {{
+                isTradeDisabled ? ctaDisabledLabel : $t('trade.review_trade')
+              }}
             </app-base-button>
           </transition>
 
@@ -250,14 +246,9 @@
     </div>
 
     <div v-if="showHelpLink" class="mt-auto flex justify-center px-5 pb-5">
-      <a
-        href="https://help.myetherwallet.com/en/article/what-is-gas"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex h-10 items-center px-3 rounded-24 text-text-brand text-s-14 font-semibold tracking-[-0.28px] hoverNoBG"
-      >
+      <app-base-button type="link" size="small" @click="openHelpLink">
         {{ $t('trade.need_help') }}
-      </a>
+      </app-base-button>
     </div>
 
     <!-- Trade Quote Modal -->
@@ -300,6 +291,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppContentGroup from '@components/content_group/AppContentGroup.vue'
 import TradeAmountCard from './components/TradeAmountCard.vue'
 import TradeMarketStatusPill from './components/TradeMarketStatusPill.vue'
 import TradeReviewModal from './components/TradeReviewModal.vue'
@@ -355,8 +347,12 @@ const {
   quoteRefreshFailed,
   refreshExpiredQuote,
   ctaDisabledLabel,
+  isFromAmountBusy,
+  isFromAmountErrorVisible,
+  isCtaLoading,
   showHelpLink,
   isInsufficientBalanceError,
+  isDecimalsError,
   isPairUnavailable,
   pillStatus,
   untilText,
@@ -378,6 +374,14 @@ const {
   onFromTokenSelected,
   onToTokenSelected,
 } = useTradeModule()
+
+const openHelpLink = () => {
+  window.open(
+    'https://help.myetherwallet.com/en/article/what-is-gas',
+    '_blank',
+    'noopener,noreferrer',
+  )
+}
 
 // Case-insensitive: the swap list can return a checksummed native sentinel,
 // and an exact-match miss here would let MAX select the entire native balance
