@@ -32,7 +32,7 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 sm:pt-8 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           :label="$t('common.close_side_menu')"

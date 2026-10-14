@@ -19,7 +19,7 @@ const providerLogoMap: Record<string, string> = {
   TOPPER: topperLogo,
   COINBASE: coinbaseLogo,
   VENMO: venmoLogo,
-  CASH_APP: cashappLogo
+  CASH_APP: cashappLogo,
 }
 
 export const getProviderLogo = (provider: string): string | undefined =>
@@ -65,18 +65,3 @@ export const getPaymentMethodIcons = (
   }
   return icons
 }
-
-/**
- * The curated set of payment-method icons shown in the Buy module footer
- * ("we accept" banner). Order is driven by design, not by any specific quote.
- */
-export const PAYMENT_METHOD_BANNER_ICONS: PaymentMethodIcon[] = [
-  VISA,
-  MASTERCARD,
-  APPLE_PAY,
-  GOOGLE_PAY,
-  PIX,
-  PAYPAL,
-  VENMO,
-  CASH_APP
-]
