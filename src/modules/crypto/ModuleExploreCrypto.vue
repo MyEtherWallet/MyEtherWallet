@@ -10,7 +10,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchInput"
           bg-class="bg-background-default"
           size="compact"
@@ -210,30 +210,27 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
+                <AppBtnIcon
+                  :label="
                     isWatchListed(getWatchlistId(token))
                       ? $t('common.remove_from_watchlist')
                       : $t('common.add_to_watchlist')
                   "
+                  :class="
+                    isWatchListed(getWatchlistId(token))
+                      ? 'text-text-brand'
+                      : 'text-text-subtle'
+                  "
                   @click.stop="setWatchlistToken(token)"
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
                 >
-                  <!-- changes color when active -->
                   <AppIcon
                     name="star"
+                    :variant="
+                      isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
+                    "
                     size="xxs"
-                    v-if="!isWatchListed(getWatchlistId(token))"
-                    class="cursor-pointer"
                   />
-                  <AppIcon
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                </AppBtnIcon>
               </td>
               <!-- Name & Symbol -->
               <td class="px-1 py-1" colspan="2">
@@ -340,8 +337,6 @@
                       <app-btn-icon
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -378,7 +373,7 @@
                               : $t('common.add_to_watchlist')
                           }}</span>
                         </button>
-                        <hr
+                        <app-divider
                           v-if="
                             isBuyableOnCompatibleChain(token.coinId) ||
                             token.ondo !== null ||
@@ -386,7 +381,7 @@
                             token.chains.length > 0 ||
                             getTokenIsCurrentNative(token)
                           "
-                          class="h-px bg-background-default-hover border-0 w-full my-2 xs:hidden"
+                          class="my-1 xs:hidden"
                         />
 
                         <ul>
@@ -523,9 +518,8 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click="previousPage"
@@ -533,9 +527,8 @@
             <AppIcon name="chevron-left" variant="filled" size="xxs" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click="nextPage"
@@ -559,14 +552,14 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -603,8 +596,9 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
-
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 

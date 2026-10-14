@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTabBar from '@/components/AppTabBar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -161,7 +161,7 @@ const confirm = () => {
     </template>
     <template #content>
       <div class="flex flex-col px-6">
-        <AppSearchInput
+        <AppSearchbar
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"

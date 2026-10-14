@@ -263,6 +263,7 @@
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 // Components
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
@@ -277,7 +278,6 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
 import { useSwapModule } from './composables/useSwapModule'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const {
   supportedNetwork,

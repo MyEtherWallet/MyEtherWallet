@@ -41,7 +41,10 @@ import {
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
-import { CHUNK_LOAD_ERROR_MESSAGES } from '@/router/chunkError'
+import {
+  CHUNK_LOAD_ERROR_MESSAGES,
+  installStaleChunkReload,
+} from '@/router/chunkError'
 
 const app = createApp(App)
 
@@ -62,7 +65,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'TypeError: Load failed',
       // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
       // assets that no longer exist after a redeploy. These are already
-      // auto-recovered by router.onError (reload once), so they are noise.
+      // auto-recovered (reload once) by router.onError for route chunks and
+      // by installStaleChunkReload for imports inside libraries, so they are
+      // noise.
       // Covers every browser wording of the same failure (Safari "Importing a
       // module script failed" APP-MEW-WEB-A5, "text/html ... MIME type"
       // APP-MEW-WEB-B8, "Unable to preload CSS" APP-MEW-WEB-1K6).
@@ -219,6 +224,10 @@ pinia.use(
 
 app.use(pinia)
 app.use(router)
+// Reload once on stale-deploy chunk 404s that happen outside the router (see
+// router/chunkError.ts). Installed before mount so the first lazy import is
+// already covered.
+installStaleChunkReload()
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 app.use(autoAnimatePlugin)

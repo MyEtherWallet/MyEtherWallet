@@ -206,7 +206,7 @@
 import { storeToRefs } from 'pinia'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'

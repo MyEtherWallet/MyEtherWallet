@@ -6,7 +6,10 @@ import { useDebounceFn } from '@vueuse/core'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
-import { isExpectedSwapQuoteError } from '@/modules/swap/swapErrors'
+import {
+  getLocalizedSwapQuoteError,
+  isExpectedSwapQuoteError,
+} from '@/modules/swap/swapErrors'
 import {
   smallestMinFromDisplay,
   resolveServableMinDisplay,
@@ -873,7 +876,13 @@ export function useSwapModule(): SwapModuleBindings {
       bestOfferSelectionOpen.value = true
     } catch (e: unknown) {
       const errorMessage = getErrorMessage(e, t('swap.error.fetching-gas-fees'))
-      generalError.value = errorMessage
+      // The raw node / API text (addresses, wei amounts) is kept for analytics
+      // and Sentry; the user sees a localized, actionable message instead.
+      generalError.value =
+        getLocalizedSwapQuoteError(
+          errorMessage,
+          selectedChain.value?.currencyName,
+        ) ?? errorMessage
       // Expected, user-facing swap conditions (no route/quote, thin liquidity,
       // slippage / on-chain revert) surface via generalError; skip the Sentry
       // report to avoid noise. See Sentry APP-MEW-WEB-EV.
@@ -883,7 +892,7 @@ export function useSwapModule(): SwapModuleBindings {
       if (!isDevMode) {
         analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
           ...analyticsPayload,
-          errorMsg: generalError.value,
+          errorMsg: errorMessage,
         })
       }
       reportModuleError({
@@ -891,7 +900,7 @@ export function useSwapModule(): SwapModuleBindings {
         title: 'SWAP: Error fetching gas fees',
         error: e,
         expected: isExpectedError,
-        extra: { errorMessage: generalError.value },
+        extra: { errorMessage },
       })
     } finally {
       bestSwapLoadingOpen.value = false
@@ -1487,15 +1496,23 @@ export function useSwapModule(): SwapModuleBindings {
           if (cancelled) return
           swapInfo.value = null
           swapGasFeeQuote.value = undefined
-          const errorMessage = getErrorMessage(err, 'Error fetching gas fees')
-          generalError.value = errorMessage
+          const errorMessage = getErrorMessage(
+            err,
+            t('swap.error.fetching-gas-fees'),
+          )
+          // Raw text goes to analytics / Sentry; the user gets a localized one.
+          generalError.value =
+            getLocalizedSwapQuoteError(
+              errorMessage,
+              selectedChain.value?.currencyName,
+            ) ?? errorMessage
           const isExpectedQuoteError =
             errorMessage === t('swap.error.pair-not-available') ||
             isExpectedSwapQuoteError(errorMessage)
           if (!isDevMode) {
             analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
               ...analyticsPayload,
-              errorMsg: generalError.value,
+              errorMsg: errorMessage,
             })
           }
           reportModuleError({
@@ -1503,7 +1520,7 @@ export function useSwapModule(): SwapModuleBindings {
             title: 'SWAP: Error fetching gas fees on quote selection',
             error: err,
             expected: isExpectedQuoteError,
-            extra: { errorMessage: generalError.value },
+            extra: { errorMessage },
           })
         } finally {
           if (!cancelled) txProceeding.value = false

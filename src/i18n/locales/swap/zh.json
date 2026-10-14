@@ -38,6 +38,7 @@
       "too-many-decimals": "数量的小数位过多",
       "invalid-amount": "数量无效",
       "pair-not-available": "该代币对当前不可用",
+      "quote-failed": "无法获取该金额的报价。请尝试其他金额或代币对。",
       "recipient-required": "跨链需要填写收款地址",
       "invalid-address": "地址无效"
     },

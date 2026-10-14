@@ -110,7 +110,7 @@
 
       <!-- Divider + incompatible section -->
       <template v-if="incompatible.length">
-        <div class="h-px w-full bg-background-default-hover my-1" />
+        <app-divider />
         <div class="px-4 py-2">
           <span class="text-s-12 text-text-subtle">
             {{ $t('select_chain.incompatible_title') }}
@@ -150,6 +150,7 @@ import { ref, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const emit = defineEmits<{
   (e: 'back'): void

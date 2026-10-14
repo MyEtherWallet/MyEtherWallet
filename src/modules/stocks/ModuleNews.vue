@@ -5,7 +5,6 @@
 
       <div class="flex">
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage === 0"
           :label="$t('common.previous_page')"
           @click="prevPage"
@@ -13,7 +12,6 @@
           <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage >= totalPages - 1"
           :label="$t('common.next_page')"
           @click="nextPage"
@@ -49,13 +47,12 @@
                     : ''
                 }}
               </p>
-              <span
+              <AppTag
                 v-for="ticker in article.tickers || []"
                 :key="ticker"
-                class="text-s-9 font-semibold tracking-sp-06 uppercase text-text-subtle bg-background-brand-subtle px-2 py-px rounded"
-              >
-                {{ ticker }}
-              </span>
+                variant="subtle"
+                :label="ticker"
+              />
             </div>
           </div>
         </a>
@@ -75,6 +72,7 @@
 import AppSheet from '@/components/AppSheet.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'
