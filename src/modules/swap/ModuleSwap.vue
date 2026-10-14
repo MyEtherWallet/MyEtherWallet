@@ -1,237 +1,134 @@
 <template>
-  <div>
-    <div
-      :class="[
-        'static w-full flex flex-col items-center justify-items-stretch gap-3',
-      ]"
-    >
-      <div class="w-full max-w-[500px] relative">
-        <!-- <rewards-small-banner
-          :class="blockedClass"
-          :location="'small-banner-swap'"
-        /> -->
-
-        <!-- Header stays at full opacity when blocked: only the form below the
-             unavailable card is dimmed. -->
-        <div class="flex items-end justify-between mb-2 px-4">
-          <p class="font-bold text-s-28">
-            {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
-          </p>
-          <app-btn-text
-            v-if="supportedNetwork"
-            class="text-text-brand text-s-14 pb-1"
-            @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
-          >
-        </div>
-        <!-- Network Not Supported -->
-        <app-unavailable-card
-          v-if="swapLoaded && !supportedNetwork"
-          class="mb-3"
-          :title="$t('swap.network-not-supported')"
-          :description="
-            isSwapView
-              ? $t('swap.swapping-not-available', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-              : $t('swap.bridging-not-available', {
-                  network:
-                    selectedChain?.nameLong ||
-                    selectedChain?.name ||
-                    $t('common.network'),
-                })
-          "
-        >
-          <template #action>
-            <select-chain-for-app
-              :passed-chains="fromChains"
-              :preselected-chain="defualtChainWhenNetworkUnsupported"
-              :can-store="false"
-              id="SWAP:NetworkNotSupported"
-              class="w-full"
-              @update:selected-chain="switchGlobalNetwork"
-            />
-          </template>
-        </app-unavailable-card>
-
-        <div :class="['relative transition-all duration-300', blockedClass]">
-          <!-- From Section -->
-          <div
-            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto"
-          >
-            <p
-              class="text-s-12 font-bold ml-3"
-              :class="{ 'mb-1': !isSwapView }"
-            >
-              {{ $t('swap.you-are-selling') }}
-            </p>
-            <select-chain-for-app
-              v-if="!isSwapView"
-              :passed-chains="fromChains"
-            />
-            <app-swap-enter-amount
-              v-model:amount="fromAmount"
-              v-model:selected-token="fromTokenModel"
-              v-model:error="fromAmountError"
-              :network-name="selectedChain?.name"
-              :external-loading="fromLoadingState"
-              :tokens="parsedFromTokens"
-              :show-balance="isWalletConnected"
-              :is-pristine="isPristine"
-              sort-context="swap"
-              :class="isSwapView ? 'mt-1' : 'mt-3'"
-            >
-              <template #actions>
-                <div
-                  v-if="
-                    isWalletConnected &&
-                    !isWatchOnly &&
-                    fromTokenSelected &&
-                    isInternalWallet()
-                  "
-                >
-                  <button
-                    type="button"
-                    class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                    @click="handleMaxClick"
-                  >
-                    {{ $t('common.max') }}
-                  </button>
-                </div>
-              </template>
-            </app-swap-enter-amount>
-          </div>
-
-          <!-- Arrow Button -->
-          <div class="relative h-0 z-10 flex justify-center items-center">
-            <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
-            >
-              <AppIcon
-                name="arrow-down"
-                variant="filled"
-                size="s"
-                class="text-text-brand"
-              />
-            </div>
-          </div>
-
-          <!-- To Section -->
-          <div
-            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto mt-2"
-          >
-            <p class="text-s-12 font-bold ml-3">
-              {{ $t('swap.you-are-buying') }}
-            </p>
-            <select-chain-for-app
-              :can-store="false"
-              :passed-chains="parsedToChains"
-              :preselected-chain="selectedToChain"
-              :class="{
-                hidden:
-                  isSwapView &&
-                  selectedChain?.name === selectedToChain?.name &&
-                  !isBitcoinChain,
-              }"
-              @update:selected-chain="setToChain"
-            />
-            <app-swap-enter-amount
-              v-model:amount="toAmount"
-              v-model:selected-token="toTokenModel"
-              v-model:error="toAmountError"
-              :external-loading="toLoadingState"
-              :show-balance="false"
-              :tokens="filteredToTokens"
-              :readonly="true"
-              :is-estimate="true"
-              :is-from-view="false"
-              :network-name="selectedToChain?.name"
-              :is-pristine="isPristine"
-              sort-context="swap"
-              :class="
-                isSwapView &&
-                selectedChain?.name === selectedToChain?.name &&
-                !isBitcoinChain
-                  ? 'mt-1'
-                  : 'mt-3'
-              "
-            />
-            <div
-              class="pt-4"
-              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
-            ></div>
-            <address-input
-              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
-              v-model:adr-input="userToAddress"
-              :resolved-address="toAddress"
-              :found-nick-name="foundNickName"
-              :address-error-messages="toAddressError"
-              :network="selectedToChain"
-              :is-pristine="isPristine"
-              @validate:address="validateToAddress"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Error Display -->
-      <div
-        v-if="!isLoading && priceImpactTooHigh"
-        :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
+  <div class="flex h-full flex-col">
+    <div class="flex w-full flex-col gap-5">
+      <!-- Header stays at full opacity when blocked: only the form below the
+           unavailable card is dimmed. -->
+      <AppContentGroup size="l" :title="title" :description="description" />
+      <!-- Network Not Supported -->
+      <app-unavailable-card
+        v-if="swapLoaded && !supportedNetwork"
+        :title="$t('swap.network-not-supported')"
+        :description="
+          isSwapView
+            ? $t('swap.swapping-not-available', {
+                network:
+                  selectedChain?.nameLong ||
+                  selectedChain?.name ||
+                  $t('common.network'),
+              })
+            : $t('swap.bridging-not-available', {
+                network:
+                  selectedChain?.nameLong ||
+                  selectedChain?.name ||
+                  $t('common.network'),
+              })
+        "
       >
-        <p class="text-text-error text-s-14 text-center">
-          {{
-            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
-          }}
-        </p>
-      </div>
-      <div
-        v-if="!isLoading && generalError"
-        :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-      >
-        <p class="text-text-error text-s-14 text-center">
-          {{ generalError }}
-        </p>
-      </div>
-      <app-base-button
-        v-if="!isWalletConnected || isWatchOnly"
-        :class="['mx-auto w-full max-w-[340px]', blockedClass]"
-        @click="connectWalletForSwap"
-      >
-        {{ t('connect_wallet') }}</app-base-button
-      >
-      <div v-else :class="['w-full max-w-[340px]', blockedClass]">
-        <transition name="fade" mode="out-in">
-          <app-no-chain-balance
-            v-if="!hasChainBalance"
-            :source="isSwapView ? 'swap' : 'bridge'"
-            class="mb-5 -mt-1"
-          />
-          <app-base-button
-            v-else
-            :disabled="isSwapDisabled"
-            @click="swapButton"
+        <template #action>
+          <select-chain-for-app
+            :passed-chains="fromChains"
+            :preselected-chain="defualtChainWhenNetworkUnsupported"
+            :can-store="false"
+            id="SWAP:NetworkNotSupported"
             class="w-full"
-          >
-            {{
-              isSwapView ? $t('common.swap') : $t('common.bridge')
-            }}</app-base-button
-          >
-        </transition>
-      </div>
+            @update:selected-chain="switchGlobalNetwork"
+          />
+        </template>
+      </app-unavailable-card>
 
-      <app-need-help
-        :title="t('swap.need-help-swapping')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mx-auto"
-        :class="blockedClass"
-      />
+      <app-swap-form
+        v-model:from-amount="fromAmount"
+        v-model:from-token="fromTokenModel"
+        v-model:from-error="fromAmountError"
+        v-model:to-amount="toAmount"
+        v-model:to-token="toTokenModel"
+        v-model:to-error="toAmountError"
+        :from-tokens="parsedFromTokens"
+        :to-tokens="filteredToTokens"
+        :from-network-name="selectedChain?.name"
+        :to-network-name="selectedToChain?.name"
+        :from-loading="fromLoadingState"
+        :to-loading="toLoadingState"
+        :show-balance="isWalletConnected"
+        :is-pristine="isPristine"
+        :quick-actions="quickActions"
+        :show-from-network="!isSwapView"
+        :from-chains="fromChains"
+        :show-to-network="
+          !(
+            isSwapView &&
+            selectedChain?.name === selectedToChain?.name &&
+            !isBitcoinChain
+          )
+        "
+        :to-chains="parsedToChains"
+        :to-chain="selectedToChain"
+        :cta-label="ctaLabel"
+        :cta-disabled="isSwapDisabled"
+        :class="['transition-all duration-300', blockedClass]"
+        @percent="handleMaxClick"
+        @update:to-chain="setToChain"
+        @submit="swapButton"
+      >
+        <address-input
+          v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
+          v-model:adr-input="userToAddress"
+          :resolved-address="toAddress"
+          :found-nick-name="foundNickName"
+          :address-error-messages="toAddressError"
+          :network="selectedToChain"
+          :is-pristine="isPristine"
+          filled
+          @validate:address="validateToAddress"
+        />
+        <!-- Error Display -->
+        <div
+          v-if="!isLoading && priceImpactTooHigh"
+          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12"
+        >
+          <p class="text-text-error text-s-14 text-center">
+            {{
+              t('swap.price-impact-too-high', {
+                percent: priceImpact.toFixed(2),
+              })
+            }}
+          </p>
+        </div>
+        <div
+          v-if="!isLoading && generalError"
+          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12"
+        >
+          <p class="text-text-error text-s-14 text-center">
+            {{ generalError }}
+          </p>
+        </div>
+        <template
+          v-if="!isWalletConnected || isWatchOnly || !hasChainBalance"
+          #cta
+        >
+          <app-base-button
+            v-if="!isWalletConnected || isWatchOnly"
+            class="w-full"
+            @click="connectWalletForSwap"
+          >
+            {{ t('connect_wallet') }}</app-base-button
+          >
+          <app-no-chain-balance
+            v-else
+            :source="isSwapView ? 'swap' : 'bridge'"
+          />
+        </template>
+      </app-swap-form>
     </div>
+
+    <app-need-help
+      :title="
+        isSwapView ? t('swap.need-help-swapping') : t('swap.need-help-bridging')
+      "
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      class="mt-auto self-center pt-5"
+      :class="blockedClass"
+    />
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
     <swap-offer-modal
       v-model:swap-offer-open="bestOfferSelectionOpen"
@@ -263,16 +160,15 @@
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 // Components
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppSwapForm from '@/components/AppSwapForm.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
@@ -328,7 +224,6 @@ const {
   isInternalWallet,
   handleMaxClick,
   switchGlobalNetwork,
-  clearValues,
   validateToAddress,
   proceedWithSwap,
   swapButton,
@@ -352,6 +247,30 @@ const toTokenModel = computed({
   set: value => {
     toTokenSelected.value = value ?? null
   },
+})
+
+const title = computed(() =>
+  isSwapView.value ? t('common.swap') : t('common.bridge'),
+)
+const description = computed(() =>
+  isSwapView.value
+    ? t('swap.within-network', {
+        network: selectedChain.value?.nameLong || selectedChain.value?.name,
+      })
+    : t('swap.between-chains'),
+)
+
+// % presets of the from balance; Max keeps its internal-wallet gate (it
+// reserves the fee, which only internal wallets can estimate up front).
+const quickActions = computed(() => {
+  if (!isWalletConnected.value || isWatchOnly.value || !fromTokenSelected.value)
+    return []
+  return isInternalWallet() ? [25, 50, 75, 100] : [25, 50, 75]
+})
+
+const ctaLabel = computed(() => {
+  if (!Number(fromAmount.value)) return t('common.enter_amount')
+  return isSwapView.value ? t('swap.review-swap') : t('swap.review-bridge')
 })
 
 bindWatchers()
