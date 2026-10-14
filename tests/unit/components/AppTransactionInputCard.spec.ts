@@ -66,6 +66,52 @@ describe('AppTransactionInputCard', () => {
     expect(all.attributes('disabled')).toBeDefined()
   })
 
+  it('keeps a long balance from squeezing the value: two independent rows', () => {
+    const wrapper = mountCard(
+      {
+        modelValue: '0.0084513733',
+        conversion: 'Minimum not reached',
+        error: true,
+        balance: 'Balance: 0.0112 AAPLON',
+      },
+      { picker: '<button data-testid="picker-slot">AAPLon</button>' },
+    )
+    const info = wrapper.get('[data-testid="transaction-input-card-info"]')
+    const balance = wrapper.get(
+      '[data-testid="transaction-input-card-balance"]',
+    )
+    // Info and balance share a row; the picker sits in the value row above
+    expect(info.element.parentElement).toBe(balance.element.parentElement)
+    expect(
+      wrapper
+        .get('[data-testid="picker-slot"]')
+        .element.closest('.flex')
+        ?.contains(info.element),
+    ).toBe(false)
+    expect(info.text()).toBe('Minimum not reached')
+    expect(info.classes()).toContain('text-text-error')
+    expect(balance.classes()).toContain('truncate')
+    expect(
+      wrapper
+        .get('[data-testid="input-naked-input"]')
+        .attributes('aria-describedby'),
+    ).toBe(info.attributes('id'))
+  })
+
+  it('shows the hint while empty and a spinner while loading', () => {
+    expect(
+      mountCard({ infoMessage: 'Enter amount' })
+        .get('[data-testid="transaction-input-card-info"]')
+        .text(),
+    ).toBe('Enter amount')
+    expect(
+      mountCard({ loading: true })
+        .get('[data-testid="transaction-input-card-info"]')
+        .find('app-spinner-stub')
+        .exists(),
+    ).toBe(true)
+  })
+
   it('updates the model and forwards focus / blur from the input', async () => {
     const wrapper = mountCard()
     const input = wrapper.get('[data-testid="input-naked-input"]')
