@@ -26,7 +26,7 @@
           >
             <app-chip
               :label="$t('common.max')"
-              class="uppercase"
+              class="ml-auto uppercase"
               @click="setMaxAmount()"
             />
           </template>

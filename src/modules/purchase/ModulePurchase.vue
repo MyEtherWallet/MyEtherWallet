@@ -1,26 +1,18 @@
 <template>
   <div class="flex flex-col h-full">
-    <!-- Topbar -->
-    <div class="border-b border-border-default -mx-4">
-      <div class="flex items-center gap-4 px-4 -mb-px">
-        <button
-          v-for="tab in tabs"
-          :key="tab.value"
-          type="button"
-          :class="[
-            'px-1 pb-2 border-b-2 transition-colors',
-            currentTab === tab.value
-              ? 'border-black text-black'
-              : 'border-transparent text-text-placeholder',
-          ]"
-          @click="currentTab = tab.value"
-        >
-          <span class="text-heading-lg">
-            {{ tab.label }}
-          </span>
-        </button>
-      </div>
-    </div>
+    <app-content-group
+      :title="t('purchase.title')"
+      :description="t('purchase.description')"
+      size="l"
+    />
+
+    <app-segmented-control
+      v-model="currentTab"
+      :items="tabs"
+      :label="t('purchase.title')"
+      full-width
+      class="mt-5"
+    />
 
     <!-- Tab content -->
     <div class="flex-1 flex flex-col pt-5">
@@ -37,6 +29,9 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import AppContentGroup from '@components/content_group/AppContentGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
+import type { SegmentItem } from '@components/segmented_control/types'
 import ModuleBuy from './ModuleBuy.vue'
 import ModuleSell from './ModuleSell.vue'
 
@@ -53,7 +48,7 @@ watch(selectedPurchaseCoinId, coinId => {
   if (coinId) currentTab.value = 'buy'
 })
 
-const tabs = computed<{ value: PurchaseTab; label: string }[]>(() => [
+const tabs = computed<SegmentItem<PurchaseTab>[]>(() => [
   { value: 'buy', label: t('purchase.buy.title') },
   { value: 'sell', label: t('purchase.sell.title') },
 ])

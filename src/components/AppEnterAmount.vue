@@ -1,18 +1,16 @@
 <template>
   <div ref="target" @click="setInFocusInput">
-    <AppTransactionInputCard :caption="balanceCaption">
-      <AppInputNaked
-        :model-value="String(amount)"
-        :label="$t('common.amount')"
-        :show-currency="false"
-        :error="showError"
-        :loading="isLoading"
-        :info-message="$t('common.enter_amount')"
-        :conversion="`≈ ${balanceFiat}`"
-        name="amount-input"
-        @update:model-value="amount = $event"
-        @focus="setInFocusInput"
-      />
+    <AppTransactionInputCard
+      :model-value="String(amount)"
+      :input-label="$t('common.amount')"
+      :error="showError"
+      :loading="isLoading"
+      :info-message="$t('common.enter_amount')"
+      :conversion="`≈ ${balanceFiat}`"
+      :balance="balanceCaption"
+      @update:model-value="amount = $event"
+      @focus="setInFocusInput"
+    >
       <template #picker>
         <slot name="token-select">
           <app-token-select
@@ -47,7 +45,6 @@ import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
 import AppTransactionInputCard from './AppTransactionInputCard.vue'
-import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'

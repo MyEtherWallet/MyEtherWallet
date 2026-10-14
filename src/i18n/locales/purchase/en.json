@@ -1,10 +1,13 @@
 {
   "purchase": {
+    "title": "Buy & Sell",
+    "description": "Any crypto assets",
+    "on_network": "on {network}",
     "buy": {
       "title": "Buy",
-      "youre_buying": "You're buying",
+      "you_are_paying": "You are paying",
       "enter_amount": "Enter amount",
-      "continue": "Continue",
+      "continue": "Review purchase",
       "connect_wallet": "Connect wallet",
       "no_quotes": "No quotes found",
       "need_help": "Need help buying?",
@@ -18,14 +21,12 @@
     },
     "sell": {
       "title": "Sell",
-      "youre_selling": "You're selling",
-      "your_balance": "Your balance:",
+      "you_are_selling": "You are selling",
+      "balance": "Balance: {amount}",
       "enter_amount": "Enter amount",
-      "continue": "Continue",
+      "continue": "Review sell",
       "connect_wallet": "Connect wallet",
       "need_help": "Need help selling?",
-      "network_fee": "Network fee",
-      "network_fee_tooltip": "Fees in the {chain} network are charged in {symbol}",
       "network_not_supported": "Network not supported",
       "network_not_available": "Selling is not available on {network}. Switch to a supported network.",
       "error": {
@@ -40,7 +41,7 @@
         "continue": "Continue"
       }
     },
-    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
     "min": "Min",
     "max": "Max",
     "bank": "Bank",

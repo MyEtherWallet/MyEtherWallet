@@ -1,21 +1,19 @@
 <template>
   <div ref="target" @click="setInFocusInput">
-    <AppTransactionInputCard :caption="caption">
+    <AppTransactionInputCard
+      v-model="amount"
+      :input-label="$t('common.amount')"
+      :readonly="readonly"
+      :error="showError"
+      :loading="isLoading"
+      :info-message="isFromView ? $t('common.enter_amount') : conversion"
+      :conversion="conversion"
+      :balance="caption"
+      @focus="setInFocusInput"
+    >
       <template v-if="$slots.header" #header>
         <slot name="header" />
       </template>
-      <AppInputNaked
-        v-model="amount"
-        :label="$t('common.amount')"
-        :show-currency="false"
-        :readonly="readonly"
-        :error="showError"
-        :loading="isLoading"
-        :info-message="isFromView ? $t('common.enter_amount') : conversion"
-        :conversion="conversion"
-        name="amount-input"
-        @focus="setInFocusInput"
-      />
       <template #picker>
         <app-swap-token-select
           v-model:selected-token="selectedToken"
@@ -54,7 +52,6 @@ import { ref, computed, type PropType, watch, nextTick } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import AppTransactionInputCard from './AppTransactionInputCard.vue'
-import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'

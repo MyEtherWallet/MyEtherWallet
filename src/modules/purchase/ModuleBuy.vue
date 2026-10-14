@@ -14,30 +14,40 @@
       class="mb-3"
     />
 
-    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
-      <purchase-token-select-card
-        v-if="displayChain"
-        :chain="displayChain"
-        :token="selectedToken"
-        @click="showTokenModal = true"
-      />
-      <purchase-amount-input
-        :label="t('purchase.buy.youre_buying')"
-        :currency="selectedFiat"
-        :amount="fiatAmount"
-        :estimate="formattedCryptoEstimate"
-        :is-loading="isFetchingEstimate"
-        :error-message="amountError"
-        :helper-message="amountHelper"
-        :quick-buttons="quickButtons"
-        @update:amount="onFiatAmountChange"
-        @open-currency="showCurrencyModal = true"
-        @focus="isInputFocused = true"
-        @blur="isInputFocused = false"
-      />
+    <div :class="['flex flex-col h-full', blockedClass]">
+      <div class="flex flex-col gap-2">
+        <purchase-token-picker
+          v-if="displayChain"
+          :chain="displayChain"
+          :token="selectedToken"
+          @click="showTokenModal = true"
+        />
+        <app-transaction-input-card
+          :model-value="fiatAmount"
+          :title="t('purchase.buy.you_are_paying')"
+          :input-label="t('common.amount')"
+          :conversion="`≈ ${formattedCryptoEstimate}`"
+          :info-message="amountHelper || `≈ ${formattedCryptoEstimate}`"
+          :error="!!amountError"
+          :loading="isFetchingEstimate"
+          :max-decimals="MAX_FIAT_DECIMALS"
+          :quick-actions="quickActions"
+          @update:model-value="onFiatAmountChange"
+          @quick-action="onQuickAction"
+          @focus="isInputFocused = true"
+          @blur="isInputFocused = false"
+        >
+          <template #picker>
+            <purchase-currency-picker
+              :currency="selectedFiat"
+              @click="showCurrencyModal = true"
+            />
+          </template>
+        </app-transaction-input-card>
+      </div>
 
       <app-base-button
-        class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+        class="w-full mt-5"
         :disabled="ctaDisabled && !ctaIsLoading"
         :is-loading="ctaIsLoading"
         @click="onSubmit"
@@ -45,16 +55,12 @@
         {{ ctaLabel }}
       </app-base-button>
 
-      <a
-        href="https://help.myetherwallet.com/"
-        target="_blank"
-        rel="noopener"
-        class="mt-auto self-center text-label-xs text-text-brand hover:underline"
-      >
-        {{ t('purchase.buy.need_help') }}
-      </a>
-
-      <purchase-footer class="pt-2" />
+      <div class="mt-auto pt-5 flex flex-col items-center gap-5">
+        <purchase-footer />
+        <app-base-button type="link" size="small" @click="openHelpCenter">
+          {{ t('purchase.buy.need_help') }}
+        </app-base-button>
+      </div>
     </div>
 
     <purchase-token-modal
@@ -96,14 +102,15 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 
-import PurchaseTokenSelectCard from './components/PurchaseTokenSelectCard.vue'
-import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
+import PurchaseTokenPicker from './components/PurchaseTokenPicker.vue'
+import PurchaseCurrencyPicker from './components/PurchaseCurrencyPicker.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
+import AppTransactionInputCard from '@components/AppTransactionInputCard.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -191,6 +198,8 @@ const accessStore = useAccessStore()
 
 const DEFAULT_BUY_CHAIN = 'ETH'
 const DEFAULT_FIAT = 'USD'
+const HELP_CENTER_URL = 'https://help.myetherwallet.com/'
+const MAX_FIAT_DECIMALS = 6
 
 const fiatAmount = ref('')
 const isInputFocused = ref(false)
@@ -271,7 +280,7 @@ const fiatLimits = computed(() => {
   return fiat?.limits ?? { min: 0, max: 0 }
 })
 
-const USD_AMOUNTS = [15, 50, 100, 250]
+const USD_AMOUNTS = [25, 50, 100, 250]
 const MIN_USD = 2
 const MAX_USD = 250
 
@@ -286,7 +295,7 @@ const formatLocalizedAmount = (usd: number, rate: number): string => {
 const quickButtons = computed(() => {
   const rate = currencyRate.value
   if (!rate) return []
-  if (Math.round(15 * rate) >= 1) {
+  if (Math.round(USD_AMOUNTS[0] * rate) >= 1) {
     return USD_AMOUNTS.map(usd => ({
       label: formatLocalizedAmount(usd, rate),
       value: Math.round(usd * rate),
@@ -306,6 +315,15 @@ const quickButtons = computed(() => {
     },
   ]
 })
+
+const quickActions = computed(() =>
+  quickButtons.value.map(btn => ({ key: btn.usdValue, label: btn.label })),
+)
+
+const onQuickAction = (usdValue: string | number) => {
+  const btn = quickButtons.value.find(b => b.usdValue === usdValue)
+  if (btn) onFiatAmountChange(String(btn.value))
+}
 
 const formattedCryptoEstimate = computed(() => {
   if (!cryptoEstimate.value) return `0.00 ${tokenSymbol.value}`.trim()
@@ -382,7 +400,7 @@ const ctaIsLoading = computed(
 
 const ctaLabel = computed(() => {
   if (!isReady.value) return t('purchase.buy.connect_wallet')
-  if (hasNoQuotes.value) return t('purchase.buy.no_quotes')
+  if (amountError.value) return amountError.value
   if (amountIsValid.value) return t('purchase.buy.continue')
   return t('purchase.buy.enter_amount')
 })
@@ -477,6 +495,10 @@ const buyQuoteParams = () => ({
   cryptoCurrency: tokenSymbol.value,
   chain: purchaseChainCode.value,
 })
+
+const openHelpCenter = () => {
+  window.open(HELP_CENTER_URL, '_blank', 'noopener')
+}
 
 const onSubmit = async () => {
   if (showUnsupportedNetwork.value) return
