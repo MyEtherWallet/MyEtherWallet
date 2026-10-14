@@ -116,20 +116,23 @@
           </div>
 
           <div v-if="txDataFormatted" class="flex flex-col gap-3">
-            <app-btn-text
-              class="self-start !text-text-default text-label-sm"
+            <app-base-button
+              type="tertiary"
+              surface="alternative"
+              size="small"
+              class="self-start"
               @click="showMoreDetails = !showMoreDetails"
             >
-              <span class="flex items-center gap-1">
-                {{ $t('common.more_details') }}
+              {{ $t('common.more_details') }}
+              <template #trailing>
                 <AppIcon
                   name="chevron-down"
                   size="xxs"
                   class="transition-transform"
                   :class="{ 'rotate-180': showMoreDetails }"
                 />
-              </span>
-            </app-btn-text>
+              </template>
+            </app-base-button>
             <expand-transition>
               <div
                 v-if="showMoreDetails"
@@ -193,7 +196,6 @@ import type { TokenBalanceRaw } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
