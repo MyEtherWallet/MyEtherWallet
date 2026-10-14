@@ -1,62 +1,56 @@
 <template>
-  <div>
-    <div class="static w-full flex flex-col items-center justify-items-stretch">
-      <div class="w-full max-w-[500px]">
-        <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
-          <app-btn-text
-            class="text-text-brand text-s-15 pb-1"
-            @click="resetSendModule"
-            >{{ $t('common.clear_all') }}</app-btn-text
-          >
-        </div>
-        <div
-          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+  <div class="flex h-full flex-col">
+    <div class="flex w-full flex-col gap-5">
+      <AppContentGroup
+        size="l"
+        :title="$t('common.send')"
+        :description="$t('send.description')"
+      />
+      <div class="flex w-full flex-col gap-2">
+        <app-enter-amount
+          v-model:amount="amount"
+          v-model:selected-token="tokenSelectedContract"
+          v-model:error="amountError"
+          :validate-input="checkAmountForError"
+          :is-pristine="isPristine"
         >
-          <app-enter-amount
-            v-model:amount="amount"
-            v-model:selected-token="tokenSelectedContract"
-            v-model:error="amountError"
-            :validate-input="checkAmountForError"
-            :is-pristine="isPristine"
+          <template
+            v-if="
+              isWalletConnected &&
+              !isWatchOnly &&
+              tokenSelected &&
+              isInternalWallet()
+            "
+            #footer
           >
-            <template
-              v-if="
-                isWalletConnected &&
-                !isWatchOnly &&
-                tokenSelected &&
-                isInternalWallet()
-              "
-              #footer
-            >
-              <app-chip
-                :label="$t('common.max')"
-                class="uppercase"
-                @click="setMaxAmount()"
-              />
-            </template>
-          </app-enter-amount>
-          <address-input
-            v-model:adr-input="adrInput"
-            :resolved-address="toAddress"
-            :address-error-messages="toAddressError"
-            :network="selectedChain"
-            :found-nick-name="foundNickName"
-            :is-pristine="isPristine"
-            @validate:address="validateAddressInput"
-            @immediate-update:resolved-address="onInput"
-          />
-          <app-select-tx-fee
-            v-if="isBitcoinChain ? hasChainBalance : true"
-            :fees="gasFees"
-            :is-loading-fees="isLoadingFees"
-            :txRequestBody="gasFeeTxEstimate"
-            v-model:gas-fee-error="gasFeeError"
-            v-model:selected-fee-native-value="selectedFeeNativeValue"
-            @fee-is-loading="setDefaultFee"
-          />
-        </div>
+            <app-chip
+              :label="$t('common.max')"
+              class="uppercase"
+              @click="setMaxAmount()"
+            />
+          </template>
+        </app-enter-amount>
+        <address-input
+          v-model:adr-input="adrInput"
+          :resolved-address="toAddress"
+          :address-error-messages="toAddressError"
+          :network="selectedChain"
+          :found-nick-name="foundNickName"
+          :is-pristine="isPristine"
+          filled
+          @validate:address="validateAddressInput"
+          @immediate-update:resolved-address="onInput"
+        />
       </div>
+      <app-select-tx-fee
+        v-if="isBitcoinChain ? hasChainBalance : true"
+        :fees="gasFees"
+        :is-loading-fees="isLoadingFees"
+        :txRequestBody="gasFeeTxEstimate"
+        v-model:gas-fee-error="gasFeeError"
+        v-model:selected-fee-native-value="selectedFeeNativeValue"
+        @fee-is-loading="setDefaultFee"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         class="w-full capitalize"
@@ -64,29 +58,23 @@
       >
         {{ $t('common.connect_wallet') }}</app-base-button
       >
-      <div v-else class="flex w-full">
-        <app-no-chain-balance
-          v-if="!hasChainBalance"
-          source="send"
-          class="mb-5 -mt-1"
-        />
-        <app-base-button
-          v-else
-          :disabled="!validSend"
-          :is-loading="isLoadingFees"
-          @click="handleSubmit"
-          class="w-full max-w-[340px]"
-        >
-          {{ $t('common.send') }}</app-base-button
-        >
-      </div>
-
-      <app-need-help
-        :title="$t('send.need-help')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mt-5"
-      />
+      <app-no-chain-balance v-else-if="!hasChainBalance" source="send" />
+      <app-base-button
+        v-else
+        :disabled="!validSend"
+        :is-loading="isLoadingFees"
+        class="w-full"
+        @click="handleSubmit"
+      >
+        {{ ctaLabel }}</app-base-button
+      >
     </div>
+
+    <app-need-help
+      :title="$t('send.need-help')"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      class="mt-auto self-center pt-5"
+    />
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
       v-if="isWalletConnected && tokenSelected && toAddress"
@@ -125,7 +113,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppChip from '@/components/chip/AppChip.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
@@ -376,6 +364,10 @@ const validSend = computed(() => {
     hasChainBalance.value
   )
 })
+
+const ctaLabel = computed(() =>
+  Number(amount.value) ? t('send.review-send') : t('common.enter_amount'),
+)
 
 const amountToFiat = computed(() => {
   if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
