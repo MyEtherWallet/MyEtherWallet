@@ -1,5 +1,6 @@
 <template>
-  <div class="flex h-full flex-col">
+  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
+    <!-- The shared panel pads 16/24px; Figma side panels sit at 20/32 on desktop -->
     <div class="flex w-full flex-col gap-5">
       <!-- Header stays at full opacity when blocked: only the form below the
            unavailable card is dimmed. -->
