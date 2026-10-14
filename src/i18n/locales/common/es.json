@@ -83,6 +83,8 @@
     "from": "Desde",
     "to": "Hacia",
     "amount": "Cantidad",
+    "summary": "Resumen",
+    "recipient": "Destinatario",
     "enter_amount": "Ingresa el monto",
     "max": "Máx",
     "network_fee": "Comisión de red",

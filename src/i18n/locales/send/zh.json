@@ -31,12 +31,8 @@
     }
   },
   "verify-tx": {
-    "title": "验证交易",
-    "description": "确认交易前请仔细核对相关信息。",
-    "unknown-network": "未知网络",
-    "confirm": "确认并发送"
+    "confirm": "确认发送"
   },
-
   "error": {
     "amount": {
       "required": "请输入数量",

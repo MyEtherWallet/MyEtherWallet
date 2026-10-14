@@ -31,12 +31,8 @@
     }
   },
   "verify-tx": {
-    "title": "Verify Transaction",
-    "description": "Double check the information before confirming the transaction.",
-    "unknown-network": "Unknown network",
-    "confirm": "Confirm and send"
+    "confirm": "Confirm send"
   },
-
   "error": {
     "amount": {
       "required": "amount is required",
