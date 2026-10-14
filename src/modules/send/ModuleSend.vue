@@ -20,23 +20,20 @@
             :validate-input="checkAmountForError"
             :is-pristine="isPristine"
           >
-            <template #balance-action>
-              <div
-                v-if="
-                  isWalletConnected &&
-                  !isWatchOnly &&
-                  tokenSelected &&
-                  isInternalWallet()
-                "
-              >
-                <button
-                  type="button"
-                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMaxAmount()"
-                >
-                  {{ $t('common.max') }}
-                </button>
-              </div>
+            <template
+              v-if="
+                isWalletConnected &&
+                !isWatchOnly &&
+                tokenSelected &&
+                isInternalWallet()
+              "
+              #footer
+            >
+              <app-chip
+                :label="$t('common.max')"
+                class="uppercase"
+                @click="setMaxAmount()"
+              />
             </template>
           </app-enter-amount>
           <address-input
@@ -126,6 +123,7 @@ import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'

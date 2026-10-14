@@ -84,6 +84,7 @@
     "from": "Desde",
     "to": "Hacia",
     "amount": "Cantidad",
+    "enter_amount": "Ingresa el monto",
     "max": "Máx",
     "network_fee": "Comisión de red",
     "more_details": "Más detalles",

@@ -86,6 +86,7 @@
     "from": "From",
     "to": "To",
     "amount": "Amount",
+    "enter_amount": "Enter amount",
     "max": "Max",
     "network_fee": "Network fee",
     "more_details": "More details",

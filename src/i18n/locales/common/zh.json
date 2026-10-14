@@ -84,6 +84,7 @@
     "from": "从",
     "to": "至",
     "amount": "数量",
+    "enter_amount": "输入金额",
     "max": "最大",
     "network_fee": "网络费用",
     "more_details": "更多详情",
