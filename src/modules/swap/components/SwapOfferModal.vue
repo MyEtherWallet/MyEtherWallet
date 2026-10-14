@@ -278,7 +278,7 @@
           type="link"
           tone="danger"
           size="large"
-          class="mx-auto w-full mt-2 text-text-error"
+          class="mx-auto w-full mt-2"
           @click="declineSwap"
         >
           {{ t('common.cancel') }}
