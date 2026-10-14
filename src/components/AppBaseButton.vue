@@ -8,7 +8,7 @@
       disabled
         ? isOutline
           ? '!border-border-disabled !text-text-disabled'
-          : '!bg-background-disabled'
+          : '!opacity-40'
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
@@ -95,6 +95,9 @@ const props = defineProps({
   },
 })
 
+// Disabled filled buttons keep their theme fill at 40% (Figma Button /
+// State=Disabled), set in the template with `!opacity-40` so it beats the
+// hover:opacity-90; outline buttons switch to the disabled border and text.
 const themeStyle = computed(() => {
   if (props.theme === 'primary') {
     if (props.isOutline)
