@@ -31,8 +31,12 @@
     }
   },
   "verify-tx": {
-    "confirm": "Confirmar envío"
+    "title": "Verificar transacción",
+    "description": "Revisa bien la información antes de confirmar la transacción.",
+    "unknown-network": "Red desconocida",
+    "confirm": "Confirmar y enviar"
   },
+
   "error": {
     "amount": {
       "required": "la cantidad es obligatoria",

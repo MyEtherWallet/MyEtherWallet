@@ -1,187 +1,254 @@
 <template>
   <app-dialog
+    :title="$t('verify-tx.title')"
     v-model:is-open="openModal"
-    hide-close
-    class="w-full sm:w-[480px] sm:mx-auto !rounded-20"
+    class="sm:max-w-[600px] sm:mx-auto"
+    has-content-gutter
   >
-    <template #title>
-      <h1
-        id="dialogTitle"
-        class="w-full text-center text-heading-base text-text-default px-12 pt-[29px] pb-[21px]"
-      >
-        {{ $t('send.review-send') }}
-      </h1>
-      <app-btn-icon-close
-        variant="filled"
-        class="absolute top-6 right-6"
-        @close="openModal = false"
-      />
-    </template>
     <template #content>
-      <div class="flex flex-col gap-6 p-6">
-        <div class="flex flex-col gap-8 pb-6">
-          <div class="flex flex-col gap-3">
-            <p class="text-label-base text-text-default">
-              {{ $t('common.summary') }}
-            </p>
+      <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
+      <div class="flex flex-col gap-3 px-1">
+        <div class="text-text-subtle text-s-15 text-center mb-1">
+          {{ $t('verify-tx.description') }}
+        </div>
+        <expand-transition>
+          <div v-if="showApproveMessage">
             <div
-              class="flex flex-col gap-4 p-4 rounded-16 bg-background-default"
+              class="flex items-center justify-center gap-5 my-4 font-bold text-text-brand animate-pulse"
+              key="confirmation-approve-message"
             >
-              <div class="flex items-center gap-3">
-                <app-content-group :title="$t('common.amount')" class="flex-1" />
-                <app-content-group
-                  :title="`${toAmount} ${toToken.symbol}`"
-                  :description="`≈ ${formatFiat(toAmountFiat).display}`"
-                  align="right"
-                  class="flex-1"
-                />
-                <!-- The network row is gone from the design; its logo rides on the token as a badge -->
-                <app-avatar
-                  type="cryptoAsset"
-                  size="l"
-                  :url="toToken.logo_url || network?.icon"
-                  :symbol="toToken.symbol"
-                  :badge-bottom="!!network?.icon"
-                >
-                  <template #badge>
-                    <app-avatar-badge type="network">
-                      <img
-                        :src="network?.icon"
-                        :alt="network?.nameLong"
-                        class="w-full h-full object-cover"
-                      />
-                    </app-avatar-badge>
-                  </template>
-                </app-avatar>
-              </div>
-              <app-divider class="-my-1" />
-              <div class="flex items-center gap-3">
-                <app-content-group :title="$t('common.from')" class="flex-1" />
-                <app-content-group
-                  :title="truncateAddress(fromAddress)"
-                  :description="fromAccountName"
-                  align="right"
-                  class="flex-1"
-                />
-                <app-avatar type="account" size="l" :address="fromAddress" />
-              </div>
-              <app-divider class="-my-1" />
-              <div class="flex items-center gap-3">
-                <app-content-group
-                  :title="$t('common.recipient')"
-                  class="flex-1"
-                />
-                <app-content-group
-                  :title="truncateAddress(toAddress)"
-                  align="right"
-                  class="flex-1"
-                />
-                <app-avatar type="account" size="l" :address="toAddress" />
+              {{ $t('send.approve-tx-on-device') }}
+            </div>
+          </div>
+        </expand-transition>
+        <div class="flex flex-col gap-2 text-wrap">
+          <!-- Network -->
+          <div
+            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex items-center"
+          >
+            <img
+              :src="selectedChain?.icon || '@/assets/icons/tokens/eth.svg'"
+              alt=""
+              class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
+            />
+            <div>
+              <p
+                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle"
+              >
+                {{ $t('common.network') }}
+              </p>
+              <p class="text-s-17 font-medium text-black">
+                {{ selectedChain?.nameLong || $t('verify-tx.unknown-network') }}
+              </p>
+            </div>
+          </div>
+          <!-- From-->
+          <div
+            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+          >
+            <p
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
+            >
+              {{ $t('common.from') }}
+            </p>
+
+            <div class="flex items-center">
+              <img
+                alt=""
+                :src="createIcon(fromAddress)"
+                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+              />
+              <p
+                class="text-s-15 font-medium text-black break-all leading-relaxed"
+              >
+                {{ fromAddress }}
+              </p>
+            </div>
+          </div>
+          <!-- Token Amount-->
+          <div
+            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+          >
+            <p
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
+            >
+              {{ $t('common.amount') }}
+            </p>
+            <div class="flex items-center">
+              <img
+                alt=""
+                :src="toToken.logo_url || selectedChain?.icon"
+                class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
+              />
+              <div class="grow">
+                <p class="text-s-20 font-bold text-black leading-tight">
+                  {{ toAmount }}
+                  <span class="text-s-14 text-text-subtle">{{
+                    toToken.symbol
+                  }}</span>
+                </p>
+                <p class="text-text-subtle text-s-14 font-medium">
+                  {{ formatFiat(toAmountFiat).display }}
+                </p>
               </div>
             </div>
           </div>
-
-          <div class="flex flex-col gap-3">
-            <p class="text-label-base text-text-default">
-              {{ $t('common.network_fee') }}:
-            </p>
-            <!-- Picks the fee tier; ModuleSend rebuilds the tx at that priority -->
-            <button
-              type="button"
-              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-background-default hover:bg-background-default-hover transition-colors disabled:cursor-default"
-              :disabled="feeLoading"
-              @click="emit('edit-fee')"
+          <!-- To -->
+          <div
+            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
+          >
+            <p
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
             >
-              <span class="text-label-sm text-text-default whitespace-nowrap">
-                ≈ {{ formatFiat(networkFeeUSD).display }}
-                <span class="text-text-sm text-text-subtle">
-                  ({{ formatFee }} {{ network?.currencyName }})
-                </span>
-              </span>
-              <span class="flex flex-1 justify-end min-w-0">
-                <app-tag
-                  :type="isRecommendedFee ? 'success' : 'neutral'"
-                  variant="contrast"
-                  :leading-icon="isRecommendedFee ? 'check-badge' : undefined"
-                  :label="feeTierLabel"
-                />
-              </span>
-              <AppIcon name="chevron-down" size="s" class="text-text-default" />
-            </button>
-            <app-input-feedback
-              v-if="feeErrorMessage"
-              type="error"
-              :message="feeErrorMessage"
-            />
+              {{ $t('common.to') }}
+            </p>
+
+            <div class="flex items-center">
+              <img
+                alt=""
+                :src="createIcon(toAddress)"
+                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+              />
+              <p
+                class="text-s-15 font-medium text-black break-all leading-relaxed"
+              >
+                {{ toAddress }}
+              </p>
+            </div>
           </div>
 
-          <div v-if="txDataFormatted" class="flex flex-col gap-3">
-            <app-base-button
-              type="tertiary"
-              surface="alternative"
-              size="small"
-              class="self-start"
-              @click="showMoreDetails = !showMoreDetails"
+          <!-- Network fee -->
+          <div class="px-5 py-2 flex items-start justify-between mt-1">
+            <p
+              class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle py-1"
             >
-              {{ $t('common.more_details') }}
-              <template #trailing>
-                <AppIcon
-                  name="chevron-down"
-                  size="xxs"
-                  class="transition-transform"
-                  :class="{ 'rotate-180': showMoreDetails }"
-                />
-              </template>
-            </app-base-button>
-            <expand-transition>
+              {{ $t('common.network_fee') }}
+            </p>
+            <div class="text-right">
+              <p class="font-bold text-s-15 text-black">
+                {{ formatFee }} {{ network?.currencyName }}
+              </p>
+              <p class="text-s-12 font-medium text-text-subtle mt-0.5">
+                {{ formatFiat(networkFeeUSD).display }}
+              </p>
+            </div>
+          </div>
+          <button
+            v-if="txDataFormatted"
+            class="rounded-full hoverNoBG py-2 px-4 flex items-center justify-center max-w-fit mr-auto -mt-1 text-s-14 font-medium"
+            @click="showMoreDetails = !showMoreDetails"
+          >
+            {{ $t('common.more_details') }}
+            <AppIcon
+              name="chevron-down"
+              variant="filled"
+              size="xxs"
+              :class="[
+                'transition-transform ml-2',
+                { 'rotate-180': showMoreDetails },
+              ]"
+            />
+          </button>
+          <expand-transition>
+            <div v-if="showMoreDetails && txDataFormatted !== null">
               <div
-                v-if="showMoreDetails"
-                class="flex flex-col gap-4 p-4 rounded-16 bg-background-default"
+                class="my-2 flex flex-col gap-4 bg-background-brand-subtle py-6 rounded-20"
               >
-                <div
-                  v-for="row in detailRows"
-                  :key="row.label"
-                  class="flex items-start justify-between gap-3"
-                >
-                  <p class="text-text-sm text-text-subtle whitespace-nowrap">
-                    {{ row.label }}
+                <!-- Nonce-->
+                <div class="px-5 flex items-center justify-between">
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
+                  >
+                    {{ $t('common.nonce') }}
                   </p>
-                  <p class="text-label-sm text-text-default text-right">
-                    {{ row.value }}
+                  <p class="text-right text-s-14 font-medium text-black">
+                    {{ txDataFormatted.nonce }}
                   </p>
                 </div>
-                <div class="flex items-start justify-between gap-3">
-                  <p class="text-text-sm text-text-subtle">
+                <!-- Gas Limit -->
+                <div class="px-5 flex items-center justify-between">
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
+                  >
+                    {{ $t('gas.limit') }}
+                  </p>
+                  <p class="text-right text-s-14 font-medium text-black">
+                    {{ txDataFormatted.gasLimit }}
+                  </p>
+                </div>
+                <!-- Max fee per gas -->
+                <div
+                  v-if="txDataFormatted.maxFeePerGas"
+                  class="px-5 flex items-center justify-between"
+                >
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
+                  >
+                    {{ $t('gas.max_fee') }}
+                  </p>
+                  <p class="text-right text-s-14 font-medium text-black">
+                    {{ txDataFormatted.maxFeePerGas }} Gwei
+                  </p>
+                </div>
+                <!-- Max Priority fee per gas -->
+                <div
+                  v-if="txDataFormatted.maxPriorityFeePerGas"
+                  class="px-5 flex items-center justify-between"
+                >
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
+                  >
+                    {{ $t('gas.max_priority') }}
+                  </p>
+                  <p class="text-right text-s-14 font-medium text-black">
+                    {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
+                  </p>
+                </div>
+                <!-- Gas Price -->
+
+                <div
+                  v-if="txDataFormatted.gasPrice"
+                  class="px-5 flex items-center justify-between"
+                >
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
+                  >
+                    {{ $t('gas.price') }}
+                  </p>
+                  <p class="text-right text-s-14 font-medium text-black">
+                    {{ txDataFormatted.gasPrice }} Gwei
+                  </p>
+                </div>
+                <!-- Data -->
+                <div class="px-5 flex items-start justify-between">
+                  <p
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle pt-2"
+                  >
                     {{ $t('common.data') }}
                   </p>
-                  <p
-                    class="max-w-[70%] text-right text-s-12 break-all font-mono bg-white px-3 py-2 rounded-8 text-text-default"
-                  >
-                    {{ txDataFormatted.data }}
-                  </p>
+                  <div class="flex justify-end max-w-[70%]">
+                    <p
+                      class="text-right text-s-12 break-all font-mono bg-white px-3 py-2 rounded-lg text-black"
+                    >
+                      {{ txDataFormatted.data }}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </expand-transition>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-4">
-          <expand-transition>
-            <p
-              v-if="showApproveMessage"
-              class="text-label-base text-text-brand text-center animate-pulse"
-            >
-              {{ $t('send.approve-tx-on-device') }}
-            </p>
+            </div>
           </expand-transition>
-          <app-base-button
-            class="w-full"
-            :is-loading="signing || feeLoading"
-            :disabled="!signedTx || !!feeError"
-            @click="confirmTransaction"
-          >
-            {{ $t('verify-tx.confirm') }}
-          </app-base-button>
+          <div class="flex align-center justify-center mt-6 mb-4 gap-4">
+            <app-base-button @click="goBack" type="secondary" class="w-full">
+              {{ $t('common.back') }}
+            </app-base-button>
+            <app-base-button
+              :is-loading="signing"
+              @click="confirmTransaction"
+              class="w-full"
+            >
+              {{ $t('verify-tx.confirm') }}
+            </app-base-button>
+          </div>
         </div>
       </div>
     </template>
@@ -195,16 +262,7 @@ import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import AppDivider from '@/components/divider/AppDivider.vue'
-import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
-import AppTag from '@/components/tag/AppTag.vue'
-import { truncateAddress } from '@/utils/filters'
-import { useGlobalStore } from '@/stores/globalStore'
-import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import createIcon from '@/providers/ethereum/blockies'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
@@ -216,7 +274,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
-import { WalletType, GasPriceType } from '@/providers/types'
+import { WalletType } from '@/providers/types'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
@@ -250,16 +308,12 @@ interface EvmTxType {
   toAmount: string
   toAmountFiat: string
   signedTx: HexPrefixedString | string // rawTx may be different,
-  /** The parent is rebuilding the tx after a fee tier change. */
-  feeLoading?: boolean
-  feeError?: string
 }
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
 const emit = defineEmits<{
   'tx-sent': [txHash: string]
-  'edit-fee': []
 }>()
 const { formatFiat } = useCurrency()
 const chainsStore = useChainsStore()
@@ -296,6 +350,10 @@ const signing = ref(false)
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
 
+const goBack = () => {
+  openModal.value = false
+  model.value = false
+}
 // Toast
 const toastStore = useToastStore()
 const { t } = useI18n()
@@ -478,26 +536,6 @@ const formatFee = computed(() => {
   return formatFloatingPointValue(props.networkFeeCrypto).value
 })
 
-const { gasPriceType } = storeToRefs(useGlobalStore())
-const isRecommendedFee = computed(
-  () => gasPriceType.value === GasPriceType.REGULAR,
-)
-const feeTierLabel = computed(() =>
-  t(`select_fee.${gasPriceType.value.toLowerCase()}.title`),
-)
-const feeErrorMessage = computed(() =>
-  props.feeError === 'NOT_ENOUGH_BALANCE'
-    ? t('common.not_enough_balance_to_cover_fee', {
-        symbol: props.network?.currencyName,
-      })
-    : props.feeError,
-)
-
-const watchOnlyStore = useWatchOnlyStore()
-const fromAccountName = computed(
-  () => watchOnlyStore.activeAccount?.addressName,
-)
-
 /** ------------------------------
  * More details
  ------------------------------*/
@@ -511,8 +549,7 @@ const showMoreDetails = ref(false)
  * @returns {FeeMarketEIP1559Transaction | LegacyTransaction | null} The transaction details or null if the chain is not selected.
  */
 const getDetails = () => {
-  // signedTx is cleared while the parent rebuilds it for a new fee tier
-  if (props.signedTx && selectedChain.value && selectedChain.value.chainID) {
+  if (selectedChain.value && selectedChain.value.chainID) {
     //evm Only
     const chainId = selectedChain.value.chainID
     const serializedTx = props.signedTx
@@ -568,18 +605,5 @@ const txDataFormatted = computed(() => {
       fromWei(_details.gasPrice.toString(), 'gwei'),
     ).value,
   }
-})
-
-const detailRows = computed(() => {
-  const tx = txDataFormatted.value
-  if (!tx) return []
-  const gwei = (value?: string) => value && `${value} Gwei`
-  return [
-    { label: t('common.nonce'), value: tx.nonce },
-    { label: t('gas.limit'), value: tx.gasLimit },
-    { label: t('gas.max_fee'), value: gwei(tx.maxFeePerGas) },
-    { label: t('gas.max_priority'), value: gwei(tx.maxPriorityFeePerGas) },
-    { label: t('gas.price'), value: gwei(tx.gasPrice) },
-  ].filter(row => row.value)
 })
 </script>

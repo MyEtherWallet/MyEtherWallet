@@ -72,12 +72,9 @@
       </transition>
     </div>
 
-    <!-- Opens on top of summary screens (Send review), which are dialogs too -->
     <app-dialog
       :title="$t('select_fee.title')"
       v-model:is-open="openModal"
-      z-index-overlay="z-[102]"
-      z-index-container="z-[103]"
       class="max-w-[560px] sm:mx-auto"
     >
       <template #content>
