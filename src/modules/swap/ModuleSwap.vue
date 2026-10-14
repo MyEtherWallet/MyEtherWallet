@@ -131,6 +131,7 @@
         isSwapView ? t('swap.need-help-swapping') : t('swap.need-help-bridging')
       "
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      variant="link"
       class="mt-auto self-center pt-5"
       :class="blockedClass"
     />

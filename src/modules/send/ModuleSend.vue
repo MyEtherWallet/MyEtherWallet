@@ -73,6 +73,7 @@
     <app-need-help
       :title="$t('send.need-help')"
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      variant="link"
       class="mt-auto self-center pt-5"
     />
     <!-- TODO: replace network with actual selected network info -->
