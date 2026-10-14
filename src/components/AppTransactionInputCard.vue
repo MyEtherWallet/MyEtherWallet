@@ -17,6 +17,10 @@ import { computed, useId } from 'vue'
  * Two rows, [value | picker] and [info | balance], instead of Input Naked's own
  * info row: a long balance would otherwise squeeze the value and the info text
  * would run into it.
+ *
+ * Optional slots for the other side-panel actions: `header` above the amount
+ * (Bridge's network picker), `feedback` under it (Swap / Send keep their error
+ * message there), and `actions` to replace the chip row with custom content.
  */
 export interface QuickAction {
   key: string | number
@@ -89,6 +93,10 @@ const infoColorClass = computed(() => {
     <p v-if="title" class="text-text-sm text-text-subtle">{{ title }}</p>
 
     <div class="flex flex-col gap-1">
+      <!-- 12px above the amount, like the Bridge network picker in Figma -->
+      <div v-if="$slots.header" class="mb-2">
+        <slot name="header" />
+      </div>
       <div class="flex items-center justify-between gap-2">
         <AppInputNaked
           v-model="model"
@@ -132,17 +140,23 @@ const infoColorClass = computed(() => {
           {{ balance }}
         </p>
       </div>
+      <slot name="feedback" />
     </div>
 
-    <div v-if="quickActions.length" class="flex items-center gap-2">
-      <AppChip
-        v-for="action in quickActions"
-        :key="action.key"
-        :label="action.label"
-        :disabled="disabled || action.disabled"
-        class="flex-1 min-w-0"
-        @click="emit('quick-action', action.key)"
-      />
+    <div
+      v-if="quickActions.length || $slots.actions"
+      class="flex items-center gap-2"
+    >
+      <slot name="actions">
+        <AppChip
+          v-for="action in quickActions"
+          :key="action.key"
+          :label="action.label"
+          :disabled="disabled || action.disabled"
+          class="flex-1 min-w-0"
+          @click="emit('quick-action', action.key)"
+        />
+      </slot>
     </div>
   </div>
 </template>

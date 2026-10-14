@@ -28,6 +28,21 @@ describe('AppTransactionInputCard', () => {
     expect(wrapper.find('[data-testid="chip"]').exists()).toBe(false)
   })
 
+  it('renders the header and feedback slots, and actions in place of the chips', () => {
+    const wrapper = mountCard(
+      { quickActions: [{ key: 25, label: '25%' }] },
+      {
+        header: '<div data-testid="header-slot">Ethereum</div>',
+        feedback: '<p data-testid="feedback-slot">Not enough ETH</p>',
+        actions: '<button data-testid="actions-slot">MAX</button>',
+      },
+    )
+    expect(wrapper.find('[data-testid="header-slot"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="feedback-slot"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="actions-slot"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="chip"]').exists()).toBe(false)
+  })
+
   it('colours the balance as an error when asked', () => {
     const balance = mountCard({
       balance: 'Balance: 1 ETH',

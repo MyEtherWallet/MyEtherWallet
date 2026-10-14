@@ -59,10 +59,11 @@
                 <template #footer>
                   <!-- Percentage presets: design-library Chips on the grey
                        amount surface (white `default` fill). -->
-                  <div class="flex gap-2 mt-5">
+                  <div class="flex w-full gap-2">
                     <app-chip
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
+                      class="flex-1"
                       :label="pct === 100 ? $t('perps.deposit.max') : pct + '%'"
                       @click="setAmountPercent(pct)"
                     />

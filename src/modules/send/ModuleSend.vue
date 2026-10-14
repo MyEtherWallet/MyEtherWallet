@@ -1,67 +1,59 @@
 <template>
-  <div>
-    <div class="static w-full flex flex-col items-center justify-items-stretch">
-      <div class="w-full max-w-[500px]">
-        <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
-          <app-base-button
-            type="link"
-            size="small"
-            class="text-text-brand text-s-15 pb-1"
-            @click="resetSendModule"
-            >{{ $t('common.clear_all') }}</app-base-button
-          >
-        </div>
-        <div
-          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
+    <!-- The shared panel pads 16/24px; Figma side panels sit at 20/32 on desktop -->
+    <div class="flex w-full flex-col gap-5">
+      <AppContentGroup
+        size="l"
+        :title="$t('common.send')"
+        :description="$t('send.description')"
+      />
+      <div class="flex w-full flex-col gap-2">
+        <app-enter-amount
+          v-model:amount="amount"
+          v-model:selected-token="tokenSelectedContract"
+          v-model:error="amountError"
+          :validate-input="checkAmountForError"
+          :is-pristine="isPristine"
         >
-          <app-enter-amount
-            v-model:amount="amount"
-            v-model:selected-token="tokenSelectedContract"
-            v-model:error="amountError"
-            :validate-input="checkAmountForError"
-            :is-pristine="isPristine"
+          <template
+            v-if="
+              isWalletConnected &&
+              !isWatchOnly &&
+              tokenSelected &&
+              isInternalWallet()
+            "
+            #footer
           >
-            <template #balance-action>
-              <div
-                v-if="
-                  isWalletConnected &&
-                  !isWatchOnly &&
-                  tokenSelected &&
-                  isInternalWallet()
-                "
-              >
-                <button
-                  type="button"
-                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMaxAmount()"
-                >
-                  {{ $t('common.max') }}
-                </button>
-              </div>
-            </template>
-          </app-enter-amount>
-          <address-input
-            v-model:adr-input="adrInput"
-            :resolved-address="toAddress"
-            :address-error-messages="toAddressError"
-            :network="selectedChain"
-            :found-nick-name="foundNickName"
-            :is-pristine="isPristine"
-            @validate:address="validateAddressInput"
-            @immediate-update:resolved-address="onInput"
-          />
-          <app-select-tx-fee
-            v-if="isBitcoinChain ? hasChainBalance : true"
-            :fees="gasFees"
-            :is-loading-fees="isLoadingFees"
-            :txRequestBody="gasFeeTxEstimate"
-            v-model:gas-fee-error="gasFeeError"
-            v-model:selected-fee-native-value="selectedFeeNativeValue"
-            @fee-is-loading="setDefaultFee"
-          />
-        </div>
+            <app-chip
+              :label="$t('common.max')"
+              class="ml-auto uppercase"
+              @click="setMaxAmount()"
+            />
+          </template>
+        </app-enter-amount>
+        <address-input
+          v-model:adr-input="adrInput"
+          :resolved-address="toAddress"
+          :address-error-messages="toAddressError"
+          :network="selectedChain"
+          :found-nick-name="foundNickName"
+          :is-pristine="isPristine"
+          filled
+          @validate:address="validateAddressInput"
+          @immediate-update:resolved-address="onInput"
+        />
       </div>
+      <!-- Fee row moves to the summary screen; the fee logic and its error stay -->
+      <app-select-tx-fee
+        v-if="isBitcoinChain ? hasChainBalance : true"
+        hide-selector
+        :fees="gasFees"
+        :is-loading-fees="isLoadingFees"
+        :txRequestBody="gasFeeTxEstimate"
+        v-model:gas-fee-error="gasFeeError"
+        v-model:selected-fee-native-value="selectedFeeNativeValue"
+        @fee-is-loading="setDefaultFee"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         class="w-full capitalize"
@@ -69,29 +61,24 @@
       >
         {{ $t('common.connect_wallet') }}</app-base-button
       >
-      <div v-else class="flex w-full">
-        <app-no-chain-balance
-          v-if="!hasChainBalance"
-          source="send"
-          class="mb-5 -mt-1"
-        />
-        <app-base-button
-          v-else
-          :disabled="!validSend"
-          :is-loading="isLoadingFees"
-          @click="handleSubmit"
-          class="w-full max-w-[340px]"
-        >
-          {{ $t('common.send') }}</app-base-button
-        >
-      </div>
-
-      <app-need-help
-        :title="$t('send.need-help')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mt-5"
-      />
+      <app-no-chain-balance v-else-if="!hasChainBalance" source="send" />
+      <app-base-button
+        v-else
+        :disabled="!validSend"
+        :is-loading="isLoadingFees"
+        class="w-full"
+        @click="handleSubmit"
+      >
+        {{ ctaLabel }}</app-base-button
+      >
     </div>
+
+    <app-need-help
+      :title="$t('send.need-help')"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      variant="link"
+      class="mt-auto self-center pt-5"
+    />
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
       v-if="isWalletConnected && tokenSelected && toAddress"
@@ -128,7 +115,9 @@ import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
@@ -380,6 +369,12 @@ const validSend = computed(() => {
   )
 })
 
+const ctaLabel = computed(() =>
+  BigNumber(amount.value).gt(0)
+    ? t('send.review-send')
+    : t('common.enter_amount'),
+)
+
 const amountToFiat = computed(() => {
   if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
@@ -406,7 +401,9 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
+  | EstimatesRequestBody
+  | BitcoinQuotesRequestBody
+  | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&

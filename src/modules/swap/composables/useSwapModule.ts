@@ -136,9 +136,9 @@ interface SwapModuleBindings {
   isSwapDisabled: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
   isInternalWallet: () => boolean
-  handleMaxClick: () => void
+  /** Max (100) or a % preset of the from balance. */
+  handleMaxClick: (percentage?: number) => void
   switchGlobalNetwork: (chain: Chain) => void
-  clearValues: () => void
   validateToAddress: () => Promise<void>
   proceedWithSwap: (quoteId: string) => Promise<void>
   swapButton: () => Promise<void>
@@ -469,39 +469,44 @@ export function useSwapModule(): SwapModuleBindings {
     return gasFee + additionalFees
   }
 
-  const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
-    useMaxAmount({
-      getBalance: () => {
-        if (!fromTokenSelected.value) return 0n
-        const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-        return tokenParams.totalBalance
-      },
-      getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
-      getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
-      isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
-      isTokenSelected: () => !!fromTokenSelected.value,
-      getAmount: () => fromAmount.value,
-      onAmountChange: value => {
-        fromAmount.value = String(value)
-      },
-      markFormDirty,
-      resetFormPristine: resetPristine,
-      getTokenIdentifier: () => fromTokenSelected.value?.address,
-      getDependencies: () => [
-        fromTokenSelected.value?.balance,
-        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
-          swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
-        selectedQuote.value?.additionalNativeFees?.toString(),
-      ],
-    })
+  const {
+    setMaxAmount,
+    resetMaxState,
+    isInternalWallet,
+    isMaxSelected,
+    selectedPercentage,
+  } = useMaxAmount({
+    getBalance: () => {
+      if (!fromTokenSelected.value) return 0n
+      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+      return tokenParams.totalBalance
+    },
+    getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+    isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+    isTokenSelected: () => !!fromTokenSelected.value,
+    getAmount: () => fromAmount.value,
+    onAmountChange: value => {
+      fromAmount.value = String(value)
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => fromTokenSelected.value?.address,
+    getDependencies: () => [
+      fromTokenSelected.value?.balance,
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+      selectedQuote.value?.additionalNativeFees?.toString(),
+    ],
+  })
 
-  const handleMaxClick = (): void => {
-    if (isMaxSelected.value) return
+  const handleMaxClick = (percentage = 100): void => {
+    if (isMaxSelected.value && selectedPercentage.value === percentage) return
     // Discard any prior quote/fee so the new max is calculated against the full
     // balance, not against a fee that was estimated for a smaller manual amount.
     selectedQuote.value = undefined
     swapGasFeeQuote.value = undefined
-    setMaxAmount()
+    setMaxAmount(percentage)
   }
 
   const switchGlobalNetwork = (chain: Chain) => {
@@ -1711,7 +1716,6 @@ export function useSwapModule(): SwapModuleBindings {
     isInternalWallet,
     handleMaxClick,
     switchGlobalNetwork,
-    clearValues,
     validateToAddress,
     proceedWithSwap: swapExecutionFeature.proceedWithSwap,
     swapButton: swapExecutionFeature.swapButton,

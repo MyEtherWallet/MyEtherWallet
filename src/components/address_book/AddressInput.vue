@@ -3,16 +3,27 @@
     <div class="relative">
       <!-- Blockie -->
       <div
-        class="absolute top-[13px] left-[13px] flex items-center pointer-events-none"
+        :class="[
+          filled ? 'top-4 left-4' : 'top-[13px] left-[13px]',
+          'absolute flex items-center pointer-events-none',
+        ]"
       >
         <div
           v-if="!resolvedAddress"
-          class="rounded-full bg-background-default w-8 h-8 border border-border-default"
+          :class="[
+            filled
+              ? 'w-6 h-6 bg-white'
+              : 'w-8 h-8 bg-background-default border border-border-default',
+            'rounded-full',
+          ]"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-8 h-8 border border-border-default"
+          :class="[
+            filled ? 'w-6 h-6' : 'w-8 h-8',
+            'rounded-full border border-border-default',
+          ]"
           height="32"
           width="32"
         />
@@ -21,15 +32,9 @@
       <label
         for="address-input"
         :class="[
-          'pointer-events-none absolute left-14 transition-all aria-hidden',
-          inFocusInput
-            ? hasError && !isPristine
-              ? 'text-text-error'
-              : 'text-text-brand'
-            : 'text-text-muted',
-          inFocusInput || adrInput !== ''
-            ? 'top-2 text-s-11'
-            : 'top-[18px] text-sm font-medium',
+          filled ? 'left-12' : 'left-14',
+          'pointer-events-none absolute transition-all aria-hidden',
+          labelClass,
         ]"
       >
         {{ resolvedLabel }}
@@ -46,10 +51,15 @@
             '!border-border-brand !border-2': inFocusInput,
             '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
-          isRaised
-            ? 'shadow-button shadow-button-elevated'
-            : 'border border-border-strong',
-          'grow focus:outline-none focus:ring-0 bg-white text-text-default rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
+          filled
+            ? 'border-0 bg-background-default rounded-12 h-14 pl-12 text-text-sm'
+            : [
+                isRaised
+                  ? 'shadow-button shadow-button-elevated'
+                  : 'border border-border-strong',
+                'bg-white rounded-20 h-[58px] pl-14 text-sm font-medium',
+              ],
+          'grow focus:outline-none focus:ring-0 text-text-default w-full pr-20 pt-4 pb-0 transition-colors',
         ]"
         :aria-label="resolvedLabel"
         @focus="setInFocusInput()"
@@ -63,21 +73,21 @@
           :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
-          class="text-text-brand"
+          :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
-          <AppIcon name="x-circle" />
+          <AppIcon name="x-circle" :size="filled ? 's' : 'm'" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
-          class="text-text-brand"
+          :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
-          <AppIcon name="users" variant="filled" />
+          <AppIcon name="users" variant="filled" :size="filled ? 's' : 'm'" />
         </app-btn-icon>
       </div>
     </div>
     <!-- Error Messages OR Resolved Address -->
-    <div class="min-h-6">
+    <div :class="{ 'min-h-6': !filled }">
       <transition name="fade" mode="out-in">
         <AppInputFeedback
           v-if="
@@ -180,6 +190,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /** Design-library "Address input / Filled": grey 56px field, no border or shadow. */
+  filled: {
+    type: Boolean,
+    default: false,
+  },
   isPristine: {
     type: Boolean,
     default: false,
@@ -247,6 +262,29 @@ const hasError = computed(() => {
 const adrInputRef = ref<HTMLElement | null>(null)
 const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
   useInFocusInput(adrInputRef)
+
+// Floating label: raised above the value once focused or filled, otherwise it
+// sits in the field as the placeholder. The filled (design-library) field keeps
+// label/xs subtle while focused and rests as a text/sm placeholder.
+const labelClass = computed(() => {
+  const isRaisedLabel = inFocusInput.value || adrInput.value !== ''
+  const isError = inFocusInput.value && hasError.value && !props.isPristine
+  if (props.filled) {
+    if (!isRaisedLabel) return 'top-[18px] text-text-sm text-text-placeholder'
+    return [
+      'top-2 text-label-xs',
+      isError ? 'text-text-error' : 'text-text-subtle',
+    ]
+  }
+  return [
+    isRaisedLabel ? 'top-2 text-s-11' : 'top-[18px] text-sm font-medium',
+    inFocusInput.value
+      ? isError
+        ? 'text-text-error'
+        : 'text-text-brand'
+      : 'text-text-muted',
+  ]
+})
 
 //Validate address input when it loses focus
 watch(inFocusInput, newValue => {
