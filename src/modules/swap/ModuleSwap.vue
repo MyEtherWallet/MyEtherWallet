@@ -84,7 +84,7 @@
               sort-context="swap"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             >
-              <template #balance-action>
+              <template #actions>
                 <div
                   v-if="
                     isWalletConnected &&
