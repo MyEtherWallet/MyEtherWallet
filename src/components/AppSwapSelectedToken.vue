@@ -5,23 +5,16 @@
     :is-loading="isLoading"
     :selected-token="selectedToken"
   >
-    <button
-      :class="[
-        isLoading || !selectedToken
-          ? 'bg-background-default-hover animate-pulse min-w-[120px]'
-          : 'bg-white hoverNoBG shadow-button border-border-default border',
-        'rounded-full px-1 min-h-9 transition-colors',
-      ]"
-      type="button"
-      @click="openSelectToken"
+    <AppPicker
+      size="s"
+      :title="selectedToken?.symbol ?? ''"
+      :loading="isLoading || !selectedToken"
       :aria-label="$t('select_token.title')"
-      :disabled="isLoading || !selectedToken"
+      @click="openSelectToken"
     >
-      <div
-        v-if="!isLoading && selectedToken"
-        class="flex flex-nowrap items-center"
-      >
+      <template #avatar>
         <app-token-logo
+          v-if="selectedToken"
           :url="selectedToken.logoURI"
           :symbol="selectedToken.symbol"
           :address="
@@ -29,30 +22,12 @@
               ? { address: selectedToken.address, network: networkName }
               : undefined
           "
-          width="w-7"
-          height="h-7"
-          :no-shadow="noLogoShadow"
-          class="mr-2"
+          width="w-6"
+          height="h-6"
+          no-shadow
         />
-        <app-token-symbol
-          v-if="!isLoading"
-          :symbol="selectedToken.symbol"
-          :address="
-            networkName
-              ? { address: selectedToken.address, network: networkName }
-              : undefined
-          "
-        />
-        <div class="ml-1 min-w-4 h-4">
-          <AppIcon
-            name="chevron-down"
-            variant="filled"
-            v-if="!isLoading"
-            class="text-text-subtle"
-          />
-        </div>
-      </div>
-    </button>
+      </template>
+    </AppPicker>
   </slot>
   <app-dialog
     v-model:is-open="showAllTokens"
@@ -443,6 +418,7 @@ import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import AppPicker from '@/components/picker/AppPicker.vue'
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,

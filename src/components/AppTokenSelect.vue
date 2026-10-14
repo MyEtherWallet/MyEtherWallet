@@ -1,42 +1,23 @@
 <template>
-  <button
-    :class="[
-      isLoading || !selectedToken
-        ? 'bg-background-default-hover animate-pulse min-w-[120px]'
-        : 'bg-white hoverNoBG shadow-button border-border-default border',
-      'rounded-full px-1 min-h-9 transition-colors',
-    ]"
-    type="button"
-    @click="showAllTokens = true"
+  <AppPicker
+    size="s"
+    :title="selectedToken?.symbol ?? ''"
+    :loading="isLoading || !selectedToken"
     :aria-label="$t('select_token.title')"
-    :disabled="isLoading || !selectedToken"
+    @click="showAllTokens = true"
   >
-    <div
-      v-if="!isLoading && selectedToken"
-      class="flex flex-nowrap items-center"
-    >
+    <template #avatar>
       <app-token-logo
+        v-if="selectedToken"
         :url="selectedToken.logo_url"
         :alt="selectedToken.symbol"
-        width="w-7"
-        height="h-7"
-        class="mr-2"
+        width="w-6"
+        height="h-6"
+        no-shadow
         :is-stock="selectedToken.ondo !== undefined"
       />
-      <app-token-symbol
-        :symbol="selectedToken.symbol"
-        :is-stock="selectedToken.ondo !== undefined"
-      />
-      <div class="ml-1 min-w-4 h-4">
-        <AppIcon
-          name="chevron-down"
-          variant="filled"
-          v-if="!isLoading"
-          class="text-text-subtle"
-        />
-      </div>
-    </div>
-  </button>
+    </template>
+  </AppPicker>
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
@@ -222,6 +203,7 @@ import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
 import AppTokenSymbol from './AppTokenSymbol.vue'
+import AppPicker from '@/components/picker/AppPicker.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
