@@ -184,6 +184,22 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       false,
   )
 
+  // The pool endpoint is address-independent, so a REWARDS_DISABLED reason on
+  // it means the program itself is paused (ops switched it off), not that
+  // this wallet is ineligible.
+  const tradePaused = computed(
+    () =>
+      tradePool.value?.reasons.some(r => r.type === 'REWARDS_DISABLED') ??
+      false,
+  )
+  const isRewardsPaused = computed(
+    () =>
+      poolReasons.value.some(r => r.type === 'REWARDS_DISABLED') ||
+      tradePaused.value ||
+      (swapPool.value?.reasons.some(r => r.type === 'REWARDS_DISABLED') ??
+        false),
+  )
+
   const swapTotal = computed(() => {
     const p = swapPool.value
     if (!p || p.hourlyRemainingRewardCount === null) return null
@@ -340,6 +356,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     )
     if (tradeEligibility || swapEligibility) return true
 
+    // While the program is paused every address gets REWARDS_DISABLED back
+    // from the eligibility endpoint, so it says nothing about this wallet.
+    if (isRewardsPaused.value) return false
+
     const tradeRecentlyRewarded = eligibilityV2.value?.trade.reasons.some(
       r => r.type === 'USER_RECENTLY_REWARDED',
     )
@@ -394,6 +414,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     poolReasons,
     swapPool,
     tradePool,
+    tradePaused,
+    isRewardsPaused,
     isLoadingPool,
     fetchPool,
     // Eligibility
