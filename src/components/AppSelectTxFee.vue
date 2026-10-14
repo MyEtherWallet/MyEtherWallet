@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div :class="{ contents: hideSelector }">
     <button
+      v-if="!hideSelector"
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
@@ -36,16 +37,16 @@
       </div>
     </button>
     <div
-      v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
-      class="min-h-6 mt-1"
+      v-if="
+        !(isLoadingFees || isLoadingBalances) &&
+        isLoadedChainsData &&
+        (!hideSelector || showFeeError)
+      "
+      :class="{ 'min-h-6 mt-1': !hideSelector }"
     >
       <transition name="fade" mode="out-in">
         <AppInputFeedback
-          v-if="
-            isWalletConnected &&
-            gasFeeError &&
-            (!isNotEnoughBalance || hasChainBalance)
-          "
+          v-if="showFeeError"
           type="error"
           :message="gasFeeError"
         >
@@ -202,6 +203,12 @@ interface Props {
   fees?: QuotesResponse
   isLoadingFees?: boolean
   txRequestBody?: EstimatesRequestBody | GetBtcTransactionEstimateBody
+  /**
+   * Hide the fee row but keep fetching, validating and emitting the selected
+   * fee; only the error message shows. The Send panel moves the fee to its
+   * summary screen.
+   */
+  hideSelector?: boolean
 }
 
 const props = defineProps<Props>()
@@ -242,6 +249,12 @@ const {
   hasChainBalance,
   isLoadingBalances,
 } = storeToRefs(walletStore)
+const showFeeError = computed(
+  () =>
+    isWalletConnected.value &&
+    !!gasFeeError.value &&
+    (!isNotEnoughBalance.value || hasChainBalance.value),
+)
 
 const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
   (): EstimatesRequestBody | GetBtcTransactionEstimateBody => {

@@ -43,8 +43,10 @@
           @immediate-update:resolved-address="onInput"
         />
       </div>
+      <!-- Fee row moves to the summary screen; the fee logic and its error stay -->
       <app-select-tx-fee
         v-if="isBitcoinChain ? hasChainBalance : true"
+        hide-selector
         :fees="gasFees"
         :is-loading-fees="isLoadingFees"
         :txRequestBody="gasFeeTxEstimate"

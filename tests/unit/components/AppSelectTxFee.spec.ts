@@ -66,9 +66,9 @@ vi.mock('pinia', async importOriginal => {
 
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
-const mountWithFees = (fees: unknown) =>
+const mountWithFees = (fees: unknown, props: Record<string, unknown> = {}) =>
   mount(AppSelectTxFee, {
-    props: { fees: fees as never, isLoadingFees: false },
+    props: { fees: fees as never, isLoadingFees: false, ...props },
     global: {
       stubs: { AppDialog: true, AppIcon: true },
       mocks: { $t: (k: string) => k },
@@ -90,5 +90,20 @@ describe('AppSelectTxFee', () => {
       fees: { ECONOMY: tier, REGULAR: tier, FAST: tier, FASTEST: tier },
     })
     expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
+  })
+
+  it('hides the fee row but keeps emitting the selected fee with hideSelector', () => {
+    const tier = { nativeValue: '1000', fiatValue: '1', nativeSymbol: 'ETH' }
+    const wrapper = mountWithFees(
+      {
+        quoteId: 'q',
+        fees: { ECONOMY: tier, REGULAR: tier, FAST: tier, FASTEST: tier },
+      },
+      { hideSelector: true },
+    )
+    expect(wrapper.find('button').exists()).toBe(false)
+    expect(wrapper.emitted('update:selectedFeeNativeValue')?.at(-1)).toEqual([
+      '1000',
+    ])
   })
 })
