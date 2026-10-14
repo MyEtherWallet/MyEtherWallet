@@ -1,0 +1,123 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import type { RouteLocationRaw } from 'vue-router'
+import { useStocksStore } from '@/stores/stocksStore'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import AppNewsCard from '@/components/AppNewsCard.vue'
+import AppPagination from '@/components/AppPagination.vue'
+
+const PER_PAGE = 6
+
+const { t, locale } = useI18n()
+const stocksStore = useStocksStore()
+const page = ref(1)
+
+const total = computed(() => stocksStore.recentNews.length)
+const pageItems = computed(() =>
+  stocksStore.recentNews.slice(
+    (page.value - 1) * PER_PAGE,
+    page.value * PER_PAGE,
+  ),
+)
+
+// recentNews carries no source field — derive a readable publisher name from
+// the article host (e.g. "www.reuters.com" -> "Reuters").
+const sourceFromUrl = (url?: string): string => {
+  if (!url) return ''
+  try {
+    const name = new URL(url).hostname.replace(/^www\./, '').split('.')[0]
+    return name.charAt(0).toUpperCase() + name.slice(1)
+  } catch {
+    return ''
+  }
+}
+
+// Relative label per the design: Today / Yesterday / N days ago, then an
+// absolute date once an article is a week or older.
+const DAY = 86400000
+const dateLabel = (ts?: number): string => {
+  if (!ts) return ''
+  const days = Math.floor((Date.now() - ts) / DAY)
+  if (days <= 0) return t('homePage.news.today')
+  if (days === 1) return t('homePage.news.yesterday')
+  if (days < 7) return t('homePage.news.daysAgo', { n: days })
+  return new Date(ts).toLocaleDateString(locale.value, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+const newsDescription = (item: {
+  description?: string | null
+  articleUrl?: string
+}): string => {
+  if (item.description) return item.description
+  const source = sourceFromUrl(item.articleUrl)
+  return source
+    ? t('homePage.news.readOnSource', { source })
+    : t('homePage.news.readMore')
+}
+
+// News items carry only ticker symbols — resolve each to a stock icon URL from
+// the tradable-assets list in the store (fetched on app start) so the footer
+// badge shows the real logo instead of the initials avatar.
+const tokenLogo = (item: { tickers?: string[] }): string | undefined =>
+  stocksStore.stockIconBySymbol(item.tickers?.[0])
+
+// When the ticker maps to a tradable stock, link its badge to the stock page
+// (same destination as the New Listings cards); non-tradable tickers stay a
+// plain label.
+const tokenTo = (item: {
+  tickers?: string[]
+}): RouteLocationRaw | undefined => {
+  const symbol = stocksStore.stockTradableSymbol(item.tickers?.[0])
+  return symbol
+    ? { name: STOCK_INFO_ROUTE_NAMES.homePage, params: { symbol } }
+    : undefined
+}
+</script>
+
+<template>
+  <div>
+    <p
+      v-if="total === 0"
+      data-test="news-empty"
+      class="text-s-16 text-text-subtle"
+    >
+      {{ t('homePage.news.empty') }}
+    </p>
+    <template v-else>
+      <div class="@container">
+        <div
+          class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1136px]:grid-cols-3"
+        >
+          <AppNewsCard
+            v-for="n in pageItems"
+            :key="n.articleUrl"
+            :title="n.title ?? ''"
+            :source="sourceFromUrl(n.articleUrl)"
+            :date="dateLabel(n.timestamp)"
+            :description="newsDescription(n)"
+            :ticker="n.tickers?.[0]"
+            :token-logo="tokenLogo(n)"
+            :token-to="tokenTo(n)"
+            :href="n.articleUrl"
+          />
+        </div>
+      </div>
+      <AppPagination
+        v-if="total > PER_PAGE"
+        v-model="page"
+        :total="total"
+        :per-page="PER_PAGE"
+        class="mt-6"
+      >
+        <template #label="{ page: p, pages }">
+          {{ t('homePage.news.pagination', { page: p, total: pages }) }}
+        </template>
+      </AppPagination>
+    </template>
+  </div>
+</template>

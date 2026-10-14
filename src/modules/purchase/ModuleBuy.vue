@@ -1,6 +1,20 @@
 <template>
   <div class="relative flex flex-col h-full">
-    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.buy.network_not_supported')"
+      :description="
+        t('purchase.buy.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="mb-3"
+    />
+
+    <div :class="['flex flex-col gap-3 h-full', blockedClass]">
       <purchase-token-select-card
         v-if="displayChain"
         :chain="displayChain"
@@ -35,27 +49,13 @@
         href="https://help.myetherwallet.com/"
         target="_blank"
         rel="noopener"
-        class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+        class="mt-auto self-center text-label-xs text-text-brand hover:underline"
       >
         {{ t('purchase.buy.need_help') }}
       </a>
 
       <purchase-footer class="pt-2" />
     </div>
-
-    <purchase-unsupported-network
-      v-if="showUnsupportedNetwork"
-      :title="t('purchase.buy.network_not_supported')"
-      :description="
-        t('purchase.buy.network_not_available', {
-          network:
-            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
-        })
-      "
-      :chains="supportedNetworkChains"
-      :default-chain="defaultSupportedChain"
-      class="absolute inset-x-2 top-[88px] z-20"
-    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -80,9 +80,12 @@
       :fiat-amount="fiatAmount"
       :fiat-currency="selectedFiat"
       :crypto-currency="tokenSymbol"
-      :is-loading="isFetchingQuotes"
+      :is-loading="isFetchingQuotes && !buyQuotes.length"
       :error="buyQuotesError"
       :analytics-payload="buyPayload"
+      :quote-countdown="quoteCountdown"
+      :quote-expired="quoteExpired"
+      :cooldown-seconds="quoteCooldownSeconds"
     />
   </div>
 </template>
@@ -111,12 +114,11 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
-import {
-  v7ToPurchaseChain,
-  purchaseChainToChain,
-} from './helpers/chainMapping'
+import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
+import { useQuoteCountdown } from './composables/useQuoteCountdown'
+import { useBlockedContent } from '@/composables/useBlockedContent'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
@@ -134,9 +136,11 @@ const {
   buyQuotes,
   isFetchingQuotes,
   buyQuotesError,
+  buyQuotesExpiresAt,
   cryptoEstimate,
   isFetchingEstimate,
   exchangeRates,
+  rateLimitedUntil,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -147,7 +151,8 @@ const {
 } = purchaseStore
 
 const walletStore = useWalletStore()
-const { isWalletConnected, isWatchOnly, walletAddress } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly, walletAddress } =
+  storeToRefs(walletStore)
 
 const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
@@ -155,7 +160,8 @@ const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 
-const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(buyNetworks, walletChain, chains)
+const { compatibleChainCodes, incompatibleChainCodes } =
+  usePurchaseCompatibility(buyNetworks, walletChain, chains)
 
 const supportedNetworkChains = computed<Chain[]>(() =>
   compatibleChainCodes.value
@@ -179,9 +185,7 @@ const showUnsupportedNetwork = computed(
   () => !!purchaseInfo.value && !supportedNetwork.value,
 )
 
-const blurClass = computed(() =>
-  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
-)
+const { blockedClass } = useBlockedContent(showUnsupportedNetwork)
 
 const accessStore = useAccessStore()
 
@@ -245,7 +249,10 @@ onMounted(() => {
   analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
-watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
+watch(
+  [() => walletMenu.selectedPurchaseCoinId, buyNetworks],
+  applyPreselectedToken,
+)
 
 const currencyOptions = computed(() => {
   const tokenProviders = selectedToken.value?.providers
@@ -275,8 +282,8 @@ const formatAmount = (value: number): string => {
 }
 
 const minMaxButtons = (min: number, max: number) => [
-  { label: 'Min', value: min, usdValue: min },
-  { label: 'Max', value: max, usdValue: max },
+  { label: t('purchase.min'), value: min, usdValue: min },
+  { label: t('purchase.max'), value: max, usdValue: max },
 ]
 
 const roundToStep = (value: number): number => {
@@ -329,7 +336,9 @@ const formattedCryptoEstimate = computed(() => {
 const buyPayload = computed<BuyPayloadShared>(() => {
   const rate = currencyRate.value
   const amountUSD =
-    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+    rate && rate > 0
+      ? (Number(fiatAmount.value) / rate).toFixed(2)
+      : fiatAmount.value
   return {
     network: displayChain.value?.name,
     token: tokenSymbol.value,
@@ -455,7 +464,9 @@ watch(selectedToken, token => {
 
 watch(currencyOptions, options => {
   if (options.length && !options.includes(selectedFiat.value)) {
-    selectedFiat.value = options.includes(DEFAULT_FIAT) ? DEFAULT_FIAT : options[0]
+    selectedFiat.value = options.includes(DEFAULT_FIAT)
+      ? DEFAULT_FIAT
+      : options[0]
   }
 })
 
@@ -480,6 +491,14 @@ watch(
   },
 )
 
+const buyQuoteParams = () => ({
+  address: walletAddress.value ?? '',
+  fiatCurrency: selectedFiat.value,
+  amount: fiatAmount.value,
+  cryptoCurrency: tokenSymbol.value,
+  chain: purchaseChainCode.value,
+})
+
 const onSubmit = async () => {
   if (showUnsupportedNetwork.value) return
   if (!isReady.value) {
@@ -493,12 +512,22 @@ const onSubmit = async () => {
   clearBuyQuotes()
   showProviderModal.value = true
 
-  await fetchBuyQuotes({
-    address: walletAddress.value ?? '',
-    fiatCurrency: selectedFiat.value,
-    amount: fiatAmount.value,
-    cryptoCurrency: tokenSymbol.value,
-    chain: purchaseChainCode.value,
-  })
+  await fetchBuyQuotes(buyQuoteParams())
 }
+
+const {
+  isExpired: quoteExpired,
+  cooldownSecondsLeft: quoteCooldownSeconds,
+  countdownText: quoteCountdown,
+} = useQuoteCountdown({
+  expiresAt: buyQuotesExpiresAt,
+  rateLimitedUntil,
+  enabled: computed(
+    () => showProviderModal.value && buyQuotes.value.length > 0,
+  ),
+  onExpire: () => {
+    if (isFetchingQuotes.value) return
+    fetchBuyQuotes(buyQuoteParams(), { silent: true })
+  },
+})
 </script>

@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+
+const props = defineProps<{
+  modelValue: number
+  total: number
+  perPage: number
+}>()
+const emit = defineEmits<{ 'update:modelValue': [page: number] }>()
+
+const pageCount = computed(() =>
+  Math.max(1, Math.ceil(props.total / props.perPage)),
+)
+const isFirst = computed(() => props.modelValue <= 1)
+const isLast = computed(() => props.modelValue >= pageCount.value)
+
+const go = (p: number) => {
+  if (p >= 1 && p <= pageCount.value) emit('update:modelValue', p)
+}
+</script>
+
+<template>
+  <div data-test="pagination" class="w-full">
+    <div class="border-t border-border-default" />
+    <div class="mt-6 flex items-center gap-3">
+      <p class="flex-1 text-s-16 text-black">
+        <!-- Consumers pass a localized label; falls back to "page / pages". -->
+        <slot name="label" :page="props.modelValue" :pages="pageCount">
+          {{ props.modelValue }} / {{ pageCount }}
+        </slot>
+      </p>
+      <button
+        data-test="prev"
+        type="button"
+        :disabled="isFirst"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
+        @click="go(props.modelValue - 1)"
+      >
+        <AppIcon name="chevron-left" variant="filled" />
+      </button>
+      <button
+        data-test="next"
+        type="button"
+        :disabled="isLast"
+        class="flex size-10 items-center justify-center rounded-full bg-background-default-hover text-black transition hover:bg-background-default-selected disabled:cursor-not-allowed disabled:opacity-40"
+        @click="go(props.modelValue + 1)"
+      >
+        <AppIcon name="chevron-right" variant="filled" />
+      </button>
+    </div>
+  </div>
+</template>

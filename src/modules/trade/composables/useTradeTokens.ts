@@ -1,27 +1,36 @@
-import { computed, type Ref } from 'vue'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import { computed, ref, watch, type Ref } from 'vue'
+import { useNow } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import type {
-  Chain,
+  GetWebStocksTableResponse,
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import {
   isAssetTradableInSession,
   getSessionDisabledAddresses,
-  TRADING_PAUSED_SESSION_MESSAGE,
-} from './tradeSession'
+  getActivePauseReason,
+  type PauseReason,
+} from '../common/tradeSession'
+import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
 
+export interface TradeAssetToken extends NewTokenInfo {
+  priceChangePercentage24h?: number
+  pauseReason?: PauseReason | null
+}
+
 interface UseTradeTokensOptions {
-  selectedFromChain: Ref<Chain | undefined>
+  form: TradeForm
   fromTokens: Ref<NewTokenInfo[]>
-  fromTokenSelected: Ref<NewTokenInfo | null>
-  toTokenSelected: Ref<NewTokenInfo | null>
   tradableAssets: Ref<GetWebSwapOndoAssetsResponse | null>
   additionalBuyAssets: Ref<GetWebSwapOndoSupportingAssetsResponse | null>
   hardcodedTokensInfo: Ref<HardcodedTokenInfo[]>
@@ -30,15 +39,53 @@ interface UseTradeTokensOptions {
 
 export function useTradeTokens(options: UseTradeTokensOptions) {
   const {
-    selectedFromChain,
+    form,
     fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
     hardcodedTokensInfo,
     currentSession,
   } = options
+  const { selectedFromChain, fromTokenSelected, toTokenSelected } = form
+
+  const { t } = useI18n()
+  const { useMEWFetch } = useFetchMewApi()
+
+  const stockMarketCapBySymbol = ref<Record<string, number>>({})
+  let marketCapsRequested = false
+
+  const loadStockMarketCaps = async () => {
+    if (marketCapsRequested) return
+    marketCapsRequested = true
+    const { data } = await useMEWFetch(
+      '/v1/web/pages/stocks/table?page=1&perPage=100&sort=MARKET_CAP_DESC',
+    )
+      .get()
+      .json<GetWebStocksTableResponse>()
+    const caps: Record<string, number> = {}
+    for (const item of data.value?.items ?? []) {
+      const symbol = item.primaryMarket?.symbol?.toUpperCase()
+      const marketCap = Number(item.underlyingMarket?.marketCap)
+      if (symbol && Number.isFinite(marketCap)) caps[symbol] = marketCap
+    }
+    stockMarketCapBySymbol.value = caps
+  }
+
+  watch(
+    tradableAssets,
+    assets => {
+      if (assets?.length) loadStockMarketCaps()
+    },
+    { immediate: true },
+  )
+
+  const stockMarketCapOf = (token: NewTokenInfo): number =>
+    stockMarketCapBySymbol.value[token.symbol.toUpperCase()] ?? 0
+
+  // Ticking clock for the pause-window checks below. A bare Date.now() inside
+  // a computed is not reactive, so a pause starting or ending while the page is
+  // open froze the tags and warnings until an unrelated dependency changed.
+  const now = useNow({ interval: 60_000 })
 
   // Check if selected from token is a tradable asset (stock token)
   const isSellingTradableAsset = computed(() => {
@@ -141,14 +188,14 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
       //if asset is not tradable in current session, then return the session pause message
       if (!isAssetTradableInSession(info, currentSession.value)) {
-        return TRADING_PAUSED_SESSION_MESSAGE
+        return t('trade.trading_paused_session')
       }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
-        return (
-          info.pause?.reason?.message ||
-          `${token?.symbol} is currently not available for trading`
-        )
+        const reason = getActivePauseReason(info, now.value.getTime())
+        return reason
+          ? t(`trade.pause_reason.${reason}.tooltip`)
+          : t('trade.error.token-not-available', { symbol: token?.symbol })
       }
     }
     return ''
@@ -183,6 +230,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       chainName,
       fromTokensMap,
       hardcodedTokensInfo.value,
+      now.value.getTime(),
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -207,21 +255,13 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     return tradableTokens
   })
 
-  // Get default from token (main token or first available)
-  const getDefaultFromToken = (tokens: NewTokenInfo[]): NewTokenInfo | null => {
-    return (
-      tokens.find(t => t.address === MAIN_TOKEN_CONTRACT) || tokens[0] || null
-    )
-  }
-
   return {
-    isSellingTradableAsset,
     isCashOutTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
     disabledTokenAddresses,
     toTokens,
-    getDefaultFromToken,
+    stockMarketCapOf,
   }
 }
 
@@ -231,7 +271,18 @@ function mapTradableAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
+  now: number,
 ): NewTokenInfo[] {
+  const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
+    address: token.address,
+    balance: token.balance || '0',
+  }))
+  const hydrate = (tokens: NewTokenInfo[]) =>
+    hydrateTokenBalances(tokens, {
+      balanceSources,
+      mainTokenAddress: MAIN_TOKEN_CONTRACT,
+    }) as NewTokenInfo[]
+
   const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
@@ -249,6 +300,10 @@ function mapTradableAssetsToTokens(
       const tokenPrice =
         parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
 
+      const priceChange = parseFloat(
+        asset.primaryMarket.priceChangePercentage24h ?? '0',
+      )
+
       return {
         name: asset.stockAlias || asset.symbol,
         symbol: asset.symbol.toUpperCase(),
@@ -258,8 +313,14 @@ function mapTradableAssetsToTokens(
         cgId: matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: tokenPrice,
+        priceChangePercentage24h: Number.isFinite(priceChange)
+          ? priceChange
+          : 0,
+        // Only a genuinely blocked asset carries a tag — the picker treats a
+        // tagged row as unselectable, so a stale pause record left on a
+        // tradable asset must not block it.
+        pauseReason: asset.tradable ? null : getActivePauseReason(asset, now),
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,
@@ -287,7 +348,6 @@ function mapTradableAssetsToTokens(
           cgId: t.cgId,
           type: 'erc20',
           rank: matchingFromToken?.rank || 0,
-          balance: matchingFromToken?.balance || '0',
           price: t.price,
           networkInfo: {
             name: 'ETHEREUM',
@@ -295,10 +355,10 @@ function mapTradableAssetsToTokens(
           },
         }
       }) as unknown as NewTokenInfo[]
-    return [...mappedAssets, ...hardcodedTokens]
+    return hydrate([...mappedAssets, ...hardcodedTokens])
   }
 
-  return mappedAssets
+  return hydrate(mappedAssets)
 }
 
 // Helper to map supporting assets to token format
@@ -307,7 +367,7 @@ function mapSupportingAssetsToTokens(
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
 ): NewTokenInfo[] {
-  return assets
+  const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
     )
@@ -330,7 +390,6 @@ function mapSupportingAssetsToTokens(
         cgId: asset.coinId || matchingFromToken?.cgId || '',
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
         price: asset.price || matchingFromToken?.price || 0,
         networkInfo: {
           name: chainName.toLowerCase(),
@@ -338,4 +397,12 @@ function mapSupportingAssetsToTokens(
         },
       }
     }) as unknown as NewTokenInfo[]
+
+  return hydrateTokenBalances(mappedAssets, {
+    balanceSources: Array.from(fromTokensMap.values()).map(token => ({
+      address: token.address,
+      balance: token.balance || '0',
+    })),
+    mainTokenAddress: MAIN_TOKEN_CONTRACT,
+  }) as NewTokenInfo[]
 }

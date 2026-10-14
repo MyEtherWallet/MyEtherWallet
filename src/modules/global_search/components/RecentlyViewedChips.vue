@@ -9,7 +9,7 @@
           v-for="item in recentlyViewedTop6"
           :key="item.id"
           type="button"
-          class="flex items-center gap-1.5 pl-1 pr-2 py-1 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
+          class="flex items-center gap-1.5 pl-1 pr-2 py-1 bg-background-default hover:bg-background-default-hover rounded-[8px] transition-colors"
           @click="selectAsset(item, true)"
         >
           <app-token-logo
@@ -27,7 +27,7 @@
         </button>
       </div>
     </div>
-    <div class="h-px bg-grey-5 mt-4 mb-2" />
+    <div class="h-px bg-background-default mt-4 mb-2" />
   </div>
 </template>
 

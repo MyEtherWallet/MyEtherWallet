@@ -9,13 +9,15 @@
       >
         <div class="max-w-[540px] mx-auto">
           <p class="text-s-20 xl:text-s-24 font-bold mb-2">
-            You don't have any crypto
+            {{ $t('portfolio.no_balance.title') }}
           </p>
 
-          <p class="text-s-15 xl:text-s-17 text-info leading-relaxed">
-            To start trading and managing your digital assets, you will need
-            some
-            {{ selectedChain?.currencyName }} in your portfolio.
+          <p class="text-s-15 xl:text-s-17 text-text-subtle leading-relaxed">
+            {{
+              $t('portfolio.no_balance.description', {
+                currencyName: selectedChain?.currencyName,
+              })
+            }}
           </p>
         </div>
         <div
@@ -31,7 +33,10 @@
                 class="w-5 h-5 xl:w-6 xl:h-6 text-white"
                 dollar-icon-color="rgb(0,90,229,1)"
               />
-              <p>Buy {{ selectedChain?.currencyName }}</p>
+              <p>
+                {{ $t('portfolio.no_balance.buy') }}
+                {{ selectedChain?.currencyName }}
+              </p>
             </div>
           </app-base-button>
           <app-base-button
@@ -41,8 +46,15 @@
             :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-primary" />
-              <p>Deposit {{ selectedChain?.currencyName }}</p>
+              <AppIcon
+                name="qr-code"
+                size="xxs"
+                class="text-text-brand xl:size-5"
+              />
+              <p>
+                {{ $t('portfolio.no_balance.deposit') }}
+                {{ selectedChain?.currencyName }}
+              </p>
             </div>
           </app-base-button>
         </div>
@@ -54,7 +66,6 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -65,6 +76,7 @@ import { ref, computed } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { isXLAndUp } = useAppBreakpoints()
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()

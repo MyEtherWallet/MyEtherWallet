@@ -26,7 +26,7 @@
             })
           }}
         </h1>
-        <p class="text-s-15 text-grey-60 leading-relaxed max-w-[320px]">
+        <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
           {{
             $t('common.deposit_description', {
               chain: selectedChain?.nameLong || 'Ethereum',
@@ -45,7 +45,7 @@
             <!-- Loading QR Placeholder -->
             <div
               v-show="isLoadingQRCode"
-              class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+              class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
             ></div>
           </div>
         </div>
@@ -64,7 +64,7 @@
             <!-- Copy -->
             <app-btn-copy
               :copy-value="walletAddress"
-              class="!min-w-10 h-10 text-primary"
+              class="!min-w-10 h-10 text-text-brand"
             >
             </app-btn-copy>
             <!-- Block Explorer Link -->
@@ -72,9 +72,12 @@
               :href="getExplorerLink"
               :aria-label="$t('view_in_block_explorer')"
               target="_blank"
-              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-primary-light transition-colors"
+              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
             >
-              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-primary" />
+              <AppIcon
+                name="arrow-top-right-on-square"
+                class="text-text-brand"
+              />
             </a>
           </div>
         </div>
@@ -92,10 +95,10 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { watch, computed } from 'vue'
 import { analytics, DepositEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

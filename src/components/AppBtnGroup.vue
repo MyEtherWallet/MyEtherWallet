@@ -2,7 +2,7 @@
   <div
     :class="[
       {
-        'bg-surface rounded-32 p-1': variant === 'default',
+        'bg-background-default-hover rounded-32 p-1': variant === 'default',
       },
       { 'max-w-fit': !hasFullWidth },
       'flex  gap-1',
@@ -12,7 +12,9 @@
       v-if="isLoaded"
       class="flex flex-row"
       :class="[
-        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start',
+        hasFullWidth
+          ? 'justify-stretch  overflow-auto no-scrollbar scrollbar-hide'
+          : 'flex-wrap justify-start',
         variant === 'outline' ? 'gap-2' : 'gap-1',
       ]"
     >
@@ -24,7 +26,7 @@
         :class="[
           { 'min-h-10 min-w-[110px] px-3': size === 'large' },
           { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
-          { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
+          { 'min-h-7 min-w-20 !text-s-14': size === 'small' },
           { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
           {
             'bg-white shadow-container !hover:bg-white':
@@ -32,13 +34,14 @@
           },
           { hoverNoBG: variant === 'default' && !areEqual(selected, btn) },
           {
-            '!bg-surface': variant === 'outline' && !areEqual(selected, btn),
+            '!bg-background-default-hover':
+              variant === 'outline' && !areEqual(selected, btn),
           },
           {
             ' !bg-black text-white':
               variant === 'outline' && areEqual(selected, btn),
           },
-          { 'w-full': hasFullWidth },
+          { 'w-full !min-w-fit': hasFullWidth },
           'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium  ',
 
           variant === 'outline' ? '' : '',

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
+  <div class="flex flex-col mb-10 w-full divide-y divide-border-default">
     <app-asset-info-header
       :is-loading="isLoading"
       :has-data="tokenData !== null"
@@ -36,6 +36,12 @@
         @bridge-to-chain="setBridgeWalletStore"
       />
     </div>
+    <!-- About -->
+    <token-info-about
+      :description="description"
+      :symbol="tokenData?.symbol || undefined"
+      :is-loading="isFetchingDescription && !description"
+    />
     <!-- Market Data -->
     <token-info-market-data :is-loading="isLoading" :token-data="tokenData" />
     <!-- Supported Chains -->
@@ -54,15 +60,17 @@
 
 <script setup lang="ts">
 import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
+import TokenInfoAbout from './components/token_info/TokenInfoAbout.vue'
 import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue'
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoChart from './components/token_info/TokenInfoChart.vue'
 import { computed, ref, watch } from 'vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useAssetDescription } from '@/composables/useAssetDescription'
 import { type GetWebTokenInfo, type TokenBalanceRaw } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
 import TokenInfoBalance from './components/token_info/TokenInfoBalance.vue'
@@ -71,12 +79,13 @@ import type { DisplayToken } from '../portfolio/components/balances/TableTokenBa
 import { useInputStore } from '@/stores/inputStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import type { Chain, TokenSupportedChain } from '@/mew_api/types'
-import type { NewTokenInfo } from '@/composables/useSwap'
+import type { NewTokenInfo } from '@/stores/swapStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   tokenId: {
@@ -261,6 +270,14 @@ onFetchResponse(() => {
 })
 
 /** --------------------
+ * Description
+ --------------------*/
+const { description, isFetchingDescription } = useAssetDescription(
+  computed(() => props.tokenId),
+  'token',
+)
+
+/** --------------------
  * Balances
  --------------------*/
 const chainsStore = useChainsStore()
@@ -401,7 +418,7 @@ const toggleWatchlist = () => {
 const shareText = computed(() => {
   const ticker = tokenData.value?.symbol?.toUpperCase() ?? ''
   const price = tokenData.value?.currentPrice
-    ? `$${formatFiatValue(tokenData.value.currentPrice).value}`
+    ? formatFiat(tokenData.value.currentPrice).display
     : ''
   return t('common.share_message', { ticker, price })
 })

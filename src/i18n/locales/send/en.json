@@ -3,6 +3,9 @@
     "send-tokens": "Send Tokens",
     "send-nfts": "Send NFTs",
     "need-help": "Need help sending?",
+    "approve-tx-on-device": "Approve Tx on your device",
+    "unknown": "Unknown",
+    "unknown_chain": "Unknown Chain",
     "toast": {
       "failed_to_sign": "Failed to sign transaction",
       "tx-send-success": "Transaction sent successfully",

@@ -1,0 +1,1054 @@
+<template>
+  <!--
+    @container: the wallet side panel pushes the page content instead of
+    overlaying it from the xl viewport up, so viewport breakpoints lie about
+    how much room the table really has. Column visibility is driven by this
+    element's width instead. Thresholds equal the old md / lg / xl viewport
+    breakpoints with the panel closed (viewport - 80px rail - 40px page gutter):
+    700px = md (820), 904px = lg (1024), 1160px = xl (1280).
+  -->
+  <div class="@container">
+    <div class="bg-white rounded-16 py-4 px-2 sm:px-4">
+      <!-- Title -->
+      <h1 class="text-s-20 xs:text-s-24 font-bold px-2 pt-2 pb-4">
+        {{ $t('perps.market-list.title') }}
+      </h1>
+
+      <!-- Filters: search + category -->
+      <div
+        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
+      >
+        <app-search-input
+          v-model="searchQuery"
+          bg-class="bg-background-default"
+          size="compact"
+          :placeholder="$t('perps.market-list.search-placeholder')"
+          class="w-full xs:w-60 shrink-0"
+        />
+
+        <!-- Category filter -->
+        <app-select
+          v-model:selected="selectedFilter"
+          :options="filterOptions"
+          position="left-0"
+        >
+          <template #select-button="{ toggleSelect }">
+            <button
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              @click="toggleSelect"
+            >
+              <span class="text-s-15 font-medium text-black truncate">
+                {{ selectedFilter.label }}
+              </span>
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="shrink-0 text-text-subtle"
+              />
+            </button>
+          </template>
+        </app-select>
+      </div>
+
+      <!-- Loading -->
+      <app-table-skeleton
+        v-if="contractsLoading"
+        :rows="8"
+        :columns="marketSkeletonColumns"
+      />
+
+      <!-- Error -->
+      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
+        {{ contractsError }}
+      </div>
+
+      <!-- Markets table -->
+      <div v-else>
+        <table
+          ref="marketsTable"
+          class="w-full text-sm table-fixed border-separate border-spacing-y-0"
+        >
+          <thead class="bg-white">
+            <tr
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-normal"
+            >
+              <!-- Watchlist -->
+              <th class="w-10 pb-4 text-center"></th>
+              <!-- Name -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                colspan="2"
+                @click="setHeaderSort(SortValue.NAME)"
+              >
+                <div
+                  class="flex items-center gap-1 ml-9 xs:ml-11 font-normal"
+                  :class="{
+                    'text-black': headerSort === SortValue.NAME,
+                  }"
+                >
+                  {{ $t('perps.market-list.column-name') }}
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'asc'
+                    "
+                  />
+                </div>
+              </th>
+              <!-- Market Cap -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 @min-[700px]:w-[140px]"
+                @click="setHeaderSort(SortValue.MARKET_CAP)"
+              >
+                <div
+                  class="flex items-center gap-1 relative font-normal justify-end text-right @min-[904px]:justify-start @min-[904px]:text-left"
+                  :class="{
+                    'text-black': headerSort === SortValue.MARKET_CAP,
+                  }"
+                >
+                  {{ $t('perps.market-list.column-market-cap') }}
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'asc'
+                    "
+                  />
+                </div>
+              </th>
+              <!-- Volume -->
+              <th
+                class="hidden @min-[1160px]:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
+                @click="setHeaderSort(SortValue.VOLUME)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-start relative text-left font-normal"
+                  :class="{
+                    'text-black': headerSort === SortValue.VOLUME,
+                  }"
+                >
+                  {{ $t('perps.market-list.column-volume') }}
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'asc'
+                    "
+                  />
+                </div>
+              </th>
+              <!-- 24H Change -->
+              <th class="hidden @min-[1160px]:table-cell px-1 pb-4 w-[140px]">
+                <div class="text-left font-normal">
+                  {{ $t('perps.market-list.column-24h-change') }}
+                </div>
+              </th>
+              <!-- Price -->
+              <th
+                class="hidden @min-[700px]:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors w-[140px]"
+                @click="setHeaderSort(SortValue.PRICE)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end @min-[904px]:justify-start relative text-right @min-[904px]:text-left font-normal"
+                  :class="{
+                    'text-black': headerSort === SortValue.PRICE,
+                  }"
+                >
+                  {{ $t('perps.market-list.column-price') }}
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.PRICE &&
+                      tableDirection === 'desc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === SortValue.PRICE && tableDirection === 'asc'
+                    "
+                  />
+                </div>
+              </th>
+              <!-- Actions -->
+              <th
+                class="@min-[904px]:pr-4 pb-4 text-right w-7 xs:w-10 @min-[700px]:w-12 @min-[904px]:w-[216px]"
+              ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="contract in paginatedContracts"
+              :key="contract.market"
+              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
+              @click="$emit('viewMarket', contract.market)"
+            >
+              <!-- Watchlist -->
+              <td class="w-10 rounded-l-12 text-center">
+                <button
+                  :aria-label="
+                    watchlist.has(contract.baseCurrency)
+                      ? $t('perps.market-list.remove-from-watchlist')
+                      : $t('perps.market-list.add-to-watchlist')
+                  "
+                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
+                  @click.stop="toggleWatchlist(contract.baseCurrency)"
+                >
+                  <AppIcon
+                    name="star"
+                    size="xxs"
+                    v-if="!watchlist.has(contract.baseCurrency)"
+                    class="cursor-pointer"
+                  />
+                  <AppIcon
+                    name="star"
+                    variant="filled"
+                    size="xxs"
+                    v-else
+                    class="cursor-pointer text-text-brand"
+                  />
+                </button>
+              </td>
+              <!-- Name -->
+              <td class="px-1 py-2" colspan="2">
+                <div class="flex items-center gap-3">
+                  <app-token-logo
+                    :url="getLogoUrl(contract.baseCurrency)"
+                    :symbol="contract.baseCurrency"
+                    no-shadow
+                    class="rounded-full"
+                  />
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="font-semibold whitespace-nowrap">{{
+                        contract.baseCurrency
+                      }}</span>
+                      <span
+                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
+                      >
+                        {{ contract.defaultLeverage }}x
+                      </span>
+                    </div>
+                    <span class="text-text-subtle text-s-12 truncate block">{{
+                      contract.longName
+                    }}</span>
+                  </div>
+                </div>
+              </td>
+              <!-- Market Cap -->
+              <td
+                class="px-1 py-2 text-right @min-[904px]:text-left text-s-14 text-black"
+              >
+                <p class="font-semibold">
+                  {{ formatVolume(contract.openInterestUsd) }}
+                </p>
+                <p
+                  class="text-s-12 font-semibold @min-[700px]:hidden"
+                  :class="
+                    parseFloat(contract.priceChangePercent ?? '0') >= 0
+                      ? 'text-text-success'
+                      : 'text-text-error'
+                  "
+                >
+                  {{ formatChange(contract.priceChangePercent) }}
+                </p>
+              </td>
+              <!-- Volume -->
+              <td
+                class="hidden @min-[1160px]:table-cell px-1 py-2 text-left font-semibold text-s-14 text-black"
+              >
+                {{ formatVolume(contract.usdVolume) }}
+              </td>
+              <!-- 24H Change -->
+              <td class="hidden @min-[1160px]:table-cell px-1 py-1 text-left">
+                <div class="flex flex-col items-start justify-center py-2">
+                  <p
+                    class="text-s-13 font-semibold mb-1"
+                    :class="
+                      parseFloat(contract.priceChangePercent ?? '0') >= 0
+                        ? 'text-text-success'
+                        : 'text-text-error'
+                    "
+                  >
+                    {{ formatChange(contract.priceChangePercent) }}
+                  </p>
+                  <table-sparkline
+                    v-if="contract.sparkline?.price?.length"
+                    :points="(contract.sparkline?.price ?? []).map(Number)"
+                    :width="70"
+                    :height="24"
+                    :max-points="34"
+                    :percent-change="
+                      parseFloat(contract.priceChangePercent ?? '0') ||
+                      undefined
+                    "
+                  />
+                </div>
+              </td>
+              <!-- Price -->
+              <td
+                class="hidden @min-[700px]:table-cell pl-1 pr-1 py-2 text-right @min-[904px]:text-left"
+              >
+                <p
+                  class="text-right @min-[904px]:text-left font-semibold text-s-14 text-black"
+                >
+                  {{ formatPrice(midPrice(contract)) }}
+                </p>
+                <p
+                  class="text-s-12 font-semibold @min-[1160px]:hidden"
+                  :class="
+                    parseFloat(contract.priceChangePercent ?? '0') >= 0
+                      ? 'text-text-success'
+                      : 'text-text-error'
+                  "
+                >
+                  {{ formatChange(contract.priceChangePercent) }}
+                </p>
+              </td>
+              <!-- Actions -->
+              <td
+                class="@min-[904px]:pr-2 py-1 rounded-r-12 relative text-right"
+              >
+                <div
+                  class="flex items-center justify-end @min-[904px]:hidden ml-auto -mr-1 @min-[700px]:mr-auto"
+                >
+                  <app-pop-up-menu
+                    :placeholder="$t('perps.market-list.actions-menu-label')"
+                    location="right"
+                  >
+                    <template #menu-button="{ toggleMenu }">
+                      <app-btn-icon
+                        :label="$t('perps.market-list.action-menu-label')"
+                        @click.stop="toggleMenu"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                      >
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
+                      </app-btn-icon>
+                    </template>
+                    <template #menu-content="{ toggleMenu }">
+                      <div
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                      >
+                        <button
+                          class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[
+                            toggleWatchlist(contract.baseCurrency),
+                            toggleMenu(),
+                          ]"
+                        >
+                          <AppIcon
+                            name="star"
+                            size="xxs"
+                            v-if="!watchlist.has(contract.baseCurrency)"
+                            class="cursor-pointer"
+                          />
+                          <AppIcon
+                            name="star"
+                            variant="filled"
+                            size="xxs"
+                            v-else
+                            class="cursor-pointer"
+                          />
+                          <span class="ml-2">{{
+                            watchlist.has(contract.baseCurrency)
+                              ? $t('perps.market-list.remove-from-watchlist')
+                              : $t('perps.market-list.add-to-watchlist')
+                          }}</span>
+                        </button>
+                        <hr
+                          class="h-px bg-border-strong border-0 w-full my-2 xs:hidden"
+                        />
+                        <ul>
+                          <template v-if="getPosition(contract.market)">
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openLeverage(
+                                  contract.market,
+                                  contract.baseCurrency,
+                                  getPosition(contract.market)!.leverage,
+                                ),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.change-leverage') }}
+                              </p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'add'),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.add-to-position') }}
+                              </p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'close'),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.close-position') }}
+                              </p>
+                            </li>
+                          </template>
+                          <template v-else>
+                            <li
+                              @click.stop="[
+                                toggleMenu(),
+                                openNewPosition(
+                                  contract.market,
+                                  'buy',
+                                  PerpsNewPositionAction.LONG,
+                                ),
+                              ]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <p>{{ $t('perps.trade.long') }}</p>
+                            </li>
+                            <li
+                              @click.stop="[
+                                toggleMenu(),
+                                openNewPosition(
+                                  contract.market,
+                                  'sell',
+                                  PerpsNewPositionAction.SHORT,
+                                ),
+                              ]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <p>{{ $t('perps.trade.short') }}</p>
+                            </li>
+                          </template>
+                          <li
+                            @click.stop="[
+                              toggleMenu(),
+                              emits('viewMarket', contract.market),
+                            ]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <p>
+                              {{ $t('perps.market-list.view-market-info') }}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
+                  </app-pop-up-menu>
+                </div>
+                <div
+                  class="hidden @min-[904px]:flex flex-row gap-2 justify-end"
+                >
+                  <template v-if="getPosition(contract.market)">
+                    <app-pop-up-menu
+                      :placeholder="$t('perps.market-list.actions-menu-label')"
+                      location="right"
+                    >
+                      <template #menu-button="{ toggleMenu }">
+                        <app-base-button
+                          size="small"
+                          class="min-w-[136px] !px-3 !py-2"
+                          :disabled="isWatchOnly"
+                          :theme="
+                            getPosition(contract.market)!.direction === 'long'
+                              ? 'success'
+                              : 'error'
+                          "
+                          @click="
+                            onManagePositionClick(
+                              contract.market,
+                              getPosition(contract.market)!.direction === 'long'
+                                ? 'long'
+                                : 'short',
+                              toggleMenu,
+                            )
+                          "
+                        >
+                          {{ $t('perps.market-list.manage') }}
+                          {{
+                            getPosition(contract.market)!.direction === 'long'
+                              ? $t('perps.trade.long')
+                              : $t('perps.trade.short')
+                          }}
+                        </app-base-button>
+                      </template>
+                      <template #menu-content="{ toggleMenu }">
+                        <div
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                        >
+                          <ul>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openLeverage(
+                                  contract.market,
+                                  contract.baseCurrency,
+                                  getPosition(contract.market)!.leverage,
+                                ),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.change-leverage') }}
+                              </p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'add'),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.add-to-position') }}
+                              </p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'close'),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.close-position') }}
+                              </p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                emits('viewMarket', contract.market),
+                              ]"
+                            >
+                              <p>
+                                {{ $t('perps.market-list.view-market-info') }}
+                              </p>
+                            </li>
+                          </ul>
+                        </div>
+                      </template>
+                    </app-pop-up-menu>
+                  </template>
+                  <template v-else>
+                    <!--
+                      Disabled in restricted regions: there is no order to place,
+                      so the action is dead rather than redirected. Users reach
+                      the explanatory card via the Perps action-bar button.
+                    -->
+                    <app-base-button
+                      size="small"
+                      class="w-24 !px-3 !py-2"
+                      theme="success"
+                      :disabled="isPerpsRestricted"
+                      @click="
+                        openNewPosition(
+                          contract.market,
+                          'buy',
+                          PerpsNewPositionAction.LONG,
+                        )
+                      "
+                    >
+                      {{ $t('perps.trade.long') }}
+                    </app-base-button>
+                    <app-base-button
+                      size="small"
+                      theme="error"
+                      class="w-24 !px-3 !py-2"
+                      :disabled="isPerpsRestricted"
+                      @click="
+                        openNewPosition(
+                          contract.market,
+                          'sell',
+                          PerpsNewPositionAction.SHORT,
+                        )
+                      "
+                    >
+                      {{ $t('perps.trade.short') }}
+                    </app-base-button>
+                  </template>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Footer / pagination -->
+        <div
+          v-if="filteredContracts.length > 0"
+          class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
+        >
+          <span class="text-text-subtle">
+            {{
+              $t('common.showing_page', {
+                current: currentPage + 1,
+                total: totalPages,
+              })
+            }}
+          </span>
+          <div class="flex items-center gap-2">
+            <app-btn-icon
+              class="bg-background-default"
+              height="h-10"
+              width="w-10"
+              :disabled="currentPage === 0"
+              :label="$t('common.previous_page')"
+              @click="prevPage"
+            >
+              <AppIcon name="chevron-left" variant="filled" size="xxs" />
+            </app-btn-icon>
+            <app-btn-icon
+              class="bg-background-default"
+              height="h-10"
+              width="w-10"
+              :disabled="currentPage >= totalPages - 1"
+              :label="$t('common.next_page')"
+              @click="nextPage"
+            >
+              <AppIcon name="chevron-right" variant="filled" size="xxs" />
+            </app-btn-icon>
+          </div>
+        </div>
+        <div
+          v-if="filteredContracts.length === 0"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
+        >
+          <p
+            v-if="selectedFilter.value === 'watchlist' && !searchQuery"
+            class="mb-1 text-center @min-[904px]:mt-10"
+          >
+            {{ $t('perps.market-list.no-watchlist') }}
+          </p>
+          <p v-if="searchQuery" class="mb-1 text-center @min-[904px]:my-10">
+            {{ $t('perps.market-list.no-results', { query: searchQuery }) }}
+          </p>
+          <button
+            v-if="selectedFilter.value === 'watchlist' && !searchQuery"
+            class="underline @min-[904px]:mb-10"
+            @click="selectedFilterValue = 'all'"
+          >
+            {{ $t('perps.market-list.discover-markets') }}
+            <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <perps-select-leverage-dialog
+    v-model:is-open="showLeverageDialog"
+    v-model="tempLeverage"
+    :symbol="leverageSymbol"
+    :leverage-error="leverageError"
+    :is-saving="isSavingLeverage"
+    :max-leverage="leverageMaxLeverage"
+    mode="submit"
+    @save="saveLeverage"
+  />
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppTableSkeleton, {
+  type SkeletonColumn,
+} from '@/components/AppTableSkeleton.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import TableSparkline from '@/components/TableSparkline.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import {
+  usePerpsMarkets,
+  usePerpsContracts,
+} from '../composables/usePerpsMarkets'
+import type { Contract, TradingPair } from '../sdk/types'
+import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
+import { getLogoUrl, midPrice, hasTag } from '../utils/market'
+import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePerpsRestriction } from '../composables/usePerpsRestriction'
+import { usePaginate } from '@/composables/usePaginate'
+import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
+import { capturePerps } from '../sentry'
+import { PERPS_FEATURE } from '@/sentry/constants'
+import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
+import { usePerpsToasts } from '../composables/usePerpsToasts'
+import { useWalletStore } from '@/stores/walletStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { storeToRefs } from 'pinia'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import {
+  analytics,
+  PerpsChangeLeverageEvent,
+  PerpsManageEvent,
+  PerpsEventLocation,
+  PerpsNewPositionAction,
+} from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
+
+const { t } = useI18n()
+const walletStore = useWalletStore()
+const { isPerpsRestricted } = usePerpsRestriction()
+const { isWatchOnly } = storeToRefs(walletStore)
+
+const watchlistStore = useWatchlistStore()
+const { watchListedPerps } = storeToRefs(watchlistStore)
+
+const emits = defineEmits<{
+  openPosition: [market: string, side?: 'buy' | 'sell']
+  openSideMenu: [market: string, type: 'add' | 'close' | undefined]
+  viewMarket: [market: string]
+}>()
+
+const showLeverageDialog = ref(false)
+const tempLeverage = ref(1)
+const isSavingLeverage = ref(false)
+const leverageError = ref('')
+const leverageMarket = ref('')
+const leverageSymbol = ref('')
+const leverageMaxLeverage = ref(20)
+const leverageOldValue = ref(1)
+const perpsToasts = usePerpsToasts()
+
+const openLeverage = (
+  market: string,
+  symbol: string,
+  currentLeverage: string,
+) => {
+  void analytics.trackPerpsManageEvent(PerpsManageEvent.CHANGE_LEVERAGE, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+  })
+  leverageMarket.value = market
+  leverageSymbol.value = symbol
+  const tradingPair = markets.value.find(m => m.market === market)
+  const parsedMax = parseInt(tradingPair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  leverageMaxLeverage.value = maxLev
+  const parsedCurrent = parseInt(currentLeverage)
+  const initial =
+    Number.isFinite(parsedCurrent) && parsedCurrent > 0 ? parsedCurrent : maxLev
+  tempLeverage.value = Math.min(initial, maxLev)
+  leverageOldValue.value = tempLeverage.value
+  leverageError.value = ''
+  showLeverageDialog.value = true
+}
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: leverageMarket.value,
+    oldLeverage: leverageOldValue.value,
+    maxLeverage: leverageMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
+  try {
+    await perpsClient.setLeverage(leverageMarket.value, tempLeverage.value)
+    showLeverageDialog.value = false
+    perpsToasts.toastLeverageUpdated(tempLeverage.value, leverageMarket.value)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
+  } catch (e) {
+    leverageError.value =
+      e instanceof Error
+        ? e.message
+        : t('perps.market-list.leverage-error-fallback')
+    perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
+    capturePerps(PERPS_FEATURE.LEVERAGE, e, {
+      title: 'PERPS: Set leverage failed',
+      extra: { market: leverageMarket.value, newLeverage: tempLeverage.value },
+    })
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
+const openPositionAdd = (market: string, type: 'add' | 'close') => {
+  void analytics.trackPerpsManageEvent(
+    type === 'add'
+      ? PerpsManageEvent.ADD_TO_POSITION
+      : PerpsManageEvent.CLOSE_POSITION,
+    {
+      assetName: market,
+      location: PerpsEventLocation.MARKET,
+    },
+  )
+  emits('openSideMenu', market, type)
+}
+
+const openNewPosition = (
+  market: string,
+  side: 'buy' | 'sell',
+  action: PerpsNewPositionAction,
+) => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+    action,
+  })
+  emits('openPosition', market, side)
+}
+
+const onManagePositionClick = (
+  market: string,
+  direction: 'long' | 'short',
+  toggleMenu: () => void,
+) => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+    action:
+      direction === 'long'
+        ? PerpsNewPositionAction.MANAGE_LONG
+        : PerpsNewPositionAction.MANAGE_SHORT,
+  })
+  toggleMenu()
+}
+
+const marketsTable = ref<HTMLElement | null>(null)
+
+const { markets } = usePerpsMarkets()
+const {
+  contracts,
+  isLoading: contractsLoading,
+  error: contractsError,
+} = usePerpsContracts()
+const { positions } = usePerpsPositions()
+
+function getPosition(market: string) {
+  return positions.value.find(p => p.market === market) || null
+}
+
+const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
+  { header: '', hidden: 'w-10' },
+  { header: t('perps.market-list.column-name') },
+  { header: t('perps.market-list.column-market-cap'), align: 'right' },
+  {
+    header: t('perps.market-list.column-volume'),
+    align: 'right',
+    hidden: 'hidden @min-[1160px]:table-cell',
+  },
+  {
+    header: t('perps.market-list.column-24h-change'),
+    align: 'right',
+    hidden: 'hidden @min-[1160px]:table-cell',
+  },
+  {
+    header: t('perps.market-list.column-price'),
+    align: 'right',
+    hidden: 'hidden @min-[700px]:table-cell',
+  },
+  {
+    header: '',
+    align: 'right',
+    hidden: 'hidden @min-[904px]:table-cell @min-[904px]:w-[216px]',
+  },
+])
+
+const searchQuery = ref('')
+// Persisted + shared with the home watchlist via the store. Exposed as a Set so
+// the existing `watchlist.has(...)` template checks keep working unchanged.
+const watchlist = computed(() => new Set(watchListedPerps.value))
+
+enum SortValue {
+  NAME = 'NAME',
+  PRICE = 'PRICE',
+  PERCENT = 'PERCENT',
+  VOLUME = 'VOLUME',
+  MARKET_CAP = 'MARKET_CAP',
+}
+
+const headerSort = ref<SortValue>(SortValue.VOLUME)
+const tableDirection = ref<'asc' | 'desc'>('desc')
+
+function setHeaderSort(key: SortValue) {
+  if (headerSort.value === key) {
+    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    tableDirection.value = 'desc'
+    headerSort.value = key
+  }
+}
+
+function toggleWatchlist(symbol: string) {
+  watchlistStore.setWatchlistPerp(symbol)
+}
+
+interface FilterOption {
+  label: string
+  value: string
+}
+
+const filterOptions = computed<FilterOption[]>(() => [
+  { label: t('perps.market-list.all-categories'), value: 'all' },
+  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
+  { label: t('perps.market-list.filter-stocks'), value: 'stocks' },
+  { label: t('perps.market-list.filter-commodities'), value: 'commodities' },
+  { label: t('perps.market-list.filter-indices'), value: 'indices' },
+])
+
+// Track the filter by value, not by object: labels are locale-dependent and
+// AppSelect compares the selection by structural equality.
+const selectedFilterValue = ref('all')
+
+const selectedFilter = computed<FilterOption>({
+  get: () =>
+    filterOptions.value.find(o => o.value === selectedFilterValue.value) ??
+    filterOptions.value[0],
+  set: option => {
+    selectedFilterValue.value = option.value
+  },
+})
+
+interface EnrichedContract extends Contract {
+  displayName: string
+  longName: string
+  defaultLeverage: string
+}
+
+const enrichedContracts = computed<EnrichedContract[]>(() => {
+  const marketMap = new Map<string, TradingPair>()
+  for (const m of markets.value) {
+    marketMap.set(m.market, m)
+  }
+  // Contracts flagged `disabled` by the API must not appear in the market
+  // list (MEW-2025). Filtered here (display source) rather than at the shared
+  // `contracts` ref so an active/held disabled market still resolves elsewhere.
+  return contracts.value
+    .filter(c => !c.disabled)
+    .map(c => {
+      const pair = marketMap.get(c.market)
+      return {
+        ...c,
+        displayName: pair?.displayName ?? c.baseCurrency,
+        longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
+        defaultLeverage: pair?.defaultLeverage ?? '',
+      }
+    })
+})
+
+const filteredContracts = computed(() => {
+  let list = enrichedContracts.value
+
+  if (selectedFilter.value.value === 'watchlist') {
+    list = list.filter(c => watchlist.value.has(c.baseCurrency))
+  } else if (selectedFilter.value.value === 'commodities') {
+    list = list.filter(c => hasTag(c, 'commodity'))
+  } else if (selectedFilter.value.value === 'indices') {
+    list = list.filter(c => hasTag(c, 'index'))
+  } else if (selectedFilter.value.value === 'stocks') {
+    list = list.filter(c => !hasTag(c, 'commodity') && !hasTag(c, 'index'))
+  }
+
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(
+      c =>
+        c.baseCurrency.toLowerCase().includes(q) ||
+        c.market.toLowerCase().includes(q) ||
+        c.displayName.toLowerCase().includes(q) ||
+        c.longName.toLowerCase().includes(q),
+    )
+  }
+
+  const dir = tableDirection.value === 'desc' ? -1 : 1
+  list = [...list].sort((a, b) => {
+    let cmp = 0
+    switch (headerSort.value) {
+      case SortValue.NAME:
+        cmp = a.baseCurrency.localeCompare(b.baseCurrency)
+        break
+      case SortValue.PRICE:
+        cmp = midPrice(a) - midPrice(b)
+        break
+      case SortValue.PERCENT:
+        cmp =
+          parseFloat(a.priceChangePercent ?? '0') -
+          parseFloat(b.priceChangePercent ?? '0')
+        break
+      case SortValue.VOLUME:
+        cmp = parseFloat(a.usdVolume ?? '0') - parseFloat(b.usdVolume ?? '0')
+        break
+      case SortValue.MARKET_CAP:
+        cmp =
+          parseFloat(a.openInterestUsd ?? '0') -
+          parseFloat(b.openInterestUsd ?? '0')
+        break
+    }
+    return cmp * dir
+  })
+
+  return list
+})
+
+function formatChange(pct?: string): string {
+  if (!pct) return '—'
+  return formatPercent(parseFloat(pct))
+}
+
+const {
+  currentPage,
+  paginatedArray: paginatedContracts,
+  totalPages,
+  nextPage,
+  prevPage,
+} = usePaginate<EnrichedContract>(filteredContracts, PERPS_PAGE_SIZE)
+</script>

@@ -16,6 +16,7 @@ export const currencySymbols: Record<string, string> = {
   BMD: '$',
   BOB: '$b',
   BAM: 'KM',
+  BDT: '৳',
   BGN: 'лв',
   BRL: 'R$',
   BND: '$',

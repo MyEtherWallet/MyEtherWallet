@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-background-contrast-default rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
         :class="{ 'mew-card-readable': !useDynamicContrast }"
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
@@ -17,7 +17,10 @@
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
           <div class="">
-            <app-pop-up-menu placeholder="wallet menu" location="left">
+            <app-pop-up-menu
+              :placeholder="t('common.wallet_menu')"
+              location="left"
+            >
               <template #menu-button="{ toggleMenu }">
                 <button
                   class="p-1 text-s-11 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
@@ -26,10 +29,15 @@
                   <!-- TODO: add ens resolution-->
                   <p v-if="!isWatchOnly">{{ t('common.my_wallet') }}</p>
                   <p v-else>
-                    <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
+                    <IconWatchOnly class="inline-block w-3 h-3" />
                     {{ t('common.watch_only') }}
                   </p>
-                  <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
+                  <AppIcon
+                    name="chevron-down"
+                    variant="filled"
+                    size="xxs"
+                    class="ml-1"
+                  />
                 </button>
               </template>
               <template #menu-content>
@@ -39,8 +47,11 @@
                       @click="setOpenPaperWalletDialog(true)"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <QrCodeIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                      <AppIcon
+                        name="qr-code"
+                        variant="filled"
+                        size="s"
+                        class="inline-block mr-2 text-text-brand"
                       />
                       {{ $t('view_paper_wallet') }}
                     </li>
@@ -49,19 +60,27 @@
                       @click="switchAddress()"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <UserGroupIcon
-                        class="w-5 h-5 inline-block mr-2 text-primary"
+                      <AppIcon
+                        name="user-group"
+                        size="s"
+                        class="inline-block mr-2 text-text-brand"
                       />
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
+                  <hr
+                    class="h-px bg-background-default-hover border-0 w-full my-2"
+                  />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
                       class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
                     >
-                      <TrashIcon class="w-5 h-5 inline-block mr-2 text-error" />
+                      <AppIcon
+                        name="trash"
+                        size="s"
+                        class="inline-block mr-2 text-text-error"
+                      />
                       {{
                         isWatchOnly
                           ? $t('delete_watch_only_wallet')
@@ -83,7 +102,7 @@
               class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
               @click="copyClick"
             >
-              <ClipboardDocumentIcon class="w-5 h-5" />
+              <AppIcon name="clipboard-document" size="s" />
             </button>
             <!-- Link to block explorer -->
             <a
@@ -92,7 +111,7 @@
               target="_blank"
               class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             >
-              <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+              <AppIcon name="arrow-top-right-on-square" size="s" />
             </a>
           </div>
         </div>
@@ -115,7 +134,7 @@
             class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="fetchBalances"
           >
-            <ArrowPathIcon class="w-5 h-5" />
+            <AppIcon name="arrow-path" size="s" />
           </button>
         </div>
         <!-- Token balances -->
@@ -133,7 +152,7 @@
             class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
           ></div>
           <button
-            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-1.5 px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
             {{ isWatchOnly ? t('common.connect') : t('common.disconnect') }}
@@ -149,15 +168,7 @@ import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { truncateAddress } from '@/utils/filters'
-import { ChevronDownIcon, QrCodeIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
-import {
-  ClipboardDocumentIcon,
-  ArrowPathIcon,
-  ArrowTopRightOnSquareIcon,
-  UserGroupIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/outline'
 import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
@@ -169,6 +180,7 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
 import {
@@ -178,6 +190,7 @@ import {
 } from '@/analytics'
 import * as Sentry from '@sentry/vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -203,17 +216,29 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
-  wallet.value?.getBalance().then(balances => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-  })
+  wallet.value
+    ?.getBalance()
+    .then(balances => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.MODE !== 'production')
+        console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+    })
 }
 /**
  * Copies the wallet address to the clipboard.
  */
 const copyClick = async () => {
   try {
-    if (!walletAddress.value) throw new Error(t('common.error.no_wallet_address'))
+    if (!walletAddress.value)
+      throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
@@ -255,8 +280,11 @@ const animateMewCard = (el: HTMLElement) => {
 // composable separately requests an anonymous copy for CORS-enabled pixel
 // sampling; if mewcard.mewapi.io does not yet return CORS headers the sampler
 // fails silently and we keep the static text-shadow fallback.
-const { textColor, isDynamic: useDynamicContrast, sampleFromUrl } =
-  useImageContrastTextColor()
+const {
+  textColor,
+  isDynamic: useDynamicContrast,
+  sampleFromUrl,
+} = useImageContrastTextColor()
 
 const mewCardUrl = computed(
   () => `https://mewcard.mewapi.io/?address=${walletAddress.value ?? ''}`,
@@ -294,12 +322,13 @@ const disconnectWallet = () => {
   emit('close')
 }
 
-const deleteWallet = () => {
+const deleteWallet = async () => {
   const recentAddressStore = useWatchOnlyStore()
   recentAddressStore.removeWallet(
     walletAddress.value as string,
     selectedChain.value!,
   )
+  await usePerpsAuth().logout()
   disconnectWallet()
   emit('close')
 }

@@ -4,6 +4,10 @@
       <ModuleTokenInfo :tokenId="tokenId" />
     </template>
   </app-view-as-dialog>
+  <!-- Hosts the connect/create overlay routes so they open ON TOP of this dialog and
+       cancelling returns here, e.g. /crypto/token/peaq-2/access. Layout-neutral: the
+       overlay views render nothing (the dialogs are mounted globally in App.vue). -->
+  <router-view />
 </template>
 
 <script setup lang="ts">

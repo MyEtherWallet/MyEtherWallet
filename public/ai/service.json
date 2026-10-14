@@ -1,0 +1,128 @@
+{
+  "name": "MyEtherWallet",
+  "alternateName": "MEW",
+  "serviceType": "Self-custody cryptocurrency wallet",
+  "provider": "MyEtherWallet Inc",
+  "areaServed": "Worldwide",
+  "url": "https://app.myetherwallet.com/",
+  "availability": "24/7",
+  "pricing": {
+    "priceToUse": "0",
+    "priceCurrency": "USD",
+    "notes": "MyEtherWallet is free to use. Users pay network gas fees and any third-party provider fee (for example a fiat on-ramp or staking provider fee)."
+  },
+  "requirements": {
+    "account": false,
+    "emailAddress": false,
+    "kycToCreateWallet": false,
+    "javascript": true,
+    "browser": "Any modern web browser"
+  },
+  "features": [
+    "Create or import a self-custody wallet",
+    "Buy and sell crypto with fiat",
+    "Token swaps across supported networks",
+    "Send and receive crypto, tokens and NFTs",
+    "ETH staking (partial staking with no minimum, and liquid staking)",
+    "Perpetual futures trading",
+    "Tokenized stocks",
+    "Sign and verify messages",
+    "Address book and ENS name resolution",
+    "Watch-only addresses",
+    "Paper wallet printing",
+    "Hardware wallet support (Ledger, Trezor)",
+    "WalletConnect, MEW mobile app and Enkrypt extension support"
+  ],
+  "capabilities": [
+    {
+      "name": "Swap tokens",
+      "description": "Swap one token for another using aggregated decentralised exchange liquidity.",
+      "url": "https://app.myetherwallet.com/swap",
+      "requiresWallet": true
+    },
+    {
+      "name": "Buy and sell crypto",
+      "description": "On-ramp and off-ramp between fiat currency and crypto via integrated payment providers.",
+      "url": "https://app.myetherwallet.com/buy-and-sell",
+      "requiresWallet": true
+    },
+    {
+      "name": "Stake ETH",
+      "description": "Partial staking with no 32 ETH minimum (powered by Coinbase) and liquid staking (powered by Lido). No lock-up period in MEW.",
+      "url": "https://app.myetherwallet.com/earn",
+      "requiresWallet": true
+    },
+    {
+      "name": "Trade perpetual futures",
+      "description": "Trade perpetuals directly from a self-custody wallet, 24/7. Unavailable in restricted regions.",
+      "url": "https://app.myetherwallet.com/perps",
+      "requiresWallet": true
+    },
+    {
+      "name": "Trade tokenized stocks",
+      "description": "Access tokenized equity exposure onchain, including outside traditional market hours.",
+      "url": "https://app.myetherwallet.com/stocks",
+      "requiresWallet": true
+    },
+    {
+      "name": "Browse crypto markets",
+      "description": "View token prices, charts and market data without connecting a wallet.",
+      "url": "https://app.myetherwallet.com/crypto",
+      "requiresWallet": false
+    },
+    {
+      "name": "Verify a signed message",
+      "description": "Verify that a message was signed by a given address.",
+      "url": "https://app.myetherwallet.com/verify",
+      "requiresWallet": false
+    }
+  ],
+  "networks": {
+    "count": "30+",
+    "examples": [
+      "Ethereum",
+      "Arbitrum",
+      "Arbitrum Nova",
+      "Base",
+      "Optimism",
+      "Polygon",
+      "Polygon zkEVM",
+      "BNB Smart Chain",
+      "opBNB",
+      "Avalanche C-Chain",
+      "zkSync Era",
+      "Linea",
+      "Scroll",
+      "Blast",
+      "Mode",
+      "Gnosis",
+      "Celo",
+      "Moonbeam",
+      "Moonriver",
+      "Aurora",
+      "Fantom",
+      "Rootstock",
+      "Bitcoin",
+      "Solana"
+    ],
+    "source": "Networks are served dynamically by the MEW API; this list is illustrative, not exhaustive."
+  },
+  "custody": {
+    "model": "non-custodial",
+    "keyStorage": "client-side, in the user's browser or on a connected hardware wallet",
+    "userFundsHeldByProvider": 0,
+    "recoveryPhraseResetPossible": false
+  },
+  "limitations": [
+    "Requires JavaScript; there is no server-rendered version of the app.",
+    "MEW cannot recover or reset a lost recovery phrase.",
+    "Perpetuals and some trading features are unavailable in restricted jurisdictions.",
+    "Nothing in the app is financial advice."
+  ],
+  "support": {
+    "email": "support@myetherwallet.com",
+    "helpCenter": "https://help.myetherwallet.com/en/",
+    "languages": ["en", "es", "zh"]
+  },
+  "dateModified": "2026-08-10"
+}

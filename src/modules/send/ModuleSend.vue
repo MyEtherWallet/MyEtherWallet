@@ -3,14 +3,16 @@
     <div class="static w-full flex flex-col items-center justify-items-stretch">
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">Send</p>
+          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
           <app-btn-text
-            class="text-primary text-s-15 pb-1"
+            class="text-text-brand text-s-15 pb-1"
             @click="resetSendModule"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
-        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+        <div
+          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+        >
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelectedContract"
@@ -19,11 +21,18 @@
             :is-pristine="isPristine"
           >
             <template #balance-action>
-              <div v-if="isWalletConnected && !isWatchOnly && tokenSelected && isInternalWallet()">
+              <div
+                v-if="
+                  isWalletConnected &&
+                  !isWatchOnly &&
+                  tokenSelected &&
+                  isInternalWallet()
+                "
+              >
                 <button
                   type="button"
                   class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMaxAmount"
+                  @click="setMaxAmount()"
                 >
                   {{ $t('common.max') }}
                 </button>
@@ -124,8 +133,9 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
   QuotesResponse,
   EstimatesRequestBody,
-  GetBtcTransactionEstimateBody,
+  BitcoinQuotesRequestBody,
 } from '@/mew_api/types'
+import { isP2shAddress } from '@/providers/common/btcInfo'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
@@ -139,11 +149,13 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
+import { getLocalizedWalletError } from '@/utils/walletUtils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
+import { useFormPristine } from '@/composables/useFormPristine'
 import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import {
@@ -185,11 +197,10 @@ const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
-const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
-  EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined
 >(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
@@ -213,6 +224,9 @@ const sendModalData = ref({
   tokenAddress: '',
 })
 const address = ref('')
+// 0x-prefixed compressed public key, populated for Bitcoin-family wallets;
+// required to declare a P2SH from-address in the quote request.
+const publicKey = ref('')
 const foundNickName = ref('')
 
 /** ----------------
@@ -227,15 +241,21 @@ const {
   validateAddressInput,
   clearAddressInput,
 } = useAddressInput(selectedChain)
+const {
+  isPristine,
+  reset: resetPristine,
+  markDirty: markFormDirty,
+} = useFormPristine([amount, adrInput])
 
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
   if (!wallet.value) return
   address.value = await wallet.value.getAddress()
+  publicKey.value = (await wallet.value.getPublicKey?.()) ?? ''
 
   if (hasSendValues.value) {
-    isPristine.value = false // Restoring values means form is not pristine
+    markFormDirty() // Restoring values means form is not pristine
     amount.value = sendValues.value.amount
     toAddress.value = sendValues.value.toAddress
     tokenSelectedContract.value = sendValues.value.token
@@ -260,21 +280,26 @@ const isNativeTokenSelected = computed(() => {
 /** ----------------
  * Max Amount
  ------------------*/
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
-  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
-  getDecimals: () => tokenSelected.value?.decimals ?? 18,
-  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
-  isNativeToken: () => isNativeTokenSelected.value,
-  isTokenSelected: () => !!tokenSelected.value,
-  amountRef: amount,
-  isPristineRef: isPristine,
-  getTokenIdentifier: () => tokenSelectedContract.value,
-  getDependencies: () => [
-    tokenSelected.value?.balanceWei,
-    selectedFeeNativeValue.value,
-  ],
-  onMaxApplied: () => checkAmountForError(),
-})
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
+  useMaxAmount({
+    getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+    getDecimals: () => tokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+    isNativeToken: () => isNativeTokenSelected.value,
+    isTokenSelected: () => !!tokenSelected.value,
+    getAmount: () => amount.value,
+    onAmountChange: value => {
+      amount.value = value
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => tokenSelectedContract.value,
+    getDependencies: () => [
+      tokenSelected.value?.balanceWei,
+      selectedFeeNativeValue.value,
+    ],
+    onMaxApplied: () => checkAmountForError(),
+  })
 
 const checkAmountForError = () => {
   // Skip validation if form is pristine (just cleared or initial state)
@@ -289,7 +314,10 @@ const checkAmountForError = () => {
     tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? safeParseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
+    ? safeParseUnits(
+        amount.value.toString(),
+        tokenSelected.value?.decimals ?? 18,
+      )
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -377,9 +405,7 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  | EstimatesRequestBody
-  | GetBtcTransactionEstimateBody
-  | undefined => {
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
@@ -414,7 +440,7 @@ const getTxRequestBody = ():
         data: data.value as HexPrefixedString,
       }
     } else if (isBitcoinChain.value) {
-      return {
+      const body: BitcoinQuotesRequestBody = {
         fromAddresses: [address.value],
         changeAddress: address.value,
         outputs: [
@@ -424,6 +450,22 @@ const getTxRequestBody = ():
           },
         ],
       }
+      // A P2SH from-address must declare its type and public key so the backend
+      // can build the correct redeem script for the quote.
+      if (
+        publicKey.value &&
+        wallet.value &&
+        isP2shAddress(address.value, wallet.value.getProvider())
+      ) {
+        body.p2shAddressTypes = [
+          {
+            address: address.value,
+            type: 'P2SH_P2WPKH',
+            publicKey: publicKey.value,
+          },
+        ]
+      }
+      return body
     }
   }
 }
@@ -448,7 +490,11 @@ watchDebounced(
     prevToken.value = currentToken
     prevToAddress.value = currentToAddress
 
-    if (isMaxSelected.value && onlyAmountChanged && isNativeTokenSelected.value) {
+    if (
+      isMaxSelected.value &&
+      onlyAmountChanged &&
+      isNativeTokenSelected.value
+    ) {
       return
     }
 
@@ -465,7 +511,7 @@ watchDebounced(
 )
 
 const resetSendModule = () => {
-  isPristine.value = true // Reset to pristine state
+  resetPristine()
   amountError.value = '' // Clear error immediately
   resetMaxState()
   amount.value = ''
@@ -474,19 +520,6 @@ const resetSendModule = () => {
   tokenSelectedContract.value = MAIN_TOKEN_CONTRACT
   clearAddressInput()
 }
-
-// Mark form as not pristine when user starts typing
-watch(
-  () => [amount.value, adrInput.value],
-  ([newAmount, newAdr], [oldAmount, oldAdr]) => {
-    if (
-      (newAmount !== '' && oldAmount === '') ||
-      (newAdr !== '' && oldAdr === '')
-    ) {
-      isPristine.value = false
-    }
-  },
-)
 
 watch(
   () => selectedChain.value,
@@ -550,14 +583,14 @@ const getGasFeeQuotes = async () => {
       )
     } else {
       gasFees.value = (await wallet.value?.getBtcGasFee?.(
-        gasFeeTxEstimate.value as GetBtcTransactionEstimateBody,
+        gasFeeTxEstimate.value as BitcoinQuotesRequestBody,
       )) as QuotesResponse
     }
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
-    const btcValue = (body as GetBtcTransactionEstimateBody).outputs?.[0].amount
+    const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
     const evmValue = (body as EstimatesRequestBody).value
     const totalBalanceNeeded =
       BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
@@ -622,17 +655,16 @@ const handleSubmit = async () => {
       signedTx.value = signResponse.signed
       openTxModal.value = true
     } catch (e) {
+      const errorMsg =
+        e instanceof Error ? e.message : (e as { message?: string })?.message
       analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
         token: tokenSelected.value?.symbol,
-        errorMsg:
-          e instanceof Error || (e as any).message
-            ? (e as any).message
-            : 'Unknown error during signing',
+        errorMsg: errorMsg ?? 'Unknown error during signing',
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Could not sign transaction',
-        textSecondary: e instanceof Error && e.message ? e.message : undefined,
+        text: t('send.toast.failed_to_sign'),
+        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
       })
     }
     return

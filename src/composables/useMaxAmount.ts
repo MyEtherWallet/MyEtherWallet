@@ -1,4 +1,4 @@
-import { ref, watch, nextTick, type Ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { formatUnits } from 'viem'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -10,8 +10,10 @@ export interface UseMaxAmountOptions {
   getEstimatedFee: () => bigint
   isNativeToken: () => boolean
   isTokenSelected: () => boolean
-  amountRef: Ref<string | number>
-  isPristineRef: Ref<boolean>
+  getAmount: () => string | number
+  onAmountChange: (amount: string | number) => void
+  markFormDirty: () => void
+  resetFormPristine: () => void
   getTokenIdentifier: () => string | undefined
   getDependencies: () => unknown[]
   onMaxApplied?: () => void
@@ -28,8 +30,10 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     getEstimatedFee,
     isNativeToken,
     isTokenSelected,
-    amountRef,
-    isPristineRef,
+    getAmount,
+    onAmountChange,
+    markFormDirty,
+    resetFormPristine,
     getTokenIdentifier,
     getDependencies,
     onMaxApplied,
@@ -42,6 +46,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   const isApplyingMaxAmount = ref(false)
   const preMaxAmount = ref<string | number>('')
   const isFreshMaxClick = ref(false)
+  const selectedPercentage = ref(100)
 
   const isInternalWallet = (): boolean => {
     const walletType = wallet.value?.getWalletType()
@@ -51,12 +56,20 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     )
   }
 
-  const getMaxAmount = (): string => {
+  // `Math.trunc(Math.min(100, Math.max(0, NaN)))` is NaN, and `BigInt(NaN)`
+  // throws — so non-finite input has to be rejected before either use.
+  const normalizePercentage = (percentage: number): number =>
+    Number.isFinite(percentage)
+      ? Math.trunc(Math.min(100, Math.max(0, percentage)))
+      : 0
+
+  const getMaxAmount = (percentage = selectedPercentage.value): string => {
     if (!isTokenSelected()) return ''
 
-    const balance = getBalance()
+    const boundedPercentage = normalizePercentage(percentage)
+    const balance = (getBalance() * BigInt(boundedPercentage)) / 100n
     const fee = getEstimatedFee()
-    const reservedFee = isNativeToken() ? fee : 0n
+    const reservedFee = isNativeToken() && boundedPercentage === 100 ? fee : 0n
     const spendable = balance > reservedFee ? balance - reservedFee : 0n
 
     return formatUnits(spendable, getDecimals())
@@ -71,7 +84,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     isApplyingMaxAmount.value = true
     try {
       const maxAmount = getMaxAmount()
-      const currentAmount = String(amountRef.value)
+      const currentAmount = String(getAmount())
 
       // On automatic recalculations (fee/balance changed), don't zero out a positive
       // amount the user set — fee validation surfaces the insufficient-gas error.
@@ -80,7 +93,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
         isFresh || maxAmount !== '0' || currentAmount === '' || currentAmount === '0'
 
       if (shouldUpdate && currentAmount !== maxAmount) {
-        amountRef.value = maxAmount
+        onAmountChange(maxAmount)
       }
 
       onMaxApplied?.()
@@ -90,20 +103,21 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     }
   }
 
-  const setMaxAmount = (): void => {
-    // Max can only be activated once. Subsequent clicks are no-ops until the
-    // user modifies the amount (which deactivates max via the amount watcher).
-    if (isMaxSelected.value) return
+  const setMaxAmount = (percentage = 100): void => {
+    const boundedPercentage = normalizePercentage(percentage)
+    if (isMaxSelected.value && selectedPercentage.value === boundedPercentage) return
 
-    isPristineRef.value = false
+    markFormDirty()
     isFreshMaxClick.value = true
-    preMaxAmount.value = amountRef.value
+    if (!isMaxSelected.value) preMaxAmount.value = getAmount()
+    selectedPercentage.value = boundedPercentage
     isMaxSelected.value = true
   }
 
   const resetMaxState = (): void => {
     isMaxSelected.value = false
     isFreshMaxClick.value = false
+    selectedPercentage.value = 100
     preMaxAmount.value = ''
   }
 
@@ -116,14 +130,14 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     (newToken, oldToken) => {
       if (newToken !== oldToken && isMaxSelected.value) {
         isMaxSelected.value = false
-        amountRef.value = preMaxAmount.value
+        onAmountChange(preMaxAmount.value)
         // If nothing was typed before max, go back to pristine so no validation error shows
         if (
           preMaxAmount.value === '' ||
           preMaxAmount.value === 0 ||
           preMaxAmount.value === '0'
         ) {
-          isPristineRef.value = true
+          resetFormPristine()
         }
         preMaxAmount.value = ''
       }
@@ -131,7 +145,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   )
 
   watch(
-    () => amountRef.value,
+    () => getAmount(),
     (newAmount, oldAmount) => {
       if (
         isMaxSelected.value &&
@@ -144,7 +158,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   )
 
   watch(
-    () => [isMaxSelected.value, ...getDependencies()],
+    () => [isMaxSelected.value, selectedPercentage.value, ...getDependencies()],
     () => {
       if (!isMaxSelected.value) return
       void applyMaxAmount()
@@ -154,6 +168,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   return {
     isMaxSelected,
     isApplyingMaxAmount,
+    selectedPercentage,
     getMaxAmount,
     applyMaxAmount,
     setMaxAmount,

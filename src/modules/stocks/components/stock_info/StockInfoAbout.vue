@@ -4,7 +4,7 @@
     :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
   >
     <div
-      class="grid grid-cols-1 lg:grid-cols-4 lg:divide-x divide-grey-10 gap-y-6"
+      class="grid grid-cols-1 lg:grid-cols-4 lg:divide-x divide-border-default gap-y-6"
     >
       <div
         class="py-1 lg:py-2"
@@ -17,7 +17,7 @@
         <h2
           class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-4 flex items-center"
         >
-          About
+          {{ $t('stocks.about') }}
           <app-token-symbol
             v-if="data.primaryMarket"
             :symbol="data.primaryMarket?.symbol"
@@ -25,8 +25,19 @@
             class="!font-bold !text-s-20 xs:!text-s-24 leading-p-150 ml-1"
           />
         </h2>
-        <p class="text-s-14 text-info leading-p-150">
-          {{ data.description }}
+        <div v-if="isLoadingDescription && !displayedDescription" class="pt-1">
+          <div
+            class="h-4 mb-2 animate-pulse bg-background-default-hover rounded-6 w-full"
+          ></div>
+          <div
+            class="h-4 mb-2 animate-pulse bg-background-default-hover rounded-6 w-full"
+          ></div>
+          <div
+            class="h-4 animate-pulse bg-background-default-hover rounded-6 w-2/3"
+          ></div>
+        </div>
+        <p v-else class="text-s-14 text-text-subtle leading-p-150">
+          {{ displayedDescription || '-' }}
         </p>
       </div>
       <div
@@ -37,9 +48,9 @@
       >
         <div class="xs:col-span-2 lg:col-span-1">
           <p
-            class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-2"
+            class="text-s-11 text-text-subtle uppercase tracking-sp-06 font-bold mb-2"
           >
-            Category
+            {{ $t('stocks.category') }}
           </p>
           <div
             v-if="
@@ -50,13 +61,13 @@
           >
             <div
               v-if="data.metadata.assetClass"
-              class="bg-mewBg rounded-full px-4 py-1 text-primary font-semibold text-s-14"
+              class="bg-background-brand-subtle rounded-full px-4 py-1 text-text-brand font-semibold text-s-14"
             >
               {{ data.metadata.assetClass }}
             </div>
             <div
               v-if="data.metadata.instrumentType"
-              class="bg-mewBg rounded-full px-4 py-1 text-primary font-semibold text-s-14"
+              class="bg-background-brand-subtle rounded-full px-4 py-1 text-text-brand font-semibold text-s-14"
             >
               {{ data.metadata.instrumentType }}
             </div>
@@ -65,9 +76,9 @@
         </div>
         <div class="col-span-1">
           <p
-            class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
+            class="text-s-11 text-text-subtle uppercase tracking-sp-06 font-bold mb-1"
           >
-            Shares Per Token
+            {{ $t('stocks.shares_per_token') }}
           </p>
           <p
             class="text-s-16 font-medium"
@@ -84,9 +95,9 @@
         </div>
         <div>
           <p
-            class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
+            class="text-s-11 text-text-subtle uppercase tracking-sp-06 font-bold mb-1"
           >
-            Total Holders
+            {{ $t('stocks.total_holders') }}
           </p>
           <p class="text-s-16 font-medium">
             {{
@@ -102,6 +113,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {
   formatFloatingPointValue,
@@ -113,8 +125,17 @@ import { storeToRefs } from 'pinia'
 
 interface Props {
   data: GetWebStocksInfoSummaryResponse
+  /** Fetched from the dedicated description endpoint. */
+  description?: string | null
+  isLoadingDescription?: boolean
 }
-defineProps<Props>()
+const props = defineProps<Props>()
+
+// The summary payload still carries a description for assets the dedicated
+// endpoint has nothing for, so keep it as a fallback.
+const displayedDescription = computed(
+  () => props.description || props.data.description || '',
+)
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

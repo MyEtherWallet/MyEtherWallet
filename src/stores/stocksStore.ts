@@ -4,16 +4,20 @@ import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
   type StocksOverviewResponse,
   type StockOverviewItem,
+  type StockTrendingItem,
   type StockNewsItem,
   type StockTopMoverItem,
   type StockBannerItem,
   type GetTradableAssetsResponse,
   type GetWebStocksInfoSummaryResponse,
+  type GetWebStocksOipsResponse,
+  type StockOipItem,
 } from '@/mew_api/types'
 
 export const useStocksStore = defineStore('stocksStore', () => {
   const { useMEWFetch } = useFetchMewApi()
   const { useMEWFetch: useMEWFetchAddresses } = useFetchMewApi()
+  const { useMEWFetch: useMEWFetchOips } = useFetchMewApi()
 
   /**------------------------
    * Stocks Overview
@@ -35,7 +39,7 @@ export const useStocksStore = defineStore('stocksStore', () => {
   const recentNews = computed<StockNewsItem[]>(
     () => dataOverview.value?.recentNews || [],
   )
-  const trending = computed<StockOverviewItem[]>(
+  const trending = computed<StockTrendingItem[]>(
     () => dataOverview.value?.trending || [],
   )
   const topMovers = computed<StockTopMoverItem[]>(
@@ -43,6 +47,23 @@ export const useStocksStore = defineStore('stocksStore', () => {
   )
   const banner = computed<StockBannerItem[]>(
     () => dataOverview.value?.banner || [],
+  )
+  /**------------------------
+   * OIP Stocks
+   -------------------------*/
+  const oipFetchUrl = '/v1/web/pages/stocks/oips'
+  const {
+    data: dataOips,
+    isFetching: isLoadingOips,
+    execute: fetchStocksOips,
+  } = useMEWFetchOips(oipFetchUrl, {
+    immediate: false,
+  })
+    .get()
+    .json<GetWebStocksOipsResponse>()
+
+  const oips = computed<StockOipItem[]>(() =>
+    Array.isArray(dataOips.value) ? dataOips.value : [],
   )
 
   /**------------------------
@@ -86,6 +107,35 @@ export const useStocksStore = defineStore('stocksStore', () => {
       ),
     )
   }
+
+  // Match a news ticker to a tradable stock. News items only carry `tickers`
+  // (symbols) — no icon URL — so callers (e.g. Market News cards) resolve them
+  // via the tradable-assets list, fetched on app start. Tradable stocks are
+  // keyed by an Ondo-tokenized `symbol` ("AAPLon") while news tickers are the
+  // plain underlying ("AAPL"); match on the underlying by dropping the trailing
+  // "on" (and also accept an already tokenized ticker).
+  const matchStockByTicker = (ticker?: string) => {
+    if (!ticker) return undefined
+    const target = ticker.toUpperCase()
+    return stocksAddresses.value.find(stock => {
+      const sym = stock.symbol?.toUpperCase()
+      if (!sym) return false
+      const base = sym.endsWith('ON') ? sym.slice(0, -2) : sym
+      return base === target || sym === target
+    })
+  }
+
+  // Icon URL for a ticker, or undefined so the caller can fall back to the
+  // initials avatar.
+  const stockIconBySymbol = (ticker?: string): string | undefined => {
+    const match = matchStockByTicker(ticker)
+    return match?.iconPngUrl || match?.iconSvgUrl || undefined
+  }
+
+  // The tokenized tradable symbol ("AAPLon") for a plain ticker — the param the
+  // stock page route expects — or undefined when the stock isn't tradable.
+  const stockTradableSymbol = (ticker?: string): string | undefined =>
+    matchStockByTicker(ticker)?.symbol
 
   /**------------------------
    * Helper Methods
@@ -131,6 +181,10 @@ export const useStocksStore = defineStore('stocksStore', () => {
     trending,
     topMovers,
     banner,
+    // OIP
+    isLoadingOips,
+    fetchStocksOips,
+    oips,
     // Addresses
     isLoadingAddresses,
     fetchStocksAddresses,
@@ -138,6 +192,8 @@ export const useStocksStore = defineStore('stocksStore', () => {
     hasStocksAddressesData,
     // Helpers
     isStock,
+    stockIconBySymbol,
+    stockTradableSymbol,
     fetchMissingStockData,
     mapMissingStocksInfo,
   }

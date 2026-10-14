@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
+  <div class="flex flex-col mb-10 w-full divide-y divide-border-default">
     <app-asset-info-header
       :is-loading="isLoading"
       :has-data="!!stockData"
       :share-text="shareText"
       :is-watchlisted="isWatchlisted"
       :icon-url="stockData?.iconPngUrl || stockData?.iconSvgUrl || undefined"
-      :symbol="stockData?.stockAlias || symbol"
+      :symbol="stockData?.primaryMarket?.symbol || symbol"
       :name="stockData?.stockAlias || ''"
       :current-price="stockData?.primaryMarket?.price ?? null"
       :price-change-percentage="
@@ -40,7 +40,12 @@
     <!-- Price Stats -->
     <stock-info-price v-if="stockData" :data="stockData" />
     <!-- About -->
-    <stock-info-about v-if="stockData" :data="stockData" />
+    <stock-info-about
+      v-if="stockData"
+      :data="stockData"
+      :description="description"
+      :is-loading-description="isFetchingDescription"
+    />
 
     <!-- Underlying Asset Stats -->
 
@@ -62,7 +67,7 @@
       :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6 ']"
     >
       <div
-        class="h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-full"
+        class="h-[308px] xs:h-[227px] animate-pulse bg-background-default-hover rounded-12 w-full"
       ></div>
     </div>
   </div>
@@ -71,6 +76,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useAssetDescription } from '@/composables/useAssetDescription'
 import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
@@ -78,7 +84,7 @@ import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
 import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -89,6 +95,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { formatFiat } = useCurrency()
 
 const props = defineProps({
   symbol: {
@@ -157,6 +164,15 @@ onFetchResponse(() => {
 const isLoading = computed(() => {
   return !isLoadedData.value
 })
+
+/**--------------------
+ * Description
+ ---------------------*/
+const { description, isFetchingDescription } = useAssetDescription(
+  computed(() => props.symbol),
+  'stock',
+)
+
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
@@ -179,7 +195,7 @@ const existsOnCurrentChain = computed(() => {
 const shareText = computed(() => {
   const ticker = stockData.value?.stockAlias || props.symbol
   const price = stockData.value?.primaryMarket?.price
-    ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
+    ? formatFiat(stockData.value.primaryMarket.price).display
     : ''
   return t('common.share_message', { ticker, price })
 })

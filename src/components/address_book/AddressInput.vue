@@ -7,12 +7,12 @@
       >
         <div
           v-if="!resolvedAddress"
-          class="rounded-full bg-grey-5 w-8 h-8 border border-grey-10"
+          class="rounded-full bg-background-default w-8 h-8 border border-border-default"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-8 h-8 border border-grey-10"
+          class="rounded-full w-8 h-8 border border-border-default"
           height="32"
           width="32"
         />
@@ -24,15 +24,15 @@
           'pointer-events-none absolute left-14 transition-all aria-hidden',
           inFocusInput
             ? hasError && !isPristine
-              ? 'text-error'
-              : 'text-primary'
-            : 'text-grey-50',
+              ? 'text-text-error'
+              : 'text-text-brand'
+            : 'text-text-muted',
           inFocusInput || adrInput !== ''
             ? 'top-2 text-s-11'
             : 'top-[18px] text-sm font-medium',
         ]"
       >
-        {{ label }}
+        {{ resolvedLabel }}
       </label>
       <!-- Input  -->
       <input
@@ -43,15 +43,15 @@
         type="text"
         :class="[
           {
-            '!border-primary !border-2': inFocusInput,
+            '!border-border-brand !border-2': inFocusInput,
             '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
           isRaised
             ? 'shadow-button shadow-button-elevated'
-            : 'border border-grey-outline',
-          'grow focus:outline-none focus:ring-0 bg-white   text-normal rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
+            : 'border border-border-strong',
+          'grow focus:outline-none focus:ring-0 bg-white text-text-default rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
-        :aria-label="label"
+        :aria-label="resolvedLabel"
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
         autocomplete="off"
@@ -63,16 +63,16 @@
           :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
-          class="text-primary"
+          class="text-text-brand"
         >
-          <x-circle-icon class="w-6 h-6" />
+          <AppIcon name="x-circle" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
-          class="text-primary"
+          class="text-text-brand"
         >
-          <users-icon class="w-6 h-6" />
+          <AppIcon name="users" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -85,8 +85,8 @@
             resolvedAddress !== ''
           "
           :class="{
-            'text-error': addressErrorMessages && !isPristine,
-            'text-info !text-s-11': resolvedAddress,
+            'text-text-error': addressErrorMessages && !isPristine,
+            'text-text-subtle !text-s-11': resolvedAddress,
           }"
           class="text-s-12 truncate"
         >
@@ -138,9 +138,9 @@
  *  onInput,
  *  validateAddressInput } = useAddressInput(selectedChain)
  */
-import { XCircleIcon } from '@heroicons/vue/24/outline'
-import { UsersIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { ref, computed, watch, nextTick, type PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
@@ -151,11 +151,12 @@ import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+const { t } = useI18n()
 
 const props = defineProps({
   label: {
     type: String,
-    default: 'To Address',
+    default: undefined,
   },
   resolvedAddress: {
     type: String,
@@ -199,6 +200,8 @@ const adrInput = defineModel<string>('adrInput', {
 })
 
 const isAddressBookOpen = ref(false)
+
+const resolvedLabel = computed(() => props.label || t('common.enter_address'))
 
 const addressBlockie = computed(() => {
   const addressToCheck = adrInput.value || props.resolvedAddress

@@ -35,6 +35,9 @@
                   ref="jsonInput"
                   type="file"
                   name="file"
+                  :aria-label="
+                    $t('access_wallet_keystore.select_keystore_file_title')
+                  "
                   style="display: none"
                   @change="uploadKeystoreFile"
                 />
@@ -48,7 +51,7 @@
               />
             </div>
 
-            <div v-if="fileError.value" class="text-error mt-4">
+            <div v-if="fileError.value" class="text-text-error mt-4">
               {{ fileError.description }}
             </div>
           </div>
@@ -65,7 +68,8 @@
               :error-message="errorPassword"
               is-required
               class="mt-7"
-              @keyup.enter="enterPassword"
+              @enter="enterPassword"
+              :submit-disabled="submitIsDisabled"
             />
             <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
               <app-base-button

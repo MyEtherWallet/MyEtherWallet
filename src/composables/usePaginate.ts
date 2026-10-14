@@ -1,5 +1,6 @@
 import { computed, ref, type Ref, unref, watch } from 'vue'
 
+// Use for local arrays with offset/page-number pagination.
 export const usePaginate = <T>(
   arrayToPaginate: Ref<T[]> | T[],
   perPage: number | Ref<number>,

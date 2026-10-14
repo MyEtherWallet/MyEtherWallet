@@ -5,7 +5,9 @@
     sheet-class=" !px-4 sm:!px-5 !pt-4 !pb-5 h-full flex flex-col justify-between overflow-y-auto sm:overflow-hidden"
   >
     <div class="flex items-center w-full justify-between mb-5">
-      <h2 class="text-s-20 font-bold leading-tight">{{ t('portfolio.overview.title') }}</h2>
+      <h2 class="text-s-20 font-bold leading-tight">
+        {{ t('portfolio.overview.title') }}
+      </h2>
     </div>
 
     <div v-if="!isLoading" class="flex flex-col gap-4">
@@ -18,7 +20,7 @@
               :key="`placeholder-stocks-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -35,15 +37,17 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.tokenized_stocks') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.tokenized_stocks')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', stocksTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stocksFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             stocksPercentageFormatted
           }}</span>
         </div>
@@ -58,7 +62,7 @@
               :key="`placeholder-stables-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -75,15 +79,17 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.stables') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.stables')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', stablesTokenCount)
             }}</span>
           </div>
         </div>
         <div class="flex flex-col items-end">
           <span class="text-s-15 font-medium">{{ stablesFormattedValue }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             stablesPercentageFormatted
           }}</span>
         </div>
@@ -98,7 +104,7 @@
               :key="`placeholder-largecap-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -118,14 +124,14 @@
           </div>
           <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-1">
-              <span class="text-s-15 font-medium truncate"
-                >{{ t('portfolio.overview.large_market_cap') }}</span
-              >
+              <span class="text-s-15 font-medium truncate">{{
+                t('portfolio.overview.large_market_cap')
+              }}</span>
               <app-tooltip
                 :text="t('portfolio.overview.large_market_cap_tooltip')"
               />
             </div>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', largeCapTokenCount)
             }}</span>
           </div>
@@ -134,7 +140,7 @@
           <span class="text-s-15 font-medium">{{
             largeCapFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             largeCapPercentageFormatted
           }}</span>
         </div>
@@ -149,7 +155,7 @@
               :key="`placeholder-${index}`"
               :class="[
                 index === 1 ? '' : '-ml-[13px]',
-                'w-[22px] h-[22px] rounded-full flex-none bg-surface-light border border-grey-5 shadow-token',
+                'w-[22px] h-[22px] rounded-full flex-none bg-background-alternative border border-border-subtle shadow-token',
               ]"
             ></div>
             <app-token-logo
@@ -169,8 +175,10 @@
             />
           </div>
           <div class="flex flex-col min-w-0">
-            <span class="text-s-15 font-medium truncate">{{ t('portfolio.overview.altcoins') }}</span>
-            <span class="text-s-12 text-info">{{
+            <span class="text-s-15 font-medium truncate">{{
+              t('portfolio.overview.altcoins')
+            }}</span>
+            <span class="text-s-12 text-text-subtle">{{
               t('common.token_count', altcoinsTokenCount)
             }}</span>
           </div>
@@ -179,7 +187,7 @@
           <span class="text-s-15 font-medium">{{
             altcoinsFormattedValue
           }}</span>
-          <span class="text-s-12 text-info">{{
+          <span class="text-s-12 text-text-subtle">{{
             altcoinsPercentageFormatted
           }}</span>
         </div>
@@ -189,7 +197,7 @@
       <div
         v-for="i in 4"
         :key="`loading-overview-${i}`"
-        class="bg-grey-10 animate-pulse rounded-16 w-full h-[41px]"
+        class="bg-background-default-hover animate-pulse rounded-16 w-full h-[41px]"
       ></div>
     </div>
   </app-sheet>
@@ -206,11 +214,12 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 import { BigNumber } from 'bignumber.js'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenBalance } from '@/mew_api/types'
+import { getTokenCategory, type TokenCategory } from '@/utils/tokenCategories'
+
+const { formatFiat } = useCurrency()
 
 const walletStore = useWalletStore()
 const {
@@ -223,225 +232,101 @@ const {
 /** -------------------------------
  * Helpers
  -------------------------------*/
-const getTokenBalance = (contract: string) => {
-  const tokenBalanceRaw = walletStore.getTokenBalance(contract)
-  if (!tokenBalanceRaw) {
-    return new BigNumber(0)
-  }
-  return BigNumber(tokenBalanceRaw.price || 0).times(
-    BigNumber(tokenBalanceRaw.balance),
-  )
+const TOP_TOKENS_LIMIT = 3
+
+/**
+ * Fiat value of a holding, read off the token itself rather than looked up by
+ * contract: a duplicate contract entry can otherwise resolve to another
+ * holding's balance, and this keeps the buckets adding up to the store's
+ * portfolio total, which is computed the same way.
+ */
+const tokenFiatValue = (token: TokenBalance): BigNumber => {
+  return BigNumber(token.price || 0).times(BigNumber(token.balance || 0))
 }
 
 const getTopUsdBalanceTokens = (tokenList: TokenBalance[]): TokenBalance[] => {
-  return [...tokenList]
-    .sort((tokenA, tokenB) => {
-      return (
-        getTokenBalance(tokenB.contract).comparedTo(
-          getTokenBalance(tokenA.contract),
-        ) ?? 0
-      )
-    })
-    .slice(0, 3)
+  return tokenList
+    .map(token => ({ token, value: tokenFiatValue(token) }))
+    .sort((tokenA, tokenB) => tokenB.value.comparedTo(tokenA.value) ?? 0)
+    .slice(0, TOP_TOKENS_LIMIT)
     .reverse() // reverse to show highest balance token at the back of the stack
+    .map(({ token }) => token)
 }
 
 /** -------------------------------
- * Tokenized Stocks
+ * Categories
+ * Every holding lands in exactly one bucket, so the four rows partition the
+ * portfolio instead of double counting tokens that match two filters.
  -------------------------------*/
-const stocksValue = computed<BigNumber>(() => {
-  const stocks = allTokens.value.filter(token => token.ondo !== undefined)
-  if (stocks.length === 0) {
-    return new BigNumber(0)
-  }
-  return stocks.reduce((total, token) => {
-    const tokenBalanceFiatBN = getTokenBalance(token.contract)
-    return total.plus(tokenBalanceFiatBN)
-  }, new BigNumber(0))
-})
+const categorizedTokens = computed<Record<TokenCategory, TokenBalance[]>>(
+  () => {
+    const groups: Record<TokenCategory, TokenBalance[]> = {
+      stocks: [],
+      stables: [],
+      largeCap: [],
+      altcoins: [],
+    }
+    for (const token of allTokens.value) {
+      groups[getTokenCategory(token)].push(token)
+    }
+    return groups
+  },
+)
 
-const stocksFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stocksValue.value).value}`
-})
-
-const topStocksTokens = computed<TokenBalance[]>(() => {
-  return getTopUsdBalanceTokens(
-    allTokens.value.filter(token => token.ondo !== undefined),
+const createCategoryView = (category: TokenCategory) => {
+  const tokens = computed<TokenBalance[]>(
+    () => categorizedTokens.value[category],
   )
-})
-
-const stocksTokenCount = computed<number>(() => {
-  return allTokens.value.filter(token => token.ondo !== undefined).length
-})
-
-/** -------------------------------
- * Stables
- -------------------------------*/
-const stablesValue = computed<BigNumber>(() => {
-  const stables = allTokens.value.filter(token => token.is_stablecoin)
-  if (stables.length === 0) {
-    return new BigNumber(0)
-  }
-  return stables.reduce((total, token) => {
-    const tokenBalanceFiatBN = getTokenBalance(token.contract)
-    return total.plus(tokenBalanceFiatBN)
-  }, new BigNumber(0))
-})
-
-const stablesFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(stablesValue.value).value}`
-})
-
-const topStableTokens = computed<TokenBalance[]>(() => {
-  return getTopUsdBalanceTokens(
-    allTokens.value.filter(token => token.is_stablecoin),
-  )
-})
-
-const stablesTokenCount = computed<number>(() => {
-  return allTokens.value.filter(token => token.is_stablecoin).length
-})
-
-/** -------------------------------
- * Large Market Cap
- -------------------------------*/
-const largeCapValue = computed<BigNumber>(() => {
-  const largeCapTokens = allTokens.value.filter(
-    token =>
-      !token.is_stablecoin &&
-      token.ondo === undefined &&
-      token.market_cap &&
-      BigNumber(token.market_cap).isGreaterThan(10000000000), // $10B+
-  )
-  if (largeCapTokens.length === 0) {
-    return new BigNumber(0)
-  }
-  return largeCapTokens.reduce((total, token) => {
-    const tokenBalanceFiatBN = getTokenBalance(token.contract)
-    return total.plus(tokenBalanceFiatBN)
-  }, new BigNumber(0))
-})
-
-const largeCapFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(largeCapValue.value).value}`
-})
-
-const topLargeCapTokens = computed<TokenBalance[]>(() => {
-  return getTopUsdBalanceTokens(
-    allTokens.value.filter(
-      token =>
-        !token.is_stablecoin &&
-        token.ondo === undefined &&
-        token.market_cap != null &&
-        BigNumber(token.market_cap).isGreaterThan(10000000000),
+  const value = computed<BigNumber>(() =>
+    tokens.value.reduce(
+      (total, token) => total.plus(tokenFiatValue(token)),
+      new BigNumber(0),
     ),
   )
-})
-
-const largeCapTokenCount = computed<number>(() => {
-  return allTokens.value.filter(
-    token =>
-      !token.is_stablecoin &&
-      token.ondo === undefined &&
-      token.market_cap &&
-      BigNumber(token.market_cap).isGreaterThan(10000000000),
-  ).length
-})
-
-/** -------------------------------
- * Altcoins
- -------------------------------*/
-const altcoinsValue = computed<BigNumber>(() => {
-  const altcoins = allTokens.value.filter(
-    token =>
-      !token.is_stablecoin &&
-      token.ondo === undefined &&
-      (!token.market_cap ||
-        BigNumber(token.market_cap).isLessThan(10000000000)), // < $10B
-  )
-  if (altcoins.length === 0) {
-    return new BigNumber(0)
-  }
-  return altcoins.reduce((total, token) => {
-    const tokenBalanceFiatBN = getTokenBalance(token.contract)
-    return total.plus(tokenBalanceFiatBN)
-  }, new BigNumber(0))
-})
-
-const altcoinsFormattedValue = computed<string>(() => {
-  return `$${formatFiatValue(altcoinsValue.value).value}`
-})
-
-const topAltcoinTokens = computed<TokenBalance[]>(() => {
-  return getTopUsdBalanceTokens(
-    allTokens.value.filter(
-      token =>
-        !token.is_stablecoin &&
-        token.ondo === undefined &&
-        (!token.market_cap ||
-          BigNumber(token.market_cap).isLessThan(10000000000)),
+  const percentage = computed<BigNumber>(() => {
+    const total = totalFiatPortfolioValueBN.value
+    if (total.isZero()) {
+      return new BigNumber(0)
+    }
+    return value.value.div(total).multipliedBy(100)
+  })
+  return {
+    topTokens: computed<TokenBalance[]>(() =>
+      getTopUsdBalanceTokens(tokens.value),
     ),
-  )
-})
-
-const altcoinsTokenCount = computed<number>(() => {
-  return allTokens.value.filter(
-    token =>
-      !token.is_stablecoin &&
-      token.ondo === undefined &&
-      (!token.market_cap ||
-        BigNumber(token.market_cap).isLessThan(10000000000)),
-  ).length
-})
-
-/** -------------------------------
- * Percentage Calculations
- -------------------------------*/
-const totalPortfolioValue = computed<BigNumber>(() => {
-  return totalFiatPortfolioValueBN.value
-})
-
-const stocksPercentage = computed<BigNumber>(() => {
-  if (totalPortfolioValue.value.isZero()) {
-    return new BigNumber(0)
+    tokenCount: computed<number>(() => tokens.value.length),
+    formattedValue: computed<string>(() => formatFiat(value.value).display),
+    percentageFormatted: computed<string>(
+      () => formatPercentageValue(percentage.value).value,
+    ),
   }
-  return stocksValue.value.div(totalPortfolioValue.value).multipliedBy(100)
-})
+}
 
-const stocksPercentageFormatted = computed<string>(() => {
-  return formatPercentageValue(stocksPercentage.value).value
-})
+const {
+  topTokens: topStocksTokens,
+  tokenCount: stocksTokenCount,
+  formattedValue: stocksFormattedValue,
+  percentageFormatted: stocksPercentageFormatted,
+} = createCategoryView('stocks')
 
-const stablesPercentage = computed<BigNumber>(() => {
-  if (totalPortfolioValue.value.isZero()) {
-    return new BigNumber(0)
-  }
-  return stablesValue.value.div(totalPortfolioValue.value).multipliedBy(100)
-})
+const {
+  topTokens: topStableTokens,
+  tokenCount: stablesTokenCount,
+  formattedValue: stablesFormattedValue,
+  percentageFormatted: stablesPercentageFormatted,
+} = createCategoryView('stables')
 
-const stablesPercentageFormatted = computed<string>(() => {
-  return formatPercentageValue(stablesPercentage.value).value
-})
+const {
+  topTokens: topLargeCapTokens,
+  tokenCount: largeCapTokenCount,
+  formattedValue: largeCapFormattedValue,
+  percentageFormatted: largeCapPercentageFormatted,
+} = createCategoryView('largeCap')
 
-const largeCapPercentage = computed<BigNumber>(() => {
-  if (totalPortfolioValue.value.isZero()) {
-    return new BigNumber(0)
-  }
-  return largeCapValue.value.div(totalPortfolioValue.value).multipliedBy(100)
-})
-
-const largeCapPercentageFormatted = computed<string>(() => {
-  return formatPercentageValue(largeCapPercentage.value).value
-})
-
-const altcoinsPercentage = computed<BigNumber>(() => {
-  if (totalPortfolioValue.value.isZero()) {
-    return new BigNumber(0)
-  }
-  return altcoinsValue.value.div(totalPortfolioValue.value).multipliedBy(100)
-})
-
-const altcoinsPercentageFormatted = computed<string>(() => {
-  return formatPercentageValue(altcoinsPercentage.value).value
-})
+const {
+  topTokens: topAltcoinTokens,
+  tokenCount: altcoinsTokenCount,
+  formattedValue: altcoinsFormattedValue,
+  percentageFormatted: altcoinsPercentageFormatted,
+} = createCategoryView('altcoins')
 </script>

@@ -15,15 +15,22 @@
         />
         <div class="flex flex-col p-6 gap-10">
           <div class="flex flex-col gap-4">
-            <h1
-              class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black text-center"
-            >
-              {{ $t('rwaRewards.announcement_title') }}
+            <h1 class="text-heading-xl text-black text-center">
+              {{
+                $t('rwaRewards.announcement_title', {
+                  amount: announcementAmount,
+                })
+              }}
             </h1>
             <p
-              class="text-s-16 font-normal leading-[22px] text-[#575757] text-center whitespace-pre-line"
+              class="text-text-base text-text-subtle text-center whitespace-pre-line"
             >
-              {{ $t('rwaRewards.announcement_desc') }}
+              {{
+                $t('rwaRewards.announcement_desc', {
+                  amount: announcementAmount,
+                  count: round1HoldDays,
+                })
+              }}
             </p>
           </div>
           <app-base-button
@@ -40,8 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -49,8 +57,6 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useMarketStatus } from '@/modules/trade/composables'
-import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import overlayImg from '@/assets/images/rwa-rewards/tradeAndHoldFullscreenOverlayImg.png'
 import {
   analytics,
@@ -58,13 +64,20 @@ import {
   RerwadsAndOffersEvent,
 } from '@/analytics'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWalletUnlocked } = storeToRefs(walletStore)
 const holdingsStore = useHoldingsStore()
+const { canRegisterTrade, round1HoldDays, round1RewardAmountLabel } =
+  storeToRefs(holdingsStore)
+const announcementAmount = computed(
+  () => round1RewardAmountLabel.value ?? t('rwaRewards.reward_amount'),
+)
 const announcement = useRwaAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
-const { fetchTradingRestriction } = useMarketStatus()
+const globalStore = useGlobalStore()
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
+const { fetchTradingRestriction } = globalStore
 
 const isOpen = ref(false)
 const showAfter = ref(false)
@@ -81,11 +94,9 @@ onMounted(async () => {
   await fetchTradingRestriction()
   if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
-    if (
-      !isWalletUnlocked.value &&
-      (route.name === ROUTES_ACCESS.ACCESS.NAME ||
-        route.name === ROUTES_CREATE_WALLET.CREATE_WALLET.NAME)
-    ) {
+    // Only overlay records carry `meta.walletFlow`, and there is one per host page, so
+    // this replaces two now-insufficient fixed-name comparisons.
+    if (!isWalletUnlocked.value && route.meta.walletFlow) {
       showAfter.value = true
     } else {
       openDialog()
@@ -95,6 +106,9 @@ onMounted(async () => {
 
 const openDialog = () => {
   if (isTradingRestrictedInRegion.value) return
+  // Don't announce an offer that can no longer be joined. Best-effort: reward
+  // info only loads for an unlocked wallet, so an unknown state still announces.
+  if (!canRegisterTrade.value) return
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()

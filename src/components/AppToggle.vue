@@ -3,7 +3,7 @@
     <span v-if="!isRight" class="text8 pr-2">{{ label }}</span>
     <button
       :class="[
-        model ? 'bg-primary' : 'bg-info',
+        model ? 'bg-background-brand' : 'bg-background-toggle',
         ' w-11 h-6  rounded-full px-1 ',
       ]"
       @click="model = !model"

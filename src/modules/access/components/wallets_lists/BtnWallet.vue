@@ -8,10 +8,10 @@
       <img
         v-if="wallet.isOfficial"
         :src="OfficialBadge"
-        alt="Official MyEtherWallet"
+        :alt="$t('access_wallet.official_badge_alt')"
         height="20"
         width="68"
-        class="w-[56px] object-contain h-5"
+        class="w-14 object-contain h-5"
       />
       <h5
         v-if="isDetected || isRecent"
@@ -38,7 +38,7 @@
       <AsyncImg
         :img="img"
         :is-loaded="isLoadedImg"
-        :alt="wallet.name"
+        :alt="wallet.nameKey ? $t(wallet.nameKey) : wallet.name"
         class="rounded-lg mx-auto"
       />
     </div>
@@ -47,7 +47,7 @@
         id="wallet-name"
         class="text-s-14 my-2 font-medium leading-p-150 text-center mx-auto"
       >
-        {{ wallet.name }}
+        {{ wallet.nameKey ? $t(wallet.nameKey) : wallet.name }}
       </p>
     </div>
   </button>
@@ -108,7 +108,7 @@ const resolveImg = async (_img: () => Promise<string>) => {
     // The wallet icon is lazily imported as a hashed JS chunk. Failing to load it
     // (network blip, stale chunk after a redeploy, content blockers) is expected and
     // non-actionable — AsyncImg already falls back to a placeholder. Don't report noise.
-    if (import.meta.env.DEV) {
+    if (import.meta.env.MODE !== 'production') {
       console.error('Error loading wallet image:', props.wallet.name, error)
     }
   } finally {

@@ -9,15 +9,15 @@
         <expand-transition>
           <div v-if="showApproveMessage">
             <div
-              class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
+              class="flex items-center justify-center gap-5 my-4 font-bold text-text-brand animate-pulse"
               key="confirmation-approve-message"
             >
-              Approve Tx on your device
+              {{ t('swap.swap-offer.approve-tx-on-device') }}
             </div>
           </div>
         </expand-transition>
         <div
-          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
+          class="p-4 flex flex-col border border-solid border-border-default rounded-20 mb-2"
         >
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             {{ t('swap.swap-offer.best-offer-from') }}
@@ -52,7 +52,9 @@
             />
             {{ t('swap.swap-offer.you-will-get') }}:
           </p>
-          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+          <div
+            class="flex items-center bg-background-brand-subtle rounded-20 p-4 my-2"
+          >
             <div class="relative">
               <app-token-logo
                 :url="toToken?.logoURI"
@@ -62,8 +64,8 @@
                     ? { address: toToken.address, network: toChain.name }
                     : undefined
                 "
-                width="w-8 lg:w-[48px]"
-                height="h-8 lg:h-[48px]"
+                width="w-8 lg:w-12"
+                height="h-8 lg:h-12"
               />
               <div
                 class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"
@@ -100,7 +102,9 @@
                 >
                 </app-tooltip>
               </div>
-              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+              <div class="text-s-12 text-text-subtle">
+                ≈ {{ currencySymbol }}{{ toAmountFiat }}
+              </div>
             </div>
           </div>
           <app-pop-up-menu
@@ -115,7 +119,8 @@
                   :key="idx + item.quote.provider + item.toTokenAmount"
                   class="w-full text-left p-3 rounded-12 mb-2 hoverBGWhite"
                   :class="{
-                    'bg-mewBg': item.quote.provider === selectedQuote?.provider,
+                    'bg-background-brand-subtle':
+                      item.quote.provider === selectedQuote?.provider,
                   }"
                   @click="
                     () => {
@@ -127,7 +132,7 @@
                     <div class="grow min-w-0">
                       <div class="flex items-center gap-2">
                         <p
-                          class="text-info text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
+                          class="text-text-subtle text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
                         >
                           {{
                             t('swap.swap-offer.offer_from', {
@@ -139,9 +144,9 @@
                         </p>
                         <p
                           v-if="idx === 0"
-                          class="bg-primary text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
+                          class="bg-background-brand text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
                         >
-                          best rate
+                          {{ t('swap.swap-offer.best-rate') }}
                         </p>
                       </div>
                       <div
@@ -191,7 +196,7 @@
                     <div class="flex items-center gap-2 flex-none ml-auto">
                       <span
                         v-if="idx > 0"
-                        class="text-error text-s-12 whitespace-nowrap text-right mr-2"
+                        class="text-text-error text-s-12 whitespace-nowrap text-right mr-2"
                       >
                         ({{
                           getPercentageDiff(
@@ -200,9 +205,12 @@
                           )
                         }}%)
                       </span>
-                      <CheckIcon
+                      <AppIcon
+                        name="check"
+                        variant="filled"
+                        size="s"
                         v-if="item.quote.provider === selectedQuote?.provider"
-                        class="w-5 h-5 text-primary"
+                        class="text-text-brand"
                       />
                       <div v-else class="w-4 h-4" />
                     </div>
@@ -212,8 +220,8 @@
             </template>
           </app-pop-up-menu>
           <div class="pt-3 ml-2">
-            <div class="text-s-14 text-info flex items-center gap-1">
-              <span>Rate: 1</span>
+            <div class="text-s-14 text-text-subtle flex items-center gap-1">
+              <span>{{ t('swap.swap-offer.rate') }}: 1</span>
               <app-token-symbol
                 :symbol="fromToken?.symbol || 'UNKNOWN'"
                 :address="
@@ -237,14 +245,14 @@
               />
             </div>
             <!-- TODO: make library return these values -->
-            <!-- <div class="text-s-14 text-info">Price impact: -0.07%</div> -->
-            <div class="text-s-14 text-info">
+            <!-- <div class="text-s-14 text-text-subtle">Price impact: -0.07%</div> -->
+            <div class="text-s-14 text-text-subtle">
               {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
             </div>
-            <!-- <div class="text-s-14 text-info">
+            <!-- <div class="text-s-14 text-text-subtle">
               {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
             </div> -->
-            <div class="text-s-14 text-info">
+            <div class="text-s-14 text-text-subtle">
               {{
                 t('swap.swap-offer.offer-includes', {
                   feePercent: swapInfo?.fee,
@@ -262,16 +270,16 @@
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
-          :disabled="!!gasFeeError"
+          :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
         >
           {{ btnText }}
         </app-base-button>
         <app-btn-text
-          class="mx-auto w-full mt-2 text-error"
+          class="mx-auto w-full mt-2 text-text-error"
           is-large
           @click="declineSwap"
         >
-          Cancel
+          {{ t('common.cancel') }}
         </app-btn-text>
       </div>
     </template>
@@ -297,18 +305,17 @@ import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
-import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
+const { formatFiat, currencySymbol } = useCurrency()
 
 enum ProviderName {
   oneInch = 'oneInch',
@@ -409,7 +416,9 @@ const isBridge = computed(() => {
 })
 
 const title = computed(() => {
-  return isBridge.value ? 'Bridge' : 'Swap'
+  return isBridge.value
+    ? t('swap.swap-offer.title-bridge')
+    : t('swap.swap-offer.title-swap')
 })
 
 const btnText = computed(() => {
@@ -469,7 +478,7 @@ const toAmountFormatted = computed(() => {
 const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
   const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
-  return formatFiatValue(value.toString()).value
+  return formatFiat(value.toString()).value
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
@@ -523,6 +532,11 @@ watch(
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
+  // Guard against proceeding without a resolved quote: an empty quoteId would
+  // build a malformed unsigned-tx URL (…/multi-quotes//unsigned -> 404). The
+  // button is disabled in this state; this also ignores any stray click.
+  const quoteId = props.swapGasFeeQuote?.quoteId
+  if (!quoteId) return
   isProceeding.value = true
   loadingModel.value = true
   if (
@@ -531,7 +545,7 @@ const proceedWithSwap = () => {
   ) {
     showApproveMessage.value = true
   }
-  emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+  emits('update:proceedWithSwap', quoteId)
 }
 const declineSwap = () => {
   emits('update:declineSwap')

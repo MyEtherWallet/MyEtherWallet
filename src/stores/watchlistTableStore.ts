@@ -1,13 +1,22 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { StoreConfigs } from './configs'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification/index'
+import i18n from '@/i18n'
+
+/** Max items allowed per watchlist bucket (crypto, stocks and perps each). */
+export const WATCHLIST_MAX = 25
+
 export const useWatchlistStore = defineStore('useWatchlistStore', () => {
   /**--------------------------
    * WATCHLIST LOCAL STORAGE
    * 1. watchListedTokens: An array of coin IDs representing the tokens that the user has added to their watchlist.
    * 2. watchListedStocks: An array of stock symbols representing the stocks that the user has added to their watchlist.
-   * 3. setWatchlistItem: A function that adds or removes a token/stock to/from the watchlist based on isStock parameter.
-   * 4. isWatchListed: A function that checks if a given coin ID or stock symbol is present in the respective watchlist and returns a boolean value.
+   * 3. watchListedPerps: An array of perp market base currencies (e.g. "BTC") the user has added to their watchlist.
+   * 4. setWatchlistItem: A function that adds or removes a token/stock to/from the watchlist based on isStock parameter.
+   * 5. setWatchlistPerp: A function that toggles a perp market (by base currency) in/out of the perps watchlist.
+   * 6. isWatchListed / isWatchListedPerp: membership checks.
    --------------------------*/
   const watchListedTokens = useLocalStorage<string[]>(
     StoreConfigs.LOCAL_STORAGE_KEYS.watchListedTokens,
@@ -25,6 +34,50 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
     },
   )
 
+  const watchListedPerps = useLocalStorage<string[]>(
+    StoreConfigs.LOCAL_STORAGE_KEYS.watchListedPerps,
+    [],
+    {
+      mergeDefaults: true,
+    },
+  )
+
+  /**
+   * Manual display order for the home watchlist table, as row keys
+   * ("stock-AAPL" | "token-ethereum" | "perp-BTC"). The table is drag-sorted
+   * across all buckets, so a single ordered list is the source of truth for
+   * display; ids not present here (freshly added) fall back to the top.
+   */
+  const watchlistOrder = useLocalStorage<string[]>(
+    StoreConfigs.LOCAL_STORAGE_KEYS.watchlistOrder,
+    [],
+    {
+      mergeDefaults: true,
+    },
+  )
+
+  const setWatchlistOrder = (keys: string[]) => {
+    watchlistOrder.value = keys
+  }
+
+  // Both toggle fns below are the single add path every UI trigger routes
+  // through (star buttons across crypto/stocks/perps + the onboarding batch
+  // loop), so capping each bucket here covers them all.
+  const notifyWatchlistFull = () => {
+    const toastStore = useToastStore()
+    const text = i18n.global.t('common.watchlist_limit_reached', {
+      max: WATCHLIST_MAX,
+    })
+    // Surface the limit toast once: a batch add (onboarding) rejects many items
+    // in one tick and would otherwise stack an identical toast per item.
+    if (toastStore.messages.some(m => m.text === text)) return
+    toastStore.addToastMessage({
+      text,
+      type: ToastType.Warning,
+      duration: 5000,
+    })
+  }
+
   const setWatchlistItem = (
     id: string,
     isStock: boolean | null | undefined = true,
@@ -34,10 +87,32 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
 
     if (isAlreadyListed) {
       targetList.value = targetList.value.filter(item => item !== id)
-    } else {
-      targetList.value = [...targetList.value, id]
+      return
     }
+    if (targetList.value.length >= WATCHLIST_MAX) {
+      notifyWatchlistFull()
+      return
+    }
+    targetList.value = [...targetList.value, id]
   }
+
+  const setWatchlistPerp = (symbol: string) => {
+    const isAlreadyListed = watchListedPerps.value.includes(symbol)
+    if (isAlreadyListed) {
+      watchListedPerps.value = watchListedPerps.value.filter(
+        item => item !== symbol,
+      )
+      return
+    }
+    if (watchListedPerps.value.length >= WATCHLIST_MAX) {
+      notifyWatchlistFull()
+      return
+    }
+    watchListedPerps.value = [...watchListedPerps.value, symbol]
+  }
+
+  const isWatchListedPerp = (symbol: string) =>
+    watchListedPerps.value.includes(symbol)
 
   const isWatchListed = (coinId: string) => {
     const isStoredToken = watchListedTokens.value.find((sCoinId: string) => {
@@ -58,5 +133,10 @@ export const useWatchlistStore = defineStore('useWatchlistStore', () => {
     watchListedTokens,
     isWatchListed,
     watchListedStocks,
+    watchListedPerps,
+    setWatchlistPerp,
+    isWatchListedPerp,
+    watchlistOrder,
+    setWatchlistOrder,
   }
 })

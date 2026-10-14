@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export type WalletPanel = 'trade' | 'swap' | 'send' | 'bridge' | 'purchase'
+export type WalletPanel = 'trade' | 'swap' | 'send' | 'bridge' | 'purchase' | 'perps'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const hideLowBalance = ref(false)
@@ -12,6 +12,8 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
 
   // Selected token symbol for Trade module (set from stocks view)
   const selectedTradeTokenSymbol = ref<string | null>(null)
+  const selectedTradeOrderSide = ref<'buy' | 'sell' | null>(null)
+  const selectedTradeManageMode = ref<'add' | 'close' | undefined>('add')
 
   // Coingecko id of the token to pre-populate in the Buy module (set from the
   // crypto/balance tables). Consumed and cleared by ModuleBuy.
@@ -34,6 +36,13 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     selectedTradeTokenSymbol.value = symbol
   }
 
+  const setSelectedTradeOrderSide = (side: 'buy' | 'sell' | null) => {
+    selectedTradeOrderSide.value = side
+  }
+
+  const setSelectedTradeManageMode = (mode: 'add' | 'close' | undefined) => {
+    selectedTradeManageMode.value = mode
+  }
   const setSelectedPurchaseCoinId = (coinId: string | null) => {
     selectedPurchaseCoinId.value = coinId
   }
@@ -51,6 +60,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
+    selectedTradeOrderSide,
+    setSelectedTradeOrderSide,
+    selectedTradeManageMode,
+    setSelectedTradeManageMode,
     selectedPurchaseCoinId,
     setSelectedPurchaseCoinId,
     hideLowBalance,

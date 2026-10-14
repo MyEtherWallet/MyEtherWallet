@@ -1,0 +1,168 @@
+import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
+
+type TradableAsset = GetWebSwapOndoAssetsResponse[number]
+
+/**
+ * Whether an asset's `tradableSessions` allows trading in the current session.
+ * - `currentSession === null` (nothing tradable) -> false
+ * - missing/empty `tradableSessions` (older payloads) -> not session-gated (true),
+ *   so we never hide everything just because the field is absent
+ * - otherwise -> membership test
+ *
+ * NOTE: this is the SESSION gate only. The asset-level `tradable` flag
+ * (scheduled pause / halt) is checked separately by callers.
+ */
+export const isAssetTradableInSession = (
+  asset: Pick<TradableAsset, 'primaryMarket'>,
+  currentSession: string | null,
+): boolean => {
+  if (currentSession === null) return false
+  const sessions = asset.primaryMarket?.tradableSessions
+  if (!sessions || sessions.length === 0) return true
+  return sessions.includes(currentSession)
+}
+
+export const PAUSE_REASONS = [
+  'cash_dividend',
+  'stock_dividend',
+  'stock_split',
+  'merger',
+  'acquisition',
+  'spinoff',
+  'earnings',
+  'maintenance',
+] as const
+
+export type PauseReason = (typeof PAUSE_REASONS)[number]
+
+export const isPauseReason = (value: string): value is PauseReason =>
+  (PAUSE_REASONS as readonly string[]).includes(value)
+
+/**
+ * Parses a pause boundary. A timezone-naive timestamp ("2026-03-08 09:30:00")
+ * would otherwise be read in the viewer's local zone, silently shifting the
+ * window by their UTC offset — treat it as UTC instead. Returns null for a
+ * missing or unparseable value.
+ */
+const parsePauseBoundary = (
+  value: string | null | undefined,
+): number | null => {
+  if (!value) return null
+  const trimmed = value.trim()
+  const hasTime = /[T ]\d{1,2}:\d{2}/.test(trimmed)
+  const hasZone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(trimmed)
+  const candidate =
+    hasTime && !hasZone ? `${trimmed.replace(' ', 'T')}Z` : trimmed
+  const time = Date.parse(candidate)
+  return Number.isNaN(time) ? null : time
+}
+
+export const getActivePauseReason = (
+  asset: Pick<TradableAsset, 'pause'> | null | undefined,
+  now: number,
+): PauseReason | null => {
+  const pause = asset?.pause
+  if (!pause) return null
+
+  // A missing or unparseable bound is open on that side, so an indefinite halt
+  // (start set, no end — the normal shape for "paused until further notice")
+  // still surfaces its reason instead of falling back to the generic copy.
+  const start = parsePauseBoundary(pause.start)
+  const end = parsePauseBoundary(pause.end)
+  if (start !== null && now < start) return null
+  if (end !== null && now > end) return null
+
+  const slug = pause.reason?.message?.trim().toLowerCase()
+  return slug && isPauseReason(slug) ? slug : null
+}
+
+/**
+ * Addresses (lowercased) to render disabled under the "Trading paused for this
+ * session" group. An asset is disabled when it is globally paused
+ * (`tradable === false`) or not tradable in the current session — UNLESS, during
+ * off-hours, it EXPLICITLY lists `offhours` in `tradableSessions` (the off-hours
+ * override keeps it tradable even when globally paused).
+ */
+export const getSessionDisabledAddresses = (
+  assets: TradableAsset[] | null,
+  currentSession: string | null,
+): Set<string> => {
+  const disabled = new Set<string>()
+  if (!assets) return disabled
+  const addAll = (asset: TradableAsset) => {
+    for (const addr of asset.addresses) {
+      // Defensive: address members can be null or have a non-string `address`
+      // in malformed payloads; only lowercase real, non-empty strings.
+      if (typeof addr?.address === 'string' && addr.address)
+        disabled.add(addr.address.toLowerCase())
+    }
+  }
+  for (const asset of assets) {
+    // Defensive: the Ondo assets API has been observed returning null/malformed
+    // elements (Sentry APP-MEW-WEB-1CE). Skip anything that is not a shaped
+    // asset with an addresses array, so this pure utility never dereferences a
+    // bad entry, independent of upstream filtering.
+    if (!asset || !Array.isArray(asset.addresses)) continue
+
+    // Off-hours override: an asset that EXPLICITLY lists `offhours` stays
+    // tradable during off-hours even if globally paused. Must be an explicit
+    // membership (not the missing-field fallback in isAssetTradableInSession)
+    // so a paused asset without off-hours support doesn't slip through.
+    if (
+      currentSession === 'offhours' &&
+      !!asset.primaryMarket?.tradableSessions?.includes('offhours')
+    )
+      continue
+
+    // Globally paused (and not off-hours-enabled) -> disabled.
+    if (!asset.tradable) {
+      addAll(asset)
+      continue
+    }
+
+    // Tradable in the current session -> enabled (skip).
+    if (isAssetTradableInSession(asset, currentSession)) continue
+
+    // Otherwise session-gated -> disabled.
+    addAll(asset)
+  }
+  return disabled
+}
+
+export const pickFirstAvailableToken = <T extends { address?: string }>(
+  tokens: T[],
+  disabledAddresses: Iterable<string>,
+): T | null => {
+  const disabled = new Set(
+    Array.from(disabledAddresses, address => address.toLowerCase()),
+  )
+  return (
+    tokens.find(token => !disabled.has(token.address?.toLowerCase() ?? '')) ??
+    tokens[0] ??
+    null
+  )
+}
+
+export const pickHighestMarketCapToken = <T extends { address?: string }>(
+  tokens: T[],
+  options: {
+    excludeAddress?: string
+    disabledAddresses?: Iterable<string>
+    marketCapOf: (token: T) => number
+  },
+): T | null => {
+  const excluded = options.excludeAddress?.toLowerCase()
+  const disabled = new Set(
+    Array.from(options.disabledAddresses ?? [], address =>
+      address.toLowerCase(),
+    ),
+  )
+  const candidates = tokens.filter(token => {
+    const address = token.address?.toLowerCase() ?? ''
+    return address !== excluded && !disabled.has(address)
+  })
+  if (!candidates.length) return null
+  return candidates.reduce((best, token) =>
+    options.marketCapOf(token) > options.marketCapOf(best) ? token : best,
+  )
+}

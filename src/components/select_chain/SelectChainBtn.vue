@@ -1,8 +1,10 @@
 <template>
   <div>
     <button
-      :class="[isReady ? 'hoverNoBG' : 'animate-pulse bg-surface']"
-      class="py-2 px-3 rounded-16 w-full border border-1 border-grey-outline min-h-[58px]"
+      :class="[
+        isReady ? 'hoverNoBG' : 'animate-pulse bg-background-default-hover',
+      ]"
+      class="py-2 px-3 rounded-16 w-full border border-1 border-border-strong min-h-[58px]"
       @click="setOpenDialog(true)"
     >
       <div v-if="selectedChain" class="flex items-center">
@@ -15,7 +17,9 @@
           width="32"
         />
         <div class="ml-1 pr-1 min-w-[30px]">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p
+            class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
+          >
             {{ $t('common.network') }}
           </p>
           <p
@@ -24,7 +28,12 @@
             {{ selectedChain.nameLong }}
           </p>
         </div>
-        <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="flex-none ml-auto mr-1"
+        />
       </div>
     </button>
     <!-- Dialog with chains list -->
@@ -43,9 +52,9 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import SelectChainDialog from './SelectChainDialog.vue'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 defineProps({
   isBtnGroup: {
     type: Boolean,

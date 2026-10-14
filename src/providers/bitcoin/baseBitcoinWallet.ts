@@ -89,6 +89,9 @@ class BaseBtcWallet implements WalletInterface {
   getAddress(): Promise<string> {
     throw new Error('Method not implemented: getAddress')
   }
+  getPublicKey(): Promise<HexPrefixedString> {
+    throw new Error('Method not implemented: getPublicKey')
+  }
   getWalletType(): WalletType {
     throw new Error('Method not implemented: getWalletType')
   }

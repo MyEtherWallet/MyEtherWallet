@@ -72,7 +72,11 @@ const resetStyles = (_element: Element) => {
   if (!height.value) return
   const element = _element as HTMLElement
   element.style.overflow = overflow.value
-  if (height.value != null) element.style.height = height.value
+  // Release the snapshotted height so the element goes back to height:auto and can
+  // grow/shrink with dynamic content after the transition (e.g. rows added or
+  // removed in a collapsible list). Keeping the fixed px height left the box the
+  // old size, so later content overflowed onto the next element or left a gap.
+  element.style.height = ''
   height.value = null
   overflow.value = ''
 }

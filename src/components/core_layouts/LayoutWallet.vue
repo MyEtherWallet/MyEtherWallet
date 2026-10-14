@@ -4,9 +4,9 @@
       :class="[
         hasShadow && !isOpenSideMenu
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
-          : '!border-grey-10',
+          : '!border-border-default',
         'border-white',
-        '  w-[60px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        '  w-[60px] xs:w-20 bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
       ]"
     >
       <div>
@@ -17,8 +17,12 @@
               @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
               class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
-              <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
-              <ChevronDoubleRightIcon v-else class="w-5 h-5" />
+              <AppIcon
+                name="chevron-double-left"
+                size="s"
+                v-if="!isOpenSideMenu"
+              />
+              <AppIcon name="chevron-double-right" size="s" v-else />
             </button>
             <!-- Trade button -->
             <button
@@ -26,20 +30,21 @@
               @click="openPanel('trade')"
               :class="[
                 walletPanel === 'trade' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-trade
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
-                Trade
+                {{ $t('common.trade') }}
               </p>
             </button>
             <!-- Swap button -->
@@ -47,18 +52,43 @@
               @click="openPanel('swap')"
               :class="[
                 walletPanel === 'swap' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12  flex flex-col items-center justify-center w-full',
               ]"
             >
-              <icon-swap :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
+              <icon-swap
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.swap') }}
+              </p>
+            </button>
+            <!-- Perps button -->
+            <button
+              @click="openPanel('perps')"
+              :class="[
+                walletPanel === 'perps' && isOpenSideMenu
+                  ? 'bg-background-brand-subtle'
+                  : 'hoverNoBG',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+              ]"
+            >
+              <icon-perps
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              />
+              <p
+                :class="[
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
+                ]"
+              >
+                {{ $t('common.perps') }}
               </p>
             </button>
             <!-- Bridge button -->
@@ -66,20 +96,21 @@
               @click="openPanel('bridge')"
               :class="[
                 walletPanel === 'bridge' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-bridge
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
-                Bridge
+                {{ $t('common.bridge') }}
               </p>
             </button>
             <!-- Deposit button -->
@@ -90,12 +121,14 @@
               ]"
               @click="openDepositDialog = true"
             >
-              <QrCodeIcon
-                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+              <AppIcon
+                name="qr-code"
+                :class="['mb-1 text-text-brand xs:size-7']"
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('deposit') }}
@@ -106,17 +139,18 @@
               @click="openPanel('send')"
               :class="[
                 walletPanel === 'send' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-send
-                :class="['mb-1 mt-1 w-5 h-5 xs:w-6 xs:h-6 text-primary']"
+                :class="['mb-1 mt-1 w-5 h-5 xs:w-6 xs:h-6 text-text-brand']"
               />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.send') }}
@@ -127,15 +161,18 @@
               @click="openPanel('purchase')"
               :class="[
                 walletPanel === 'purchase' && isOpenSideMenu
-                  ? 'bg-mewBg'
+                  ? 'bg-background-brand-subtle'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
-              <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
+              <icon-buy
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-text-brand']"
+              />
               <p
                 :class="[
-                  'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
+                  actionTextSizeClass,
+                  'text-center uppercase mt-0.5 font-bold tracking-sp-06',
                 ]"
               >
                 {{ $t('common.buy_sell') }}
@@ -160,16 +197,16 @@
         :class="[
           hasShadow && !isOpenSideMenu
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
-            : 'border-grey-10 border-l-1',
+            : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
-          label="close side menu"
-          class="sm:hidden flex-none ml-3 rounded-12 hoverNoBG"
+          :label="$t('common.close_side_menu')"
+          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
-          <ChevronDoubleRightIcon class="w-5 h-5" />
+          <AppIcon name="chevron-double-right" size="s" />
         </app-btn-icon>
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
@@ -177,6 +214,10 @@
             <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
             <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
             <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+            <ModulePerpsTrade
+              v-else-if="walletPanel === 'perps'"
+              key="perps-trade"
+            />
             <ModulePurchase
               v-else-if="walletPanel === 'purchase'"
               key="purchase"
@@ -188,7 +229,12 @@
         </div>
       </div>
     </transition>
-    <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <!-- WeekendTradingTooltip is intentionally not mounted — the weekend
+         trading tooltip is disabled. Re-render it here with
+         `:anchor="tradeBtnRef"` to bring it back; the component and its
+         `shouldShowTooltip` gate in weekendTradingAnnouncementStore are
+         unchanged. The WeekendTradingDialog is unaffected. -->
+    <marketing-tooltip :anchor="tradeBtnRef" />
     <rwa-reward-modal />
   </div>
 </template>
@@ -203,27 +249,35 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
+import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import {
-  QrCodeIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-} from '@heroicons/vue/24/outline'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
+import { pageRouteName } from '@/router/routeHierarchy'
+import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+const { t, locale } = useI18n()
 const walletMenu = useWalletMenuStore()
+
+// Spanish labels are longer; shrink the side-menu action button text so they fit
+const actionTextSizeClass = computed(() =>
+  locale.value === 'es'
+    ? 'text-[7px] xs:text-s-8 text-wrap'
+    : 'text-s-9 xs:text-s-11',
+)
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
@@ -231,14 +285,17 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
+// The connect/create overlays nest under the info routes, so compare against the
+// deepest PAGE record rather than route.name (which would be e.g. the access route).
+const page = computed(() => pageRouteName(route))
 
 onMounted(() => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home ||
-    route.name === STOCK_INFO_ROUTE_NAMES.stocks ||
-    route.name === STOCK_INFO_ROUTE_NAMES.home ||
-    route.name === STOCK_INFO_ROUTE_NAMES.crypto
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home ||
+    page.value === STOCK_INFO_ROUTE_NAMES.stocks ||
+    page.value === STOCK_INFO_ROUTE_NAMES.home ||
+    page.value === STOCK_INFO_ROUTE_NAMES.crypto
   ) {
     if (isXLAndUp.value) {
       walletMenu.setIsOpenSideMenu(true)
@@ -249,8 +306,8 @@ onMounted(() => {
 })
 watch(isMDAndUp, newVal => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home
   ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)
@@ -262,8 +319,8 @@ watch(isMDAndUp, newVal => {
 
 watch(isXLAndUp, newVal => {
   if (
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home
+    page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    page.value === TOKEN_INFO_ROUTE_NAMES.home
   ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)
@@ -276,17 +333,12 @@ watch(isXLAndUp, newVal => {
 const openPanel = (panel: WalletPanel) => {
   walletMenu.openPanel(panel)
   analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-    button: panel as any,
+    button: panel,
   })
 }
 
 const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
-const comingSoon = computed(() => {
-  const map = new Map<string, string>()
-  return map.get(walletPanel.value)
-    ? `${map.get(walletPanel.value)} is coming soon`
-    : 'Coming Soon'
-})
+const comingSoon = computed(() => t('common.coming_soon'))
 </script>

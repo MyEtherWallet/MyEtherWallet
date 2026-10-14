@@ -76,6 +76,13 @@ type downloadUrls = {
 export type WalletConfig = {
   id: string
   name: string
+  /**
+   * i18n key for the user-facing wallet name. When present it is resolved with
+   * `$t()` at the render site (kept reactive on locale switch); `name` stays the
+   * canonical English string used for analytics, sorting and de-duplication.
+   * Omitted for brand names (Ledger, Trezor, ...), which are not translated.
+   */
+  nameKey?: string
   icon: string | (() => Promise<string>)
   type: WalletConfigType[]
   isDefault?: boolean
@@ -141,6 +148,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
   keystore: {
     id: 'keystore',
     name: 'Keystore',
+    nameKey: 'access_wallet.wallet_name.keystore',
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'keystore',
@@ -149,6 +157,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
   mnemonic: {
     id: 'mnemonic',
     name: 'Recovery (mnemonic) Phrase',
+    nameKey: 'access_wallet.wallet_name.mnemonic',
     icon: MnemonicLogo,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'mnemonic',
@@ -157,6 +166,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
   privateKey: {
     id: 'privateKey',
     name: 'Private Key',
+    nameKey: 'access_wallet.wallet_name.private_key',
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'private_key',

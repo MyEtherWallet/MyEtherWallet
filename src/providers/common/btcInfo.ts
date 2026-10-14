@@ -1,4 +1,4 @@
-import { payments, type PaymentCreator } from 'bitcoinjs-lib'
+import { address as btcAddress, payments, type PaymentCreator } from 'bitcoinjs-lib'
 const P2PKH_DUST = 546
 const P2SH_DUST = 540
 const P2WPKH_DUST = 294
@@ -110,6 +110,23 @@ const NODE_MAP: Record<string, string> = {
   LITECOIN: 'https://partners.mewapi.io/nodes/ss/ltc',
 }
 
+/**
+ * Returns true when `addr` is a base58 pay-to-script-hash address for the
+ * given chain. Native segwit (bech32, e.g. `bc1...`) and taproot addresses are
+ * not base58 and resolve to false. Used to decide whether a from-address needs
+ * a `p2shAddressTypes` entry in the transaction quote request.
+ */
+const isP2shAddress = (addr: string, chainName: string): boolean => {
+  const info = INFO_MAP[chainName]
+  if (!info || !addr) return false
+  try {
+    return btcAddress.fromBase58Check(addr).version === info.network.scriptHash
+  } catch {
+    // Not a base58 address (bech32 / taproot / invalid) — not P2SH.
+    return false
+  }
+}
+
 const UNISAT_MAP: Record<string, string> = {
   BITCOIN: 'livenet',
   BITCOIN_TEST: 'testnet',
@@ -130,4 +147,5 @@ export {
   P2TR_DUST,
   NODE_MAP,
   UNISAT_MAP,
+  isP2shAddress,
 }

@@ -43,6 +43,7 @@ export const useWalletList = () => {
     if (wallet.rkDetails && wallet.rkDetails.name) return wallet.rkDetails.name
     return wallet.name
   }
+
   /** -------------------
    * Wallets
    * -------------------*/
@@ -120,7 +121,8 @@ export const useWalletList = () => {
         )
         if (
           existingWalletIndex < 0 &&
-          !DEFAULT_IDS.includes(injectedWallet.name.toLowerCase())
+          !DEFAULT_IDS.includes(injectedWallet.id) &&
+          !DEFAULT_IDS.includes(injectedWallet.name)
         ) {
           // If no wallet with same name, add injected wallet to array
           newConArr.push(injectedWallet)

@@ -444,6 +444,9 @@ Commits follow Conventional Commits (enforced by commitlint):
 
 - `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`, `test:`
 
+**No need to create a changelog file** — the changelog is generated on release from
+these commit messages. Do not add or hand-edit `CHANGELOG.md`.
+
 ---
 
 ## Key Third-Party Libraries

@@ -1,6 +1,11 @@
 <template>
   <div class="inline-block">
-    <Line :data="chartData" :options="chartOptions" :plugins="plugins" />
+    <Line
+      :data="chartData"
+      :options="chartOptions"
+      :plugins="plugins"
+      :destroy-delay="CHART_DESTROY_DELAY_MS"
+    />
   </div>
 </template>
 
@@ -19,14 +24,26 @@ import {
   type ChartData,
 } from 'chart.js'
 import {
-  formatFiatValue,
   formatIntegerValue,
   convertToThousand,
   OneThousand,
   OneMillion,
 } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
+
+const { formatFiat, currencySymbol, rate } = useCurrency()
+
+/**
+ * Defer Chart.js teardown so vue-chartjs's queued `nextTick(() => chart.update())`
+ * (scheduled when reactive data/options change) runs BEFORE `chart.destroy()`.
+ * Without a delay, destroy nulls `chart.canvas`, then the pending update walks the
+ * responsive-resize path and dereferences `null.ownerDocument` -> unhandled
+ * TypeError on teardown (timeframe toggle / route change), seen on Safari.
+ * See Sentry APP-MEW-WEB-1FZ.
+ */
+const CHART_DESTROY_DELAY_MS = 300
 
 const props = withDefaults(
   defineProps<{
@@ -71,13 +88,17 @@ Chart.register(
   Filler,
 )
 
+/**
+ * Chart.js paints to a canvas, which cannot resolve `var(--color-*)`, so these
+ * mirror the semantic tokens as literals. Keep in sync with `main.css`.
+ */
 const colors = {
-  upColor: 'rgb(5,192,165,1)',
-  downColor: 'rgb(239,68,68,1)',
-  bgUp: 'rgba(5,192,165,0.07)',
-  bgDown: 'rgba(239,68,68,0.07)',
-  bgGrey: 'rgba(0,0,0,0.05)',
-  tooltipBg: 'rgba(0,0,0,0.7)',
+  upColor: '#01a08c', // background/success
+  downColor: '#e40c58', // background/error
+  bgUp: 'rgba(1,160,140,0.07)', // background/success @ 7%
+  bgDown: 'rgba(228,12,88,0.07)', // background/error @ 7%
+  bgGrey: '#f5f5f5', // background/default
+  tooltipBg: '#1a1a1a', // background/info
 }
 
 /** Simple bucket-average downsampling (fast + good enough for display-only) */
@@ -218,127 +239,136 @@ const plugins = [
     },
   },
 ]
-const chartOptions = computed<ChartOptions<'line'>>(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: 'index',
-    intersect: false,
-  },
-  plugins: {
-    tooltip: {
-      filter: function (tooltipItem) {
-        // Disable tooltip for Dataset 2 (which has index 1)
-        return tooltipItem.datasetIndex !== 1
-      },
-      padding: 10,
-      backgroundColor: colors.tooltipBg,
-      boxPadding: 10,
-      bodySpacing: 3,
+const chartOptions = computed<ChartOptions<'line'>>(() => {
+  // Reference the currency refs so this computed (and thus the chart) re-renders
+  // when the display currency changes. The callbacks below convert lazily.
+  void rate.value
+  void currencySymbol.value
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
       intersect: false,
-      titleSpacing: 3,
-      displayColors: false,
-      titleFont: {
-        size: 12,
-        fontFamily: 'Roboto , sans-serif',
-        weight: 'normal',
-      },
-      bodyFont: {
-        size: 16,
-        fontFamily: 'Roboto , sans-serif',
-      },
-      callbacks: {
-        label: function (context) {
-          let label = context.dataset.label || ''
-          if (label) {
-            label += ': '
-          }
-          if (context.parsed.y !== null) {
-            return '$' + formatFiatValue(context.parsed.y).value
-          }
-          return label
+    },
+    plugins: {
+      tooltip: {
+        filter: function (tooltipItem) {
+          // Disable tooltip for Dataset 2 (which has index 1)
+          return tooltipItem.datasetIndex !== 1
         },
-        title: function (context) {
-          if (context.length === 0) {
-            return ''
-          }
-          const date = new Date(displayLabels.value[context[0].dataIndex] || '')
-          return date.toLocaleDateString('en-US', {
-            minute: 'numeric',
-            hour: 'numeric',
-          })
+        padding: 10,
+        backgroundColor: colors.tooltipBg,
+        boxPadding: 10,
+        bodySpacing: 3,
+        intersect: false,
+        titleSpacing: 3,
+        displayColors: false,
+        titleFont: {
+          size: 12,
+          fontFamily: 'Roboto , sans-serif',
+          weight: 'normal',
+        },
+        bodyFont: {
+          size: 16,
+          fontFamily: 'Roboto , sans-serif',
+        },
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || ''
+            if (label) {
+              label += ': '
+            }
+            if (context.parsed.y !== null) {
+              return formatFiat(context.parsed.y).display
+            }
+            return label
+          },
+          title: function (context) {
+            if (context.length === 0) {
+              return ''
+            }
+            const date = new Date(
+              displayLabels.value[context[0].dataIndex] || '',
+            )
+            return date.toLocaleDateString('en-US', {
+              minute: 'numeric',
+              hour: 'numeric',
+            })
+          },
         },
       },
     },
-  },
-  scales: {
-    x: {
-      display: true,
-      ticks: {
-        font: {
-          size: 10,
+    scales: {
+      x: {
+        display: true,
+        ticks: {
+          font: {
+            size: 10,
+          },
+          maxTicksLimit: 4,
+          type: 'time',
+          align: 'start',
+          color: 'rgba(0, 0, 0, 0.65)',
+          callback: function (value) {
+            const date = new Date(displayLabels.value[value as number])
+            const format = getFormat()
+            return props.timeFrame === '1D'
+              ? date.toLocaleTimeString('en-US', format)
+              : date.toLocaleDateString('en-US', format)
+          },
         },
-        maxTicksLimit: 4,
-        type: 'time',
-        align: 'start',
-        color: 'rgba(0, 0, 0, 0.65)',
-        callback: function (value) {
-          const date = new Date(displayLabels.value[value as number])
-          const format = getFormat()
-          return props.timeFrame === '1D'
-            ? date.toLocaleTimeString('en-US', format)
-            : date.toLocaleDateString('en-US', format)
+        border: {
+          display: false, // This removes the main x-axis line
+        },
+        grid: {
+          display: false, // Set display to false to remove vertical grid lines
         },
       },
-      border: {
-        display: false, // This removes the main x-axis line
-      },
-      grid: {
-        display: false, // Set display to false to remove vertical grid lines
+      y: {
+        display: true,
+        ticks: {
+          count: 3,
+          callback: function (value: any) {
+            return formatChartValue(value)
+          },
+          font: {
+            size: 10,
+          },
+          color: 'rgba(0, 0, 0, 0.65)',
+        },
+        suggestedMin: yBounds.value.min,
+        suggestedMax: yBounds.value.max,
+        position: 'right',
+        border: {
+          display: false, // This removes the main x-axis line
+        },
+        grid: {
+          display: false, // Set display to false to remove vertical grid lines
+        },
       },
     },
-    y: {
-      display: true,
-      ticks: {
-        count: 3,
-        callback: function (value: any) {
-          return formatChartValue(value)
-        },
-        font: {
-          size: 10,
-        },
-        color: 'rgba(0, 0, 0, 0.65)',
-      },
-      suggestedMin: yBounds.value.min,
-      suggestedMax: yBounds.value.max,
-      position: 'right',
-      border: {
-        display: false, // This removes the main x-axis line
-      },
-      grid: {
-        display: false, // Set display to false to remove vertical grid lines
-      },
-    },
-  },
-  elements: { line: { capBezierPoints: true } },
-}))
+    elements: { line: { capBezierPoints: true } },
+  }
+})
 
 const formatChartValue = (_value: number) => {
-  const value = new BigNumber(_value)
-  if (value === undefined || value.isZero() || value.isNaN()) {
-    return '$0'
+  const symbol = currencySymbol.value
+  const value = new BigNumber(_value).multipliedBy(rate.value)
+  if (value.isZero() || value.isNaN()) {
+    return `${symbol}0`
   }
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return `$${formatIntegerValue(value).value}`
+    return `${symbol}${formatIntegerValue(value).value}`
   }
   if (value.isGreaterThanOrEqualTo(OneThousand)) {
-    return `$${convertToThousand(value).value}`
+    return `${symbol}${convertToThousand(value).value}`
   }
 
   if (value.isGreaterThanOrEqualTo(10)) {
-    return `$${value.toFormat(2, 1)}`
+    return `${symbol}${value.toFormat(2, 1)}`
   }
-  return `$${value.toPrecision(4, 1)}`
+  return `${symbol}${value.toPrecision(4, 1)}`
 }
 </script>
 

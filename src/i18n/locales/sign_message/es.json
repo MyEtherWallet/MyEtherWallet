@@ -1,0 +1,19 @@
+{
+  "sign_message": {
+    "enter_message_to_sign": "Ingresa el mensaje para firmar",
+    "signature_title": "Firma",
+    "message_label": "Mensaje:",
+    "signing_address_label": "Dirección de firma:",
+    "signature_label": "Firma:",
+    "copy_signature": "Copiar firma",
+    "signature_copied": "Firma copiada al portapapeles",
+    "signature_copy_failed": "No se pudo copiar la firma al portapapeles",
+    "signing_failed": "Error al firmar",
+    "enter_message_to_verify": "Ingresa el mensaje para verificar",
+    "signing_address": "Dirección de firma",
+    "enter_signature_to_verify": "Ingresa la firma para verificar",
+    "message_signed_by": "El mensaje {message} está firmado por {address}.",
+    "message_not_signed_by": "El mensaje {message} NO está firmado por {address}.",
+    "verify_not_supported": "La verificación de mensajes no es compatible con {chain}"
+  }
+}

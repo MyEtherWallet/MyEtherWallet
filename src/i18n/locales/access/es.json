@@ -1,0 +1,8 @@
+{
+  "access": {
+    "no_supported_derivation_paths": "No se encontraron rutas de derivación compatibles para esta billetera"
+  },
+  "select_address_list": {
+    "view_in_explorer": "ver dirección en el explorador"
+  }
+}

@@ -8,6 +8,7 @@ import * as sessionReplay from '@amplitude/session-replay-browser'
 import { pageUrlEnrichmentPlugin } from "@amplitude/plugin-page-url-enrichment-browser";
 import { pageViewedEnrichmentPlugin } from './pageViewedEnrichment';
 import configs from '@/configs';
+import { safeLocalStorage } from '@/utils/safeStorage';
 
 const __TMP_VERSION__ = configs.APP_VERSION
 const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
@@ -22,7 +23,7 @@ const amplitude = createInstance()
  * Reads the persisted consent state from localStorage.
  */
 const getConsentToTrack = (): boolean => {
-  const initialPopupStateJson = localStorage.getItem(
+  const initialPopupStateJson = safeLocalStorage.getItem(
     StoreConfigs.LOCAL_STORAGE_KEYS.analytics,
   )
   if (!initialPopupStateJson) {
@@ -60,7 +61,7 @@ export const initAnalytics = async (): Promise<void> => {
   }
 
   const consentToTrack = getConsentToTrack()
-  const isProd = configs.AMPLITUDE === 'prod'
+  const isProd = import.meta.env.MODE === 'production'
   const serverUrl = isProd
     ? 'https://analytics-web-v7.mewwallet.dev'
     : 'https://analytics-web-development-v7.mewwallet.dev'
@@ -96,7 +97,7 @@ export const initAnalytics = async (): Promise<void> => {
     sessionId: sessionId,
     deviceId: deviceId,
     serverZone: inEU ? 'EU' : 'US',
-    debugMode: process.env.NODE_ENV !== 'production',
+    debugMode: import.meta.env.MODE !== 'production',
     sampleRate: .8,
     privacyConfig: {
       maskSelector: ['[data-private]'],
