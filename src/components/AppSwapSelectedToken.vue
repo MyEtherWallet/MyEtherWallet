@@ -7,7 +7,7 @@
   >
     <AppPicker
       size="s"
-      :title="selectedToken?.symbol ?? ''"
+      :title="truncate(selectedToken?.symbol ?? '', 7)"
       :loading="isLoading || !selectedToken"
       :aria-label="$t('select_token.title')"
       @click="openSelectToken"

@@ -139,7 +139,6 @@ interface SwapModuleBindings {
   /** Max (100) or a % preset of the from balance. */
   handleMaxClick: (percentage?: number) => void
   switchGlobalNetwork: (chain: Chain) => void
-  clearValues: () => void
   validateToAddress: () => Promise<void>
   proceedWithSwap: (quoteId: string) => Promise<void>
   swapButton: () => Promise<void>
@@ -1717,7 +1716,6 @@ export function useSwapModule(): SwapModuleBindings {
     isInternalWallet,
     handleMaxClick,
     switchGlobalNetwork,
-    clearValues,
     validateToAddress,
     proceedWithSwap: swapExecutionFeature.proceedWithSwap,
     swapButton: swapExecutionFeature.swapButton,

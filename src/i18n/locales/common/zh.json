@@ -90,6 +90,8 @@
     "nonce": "Nonce",
     "data": "数据",
     "balance": "余额",
+    "balance_amount": "余额：{amount}",
+    "price_amount": "价格：{amount}",
     "send": "发送",
     "connect_wallet": "连接钱包",
     "select_token": "选择代币",

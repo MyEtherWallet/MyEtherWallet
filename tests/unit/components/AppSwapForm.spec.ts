@@ -17,8 +17,7 @@ vi.mock('@/components/AppSwapEnterAmount.vue', () => ({
 vi.mock('@/components/select_chain/SelectChainForApp.vue', () => ({
   default: {
     name: 'SelectChainForApp',
-    template:
-      '<div data-testid="network"><slot name="network-button" /></div>',
+    template: '<div data-testid="network"><slot name="network-button" /></div>',
   },
 }))
 vi.mock('@/components/avatar/AppAvatar.vue', () => ({
@@ -57,20 +56,13 @@ describe('AppSwapForm', () => {
     expect(cards).toHaveLength(2)
     expect(cards[0].attributes('data-from')).toBe('true')
     expect(cards[1].attributes('data-from')).toBe('false')
-    expect(wrapper.find('[data-testid="swap-form-arrow"]').exists()).toBe(
-      true,
-    )
+    expect(wrapper.find('[data-testid="swap-form-arrow"]').exists()).toBe(true)
   })
 
   it('renders the quick actions as chips, 100 as MAX, and emits the percentage', async () => {
     const wrapper = mountForm({ quickActions: [25, 50, 75, 100] })
     const buttons = wrapper.findAll(chips)
-    expect(buttons.map(b => b.text())).toEqual([
-      '25%',
-      '50%',
-      '75%',
-      'Max',
-    ])
+    expect(buttons.map(b => b.text())).toEqual(['25%', '50%', '75%', 'Max'])
     await buttons[1].trigger('click')
     await buttons[3].trigger('click')
     expect(wrapper.emitted('percent')).toEqual([[50], [100]])
@@ -103,16 +95,5 @@ describe('AppSwapForm', () => {
     const wrapper = mountForm({}, { cta: '<p data-testid="connect" />' })
     expect(wrapper.find(cta).exists()).toBe(false)
     expect(wrapper.find('[data-testid="connect"]').exists()).toBe(true)
-  })
-
-  it('renders the default slot between the cards and the CTA', () => {
-    const wrapper = mountForm({}, { default: '<p data-testid="extra" />' })
-    const html = wrapper.html()
-    expect(html.indexOf('data-testid="extra"')).toBeGreaterThan(
-      html.indexOf('swap-form-arrow'),
-    )
-    expect(html.indexOf('data-testid="extra"')).toBeLessThan(
-      html.indexOf('swap-form-cta'),
-    )
   })
 })

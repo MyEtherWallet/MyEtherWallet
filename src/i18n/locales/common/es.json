@@ -90,6 +90,8 @@
     "nonce": "Nonce",
     "data": "Datos",
     "balance": "Saldo",
+    "balance_amount": "Saldo: {amount}",
+    "price_amount": "Precio: {amount}",
     "send": "Enviar",
     "connect_wallet": "conectar billetera",
     "select_token": "seleccionar token",

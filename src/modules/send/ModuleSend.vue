@@ -366,7 +366,9 @@ const validSend = computed(() => {
 })
 
 const ctaLabel = computed(() =>
-  Number(amount.value) ? t('send.review-send') : t('common.enter_amount'),
+  BigNumber(amount.value).gt(0)
+    ? t('send.review-send')
+    : t('common.enter_amount'),
 )
 
 const amountToFiat = computed(() => {
@@ -395,7 +397,9 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
+  | EstimatesRequestBody
+  | BitcoinQuotesRequestBody
+  | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&

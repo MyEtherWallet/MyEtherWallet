@@ -225,15 +225,17 @@ const balance = computed(() => {
 
 // Figma prefixes every fiat estimate with "≈"; the to-side already carries it.
 const conversion = computed(() =>
-  props.isEstimate
-    ? balanceFiatOrError.value
-    : `≈ ${balanceFiatOrError.value}`,
+  props.isEstimate ? balanceFiatOrError.value : `≈ ${balanceFiatOrError.value}`,
 )
 
 const caption = computed(() =>
   props.showBalance && props.isFromView
-    ? `${t('common.balance')}: ${balance.value} ${selectedToken.value?.symbol ?? ''}`.trim()
-    : `${t('common.price')}: ${currencySymbol.value}${tokenPrice.value}`,
+    ? t('common.balance_amount', {
+        amount: `${balance.value} ${selectedToken.value?.symbol ?? ''}`.trim(),
+      })
+    : t('common.price_amount', {
+        amount: `${currencySymbol.value}${tokenPrice.value}`,
+      }),
 )
 
 const showError = computed(

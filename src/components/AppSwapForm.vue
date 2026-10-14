@@ -14,11 +14,9 @@
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppChip from '@/components/chip/AppChip.vue'
-import AppPicker from '@/components/picker/AppPicker.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import SelectChainPicker from '@/components/select_chain/SelectChainPicker.vue'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Chain } from '@/mew_api/types'
 
@@ -43,6 +41,8 @@ withDefaults(
     toChain?: Chain | null
     ctaLabel: string
     ctaDisabled?: boolean
+    /** Figma "Typing/Loading": spinner while the quote loads. */
+    ctaLoading?: boolean
   }>(),
   {
     fromNetworkName: undefined,
@@ -58,6 +58,7 @@ withDefaults(
     toChains: () => [],
     toChain: null,
     ctaDisabled: false,
+    ctaLoading: false,
   },
 )
 
@@ -93,25 +94,7 @@ const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
         sort-context="swap"
       >
         <template v-if="showFromNetwork" #header>
-          <SelectChainForApp :passed-chains="fromChains">
-            <template #network-button="{ openNetworkDialog, selectedChain }">
-              <AppPicker
-                size="s"
-                :title="selectedChain?.nameLong ?? ''"
-                :loading="!selectedChain"
-                :aria-label="$t('common.select_network')"
-                @click.stop="openNetworkDialog(true)"
-              >
-                <template #avatar="{ size }">
-                  <AppAvatar
-                    type="network"
-                    :chain="selectedChain?.name"
-                    :size="size"
-                  />
-                </template>
-              </AppPicker>
-            </template>
-          </SelectChainForApp>
+          <SelectChainPicker :passed-chains="fromChains" />
         </template>
         <template v-if="quickActions.length" #actions>
           <AppChip
@@ -150,31 +133,13 @@ const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
         sort-context="swap"
       >
         <template #header>
-          <SelectChainForApp
+          <SelectChainPicker
             :can-store="false"
             :passed-chains="toChains"
             :preselected-chain="toChain"
             :class="{ hidden: !showToNetwork }"
             @update:selected-chain="emit('update:toChain', $event)"
-          >
-            <template #network-button="{ openNetworkDialog, selectedChain }">
-              <AppPicker
-                size="s"
-                :title="selectedChain?.nameLong ?? ''"
-                :loading="!selectedChain"
-                :aria-label="$t('common.select_network')"
-                @click.stop="openNetworkDialog(true)"
-              >
-                <template #avatar="{ size }">
-                  <AppAvatar
-                    type="network"
-                    :chain="selectedChain?.name"
-                    :size="size"
-                  />
-                </template>
-              </AppPicker>
-            </template>
-          </SelectChainForApp>
+          />
         </template>
       </AppSwapEnterAmount>
     </div>
@@ -185,6 +150,7 @@ const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
       <AppBaseButton
         class="w-full"
         :disabled="ctaDisabled"
+        :is-loading="ctaLoading"
         data-testid="swap-form-cta"
         @click="emit('submit')"
       >

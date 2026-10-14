@@ -3,7 +3,11 @@
     <div class="flex w-full flex-col gap-5">
       <!-- Header stays at full opacity when blocked: only the form below the
            unavailable card is dimmed. -->
-      <AppContentGroup size="l" :title="title" :description="description" />
+      <AppContentGroup
+        size="l"
+        :title="isSwapView ? $t('common.swap') : $t('common.bridge')"
+        :description="description"
+      />
       <!-- Network Not Supported -->
       <app-unavailable-card
         v-if="swapLoaded && !supportedNetwork"
@@ -65,6 +69,7 @@
         :to-chain="selectedToChain"
         :cta-label="ctaLabel"
         :cta-disabled="isSwapDisabled"
+        :cta-loading="isLoading"
         :class="['transition-all duration-300', blockedClass]"
         @percent="handleMaxClick"
         @update:to-chain="setToChain"
@@ -159,6 +164,7 @@
 <script setup lang="ts">
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
+import BigNumber from 'bignumber.js'
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
@@ -249,16 +255,12 @@ const toTokenModel = computed({
   },
 })
 
-const title = computed(() =>
-  isSwapView.value ? t('common.swap') : t('common.bridge'),
-)
-const description = computed(() =>
-  isSwapView.value
-    ? t('swap.within-network', {
-        network: selectedChain.value?.nameLong || selectedChain.value?.name,
-      })
-    : t('swap.between-chains'),
-)
+// No description until the chain loads, so the network name is never blank.
+const description = computed(() => {
+  if (!isSwapView.value) return t('swap.between-chains')
+  const network = selectedChain.value?.nameLong || selectedChain.value?.name
+  return network ? t('swap.within-network', { network }) : undefined
+})
 
 // % presets of the from balance; Max keeps its internal-wallet gate (it
 // reserves the fee, which only internal wallets can estimate up front).
@@ -269,7 +271,7 @@ const quickActions = computed(() => {
 })
 
 const ctaLabel = computed(() => {
-  if (!Number(fromAmount.value)) return t('common.enter_amount')
+  if (!BigNumber(fromAmount.value).gt(0)) return t('common.enter_amount')
   return isSwapView.value ? t('swap.review-swap') : t('swap.review-bridge')
 })
 

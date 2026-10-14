@@ -25,7 +25,7 @@
         <transition name="fade" mode="out-in">
           <!-- Inside the card padding, so no side inset of its own -->
           <AppInputFeedback
-            v-if="showError"
+            v-if="showError && !isLoading"
             type="error"
             :message="error"
             class="px-0!"
@@ -116,7 +116,10 @@ const balance = computed(() => {
 
 const balanceCaption = computed(() =>
   isWalletConnected.value
-    ? `${t('common.balance')}: ${balance.value} ${tokenBalanceRaw.value?.symbol ?? ''}`.trim()
+    ? t('common.balance_amount', {
+        amount:
+          `${balance.value} ${tokenBalanceRaw.value?.symbol ?? ''}`.trim(),
+      })
     : undefined,
 )
 
@@ -187,10 +190,6 @@ watch(
 )
 
 const showError = computed(
-  () =>
-    !!error.value &&
-    !isLoading.value &&
-    !isOpenSelectToken.value &&
-    !props.isPristine,
+  () => !!error.value && !isOpenSelectToken.value && !props.isPristine,
 )
 </script>
