@@ -50,6 +50,7 @@
               : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
+          @pointerdown="setActive()"
           @focus="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
@@ -61,7 +62,7 @@
         v-if="$slots.trailing || showClear || showReveal"
         :inert="disabled || undefined"
         :class="[
-          'flex items-center gap-1 shrink-0',
+          'flex items-center shrink-0',
           { 'opacity-40 pointer-events-none': disabled },
         ]"
       >
@@ -69,7 +70,7 @@
         <app-btn-icon
           v-if="showClear"
           @click="clearInputValue"
-          class="text-text-brand"
+          :class="TRAILING_BTN_CLASS"
           :label="$t('common.clear_icon')"
         >
           <AppIcon name="x-circle" size="s" />
@@ -77,7 +78,7 @@
         <app-btn-icon
           v-if="showReveal"
           @click="togglePasswordVisibility"
-          class="text-text-brand"
+          :class="TRAILING_BTN_CLASS"
           :label="
             !showPassword
               ? $t('common.show_password')
@@ -95,20 +96,15 @@
 
     <!-- Feedback row — focus-independent; never rendered while disabled -->
     <transition name="fade">
-      <div
+      <AppInputFeedback
         v-if="showFeedback"
         :id="feedbackId"
-        class="flex items-center gap-1 min-h-6 px-4"
-      >
-        <AppIcon
-          name="exclamation-circle"
-          size="s"
-          class="shrink-0 text-text-error"
-        />
-        <p class="text-text-xs text-text-error min-w-0 break-words">
-          {{ errorMessage || $t('common.required') }}
-        </p>
-      </div>
+        :type="hasError ? 'error' : feedback?.type"
+        :message="
+          errorMessage ||
+          (hasRequiredError ? $t('common.required') : feedback?.message)
+        "
+      />
     </transition>
   </div>
 </template>
@@ -125,6 +121,8 @@ import {
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
+import type { InputFeedback } from '@/components/input_feedback/types'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import {
   INPUT_SIZE_SPEC,
@@ -171,6 +169,11 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  /** Success / warning / helper row; `errorMessage` wins when both are set. */
+  feedback: {
+    type: Object as PropType<InputFeedback>,
+    required: false,
+  },
   type: {
     type: String as PropType<InputTypeHTMLAttribute>,
     default: 'text',
@@ -208,8 +211,13 @@ const spec = computed(() => INPUT_SIZE_SPEC[props.size])
 /**------------------------
  * Focus State
  -------------------------*/
-const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
-  useInFocusInput(baseInput)
+const {
+  inFocusInput,
+  isActive,
+  setActive,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(baseInput)
 
 /**------------------------
  * Value / label float
@@ -230,11 +238,14 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? props.label)
 const hasRequiredError = ref(false)
 const hasError = computed(
   () =>
-    (!!props.errorMessage && props.errorMessage !== '') ||
-    hasRequiredError.value,
+    !!props.errorMessage ||
+    hasRequiredError.value ||
+    (props.feedback?.type === 'error' && !!props.feedback.message),
 )
 // Disabled fields never show the feedback row (no error variants in Figma).
-const showFeedback = computed(() => !props.disabled && hasError.value)
+const showFeedback = computed(
+  () => !props.disabled && (hasError.value || !!props.feedback?.message),
+)
 
 watch(inFocusInput, value => {
   if (!value) {
@@ -246,6 +257,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -258,6 +270,7 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
+    active: isActive.value,
     error: hasError.value,
     disabled: props.disabled,
   }),
@@ -266,11 +279,16 @@ const surfaceClass = computed(() =>
 /**------------------------
  * Trailing actions (built-in clear + password reveal)
  -------------------------*/
+// Figma Input trailing Button Icon: 20px glyph + 3px padding (26px, between the
+// library S 22 and M 32 boxes), siblings packed with no gap. icon/default tint
+// on the button; the glyph inherits it.
+const TRAILING_BTN_CLASS = 'size-[26px]! text-icon-default'
 const showClear = computed(() => hasValue.value && !props.disabled)
 const showReveal = computed(() => props.type === 'password' && !props.disabled)
 
 const showPassword = ref(false)
 const togglePasswordVisibility = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     showPassword.value = !showPassword.value
@@ -284,6 +302,7 @@ const inputType = computed(() => {
 })
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

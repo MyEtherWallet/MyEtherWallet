@@ -72,8 +72,8 @@ src/
 | Component                | Purpose                                     |
 | ------------------------ | ------------------------------------------- |
 | `AppInput.vue`           | Base text input                             |
-| `AppTextField.vue`       | Extended text field with label/error slots  |
-| `AppSearchInput.vue`     | Input with search icon                      |
+| `AppTextArea.vue`        | Multi-line text area with error feedback    |
+| `AppSearchbar.vue`       | Search field with search icon + clear       |
 | `AppSelect.vue`          | Dropdown select                             |
 | `AppTokenSelect.vue`     | Token-aware dropdown (shows logos, symbols) |
 | `AppToggle.vue`          | Toggle switch (boolean)                     |

@@ -10,14 +10,14 @@ vi.mock('@/modules/home/composables/useAssetPicker', () => ({
   useAssetPicker: () => ({ items, isLoading }),
 }))
 
-// AppDialog teleports; AppSearchInput/AssetPickerRow pull heavy deps — stub all.
+// AppDialog teleports; AppSearchbar/AssetPickerRow pull heavy deps — stub all.
 vi.mock('@/components/AppDialog.vue', () => ({
   default: {
     props: { isOpen: Boolean },
     template: '<div v-if="isOpen"><slot name="content" /></div>',
   },
 }))
-vi.mock('@/components/AppSearchInput.vue', () => ({
+vi.mock('@/components/AppSearchbar.vue', () => ({
   default: { template: '<input data-test="search" />' },
 }))
 vi.mock('@/modules/home/components/AssetPickerRow.vue', () => ({

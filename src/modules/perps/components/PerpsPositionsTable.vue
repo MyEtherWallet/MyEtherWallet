@@ -748,7 +748,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in paginatedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
