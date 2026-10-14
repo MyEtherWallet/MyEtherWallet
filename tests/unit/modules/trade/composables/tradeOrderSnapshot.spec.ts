@@ -105,9 +105,10 @@ const makeHarness = async () => {
   form.toTokenSelected.value = AAPL as never
   form.fromAmount.value = '100'
   const currentQuote = ref<typeof ORIGINAL_QUOTE | null>({ ...ORIGINAL_QUOTE })
+  const walletAddress = ref<string | null>('0xwallet')
   const execution = useTradeExecution({
     form,
-    walletAddress: ref('0xwallet'),
+    walletAddress,
     wallet: ref({}) as never,
     currentQuote,
     needsApproval: ref(false),
@@ -124,7 +125,7 @@ const makeHarness = async () => {
     form.toTokenSelected.value = TSLA as never
     currentQuote.value = null
   }
-  return { ...execution, form, currentQuote, clearForm }
+  return { ...execution, form, currentQuote, walletAddress, clearForm }
 }
 
 describe('confirmTrade saves what the user confirmed (MEW trade notification)', () => {
@@ -162,7 +163,37 @@ describe('confirmTrade saves what the user confirmed (MEW trade notification)', 
       toUsdValue: '98.00',
       chainId: 1,
       chainName: 'ETHEREUM',
+      fromAddress: '0xwallet',
     })
+  })
+
+  it('keeps submission and the saved order on the account that confirmed', async () => {
+    const { confirmTrade, walletAddress } = await makeHarness()
+    mockSubmitOrder.mockImplementation(async () => {
+      // Account switched in the wallet while the relayer call was in flight.
+      walletAddress.value = '0xother'
+      return { hash: '0xorder' }
+    })
+
+    await confirmTrade()
+
+    expect(mockSubmitOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ fromAddress: '0xwallet' }),
+      expect.anything(),
+    )
+    expect(mockAddOrder.mock.calls[0][0]).toMatchObject({
+      fromAddress: '0xwallet',
+    })
+  })
+
+  it('does not submit without a connected address', async () => {
+    const { confirmTrade, walletAddress } = await makeHarness()
+    walletAddress.value = null
+
+    await confirmTrade()
+
+    expect(mockSubmitOrder).not.toHaveBeenCalled()
+    expect(mockAddOrder).not.toHaveBeenCalled()
   })
 
   it('submits the order with the confirmed tokens and amount, not the live form', async () => {

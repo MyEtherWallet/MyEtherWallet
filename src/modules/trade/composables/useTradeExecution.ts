@@ -328,10 +328,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     quote: QuoteData | null
     chainId: number
     chainName: string
+    /** Account that signs the order and owns the saved notification. */
+    walletAddress: string
   }
 
   const snapshotTrade = (): TradeSnapshot | null => {
     if (!fromTokenSelected.value || !toTokenSelected.value) return null
+    if (!walletAddress.value) return null
     return {
       from: fromTokenSelected.value,
       to: toTokenSelected.value,
@@ -339,6 +342,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       quote: currentQuote.value,
       chainId: parseInt(selectedFromChain.value?.chainID || '1'),
       chainName: selectedFromChain.value?.name || 'ETHEREUM',
+      walletAddress: walletAddress.value,
     }
   }
 
@@ -351,7 +355,15 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     snapshot: TradeSnapshot,
     extra: Partial<SavedTradeOrder> & { status: string },
   ): SavedTradeOrder => {
-    const { from, to, amount: fromAmount, quote, chainId, chainName } = snapshot
+    const {
+      from,
+      to,
+      amount: fromAmount,
+      quote,
+      chainId,
+      chainName,
+      walletAddress: fromAddress,
+    } = snapshot
     const toDecimals = to.decimals || 18
     const expectedToAmount = formatUnits(
       quote?.avgAmount || quote?.startAmount || 0n,
@@ -379,7 +391,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ? BigNumber(expectedToAmount).times(to.price).toFixed(2)
         : undefined,
       chainId,
-      fromAddress: walletAddress.value!,
+      fromAddress,
       seen: false,
       chainName,
       fromTokenAddress: from.address,
@@ -485,7 +497,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           fromTokenAddress: snapshot.from.address,
           toTokenAddress: snapshot.to.address,
           amount: amountInBaseUnits,
-          fromAddress: walletAddress.value!,
+          fromAddress: snapshot.walletAddress,
           fromTokenDecimals: snapshot.from.decimals || 18,
           toTokenDecimals: snapshot.to.decimals || 18,
         },
