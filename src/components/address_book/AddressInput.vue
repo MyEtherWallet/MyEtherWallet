@@ -78,14 +78,14 @@
           :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
-          class="text-text-brand"
+          :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
           <AppIcon name="x-circle" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
-          class="text-text-brand"
+          :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
           <AppIcon name="users" variant="filled" />
         </app-btn-icon>
