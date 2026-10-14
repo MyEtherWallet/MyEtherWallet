@@ -196,6 +196,10 @@ describe('AddToWatchlistDialog', () => {
     const loading = mountDialog()
     expect(loading.findAll('[data-test="picker-skeleton"]').length).toBe(6)
     expect(loading.find('[data-test="asset-picker-row"]').exists()).toBe(false)
+    // Skeletons are aria-hidden; a live status announces the load instead.
+    expect(loading.get('[role="status"]').text()).toBe(
+      'homePage.hero.watchlist.addModal.loading',
+    )
     isLoading.value = false
     expect(mountDialog().find('[data-test="picker-empty"]').exists()).toBe(true)
   })

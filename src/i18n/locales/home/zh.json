@@ -56,6 +56,7 @@
           "title": "添加到关注列表",
           "searchPlaceholder": "搜索",
           "empty": "未找到资产",
+          "loading": "正在加载资产",
           "allStocks": "全部股票",
           "allCrypto": "全部加密货币",
           "more": "更多",

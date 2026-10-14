@@ -56,6 +56,7 @@
           "title": "Add to watchlist",
           "searchPlaceholder": "Search",
           "empty": "No assets found",
+          "loading": "Loading assets",
           "allStocks": "All stocks",
           "allCrypto": "All crypto",
           "more": "More",

@@ -56,6 +56,7 @@
           "title": "Agregar a la lista",
           "searchPlaceholder": "Buscar",
           "empty": "No se encontraron activos",
+          "loading": "Cargando activos",
           "allStocks": "Todas las acciones",
           "allCrypto": "Todas las cripto",
           "more": "Más",

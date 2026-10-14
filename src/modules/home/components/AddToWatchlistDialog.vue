@@ -264,6 +264,9 @@ const confirm = () => {
         >
           <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
           <template v-if="isLoading">
+            <span role="status" class="sr-only">
+              {{ t('homePage.hero.watchlist.addModal.loading') }}
+            </span>
             <div
               v-for="n in 6"
               :key="n"
