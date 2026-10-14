@@ -167,9 +167,10 @@
             </div>
 
             <app-base-button
-              type="link"
+              type="tertiary"
+              surface="alternative"
               size="small"
-              class="!text-text-default font-semibold"
+              class="!text-black text-s-14 font-semibold tracking-[-0.28px]"
               @click="isBreakdownOpen = !isBreakdownOpen"
             >
               <span class="flex items-center gap-1">

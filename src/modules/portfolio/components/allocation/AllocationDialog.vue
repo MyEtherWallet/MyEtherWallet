@@ -139,8 +139,8 @@
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'

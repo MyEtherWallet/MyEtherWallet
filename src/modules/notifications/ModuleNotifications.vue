@@ -75,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { ref, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 //Components
@@ -84,7 +85,6 @@ import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 
 //Helpers

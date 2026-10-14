@@ -8,7 +8,7 @@ const mountIt = (props = {}, slots = {}) =>
   mount(AppBaseButton, {
     props,
     slots,
-    global: { directives: { ripple } },
+    global: { directives: { ripple }, stubs: { AppSpinner: true } },
   })
 
 describe('AppBaseButton', () => {
@@ -30,13 +30,13 @@ describe('AppBaseButton', () => {
     expect(cls).toContain('text-text-brand')
   })
 
-  it('renders secondary on the alternative surface as white', () => {
+  it('renders secondary on the alternative surface as white (background/alternative)', () => {
     const cls = mountIt({ type: 'secondary', surface: 'alternative' }).classes()
     expect(cls).toContain('bg-background-alternative')
     expect(cls).toContain('text-text-brand')
   })
 
-  it('renders tertiary transparent, brand on default and default text on alternative', () => {
+  it('renders tertiary transparent, brand on default and black on alternative', () => {
     expect(mountIt({ type: 'tertiary' }).classes()).toContain('text-text-brand')
     expect(
       mountIt({ type: 'tertiary', surface: 'alternative' }).classes(),
@@ -47,6 +47,20 @@ describe('AppBaseButton', () => {
     const cls = mountIt({ type: 'link' }).classes()
     expect(cls).toContain('text-text-brand')
     expect(cls).not.toContain(BTN_SIZE_SPEC.large.padding.split(' ')[0])
+  })
+
+  it('drops the label padding for the link type', () => {
+    // A link renders inline with no padding, so the label wrapper must not
+    // carry the size labelPadding either.
+    const label = mountIt({ type: 'link' }, { default: 'Learn more' }).find(
+      'span',
+    )
+    expect(label.classes()).not.toContain(BTN_SIZE_SPEC.large.labelPadding)
+    // A non-link keeps it.
+    const solid = mountIt({ type: 'secondary' }, { default: 'Cancel' }).find(
+      'span',
+    )
+    expect(solid.classes()).toContain(BTN_SIZE_SPEC.large.labelPadding)
   })
 
   it('applies the danger tone per type', () => {

@@ -286,7 +286,7 @@
         <app-base-button
           type="tertiary"
           surface="alternative"
-          size="small"
+          size="medium"
           class="font-medium mt-3 -ml-1"
           @click="showPositionMore = !showPositionMore"
           >{{ $t('perps.info.more-label') }}

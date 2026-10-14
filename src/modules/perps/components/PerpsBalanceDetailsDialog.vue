@@ -39,10 +39,10 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import {
   usePerpsBalance,
   usePerpsPortfolioSummary,

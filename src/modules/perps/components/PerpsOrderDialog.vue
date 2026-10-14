@@ -82,11 +82,11 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'

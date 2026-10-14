@@ -32,13 +32,13 @@ const tones = ['default', 'danger', 'success'] as const
 const contexts = [
   { label: 'App background', class: 'bg-background-default' },
   { label: 'White card', class: 'bg-white' },
-  { label: 'Default surface hover', class: 'bg-background-default-hover' },
+  { label: 'Muted', class: 'bg-background-default-hover' },
   { label: 'Brand tint', class: 'bg-background-brand-subtle' },
 ] as const
 </script>
 
 <template>
-  <div class="p-10 bg-background-default min-h-screen">
+  <div class="p-10 bg-background-alternative min-h-screen">
     <h1 class="title5 mb-8">AppBaseButton — types × tones × sizes</h1>
 
     <div
