@@ -78,9 +78,27 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'input-feedback',
+              name: 'DevInputFeedback',
+              component: () => import('@/views/ViewInputFeedbackShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'input-naked',
               name: 'DevInputNaked',
               component: () => import('@/views/ViewInputNakedShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'text-area',
+              name: 'DevTextArea',
+              component: () => import('@/views/ViewTextAreaShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'searchbar',
+              name: 'DevSearchbar',
+              component: () => import('@/views/ViewSearchbarShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

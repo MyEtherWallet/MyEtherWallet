@@ -20,7 +20,8 @@
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
+              bg-class="bg-background-alternative"
               v-model="searchInput"
               class="grow"
               :placeholder="$t('select_token.search')"
@@ -142,7 +143,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useI18n } from 'vue-i18n'

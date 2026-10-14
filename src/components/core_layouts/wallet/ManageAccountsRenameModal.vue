@@ -29,21 +29,12 @@
             "
             @keyup.enter="save"
           />
-          <div
+          <AppInputFeedback
             v-if="isDuplicate"
             data-test="rename-modal-error"
-            class="flex items-center gap-1.5 px-1"
-          >
-            <AppIcon
-              name="exclamation-circle"
-              variant="filled"
-              size="xxs"
-              class="shrink-0 text-text-error"
-            />
-            <p class="text-s-12 text-text-error leading-[18px]">
-              {{ $t('multi_address.rename.duplicate') }}
-            </p>
-          </div>
+            type="error"
+            :message="$t('multi_address.rename.duplicate')"
+          />
         </div>
         <button
           data-test="rename-modal-save"
@@ -66,7 +57,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const props = defineProps<{

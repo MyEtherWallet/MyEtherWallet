@@ -17,22 +17,19 @@
       autocomplete="off"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
+      @pointerdown="setActive()"
       @input="onInput"
     />
-    <div class="flex items-center gap-1 min-h-6 px-4 mt-1">
-      <template v-if="showFeedback">
-        <AppIcon
-          name="exclamation-circle"
-          size="s"
-          class="shrink-0 text-text-error"
-        />
-        <p
-          :id="feedbackId"
-          class="text-text-xs text-text-error min-w-0 break-words"
-        >
-          {{ errorMessage || $t('common.required') }}
-        </p>
-      </template>
+    <div class="flex items-center min-h-6 pr-4 mt-1">
+      <AppInputFeedback
+        v-if="showFeedback"
+        :id="feedbackId"
+        :type="hasError ? 'error' : feedback?.type"
+        :message="
+          errorMessage ||
+          (hasRequiredError ? $t('common.required') : feedback?.message)
+        "
+      />
       <button
         v-if="hasValue && !readonly"
         @click="clearInputValue"
@@ -46,7 +43,8 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch, useId, type PropType } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
+import type { InputFeedback } from '@/components/input_feedback/types'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { inputSurfaceClass, type InputSurface } from '@/components/inputSizes'
 
@@ -58,9 +56,9 @@ defineOptions({ inheritAttrs: false })
  * textarea height. No float label — a textarea has no filled/label state.
  *
  * @example Basic
- * <app-text-field v-model="model" placeholder="Message" />
+ * <app-text-area v-model="model" placeholder="Message" />
  * @example On a white card/dialog
- * <app-text-field v-model="model" surface="alternative" placeholder="Message" />
+ * <app-text-area v-model="model" surface="alternative" placeholder="Message" />
  */
 const props = defineProps({
   placeholder: {
@@ -80,6 +78,11 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  /** Success / warning / helper row; `errorMessage` wins when both are set. */
+  feedback: {
+    type: Object as PropType<InputFeedback>,
+    required: false,
+  },
   isRequired: {
     type: Boolean,
     default: false,
@@ -94,8 +97,13 @@ const model = defineModel<string>()
 const baseInput = ref<HTMLElement | null>(null)
 const feedbackId = useId()
 
-const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
-  useInFocusInput(baseInput)
+const {
+  inFocusInput,
+  isActive,
+  setActive,
+  setInFocusInput,
+  startOutOfFocusTimeout,
+} = useInFocusInput(baseInput)
 
 const hasValue = computed(() => model.value != null && model.value !== '')
 
@@ -105,10 +113,11 @@ const hasValue = computed(() => model.value != null && model.value !== '')
 const hasRequiredError = ref(false)
 const hasError = computed(
   () =>
-    (!!props.errorMessage && props.errorMessage !== '') ||
-    hasRequiredError.value,
+    !!props.errorMessage ||
+    hasRequiredError.value ||
+    (props.feedback?.type === 'error' && !!props.feedback.message),
 )
-const showFeedback = computed(() => hasError.value)
+const showFeedback = computed(() => hasError.value || !!props.feedback?.message)
 
 watch(inFocusInput, value => {
   if (!value) {
@@ -120,6 +129,7 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
+  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -132,11 +142,13 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
+    active: isActive.value,
     error: hasError.value,
   }),
 )
 
 const clearInputValue = () => {
+  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''
