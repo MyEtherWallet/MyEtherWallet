@@ -11,8 +11,10 @@
         <div
           v-if="!resolvedAddress"
           :class="[
-            filled ? 'w-6 h-6 bg-white' : 'w-8 h-8 bg-background-default',
-            'rounded-full border border-border-default',
+            filled
+              ? 'w-6 h-6 bg-white'
+              : 'w-8 h-8 bg-background-default border border-border-default',
+            'rounded-full',
           ]"
         ></div>
         <img
@@ -32,14 +34,7 @@
         :class="[
           filled ? 'left-12' : 'left-14',
           'pointer-events-none absolute transition-all aria-hidden',
-          inFocusInput
-            ? hasError && !isPristine
-              ? 'text-text-error'
-              : 'text-text-brand'
-            : 'text-text-muted',
-          inFocusInput || adrInput !== ''
-            ? 'top-2 text-s-11'
-            : 'top-[18px] text-sm font-medium',
+          labelClass,
         ]"
       >
         {{ resolvedLabel }}
@@ -57,14 +52,14 @@
             '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
           filled
-            ? 'border-0 bg-background-default rounded-12 h-14 pl-12'
+            ? 'border-0 bg-background-default rounded-12 h-14 pl-12 text-text-sm'
             : [
                 isRaised
                   ? 'shadow-button shadow-button-elevated'
                   : 'border border-border-strong',
-                'bg-white rounded-20 h-[58px] pl-14',
+                'bg-white rounded-20 h-[58px] pl-14 text-sm font-medium',
               ],
-          'grow focus:outline-none focus:ring-0 text-text-default w-full pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
+          'grow focus:outline-none focus:ring-0 text-text-default w-full pr-20 pt-4 pb-0 transition-colors',
         ]"
         :aria-label="resolvedLabel"
         @focus="setInFocusInput()"
@@ -80,19 +75,19 @@
           v-if="adrInput !== ''"
           :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
-          <AppIcon name="x-circle" />
+          <AppIcon name="x-circle" :size="filled ? 's' : 'm'" />
         </app-btn-icon>
         <app-btn-icon
           :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
           :class="filled ? 'text-text-default' : 'text-text-brand'"
         >
-          <AppIcon name="users" variant="filled" />
+          <AppIcon name="users" variant="filled" :size="filled ? 's' : 'm'" />
         </app-btn-icon>
       </div>
     </div>
     <!-- Error Messages OR Resolved Address -->
-    <div class="min-h-6">
+    <div :class="{ 'min-h-6': !filled }">
       <transition name="fade" mode="out-in">
         <AppInputFeedback
           v-if="
@@ -267,6 +262,29 @@ const hasError = computed(() => {
 const adrInputRef = ref<HTMLElement | null>(null)
 const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
   useInFocusInput(adrInputRef)
+
+// Floating label: raised above the value once focused or filled, otherwise it
+// sits in the field as the placeholder. The filled (design-library) field keeps
+// label/xs subtle while focused and rests as a text/sm placeholder.
+const labelClass = computed(() => {
+  const isRaisedLabel = inFocusInput.value || adrInput.value !== ''
+  const isError = inFocusInput.value && hasError.value && !props.isPristine
+  if (props.filled) {
+    if (!isRaisedLabel) return 'top-[18px] text-text-sm text-text-placeholder'
+    return [
+      'top-2 text-label-xs',
+      isError ? 'text-text-error' : 'text-text-subtle',
+    ]
+  }
+  return [
+    isRaisedLabel ? 'top-2 text-s-11' : 'top-[18px] text-sm font-medium',
+    inFocusInput.value
+      ? isError
+        ? 'text-text-error'
+        : 'text-text-brand'
+      : 'text-text-muted',
+  ]
+})
 
 //Validate address input when it loses focus
 watch(inFocusInput, newValue => {
