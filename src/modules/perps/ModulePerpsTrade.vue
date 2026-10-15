@@ -19,19 +19,10 @@
     </div>
 
     <!--
-      Service outage notice. The panel opens without ViewPerps (and its
-      PerpsStatusBanner) in the tree, so the outage needs saying here too.
-
-      Suppressed while the region block shows, matching PerpsStatusBanner's
-      precedence: the jurisdiction card already explains why the form is
-      unusable, and a second notice would only compete with it.
+      Service outage notice. The panel opens without ViewPerps in the tree, so
+      it mounts its own copy; it already yields to the region block below.
     -->
-    <AppBanner
-      v-if="showStatusLabel"
-      type="warning"
-      class="mb-3"
-      :description="$t('perps.status.unavailable')"
-    />
+    <PerpsStatusBanner class="mb-3" />
 
     <!-- Region-blocked: card explains why, form below stays visible but dimmed
          and inert so the panel reads as present-but-unusable. -->
@@ -921,6 +912,7 @@ import { usePerpsRestriction } from './composables/usePerpsRestriction'
 import { usePerpsStatus } from './composables/usePerpsStatus'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
+import PerpsStatusBanner from './components/PerpsStatusBanner.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import AppBanner from '@/components/banner/AppBanner.vue'
 import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
@@ -970,10 +962,6 @@ const { blockedClass } = useBlockedContent(isPerpsRestricted)
 // ViewPerps (and its banner) in the tree, so without this the panel would keep
 // firing orders and quotes at a service reporting 500.
 const { isServiceUnavailable } = usePerpsStatus()
-// Restricted outranks the outage: see the template comment on the label.
-const showStatusLabel = computed(
-  () => isServiceUnavailable.value && !isPerpsRestricted.value,
-)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
