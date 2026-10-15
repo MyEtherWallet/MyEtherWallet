@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // Gallery for the Banner (MEW-2448), reachable at /dev/banner via the
-// design-library shell — see routesDefault.ts. Figma `_base / Banner`
-// 3740:42018 (multi + single line) and `Banner` 3740:42238 (four types), then
-// actions, no close, long copy, and a live v-model dismiss.
+// design-library shell — see routesDefault.ts. Figma `Banner` 3740:42238 (four
+// types), then actions, no close, long copy, and a live v-model dismiss.
 import { ref } from 'vue'
 import AppBanner from '@/components/banner/AppBanner.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -25,19 +24,6 @@ const isShown = ref(true)
         status icon; the container stays grey for every type.
       </p>
     </header>
-
-    <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">_base: multi line · single line</h2>
-      <div
-        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-alternative p-8"
-      >
-        <AppBanner :title="TITLE" :description="DESCRIPTION" dismissible />
-        <AppBanner
-          description="Short feedback message of only 1 line"
-          dismissible
-        />
-      </div>
-    </section>
 
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Types</h2>
