@@ -30,7 +30,7 @@ const dismissCount = ref(0)
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">_base: multi line · single line</h2>
       <div
-        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default p-8"
+        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-alternative p-8"
       >
         <AppBanner :title="TITLE" :description="DESCRIPTION" dismissible />
         <AppBanner
@@ -43,7 +43,7 @@ const dismissCount = ref(0)
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Types</h2>
       <div
-        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default p-8"
+        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-alternative p-8"
       >
         <AppBanner
           v-for="type in BANNER_TYPES"
@@ -59,7 +59,7 @@ const dismissCount = ref(0)
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Variations</h2>
       <div
-        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default p-8"
+        class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-alternative p-8"
       >
         <AppBanner
           type="warning"
@@ -83,7 +83,7 @@ const dismissCount = ref(0)
     <section class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">Dismiss (v-model)</h2>
       <div
-        class="flex flex-col items-start gap-4 rounded-12 border border-border-default p-8"
+        class="flex flex-col items-start gap-4 rounded-12 border border-border-default bg-background-alternative p-8"
       >
         <AppBanner
           v-model="isShown"
