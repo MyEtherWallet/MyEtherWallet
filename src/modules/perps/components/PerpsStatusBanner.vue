@@ -5,32 +5,18 @@
     request that never got a response) reads the same way, so the page never
     opens with an outage notice it cannot substantiate.
   -->
-  <div
+  <AppBanner
     v-if="showBanner"
-    role="status"
-    class="flex items-center gap-2 w-full px-4 py-3 rounded-16 bg-background-warning-subtle border-1 border-border-warning"
-  >
-    <!--
-      The amber lives in the tinted shell and the icon rather than the text:
-      `warning` is rgba(255,165,0) — around 2:1 against this background, which is
-      unreadable for body copy. Near-black text on the amber shell reads as an
-      amber banner without failing contrast.
-    -->
-    <AppIcon
-      name="exclamation-triangle"
-      size="s"
-      aria-hidden="true"
-      class="shrink-0 text-text-warning"
-    />
-    <p class="text-s-14">{{ $t('perps.status.unavailable') }}</p>
-  </div>
+    type="warning"
+    :description="$t('perps.status.unavailable')"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { usePerpsStatus } from '../composables/usePerpsStatus'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 
 const { isServiceUnavailable } = usePerpsStatus()
 const { isPerpsRestricted } = usePerpsRestriction()

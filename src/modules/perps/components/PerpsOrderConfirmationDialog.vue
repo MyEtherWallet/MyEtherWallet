@@ -121,16 +121,13 @@
         </div>
 
         <!-- Error -->
-        <div
+        <AppBanner
           v-if="orderError || leverageError || limitPriceOutOfTolerance"
-          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
-        >
-          <p class="text-text-error text-s-14 font-medium">
-            {{
-              orderError || leverageError || $t('perps.errors.out-of-tolerance')
-            }}
-          </p>
-        </div>
+          type="alert"
+          :description="
+            orderError || leverageError || $t('perps.errors.out-of-tolerance')
+          "
+        />
 
         <!-- Actions -->
         <div class="flex flex-col gap-1">
@@ -168,6 +165,7 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { formatUsd, formatUsdc } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 

@@ -82,12 +82,7 @@
         </div>
 
         <!-- Error -->
-        <div
-          v-if="closeError"
-          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
-        >
-          <p class="text-text-error text-s-14 font-medium">{{ closeError }}</p>
-        </div>
+        <AppBanner v-if="closeError" type="alert" :description="closeError" />
 
         <!-- Actions -->
         <div class="flex flex-col gap-1">
@@ -123,6 +118,7 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { formatUsd, formatPnl } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 
