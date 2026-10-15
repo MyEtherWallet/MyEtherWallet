@@ -148,7 +148,6 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "daysAgo": "{n} days ago",
-      "pagination": "Showing page {page} of {total}",
       "readOnSource": "Read the full article on {source}",
       "readMore": "Read the full article"
     }

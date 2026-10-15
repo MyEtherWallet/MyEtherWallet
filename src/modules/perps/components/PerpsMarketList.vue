@@ -609,40 +609,14 @@
             </tr>
           </tbody>
         </table>
-        <!-- Footer / pagination -->
-        <div
+        <AppPagination
           v-if="filteredContracts.length > 0"
-          class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
-        >
-          <span class="text-text-subtle">
-            {{
-              $t('common.showing_page', {
-                current: currentPage + 1,
-                total: totalPages,
-              })
-            }}
-          </span>
-          <div class="flex items-center gap-2">
-            <app-btn-icon
-              variant="filled"
-              size="l"
-              :disabled="currentPage === 0"
-              :label="$t('common.previous_page')"
-              @click="prevPage"
-            >
-              <AppIcon name="chevron-left" variant="filled" size="xxs" />
-            </app-btn-icon>
-            <app-btn-icon
-              variant="filled"
-              size="l"
-              :disabled="currentPage >= totalPages - 1"
-              :label="$t('common.next_page')"
-              @click="nextPage"
-            >
-              <AppIcon name="chevron-right" variant="filled" size="xxs" />
-            </app-btn-icon>
-          </div>
-        </div>
+          :model-value="currentPage + 1"
+          :total-pages="totalPages"
+          variant="alternative"
+          class="mt-4"
+          @update:model-value="currentPage = $event - 1"
+        />
         <div
           v-if="filteredContracts.length === 0"
           class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
@@ -693,6 +667,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
 import {
   usePerpsMarkets,
   usePerpsContracts,
@@ -1045,7 +1020,5 @@ const {
   currentPage,
   paginatedArray: paginatedContracts,
   totalPages,
-  nextPage,
-  prevPage,
 } = usePaginate<EnrichedContract>(filteredContracts, PERPS_PAGE_SIZE)
 </script>
