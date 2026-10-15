@@ -614,7 +614,7 @@
           :model-value="currentPage + 1"
           :total-pages="totalPages"
           variant="alternative"
-          class="mt-4 px-2"
+          class="mt-4"
           @update:model-value="currentPage = $event - 1"
         />
         <div

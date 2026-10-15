@@ -384,7 +384,8 @@
         :model-value="page"
         :total-pages="totalPages"
         variant="alternative"
-        class="mt-4 px-2"
+        :label="isLoading ? blankLabel : undefined"
+        class="mt-4"
         @update:model-value="setPage"
       />
       <select-chain-dialog
@@ -483,6 +484,8 @@ const setPage = (p: number) => {
   page.value = p
   tableContainer.value?.scrollTo(0, 0)
 }
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
