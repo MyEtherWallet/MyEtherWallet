@@ -131,12 +131,12 @@
             </div>
 
             <!-- Error -->
-            <div
+            <AppBanner
               v-if="error"
-              class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4 mb-4 mt-2"
-            >
-              <p class="text-text-error text-s-14 font-medium">{{ error }}</p>
-            </div>
+              type="alert"
+              class="mb-4 mt-2"
+              :description="error"
+            />
 
             <!-- Deposit Button -->
             <AppBaseButton
@@ -245,6 +245,7 @@ import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'

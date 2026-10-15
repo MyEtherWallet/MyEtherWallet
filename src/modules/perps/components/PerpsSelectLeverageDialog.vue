@@ -128,23 +128,21 @@
             $t('perps.select-leverage.learn-more')
           }}</a>
         </p>
-        <app-warning
+        <AppBanner
           v-if="mode === 'add'"
+          type="warning"
           :title="$t('perps.select-leverage.leverage-will-change-title')"
-          :text="
+          :description="
             $t('perps.select-leverage.leverage-will-change-text', { symbol })
           "
         />
 
         <!-- Leverage Error -->
-        <div
+        <AppBanner
           v-if="leverageError"
-          class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
-        >
-          <p class="text-text-error text-s-14 font-medium">
-            {{ leverageError }}
-          </p>
-        </div>
+          type="alert"
+          :description="leverageError"
+        />
 
         <!-- Save Button -->
         <button
@@ -166,7 +164,7 @@ import { getLogoUrl } from '../utils/market'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppWarning from '@/components/AppWarning.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 
 const { t } = useI18n()
 

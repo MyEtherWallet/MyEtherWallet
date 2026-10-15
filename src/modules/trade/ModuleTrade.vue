@@ -157,46 +157,43 @@
       </div>
 
       <!-- Error Display -->
-      <div
+      <AppBanner
         v-if="!isLoading && displayGeneralError && !isPairUnavailable"
+        type="alert"
+        :description="displayGeneralError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
-      >
-        <p class="text-text-error text-s-14 text-center break-words">
-          {{ displayGeneralError }}
-        </p>
-      </div>
+        class="w-full max-w-[340px] mb-2 max-h-[120px] overflow-y-auto"
+      />
 
       <!-- Asset Not Tradeable Warning (only show when a session is open) -->
-      <div
+      <AppBanner
         v-if="
           !isLoading &&
           isTradingSessionOpen &&
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
+        type="warning"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-warning-subtle border border-border-warning rounded-12 mb-2"
+        class="w-full max-w-[340px] mb-2"
       >
-        <p class="text-text-warning text-s-14 text-center">
-          <app-token-symbol
-            :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
-            :address="
-              toTokenSelected && selectedFromChain
-                ? {
-                    address: toTokenSelected.address,
-                    network: selectedFromChain.name,
-                  }
-                : undefined
-            "
-            :has-gradient="false"
-            class="inline-flex !text-s-14"
-          />
-          {{
-            $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage })
-          }}
-        </p>
-      </div>
+        <app-token-symbol
+          :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
+          :address="
+            toTokenSelected && selectedFromChain
+              ? {
+                  address: toTokenSelected.address,
+                  network: selectedFromChain.name,
+                }
+              : undefined
+          "
+          :has-gradient="false"
+          class="inline-flex !text-s-14"
+        />
+        {{
+          $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage })
+        }}
+      </AppBanner>
 
       <div class="w-full max-w-[340px] transition-all duration-300">
         <app-base-button
@@ -231,20 +228,12 @@
             </app-base-button>
           </transition>
 
-          <div
+          <AppBanner
             v-if="isPairUnavailable && isTradingSessionOpen"
-            class="flex items-start gap-3 w-full mt-3 px-4 py-3 rounded-12 bg-warning-subtle"
-          >
-            <AppIcon
-              name="exclamation-triangle"
-              variant="filled"
-              size="s"
-              class="flex-none text-text-warning"
-            />
-            <p class="text-s-14 leading-[20px] text-black">
-              {{ $t('trade.pair_unavailable.notice') }}
-            </p>
-          </div>
+            type="warning"
+            :description="$t('trade.pair_unavailable.notice')"
+            class="w-full mt-3"
+          />
         </div>
       </div>
     </div>
@@ -311,6 +300,7 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useTradeModule } from './composables/useTradeModule'
 
