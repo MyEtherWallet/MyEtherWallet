@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { withWalletFlowRoutes } from './routesWalletFlow'
 import { type RouterOptions } from 'vue-router'
 import { useGlobalStore } from '@/stores/globalStore'
+import configs from '@/configs'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -27,7 +28,7 @@ const DefaultRoutes = <RouteNameCollection>[
   // components that have a preview; each renders in its <router-view>. Never
   // registered in production builds. noWalletFlow: these are previews, not app
   // pages — they must not get the connect/create overlays from withWalletFlowRoutes.
-  ...(import.meta.env.MODE !== 'production'
+  ...(configs.BUILD_MODE !== 'production'
     ? [
         {
           path: '/dev',
@@ -47,6 +48,139 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'action-bar',
+              name: 'DevActionBar',
+              component: () => import('@/views/ViewActionBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'avatar',
+              name: 'DevAvatar',
+              component: () => import('@/views/ViewAvatarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toggle',
+              name: 'DevToggle',
+              component: () => import('@/views/ViewToggleShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'content-group',
+              name: 'DevContentGroup',
+              component: () => import('@/views/ViewContentGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'input',
+              name: 'DevInput',
+              component: () => import('@/views/ViewInputPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'input-feedback',
+              name: 'DevInputFeedback',
+              component: () => import('@/views/ViewInputFeedbackShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'input-naked',
+              name: 'DevInputNaked',
+              component: () => import('@/views/ViewInputNakedShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'text-area',
+              name: 'DevTextArea',
+              component: () => import('@/views/ViewTextAreaShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'searchbar',
+              name: 'DevSearchbar',
+              component: () => import('@/views/ViewSearchbarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'picker',
+              name: 'DevPicker',
+              component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'divider',
+              name: 'DevDivider',
+              component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'segmented-control',
+              name: 'DevSegmentedControl',
+              component: () =>
+                import('@/views/ViewSegmentedControlShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'spinner',
+              name: 'DevSpinner',
+              component: () => import('@/views/ViewSpinnerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'slider',
+              name: 'DevSlider',
+              component: () => import('@/views/ViewSliderShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tab-bar',
+              name: 'DevTabBar',
+              component: () => import('@/views/ViewTabBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tab-item',
+              name: 'DevTabItem',
+              component: () => import('@/views/ViewTabItemShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'checkbox',
+              name: 'DevCheckbox',
+              component: () => import('@/views/ViewCheckboxShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'chip',
+              name: 'DevChip',
+              component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tag',
+              name: 'DevTag',
+              component: () => import('@/views/ViewTagShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'icons',
+              name: 'DevIcons',
+              component: () => import('@/views/ViewIconShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'radio',
+              name: 'DevRadio',
+              component: () => import('@/views/ViewRadioShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tooltip',
+              name: 'DevTooltip',
+              component: () => import('@/views/ViewTooltipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'colors',
               name: 'DevColors',
               component: () => import('@/views/ViewColorPreview.vue'),
@@ -59,15 +193,15 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'typography',
-              name: 'DevTypography',
-              component: () => import('@/views/ViewTypographyShowcase.vue'),
+              path: 'btn-icon',
+              name: 'DevBtnIcon',
+              component: () => import('@/views/ViewBtnIconShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'icons',
-              name: 'DevIcons',
-              component: () => import('@/views/ViewIconShowcase.vue'),
+              path: 'typography',
+              name: 'DevTypography',
+              component: () => import('@/views/ViewTypographyShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
           ],

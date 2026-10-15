@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { SIZE, SIZE_TOKENS, sizeVar } from '@/components/sizeScale'
+import { AVATAR_SIZES, STATUS_BADGE_BOX } from '@/components/avatar/types'
 
 describe('size scale (MEW-2364)', () => {
   it('locks the 35-token scale to the Figma / Tailwind spec', () => {
@@ -76,5 +77,16 @@ describe('size scale (MEW-2364)', () => {
     expect(sizeVar(0.5)).toBe('--size-0-5')
     expect(sizeVar(2.5)).toBe('--size-2-5')
     expect(sizeVar(12)).toBe('--size-12')
+  })
+})
+
+describe('avatar geometry resolves through the scale unchanged', () => {
+  it('keeps the exact Figma boxes after wiring to SIZE[]', () => {
+    expect(AVATAR_SIZES.xs).toEqual({ box: 18, badgeBox: 14 })
+    expect(AVATAR_SIZES.s).toEqual({ box: 24, badgeBox: 16 })
+    expect(AVATAR_SIZES.m).toEqual({ box: 32, badgeBox: 20 })
+    expect(AVATAR_SIZES.l).toEqual({ box: 40, badgeBox: 22 })
+    expect(AVATAR_SIZES.xl).toEqual({ box: 48, badgeBox: 24 })
+    expect(STATUS_BADGE_BOX).toBe(10)
   })
 })

@@ -5,7 +5,8 @@
     </p>
     <app-input
       v-model="email"
-      :placeholder="$t('common.subscribe.email_placeholder')"
+      surface="alternative"
+      :label="$t('common.subscribe.email_placeholder')"
       type="email"
       :error-message="emailErrorMessage"
     />

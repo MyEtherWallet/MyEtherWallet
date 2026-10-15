@@ -88,7 +88,7 @@
         </div>
 
         <!-- Divider -->
-        <hr class="my-6 border-t border-border-default" />
+        <app-divider class="my-5" />
 
         <rewards-rows
           v-if="!isBanned"
@@ -100,6 +100,7 @@
           :trade-claimed="tradeClaimed"
           :trade-no-rewards="tradeNoRewards"
           :trade-market-closed="tradeMarketClosed"
+          :trade-paused="tradePaused"
           :trade-remaining-pct="tradeRemainingPct"
           :trade-remaining-count="tradeRemainingCount"
           :trade-total="tradeTotal"
@@ -133,6 +134,7 @@ import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps<{
   location?:
     | 'main-banner'
@@ -147,6 +149,7 @@ const props = defineProps<{
   tradeClaimed: boolean | null
   tradeNoRewards: boolean
   tradeMarketClosed: boolean
+  tradePaused: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null

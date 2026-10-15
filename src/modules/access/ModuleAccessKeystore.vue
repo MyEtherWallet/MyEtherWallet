@@ -62,8 +62,9 @@
             />
             <app-input
               v-model="password"
+              surface="alternative"
               data-private
-              :placeholder="$t('access_wallet_keystore.enter_password')"
+              :label="$t('access_wallet_keystore.enter_password')"
               type="password"
               :error-message="errorPassword"
               is-required
@@ -74,7 +75,7 @@
             <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
               <app-base-button
                 @click="backStep"
-                is-outline
+                type="secondary"
                 class="!min-w-[120px]"
               >
                 {{ $t('common.back') }}

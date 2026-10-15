@@ -47,7 +47,7 @@
               <!-- Seacrh -->
               <div class="sticky top-0 bg-white z-10 pt-2">
                 <div class="mb-1 flex items-center gap-2">
-                  <app-search-input
+                  <app-searchbar
                     v-model="searchInput"
                     class="grow"
                     :placeholder="$t('derivation_path.search')"
@@ -58,7 +58,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-background-default-hover border-0 w-full" />
+                <app-divider class="-my-1" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -87,24 +87,27 @@
             <div v-else class="px-5">
               <app-input
                 v-model="newPathLabel"
-                :placeholder="$t('derivation_path.enter_label')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_label')"
                 is-required
                 class="mt-4"
               />
               <app-input
                 v-model="newPath"
-                :placeholder="$t('derivation_path.enter_path')"
+                surface="alternative"
+                :label="$t('derivation_path.enter_path')"
                 is-required
               />
               <div class="flex items-center flex-col justify-center mt-3">
                 <app-base-button class="!py-3">{{
                   $t('common.add')
                 }}</app-base-button>
-                <app-btn-text
+                <app-base-button
+                  type="link"
+                  size="large"
                   class="text-text-brand mt-4"
-                  is-large
                   @click="setShowAddPath(false)"
-                  >{{ $t('common.cancel') }}</app-btn-text
+                  >{{ $t('common.cancel') }}</app-base-button
                 >
               </div>
             </div>
@@ -119,10 +122,9 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'
 import {
@@ -135,6 +137,7 @@ import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import type { Chain } from '@/mew_api/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 defineProps({

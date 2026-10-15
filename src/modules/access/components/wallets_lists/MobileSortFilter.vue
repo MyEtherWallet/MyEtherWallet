@@ -28,9 +28,7 @@
           </button>
         </div>
         <!-- DIVIDER -->
-        <hr
-          class="h-px bg-background-default-hover border-0 w-full mt-7 mb-6"
-        />
+        <app-divider class="mt-6 mb-5" />
         <!-- Sort -->
         <p class="text7 ml-3 mb-2 !font-bold">{{ $t('common.sort_by') }}:</p>
         <div class="flex flex-wrap gap-x-2 gap-y-3">
@@ -69,6 +67,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type Filter } from '@/modules/access/common/walletConfigs'
 import { type AppSelectOption } from '@/types/components/appSelect'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 interface Props {
   filterOptions: Filter[]

@@ -46,13 +46,13 @@
             <!-- Seacrh -->
             <div class="sticky top-0 bg-white z-10 pt-2">
               <div class="mb-1 flex items-center gap-2">
-                <app-search-input
+                <app-searchbar
                   v-model="searchInput"
                   class="grow"
                   :placeholder="$t('derivation_path.search')"
                 />
               </div>
-              <hr class="h-px bg-background-default-hover border-0 w-full" />
+              <app-divider class="-my-1" />
             </div>
             <!-- Seacrh Result-->
             <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
@@ -85,11 +85,12 @@
 import { ref, computed, watch } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType } from '@enkryptcom/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps({
   isBtnGroup: {

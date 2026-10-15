@@ -50,11 +50,7 @@
                 class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
                 >{{ row.label }}</span
               >
-              <app-tooltip
-                v-if="row.tooltip"
-                :text="row.tooltip"
-                position="top-right"
-              />
+              <app-tooltip v-if="row.tooltip" :text="row.tooltip" />
             </div>
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
               {{ row.value }}
@@ -73,11 +69,12 @@
               : $t('perps.order.cancel-order-button')
           }}
         </button>
-        <app-btn-text
+        <app-base-button
+          type="link"
+          size="large"
           class="w-full mt-2 text-text-brand"
-          is-large
           @click="$emit('close')"
-          >{{ $t('perps.trade.tab-close') }}</app-btn-text
+          >{{ $t('perps.trade.tab-close') }}</app-base-button
         >
       </div>
     </template>
@@ -85,12 +82,12 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { capturePerps } from '../sentry'

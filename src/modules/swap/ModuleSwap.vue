@@ -17,11 +17,13 @@
           <p class="font-bold text-s-28">
             {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
             v-if="supportedNetwork"
             class="text-text-brand text-s-14 pb-1"
             @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
         <!-- Network Not Supported -->
@@ -263,12 +265,15 @@
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 // Components
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+// AppBtnText is not imported: the "clear all" text button became an
+// app-base-button link in the buttons redesign.
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
@@ -277,7 +282,6 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
 import { useSwapModule } from './composables/useSwapModule'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const {
   supportedNetwork,

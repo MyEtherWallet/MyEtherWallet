@@ -23,7 +23,7 @@
     <!-- Amount + estimate / helper / spinner / error -->
     <div
       class="flex-1 w-full flex flex-col items-center justify-center gap-2 cursor-text"
-      @click="focus"
+      @click="onAreaClick"
     >
       <label
         :for="inputId"
@@ -76,7 +76,7 @@
         class="h-[22px] flex items-center justify-center"
         aria-live="polite"
       >
-        <app-spinner size-class="w-5 h-5" class="text-text-placeholder" />
+        <app-spinner :size="20" color="placeholder" />
       </p>
       <p
         v-else-if="errorMessage"
@@ -140,7 +140,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import PurchaseCurrencyChip from './PurchaseCurrencyChip.vue'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
@@ -329,6 +329,14 @@ const onSelectPreset = async (btn: QuickButton) => {
 }
 
 const focus = () => inputEl.value?.focus()
+
+const onAreaClick = (event: MouseEvent) => {
+  const input = inputEl.value
+  if (!input || event.target === input) return
+  input.focus()
+  const cursorPosition = input.value.length
+  input.setSelectionRange(cursorPosition, cursorPosition)
+}
 
 defineExpose({ focus })
 

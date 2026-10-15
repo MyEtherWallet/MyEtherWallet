@@ -93,7 +93,6 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
@@ -114,7 +113,7 @@
             </app-base-button>
           </template>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             :class="isRoundTwoActive ? 'w-full' : ''"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
@@ -185,7 +184,7 @@
             :subtitle="$t('rwaRewards.sub_sent')"
           />
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="w-full text-s-16 font-semibold tracking-[-0.32px]"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"
@@ -217,7 +216,6 @@
             <app-tooltip
               v-if="isDisabledCta"
               :text="disabledCtaTooltip"
-              position="middle"
               class="flex-1"
             >
               <button
@@ -238,7 +236,7 @@
             </app-base-button>
           </template>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             :class="isRoundTwoActive ? 'w-full' : ''"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
@@ -266,7 +264,7 @@
           </p>
         </div>
         <app-base-button
-          theme="neutral"
+          type="secondary"
           class="text-label-base"
           @click="onContactSupport"
         >
@@ -303,7 +301,6 @@
           <app-tooltip
             v-if="isDisabledCta"
             :text="disabledCtaTooltip"
-            position="middle"
             class="flex-1"
           >
             <button
@@ -323,7 +320,7 @@
             {{ tradeLabel }}
           </app-base-button>
           <app-base-button
-            theme="neutral"
+            type="secondary"
             class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             data-test="rwa-hero-more-info"
             @click="onMoreInfo"
@@ -354,7 +351,7 @@ import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import {

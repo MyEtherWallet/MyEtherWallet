@@ -7,38 +7,34 @@
         <h1 class="text-s-24 xs:text-s-20 font-bold hidden lg:block">
           {{ selectedTab.label }}
         </h1>
-        <div
-          class="hidden lg:flex lg:items-center bg-background-default rounded-full"
-        >
-          <app-btn-group
-            v-model:selected="selectedTab"
-            :btn-list="tabs"
-            size="medium"
-            class="flex-wrap"
+        <div class="hidden lg:block">
+          <AppSegmentedControl
+            v-model="activeTab"
+            :items="tabs"
+            size="small"
+            :label="$t('perps.positions.tabs-label')"
           >
-            <template #btn-content="{ data }">
-              <span class="px-2">
-                {{ data.label }}
-                <span
-                  v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-text-subtle text-s-12"
-                >
-                  · {{ positions.length }}
-                </span>
-                <span
-                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
-                  class="ml-1 text-text-subtle text-s-12"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${PERPS_PAGE_SIZE}+`
-                      : openOrdersCount
-                  }}
-                </span>
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'positions' && positions.length > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                · {{ positions.length }}
+              </span>
+              <span
+                v-else-if="item.value === 'orders' && openOrdersCount > 0"
+                class="ml-1 text-text-subtle text-s-12"
+              >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${PERPS_PAGE_SIZE}+`
+                    : openOrdersCount
+                }}
               </span>
             </template>
-          </app-btn-group>
+          </AppSegmentedControl>
         </div>
         <app-select
           v-model:selected="selectedTab"
@@ -246,9 +242,7 @@
                       <app-btn-icon
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
-                        class="flex lg:hidden"
+                        class="lg:hidden"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -261,7 +255,7 @@
                         size="small"
                         :disabled="isWatchOnly"
                         @click="toggleMenu"
-                        :theme="pos.direction === 'long' ? 'success' : 'error'"
+                        :tone="pos.direction === 'long' ? 'success' : 'danger'"
                       >
                         {{ $t('perps.positions.manage-label') }}
                       </AppBaseButton>
@@ -334,28 +328,27 @@
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
         <div class="mb-4 xs:pl-4">
-          <app-btn-group
-            v-model:selected="selectedOrderFilter"
-            :btn-list="orderFilterTabs"
-            size="xs"
+          <AppSegmentedControl
+            v-model="selectedOrderFilterValue"
+            :items="orderFilterTabs"
+            size="small"
+            :label="$t('perps.positions.order-filter-label')"
           >
-            <template #btn-content="{ data }">
-              <span class="px-2"
-                >{{ data.label }}
-                <span
-                  v-if="data.value === 'pending' && openOrdersCount > 0"
-                  class="ml-1 text-text-subtle text-s-11"
-                >
-                  ·
-                  {{
-                    openOrdersCountIsCapped
-                      ? `${PERPS_PAGE_SIZE}+`
-                      : openOrdersCount
-                  }}
-                </span></span
+            <template #label="{ item }">
+              {{ item.label }}
+              <span
+                v-if="item.value === 'pending' && openOrdersCount > 0"
+                class="ml-1 text-text-subtle text-s-11"
               >
+                ·
+                {{
+                  openOrdersCountIsCapped
+                    ? `${PERPS_PAGE_SIZE}+`
+                    : openOrdersCount
+                }}
+              </span>
             </template>
-          </app-btn-group>
+          </AppSegmentedControl>
         </div>
         <app-table-skeleton
           v-if="ordersLoading && orders.length === 0"
@@ -467,21 +460,12 @@
               </td>
               <!-- Status -->
               <td class="px-1 py-3 hidden lg:table-cell">
-                <p
-                  :class="[
-                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-px bg-background-default-hover',
-                    order.status === 'open' || order.status === 'pending'
-                      ? 'text-text-brand'
-                      : order.status === 'fullyfilled'
-                        ? 'text-text-success'
-                        : order.status === 'canceled' ||
-                            order.status === 'untriggered'
-                          ? 'text-text-subtle'
-                          : '',
-                  ]"
-                >
-                  {{ $t(formatOrderStatus(order.status)) }}
-                </p>
+                <app-tag
+                  :type="orderStatusTagType(order.status)"
+                  variant="subtle"
+                  class="-ml-2 mt-1"
+                  :label="$t(formatOrderStatus(order.status))"
+                />
               </td>
               <!-- Type -->
               <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
@@ -521,8 +505,6 @@
                     <app-btn-icon
                       :label="$t('perps.market-list.action-menu-label')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"
@@ -563,8 +545,6 @@
                 <app-btn-icon
                   v-else
                   :label="$t('perps.positions.view-order-details-label')"
-                  height="h-7 xs:h-8"
-                  width="w-7 xs:w-8"
                   :class="{ 'ml-auto': !showCancelButton(order) }"
                   @click.stop="openOrderDialog(order)"
                 >
@@ -652,31 +632,22 @@
                       <p class="font-bold truncate">
                         {{ getBase(fill.market) }}
                       </p>
-                      <p
-                        :class="[
-                          fill.direction?.toLowerCase().includes('long')
-                            ? 'text-text-success'
-                            : 'text-text-error',
-                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-px bg-background-default-hover lg:hidden',
-                        ]"
-                      >
-                        {{ $t(directionKey(fill.direction)) }}
-                      </p>
+                      <app-tag
+                        :type="fillDirectionTagType(fill.direction)"
+                        variant="subtle"
+                        class="-ml-1 mt-1 lg:hidden"
+                        :label="$t(directionKey(fill.direction))"
+                      />
                     </div>
                   </div>
                 </td>
                 <!-- Direction -->
                 <td class="px-1 py-3 hidden lg:table-cell">
-                  <span
-                    :class="[
-                      fill.direction?.toLowerCase().includes('long')
-                        ? 'text-text-success'
-                        : 'text-text-error',
-                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-px bg-background-default-hover',
-                    ]"
-                  >
-                    {{ $t(directionKey(fill.direction)) }}
-                  </span>
+                  <app-tag
+                    :type="fillDirectionTagType(fill.direction)"
+                    variant="subtle"
+                    :label="$t(directionKey(fill.direction))"
+                  />
                 </td>
                 <!-- Time -->
                 <td
@@ -706,8 +677,6 @@
                 <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
                   <app-btn-icon
                     :label="$t('perps.positions.view-fill-details-label')"
-                    height="h-7 xs:h-8"
-                    width="w-7 xs:w-8"
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
@@ -779,7 +748,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in paginatedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
@@ -906,12 +875,13 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -938,8 +908,10 @@ import {
   formatDate,
   getOrderPrice,
   formatOrderStatus,
+  orderStatusTagType,
   formatOrderType,
   directionKey,
+  fillDirectionTagType,
   withdrawalStatusColor,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
@@ -1214,18 +1186,7 @@ const orderFilterTabs = computed(() => [
   { label: t('perps.positions.filter-pending'), value: 'pending' },
 ])
 
-// Track the filter by value, not by object: labels are locale-dependent and
-// AppBtnGroup compares the selection by structural equality.
 const selectedOrderFilterValue = ref('all')
-const selectedOrderFilter = computed({
-  get: () =>
-    orderFilterTabs.value.find(
-      tab => tab.value === selectedOrderFilterValue.value,
-    ) ?? orderFilterTabs.value[0],
-  set: (tab: { label: string; value: string }) => {
-    selectedOrderFilterValue.value = tab.value
-  },
-})
 
 const ordersStatusFilter = computed<OrdersStatusFilter>(() =>
   selectedOrderFilterValue.value === 'pending' ? 'pending' : 'all',
@@ -1440,7 +1401,7 @@ const tabs = computed(() => [
 ])
 
 // Track the tab by value, not by object: labels are locale-dependent and
-// AppBtnGroup/AppSelect compare the selection by structural equality.
+// AppSelect compares the selection by structural equality.
 const activeTab = ref('positions')
 const selectedTab = computed({
   get: () =>

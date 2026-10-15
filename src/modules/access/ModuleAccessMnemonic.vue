@@ -17,8 +17,9 @@
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
-            <app-text-field
+            <app-text-area
               v-model="mnemonic"
+              surface="alternative"
               data-private
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
               class="mt-4"
@@ -44,20 +45,22 @@
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
+              <div class="flex items-center gap-2">
+                <app-toggle
+                  v-model="hasExtraWord"
+                  :aria-label="extraWordToggleString"
+                />
+                <span class="text8">{{ extraWordToggleString }}</span>
+              </div>
             </div>
             <!-- Extra Word -->
             <expand-transition>
               <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
+                  surface="alternative"
                   data-private
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
+                  :label="$t('access_wallet_recovery_phrase.enter_extra_word')"
                 />
               </div>
             </expand-transition>
@@ -107,7 +110,7 @@
                 {{ $t('common.access_wallet') }}
               </app-base-button>
               <app-base-button
-                :is-outline="true"
+                type="secondary"
                 class="w-full xs:w-auto xs:min-w-[180px]"
                 @click="backStep"
               >
@@ -128,7 +131,7 @@ import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextArea from '@/components/AppTextArea.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'

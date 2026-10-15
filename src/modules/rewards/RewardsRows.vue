@@ -64,7 +64,7 @@
       <app-base-button
         v-if="!swapClaimed && !swapNoRewards"
         size="small"
-        is-outline
+        type="secondary"
         class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
@@ -105,7 +105,10 @@
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
-            !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
+            !tradeClaimed &&
+            !tradeNoRewards &&
+            !tradeMarketClosed &&
+            !tradePaused
               ? 'bg-background-brand-subtle'
               : 'bg-background-default',
           ]"
@@ -113,7 +116,10 @@
           <icon-trade
             class="w-6 h-6"
             :class="[
-              !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
+              !tradeClaimed &&
+              !tradeNoRewards &&
+              !tradeMarketClosed &&
+              !tradePaused
                 ? 'text-text-brand'
                 : 'text-text-placeholder',
             ]"
@@ -130,7 +136,12 @@
             }}</span
           >
           <template
-            v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
+            v-if="
+              !tradeClaimed &&
+              !tradeNoRewards &&
+              !tradeMarketClosed &&
+              !tradePaused
+            "
           >
             <div
               class="w-full h-1.5 bg-background-brand-subtle rounded-full overflow-hidden mt-1 flex"
@@ -145,6 +156,12 @@
               {{ t('rewards.rewards_left_label') }}
             </p>
           </template>
+          <p
+            v-else-if="tradePaused"
+            class="text-s-12 font-medium mt-0.5 text-text-error"
+          >
+            {{ t('rewards.temporarily_paused') }}
+          </p>
           <p
             v-else-if="tradeClaimed"
             class="text-s-12 font-medium mt-0.5 text-text-success"
@@ -163,9 +180,11 @@
         </div>
       </div>
       <app-base-button
-        v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
+        v-if="
+          !tradeClaimed && !tradeNoRewards && !tradeMarketClosed && !tradePaused
+        "
         size="small"
-        is-outline
+        type="secondary"
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
@@ -179,13 +198,15 @@
         }"
       >
         {{
-          t('rewards.back_in', {
-            time: tradeClaimed
-              ? timeUntilTradeNextEligible
-              : tradeMarketClosed
-                ? timeUntilMarketOpen
-                : timeUntilHourReset,
-          })
+          tradePaused
+            ? t('rewards.paused')
+            : t('rewards.back_in', {
+                time: tradeClaimed
+                  ? timeUntilTradeNextEligible
+                  : tradeMarketClosed
+                    ? timeUntilMarketOpen
+                    : timeUntilHourReset,
+              })
         }}
         <AppIcon
           name="clock"
@@ -224,6 +245,7 @@ defineProps<{
   tradeClaimed: boolean | null
   tradeNoRewards: boolean
   tradeMarketClosed: boolean
+  tradePaused: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null
