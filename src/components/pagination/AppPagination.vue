@@ -25,7 +25,7 @@ const props = withDefaults(
     /** Overrides the "Showing page X of Y" copy. */
     label?: (page: number, total: number) => string
   }>(),
-  { variant: 'default', label: undefined },
+  { variant: 'default' },
 )
 
 const { t } = useI18n()
