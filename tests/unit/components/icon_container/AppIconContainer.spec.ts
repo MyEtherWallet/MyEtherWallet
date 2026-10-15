@@ -21,9 +21,9 @@ describe('AppIconContainer', () => {
 
   it.each([
     ['info', 'bg-background-alternative', 'text-icon-default'],
-    ['error', 'bg-background-error-subtle', 'text-icon-error'],
-    ['success', 'bg-background-success-subtle', 'text-icon-success'],
-    ['warning', 'bg-background-warning-subtle', 'text-icon-warning'],
+    ['error', 'bg-background-error-subtle', 'text-background-error'],
+    ['success', 'bg-background-success-subtle', 'text-background-success'],
+    ['warning', 'bg-background-warning-subtle', 'text-background-warning'],
   ] as const)('%s tone → %s circle, %s glyph', (tone, bg, glyph) => {
     const w = mount(AppIconContainer, {
       props: { icon: 'information-circle', tone },

@@ -48,7 +48,7 @@ const props = withDefaults(
     description?: string
     dismissible?: boolean
   }>(),
-  { type: 'info', title: undefined, description: undefined },
+  { type: 'info' },
 )
 const emit = defineEmits<{ close: [] }>()
 const isVisible = defineModel<boolean>({ default: true })

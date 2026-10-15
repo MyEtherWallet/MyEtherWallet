@@ -2,14 +2,16 @@
   <div
     :class="[
       'flex w-full gap-2 rounded-12 bg-background-default px-4',
-      isMultiLine ? 'min-h-15 items-start py-3' : 'min-h-12 items-center py-2',
+      isMultiLine()
+        ? 'min-h-15 items-start py-3'
+        : 'min-h-12 items-center py-2',
     ]"
   >
     <slot name="icon" />
     <div
       :class="[
         'flex min-w-0 flex-1 flex-col items-end justify-center',
-        { 'gap-4': isMultiLine },
+        { 'gap-4': isMultiLine() },
       ]"
     >
       <div class="flex w-full flex-col break-words text-text-default">
@@ -33,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { useSlots } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 
 /**
@@ -52,5 +54,7 @@ const props = defineProps<{
 const emit = defineEmits<{ close: [] }>()
 const slots = useSlots()
 
-const isMultiLine = computed(() => !!props.title || !!slots.actions)
+// A function, not a computed: slots aren't reactive, so a computed would miss
+// an #actions slot that appears after mount.
+const isMultiLine = () => !!props.title || !!slots.actions
 </script>

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { defineComponent, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppBannerBase from '@/components/banner/AppBannerBase.vue'
@@ -38,6 +39,24 @@ describe('AppBannerBase', () => {
     const w = mountBase({}, { actions: '<button>Retry</button>' })
     expect(w.classes()).toContain('items-start')
     expect(w.get('button').text()).toBe('Retry')
+  })
+
+  it('re-derives the layout when actions appear after mount', async () => {
+    const show = ref(false)
+    const Host = defineComponent({
+      components: { AppBannerBase },
+      setup: () => ({ show }),
+      template: `<AppBannerBase description="Note">
+        <template v-if="show" #actions><button>Retry</button></template>
+      </AppBannerBase>`,
+    })
+    const w = mount(Host, { global: { plugins: [i18n] } })
+    const root = () => w.getComponent(AppBannerBase)
+    expect(root().classes()).toContain('items-center')
+
+    show.value = true
+    await nextTick()
+    expect(root().classes()).toContain('items-start')
   })
 
   it('renders the icon slot and lets the default slot replace the description', () => {
