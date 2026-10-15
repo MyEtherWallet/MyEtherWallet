@@ -14,7 +14,6 @@ const LONG =
   'Bridging from Arbitrum usually takes a few minutes, but during network congestion it can take up to an hour. Your funds stay safe while the transfer is pending, and you can follow its progress from the activity panel.'
 
 const isShown = ref(true)
-const dismissCount = ref(0)
 </script>
 
 <template>
@@ -91,11 +90,7 @@ const dismissCount = ref(0)
           :title="TITLE"
           :description="DESCRIPTION"
           dismissible
-          @close="dismissCount++"
         />
-        <p class="text-s-14 text-text-subtle">
-          Shown: {{ isShown }} · closed {{ dismissCount }}×
-        </p>
         <AppBaseButton
           v-if="!isShown"
           type="secondary"
