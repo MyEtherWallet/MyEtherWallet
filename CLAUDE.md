@@ -109,13 +109,13 @@ src/
 
 ### Feedback & Status
 
-| Component                   | Purpose                               |
-| --------------------------- | ------------------------------------- |
-| `AppNoChainBalance.vue`     | Empty state when chain has no balance |
-| `AppNotRecommended.vue`     | Warning banner for risky actions      |
-| `AppNeedHelp.vue`           | Help/support call-to-action           |
-| `AppMewWalletBanner.vue`    | MEW wallet promotional banner         |
-| `AppSubscribeToUpdates.vue` | Newsletter/update subscription        |
+| Component                   | Purpose                                  |
+| --------------------------- | ---------------------------------------- |
+| `AppNoChainBalance.vue`     | Empty state when chain has no balance    |
+| `banner/AppBanner.vue`      | Inline info/alert/success/warning notice |
+| `AppNeedHelp.vue`           | Help/support call-to-action              |
+| `AppMewWalletBanner.vue`    | MEW wallet promotional banner            |
+| `AppSubscribeToUpdates.vue` | Newsletter/update subscription           |
 
 ### Multi-Step Flows
 
