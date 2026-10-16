@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col gap-6">
-    <section class="flex flex-col gap-4 rounded-16 bg-background-default p-5">
+    <section
+      v-if="showSocialLogin"
+      class="flex flex-col gap-4 rounded-16 bg-background-default p-5"
+    >
       <AppBaseButton
         data-testid="google"
         class="w-full"
@@ -129,11 +132,13 @@ import MewLogo from '@/assets/images/access/mew-app.webp'
 import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useAccessStore } from '@/stores/accessStore'
+import configs from '@/configs'
 
 /** Google / email sign-up is handed to Privy by MEW-2289; nothing listens yet. */
 const emit = defineEmits<{ 'sign-up': [payload: SignUpPayload] }>()
 const { t } = useI18n()
 const accessStore = useAccessStore()
+const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 
 const email = ref('')
 // Shape check only; Privy validates the address for real.

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
@@ -12,6 +12,7 @@ vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({ setCurrentView }),
 }))
 
+const { default: configs } = await import('@/configs')
 const { default: AccessSignUp } =
   await import('@/modules/access/components/AccessSignUp.vue')
 const i18n = createI18n({
@@ -30,6 +31,9 @@ const mountSignUp = () => {
   })
   return wrapper
 }
+beforeEach(() => {
+  configs.SHOW_SOCIAL_LOGIN = true
+})
 afterEach(() => wrapper?.unmount())
 
 const continueBtn = (w: VueWrapper) => w.get('[data-testid="email-continue"]')
@@ -59,6 +63,14 @@ describe('AccessSignUp', () => {
     await input.trigger('keydown', { key: 'Enter' })
     await input.trigger('keyup', { key: 'Enter' })
     expect(w.emitted('sign-up')).toBeUndefined()
+  })
+
+  it('hides the Google/email login while the flag is off', () => {
+    configs.SHOW_SOCIAL_LOGIN = false
+    const w = mountSignUp()
+    expect(w.find('[data-testid="google"]').exists()).toBe(false)
+    expect(w.find('input[type="email"]').exists()).toBe(false)
+    expect(w.find('[data-testid="download-mew-mobile"]').exists()).toBe(true)
   })
 
   it('opens the MEW Mobile download view and links Enkrypt externally', async () => {
