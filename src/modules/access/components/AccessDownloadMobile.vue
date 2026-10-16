@@ -58,7 +58,7 @@
         v-for="store in STORE_ORDER"
         :key="store"
         :data-testid="`store-${store}`"
-        theme="secondary"
+        type="secondary"
         class="!px-4"
         @click="openStore(store)"
       >

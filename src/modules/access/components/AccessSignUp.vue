@@ -40,7 +40,7 @@
         <template #trailing>
           <AppBaseButton
             data-testid="email-continue"
-            theme="secondary"
+            type="secondary"
             size="small"
             :disabled="!isValidEmail"
             @click="submitEmail"
