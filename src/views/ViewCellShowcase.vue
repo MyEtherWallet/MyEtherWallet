@@ -199,7 +199,7 @@ const watched = ref(false)
         </AppBaseButton>
       </div>
       <div
-        class="flex max-w-[480px] flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
+        class="flex max-w-120 flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
       >
         <div
           v-for="row in liveAccessories"
