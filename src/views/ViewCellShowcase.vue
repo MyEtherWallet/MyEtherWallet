@@ -98,7 +98,7 @@ const watched = ref(false)
     <section class="flex flex-col gap-4">
       <h2 class="text-label-base">Watchlist toggle</h2>
       <div
-        class="flex max-w-[480px] flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
+        class="flex max-w-120 flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
       >
         <div class="flex items-center gap-6 text-text-xs text-text-subtle">
           <span class="flex items-center gap-2">
@@ -108,7 +108,7 @@ const watched = ref(false)
             On <AppCellWatchlistToggle :model-value="true" />
           </span>
           <span class="flex items-center gap-2">
-            Loading <AppCellWatchlistToggle :model-value="watched" loading />
+            Loading <AppCellWatchlistToggle :model-value="true" loading />
           </span>
         </div>
         <AppCell
