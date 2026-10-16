@@ -2,7 +2,7 @@
 // Preview for the Cell design-library component (MEW-2195) at /dev/cell.
 // Figma: MEW Web App — Design Library › Cell — Style × State × Size, each
 // style on the surface it is meant for, plus one row per slot.
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import AppCell from '@components/AppCell.vue'
 import AppAvatar from '@components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
@@ -10,7 +10,17 @@ import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AppCellWatchlistToggle from '@components/AppCellWatchlistToggle.vue'
 import AppIcon from '@components/icon/AppIcon.vue'
-import { CELL_SIZES, type CellSurface } from '@components/cellSizes'
+import {
+  CELL_SIZES,
+  type CellRightAccessory,
+  type CellSurface,
+} from '@components/cellSizes'
+
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
 
 const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
   {
@@ -36,6 +46,64 @@ const STATES = [
 
 const clicks = ref(0)
 const slotClicks = ref(0)
+
+// Right accessory (MEW-2445): the nine Figma variants (set 1058:908), then a
+// live block where the sign toggle and fresh points drive the trend colours.
+const randomPoints = () => Array.from({ length: 24 }, () => Math.random() * 100)
+const sign = ref(1)
+const livePoints = ref(randomPoints())
+
+const ACCESSORY_VARIANTS: { label: string; accessory: CellRightAccessory }[] = [
+  { label: 'balance', accessory: BALANCE },
+  {
+    label: 'balance+performance up',
+    accessory: { kind: 'balance-performance', primary: '$1,230', change: 0.1 },
+  },
+  {
+    label: 'balance+performance down',
+    accessory: { kind: 'balance-performance', primary: '$1,230', change: -0.1 },
+  },
+  {
+    label: 'graph positive',
+    accessory: { kind: 'graph', points: [10, 14, 12, 18, 16, 22, 26] },
+  },
+  {
+    label: 'graph negative',
+    accessory: { kind: 'graph', points: [26, 22, 24, 16, 18, 12, 10] },
+  },
+  { label: 'performance up', accessory: { kind: 'performance', change: 0.1 } },
+  {
+    label: 'performance down',
+    accessory: { kind: 'performance', change: -0.1 },
+  },
+  { label: 'check', accessory: { kind: 'icon', icon: 'check-circle' } },
+  { label: 'loading', accessory: { kind: 'loading' } },
+]
+
+const liveAccessories = computed<
+  { label: string; accessory: CellRightAccessory }[]
+>(() => [
+  {
+    label: 'balance+performance',
+    accessory: {
+      kind: 'balance-performance',
+      primary: '$1,230',
+      change: 2.45 * sign.value,
+    },
+  },
+  {
+    label: 'performance',
+    accessory: { kind: 'performance', change: 2.45 * sign.value },
+  },
+  {
+    label: 'graph (trend from first vs last point)',
+    accessory: { kind: 'graph', points: livePoints.value },
+  },
+  {
+    label: 'zero change is neutral',
+    accessory: { kind: 'performance', change: 0 },
+  },
+])
 const watched = ref(false)
 </script>
 
@@ -69,8 +137,7 @@ const watched = ref(false)
               v-bind="state.props"
               title="Title"
               description="Information"
-              accessory-title="$1,230"
-              accessory-description="1,230 USDC"
+              :right-accessory="BALANCE"
               @click="clicks++"
             >
               <template #avatar="{ size: avatarSize }">
@@ -91,6 +158,64 @@ const watched = ref(false)
               </template>
             </AppCell>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-label-base">Right accessory</h2>
+      <div
+        class="grid grid-cols-2 gap-6 rounded-12 border border-border-default bg-background-default p-6"
+      >
+        <div v-for="size in CELL_SIZES" :key="size" class="flex flex-col gap-3">
+          <p class="text-text-xs text-text-subtle">size="{{ size }}"</p>
+          <div
+            v-for="row in ACCESSORY_VARIANTS"
+            :key="row.label"
+            class="flex flex-col gap-1"
+          >
+            <span class="text-text-xs text-text-subtle">{{ row.label }}</span>
+            <AppCell
+              :size="size"
+              title="Title"
+              description="Information"
+              :right-accessory="row.accessory"
+              @click="clicks++"
+            >
+              <template #avatar="{ size: avatarSize }">
+                <AppAvatar :size="avatarSize" type="initial" initial="A" />
+              </template>
+            </AppCell>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <AppBaseButton size="small" @click="sign = -sign">
+          Flip sign
+        </AppBaseButton>
+        <AppBaseButton size="small" @click="livePoints = randomPoints()">
+          New points
+        </AppBaseButton>
+      </div>
+      <div
+        class="flex max-w-120 flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
+      >
+        <div
+          v-for="row in liveAccessories"
+          :key="row.label"
+          class="flex flex-col gap-1"
+        >
+          <span class="text-text-xs text-text-subtle">{{ row.label }}</span>
+          <AppCell
+            title="Live"
+            description="Information"
+            :right-accessory="row.accessory"
+          >
+            <template #avatar="{ size: avatarSize }">
+              <AppAvatar :size="avatarSize" type="initial" initial="L" />
+            </template>
+          </AppCell>
         </div>
       </div>
     </section>
@@ -178,15 +303,14 @@ const watched = ref(false)
 
         <AppCell
           title="Custom accessory slot"
-          description="Coloured 24h change"
-          accessory-title="$1,230"
+          description="Escape hatch, replaces rightAccessory"
+          :right-accessory="BALANCE"
         >
           <template #avatar="{ size: avatarSize }">
             <AppAvatar :size="avatarSize" type="initial" initial="C" />
           </template>
           <template #accessory>
-            <p class="text-label-base text-text-default">$1,230</p>
-            <p class="text-text-sm text-text-success">+2.45%</p>
+            <p class="text-label-base text-text-brand">Custom</p>
           </template>
         </AppCell>
 
@@ -203,7 +327,7 @@ const watched = ref(false)
         <AppCell
           title="Very long title that should truncate instead of wrapping onto a second line"
           description="Very long description that should truncate instead of wrapping onto a second line"
-          accessory-title="$1,230"
+          :right-accessory="BALANCE"
         >
           <template #avatar="{ size: avatarSize }">
             <AppAvatar :size="avatarSize" type="initial" initial="L" />

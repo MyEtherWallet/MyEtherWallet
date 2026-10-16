@@ -19,10 +19,6 @@ defineProps<Props>()
 const { t } = useI18n()
 const router = useRouter()
 const { formatFiat } = useCurrency()
-
-const isUp = (change: number) => change >= 0
-const changeText = (change: number) =>
-  `${isUp(change) ? '+' : '-'}${Math.abs(change).toFixed(2)}%`
 </script>
 
 <template>
@@ -58,10 +54,10 @@ const changeText = (change: number) =>
           :key="n"
           size="small"
           loading
+          :right-accessory="{ kind: 'loading' }"
           data-test="trending-skeleton"
         >
           <template #avatar />
-          <template #accessory />
         </AppCell>
       </template>
 
@@ -79,6 +75,11 @@ const changeText = (change: number) =>
         :key="item.symbol"
         size="small"
         :description="item.name"
+        :right-accessory="{
+          kind: 'balance-performance',
+          primary: formatFiat(item.price).display,
+          change: item.change,
+        }"
         data-test="token-list-row"
         @click="router.push(item.to)"
       >
@@ -96,18 +97,6 @@ const changeText = (change: number) =>
             :is-stock="item.isStock"
             class="!text-label-base text-text-default"
           />
-        </template>
-        <template #accessory>
-          <p class="text-label-base text-text-default">
-            {{ formatFiat(item.price).display }}
-          </p>
-          <p
-            class="text-text-sm"
-            :class="isUp(item.change) ? 'text-text-success' : 'text-text-error'"
-            data-test="token-list-row-change"
-          >
-            {{ changeText(item.change) }}
-          </p>
         </template>
       </AppCell>
     </div>
