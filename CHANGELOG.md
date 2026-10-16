@@ -1,3 +1,9 @@
+### Release v6.9.28
+
+### fix
+
+- disable eth blocks, clean up address resolution [#5757](https://github.com/MyEtherWallet/MyEtherWallet/pull/5757)
+
 ### Release v6.9.27
 
 ### fix

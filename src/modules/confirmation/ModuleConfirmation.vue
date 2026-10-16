@@ -55,6 +55,7 @@
               :tx-fee-usd="txFeeUSD"
               :value="value"
               :to-tx-data="tx.toTxData"
+              :nft-data="tx.nftTxData"
               :to-details="allToDetails"
               :send-currency="sendCurrency"
               :is-web3-wallet="hasGasPriceOption"
@@ -279,6 +280,7 @@ import EventNames from '@/utils/web3-provider/events.js';
 
 import { Toast, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import parseTokenData from './handlers/parseTokenData';
+import parseNftData from './handlers/parseNftData';
 import { EventBus } from '@/core/plugins/eventBus';
 import { setEvents } from '@/utils/web3-provider/methods/utils';
 import { sanitizeHex } from '@/modules/access-wallet/common/helpers';
@@ -357,10 +359,12 @@ export default {
       return !this.txTo;
     },
     txTo() {
-      if (!this.isBatch)
-        return this.tx.hasOwnProperty('toTxData')
-          ? this.tx.toTxData.to
-          : this.tx.to;
+      if (!this.isBatch) {
+        if (this.tx.hasOwnProperty('toTxData')) return this.tx.toTxData.to;
+        // Show who receives the NFT, not the contract that moves it.
+        if (this.tx.nftTxData) return this.tx.nftTxData.to;
+        return this.tx.to;
+      }
       return this.unsignedTxArr[0].to;
     },
     isOtherWallet() {
@@ -719,6 +723,11 @@ export default {
           amount: tokenData.tokenTransferVal,
           to: tokenData.tokenTransferTo
         };
+      } else if (tx.to && tx.data) {
+        // An NFT transfer encodes its recipient in the calldata, so without
+        // this the confirmation would present the NFT contract as the
+        // destination and leave the real recipient buried in raw hex.
+        tx.nftTxData = parseNftData(tx.data);
       }
       tx.network = this.network.type.name;
     },
@@ -1067,6 +1076,18 @@ export default {
                 ? 'Via Contract Address'
                 : 'To address',
             value: toAdd
+          },
+          {
+            title: 'NFT recipient',
+            value: item.nftTxData ? item.nftTxData.to : ''
+          },
+          {
+            title: 'Token ID',
+            value: item.nftTxData ? item.nftTxData.tokenId : ''
+          },
+          {
+            title: 'NFT amount',
+            value: item.nftTxData?.amount ? item.nftTxData.amount : ''
           },
           {
             title: 'Sending',

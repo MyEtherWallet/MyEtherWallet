@@ -124,7 +124,8 @@ const EXCEPTIONS = [
   'graphql-tag',
   'lodash',
   'scrollmagic',
-  'bignumber.js'
+  'bignumber.js',
+  'moment'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

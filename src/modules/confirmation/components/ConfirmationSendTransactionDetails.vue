@@ -71,6 +71,14 @@ export default {
       type: Object,
       default: () => {}
     },
+    /**
+     * Decoded ERC-721/ERC-1155 transfer params, when this tx is an NFT
+     * transfer. See confirmation/handlers/parseNftData.
+     */
+    nftData: {
+      type: Object,
+      default: null
+    },
     sendCurrency: {
       type: Object,
       default: () => {}
@@ -128,14 +136,26 @@ export default {
         : ['Transaction Fee'];
     },
     valueItems() {
+      // An NFT transfer moves no native value, so the default tile would read
+      // "0 ETH" and say nothing about what is actually leaving the wallet.
+      // Show the token and quantity instead, and label the recipient plainly.
+      const sending = this.nftData
+        ? {
+            label: 'Sending NFT',
+            amount: this.nftData.amount ? this.nftData.amount : '1',
+            usd: '',
+            type: `${this.nftData.standard} · Token #${this.nftData.tokenId}`
+          }
+        : {
+            amount: formatFloatingPointValue(this.currency.amount).value,
+            icon: this.currency.img,
+            usd: this.usdAmount,
+            type: this.currency.symbol
+          };
       return [
+        sending,
         {
-          amount: formatFloatingPointValue(this.currency.amount).value,
-          icon: this.currency.img,
-          usd: this.usdAmount,
-          type: this.currency.symbol
-        },
-        {
+          label: this.nftData ? 'NFT recipient' : '',
           avatar: this.avatar,
           address: this.to ? toChecksumAddress(this.to) : '',
           nickname:

@@ -17,7 +17,7 @@
     <span class="mew-heading-2">Send Your NFT </span>
     <img height="150" :src="nft.image" alt="nft image" @error="onImgErr" />
     <div class="mb-4 mt-2">{{ nft.name | concatName }}</div>
-    <module-address-book @setAddress="setAddress" />
+    <module-address-book :currency="currencyName" @setAddress="setAddress" />
     <span
       v-if="!enoughFunds && showBalanceError"
       class="redPrimary--text px-6 py-0 py-sm-3 mb-3 mb-sm-0"

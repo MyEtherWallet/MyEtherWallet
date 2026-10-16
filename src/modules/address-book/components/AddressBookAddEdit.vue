@@ -93,7 +93,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
-import { isEmpty, throttle } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { getAddressInfo } from '@kleros/address-tags-sdk';
 
 import Resolver from '@/modules/name-resolver/index';
@@ -116,7 +116,10 @@ export default {
       currentIdx: null,
       nickname: '',
       addressToAdd: '',
-      nametag: ''
+      nametag: '',
+      // See invalidateResolutions(): only a resolution whose generation is
+      // still current may write its result back.
+      resolveGeneration: 0
     };
   },
   computed: {
@@ -245,6 +248,7 @@ export default {
     },
     addressToAdd(newVal) {
       this.nametag = '';
+      this.invalidateResolutions();
       if (isAddress(newVal.toLowerCase())) {
         this.resolveAddress();
       } else {
@@ -252,12 +256,29 @@ export default {
       }
     },
     web3() {
+      this.invalidateResolutions();
       if (this.network.type.ensEnkryptType) {
         this.nameResolver = new Resolver(this.network);
       } else {
         this.nameResolver = null;
       }
+    },
+    // A chain or account change can arrive without `web3` being replaced.
+    'network.type.chainID'() {
+      this.invalidateResolutions();
+    },
+    address() {
+      this.invalidateResolutions();
     }
+  },
+  created() {
+    // Debounced per instance rather than on `methods`, which Vue would share
+    // across every instance of this component along with its timer state.
+    this.resolveAddress = debounce(this.resolveAddressNow, 300);
+    this.resolveName = debounce(this.resolveNameNow, 500);
+  },
+  beforeDestroy() {
+    this.invalidateResolutions();
   },
   mounted() {
     if (this.network.type.ensEnkryptType)
@@ -276,49 +297,91 @@ export default {
   methods: {
     ...mapActions('addressBook', ['setAddressBook']),
     reset() {
+      this.invalidateResolutions();
       this.addressToAdd = '';
       this.nickname = '';
       this.resolvedAddr = '';
       this.nametag = '';
     },
     /**
-     * Resolves address and @returns name
+     * Abandons every pending or queued resolution. Called whenever the input,
+     * the network or the resolver changes so an in-flight lookup can no
+     * longer write back a result for an input that has since been replaced.
      */
-    resolveAddress: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          const resolvedName = await this.nameResolver.resolveAddress(
-            this.addressToAdd
+    invalidateResolutions() {
+      this.resolveName?.cancel?.();
+      this.resolveAddress?.cancel?.();
+      return ++this.resolveGeneration;
+    },
+    /**
+     * Everything a resolution must still agree with before it may write back.
+     */
+    resolutionContext() {
+      return {
+        generation: this.resolveGeneration,
+        resolver: this.nameResolver,
+        input: this.addressToAdd,
+        chainID: this.network.type.chainID,
+        account: this.address
+      };
+    },
+    /**
+     * True while the resolution started in `ctx` is still the one the user is
+     * waiting on.
+     */
+    isCurrentResolution(ctx) {
+      const now = this.resolutionContext();
+      return (
+        ctx.generation === now.generation &&
+        ctx.resolver === now.resolver &&
+        ctx.input === now.input &&
+        ctx.chainID === now.chainID &&
+        ctx.account === now.account
+      );
+    },
+    /**
+     * Resolves address and @returns name
+     * Debounced per instance in created() as `resolveAddress`.
+     */
+    async resolveAddressNow() {
+      if (!this.nameResolver) return;
+      const ctx = this.resolutionContext();
+      try {
+        const resolvedName = await ctx.resolver.resolveAddress(ctx.input);
+        if (!this.isCurrentResolution(ctx)) return;
+        if (resolvedName && !resolvedName.name) {
+          const data = await getAddressInfo(
+            this.checksumAddressToAdd,
+            'https://ipfs.kleros.io'
           );
-          if (resolvedName && !resolvedName.name) {
-            await getAddressInfo(
-              this.checksumAddressToAdd,
-              'https://ipfs.kleros.io'
-            ).then(data => {
-              this.nametag = data?.publicNameTag || '';
-            });
-          }
-          this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
-        } catch (e) {
-          this.nametag = '';
-          this.resolvedAddr = '';
+          if (!this.isCurrentResolution(ctx)) return;
+          this.nametag = data?.publicNameTag || '';
         }
+        this.resolvedAddr = resolvedName.name ? resolvedName.name : '';
+      } catch (e) {
+        if (!this.isCurrentResolution(ctx)) return;
+        this.nametag = '';
+        this.resolvedAddr = '';
       }
-    }, 300),
+    },
     /**
      * Resolves name and @returns address
+     * Debounced per instance in created() as `resolveName`.
      */
-    resolveName: throttle(async function () {
-      if (this.nameResolver) {
-        try {
-          await this.nameResolver.resolveName(this.addressToAdd).then(addr => {
-            this.resolvedAddr = addr;
-          });
-        } catch (e) {
-          this.resolvedAddr = '';
-        }
+    async resolveNameNow() {
+      if (!this.nameResolver) return;
+      // Bind the lookup to the state that started it so a stalled resolver
+      // cannot overwrite a corrected address.
+      const ctx = this.resolutionContext();
+      try {
+        const addr = await ctx.resolver.resolveName(ctx.input);
+        if (!this.isCurrentResolution(ctx)) return;
+        this.resolvedAddr = addr;
+      } catch (e) {
+        if (!this.isCurrentResolution(ctx)) return;
+        this.resolvedAddr = '';
       }
-    }, 500),
+    },
     setAddress(value) {
       this.addressToAdd = value ? value : '';
     },

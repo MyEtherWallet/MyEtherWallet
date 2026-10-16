@@ -11,7 +11,7 @@ import ModuleEthBlocksMint from './modules/ModuleEthBlocksMint';
 import ModuleEthBlockInfo from './modules/ModuleEthBlockInfo';
 import ModuleEthBlocksDateSearch from './modules/ModuleEthBlocksDateSearch';
 import ModuleEthBlockBatchMinting from './modules/ModuleEthBlockBatchMinting';
-import { SUPPORTED_NETWORKS } from './handlers/helpers/supportedNetworks';
+
 export default {
   title: 'ETH Blocks',
   subtitle: '',
@@ -20,7 +20,7 @@ export default {
   rightIconType: 'mew',
   rightIcon: 'ethBlocks',
   path: ETH_BLOCKS_ROUTE.CORE.PATH,
-  networks: SUPPORTED_NETWORKS,
+  networks: [],
   layout,
   release: '11/11/2021',
   defaultName: ETH_BLOCKS_ROUTE.CORE.NAME,
