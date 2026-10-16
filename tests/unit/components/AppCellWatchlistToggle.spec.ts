@@ -50,13 +50,18 @@ describe('AppCellWatchlistToggle — Cell watchlist star (MEW-2446)', () => {
   })
 
   it('on: filled star, icon/brand, aria-pressed true, "remove" label', () => {
-    const btn = mountToggle({ modelValue: true })
-    expect(btn.getComponent(AppIcon).props('variant')).toBe('filled')
-    expect(btn.get('button').classes()).toContain('text-icon-brand')
-    expect(btn.get('button').attributes('aria-pressed')).toBe('true')
-    expect(btn.get('button').attributes('aria-label')).toBe(
-      'Remove from Watchlist',
-    )
+    const w = mountToggle({ modelValue: true })
+    const btn = w.get('button')
+    expect(w.getComponent(AppIcon).props('variant')).toBe('filled')
+    expect(btn.classes()).toContain('text-icon-brand')
+    expect(btn.attributes('aria-pressed')).toBe('true')
+    expect(btn.attributes('aria-label')).toBe('Remove from Watchlist')
+  })
+
+  it('is controlled: without a listener the star stays as passed', async () => {
+    const w = mountToggle()
+    await w.get('button').trigger('click')
+    expect(w.getComponent(AppIcon).props('variant')).toBe('stroke')
   })
 
   it('click emits the flipped value', async () => {
