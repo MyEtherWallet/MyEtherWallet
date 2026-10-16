@@ -72,20 +72,22 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
     expect(change.classes()).toContain('text-text-subtle')
   })
 
-  it('goes through the shared percent formatter, unsigned when it returns a bound', () => {
+  it("keeps the shared percent formatter's bounds, direction included", () => {
     const huge = mountAccessory({ kind: 'performance', change: -1234 })
-    expect(huge.text()).toBe('> 1000%')
+    expect(huge.text()).toBe(`< ${MINUS}1000%`)
     expect(
       huge.get('[data-test="cell-accessory-performance"]').classes(),
     ).toContain('text-text-error')
-    const tiny = mountAccessory({
-      kind: 'balance-performance',
-      primary: '$1',
-      change: 0.001,
-    })
-    const change = tiny.findAll('p')[1]
-    expect(change.text()).toBe('< 0.01%')
-    expect(change.classes()).toContain('text-text-success')
+
+    const tinyChange = (change: number) =>
+      mountAccessory({ kind: 'balance-performance', primary: '$1', change })
+        .findAll('p')[1]
+    const tinyUp = tinyChange(0.001)
+    expect(tinyUp.text()).toBe('< 0.01%')
+    expect(tinyUp.classes()).toContain('text-text-success')
+    const tinyDown = tinyChange(-0.001)
+    expect(tinyDown.text()).toBe(`> ${MINUS}0.01%`)
+    expect(tinyDown.classes()).toContain('text-text-error')
   })
 
   it('renders performance as an arrow + label/base row in the trend colour', () => {
