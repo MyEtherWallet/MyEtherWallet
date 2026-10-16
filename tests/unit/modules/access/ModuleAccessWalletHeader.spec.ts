@@ -121,15 +121,15 @@ const back = (w: VueWrapper) => w.find('button[aria-label="common.back"]')
 const title = (w: VueWrapper) => w.get('h1').text()
 
 describe('ModuleAccessWallet header', () => {
-  it('hides back on the wallet chooser and shows the login title', () => {
+  it('hides back on the wallet chooser and shows the Connect wallet title', () => {
     const w = mountAt('default')
     expect(back(w).exists()).toBe(false)
-    expect(title(w)).toBe('access_wallet.login_title')
+    expect(title(w)).toBe('common.connect_wallet')
   })
 
   it('goes back from sign-up to the chooser', async () => {
     const w = mountAt('sign_up')
-    expect(title(w)).toBe('access_wallet.login_title')
+    expect(title(w)).toBe('common.connect_wallet')
     await back(w).trigger('click')
     expect(setCurrentView).toHaveBeenCalledWith('default')
   })

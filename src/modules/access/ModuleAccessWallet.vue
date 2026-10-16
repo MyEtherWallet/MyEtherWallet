@@ -297,7 +297,7 @@ const ADVANCED_TITLES: Partial<Record<WalletView, string[]>> = {
 
 const getTitle = computed(() => {
   if (currentView.value === 'default' || currentView.value === 'sign_up') {
-    return t('access_wallet.login_title')
+    return t('common.connect_wallet')
   }
   if (currentView.value === 'download_mobile') {
     return t('access_wallet.download_mobile.title')
