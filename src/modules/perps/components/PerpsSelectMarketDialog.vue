@@ -12,7 +12,7 @@
         <div
           class="flex gap-2 justify-between items-center mb-2 mx-4 bg-background-default-hover rounded-full p-1"
         >
-          <app-search-input
+          <app-searchbar
             :model-value="search"
             class="grow"
             bg-class="bg-transparent"
@@ -120,10 +120,11 @@
                     <span class="font-bold text-s-15 whitespace-nowrap">{{
                       contract.baseCurrency
                     }}</span>
-                    <span
-                      class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >{{ getMarketLeverage(contract) }}x</span
-                    >
+                    <app-tag
+                      variant="subtle"
+                      class="shrink-0"
+                      :label="`${getMarketLeverage(contract)}x`"
+                    />
                   </div>
                   <span class="text-text-subtle text-s-12">{{
                     getMarketDisplayName(contract)
@@ -165,13 +166,14 @@ import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import type {
   MarketSortValue,
   SortDirection,

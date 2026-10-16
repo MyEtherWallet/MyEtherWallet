@@ -10,16 +10,18 @@
           class="rounded-full bg-background-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
-      <div
-        :class="txStatus.color"
-        class="ml-2 px-2.5 py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+      <AppTag
+        :type="txStatus.type"
+        :variant="txStatus.variant"
+        :label="$t(txStatus.labelKey)"
+        class="ml-2"
       >
-        <div
-          v-if="txStatus.key === 'pending'"
-          class="bg-white w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
-        ></div>
-        {{ $t(txStatus.labelKey) }}
-      </div>
+        <template v-if="txStatus.key === 'pending'" #leading>
+          <span
+            class="ml-1 bg-current w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
+          ></span>
+        </template>
+      </AppTag>
     </div>
 
     <!-- Amount and Recipient -->
@@ -62,7 +64,10 @@
       </div>
     </div>
     <div class="flex justify-space-between items-center">
-      <app-btn-text
+      <app-base-button
+        type="tertiary"
+        surface="alternative"
+        size="small"
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
@@ -76,7 +81,7 @@
             { 'rotate-180': showMoreDetails },
           ]"
         />
-      </app-btn-text>
+      </app-base-button>
       <!-- delete Button -->
       <app-btn-icon
         :label="$t('common.delete_notification')"
@@ -161,12 +166,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import { getTxNotificationStatus } from '../utils/txStatus'
 import type { TransactionNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
@@ -194,37 +201,10 @@ const truncateHash = (hash: string): string => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`
 }
 
-const txStatus = computed(() => {
-  const status = props.transaction.status.toLowerCase()
-  const now = Math.floor(Date.now() / 1000)
-  const hoursAgo48 = 48 * 60 * 60
-  const isOlderThan48Hours = now - props.transaction.createdAt > hoursAgo48
-
-  if (status === 'sent') {
-    if (isOlderThan48Hours) {
-      return {
-        key: 'possibly_dropped',
-        labelKey: 'notifications_module.status.possibly_dropped',
-        color: 'bg-background-default-hover',
-      }
-    }
-    return {
-      key: 'pending',
-      labelKey: 'notifications_module.status.pending',
-      color: 'bg-background-brand',
-    }
-  } else if (status === 'failed') {
-    return {
-      key: 'failed',
-      labelKey: 'notifications_module.status.failed',
-      color: 'bg-background-error',
-    }
-  } else {
-    return {
-      key: 'successful',
-      labelKey: 'notifications_module.status.successful',
-      color: 'bg-background-success',
-    }
-  }
-})
+const txStatus = computed(() =>
+  getTxNotificationStatus(
+    props.transaction.status,
+    props.transaction.createdAt,
+  ),
+)
 </script>

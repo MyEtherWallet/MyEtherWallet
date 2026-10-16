@@ -6,10 +6,9 @@
   >
     <template #title>
       <app-btn-icon
+        variant="filled"
         :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-background-default"
-        height="h-8"
-        width="w-8"
+        class="absolute top-6 right-6"
         @click="model = false"
       >
         <AppIcon name="x-mark" />
@@ -129,6 +128,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
@@ -137,7 +137,6 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useApprovalFee } from '../composables/useApprovalFee'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 // No submitting state: clicking Approve flips the flow step synchronously,
 // which closes this modal and opens the waiting-approval one.
 const props = withDefaults(

@@ -77,25 +77,20 @@
       </div>
     </div>
     <!-- Error Messages OR Resolved Address -->
-    <div class="min-h-6 flex items-center px-4">
+    <div class="min-h-6">
       <transition name="fade" mode="out-in">
-        <p
+        <AppInputFeedback
           v-if="
             (addressErrorMessages !== '' && !isPristine) ||
             resolvedAddress !== ''
           "
-          :class="{
-            'text-text-error': addressErrorMessages && !isPristine,
-            'text-text-subtle !text-s-11': resolvedAddress,
-          }"
-          class="text-s-12 truncate"
-        >
-          {{
+          :type="addressErrorMessages && !isPristine ? 'error' : 'text'"
+          :message="
             (!isPristine && addressErrorMessages) ||
             foundNickName ||
             resolvedAddress
-          }}
-        </p>
+          "
+        />
       </transition>
     </div>
 
@@ -138,12 +133,13 @@
  *  onInput,
  *  validateAddressInput } = useAddressInput(selectedChain)
  */
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { ref, computed, watch, nextTick, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
 import type { Chain } from '@/mew_api/types'
 import { storeToRefs } from 'pinia'

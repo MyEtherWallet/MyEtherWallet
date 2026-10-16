@@ -12,7 +12,7 @@
     <div
       class="flex items-center gap-2 h-12 px-1 bg-background-default-hover rounded-24 flex-none"
     >
-      <app-search-input
+      <app-searchbar
         v-model="searchInput"
         size="compact"
         bg-class="bg-white"
@@ -106,7 +106,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'

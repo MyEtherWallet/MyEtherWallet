@@ -18,7 +18,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchQuery"
           bg-class="bg-background-default"
           size="compact"
@@ -214,29 +214,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
-                    watchlist.has(contract.baseCurrency)
-                      ? $t('perps.market-list.remove-from-watchlist')
-                      : $t('perps.market-list.add-to-watchlist')
-                  "
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
-                  @click.stop="toggleWatchlist(contract.baseCurrency)"
-                >
-                  <AppIcon
-                    name="star"
-                    size="xxs"
-                    v-if="!watchlist.has(contract.baseCurrency)"
-                    class="cursor-pointer"
-                  />
-                  <AppIcon
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                <AppCellWatchlistToggle
+                  :model-value="watchlist.has(contract.baseCurrency)"
+                  @update:model-value="toggleWatchlist(contract.baseCurrency)"
+                />
               </td>
               <!-- Name -->
               <td class="px-1 py-2" colspan="2">
@@ -252,11 +233,11 @@
                       <span class="font-semibold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
-                      <span
-                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >
-                        {{ contract.defaultLeverage }}x
-                      </span>
+                      <AppTag
+                        variant="subtle"
+                        class="shrink-0"
+                        :label="`${contract.defaultLeverage}x`"
+                      />
                     </div>
                     <span class="text-text-subtle text-s-12 truncate block">{{
                       contract.longName
@@ -349,8 +330,6 @@
                       <app-btn-icon
                         :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -490,10 +469,10 @@
                           size="small"
                           class="min-w-[136px] !px-3 !py-2"
                           :disabled="isWatchOnly"
-                          :theme="
+                          :tone="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
-                              : 'error'
+                              : 'danger'
                           "
                           @click="
                             onManagePositionClick(
@@ -580,7 +559,7 @@
                     <app-base-button
                       size="small"
                       class="w-24 !px-3 !py-2"
-                      theme="success"
+                      tone="success"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -594,7 +573,7 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      theme="error"
+                      tone="danger"
                       class="w-24 !px-3 !py-2"
                       :disabled="isPerpsRestricted"
                       @click="
@@ -628,9 +607,8 @@
           </span>
           <div class="flex items-center gap-2">
             <app-btn-icon
-              class="bg-background-default"
-              height="h-10"
-              width="w-10"
+              variant="filled"
+              size="l"
               :disabled="currentPage === 0"
               :label="$t('common.previous_page')"
               @click="prevPage"
@@ -638,9 +616,8 @@
               <AppIcon name="chevron-left" variant="filled" size="xxs" />
             </app-btn-icon>
             <app-btn-icon
-              class="bg-background-default"
-              height="h-10"
-              width="w-10"
+              variant="filled"
+              size="l"
               :disabled="currentPage >= totalPages - 1"
               :label="$t('common.next_page')"
               @click="nextPage"
@@ -689,7 +666,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -699,6 +676,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import {
   usePerpsMarkets,
   usePerpsContracts,
@@ -718,6 +696,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import {
   analytics,
   PerpsChangeLeverageEvent,

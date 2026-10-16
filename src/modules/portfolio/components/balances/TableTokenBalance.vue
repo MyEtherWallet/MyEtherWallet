@@ -9,7 +9,11 @@
         <div
           class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
         >
-          <app-search-input v-model="searchInput" class="grow" />
+          <app-searchbar
+            bg-class="bg-background-alternative"
+            v-model="searchInput"
+            class="grow"
+          />
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
@@ -20,8 +24,6 @@
             <app-btn-icon
               :label="$t('common.action_menu')"
               @click.stop="toggleMenu"
-              height="h-7"
-              width="w-7"
             >
               <AppIcon name="ellipsis-vertical" variant="filled" size="s" />
             </app-btn-icon>
@@ -298,26 +300,11 @@
           >
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <button
+              <AppCellWatchlistToggle
                 v-if="getWatchlistId(token)"
-                @click.stop="setWatchlistToken(token)"
-                class="p-2 text-black rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
-              >
-                <!-- changes icon when active -->
-                <AppIcon
-                  name="star"
-                  size="xxs"
-                  v-if="!isWatchListed(getWatchlistId(token))"
-                  class="cursor-pointer"
-                />
-                <AppIcon
-                  name="star"
-                  variant="filled"
-                  size="xxs"
-                  v-else
-                  class="cursor-pointer"
-                />
-              </button>
+                :model-value="isWatchListed(getWatchlistId(token))"
+                @update:model-value="setWatchlistToken(token)"
+              />
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -431,8 +418,6 @@
                     <app-btn-icon
                       :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
                     >
                       <AppIcon
                         name="ellipsis-vertical"
@@ -571,7 +556,7 @@
                   v-if="isBuyableOnCompatibleChain(token.coinId)"
                   size="small"
                   @click="buyBtn(token)"
-                  is-outline
+                  type="secondary"
                   class="w-full"
                   :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
@@ -648,7 +633,7 @@
         </p>
       </div>
       <!-- Loading State -->
-      <div v-if="isLoading" class="">
+      <div v-if="isLoading">
         <div
           v-for="n in Number(activeShownItems.value)"
           :key="n"
@@ -735,10 +720,11 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

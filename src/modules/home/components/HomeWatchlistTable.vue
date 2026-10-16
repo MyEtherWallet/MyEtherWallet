@@ -4,10 +4,12 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
@@ -177,7 +179,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       <div
         class="flex flex-col gap-2 min-[780px]:flex-row min-[780px]:items-center"
       >
-        <AppSearchInput
+        <AppSearchbar
           v-model="query"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
           bg-class="bg-background-default"
@@ -331,17 +333,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             />
           </span>
 
-          <!-- Star toggle (remove). Grows a light circular background on hover
-               (Figma), via negative margin so the 20px column stays aligned. -->
-          <button
-            type="button"
+          <!-- Star toggle: every row here is watched, so a click removes it.
+               -m-px fits the 22px button into the 20px header column. -->
+          <AppCellWatchlistToggle
             data-test="watchlist-remove"
-            :aria-label="t('homePage.hero.watchlist.table.remove')"
-            class="-m-1 flex size-7 shrink-0 items-center justify-center rounded-full text-text-brand transition-colors hover:bg-background-default-hover"
-            @click="remove(row)"
-          >
-            <AppIcon name="star" variant="filled" size="s" />
-          </button>
+            :model-value="true"
+            class="-m-px"
+            @update:model-value="remove(row)"
+          />
 
           <!-- Token — a focusable link so keyboard users can open the drawer
                (the row-body click is a mouse convenience layered on top). -->
@@ -489,11 +488,10 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                 {{ t(actionKey(row)) }}
               </button>
               <div class="relative min-[780px]:hidden">
-                <button
-                  type="button"
+                <AppBtnIcon
                   data-test="watchlist-menu"
-                  :aria-label="t('homePage.hero.watchlist.table.moreActions')"
-                  class="hoverNoBG flex size-8 items-center justify-center rounded-full text-text-subtle"
+                  :label="t('homePage.hero.watchlist.table.moreActions')"
+                  class="text-text-subtle"
                   @click="
                     openMenuKey = openMenuKey === row.key ? null : row.key
                   "
@@ -503,7 +501,7 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
                     variant="filled"
                     size="s"
                   />
-                </button>
+                </AppBtnIcon>
                 <template v-if="openMenuKey === row.key">
                   <div
                     class="fixed inset-0 z-10"

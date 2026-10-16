@@ -47,7 +47,7 @@
               <!-- Seacrh -->
               <div class="sticky top-0 bg-white z-10 pt-2">
                 <div class="mb-1 flex items-center gap-2">
-                  <app-search-input
+                  <app-searchbar
                     v-model="searchInput"
                     class="grow"
                     :placeholder="$t('derivation_path.search')"
@@ -102,11 +102,12 @@
                 <app-base-button class="!py-3">{{
                   $t('common.add')
                 }}</app-base-button>
-                <app-btn-text
+                <app-base-button
+                  type="link"
+                  size="large"
                   class="text-text-brand mt-4"
-                  is-large
                   @click="setShowAddPath(false)"
-                  >{{ $t('common.cancel') }}</app-btn-text
+                  >{{ $t('common.cancel') }}</app-base-button
                 >
               </div>
             </div>
@@ -121,10 +122,9 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'
 import {

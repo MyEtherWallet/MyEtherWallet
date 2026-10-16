@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import type { ApiOrder } from '../sdk/types'
+import type { TagType } from '@/components/tag/types'
 /**
  * Common formatting utilities for the perps module.
  */
@@ -184,6 +185,19 @@ export const formatOrderStatus = (status: string): string => {
   return orderStatusLabels[status] ?? status
 }
 
+// AppTag colour for an order status pill; unmapped statuses stay neutral.
+export const orderStatusTagType = (status: string): TagType => {
+  switch (status) {
+    case 'open':
+    case 'pending':
+      return 'branded'
+    case 'fullyfilled':
+      return 'success'
+    default:
+      return 'neutral'
+  }
+}
+
 // See orderStatusLabels above re: i18n keys + raw-enum fallback.
 export const orderTypeLabels: Record<string, string> = {
   limit: 'perps.order-type.limit',
@@ -215,6 +229,12 @@ export const directionKey = (direction: string | undefined): string => {
   if (!direction) return ''
   return directionLabels[direction] ?? direction
 }
+
+// AppTag colour for a fill direction pill: any direction containing "long" is
+// success, everything else danger. Both flip directions contain "long", so
+// both come out success.
+export const fillDirectionTagType = (direction: string | undefined): TagType =>
+  direction?.toLowerCase().includes('long') ? 'success' : 'danger'
 
 // Withdrawal status is a WITHDRAWAL_* enum (see WalletWithdrawal in sdk/types).
 // The label is localized via perps.positions.dw-status.* (PerpsPositionsTable's

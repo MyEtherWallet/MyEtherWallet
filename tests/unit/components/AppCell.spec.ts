@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
+import { createI18n } from 'vue-i18n'
 import AppCell from '@/components/AppCell.vue'
 import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import {
   type CellRightAccessory,
   CELL_SIZE_SPEC,
@@ -21,6 +23,8 @@ const BALANCE: CellRightAccessory = {
   primary: '$1,230',
   secondary: '1,230 USDC',
 }
+
+const i18n = createI18n({ legacy: false, locale: 'en', missingWarn: false })
 
 const mountCell = (props: Record<string, unknown> = {}, slots = {}) =>
   mount(AppCell, {
@@ -194,6 +198,19 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     )
     await w.get('[data-test="prefix"]').trigger('click')
     await w.get('[data-test="suffix"]').trigger('click')
+    expect(w.emitted('click')).toBeUndefined()
+  })
+
+  it('renders the watchlist toggle in the prefix action position', async () => {
+    const w = mount(AppCell, {
+      props: { title: 'Title' },
+      slots: { prefix: () => h(AppCellWatchlistToggle, { modelValue: true }) },
+      global: { plugins: [i18n] },
+    })
+    const toggle = w.getComponent(AppCellWatchlistToggle)
+    // Prefix action is the cell's first child, before avatar and content.
+    expect(toggle.element.parentElement).toBe(w.element.firstElementChild)
+    await toggle.trigger('click')
     expect(w.emitted('click')).toBeUndefined()
   })
 })

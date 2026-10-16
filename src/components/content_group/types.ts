@@ -4,30 +4,30 @@ export type ContentGroupAlign = 'left' | 'right'
 export type ContentGroupTone = 'default' | 'inverse'
 
 /**
- * Content Group typography (design library, MEW-2271), bound to the published
- * Typography tokens (MEW-2031, `main.css` @theme). Each token carries size,
- * line-height, tracking and weight, so one class is the whole style:
- *   m → title label/base (16/22 · 600) · description text/sm (14/20 · 400)
- *   l → title heading/base (20/22 · 700) · description text/base (16/22 · 400)
- * `inverted` only swaps the weights via `font-*`, which override the token's slot.
+ * Content Group line styles (design library, MEW-2271; Figma component set
+ * 1952:43). Each line is either the emphasized one (the title, or the
+ * description when `inverted`) or the supporting one. The typography tokens
+ * carry size, line height, tracking and weight, so no `font-*` override:
+ *   M: emphasis label/base 16·600 · supporting text/sm 14·400
+ *   L: emphasis heading/base 20·700 · supporting text/base 16·400
  */
-export const TITLE_SIZE_CLASS: Record<ContentGroupSize, string> = {
+export const EMPHASIS_TEXT_CLASS: Record<ContentGroupSize, string> = {
   m: 'text-label-base',
   l: 'text-heading-base',
 }
 
-export const DESCRIPTION_SIZE_CLASS: Record<ContentGroupSize, string> = {
+export const SUPPORTING_TEXT_CLASS: Record<ContentGroupSize, string> = {
   m: 'text-text-sm',
   l: 'text-text-base',
 }
 
-/** Title / description colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
-export const TONE_TITLE_CLASS: Record<ContentGroupTone, string> = {
+/** Emphasis / supporting colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
+export const TONE_EMPHASIS_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-default',
   inverse: 'text-text-inverted',
 }
 
-export const TONE_DESCRIPTION_CLASS: Record<ContentGroupTone, string> = {
+export const TONE_SUPPORTING_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-subtle',
   inverse: 'text-text-inverted-subtle',
 }

@@ -14,7 +14,8 @@
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <app-btn-icon-close
-          class="absolute top-4 right-4 z-20 bg-background-default"
+          variant="filled"
+          class="absolute top-4 right-4 z-20"
           @close="holdingsStore.closeModal()"
         />
 
@@ -153,12 +154,13 @@
                           : $t('rwaRewards.claim')
                       }}
                     </app-base-button>
-                    <span
+                    <AppTag
                       v-else
-                      class="shrink-0 py-1 px-2 rounded-8 bg-background-error-subtle text-text-error text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
-                    >
-                      {{ $t('rwaRewards.reward_expired') }}
-                    </span>
+                      type="danger"
+                      variant="subtle"
+                      class="shrink-0"
+                      :label="$t('rwaRewards.reward_expired')"
+                    />
                   </div>
                   <template v-if="step.state === 'failed' && !isRoundTwoActive">
                     <app-base-button
@@ -213,7 +215,7 @@
               </div>
               <app-base-button
                 v-if="status === 'banned' || isUnderReview"
-                theme="neutral"
+                type="secondary"
                 size="medium"
                 class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
                 @click="onContactSupport"
@@ -234,7 +236,7 @@
               </template>
             </p>
             <a
-              :href="rewardsPageUrl"
+              :href="configs.TERMS_OF_SERVICE_URL"
               target="_blank"
               rel="noopener"
               class="text-s-16 font-semibold tracking-[-0.32px] text-text-brand hover:underline"
@@ -259,6 +261,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -270,6 +273,7 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
+import configs from '@/configs'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 import AppDivider from '@/components/divider/AppDivider.vue'
 
@@ -302,7 +306,6 @@ const {
   rewardAmountLabel,
 } = storeToRefs(holdingsStore)
 const { t } = useI18n()
-const rewardsPageUrl = 'https://myetherwallet.com/terms-of-service'
 
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 // Strictly the reward's own claim deadline — never the season end. The two are
@@ -485,7 +488,7 @@ const onTrade = () => {
 }
 const onDiscoverRewards = () => {
   trackCta('discover_rewards')
-  window.open(rewardsPageUrl, '_blank', 'noopener')
+  window.open(configs.REWARDS_PAGE_URL, '_blank', 'noopener')
 }
 const onClaim = async () => {
   // A watch-only address can't sign the claim — send the user to log in with a
