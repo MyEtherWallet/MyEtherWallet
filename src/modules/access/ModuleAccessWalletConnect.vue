@@ -38,7 +38,7 @@
             data-testid="wc-qr-loading"
             class="flex size-full items-center justify-center rounded-16 bg-background-default"
           >
-            <AppSpinner size-class="size-6" class="text-text-brand" />
+            <AppSpinner :size="24" />
           </div>
         </div>
         <div class="flex items-center gap-1 text-base font-semibold">
@@ -65,7 +65,7 @@ import { storeToRefs } from 'pinia'
 import QrcodeVue from 'qrcode.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'
 import { useAccessStore } from '@/stores/accessStore'
 

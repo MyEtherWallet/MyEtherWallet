@@ -51,7 +51,7 @@
           <div
             class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
               v-model="searchInput"
               class="grow"
               bg-class="bg-transparent"
@@ -216,7 +216,7 @@ import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from './AppSearchInput.vue'
+import AppSearchbar from './AppSearchbar.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'

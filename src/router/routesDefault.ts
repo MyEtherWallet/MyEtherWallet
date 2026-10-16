@@ -48,9 +48,21 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'action-bar',
+              name: 'DevActionBar',
+              component: () => import('@/views/ViewActionBarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'avatar',
               name: 'DevAvatar',
               component: () => import('@/views/ViewAvatarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toggle',
+              name: 'DevToggle',
+              component: () => import('@/views/ViewToggleShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -72,6 +84,24 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'input-naked',
+              name: 'DevInputNaked',
+              component: () => import('@/views/ViewInputNakedShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'text-area',
+              name: 'DevTextArea',
+              component: () => import('@/views/ViewTextAreaShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'searchbar',
+              name: 'DevSearchbar',
+              component: () => import('@/views/ViewSearchbarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
@@ -81,6 +111,25 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'divider',
               name: 'DevDivider',
               component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'segmented-control',
+              name: 'DevSegmentedControl',
+              component: () =>
+                import('@/views/ViewSegmentedControlShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'spinner',
+              name: 'DevSpinner',
+              component: () => import('@/views/ViewSpinnerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'slider',
+              name: 'DevSlider',
+              component: () => import('@/views/ViewSliderShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -96,16 +145,21 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'segmented-control',
-              name: 'DevSegmentedControl',
-              component: () =>
-                import('@/views/ViewSegmentedControlShowcase.vue'),
+              path: 'checkbox',
+              name: 'DevCheckbox',
+              component: () => import('@/views/ViewCheckboxShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
               path: 'chip',
               name: 'DevChip',
               component: () => import('@/views/ViewChipShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'tag',
+              name: 'DevTag',
+              component: () => import('@/views/ViewTagShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -124,12 +178,6 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'tooltip',
               name: 'DevTooltip',
               component: () => import('@/views/ViewTooltipShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
-              path: 'toggle',
-              name: 'DevToggle',
-              component: () => import('@/views/ViewToggleShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

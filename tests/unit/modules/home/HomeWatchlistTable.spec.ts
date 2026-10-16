@@ -57,7 +57,7 @@ vi.mock('@/components/AppTokenLogo.vue', () => ({
 vi.mock('@/components/AppTokenSymbol.vue', () => ({
   default: { props: ['symbol'], template: '<span>{{ symbol }}</span>' },
 }))
-vi.mock('@/components/AppSearchInput.vue', () => ({
+vi.mock('@/components/AppSearchbar.vue', () => ({
   default: {
     props: ['modelValue', 'placeholder', 'bgClass'],
     emits: ['update:modelValue'],

@@ -10,7 +10,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchInput"
           bg-class="bg-background-default"
           size="compact"
@@ -338,7 +338,7 @@
                 <div class="hidden lg:flex justify-end">
                   <app-base-button
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="tradeBtn(token)"
                     >{{ $t('stocks.trade') }}
@@ -425,7 +425,7 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'

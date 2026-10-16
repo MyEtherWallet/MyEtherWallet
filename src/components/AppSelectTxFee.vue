@@ -273,7 +273,8 @@ const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
     ) {
       // Return a default BTC estimate body
       return {} as unknown as
-        EstimatesRequestBody | GetBtcTransactionEstimateBody
+        | EstimatesRequestBody
+        | GetBtcTransactionEstimateBody
     }
     /**
      * Right now bitcoin wallets are only fetched when the user is logged in.
@@ -532,7 +533,8 @@ const displayFees = computed<DisplayFee[]>(() => {
 
 const hasFees = computed(() => {
   if (props.fees) {
-    return Object.keys(props.fees.fees).length > 0 && !props.isLoadingFees
+    // SwapOfferModal passes {} when there's no gas quote yet (APP-MEW-WEB-16F)
+    return Object.keys(props.fees.fees ?? {}).length > 0 && !props.isLoadingFees
   }
   return (
     feesReady.value &&

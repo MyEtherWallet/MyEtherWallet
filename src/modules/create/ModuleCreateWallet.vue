@@ -64,11 +64,11 @@
               :aria-label="$t('create_wallet.mew_mobile_app')"
               class="relative rounded-20 lg:rounded-32 bg-background-brand-subtle pt-4 px-4 lg:p-6"
             >
-              <div
-                class="absolute top-0 right-0 bg-background-brand text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-1.5 rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
-              >
-                {{ $t('create_wallet.recommended') }}
-              </div>
+              <AppTag
+                type="branded"
+                :label="$t('create_wallet.recommended')"
+                class="absolute top-0 right-0 translate-y-[-35%] translate-x-[10%]"
+              />
               <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
                   :src="mewMobile"
@@ -173,11 +173,11 @@
               :aria-label="$t('create_wallet.enkrypt_browser_wallet')"
               class="relative rounded-20 lg:rounded-32 p-4 lg:p-6 bg-enkryptBg flex flex-col h-full w-full"
             >
-              <div
-                class="absolute top-0 right-0 bg-background-brand text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-1.5 rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
-              >
-                {{ $t('create_wallet.recommended') }}
-              </div>
+              <AppTag
+                type="branded"
+                :label="$t('create_wallet.recommended')"
+                class="absolute top-0 right-0 translate-y-[-35%] translate-x-[10%]"
+              />
               <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
                   :src="enkryptLogo"
@@ -290,11 +290,12 @@
                 class="relative flex flex-col text-left gap-4 lg:gap-6 p-4 lg:p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-border-brand focus:border-border-brand transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
-                <div
-                  class="absolute top-0 right-0 border-border-error border-1 bg-background-error-subtle text-text-error text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-1.5 rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-button"
-                >
-                  {{ $t('create_wallet.not_recommended') }}
-                </div>
+                <AppTag
+                  type="danger"
+                  variant="subtle"
+                  :label="$t('create_wallet.not_recommended')"
+                  class="absolute top-0 right-0 translate-y-[-35%] translate-x-[10%]"
+                />
                 <div class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6">
                   <div class="lg:w-1/3">
                     <img
@@ -389,6 +390,7 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'

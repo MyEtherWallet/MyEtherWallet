@@ -2,10 +2,10 @@
 // Gallery for the Input feedback row (MEW-2402), reachable at
 // /dev/input-feedback via the design-library shell — see routesDefault.ts.
 // The four Figma types standalone (node 2564:1269), then the row under
-// AppInput / AppTextField, including a long message that wraps.
+// AppInput / AppTextArea, including a long message that wraps.
 import { ref } from 'vue'
 import AppInput from '@/components/AppInput.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextArea from '@/components/AppTextArea.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { FEEDBACK_TYPES } from '@/components/input_feedback/types'
 
@@ -91,16 +91,16 @@ const message = ref('Hello MEW')
     </section>
 
     <section class="flex flex-col gap-4">
-      <h2 class="text-s-16 font-semibold">Under AppTextField</h2>
+      <h2 class="text-s-16 font-semibold">Under AppTextArea</h2>
       <div
         class="grid sm:grid-cols-2 gap-6 rounded-12 border border-border-default p-8"
       >
-        <AppTextField
+        <AppTextArea
           v-model="message"
           placeholder="Message"
           :error-message="UNBROKEN"
         />
-        <AppTextField
+        <AppTextArea
           v-model="message"
           placeholder="Message"
           :feedback="{ type: 'success', message: 'Signature verified' }"

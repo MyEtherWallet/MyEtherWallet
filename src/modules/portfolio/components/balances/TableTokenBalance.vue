@@ -9,7 +9,11 @@
         <div
           class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
         >
-          <app-search-input v-model="searchInput" class="grow" />
+          <app-searchbar
+            bg-class="bg-background-alternative"
+            v-model="searchInput"
+            class="grow"
+          />
         </div>
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
@@ -565,7 +569,7 @@
                   v-if="isBuyableOnCompatibleChain(token.coinId)"
                   size="small"
                   @click="buyBtn(token)"
-                  is-outline
+                  type="secondary"
                   class="w-full"
                   :class="{ 'col-start-2': !hasPrimaryAction(token) }"
                   >{{ $t('common.buy') }}
@@ -642,7 +646,7 @@
         </p>
       </div>
       <!-- Loading State -->
-      <div v-if="isLoading" class="">
+      <div v-if="isLoading">
         <div
           v-for="n in Number(activeShownItems.value)"
           :key="n"
@@ -729,7 +733,7 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'

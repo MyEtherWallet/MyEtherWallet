@@ -18,7 +18,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchQuery"
           bg-class="bg-background-default"
           size="compact"
@@ -250,11 +250,11 @@
                       <span class="font-semibold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
-                      <span
-                        class="shrink-0 bg-background-default-hover text-text-subtle font-bold rounded px-1.5 py-px text-s-9"
-                      >
-                        {{ contract.defaultLeverage }}x
-                      </span>
+                      <AppTag
+                        variant="subtle"
+                        class="shrink-0"
+                        :label="`${contract.defaultLeverage}x`"
+                      />
                     </div>
                     <span class="text-text-subtle text-s-12 truncate block">{{
                       contract.longName
@@ -486,10 +486,10 @@
                           size="small"
                           class="min-w-[136px] !px-3 !py-2"
                           :disabled="isWatchOnly"
-                          :theme="
+                          :tone="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
-                              : 'error'
+                              : 'danger'
                           "
                           @click="
                             onManagePositionClick(
@@ -576,7 +576,7 @@
                     <app-base-button
                       size="small"
                       class="w-24 !px-3 !py-2"
-                      theme="success"
+                      tone="success"
                       :disabled="isPerpsRestricted"
                       @click="
                         openNewPosition(
@@ -590,7 +590,7 @@
                     </app-base-button>
                     <app-base-button
                       size="small"
-                      theme="error"
+                      tone="danger"
                       class="w-24 !px-3 !py-2"
                       :disabled="isPerpsRestricted"
                       @click="
@@ -683,7 +683,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -712,6 +712,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 import {
   analytics,
   PerpsChangeLeverageEvent,
