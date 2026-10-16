@@ -237,18 +237,14 @@
               </div>
             </div>
           </expand-transition>
-          <div class="flex align-center justify-center mt-6 mb-4 gap-4">
-            <app-base-button @click="goBack" type="secondary" class="w-full">
+          <app-btn-group :has-padding="false" class="mt-6 mb-4">
+            <app-base-button @click="goBack" type="secondary">
               {{ $t('common.back') }}
             </app-base-button>
-            <app-base-button
-              :is-loading="signing"
-              @click="confirmTransaction"
-              class="w-full"
-            >
+            <app-base-button :is-loading="signing" @click="confirmTransaction">
               {{ $t('verify-tx.confirm') }}
             </app-base-button>
-          </div>
+          </app-btn-group>
         </div>
       </div>
     </template>
@@ -262,6 +258,7 @@ import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import createIcon from '@/providers/ethereum/blockies'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'

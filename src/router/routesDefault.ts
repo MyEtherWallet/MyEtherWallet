@@ -193,6 +193,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'button-group',
+              name: 'DevButtonGroup',
+              component: () => import('@/views/ViewButtonGroupShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'btn-icon',
               name: 'DevBtnIcon',
               component: () => import('@/views/ViewBtnIconShowcase.vue'),
