@@ -182,25 +182,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <AppBtnIcon
-                  :label="
-                    isWatchListed(token.coinId)
-                      ? $t('common.remove_from_watchlist')
-                      : $t('common.add_to_watchlist')
-                  "
-                  :class="
-                    isWatchListed(token.coinId)
-                      ? 'text-text-brand'
-                      : 'text-text-subtle'
-                  "
-                  @click.stop="setWatchlistToken(token.coinId)"
-                >
-                  <AppIcon
-                    name="star"
-                    :variant="isWatchListed(token.coinId) ? 'filled' : 'stroke'"
-                    size="xxs"
-                  />
-                </AppBtnIcon>
+                <AppCellWatchlistToggle
+                  :model-value="isWatchListed(token.coinId)"
+                  @update:model-value="setWatchlistToken(token.coinId)"
+                />
               </td>
               <!-- Name -->
               <td class="px-1 py-1" colspan="2">
@@ -429,6 +414,7 @@ import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

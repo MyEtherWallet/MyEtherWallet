@@ -16,9 +16,9 @@ import {
  * it once lets those compose it instead of re-implementing the layout.
  *
  * Colours come from `tone`: `default` (emphasis `text/default`, supporting
- * `text/subtle`) for light surfaces, `inverse` (white / white-70) for dark ones
- * such as a Toast or a dark modal header. The spans set their colour
- * explicitly, so a wrapper's `text-*` class would never reach them — use
+ * `text/subtle`) for light surfaces, `inverse` (`text/inverted` /
+ * `text/inverted-subtle`) for dark ones such as a Toast or a dark modal
+ * header. The spans set their colour explicitly, so a wrapper's `text-*` class would never reach them — use
  * `tone` instead. `inverted` swaps the two line styles: the title takes the
  * supporting style and the description the emphasis one.
  *
@@ -116,7 +116,7 @@ const descriptionClass = computed(() => [
           class="truncate min-w-0"
           :class="titleClass"
         >
-          {{ title }}
+          <slot name="title">{{ title }}</slot>
         </span>
         <span
           v-if="slots['title-icon']"
