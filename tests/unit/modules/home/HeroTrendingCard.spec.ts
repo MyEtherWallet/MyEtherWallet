@@ -34,10 +34,10 @@ import type { TrendingRowItem } from '@/modules/home/components/heroTrending'
 // Stub the cell so we test the card's mapping/wiring, not the cell internals
 // (covered in AppCell.spec). Attrs such as data-test fall through to the root.
 const AppCellStub = {
-  props: ['description', 'loading'],
+  props: ['description', 'loading', 'rightAccessory'],
   emits: ['click'],
   template:
-    '<div @click="$emit(\'click\')"><slot name="title" />{{ description }}<slot name="accessory" /></div>',
+    '<div :data-accessory="JSON.stringify(rightAccessory)" @click="$emit(\'click\')"><slot name="title" />{{ description }}</div>',
 }
 
 const stubs = {
@@ -79,14 +79,25 @@ describe('HeroTrendingCard (MEW-2094)', () => {
     expect(w.findAll(ROW).length).toBe(5)
   })
 
-  it('formats each row price through useCurrency', () => {
+  it('hands each row its fiat price and signed change as a balance-performance accessory', () => {
     const rows = mountCard().findAll(ROW)
-    expect(rows[0].text()).toContain('$1')
+    const accessory = (i: number) =>
+      JSON.parse(rows[i].attributes('data-accessory') ?? '{}')
+    expect(accessory(0)).toEqual({
+      kind: 'balance-performance',
+      primary: '$1',
+      change: 1,
+    })
+    expect(accessory(1).change).toBe(-1)
   })
 
   it('shows skeletons and no rows while loading', () => {
     const w = mountCard({ isLoading: true })
-    expect(w.findAll('[data-test="trending-skeleton"]').length).toBe(5)
+    const skeletons = w.findAll('[data-test="trending-skeleton"]')
+    expect(skeletons.length).toBe(5)
+    expect(skeletons[0].attributes('data-accessory')).toBe(
+      JSON.stringify({ kind: 'loading' }),
+    )
     expect(w.findAll(ROW).length).toBe(0)
   })
 
