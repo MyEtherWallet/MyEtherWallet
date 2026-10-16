@@ -66,7 +66,10 @@
             <WalletTabs />
             <div class="flex flex-col gap-4 pt-2">
               <AppDivider />
-              <AccessCell :title="$t('common.dont_have_wallet')">
+              <AccessCell
+                v-if="showSocialLogin"
+                :title="$t('common.dont_have_wallet')"
+              >
                 <template #avatar>
                   <span
                     class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white"
@@ -77,6 +80,7 @@
                 <template #trailing>
                   <button
                     type="button"
+                    data-testid="sign-up-cta"
                     class="shrink-0 text-base font-semibold text-text-brand cursor-pointer"
                     @click="accessStore.setCurrentView('sign_up')"
                   >
@@ -84,6 +88,7 @@
                   </button>
                 </template>
               </AccessCell>
+              <AccessDownloadWallets v-else />
             </div>
           </div>
           <AccessSignUp v-else-if="currentView === 'sign_up'" />
@@ -116,6 +121,8 @@ import WalletTabs from '@/modules/access/components/WalletTabs.vue'
 import AccessCell from '@/modules/access/components/AccessCell.vue'
 import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
+import AccessDownloadWallets from '@/modules/access/components/AccessDownloadWallets.vue'
+import configs from '@/configs'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import { parentView } from '@/modules/access/common/accessViews'
@@ -147,6 +154,7 @@ const { t } = useI18n()
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
+const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 const {
   isOpenAccessDialog,
   currentView,

@@ -56,58 +56,7 @@
         <img :src="PrivyLogo" alt="Privy" class="h-3" />
       </p>
     </section>
-    <section class="flex flex-col gap-3">
-      <h3 class="text-sm font-semibold">
-        {{ t('access_wallet.sign_up.download_official') }}
-      </h3>
-      <div class="grid grid-cols-1 gap-3 xs:grid-cols-2">
-        <AccessCell
-          as="button"
-          type="button"
-          data-testid="download-mew-mobile"
-          title="MEW Mobile"
-          :description="t('access_wallet.sign_up.ios_android')"
-          @click="accessStore.setCurrentView('download_mobile')"
-        >
-          <template #avatar>
-            <AppAvatar
-              type="wallet"
-              size="m"
-              :url="MewLogo"
-              name="MEW Mobile"
-            />
-          </template>
-          <template #trailing>
-            <AppIcon name="qr-code" size="s" class="text-text-subtle" />
-          </template>
-        </AccessCell>
-        <AccessCell
-          as="a"
-          data-testid="download-enkrypt"
-          title="Enkrypt"
-          :description="t('access_wallet.sign_up.browser_extension')"
-          :href="walletConfigs.enkrypt.downloadUrls?.browserExtension"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <template #avatar>
-            <AppAvatar
-              type="wallet"
-              size="m"
-              :url="EnkryptLogo"
-              name="Enkrypt"
-            />
-          </template>
-          <template #trailing>
-            <AppIcon
-              name="arrow-top-right-on-square"
-              size="s"
-              class="text-text-subtle"
-            />
-          </template>
-        </AccessCell>
-      </div>
-    </section>
+    <AccessDownloadWallets />
   </div>
 </template>
 
@@ -125,19 +74,14 @@ import AppDivider from '@/components/divider/AppDivider.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AccessCell from './AccessCell.vue'
 import GoogleLogo from '@/assets/images/access/google.svg'
 import PrivyLogo from '@/assets/images/access/privy.svg'
-import MewLogo from '@/assets/images/access/mew-app.webp'
-import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
-import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import { useAccessStore } from '@/stores/accessStore'
+import AccessDownloadWallets from './AccessDownloadWallets.vue'
 import configs from '@/configs'
 
 /** Google / email sign-up is handed to Privy by MEW-2289; nothing listens yet. */
 const emit = defineEmits<{ 'sign-up': [payload: SignUpPayload] }>()
 const { t } = useI18n()
-const accessStore = useAccessStore()
 const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 
 const email = ref('')
