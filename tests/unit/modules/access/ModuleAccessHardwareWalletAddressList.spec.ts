@@ -65,6 +65,7 @@ const h = vi.hoisted(() => ({
   // reactive store state, filled in by the async mock factories below
   store: {} as {
     currentView: Ref<string>
+    accessStep: Ref<number>
     selectedChain: Ref<Record<string, unknown> | null>
     ledgerSelectedDerivation: Ref<{
       path: string
@@ -107,12 +108,15 @@ vi.mock('@/stores/derivationStore', async () => {
 vi.mock('@/stores/accessStore', async () => {
   const { ref, computed } = await import('vue')
   const currentView = ref('ledger')
+  const accessStep = ref(1)
   const selectedChain = ref<Record<string, unknown> | null>(ETH_CHAIN)
   h.store.currentView = currentView
+  h.store.accessStep = accessStep
   h.store.selectedChain = selectedChain
   return {
     useAccessStore: () => ({
       currentView,
+      accessStep,
       selectedChain,
       isEvmChain: computed(() => selectedChain.value?.type === 'EVM'),
       setSelectedChain: (c: Record<string, unknown>) =>
@@ -120,6 +124,11 @@ vi.mock('@/stores/accessStore', async () => {
       closeAccessDialog: vi.fn(),
     }),
   }
+})
+vi.mock('@/stores/chainsStore', async () => {
+  const { ref } = await import('vue')
+  const chains = ref([ETH_CHAIN, BTC_CHAIN])
+  return { useChainsStore: () => ({ chains }) }
 })
 vi.mock('@/stores/walletStore', async () => {
   const { ref } = await import('vue')
@@ -200,29 +209,21 @@ vi.mock('pinia', async importOriginal => {
 
 import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWallet.vue'
 
-const SelectAddressList = {
-  name: 'SelectAddressList',
-  props: ['walletList', 'isLoading', 'modelValue'],
+const AccessAddressList = {
+  name: 'AccessAddressList',
+  props: ['entries', 'isLoading', 'modelValue', 'balancesError'],
+  emits: ['show-more', 'retry'],
   template: '<div />',
 }
 const stubs = {
-  SelectAddressList,
-  AppSheet: { template: '<div><slot /></div>' },
-  AppStepper: {
-    props: ['steps', 'description', 'activeStep'],
-    template: '<div><slot /></div>',
-  },
-  AppStepDescription: { template: '<div />' },
+  AccessAddressList,
+  AccessDropdown: { template: '<div />' },
   // Native click falls through to the root <button>; do NOT also $emit('click')
   // or the parent handler runs twice.
   AppBaseButton: {
     props: ['disabled', 'isLoading'],
     template: '<button :disabled="disabled"><slot /></button>',
   },
-  AppBtnText: { template: '<button><slot /></button>' },
-  SelectChainForApp: { template: '<div />' },
-  HardwareWalletDerivation: { template: '<div />' },
-  ButtonNoWallet: { template: '<div />' },
 }
 
 // Every mounted component watches the shared chain / derivation refs, so a
@@ -263,6 +264,7 @@ beforeEach(() => {
   h.closeLedgerTransport.mockClear()
   h.addToastMessage.mockClear()
   h.store.currentView.value = 'ledger'
+  h.store.accessStep.value = 1
   h.store.selectedChain.value = ETH_CHAIN
   h.store.ledgerSelectedDerivation.value = { path: '', label: '', basePath: '' }
   h.store.trezorSelectedDerivation.value = { path: '', label: '', basePath: '' }
@@ -299,9 +301,9 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
       { name: 'ETHEREUM', type: 'EVM', chainID: '1' },
       ['0xaddr0', '0xaddr1', '0xaddr2', '0xaddr3', '0xaddr4'],
     )
-    const list = w.findComponent(SelectAddressList)
-    expect(list.props('walletList')).toHaveLength(5)
-    expect(list.props('walletList')[0]).toMatchObject({
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('entries')).toHaveLength(5)
+    expect(list.props('entries')[0]).toMatchObject({
       address: '0xaddr0',
       balance: '1000000000000000000',
     })
@@ -313,14 +315,66 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     const w = factory()
     await connect(w)
 
-    const list = w.findComponent(SelectAddressList)
-    expect(list.props('walletList')).toHaveLength(5)
-    expect(list.props('walletList')[1]).toMatchObject({
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('entries')).toHaveLength(5)
+    expect(list.props('entries')[1]).toMatchObject({
       address: '0xaddr1',
       balance: '0',
     })
     expect(list.props('isLoading')).toBe(false)
+    expect(list.props('balancesError')).toBe(true)
     expect(h.addToastMessage).not.toHaveBeenCalled()
+  })
+
+  it('moves to the address step once the device is connected', async () => {
+    const w = factory()
+    await connect(w)
+    expect(h.store.accessStep.value).toBe(2)
+  })
+
+  it('retries the balances for the listed addresses and clears the error', async () => {
+    h.fetchNativeBalances.mockRejectedValueOnce(new Error('429'))
+    const w = factory()
+    await connect(w)
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('balancesError')).toBe(true)
+
+    list.vm.$emit('retry')
+    await settle()
+
+    expect(h.manager.getAddress).toHaveBeenCalledTimes(5)
+    expect(h.fetchNativeBalances).toHaveBeenLastCalledWith(
+      { name: 'ETHEREUM', type: 'EVM', chainID: '1' },
+      ['0xaddr0', '0xaddr1', '0xaddr2', '0xaddr3', '0xaddr4'],
+    )
+    expect(list.props('balancesError')).toBe(false)
+    expect(list.props('entries')[0].balance).toBe('1000000000000000000')
+  })
+
+  it('"Show more" appends the next five addresses and keeps the selection', async () => {
+    const w = factory()
+    await connect(w)
+    const list = w.findComponent(AccessAddressList)
+
+    list.vm.$emit('show-more')
+    await settle()
+
+    expect(h.manager.getAddress).toHaveBeenCalledTimes(10)
+    expect(h.manager.getAddress).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pathIndex: '9' }),
+    )
+    expect(h.fetchNativeBalances).toHaveBeenLastCalledWith(expect.anything(), [
+      '0xaddr5',
+      '0xaddr6',
+      '0xaddr7',
+      '0xaddr8',
+      '0xaddr9',
+    ])
+    expect(
+      list.props('entries').map((e: { index: number }) => e.index),
+    ).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    expect(list.props('modelValue')).toBe(0)
+    expect(list.props('isLoading')).toBe(false)
   })
 
   it('on Trezor, a chain switch that also changes the derivation reloads exactly once', async () => {
@@ -352,6 +406,8 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
 
     h.closeLedgerTransport.mockClear()
+    // The real store resets the step whenever the view changes.
+    h.store.accessStep.value = 1
     const w2 = factory()
     await connect(w2)
     // "Access wallet" is the AppBaseButton on step 2 (the connect button is gone).

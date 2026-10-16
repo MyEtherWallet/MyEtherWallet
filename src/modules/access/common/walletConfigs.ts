@@ -1,11 +1,11 @@
 import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
 import UnisatLogo from '@/assets/images/access/unisat.webp'
 import MewLogo from '@/assets/images/access/mew-app.webp'
-import LedgerLogo from '@/assets/images/access/ledger.webp'
-import TrezorLogo from '@/assets/images/access/trezor.webp'
-import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
-import KeystoreLogo from '@/assets/images/access/keystore.webp'
-import MnemonicLogo from '@/assets/images/access/phrase.webp'
+import LedgerLogo from '@/assets/images/access/ledger.svg'
+import TrezorLogo from '@/assets/images/access/trezor.svg'
+import PrivateKeyLogo from '@/assets/images/access/private-key.svg'
+import KeystoreLogo from '@/assets/images/access/keystore.svg'
+import MnemonicLogo from '@/assets/images/access/recovery-phrase.svg'
 import HWWallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
 import { NetworkNames } from '@enkryptcom/types'
@@ -21,6 +21,8 @@ export const ACCESS_WALLET_VIEWS = [
   'private_key',
   'wallet_connect',
   'web3_wallet',
+  'sign_up',
+  'download_mobile',
 ] as const
 
 export const CREATE_WALLET_VIEWS = ['default', 'buy', 'mnemonic'] as const
@@ -88,6 +90,8 @@ export type WalletConfig = {
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
+  /** The icon is already a full-bleed circle; draw it edge to edge, not inset. */
+  roundIcon?: boolean
   walletViewType?: WalletView
   downloadUrls?: downloadUrls
   canSupport?: (chain?: Chain) => boolean
@@ -133,6 +137,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'ledger',
     name: 'Ledger',
     icon: LedgerLogo,
+    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: ledgerSupportNetwork,
     walletViewType: 'ledger',
@@ -141,6 +146,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
+    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: trezorSupportNetwork,
     walletViewType: 'trezor',
@@ -150,6 +156,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Keystore',
     nameKey: 'access_wallet.wallet_name.keystore',
     icon: KeystoreLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'keystore',
     canSupport: keystoreSupportNetwork,
@@ -159,6 +166,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Recovery (mnemonic) Phrase',
     nameKey: 'access_wallet.wallet_name.mnemonic',
     icon: MnemonicLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'mnemonic',
     canSupport: () => true,
@@ -168,6 +176,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Private Key',
     nameKey: 'access_wallet.wallet_name.private_key',
     icon: PrivateKeyLogo,
+    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'private_key',
     canSupport: privateKeySupportNetwork,
@@ -182,6 +191,11 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isOfficial: true,
     isWC: true,
     walletViewType: 'wallet_connect',
+    downloadUrls: {
+      ios: 'https://apps.apple.com/app/mew-crypto-wallet-buy-eth/id1464614025',
+      android:
+        'https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet',
+    },
   },
   enkrypt: {
     id: 'enkrypt',
@@ -221,15 +235,4 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
       browserExtension: '',
     },
   },
-}
-
-export enum SortBy {
-  POPULAR = 'popular',
-  A_Z = 'a-z',
-  Z_A = 'z-a',
-}
-
-export interface Filter {
-  name: string
-  value: WalletConfigType | 'all'
 }
