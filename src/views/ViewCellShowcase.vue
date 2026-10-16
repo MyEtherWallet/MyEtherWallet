@@ -8,6 +8,7 @@ import AppAvatar from '@components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@components/AppCellWatchlistToggle.vue'
 import AppIcon from '@components/icon/AppIcon.vue'
 import { CELL_SIZES, type CellSurface } from '@components/cellSizes'
 
@@ -35,6 +36,7 @@ const STATES = [
 
 const clicks = ref(0)
 const slotClicks = ref(0)
+const watched = ref(false)
 </script>
 
 <template>
@@ -94,6 +96,37 @@ const slotClicks = ref(0)
     </section>
 
     <section class="flex flex-col gap-4">
+      <h2 class="text-label-base">Watchlist toggle</h2>
+      <div
+        class="flex max-w-[480px] flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
+      >
+        <div class="flex items-center gap-6 text-text-xs text-text-subtle">
+          <span class="flex items-center gap-2">
+            Off <AppCellWatchlistToggle :model-value="false" />
+          </span>
+          <span class="flex items-center gap-2">
+            On <AppCellWatchlistToggle :model-value="true" />
+          </span>
+          <span class="flex items-center gap-2">
+            Loading <AppCellWatchlistToggle :model-value="watched" loading />
+          </span>
+        </div>
+        <AppCell
+          title="Live toggle"
+          :description="`watched: ${watched}. Star clicks must not bump Cell clicks`"
+          @click="clicks++"
+        >
+          <template #prefix>
+            <AppCellWatchlistToggle v-model="watched" />
+          </template>
+          <template #avatar="{ size: avatarSize }">
+            <AppAvatar :size="avatarSize" type="cryptoAsset" symbol="ETH" />
+          </template>
+        </AppCell>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
       <h2 class="text-label-base">Slots</h2>
       <div
         class="flex max-w-[480px] flex-col gap-3 rounded-12 border border-border-default bg-background-default p-6"
@@ -104,9 +137,7 @@ const slotClicks = ref(0)
           @click="clicks++"
         >
           <template #prefix>
-            <AppBtnIcon label="Watchlist" @click="slotClicks++">
-              <AppIcon name="star" size="xxs" />
-            </AppBtnIcon>
+            <AppCellWatchlistToggle v-model="watched" @click="slotClicks++" />
           </template>
           <template #avatar="{ size: avatarSize }">
             <AppAvatar :size="avatarSize" type="initial" initial="W" />
