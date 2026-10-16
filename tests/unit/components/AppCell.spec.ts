@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
+import { createI18n } from 'vue-i18n'
 import AppCell from '@/components/AppCell.vue'
+import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import {
+  type CellRightAccessory,
   CELL_SIZE_SPEC,
   CELL_SURFACE_BG_CLASS,
   CELL_SURFACE_INTERACTIVE_CLASS,
@@ -14,6 +18,13 @@ const avatarSlot = {
     h('i', { 'data-test': 'avatar', 'data-size': scope.size }),
 }
 const accessorySlot = { accessory: '<span data-test="accessory">$1</span>' }
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
+
+const i18n = createI18n({ legacy: false, locale: 'en', missingWarn: false })
 
 const mountCell = (props: Record<string, unknown> = {}, slots = {}) =>
   mount(AppCell, {
@@ -82,22 +93,24 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.text()).not.toContain('Title')
   })
 
-  it('renders the accessory props as a right-aligned content group', () => {
-    const w = mountCell({
-      accessoryTitle: '$1,230',
-      accessoryDescription: '1,230 USDC',
-    })
-    const groups = w.findAll('[data-testid="cg-root"]')
-    expect(groups).toHaveLength(2)
-    expect(groups[1].classes()).toContain('text-right')
-    expect(groups[1].text()).toContain('$1,230')
-    expect(groups[1].text()).toContain('1,230 USDC')
+  it('renders the rightAccessory prop through AppCellRightAccessory', () => {
+    const w = mountCell({ rightAccessory: BALANCE })
+    const accessory = w.getComponent(AppCellRightAccessory)
+    expect(accessory.props('accessory')).toEqual(BALANCE)
+    expect(accessory.text()).toContain('$1,230')
+    expect(accessory.text()).toContain('1,230 USDC')
   })
 
-  it('lets the accessory slot override the accessory props', () => {
-    const w = mountCell({ accessoryTitle: '$1,230' }, accessorySlot)
+  it('renders no right side without rightAccessory or accessory slot', () => {
+    expect(mountCell().findComponent(AppCellRightAccessory).exists()).toBe(
+      false,
+    )
+  })
+
+  it('lets the accessory slot replace the rightAccessory prop', () => {
+    const w = mountCell({ rightAccessory: BALANCE }, accessorySlot)
     expect(w.find('[data-test="accessory"]').exists()).toBe(true)
-    expect(w.text()).not.toContain('$1,230')
+    expect(w.findComponent(AppCellRightAccessory).exists()).toBe(false)
   })
 
   it('emits click when interactive and exposes button semantics', async () => {
@@ -155,11 +168,13 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
 
   it('swaps content for skeletons while loading without changing the cell height', () => {
     const w = mountCell(
-      { loading: true, accessoryTitle: '$1' },
+      { loading: true, rightAccessory: BALANCE },
       { ...avatarSlot },
     )
     expect(w.find('[data-test="cell-skeleton-avatar"]').exists()).toBe(true)
-    expect(w.find('[data-test="cell-skeleton-accessory"]').exists()).toBe(true)
+    expect(w.getComponent(AppCellRightAccessory).props('accessory')).toEqual({
+      kind: 'loading',
+    })
     expect(w.find('[data-test="avatar"]').exists()).toBe(false)
     expect(w.find('[data-testid="cg-title"]').exists()).toBe(false)
     expect(w.text()).not.toContain('Title')
@@ -183,6 +198,19 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     )
     await w.get('[data-test="prefix"]').trigger('click')
     await w.get('[data-test="suffix"]').trigger('click')
+    expect(w.emitted('click')).toBeUndefined()
+  })
+
+  it('renders the watchlist toggle in the prefix action position', async () => {
+    const w = mount(AppCell, {
+      props: { title: 'Title' },
+      slots: { prefix: () => h(AppCellWatchlistToggle, { modelValue: true }) },
+      global: { plugins: [i18n] },
+    })
+    const toggle = w.getComponent(AppCellWatchlistToggle)
+    // Prefix action is the cell's first child, before avatar and content.
+    expect(toggle.element.parentElement).toBe(w.element.firstElementChild)
+    await toggle.trigger('click')
     expect(w.emitted('click')).toBeUndefined()
   })
 })

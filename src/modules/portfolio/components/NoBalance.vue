@@ -41,7 +41,7 @@
           </app-base-button>
           <app-base-button
             class="min-w-[165px] xl:min-w-[180px]"
-            is-outline
+            type="secondary"
             @click="openDepositDialog = true"
             :size="isXLAndUp ? 'large' : 'medium'"
           >

@@ -41,7 +41,6 @@
         {{ banner.primary.label }}
       </app-base-button>
       <app-btn-icon-close
-        class="bg-transparent"
         :aria-label="$t('rwaRewards.banner_dismiss')"
         data-test="rwa-home-banner-dismiss"
         @close="onDismiss"

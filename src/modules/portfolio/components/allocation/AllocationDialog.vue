@@ -1,7 +1,12 @@
 <template>
   <div>
-    <app-btn-text class="text-text-brand text-s-14" @click="openDialog = true">
-      {{ $t('common.view_all') }}</app-btn-text
+    <app-base-button
+      type="link"
+      size="small"
+      class="text-text-brand text-s-14"
+      @click="openDialog = true"
+    >
+      {{ $t('common.view_all') }}</app-base-button
     >
     <app-dialog
       v-model:is-open="openDialog"
@@ -15,7 +20,8 @@
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
           >
-            <app-search-input
+            <app-searchbar
+              bg-class="bg-background-alternative"
               v-model="searchInput"
               class="grow"
               :placeholder="$t('select_token.search')"
@@ -133,11 +139,11 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useI18n } from 'vue-i18n'

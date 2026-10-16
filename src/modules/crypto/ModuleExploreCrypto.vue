@@ -10,7 +10,7 @@
       <div
         class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchInput"
           bg-class="bg-background-default"
           size="compact"
@@ -210,30 +210,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <button
-                  :aria-label="
-                    isWatchListed(getWatchlistId(token))
-                      ? $t('common.remove_from_watchlist')
-                      : $t('common.add_to_watchlist')
-                  "
-                  @click.stop="setWatchlistToken(token)"
-                  class="p-2 text-text-subtle rounded-full hover:bg-background-default transition-colors duration-300 ease-in-out"
-                >
-                  <!-- changes color when active -->
-                  <AppIcon
-                    name="star"
-                    size="xxs"
-                    v-if="!isWatchListed(getWatchlistId(token))"
-                    class="cursor-pointer"
-                  />
-                  <AppIcon
-                    name="star"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="cursor-pointer text-text-brand"
-                  />
-                </button>
+                <AppCellWatchlistToggle
+                  :model-value="isWatchListed(getWatchlistId(token))"
+                  @update:model-value="setWatchlistToken(token)"
+                />
               </td>
               <!-- Name & Symbol -->
               <td class="px-1 py-1" colspan="2">
@@ -340,8 +320,6 @@
                       <app-btn-icon
                         :label="$t('common.action_menu')"
                         @click.stop="toggleMenu"
-                        height="h-7 xs:h-8"
-                        width="w-7 xs:w-8"
                       >
                         <AppIcon
                           name="ellipsis-vertical"
@@ -449,7 +427,7 @@
                   <app-base-button
                     v-if="token.ondo !== null"
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="tradeBtn(token)"
                     >{{ $t('crypto.trade') }}
@@ -457,7 +435,7 @@
                   <app-base-button
                     v-else-if="getIsBridgeable(token)"
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="bridgeBtn(token)"
                     >{{ $t('crypto.bridge') }}
@@ -469,7 +447,7 @@
                         getTokenIsCurrentNative(token))
                     "
                     size="small"
-                    theme="secondary"
+                    type="secondary"
                     class="!px-3 !py-2 w-24"
                     @click="swapBtn(token)"
                     >{{ $t('common.swap') }}
@@ -523,9 +501,8 @@
         </span>
         <div class="flex items-center gap-2">
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page === 1"
             :label="$t('common.previous_page')"
             @click="previousPage"
@@ -533,9 +510,8 @@
             <AppIcon name="chevron-left" variant="filled" size="xxs" />
           </app-btn-icon>
           <app-btn-icon
-            class="bg-background-default"
-            height="h-10"
-            width="w-10"
+            variant="filled"
+            size="l"
             :disabled="!isLoading && page >= totalPages"
             :label="$t('common.next_page')"
             @click="nextPage"
@@ -559,10 +535,11 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

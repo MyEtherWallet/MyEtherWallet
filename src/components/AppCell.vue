@@ -62,25 +62,18 @@
     </AppContentGroup>
 
     <template v-if="hasAccessory">
-      <div
+      <AppCellRightAccessory
         v-if="loading"
+        :accessory="{ kind: 'loading' }"
         data-test="cell-skeleton-accessory"
-        class="flex shrink-0 flex-col items-end gap-2"
-      >
-        <AppSkeleton class="h-3 w-[50px]" />
-        <AppSkeleton class="h-3 w-[70px]" />
+      />
+      <div v-else-if="$slots.accessory" class="shrink-0 text-right">
+        <slot name="accessory" />
       </div>
-      <div v-else class="shrink-0 text-right">
-        <slot name="accessory">
-          <AppContentGroup
-            :title="accessoryTitle"
-            :description="accessoryDescription"
-            size="m"
-            align="right"
-            no-wrap
-          />
-        </slot>
-      </div>
+      <AppCellRightAccessory
+        v-else-if="rightAccessory"
+        :accessory="rightAccessory"
+      />
     </template>
 
     <template v-if="!loading">
@@ -109,19 +102,21 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSkeleton from '@/components/AppSkeleton.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
 import { badgePositionStyle } from '@/components/avatar/types'
 import {
   CELL_SIZE_SPEC,
   CELL_SURFACE_BG_CLASS,
   CELL_SURFACE_INTERACTIVE_CLASS,
+  type CellRightAccessory,
   type CellSize,
   type CellSurface,
 } from '@/components/cellSizes'
 
 /**
  * Cell (design library, MEW-2195). A list row composed from AppAvatar (slot),
- * AppAvatarBadge (selected check) and AppContentGroup (title / description and
- * the right-hand accessory). Figma axes: Style → `surface`, Size → `size`,
+ * AppAvatarBadge (selected check), AppContentGroup (title / description) and
+ * AppCellRightAccessory (right-hand side). Figma axes: Style → `surface`, Size → `size`,
  * State → native hover / pressed / focus plus the `selected`, `disabled` and
  * `loading` props. Colours are semantic tokens only, so the cell flips with
  * the theme; the Content Group carries the typography tokens.
@@ -148,13 +143,13 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  accessoryTitle: {
-    type: String,
-    default: '',
-  },
-  accessoryDescription: {
-    type: String,
-    default: '',
+  /**
+   * Right-hand side (Figma `_right accesory`): balance, performance, graph,
+   * icon or loading. The `accessory` slot replaces it when given.
+   */
+  rightAccessory: {
+    type: Object as PropType<CellRightAccessory>,
+    default: undefined,
   },
   selected: {
     type: Boolean,
@@ -187,7 +182,7 @@ const selectedBadgeStyle = computed(() =>
 )
 
 const hasAccessory = computed(
-  () => Boolean(slots.accessory) || props.accessoryTitle !== '',
+  () => Boolean(slots.accessory) || Boolean(props.rightAccessory),
 )
 
 const isInteractive = computed(

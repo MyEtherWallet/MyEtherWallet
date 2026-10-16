@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
+  fillDirectionTagType,
   formatOrderStatus,
   formatOrderType,
+  orderStatusTagType,
 } from '@/modules/perps/utils/formatters'
 
 // `formatOrderStatus`/`formatOrderType` now return i18n *keys* for mapped
@@ -39,5 +41,27 @@ describe('formatOrderType', () => {
 
   it('passes through an unmapped type unchanged (raw-enum fallback)', () => {
     expect(formatOrderType('someNewType')).toBe('someNewType')
+  })
+})
+
+describe('orderStatusTagType', () => {
+  it('maps order statuses to AppTag types', () => {
+    expect(orderStatusTagType('open')).toBe('branded')
+    expect(orderStatusTagType('pending')).toBe('branded')
+    expect(orderStatusTagType('fullyfilled')).toBe('success')
+    expect(orderStatusTagType('canceled')).toBe('neutral')
+    expect(orderStatusTagType('untriggered')).toBe('neutral')
+    expect(orderStatusTagType('someNewStatus')).toBe('neutral')
+  })
+})
+
+describe('fillDirectionTagType', () => {
+  it('is success for long-side directions and danger otherwise', () => {
+    expect(fillDirectionTagType('openLong')).toBe('success')
+    expect(fillDirectionTagType('closeLong')).toBe('success')
+    expect(fillDirectionTagType('flipShortToLong')).toBe('success')
+    expect(fillDirectionTagType('openShort')).toBe('danger')
+    expect(fillDirectionTagType('closeShort')).toBe('danger')
+    expect(fillDirectionTagType(undefined)).toBe('danger')
   })
 })

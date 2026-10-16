@@ -142,12 +142,12 @@
                             })
                           }}
                         </p>
-                        <p
+                        <AppTag
                           v-if="idx === 0"
-                          class="bg-background-brand text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
-                        >
-                          {{ t('swap.swap-offer.best-rate') }}
-                        </p>
+                          type="branded"
+                          :label="t('swap.swap-offer.best-rate')"
+                          class="ml-1"
+                        />
                       </div>
                       <div
                         class="font-semibold text-s-14 flex items-center gap-1"
@@ -274,13 +274,15 @@
         >
           {{ btnText }}
         </app-base-button>
-        <app-btn-text
-          class="mx-auto w-full mt-2 text-text-error"
-          is-large
+        <app-base-button
+          type="link"
+          tone="danger"
+          size="large"
+          class="mx-auto w-full mt-2"
           @click="declineSwap"
         >
           {{ t('common.cancel') }}
-        </app-btn-text>
+        </app-base-button>
       </div>
     </template>
   </app-dialog>
@@ -294,7 +296,6 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { computed, watch, ref } from 'vue'
 import {
@@ -314,6 +315,7 @@ import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 
