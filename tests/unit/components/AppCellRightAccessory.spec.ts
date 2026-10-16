@@ -68,13 +68,24 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
       change: 0,
     })
     const change = w.findAll('p')[1]
-    expect(change.text()).toBe('0%')
+    expect(change.text()).toBe('0.00%')
     expect(change.classes()).toContain('text-text-subtle')
   })
 
-  it('goes through the shared percent formatter (caps above 1000%)', () => {
-    const w = mountAccessory({ kind: 'performance', change: -1234 })
-    expect(w.text()).toBe(`${MINUS}> 1000%`)
+  it('goes through the shared percent formatter, unsigned when it returns a bound', () => {
+    const huge = mountAccessory({ kind: 'performance', change: -1234 })
+    expect(huge.text()).toBe('> 1000%')
+    expect(
+      huge.get('[data-test="cell-accessory-performance"]').classes(),
+    ).toContain('text-text-error')
+    const tiny = mountAccessory({
+      kind: 'balance-performance',
+      primary: '$1',
+      change: 0.001,
+    })
+    const change = tiny.findAll('p')[1]
+    expect(change.text()).toBe('< 0.01%')
+    expect(change.classes()).toContain('text-text-success')
   })
 
   it('renders performance as an arrow + label/base row in the trend colour', () => {
@@ -103,7 +114,7 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
     const row = w.get('[data-test="cell-accessory-performance"]')
     expect(row.find('svg').exists()).toBe(false)
     expect(row.classes()).toContain('text-text-subtle')
-    expect(row.text()).toBe('0%')
+    expect(row.text()).toBe('0.00%')
   })
 
   it('renders graph as a 140×40 sparkline, trend from first vs last point', () => {

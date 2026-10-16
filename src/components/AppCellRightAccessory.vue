@@ -21,9 +21,6 @@ const TREND_CLASS: Record<Trend, string> = {
   neutral: 'text-text-subtle',
 }
 
-// U+2212 minus, per Figma; zero carries no sign.
-const TREND_SIGN: Record<Trend, string> = { up: '+', down: '−', neutral: '' }
-
 const trendOf = (n: number): Trend =>
   n > 0 ? 'up' : n < 0 ? 'down' : 'neutral'
 
@@ -33,10 +30,14 @@ const change = computed(() =>
 const trend = computed(() => trendOf(change.value))
 
 const changeText = computed(() => {
-  // The shared formatter returns '0' (no unit) for zero only.
+  // The shared formatter returns a bare '0' here; Figma wants 0.00%.
+  if (trend.value === 'neutral') return '0.00%'
   const value = formatPercentageValue(Math.abs(change.value)).value
-  const withUnit = value.endsWith('%') ? value : `${value}%`
-  return `${TREND_SIGN[trend.value]}${withUnit}`
+  // '< 0.01%' / '> 1000%' are already magnitudes; colour (and arrow) carry
+  // the direction, a sign in front would read '+< 0.01%'.
+  if (/^[<>]/.test(value)) return value
+  // U+2212 minus, per Figma.
+  return `${trend.value === 'up' ? '+' : '−'}${value}`
 })
 
 // TableSparkline picks its colour from the sign of percentChange.

@@ -45,10 +45,11 @@ export const CELL_SURFACE_INTERACTIVE_CLASS: Record<CellSurface, string> = {
 
 /**
  * Right accessory (Figma: Cell › `_right accesory / _base`, set 1058:908). The
- * nine Figma variants collapse to a `kind` plus the data it needs. Up / down is
- * never a prop: it comes from the sign of `change` (zero is neutral), so the
- * colour can't disagree with the number. `icon` is a static glyph slot, the
- * Cell itself owns selection and clicks.
+ * nine Figma variants collapse to a `kind` plus the data it needs. Up / down
+ * comes from the sign of `change` (zero is neutral), so the colour can't
+ * disagree with the number; a graph derives it from its first vs last point
+ * unless `trend` says otherwise. `icon` is a static glyph slot, the Cell
+ * itself owns selection and clicks.
  */
 export type CellRightAccessory =
   | { kind: 'balance'; primary: string; secondary?: string }
