@@ -9,7 +9,17 @@ import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AppIcon from '@components/icon/AppIcon.vue'
-import { CELL_SIZES, type CellSurface } from '@components/cellSizes'
+import {
+  CELL_SIZES,
+  type CellRightAccessory,
+  type CellSurface,
+} from '@components/cellSizes'
+
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
 
 const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
   {
@@ -67,8 +77,7 @@ const slotClicks = ref(0)
               v-bind="state.props"
               title="Title"
               description="Information"
-              accessory-title="$1,230"
-              accessory-description="1,230 USDC"
+              :right-accessory="BALANCE"
               @click="clicks++"
             >
               <template #avatar="{ size: avatarSize }">
@@ -147,15 +156,14 @@ const slotClicks = ref(0)
 
         <AppCell
           title="Custom accessory slot"
-          description="Coloured 24h change"
-          accessory-title="$1,230"
+          description="Escape hatch, replaces rightAccessory"
+          :right-accessory="BALANCE"
         >
           <template #avatar="{ size: avatarSize }">
             <AppAvatar :size="avatarSize" type="initial" initial="C" />
           </template>
           <template #accessory>
-            <p class="text-label-base text-text-default">$1,230</p>
-            <p class="text-text-sm text-text-success">+2.45%</p>
+            <p class="text-label-base text-text-brand">Custom</p>
           </template>
         </AppCell>
 
@@ -172,7 +180,7 @@ const slotClicks = ref(0)
         <AppCell
           title="Very long title that should truncate instead of wrapping onto a second line"
           description="Very long description that should truncate instead of wrapping onto a second line"
-          accessory-title="$1,230"
+          :right-accessory="BALANCE"
         >
           <template #avatar="{ size: avatarSize }">
             <AppAvatar :size="avatarSize" type="initial" initial="L" />
