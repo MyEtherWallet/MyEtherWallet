@@ -182,6 +182,17 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.attributes('aria-busy')).toBe('true')
   })
 
+  it('sizes the loading avatar like the avatar it stands in for', () => {
+    for (const size of ['medium', 'small'] as const) {
+      const { box } = AVATAR_SIZES[CELL_SIZE_SPEC[size].avatar]
+      const skeleton = mountCell({ loading: true, size }, avatarSlot).get(
+        '[data-test="cell-skeleton-avatar"]',
+      )
+      expect(skeleton.attributes('style')).toContain(`width: ${box}px`)
+      expect(skeleton.attributes('style')).toContain(`height: ${box}px`)
+    }
+  })
+
   it('does not emit click while loading', async () => {
     const w = mountCell({ loading: true })
     await w.trigger('click')

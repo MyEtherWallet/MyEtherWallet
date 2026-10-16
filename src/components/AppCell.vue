@@ -31,7 +31,8 @@
         v-if="loading"
         shape="circle"
         data-test="cell-skeleton-avatar"
-        class="size-8 shrink-0"
+        class="shrink-0"
+        :style="skeletonAvatarStyle"
       />
       <div v-else class="relative flex shrink-0">
         <slot name="avatar" :size="sizeSpec.avatar" />
@@ -103,7 +104,7 @@ import AppSkeleton from '@/components/AppSkeleton.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
-import { badgePositionStyle } from '@/components/avatar/types'
+import { AVATAR_SIZES, badgePositionStyle } from '@/components/avatar/types'
 import {
   CELL_SIZE_SPEC,
   CELL_SURFACE_BG_CLASS,
@@ -180,6 +181,12 @@ const sizeSpec = computed(() => CELL_SIZE_SPEC[props.size])
 const selectedBadgeStyle = computed(() =>
   badgePositionStyle(sizeSpec.value.avatar, 'topLeft'),
 )
+
+// Same box as the avatar it replaces, so the row doesn't jump once it loads.
+const skeletonAvatarStyle = computed(() => {
+  const px = `${AVATAR_SIZES[sizeSpec.value.avatar].box}px`
+  return { width: px, height: px }
+})
 
 const hasAccessory = computed(
   () => Boolean(slots.accessory) || Boolean(props.rightAccessory),
