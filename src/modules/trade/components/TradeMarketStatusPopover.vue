@@ -38,13 +38,14 @@
         :time-label="timelineTimeLabel"
         :session-ranges="timelineRanges"
       />
-      <button
-        :aria-label="$t('common.close')"
-        class="absolute right-1 top-1 flex w-6 h-6 items-center justify-center rounded-full hoverNoBG"
+      <AppBtnIcon
+        size="s"
+        :label="$t('common.close')"
+        class="absolute right-1 top-1"
         @click="emit('close')"
       >
         <AppIcon name="x-mark" variant="filled" size="xxs" />
-      </button>
+      </AppBtnIcon>
     </div>
   </div>
 </template>
@@ -52,6 +53,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
 } from './TradeMarketTimeline.vue'

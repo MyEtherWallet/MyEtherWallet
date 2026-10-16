@@ -122,7 +122,7 @@
         <app-base-button
           class="mt-8 mx-auto w-full xs:w-[220px]"
           :disabled="disableSubmit"
-          :theme="currentView === 'delete' ? 'error' : 'primary'"
+          :tone="currentView === 'delete' ? 'danger' : 'default'"
           @click="action"
         >
           {{ buttonTitle }}
