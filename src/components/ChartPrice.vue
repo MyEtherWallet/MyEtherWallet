@@ -218,6 +218,14 @@ const getFormat = (): Intl.DateTimeFormatOptions => {
 }
 const plugins = [
   {
+    // Because of the destroy delay, the chart outlives its canvas for a moment.
+    // Chart.js drops its dataset metas on detach but keeps the hovered tooltip,
+    // so a pointer event still queued for the next frame crashed on the
+    // missing controller (Sentry APP-MEW-WEB-1NE). Skip events while detached.
+    id: 'ignoreDetachedEvents',
+    beforeEvent: (chart: Chart) => chart.attached,
+  },
+  {
     id: 'verticalLine',
     afterDraw: (chart: any) => {
       if (chart.tooltip?.opacity > 0) {
