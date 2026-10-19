@@ -31,8 +31,6 @@
           class="h-12 w-96 animate-pulse rounded-3xl bg-background-default"
         />
       </template>
-      <!-- Design-library Picker (L), same as SelectChainBtn: the selection
-           opens the chain dialog. -->
       <AppPicker
         v-else
         size="l"
