@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeAll } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import { Chart } from 'chart.js'
@@ -36,10 +36,6 @@ beforeAll(() => {
       return fakeContext(this) as unknown as CanvasRenderingContext2D
     } as HTMLCanvasElement['getContext'],
   )
-})
-
-afterEach(() => {
-  document.body.innerHTML = ''
 })
 
 describe('ChartPrice', () => {
