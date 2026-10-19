@@ -5,7 +5,7 @@
       <app-sheet :title="$t('verify-message')">
         <div class="flex flex-col gap-1 pt-6">
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
-          <app-text-area
+          <app-text-area-legacy
             v-model="message"
             surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_verify')"
@@ -23,7 +23,7 @@
             class="w-full mb-4"
           />
 
-          <app-text-area
+          <app-text-area-legacy
             v-model="signature"
             surface="alternative"
             :placeholder="$t('sign_message.enter_signature_to_verify')"
@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppTextArea from '@/components/AppTextArea.vue'
+import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'

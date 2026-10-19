@@ -72,7 +72,7 @@ src/
 | Component                | Purpose                                     |
 | ------------------------ | ------------------------------------------- |
 | `AppInput.vue`           | Base text input                             |
-| `AppTextArea.vue`        | Multi-line text area with error feedback    |
+| `AppTextAreaLegacy.vue`  | Legacy multi-line text area (pre DL)        |
 | `AppSearchbar.vue`       | Search field with search icon + clear       |
 | `AppSelect.vue`          | Dropdown select                             |
 | `AppTokenSelect.vue`     | Token-aware dropdown (shows logos, symbols) |
@@ -172,6 +172,10 @@ src/
 
 - `AppTabs.vue` — tabbed interface
 - `AppTabsSimple.vue` — simplified tabs without panels
+
+**`text_area/`**
+
+- `AppTextArea.vue` — design-library multi-line field (`surface`, `label`, `message`/`errorMessage`, `disabled`, `heightClass`, trailing `actionIcon`)
 
 **`transitions/`**
 
