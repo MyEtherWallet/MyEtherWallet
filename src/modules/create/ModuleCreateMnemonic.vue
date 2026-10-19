@@ -308,6 +308,26 @@ const closeCreateOpenAccess = () => {
   setCurrentView('mnemonic')
 }
 /**------------------------
+ * Mnemonic phrase
+ -------------------------*/
+
+// Declared before the verify computed: its watcher reads `mnemonic` during setup
+const mnemonic = ref('')
+const length = ref({
+  label: t('create_wallet.mnemonic.word_option', { count: 12 }),
+  value: '12',
+})
+
+watch(length, () => {
+  updateMnemonic()
+})
+
+const updateMnemonic = () => {
+  const bits =
+    length.value.value === '12' ? 128 : length.value.value === '18' ? 192 : 256
+  mnemonic.value = generateMnemonic(english, bits)
+}
+/**------------------------
  * Verify Indexes
  -------------------------*/
 
@@ -397,25 +417,6 @@ const verifyMnemonic = computed(() => {
 
   return isValid
 })
-/**------------------------
- * Mnemonic phrase
- -------------------------*/
-
-const mnemonic = ref('')
-const length = ref({
-  label: t('create_wallet.mnemonic.word_option', { count: 12 }),
-  value: '12',
-})
-
-watch(length, () => {
-  updateMnemonic()
-})
-
-const updateMnemonic = () => {
-  const bits =
-    length.value.value === '12' ? 128 : length.value.value === '18' ? 192 : 256
-  mnemonic.value = generateMnemonic(english, bits)
-}
 
 onMounted(() => {
   updateMnemonic()
