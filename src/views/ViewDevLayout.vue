@@ -23,6 +23,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Chip', to: '/dev/chip' },
       { name: 'Content Group', to: '/dev/content-group' },
       { name: 'Divider', to: '/dev/divider' },
+      { name: 'Footer', to: '/dev/footer' },
       { name: 'Icon', to: '/dev/icons' },
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },

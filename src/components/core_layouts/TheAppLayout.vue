@@ -57,16 +57,10 @@
           >
             <router-view />
           </div>
-          <MewFooter
+          <AppFooter
             v-if="!isDevPlayground"
-            :use-i18n="useI18n"
+            v-bind="footerProps"
             :amplitude="analytics.amplitude"
-            :link-component="RouterLink"
-            :package-version="packageVersion"
-            :user-consent="analyticsStore.consent"
-            :curr-project="CURR_PROJECT"
-            @update:consent="handleSetConsent"
-            class="px-3 xs:px-5"
           />
           <div
             v-if="!isDevPlayground"
@@ -96,13 +90,12 @@
 </template>
 
 <script setup lang="ts">
-import { MewFooter } from '@myetherwallet/vue-common-components'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { AppFooter } from '@myetherwallet/vue-common-components'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { inject, computed, ref, watch } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
-import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
@@ -114,6 +107,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import { useFooterProps } from '@/composables/useFooterProps'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)
@@ -121,22 +115,11 @@ const accessStore = useAccessStore()
 const { isOpenAccessDialog } = storeToRefs(accessStore)
 const { t } = useI18n()
 
-const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
-//TODO: make a new project for MEW  PORTOFLIO APP
-const CURR_PROJECT = 'MEW_WEBAPP'
-/**
- * App Version
- */
-
-const packageVersion = configs.APP_VERSION
-
-const handleSetConsent = (consent: boolean) => {
-  analyticsStore.setTrackingConsent(consent)
-}
+const footerProps = useFooterProps()
 
 const route = useRoute()
 const router = useRouter()
