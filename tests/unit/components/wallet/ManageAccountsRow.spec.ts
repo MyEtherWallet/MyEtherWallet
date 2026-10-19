@@ -145,4 +145,35 @@ describe('ManageAccountsRow', () => {
     w.unmount()
     expect(w.emitted('visibility-change')?.at(-1)).toEqual([false])
   })
+
+  it('survives an in-page translator rewriting the balance cell — APP-MEW-WEB-1QC', async () => {
+    // Browser translators swap the "$12.34" text for their own <font> nodes,
+    // detaching what Vue holds. A balance refresh then swapped skeleton <-> amount
+    // and Vue walked the detached nodes into null (`nextSibling` of null).
+    const errors: unknown[] = []
+    const w = mount(ManageAccountsRow, {
+      attachTo: document.body,
+      props: {
+        account: acc(),
+        isActive: true,
+        balance: { usdValue: 12.34, tokenCount: 1 },
+        balanceLoading: false,
+      },
+      global: {
+        stubs,
+        mocks: { $t: (k: string) => k },
+        config: { errorHandler: err => void errors.push(err) },
+      },
+    })
+    const cell = w.get('.text-right').element
+    const font = document.createElement('font')
+    font.textContent = '$12.34'
+    cell.replaceChildren(font)
+
+    await w.setProps({ balanceLoading: true })
+    await w.setProps({ balanceLoading: false })
+
+    expect(errors.map(e => (e as Error).message)).toEqual([])
+    w.unmount()
+  })
 })
