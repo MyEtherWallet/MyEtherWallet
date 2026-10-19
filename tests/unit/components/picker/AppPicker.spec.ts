@@ -15,6 +15,44 @@ describe('AppPicker', () => {
     expect(wrapper.get(chevron()).classes()).toContain('text-icon-subtle')
   })
 
+  it('renders a dialog-trigger button with a 1px inset brand focus ring', () => {
+    const el = mount(AppPicker, { props: { title: 'T' } }).get(root())
+    expect(el.attributes('type')).toBe('button')
+    expect(el.attributes('aria-haspopup')).toBe('dialog')
+    expect(el.classes()).toEqual(
+      expect.arrayContaining([
+        'focus-visible:ring-1',
+        'focus-visible:ring-inset',
+        'focus-visible:ring-border-brand',
+      ]),
+    )
+    expect(el.classes()).not.toContain('border')
+  })
+
+  it('lets a fallthrough click and attrs reach the button, except when disabled or loading', async () => {
+    const clicks = (props: Record<string, unknown>) => {
+      let n = 0
+      const wrapper = mount(AppPicker, {
+        props: { title: 'T', ...props },
+        attrs: { onClick: () => n++, 'aria-describedby': 'hint' },
+      })
+      return { wrapper, count: () => n }
+    }
+
+    const enabled = clicks({})
+    expect(enabled.wrapper.get(root()).attributes('aria-describedby')).toBe(
+      'hint',
+    )
+    await enabled.wrapper.get(root()).trigger('click')
+    expect(enabled.count()).toBe(1)
+
+    for (const state of [{ disabled: true }, { loading: true }]) {
+      const blocked = clicks(state)
+      await blocked.wrapper.get(root()).trigger('click')
+      expect(blocked.count()).toBe(0)
+    }
+  })
+
   it('renders as a button and forwards disabled', () => {
     const wrapper = mount(AppPicker, {
       props: { title: 'T', disabled: true },

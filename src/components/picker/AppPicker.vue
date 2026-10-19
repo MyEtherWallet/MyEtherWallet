@@ -77,7 +77,7 @@ const rootClass = computed(() => [
     aria-haspopup="dialog"
     :aria-expanded="expanded"
     data-testid="picker"
-    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-background-alternative-hover focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none"
+    class="items-center text-left transition-colors duration-200 hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-brand disabled:pointer-events-none"
     :class="rootClass"
   >
     <span
