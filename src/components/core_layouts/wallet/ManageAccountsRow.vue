@@ -59,6 +59,7 @@
 
     <div
       v-if="balanceLoading || balance"
+      translate="no"
       class="text-right flex-shrink-0 text-s-14"
       :class="isActive ? 'text-black' : 'text-text-subtle'"
     >

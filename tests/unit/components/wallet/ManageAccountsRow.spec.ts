@@ -166,6 +166,8 @@ describe('ManageAccountsRow', () => {
       },
     })
     const cell = w.get('.text-right').element
+    // Amounts have nothing to translate; this keeps translators off the cell
+    expect(cell.getAttribute('translate')).toBe('no')
     const font = document.createElement('font')
     font.textContent = '$12.34'
     cell.replaceChildren(font)
