@@ -12,7 +12,7 @@ describe('AppPicker', () => {
   it('renders the title and the trailing chevron', () => {
     const wrapper = mount(AppPicker, { props: { title: 'Ethereum' } })
     expect(wrapper.text()).toContain('Ethereum')
-    expect(wrapper.find(chevron()).exists()).toBe(true)
+    expect(wrapper.get(chevron()).classes()).toContain('text-icon-subtle')
   })
 
   it('renders as a button and forwards disabled', () => {
@@ -22,7 +22,18 @@ describe('AppPicker', () => {
     const el = wrapper.get(root()).element as HTMLButtonElement
     expect(el.tagName).toBe('BUTTON')
     expect(el.disabled).toBe(true)
-    expect(wrapper.get(root()).classes()).toContain('disabled:opacity-40')
+    expect(wrapper.get(root()).classes()).toContain('opacity-40')
+  })
+
+  it('mirrors the modal state through aria-expanded only when bound', () => {
+    const unbound = mount(AppPicker, { props: { title: 'T' } })
+    expect(unbound.get(root()).attributes('aria-expanded')).toBeUndefined()
+
+    const open = mount(AppPicker, { props: { title: 'T', expanded: true } })
+    expect(open.get(root()).attributes('aria-expanded')).toBe('true')
+
+    const closed = mount(AppPicker, { props: { title: 'T', expanded: false } })
+    expect(closed.get(root()).attributes('aria-expanded')).toBe('false')
   })
 
   it('shows the description only at size L', () => {
@@ -88,7 +99,12 @@ describe('AppPicker', () => {
 
   it('fills white on the default style and grey on the alternative style', () => {
     const def = mount(AppPicker, { props: { title: 'T', surface: 'default' } })
-    expect(def.get(root()).classes()).toContain('bg-white')
+    expect(def.get(root()).classes()).toEqual(
+      expect.arrayContaining([
+        'bg-background-alternative',
+        'hover:bg-background-alternative-hover',
+      ]),
+    )
 
     const alt = mount(AppPicker, {
       props: { title: 'T', surface: 'alternative' },
@@ -96,13 +112,15 @@ describe('AppPicker', () => {
     expect(alt.get(root()).classes()).toContain('bg-background-default')
   })
 
-  it('shows the Content Group skeleton and ignores clicks while loading', () => {
+  it('shows the Content Group skeleton and blocks mouse + keyboard while loading', () => {
     const wrapper = mount(AppPicker, {
       props: { title: 'Ethereum', loading: true },
     })
     const root = wrapper.get('[data-testid="picker"]')
     expect(root.attributes('aria-busy')).toBe('true')
-    expect(root.classes()).toContain('pointer-events-none')
+    // Native disabled is what stops Enter/Space too; loading isn't dimmed.
+    expect((root.element as HTMLButtonElement).disabled).toBe(true)
+    expect(root.classes()).not.toContain('opacity-40')
     expect(wrapper.find('[data-testid="cg-title"]').exists()).toBe(false)
     expect(wrapper.find('.animate-pulse').exists()).toBe(true)
   })
