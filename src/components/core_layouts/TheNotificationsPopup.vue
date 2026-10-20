@@ -7,7 +7,7 @@
       @click="togglePopup"
     >
       <div class="relative">
-        <AppIcon name="bell" variant="filled" />
+        <AppIcon name="bell" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"

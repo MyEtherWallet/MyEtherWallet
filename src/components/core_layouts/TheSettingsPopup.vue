@@ -6,7 +6,7 @@
       :label="$t('menu.open-settings')"
       @click="togglePopup"
     >
-      <AppIcon name="cog-6-tooth" variant="filled" />
+      <AppIcon name="cog-6-tooth" />
     </app-btn-icon>
 
     <!-- Headless network selector (mobile): owns the chain dialog. It renders
