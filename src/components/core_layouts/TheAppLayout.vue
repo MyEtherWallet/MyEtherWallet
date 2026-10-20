@@ -1,6 +1,10 @@
 <template>
   <div class="h-screen relative flex overflow-hidden">
-    <the-header class="basis-full" @wheel="onHeaderWheel" />
+    <the-header
+      class="basis-full"
+      :scrolled="scrollTop > 0"
+      @wheel="onHeaderWheel"
+    />
 
     <!-- Background -->
     <teleport to="#app">
@@ -15,7 +19,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer top-0 xs:top-[69px] sm:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
+          class="cursor-pointer top-0 xs:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -36,9 +40,7 @@
       ]"
     >
       <div :class="['absolute w-full', backgroundClass]"></div>
-      <div
-        :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
-      >
+      <div :class="['relative flex justify-center  w-full mt-19']">
         <main
           :class="[
             'basis-full w-full relative',
@@ -100,6 +102,7 @@ import { MewFooter } from '@myetherwallet/vue-common-components'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { inject, computed, ref, watch } from 'vue'
+import { useScroll } from '@vueuse/core'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -206,6 +209,8 @@ const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 
 const scrollContainer = ref<HTMLElement | null>(null)
+// Drives the navbar's bottom border: only once the page leaves the top.
+const { y: scrollTop } = useScroll(scrollContainer)
 
 const onHeaderWheel = (e: WheelEvent) => {
   if (isOverflowHidden.value || !scrollContainer.value) return

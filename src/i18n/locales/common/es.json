@@ -223,7 +223,8 @@
   "menu": {
     "open-settings": "Abrir configuración",
     "open-notifications": "Abrir notificaciones",
-    "open-menu": "Abrir menú"
+    "open-menu": "Abrir menú",
+    "main": "Principal"
   },
   "home": "Inicio",
   "connect_wallet": "Conectar billetera",
