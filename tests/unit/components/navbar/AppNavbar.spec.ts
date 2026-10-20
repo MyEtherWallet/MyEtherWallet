@@ -132,14 +132,15 @@ describe('AppNavbar', () => {
     expect(wrapper.classes()).not.toContain('border-transparent')
   })
 
-  it('uses the Figma geometry: 76 high, 1440 max, 16/20 gutter, 8/16 right gap', () => {
+  it('uses the Figma geometry: 76 high, full width, 16/20 gutter, 8/16 right gap', () => {
     const wrapper = mountNavbar()
     // The 1px scrolled border is inside the 76 (border-box on the header).
     expect(wrapper.classes()).toContain('h-19')
     const bar = wrapper.get('header > div')
     expect(bar.classes()).toEqual(
-      expect.arrayContaining(['h-full', 'max-w-360', 'px-4', 'sm:px-5']),
+      expect.arrayContaining(['h-full', 'w-full', 'px-4', 'sm:px-5']),
     )
+    expect(bar.classes()).not.toContain('max-w-360')
     const right = bar.findAll(':scope > div')[1]
     expect(right.classes()).toEqual(
       expect.arrayContaining(['gap-2', 'sm:gap-4']),

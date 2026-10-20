@@ -7,7 +7,7 @@
     ]"
   >
     <div
-      class="mx-auto flex h-full w-full max-w-360 items-center justify-between gap-3 px-4 sm:px-5"
+      class="flex h-full w-full items-center justify-between gap-3 px-4 sm:px-5"
     >
       <!-- Left: hamburger (compact) + logo + links (desktop) -->
       <div class="flex min-w-0 items-center gap-3">
@@ -85,8 +85,9 @@ import { ROUTES_MAIN } from '@/router/routeNames'
 /**
  * Navbar (design library, Figma 1078:1485). Responsive app bar: desktop
  * (≥ xl/1280) shows the logo wordmark, the links and the Create + Connect CTAs;
- * compact (< 1280) swaps in the hamburger and the logo mark. Content above
- * 1440 is capped and centred.
+ * compact (< 1280) swaps in the hamburger and the logo mark. Content spans
+ * the full window width at every size, like the previous header (Figma caps
+ * it at 1440; product kept full width, MEW-2463).
  *
  * The navbar owns layout only. Links, search, the saved-wallet trigger and the
  * notifications/settings actions come in through slots, because each of those
