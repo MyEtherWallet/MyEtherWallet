@@ -228,7 +228,8 @@
   "menu": {
     "open-settings": "Open Settings",
     "open-notifications": "Open Notifications",
-    "open-menu": "Open Menu"
+    "open-menu": "Open Menu",
+    "main": "Main"
   },
   "home": "Home",
   "connect_wallet": "Connect wallet",
