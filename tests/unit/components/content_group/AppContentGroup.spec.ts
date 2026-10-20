@@ -150,8 +150,14 @@ describe('AppContentGroup', () => {
     })
     expect(wrapper.text()).not.toContain('Secret')
     expect(wrapper.text()).not.toContain('Hidden')
-    expect(wrapper.html()).toContain('animate-pulse')
-    expect(wrapper.html()).toContain('bg-background-skeleton')
+    const bars = wrapper.findAll('[data-testid="skeleton"]')
+    expect(bars).toHaveLength(2)
+    expect(bars[0].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[35px]']),
+    )
+    expect(bars[1].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[79px]']),
+    )
     expect(wrapper.find(title()).exists()).toBe(false)
   })
 

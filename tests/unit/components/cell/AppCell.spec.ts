@@ -2,15 +2,15 @@ import { describe, it, expect } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
-import AppCell from '@/components/AppCell.vue'
-import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
-import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppCellRightAccessory from '@/components/cell/AppCellRightAccessory.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import {
   type CellRightAccessory,
   CELL_SIZE_SPEC,
   CELL_SURFACE_BG_CLASS,
   CELL_SURFACE_INTERACTIVE_CLASS,
-} from '@/components/cellSizes'
+} from '@/components/cell/cellSizes'
 import { AVATAR_SIZES } from '@/components/avatar/types'
 
 const avatarSlot = {
@@ -223,5 +223,56 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(toggle.element.parentElement).toBe(w.element.firstElementChild)
     await toggle.trigger('click')
     expect(w.emitted('click')).toBeUndefined()
+  })
+  it('renders no checkbox or radio by default', () => {
+    const w = mountCell({}, avatarSlot)
+    expect(w.find('[data-test="cell-checkbox"]').exists()).toBe(false)
+    expect(w.find('[data-test="cell-radio"]').exists()).toBe(false)
+    expect(w.attributes('aria-pressed')).toBeUndefined()
+  })
+
+  it('puts the checkbox first and the radio last, both mirroring selected', () => {
+    const w = mountCell(
+      { checkbox: true, radio: true, selected: true },
+      avatarSlot,
+    )
+    const row = w.element
+    expect(row.firstElementChild?.getAttribute('data-test')).toBe(
+      'cell-checkbox',
+    )
+    expect(row.lastElementChild?.getAttribute('data-test')).toBe('cell-radio')
+    const checkboxInput = w.get<HTMLInputElement>(
+      '[data-test="cell-checkbox"] input',
+    ).element
+    const radioInput = w.get<HTMLInputElement>(
+      '[data-test="cell-radio"] input',
+    ).element
+    expect(checkboxInput.checked).toBe(true)
+    expect(radioInput.checked).toBe(true)
+    expect(w.attributes('aria-pressed')).toBe('true')
+  })
+
+  it('shows the controls unchecked while not selected', () => {
+    const w = mountCell({ checkbox: true, radio: true }, avatarSlot)
+    expect(
+      w.get<HTMLInputElement>('[data-test="cell-checkbox"] input').element
+        .checked,
+    ).toBe(false)
+    expect(
+      w.get<HTMLInputElement>('[data-test="cell-radio"] input').element.checked,
+    ).toBe(false)
+    expect(w.attributes('aria-pressed')).toBe('false')
+  })
+
+  it('keeps the controls out of reach so the whole cell is the click target', async () => {
+    const w = mountCell({ checkbox: true, radio: true }, avatarSlot)
+    expect(w.get('[data-test="cell-checkbox"]').attributes()).toHaveProperty(
+      'inert',
+    )
+    expect(w.get('[data-test="cell-radio"]').attributes()).toHaveProperty(
+      'inert',
+    )
+    await w.trigger('click')
+    expect(w.emitted('click')).toHaveLength(1)
   })
 })

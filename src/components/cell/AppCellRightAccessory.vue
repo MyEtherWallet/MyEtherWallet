@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSkeleton from '@/components/AppSkeleton.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
-import type { CellRightAccessory } from '@/components/cellSizes'
+import type { CellRightAccessory } from '@/components/cell/cellSizes'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 
 /**

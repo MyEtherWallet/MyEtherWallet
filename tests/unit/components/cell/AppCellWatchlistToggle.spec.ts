@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
-import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 
 const i18n = createI18n({

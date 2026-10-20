@@ -676,7 +676,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppCellWatchlistToggle from '@/components/AppCellWatchlistToggle.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import {
   usePerpsMarkets,
   usePerpsContracts,

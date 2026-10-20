@@ -3,18 +3,17 @@
 // Figma: MEW Web App — Design Library › Cell — Style × State × Size, each
 // style on the surface it is meant for, plus one row per slot.
 import { computed, ref } from 'vue'
-import AppCell from '@components/AppCell.vue'
+import AppCell from '@components/cell/AppCell.vue'
 import AppAvatar from '@components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
-import AppCellWatchlistToggle from '@components/AppCellWatchlistToggle.vue'
-import AppIcon from '@components/icon/AppIcon.vue'
+import AppCellWatchlistToggle from '@components/cell/AppCellWatchlistToggle.vue'
 import {
   CELL_SIZES,
   type CellRightAccessory,
   type CellSurface,
-} from '@components/cellSizes'
+} from '@components/cell/cellSizes'
 
 const BALANCE: CellRightAccessory = {
   kind: 'balance',
@@ -105,6 +104,16 @@ const liveAccessories = computed<
   },
 ])
 const watched = ref(false)
+
+const SELECT_OPTIONS = ['Ethereum', 'Bitcoin'] as const
+type SelectOption = (typeof SELECT_OPTIONS)[number]
+const checkedOptions = ref<SelectOption[]>(['Ethereum'])
+const toggleChecked = (option: SelectOption) => {
+  checkedOptions.value = checkedOptions.value.includes(option)
+    ? checkedOptions.value.filter(checked => checked !== option)
+    : [...checkedOptions.value, option]
+}
+const pickedOption = ref<SelectOption>('Ethereum')
 </script>
 
 <template>
@@ -278,7 +287,7 @@ const watched = ref(false)
             <AppAvatar :size="avatarSize" type="initial" initial="B" />
           </template>
           <template #action>
-            <AppBaseButton size="small" @click="slotClicks++">
+            <AppBaseButton type="secondary" size="small" @click="slotClicks++">
               Button
             </AppBaseButton>
           </template>
@@ -293,9 +302,40 @@ const watched = ref(false)
             <AppAvatar :size="avatarSize" type="initial" initial="S" />
           </template>
           <template #suffix>
-            <AppBtnIcon label="More" @click="slotClicks++">
-              <AppIcon name="ellipsis-horizontal" size="xs" variant="filled" />
-            </AppBtnIcon>
+            <AppBtnIcon
+              size="s"
+              icon="ellipsis-horizontal"
+              label="More"
+              @click="slotClicks++"
+            />
+          </template>
+        </AppCell>
+
+        <AppCell
+          v-for="option in SELECT_OPTIONS"
+          :key="`checkbox-${option}`"
+          :title="`Checkbox — ${option}`"
+          description="Multi-select: tap the row"
+          checkbox
+          :selected="checkedOptions.includes(option)"
+          @click="toggleChecked(option)"
+        >
+          <template #avatar="{ size: avatarSize }">
+            <AppAvatar :size="avatarSize" type="initial" :initial="option[0]" />
+          </template>
+        </AppCell>
+
+        <AppCell
+          v-for="option in SELECT_OPTIONS"
+          :key="`radio-${option}`"
+          :title="`Radio — ${option}`"
+          description="Single-select: tap the row"
+          radio
+          :selected="pickedOption === option"
+          @click="pickedOption = option"
+        >
+          <template #avatar="{ size: avatarSize }">
+            <AppAvatar :size="avatarSize" type="initial" :initial="option[0]" />
           </template>
         </AppCell>
 

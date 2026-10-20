@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import AppCell from '@/components/AppCell.vue'
+import AppCell from '@/components/cell/AppCell.vue'
 
 // Lists every preview registered under /dev/ (the ViewDevLayout children in
 // routesDefault.ts), so a new showcase shows up here without another edit.

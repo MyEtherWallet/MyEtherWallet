@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import type { CellRightAccessory } from '@/components/cellSizes'
+import type { CellRightAccessory } from '@/components/cell/cellSizes'
 
 // chart.js needs a real canvas; the accessory only forwards props to it.
 vi.mock('@/components/TableSparkline.vue', () => ({
@@ -11,7 +11,7 @@ vi.mock('@/components/TableSparkline.vue', () => ({
   },
 }))
 
-import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
+import AppCellRightAccessory from '@/components/cell/AppCellRightAccessory.vue'
 
 const mountAccessory = (accessory: CellRightAccessory) =>
   mount(AppCellRightAccessory, { props: { accessory } })
@@ -80,8 +80,11 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
     ).toContain('text-text-error')
 
     const tinyChange = (change: number) =>
-      mountAccessory({ kind: 'balance-performance', primary: '$1', change })
-        .findAll('p')[1]
+      mountAccessory({
+        kind: 'balance-performance',
+        primary: '$1',
+        change,
+      }).findAll('p')[1]
     const tinyUp = tinyChange(0.001)
     expect(tinyUp.text()).toBe('< 0.01%')
     expect(tinyUp.classes()).toContain('text-text-success')
@@ -160,7 +163,7 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
 
   it('renders loading as two right-aligned skeleton bars', () => {
     const w = mountAccessory({ kind: 'loading' })
-    const bars = w.findAll('.bg-background-skeleton')
+    const bars = w.findAll('[data-testid="skeleton"]')
     expect(bars).toHaveLength(2)
     expect(bars[0].classes()).toEqual(expect.arrayContaining(['h-3', 'w-12']))
     expect(bars[1].classes()).toEqual(expect.arrayContaining(['h-3', 'w-20']))

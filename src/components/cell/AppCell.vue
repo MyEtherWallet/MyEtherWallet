@@ -13,11 +13,17 @@
     :tabindex="isInteractive ? 0 : undefined"
     :aria-disabled="disabled || undefined"
     :aria-busy="loading || undefined"
+    :aria-pressed="checkbox || radio ? selected : undefined"
     data-testid="cell"
     @click="onClick"
     @keydown.enter.self.prevent="onClick"
     @keydown.space.self.prevent="onClick"
   >
+    <!-- inert: the control only mirrors `selected`; clicks reach the cell. -->
+    <span v-if="checkbox" class="flex shrink-0" data-test="cell-checkbox" inert>
+      <AppCheckbox :model-value="selected" />
+    </span>
+
     <div
       v-if="$slots.prefix"
       class="flex h-11 w-7 shrink-0 items-center justify-center"
@@ -94,16 +100,22 @@
         <slot name="extra" />
       </div>
     </template>
+
+    <span v-if="radio" class="flex shrink-0" data-test="cell-radio" inert>
+      <AppRadio :model-value="selected" :value="true" :name="radioName" />
+    </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots, type PropType } from 'vue'
+import { computed, useId, useSlots, type PropType } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSkeleton from '@/components/AppSkeleton.vue'
+import AppCheckbox from '@/components/checkbox/AppCheckbox.vue'
+import AppRadio from '@/components/radio/AppRadio.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
-import AppCellRightAccessory from '@/components/AppCellRightAccessory.vue'
+import AppCellRightAccessory from '@/components/cell/AppCellRightAccessory.vue'
 import { AVATAR_SIZES, badgePositionStyle } from '@/components/avatar/types'
 import {
   CELL_SIZE_SPEC,
@@ -112,12 +124,13 @@ import {
   type CellRightAccessory,
   type CellSize,
   type CellSurface,
-} from '@/components/cellSizes'
+} from '@/components/cell/cellSizes'
 
 /**
  * Cell (design library, MEW-2195). A list row composed from AppAvatar (slot),
- * AppAvatarBadge (selected check), AppContentGroup (title / description) and
- * AppCellRightAccessory (right-hand side). Figma axes: Style → `surface`, Size → `size`,
+ * AppAvatarBadge (selected check), AppContentGroup (title / description),
+ * AppCellRightAccessory (right-hand side) and the optional AppCheckbox /
+ * AppRadio. Figma axes: Style → `surface`, Size → `size`,
  * State → native hover / pressed / focus plus the `selected`, `disabled` and
  * `loading` props. Colours are semantic tokens only, so the cell flips with
  * the theme; the Content Group carries the typography tokens.
@@ -168,6 +181,19 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * Figma `Checkbox` / `Radio`: a leading checkbox (multi-select lists) or a
+   * trailing radio (single-select lists), checked while `selected`. The cell
+   * stays the click target; the consumer toggles `selected` on `click`.
+   */
+  checkbox: {
+    type: Boolean,
+    default: false,
+  },
+  radio: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -175,6 +201,8 @@ const emit = defineEmits<{
 }>()
 
 const slots = useSlots()
+
+const radioName = useId()
 
 const sizeSpec = computed(() => CELL_SIZE_SPEC[props.size])
 

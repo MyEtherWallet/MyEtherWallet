@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import {
   EMPHASIS_TEXT_CLASS,
   SUPPORTING_TEXT_CLASS,
@@ -98,14 +99,10 @@ const descriptionClass = computed(() => [
     <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes. -->
     <template v-if="loading">
       <div class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[35px] rounded-[4px] bg-background-skeleton animate-pulse"
-        ></div>
+        <AppSkeleton class="inline-block h-3 w-[35px]" />
       </div>
       <div v-if="hasDescription" class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[79px] rounded-[4px] bg-background-skeleton animate-pulse"
-        ></div>
+        <AppSkeleton class="inline-block h-3 w-[79px]" />
       </div>
     </template>
 
