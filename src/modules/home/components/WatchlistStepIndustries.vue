@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
-import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
+import AppCard from '@/components/card/AppCard.vue'
 import type { WatchlistCategory } from '@/modules/home/composables/useWatchlistCategories'
 import AppIcon from '@/components/icon/AppIcon.vue'
 
@@ -81,16 +81,19 @@ const toggle = (id: string) => {
       />
       <div class="mew-scrollbar max-h-80 overflow-y-auto py-2 pr-1">
         <div class="grid grid-cols-2 gap-3">
-          <WatchlistSelectableCard
+          <AppCard
             v-for="category in categories"
             :key="category.id"
             data-test="industry-pill"
+            interactive
+            variant="alternative"
+            :label="category.label"
             :selected="selected.includes(category.id)"
             class="p-4 text-s-16 font-medium text-black"
-            @toggle="toggle(category.id)"
+            @click="toggle(category.id)"
           >
             {{ category.label }}
-          </WatchlistSelectableCard>
+          </AppCard>
         </div>
       </div>
     </div>
