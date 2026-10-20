@@ -1,56 +1,44 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpenCreateDialog"
+  <app-modal
+    v-model="isOpenCreateDialog"
+    :title="getTitle"
+    :show-back-button="currentView !== 'default'"
     :class="[
-      'w-full max-h-[95vh]',
+      'w-full max-h-[95vh] bg-background-default',
       currentView === 'mnemonic' || currentView === 'buy'
         ? 'max-w-[1024px] lg:h-auto'
         : 'max-w-[450px] lg:!max-w-[952px] lg:max-h-[650px]',
     ]"
-    bg="bg-background-default"
-    @close-dialog="closeCreate()"
+    @close="closeCreate()"
+    @back="createStore.setCurrentView('default')"
   >
-    <template #title>
-      <div class="flex w-full flex-col md:flex-row px-4 xs:px-6">
-        <div class="w-8 ml-[-12px]">
-          <app-btn-icon
-            v-if="currentView !== 'default'"
-            size="l"
-            :label="$t('create_wallet.back_to_connect_options')"
-            class="mr-auto mt-4"
-            @click="createStore.setCurrentView('default')"
-          >
-            <AppIcon name="arrow-left" size="s" />
-          </app-btn-icon>
-        </div>
-        <div
-          :class="
-            currentView === 'default'
-              ? 'mt-4'
-              : 'sm:justify-center sm:items-center'
-          "
-          class="flex flex-col justify-start w-full md:mt-4 lg:mt-6 lg:mb-2"
+    <template #header>
+      <!-- px-8 keeps the title clear of the absolute back/close buttons. -->
+      <div
+        :class="{
+          'sm:justify-center sm:items-center': currentView !== 'default',
+        }"
+        class="flex flex-col justify-start w-full px-8"
+      >
+        <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
+          {{ getTitle }}
+        </h1>
+        <p
+          v-if="currentView === 'default'"
+          class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-text-subtle"
         >
-          <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
-            {{ getTitle }}
-          </h1>
-          <p
-            v-if="currentView === 'default'"
-            class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-text-subtle"
-          >
-            {{ $t('create_wallet.subtitle') }}
-            <!-- <a
-              href="https://help.myetherwallet.com/en/articles/5979837-how-to-create-an-ethereum-wallet-with-mew"
-              target="_blank"
-              class="underline inline-flex items-center ml-1 hoverOpacity"
-              >Creating a wallet guide
-              <arrow-long-right-icon class="w-5 h-5 ml-1"
-            /></a> -->
-          </p>
-        </div>
+          {{ $t('create_wallet.subtitle') }}
+          <!-- <a
+            href="https://help.myetherwallet.com/en/articles/5979837-how-to-create-an-ethereum-wallet-with-mew"
+            target="_blank"
+            class="underline inline-flex items-center ml-1 hoverOpacity"
+            >Creating a wallet guide
+            <arrow-long-right-icon class="w-5 h-5 ml-1"
+          /></a> -->
+        </p>
       </div>
     </template>
-    <template #content>
+    <template #default>
       <div class="px-4 xs:px-6 pb-10">
         <!-- Default View -->
         <div v-if="currentView === 'default'" class="flex flex-col gap-7">
@@ -384,11 +372,10 @@
         </div>
       </div>
     </template>
-  </app-dialog>
+  </app-modal>
 </template>
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTag from '@/components/tag/AppTag.vue'
 
