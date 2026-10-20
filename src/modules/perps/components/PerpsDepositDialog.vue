@@ -1,230 +1,218 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    :title="showDepositAddress ? '' : $t('perps.deposit.title')"
-    has-content-gutter
-    class="sm:max-w-[460px] sm:mx-auto"
+  <app-modal
+    v-model="isOpen"
+    :title="
+      showDepositAddress
+        ? $t('perps.deposit.eth-deposit-address-title')
+        : $t('perps.deposit.title')
+    "
+    :show-back-button="showDepositAddress && showIsLive"
+    @back="showDepositAddress = false"
   >
-    <template v-if="showDepositAddress && showIsLive" #title>
-      <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
-        <app-btn-icon
-          :label="$t('common.back')"
-          class="mr-2"
-          @click="showDepositAddress = false"
-        >
-          <AppIcon name="chevron-left" variant="filled" size="s" />
-        </app-btn-icon>
-        <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
-          {{ $t('perps.deposit.eth-deposit-address-title') }}
-        </h1>
-        <div class="w-9" />
-      </div>
-    </template>
-    <template #content>
-      <div class="pb-6">
-        <!-- ===== PAGE 1: Deposit Form ===== -->
-        <template v-if="!showDepositAddress">
-          <!-- Content Card -->
-          <div class="relative">
-            <!-- <AppToggle
+    <div class="px-4 sm:px-6 pb-6">
+      <!-- ===== PAGE 1: Deposit Form ===== -->
+      <template v-if="!showDepositAddress">
+        <!-- Content Card -->
+        <div class="relative">
+          <!-- <AppToggle
               v-model="showIsLive"
               :label="$t('perps.deposit.live-mode-label')"
               class="mb-4"
             /> -->
-            <div class="bg-background-brand-subtle rounded-20 px-4 p-4">
-              <!-- Amount Input -->
-              <p class="font-bold ml-3 mb-1">
-                {{ $t('perps.deposit.amount-label') }}
-              </p>
-              <app-enter-amount
-                v-model:amount="amount"
-                v-model:selected-token="USDC_CONTRACT"
-                :validate-input="checkAmountForError"
-                :is-pristine="isPristine"
-                :error="amountError"
-                :token-obj="tokenOptions"
-              >
-                <template #token-select>
-                  <div class="flex items-center py-1.5 ml-3 flex-shrink-0">
-                    <app-token-logo
-                      :url="usdcBalance?.logo_url"
-                      symbol="USDC"
-                      width="w-7"
-                      height="h-7"
-                      class="mr-2"
-                    />
-                    <span class="uppercase font-medium e text-s-15">USDC</span>
-                  </div>
-                </template>
-                <template #footer>
-                  <!-- Percentage presets: design-library Chips on the grey
+          <div class="bg-background-brand-subtle rounded-20 px-4 p-4">
+            <!-- Amount Input -->
+            <p class="font-bold ml-3 mb-1">
+              {{ $t('perps.deposit.amount-label') }}
+            </p>
+            <app-enter-amount
+              v-model:amount="amount"
+              v-model:selected-token="USDC_CONTRACT"
+              :validate-input="checkAmountForError"
+              :is-pristine="isPristine"
+              :error="amountError"
+              :token-obj="tokenOptions"
+            >
+              <template #token-select>
+                <div class="flex items-center py-1.5 ml-3 flex-shrink-0">
+                  <app-token-logo
+                    :url="usdcBalance?.logo_url"
+                    symbol="USDC"
+                    width="w-7"
+                    height="h-7"
+                    class="mr-2"
+                  />
+                  <span class="uppercase font-medium e text-s-15">USDC</span>
+                </div>
+              </template>
+              <template #footer>
+                <!-- Percentage presets: design-library Chips on the grey
                        amount surface (white `default` fill). -->
-                  <div class="flex gap-2 mt-5">
-                    <app-chip
-                      v-for="pct in [25, 50, 75, 100]"
-                      :key="pct"
-                      :label="pct === 100 ? $t('perps.deposit.max') : pct + '%'"
-                      @click="setAmountPercent(pct)"
-                    />
-                  </div>
-                </template>
-              </app-enter-amount>
-
-              <!-- Network -->
-              <div class="mt-5 px-2 flex items-center justify-between">
-                <p
-                  class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
-                >
-                  {{ $t('perps.deposit.from-network-label') }}
-                </p>
-
-                <div class="flex items-center gap-2">
-                  <app-token-logo
-                    v-if="showIsLive"
-                    :url="selectedChain?.icon"
-                    symbol="ETH"
-                    width="w-5"
-                    height="h-5"
-                  />
-                  <p class="font-medium text-s-14">
-                    {{
-                      showIsLive
-                        ? $t('perps.deposit.network-ethereum')
-                        : $t('perps.deposit.network-sandbox')
-                    }}
-                  </p>
-                </div>
-              </div>
-              <!--Deposit Address-->
-              <div class="py-4 px-2 flex items-center justify-between">
-                <p
-                  class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
-                >
-                  {{ $t('perps.deposit.to-address-label') }}
-                </p>
-
-                <div class="flex items-center gap-2">
-                  <div
-                    v-if="showIsLive"
-                    class="font-medium text-s-14 flex items-center gap-2"
-                    :class="{
-                      'animate-pulse w-[120px] h-[21px] bg-background-default-hover rounded-8':
-                        !depositAddress,
-                    }"
-                  >
-                    <app-blockie
-                      v-if="depositAddress"
-                      :address="depositAddress"
-                      :size="5"
-                    />
-                    <p>
-                      {{
-                        depositAddress ? truncateAddress(depositAddress, 6) : ''
-                      }}
-                    </p>
-                  </div>
-                  <p v-else class="font-medium text-s-14">
-                    {{ $t('perps.deposit.smart-contract-address') }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Error -->
-            <div
-              v-if="error"
-              class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4 mb-4 mt-2"
-            >
-              <p class="text-text-error text-s-14 font-medium">{{ error }}</p>
-            </div>
-
-            <!-- Deposit Button -->
-            <AppBaseButton
-              :disabled="depositDisabled"
-              :is-loading="sending"
-              class="w-full mt-5"
-              @click="sendDeposit"
-            >
-              {{ depositButtonLabel }}
-            </AppBaseButton>
-
-            <!-- Deposit Address Link -->
-            <div v-if="showIsLive && depositAddress" class="text-center mt-5">
-              <button
-                class="text-text-brand text-s-14 font-medium hover:underline inline-flex items-center gap-1"
-                @click="showDepositAddress = true"
-              >
-                {{ $t('perps.deposit.use-deposit-address-link') }}
-                <AppIcon name="chevron-right" size="xxs" variant="filled" />
-              </button>
-            </div>
-          </div>
-        </template>
-
-        <!-- ===== PAGE 2: Deposit Address (live only) ===== -->
-        <template v-else-if="showIsLive">
-          <!-- Warning text -->
-          <p class="mb-6">
-            {{ $t('perps.deposit.deposit-address-warning') }}
-          </p>
-
-          <!-- QR Code -->
-          <div class="flex justify-center mb-8">
-            <div
-              class="rounded-[20px] border border-border-default p-4 relative inline-block"
-            >
-              <qrcode-vue
-                :value="depositAddress || ''"
-                :size="220"
-                level="M"
-                render-as="svg"
-              />
-              <!-- ETH icon overlay in center -->
-              <div
-                class="absolute inset-0 flex items-center justify-center pointer-events-none"
-              >
-                <div
-                  class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center"
-                >
-                  <app-token-logo
-                    :url="selectedChain?.icon"
-                    symbol="ETH"
-                    width="w-8"
-                    height="h-8"
+                <div class="flex gap-2 mt-5">
+                  <app-chip
+                    v-for="pct in [25, 50, 75, 100]"
+                    :key="pct"
+                    :label="pct === 100 ? $t('perps.deposit.max') : pct + '%'"
+                    @click="setAmountPercent(pct)"
                   />
                 </div>
-              </div>
-            </div>
-          </div>
+              </template>
+            </app-enter-amount>
 
-          <!-- Address display -->
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <app-token-logo
-                :url="usdcBalance?.logo_url"
-                symbol="USDC"
-                width="w-10"
-                height="h-10"
-              />
-              <div
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+            <!-- Network -->
+            <div class="mt-5 px-2 flex items-center justify-between">
+              <p
+                class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
               >
+                {{ $t('perps.deposit.from-network-label') }}
+              </p>
+
+              <div class="flex items-center gap-2">
                 <app-token-logo
+                  v-if="showIsLive"
                   :url="selectedChain?.icon"
                   symbol="ETH"
                   width="w-5"
                   height="h-5"
                 />
+                <p class="font-medium text-s-14">
+                  {{
+                    showIsLive
+                      ? $t('perps.deposit.network-ethereum')
+                      : $t('perps.deposit.network-sandbox')
+                  }}
+                </p>
               </div>
             </div>
-            <p
-              class="font-bold text-s-15 text-text-default break-all flex-1 leading-snug"
+            <!--Deposit Address-->
+            <div class="py-4 px-2 flex items-center justify-between">
+              <p
+                class="text-text-subtle uppercase tracking-sp-06 text-s-12 font-bold"
+              >
+                {{ $t('perps.deposit.to-address-label') }}
+              </p>
+
+              <div class="flex items-center gap-2">
+                <div
+                  v-if="showIsLive"
+                  class="font-medium text-s-14 flex items-center gap-2"
+                  :class="{
+                    'animate-pulse w-[120px] h-[21px] bg-background-default-hover rounded-8':
+                      !depositAddress,
+                  }"
+                >
+                  <app-blockie
+                    v-if="depositAddress"
+                    :address="depositAddress"
+                    :size="5"
+                  />
+                  <p>
+                    {{
+                      depositAddress ? truncateAddress(depositAddress, 6) : ''
+                    }}
+                  </p>
+                </div>
+                <p v-else class="font-medium text-s-14">
+                  {{ $t('perps.deposit.smart-contract-address') }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div
+            v-if="error"
+            class="bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4 mb-4 mt-2"
+          >
+            <p class="text-text-error text-s-14 font-medium">{{ error }}</p>
+          </div>
+
+          <!-- Deposit Button -->
+          <AppBaseButton
+            :disabled="depositDisabled"
+            :is-loading="sending"
+            class="w-full mt-5"
+            @click="sendDeposit"
+          >
+            {{ depositButtonLabel }}
+          </AppBaseButton>
+
+          <!-- Deposit Address Link -->
+          <div v-if="showIsLive && depositAddress" class="text-center mt-5">
+            <button
+              class="text-text-brand text-s-14 font-medium hover:underline inline-flex items-center gap-1"
+              @click="showDepositAddress = true"
             >
-              {{ depositAddress }}
-            </p>
-            <app-btn-copy :copy-value="depositAddress || ''" />
-            <!-- Refresh -->
-            <!-- <app-tooltip text="Refresh deposit address">
+              {{ $t('perps.deposit.use-deposit-address-link') }}
+              <AppIcon name="chevron-right" size="xxs" variant="filled" />
+            </button>
+          </div>
+        </div>
+      </template>
+
+      <!-- ===== PAGE 2: Deposit Address (live only) ===== -->
+      <template v-else-if="showIsLive">
+        <!-- Warning text -->
+        <p class="mb-6">
+          {{ $t('perps.deposit.deposit-address-warning') }}
+        </p>
+
+        <!-- QR Code -->
+        <div class="flex justify-center mb-8">
+          <div
+            class="rounded-[20px] border border-border-default p-4 relative inline-block"
+          >
+            <qrcode-vue
+              :value="depositAddress || ''"
+              :size="220"
+              level="M"
+              render-as="svg"
+            />
+            <!-- ETH icon overlay in center -->
+            <div
+              class="absolute inset-0 flex items-center justify-center pointer-events-none"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center"
+              >
+                <app-token-logo
+                  :url="selectedChain?.icon"
+                  symbol="ETH"
+                  width="w-8"
+                  height="h-8"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address display -->
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <app-token-logo
+              :url="usdcBalance?.logo_url"
+              symbol="USDC"
+              width="w-10"
+              height="h-10"
+            />
+            <div
+              class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+            >
+              <app-token-logo
+                :url="selectedChain?.icon"
+                symbol="ETH"
+                width="w-5"
+                height="h-5"
+              />
+            </div>
+          </div>
+          <p
+            class="font-bold text-s-15 text-text-default break-all flex-1 leading-snug"
+          >
+            {{ depositAddress }}
+          </p>
+          <app-btn-copy :copy-value="depositAddress || ''" />
+          <!-- Refresh -->
+          <!-- <app-tooltip text="Refresh deposit address">
               <app-btn-icon
                 label="Refresh deposit address"
                 :disabled="loading"
@@ -233,11 +221,10 @@
                 <arrow-path-icon class="w-[18px] h-[18px]" />
                 </app-btn-icon>
             </app-tooltip> -->
-          </div>
-        </template>
-      </div>
-    </template>
-  </app-dialog>
+        </div>
+      </template>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -246,8 +233,7 @@ import QrcodeVue from 'qrcode.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
