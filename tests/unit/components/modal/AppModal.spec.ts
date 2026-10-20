@@ -272,11 +272,20 @@ describe('AppModal', () => {
       expect(document.activeElement).toBe(opener)
     })
 
-    it('Tab wraps from the last focusable to the first and back', async () => {
-      mountModal({}, { default: '<input data-test="first" />' })
+    it('never lands on a footer action or close when the content has no control', async () => {
+      mountModal({
+        buttons: { primary: { label: 'Delete', onClick: () => {} } },
+      })
       await flushPromises()
-      const first = dialog()!.querySelector<HTMLElement>('[data-test="first"]')!
-      const last = closeBtn()!
+      expect(document.activeElement).toBe(dialog())
+    })
+
+    it('Tab wraps from the last focusable to the first and back', async () => {
+      // Close is first in the DOM (top of the panel), the content input last.
+      mountModal({}, { default: '<input data-test="last" />' })
+      await flushPromises()
+      const first = closeBtn()!
+      const last = dialog()!.querySelector<HTMLElement>('[data-test="last"]')!
 
       last.focus()
       const tab = new KeyboardEvent('keydown', {

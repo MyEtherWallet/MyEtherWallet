@@ -29,6 +29,24 @@
           @keydown.esc="onEsc"
           @keydown.tab="onTab"
         >
+          <!-- First in the DOM so Tab order matches what the user sees. -->
+          <AppBtnIcon
+            v-if="showBackButton"
+            icon="chevron-left"
+            variant="filled"
+            :label="t('common.back')"
+            class="absolute left-4 top-4 z-10 sm:left-6 sm:top-6"
+            @click="emit('back')"
+          />
+          <AppBtnIcon
+            v-if="showCloseButton && !persistent"
+            icon="x-mark"
+            variant="filled"
+            :label="t('common.close')"
+            class="absolute right-4 top-4 z-10 sm:right-6 sm:top-6"
+            @click="close"
+          />
+
           <header
             v-if="hasHeader"
             class="flex min-h-20 shrink-0 items-center justify-center p-4 sm:p-6"
@@ -46,7 +64,7 @@
             </slot>
           </header>
 
-          <div class="mew-scrollbar min-h-0 flex-1 overflow-y-auto">
+          <div ref="body" class="mew-scrollbar min-h-0 flex-1 overflow-y-auto">
             <slot />
           </div>
 
@@ -68,23 +86,6 @@
               </AppBtnGroup>
             </slot>
           </footer>
-
-          <AppBtnIcon
-            v-if="showBackButton"
-            icon="chevron-left"
-            variant="filled"
-            :label="t('common.back')"
-            class="absolute left-4 top-4 sm:left-6 sm:top-6"
-            @click="emit('back')"
-          />
-          <AppBtnIcon
-            v-if="showCloseButton && !persistent"
-            icon="x-mark"
-            variant="filled"
-            :label="t('common.close')"
-            class="absolute right-4 top-4 sm:right-6 sm:top-6"
-            @click="close"
-          />
         </div>
       </div>
     </Transition>
@@ -146,6 +147,7 @@ import {
   watch,
 } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
@@ -192,7 +194,10 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const slots = useSlots()
 const dialogStore = useDialogStore()
+const { pushAreaHidden, popAreaHidden } = dialogStore
+const { isAreaHidden } = storeToRefs(dialogStore)
 const panel = useTemplateRef<HTMLElement>('panel')
+const body = useTemplateRef<HTMLElement>('body')
 const titleId = useId()
 const zIndex = ref(MODAL_Z_BASE)
 
@@ -255,11 +260,11 @@ const syncAreaHidden = (open: boolean) => {
   if (open === countsAsOpen) return
   countsAsOpen = open
   if (open) {
-    dialogStore.pushAreaHidden()
+    pushAreaHidden()
     zIndex.value = MODAL_Z_BASE + ++stackTop
   } else {
-    dialogStore.popAreaHidden()
-    if (!dialogStore.isAreaHidden) stackTop = 0
+    popAreaHidden()
+    if (!isAreaHidden.value) stackTop = 0
   }
 }
 
@@ -272,7 +277,10 @@ watch(
     if (open) {
       opener = document.activeElement as HTMLElement | null
       await nextTick()
-      ;(focusables()[0] ?? panel.value)?.focus()
+      // First control in the content, else the panel: never the close button
+      // or a footer action, so Enter can't confirm a destructive step.
+      const first = body.value?.querySelector<HTMLElement>(FOCUSABLE)
+      ;(first ?? panel.value)?.focus()
     } else if (opener) {
       // After the tick the background is no longer inert, so it can take focus.
       const target = opener

@@ -18,9 +18,7 @@ export const useDialogStore = defineStore('dialogStore', () => {
 
   const isAreaHidden = computed(() => openDialogCount.value > 0)
 
-  const bodyScrollLocked = useScrollLock(
-    typeof document === 'undefined' ? null : document.body,
-  )
+  const bodyScrollLocked = useScrollLock(document.body)
   watch(isAreaHidden, hidden => {
     bodyScrollLocked.value = hidden
   })
