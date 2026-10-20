@@ -93,17 +93,14 @@ import { ROUTES_MAIN } from '@/router/routeNames'
  *
  * Between 1280 and 1440 the full row doesn't fit, so the CTAs drop "wallet".
  */
-withDefaults(
-  defineProps<{
-    /** Wallet saved? (Figma axis): true renders `#wallet`, false the CTAs. */
-    walletSaved: boolean
-    /** Hamburger state, mirrored to aria-expanded. */
-    menuOpen?: boolean
-    /** Page scrolled past the top: shows the bottom border. */
-    scrolled?: boolean
-  }>(),
-  { menuOpen: false, scrolled: false },
-)
+defineProps<{
+  /** Wallet saved? (Figma axis): true renders `#wallet`, false the CTAs. */
+  walletSaved: boolean
+  /** Hamburger state, mirrored to aria-expanded. */
+  menuOpen?: boolean
+  /** Page scrolled past the top: shows the bottom border. */
+  scrolled?: boolean
+}>()
 
 const emit = defineEmits<{
   'toggle-menu': []
