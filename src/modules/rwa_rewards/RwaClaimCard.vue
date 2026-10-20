@@ -14,15 +14,7 @@
         "
       >
         <AppIcon
-          v-if="variant === 'sent'"
-          name="check"
-          variant="filled"
-          size="xxs"
-          class="text-white"
-        />
-        <AppIcon
-          v-else
-          name="x-mark"
+          :name="variant === 'sent' ? 'check' : 'x-mark'"
           variant="filled"
           size="xxs"
           class="text-white"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import { CARD_VARIANT_CLASS, type CardVariant } from './types'
@@ -19,7 +18,7 @@ import { CARD_VARIANT_CLASS, type CardVariant } from './types'
  * button; only `selected` and `loading` are props. Leave `selected` unbound for
  * cards that aren't toggles so aria-pressed isn't exposed.
  */
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title?: string
     description?: string
@@ -40,12 +39,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{ click: [] }>()
 
-const slots = useSlots()
 const AVATAR_SIZE = 'm' as const // 32px
-
-const hasHeader = computed(
-  () => !!props.title || !!slots.avatar || !!slots.action,
-)
 </script>
 
 <template>
@@ -56,11 +50,11 @@ const hasHeader = computed(
     :aria-busy="loading || undefined"
   >
     <div
-      v-if="hasHeader"
+      v-if="title || $slots.avatar || $slots.action"
       data-testid="card-header"
       class="flex items-start gap-3 p-4"
     >
-      <template v-if="slots.avatar">
+      <template v-if="$slots.avatar">
         <span
           v-if="loading"
           data-testid="card-avatar-skeleton"
@@ -79,7 +73,7 @@ const hasHeader = computed(
         class="flex-1"
       />
 
-      <span v-if="slots.action" class="relative z-10 ml-auto shrink-0">
+      <span v-if="$slots.action" class="relative z-10 ml-auto shrink-0">
         <slot name="action" />
       </span>
     </div>
@@ -87,7 +81,7 @@ const hasHeader = computed(
     <slot />
 
     <AppBtnGroup
-      v-if="slots.buttons"
+      v-if="$slots.buttons"
       data-testid="card-buttons"
       has-padding
       class="relative z-10"
