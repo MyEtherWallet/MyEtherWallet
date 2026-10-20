@@ -9,19 +9,19 @@ import AppCard from '@/components/card/AppCard.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import type { CardVariant } from '@/components/card/types'
+import type { CardSurface } from '@/components/card/types'
 
-// Each variant fills the opposite of the surface it sits on, so preview each
+// Each surface fills the opposite of the surface it sits on, so preview each
 // on its designed surface or the fill would vanish (white on white).
-const VARIANTS: { variant: CardVariant; label: string; page: string }[] = [
+const SURFACES: { surface: CardSurface; label: string; page: string }[] = [
   {
-    variant: 'default',
-    label: 'Variant: default — fills white, sits on a default (grey) surface',
+    surface: 'default',
+    label: 'Surface: default — fills white, sits on a default (grey) surface',
     page: 'bg-background-default',
   },
   {
-    variant: 'alternative',
-    label: 'Variant: alternative — fills grey, sits on a white surface',
+    surface: 'alternative',
+    label: 'Surface: alternative — fills grey, sits on a white surface',
     page: 'bg-white',
   },
 ]
@@ -66,7 +66,7 @@ const picked = ref(false)
       </div>
     </header>
 
-    <section v-for="v in VARIANTS" :key="v.variant" class="flex flex-col gap-4">
+    <section v-for="v in SURFACES" :key="v.surface" class="flex flex-col gap-4">
       <h2 class="text-s-16 font-semibold">{{ v.label }}</h2>
       <div
         class="grid grid-cols-1 gap-4 rounded-12 border border-border-default p-4 sm:grid-cols-2 lg:grid-cols-4"
@@ -78,7 +78,7 @@ const picked = ref(false)
           </p>
           <AppCard
             v-bind="s.props"
-            :variant="v.variant"
+            :surface="v.surface"
             title="Ethereum"
             description="ETH"
           >
@@ -95,7 +95,7 @@ const picked = ref(false)
               <AppBaseButton
                 type="secondary"
                 size="medium"
-                :surface="v.variant === 'default' ? 'alternative' : 'default'"
+                :surface="v.surface === 'default' ? 'alternative' : 'default'"
               >
                 Sell
               </AppBaseButton>
@@ -115,7 +115,7 @@ const picked = ref(false)
       >
         <AppCard
           interactive
-          variant="alternative"
+          surface="alternative"
           label="Stocks"
           :selected="picked"
           class="h-[120px] justify-between p-4"
@@ -129,7 +129,7 @@ const picked = ref(false)
         <AppCard
           interactive
           disabled
-          variant="alternative"
+          surface="alternative"
           label="Crypto"
           :selected="false"
           class="h-[120px] justify-between p-4"

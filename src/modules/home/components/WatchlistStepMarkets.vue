@@ -54,7 +54,7 @@ const toggle = (id: string) => {
         :key="market.id"
         data-test="market-card"
         interactive
-        variant="alternative"
+        surface="alternative"
         :label="marketLabel(market.labelKey)"
         :selected="selected.includes(market.id)"
         class="h-[120px] justify-between p-4"

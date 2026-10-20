@@ -17,11 +17,13 @@ describe('AppCard', () => {
     expect(wrapper.text()).toContain('Ethereum')
   })
 
-  it('maps each variant to its fill token', () => {
+  it('maps each surface to its fill token', () => {
     const def = mount(AppCard, { props: { title: 'T' } })
     expect(def.get(root).classes()).toContain('bg-background-alternative')
 
-    const alt = mount(AppCard, { props: { title: 'T', variant: 'alternative' } })
+    const alt = mount(AppCard, {
+      props: { title: 'T', surface: 'alternative' },
+    })
     expect(alt.get(root).classes()).toContain('bg-background-default')
   })
 

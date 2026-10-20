@@ -1,6 +1,11 @@
 <template>
   <!-- Alternative (grey) fill: the card sits on the white hero surface. -->
-  <AppCard variant="alternative" :title="amountLabel" :description="subtitle">
+  <AppCard
+    surface="alternative"
+    :title="amountLabel"
+    :description="subtitle"
+    class="w-full"
+  >
     <template #avatar>
       <img :src="usdcIcon" alt="" class="size-8" />
     </template>

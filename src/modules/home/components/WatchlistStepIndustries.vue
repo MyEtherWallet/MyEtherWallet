@@ -86,7 +86,7 @@ const toggle = (id: string) => {
             :key="category.id"
             data-test="industry-pill"
             interactive
-            variant="alternative"
+            surface="alternative"
             :label="category.label"
             :selected="selected.includes(category.id)"
             class="p-4 text-s-16 font-medium text-black"

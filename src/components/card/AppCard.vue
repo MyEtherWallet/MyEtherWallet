@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import { CARD_VARIANT_CLASS, type CardVariant } from './types'
+import { CARD_SURFACE_BG_CLASS, type CardSurface } from './types'
 
 /**
  * Card (design library, Figma 2276:5773). Self-contained block for asset or
@@ -22,7 +22,7 @@ withDefaults(
   defineProps<{
     title?: string
     description?: string
-    variant?: CardVariant
+    surface?: CardSurface
     interactive?: boolean
     selected?: boolean
     loading?: boolean
@@ -32,7 +32,7 @@ withDefaults(
     label?: string
   }>(),
   {
-    variant: 'default',
+    surface: 'default',
     selected: undefined,
   },
 )
@@ -46,7 +46,7 @@ const AVATAR_SIZE = 'm' as const // 32px
   <div
     data-testid="card"
     class="relative flex flex-col overflow-hidden rounded-16 transition-colors duration-200"
-    :class="[CARD_VARIANT_CLASS[variant], { 'opacity-40': disabled }]"
+    :class="[CARD_SURFACE_BG_CLASS[surface], { 'opacity-40': disabled }]"
     :aria-busy="loading || undefined"
   >
     <div
@@ -93,8 +93,11 @@ const AVATAR_SIZE = 'm' as const // 32px
       v-if="interactive"
       type="button"
       data-testid="card-hit"
-      class="card-hit absolute inset-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default!"
-      :class="{ 'ring-1 ring-inset ring-border-selected': selected }"
+      class="card-hit absolute inset-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand"
+      :class="[
+        disabled ? 'cursor-not-allowed!' : 'disabled:cursor-default!',
+        { 'ring-1 ring-inset ring-border-selected': selected },
+      ]"
       :aria-label="label || title"
       :aria-pressed="selected"
       :disabled="loading || disabled"
