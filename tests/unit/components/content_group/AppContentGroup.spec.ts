@@ -116,6 +116,22 @@ describe('AppContentGroup', () => {
     expect(rootClasses).not.toContain('items-start')
   })
 
+  it('align "center" centres both lines (Modal header)', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'T', description: 'D', align: 'center' },
+      slots: { 'title-icon': '<svg />' },
+    })
+    const rootClasses = wrapper.get('[data-testid="cg-root"]').classes()
+    expect(rootClasses).toContain('text-center')
+    expect(rootClasses).not.toContain('items-center')
+    expect(wrapper.get(title()).element.parentElement!.classList).toContain(
+      'justify-center',
+    )
+    expect(
+      wrapper.get(description()).element.parentElement!.classList,
+    ).toContain('justify-center')
+  })
+
   it('title is single-line (truncates) by default; description wraps', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D' },

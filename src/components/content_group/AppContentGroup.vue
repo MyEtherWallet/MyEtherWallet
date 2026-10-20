@@ -60,14 +60,20 @@ const hasDescription = computed(() => !!props.description)
 // Text alignment cascades to the (possibly wrapping) text and the inline-block
 // skeleton bars. The rows themselves stay full-width (default stretch) so the
 // title can actually clip — items-start/end would shrink them to content width.
-const alignClass = computed(() =>
-  props.align === 'right' ? 'text-right' : 'text-left',
-)
+const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+}
+const alignClass = computed(() => ALIGN_CLASS[props.align])
 
 // Positions the text + trailing icons within a full-width row.
-const rowJustifyClass = computed(() =>
-  props.align === 'right' ? 'justify-end' : 'justify-start',
-)
+const ROW_JUSTIFY_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}
+const rowJustifyClass = computed(() => ROW_JUSTIFY_CLASS[props.align])
 
 const emphasisClass = computed(() => [
   EMPHASIS_TEXT_CLASS[props.size],

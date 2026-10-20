@@ -1,5 +1,6 @@
 export type ContentGroupSize = 'm' | 'l'
-export type ContentGroupAlign = 'left' | 'right'
+/** `center` is the Modal header layout. */
+export type ContentGroupAlign = 'left' | 'center' | 'right'
 /** Which surface the group sits on — picks the text colours. */
 export type ContentGroupTone = 'default' | 'inverse'
 

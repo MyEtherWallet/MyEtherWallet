@@ -12,7 +12,7 @@ import type {
 } from '@/components/content_group/types'
 
 const SIZES: ContentGroupSize[] = ['m', 'l']
-const ALIGNS: ContentGroupAlign[] = ['left', 'right']
+const ALIGNS: ContentGroupAlign[] = ['left', 'center', 'right']
 const ADDRESS = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8'
 
 const sizeAlign = SIZES.flatMap(size =>
