@@ -42,12 +42,12 @@ vi.mock('@/modules/home/composables/useWatchlistCategories', () => ({
   },
 }))
 
-// AppDialog teleports to #app; replace with an inline passthrough.
-vi.mock('@/components/AppDialog.vue', () => ({
+// AppModal teleports to #app; replace with an inline passthrough.
+vi.mock('@/components/modal/AppModal.vue', () => ({
   default: {
-    props: { isOpen: Boolean },
-    emits: ['update:isOpen'],
-    template: '<div v-if="isOpen"><slot name="content" /></div>',
+    props: { modelValue: Boolean },
+    emits: ['update:modelValue'],
+    template: '<div v-if="modelValue"><slot /></div>',
   },
 }))
 
@@ -88,7 +88,11 @@ import HomeWatchlistOnboardingDialog from '@/modules/home/components/HomeWatchli
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 
 const mountDialog = () =>
-  mount(HomeWatchlistOnboardingDialog, { props: { isOpen: true } })
+  mount(HomeWatchlistOnboardingDialog, {
+    props: { isOpen: true },
+    // The modal's aria-label is the only translated string at this level.
+    global: { mocks: { $t: (key: string) => key } },
+  })
 
 describe('HomeWatchlistOnboardingDialog (MEW-2130)', () => {
   beforeEach(() => {
