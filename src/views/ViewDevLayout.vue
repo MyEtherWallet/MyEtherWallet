@@ -46,10 +46,8 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
 
 <template>
   <!-- Fixed to the space below the app header so only the main column scrolls;
-       the sidebar stays put. Header is 68px (xs) / 76px (sm+) — see TheHeader. -->
-  <div
-    class="flex h-[calc(100dvh-68px)] sm:h-[calc(100dvh-76px)] overflow-hidden bg-background-default"
-  >
+       the sidebar stays put. Header is 76px — see AppNavbar. -->
+  <div class="flex h-[calc(100dvh-76px)] overflow-hidden bg-background-default">
     <aside
       class="w-56 shrink-0 overflow-y-auto border-r border-border-default bg-white p-4"
     >

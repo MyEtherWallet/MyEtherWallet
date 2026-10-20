@@ -2,7 +2,7 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
-      size="l"
+      size="m"
       :label="$t('menu.open-settings')"
       @click="togglePopup"
     >
