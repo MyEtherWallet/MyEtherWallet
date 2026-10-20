@@ -124,7 +124,7 @@ const twoButtons = (
       @closed="lastEvent = 'closed'"
     >
       <div
-        class="m-4 sm:m-6 flex h-[170px] items-center justify-center rounded-12 border border-dashed border-border-default text-s-14 text-text-subtle"
+        class="m-4 sm:m-6 flex h-42.5 items-center justify-center rounded-12 border border-dashed border-border-default text-s-14 text-text-subtle"
       >
         Content slot
       </div>

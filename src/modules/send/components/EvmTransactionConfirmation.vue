@@ -249,6 +249,7 @@ import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
 import AppModal from '@/components/modal/AppModal.vue'
+import type { ModalButtons } from '@/components/modal/types'
 import createIcon from '@/providers/ethereum/blockies'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -519,7 +520,7 @@ const confirmTransaction = async () => {
   }
 }
 
-const footerButtons = computed(() => ({
+const footerButtons = computed<ModalButtons>(() => ({
   primary: {
     label: t('verify-tx.confirm'),
     onClick: confirmTransaction,
