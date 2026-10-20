@@ -1,12 +1,13 @@
 <template>
   <header
     :class="[
-      'w-full border-b bg-background-alternative transition-colors',
+      // Height on the header so the scrolled border sits inside the 76px.
+      'h-19 w-full border-b bg-background-alternative transition-colors',
       scrolled ? 'border-border-default' : 'border-transparent',
     ]"
   >
     <div
-      class="mx-auto flex h-19 w-full max-w-360 items-center justify-between gap-3 px-4 sm:px-5"
+      class="mx-auto flex h-full w-full max-w-360 items-center justify-between gap-3 px-4 sm:px-5"
     >
       <!-- Left: hamburger (compact) + logo + links (desktop) -->
       <div class="flex min-w-0 items-center gap-3">
@@ -53,7 +54,9 @@
             class="hidden xl:inline-flex"
             @click="emit('create-wallet')"
           >
-            <span class="xl:max-2xl:hidden">{{ t('common.create_wallet') }}</span>
+            <span class="xl:max-2xl:hidden">{{
+              t('common.create_wallet')
+            }}</span>
             <span class="hidden xl:max-2xl:inline">
               {{ t('common.create_wallet_short') }}
             </span>
