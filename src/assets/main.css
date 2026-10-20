@@ -819,6 +819,24 @@
 }
 
 /**
+* AppModal panel defaults: Modal S fills the row, M is 480 from sm (768), on
+* the white surface. In the components layer so a width or background utility
+* a consumer passes to AppModal wins without `!`.
+*/
+@layer components {
+  .app-modal-panel {
+    width: 100%;
+    background-color: var(--color-background-alternative);
+  }
+
+  @media (width >=theme(--breakpoint-sm)) {
+    .app-modal-panel {
+      width: --spacing(120);
+    }
+  }
+}
+
+/**
 * min screen-tablet-portain
 */
 @media (width >=theme(--breakpoint-md)) {

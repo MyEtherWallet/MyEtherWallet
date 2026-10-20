@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useScrollLock } from '@vueuse/core'
 
 export const useDialogStore = defineStore('dialogStore', () => {
   /**
    * Number of dialogs currently open. The app root reads `isAreaHidden` to set
-   * `inert`/`aria-hidden` behind any open dialog.
+   * `inert`/`aria-hidden` behind any open dialog, and the body scroll lock
+   * below follows it, so stacked modals keep both until the last one closes.
    *
    * Refcounted rather than a boolean: several always-mounted dialogs share this
    * flag, and with a boolean the pre-flush watcher of whichever dialog happened
@@ -16,7 +18,14 @@ export const useDialogStore = defineStore('dialogStore', () => {
 
   const isAreaHidden = computed(() => openDialogCount.value > 0)
 
-  /** A dialog opened. Call exactly once per open (AppDialog owns this). */
+  const bodyScrollLocked = useScrollLock(
+    typeof document === 'undefined' ? null : document.body,
+  )
+  watch(isAreaHidden, hidden => {
+    bodyScrollLocked.value = hidden
+  })
+
+  /** A dialog opened. Call exactly once per open (AppModal owns this). */
   const pushAreaHidden = () => {
     openDialogCount.value += 1
   }
