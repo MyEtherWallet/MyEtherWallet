@@ -14,39 +14,43 @@
       @connect-wallet="connectWallet"
     >
       <template #links>
-        <router-link
-          v-for="item in coreMenuList"
-          :key="item.routeName"
-          :to="{ name: item.routeName }"
-          class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-          active-class="bg-background-default-hover"
-          v-ripple
-        >
-          {{ item.title }}
-        </router-link>
-        <app-select
-          v-model:selected="selectedOption"
-          v-model:open="isMoreOpen"
-          :options="moreMenuOptions"
-          :placeholder="$t('common.more')"
-          use-vue-router
-          has-on-Hover
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
-              @click="toggleSelect"
-            >
-              {{ $t('common.more') }}
-              <AppIcon
-                name="chevron-down"
-                variant="filled"
-                size="xxs"
-                class="ml-2"
-              />
-            </button>
-          </template>
-        </app-select>
+        <!-- Own stacking context (as the old logo group had) so the More
+             dropdown can't paint over the search overlay -->
+        <div class="relative z-0 flex items-center gap-2">
+          <router-link
+            v-for="item in coreMenuList"
+            :key="item.routeName"
+            :to="{ name: item.routeName }"
+            class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+            active-class="bg-background-default-hover"
+            v-ripple
+          >
+            {{ item.title }}
+          </router-link>
+          <app-select
+            v-model:selected="selectedOption"
+            v-model:open="isMoreOpen"
+            :options="moreMenuOptions"
+            :placeholder="$t('common.more')"
+            use-vue-router
+            has-on-Hover
+          >
+            <template #select-button="{ toggleSelect }">
+              <button
+                class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
+                @click="toggleSelect"
+              >
+                {{ $t('common.more') }}
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  class="ml-2"
+                />
+              </button>
+            </template>
+          </app-select>
+        </div>
       </template>
       <template #search>
         <module-global-search />
@@ -98,6 +102,7 @@ import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -173,6 +178,11 @@ const hasAnySavedAccount = computed<boolean>(() =>
 const isRestoringWallet = ref(false)
 
 const isSideMenuOpen = ref(false)
+// The hamburger is compact-only: close the drawer when the window widens past it.
+const { isXLAndUp } = useAppBreakpoints()
+watch(isXLAndUp, desktop => {
+  if (desktop) isSideMenuOpen.value = false
+})
 
 /** ------------------------------
  * Wallet CTAs
