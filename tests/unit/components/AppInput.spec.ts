@@ -39,6 +39,11 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     expect(label.attributes('for')).toBe(input.attributes('id'))
   })
 
+  it('passes inputmode to the input for the virtual keyboard', () => {
+    const wrapper = mountInput({ inputmode: 'decimal' })
+    expect(wrapper.get('input').attributes('inputmode')).toBe('decimal')
+  })
+
   it('holds a fixed height per size — h-14 large, h-10 small', () => {
     expect(field(mountInput({ size: 'large' })).classes()).toContain('h-14')
     expect(field(mountInput({ size: 'small' })).classes()).toContain('h-10')
