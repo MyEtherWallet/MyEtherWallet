@@ -159,6 +159,7 @@
               v-else
               :model-value="manageMode ?? 'add'"
               :items="manageModeItems"
+              :label="$t('perps.trade.manage-position')"
               full-width
               class="col-span-2"
               @update:model-value="onClickManageMode"
@@ -166,10 +167,7 @@
             <app-pop-up-menu
               :placeholder="orderTypeLabel"
               location="right"
-              :class="{
-                'opacity-0 pointer-events-none':
-                  activePosition && manageMode === 'close',
-              }"
+              :class="{ invisible: activePosition && manageMode === 'close' }"
             >
               <template #menu-button="{ toggleMenu }">
                 <!-- Opens an inline menu, not a modal -->
@@ -251,6 +249,7 @@
             v-model="limitPrice"
             :label="$t('perps.trade.target-price', { symbol: displaySymbol })"
             :error-message="limitPriceErrorMessage"
+            inputmode="decimal"
             @input.capture="onLimitPriceInput"
           />
 
@@ -279,7 +278,7 @@
                   />
                   <AppPicker
                     size="s"
-                    :title="`${manageMode === 'add' ? effectiveLeverage : leverage}×`"
+                    :title="`${displayLeverage}×`"
                     :avatar="false"
                     :loading="isLoadingLeverage"
                     :disabled="isLoadingLeverage"
@@ -307,68 +306,25 @@
                   />
                 </div>
                 <p class="w-10 shrink-0 text-right text-label-sm">
-                  {{ formatPercent(sliderValue) }}
+                  {{ formatSliderPercent(sliderValue) }}
                 </p>
               </div>
 
-              <hr class="border-t border-border-subtle" />
+              <AppDivider />
               <div class="flex flex-col gap-2 text-text-sm">
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-text-subtle">
-                    {{ $t('perps.trade.position-size') }}
-                  </p>
-                  <p class="text-label-sm">
-                    {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
-                  </p>
-                </div>
                 <div
-                  v-if="activePosition && manageMode === 'add'"
+                  v-for="row in marginRows"
+                  :key="row.label"
                   class="flex items-center justify-between gap-2"
                 >
-                  <p class="text-text-subtle">
-                    {{ $t('perps.trade.new-size') }}
-                  </p>
-                  <p class="text-label-sm">
-                    {{
-                      submitDisabled
-                        ? '--'
-                        : formatUsd(
-                            (positionNotionalValue || 0) +
-                              (positionSizeUsd || 0),
-                          )
-                    }}
-                  </p>
-                </div>
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-text-subtle">
-                    {{ $t('perps.trade.est-liquidation') }}
-                  </p>
-                  <p class="text-label-sm">
-                    {{
-                      submitDisabled
-                        ? '--'
-                        : estimatedLiquidation
-                          ? formatUsd(estimatedLiquidation)
-                          : '$0.00'
-                    }}
-                  </p>
-                </div>
-                <div class="flex items-center justify-between gap-2">
-                  <p class="text-text-subtle">
-                    {{ $t('perps.balance.margin-ratio-label') }}
-                  </p>
-                  <p class="text-label-sm">
-                    {{
-                      newMarginRatio !== null
-                        ? `${(newMarginRatio * 100).toFixed(2)}%`
-                        : '--'
-                    }}
-                  </p>
+                  <p class="text-text-subtle">{{ row.label }}</p>
+                  <p class="text-label-sm">{{ row.value }}</p>
                 </div>
               </div>
             </div>
 
-            <!-- Take profit / stop loss: both open the same auto-close dialog -->
+            <!-- Take profit / stop loss: both open the same auto-close dialog.
+                 h-14: Figma draws them at 56px, between Picker M and L. -->
             <div class="flex gap-2">
               <AppPicker
                 size="l"
@@ -431,11 +387,11 @@
                   />
                 </div>
                 <p class="w-10 shrink-0 text-right text-label-sm">
-                  {{ formatPercent(closeSliderValue) }}
+                  {{ formatSliderPercent(closeSliderValue) }}
                 </p>
               </div>
 
-              <hr class="border-t border-border-subtle" />
+              <AppDivider />
               <div
                 class="flex items-center justify-between gap-2 text-text-sm"
               >
@@ -506,7 +462,7 @@
             class="w-full min-w-0"
             @click="showConfirmation"
           >
-            <span class="block truncate">{{ getMainBtnText }}</span>
+            <span class="block truncate">{{ submitButtonLabel }}</span>
           </app-base-button>
           <app-base-button
             v-if="activePosition && manageMode === 'close'"
@@ -538,7 +494,7 @@
       :current-price="currentPrice"
       :limit-price="limitPrice"
       :input-amount="inputAmount"
-      :leverage="manageMode === 'add' ? effectiveLeverage : leverage"
+      :leverage="displayLeverage"
       :position-size-usd="positionSizeUsd"
       :order-size="orderSize"
       :estimated-liquidation="estimatedLiquidation"
@@ -646,6 +602,7 @@ import AppSlider from '@/components/slider/AppSlider.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
@@ -964,14 +921,13 @@ const marketName = computed(() =>
   activeContract.value ? getMarketDisplayName(activeContract.value) : '',
 )
 
-const sideTone = computed(() =>
-  orderSide.value === 'buy' ? 'success' : 'danger',
-)
+const SIDE_TONE = { buy: 'success', sell: 'danger' } as const
+const sideTone = computed(() => SIDE_TONE[orderSide.value])
 const orderSideItems = computed<SegmentItem<'buy' | 'sell'>[]>(() =>
   orderSideButtons.value.map(({ label, value }) => ({
     label,
     value,
-    tone: value === 'buy' ? 'success' : 'danger',
+    tone: SIDE_TONE[value],
   })),
 )
 // Add / Close share the open position's side colour
@@ -985,7 +941,47 @@ const orderTypeLabel = computed(() =>
     : t('perps.trade.limit'),
 )
 
-const formatPercent = (value: number) => `${+Number(value).toFixed(1)}%`
+const formatSliderPercent = (value: number) =>
+  `${+Number(value).toFixed(1)}%`
+
+const displayLeverage = computed(() =>
+  manageMode.value === 'add' ? effectiveLeverage.value : leverage.value,
+)
+
+const marginRows = computed(() => [
+  {
+    label: t('perps.trade.position-size'),
+    value: positionSizeUsd.value ? formatUsd(positionSizeUsd.value) : '$0.00',
+  },
+  ...(activePosition.value && manageMode.value === 'add'
+    ? [
+        {
+          label: t('perps.trade.new-size'),
+          value: submitDisabled.value
+            ? '--'
+            : formatUsd(
+                (positionNotionalValue.value || 0) +
+                  (positionSizeUsd.value || 0),
+              ),
+        },
+      ]
+    : []),
+  {
+    label: t('perps.trade.est-liquidation'),
+    value: submitDisabled.value
+      ? '--'
+      : estimatedLiquidation.value
+        ? formatUsd(estimatedLiquidation.value)
+        : '$0.00',
+  },
+  {
+    label: t('perps.balance.margin-ratio-label'),
+    value:
+      newMarginRatio.value !== null
+        ? `${(newMarginRatio.value * 100).toFixed(2)}%`
+        : '--',
+  },
+])
 
 const marginErrorMessage = computed(() => {
   if (marginPrecisionError.value) return t('perps.errors.margin-precision')
@@ -1017,32 +1013,4 @@ const limitPriceErrorMessage = computed(() => {
   return undefined
 })
 
-const getMainBtnText = computed(() => {
-  if (manageMode.value === 'close') {
-    return closeButtonLabel.value
-  }
-  return submitButtonLabel.value
-})
 </script>
-<style scoped>
-.slider-input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: var(--size-4);
-  height: var(--size-4);
-  border-radius: 50%;
-  background: var(--thumb-color, var(--color-background-brand));
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.slider-input::-moz-range-thumb {
-  width: var(--size-4);
-  height: var(--size-4);
-  border-radius: 50%;
-  background: var(--thumb-color, var(--color-background-brand));
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-</style>
