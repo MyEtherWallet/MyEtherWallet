@@ -24,10 +24,10 @@ export const SUPPORTING_TEXT_CLASS: Record<ContentGroupSize, string> = {
 /** Emphasis / supporting colours per tone. `inverse` is for dark surfaces (Toast, dark modal header). */
 export const TONE_EMPHASIS_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-default',
-  inverse: 'text-white',
+  inverse: 'text-text-inverted',
 }
 
 export const TONE_SUPPORTING_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-subtle',
-  inverse: 'text-white/70',
+  inverse: 'text-text-inverted-subtle',
 }
