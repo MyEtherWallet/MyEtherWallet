@@ -42,8 +42,9 @@
       />
       <div v-else class="relative flex shrink-0">
         <slot name="avatar" :size="sizeSpec.avatar" />
+        <!-- The checkbox / radio already shows selection; never both. -->
         <span
-          v-if="selected"
+          v-if="selected && !checkbox && !radio"
           data-test="cell-selected-badge"
           class="absolute"
           :style="selectedBadgeStyle"

@@ -166,6 +166,17 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(mountCell({ selected: true }).find(selector).exists()).toBe(false)
   })
 
+  it('hides the avatar check when a checkbox or radio already shows selection', () => {
+    const selector = '[data-test="cell-selected-badge"]'
+    for (const control of [{ checkbox: true }, { radio: true }]) {
+      expect(
+        mountCell({ selected: true, ...control }, avatarSlot)
+          .find(selector)
+          .exists(),
+      ).toBe(false)
+    }
+  })
+
   it('swaps content for skeletons while loading without changing the cell height', () => {
     const w = mountCell(
       { loading: true, rightAccessory: BALANCE },

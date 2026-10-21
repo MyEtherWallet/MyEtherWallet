@@ -81,8 +81,8 @@ const graphChange = computed(() => {
     <TableSparkline
       v-else-if="accessory.kind === 'graph'"
       :points="accessory.points"
-      :width="140"
-      :height="40"
+      :width="64"
+      :height="24"
       :percent-change="graphChange"
       aria-hidden="true"
     />

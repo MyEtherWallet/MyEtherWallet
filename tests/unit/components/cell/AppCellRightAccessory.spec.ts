@@ -122,13 +122,13 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
     expect(row.text()).toBe('0.00%')
   })
 
-  it('renders graph as a 140×40 sparkline, trend from first vs last point', () => {
+  it('renders graph as a 64×24 sparkline, trend from first vs last point', () => {
     const up = mountAccessory({ kind: 'graph', points: [1, 3, 2, 4] })
     const spark = up.getComponent({ name: 'TableSparkline' })
     expect(spark.props()).toMatchObject({
       points: [1, 3, 2, 4],
-      width: 140,
-      height: 40,
+      width: 64,
+      height: 24,
     })
     expect(spark.props('percentChange')).toBeGreaterThan(0)
     expect(spark.attributes('aria-hidden')).toBe('true')
