@@ -36,9 +36,9 @@ describe('AppContentGroup', () => {
     const dark = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', tone: 'inverse' },
     })
-    expect(dark.get(title()).classes()).toContain('text-white')
+    expect(dark.get(title()).classes()).toContain('text-text-inverted')
     expect(dark.get(title()).classes()).not.toContain('text-text-default')
-    expect(dark.get(description()).classes()).toContain('text-white/70')
+    expect(dark.get(description()).classes()).toContain('text-text-inverted')
   })
 
   it('size "m" uses label/base title and text/sm description', () => {

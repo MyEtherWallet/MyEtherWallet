@@ -37,6 +37,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Tab Item', to: '/dev/tab-item' },
       { name: 'Tag', to: '/dev/tag' },
       { name: 'Text Area', to: '/dev/text-area' },
+      { name: 'Toast', to: '/dev/toast' },
       { name: 'Toggle', to: '/dev/toggle' },
       { name: 'Tooltip', to: '/dev/tooltip' },
     ],

@@ -114,6 +114,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'toast',
+              name: 'DevToast',
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'segmented-control',
               name: 'DevSegmentedControl',
               component: () =>
