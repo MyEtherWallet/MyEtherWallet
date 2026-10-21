@@ -93,6 +93,7 @@ const SAMPLE: IconName = 'wallet'
       <AppSearchbar
         v-model="query"
         variant="default"
+        aria-label="Filter icons by name"
         placeholder="Filter by name…"
         class="ml-auto w-56"
       />

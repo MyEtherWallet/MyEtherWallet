@@ -9,9 +9,10 @@ const VARIANTS = [
   { variant: 'outline', surface: 'bg-background-default' },
   { variant: 'default', surface: 'bg-background-alternative' },
 ] as const
+const STATES = ['Default', 'Focus — Tab in', 'Typing'] as const
 const models = reactive<Record<string, string>>({
-  'outline-typing': 'Type',
-  'default-typing': 'Type something',
+  'outline-Typing': 'Type',
+  'default-Typing': 'Type something',
 })
 
 const TOKENS = ['Bitcoin', 'Ethereum', 'Solana', 'Tether', 'USD Coin', 'XRP']
@@ -49,8 +50,10 @@ const push = (line: string) => {
           ]"
         >
           <p class="text-text-xs text-text-muted">variant = {{ variant }}</p>
-          <AppSearchbar v-model="models[`${variant}-default`]" :variant />
-          <AppSearchbar v-model="models[`${variant}-typing`]" :variant />
+          <div v-for="state in STATES" :key="state" class="flex flex-col gap-1">
+            <p class="text-text-xs text-text-muted">{{ state }}</p>
+            <AppSearchbar v-model="models[`${variant}-${state}`]" :variant />
+          </div>
         </div>
       </div>
     </section>
