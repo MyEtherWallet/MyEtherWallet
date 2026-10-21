@@ -3,13 +3,13 @@
     :class="[
       'group flex min-w-0 cursor-text items-center gap-2.5 rounded-full',
       VARIANT_CLASS[variant].field,
-      // Keyboard Focus draws the Checkbox ring; clicking in or typing is
-      // Figma Focus/Typing, which keep only the caret (same rule as Input).
-      inFocusInput && !isActive
-        ? 'outline-2 outline-offset-4 outline-border-focus'
-        : '',
+      // Ring on keyboard focus of the input only; clicking in or typing
+      // shows just the caret, like Input.
+      isActive
+        ? ''
+        : 'has-[input:focus]:outline-2 has-[input:focus]:outline-offset-4 has-[input:focus]:outline-border-focus',
     ]"
-    @pointerdown="setActive()"
+    @pointerdown="isActive = true"
   >
     <AppIcon
       name="magnifying-glass"
@@ -27,15 +27,14 @@
       enterkeyhint="search"
       :value="query"
       :placeholder="placeholder || $t('common.search')"
-      :aria-label="placeholder || $t('common.search')"
+      :aria-label="ariaLabel || placeholder || $t('common.search')"
       :class="[
         'min-w-0 flex-1 appearance-none border-none bg-transparent p-0 text-text-default caret-border-selected focus:outline-none focus:ring-0',
         'placeholder:text-text-muted focus:placeholder:text-text-placeholder',
         '[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none',
         VARIANT_CLASS[variant].text,
       ]"
-      @focus="setInFocusInput()"
-      @blur="startOutOfFocusTimeout()"
+      @blur="isActive = false"
       @input="onInput"
       @keydown.enter="onSubmit"
       @keydown.esc="onEsc"
@@ -57,7 +56,6 @@ import { useTimeoutFn } from '@vueuse/core'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import type { IconName } from '@/components/icon/icons'
-import { useInFocusInput } from '@/composables/useInFocusInput'
 
 /**
  * Searchbar (design library, Figma 82:14709). Text field for filtering or
@@ -76,8 +74,10 @@ import { useInFocusInput } from '@/composables/useInFocusInput'
 const props = withDefaults(
   defineProps<{
     variant?: 'outline' | 'default'
-    /** Also the aria-label. Falls back to the localized `common.search`. */
+    /** Falls back to the localized `common.search`. */
     placeholder?: string
+    /** Defaults to the placeholder. */
+    ariaLabel?: string
     /** ms before v-model updates; 0 emits on every keystroke. Use for
      *  searches that fetch. */
     debounce?: number
@@ -90,6 +90,7 @@ const props = withDefaults(
   {
     variant: 'outline',
     placeholder: '',
+    ariaLabel: '',
     debounce: 0,
     actionIcon: undefined,
     actionLabel: '',
@@ -139,17 +140,12 @@ const flush = () => {
 }
 
 const searchInput = ref<HTMLInputElement | null>(null)
-const {
-  inFocusInput,
-  isActive,
-  setActive,
-  setInFocusInput,
-  startOutOfFocusTimeout,
-} = useInFocusInput(searchInput)
+// Clicked in or typing since the input last took focus (Figma Focus/Typing).
+const isActive = ref(false)
 
 const onInput = (e: Event) => {
   query.value = (e.target as HTMLInputElement).value
-  setActive()
+  isActive.value = true
   if (props.debounce) startDebounce()
   else commit()
 }
@@ -163,14 +159,14 @@ const clear = () => {
   query.value = ''
   flush()
   emit('clear')
-  setActive()
+  isActive.value = true
   searchInput.value?.focus()
 }
 
 // Esc on a filled field clears it and stops there, so an enclosing dialog
 // only closes on the next Esc.
 const onEsc = (e: KeyboardEvent) => {
-  if (!query.value) return
+  if (!query.value) return flush()
   e.stopPropagation()
   clear()
 }

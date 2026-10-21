@@ -202,17 +202,33 @@ describe('AppSearchbar — design-library Searchbar (MEW-1976)', () => {
     )
   })
 
-  it('draws the Checkbox focus ring on keyboard focus only', async () => {
-    const RING = 'outline-border-focus'
+  it('scopes the focus ring to the focused input, until a click or keystroke', async () => {
+    // :has(input:focus) keeps the ring off while the action button has focus.
+    const RING = 'has-[input:focus]:outline-border-focus'
     const w = mountFull({ modelValue: '' })
-    await w.get('input').trigger('focus') // Tab in
-    expect(w.classes()).toContain(RING)
+    expect(w.classes()).toContain(RING) // Tab in → ring
     await w.get('input').setValue('e') // typing → no ring
     expect(w.classes()).not.toContain(RING)
+    await w.get('input').trigger('blur') // Tab out and back → ring again
+    expect(w.classes()).toContain(RING)
 
     const clicked = mountFull({ modelValue: '' })
-    await clicked.trigger('pointerdown')
-    await clicked.get('input').trigger('focus') // click in → no ring
+    await clicked.trigger('pointerdown') // click in → no ring
     expect(clicked.classes()).not.toContain(RING)
+  })
+
+  it('takes an explicit aria-label over the placeholder', () => {
+    const input = mountFull({ ariaLabel: 'Filter icons' }).get('input')
+    expect(input.attributes('aria-label')).toBe('Filter icons')
+    expect(input.attributes('placeholder')).toBe('Search')
+  })
+
+  it('Esc on an empty field still flushes a pending debounce', async () => {
+    vi.useFakeTimers()
+    const w = mountFull({ modelValue: 'eth', debounce: 250 })
+    await w.get('input').setValue('')
+    await w.get('input').trigger('keydown', { key: 'Escape' })
+    expect(w.emitted('update:modelValue')).toEqual([['']])
+    expect(w.emitted('clear')).toBeUndefined()
   })
 })
