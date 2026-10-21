@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount, shallowMount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppSearchbar from '@/components/AppSearchbar.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 
 const i18n = createI18n({
@@ -49,59 +50,169 @@ describe('AppSearchbar placeholder localization (MEW-2047)', () => {
   })
 })
 
-describe('AppSearchbar — design-library Searchbar (MEW-1971)', () => {
-  const mountFull = (props: Record<string, unknown> = {}) => {
+describe('AppSearchbar — design-library Searchbar (MEW-1976)', () => {
+  const mountFull = (props: Record<string, unknown> = {}, attrs = {}) => {
     i18n.global.locale.value = 'en'
-    return mount(AppSearchbar, { props, global: { plugins: [i18n] } })
+    return mount(AppSearchbar, {
+      props,
+      attrs,
+      global: { plugins: [i18n] },
+      attachTo: document.body,
+    })
   }
 
-  it('defaults to the Figma Default fill (background/formfield)', () => {
-    expect(mountFull().get('input').classes()).toContain(
-      'bg-background-formfield',
+  afterEach(() => {
+    vi.useRealTimers()
+    document.body.innerHTML = ''
+  })
+
+  it('renders a native search field with the browser cancel button hidden', () => {
+    const input = mountFull().get('input')
+    expect(input.attributes('type')).toBe('search')
+    expect(input.attributes('autocomplete')).toBe('off')
+    expect(input.classes()).toContain(
+      '[&::-webkit-search-cancel-button]:appearance-none',
     )
   })
 
-  it('keeps the search icon icon/subtle while focused', async () => {
+  it('defaults to Outline: 48px white field with a 4px border, text/base', () => {
     const w = mountFull()
-    await w.get('input').trigger('focus')
-    const icon = w.get('svg')
-    expect(icon.classes()).toContain('text-icon-subtle')
-    expect(icon.classes()).not.toContain('text-text-brand')
+    expect(w.classes()).toEqual(
+      expect.arrayContaining([
+        'h-12',
+        'border-4',
+        'border-border-default',
+        'bg-background-alternative',
+      ]),
+    )
+    expect(w.get('input').classes()).toContain('text-text-base')
+    expect(w.findComponent(AppIcon).props('size')).toBe('s')
   })
 
-  it('clears with a bare black cross (x-mark), not a circled one', () => {
+  it('Default style: 40px formfield fill, no border, text/sm', () => {
+    const w = mountFull({ variant: 'default' })
+    expect(w.classes()).toEqual(
+      expect.arrayContaining(['h-10', 'bg-background-formfield']),
+    )
+    expect(w.classes()).not.toContain('border-4')
+    expect(w.get('input').classes()).toContain('text-text-sm')
+    expect(w.findComponent(AppIcon).props('size')).toBe('s')
+  })
+
+  it('layout classes fall through to the root, not the input', () => {
+    const w = mountFull({}, { class: 'grow' })
+    expect(w.classes()).toContain('grow')
+    expect(w.get('input').classes()).not.toContain('grow')
+  })
+
+  it('emits v-model on every input when debounce is 0', async () => {
+    const w = mountFull({ modelValue: '' })
+    await w.get('input').setValue('e')
+    await w.get('input').setValue('et')
+    expect(w.emitted('update:modelValue')).toEqual([['e'], ['et']])
+  })
+
+  it('debounces v-model to one trailing emit', async () => {
+    vi.useFakeTimers()
+    const w = mountFull({ modelValue: '', debounce: 250 })
+    await w.get('input').setValue('e')
+    await w.get('input').setValue('eth')
+    expect(w.emitted('update:modelValue')).toBeUndefined()
+    vi.advanceTimersByTime(250)
+    expect(w.emitted('update:modelValue')).toEqual([['eth']])
+  })
+
+  it('Enter flushes a pending debounce and emits submit', async () => {
+    vi.useFakeTimers()
+    const w = mountFull({ modelValue: '', debounce: 250 })
+    await w.get('input').setValue('eth')
+    await w.get('input').trigger('keydown', { key: 'Enter' })
+    expect(w.emitted('update:modelValue')).toEqual([['eth']])
+    expect(w.emitted('submit')).toEqual([['eth']])
+    vi.advanceTimersByTime(250)
+    expect(w.emitted('update:modelValue')).toHaveLength(1)
+  })
+
+  it('Esc clears a filled field', async () => {
     const w = mountFull({ modelValue: 'eth' })
-    const clear = w.get('[aria-label="Clear"]').findComponent(AppIcon)
-    expect(clear.props('name')).toBe('x-mark')
-    expect(clear.props('size')).toBe('xxs') // Figma: 16px
-    expect(w.get('[aria-label="Clear"]').classes()).toContain(
-      'text-icon-default',
+    await w.get('input').trigger('keydown', { key: 'Escape' })
+    expect(w.emitted('update:modelValue')).toEqual([['']])
+    expect(w.emitted('clear')).toHaveLength(1)
+  })
+
+  it('follows the parent model', async () => {
+    const w = mountFull({ modelValue: 'eth' })
+    await w.setProps({ modelValue: 'btc' })
+    expect((w.get('input').element as HTMLInputElement).value).toBe('btc')
+  })
+
+  it('shows the clear button (Button Icon S, x-mark) only while there is a value', async () => {
+    const w = mountFull({ modelValue: '' })
+    expect(w.findComponent(AppBtnIcon).exists()).toBe(false)
+    await w.setProps({ modelValue: 'eth' })
+    const btn = w.getComponent(AppBtnIcon)
+    expect(btn.props()).toMatchObject({
+      icon: 'x-mark',
+      size: 's',
+      variant: 'naked',
+      label: 'Clear',
+    })
+  })
+
+  it('clear button empties the field, emits clear and refocuses the input', async () => {
+    const w = mountFull({ modelValue: 'eth' })
+    await w.get('button').trigger('click')
+    expect(w.emitted('update:modelValue')).toEqual([['']])
+    expect(w.emitted('clear')).toHaveLength(1)
+    expect(document.activeElement).toBe(w.get('input').element)
+  })
+
+  it('a custom actionIcon emits action with the value instead of clearing', async () => {
+    const w = mountFull({
+      modelValue: 'eth',
+      actionIcon: 'qr-code',
+      actionLabel: 'Scan',
+    })
+    const btn = w.getComponent(AppBtnIcon)
+    expect(btn.props()).toMatchObject({ icon: 'qr-code', label: 'Scan' })
+    await w.get('button').trigger('click')
+    expect(w.emitted('action')).toEqual([['eth']])
+    expect(w.emitted('update:modelValue')).toBeUndefined()
+    expect(w.emitted('clear')).toBeUndefined()
+  })
+
+  it('search icon turns brand on focus and stays brand while there is a value', async () => {
+    const empty = mountFull({ modelValue: '' }).findComponent(AppIcon)
+    expect(empty.classes()).toEqual(
+      expect.arrayContaining([
+        'text-icon-subtle',
+        'group-focus-within:text-icon-brand',
+      ]),
+    )
+    const filled = mountFull({ modelValue: 'eth' }).findComponent(AppIcon)
+    expect(filled.classes()).toContain('text-icon-brand')
+  })
+
+  it('lightens the placeholder on focus', () => {
+    expect(mountFull().get('input').classes()).toEqual(
+      expect.arrayContaining([
+        'placeholder:text-text-muted',
+        'focus:placeholder:text-text-placeholder',
+      ]),
     )
   })
-})
 
-describe('AppSearchbar — review follow-ups (MEW-1971)', () => {
-  const mountFull = (props: Record<string, unknown> = {}) => {
-    i18n.global.locale.value = 'en'
-    return mount(AppSearchbar, { props, global: { plugins: [i18n] } })
-  }
-
-  it('shows the brand ring on keyboard focus only, like Input', async () => {
+  it('draws the Checkbox focus ring on keyboard focus only', async () => {
+    const RING = 'outline-border-focus'
     const w = mountFull({ modelValue: '' })
-    const input = w.get('input')
-    await input.trigger('focus') // Tab in
-    expect(input.classes()).toContain('inset-ring-border-brand')
-    await input.trigger('input') // typing → Active
-    expect(input.classes()).not.toContain('inset-ring-border-brand')
+    await w.get('input').trigger('focus') // Tab in
+    expect(w.classes()).toContain(RING)
+    await w.get('input').setValue('e') // typing → no ring
+    expect(w.classes()).not.toContain(RING)
 
-    const clicked = mountFull({ modelValue: '' }).get('input')
+    const clicked = mountFull({ modelValue: '' })
     await clicked.trigger('pointerdown')
-    await clicked.trigger('focus') // click in → Active straight away
-    expect(clicked.classes()).not.toContain('inset-ring-border-brand')
-  })
-
-  it('hides the clear button when the model is undefined', () => {
-    const w = mountFull() // no modelValue at all
-    expect(w.get('[aria-label="Clear"]').classes()).toContain('hidden')
+    await clicked.get('input').trigger('focus') // click in → no ring
+    expect(clicked.classes()).not.toContain(RING)
   })
 })
