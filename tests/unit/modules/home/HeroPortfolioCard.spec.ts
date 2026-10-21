@@ -297,12 +297,51 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
       walletAddress: '0x71C8000000000000000000000000000000000389a',
     })
     await nextTick()
-    expect(w.find('[data-test="hero-amount-skeleton"]').exists()).toBe(false)
+    // The skeleton stays mounted and is toggled with v-show (APP-MEW-WEB-1QA).
+    const skeleton = () =>
+      w.get<HTMLElement>('[data-test="hero-amount-skeleton"]').element.style
+        .display
+    expect(skeleton()).toBe('none')
     // Refresh: card layout stays, only the amount becomes a skeleton.
     setWallet({ isLoadingBalances: true })
     await nextTick()
     expect(w.find('[data-test="hero-portfolio-assets"]').exists()).toBe(true)
-    expect(w.find('[data-test="hero-amount-skeleton"]').exists()).toBe(true)
+    expect(skeleton()).toBe('')
+  })
+
+  it('survives an in-page translator rewriting the total headline — APP-MEW-WEB-1QA', async () => {
+    // Browser translators (Whale/Papago, Chrome) rebuild a translated sentence
+    // with their own <font> nodes, detaching the text + amount <span> Vue still
+    // holds. A refresh then swapped that detached span and Vue tried to insert
+    // into its (null) parentNode.
+    const errors: unknown[] = []
+    setWallet({ isWalletConnected: true, isLoadingBalances: true })
+    const w = mount(HeroPortfolioCard, {
+      attachTo: document.body,
+      global: {
+        plugins: [i18n],
+        config: { errorHandler: err => void errors.push(err) },
+      },
+    })
+    // First load completes, so later refreshes keep the assets headline.
+    setWallet({
+      isLoadingBalances: false,
+      totalFiatPortfolioValueBN: new BigNumber(64.12),
+      walletAddress: '0x71C8000000000000000000000000000000000389a',
+    })
+    await nextTick()
+    const headline = w.get('[data-test="hero-portfolio-assets"]').element
+    const font = document.createElement('font')
+    font.textContent = '총 $64.12를 보유하고 있습니다'
+    headline.replaceChildren(font)
+
+    setWallet({ isLoadingBalances: true })
+    await nextTick()
+    setWallet({ isLoadingBalances: false })
+    await nextTick()
+
+    expect(errors.map(e => (e as Error).message)).toEqual([])
+    w.unmount()
   })
 
   it('masks total and percent when the eye toggles hideBalances', async () => {
