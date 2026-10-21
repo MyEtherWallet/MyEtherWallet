@@ -25,6 +25,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Content Group', to: '/dev/content-group' },
       { name: 'Divider', to: '/dev/divider' },
       { name: 'Icon', to: '/dev/icons' },
+      { name: 'InfoCell', to: '/dev/info-cell' },
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },
       { name: 'Input Naked', to: '/dev/input-naked' },
