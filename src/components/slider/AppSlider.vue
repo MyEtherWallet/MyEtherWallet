@@ -9,7 +9,7 @@
  */
 import { computed } from 'vue'
 import { SIZE } from '@/components/sizeScale'
-import type { AppSliderProps } from './types'
+import type { AppSliderProps, SliderTone } from './types'
 
 defineOptions({ inheritAttrs: false })
 
@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<AppSliderProps>(), {
   max: 100,
   step: 1,
   disabled: false,
+  tone: 'brand',
   ariaValueText: undefined,
 })
 
@@ -44,13 +45,21 @@ const fillWidth = computed(
 const trackClass = computed(() =>
   props.disabled ? 'bg-background-disabled' : 'bg-background-alternative',
 )
+const TONE_CLASS: Record<SliderTone, { fill: string; thumb: string }> = {
+  brand: { fill: 'bg-background-brand', thumb: 'border-border-brand' },
+  success: { fill: 'bg-background-success', thumb: 'border-border-success' },
+  danger: { fill: 'bg-background-error', thumb: 'border-border-error' },
+}
+
 const fillClass = computed(() =>
-  props.disabled ? 'bg-background-brand-disabled' : 'bg-background-brand',
+  props.disabled
+    ? 'bg-background-brand-disabled'
+    : TONE_CLASS[props.tone].fill,
 )
 const thumbClass = computed(() =>
   props.disabled
     ? 'border-border-disabled bg-background-disabled'
-    : 'border-border-brand bg-background-alternative',
+    : `${TONE_CLASS[props.tone].thumb} bg-background-alternative`,
 )
 
 const onInput = (event: Event) => {
