@@ -117,7 +117,13 @@
       "close-position": "平仓 {symbol} {direction}",
       "enter-target-price": "输入目标价格",
       "add-to-position": "加仓 {symbol} {direction}",
-      "open-position": "{direction} {symbol}"
+      "margin": "保证金",
+      "available": "可用：{amount}",
+      "take-profit": "止盈",
+      "stop-loss": "止损",
+      "review-long": "查看做多",
+      "review-short": "查看做空",
+      "need-help": "交易永续合约需要帮助？"
     },
     "confirm": {
       "long": "做多",

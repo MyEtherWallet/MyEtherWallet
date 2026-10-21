@@ -904,12 +904,10 @@ export function usePerpsTradeForm() {
         direction,
       })
     }
-    const direction =
-      orderSide.value === 'buy' ? t('perps.trade.long') : t('perps.trade.short')
-    return t('perps.trade.open-position', {
-      direction,
-      symbol: displaySymbol.value,
-    })
+    if (!(amt > 0)) return t('common.enter_amount')
+    return orderSide.value === 'buy'
+      ? t('perps.trade.review-long')
+      : t('perps.trade.review-short')
   })
 
   // ── Slider / percentage helpers ────────────────────────────

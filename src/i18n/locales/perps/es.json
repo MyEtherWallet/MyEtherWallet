@@ -117,7 +117,13 @@
       "close-position": "Cerrar {symbol} {direction}",
       "enter-target-price": "Introduce el precio objetivo",
       "add-to-position": "Añadir a {symbol} {direction}",
-      "open-position": "{direction} {symbol}"
+      "margin": "Margen",
+      "available": "Disponible: {amount}",
+      "take-profit": "Take profit",
+      "stop-loss": "Stop loss",
+      "review-long": "Revisar largo",
+      "review-short": "Revisar corto",
+      "need-help": "¿Necesitas ayuda para operar perps?"
     },
     "confirm": {
       "long": "Largo",

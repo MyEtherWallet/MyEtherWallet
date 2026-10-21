@@ -117,7 +117,13 @@
       "close-position": "Close {symbol} {direction}",
       "enter-target-price": "Enter target price",
       "add-to-position": "Add to {symbol} {direction}",
-      "open-position": "{direction} {symbol}"
+      "margin": "Margin",
+      "available": "Available: {amount}",
+      "take-profit": "Take profit",
+      "stop-loss": "Stop loss",
+      "review-long": "Review long",
+      "review-short": "Review short",
+      "need-help": "Need help trading perps?"
     },
     "info": {
       "perpetual-label": "Perpetual",
