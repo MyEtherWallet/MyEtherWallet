@@ -67,7 +67,8 @@ describe('AppNavLink — design-library NavLink (MEW-2461)', () => {
     expect(active.classes()).not.toContain(
       'hover:bg-background-alternative-hover',
     )
-    expect(active.attributes('aria-current')).toBe('page')
+    // An ancestor section is selected but is not the current page.
+    expect(active.attributes('aria-current')).toBeUndefined()
 
     const inactive = link(mountLink({ to: '/' }))
     expect(inactive.classes()).toContain(
@@ -75,6 +76,18 @@ describe('AppNavLink — design-library NavLink (MEW-2461)', () => {
     )
     expect(inactive.classes()).not.toContain('bg-background-default-hover')
     expect(inactive.attributes('aria-current')).toBeUndefined()
+  })
+
+  it('marks only the exact current page with aria-current', () => {
+    expect(
+      link(mountLink({ to: '/stocks/aapl' })).attributes('aria-current'),
+    ).toBe('page')
+    expect(
+      link(mountLink({ to: '/', selected: true })).attributes('aria-current'),
+    ).toBeUndefined()
+    expect(
+      link(mountLink({ selected: true })).attributes('aria-current'),
+    ).toBeUndefined()
   })
 
   it('matches the route exactly with `exact`', () => {

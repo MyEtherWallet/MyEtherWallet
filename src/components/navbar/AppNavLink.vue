@@ -10,7 +10,8 @@ import { NAV_LINK_CLASS } from './types'
  * while its route or one of its child routes is active; without `to` it is a
  * button (menu trigger).
  * `selected` overrides the route match, so a parent can mark a section active
- * for routes the link doesn't cover. Figma's `Show pointer` is a design
+ * for routes the link doesn't cover. `aria-current="page"` stays on the link
+ * whose route is the exact current page, not on its ancestor sections. Figma's `Show pointer` is a design
  * annotation of the hover cursor, so it has no prop.
  *
  * @example <AppNavLink :to="{ name: ROUTES_MAIN.HOME.NAME }" :label="t('home')" />
@@ -62,9 +63,7 @@ const linkClass = (routeActive: boolean) => [
       data-testid="nav-link"
       :href="href"
       :class="linkClass(exact ? isExactActive : isActive)"
-      :aria-current="
-        isSelected(exact ? isExactActive : isActive) ? 'page' : undefined
-      "
+      :aria-current="isExactActive ? 'page' : undefined"
       :aria-haspopup="dropdown ? 'menu' : undefined"
       :aria-expanded="dropdown ? expanded : undefined"
       @click="navigate"
@@ -82,7 +81,6 @@ const linkClass = (routeActive: boolean) => [
     type="button"
     data-testid="nav-link"
     :class="linkClass(false)"
-    :aria-current="isSelected(false) ? 'page' : undefined"
     :aria-haspopup="dropdown ? 'menu' : undefined"
     :aria-expanded="dropdown ? expanded : undefined"
   >
