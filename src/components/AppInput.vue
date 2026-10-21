@@ -37,6 +37,7 @@
           :id="inputId"
           ref="baseInput"
           :type="inputType"
+          :inputmode="inputmode"
           v-model="model"
           :disabled="disabled"
           :placeholder="resolvedPlaceholder"
@@ -118,6 +119,7 @@ import {
   useId,
   type PropType,
   type InputTypeHTMLAttribute,
+  type HTMLAttributes,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -177,6 +179,11 @@ const props = defineProps({
   type: {
     type: String as PropType<InputTypeHTMLAttribute>,
     default: 'text',
+  },
+  /** Virtual keyboard hint, e.g. 'decimal' for amounts typed as text. */
+  inputmode: {
+    type: String as PropType<HTMLAttributes['inputmode']>,
+    required: false,
   },
   isRequired: {
     type: Boolean,

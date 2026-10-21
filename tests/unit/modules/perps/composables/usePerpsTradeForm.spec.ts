@@ -222,27 +222,12 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
     walletMenuState.selectedTradeTokenSymbol = 'AAPL-USD'
   })
 
-  it('resolves the open-position key + direction/symbol params with no active position', () => {
+  it('resolves the enter-amount key until a margin amount is typed', () => {
     const form = usePerpsTradeForm()
     form.orderType.value = 'market'
-    expect(form.submitButtonLabel.value).toBe(
-      mockT('perps.trade.open-position', {
-        direction: mockT('perps.trade.long'),
-        symbol: 'AAPL',
-      }),
-    )
-  })
-
-  it('resolves the short direction label when order side is sell', () => {
-    const form = usePerpsTradeForm()
-    form.orderType.value = 'market'
+    expect(form.submitButtonLabel.value).toBe('common.enter_amount')
     form.setOrderSide('sell')
-    expect(form.submitButtonLabel.value).toBe(
-      mockT('perps.trade.open-position', {
-        direction: mockT('perps.trade.short'),
-        symbol: 'AAPL',
-      }),
-    )
+    expect(form.submitButtonLabel.value).toBe('common.enter_amount')
   })
 
   it('resolves the close-position key + direction/symbol params for closeButtonLabel', () => {
@@ -506,6 +491,15 @@ describe('usePerpsTradeForm — cross-margin liquidation estimate', () => {
     expect(form.currentPrice.value).toBe(396.2)
     expect(form.positionSizeUsd.value).toBe(20)
     expect(form.estimatedLiquidation.value).toBeCloseTo(1869.4, 2)
+  })
+
+  it('resolves the review key for the selected side once a margin is typed', () => {
+    const form = usePerpsTradeForm()
+    form.setOrderSide('sell')
+    form.inputAmount.value = '2'
+    expect(form.submitButtonLabel.value).toBe('perps.trade.review-short')
+    form.setOrderSide('buy')
+    expect(form.submitButtonLabel.value).toBe('perps.trade.review-long')
   })
 })
 
