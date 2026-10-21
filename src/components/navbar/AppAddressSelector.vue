@@ -11,7 +11,7 @@ import { truncateAddress } from '@/utils/filters'
  * Address selector (design library, Figma 892:2786). The Navbar pill for the
  * active account: account avatar with the network badge, balance, name (or the
  * truncated address) with a connected dot / watch-only eye, and a chevron that
- * flips while `open`. Hover is CSS; the parent owns the menu it opens and the
+ * flips while `open`. Hover is CSS; the parent owns the popup it opens and the
  * store data (it passes formatted strings).
  *
  * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
@@ -53,7 +53,8 @@ const accountLabel = computed(
 const ariaLabel = computed(() =>
   props.address
     ? [
-        props.balance,
+        // The placeholder hides the balance, so don't announce a stale one.
+        props.loading ? t('common.loading') : props.balance,
         accountLabel.value,
         t(
           props.connected
@@ -71,7 +72,6 @@ const ariaLabel = computed(() =>
   <button
     type="button"
     data-testid="address-selector"
-    aria-haspopup="menu"
     :aria-expanded="open"
     :aria-label="ariaLabel"
     class="inline-flex h-10 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full border border-border-default bg-background-alternative pl-2 pr-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"

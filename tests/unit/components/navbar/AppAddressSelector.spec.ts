@@ -27,6 +27,7 @@ const i18n = createI18n({
         watch_only: 'Watch only',
         no_address_pill: 'No address',
       },
+      common: { loading: 'Loading' },
     },
   },
 })
@@ -49,11 +50,12 @@ const button = (wrapper: ReturnType<typeof mountSelector>) =>
   wrapper.get('[data-testid="address-selector"]')
 
 describe('AppAddressSelector — design-library Address selector (MEW-2462)', () => {
-  it('is a menu-trigger button with the Figma pill box', () => {
+  it('is a button with the Figma pill box', () => {
     const el = button(mountSelector())
     expect(el.element.tagName).toBe('BUTTON')
     expect(el.attributes('type')).toBe('button')
-    expect(el.attributes('aria-haspopup')).toBe('menu')
+    // The manage-accounts popup is not a menu, so no aria-haspopup.
+    expect(el.attributes('aria-haspopup')).toBeUndefined()
     expect(el.classes()).toEqual(
       expect.arrayContaining([
         'h-10',
@@ -122,8 +124,11 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
     ).toBe('$130.23, 0x32Be...2D88, Watch only')
   })
 
-  it('swaps the balance for a placeholder while loading', () => {
-    const wrapper = mountSelector({ loading: true })
+  it('swaps the balance for a placeholder while loading, also for screen readers', () => {
+    const wrapper = mountSelector({ loading: true, name: 'Savings' })
+    expect(button(wrapper).attributes('aria-label')).toBe(
+      'Loading, Savings, Connected',
+    )
     expect(
       wrapper.find('[data-test="address-selector-loading"]').exists(),
     ).toBe(true)
