@@ -37,6 +37,22 @@ describe('AppSegment', () => {
     expect(classes.some(c => c.startsWith('hover:'))).toBe(false)
   })
 
+  it('fills with the tone and inverts the text only while selected', () => {
+    const long = mount(AppSegment, {
+      props: { label: 'Long', selected: true, tone: 'success' },
+    })
+    expect(long.get(root).classes()).toEqual(
+      expect.arrayContaining(['bg-background-success', 'text-text-inverted']),
+    )
+    expect(long.get(root).classes()).not.toContain('text-text-default')
+
+    const short = mount(AppSegment, {
+      props: { label: 'Short', selected: false, tone: 'danger' },
+    })
+    expect(short.get(root).classes()).not.toContain('bg-background-error')
+    expect(short.get(root).classes()).toContain('text-text-default')
+  })
+
   it('binds the hover colour per size as in Figma', () => {
     const def = mount(AppSegment, { props: { label: 'A' } })
     expect(def.get(root).classes()).toContain('hover:bg-background-default')
