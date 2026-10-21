@@ -16,6 +16,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
     title: 'Components',
     items: [
       { name: 'Action Bar', to: '/dev/action-bar' },
+      { name: 'Address Selector', to: '/dev/address-selector' },
       { name: 'Avatar', to: '/dev/avatar' },
       { name: 'Button', to: '/dev/button' },
       { name: 'Button Icon', to: '/dev/btn-icon' },
