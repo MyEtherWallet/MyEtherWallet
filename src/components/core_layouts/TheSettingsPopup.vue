@@ -473,8 +473,7 @@
               <!-- Search -->
               <app-searchbar
                 v-model="languageQuery"
-                size="compact"
-                bg-class="bg-background-default"
+                variant="default"
                 :placeholder="$t('common.search')"
               />
 
