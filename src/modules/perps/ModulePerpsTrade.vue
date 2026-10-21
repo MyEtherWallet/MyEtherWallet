@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-[500px] mx-auto relative h-full flex flex-col pb-6">
+  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
     <perps-signing-prompt
       :show="showSigningPrompt"
       :message="signingMessage"
@@ -8,826 +8,526 @@
       @confirm="confirmSign"
       @cancel="cancelSign"
     />
-    <!-- Header: Asset Info -->
-    <div class="flex items-center justify-between mb-2 px-4 -mt-2">
-      <div>
-        <p class="font-bold text-s-28">{{ $t('perps.trade.perpetuals') }}</p>
-        <p class="text-text-subtle text-s-12 ml-1">
-          {{ $t('perps.trade.powered-by') }}
-        </p>
-      </div>
-    </div>
-
-    <!--
-      Service outage notice. The panel opens without ViewPerps (and its
-      PerpsStatusBanner) in the tree, so the outage needs saying here too — kept
-      to a compact label since the panel is narrow.
-
-      Suppressed while the region block shows, matching PerpsStatusBanner's
-      precedence: the jurisdiction card already explains why the form is
-      unusable, and a second notice would only compete with it.
-    -->
-    <div
-      v-if="showStatusLabel"
-      role="status"
-      class="flex items-center gap-1.5 mb-3 px-3 py-2 rounded-12 bg-background-warning-subtle"
-    >
-      <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
-           unreadable for copy, so the text stays near-black. -->
-      <AppIcon
-        name="exclamation-triangle"
-        variant="filled"
-        size="xxs"
-        aria-hidden="true"
-        class="shrink-0 text-text-warning"
+    <!-- The shared panel pads 16/24px; Figma side panels sit at 20/32 on desktop -->
+    <div class="flex w-full flex-col gap-5">
+      <AppContentGroup
+        size="l"
+        :title="$t('perps.trade.perpetuals')"
+        :description="$t('perps.trade.powered-by')"
       />
-      <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
-    </div>
 
-    <!-- Region-blocked: card explains why, form below stays visible but dimmed
-         and inert so the panel reads as present-but-unusable. -->
-    <app-unavailable-card
-      v-if="isPerpsRestricted"
-      class="mb-3"
-      :title="$t('perps.restricted.panel-title')"
-      :description="$t('perps.restricted.panel-description')"
-    >
-      <template #icon>
-        <div class="relative">
-          <AppIcon
-            name="globe-asia-australia"
-            variant="filled"
-            size="xxl"
-            aria-hidden="true"
-            class="text-black"
-          />
-          <!--
-            Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
-            knocked-out "!" lets the red through, and the 4px the circle extends
-            past the icon forms the red ring. Inverting these (white circle,
-            red icon) loses the ring and reads as a solid red blob. Keep the
-            two sizes 8px apart to preserve that ring width.
-          -->
-          <span
-            class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-background-error flex items-center justify-center"
-          >
-            <AppIcon
-              name="exclamation-circle"
-              variant="filled"
-              size="s"
-              aria-hidden="true"
-              class="text-white"
-            />
-          </span>
-        </div>
-      </template>
-      <template #action>
-        <app-learn-more-link
-          :href="perpsHelpUrl"
-          :label="$t('perps.restricted.learn-more')"
-          @click="onRestrictedLearnMore"
-        />
-      </template>
-    </app-unavailable-card>
+      <!--
+        Service outage notice. The panel opens without ViewPerps (and its
+        PerpsStatusBanner) in the tree, so the outage needs saying here too — kept
+        to a compact label since the panel is narrow.
 
-    <!-- Active Trade Form -->
-    <div
-      class="flex flex-col pb-6"
-      :class="blockedClass"
-      :inert="isPerpsRestricted"
-    >
-      <!-- Scrollable content -->
+        Suppressed while the region block shows, matching PerpsStatusBanner's
+        precedence: the jurisdiction card already explains why the form is
+        unusable, and a second notice would only compete with it.
+      -->
       <div
-        class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3"
+        v-if="showStatusLabel"
+        role="status"
+        class="flex items-center gap-1.5 px-3 py-2 rounded-12 bg-background-warning-subtle"
       >
-        <!-- Asset Selector & Price & current Position Info if open -->
-        <div>
-          <!-- Token Selector -->
-          <button
-            :class="[
-              isLoading || !selectedToken
-                ? 'bg-background-default-hover animate-pulse'
-                : 'bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all',
-              'rounded-20 px-1 transition-colors w-full flex items-center justify-between px-4 py-2',
-            ]"
-            type="button"
-            @click="openTokenSelect"
-            :aria-label="$t('select_token.title')"
-            :disabled="isLoading || !selectedToken"
-          >
-            <div
-              v-if="!isLoading && selectedToken"
-              class="flex items-center justify-start"
-            >
-              <app-token-logo
-                :url="selectedToken.logo_url"
-                :alt="selectedToken.symbol"
-                class="mr-2"
-                :is-stock="selectedToken.ondo !== undefined"
-              />
-              <div>
-                <app-token-symbol
-                  :symbol="selectedToken.symbol"
-                  :is-stock="selectedToken.ondo !== undefined"
-                  class="!font-bold text-left"
-                />
-                <p class="text-text-subtle text-s-12">
-                  {{ formatUsd(currentPrice) }}
-                  <span
-                    :class="
-                      priceChange >= 0 ? 'text-text-success' : 'text-text-error'
-                    "
-                    class="pl-1"
-                  >
-                    ({{ priceChange.toFixed(2) }}%)
-                  </span>
-                </p>
-              </div>
-            </div>
-            <AppIcon
-              name="chevron-down"
-              variant="filled"
-              size="xxs"
-              v-if="!isLoading"
-              class="text-text-subtle ml-4"
-            />
-          </button>
+        <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
+             unreadable for copy, so the text stays near-black. -->
+        <AppIcon
+          name="exclamation-triangle"
+          variant="filled"
+          size="xxs"
+          aria-hidden="true"
+          class="shrink-0 text-text-warning"
+        />
+        <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
+      </div>
 
-          <!-- Position Info -->
-          <div v-if="activePosition" class="px-2 mt-3 flex flex-col gap-1">
-            <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-text-subtle text-s-12">
+      <!-- Region-blocked: card explains why, form below stays visible but dimmed
+           and inert so the panel reads as present-but-unusable. -->
+      <app-unavailable-card
+        v-if="isPerpsRestricted"
+        :title="$t('perps.restricted.panel-title')"
+        :description="$t('perps.restricted.panel-description')"
+      >
+        <template #icon>
+          <div class="relative">
+            <AppIcon
+              name="globe-asia-australia"
+              variant="filled"
+              size="xxl"
+              aria-hidden="true"
+              class="text-black"
+            />
+            <!--
+              Error-filled 28px circle behind a 20px WHITE solid icon: the icon's
+              knocked-out "!" lets the red through, and the 4px the circle extends
+              past the icon forms the red ring. Inverting these (white circle,
+              red icon) loses the ring and reads as a solid red blob. Keep the
+              two sizes 8px apart to preserve that ring width.
+            -->
+            <span
+              class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-background-error flex items-center justify-center"
+            >
+              <AppIcon
+                name="exclamation-circle"
+                variant="filled"
+                size="s"
+                aria-hidden="true"
+                class="text-white"
+              />
+            </span>
+          </div>
+        </template>
+        <template #action>
+          <app-learn-more-link
+            :href="perpsHelpUrl"
+            :label="$t('perps.restricted.learn-more')"
+            @click="onRestrictedLearnMore"
+          />
+        </template>
+      </app-unavailable-card>
+
+      <!-- Active Trade Form -->
+      <div
+        class="flex flex-col gap-5"
+        :class="blockedClass"
+        :inert="isPerpsRestricted"
+      >
+        <!-- Market picker & current position info if open -->
+        <div class="flex flex-col gap-3">
+          <AppPicker
+            size="l"
+            surface="alternative"
+            :title="displaySymbol"
+            :description="marketName"
+            :aria-label="$t('select_token.title')"
+            @click="openTokenSelect"
+          >
+            <template #avatar>
+              <app-token-logo
+                :url="logoUrl"
+                :symbol="displaySymbol"
+                width="w-8"
+                height="h-8"
+                no-shadow
+              />
+            </template>
+          </AppPicker>
+
+          <div
+            v-if="activePosition"
+            class="flex flex-col gap-2 px-4 text-text-sm"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-text-subtle">
                 {{ $t('perps.trade.position-size') }}
               </p>
-              <p class="font-medium">
+              <p class="text-label-sm">
                 {{ formatUsd(positionNotionalValue) }}
               </p>
             </div>
-            <div class="flex justify-between text-s-14 font-medium">
-              <p class="text-text-subtle text-s-12">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-text-subtle">
                 {{ $t('perps.trade.current-profit') }}
               </p>
               <p
                 :class="
                   positionPnl >= 0 ? 'text-text-success' : 'text-text-error'
                 "
-                class="font-medium"
+                class="text-label-sm"
               >
                 {{ formatPnl(String(positionPnl)) }}
-                <span class="text-s-12"
-                  >({{ (positionRoe * 100).toFixed(2) }}%)</span
-                >
+                ({{ (positionRoe * 100).toFixed(2) }}%)
               </p>
             </div>
           </div>
         </div>
-        <div class="flex items-center justify-between">
-          <div
-            v-if="!activePosition"
-            class="flex w-full gap-1 bg-white p-1 rounded-full shadow-button shadow-button-elevated"
-          >
-            <button
-              v-for="side in orderSideButtons"
-              :key="side.value"
-              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 p-4 w-full"
-              :class="[
-                orderSide === side.value
-                  ? 'text-white  shadow-button shadow-button-elevated'
-                  : ' hoverNoBG ',
-                {
-                  'bg-background-success':
-                    orderSide === side.value && side.value === 'buy',
-                  'bg-background-error':
-                    orderSide === side.value && side.value === 'sell',
-                },
-              ]"
-              @click="onClickOrderSide(side.value)"
-            >
-              {{ side.label }}
-              <AppIcon
-                name="arrow-trending-up"
-                variant="filled"
-                size="xxs"
-                v-if="side.value === 'buy'"
-                :class="orderSide === side.value ? 'text-white' : 'text-black'"
-              />
-              <AppIcon
-                name="arrow-trending-down"
-                variant="filled"
-                size="xxs"
-                v-if="side.value === 'sell'"
-                :class="orderSide === side.value ? 'text-white' : 'text-black'"
-              />
-            </button>
-          </div>
-          <div
-            v-else
-            class="flex w-full gap-1 bg-white p-1 rounded-full shadow-button shadow-button-elevated"
-          >
-            <button
-              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 w-full"
-              :class="[
-                manageMode === 'add'
-                  ? ' text-white shadow-button shadow-button-elevated'
-                  : 'hoverNoBG',
-                {
-                  'bg-background-success':
-                    orderSide === 'buy' && manageMode === 'add',
-                  'bg-background-error':
-                    orderSide === 'sell' && manageMode === 'add',
-                },
-              ]"
-              @click="onClickManageMode('add')"
-            >
-              {{ $t('perps.trade.tab-add') }}
-            </button>
-            <button
-              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 w-full"
-              :class="[
-                manageMode === 'close'
-                  ? 'text-white shadow-button shadow-button-elevated'
-                  : 'hoverNoBG',
-                {
-                  'bg-background-success':
-                    orderSide === 'buy' && manageMode === 'close',
-                  'bg-background-error':
-                    orderSide === 'sell' && manageMode === 'close',
-                },
-              ]"
-              @click="onClickManageMode('close')"
-            >
-              {{ $t('perps.trade.tab-close') }}
-            </button>
-          </div>
-          <app-pop-up-menu
-            :placeholder="
-              orderType === 'market'
-                ? $t('perps.trade.market')
-                : $t('perps.trade.limit')
-            "
-            location="right"
-            class="ml-3"
-            :class="{
-              'opacity-0 pointer-events-none':
-                activePosition && manageMode === 'close',
-            }"
-          >
-            <template #menu-content="{ toggleMenu }">
-              <div
-                class="bg-white rounded-[20px] shadow-xl border border-border-default w-[260px] p-2 overflow-hidden"
-              >
-                <div
-                  class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'market'
-                      ? 'bg-background-brand-subtle'
-                      : 'hover:bg-background-default'
-                  "
-                  @click="[setOrderType('market'), toggleMenu()]"
-                >
-                  <div>
-                    <p class="font-bold text-s-14">
-                      {{ $t('perps.trade.market-order') }}
-                    </p>
-                    <p class="text-text-subtle text-s-12 mt-0.5">
-                      {{ $t('perps.trade.market-order-description') }}
-                    </p>
-                  </div>
-                  <AppIcon
-                    name="check"
-                    variant="filled"
-                    size="s"
-                    v-if="orderType === 'market'"
-                    class="text-text-brand"
-                  />
 
-                  <span v-else class="w-4 mt-0.5" />
-                </div>
-                <div
-                  class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'limit'
-                      ? 'bg-background-brand-subtle'
-                      : 'hover:bg-background-default'
-                  "
-                  @click="[setOrderType('limit'), toggleMenu()]"
-                >
-                  <div>
-                    <p class="font-bold text-s-14">
-                      {{ $t('perps.trade.limit-order') }}
-                    </p>
-                    <p class="text-text-subtle text-s-12 mt-0.5">
-                      {{ $t('perps.trade.limit-order-description') }}
-                    </p>
-                  </div>
-                  <AppIcon
-                    name="check"
-                    variant="filled"
-                    size="s"
-                    v-if="orderType === 'limit'"
-                    class="text-text-brand"
-                  />
-                  <span v-else class="w-4 mt-0.5" />
-                </div>
-              </div>
-            </template>
-          </app-pop-up-menu>
-        </div>
-        <!-- Target Price (Limit Orders) -->
-        <div
-          v-if="orderType === 'limit'"
-          class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 py-3 transition-all flex flex-col justify-between"
-        >
-          <p class="font-semibold text-s-12 text-text-subtle">
-            {{ $t('perps.trade.target-price', { symbol: displaySymbol }) }}
-          </p>
-          <div class="flex items-center py-1">
-            <span
-              class="font-bold text-s-20 tracking-tight shrink-0"
-              :class="[
-                !limitPrice || limitPrice === '' ? 'opacity-50' : '',
-                limitPriceHasError ? 'text-text-error' : '',
-              ]"
-              >$</span
-            >
-            <input
-              v-model="limitPrice"
-              type="text"
-              inputmode="decimal"
-              placeholder="0.00"
-              :aria-label="$t('perps.confirm.limit-price')"
-              class="w-full min-w-0 font-bold text-s-20 tracking-tight outline-none bg-transparent"
-              :class="{ 'text-text-error': limitPriceHasError }"
-              @keydown="
-                e => {
-                  if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
-                }
-              "
-              @input="onLimitPriceInput"
+        <div class="flex flex-col gap-2">
+          <!-- Long / Short (or Add / Close with a position) + order type -->
+          <div class="grid grid-cols-3 items-center gap-3">
+            <AppSegmentedControl
+              v-if="!activePosition"
+              :model-value="orderSide"
+              :items="orderSideItems"
+              :label="$t('perps.confirm.side-label')"
+              full-width
+              class="col-span-2"
+              @update:model-value="onClickOrderSide"
             />
-          </div>
-
-          <transition name="fade" mode="out-in">
-            <AppInputFeedback
-              v-if="!limitPrice || parseFloat(limitPrice) === 0"
-              type="error"
-              class="mb-1 px-0!"
-            >
-              {{ $t('perps.errors.target-required') }}
-            </AppInputFeedback>
-            <AppInputFeedback
-              v-else-if="
-                isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
-              "
-              type="error"
-              class="mb-1 px-0!"
-            >
-              {{ $t('perps.errors.invalid-price') }}
-            </AppInputFeedback>
-            <AppInputFeedback
-              v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
-              type="error"
-              class="mb-1 px-0!"
-            >
-              {{ $t('perps.errors.price-max', { max: '$10,000,000' }) }}
-            </AppInputFeedback>
-            <AppInputFeedback
-              v-else-if="limitPricePrecisionError"
-              type="error"
-              class="mb-1 px-0!"
-            >
-              {{
-                quoteDecimals === 0
-                  ? $t('perps.errors.price-whole')
-                  : $t('perps.errors.price-precision-decimals', {
-                      decimals: quoteDecimals,
-                      count: quoteDecimals,
-                    })
-              }}
-            </AppInputFeedback>
-            <AppInputFeedback
-              v-else-if="limitPriceOutOfTolerance"
-              type="error"
-              class="mb-1 px-0!"
-            >
-              {{ $t('perps.errors.out-of-tolerance') }}
-            </AppInputFeedback>
-          </transition>
-
-          <div class="flex justify-start gap-2 mt-1">
-            <button
-              v-for="pct in [-5, -2.5, 0, 2.5, 5]"
-              :key="pct"
-              class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-              @click="setLimitPricePct(pct)"
-            >
-              {{
-                pct === 0
-                  ? $t('perps.trade.mid')
-                  : (pct > 0 ? '+' : '') + pct + '%'
-              }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Long / Short Toggle + Order Type on same row (no position) -->
-        <template v-if="!activePosition || manageMode === 'add'">
-          <!-- Margin -->
-          <div
-            class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between gap-2"
-          >
-            <p class="text-s-12 text-text-subtle mr-3 font-semibold">
-              {{ $t('perps.trade.margin-available') }}
-              <span class="font-medium ml-1 font-normal">
-                {{ formatUsd(availableMargin) }}
-              </span>
-            </p>
-            <div class="flex items-center justify-between -mt-1">
-              <div
-                class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
-                :class="[
-                  !inputAmount || inputAmount === '' ? 'before:opacity-50' : '',
-                  marginPrecisionError ? 'before:text-text-error' : '',
-                ]"
-              >
-                <input
-                  v-model="inputAmount"
-                  type="number"
-                  min="0"
-                  step="any"
-                  placeholder="0.00"
-                  :aria-label="$t('perps.trade.margin-amount-label')"
-                  class="font-bold text-s-28 bg-transparent outline-none w-full"
-                  :class="{ 'text-text-error': marginPrecisionError }"
-                  @keydown="
-                    e => {
-                      if (['e', 'E', '+', '-'].includes(e.key))
-                        e.preventDefault()
-                    }
-                  "
-                  @input="onInputAmount"
-                />
-              </div>
-              <button
-                class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-background-default-hover min-w-15"
-                :disabled="isLoadingLeverage"
-                @click="openLeverage"
-              >
-                <span
-                  v-if="isLoadingLeverage"
-                  class="ml-auto bg-background-default-hover animate-pulse rounded-full h-4 w-8"
-                />
-                <p v-else class="ml-auto font-semibold text-s-14">
-                  {{
-                    manageMode === 'add' ? effectiveLeverage : leverage
-                  }}&times;
-                </p>
-                <AppIcon name="chevron-down" variant="filled" size="xxs" />
-              </button>
-            </div>
-            <p class="text-text-subtle text-s-12 -mt-2 mb-2 truncate">
-              {{ $t('perps.trade.size') }}
-              {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
-            </p>
-
-            <!-- Error State -->
-            <transition name="fade" mode="out-in">
-              <AppInputFeedback
-                v-if="marginPrecisionError"
-                type="error"
-                class="mb-1 px-0!"
-              >
-                {{ $t('perps.errors.margin-precision') }}
-              </AppInputFeedback>
-              <AppInputFeedback
-                v-else-if="
-                  Number(inputAmount || '0') > availableMargin ||
-                  isNaN(Number(inputAmount))
-                "
-                type="error"
-                class="mb-1 px-0!"
-              >
-                {{
-                  isNaN(Number(inputAmount))
-                    ? $t('perps.errors.invalid-amount')
-                    : $t('perps.errors.insufficient-margin')
-                }}
-              </AppInputFeedback>
-              <AppInputFeedback
-                v-else-if="
-                  Number(inputAmount || '0') > 0 &&
-                  positionSizeUsd < minOrderAmount
-                "
-                type="error"
-                class="mb-1 px-0!"
-              >
-                {{
-                  $t('perps.errors.min-amount', {
-                    amount: formatUsd(minOrderAmount),
-                  })
-                }}
-              </AppInputFeedback>
-            </transition>
-
-            <!-- Slider -->
-            <div class="relative mb-1 flex items-center gap-2">
-              <input
-                v-model="sliderValue"
-                type="range"
-                min="0"
-                max="100"
-                step="0.01"
-                :aria-label="$t('perps.trade.size-percentage-label')"
-                class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
-                :style="{
-                  background: `linear-gradient(to right, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} 0%, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} ${sliderValue}%, var(--color-background-default-hover) ${sliderValue}%, var(--color-background-default-hover) 100%)`,
-                  '--thumb-color':
-                    orderSide === 'buy'
-                      ? 'var(--color-background-success)'
-                      : 'var(--color-background-error)',
-                }"
-                @input="onSliderInput"
-              />
-            </div>
-
-            <!-- Size Pills -->
-            <div class="flex justify-start gap-2">
-              <button
-                v-for="pct in [10, 25, 50, 75, 100]"
-                :key="pct"
-                class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                @click="setPercentage(pct)"
-              >
-                {{ pct + '%' }}
-              </button>
-            </div>
-            <hr class="border-t border-border-subtle mt-1" />
-            <!-- New size -->
-            <div
-              v-if="activePosition && manageMode === 'add'"
-              class="flex justify-between text-s-14 py-1 font-medium"
-            >
-              <span class="font-bold text-s-12 text-text-subtle">{{
-                $t('perps.trade.new-size')
-              }}</span>
-              <span class="font-bold">{{
-                submitDisabled
-                  ? '-'
-                  : formatUsd(
-                      (positionNotionalValue || 0) + (positionSizeUsd || 0),
-                    )
-              }}</span>
-            </div>
-            <!-- Est. Liquidation -->
-            <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-text-subtle">{{
-                $t('perps.trade.est-liquidation')
-              }}</span>
-              <span class="font-bold">{{
-                submitDisabled
-                  ? '-'
-                  : estimatedLiquidation
-                    ? formatUsd(estimatedLiquidation)
-                    : '$0.00'
-              }}</span>
-            </div>
-            <!-- Margin Ratio -->
-            <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-text-subtle">{{
-                $t('perps.balance.margin-ratio-label')
-              }}</span>
-              <span class="font-bold">{{
-                newMarginRatio !== null
-                  ? `${(newMarginRatio * 100).toFixed(2)}%`
-                  : '-'
-              }}</span>
-            </div>
-          </div>
-          <!-- Add take profit / stop loss -->
-          <div class="flex items-center justify-center flex-wrap gap-2">
-            <button
-              v-if="takeProfitPrice === null && stopLossPrice === null"
-              class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
-              @click="openAutoCloseModal"
-            >
-              <AppIcon name="plus-circle" variant="filled" size="xxs" />
-              <p class="text-s-12 font-medium">
-                {{ $t('perps.trade.add-tp-sl') }}
-              </p>
-            </button>
-            <div
+            <AppSegmentedControl
               v-else
-              class="flex items-center justify-center flex-wrap gap-2"
+              :model-value="manageMode ?? 'add'"
+              :items="manageModeItems"
+              full-width
+              class="col-span-2"
+              @update:model-value="onClickManageMode"
+            />
+            <app-pop-up-menu
+              :placeholder="orderTypeLabel"
+              location="right"
+              :class="{
+                'opacity-0 pointer-events-none':
+                  activePosition && manageMode === 'close',
+              }"
             >
-              <button
-                v-if="takeProfitPrice !== null"
-                class="flex items-center hoverBGWhite bg-background-success text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
-                @click="openAutoCloseModal"
-              >
-                <p class="text-s-12">
-                  {{ $t('perps.trade.take-profit-label') }}
-                  <span class="font-medium">{{
-                    formatUsd(takeProfitPrice)
-                  }}</span>
-                </p>
-              </button>
+              <template #menu-button="{ toggleMenu }">
+                <!-- Opens an inline menu, not a modal -->
+                <AppPicker
+                  size="s"
+                  :title="orderTypeLabel"
+                  :avatar="false"
+                  aria-haspopup="listbox"
+                  class="w-full justify-between"
+                  @click="toggleMenu"
+                />
+              </template>
+              <template #menu-content="{ toggleMenu }">
+                <div
+                  class="bg-white rounded-[20px] shadow-xl border border-border-default w-[260px] p-2 overflow-hidden"
+                >
+                  <div
+                    class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                    :class="
+                      orderType === 'market'
+                        ? 'bg-background-brand-subtle'
+                        : 'hover:bg-background-default'
+                    "
+                    @click="[setOrderType('market'), toggleMenu()]"
+                  >
+                    <div>
+                      <p class="font-bold text-s-14">
+                        {{ $t('perps.trade.market-order') }}
+                      </p>
+                      <p class="text-text-subtle text-s-12 mt-0.5">
+                        {{ $t('perps.trade.market-order-description') }}
+                      </p>
+                    </div>
+                    <AppIcon
+                      name="check"
+                      variant="filled"
+                      size="s"
+                      v-if="orderType === 'market'"
+                      class="text-text-brand"
+                    />
 
-              <button
-                v-if="stopLossPrice !== null"
-                class="flex items-center hoverBGWhite bg-background-error text-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
-                @click="openAutoCloseModal"
+                    <span v-else class="w-4 mt-0.5" />
+                  </div>
+                  <div
+                    class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                    :class="
+                      orderType === 'limit'
+                        ? 'bg-background-brand-subtle'
+                        : 'hover:bg-background-default'
+                    "
+                    @click="[setOrderType('limit'), toggleMenu()]"
+                  >
+                    <div>
+                      <p class="font-bold text-s-14">
+                        {{ $t('perps.trade.limit-order') }}
+                      </p>
+                      <p class="text-text-subtle text-s-12 mt-0.5">
+                        {{ $t('perps.trade.limit-order-description') }}
+                      </p>
+                    </div>
+                    <AppIcon
+                      name="check"
+                      variant="filled"
+                      size="s"
+                      v-if="orderType === 'limit'"
+                      class="text-text-brand"
+                    />
+                    <span v-else class="w-4 mt-0.5" />
+                  </div>
+                </div>
+              </template>
+            </app-pop-up-menu>
+          </div>
+
+          <!-- Target Price (Limit Orders). The capture listener cleans the
+               typed value before AppInput's v-model reads it. -->
+          <AppInput
+            v-if="orderType === 'limit'"
+            v-model="limitPrice"
+            :label="$t('perps.trade.target-price', { symbol: displaySymbol })"
+            :error-message="limitPriceErrorMessage"
+            @input.capture="onLimitPriceInput"
+          />
+
+          <!-- Margin (new position or add to it) -->
+          <template v-if="!activePosition || manageMode === 'add'">
+            <div class="flex flex-col gap-4 rounded-16 bg-background-default p-4">
+              <div
+                class="flex items-center justify-between gap-2 text-text-base text-text-subtle"
               >
-                <p class="text-s-12">
-                  {{ $t('perps.trade.stop-loss-label') }}
-                  <span class="font-medium">{{
-                    formatUsd(stopLossPrice)
-                  }}</span>
-                </p>
-              </button>
-              <button
-                v-if="takeProfitPrice === null || stopLossPrice === null"
-                class="flex items-center hoverBGWhite gap-2 justify-between bg-white shadow-button shadow-button-elevated rounded-full px-4 py-1"
-                @click="openAutoCloseModal"
-              >
-                <AppIcon name="plus-circle" variant="filled" size="xxs" />
-                <p class="text-s-12 font-medium">
+                <p class="shrink-0">{{ $t('perps.trade.margin') }}</p>
+                <p class="min-w-0 truncate">
                   {{
-                    takeProfitPrice === null
-                      ? $t('perps.trade.add-take-profit')
-                      : $t('perps.trade.add-stop-loss')
+                    $t('perps.trade.available', {
+                      amount: formatUsd(availableMargin),
+                    })
                   }}
                 </p>
-              </button>
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between gap-4">
+                  <AppInputNaked
+                    v-model="inputAmount"
+                    :label="$t('perps.trade.margin-amount-label')"
+                    :error="marginPrecisionError"
+                    class="min-w-0 flex-1"
+                  />
+                  <AppPicker
+                    size="s"
+                    :title="`${manageMode === 'add' ? effectiveLeverage : leverage}×`"
+                    :avatar="false"
+                    :loading="isLoadingLeverage"
+                    :disabled="isLoadingLeverage"
+                    @click="openLeverage"
+                  />
+                </div>
+                <transition name="fade" mode="out-in">
+                  <AppInputFeedback
+                    v-if="marginErrorMessage"
+                    type="error"
+                    :message="marginErrorMessage"
+                    class="px-0!"
+                  />
+                </transition>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <div class="min-w-0 flex-1">
+                  <AppSlider
+                    :model-value="sliderValue"
+                    :step="0.01"
+                    :tone="sideTone"
+                    :label="$t('perps.trade.size-percentage-label')"
+                    @update:model-value="onSliderChange"
+                  />
+                </div>
+                <p class="w-10 shrink-0 text-right text-label-sm">
+                  {{ formatPercent(sliderValue) }}
+                </p>
+              </div>
+
+              <hr class="border-t border-border-subtle" />
+              <div class="flex flex-col gap-2 text-text-sm">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-text-subtle">
+                    {{ $t('perps.trade.position-size') }}
+                  </p>
+                  <p class="text-label-sm">
+                    {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
+                  </p>
+                </div>
+                <div
+                  v-if="activePosition && manageMode === 'add'"
+                  class="flex items-center justify-between gap-2"
+                >
+                  <p class="text-text-subtle">
+                    {{ $t('perps.trade.new-size') }}
+                  </p>
+                  <p class="text-label-sm">
+                    {{
+                      submitDisabled
+                        ? '--'
+                        : formatUsd(
+                            (positionNotionalValue || 0) +
+                              (positionSizeUsd || 0),
+                          )
+                    }}
+                  </p>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-text-subtle">
+                    {{ $t('perps.trade.est-liquidation') }}
+                  </p>
+                  <p class="text-label-sm">
+                    {{
+                      submitDisabled
+                        ? '--'
+                        : estimatedLiquidation
+                          ? formatUsd(estimatedLiquidation)
+                          : '$0.00'
+                    }}
+                  </p>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-text-subtle">
+                    {{ $t('perps.balance.margin-ratio-label') }}
+                  </p>
+                  <p class="text-label-sm">
+                    {{
+                      newMarginRatio !== null
+                        ? `${(newMarginRatio * 100).toFixed(2)}%`
+                        : '--'
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </template>
 
-        <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-if="activePosition && manageMode === 'close'">
-          <!-- ADD MODE -->
-
-          <!-- CLOSE MODE -->
-          <div
-            class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between"
-          >
-            <p class="font-semibold text-s-12 text-text-subtle mr-3">
-              {{ $t('perps.trade.amount-to-close') }}
-            </p>
-            <!-- input -->
-            <div
-              class="flex items-center before:content-['$'] before:font-bold before:text-[28px] before:tracking-tight before:mr-1"
-              :class="[
-                !closeAmount || closeAmount === '' ? 'before:opacity-50' : '',
-                closeAmountPrecisionError ? 'before:text-text-error' : '',
-              ]"
-            >
-              <input
-                v-model="closeAmount"
-                type="number"
-                min="0"
-                step="any"
-                placeholder="0.00"
-                :aria-label="$t('perps.close.close-amount-label')"
-                class="font-bold text-s-28 bg-transparent outline-none w-full"
-                :class="{ 'text-text-error': closeAmountPrecisionError }"
-                @keydown="
-                  e => {
-                    if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault()
-                  }
+            <!-- Take profit / stop loss: both open the same auto-close dialog -->
+            <div class="flex gap-2">
+              <AppPicker
+                size="l"
+                surface="alternative"
+                :avatar="false"
+                :title="$t('perps.trade.take-profit')"
+                :description="
+                  takeProfitPrice !== null
+                    ? formatUsd(takeProfitPrice)
+                    : undefined
                 "
-                @input="onCloseAmountInput"
+                class="h-14! min-w-0 flex-1"
+                @click="openAutoCloseModal"
+              />
+              <AppPicker
+                size="l"
+                surface="alternative"
+                :avatar="false"
+                :title="$t('perps.trade.stop-loss')"
+                :description="
+                  stopLossPrice !== null ? formatUsd(stopLossPrice) : undefined
+                "
+                class="h-14! min-w-0 flex-1"
+                @click="openAutoCloseModal"
               />
             </div>
-            <p class="text-text-subtle text-s-12 mb-2">
-              {{ $t('perps.trade.new-size-close') }}
-              {{
-                formatUsd(
-                  Math.max(
-                    0,
-                    positionNotionalValue - (parseFloat(closeAmount) || 0),
-                  ),
-                )
-              }}
-            </p>
-            <transition name="fade" mode="out-in">
-              <AppInputFeedback
-                v-if="closeAmountPrecisionError"
-                type="error"
-                class="mb-1 px-0!"
-              >
-                {{ $t('perps.errors.amount-precision') }}
-              </AppInputFeedback>
-            </transition>
-            <!--slider -->
-            <input
-              v-model="closeSliderValue"
-              type="range"
-              min="0"
-              max="100"
-              step="0.01"
-              :aria-label="$t('perps.close.close-percentage-label')"
-              class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
-              :style="{
-                background: `linear-gradient(to right, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} 0%, ${orderSide === 'buy' ? 'var(--color-background-success)' : 'var(--color-background-error)'} ${closeSliderValue}%, var(--color-background-default-hover) ${closeSliderValue}%, var(--color-background-default-hover) 100%)`,
-                '--thumb-color':
-                  orderSide === 'buy'
-                    ? 'var(--color-background-success)'
-                    : 'var(--color-background-error)',
-              }"
-              @input="onCloseSliderInput"
-            />
-            <!-- Size Pills -->
-            <div class="flex justify-start gap-2 mt-4 mb-2">
-              <button
-                v-for="pct in [5, 25, 50, 75, 100]"
-                :key="pct"
-                :disabled="isClosePillDisabled(pct)"
-                class="w-full px-2.5 py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                :class="
-                  isClosePillDisabled(pct)
-                    ? 'opacity-40 cursor-not-allowed'
-                    : 'hover:border-border-hover'
-                "
-                @click="setClosePercentage(pct)"
-              >
-                {{ pct }}%
-              </button>
-            </div>
-          </div>
+          </template>
 
-          <!-- Close Error -->
-          <div
-            v-if="closeError"
-            class="mx-4 mb-4 bg-background-error-subtle border border-border-error-subtle rounded-[16px] p-4"
-          >
-            <p class="text-text-error text-s-14 font-medium">
-              {{ closeError }}
-            </p>
-          </div>
-        </template>
-      </div>
-      <!-- Submit Button -->
-      <template v-if="!isSupportedNetwork">
+          <!-- Close part of the open position -->
+          <template v-if="activePosition && manageMode === 'close'">
+            <div class="flex flex-col gap-4 rounded-16 bg-background-default p-4">
+              <p class="text-text-base text-text-subtle">
+                {{ $t('perps.trade.amount-to-close') }}
+              </p>
+              <div class="flex flex-col gap-1">
+                <AppInputNaked
+                  :model-value="closeAmount"
+                  :label="$t('perps.close.close-amount-label')"
+                  :error="closeAmountPrecisionError"
+                  @update:model-value="onCloseAmountChange"
+                />
+                <transition name="fade" mode="out-in">
+                  <AppInputFeedback
+                    v-if="closeAmountPrecisionError"
+                    type="error"
+                    :message="$t('perps.errors.amount-precision')"
+                    class="px-0!"
+                  />
+                </transition>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <div class="min-w-0 flex-1">
+                  <AppSlider
+                    :model-value="closeSliderValue"
+                    :step="0.01"
+                    :tone="sideTone"
+                    :label="$t('perps.close.close-percentage-label')"
+                    @update:model-value="onCloseSliderChange"
+                  />
+                </div>
+                <p class="w-10 shrink-0 text-right text-label-sm">
+                  {{ formatPercent(closeSliderValue) }}
+                </p>
+              </div>
+
+              <hr class="border-t border-border-subtle" />
+              <div
+                class="flex items-center justify-between gap-2 text-text-sm"
+              >
+                <p class="text-text-subtle">
+                  {{ $t('perps.trade.new-size') }}
+                </p>
+                <p class="text-label-sm">
+                  {{
+                    formatUsd(
+                      Math.max(
+                        0,
+                        positionNotionalValue - (parseFloat(closeAmount) || 0),
+                      ),
+                    )
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Close Error -->
+            <AppInputFeedback
+              v-if="closeError"
+              type="error"
+              :message="closeError"
+              class="px-0!"
+            />
+          </template>
+        </div>
+
+        <!-- Submit Button -->
         <div
-          class="bg-background-brand-subtle rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+          v-if="!isSupportedNetwork"
+          class="flex flex-col gap-3 text-center"
         >
-          <p class="text-text-subtle text-s-14 mb-4">
+          <p class="text-text-sm text-text-subtle">
             {{ $t('perps.trade.eth-only') }}
           </p>
           <app-base-button class="w-full" @click="onSwitchToEthereum">
             {{ $t('perps.trade.switch-to-ethereum') }}
           </app-base-button>
         </div>
-      </template>
-      <template v-else-if="isWatchOnly">
         <!-- Stays enabled during an outage: connecting a wallet is a
              wallet-side action that doesn't touch the perps service, and it's
              useful across the rest of the app regardless. -->
         <app-base-button
-          v-if="!isWalletConnected || isWatchOnly"
-          :class="['mx-auto w-full max-w-[340px] mt-4']"
+          v-else-if="isWatchOnly"
+          class="w-full"
           @click="connectWallet"
         >
-          {{ t('connect_wallet') }}</app-base-button
+          {{ t('connect_wallet') }}
+        </app-base-button>
+        <!-- Signing in hits the perps service, so during an outage it would
+             only prompt for a signature the backend cannot redeem. The label
+             at the top of the panel says why the button is dead. -->
+        <app-base-button
+          v-else-if="!token"
+          class="w-full"
+          :disabled="isServiceUnavailable"
+          @click="login(PerpsEventSource.TRADE)"
         >
-      </template>
-      <template v-else-if="!token && !isWatchOnly">
-        <div
-          class="rounded-20 px-4 mt-2 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
-        >
-          <!-- Signing in hits the perps service, so during an outage it would
-               only prompt for a signature the backend cannot redeem. The label
-               at the top of the panel says why the button is dead. -->
+          {{ $t('perps.trade.sign-in') }}
+        </app-base-button>
+        <template v-else>
           <app-base-button
-            class="w-full"
-            :disabled="isServiceUnavailable"
-            @click="login(PerpsEventSource.TRADE)"
+            v-if="!activePosition || manageMode === 'add'"
+            :disabled="submitDisabled"
+            :tone="sideTone"
+            class="w-full min-w-0"
+            @click="showConfirmation"
           >
-            {{ $t('perps.trade.sign-in') }}
+            <span class="block truncate">{{ getMainBtnText }}</span>
           </app-base-button>
-        </div>
-      </template>
-      <template v-else>
-        <app-base-button
-          v-if="!activePosition || manageMode === 'add'"
-          :disabled="submitDisabled"
-          @click="showConfirmation"
-          :tone="orderSide === 'buy' ? 'success' : 'danger'"
-          class="w-full mt-4 min-w-0"
-        >
-          <span class="block truncate">{{ getMainBtnText }}</span>
-        </app-base-button>
-        <app-base-button
-          v-if="activePosition && manageMode === 'close'"
-          :tone="orderSide === 'buy' ? 'success' : 'danger'"
-          :disabled="closeDisabled"
-          @click="showCloseConfirmation"
-          class="w-full mt-4 min-w-0"
-        >
-          <span class="block truncate">{{ closeButtonLabel }}</span>
-        </app-base-button>
-      </template>
+          <app-base-button
+            v-if="activePosition && manageMode === 'close'"
+            :tone="sideTone"
+            :disabled="closeDisabled"
+            class="w-full min-w-0"
+            @click="showCloseConfirmation"
+          >
+            <span class="block truncate">{{ closeButtonLabel }}</span>
+          </app-base-button>
+        </template>
+      </div>
     </div>
+
+    <app-need-help
+      :title="$t('perps.trade.need-help')"
+      :help-link="perpsHelpUrl"
+      variant="link"
+      class="mt-auto self-center pt-5"
+      :class="blockedClass"
+    />
 
     <!-- Order Confirmation Dialog -->
     <perps-order-confirmation-dialog
@@ -924,7 +624,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
@@ -936,9 +636,16 @@ import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppPicker from '@/components/picker/AppPicker.vue'
+import AppSegmentedControl from '@/components/segmented_control/AppSegmentedControl.vue'
+import type { SegmentItem } from '@/components/segmented_control/types'
+import AppSlider from '@/components/slider/AppSlider.vue'
+import AppInput from '@/components/AppInput.vue'
+import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
@@ -965,7 +672,7 @@ import {
 } from '@/analytics'
 
 const walletStore = useWalletStore()
-const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const { isWatchOnly } = storeToRefs(walletStore)
 const {
   showSigningPrompt,
   signingMessage,
@@ -1015,14 +722,9 @@ const connectWallet = () => {
   accessStore.openAccessDialog()
 }
 
-const onInputAmount = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  if (Number(target.value) < 0) target.value = '0'
-}
-
-const onCloseAmountInput = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  let val = parseFloat(target.value)
+const onCloseAmountChange = async (value: string) => {
+  closeAmount.value = value
+  const val = parseFloat(value)
   const maxVal = positionNotionalValue.value
   if (isNaN(val) || val <= 0) {
     closeAmount.value = ''
@@ -1030,11 +732,24 @@ const onCloseAmountInput = (e: Event) => {
     return
   }
   if (val > maxVal) {
-    val = maxVal
-    target.value = val.toFixed(2)
-    closeAmount.value = val.toFixed(2)
+    // Let the typed value render first: clamping straight back to the same max
+    // wouldn't change the model, and the input would keep the typed amount.
+    await nextTick()
+    closeAmount.value = maxVal.toFixed(2)
+    closeSliderValue.value = 100
+    return
   }
   closeSliderValue.value = maxVal > 0 ? (val / maxVal) * 100 : 0
+}
+
+const onCloseSliderChange = (value: number) => {
+  closeSliderValue.value = value
+  onCloseSliderInput()
+}
+
+const onSliderChange = (value: number) => {
+  sliderValue.value = value
+  onSliderInput()
 }
 
 const confirmAndSubmitAndSetLeverage = async () => {
@@ -1073,7 +788,6 @@ const {
   // Market info
   displaySymbol,
   currentPrice,
-  priceChange,
   // Order form
   orderSide,
   orderSideButtons,
@@ -1104,8 +818,6 @@ const {
   closeError,
   isClosing,
   showCloseConfirmModal,
-  isClosePillDisabled,
-  setClosePercentage,
   onCloseSliderInput,
   confirmAndClosePosition,
   showCloseConfirmation,
@@ -1132,7 +844,6 @@ const {
   isSubmitting,
   submitDisabled,
   submitButtonLabel,
-  limitPriceHasError,
   limitPriceOutOfTolerance,
   limitPricePrecisionError,
   marginPrecisionError,
@@ -1146,12 +857,10 @@ const {
   confirmAndSubmitOrder,
   newMarginRatio,
   // Slider
-  setPercentage,
   onSliderInput,
   setOrderType,
   limitPrice,
   activeLimitPill,
-  setLimitPricePct,
   // Market selector
   showMarketModal,
   marketSearch,
@@ -1250,13 +959,63 @@ const activeContract = computed(() =>
   contracts.value.find(c => c.market === fullMarketName.value),
 )
 
-const isLoading = computed(() => false)
+const logoUrl = computed(() => getLogoUrl(displaySymbol.value))
+const marketName = computed(() =>
+  activeContract.value ? getMarketDisplayName(activeContract.value) : '',
+)
 
-const selectedToken = computed(() => ({
-  logo_url: getLogoUrl(displaySymbol.value),
-  symbol: displaySymbol.value,
-  ondo: undefined,
-}))
+const sideTone = computed(() =>
+  orderSide.value === 'buy' ? 'success' : 'danger',
+)
+const orderSideItems = computed<SegmentItem<'buy' | 'sell'>[]>(() =>
+  orderSideButtons.value.map(({ label, value }) => ({
+    label,
+    value,
+    tone: value === 'buy' ? 'success' : 'danger',
+  })),
+)
+// Add / Close share the open position's side colour
+const manageModeItems = computed<SegmentItem<'add' | 'close'>[]>(() => [
+  { label: t('perps.trade.tab-add'), value: 'add', tone: sideTone.value },
+  { label: t('perps.trade.tab-close'), value: 'close', tone: sideTone.value },
+])
+const orderTypeLabel = computed(() =>
+  orderType.value === 'market'
+    ? t('perps.trade.market')
+    : t('perps.trade.limit'),
+)
+
+const formatPercent = (value: number) => `${+Number(value).toFixed(1)}%`
+
+const marginErrorMessage = computed(() => {
+  if (marginPrecisionError.value) return t('perps.errors.margin-precision')
+  const amount = Number(inputAmount.value || '0')
+  if (isNaN(amount)) return t('perps.errors.invalid-amount')
+  if (amount > availableMargin.value)
+    return t('perps.errors.insufficient-margin')
+  if (amount > 0 && positionSizeUsd.value < minOrderAmount.value)
+    return t('perps.errors.min-amount', {
+      amount: formatUsd(minOrderAmount.value),
+    })
+  return ''
+})
+
+const limitPriceErrorMessage = computed(() => {
+  const price = parseFloat(limitPrice.value)
+  if (!limitPrice.value || price === 0) return t('perps.errors.target-required')
+  if (isNaN(price) || price < 0) return t('perps.errors.invalid-price')
+  if (price >= 10000000)
+    return t('perps.errors.price-max', { max: '$10,000,000' })
+  if (limitPricePrecisionError.value)
+    return quoteDecimals.value === 0
+      ? t('perps.errors.price-whole')
+      : t('perps.errors.price-precision-decimals', {
+          decimals: quoteDecimals.value,
+          count: quoteDecimals.value,
+        })
+  if (limitPriceOutOfTolerance.value) return t('perps.errors.out-of-tolerance')
+  return undefined
+})
 
 const getMainBtnText = computed(() => {
   if (manageMode.value === 'close') {
