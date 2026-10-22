@@ -731,14 +731,11 @@ const { closeAccessDialog } = useAccessStore()
 // transport must then stay open for signing.
 let accessed = false
 
-// Leaving the flow (back to the wallet list, dialog closed): stop any pending or
-// in-flight load, and if we opened a Ledger transport without connecting a
-// wallet, release the USB/BLE interface so Ledger Live / another tab can claim
-// the device — unless a Ledger wallet from an earlier session is still
-// connected and signing over that same transport.
-onUnmounted(() => {
-  cancelScheduledLoad()
-  loadListGeneration++
+// If we opened a Ledger transport without connecting a wallet, release the
+// USB/BLE interface so Ledger Live / another tab can claim the device — unless
+// a Ledger wallet from an earlier session is still connected and signing over
+// that same transport.
+const releaseLedgerIfUnused = () => {
   if (
     ledgerTransportOpened &&
     !accessed &&
@@ -746,6 +743,14 @@ onUnmounted(() => {
   ) {
     void closeLedgerTransport()
   }
+}
+
+// Leaving the flow (back to the wallet list, dialog closed): stop any pending or
+// in-flight load and free the Ledger if nothing uses it.
+onUnmounted(() => {
+  cancelScheduledLoad()
+  loadListGeneration++
+  releaseLedgerIfUnused()
 })
 
 const access = async () => {
@@ -769,8 +774,10 @@ const access = async () => {
       WalletConfigType.HARDWARE,
     )
   } catch (e) {
-    // Not connected after all, so leaving the flow must still free the Ledger.
+    // Not connected after all, so leaving the flow must still free the Ledger;
+    // if it was already left while connecting, the unmount skipped that.
     accessed = false
+    if (isUnmounted) releaseLedgerIfUnused()
     const errorMessage = e instanceof Error ? e.message : String(e)
     toastStore.addToastMessage({
       type: ToastType.Error,

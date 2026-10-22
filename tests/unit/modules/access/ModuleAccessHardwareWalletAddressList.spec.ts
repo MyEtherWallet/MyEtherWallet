@@ -428,6 +428,24 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
   })
 
+  it('releases the Ledger when connecting fails after the flow was already left', async () => {
+    let failConnect: (e: Error) => void = () => {}
+    h.setWallet.mockImplementationOnce(
+      () => new Promise<undefined>((_, reject) => (failConnect = reject)),
+    )
+    const w = factory()
+    await connect(w)
+    await w.get('button').trigger('click')
+    await settle()
+    // Still connecting, so unmounting must keep the transport for the wallet.
+    w.unmount()
+    expect(h.closeLedgerTransport).not.toHaveBeenCalled()
+
+    failConnect(new Error('getAddress failed'))
+    await settle()
+    expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
+  })
+
   it('releases the Ledger transport when the flow is left without connecting a wallet, but not after access', async () => {
     const w = factory()
     await connect(w)
