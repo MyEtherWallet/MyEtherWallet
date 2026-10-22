@@ -60,8 +60,22 @@
           transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
         }"
       >
-        <div ref="contentRef" class="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
-          <div v-if="currentView === 'default'" class="flex flex-col gap-4">
+        <!-- The chooser is capped at the room left under the title (the dialog's
+             max height minus the 56px / sm 64px title), so only the wallet grid
+             shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
+        <div
+          ref="contentRef"
+          data-testid="access-content"
+          class="flex flex-col px-4 pb-4 pt-4 sm:px-6 sm:pb-6"
+          :class="
+            currentView === 'default' &&
+            'mew-scrollbar overflow-y-auto max-h-[calc(min(95vh,100dvh_-_32px)_-_56px)] xs:max-h-[calc(min(95vh,100dvh_-_48px)_-_56px)] sm:max-h-[calc(90vh_-_136px)]'
+          "
+        >
+          <div
+            v-if="currentView === 'default'"
+            class="flex min-h-0 flex-col gap-4"
+          >
             <NetworkChips :selected="selectedChain" @select="updateChain" />
             <WalletTabs />
             <div class="flex flex-col gap-4 pt-2">

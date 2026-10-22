@@ -129,11 +129,13 @@ describe('WalletTabs', () => {
     )
   })
 
-  it('makes the wallet grid the only scrolling area', () => {
+  it('lets the wallet grid shrink and scroll inside the chooser column', () => {
     const w = mountTabs()
+    // `contents` hands tabs, search and grid to the chooser's flex column.
+    expect(w.classes()).toContain('contents')
     const grid = w.get('[data-testid="wallet-grid"]')
     expect(grid.classes()).toContain('overflow-y-auto')
-    expect(grid.classes().some(c => c.startsWith('max-h-'))).toBe(true)
+    expect(grid.classes()).toContain('min-h-[136px]')
   })
 
   it('keeps each tab list intact when connectors share an id', async () => {

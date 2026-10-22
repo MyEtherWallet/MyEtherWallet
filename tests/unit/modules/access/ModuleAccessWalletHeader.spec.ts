@@ -127,6 +127,18 @@ describe('ModuleAccessWallet header', () => {
     expect(title(w)).toBe('connect_wallet')
   })
 
+  it('caps the chooser under the title so only the wallet grid scrolls', () => {
+    const content = (w: VueWrapper) => w.get('[data-testid="access-content"]')
+    let w = mountAt('default')
+    expect(content(w).classes()).toContain('overflow-y-auto')
+    expect(content(w).classes().some(c => c.startsWith('max-h-'))).toBe(true)
+    w.unmount()
+    // Other steps scroll in the dialog itself, which their sticky footers need.
+    w = mountAt('keystore')
+    expect(content(w).classes()).not.toContain('overflow-y-auto')
+    expect(content(w).classes().some(c => c.startsWith('max-h-'))).toBe(false)
+  })
+
   it('goes back from sign-up to the chooser', async () => {
     const w = mountAt('sign_up')
     expect(title(w)).toBe('connect_wallet')
