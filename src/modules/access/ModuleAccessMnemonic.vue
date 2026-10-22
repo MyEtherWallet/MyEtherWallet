@@ -91,11 +91,14 @@
           </template>
         </AccessDropdown>
       </div>
+      <!-- While a chain / path change waits for the debounced re-derive, the rows
+           still belong to the old chain, so show skeletons instead of the old
+           balances under the new chain's currency. -->
       <AccessAddressList
         v-model="selectedIndex"
-        :entries="walletList"
-        :is-loading="isLoadingWalletList"
-        :balances-error="balancesError"
+        :entries="derivationPending ? [] : walletList"
+        :is-loading="isLoadingWalletList || derivationPending"
+        :balances-error="balancesError && !derivationPending"
         :currency="selectedChain?.currencyName"
         @show-more="loadAddresses(false)"
         @retry="retryBalances"

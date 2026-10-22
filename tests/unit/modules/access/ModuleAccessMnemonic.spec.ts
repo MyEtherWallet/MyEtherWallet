@@ -347,6 +347,31 @@ describe('ModuleAccessMnemonic', () => {
     ).toBeUndefined()
   })
 
+  it("hides the old chain's rows while the re-derive is pending", async () => {
+    vi.useFakeTimers()
+    const w = mountIt()
+    await toStep2(w)
+    expect(w.text()).toContain('0.42 ETH')
+    selectedChain.value = {
+      name: 'MATIC',
+      nameLong: 'Polygon',
+      type: 'EVM',
+      chainID: '137',
+      currencyName: 'POL',
+    }
+    await flushPromises() // debounce still pending
+    // Skeletons, not the Ethereum balances relabelled as POL.
+    expect(rows(w)).toHaveLength(0)
+    expect(
+      w.findAll('[data-testid="address-skeleton"]').length,
+    ).toBeGreaterThan(0)
+    expect(w.text()).not.toContain('0.42 POL')
+    await vi.advanceTimersByTimeAsync(600)
+    await flushPromises()
+    expect(rows(w)).toHaveLength(5)
+    expect(w.text()).toContain('0.42 POL')
+  })
+
   it('builds the Bitcoin wallet for a non-EVM chain, as before', async () => {
     selectedChain.value = {
       name: 'SOLANA',

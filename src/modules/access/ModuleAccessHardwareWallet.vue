@@ -435,15 +435,21 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
   }
 }
 
-const connectViaUSB = async () => {
-  if (!(await openTransport(getLedgerWebUSBTransport))) return
-  return unlockWallet()
+// One Ledger connect at a time (MEW-2523, Sentry APP-MEW-WEB-1QE): a second
+// click while the transport was opening started another flow whose transport
+// open released the one the first flow was using. Keep the button busy from
+// the transport open on; unlockWallet takes the flag over in the same tick, so
+// no click gets in between.
+const connectLedger = async (getTransport: () => Promise<unknown>) => {
+  if (connectingWallet.value) return
+  connectingWallet.value = true
+  const opened = await openTransport(getTransport)
+  connectingWallet.value = false
+  if (opened) await unlockWallet()
 }
 
-const connectViaBluetooth = async () => {
-  if (!(await openTransport(getLedgerBLETransport))) return
-  return unlockWallet()
-}
+const connectViaUSB = () => connectLedger(getLedgerWebUSBTransport)
+const connectViaBluetooth = () => connectLedger(getLedgerBLETransport)
 
 /**------------------------
  *  Wallet List
@@ -479,6 +485,11 @@ const scheduleLoadList = () => {
   cancelScheduledLoad()
   loadListGeneration++
   isLoadingWalletList.value = true
+  // Drop the previous chain's / path's rows now: the list only shows skeletons
+  // while empty, and the old balances would otherwise sit under the new chain's
+  // currency until the device settles.
+  walletList.value = []
+  balancesError.value = false
   scheduledLoad = setTimeout(() => {
     scheduledLoad = null
     void loadList()
@@ -628,6 +639,11 @@ watch(
     loadListGeneration++
     cancelScheduledLoad()
     isLoadingWalletList.value = true
+    // The rows belong to the old chain: drop them before the app switch (~6s on
+    // Ledger) rather than showing their balances under the new currency, and so
+    // nothing stays connectable against the wrong chain if the switch fails.
+    walletList.value = []
+    balancesError.value = false
     suppressPathWatcher = true
     hwWalletInstance = createHwManager()
     const networkName = chainToEnum[newValue.name as string] as NetworkNames
@@ -744,6 +760,18 @@ const releaseLedgerIfUnused = () => {
     void closeLedgerTransport()
   }
 }
+
+// Header Back (address step → connect step) starts over, like keystore and
+// phrase: stop the pending or in-flight load so it doesn't keep reading the
+// device under the next connect, and clear the list the next connect rebuilds.
+watch(accessStep, step => {
+  if (step !== 1) return
+  cancelScheduledLoad()
+  loadListGeneration++
+  walletList.value = []
+  balancesError.value = false
+  isLoadingWalletList.value = true
+})
 
 // Leaving the flow (back to the wallet list, dialog closed): stop any pending or
 // in-flight load and free the Ledger if nothing uses it.

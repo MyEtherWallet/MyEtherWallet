@@ -465,3 +465,50 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(h.closeLedgerTransport).not.toHaveBeenCalled()
   })
 })
+
+describe('ModuleAccessHardwareWallet — stale rows never outlive their chain or step', () => {
+  it('Back to the connect step stops the load in flight, clears the list, and the next connect loads once', async () => {
+    const w = factory()
+    await connect(w)
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('entries')).toHaveLength(5)
+
+    list.vm.$emit('show-more') // page 2 in flight
+    h.store.accessStep.value = 1 // header Back
+    await settle()
+
+    // Back shows the connect step; the stale page never fetched balances.
+    expect(w.findComponent(AccessAddressList).exists()).toBe(false)
+    expect(h.fetchNativeBalances).toHaveBeenCalledTimes(1)
+
+    await connect(w)
+    expect(h.store.accessStep.value).toBe(2)
+    expect(h.fetchNativeBalances).toHaveBeenCalledTimes(2)
+    // A fresh first page only: nothing from the stale list or its page 2 survived.
+    expect(
+      w
+        .findComponent(AccessAddressList)
+        .props('entries')
+        .map((e: { index: number }) => e.index),
+    ).toEqual([0, 1, 2, 3, 4])
+  })
+
+  it('a chain switch drops the old rows while the device settles, instead of showing them under the new currency', async () => {
+    const w = factory()
+    await connect(w)
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('entries')).toHaveLength(5)
+
+    h.supportedPaths = BTC_PATHS
+    h.store.selectedChain.value = BTC_CHAIN
+    await settle() // chain watcher ran; the reload is scheduled, not run
+
+    expect(list.props('entries')).toHaveLength(0)
+    expect(list.props('isLoading')).toBe(true)
+
+    await vi.advanceTimersByTimeAsync(1000)
+    await settle()
+    expect(list.props('entries')).toHaveLength(5)
+    expect(list.props('isLoading')).toBe(false)
+  })
+})
