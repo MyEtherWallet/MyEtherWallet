@@ -28,7 +28,10 @@ vi.mock('@/modules/access/composables/useConnectWallet', () => ({
   useConnectWallet: () => ({ connect }),
 }))
 
-const route = reactive<{ query: Record<string, unknown> }>({ query: {} })
+const route = reactive<{
+  query: Record<string, unknown>
+  meta: Record<string, unknown>
+}>({ query: {}, meta: {} })
 const replace = vi.fn(({ query }: { query: Record<string, unknown> }) => {
   route.query = query
 })
@@ -68,6 +71,7 @@ const mountTabs = () => {
 }
 beforeEach(() => {
   route.query = { type: 'default' }
+  route.meta = { walletFlow: 'access' }
   replace.mockClear()
 })
 afterEach(() => wrapper?.unmount())
@@ -111,6 +115,14 @@ describe('WalletTabs', () => {
     expect(replace).toHaveBeenLastCalledWith({
       query: { type: 'default', walletTab: 'hardware' },
     })
+  })
+
+  it('leaves the URL alone while the access overlay route is not active yet', async () => {
+    // e.g. the chooser opened from the home page and its navigation is in flight
+    route.meta = {}
+    const w = mountTabs()
+    await w.findAll('[role="tab"]')[1].trigger('click')
+    expect(replace).not.toHaveBeenCalled()
   })
 
   it('restores the tab from the URL when coming back from another step', () => {

@@ -59,7 +59,9 @@ const { walletsForTab } = useWalletList()
 const { connect } = useConnectWallet()
 
 // The tab lives in the URL (?walletTab=) so coming back from a connect step
-// (Ledger, keystore, …) restores it; closing the overlay drops it.
+// (Ledger, keystore, …) restores it; closing the overlay drops it. Like the
+// network pills, only write it on the overlay's own route: a replace on the
+// host page would cancel the navigation that opens the overlay.
 const route = useRoute()
 const router = useRouter()
 const isWalletTab = (value: unknown): value is WalletTab =>
@@ -68,6 +70,7 @@ const tab = computed<WalletTab>({
   get: () =>
     isWalletTab(route.query.walletTab) ? route.query.walletTab : 'popular',
   set: walletTab => {
+    if (route.meta.walletFlow !== 'access') return
     void router.replace({ query: { ...route.query, walletTab } })
   },
 })
