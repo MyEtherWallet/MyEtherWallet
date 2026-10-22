@@ -59,19 +59,21 @@
 
     <div
       v-if="balanceLoading || balance"
+      translate="no"
       class="text-right flex-shrink-0 text-s-14"
       :class="isActive ? 'text-black' : 'text-text-subtle'"
     >
       <!-- Active row skeletons whenever loading (stale-safe on switch); other rows
-           show their cached balance and only skeleton when none exists yet. -->
-      <template v-if="balanceLoading && (isActive || !balance)">
-        <span
-          class="inline-block w-12 h-3 bg-background-default-hover animate-pulse rounded"
-        />
-      </template>
-      <template v-else-if="balance"
-        >${{ formatFiat(balance.usdValue) }}</template
-      >
+           show their cached balance and only skeleton when none exists yet.
+           v-show, not v-if: a browser translator rewrites this text, and a v-if
+           swap on the detached nodes then crashed Vue (APP-MEW-WEB-1QC). -->
+      <span
+        v-show="showSkeleton"
+        class="inline-block w-12 h-3 bg-background-default-hover animate-pulse rounded"
+      />
+      <span v-show="!showSkeleton">{{
+        balance ? `$${formatFiat(balance.usdValue)}` : ''
+      }}</span>
     </div>
 
     <app-pop-up-menu
@@ -140,6 +142,9 @@ const emit = defineEmits<{
 // lazily (re)fetch its balance. No rootMargin: only rows actually in the viewport
 // count as visible, so we never fetch/poll rows that are off-screen.
 const rowRef = ref<HTMLElement | null>(null)
+const showSkeleton = computed(
+  () => !!props.balanceLoading && (props.isActive || !props.balance),
+)
 const scrollRootRef = computed(() => props.scrollRoot ?? undefined)
 useIntersectionObserver(
   rowRef,

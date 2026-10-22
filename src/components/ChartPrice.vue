@@ -218,6 +218,12 @@ const getFormat = (): Intl.DateTimeFormatOptions => {
 }
 const plugins = [
   {
+    // The destroy delay keeps the chart alive after its canvas is gone, and
+    // Chart.js clears dataset metas on detach. Skip queued events (APP-MEW-WEB-1NE).
+    id: 'ignoreDetachedEvents',
+    beforeEvent: (chart: Chart) => chart.attached,
+  },
+  {
     id: 'verticalLine',
     afterDraw: (chart: any) => {
       if (chart.tooltip?.opacity > 0) {
