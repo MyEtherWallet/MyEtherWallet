@@ -1,0 +1,49 @@
+{
+  "create_wallet": {
+    "title": "Create Wallet",
+    "subtitle": "MEW доступен на мобильных устройствах и в вашем браузере на компьютере.",
+    "back_to_connect_options": "Back to connect options",
+    "buy_hardware_wallet_title": "Buy a Hardware Wallet",
+    "create_mnemonic_wallet_title": "Create a Mnemonic Wallet",
+    "recommended": "Recommended",
+    "not_recommended": "Not recommended",
+    "mew_mobile_app": "Мобильное приложение MEW",
+    "ratings_count": "13k+ ratings",
+    "scan_to_download": "Сканировать для загрузки",
+    "google_play_alt": "Google Play Store download",
+    "apple_store_alt": "Apple App Store download",
+    "enkrypt_browser_wallet": "Браузерный кошелек Enkrypt",
+    "enkrypt_users_count": "100,000+ users",
+    "get_enkrypt": "Загрузить браузерный кошелек Enkrypt",
+    "other_wallet_methods": "Other wallet methods",
+    "hardware_wallet": "Hardware Wallet",
+    "hardware_wallet_alt": "hardware wallet",
+    "hardware_wallet_description": "The highest standard of security. Order a device online and use it with MEW.",
+    "buy_hardware_wallet": "Купить аппаратный кошелек",
+    "software_wallet": "Software Wallet",
+    "software_wallet_alt": "software wallet",
+    "software_wallet_description": "Create a wallet using a recovery phrase. Use only in offline settings.",
+    "create_software_wallet": "Создать программный кошелек",
+    "starting_from": "Starting from",
+    "select_keystore": "Select Keystore",
+    "connect": "Connect",
+    "mnemonic": {
+      "select_length": "Select length",
+      "update": "Update",
+      "word_option": "{count} words",
+      "select_word": "Select Word #{number}",
+      "create_another_wallet": "Create another wallet",
+      "stepper": {
+        "create": "create",
+        "verify": "verify",
+        "done": "done"
+      },
+      "step1_title": "Your phrase",
+      "step1_description": "Write down your recovery phrase and keep it somewhere secure. Do not email it or take screenshots.",
+      "step2_title": "Let's double check it",
+      "step2_description": "Please select correct words based on their numbers.",
+      "step3_title": "All Done",
+      "step3_description": "You are now ready to take advantage of all that Ethereum has to offer! Please store your phrase in a secure place, access with mnemonic phrase should only be used in an offline setting."
+    }
+  }
+}
