@@ -323,6 +323,30 @@ describe('ModuleAccessMnemonic', () => {
     ).toBeUndefined()
   })
 
+  it('rebuilds the wallet for the new chain id when the EVM network changes', async () => {
+    vi.useFakeTimers()
+    const w = mountIt()
+    await toStep2(w)
+    expect(built.evm.at(-1)).toMatchObject({ chainId: '1' })
+    selectedChain.value = {
+      name: 'MATIC',
+      nameLong: 'Polygon',
+      type: 'EVM',
+      chainID: '137',
+      currencyName: 'POL',
+    }
+    await vi.advanceTimersByTimeAsync(600)
+    await flushPromises()
+    // Same path, but the signer has to carry Polygon's chain id.
+    expect(built.evm.at(-1)).toMatchObject({
+      chainId: '137',
+      basePath: "m/44'/60'/0'/0",
+    })
+    expect(
+      w.get('[data-testid="phrase-connect"]').attributes('disabled'),
+    ).toBeUndefined()
+  })
+
   it('builds the Bitcoin wallet for a non-EVM chain, as before', async () => {
     selectedChain.value = {
       name: 'SOLANA',

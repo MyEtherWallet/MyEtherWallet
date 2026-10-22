@@ -342,12 +342,10 @@ watchDebounced(
       unlockWallet() // new derivation path → rebuild the wallet
     } else if (chainName !== oldChainName) {
       syncPathToChain()
-      // Same family keeps the path, so only balances change; a family switch
-      // changed the path above and the next run of this watcher rebuilds.
-      if (selectedDerivation.value?.path === builtFor.value.path) {
-        builtFor.value = { ...builtFor.value, chain: chainName ?? '' }
-        loadAddresses(true)
-      }
+      // A family switch changed the path above and the next run of this watcher
+      // rebuilds. The same family keeps the path and addresses, but the wallet
+      // signs with the chain id it was built for, so rebuild it too.
+      if (selectedDerivation.value?.path === builtFor.value.path) unlockWallet()
     }
   },
   { debounce: 500 },
