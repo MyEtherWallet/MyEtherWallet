@@ -90,6 +90,33 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
     expect(unnamed).toContain('$130.23')
   })
 
+  it('truncates names of 18+ characters to 17 and an ellipsis, keeping the full name', () => {
+    const longName = 'My very long account name for the long weekend'
+    const wrapper = mountSelector({ name: longName })
+    const label = wrapper.get('[data-test="address-selector-label"]')
+    expect(label.text()).toBe('My very long acco…')
+    expect(label.attributes('title')).toBe(longName)
+    expect(button(wrapper).attributes('aria-label')).toContain(longName)
+
+    const atLimit = mountSelector({ name: '12345678901234567' }).get(
+      '[data-test="address-selector-label"]',
+    )
+    expect(atLimit.text()).toBe('12345678901234567')
+    expect(atLimit.attributes('title')).toBeUndefined()
+
+    expect(
+      mountSelector({ name: '123456789012345678' })
+        .get('[data-test="address-selector-label"]')
+        .text(),
+    ).toBe('12345678901234567…')
+  })
+
+  it('never truncates the shortened address', () => {
+    expect(
+      mountSelector().get('[data-test="address-selector-label"]').text(),
+    ).toBe('0x32Be...2D88')
+  })
+
   it('shows the connected dot, or the eye when watch-only', () => {
     const connected = mountSelector()
     expect(

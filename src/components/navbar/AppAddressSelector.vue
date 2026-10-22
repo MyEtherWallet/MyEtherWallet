@@ -50,6 +50,19 @@ const accountLabel = computed(
   () => props.name || truncateAddress(props.address, 6, 4),
 )
 
+// Design review: names of 18+ characters show their first 17 and an ellipsis,
+// so the pill doesn't stretch the navbar. Counted by code point (emoji-safe).
+const NAME_TRUNCATE_LENGTH = 18
+const visibleLabel = computed(() => {
+  const characters = Array.from(props.name ?? '')
+  return characters.length >= NAME_TRUNCATE_LENGTH
+    ? `${characters.slice(0, NAME_TRUNCATE_LENGTH - 1).join('')}…`
+    : accountLabel.value
+})
+const isLabelTruncated = computed(
+  () => visibleLabel.value !== accountLabel.value,
+)
+
 const ariaLabel = computed(() =>
   props.address
     ? [
@@ -107,8 +120,12 @@ const ariaLabel = computed(() =>
         </span>
         <span class="flex items-center gap-1">
           <!-- 10/12 per Figma; the type scale has no 10px style. -->
-          <span class="text-[10px] leading-3 text-text-subtle">
-            {{ accountLabel }}
+          <span
+            data-test="address-selector-label"
+            class="text-[10px] leading-3 text-text-subtle"
+            :title="isLabelTruncated ? accountLabel : undefined"
+          >
+            {{ visibleLabel }}
           </span>
           <AccountConnectedDot
             v-if="connected"
