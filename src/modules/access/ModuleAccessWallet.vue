@@ -6,10 +6,10 @@
       dialogWidth,
       // Pin the top so switching network/tab/search grows the modal downward
       // instead of re-centering it. At full height the bottom gap matches the
-      // top one: the container padding (16/24px), plus 10vh from sm, so the
-      // sm cap is 100vh - 2 * (36px + 10vh).
+      // top one: the container padding (16 / xs 24 / sm 36px) plus 5dvh, or
+      // 10vh from sm, so the cap is 100dvh - 2 * (padding + offset).
       isNewView
-        ? 'self-start sm:mt-[10vh] sm:max-h-[calc(80vh-72px)]'
+        ? 'self-start mt-[5dvh] max-h-[calc(90dvh-32px)] xs:max-h-[calc(90dvh-48px)] sm:mt-[10vh] sm:max-h-[calc(80vh-72px)]'
         : 'max-h-[95vh]',
     ]"
     :bg="isNewView ? 'bg-white' : 'bg-background-default'"
@@ -73,7 +73,7 @@
           class="flex flex-col px-4 pb-4 pt-4 sm:px-6 sm:pb-6"
           :class="
             currentView === 'default' &&
-            'mew-scrollbar overflow-y-auto max-h-[calc(100dvh_-_88px)] xs:max-h-[calc(100dvh_-_104px)] sm:max-h-[calc(80vh_-_136px)]'
+            'mew-scrollbar overflow-y-auto max-h-[calc(90dvh_-_88px)] xs:max-h-[calc(90dvh_-_104px)] sm:max-h-[calc(80vh_-_136px)]'
           "
         >
           <div
