@@ -351,6 +351,21 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(list.props('entries')[0].balance).toBe('1000000000000000000')
   })
 
+  it('keeps the balances error after "Show more" loads the next page fine', async () => {
+    h.fetchNativeBalances.mockRejectedValueOnce(new Error('429'))
+    const w = factory()
+    await connect(w)
+    const list = w.findComponent(AccessAddressList)
+    expect(list.props('balancesError')).toBe(true)
+
+    list.vm.$emit('show-more')
+    await settle()
+
+    // The first five still have no balance, so the retry link has to stay.
+    expect(list.props('entries')).toHaveLength(10)
+    expect(list.props('balancesError')).toBe(true)
+  })
+
   it('"Show more" appends the next five addresses and keeps the selection', async () => {
     const w = factory()
     await connect(w)

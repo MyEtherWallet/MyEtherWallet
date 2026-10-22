@@ -586,7 +586,8 @@ const loadList = async (append = false) => {
       balancesFailed = true
     }
     if (isStale()) return
-    balancesError.value = balancesFailed
+    // "Show more" only fetches the new page, so an earlier failure still stands.
+    balancesError.value = (append && balancesError.value) || balancesFailed
     walletList.value = append ? [...walletList.value, ...entries] : entries
     if (!append && entries.length > 0) selectedIndex.value = entries[0].index
   } catch (e) {

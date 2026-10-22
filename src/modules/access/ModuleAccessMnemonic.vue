@@ -287,7 +287,10 @@ const loadBalances = async (entries: SelectAddress[]) => {
         balance: raw === undefined ? '0' : formatNativeBalance(raw, chain.type),
       }
     })
-    balancesError.value = false
+    // A "Show more" page doesn't cover the earlier rows, so it can't clear their error.
+    if (walletList.value.every(entry => indexes.has(entry.index))) {
+      balancesError.value = false
+    }
   } catch {
     // Addresses stay connectable without balances (e.g. a rate-limited endpoint).
     if (generation === listGeneration) balancesError.value = true

@@ -235,6 +235,16 @@ describe('ModuleAccessMnemonic', () => {
     expect(w.text()).toContain('0.42 ETH')
   })
 
+  it('keeps the balances error after "Show more" loads the next page fine', async () => {
+    h.fetchNativeBalances.mockRejectedValueOnce(new Error('429'))
+    const w = mountIt()
+    await toStep2(w)
+    await w.get('[data-testid="show-more"]').trigger('click')
+    await flushPromises()
+    expect(rows(w)).toHaveLength(10)
+    expect(w.find('[data-testid="balances-error"]').exists()).toBe(true)
+  })
+
   it('connects the selected address', async () => {
     const w = mountIt()
     await toStep2(w)
