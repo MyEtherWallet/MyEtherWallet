@@ -204,9 +204,9 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
 
       <AppSearchbar
         v-model="query"
+        variant="default"
         :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-        bg-class="bg-white"
-        class="mt-5 shrink-0 rounded-full border border-border-default"
+        class="mt-5 shrink-0"
       />
 
       <!-- Token list: caps at a fraction of the viewport and scrolls inside that

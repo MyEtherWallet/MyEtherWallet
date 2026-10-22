@@ -12,8 +12,7 @@
       >
         <app-searchbar
           v-model="searchInput"
-          bg-class="bg-background-default"
-          size="compact"
+          variant="default"
           :placeholder="$t('crypto.search')"
           class="w-full xs:w-60 shrink-0"
         />

@@ -6,15 +6,11 @@
       <div
         class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"
       >
-        <div
-          class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
-        >
-          <app-searchbar
-            bg-class="bg-background-alternative"
-            v-model="searchInput"
-            class="grow"
-          />
-        </div>
+        <app-searchbar
+          v-model="searchInput"
+          variant="outline"
+          class="grow w-full xs:max-w-[500px]"
+        />
         <app-pop-up-menu
           v-if="view !== 'watchlist'"
           :placeholder="$t('common.action_menu')"
