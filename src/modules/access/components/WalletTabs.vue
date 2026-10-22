@@ -19,11 +19,12 @@
       </template>
     </AppInput>
     <!-- Only the wallet grid scrolls; network chips, tabs, search and the
-         download footer keep their size (see ModuleAccessWallet). -->
+         download footer keep their size (see ModuleAccessWallet). It shrinks
+         down to one 64px card row before the whole chooser has to scroll. -->
     <div
       v-if="wallets.length"
       data-testid="wallet-grid"
-      class="mew-scrollbar -mx-1 grid min-h-[136px] grid-cols-1 content-start gap-3 overflow-y-auto px-1 xs:grid-cols-2"
+      class="mew-scrollbar -mx-1 grid min-h-16 grid-cols-1 content-start gap-3 overflow-y-auto px-1 xs:grid-cols-2"
     >
       <!-- Keyed by name: connector ids repeat (injected / WalletConnect-based
            wallets), while each tab list is already unique by name. -->

@@ -135,7 +135,7 @@ describe('WalletTabs', () => {
     expect(w.classes()).toContain('contents')
     const grid = w.get('[data-testid="wallet-grid"]')
     expect(grid.classes()).toContain('overflow-y-auto')
-    expect(grid.classes()).toContain('min-h-[136px]')
+    expect(grid.classes()).toContain('min-h-16')
   })
 
   it('keeps each tab list intact when connectors share an id', async () => {

@@ -2,11 +2,15 @@
   <app-dialog
     v-model:is-open="bigDialogOpen"
     :class="[
-      'w-full max-h-[95vh]',
+      'w-full',
       dialogWidth,
       // Pin the top so switching network/tab/search grows the modal downward
-      // instead of re-centering it. 36px container padding + 10vh offset.
-      isNewView && 'self-start sm:mt-[10vh] sm:max-h-[calc(90vh-72px)]',
+      // instead of re-centering it. At full height the bottom gap matches the
+      // top one: the container padding (16/24px), plus 10vh from sm, so the
+      // sm cap is 100vh - 2 * (36px + 10vh).
+      isNewView
+        ? 'self-start sm:mt-[10vh] sm:max-h-[calc(80vh-72px)]'
+        : 'max-h-[95vh]',
     ]"
     :bg="isNewView ? 'bg-white' : 'bg-background-default'"
     :has-title-underline="!isNewView"
@@ -61,15 +65,15 @@
         }"
       >
         <!-- The chooser is capped at the room left under the title (the dialog's
-             max height minus the 56px / sm 64px title), so only the wallet grid
-             shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
+             max height above minus the 56px / sm 64px title), so only the wallet
+             grid shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
         <div
           ref="contentRef"
           data-testid="access-content"
           class="flex flex-col px-4 pb-4 pt-4 sm:px-6 sm:pb-6"
           :class="
             currentView === 'default' &&
-            'mew-scrollbar overflow-y-auto max-h-[calc(min(95vh,100dvh_-_32px)_-_56px)] xs:max-h-[calc(min(95vh,100dvh_-_48px)_-_56px)] sm:max-h-[calc(90vh_-_136px)]'
+            'mew-scrollbar overflow-y-auto max-h-[calc(100dvh_-_88px)] xs:max-h-[calc(100dvh_-_104px)] sm:max-h-[calc(80vh_-_136px)]'
           "
         >
           <div
