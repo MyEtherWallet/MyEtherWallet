@@ -760,14 +760,29 @@ const access = async () => {
   if (!wallet) return
   isUnlockingWallet.value = true
   accessed = true
-
-  setWallet(
-    markRaw(wallet as EvmHardwareWallet) as WalletInterface,
-    walletConfig.value?.name || 'hardware',
-    WalletConfigType.HARDWARE,
-  )
+  try {
+    // Await so a getAddress()/restriction failure is toasted here instead of
+    // closing the dialog with no wallet (MEW-2185).
+    await setWallet(
+      markRaw(wallet as EvmHardwareWallet) as WalletInterface,
+      walletConfig.value?.name || 'hardware',
+      WalletConfigType.HARDWARE,
+    )
+  } catch (e) {
+    // Not connected after all, so leaving the flow must still free the Ledger.
+    accessed = false
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('error_connecting'),
+      textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
+    })
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    return
+  } finally {
+    isUnlockingWallet.value = false
+  }
   addWallet(walletConfig.value as WalletConfig)
-  isUnlockingWallet.value = false
   hwWalletInstance = null
   setSelectedChainGlobalStore(selectedChain.value?.name || '')
   analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {

@@ -155,7 +155,14 @@ import {
   formatNativeBalance,
 } from '@/composables/useNativeBalances'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import { useI18n } from 'vue-i18n'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
+const { t } = useI18n()
+const { addToastMessage } = useToastStore()
 const accessStore = useAccessStore()
 const { selectedChain, accessStep } = storeToRefs(accessStore)
 const { chains } = storeToRefs(useChainsStore())
@@ -367,7 +374,9 @@ const access = async () => {
   try {
     const instance = await wallet.value?.getWallet(selectedIndex.value)
     if (instance) {
-      setWallet(instance, 'mnemonic', walletConfigs.mnemonic.type[0])
+      // Await so a getAddress()/restriction failure is toasted below instead of
+      // closing the dialog with no wallet (MEW-2185).
+      await setWallet(instance, 'mnemonic', walletConfigs.mnemonic.type[0])
       addWallet(walletConfigs.mnemonic)
     }
     setSelectedNetwork(selectedChain.value?.name || '')
@@ -377,6 +386,13 @@ const access = async () => {
       network: selectedChain.value?.name,
     })
     accessStore.closeAccessDialog()
+  } catch (error) {
+    addToastMessage({
+      type: ToastType.Error,
+      text: t('common.something_went_wrong'),
+      textSecondary: error instanceof Error ? error.message : String(error),
+    })
+    captureException(error, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
     isUnlockingWallet.value = false
   }

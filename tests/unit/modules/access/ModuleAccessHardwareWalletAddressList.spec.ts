@@ -60,6 +60,7 @@ const h = vi.hoisted(() => ({
   closeLedgerTransport: vi.fn(async () => undefined),
   getLedgerWebUSBTransport: vi.fn(async () => ({})),
   setWallet: vi.fn(async () => undefined),
+  closeAccessDialog: vi.fn(),
   addToastMessage: vi.fn(),
   captureException: vi.fn(),
   // reactive store state, filled in by the async mock factories below
@@ -121,7 +122,7 @@ vi.mock('@/stores/accessStore', async () => {
       isEvmChain: computed(() => selectedChain.value?.type === 'EVM'),
       setSelectedChain: (c: Record<string, unknown>) =>
         (selectedChain.value = c),
-      closeAccessDialog: vi.fn(),
+      closeAccessDialog: h.closeAccessDialog,
     }),
   }
 })
@@ -412,6 +413,19 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
       name: 'BITCOIN',
       type: 'BITCOIN',
     })
+  })
+
+  it('stays on the address step, toasts and still releases the Ledger when connecting fails', async () => {
+    h.setWallet.mockRejectedValueOnce(new Error('getAddress failed'))
+    h.closeAccessDialog.mockClear()
+    const w = factory()
+    await connect(w)
+    await w.get('button').trigger('click')
+    await settle()
+    expect(h.closeAccessDialog).not.toHaveBeenCalled()
+    expect(h.addToastMessage).toHaveBeenCalledTimes(1)
+    w.unmount()
+    expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
   })
 
   it('releases the Ledger transport when the flow is left without connecting a wallet, but not after access', async () => {

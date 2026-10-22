@@ -22,6 +22,8 @@ const h = vi.hoisted(() => ({
   fetchNativeBalances: vi.fn(),
   track: vi.fn(),
   getWallet: vi.fn(),
+  addToastMessage: vi.fn(),
+  captureException: vi.fn(),
 }))
 const built = vi.hoisted(() => ({
   evm: [] as Record<string, unknown>[],
@@ -63,6 +65,10 @@ vi.mock('@/stores/chainsStore', () => ({
 vi.mock('@/stores/walletStore', () => ({
   useWalletStore: () => ({ setWallet: h.setWallet }),
 }))
+vi.mock('@/stores/toastStore', () => ({
+  useToastStore: () => ({ addToastMessage: h.addToastMessage }),
+}))
+vi.mock('@sentry/vue', () => ({ captureException: h.captureException }))
 vi.mock('@/stores/recentWalletsStore', () => ({
   useRecentWalletsStore: () => ({ addWallet: h.addWallet }),
 }))
@@ -254,6 +260,16 @@ describe('ModuleAccessMnemonic', () => {
     expect(h.getWallet).toHaveBeenLastCalledWith(2)
     expect(h.setWallet).toHaveBeenCalledTimes(1)
     expect(h.closeAccessDialog).toHaveBeenCalled()
+  })
+
+  it('keeps the dialog open and toasts when the wallet fails to connect', async () => {
+    h.setWallet.mockRejectedValue(new Error('getAddress failed'))
+    const w = mountIt()
+    await toStep2(w)
+    await w.get('[data-testid="phrase-connect"]').trigger('click')
+    await flushPromises()
+    expect(h.closeAccessDialog).not.toHaveBeenCalled()
+    expect(h.addToastMessage).toHaveBeenCalledTimes(1)
   })
 
   it('ignores a typed passphrase once the toggle is off', async () => {

@@ -176,8 +176,13 @@ import {
 import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const { t } = useI18n()
+const { addToastMessage } = useToastStore()
 const accessStore = useAccessStore()
 const { selectedChain, accessStep } = storeToRefs(accessStore)
 const { setSelectedNetwork } = useGlobalStore()
@@ -276,16 +281,29 @@ const unlock = async () => {
   if (submitIsDisabled.value || !keystore.value) return
   isUnlocking.value = true
   try {
-    const res = await unlockKeystore(
-      keystore.value as V3Keystore,
-      password.value,
-    )
-    const wallet = new PrivateKeyWallet(
-      Buffer.from(res.getPrivateKey()),
-      selectedChain.value?.chainID || '1',
-    )
+    let wallet: PrivateKeyWallet
+    try {
+      const res = await unlockKeystore(
+        keystore.value as V3Keystore,
+        password.value,
+      )
+      wallet = new PrivateKeyWallet(
+        Buffer.from(res.getPrivateKey()),
+        selectedChain.value?.chainID || '1',
+      )
+    } catch (error) {
+      if (isCorruptKeystoreError(error)) {
+        cannotDecrypt.value = true
+      } else {
+        passwordError.value = t('access_wallet.advanced.incorrect_password')
+      }
+      return
+    }
+    // Await so a getAddress()/restriction failure lands in the catch below
+    // instead of closing the dialog with no wallet (MEW-2185). Reset after, so
+    // the user can retry without picking the file again.
+    await setWallet(wallet, 'keystore', walletConfigs.keystore.type[0])
     reset()
-    setWallet(wallet, 'keystore', walletConfigs.keystore.type[0])
     addWallet(walletConfigs.keystore)
     setSelectedNetwork(selectedChain.value?.name || '')
     accessStore.setCurrentView('default')
@@ -296,11 +314,12 @@ const unlock = async () => {
     })
     accessStore.closeAccessDialog()
   } catch (error) {
-    if (isCorruptKeystoreError(error)) {
-      cannotDecrypt.value = true
-    } else {
-      passwordError.value = t('access_wallet.advanced.incorrect_password')
-    }
+    addToastMessage({
+      type: ToastType.Error,
+      text: t('common.something_went_wrong'),
+      textSecondary: error instanceof Error ? error.message : String(error),
+    })
+    captureException(error, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
     isUnlocking.value = false
   }

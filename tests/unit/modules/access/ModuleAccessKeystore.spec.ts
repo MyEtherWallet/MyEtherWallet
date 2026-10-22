@@ -11,6 +11,8 @@ const h = vi.hoisted(() => ({
   setCurrentView: vi.fn(),
   closeAccessDialog: vi.fn(),
   track: vi.fn(),
+  addToastMessage: vi.fn(),
+  captureException: vi.fn(),
 }))
 const accessStep = ref(1)
 vi.mock('@/stores/accessStore', () => ({
@@ -24,6 +26,10 @@ vi.mock('@/stores/accessStore', () => ({
 vi.mock('@/stores/walletStore', () => ({
   useWalletStore: () => ({ setWallet: h.setWallet }),
 }))
+vi.mock('@/stores/toastStore', () => ({
+  useToastStore: () => ({ addToastMessage: h.addToastMessage }),
+}))
+vi.mock('@sentry/vue', () => ({ captureException: h.captureException }))
 vi.mock('@/stores/recentWalletsStore', () => ({
   useRecentWalletsStore: () => ({ addWallet: h.addWallet }),
 }))
@@ -159,6 +165,25 @@ describe('ModuleAccessKeystore', () => {
     await flushPromises()
     expect(h.setWallet).toHaveBeenCalledTimes(1)
     expect(h.closeAccessDialog).toHaveBeenCalled()
+  })
+
+  it('keeps the dialog open and toasts when the wallet fails to connect', async () => {
+    h.unlockKeystore.mockResolvedValue({
+      getPrivateKey: () => new Uint8Array(32),
+    })
+    h.setWallet.mockRejectedValue(new Error('getAddress failed'))
+    const w = mountIt()
+    await upload(w, JSON.stringify(V3))
+    await w.get('input[type="password"]').setValue('right')
+    await connect(w).trigger('click')
+    await flushPromises()
+    expect(h.closeAccessDialog).not.toHaveBeenCalled()
+    expect(h.addToastMessage).toHaveBeenCalledTimes(1)
+    // Not a password problem, and the user can try again without re-typing.
+    expect(w.text()).not.toContain('access_wallet.advanced.incorrect_password')
+    expect(
+      (w.get('input[type="password"]').element as HTMLInputElement).value,
+    ).toBe('right')
   })
 
   it('keeps the password out of session replays and analytics', async () => {
