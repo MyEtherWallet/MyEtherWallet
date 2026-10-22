@@ -1,4 +1,4 @@
-FROM node:22-bookworm
+FROM node:24.22.1-debian
 RUN apt update
 RUN apt-get install build-essential zip -y
 ENV HOME=/home
