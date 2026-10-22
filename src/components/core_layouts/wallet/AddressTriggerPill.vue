@@ -1,97 +1,26 @@
 <template>
-  <button
-    class="w-40 h-10 bg-white border border-border-default rounded-[20px] flex items-center gap-2.5 pl-2 pr-2.5"
-    :class="hover ? 'hoverNoBG' : 'cursor-default'"
-  >
-    <!-- Connected: active address for the current network -->
-    <template v-if="walletAddress">
-      <span class="relative shrink-0">
-        <app-blockie
-          :address="walletAddress ?? ''"
-          :size="6"
-          :blocks="8"
-          is-flat
-          class="rounded-full"
-        />
-        <img
-          v-if="chainsStore.selectedChain?.icon"
-          :src="chainsStore.selectedChain.icon"
-          alt=""
-          aria-hidden="true"
-          class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border border-white object-contain bg-white"
-        />
-      </span>
-      <span class="flex flex-col items-start flex-1 min-w-0 gap-0.5">
-        <span
-          v-if="isLoadingBalances"
-          class="inline-block w-12 h-3 bg-background-default-hover animate-pulse rounded my-0.5"
-        />
-        <span
-          v-else
-          class="font-semibold text-s-14 leading-[14px] tracking-[-0.28px] text-black"
-        >
-          {{ formattedTotalFiatPortfolioValue }}
-        </span>
-        <span class="flex items-center gap-1 w-full min-w-0">
-          <span
-            class="text-[10px] leading-[12px] text-text-subtle"
-            :class="isDefaultName ? 'whitespace-nowrap' : 'truncate'"
-          >
-            {{ accountName }}
-          </span>
-          <!-- ponytail: 12px is below the icon scale (min xxs 16); size-3! overrides
-               it for this pill only. Add a scale token if more sites need 12px. -->
-          <AppIcon
-            name="eye"
-            variant="filled"
-            size="xxs"
-            v-if="isWatchOnly"
-            data-test="pill-watch-only"
-            class="size-3! text-text-subtle flex-shrink-0"
-          />
-          <account-connected-dot v-else data-test="pill-connected" />
-        </span>
-      </span>
-    </template>
-    <!-- Empty: no address for the selected network (keeps the trigger visible) -->
-    <template v-else>
-      <span class="relative shrink-0 pl-1">
-        <img
-          v-if="chainsStore.selectedChain?.icon"
-          :src="chainsStore.selectedChain.icon"
-          alt=""
-          aria-hidden="true"
-          class="w-6 h-6 rounded-full object-contain"
-        />
-      </span>
-      <span
-        data-test="pill-no-address"
-        class="flex-1 text-left text-s-14 font-semibold text-text-subtle truncate"
-      >
-        {{ $t('multi_address.no_address_pill') }}
-      </span>
-    </template>
-    <AppIcon
-      name="chevron-down"
-      variant="filled"
-      size="xxs"
-      class="text-black flex-shrink-0"
-    />
-  </button>
+  <app-address-selector
+    :address="walletAddress ?? ''"
+    :name="watchOnlyStore.activeAccount?.addressName"
+    :balance="formattedTotalFiatPortfolioValue"
+    :loading="isLoadingBalances"
+    :connected="!isWatchOnly"
+    :network-icon="chainsStore.selectedChain?.icon"
+    :open="open"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppBlockie from '@/components/AppBlockie.vue'
-import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
+import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
-import { truncateAddress } from '@/utils/filters'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
-withDefaults(defineProps<{ hover?: boolean }>(), { hover: true })
+// Header account trigger: feeds the active account from the stores into the
+// design-library Address selector. `open` flips its chevron while the
+// manage-accounts popup is showing.
+withDefaults(defineProps<{ open?: boolean }>(), { open: false })
 
 const walletStore = useWalletStore()
 const {
@@ -103,16 +32,4 @@ const {
 
 const watchOnlyStore = useWatchOnlyStore()
 const chainsStore = useChainsStore()
-
-const accountName = computed<string>(
-  () =>
-    watchOnlyStore.activeAccount?.addressName ??
-    truncateAddress(walletAddress.value ?? '', 6, 4),
-)
-
-// The default label IS the truncated address (6…4); it must always render in
-// full, so never ellipsis-clip it. Only long custom names get truncated.
-const isDefaultName = computed<boolean>(
-  () => accountName.value === truncateAddress(walletAddress.value ?? '', 6, 4),
-)
 </script>

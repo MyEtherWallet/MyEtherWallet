@@ -114,6 +114,13 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'address-selector',
+              name: 'DevAddressSelector',
+              component: () =>
+                import('@/views/ViewAddressSelectorShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'navlink',
               name: 'DevNavLink',
               component: () => import('@/views/ViewNavLinkShowcase.vue'),
