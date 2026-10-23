@@ -224,10 +224,21 @@ const sendModalData = ref({
   tokenIcon: '',
   tokenAddress: '',
 })
-const address = ref('')
+// Follow the store instead of copying the wallet on mount: this panel stays
+// mounted while the user connects or switches wallets, and a stale or empty
+// address makes the API build the tx for the wrong account ("nonce too low").
+const address = computed(() => walletAddress.value ?? '')
 // 0x-prefixed compressed public key, populated for Bitcoin-family wallets;
 // required to declare a P2SH from-address in the quote request.
 const publicKey = ref('')
+watch(
+  wallet,
+  async w => {
+    const key = (await w?.getPublicKey?.()) ?? ''
+    if (w === wallet.value) publicKey.value = key
+  },
+  { immediate: true },
+)
 const foundNickName = ref('')
 
 /** ----------------
@@ -248,13 +259,10 @@ const {
   markDirty: markFormDirty,
 } = useFormPristine([amount, adrInput])
 
-onMounted(async () => {
+onMounted(() => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
   if (!wallet.value) return
-  address.value = await wallet.value.getAddress()
-  publicKey.value = (await wallet.value.getPublicKey?.()) ?? ''
-
   if (hasSendValues.value) {
     markFormDirty() // Restoring values means form is not pristine
     amount.value = sendValues.value.amount
