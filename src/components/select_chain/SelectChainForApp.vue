@@ -37,7 +37,7 @@
         surface="alternative"
         :title="selectedChain?.nameLong ?? ''"
         :description="$t('common.network_label')"
-        :loading="!selectedChain"
+        :loading="!isLoadedChains"
         :expanded="openDialog"
         @click="setOpenDialog(true)"
       >
