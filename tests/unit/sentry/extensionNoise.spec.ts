@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
@@ -25,6 +26,7 @@ import {
   isTrezorHandshakeError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
+import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
@@ -871,6 +873,54 @@ describe('isBenignPurchaseInfoForbidden', () => {
   it('is false for non-object inputs', () => {
     expect(isBenignPurchaseInfoForbidden(null)).toBe(false)
     expect(isBenignPurchaseInfoForbidden(undefined)).toBe(false)
+  })
+})
+
+describe('isBenignBalanceHistoryNotAcceptable', () => {
+  const BALANCE_HISTORY = `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history`
+  // Build the event the way production does: the shared useFetchMewWalletApi
+  // reporter tags it through describeMewApiFetchError (APP-MEW-WEB-1K0).
+  const eventFor = (url: string, status: number, statusText: string) => ({
+    tags: describeMewApiFetchError({
+      error: new Error(statusText),
+      data: {},
+      status,
+      statusText,
+      url,
+    }).tags,
+  })
+
+  it('is true for the production 406 from balance-history', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(
+          `${BALANCE_HISTORY}?address=0xe3d17904566328bab5b1662be219923195554640&period=max&chain=ETH`,
+          406,
+          'Not Acceptable',
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for another status on balance-history (still reported)', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(`${BALANCE_HISTORY}?period=max&chain=ETH`, 403, 'Forbidden'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a 406 from another MEW wallet API route', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(configs.MEW_PURCHASE_API, 406, 'Not Acceptable'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for events without tags and non-object inputs', () => {
+    expect(isBenignBalanceHistoryNotAcceptable({})).toBe(false)
+    expect(isBenignBalanceHistoryNotAcceptable(null)).toBe(false)
   })
 })
 
