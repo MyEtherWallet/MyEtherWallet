@@ -231,8 +231,16 @@ const onEsc = () => {
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-const focusables = () =>
-  Array.from(panel.value?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])
+// Inert subtrees and unrendered nodes can't take focus, so a Tab loop that
+// ends on one never wraps. Without checkVisibility (older browsers, jsdom)
+// everything counts as visible.
+const canFocus = (el: HTMLElement) =>
+  !el.closest('[inert]') && el.checkVisibility?.() !== false
+
+const focusables = (root = panel.value) =>
+  Array.from(root?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []).filter(
+    canFocus,
+  )
 
 // The background is inert, but a modal stacked on another could still Tab
 // into the one below, so wrap at both ends.
@@ -279,7 +287,7 @@ watch(
       await nextTick()
       // First control in the content, else the panel: never the close button
       // or a footer action, so Enter can't confirm a destructive step.
-      const first = body.value?.querySelector<HTMLElement>(FOCUSABLE)
+      const first = focusables(body.value)[0]
       ;(first ?? panel.value)?.focus()
     } else if (opener) {
       // After the tick the background is no longer inert, so it can take focus.

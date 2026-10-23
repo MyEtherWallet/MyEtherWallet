@@ -280,6 +280,39 @@ describe('AppModal', () => {
       expect(document.activeElement).toBe(dialog())
     })
 
+    it('skips inert controls on open and in the Tab loop', async () => {
+      mountModal(
+        {},
+        {
+          default:
+            '<div inert><input data-test="inert-first" /></div>' +
+            '<input data-test="real" />' +
+            '<div inert><button data-test="inert-last">x</button></div>',
+        },
+      )
+      await flushPromises()
+      const real = dialog()!.querySelector<HTMLElement>('[data-test="real"]')!
+      expect(document.activeElement).toBe(real)
+
+      const tab = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        bubbles: true,
+        cancelable: true,
+      })
+      real.dispatchEvent(tab)
+      expect(tab.defaultPrevented).toBe(true)
+      expect(document.activeElement).toBe(closeBtn())
+
+      const shiftTab = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+      })
+      closeBtn()!.dispatchEvent(shiftTab)
+      expect(document.activeElement).toBe(real)
+    })
+
     it('Tab wraps from the last focusable to the first and back', async () => {
       // Close is first in the DOM (top of the panel), the content input last.
       mountModal({}, { default: '<input data-test="last" />' })
