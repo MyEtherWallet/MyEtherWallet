@@ -90,6 +90,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'modal',
+              name: 'DevModal',
+              component: () => import('@/views/ViewModalShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'text-area',
               name: 'DevTextArea',
               component: () => import('@/views/ViewTextAreaShowcase.vue'),
