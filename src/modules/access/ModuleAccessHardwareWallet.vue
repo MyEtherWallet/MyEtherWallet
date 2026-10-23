@@ -642,7 +642,9 @@ watch(
     // derivation write below belongs to this switch and must not queue its own
     // reload — the single scheduleLoadList() at the end does that (for Ledger
     // and Trezor alike; the guard used to cover only Ledger's local paths).
-    loadListGeneration++
+    // Back, a newer switch or the unmount bump it again and stop this one.
+    const generation = ++loadListGeneration
+    const isStale = () => generation !== loadListGeneration
     cancelScheduledLoad()
     isLoadingWalletList.value = true
     // The rows belong to the old chain: drop them before the app switch (~6s on
@@ -674,12 +676,12 @@ watch(
         wallet: selectedHwWalletType.value as HWwalletType,
         networkName: networkName as any,
       })
-      if (isUnmounted) return
+      if (isStale()) return
       const newPaths = (await hwWalletInstance!.getSupportedPaths({
         wallet: selectedHwWalletType.value as HWwalletType,
         networkName: networkName as any,
       })) as PathType[]
-      if (isUnmounted) return
+      if (isStale()) return
       paths.value = newPaths
       if (
         newPaths.length > 0 &&
@@ -690,7 +692,7 @@ watch(
       }
       connected = true
     } catch (e) {
-      if (isUnmounted) return
+      if (isStale()) return
       const errorMessage = e instanceof Error ? e.message : String(e)
       toastStore.addToastMessage({
         type: ToastType.Error,
@@ -703,6 +705,7 @@ watch(
       await nextTick()
       suppressPathWatcher = false
     }
+    if (isStale()) return
     if (connected) scheduleLoadList()
     else isLoadingWalletList.value = false
   },

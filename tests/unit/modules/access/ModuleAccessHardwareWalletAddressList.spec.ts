@@ -464,6 +464,31 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(h.manager.isConnected).not.toHaveBeenCalled()
   })
 
+  it('drops a chain switch still in flight when going back to the connect step', async () => {
+    const w = factory()
+    await connect(w)
+    h.manager.getAddress.mockClear()
+    let finishAppSwitch: () => void = () => {}
+    h.manager.isConnected.mockImplementationOnce(
+      () =>
+        new Promise<boolean>(
+          resolve => (finishAppSwitch = () => resolve(true)),
+        ),
+    )
+    h.supportedPaths = BTC_PATHS
+    h.store.selectedChain.value = BTC_CHAIN
+    await settle() // the watcher waits while the Ledger switches apps
+    h.store.accessStep.value = 1 // Back
+    await settle()
+
+    finishAppSwitch()
+    await settle()
+    await vi.advanceTimersByTimeAsync(3000) // a reload would land here
+    await settle()
+    expect(h.manager.getAddress).not.toHaveBeenCalled()
+    expect(w.findComponent(AccessAddressList).exists()).toBe(false)
+  })
+
   it('releases the Ledger transport when the flow is left without connecting a wallet, but not after access', async () => {
     const w = factory()
     await connect(w)
