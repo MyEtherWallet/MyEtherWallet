@@ -468,22 +468,16 @@
                   @input="onInputAmount"
                 />
               </div>
-              <button
-                class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-background-default-hover min-w-15"
-                :disabled="isLoadingLeverage"
+              <AppPicker
+                size="s"
+                surface="alternative"
+                :avatar="false"
+                :title="`${manageMode === 'add' ? effectiveLeverage : leverage}×`"
+                :loading="isLoadingLeverage"
+                :expanded="showLeverageModal"
+                class="shrink-0"
                 @click="openLeverage"
-              >
-                <span
-                  v-if="isLoadingLeverage"
-                  class="ml-auto bg-background-default-hover animate-pulse rounded-full h-4 w-8"
-                />
-                <p v-else class="ml-auto font-semibold text-s-14">
-                  {{
-                    manageMode === 'add' ? effectiveLeverage : leverage
-                  }}&times;
-                </p>
-                <AppIcon name="chevron-down" variant="filled" size="xxs" />
-              </button>
+              />
             </div>
             <p class="text-text-subtle text-s-12 -mt-2 mb-2 truncate">
               {{ $t('perps.trade.size') }}
@@ -953,6 +947,7 @@ import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppPicker from '@/components/picker/AppPicker.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import {
   analytics,
