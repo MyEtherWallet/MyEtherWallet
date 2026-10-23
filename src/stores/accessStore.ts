@@ -53,12 +53,16 @@ export const useAccessStore = defineStore('accessStore', () => {
     web3ConnectionError.value = null
     expectNewAddress.value = false
     intendedAddress.value = null
+    accessStep.value = 1
   }
 
   const currentView = ref<WalletView>('default')
   const setCurrentView = (view: WalletView) => {
     currentView.value = view
   }
+
+  /** Step inside a multi-step view (keystore, mnemonic); the header reads it for its title and Back. */
+  const accessStep = ref(1)
 
   const clickedWalletConnect = ref<undefined | WC_Wallet>(undefined)
   const setClickedWalletConnect = (value: WC_Wallet | undefined) => {
@@ -92,6 +96,7 @@ export const useAccessStore = defineStore('accessStore', () => {
   }
 
   watch(currentView, newView => {
+    accessStep.value = 1
     if (newView === 'default') {
       setClickedWalletConnect(undefined)
       setClickedWeb3Wallet(undefined)
@@ -166,6 +171,7 @@ export const useAccessStore = defineStore('accessStore', () => {
 
   return {
     isOpenAccessDialog,
+    accessStep,
     openAccessDialog,
     ensureAccessDialogOpen,
     closeAccessDialog,

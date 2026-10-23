@@ -201,6 +201,34 @@ const unlockKeystore = async (
   return getWalletFromPrivKeyFile(newFile, pw)
 }
 
+/**
+ * True when parsed JSON has the shape of a keystore `unlockKeystore` can open
+ * (same format detection as getWalletFromPrivKeyFile, keys case-insensitive).
+ */
+const isKeystoreFile = (json: unknown): boolean => {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) return false
+  const fields = Object.fromEntries(
+    Object.entries(json).map(([key, value]) => [key.toLowerCase(), value]),
+  )
+  return (
+    fields.encseed != null ||
+    fields.crypto != null ||
+    fields.hash != null ||
+    fields.publisher === 'MyEtherwallet'
+  )
+}
+
+/**
+ * A keystore we can't decrypt (unsupported / corrupt format) vs. anything else,
+ * which the UI treats as a wrong password. Matches the format errors thrown by
+ * @ethereumjs/wallet and fromMyEtherWalletV2; wrong-password failures vary by
+ * format (mismatch, cipher padding, length checks), so they're the fallback.
+ */
+const CORRUPT_KEYSTORE_ERROR =
+  /unsupported|not a v\d|only md5|invalid private key length/i
+const isCorruptKeystoreError = (error: unknown): boolean =>
+  CORRUPT_KEYSTORE_ERROR.test((error as Error)?.message ?? '')
+
 const isPrivateKey = (key: string) => {
   const priv = key ? key.replace('0x', '') : ''
   return key !== '' && isHexString('0x' + priv, 32)
@@ -209,6 +237,8 @@ const isPrivateKey = (key: string) => {
 export type { EthSaleKeystore, V3Keystore, MEWKeystore }
 export {
   unlockKeystore,
+  isKeystoreFile,
+  isCorruptKeystoreError,
   getMinPriorityFee,
   getBufferFromHex,
   bufferToHex,
