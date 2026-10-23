@@ -417,6 +417,12 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
   try {
     await getTransport()
     ledgerTransportOpened = true
+    // Closed while the device picker was open: the unmount had nothing to free
+    // yet, so release it now.
+    if (isUnmounted) {
+      releaseLedgerIfUnused()
+      return false
+    }
     return true
   } catch (e) {
     if (isUserCancelledTransport(e)) return false

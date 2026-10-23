@@ -446,6 +446,24 @@ describe('ModuleAccessHardwareWallet — one load per trigger', () => {
     expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
   })
 
+  it('releases a Ledger transport that opens after the flow was left', async () => {
+    let pickDevice: () => void = () => {}
+    h.getLedgerWebUSBTransport.mockImplementationOnce(
+      () => new Promise(resolve => (pickDevice = () => resolve({}))),
+    )
+    const w = factory()
+    await settle()
+    await w.get('button').trigger('click')
+    // Closed while the device picker is still open: nothing to release yet.
+    w.unmount()
+    expect(h.closeLedgerTransport).not.toHaveBeenCalled()
+
+    pickDevice()
+    await settle()
+    expect(h.closeLedgerTransport).toHaveBeenCalledTimes(1)
+    expect(h.manager.isConnected).not.toHaveBeenCalled()
+  })
+
   it('releases the Ledger transport when the flow is left without connecting a wallet, but not after access', async () => {
     const w = factory()
     await connect(w)
