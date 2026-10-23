@@ -390,6 +390,26 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
 }
 
 /**
+ * Whether a Sentry event is the portfolio balance-history endpoint answering
+ * 406. The backend does this intermittently for addresses it normally serves
+ * (same query: 200 most days, 406 for hours on others), and
+ * `PortfolioHistory.vue` already shows its "No chart data" state, so it is
+ * unactionable noise (APP-MEW-WEB-1K0 / MEW-2547). Matched on the
+ * `describeMewApiFetchError` tags, so other statuses from this endpoint and a
+ * 406 from any other route still report.
+ */
+export function isBenignBalanceHistoryNotAcceptable(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  if (!tags) return false
+  return (
+    tags.mew_api_url ===
+      `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history` &&
+    tags.mew_api_status === '406'
+  )
+}
+
+/**
  * Whether an error is the WalletConnect relay "Connection interrupted while
  * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
  * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects
