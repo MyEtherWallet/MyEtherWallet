@@ -230,7 +230,7 @@ const endpoint = computed(() => {
     isWalletConnected.value && walletAddress.value
       ? `?evmAddresses=${walletAddress.value}`
       : ''
-  return `/v1/web/pages/token-info/coins/${props.tokenId}${wallet}`
+  return `/v1/web/pages/token-info/coins/${encodeURIComponent(props.tokenId)}${wallet}`
 })
 const isLoadedData = ref(false)
 
