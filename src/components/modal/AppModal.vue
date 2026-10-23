@@ -264,14 +264,20 @@ const onTab = (e: KeyboardEvent) => {
 // modal's watcher can run after the opening one's, and makes mounting a
 // closed modal a no-op.
 let countsAsOpen = false
+// This modal's level in the stack; handed back on close when it's still the
+// top one, so a child reopened over an open base doesn't climb each time.
+let layer = 0
 const syncAreaHidden = (open: boolean) => {
   if (open === countsAsOpen) return
   countsAsOpen = open
   if (open) {
     pushAreaHidden()
-    zIndex.value = MODAL_Z_BASE + ++stackTop
+    layer = ++stackTop
+    zIndex.value = MODAL_Z_BASE + layer
   } else {
     popAreaHidden()
+    if (layer === stackTop) stackTop = Math.max(0, stackTop - 1)
+    layer = 0
     if (!isAreaHidden.value) stackTop = 0
   }
 }

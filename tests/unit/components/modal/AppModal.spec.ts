@@ -121,6 +121,29 @@ describe('AppModal', () => {
     })
   })
 
+  describe('stacking', () => {
+    const zOf = (title: string) =>
+      Number(
+        backdrop(dialogs().find(d => d.textContent!.includes(title))).style
+          .zIndex,
+      )
+
+    it('a child reopened over an open base keeps the same layer', async () => {
+      mountModal({ title: 'Base' })
+      const child = mountModal({ title: 'Child', modelValue: false })
+      await nextTick()
+
+      const layers: number[] = []
+      for (let i = 0; i < 3; i++) {
+        await child.setProps({ modelValue: true })
+        layers.push(zOf('Child'))
+        await child.setProps({ modelValue: false })
+      }
+      expect(new Set(layers).size).toBe(1)
+      expect(layers[0]).toBeGreaterThan(zOf('Base'))
+    })
+  })
+
   describe('back / close', () => {
     it('shows close and hides back by default', async () => {
       mountModal()
