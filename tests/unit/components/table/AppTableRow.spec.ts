@@ -217,4 +217,24 @@ describe('AppTableRow', () => {
     )
     expect(handle.classes()).toContain('pointer-coarse:visible')
   })
+
+  it('shows skeletons while loading, keeps the star, drops actions and the click', () => {
+    const calls: number[] = []
+    const w = factory({
+      props: { loading: true, watchlisted: true },
+      attrs: { onClick: () => calls.push(1) },
+      slots: {
+        default: '<i data-test="cell">x</i>',
+        actions: '<button>Trade</button>',
+      },
+      ctx: { start: true, actions: true, visibleKeys: ['price', 'cap'] },
+    })
+    expect(w.findComponent(AppCellWatchlistToggle).exists()).toBe(true)
+    expect(w.find('[data-test="cell"]').exists()).toBe(false)
+    expect(w.text()).not.toContain('USDC')
+    expect(w.text()).not.toContain('Trade')
+    // start + leading + 2 skeleton cells + empty actions
+    expect(w.findAll('[role="cell"]')).toHaveLength(5)
+    expect(w.attributes('tabindex')).toBeUndefined()
+  })
 })

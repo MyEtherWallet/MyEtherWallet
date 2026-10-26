@@ -4,6 +4,8 @@ import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
+import AppTableCell from './AppTableCell.vue'
 import { BTN_ICON_SIZE } from '@/components/btnIconTypes'
 import type { AvatarSize } from '@/components/avatar/types'
 import type { CellSurface } from '@/components/cell/cellSizes'
@@ -28,6 +30,9 @@ import { ROW_PADDING, TABLE_CONTEXT, defaultTableContext } from './types'
  * clickable only when a `@click` listener is bound (tabindex 0, Enter/Space).
  * A `@click` next to `to` still fires (analytics). The star, handle and
  * actions sit above the link and never trigger the row.
+ *
+ * `loading` swaps the leading cell and data cells for skeletons (and hides
+ * the actions), keeping the star; AppTable's `loading` uses it for its rows.
  */
 const props = withDefaults(
   defineProps<{
@@ -37,20 +42,23 @@ const props = withDefaults(
     /** Bind to show the watchlist star; leave unbound for no star. */
     watchlisted?: boolean
     watchlistLoading?: boolean
+    loading?: boolean
   }>(),
   { title: '', description: '', watchlisted: undefined },
 )
 
 const emit = defineEmits<{ 'update:watchlisted': [on: boolean] }>()
 
-const { size, start, reorderable, actions } = inject(
+const { size, visibleKeys, start, reorderable, actions } = inject(
   TABLE_CONTEXT,
   defaultTableContext,
   true,
 )
 
 const attrs = useAttrs()
-const clickable = computed(() => !props.to && Boolean(attrs.onClick))
+const clickable = computed(
+  () => !props.to && !props.loading && Boolean(attrs.onClick),
+)
 
 const hovered = ref(false)
 const surface = computed<CellSurface>(() =>
@@ -105,7 +113,17 @@ const activate = (e: KeyboardEvent) => {
       class="flex min-w-0 items-center gap-2"
       :title="title || undefined"
     >
-      <slot name="leading" :size="avatarSize">
+      <template v-if="loading">
+        <AppSkeleton
+          shape="circle"
+          :class="size === 's' ? 'size-8' : 'size-10'"
+        />
+        <span class="flex flex-col gap-2">
+          <AppSkeleton class="h-3 w-16" />
+          <AppSkeleton class="h-3 w-24" />
+        </span>
+      </template>
+      <slot v-else name="leading" :size="avatarSize">
         <span v-if="$slots.avatar" class="flex h-11 shrink-0 items-center">
           <slot name="avatar" :size="avatarSize" />
         </span>
@@ -136,7 +154,12 @@ const activate = (e: KeyboardEvent) => {
       </slot>
     </div>
 
-    <slot />
+    <template v-if="loading">
+      <AppTableCell v-for="key in visibleKeys" :key="key" :column="key">
+        <AppSkeleton class="h-3 w-16" />
+      </AppTableCell>
+    </template>
+    <slot v-else />
 
     <div
       v-if="actions"
@@ -144,7 +167,7 @@ const activate = (e: KeyboardEvent) => {
       class="relative z-10 flex items-center justify-end gap-2"
       @click.stop
     >
-      <slot name="actions" :size="size" :surface="surface" />
+      <slot v-if="!loading" name="actions" :size="size" :surface="surface" />
     </div>
   </div>
 </template>

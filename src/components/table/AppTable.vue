@@ -7,9 +7,7 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import AppPagination from '@/components/pagination/AppPagination.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppTableRow from './AppTableRow.vue'
-import AppTableCell from './AppTableCell.vue'
 import {
   COLUMN_SPACING,
   ROW_PADDING,
@@ -37,7 +35,8 @@ import {
  * own width (768 / 1280). At S only the leading and primary columns show;
  * `largeOnly` columns show at L only.
  * Sort cycles off → desc → asc → off per column (`v-model:sort`); with
- * `defaultSort`, "off" is that sort instead of null. `loading` swaps the rows
+ * `defaultSort`, "off" is that sort instead of null (a column whose default
+ * is asc just toggles). `loading` swaps the rows
  * for `loadingRows` skeleton rows and blanks the pagination label.
  */
 const props = withDefaults(
@@ -125,10 +124,15 @@ const ariaSort = (col: TableColumn) => {
 
 const onSort = (col: TableColumn) => {
   const direction = directionOf(col)
-  sort.value =
+  const next: TableSort | null =
     direction === 'asc'
       ? (props.defaultSort ?? null)
       : { key: col.key, direction: direction === 'desc' ? 'asc' : 'desc' }
+  // The default can be this very column ascending: toggle instead of sticking.
+  sort.value =
+    next?.key === col.key && next.direction === direction
+      ? { key: col.key, direction: 'desc' }
+      : next
 }
 
 // SortableJS (touch included) drags a row by its handle. It moves the DOM
@@ -227,21 +231,7 @@ watch(
         ]"
       >
         <template v-if="loading">
-          <AppTableRow v-for="n in loadingRows" :key="n">
-            <template #leading>
-              <AppSkeleton
-                shape="circle"
-                :class="size === 's' ? 'size-8' : 'size-10'"
-              />
-              <span class="flex flex-col gap-2">
-                <AppSkeleton class="h-3 w-16" />
-                <AppSkeleton class="h-3 w-24" />
-              </span>
-            </template>
-            <AppTableCell v-for="key in visibleKeys" :key="key" :column="key">
-              <AppSkeleton class="h-3 w-16" />
-            </AppTableCell>
-          </AppTableRow>
+          <AppTableRow v-for="n in loadingRows" :key="n" loading />
         </template>
         <slot v-else :size="size" :visible-keys="visibleKeys" />
       </div>
