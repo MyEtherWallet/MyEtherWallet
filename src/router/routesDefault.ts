@@ -126,6 +126,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'pagination',
+              name: 'DevPagination',
+              component: () => import('@/views/ViewPaginationShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'segmented-control',
               name: 'DevSegmentedControl',
               component: () =>

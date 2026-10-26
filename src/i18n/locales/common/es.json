@@ -42,6 +42,7 @@
     "all_chains": "Todas las redes",
     "all_networks": "Todas las redes",
     "showing_page": "Mostrando página {current} de {total}",
+    "pagination": "Paginación",
     "edit": "Editar",
     "delete": "Eliminar",
     "token_count": "sin tokens| 1 token | {count} tokens",

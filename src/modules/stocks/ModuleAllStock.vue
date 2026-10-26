@@ -365,37 +365,14 @@
         </div>
       </div>
 
-      <!-- Footer / pagination -->
-      <div
-        class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
-      >
-        <span
-          class="text-text-subtle"
-          :class="isLoading ? 'invisible' : 'visible'"
-        >
-          {{ $t('common.showing_page', { current: page, total: totalPages }) }}
-        </span>
-        <div class="flex items-center gap-2">
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page === 1"
-            :label="$t('common.previous_page')"
-            @click.stop="previousPage"
-          >
-            <AppIcon name="chevron-left" variant="filled" size="xxs" />
-          </app-btn-icon>
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page >= totalPages"
-            :label="$t('common.next_page')"
-            @click.stop="nextPage"
-          >
-            <AppIcon name="chevron-right" variant="filled" size="xxs" />
-          </app-btn-icon>
-        </div>
-      </div>
+      <AppPagination
+        :model-value="page"
+        :total-pages="totalPages"
+        variant="alternative"
+        :label="isLoading ? blankLabel : undefined"
+        class="mt-4"
+        @update:model-value="setPage"
+      />
       <select-chain-dialog
         v-if="isLoadedChains"
         v-model:is-open="openChainDialog"
@@ -415,6 +392,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -488,19 +466,12 @@ const PER_PAGE = 10
 /** -------------------------------
  * Pagination
 -------------------------------*/
-const previousPage = () => {
-  if (page.value > 1) {
-    page.value--
-  }
+const setPage = (p: number) => {
+  page.value = p
   tableContainer.value?.scrollTo(0, 0)
 }
-
-const nextPage = () => {
-  if (page.value < totalPages.value) {
-    page.value++
-  }
-  tableContainer.value?.scrollTo(0, 0)
-}
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
