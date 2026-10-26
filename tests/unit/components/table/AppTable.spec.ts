@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
@@ -7,7 +7,7 @@ import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
 import AppPagination from '@/components/pagination/AppPagination.vue'
 import {
-  TABLE_WRAPPER_SIZE,
+  TABLE_WRAPPER,
   tableSizeFor,
   type TableColumn,
 } from '@/components/table/types'
@@ -127,7 +127,11 @@ describe('AppTable', () => {
   it('takes the size from the wrapper when there is no size prop', () => {
     const w = factory(
       { size: undefined },
-      { provide: { [TABLE_WRAPPER_SIZE as symbol]: ref('s') } },
+      {
+        provide: {
+          [TABLE_WRAPPER as symbol]: { size: ref('s'), title: ref('Explore') },
+        },
+      },
     )
     expect(headers(w)).toEqual(['Name', 'Market cap'])
   })
@@ -199,5 +203,69 @@ describe('AppTable', () => {
     await rows[0].trigger('dragstart')
     await rows[1].trigger('drop')
     expect(w.emitted('reorder')).toBeUndefined()
+  })
+
+  it('is named by the wrapper title unless given its own label', () => {
+    const wrapper = {
+      [TABLE_WRAPPER as symbol]: { size: ref('l'), title: ref('Explore') },
+    }
+    expect(
+      grid(factory({}, { provide: wrapper })).attributes('aria-label'),
+    ).toBe('Explore')
+    expect(
+      grid(factory({ ariaLabel: 'Own' }, { provide: wrapper })).attributes(
+        'aria-label',
+      ),
+    ).toBe('Own')
+  })
+
+  it('labels the start column Watchlist only when it holds the star', () => {
+    expect(headers(factory({ reorderable: true }))[0]).toBe('')
+    expect(headers(factory({ watchlist: true }))[0]).toBe('Watchlist')
+  })
+
+  it('forgets a cancelled drag', async () => {
+    const w = factory({ reorderable: true }, { rows: 3 })
+    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
+    await rows[0].get('[data-test="table-row-handle"]').trigger('dragstart')
+    await rows[0].trigger('dragend')
+    await rows[2].trigger('drop')
+    expect(w.emitted('reorder')).toBeUndefined()
+  })
+
+  describe('measuring its own width', () => {
+    afterEach(() => vi.unstubAllGlobals())
+
+    it.each([
+      [400, ['Name', 'Market cap']],
+      [900, ['Name', 'Price', 'Volume', 'Market cap']],
+      [1300, ['Name', 'Price', 'Volume', 'Market cap']],
+    ])('at %ipx shows %j', async (width, expected) => {
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          constructor(private cb: ResizeObserverCallback) {}
+          observe() {
+            this.cb(
+              [
+                {
+                  borderBoxSize: [{ inlineSize: width, blockSize: 100 }],
+                  contentRect: { width, height: 100 },
+                } as unknown as ResizeObserverEntry,
+              ],
+              this as unknown as ResizeObserver,
+            )
+          }
+          unobserve() {}
+          disconnect() {}
+        },
+      )
+      const w = factory({ size: undefined })
+      await w.vm.$nextTick()
+      expect(headers(w)).toEqual(expected)
+      expect(grid(w).attributes('style')).toContain(
+        `calc(var(--spacing) * ${width >= 1280 ? 35 : width >= 768 ? 27.5 : 24})`,
+      )
+    })
   })
 })

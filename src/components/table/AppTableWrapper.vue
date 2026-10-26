@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, provide, useId, useTemplateRef } from 'vue'
+import { computed, provide, toRef, useTemplateRef } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
-import { TABLE_WRAPPER_SIZE, tableSizeFor, type TableSize } from './types'
+import { TABLE_WRAPPER, tableSizeFor, type TableSize } from './types'
 
 /**
  * Table wrapper (design library, Figma TableWrapper 2913:98036). The white
@@ -25,15 +25,13 @@ const props = defineProps<{
 const root = useTemplateRef<HTMLElement>('root')
 const { width } = useElementSize(root, undefined, { box: 'border-box' })
 const size = computed<TableSize>(() => props.size ?? tableSizeFor(width.value))
-provide(TABLE_WRAPPER_SIZE, size)
-
-const titleId = useId()
+provide(TABLE_WRAPPER, { size, title: toRef(props, 'title') })
 </script>
 
 <template>
   <section
     ref="root"
-    :aria-labelledby="titleId"
+    :aria-label="title"
     :class="[
       'flex w-full flex-col gap-6 rounded-16 bg-background-alternative',
       size === 's' ? 'p-4' : 'p-6',
@@ -41,7 +39,6 @@ const titleId = useId()
   >
     <div data-test="table-heading" class="flex items-center gap-6">
       <AppContentGroup
-        :id="titleId"
         :title="title"
         :description="description"
         size="l"

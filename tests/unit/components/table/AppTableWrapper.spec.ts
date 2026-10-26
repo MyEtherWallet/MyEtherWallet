@@ -2,12 +2,12 @@ import { describe, it, expect } from 'vitest'
 import { defineComponent, h, inject } from 'vue'
 import { mount } from '@vue/test-utils'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
-import { TABLE_WRAPPER_SIZE } from '@/components/table/types'
+import { TABLE_WRAPPER } from '@/components/table/types'
 
 const SizeProbe = defineComponent({
   setup() {
-    const size = inject(TABLE_WRAPPER_SIZE)
-    return () => h('i', { 'data-test': 'probe' }, size?.value)
+    const wrapper = inject(TABLE_WRAPPER)
+    return () => h('i', { 'data-test': 'probe' }, wrapper?.size.value)
   },
 })
 
@@ -25,11 +25,10 @@ const ACTION = {
 }
 
 describe('AppTableWrapper', () => {
-  it('is a section labelled by its title', () => {
-    const w = factory()
-    const id = w.attributes('aria-labelledby')!
+  it('is a section named by its title alone', () => {
+    const w = factory({ description: 'Top assets' })
     expect(w.element.tagName).toBe('SECTION')
-    expect(w.get(`#${id}`).text()).toBe('Explore crypto')
+    expect(w.attributes('aria-label')).toBe('Explore crypto')
   })
 
   it('pads 24 at L/M and 16 at S', () => {

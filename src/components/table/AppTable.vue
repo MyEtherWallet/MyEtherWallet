@@ -10,7 +10,7 @@ import {
   COLUMN_SPACING,
   ROW_PADDING,
   TABLE_CONTEXT,
-  TABLE_WRAPPER_SIZE,
+  TABLE_WRAPPER,
   tableSizeFor,
   type TableColumn,
   type TableFooterType,
@@ -65,9 +65,9 @@ const { t } = useI18n()
 
 const root = useTemplateRef<HTMLElement>('root')
 const { width } = useElementSize(root, undefined, { box: 'border-box' })
-const wrapperSize = inject(TABLE_WRAPPER_SIZE, null)
+const wrapper = inject(TABLE_WRAPPER, null)
 const size = computed<TableSize>(
-  () => props.size ?? wrapperSize?.value ?? tableSizeFor(width.value),
+  () => props.size ?? wrapper?.size.value ?? tableSizeFor(width.value),
 )
 
 const leading = computed(() => props.columns[0])
@@ -141,6 +141,10 @@ const onDragstart = (e: DragEvent) => {
 const onDragover = (e: DragEvent) => {
   if (props.reorderable && dragFrom >= 0) e.preventDefault()
 }
+// A cancelled drag (Esc, dropped outside) must not leak into the next drop.
+const onDragend = () => {
+  dragFrom = -1
+}
 const onDrop = (e: DragEvent) => {
   const to = rowIndex(rowOf(e))
   if (props.reorderable && dragFrom >= 0 && to >= 0 && to !== dragFrom) {
@@ -155,7 +159,7 @@ const onDrop = (e: DragEvent) => {
   <div ref="root" class="flex w-full flex-col gap-6">
     <div
       role="table"
-      :aria-label="ariaLabel"
+      :aria-label="ariaLabel ?? wrapper?.title.value"
       :class="['grid', size === 's' ? 'gap-x-1' : 'gap-x-2']"
       :style="{ gridTemplateColumns: template }"
     >
@@ -167,7 +171,9 @@ const onDrop = (e: DragEvent) => {
         ]"
       >
         <div v-if="start" role="columnheader">
-          <span class="sr-only">{{ t('common.watchlist') }}</span>
+          <span v-if="watchlist" class="sr-only">
+            {{ t('common.watchlist') }}
+          </span>
         </div>
         <div
           v-for="(col, i) in [leading, ...visibleData]"
@@ -183,7 +189,7 @@ const onDrop = (e: DragEvent) => {
             v-if="col.sortable"
             type="button"
             :class="[
-              'flex min-w-0 items-center gap-1 rounded-4 text-overline transition-colors hover:text-text-default focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus',
+              'flex min-w-0 items-center gap-1 rounded-8 text-overline transition-colors hover:text-text-default focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus',
               directionOf(col) ? 'text-text-default' : 'text-text-subtle',
             ]"
             @click="onSort(col)"
@@ -214,6 +220,7 @@ const onDrop = (e: DragEvent) => {
         @dragstart="onDragstart"
         @dragover="onDragover"
         @drop="onDrop"
+        @dragend="onDragend"
       >
         <slot :size="size" :visible-keys="visibleKeys" />
       </div>
