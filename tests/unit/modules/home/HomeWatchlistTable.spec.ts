@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { enableAutoUnmount, mount, RouterLinkStub } from '@vue/test-utils'
 import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
@@ -40,8 +40,9 @@ const ROWS: WatchlistRow[] = [
   makeRow(),
 ]
 
-const push = vi.fn()
-vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
+vi.mock('vue-router', async () => ({
+  RouterLink: (await import('@vue/test-utils')).RouterLinkStub,
+}))
 
 // jsdom has no layout: the table wrapper sizes itself from this width
 // (L ≥1280, M ≥768, S below).
@@ -98,9 +99,12 @@ const i18n = createI18n({
   messages: { en: {} },
 })
 
+enableAutoUnmount(afterEach)
+// Attached so isVisible() can read the menu's v-show.
 const mountTable = (rows: WatchlistRow[] = ROWS) =>
   mount(HomeWatchlistTable, {
     props: { rows },
+    attachTo: document.body,
     global: { plugins: [i18n], directives: { ripple: {} } },
   })
 
@@ -113,7 +117,6 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     localStorage.clear()
     cardWidth.value = 1300
     setActivePinia(createPinia())
-    push.mockClear()
     openSwapForToken.mockClear()
     openBridgeForToken.mockClear()
   })
@@ -134,28 +137,18 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(store.watchListedTokens).toEqual([])
   })
 
-  it('Trade opens the trade side panel in place, without navigating', async () => {
+  it('Trade opens the trade side panel in place', async () => {
     const walletMenu = useWalletMenuStore()
     const w = mountTable()
     await w.findAll('[data-test="watchlist-trade"]')[0].trigger('click')
     expect(walletMenu.selectedTradeTokenSymbol).toBe('AAPL')
     expect(walletMenu.walletPanel).toBe('trade')
     expect(walletMenu.isOpenSideMenu).toBe(true)
-    expect(push).not.toHaveBeenCalled()
   })
 
-  it('clicking the row body opens the asset info drawer', async () => {
-    const w = mountTable()
-    await w.findAll('[data-test="watchlist-row"]')[0].trigger('click')
-    expect(push).toHaveBeenCalledWith(ROWS[0].route)
-  })
-
-  it('the row is focusable and Enter opens the drawer (keyboard access)', async () => {
-    const w = mountTable([makeRow()])
-    const row = w.get('[data-test="watchlist-row"]')
-    expect(row.attributes('tabindex')).toBe('0')
-    await row.trigger('keydown', { key: 'Enter' })
-    expect(push).toHaveBeenCalledWith(makeRow().route)
+  it('links each row to its asset info drawer', () => {
+    const links = mountTable().findAllComponents(RouterLinkStub)
+    expect(links.map(l => l.props('to'))).toEqual(ROWS.map(r => r.route))
   })
 
   it('titles a stock row with the ticker and a gradient "on"', () => {
@@ -166,18 +159,6 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(stock.get('span.bg-stock-gradient').text()).toBe('on')
     expect(crypto.text()).toBe('ETH')
     expect(crypto.find('span.bg-stock-gradient').exists()).toBe(false)
-  })
-
-  it('clicking the star (remove) does not navigate', async () => {
-    const w = mountTable()
-    await stars(w)[0].trigger('click')
-    expect(push).not.toHaveBeenCalled()
-  })
-
-  it('clicking the trade action does not navigate', async () => {
-    const w = mountTable()
-    await w.findAll('[data-test="watchlist-trade"]')[0].trigger('click')
-    expect(push).not.toHaveBeenCalled()
   })
 
   it('primes and opens Bridge with the row chains for a bridge cta', async () => {
@@ -254,11 +235,13 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
       'common.actions',
     ])
     expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
+    const trade = () => w.findAll('[data-test="watchlist-menu-trade"]')[0]
+    expect(trade().isVisible()).toBe(false)
     await w.findAll('[data-test="watchlist-menu"]')[0].trigger('click')
-    await w.get('[data-test="watchlist-menu-trade"]').trigger('click')
+    expect(trade().isVisible()).toBe(true)
+    await trade().trigger('click')
     expect(walletMenu.walletPanel).toBe('trade')
-    expect(push).not.toHaveBeenCalled()
-    expect(w.find('[data-test="watchlist-menu-trade"]').exists()).toBe(false)
+    expect(trade().isVisible()).toBe(false)
   })
 
   it('the ellipsis menu removes the row from the watchlist', async () => {
@@ -267,9 +250,8 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     store.setWatchlistItem('AAPL', true)
     const w = mountTable()
     await w.findAll('[data-test="watchlist-menu"]')[0].trigger('click')
-    await w.get('[data-test="watchlist-menu-remove"]').trigger('click')
+    await w.findAll('[data-test="watchlist-menu-remove"]')[0].trigger('click')
     expect(store.watchListedStocks).toEqual([])
-    expect(push).not.toHaveBeenCalled()
   })
 
   it('filters rows by category (crypto only)', async () => {
@@ -289,12 +271,15 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(w.findAll('[data-test="watchlist-row"]').length).toBe(1)
   })
 
-  it('renders a loading row as a skeleton (star kept, no trade button)', () => {
+  it('shows skeleton rows while a row waits on its market data', () => {
     const w = mountTable([
+      makeRow(),
       makeRow({ key: 'token-solana', symbol: '', name: '', loading: true }),
     ])
-    expect(w.findAll('[data-test="watchlist-row"]').length).toBe(1)
-    expect(stars(w).length).toBe(1)
+    expect(w.get('[role="table"]').attributes('aria-busy')).toBe('true')
+    // One skeleton row per shown row; the real rows wait for the data.
+    expect(w.findAll('[role="rowgroup"] [role="row"]').length).toBe(2)
+    expect(w.find('[data-test="watchlist-row"]').exists()).toBe(false)
     expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
   })
 
@@ -305,7 +290,6 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(w.get('[data-test="add-dialog"]').attributes('data-open')).toBe(
       'true',
     )
-    expect(push).not.toHaveBeenCalled()
   })
 
   it('disables the Add asset button with a tooltip once both buckets are full (MEW-2374)', () => {

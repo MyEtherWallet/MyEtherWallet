@@ -1,11 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 const push = vi.fn()
-vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
+vi.mock('vue-router', async () => ({
+  RouterLink: (await import('@vue/test-utils')).RouterLinkStub,
+  useRouter: () => ({ push }),
+}))
 
 // jsdom has no layout: the table wrapper sizes itself from this width
 // (L ≥1280, M ≥768, S below).
@@ -16,9 +19,9 @@ vi.mock('@vueuse/core', async importOriginal => ({
 }))
 
 // The real analytics module pulls the router and the wallet (Ledger) stack.
-vi.mock('@/analytics', () => ({
+vi.mock('@/analytics', async () => ({
+  ...(await vi.importActual('@/analytics/events')),
   analytics: { trackClickTokenTradeEvent: vi.fn() },
-  ClickTokenTradeEvent: { BUY: 'buy', SWAP: 'swap', TRADE: 'trade' },
 }))
 vi.mock('@/stores/walletStore', async () => {
   const { defineStore } = await import('pinia')
@@ -106,6 +109,11 @@ vi.mock(
 
 import TableTokenBalance from '@/modules/portfolio/components/balances/TableTokenBalance.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { useTokenInfoStore } from '@/stores/tokenInfoStore'
+import { useCustomTokenStore } from '@/stores/customTokenStore'
+import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const i18n = createI18n({
   legacy: false,
@@ -123,7 +131,8 @@ const mountTable = (view = 'all') =>
     global: {
       plugins: [i18n],
       directives: { ripple: {} },
-      stubs: { RouterLink: true },
+      // The empty-watchlist state uses the global router-link.
+      stubs: { RouterLink: RouterLinkStub },
     },
   })
 
@@ -131,12 +140,15 @@ const mountTable = (view = 'all') =>
 const symbols = (w: ReturnType<typeof mountTable>) =>
   w.findAllComponents(AppTableRow).map(r => r.props('title'))
 
-// Body rows are the clickable ones; the header row has no tabindex.
+const BODY_ROW = '[role="rowgroup"] [role="row"]'
 const buttonTexts = (w: ReturnType<typeof mountTable>) =>
-  w.findAll('[role="row"][tabindex] button').map(b => b.text())
+  w.findAll(`${BODY_ROW} button`).map(b => b.text())
+const headers = (w: ReturnType<typeof mountTable>) =>
+  w.findAll('[role="columnheader"]').map(h => h.text())
 
 describe('TableTokenBalance', () => {
   beforeEach(() => {
+    localStorage.clear()
     setActivePinia(createPinia())
     cardWidth.value = 1300
   })
@@ -170,17 +182,49 @@ describe('TableTokenBalance', () => {
     await w.vm.$nextTick()
     expect(buttonTexts(w)).not.toContain('common.swap')
     expect(
-      w.findAll('[role="row"][tabindex] [aria-label="common.action_menu"]'),
+      w.findAll(`${BODY_ROW} [aria-label="common.action_menu"]`),
     ).toHaveLength(3)
   })
 
-  it('opens the token page on row click', async () => {
+  it('shows the market cap column at L only', async () => {
     const w = mountTable()
-    await w.find('[role="row"][tabindex]').trigger('click')
-    expect(push).toHaveBeenCalledWith({
-      name: expect.any(String),
+    expect(headers(w)).toContain('portfolio.table.market_cap_header')
+    cardWidth.value = 900
+    await w.vm.$nextTick()
+    expect(headers(w)).not.toContain('portfolio.table.market_cap_header')
+    expect(headers(w)).toContain('portfolio.table.price_header')
+  })
+
+  it('links each row to its token page and primes the token info', async () => {
+    const w = mountTable()
+    const link = w.getComponent(RouterLinkStub)
+    expect(link.props('to')).toEqual({
+      name: TOKEN_INFO_ROUTE_NAMES.home,
       params: { tokenId: 'aaa' },
     })
+    await link.trigger('click')
+    expect(useTokenInfoStore().tokenInfo).toMatchObject({ coinId: 'aaa' })
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('shows a page of skeleton rows while balances load', () => {
+    useWalletStore().isLoadingBalances = true
+    const w = mountTable()
+    expect(w.get('[role="table"]').attributes('aria-busy')).toBe('true')
+    expect(w.findAllComponents(AppTableRow)).toHaveLength(10)
+    expect(w.get('nav p').text()).toBe('')
+  })
+
+  it('keeps the watchlist star on custom tokens that have a watchlist id', () => {
+    useCustomTokenStore().addCustomToken('ETHEREUM', {
+      name: 'Aaa',
+      symbol: 'aaa',
+      address: '0xa',
+      decimals: 18,
+    })
+    const w = mountTable('custom')
+    expect(symbols(w)).toEqual(['AAA'])
+    expect(w.findAllComponents(AppCellWatchlistToggle)).toHaveLength(1)
   })
 
   it('labels the pager with the results shown so far', () => {

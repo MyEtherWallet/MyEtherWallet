@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { ref, type Ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 const push = vi.fn()
-vi.mock('vue-router', () => ({
+vi.mock('vue-router', async () => ({
+  RouterLink: (await import('@vue/test-utils')).RouterLinkStub,
   useRoute: () => ({ query: {} }),
   useRouter: () => ({ push, replace: vi.fn() }),
 }))
@@ -18,16 +19,20 @@ vi.mock('@vueuse/core', async importOriginal => ({
 }))
 
 const trackSort = vi.fn()
-vi.mock('@/analytics', () => ({
+const trackClickStock = vi.fn()
+vi.mock('@/analytics', async () => ({
+  ...(await vi.importActual('@/analytics/events')),
   analytics: new Proxy(
     {},
     {
       get: (_, key) =>
-        key === 'trackStockMarketClickSortEvent' ? trackSort : () => {},
+        key === 'trackStockMarketClickSortEvent'
+          ? trackSort
+          : key === 'trackStockMarketClickStockEvent'
+            ? trackClickStock
+            : () => {},
     },
   ),
-  ClickTokenTradeEvent: {},
-  StockMarketEvent: {},
 }))
 
 // Each useMEWFetch call (gainers, then table) records its URL ref; execute()
@@ -97,6 +102,8 @@ vi.mock('@/components/select_chain/SelectChainDialog.vue', () => ({
 
 import ModuleAllStock from '@/modules/stocks/ModuleAllStock.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
+import { StockMarketEvent, StockMarketLocation } from '@/analytics/events'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const i18n = createI18n({
   legacy: false,
@@ -113,7 +120,8 @@ const mountModule = async () => {
     global: {
       plugins: [i18n],
       directives: { ripple: {} },
-      stubs: { RouterLink: true },
+      // AppSelect resolves the global router-link.
+      stubs: { RouterLink: RouterLinkStub },
     },
   })
   await flushPromises()
@@ -128,6 +136,7 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     setActivePinia(createPinia())
     fetches.length = 0
     trackSort.mockClear()
+    trackClickStock.mockClear()
     push.mockClear()
     cardWidth.value = 1300
     respond = true
@@ -138,10 +147,22 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     const rows = w.findAllComponents(AppTableRow)
     expect(rows).toHaveLength(1)
     expect(rows[0].props('description')).toBe('Apple')
-    await rows[0].trigger('click')
-    expect(push).toHaveBeenCalledWith(
-      expect.objectContaining({ params: { symbol: 'AAPLon' } }),
-    )
+  })
+
+  it('links the row to the stock page and tracks the click', async () => {
+    const w = await mountModule()
+    const link = w.getComponent(RouterLinkStub)
+    expect(link.props('to')).toEqual({
+      name: STOCK_INFO_ROUTE_NAMES.stocks,
+      params: { symbol: 'AAPLon' },
+    })
+    await link.trigger('click')
+    expect(trackClickStock).toHaveBeenCalledWith(StockMarketEvent.CLICK_STOCK, {
+      location: StockMarketLocation.TOKEN_ROW,
+      stockName: 'Apple',
+      stockSymbol: 'AAPLon',
+    })
+    expect(push).not.toHaveBeenCalled()
   })
 
   it('titles a stock with its ticker and a gradient "on"', async () => {
@@ -151,24 +172,26 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     expect(title.get('span.bg-stock-gradient').text()).toBe('on')
   })
 
-  it('blanks the pagination label while loading', async () => {
+  it('shows a page of skeleton rows while loading', async () => {
     respond = false
     const w = await mountModule()
-    expect(w.get('nav p').text()).toBe('')
+    expect(w.get('[role="table"]').attributes('aria-busy')).toBe('true')
+    expect(w.findAllComponents(AppTableRow)).toHaveLength(10)
+    expect(w.findComponent(RouterLinkStub).exists()).toBe(false)
 
     respond = true
     fetches[1].execute()
     await flushPromises()
-    expect(w.get('nav p').text()).toBe('common.showing_page')
+    expect(w.findAllComponents(AppTableRow)).toHaveLength(1)
   })
 
-  it('drives the API sort from the header and falls back to market cap', async () => {
+  it('drives the API sort from the header and returns to market cap', async () => {
     const w = await mountModule()
     expect(tableUrl().searchParams.get('sort')).toBe('MARKET_CAP_DESC')
 
     await header(w, 'Price').trigger('click')
     expect(tableUrl().searchParams.get('sort')).toBe('PRICE_DESC')
-    expect(trackSort).toHaveBeenLastCalledWith(undefined, {
+    expect(trackSort).toHaveBeenLastCalledWith(StockMarketEvent.CLICK_SORT, {
       sortOption: 'price',
     })
 
@@ -178,7 +201,7 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     // Third click turns the column off → the default sort.
     await header(w, 'Price').trigger('click')
     expect(tableUrl().searchParams.get('sort')).toBe('MARKET_CAP_DESC')
-    expect(trackSort).toHaveBeenLastCalledWith(undefined, {
+    expect(trackSort).toHaveBeenLastCalledWith(StockMarketEvent.CLICK_SORT, {
       sortOption: 'price',
     })
   })

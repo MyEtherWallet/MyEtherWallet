@@ -1,6 +1,6 @@
 <template>
   <div class="basis-full w-full">
-    <AppTableWrapper :title="$t('crypto.explore_tokens')">
+    <AppTableWrapper :title="$t('crypto.explore_tokens')" title-tag="h1">
       <template #toolbar="{ size }">
         <app-searchbar
           v-model="searchInput"
@@ -65,31 +65,25 @@
         v-if="isLoading || tokens.length > 0"
         v-model:sort="sort"
         v-model:page="page"
+        :default-sort="DEFAULT_SORT"
         :columns="columns"
         :pages="totalPages"
-        :pagination-label="isLoading ? blankLabel : undefined"
+        :loading="isLoading"
+        :loading-rows="PER_PAGE"
         footer="pagination"
         watchlist
         actions
       >
         <template #default="{ size }">
-          <!-- Full-width bars in the row tracks keep the header and pager in place. -->
-          <template v-if="isLoading">
-            <AppSkeleton
-              v-for="n in PER_PAGE"
-              :key="n"
-              class="col-span-full my-3 h-11 rounded-12"
-            />
-          </template>
           <AppTableRow
             v-for="token in tokens"
-            v-else
             :key="token.name + token.marketCap"
             :title="token.symbol.toUpperCase()"
             :description="getTokenDisplayName(token)"
+            :to="getTokenRoute(token)"
             :watchlisted="isWatchListed(getWatchlistId(token))"
             @update:watchlisted="setWatchlistToken(token)"
-            @click="onRowClick(token)"
+            @click="trackRowClick(token)"
           >
             <template v-if="token.ondo !== null" #title>
               {{ stockBaseSymbol(token.symbol)
@@ -145,36 +139,6 @@
                   <div
                     class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                   >
-                    <button
-                      v-if="token.coinId || token.ondo"
-                      class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
-                      @click.stop="[setWatchlistToken(token), toggleMenu()]"
-                    >
-                      <AppIcon
-                        name="star"
-                        :variant="
-                          isWatchListed(getWatchlistId(token))
-                            ? 'filled'
-                            : 'stroke'
-                        "
-                        size="xxs"
-                      />
-                      <span class="ml-2">{{
-                        isWatchListed(getWatchlistId(token))
-                          ? $t('common.remove_from_watchlist')
-                          : $t('common.add_to_watchlist')
-                      }}</span>
-                    </button>
-                    <app-divider
-                      v-if="
-                        isBuyableOnCompatibleChain(token.coinId) ||
-                        token.ondo !== null ||
-                        getIsBridgeable(token) ||
-                        token.chains.length > 0 ||
-                        getTokenIsCurrentNative(token)
-                      "
-                      class="my-1 xs:hidden"
-                    />
                     <ul>
                       <li
                         v-if="isBuyableOnCompatibleChain(token.coinId)"
@@ -279,13 +243,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { computed, ref, shallowRef, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName, stockBaseSymbol } from '@/utils/tokenDisplayName'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
@@ -325,10 +288,15 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { NewTokenInfo } from '@/stores/swapStore'
 import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
+import {
+  analytics,
+  ClickTokenTradeEvent,
+  ClickTokenTradeLocation,
+  CryptoMarketEvent,
+  CryptoMarketLocation,
+} from '@/analytics'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
@@ -364,8 +332,6 @@ const networkFilterLabel = computed(() =>
     ? t('common.all_networks')
     : selectedChainFilter.value!.nameLong,
 )
-const headerSort = ref<string>('MARKET_CAP')
-const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
@@ -430,12 +396,12 @@ const canSwap = (token: DisplayToken): boolean =>
   (token.chains.length > 0 || getTokenIsCurrentNative(token))
 const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
-    location: 'crypto_table',
+    location: ClickTokenTradeLocation.CRYPTO_TABLE,
     token: token.symbol,
     isMobile,
   })
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
-    location: 'buy_button',
+    location: CryptoMarketLocation.BUY_BUTTON,
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
@@ -444,12 +410,12 @@ const buyBtn = (token: DisplayToken, isMobile = false) => {
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BRIDGE, {
-    location: 'crypto_table',
+    location: ClickTokenTradeLocation.CRYPTO_TABLE,
     token: token.symbol,
     isMobile,
   })
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
-    location: 'bridge_button',
+    location: CryptoMarketLocation.BRIDGE_BUTTON,
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
@@ -496,12 +462,12 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
 }
 const swapBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.SWAP, {
-    location: 'crypto_table',
+    location: ClickTokenTradeLocation.CRYPTO_TABLE,
     token: token.symbol,
     isMobile,
   })
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
-    location: 'swap_button',
+    location: CryptoMarketLocation.SWAP_BUTTON,
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
@@ -553,7 +519,7 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
-    location: 'crypto_table',
+    location: ClickTokenTradeLocation.CRYPTO_TABLE,
     token: token.symbol,
     stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
@@ -567,8 +533,8 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 
-// Column keys are the API sort keys. The header cycles off → desc → asc → off;
-// "off" falls back to the default market cap desc.
+// Column keys are the API sort keys. The header cycles desc → asc → back to
+// the default market cap desc.
 const columns = computed<TableColumn[]>(() => [
   { key: 'NAME', label: t('crypto.token'), sortable: true },
   { key: 'MARKET_CAP', label: t('crypto.market_cap'), sortable: true },
@@ -577,19 +543,15 @@ const columns = computed<TableColumn[]>(() => [
   { key: 'PRICE', label: t('crypto.price'), sortable: true },
 ])
 
-const sort = computed<TableSort | null>({
-  get: () => ({ key: headerSort.value, direction: tableDirection.value }),
-  set: next => {
-    analytics.trackCryptoMarketClickSortEvent(CryptoMarketEvent.CLICK_SORT, {
-      sortOption: (next?.key ?? headerSort.value).toLowerCase(),
-    })
-    headerSort.value = next?.key ?? 'MARKET_CAP'
-    tableDirection.value = next?.direction ?? 'desc'
-  },
+const DEFAULT_SORT: TableSort = { key: 'MARKET_CAP', direction: 'desc' }
+// Shallow so the table's DEFAULT_SORT comes back by identity.
+const sort = shallowRef<TableSort>(DEFAULT_SORT)
+// A click back to the default reports the column that was clicked.
+watch(sort, (next, prev) => {
+  analytics.trackCryptoMarketClickSortEvent(CryptoMarketEvent.CLICK_SORT, {
+    sortOption: (next === DEFAULT_SORT ? prev : next).key.toLowerCase(),
+  })
 })
-
-// totalPages is stale until the fetch lands, so the page label stays blank.
-const blankLabel = () => ''
 
 const setSelectedChain = (chain: Chain) => {
   analytics.trackCryptoMarketSelectNetworkEvent(
@@ -670,7 +632,7 @@ const fetchTableUrl = computed(() => {
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''
       : `filterChain=${selectedChainFilter.value.name}`
-  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${PER_PAGE}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
+  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${PER_PAGE}&sort=${sort.value.key}_${sort.value.direction.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
 })
 
 const {
@@ -802,7 +764,7 @@ const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
   return [...tokensList].sort((a, b) => {
     let comparison = 0
 
-    switch (headerSort.value) {
+    switch (sort.value.key) {
       case 'NAME':
         comparison = a.name.localeCompare(b.name)
         break
@@ -823,7 +785,7 @@ const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
         comparison = 0
     }
 
-    return tableDirection.value === 'desc' ? -comparison : comparison
+    return sort.value.direction === 'desc' ? -comparison : comparison
   })
 }
 
@@ -919,8 +881,8 @@ watch(
 const prevWatchValues = ref({
   chain: selectedChainFilter.value,
   page: page.value,
-  headerSort: headerSort.value,
-  tableDirection: tableDirection.value,
+  headerSort: sort.value.key,
+  tableDirection: sort.value.direction,
   cryptoFilter: selectedCryptoFilter.value,
 })
 
@@ -928,8 +890,7 @@ watch(
   () => [
     selectedChainFilter.value,
     page.value,
-    headerSort.value,
-    tableDirection.value,
+    sort.value,
     selectedCryptoFilter.value,
   ],
   () => {
@@ -938,15 +899,15 @@ watch(
       prev.chain === selectedChainFilter.value &&
       prev.page === page.value &&
       prev.cryptoFilter === selectedCryptoFilter.value &&
-      (prev.headerSort !== headerSort.value ||
-        prev.tableDirection !== tableDirection.value)
+      (prev.headerSort !== sort.value.key ||
+        prev.tableDirection !== sort.value.direction)
 
     // Update previous values
     prevWatchValues.value = {
       chain: selectedChainFilter.value,
       page: page.value,
-      headerSort: headerSort.value,
-      tableDirection: tableDirection.value,
+      headerSort: sort.value.key,
+      tableDirection: sort.value.direction,
       cryptoFilter: selectedCryptoFilter.value,
     }
 
@@ -1013,13 +974,12 @@ watch(
   },
 )
 
-const onRowClick = (token: DisplayToken) => {
+const trackRowClick = (token: DisplayToken) => {
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
-    location: 'token_row',
+    location: CryptoMarketLocation.TOKEN_ROW,
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
-  goToTokenPage(token)
 }
 
 const getTokenRoute = (token: DisplayToken) => {

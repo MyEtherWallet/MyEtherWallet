@@ -1,6 +1,6 @@
 <template>
   <div class="basis-full w-full">
-    <AppTableWrapper :title="$t('stocks.all_stocks')">
+    <AppTableWrapper :title="$t('stocks.all_stocks')" title-tag="h1">
       <template #toolbar="{ size }">
         <app-searchbar
           v-model="searchInput"
@@ -40,30 +40,24 @@
         v-if="isLoading || tokens.length > 0"
         v-model:sort="sort"
         v-model:page="page"
+        :default-sort="DEFAULT_SORT"
         :columns="columns"
         :pages="totalPages"
-        :pagination-label="isLoading ? blankLabel : undefined"
+        :loading="isLoading"
+        :loading-rows="PER_PAGE"
         footer="pagination"
         watchlist
         actions
       >
         <template #default="{ size }">
-          <!-- Full-width bars in the row tracks keep the header and pager in place. -->
-          <template v-if="isLoading">
-            <AppSkeleton
-              v-for="n in PER_PAGE"
-              :key="n"
-              class="col-span-full my-3 h-11 rounded-12"
-            />
-          </template>
           <AppTableRow
             v-for="token in tokens"
-            v-else
             :key="token.name + token.marketCap"
             :description="token.name"
+            :to="getTokenRoute(token)"
             :watchlisted="isWatchListed(token.coinId)"
             @update:watchlisted="setWatchlistToken(token.coinId)"
-            @click="onRowClick(token)"
+            @click="trackRowClick(token)"
           >
             <template #title>
               {{ stockBaseSymbol(token.symbol)
@@ -173,13 +167,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { computed, ref, shallowRef, onMounted, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
@@ -209,7 +202,13 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
-import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
+import {
+  analytics,
+  ClickTokenTradeEvent,
+  ClickTokenTradeLocation,
+  StockMarketEvent,
+  StockMarketLocation,
+} from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
@@ -225,8 +224,6 @@ const searchInput = ref('')
 const activeSort = ref({ label: '', value: '' })
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
-const headerSort = ref<string>('MARKET_CAP')
-const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
@@ -252,13 +249,13 @@ const PER_PAGE = 10
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
-    location: 'stocks_table',
+    location: ClickTokenTradeLocation.STOCKS_TABLE,
     token: token.symbol,
     stock: token.name,
     isMobile,
   })
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
-    location: 'trade_button',
+    location: StockMarketLocation.TRADE_BUTTON,
     stockName: token.name,
     stockSymbol: token.symbol,
   })
@@ -272,8 +269,8 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 
-// Column keys are the API sort keys. The header cycles off → desc → asc → off;
-// "off" falls back to the default market cap desc.
+// Column keys are the API sort keys. The header cycles desc → asc → back to
+// the default market cap desc.
 const columns = computed<TableColumn[]>(() => [
   { key: 'NAME', label: t('stocks.name'), sortable: true },
   { key: 'MARKET_CAP', label: t('stocks.market_cap'), sortable: true },
@@ -286,19 +283,15 @@ const columns = computed<TableColumn[]>(() => [
   { key: 'PRICE', label: t('stocks.price'), sortable: true },
 ])
 
-const sort = computed<TableSort | null>({
-  get: () => ({ key: headerSort.value, direction: tableDirection.value }),
-  set: next => {
-    analytics.trackStockMarketClickSortEvent(StockMarketEvent.CLICK_SORT, {
-      sortOption: (next?.key ?? headerSort.value).toLowerCase(),
-    })
-    headerSort.value = next?.key ?? 'MARKET_CAP'
-    tableDirection.value = next?.direction ?? 'desc'
-  },
+const DEFAULT_SORT: TableSort = { key: 'MARKET_CAP', direction: 'desc' }
+// Shallow so the table's DEFAULT_SORT comes back by identity.
+const sort = shallowRef<TableSort>(DEFAULT_SORT)
+// A click back to the default reports the column that was clicked.
+watch(sort, (next, prev) => {
+  analytics.trackStockMarketClickSortEvent(StockMarketEvent.CLICK_SORT, {
+    sortOption: (next === DEFAULT_SORT ? prev : next).key.toLowerCase(),
+  })
 })
-
-// totalPages is stale until the fetch lands, so the page label stays blank.
-const blankLabel = () => ''
 
 const setSelectedChain = (chain: Chain) => {
   activeSort.value = { label: chain.nameLong, value: chain.name }
@@ -407,23 +400,19 @@ const formatStock = (
 }
 
 const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
+  const { key, direction } = sort.value
   const sortMap: Record<string, () => DisplayToken[]> = {
-    NAME: () => sortObjectArrayString(tokensList, 'name', tableDirection.value),
+    NAME: () => sortObjectArrayString(tokensList, 'name', direction),
     MARKET_CAP: () =>
-      sortObjectArrayNumber(tokensList, 'marketCapRaw', tableDirection.value),
+      sortObjectArrayNumber(tokensList, 'marketCapRaw', direction),
     VOLUME_24H: () =>
-      sortObjectArrayNumber(tokensList, 'totalVolumeRaw', tableDirection.value),
-    PRICE: () =>
-      sortObjectArrayNumber(tokensList, 'priceRaw', tableDirection.value),
+      sortObjectArrayNumber(tokensList, 'totalVolumeRaw', direction),
+    PRICE: () => sortObjectArrayNumber(tokensList, 'priceRaw', direction),
     PRICE_CHANGE_PERCENTAGE_24H: () =>
-      sortObjectArrayNumber(
-        tokensList,
-        'priceChangePercentage24h',
-        tableDirection.value,
-      ),
+      sortObjectArrayNumber(tokensList, 'priceChangePercentage24h', direction),
   }
 
-  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : tokensList
+  return sortMap[key] ? sortMap[key]() : tokensList
 }
 
 const fetchGainersUrl = computed(() => {
@@ -454,8 +443,8 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }
 
-  const sort = `${headerSort.value}_${tableDirection.value.toUpperCase()}`
-  url.searchParams.set('sort', sort)
+  const { key, direction } = sort.value
+  url.searchParams.set('sort', `${key}_${direction.toUpperCase()}`)
 
   return url.toString()
 })
@@ -614,8 +603,8 @@ watch(
 const prevWatchValues = ref({
   chain: selectedChainFilter.value,
   page: page.value,
-  headerSort: headerSort.value,
-  tableDirection: tableDirection.value,
+  headerSort: sort.value.key,
+  tableDirection: sort.value.direction,
   cryptoFilter: selectedCryptoFilter.value.value,
 })
 
@@ -623,8 +612,7 @@ watch(
   () => [
     selectedChainFilter.value,
     page.value,
-    headerSort.value,
-    tableDirection.value,
+    sort.value,
     selectedCryptoFilter.value.value,
   ],
   () => {
@@ -633,15 +621,15 @@ watch(
       prev.chain === selectedChainFilter.value &&
       prev.page === page.value &&
       prev.cryptoFilter === selectedCryptoFilter.value.value &&
-      (prev.headerSort !== headerSort.value ||
-        prev.tableDirection !== tableDirection.value)
+      (prev.headerSort !== sort.value.key ||
+        prev.tableDirection !== sort.value.direction)
 
     // Update previous values
     prevWatchValues.value = {
       chain: selectedChainFilter.value,
       page: page.value,
-      headerSort: headerSort.value,
-      tableDirection: tableDirection.value,
+      headerSort: sort.value.key,
+      tableDirection: sort.value.direction,
       cryptoFilter: selectedCryptoFilter.value.value,
     }
 
@@ -696,19 +684,20 @@ watch(
   },
 )
 
-const onRowClick = (token: DisplayToken) => {
+const trackRowClick = (token: DisplayToken) => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
-    location: 'token_row',
+    location: StockMarketLocation.TOKEN_ROW,
     stockName: token.name,
     stockSymbol: token.symbol,
   })
-  goToTokenPage(token)
 }
 
+const getTokenRoute = (token: DisplayToken) => ({
+  name: STOCK_INFO_ROUTE_NAMES.stocks,
+  params: { symbol: token.symbol },
+})
+
 const goToTokenPage = (token: DisplayToken) => {
-  router.push({
-    name: STOCK_INFO_ROUTE_NAMES.stocks,
-    params: { symbol: token.symbol },
-  })
+  router.push(getTokenRoute(token))
 }
 </script>

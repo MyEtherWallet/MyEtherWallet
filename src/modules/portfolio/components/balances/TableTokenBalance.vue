@@ -1,6 +1,6 @@
 <template>
   <div v-if="isWalletConnected">
-    <AppTableWrapper :title="$t('portfolio.your_balances')">
+    <AppTableWrapper :title="$t('portfolio.your_balances')" title-tag="h1">
       <template #toolbar="{ size }">
         <AppSearchbar
           v-if="!isComingSoon"
@@ -73,7 +73,7 @@
           </p>
           <div
             v-else
-            class="bg-background-default animate-pulse w-[100px] h-6 rounded-lg ml-auto"
+            class="bg-background-default animate-pulse w-25 h-6 rounded-lg ml-auto"
           ></div>
         </div>
       </template>
@@ -86,61 +86,17 @@
       <div v-if="isComingSoon" class="text-center my-10">
         {{ $t('common.coming_soon') }}
       </div>
-      <AppTableSkeleton v-else-if="isLoading" :rows="PER_PAGE" />
-      <div
-        v-else-if="emptyState === 'watchlist'"
-        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
-      >
-        <p class="mb-1">{{ $t('portfolio.table.empty_watchlist') }}</p>
-        <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
-          >{{ $t('portfolio.table.discover_more_tokens') }}
-          <AppIcon
-            name="arrow-long-up"
-            variant="filled"
-            size="xxs"
-            class="rotate-90 inline-flex"
-          />
-        </router-link>
-      </div>
-      <div
-        v-else-if="emptyState === 'custom'"
-        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
-      >
-        <p class="mb-6">{{ $t('portfolio.table.empty_custom') }}</p>
-        <app-base-button size="medium" @click="openAddCustom">{{
-          $t('portfolio.table.add_custom_token')
-        }}</app-base-button>
-      </div>
-      <div
-        v-else-if="emptyState === 'stocks'"
-        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
-      >
-        <p class="mb-6">
-          {{ $t('portfolio.table.empty_stocks') }}
-        </p>
-        <app-base-button
-          size="medium"
-          @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
-          >{{ $t('common.explore_stocks') }}</app-base-button
-        >
-      </div>
-      <div
-        v-else-if="emptyState === 'search'"
-        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
-      >
-        <p class="mb-1">
-          {{ $t('portfolio.table.no_results', { query: searchInput }) }}
-        </p>
-      </div>
       <AppTable
-        v-else
+        v-else-if="isLoading || !emptyState"
         v-model:sort="sort"
         v-model:page="page"
         :columns="columns"
         :pages="totalPages"
         :pagination-label="resultsLabel"
+        :loading="isLoading"
+        :loading-rows="PER_PAGE"
         footer="pagination"
-        :watchlist="view !== 'custom'"
+        watchlist
         actions
       >
         <AppTableRow
@@ -153,14 +109,15 @@
             token.contract
           "
           :title="token.symbol.toUpperCase()"
-          :description="getTokenName(token)"
+          :description="getTokenDisplayName(token)"
+          :to="getTokenRoute(token)"
           :watchlisted="
             getWatchlistId(token)
               ? isWatchListed(getWatchlistId(token))
               : undefined
           "
           @update:watchlisted="setWatchlistToken(token)"
-          @click="goToTokenPage(token)"
+          @click="onTokenLinkClick(token)"
         >
           <template v-if="token.ondo" #title>
             {{ stockBaseSymbol(token.symbol)
@@ -345,6 +302,51 @@
           </template>
         </AppTableRow>
       </AppTable>
+      <div
+        v-else-if="emptyState === 'watchlist'"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
+      >
+        <p class="mb-1">{{ $t('portfolio.table.empty_watchlist') }}</p>
+        <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
+          >{{ $t('portfolio.table.discover_more_tokens') }}
+          <AppIcon
+            name="arrow-long-up"
+            variant="filled"
+            size="xxs"
+            class="rotate-90 inline-flex"
+          />
+        </router-link>
+      </div>
+      <div
+        v-else-if="emptyState === 'custom'"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
+      >
+        <p class="mb-6">{{ $t('portfolio.table.empty_custom') }}</p>
+        <app-base-button size="medium" @click="openAddCustom">{{
+          $t('portfolio.table.add_custom_token')
+        }}</app-base-button>
+      </div>
+      <div
+        v-else-if="emptyState === 'stocks'"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
+      >
+        <p class="mb-6">
+          {{ $t('portfolio.table.empty_stocks') }}
+        </p>
+        <app-base-button
+          size="medium"
+          @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
+          >{{ $t('common.explore_stocks') }}</app-base-button
+        >
+      </div>
+      <div
+        v-else-if="emptyState === 'search'"
+        class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
+      >
+        <p class="mb-1">
+          {{ $t('portfolio.table.no_results', { query: searchInput }) }}
+        </p>
+      </div>
     </AppTableWrapper>
     <custom-tokens-dialog />
   </div>
@@ -364,7 +366,6 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTableSkeleton from '@/components/AppTableSkeleton.vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
@@ -385,9 +386,13 @@ import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
-import { stockBaseSymbol } from '@/utils/tokenDisplayName'
+import { getTokenDisplayName, stockBaseSymbol } from '@/utils/tokenDisplayName'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import { analytics, ClickTokenTradeEvent } from '@/analytics'
+import {
+  analytics,
+  ClickTokenTradeEvent,
+  ClickTokenTradeLocation,
+} from '@/analytics'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { captureException } from '@sentry/vue'
@@ -512,6 +517,7 @@ const columns = computed<TableColumn[]>(() => [
     key: SortValueString.MARKET_CAP,
     label: t('portfolio.table.market_cap_header'),
     sortable: true,
+    largeOnly: true,
   },
   {
     key: SortValueString.PRICE,
@@ -652,10 +658,6 @@ watch(
 /** -------------------------------
  * Table Logic
  -------------------------------*/
-const getTokenName = (token: DisplayToken): string => {
-  return token.ondo?.stockAlias || token.name
-}
-
 const getFiatValue = (token: TokenBalance): BigNumber => {
   return BigNumber(token.price || 0).multipliedBy(token.balance)
 }
@@ -818,7 +820,7 @@ const totalValue = computed(() => {
 /** -------------------------------
  * Pagination Logic
  -------------------------------*/
-// ponytail: fixed page size; the table footer has no page-size picker.
+// Fixed page size: the table footer has no page-size picker.
 const PER_PAGE = 10
 
 const { currentPage, paginatedArray, totalPages } = usePaginate<DisplayToken>(
@@ -860,7 +862,7 @@ const hasPrimaryAction = (token: DisplayToken): boolean =>
   !!token.ondo || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token?.symbol,
     isMobile,
   })
@@ -927,7 +929,7 @@ const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
 
 const swapBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.SWAP, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token.symbol,
     isMobile,
   })
@@ -938,7 +940,7 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token.symbol,
     isMobile,
     stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,

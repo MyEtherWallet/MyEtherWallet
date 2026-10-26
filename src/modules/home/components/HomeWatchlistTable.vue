@@ -2,11 +2,9 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
@@ -35,8 +33,6 @@ const query = ref('')
 const category = ref<'all' | 'stocks' | 'crypto'>('all')
 const isCategoryOpen = ref(false)
 const expanded = ref(false)
-// Row key whose size-S ellipsis action menu is open.
-const openMenuKey = ref<string | null>(null)
 const INITIAL_COUNT = 5
 
 const CATEGORIES = [
@@ -63,11 +59,9 @@ const columns = computed<TableColumn[]>(() => [
     primary: true,
   },
 ])
-const dataKeys = computed(() => columns.value.slice(1).map(c => c.key))
 
 const watchlistStore = useWatchlistStore()
 const walletMenu = useWalletMenuStore()
-const router = useRouter()
 const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
 
 // The add modal only offers crypto + stocks, so once both buckets hit the limit
@@ -100,6 +94,9 @@ const displayRows = computed(() =>
     ? filteredRows.value
     : filteredRows.value.slice(0, INITIAL_COUNT),
 )
+// Rows still waiting on market data (first load, or an asset just added)
+// show the table's skeleton rows until the fetch lands.
+const isLoading = computed(() => displayRows.value.some(r => r.loading))
 const hiddenCount = computed(() => filteredRows.value.length - INITIAL_COUNT)
 const hasMore = computed(() => !expanded.value && hiddenCount.value > 0)
 
@@ -242,6 +239,8 @@ const actionCall = (row: WatchlistRow) => {
       watchlist
       actions
       :reorderable="!dragDisabled"
+      :loading="isLoading"
+      :loading-rows="displayRows.length"
       :footer="hasMore ? 'show-more' : undefined"
       :remaining="hiddenCount"
       @show-more="expanded = true"
@@ -254,9 +253,9 @@ const actionCall = (row: WatchlistRow) => {
           data-test="watchlist-row"
           :title="row.symbol.toUpperCase()"
           :description="row.name"
+          :to="row.route"
           :watchlisted="true"
           @update:watchlisted="remove(row)"
-          @click="router.push(row.route)"
         >
           <template v-if="row.isStock" #title>
             {{ stockBaseSymbol(row.symbol)
@@ -264,18 +263,7 @@ const actionCall = (row: WatchlistRow) => {
               >on</span
             >
           </template>
-          <!-- AppTableRow has no loading state: skeleton the avatar and both
-               text lines (a blank description still gets its bar). -->
-          <template v-if="row.loading" #leading="{ size: avatarSize }">
-            <span class="flex h-11 shrink-0 items-center">
-              <AppSkeleton
-                shape="circle"
-                :class="avatarSize === 'm' ? 'size-8' : 'size-10'"
-              />
-            </span>
-            <AppContentGroup title="" description=" " loading />
-          </template>
-          <template v-else #avatar="{ size: avatarSize }">
+          <template #avatar="{ size: avatarSize }">
             <AppTokenLogo
               :url="row.logoUrl"
               :symbol="row.symbol"
@@ -286,38 +274,26 @@ const actionCall = (row: WatchlistRow) => {
             />
           </template>
 
-          <template v-if="row.loading">
-            <AppTableCell v-for="key in dataKeys" :key="key" :column="key">
-              <AppSkeleton class="h-4 w-16" />
-            </AppTableCell>
-          </template>
-          <template v-else>
-            <AppTableCell
-              column="marketCap"
-              :value="row.marketCapDisplay || '—'"
-            />
-            <AppTableCell column="volume" :value="row.volumeDisplay || '—'" />
-            <AppTableCell
-              column="change"
-              :change="row.change"
-              :series="row.sparkline.length ? row.sparkline : undefined"
-            />
-            <!-- At S the change column is gone, so price carries it. -->
-            <AppTableCell
-              column="price"
-              :value="row.priceDisplay"
-              :change="tableSize === 's' ? row.change : undefined"
-            />
-          </template>
+          <AppTableCell
+            column="marketCap"
+            :value="row.marketCapDisplay || '—'"
+          />
+          <AppTableCell column="volume" :value="row.volumeDisplay || '—'" />
+          <AppTableCell
+            column="change"
+            :change="row.change"
+            :series="row.sparkline.length ? row.sparkline : undefined"
+          />
+          <!-- At S the change column is gone, so price carries it. -->
+          <AppTableCell
+            column="price"
+            :value="row.priceDisplay"
+            :change="tableSize === 's' ? row.change : undefined"
+          />
 
           <template #actions="{ size, surface }">
-            <AppSkeleton
-              v-if="row.loading"
-              shape="rectangle-rounded"
-              :class="size === 's' ? 'size-8' : 'h-10 w-24'"
-            />
             <AppBaseButton
-              v-else-if="size !== 's'"
+              v-if="size !== 's'"
               data-test="watchlist-trade"
               type="secondary"
               size="medium"
@@ -327,33 +303,27 @@ const actionCall = (row: WatchlistRow) => {
             >
               {{ t(actionKey(row)) }}
             </AppBaseButton>
-            <div v-else class="relative">
-              <AppBtnIcon
-                data-test="watchlist-menu"
-                icon="ellipsis-horizontal"
-                :label="t('homePage.hero.watchlist.table.moreActions')"
-                @click="openMenuKey = openMenuKey === row.key ? null : row.key"
-              />
-              <template v-if="openMenuKey === row.key">
-                <div
-                  class="fixed inset-0 z-10"
-                  aria-hidden="true"
-                  @click="openMenuKey = null"
+            <AppPopUpMenu
+              v-else
+              :placeholder="t('homePage.hero.watchlist.table.moreActions')"
+              location="right"
+            >
+              <template #menu-button="{ toggleMenu }">
+                <AppBtnIcon
+                  data-test="watchlist-menu"
+                  icon="ellipsis-horizontal"
+                  :label="t('homePage.hero.watchlist.table.moreActions')"
+                  @click="toggleMenu"
                 />
-                <ul
-                  class="absolute right-0 z-20 mt-1 min-w-40 overflow-hidden rounded-2xl border border-border-strong/40 bg-white py-1 shadow-lg"
-                >
+              </template>
+              <template #menu-content="{ toggleMenu }">
+                <ul class="px-2 py-3 min-w-60">
                   <li>
                     <button
                       type="button"
                       data-test="watchlist-menu-trade"
-                      class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-black"
-                      @click="
-                        () => {
-                          actionCall(row)
-                          openMenuKey = null
-                        }
-                      "
+                      class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                      @click="[toggleMenu(), actionCall(row)]"
                     >
                       {{ t(actionKey(row)) }}
                     </button>
@@ -362,20 +332,15 @@ const actionCall = (row: WatchlistRow) => {
                     <button
                       type="button"
                       data-test="watchlist-menu-remove"
-                      class="hoverNoBG flex w-full items-center px-4 py-2 text-left text-s-14 font-medium text-text-error"
-                      @click="
-                        () => {
-                          remove(row)
-                          openMenuKey = null
-                        }
-                      "
+                      class="flex w-full items-center p-2 hoverBGWhite rounded-12 text-text-error"
+                      @click="[toggleMenu(), remove(row)]"
                     >
                       {{ t('homePage.hero.watchlist.table.removeShort') }}
                     </button>
                   </li>
                 </ul>
               </template>
-            </div>
+            </AppPopUpMenu>
           </template>
         </AppTableRow>
       </template>
