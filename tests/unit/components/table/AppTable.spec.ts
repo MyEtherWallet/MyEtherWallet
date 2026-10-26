@@ -222,6 +222,15 @@ describe('AppTable', () => {
     expect(w.emitted('update:sort')).toEqual([[def]])
   })
 
+  it('toggles a column whose default is ascending instead of sticking', async () => {
+    const def = { key: 'price', direction: 'asc' } as const
+    const w = factory({ sort: def, defaultSort: def })
+    await w.findAll('[role="columnheader"]')[1].get('button').trigger('click')
+    expect(w.emitted('update:sort')).toEqual([
+      [{ key: 'price', direction: 'desc' }],
+    ])
+  })
+
   it('swaps the rows for skeleton rows while loading and blanks the page label', () => {
     const w = factory(
       { loading: true, loadingRows: 3, footer: 'pagination', pages: 4 },
