@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import AppAccordion from '@/components/accordion/AppAccordion.vue'
 import AppAccordionGroup from '@/components/accordion/AppAccordionGroup.vue'
@@ -90,6 +90,12 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(panel(w).attributes('aria-labelledby')).toBe(headerId)
   })
 
+  it('builds the header / body ids from the id prop when given', () => {
+    const w = mountAccordion({ id: 'fees' })
+    expect(header(w).attributes('id')).toBe('fees-header')
+    expect(panel(w).attributes('id')).toBe('fees-body')
+  })
+
   it('gives each instance its own ids', () => {
     // useId is unique per app tree, so both live under one parent.
     const w = mount(
@@ -105,16 +111,16 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(new Set(ids).size).toBe(2)
   })
 
-  it.each([['disabled'], ['loading']])(
-    'blocks toggling and sets aria-disabled when %s',
-    async prop => {
-      const w = mountAccordion({ [prop]: true })
-      await header(w).trigger('click')
-      expect(panel(w).isVisible()).toBe(false)
-      expect(w.emitted('update:open')).toBeUndefined()
-      expect(header(w).attributes('aria-disabled')).toBe('true')
-    },
-  )
+  it.each([
+    ['disabled', 'aria-disabled'],
+    ['loading', 'aria-busy'],
+  ])('blocks toggling when %s and the Cell sets %s', async (prop, aria) => {
+    const w = mountAccordion({ [prop]: true })
+    await header(w).trigger('click')
+    expect(panel(w).isVisible()).toBe(false)
+    expect(w.emitted('update:open')).toBeUndefined()
+    expect(header(w).attributes(aria)).toBe('true')
+  })
 
   it('keeps the chevron visible while loading', () => {
     expect(
@@ -151,6 +157,24 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(header(w).get('[data-test="avatar"]').attributes('data-size')).toBe(
       'l',
     )
+  })
+
+  it('forwards a named slot the consumer adds after mount', async () => {
+    const late = ref(false)
+    const w = mount(
+      defineComponent(
+        () => () =>
+          h(
+            AppAccordion,
+            { title: 'Title' },
+            late.value ? { avatar: () => h('b', { 'data-test': 'late' }) } : {},
+          ),
+      ),
+      opts,
+    )
+    late.value = true
+    await nextTick()
+    expect(w.find('[data-test="late"]').exists()).toBe(true)
   })
 
   it('lands fallthrough attrs on the root, not the header', () => {

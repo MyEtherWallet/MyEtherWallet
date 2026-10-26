@@ -1,6 +1,5 @@
 <template>
   <div
-    v-bind="$attrs"
     :class="[
       'flex w-full flex-col overflow-hidden rounded-12',
       CELL_SURFACE_BG_CLASS[surface],
@@ -16,10 +15,9 @@
       :loading="loading"
       :aria-expanded="isOpen"
       :aria-controls="bodyId"
-      :aria-disabled="disabled || loading || undefined"
       @click="toggle"
     >
-      <template v-for="name in cellSlots" :key="name" #[name]="scope">
+      <template v-for="name in cellSlots()" :key="name" #[name]="scope">
         <slot :name="name" v-bind="scope" />
       </template>
       <template #indicator>
@@ -64,10 +62,9 @@ import { ACCORDION_GROUP_KEY, type AccordionKey } from './types'
  * axes: Style → `surface` (same meaning as the Cell), Open → `v-model:open`,
  * State → the Cell's own hover / pressed / focus plus `disabled` / `loading`.
  * Named slots (avatar, title, accessory…) go straight to the Cell. Inside an
- * AppAccordionGroup the group decides what is open.
+ * AppAccordionGroup the group decides what is open. Disabled / loading a11y
+ * (aria-disabled, aria-busy) comes from the Cell.
  */
-defineOptions({ inheritAttrs: false })
-
 const props = withDefaults(
   defineProps<{
     surface?: CellSurface
@@ -76,8 +73,10 @@ const props = withDefaults(
     rightAccessory?: CellRightAccessory
     disabled?: boolean
     loading?: boolean
-    /** Key inside an AppAccordionGroup. Defaults to a generated id. */
+    /** Key inside an AppAccordionGroup. Defaults to the generated id. */
     value?: AccordionKey
+    /** Base for the header / body ids. Generated when omitted. */
+    id?: string
   }>(),
   {
     surface: 'default',
@@ -85,6 +84,7 @@ const props = withDefaults(
     description: '',
     rightAccessory: undefined,
     value: undefined,
+    id: undefined,
   },
 )
 
@@ -97,16 +97,16 @@ const emit = defineEmits<{
 const slots = useSlots()
 const group = inject(ACCORDION_GROUP_KEY, null)
 
-const id = useId()
+const id = props.id ?? useId()
 const headerId = `${id}-header`
 const bodyId = `${id}-body`
 const key = computed(() => props.value ?? id)
 
 const isOpen = computed(() => (group ? group.isOpen(key.value) : open.value))
 
-const cellSlots = computed(() =>
-  Object.keys(slots).filter(name => name !== 'default'),
-)
+// Read at render time: slots aren't reactive, a computed would miss a named
+// slot the consumer adds later (e.g. behind v-if).
+const cellSlots = () => Object.keys(slots).filter(name => name !== 'default')
 
 // AppCell only emits click while interactive, so disabled / loading never land here.
 const toggle = () => {
