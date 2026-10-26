@@ -155,13 +155,23 @@ describe('AppTableRow', () => {
   it('shows a drag handle only when the table is reorderable', () => {
     expect(
       factory({ ctx: { start: true } })
-        .find('[data-test="table-row-handle"]')
+        .find('[data-table-handle]')
         .exists(),
     ).toBe(false)
     const handle = factory({ ctx: { start: true, reorderable: true } }).get(
-      '[data-test="table-row-handle"]',
+      '[data-table-handle]',
     )
-    expect(handle.attributes('draggable')).toBe('true')
     expect(handle.classes()).toContain('invisible')
+  })
+
+  it('passes title and title-icon slots to the content group', () => {
+    const w = factory({
+      slots: {
+        title: '<b>AAPL<span class="on">on</span></b>',
+        'title-icon': '<i data-test="tag">{{ params.size }}</i>',
+      },
+    })
+    expect(w.get('.on').text()).toBe('on')
+    expect(w.get('[data-test="tag"]').text()).toBe('xs')
   })
 })

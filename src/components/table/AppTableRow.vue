@@ -15,7 +15,8 @@ import { ROW_PADDING, TABLE_CONTEXT, defaultTableContext } from './types'
  *
  * Cells left to right: drag handle + watchlist star (when the table has a
  * start track), the leading cell (`#avatar` + title/description, or
- * `#leading`), the data cells from the default slot (AppTableCell), then
+ * `#leading`; `#title` / `#title-icon` pass through to the Content Group),
+ * the data cells from the default slot (AppTableCell), then
  * `#actions`. The actions slot gets `size` (Figma: two buttons at L, one at M,
  * the ellipsis Button Icon at S) and `surface` for AppBaseButton: grey buttons
  * on the white row, white ones while the row is hovered grey.
@@ -71,11 +72,10 @@ const activate = (e: KeyboardEvent) => {
     @keydown.space.self.prevent="activate"
   >
     <div v-if="start" role="cell" class="flex items-center">
-      <!-- Mouse-only in v1: AppTable reads the drag from the rowgroup. -->
+      <!-- AppTable's SortableJS drags the row by this handle. -->
       <span
         v-if="reorderable"
-        data-test="table-row-handle"
-        draggable="true"
+        data-table-handle
         aria-hidden="true"
         :class="[
           'invisible flex cursor-grab items-center justify-center text-icon-default group-focus-within:visible group-hover:visible',
@@ -104,7 +104,17 @@ const activate = (e: KeyboardEvent) => {
           size="m"
           no-wrap
           class="min-w-0 flex-1"
-        />
+        >
+          <template v-if="$slots.title" #title>
+            <slot name="title" />
+          </template>
+          <template
+            v-if="$slots['title-icon']"
+            #title-icon="{ size: iconSize }"
+          >
+            <slot name="title-icon" :size="iconSize" />
+          </template>
+        </AppContentGroup>
       </slot>
     </div>
 
