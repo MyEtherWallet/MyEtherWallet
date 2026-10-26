@@ -271,16 +271,17 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(w.findAll('[data-test="watchlist-row"]').length).toBe(1)
   })
 
-  it('shows skeleton rows while a row waits on its market data', () => {
+  it('shows a skeleton only for the row still waiting on its market data', () => {
     const w = mountTable([
       makeRow(),
       makeRow({ key: 'token-solana', symbol: '', name: '', loading: true }),
     ])
-    expect(w.get('[role="table"]').attributes('aria-busy')).toBe('true')
-    // One skeleton row per shown row; the real rows wait for the data.
-    expect(w.findAll('[role="rowgroup"] [role="row"]').length).toBe(2)
-    expect(w.find('[data-test="watchlist-row"]').exists()).toBe(false)
-    expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
+    const rows = w.findAll('[data-test="watchlist-row"]')
+    expect(rows).toHaveLength(2)
+    // The ready row keeps its actions; the pending one shows skeleton cells.
+    expect(rows[0].find('[data-test="watchlist-trade"]').exists()).toBe(true)
+    expect(rows[1].find('[data-test="watchlist-trade"]').exists()).toBe(false)
+    expect(rows[1].text()).toBe('')
   })
 
   it('Add asset opens the add-to-watchlist dialog on demand', async () => {

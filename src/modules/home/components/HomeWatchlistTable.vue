@@ -94,9 +94,6 @@ const displayRows = computed(() =>
     ? filteredRows.value
     : filteredRows.value.slice(0, INITIAL_COUNT),
 )
-// Rows still waiting on market data (first load, or an asset just added)
-// show the table's skeleton rows until the fetch lands.
-const isLoading = computed(() => displayRows.value.some(r => r.loading))
 const hiddenCount = computed(() => filteredRows.value.length - INITIAL_COUNT)
 const hasMore = computed(() => !expanded.value && hiddenCount.value > 0)
 
@@ -239,8 +236,6 @@ const actionCall = (row: WatchlistRow) => {
       watchlist
       actions
       :reorderable="!dragDisabled"
-      :loading="isLoading"
-      :loading-rows="displayRows.length"
       :footer="hasMore ? 'show-more' : undefined"
       :remaining="hiddenCount"
       @show-more="expanded = true"
@@ -255,6 +250,7 @@ const actionCall = (row: WatchlistRow) => {
           :description="row.name"
           :to="row.route"
           :watchlisted="true"
+          :loading="row.loading"
           @update:watchlisted="remove(row)"
         >
           <template v-if="row.isStock" #title>

@@ -90,6 +90,7 @@
         v-else-if="isLoading || !emptyState"
         v-model:sort="sort"
         v-model:page="page"
+        :default-sort="DEFAULT_SORT"
         :columns="columns"
         :pages="totalPages"
         :pagination-label="resultsLabel"
@@ -486,12 +487,12 @@ const { openCustomTokenDialog, setCurrentView } = customTokenStore
 
 // Local State
 const searchInput = ref('')
-// Header sort; null (the table's "off" state) falls back to the default order.
+// Header sort; a third click goes back to the default order.
 const DEFAULT_SORT: TableSort = {
   key: SortValueString.MARKET_CAP,
   direction: 'asc',
 }
-const sort = ref<TableSort | null>(null)
+const sort = ref<TableSort | null>(DEFAULT_SORT)
 const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
   {},
 )
