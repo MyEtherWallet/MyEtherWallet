@@ -35,7 +35,8 @@ const mountModal = (
       modelValue: true,
       title: 'Title',
       // Behave like a real v-model parent so closing actually closes.
-      'onUpdate:modelValue': (v: boolean) => wrapper.setProps({ modelValue: v }),
+      'onUpdate:modelValue': (v: boolean) =>
+        wrapper.setProps({ modelValue: v }),
       ...props,
     },
     slots,
@@ -259,7 +260,8 @@ describe('AppModal', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
       mountModal({ buttons: { primary: { label: 'OK', onClick: () => {} } } })
       await nextTick()
-      const button = dialog()!.querySelector<HTMLButtonElement>('footer button')!
+      const button =
+        dialog()!.querySelector<HTMLButtonElement>('footer button')!
       expect(button.className).toContain('w-full')
       expect(warn.mock.calls.flat().join(' ')).not.toContain('[AppBtnGroup]')
       warn.mockRestore()
@@ -481,11 +483,9 @@ describe('AppModal', () => {
       })
       mounted.push(wrapper)
       await wrapper.setProps({ modelValue: true })
-      await new Promise(r => setTimeout(r, 50))
-      expect(wrapper.emitted('opened')).toHaveLength(1)
+      await vi.waitFor(() => expect(wrapper.emitted('opened')).toHaveLength(1))
       await wrapper.setProps({ modelValue: false })
-      await new Promise(r => setTimeout(r, 50))
-      expect(wrapper.emitted('closed')).toHaveLength(1)
+      await vi.waitFor(() => expect(wrapper.emitted('closed')).toHaveLength(1))
     })
   })
 })
