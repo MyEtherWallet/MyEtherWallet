@@ -126,6 +126,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'navlink',
+              name: 'DevNavLink',
+              component: () => import('@/views/ViewNavLinkShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'scroll-fade',
               name: 'DevScrollFade',
               component: () => import('@/views/ViewScrollFadeShowcase.vue'),

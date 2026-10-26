@@ -294,6 +294,10 @@ import {
   ArrowUturnRightIcon as ArrowUturnRightSolid,
 } from '@heroicons/vue/24/solid'
 
+// The NavLink chevron in Figma is Heroicons `chevron-down-20-solid`, not the
+// 24/solid glyph (smaller, bolder at 20px), so its filled variant comes from 20/solid.
+import { ChevronDownIcon as ChevronDownSolid } from '@heroicons/vue/20/solid'
+
 // Custom glyphs not in Heroicons — authored SFCs, currentColor, viewBox 24.
 import CopyOutline from './custom/CopyOutline.vue'
 import CopyFilled from './custom/CopyFilled.vue'
@@ -546,7 +550,7 @@ export const icons = {
   'chevron-double-left': { stroke: ChevronDoubleLeftOutline },
   'chevron-double-right': { stroke: ChevronDoubleRightOutline },
   'chevron-double-up': { stroke: ChevronDoubleUpOutline },
-  'chevron-down': { stroke: ChevronDownOutline },
+  'chevron-down': { stroke: ChevronDownOutline, filled: ChevronDownSolid },
   'chevron-left': { stroke: ChevronLeftOutline },
   'chevron-right': { stroke: ChevronRightOutline },
   'chevron-up': { stroke: ChevronUpOutline },
