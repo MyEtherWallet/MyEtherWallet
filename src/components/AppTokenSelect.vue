@@ -44,12 +44,12 @@
       >
         <div class="sticky top-0 bg-white z-20 pt-4">
           <div
-            class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
           >
             <app-searchbar
               v-model="searchInput"
+              variant="outline"
               class="grow"
-              bg-class="bg-transparent"
               :placeholder="$t('select_token.search')"
             />
             <!--SORT-->

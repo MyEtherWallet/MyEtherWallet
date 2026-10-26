@@ -10,12 +10,11 @@
     </div>
 
     <div
-      class="flex items-center gap-2 h-12 px-1 bg-background-default-hover rounded-24 flex-none"
+      class="flex items-center gap-2 rounded-full bg-background-formfield flex-none"
     >
       <app-searchbar
         v-model="searchInput"
-        size="compact"
-        bg-class="bg-white"
+        variant="outline"
         class="flex-1"
         :placeholder="$t('purchase.select_token.search_placeholder')"
       />

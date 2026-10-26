@@ -21,9 +21,7 @@
       >
         <app-searchbar
           v-model="searchInput"
-          size="compact"
-          bg-class="bg-background-default"
-          input-class="!text-s-14 placeholder:text-text-placeholder"
+          variant="default"
           :placeholder="$t('select_token.search')"
         />
         <p

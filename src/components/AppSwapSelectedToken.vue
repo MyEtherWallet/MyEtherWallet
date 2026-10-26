@@ -66,19 +66,19 @@
     >
       <div class="sticky top-0 bg-white z-20 pt-2">
         <div
-          class="flex gap-2 justify-between items-center mb-2 bg-background-brand-subtle rounded-full p-1"
+          class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
         >
           <app-searchbar
             v-model="searchInput"
+            variant="outline"
             class="grow"
-            bg-class="bg-transparent"
             :placeholder="$t('select_token.search')"
           />
           <!--SORT-->
           <app-pop-up-menu :placeholder="$t('common.sort')">
             <template #menu-button="{ toggleMenu }">
               <button
-                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
+                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
                 @click="toggleMenu"
               >
                 <span class="mr-2">{{ activeSortLabel }}</span>

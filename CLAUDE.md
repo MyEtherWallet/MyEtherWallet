@@ -59,13 +59,13 @@ src/
 
 ### Buttons
 
-| Component             | Purpose                                                    |
-| --------------------- | ---------------------------------------------------------- |
-| `AppBaseButton.vue`   | Primary button — use as the base for all clickable actions |
-| `AppBtnText.vue`      | Text-only button (no background)                           |
-| `AppBtnIcon.vue`      | Icon-only button                                           |
-| `AppBtnIconClose.vue` | Close/dismiss icon button                                  |
-| `AppBtnCopy.vue`      | Button that copies text to clipboard                       |
+| Component             | Purpose                                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `AppBaseButton.vue`   | Primary button — use as the base for all clickable actions (`type="link"` for text-only)                      |
+| `AppBtnGroup.vue`     | Button Group — lays out 2–3 related `AppBaseButton`s (equal widths horizontal, full-width vertical, 16px gap) |
+| `AppBtnIcon.vue`      | Icon-only button                                                                                              |
+| `AppBtnIconClose.vue` | Close/dismiss icon button                                                                                     |
+| `AppBtnCopy.vue`      | Button that copies text to clipboard                                                                          |
 
 ### Inputs & Forms
 

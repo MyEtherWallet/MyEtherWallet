@@ -41,6 +41,7 @@
               <div class="mb-1 flex items-center gap-2">
                 <app-searchbar
                   v-model="searchInput"
+                  variant="default"
                   class="grow"
                   :placeholder="$t('derivation_path.search')"
                 />
