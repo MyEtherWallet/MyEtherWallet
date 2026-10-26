@@ -13,6 +13,8 @@ export interface TableColumn {
   sortable?: boolean
   /** The one data column still shown at size S (default: the first data column). */
   primary?: boolean
+  /** Shown at size L only; M drops it to keep the row within the card. */
+  largeOnly?: boolean
 }
 
 export interface TableSort {

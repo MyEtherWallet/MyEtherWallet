@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, provide, useTemplateRef } from 'vue'
+import { computed, inject, provide, useTemplateRef, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
+import { useSortable } from '@vueuse/integrations/useSortable'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -30,7 +31,8 @@ import {
  * as direct children of the slot: a wrapper element breaks the subgrid.
  *
  * Size: the `size` prop, else the AppTableWrapper around it, else the table's
- * own width (768 / 1280). At S only the leading and primary columns show.
+ * own width (768 / 1280). At S only the leading and primary columns show;
+ * `largeOnly` columns show at L only.
  * Sort cycles off → desc → asc → off per column (`v-model:sort`).
  */
 const props = withDefaults(
@@ -40,12 +42,14 @@ const props = withDefaults(
     size?: TableSize
     /** Reserve the start track for the rows' watchlist star. */
     watchlist?: boolean
-    /** Drag handles on hover; emits `reorder` (mouse only). */
+    /** Drag handles on hover (mouse and touch); emits `reorder`. */
     reorderable?: boolean
     /** Reserve the end track for the rows' `#actions`. */
     actions?: boolean
     footer?: TableFooterType
     pages?: number
+    /** Overrides the pagination footer's "Showing page X of Y" copy. */
+    paginationLabel?: (page: number, total: number) => string
     /** Count for the "Show N more" footer. */
     remaining?: number
     /** Height cap class (e.g. `max-h-96`); the rows scroll under the header. */
@@ -73,7 +77,8 @@ const size = computed<TableSize>(
 const leading = computed(() => props.columns[0])
 const dataColumns = computed(() => props.columns.slice(1))
 const visibleData = computed(() => {
-  if (size.value !== 's') return dataColumns.value
+  if (size.value === 'l') return dataColumns.value
+  if (size.value === 'm') return dataColumns.value.filter(c => !c.largeOnly)
   const primary = dataColumns.value.find(c => c.primary) ?? dataColumns.value[0]
   return primary ? [primary] : []
 })
@@ -117,42 +122,34 @@ const onSort = (col: TableColumn) => {
       : { key: col.key, direction: direction === 'desc' ? 'asc' : 'desc' }
 }
 
-// Native DnD, read once on the rowgroup so rows don't need their index.
+// SortableJS (touch included) drags a row by its handle. It moves the DOM
+// node itself, so the move is undone here and the parent reorders the data.
 const body = useTemplateRef<HTMLElement>('body')
-let dragFrom = -1
-const rowOf = (e: DragEvent) =>
-  (e.target as Element | null)?.closest<HTMLElement>('[role="row"]') ?? null
-const rowIndex = (row: HTMLElement | null) =>
-  row && body.value
-    ? Array.prototype.indexOf.call(body.value.children, row)
-    : -1
-
-const onDragstart = (e: DragEvent) => {
-  if (!props.reorderable) return
-  const row = rowOf(e)
-  dragFrom = rowIndex(row)
-  if (row && e.dataTransfer) {
-    e.dataTransfer.effectAllowed = 'move'
-    // Firefox won't start a drag without data.
-    e.dataTransfer.setData('text/plain', '')
-    e.dataTransfer.setDragImage(row, 0, 0)
-  }
-}
-const onDragover = (e: DragEvent) => {
-  if (props.reorderable && dragFrom >= 0) e.preventDefault()
-}
-// A cancelled drag (Esc, dropped outside) must not leak into the next drop.
-const onDragend = () => {
-  dragFrom = -1
-}
-const onDrop = (e: DragEvent) => {
-  const to = rowIndex(rowOf(e))
-  if (props.reorderable && dragFrom >= 0 && to >= 0 && to !== dragFrom) {
-    e.preventDefault()
-    emit('reorder', { from: dragFrom, to })
-  }
-  dragFrom = -1
-}
+const { option } = useSortable(body, [], {
+  handle: '[data-table-handle]',
+  disabled: !props.reorderable,
+  // The fields used here; sortablejs's own types aren't a direct dependency.
+  onUpdate: ({
+    item,
+    from,
+    oldIndex,
+    newIndex,
+  }: {
+    item: HTMLElement
+    from: HTMLElement
+    oldIndex?: number
+    newIndex?: number
+  }) => {
+    item.remove()
+    from.insertBefore(item, from.children[oldIndex ?? 0] ?? null)
+    if (oldIndex !== undefined && newIndex !== undefined)
+      emit('reorder', { from: oldIndex, to: newIndex })
+  },
+})
+watch(
+  () => props.reorderable,
+  on => option('disabled', !on),
+)
 </script>
 
 <template>
@@ -217,10 +214,6 @@ const onDrop = (e: DragEvent) => {
           'col-span-full grid grid-cols-subgrid',
           maxHeight && ['overflow-y-auto', maxHeight],
         ]"
-        @dragstart="onDragstart"
-        @dragover="onDragover"
-        @drop="onDrop"
-        @dragend="onDragend"
       >
         <slot :size="size" :visible-keys="visibleKeys" />
       </div>
@@ -242,6 +235,7 @@ const onDrop = (e: DragEvent) => {
       v-else-if="footer === 'pagination'"
       v-model="page"
       :total-pages="pages"
+      :label="paginationLabel"
       variant="alternative"
     />
   </div>

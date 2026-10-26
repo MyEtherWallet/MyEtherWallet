@@ -1,4 +1,16 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
+
+// SortableJS needs real pointer events; capture its options instead.
+const sortable = vi.hoisted(() => ({
+  options: {} as Record<string, any>,
+  option: vi.fn(),
+}))
+vi.mock('@vueuse/integrations/useSortable', () => ({
+  useSortable: (_el: unknown, _list: unknown, options: Record<string, any>) => {
+    sortable.options = options
+    return { option: sortable.option, start: () => {}, stop: () => {} }
+  },
+}))
 import { h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
@@ -33,7 +45,7 @@ const i18n = createI18n({
 const COLUMNS: TableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },
   { key: 'price', label: 'Price', sortable: true },
-  { key: 'volume', label: 'Volume' },
+  { key: 'volume', label: 'Volume', largeOnly: true },
   { key: 'cap', label: 'Market cap', sortable: true, primary: true },
 ]
 
@@ -83,7 +95,7 @@ describe('AppTable', () => {
       'grid-template-columns: minmax(0,1fr) repeat(3, calc(var(--spacing) * 35))',
     )
     expect(grid(factory({ size: 'm' })).attributes('style')).toContain(
-      'repeat(3, calc(var(--spacing) * 27.5))',
+      'repeat(2, calc(var(--spacing) * 27.5))',
     )
   })
 
@@ -189,22 +201,6 @@ describe('AppTable', () => {
     expect(w.emitted('update:page')).toEqual([[2]])
   })
 
-  it('emits reorder when a row is dragged onto another', async () => {
-    const w = factory({ reorderable: true }, { rows: 3 })
-    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
-    await rows[0].get('[data-test="table-row-handle"]').trigger('dragstart')
-    await rows[2].trigger('drop')
-    expect(w.emitted('reorder')).toEqual([[{ from: 0, to: 2 }]])
-  })
-
-  it('ignores drops when not reorderable', async () => {
-    const w = factory({}, { rows: 2 })
-    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
-    await rows[0].trigger('dragstart')
-    await rows[1].trigger('drop')
-    expect(w.emitted('reorder')).toBeUndefined()
-  })
-
   it('is named by the wrapper title unless given its own label', () => {
     const wrapper = {
       [TABLE_WRAPPER as symbol]: { size: ref('l'), title: ref('Explore') },
@@ -224,13 +220,52 @@ describe('AppTable', () => {
     expect(headers(factory({ watchlist: true }))[0]).toBe('Watchlist')
   })
 
-  it('forgets a cancelled drag', async () => {
+  it('drops largeOnly columns at M and keeps them at L', () => {
+    expect(headers(factory({ size: 'm' }))).toEqual([
+      'Name',
+      'Price',
+      'Market cap',
+    ])
+    expect(headers(factory({ size: 'l' }))).toEqual([
+      'Name',
+      'Price',
+      'Volume',
+      'Market cap',
+    ])
+  })
+
+  it('passes a custom label to the pagination footer', () => {
+    const label = () => '10 of 42 results'
+    const w = factory({
+      footer: 'pagination',
+      pages: 5,
+      paginationLabel: label,
+    })
+    expect(w.getComponent(AppPagination).props('label')).toBe(label)
+  })
+
+  it('reorders through SortableJS by the row handle, undoing its DOM move', () => {
     const w = factory({ reorderable: true }, { rows: 3 })
-    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
-    await rows[0].get('[data-test="table-row-handle"]').trigger('dragstart')
-    await rows[0].trigger('dragend')
-    await rows[2].trigger('drop')
-    expect(w.emitted('reorder')).toBeUndefined()
+    expect(sortable.options.handle).toBe('[data-table-handle]')
+    expect(sortable.options.disabled).toBe(false)
+    const body = w.get('[role="rowgroup"]').element
+    const first = body.children[0]
+    body.appendChild(first) // what SortableJS does on drop
+    sortable.options.onUpdate({
+      item: first,
+      from: body,
+      oldIndex: 0,
+      newIndex: 2,
+    })
+    expect(body.children[0]).toBe(first)
+    expect(w.emitted('reorder')).toEqual([[{ from: 0, to: 2 }]])
+  })
+
+  it('keeps SortableJS disabled until the table is reorderable', async () => {
+    const w = factory({}, { rows: 2 })
+    expect(sortable.options.disabled).toBe(true)
+    await w.setProps({ reorderable: true })
+    expect(sortable.option).toHaveBeenLastCalledWith('disabled', false)
   })
 
   describe('measuring its own width', () => {
@@ -238,7 +273,7 @@ describe('AppTable', () => {
 
     it.each([
       [400, ['Name', 'Market cap']],
-      [900, ['Name', 'Price', 'Volume', 'Market cap']],
+      [900, ['Name', 'Price', 'Market cap']],
       [1300, ['Name', 'Price', 'Volume', 'Market cap']],
     ])('at %ipx shows %j', async (width, expected) => {
       vi.stubGlobal(
