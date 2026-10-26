@@ -70,7 +70,11 @@
 
           <footer v-if="$slots.footer || buttons" class="shrink-0 p-4 sm:p-6">
             <slot name="footer">
-              <AppBtnGroup>
+              <!-- The Button Group takes 2–3 buttons; a lone one fills the footer. -->
+              <component
+                :is="footerButtons.length > 1 ? AppBtnGroup : 'div'"
+                v-bind="footerButtons.length > 1 ? { hasPadding: false } : {}"
+              >
                 <AppBaseButton
                   v-for="button in footerButtons"
                   :key="button.type"
@@ -79,11 +83,12 @@
                   :tone="button.tone"
                   :disabled="button.disabled"
                   :is-loading="button.loading"
+                  class="w-full"
                   @click="button.onClick"
                 >
                   {{ button.label }}
                 </AppBaseButton>
-              </AppBtnGroup>
+              </component>
             </slot>
           </footer>
         </div>

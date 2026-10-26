@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { nextTick } from 'vue'
 import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
@@ -253,6 +253,28 @@ describe('AppModal', () => {
       ])
       labels[2].click()
       expect(clicked).toEqual(['primary'])
+    })
+
+    it('lays out a lone primary full width, outside the Button Group', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      mountModal({ buttons: { primary: { label: 'OK', onClick: () => {} } } })
+      await nextTick()
+      const button = dialog()!.querySelector<HTMLButtonElement>('footer button')!
+      expect(button.className).toContain('w-full')
+      expect(warn.mock.calls.flat().join(' ')).not.toContain('[AppBtnGroup]')
+      warn.mockRestore()
+    })
+
+    it('drops the Button Group padding, the footer already has it', async () => {
+      mountModal({
+        buttons: {
+          primary: { label: 'OK', onClick: () => {} },
+          secondary: { label: 'Cancel', onClick: () => {} },
+        },
+      })
+      await nextTick()
+      const group = dialog()!.querySelector('footer > div')!
+      expect(group.className).not.toMatch(/\bp-4\b/)
     })
 
     it('omits the footer without buttons or #footer', async () => {
