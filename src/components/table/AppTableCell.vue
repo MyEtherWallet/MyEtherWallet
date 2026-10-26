@@ -44,7 +44,9 @@ const points = computed(() => {
   const step = series.length > 1 ? SPARK_W / (series.length - 1) : 0
   return series
     .map((v, i) => {
-      const y = span ? SPARK_H - 1 - ((v - min) / span) * (SPARK_H - 2) : SPARK_H / 2
+      const y = span
+        ? SPARK_H - 1 - ((v - min) / span) * (SPARK_H - 2)
+        : SPARK_H / 2
       return `${(i * step).toFixed(2)},${y.toFixed(2)}`
     })
     .join(' ')

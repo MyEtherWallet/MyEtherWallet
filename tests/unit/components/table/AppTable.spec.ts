@@ -39,7 +39,10 @@ const COLUMNS: TableColumn[] = [
 
 const factory = (
   props: Record<string, unknown> = {},
-  { provide = {}, rows = 0 }: { provide?: Record<symbol, unknown>; rows?: number } = {},
+  {
+    provide = {},
+    rows = 0,
+  }: { provide?: Record<symbol, unknown>; rows?: number } = {},
 ) =>
   mount(AppTable, {
     props: { columns: COLUMNS, size: 'l', ...props },
@@ -47,7 +50,9 @@ const factory = (
       default: () =>
         Array.from({ length: rows }, (_, i) =>
           h(AppTableRow, { title: `Row ${i}` }, () =>
-            COLUMNS.slice(1).map(c => h(AppTableCell, { column: c.key, value: c.key })),
+            COLUMNS.slice(1).map(c =>
+              h(AppTableCell, { column: c.key, value: c.key }),
+            ),
           ),
         ),
     },
@@ -61,7 +66,13 @@ const headers = (w: ReturnType<typeof factory>) =>
 describe('tableSizeFor', () => {
   it('maps widths to the wrapper breakpoints', () => {
     expect([400, 767, 768, 900, 1279, 1280, 1300].map(tableSizeFor)).toEqual([
-      's', 's', 'm', 'm', 'm', 'l', 'l',
+      's',
+      's',
+      'm',
+      'm',
+      'm',
+      'l',
+      'l',
     ])
   })
 })
@@ -77,24 +88,35 @@ describe('AppTable', () => {
   })
 
   it('adds the start and actions tracks when asked', () => {
-    expect(grid(factory({ watchlist: true, actions: true })).attributes('style')).toContain(
+    expect(
+      grid(factory({ watchlist: true, actions: true })).attributes('style'),
+    ).toContain(
       'grid-template-columns: auto minmax(0,1fr) repeat(3, calc(var(--spacing) * 35)) auto',
     )
     expect(headers(factory({ watchlist: true, actions: true }))).toEqual([
-      'Watchlist', 'Name', 'Price', 'Volume', 'Market cap', 'Actions',
+      'Watchlist',
+      'Name',
+      'Price',
+      'Volume',
+      'Market cap',
+      'Actions',
     ])
   })
 
   it('keeps only the leading and primary columns at size S', () => {
     const w = factory({ size: 's' }, { rows: 1 })
     expect(headers(w)).toEqual(['Name', 'Market cap'])
-    expect(grid(w).attributes('style')).toContain('minmax(0,1fr) repeat(1, calc(var(--spacing) * 24))')
+    expect(grid(w).attributes('style')).toContain(
+      'minmax(0,1fr) repeat(1, calc(var(--spacing) * 24))',
+    )
     expect(grid(w).classes()).toContain('gap-x-1')
     // The row drops the hidden cells with their headers.
-    expect(w.findAll('[role="row"]')[1].findAll('[role="cell"]').map(c => c.text())).toEqual([
-      'Row 0',
-      'cap',
-    ])
+    expect(
+      w
+        .findAll('[role="row"]')[1]
+        .findAll('[role="cell"]')
+        .map(c => c.text()),
+    ).toEqual(['Row 0', 'cap'])
   })
 
   it('falls back to the first data column as primary', () => {
@@ -103,7 +125,10 @@ describe('AppTable', () => {
   })
 
   it('takes the size from the wrapper when there is no size prop', () => {
-    const w = factory({ size: undefined }, { provide: { [TABLE_WRAPPER_SIZE as symbol]: ref('s') } })
+    const w = factory(
+      { size: undefined },
+      { provide: { [TABLE_WRAPPER_SIZE as symbol]: ref('s') } },
+    )
     expect(headers(w)).toEqual(['Name', 'Market cap'])
   })
 
@@ -132,7 +157,9 @@ describe('AppTable', () => {
   it('starts a different column at desc', async () => {
     const w = factory({ sort: { key: 'price', direction: 'asc' } })
     await w.findAll('[role="columnheader"]')[0].get('button').trigger('click')
-    expect(w.emitted('update:sort')).toEqual([[{ key: 'name', direction: 'desc' }]])
+    expect(w.emitted('update:sort')).toEqual([
+      [{ key: 'name', direction: 'desc' }],
+    ])
   })
 
   it('marks the sorted column with aria-sort, the arrow and the default colour', () => {
@@ -140,7 +167,9 @@ describe('AppTable', () => {
     const price = w.findAll('[role="columnheader"]')[1]
     expect(price.attributes('aria-sort')).toBe('ascending')
     expect(price.get('button').classes()).toContain('text-text-default')
-    expect(w.findAll('[role="columnheader"]')[0].get('button').classes()).toContain('text-text-subtle')
+    expect(
+      w.findAll('[role="columnheader"]')[0].get('button').classes(),
+    ).toContain('text-text-subtle')
   })
 
   it('renders a show-more footer that emits', async () => {

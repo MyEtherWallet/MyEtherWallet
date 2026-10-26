@@ -11,7 +11,10 @@ import {
 
 const factory = (
   props: Record<string, unknown> = {},
-  { size = 'l', visibleKeys = ['price'] }: { size?: TableSize; visibleKeys?: string[] } = {},
+  {
+    size = 'l',
+    visibleKeys = ['price'],
+  }: { size?: TableSize; visibleKeys?: string[] } = {},
   slots: Record<string, string> = {},
 ) =>
   mount(AppTableCell, {
@@ -28,7 +31,8 @@ const factory = (
     },
   })
 
-const trend = (w: ReturnType<typeof factory>) => w.get('[data-test="table-cell-trend"]')
+const trend = (w: ReturnType<typeof factory>) =>
+  w.get('[data-test="table-cell-trend"]')
 
 describe('AppTableCell', () => {
   it('renders the value as a cell', () => {
@@ -86,7 +90,9 @@ describe('AppTableCell', () => {
 
   it('stays when its column is visible, end-aligned at size S', () => {
     const w = factory({ column: 'price', value: '1' }, { size: 's' })
-    expect(w.classes()).toEqual(expect.arrayContaining(['items-end', 'text-right']))
+    expect(w.classes()).toEqual(
+      expect.arrayContaining(['items-end', 'text-right']),
+    )
   })
 
   it('takes custom content from the default slot', () => {

@@ -74,8 +74,7 @@ const leading = computed(() => props.columns[0])
 const dataColumns = computed(() => props.columns.slice(1))
 const visibleData = computed(() => {
   if (size.value !== 's') return dataColumns.value
-  const primary =
-    dataColumns.value.find(c => c.primary) ?? dataColumns.value[0]
+  const primary = dataColumns.value.find(c => c.primary) ?? dataColumns.value[0]
   return primary ? [primary] : []
 })
 const visibleKeys = computed(() => visibleData.value.map(c => c.key))
@@ -124,7 +123,9 @@ let dragFrom = -1
 const rowOf = (e: DragEvent) =>
   (e.target as Element | null)?.closest<HTMLElement>('[role="row"]') ?? null
 const rowIndex = (row: HTMLElement | null) =>
-  row && body.value ? Array.prototype.indexOf.call(body.value.children, row) : -1
+  row && body.value
+    ? Array.prototype.indexOf.call(body.value.children, row)
+    : -1
 
 const onDragstart = (e: DragEvent) => {
   if (!props.reorderable) return

@@ -11,13 +11,18 @@ const SizeProbe = defineComponent({
   },
 })
 
-const factory = (props: Record<string, unknown> = {}, slots: Record<string, unknown> = {}) =>
+const factory = (
+  props: Record<string, unknown> = {},
+  slots: Record<string, unknown> = {},
+) =>
   mount(AppTableWrapper, {
     props: { title: 'Explore crypto', size: 'l', ...props },
     slots: { default: () => h(SizeProbe), ...slots },
   })
 
-const ACTION = { action: () => h('button', { 'data-test': 'action' }, 'Add asset') }
+const ACTION = {
+  action: () => h('button', { 'data-test': 'action' }, 'Add asset'),
+}
 
 describe('AppTableWrapper', () => {
   it('is a section labelled by its title', () => {
@@ -39,22 +44,37 @@ describe('AppTableWrapper', () => {
 
   it('measures itself when no size is forced', () => {
     // jsdom has no layout: width 0 → S.
-    expect(factory({ size: undefined }).get('[data-test="probe"]').text()).toBe('s')
+    expect(factory({ size: undefined }).get('[data-test="probe"]').text()).toBe(
+      's',
+    )
   })
 
   it('puts the action at the end of the toolbar at L/M', () => {
     const w = factory({}, ACTION)
-    expect(w.get('[data-test="table-toolbar"]').find('[data-test="action"]').exists()).toBe(true)
+    expect(
+      w
+        .get('[data-test="table-toolbar"]')
+        .find('[data-test="action"]')
+        .exists(),
+    ).toBe(true)
   })
 
   it('moves the action next to the title at S', () => {
     const w = factory({ size: 's' }, ACTION)
-    expect(w.get('[data-test="table-heading"]').find('[data-test="action"]').exists()).toBe(true)
+    expect(
+      w
+        .get('[data-test="table-heading"]')
+        .find('[data-test="action"]')
+        .exists(),
+    ).toBe(true)
     expect(w.find('[data-test="table-toolbar"]').exists()).toBe(false)
   })
 
   it('renders the toolbar slot with the size', () => {
-    const w = factory({ size: 's' }, { toolbar: ({ size }: { size: string }) => h('b', size) })
+    const w = factory(
+      { size: 's' },
+      { toolbar: ({ size }: { size: string }) => h('b', size) },
+    )
     expect(w.get('[data-test="table-toolbar"]').text()).toBe('s')
   })
 })

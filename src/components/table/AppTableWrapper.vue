@@ -24,9 +24,7 @@ const props = defineProps<{
 
 const root = useTemplateRef<HTMLElement>('root')
 const { width } = useElementSize(root, undefined, { box: 'border-box' })
-const size = computed<TableSize>(
-  () => props.size ?? tableSizeFor(width.value),
-)
+const size = computed<TableSize>(() => props.size ?? tableSizeFor(width.value))
 provide(TABLE_WRAPPER_SIZE, size)
 
 const titleId = useId()

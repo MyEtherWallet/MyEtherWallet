@@ -3,7 +3,11 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
-import { TABLE_CONTEXT, defaultTableContext, type TableContext } from '@/components/table/types'
+import {
+  TABLE_CONTEXT,
+  defaultTableContext,
+  type TableContext,
+} from '@/components/table/types'
 
 const i18n = createI18n({
   legacy: false,
@@ -18,33 +22,40 @@ const i18n = createI18n({
   },
 })
 
-const factory = (
-  {
-    props = {},
-    attrs = {},
-    slots = {},
-    ctx = {},
-  }: {
-    props?: Record<string, unknown>
-    attrs?: Record<string, unknown>
-    slots?: Record<string, string>
-    ctx?: Partial<Record<keyof TableContext, unknown>>
-  } = {},
-) => {
+const factory = ({
+  props = {},
+  attrs = {},
+  slots = {},
+  ctx = {},
+}: {
+  props?: Record<string, unknown>
+  attrs?: Record<string, unknown>
+  slots?: Record<string, string>
+  ctx?: Partial<Record<keyof TableContext, unknown>>
+} = {}) => {
   const context = defaultTableContext()
-  for (const [k, v] of Object.entries(ctx)) (context[k as keyof TableContext] as { value: unknown }).value = v
+  for (const [k, v] of Object.entries(ctx))
+    (context[k as keyof TableContext] as { value: unknown }).value = v
   return mount(AppTableRow, {
     props: { title: 'USDC', description: 'USD Coin', ...props },
     attrs,
     slots,
-    global: { plugins: [i18n], provide: { [TABLE_CONTEXT as symbol]: context } },
+    global: {
+      plugins: [i18n],
+      provide: { [TABLE_CONTEXT as symbol]: context },
+    },
   })
 }
 
 describe('AppTableRow', () => {
   it('is a subgrid row padded for its size', () => {
     expect(factory().classes()).toEqual(
-      expect.arrayContaining(['grid-cols-subgrid', 'col-span-full', 'px-2', 'py-3']),
+      expect.arrayContaining([
+        'grid-cols-subgrid',
+        'col-span-full',
+        'px-2',
+        'py-3',
+      ]),
     )
     expect(factory({ ctx: { size: 's' } }).classes()).toContain('px-1')
     expect(factory().attributes('role')).toBe('row')
@@ -59,8 +70,16 @@ describe('AppTableRow', () => {
   it('passes the avatar size: L at sizes L/M, M at size S', () => {
     const avatar = { avatar: '<i>{{ params.size }}</i>' }
     expect(factory({ slots: avatar }).get('i').text()).toBe('l')
-    expect(factory({ slots: avatar, ctx: { size: 'm' } }).get('i').text()).toBe('l')
-    expect(factory({ slots: avatar, ctx: { size: 's' } }).get('i').text()).toBe('m')
+    expect(
+      factory({ slots: avatar, ctx: { size: 'm' } })
+        .get('i')
+        .text(),
+    ).toBe('l')
+    expect(
+      factory({ slots: avatar, ctx: { size: 's' } })
+        .get('i')
+        .text(),
+    ).toBe('m')
   })
 
   it('is not focusable without a click listener', () => {
@@ -79,7 +98,11 @@ describe('AppTableRow', () => {
   })
 
   it('renders the watchlist toggle only when watchlisted is bound', () => {
-    expect(factory({ ctx: { start: true } }).findComponent(AppCellWatchlistToggle).exists()).toBe(false)
+    expect(
+      factory({ ctx: { start: true } })
+        .findComponent(AppCellWatchlistToggle)
+        .exists(),
+    ).toBe(false)
     expect(
       factory({ props: { watchlisted: false }, ctx: { start: true } })
         .findComponent(AppCellWatchlistToggle)
@@ -89,7 +112,9 @@ describe('AppTableRow', () => {
 
   it('keeps the start cell when the table has a start track, so tracks line up', () => {
     expect(factory().findAll('[role="cell"]')).toHaveLength(1)
-    expect(factory({ ctx: { start: true } }).findAll('[role="cell"]')).toHaveLength(2)
+    expect(
+      factory({ ctx: { start: true } }).findAll('[role="cell"]'),
+    ).toHaveLength(2)
   })
 
   it('toggles the watchlist without clicking the row', async () => {
@@ -128,8 +153,14 @@ describe('AppTableRow', () => {
   })
 
   it('shows a drag handle only when the table is reorderable', () => {
-    expect(factory({ ctx: { start: true } }).find('[data-test="table-row-handle"]').exists()).toBe(false)
-    const handle = factory({ ctx: { start: true, reorderable: true } }).get('[data-test="table-row-handle"]')
+    expect(
+      factory({ ctx: { start: true } })
+        .find('[data-test="table-row-handle"]')
+        .exists(),
+    ).toBe(false)
+    const handle = factory({ ctx: { start: true, reorderable: true } }).get(
+      '[data-test="table-row-handle"]',
+    )
     expect(handle.attributes('draggable')).toBe('true')
     expect(handle.classes()).toContain('invisible')
   })

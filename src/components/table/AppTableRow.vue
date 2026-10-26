@@ -4,6 +4,8 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import { BTN_ICON_SIZE } from '@/components/btnIconTypes'
+import type { AvatarSize } from '@/components/avatar/types'
+import type { CellSurface } from '@/components/cell/cellSizes'
 import { ROW_PADDING, TABLE_CONTEXT, defaultTableContext } from './types'
 
 /**
@@ -21,7 +23,7 @@ import { ROW_PADDING, TABLE_CONTEXT, defaultTableContext } from './types'
  * The row is clickable only when a `@click` listener is bound (tabindex 0,
  * Enter/Space). The star, handle and actions never trigger it.
  */
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title?: string
     description?: string
@@ -44,8 +46,10 @@ const attrs = useAttrs()
 const clickable = computed(() => Boolean(attrs.onClick))
 
 const hovered = ref(false)
-const surface = computed(() => (hovered.value ? 'alternative' : 'default'))
-const avatarSize = computed(() => (size.value === 's' ? 'm' : 'l'))
+const surface = computed<CellSurface>(() =>
+  hovered.value ? 'alternative' : 'default',
+)
+const avatarSize = computed<AvatarSize>(() => (size.value === 's' ? 'm' : 'l'))
 
 const activate = (e: KeyboardEvent) => {
   if (clickable.value) (e.currentTarget as HTMLElement).click()
