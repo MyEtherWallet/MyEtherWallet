@@ -52,8 +52,6 @@
       "balance_header": "余额",
       "add_button": "+ 添加",
       "hide_no_value": "隐藏无价值代币",
-      "add_to_watchlist": "加入自选",
-      "remove_from_watchlist": "移出自选",
       "trade": "交易",
       "empty_watchlist": "您还没有任何自选代币。",
       "discover_more_tokens": "发现更多代币",
@@ -63,7 +61,6 @@
       "no_results": "未找到与“{query}”相关的结果。",
       "results_of": "{count} / {total} 条结果",
       "page_current": "{current}",
-      "page_of": "/",
       "page_total": "{total}"
     },
     "custom_token": {
