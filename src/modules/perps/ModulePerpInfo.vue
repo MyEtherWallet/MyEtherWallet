@@ -500,14 +500,11 @@
                 </template>
               </AppSegmentedControl>
             </div>
-            <app-table-skeleton
-              v-if="ordersLoading && marketOrders.length === 0"
-              :rows="3"
-              :columns="ordersSkeletonColumns"
-            />
             <div
-              v-else-if="
-                filteredMarketOrders.length === 0 && ordersCurrentPage === 0
+              v-if="
+                !ordersSkeleton &&
+                filteredMarketOrders.length === 0 &&
+                ordersCurrentPage === 0
               "
               class="text-center py-8 text-text-subtle text-s-14"
             >
@@ -517,21 +514,22 @@
               <AppTable
                 :columns="orderColumns"
                 :aria-label="$t('perps.positions.tab-orders')"
+                :loading="ordersSkeleton"
+                :loading-rows="3"
                 actions
               >
                 <AppTableRow
                   v-for="order in filteredMarketOrders"
                   :key="order.orderId"
-                  :title="
-                    order.side === 'buy'
-                      ? $t('perps.order.buy')
-                      : order.side === 'sell'
-                        ? $t('perps.order.sell')
-                        : order.side
-                  "
+                  :title="$t(sideKey(order.side))"
                   :description="formatDate(order.createdAt)"
                   @click="openOrderDialog(order)"
                 >
+                  <template #title>
+                    <span :class="sideColor(order.side)">
+                      {{ $t(sideKey(order.side)) }}
+                    </span>
+                  </template>
                   <AppTableCell
                     column="type"
                     :value="$t(formatOrderType(order.type))"
@@ -564,69 +562,15 @@
                       }}
                     </p>
                   </AppTableCell>
-                  <!-- Viewing is the row click; the action is cancel. -->
                   <template #actions="{ size: rowSize, surface }">
-                    <template v-if="showCancelButton(order)">
-                      <AppBaseButton
-                        v-if="rowSize !== 's'"
-                        type="secondary"
-                        size="medium"
-                        tone="danger"
-                        class="w-24"
-                        :surface="surface"
-                        :is-loading="cancellingOrderId === order.orderId"
-                        @click="openCancelConfirmation(order)"
-                      >
-                        {{ $t('perps.confirm.cancel') }}
-                      </AppBaseButton>
-                      <app-pop-up-menu
-                        v-else
-                        :placeholder="
-                          $t('perps.market-list.actions-menu-label')
-                        "
-                        location="right"
-                      >
-                        <template #menu-button="{ toggleMenu }">
-                          <AppBtnIcon
-                            icon="ellipsis-horizontal"
-                            :label="$t('perps.market-list.action-menu-label')"
-                            @click="toggleMenu"
-                          />
-                        </template>
-                        <template #menu-content="{ toggleMenu }">
-                          <div
-                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                          >
-                            <ul>
-                              <li
-                                class="p-2 flex items-center hoverBGWhite rounded-12"
-                                @click.stop="[
-                                  toggleMenu(),
-                                  openOrderDialog(order),
-                                ]"
-                              >
-                                <p>
-                                  {{ $t('perps.positions.view-order-label') }}
-                                </p>
-                              </li>
-                              <li
-                                class="p-2 flex items-center hoverBGWhite rounded-12 text-text-error"
-                                @click.stop="[
-                                  toggleMenu(),
-                                  openCancelConfirmation(order),
-                                ]"
-                              >
-                                {{
-                                  cancellingOrderId === order.orderId
-                                    ? $t('perps.order.cancelling')
-                                    : $t('perps.confirm.cancel')
-                                }}
-                              </li>
-                            </ul>
-                          </div>
-                        </template>
-                      </app-pop-up-menu>
-                    </template>
+                    <PerpsOrderActions
+                      :order="order"
+                      :size="rowSize"
+                      :surface="surface"
+                      :cancelling="cancellingOrderId === order.orderId"
+                      @view="openOrderDialog"
+                      @cancel="openCancelConfirmation"
+                    />
                   </template>
                 </AppTableRow>
               </AppTable>
@@ -652,13 +596,12 @@
             class="w-full"
             key="position-fills"
           >
-            <app-table-skeleton
-              v-if="fillsLoading && marketFills.length === 0"
-              :rows="3"
-              :columns="fillsSkeletonColumns"
-            />
             <div
-              v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
+              v-if="
+                !fillsLoading &&
+                marketFills.length === 0 &&
+                fillsCurrentPage === 0
+              "
               class="text-center py-6 text-text-subtle text-s-14"
             >
               {{ $t('perps.info.no-fills-for', { symbol: baseCurrency }) }}
@@ -667,6 +610,8 @@
               <AppTable
                 :columns="fillColumns"
                 :aria-label="$t('perps.positions.tab-fills')"
+                :loading="fillsLoading && marketFills.length === 0"
+                :loading-rows="3"
               >
                 <AppTableRow
                   v-for="fill in marketFills"
@@ -675,6 +620,13 @@
                   :description="formatDate(fill.time)"
                   @click="openFillDialog(fill)"
                 >
+                  <template #title>
+                    <AppTag
+                      :type="fillDirectionTagType(fill.direction)"
+                      variant="subtle"
+                      :label="$t(directionKey(fill.direction))"
+                    />
+                  </template>
                   <AppTableCell
                     column="price"
                     :value="formatPrice(fill.price)"
@@ -817,7 +769,6 @@ import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTag from '@/components/tag/AppTag.vue'
@@ -825,9 +776,7 @@ import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
 import type { TableColumn } from '@/components/table/types'
-import AppTableSkeleton, {
-  type SkeletonColumn,
-} from '@/components/AppTableSkeleton.vue'
+import PerpsOrderActions from './components/PerpsOrderActions.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderConfirmationDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
@@ -890,6 +839,9 @@ import {
   orderStatusTagType,
   formatOrderType,
   directionKey,
+  fillDirectionTagType,
+  sideKey,
+  sideColor,
 } from './utils/formatters'
 import {
   getLogoUrl,
@@ -1081,6 +1033,10 @@ const filteredMarketOrders = computed(() => {
   if (selectedOrderFilterValue.value === 'all') return marketOrders.value
   return marketOrders.value.filter(o => PENDING_STATUSES.has(o.status))
 })
+// Skeleton rows only on the first load; a refetch keeps the current rows.
+const ordersSkeleton = computed(
+  () => ordersLoading.value && marketOrders.value.length === 0,
+)
 
 async function fetchOpenOrdersCount() {
   if (!token.value) {
@@ -1156,14 +1112,6 @@ const openOrderDialog = (order: ApiOrder) => {
   )
   selectedOrder.value = order
   showOrderDialog.value = true
-}
-
-const showCancelButton = (order: ApiOrder) => {
-  return (
-    order.status === 'pending' ||
-    order.status === 'untriggered' ||
-    order.status === 'open'
-  )
 }
 
 const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
@@ -1273,15 +1221,6 @@ const fillColumns = computed<TableColumn[]>(() => [
   { key: 'fee', label: t('perps.fill.fee-label') },
   { key: 'pnl', label: t('perps.positions.pnl-header') },
 ])
-
-// Skeleton headers follow the table: leading + primary below md, all above.
-const skeletonOf = (columns: TableColumn[]): SkeletonColumn[] =>
-  columns.map((c, i) => ({
-    header: c.label,
-    hidden: i === 0 || c.primary ? undefined : 'hidden md:table-cell',
-  }))
-const ordersSkeletonColumns = computed(() => skeletonOf(orderColumns.value))
-const fillsSkeletonColumns = computed(() => skeletonOf(fillColumns.value))
 
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false

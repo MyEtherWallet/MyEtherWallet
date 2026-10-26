@@ -1,11 +1,14 @@
 <template>
   <!--
-    @container: the skeleton and empty state size off this element, not the
-    viewport (the wallet side panel pushes the page content from xl up). The
-    table itself takes its L/M/S size from AppTableWrapper's own width.
+    @container: the wallet side panel pushes the page content instead of
+    overlaying it from the xl viewport up, so viewport breakpoints lie about
+    how much room there really is. The empty state's spacing follows this
+    element's width instead: 904px is the old lg viewport breakpoint (1024)
+    with the panel closed (viewport - 80px rail - 40px page gutter). The table
+    takes its L/M/S size from AppTableWrapper's own width.
   -->
   <div class="@container">
-    <AppTableWrapper :title="$t('perps.market-list.title')">
+    <AppTableWrapper :title="$t('perps.market-list.title')" title-tag="h1">
       <template #toolbar="{ size }">
         <app-searchbar
           v-model="searchQuery"
@@ -40,21 +43,17 @@
         </app-select>
       </template>
 
-      <!-- Loading -->
-      <app-table-skeleton
-        v-if="contractsLoading"
-        :rows="8"
-        :columns="marketSkeletonColumns"
-      />
-
       <!-- Error -->
-      <div v-else-if="contractsError" class="text-center py-8 text-s-14">
+      <div
+        v-if="!contractsLoading && contractsError"
+        class="text-center py-8 text-s-14"
+      >
         {{ contractsError }}
       </div>
 
       <!-- Empty -->
       <div
-        v-else-if="filteredContracts.length === 0"
+        v-else-if="!contractsLoading && filteredContracts.length === 0"
         class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
       >
         <p
@@ -80,9 +79,12 @@
       <AppTable
         v-else
         v-model:sort="sort"
+        :default-sort="DEFAULT_SORT"
         :page="currentPage + 1"
         :columns="columns"
         :pages="totalPages"
+        :loading="contractsLoading"
+        :loading-rows="8"
         footer="pagination"
         watchlist
         actions
@@ -94,9 +96,12 @@
             :key="contract.market"
             :title="contract.baseCurrency"
             :description="contract.longName"
+            :to="{
+              name: PERP_INFO_ROUTE_NAME,
+              params: { market: contract.market },
+            }"
             :watchlisted="watchlist.has(contract.baseCurrency)"
             @update:watchlisted="toggleWatchlist(contract.baseCurrency)"
-            @click="$emit('viewMarket', contract.market)"
           >
             <template #avatar="{ size: avatarSize }">
               <AppAvatar
@@ -210,11 +215,7 @@
                     "
                   >
                     {{ $t('perps.market-list.manage') }}
-                    {{
-                      getPosition(contract.market)!.direction === 'long'
-                        ? $t('perps.trade.long')
-                        : $t('perps.trade.short')
-                    }}
+                    {{ $t(sideKey(getPosition(contract.market)!.direction)) }}
                   </AppBaseButton>
                   <AppBtnIcon
                     v-else
@@ -223,41 +224,18 @@
                     @click="toggleMenu"
                   />
                 </template>
+                <!--
+                  Same guards as the L buttons: managing a position needs a
+                  signing wallet, a new one an unrestricted region.
+                -->
                 <template #menu-content="{ toggleMenu }">
-                  <div
-                    class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                  >
-                    <button
-                      class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
-                      @click.stop="[
-                        toggleWatchlist(contract.baseCurrency),
-                        toggleMenu(),
-                      ]"
-                    >
-                      <AppIcon
-                        name="star"
-                        size="xxs"
-                        v-if="!watchlist.has(contract.baseCurrency)"
-                        class="cursor-pointer"
-                      />
-                      <AppIcon
-                        name="star"
-                        variant="filled"
-                        size="xxs"
-                        v-else
-                        class="cursor-pointer"
-                      />
-                      <span class="ml-2">{{
-                        watchlist.has(contract.baseCurrency)
-                          ? $t('perps.market-list.remove-from-watchlist')
-                          : $t('perps.market-list.add-to-watchlist')
-                      }}</span>
-                    </button>
-                    <app-divider variant="alternative" class="my-1 xs:hidden" />
-                    <ul>
-                      <template v-if="getPosition(contract.market)">
-                        <li
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                  <ul class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60">
+                    <template v-if="getPosition(contract.market)">
+                      <li>
+                        <button
+                          type="button"
+                          :class="MENU_ITEM"
+                          :disabled="isWatchOnly"
                           @click.stop="[
                             toggleMenu(),
                             openLeverage(
@@ -267,35 +245,42 @@
                             ),
                           ]"
                         >
-                          <p>
-                            {{ $t('perps.market-list.change-leverage') }}
-                          </p>
-                        </li>
-                        <li
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                          {{ $t('perps.market-list.change-leverage') }}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          :class="MENU_ITEM"
+                          :disabled="isWatchOnly"
                           @click.stop="[
                             toggleMenu(),
                             openPositionAdd(contract.market, 'add'),
                           ]"
                         >
-                          <p>
-                            {{ $t('perps.market-list.add-to-position') }}
-                          </p>
-                        </li>
-                        <li
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                          {{ $t('perps.market-list.add-to-position') }}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          :class="MENU_ITEM"
+                          :disabled="isWatchOnly"
                           @click.stop="[
                             toggleMenu(),
                             openPositionAdd(contract.market, 'close'),
                           ]"
                         >
-                          <p>
-                            {{ $t('perps.market-list.close-position') }}
-                          </p>
-                        </li>
-                      </template>
-                      <template v-else>
-                        <li
+                          {{ $t('perps.market-list.close-position') }}
+                        </button>
+                      </li>
+                    </template>
+                    <template v-else>
+                      <li>
+                        <button
+                          type="button"
+                          :class="MENU_ITEM"
+                          :disabled="isPerpsRestricted"
                           @click.stop="[
                             toggleMenu(),
                             openNewPosition(
@@ -304,11 +289,15 @@
                               PerpsNewPositionAction.LONG,
                             ),
                           ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <p>{{ $t('perps.trade.long') }}</p>
-                        </li>
-                        <li
+                          {{ $t('perps.trade.long') }}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          :class="MENU_ITEM"
+                          :disabled="isPerpsRestricted"
                           @click.stop="[
                             toggleMenu(),
                             openNewPosition(
@@ -317,24 +306,24 @@
                               PerpsNewPositionAction.SHORT,
                             ),
                           ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <p>{{ $t('perps.trade.short') }}</p>
-                        </li>
-                      </template>
-                      <li
+                          {{ $t('perps.trade.short') }}
+                        </button>
+                      </li>
+                    </template>
+                    <li>
+                      <button
+                        type="button"
+                        :class="MENU_ITEM"
                         @click.stop="[
                           toggleMenu(),
                           emits('viewMarket', contract.market),
                         ]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
                       >
-                        <p>
-                          {{ $t('perps.market-list.view-market-info') }}
-                        </p>
-                      </li>
-                    </ul>
-                  </div>
+                        {{ $t('perps.market-list.view-market-info') }}
+                      </button>
+                    </li>
+                  </ul>
                 </template>
               </app-pop-up-menu>
             </template>
@@ -359,9 +348,6 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSearchbar from '@/components/AppSearchbar.vue'
-import AppTableSkeleton, {
-  type SkeletonColumn,
-} from '@/components/AppTableSkeleton.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -376,8 +362,9 @@ import {
   usePerpsMarkets,
   usePerpsContracts,
 } from '../composables/usePerpsMarkets'
+import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 import type { Contract, TradingPair } from '../sdk/types'
-import { formatPrice, formatVolume } from '../utils/formatters'
+import { formatPrice, formatVolume, sideKey } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { usePerpsRestriction } from '../composables/usePerpsRestriction'
@@ -403,7 +390,6 @@ import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
 } from '@/analytics'
-import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -551,25 +537,8 @@ function getPosition(market: string) {
   return positions.value.find(p => p.market === market) || null
 }
 
-// Mirrors the table: every column from M (768) up, name + price below.
-const marketSkeletonColumns = computed<SkeletonColumn[]>(() => [
-  { header: '', hidden: 'w-10' },
-  { header: t('perps.market-list.column-name') },
-  {
-    header: t('perps.market-list.column-market-cap'),
-    hidden: 'hidden @min-[768px]:table-cell',
-  },
-  {
-    header: t('perps.market-list.column-volume'),
-    hidden: 'hidden @min-[768px]:table-cell',
-  },
-  {
-    header: t('perps.market-list.column-24h-change'),
-    hidden: 'hidden @min-[768px]:table-cell',
-  },
-  { header: t('perps.market-list.column-price'), align: 'right' },
-  { header: '', align: 'right' },
-])
+const MENU_ITEM =
+  'flex w-full items-center rounded-12 p-2 text-left hoverBGWhite disabled:pointer-events-none disabled:opacity-40'
 
 const searchQuery = ref('')
 // Persisted + shared with the home watchlist via the store. Exposed as a Set so
@@ -610,15 +579,9 @@ const columns = computed<TableColumn[]>(() => [
   },
 ])
 
+// A third header click returns here (AppTable `default-sort`), never to null.
 const DEFAULT_SORT: TableSort = { key: SortValue.VOLUME, direction: 'desc' }
-const tableSort = ref<TableSort>(DEFAULT_SORT)
-// AppTable turns a column off after asc; off falls back to the default order.
-const sort = computed<TableSort | null>({
-  get: () => tableSort.value,
-  set: value => {
-    tableSort.value = value ?? DEFAULT_SORT
-  },
-})
+const sort = ref<TableSort | null>(DEFAULT_SORT)
 
 function toggleWatchlist(symbol: string) {
   watchlistStore.setWatchlistPerp(symbol)
@@ -701,10 +664,11 @@ const filteredContracts = computed(() => {
     )
   }
 
-  const dir = tableSort.value.direction === 'desc' ? -1 : 1
+  const { key, direction } = sort.value ?? DEFAULT_SORT
+  const dir = direction === 'desc' ? -1 : 1
   list = [...list].sort((a, b) => {
     let cmp = 0
-    switch (tableSort.value.key) {
+    switch (key) {
       case SortValue.NAME:
         cmp = a.baseCurrency.localeCompare(b.baseCurrency)
         break

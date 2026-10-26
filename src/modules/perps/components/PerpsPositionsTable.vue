@@ -85,17 +85,10 @@
         </app-select>
       </div>
 
-      <!-- Positions loading -->
-      <app-table-skeleton
-        v-if="activeTab === 'positions' && !positionsHasLoaded"
-        :rows="3"
-        :columns="positionsSkeletonColumns"
-      />
-
       <!-- Positions tab -->
-      <template v-else-if="activeTab === 'positions'">
+      <template v-if="activeTab === 'positions'">
         <div
-          v-if="positions.length === 0"
+          v-if="positionsHasLoaded && positions.length === 0"
           class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-open-positions') }}
@@ -107,49 +100,43 @@
           :pages="positionsTotalPages"
           :footer="positionsTotalPages > 1 ? 'pagination' : undefined"
           :aria-label="$t('perps.positions.tab-positions')"
+          :loading="!positionsHasLoaded"
+          :loading-rows="3"
           actions
           @update:page="positionsCurrentPage = $event - 1"
         >
           <AppTableRow
             v-for="pos in paginatedPositions"
             :key="pos.market"
-            @click="$emit('viewMarket', pos.market)"
+            :title="getBase(pos.market)"
+            :description="$t(sideKey(pos.direction))"
+            :to="{ name: PERP_INFO_ROUTE_NAME, params: { market: pos.market } }"
           >
-            <template #leading="{ size: avatarSize }">
+            <template #avatar="{ size: avatarSize }">
               <AppAvatar
                 type="perpsAsset"
                 :size="avatarSize"
                 :url="getLogoUrl(getBase(pos.market))"
                 :symbol="getBase(pos.market)"
-                class="shrink-0"
               />
-              <AppContentGroup
-                :title="getBase(pos.market)"
-                class="min-w-0 flex-1"
-              >
-                <template #title-icon>
-                  <AppTag
-                    :type="fillDirectionTagType(pos.direction)"
-                    variant="subtle"
-                    :label="`${
-                      pos.direction === 'long'
-                        ? $t('perps.trade.long')
-                        : pos.direction === 'short'
-                          ? $t('perps.trade.short')
-                          : pos.direction
-                    } ${pos.leverage}x`"
-                  />
-                </template>
-              </AppContentGroup>
+            </template>
+            <template #title-icon>
+              <AppTag
+                :type="fillDirectionTagType(pos.direction)"
+                variant="subtle"
+                :label="`${pos.leverage}x`"
+              />
             </template>
             <AppTableCell
               column="value"
               :value="formatUsd(pos.notionalValue)"
             />
+            <!-- ROE: NaN (no equity yet) reads 0.00%, as formatRoe did. -->
             <AppTableCell
               column="upnl"
               :value="formatPnl(pos.unrealizedPnl)"
-              :change="parseFloat(pos.returnOnEquity) * 100"
+              :tone="trendOf(parseFloat(pos.unrealizedPnl))"
+              :change="parseFloat(pos.returnOnEquity) * 100 || 0"
             />
             <AppTableCell
               column="entry"
@@ -273,13 +260,10 @@
             </template>
           </AppSegmentedControl>
         </div>
-        <app-table-skeleton
-          v-if="ordersLoading && orders.length === 0"
-          :rows="5"
-          :columns="ordersSkeletonColumns"
-        />
         <div
-          v-else-if="orders.length === 0 && ordersCurrentPage === 0"
+          v-if="
+            !ordersLoading && orders.length === 0 && ordersCurrentPage === 0
+          "
           class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-orders') }}
@@ -289,6 +273,7 @@
           <AppTable
             :columns="orderColumns"
             :aria-label="$t('perps.positions.tab-orders')"
+            :loading="ordersLoading && orders.length === 0"
             actions
           >
             <AppTableRow
@@ -309,19 +294,11 @@
               <AppTableCell column="side">
                 <p
                   :class="[
-                    order.side === 'buy'
-                      ? 'text-text-success'
-                      : 'text-text-error',
+                    sideColor(order.side),
                     'max-w-full truncate text-label-base capitalize',
                   ]"
                 >
-                  {{
-                    order.side === 'buy'
-                      ? $t('perps.order.buy')
-                      : order.side === 'sell'
-                        ? $t('perps.order.sell')
-                        : order.side
-                  }}
+                  {{ $t(sideKey(order.side)) }}
                 </p>
               </AppTableCell>
               <AppTableCell column="status">
@@ -331,6 +308,10 @@
                   :label="$t(formatOrderStatus(order.status))"
                 />
               </AppTableCell>
+              <AppTableCell
+                column="type"
+                :value="$t(formatOrderType(order.type))"
+              />
               <AppTableCell
                 column="price"
                 :value="formatPrice(getOrderPrice(order))"
@@ -350,62 +331,15 @@
                   }}
                 </p>
               </AppTableCell>
-              <!-- Viewing is the row click; the action is cancel. -->
               <template #actions="{ size: rowSize, surface }">
-                <template v-if="showCancelButton(order)">
-                  <AppBaseButton
-                    v-if="rowSize !== 's'"
-                    type="secondary"
-                    size="medium"
-                    tone="danger"
-                    class="w-24"
-                    :surface="surface"
-                    :is-loading="cancellingOrderId === order.orderId"
-                    @click="openCancelConfirmation(order)"
-                  >
-                    {{ $t('perps.confirm.cancel') }}
-                  </AppBaseButton>
-                  <app-pop-up-menu
-                    v-else
-                    :placeholder="$t('perps.market-list.actions-menu-label')"
-                    location="right"
-                  >
-                    <template #menu-button="{ toggleMenu }">
-                      <AppBtnIcon
-                        icon="ellipsis-horizontal"
-                        :label="$t('perps.market-list.action-menu-label')"
-                        @click="toggleMenu"
-                      />
-                    </template>
-                    <template #menu-content="{ toggleMenu }">
-                      <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                      >
-                        <ul>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[toggleMenu(), openOrderDialog(order)]"
-                          >
-                            <p>{{ $t('perps.positions.view-order-label') }}</p>
-                          </li>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              openCancelConfirmation(order),
-                            ]"
-                          >
-                            {{
-                              cancellingOrderId === order.orderId
-                                ? $t('perps.order.cancelling')
-                                : $t('perps.order.cancel-order-button')
-                            }}
-                          </li>
-                        </ul>
-                      </div>
-                    </template>
-                  </app-pop-up-menu>
-                </template>
+                <PerpsOrderActions
+                  :order="order"
+                  :size="rowSize"
+                  :surface="surface"
+                  :cancelling="cancellingOrderId === order.orderId"
+                  @view="openOrderDialog"
+                  @cancel="openCancelConfirmation"
+                />
               </template>
             </AppTableRow>
           </AppTable>
@@ -428,13 +362,8 @@
 
       <!-- Fills tab -->
       <template v-else-if="activeTab === 'fills'">
-        <app-table-skeleton
-          v-if="fillsLoading && fills.length === 0"
-          :rows="3"
-          :columns="fillsSkeletonColumns"
-        />
         <div
-          v-else-if="fills.length === 0 && fillsCurrentPage === 0"
+          v-if="!fillsLoading && fills.length === 0 && fillsCurrentPage === 0"
           class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-fills') }}
@@ -443,6 +372,8 @@
           <AppTable
             :columns="fillColumns"
             :aria-label="$t('perps.positions.tab-fills')"
+            :loading="fillsLoading && fills.length === 0"
+            :loading-rows="3"
           >
             <AppTableRow
               v-for="fill in fills"
@@ -502,13 +433,8 @@
 
       <!-- Deposits & Withdrawals tab -->
       <template v-else-if="activeTab === 'deposits'">
-        <app-table-skeleton
-          v-if="dwLoading && deposits.length === 0 && withdrawals.length === 0"
-          :rows="5"
-          :columns="dwSkeletonColumns"
-        />
         <div
-          v-else-if="deposits.length === 0 && withdrawals.length === 0"
+          v-if="!dwLoading && combinedDW.length === 0"
           class="text-center py-8 text-text-subtle text-s-14"
         >
           {{ $t('perps.positions.no-deposits-or-withdrawals') }}
@@ -520,6 +446,7 @@
           :pages="dwTotalPages"
           :footer="dwTotalPages > 1 ? 'pagination' : undefined"
           :aria-label="$t('perps.positions.tab-deposits')"
+          :loading="dwLoading && combinedDW.length === 0"
           @update:page="dwCurrentPage = $event - 1"
         >
           <AppTableRow
@@ -528,6 +455,17 @@
             :title="formatDWType(item.type)"
             :description="item.coin"
           >
+            <template #title>
+              <span
+                :class="
+                  item.type === 'Deposit'
+                    ? 'text-text-success'
+                    : 'text-text-warning'
+                "
+              >
+                {{ formatDWType(item.type) }}
+              </span>
+            </template>
             <template #avatar="{ size: avatarSize }">
               <AppAvatar
                 type="cryptoAsset"
@@ -604,18 +542,17 @@ import AppSegmentedControl from '@components/segmented_control/AppSegmentedContr
 import AppSelect from '@/components/AppSelect.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
 import type { TableColumn } from '@/components/table/types'
+import { trendOf } from '@/components/cell/cellSizes'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTag from '@/components/tag/AppTag.vue'
-import AppTableSkeleton, {
-  type SkeletonColumn,
-} from '@/components/AppTableSkeleton.vue'
+import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
+import PerpsOrderActions from './PerpsOrderActions.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import PerpsCancelOrderConfirmationDialog from './PerpsCancelOrderConfirmationDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
@@ -638,8 +575,11 @@ import {
   getOrderPrice,
   formatOrderStatus,
   orderStatusTagType,
+  formatOrderType,
   directionKey,
   fillDirectionTagType,
+  sideKey,
+  sideColor,
   withdrawalStatusColor,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
@@ -757,7 +697,6 @@ const USDC_LOGO =
 const emits = defineEmits<{
   openPosition: [market: string]
   openSideMenu: [market: string, type: 'add' | 'close' | undefined]
-  viewMarket: [market: string]
 }>()
 
 const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
@@ -808,6 +747,7 @@ const orderColumns = computed<TableColumn[]>(() => [
   { key: 'market', label: t('perps.positions.market-header') },
   { key: 'side', label: t('perps.confirm.side-label') },
   { key: 'status', label: t('perps.order.status-label') },
+  { key: 'type', label: t('perps.order.type-label'), largeOnly: true },
   { key: 'price', label: t('perps.order.price-label'), primary: true },
   { key: 'filled', label: t('perps.positions.filled-size-header') },
 ])
@@ -827,25 +767,6 @@ const dwColumns = computed<TableColumn[]>(() => [
   { key: 'amount', label: t('perps.positions.amount-header'), primary: true },
   { key: 'status', label: t('perps.order.status-label') },
 ])
-
-// Skeleton headers follow the table: leading + primary below md, the rest
-// above, `largeOnly` from xl (1280px).
-const skeletonOf = (columns: TableColumn[]): SkeletonColumn[] =>
-  columns.map((c, i) => ({
-    header: c.label,
-    hidden:
-      i === 0 || c.primary
-        ? undefined
-        : c.largeOnly
-          ? 'hidden xl:table-cell'
-          : 'hidden md:table-cell',
-  }))
-const positionsSkeletonColumns = computed(() =>
-  skeletonOf(positionColumns.value),
-)
-const ordersSkeletonColumns = computed(() => skeletonOf(orderColumns.value))
-const fillsSkeletonColumns = computed(() => skeletonOf(fillColumns.value))
-const dwSkeletonColumns = computed(() => skeletonOf(dwColumns.value))
 
 const { positions, hasLoaded: positionsHasLoaded } = usePerpsPositions()
 
@@ -903,14 +824,6 @@ const {
   nextPage: ordersNextPage,
   prevPage: ordersPrevPage,
 } = usePerpsOrders(ordersStatusFilter)
-
-const showCancelButton = (order: ApiOrder) => {
-  return (
-    order.status === 'pending' ||
-    order.status === 'untriggered' ||
-    order.status === 'open'
-  )
-}
 
 const {
   fills,

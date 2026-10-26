@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enPerps from '@/i18n/locales/perps/en.json'
@@ -29,11 +29,13 @@ const position = {
   returnOnEquity: '0.1',
 }
 
+const positions = ref([position])
+const hasLoaded = ref(true)
+const orders = ref<unknown[]>([])
+const deposits = ref<unknown[]>([])
+
 vi.mock('@/modules/perps/composables/usePerpsPositions', () => ({
-  usePerpsPositions: () => ({
-    positions: ref([position]),
-    hasLoaded: ref(true),
-  }),
+  usePerpsPositions: () => ({ positions, hasLoaded }),
 }))
 const history = () => ({
   loading: ref(false),
@@ -44,10 +46,10 @@ const history = () => ({
   prevPage: vi.fn(),
 })
 vi.mock('@/modules/perps/composables/usePerpsHistory', () => ({
-  usePerpsOrders: () => ({ ...history(), orders: ref([]), refetch: vi.fn() }),
+  usePerpsOrders: () => ({ ...history(), orders, refetch: vi.fn() }),
   usePerpsFills: () => ({ ...history(), fills: ref([]) }),
   usePerpsDepositsWithdrawals: () => ({
-    deposits: ref([]),
+    deposits,
     withdrawals: ref([]),
     loading: ref(false),
   }),
@@ -103,7 +105,7 @@ const mountTable = async () => {
     global: {
       plugins: [i18n],
       directives: { ripple: {} },
-      stubs: { RouterLink: true },
+      stubs: { RouterLink: RouterLinkStub },
     },
   })
 }
@@ -113,9 +115,37 @@ const headers = (w: Awaited<ReturnType<typeof mountTable>>) =>
 
 const LARGE_ONLY = ['Entry Price', 'Margin Used', 'Total Funding']
 
+const openTab = async (
+  w: Awaited<ReturnType<typeof mountTable>>,
+  label: string,
+) => {
+  const tab = w.findAll('[role="radio"]').find(r => r.text().startsWith(label))
+  await tab!.trigger('click')
+}
+
+const cell = (w: Awaited<ReturnType<typeof mountTable>>, text: string) =>
+  w.findAll('[role="rowgroup"] [role="cell"] p').find(p => p.text() === text)!
+
+const order = {
+  orderId: '1',
+  side: 'sell',
+  price: '100',
+  size: '2',
+  market: 'AAA-USD',
+  filledSize: '0',
+  filledCost: '0',
+  status: 'open',
+  createdAt: '2026-01-01T00:00:00Z',
+  type: 'limit',
+}
+
 describe('PerpsPositionsTable positions (MEW-2469)', () => {
   beforeEach(() => {
     tableWidth.value = 1300
+    positions.value = [position]
+    hasLoaded.value = true
+    orders.value = []
+    deposits.value = []
   })
 
   it('shows entry, margin used and total funding at L', async () => {
@@ -135,5 +165,83 @@ describe('PerpsPositionsTable positions (MEW-2469)', () => {
     const w = await mountTable()
     for (const label of LARGE_ONLY) expect(headers(w)).not.toContain(label)
     expect(headers(w)).toContain('Mark Price')
+  })
+
+  it('links the row to the market, with direction and leverage', async () => {
+    const w = await mountTable()
+    expect(w.getComponent(RouterLinkStub).props('to')).toEqual({
+      name: 'perps-perp-info',
+      params: { market: 'AAA-USD' },
+    })
+    expect(w.get('[data-testid="cg-title"]').text()).toContain('AAA')
+    expect(w.get('[data-testid="cg-description"]').text()).toBe('Long')
+    expect(w.text()).toContain('4x')
+  })
+
+  it('colours uPnL by sign and shows ROE', async () => {
+    const w = await mountTable()
+    expect(cell(w, '+$10.00').classes()).toContain('text-text-success')
+    expect(w.text()).toContain('+10.00%')
+  })
+
+  it('reads 0.00% when the ROE is not a number', async () => {
+    positions.value = [{ ...position, returnOnEquity: '' }]
+    const w = await mountTable()
+    expect(w.text()).toContain('0.00%')
+    expect(w.text()).not.toContain('NaN')
+  })
+
+  it('shows skeleton rows until positions load', async () => {
+    hasLoaded.value = false
+    const w = await mountTable()
+    expect(w.get('[role="table"]').attributes('aria-busy')).toBe('true')
+    expect(w.text()).not.toContain('No open positions')
+  })
+})
+
+describe('PerpsPositionsTable orders (MEW-2469)', () => {
+  beforeEach(() => {
+    tableWidth.value = 1300
+    orders.value = [order]
+  })
+
+  it('shows the order type at L only', async () => {
+    const w = await mountTable()
+    await openTab(w, 'Orders')
+    expect(headers(w)).toContain('Type')
+    expect(w.text()).toContain('Limit')
+
+    tableWidth.value = 900
+    await w.vm.$nextTick()
+    expect(headers(w)).not.toContain('Type')
+  })
+
+  it('colours the side and offers cancel for an open order', async () => {
+    const w = await mountTable()
+    await openTab(w, 'Orders')
+    expect(cell(w, 'Sell').classes()).toContain('text-text-error')
+    expect(w.findAll('[role="rowgroup"] button').map(b => b.text())).toContain(
+      'Cancel',
+    )
+  })
+})
+
+describe('PerpsPositionsTable deposits (MEW-2469)', () => {
+  it('colours a deposit title green', async () => {
+    deposits.value = [
+      {
+        coin: 'USDC',
+        size: '5',
+        status: 'confirmed',
+        txid: 't',
+        time: '2026-01-01T00:00:00Z',
+        usdValue: '5',
+      },
+    ]
+    const w = await mountTable()
+    await openTab(w, 'Deposits')
+    expect(w.get('[data-testid="cg-title"] span').classes()).toContain(
+      'text-text-success',
+    )
   })
 })
