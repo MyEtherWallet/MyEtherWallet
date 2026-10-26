@@ -317,6 +317,47 @@ describe('AppModal', () => {
       expect(document.activeElement).toBe(opener)
     })
 
+    it('leaves focus in a modal that opened in the same tick it closed', async () => {
+      // The base stays open, so the closing modal's opener in it isn't inert.
+      mountModal({}, { default: '<button data-test="base">base</button>' })
+      // Mounted first so its focus pass runs before the closing one's.
+      const incoming = mountModal(
+        { modelValue: false },
+        { default: '<button data-test="incoming">in</button>' },
+      )
+      const outgoing = mountModal({ modelValue: false })
+      await flushPromises()
+      await outgoing.setProps({ modelValue: true })
+      await flushPromises()
+      outgoing.setProps({ modelValue: false })
+      incoming.setProps({ modelValue: true })
+      await flushPromises()
+      expect(document.activeElement).toBe(
+        document.querySelector('[data-test="incoming"]'),
+      )
+    })
+
+    it('returns focus to the modal below while the top one is still leaving', async () => {
+      mountModal({}, { default: '<button data-test="base">base</button>' })
+      await flushPromises()
+      // Real transition, so the closing panel stays in the DOM after the tick.
+      const top = mount(AppModal, {
+        props: { modelValue: false, title: 'Top' },
+        slots: { default: '<button>top</button>' },
+        attachTo: '#app',
+        global: { plugins: [i18n], stubs: { transition: false } },
+      })
+      mounted.push(top)
+      await top.setProps({ modelValue: true })
+      await flushPromises()
+      await top.setProps({ modelValue: false })
+      await flushPromises()
+      expect(dialogs()).toHaveLength(2)
+      expect(document.activeElement).toBe(
+        document.querySelector('[data-test="base"]'),
+      )
+    })
+
     it('never lands on a footer action or close when the content has no control', async () => {
       mountModal({
         buttons: { primary: { label: 'Delete', onClick: () => {} } },

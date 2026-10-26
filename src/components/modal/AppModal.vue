@@ -303,8 +303,13 @@ watch(
     } else if (opener) {
       // After the tick the background is no longer inert, so it can take focus.
       const target = opener
+      // Read now: the ref is null after the tick while the panel still leaves.
+      const own = panel.value
       opener = null
       await nextTick()
+      // A modal that opened in the same tick (a swap) already took focus.
+      const holder = document.activeElement?.closest('[role="dialog"]')
+      if (holder && holder !== own) return
       target.focus()
     }
   },
