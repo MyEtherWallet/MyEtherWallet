@@ -43,20 +43,20 @@ export const ROW_PADDING: Record<TableSize, string> = {
 }
 
 export interface TableContext {
-  size: Ref<TableSize>
+  size: Readonly<Ref<TableSize>>
   /** Data column keys rendered at the current size. */
-  visibleKeys: Ref<string[]>
+  visibleKeys: Readonly<Ref<string[]>>
   /** Leading track for the drag handle + watchlist star. */
-  start: Ref<boolean>
-  reorderable: Ref<boolean>
+  start: Readonly<Ref<boolean>>
+  reorderable: Readonly<Ref<boolean>>
   /** Trailing track for the row actions. */
-  actions: Ref<boolean>
+  actions: Readonly<Ref<boolean>>
 }
 
 export const TABLE_CONTEXT: InjectionKey<TableContext> = Symbol('AppTable')
 
 /** Size measured by AppTableWrapper, so the table follows the card's breakpoints. */
-export const TABLE_WRAPPER_SIZE: InjectionKey<Ref<TableSize>> =
+export const TABLE_WRAPPER_SIZE: InjectionKey<Readonly<Ref<TableSize>>> =
   Symbol('AppTableWrapper')
 
 /** Rows and cells read this outside an AppTable (e.g. a lone spec mount). */
