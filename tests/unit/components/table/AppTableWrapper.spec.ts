@@ -25,10 +25,17 @@ const ACTION = {
 }
 
 describe('AppTableWrapper', () => {
-  it('is a section named by its title alone', () => {
+  it('is a section named by its heading', () => {
     const w = factory({ description: 'Top assets' })
+    const heading = w.get('h2')
     expect(w.element.tagName).toBe('SECTION')
-    expect(w.attributes('aria-label')).toBe('Explore crypto')
+    expect(heading.text()).toBe('Explore crypto')
+    expect(w.attributes('aria-labelledby')).toBe(heading.attributes('id'))
+    expect(w.text()).toContain('Top assets')
+  })
+
+  it('renders the title as the requested heading level', () => {
+    expect(factory({ titleTag: 'h1' }).find('h1').text()).toBe('Explore crypto')
   })
 
   it('pads 24 at L/M and 16 at S', () => {

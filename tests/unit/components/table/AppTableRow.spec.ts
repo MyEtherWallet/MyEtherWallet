@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
@@ -43,6 +43,7 @@ const factory = ({
     global: {
       plugins: [i18n],
       provide: { [TABLE_CONTEXT as symbol]: context },
+      stubs: { RouterLink: RouterLinkStub },
     },
   })
 }
@@ -173,5 +174,47 @@ describe('AppTableRow', () => {
     })
     expect(w.get('.on').text()).toBe('on')
     expect(w.get('[data-test="tag"]').text()).toBe('xs')
+  })
+
+  it('links the title over the whole row when given `to`', async () => {
+    const calls: number[] = []
+    const w = factory({
+      props: { to: '/token/usdc' },
+      attrs: { onClick: () => calls.push(1) },
+    })
+    const link = w.getComponent(RouterLinkStub)
+    expect(link.props('to')).toBe('/token/usdc')
+    expect(link.text()).toBe('USDC')
+    expect(link.classes()).toEqual(
+      expect.arrayContaining(['after:absolute', 'after:inset-0']),
+    )
+    // The link is the focus target, not the row.
+    expect(w.attributes('tabindex')).toBeUndefined()
+    await link.trigger('click')
+    expect(calls).toHaveLength(1)
+  })
+
+  it('keeps the star and actions above the row link', () => {
+    const w = factory({
+      props: { to: '/x', watchlisted: false },
+      slots: { actions: '<button>Trade</button>' },
+      ctx: { start: true, actions: true },
+    })
+    const cells = w.findAll('[role="cell"]')
+    expect(cells[0].classes()).toContain('z-10')
+    expect(cells.at(-1)!.classes()).toContain('z-10')
+  })
+
+  it('shows the full title as a tooltip on the leading cell', () => {
+    expect(factory().findAll('[role="cell"]')[0].attributes('title')).toBe(
+      'USDC',
+    )
+  })
+
+  it('keeps the drag handle visible on touch screens', () => {
+    const handle = factory({ ctx: { start: true, reorderable: true } }).get(
+      '[data-table-handle]',
+    )
+    expect(handle.classes()).toContain('pointer-coarse:visible')
   })
 })

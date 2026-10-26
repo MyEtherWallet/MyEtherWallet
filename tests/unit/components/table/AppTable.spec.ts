@@ -141,7 +141,7 @@ describe('AppTable', () => {
       { size: undefined },
       {
         provide: {
-          [TABLE_WRAPPER as symbol]: { size: ref('s'), title: ref('Explore') },
+          [TABLE_WRAPPER as symbol]: { size: ref('s'), titleId: 'wrap-title' },
         },
       },
     )
@@ -201,18 +201,38 @@ describe('AppTable', () => {
     expect(w.emitted('update:page')).toEqual([[2]])
   })
 
-  it('is named by the wrapper title unless given its own label', () => {
+  it('is named by the wrapper heading unless given its own label', () => {
     const wrapper = {
-      [TABLE_WRAPPER as symbol]: { size: ref('l'), title: ref('Explore') },
+      [TABLE_WRAPPER as symbol]: { size: ref('l'), titleId: 'wrap-title' },
     }
-    expect(
-      grid(factory({}, { provide: wrapper })).attributes('aria-label'),
-    ).toBe('Explore')
-    expect(
-      grid(factory({ ariaLabel: 'Own' }, { provide: wrapper })).attributes(
-        'aria-label',
-      ),
-    ).toBe('Own')
+    const named = grid(factory({}, { provide: wrapper }))
+    expect(named.attributes('aria-labelledby')).toBe('wrap-title')
+    const own = grid(factory({ ariaLabel: 'Own' }, { provide: wrapper }))
+    expect(own.attributes('aria-label')).toBe('Own')
+    expect(own.attributes('aria-labelledby')).toBeUndefined()
+  })
+
+  it('returns to defaultSort instead of null after asc', async () => {
+    const def = { key: 'cap', direction: 'desc' } as const
+    const w = factory({
+      sort: { key: 'price', direction: 'asc' },
+      defaultSort: def,
+    })
+    await w.findAll('[role="columnheader"]')[1].get('button').trigger('click')
+    expect(w.emitted('update:sort')).toEqual([[def]])
+  })
+
+  it('swaps the rows for skeleton rows while loading and blanks the page label', () => {
+    const w = factory(
+      { loading: true, loadingRows: 3, footer: 'pagination', pages: 4 },
+      { rows: 2 },
+    )
+    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
+    expect(rows).toHaveLength(3)
+    expect(rows[0].text()).toBe('')
+    expect(grid(w).attributes('aria-busy')).toBe('true')
+    const label = w.getComponent(AppPagination).props('label') as () => string
+    expect(label()).toBe('')
   })
 
   it('labels the start column Watchlist only when it holds the star', () => {

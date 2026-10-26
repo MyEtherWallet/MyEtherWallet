@@ -59,11 +59,11 @@ export const TABLE_CONTEXT: InjectionKey<TableContext> = Symbol('AppTable')
 
 /**
  * From AppTableWrapper: its measured size, so the table follows the card's
- * breakpoints, and its title, which names the table for screen readers.
+ * breakpoints, and its heading id, which names the table for screen readers.
  */
 export const TABLE_WRAPPER: InjectionKey<{
   size: Readonly<Ref<TableSize>>
-  title: Readonly<Ref<string>>
+  titleId: string
 }> = Symbol('AppTableWrapper')
 
 /** Rows and cells read this outside an AppTable (e.g. a lone spec mount). */

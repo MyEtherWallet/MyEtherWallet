@@ -100,4 +100,22 @@ describe('AppTableCell', () => {
     expect(w.html()).toContain('<b>10x</b>')
     expect(w.text()).toBe('10x')
   })
+
+  it('keeps the value next to a sparkline (e.g. a "-" placeholder)', () => {
+    const w = factory({ value: '-', series: [1, 2] })
+    expect(w.text()).toBe('-')
+    expect(w.find('[data-test="table-cell-sparkline"]').exists()).toBe(true)
+  })
+
+  it('colours the value by tone', () => {
+    expect(factory({ value: '$5', tone: 'up' }).get('p').classes()).toContain(
+      'text-text-success',
+    )
+    expect(factory({ value: '$5', tone: 'down' }).get('p').classes()).toContain(
+      'text-text-error',
+    )
+    expect(factory({ value: '$5' }).get('p').classes()).toContain(
+      'text-text-default',
+    )
+  })
 })

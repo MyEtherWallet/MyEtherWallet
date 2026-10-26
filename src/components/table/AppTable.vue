@@ -7,6 +7,9 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import AppPagination from '@/components/pagination/AppPagination.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
+import AppTableRow from './AppTableRow.vue'
+import AppTableCell from './AppTableCell.vue'
 import {
   COLUMN_SPACING,
   ROW_PADDING,
@@ -33,7 +36,9 @@ import {
  * Size: the `size` prop, else the AppTableWrapper around it, else the table's
  * own width (768 / 1280). At S only the leading and primary columns show;
  * `largeOnly` columns show at L only.
- * Sort cycles off → desc → asc → off per column (`v-model:sort`).
+ * Sort cycles off → desc → asc → off per column (`v-model:sort`); with
+ * `defaultSort`, "off" is that sort instead of null. `loading` swaps the rows
+ * for `loadingRows` skeleton rows and blanks the pagination label.
  */
 const props = withDefaults(
   defineProps<{
@@ -46,6 +51,10 @@ const props = withDefaults(
     reorderable?: boolean
     /** Reserve the end track for the rows' `#actions`. */
     actions?: boolean
+    /** What a third click returns to (instead of null): the data's own order. */
+    defaultSort?: TableSort
+    loading?: boolean
+    loadingRows?: number
     footer?: TableFooterType
     pages?: number
     /** Overrides the pagination footer's "Showing page X of Y" copy. */
@@ -55,7 +64,7 @@ const props = withDefaults(
     /** Height cap class (e.g. `max-h-96`); the rows scroll under the header. */
     maxHeight?: string
   }>(),
-  { pages: 1, remaining: 0 },
+  { pages: 1, remaining: 0, loadingRows: 5 },
 )
 
 const sort = defineModel<TableSort | null>('sort', { default: null })
@@ -118,7 +127,7 @@ const onSort = (col: TableColumn) => {
   const direction = directionOf(col)
   sort.value =
     direction === 'asc'
-      ? null
+      ? (props.defaultSort ?? null)
       : { key: col.key, direction: direction === 'desc' ? 'asc' : 'desc' }
 }
 
@@ -156,7 +165,9 @@ watch(
   <div ref="root" class="flex w-full flex-col gap-6">
     <div
       role="table"
-      :aria-label="ariaLabel ?? wrapper?.title.value"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabel ? undefined : wrapper?.titleId"
+      :aria-busy="loading || undefined"
       :class="['grid', size === 's' ? 'gap-x-1' : 'gap-x-2']"
       :style="{ gridTemplateColumns: template }"
     >
@@ -215,7 +226,24 @@ watch(
           maxHeight && ['overflow-y-auto', maxHeight],
         ]"
       >
-        <slot :size="size" :visible-keys="visibleKeys" />
+        <template v-if="loading">
+          <AppTableRow v-for="n in loadingRows" :key="n">
+            <template #leading>
+              <AppSkeleton
+                shape="circle"
+                :class="size === 's' ? 'size-8' : 'size-10'"
+              />
+              <span class="flex flex-col gap-2">
+                <AppSkeleton class="h-3 w-16" />
+                <AppSkeleton class="h-3 w-24" />
+              </span>
+            </template>
+            <AppTableCell v-for="key in visibleKeys" :key="key" :column="key">
+              <AppSkeleton class="h-3 w-16" />
+            </AppTableCell>
+          </AppTableRow>
+        </template>
+        <slot v-else :size="size" :visible-keys="visibleKeys" />
       </div>
     </div>
 
@@ -235,7 +263,7 @@ watch(
       v-else-if="footer === 'pagination'"
       v-model="page"
       :total-pages="pages"
-      :label="paginationLabel"
+      :label="loading ? () => '' : paginationLabel"
       variant="alternative"
     />
   </div>

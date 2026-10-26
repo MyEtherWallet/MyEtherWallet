@@ -9,6 +9,9 @@ import { TABLE_CONTEXT, defaultTableContext } from './types'
  * `value` with an optional `change` line; the Trend types are `change` with a
  * 56×16 sparkline drawn from `series`. The default slot takes anything else.
  *
+ * `value` also shows next to a sparkline (e.g. a "-" placeholder when the
+ * change is unknown). `tone` colours the value: up green, down red.
+ *
  * `column` ties the cell to a TableColumn key so it drops out at size S with
  * its header. Give every data cell one: a cell without it always renders and
  * pushes the row off the header's tracks.
@@ -18,6 +21,7 @@ const props = defineProps<{
   value?: string
   change?: number
   series?: number[]
+  tone?: Trend
 }>()
 
 const { size, visibleKeys } = inject(TABLE_CONTEXT, defaultTableContext, true)
@@ -26,6 +30,12 @@ const TREND_CLASS: Record<Trend, string> = {
   up: 'text-text-success',
   down: 'text-text-error',
   neutral: 'text-text-disabled',
+}
+
+const VALUE_TONE_CLASS: Record<Trend, string> = {
+  up: 'text-text-success',
+  down: 'text-text-error',
+  neutral: 'text-text-default',
 }
 
 const visible = computed(
@@ -64,8 +74,11 @@ const points = computed(() => {
   >
     <slot>
       <p
-        v-if="value !== undefined && !series"
-        class="max-w-full truncate text-label-base text-text-default"
+        v-if="value !== undefined"
+        :class="[
+          'max-w-full truncate text-label-base',
+          VALUE_TONE_CLASS[tone ?? 'neutral'],
+        ]"
       >
         {{ value }}
       </p>
