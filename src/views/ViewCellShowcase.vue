@@ -312,6 +312,19 @@ const pickedOption = ref<SelectOption>('Ethereum')
         </AppCell>
 
         <AppCell
+          title="Additional content"
+          description="Extra slot hugs its content (trailing avatar)"
+          @click="clicks++"
+        >
+          <template #avatar="{ size: avatarSize }">
+            <AppAvatar :size="avatarSize" type="initial" initial="A" />
+          </template>
+          <template #extra>
+            <AppAvatar size="l" type="initial" initial="T" />
+          </template>
+        </AppCell>
+
+        <AppCell
           v-for="option in SELECT_OPTIONS"
           :key="`checkbox-${option}`"
           :title="`Checkbox — ${option}`"

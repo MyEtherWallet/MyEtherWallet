@@ -71,10 +71,16 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     }
   })
 
-  it('shows the brand focus border only while interactive', () => {
-    expect(mountCell().classes()).toContain('focus-visible:border-border-focus')
+  it('draws the 2px brand focus ring inside the cell only while interactive', () => {
+    expect(mountCell().classes()).toEqual(
+      expect.arrayContaining([
+        'focus-visible:ring-2',
+        'focus-visible:ring-inset',
+        'focus-visible:ring-border-brand',
+      ]),
+    )
     expect(mountCell({ interactive: false }).classes()).not.toContain(
-      'focus-visible:border-border-focus',
+      'focus-visible:ring-border-brand',
     )
   })
 
@@ -203,15 +209,35 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.attributes('aria-busy')).toBe('true')
   })
 
-  it('sizes the loading avatar like the avatar it stands in for', () => {
+  it('shows a 32px avatar skeleton in both sizes, as Figma Loading', () => {
     for (const size of ['medium', 'small'] as const) {
-      const { box } = AVATAR_SIZES[CELL_SIZE_SPEC[size].avatar]
       const skeleton = mountCell({ loading: true, size }, avatarSlot).get(
         '[data-test="cell-skeleton-avatar"]',
       )
-      expect(skeleton.attributes('style')).toContain(`width: ${box}px`)
-      expect(skeleton.attributes('style')).toContain(`height: ${box}px`)
+      expect(skeleton.classes()).toContain('size-8')
     }
+  })
+
+  it('draws its own 60 / 100 content bars while loading, the second only with a description', () => {
+    const bars = mountCell({ loading: true })
+      .get('[data-test="cell-skeleton-content"]')
+      .findAll('[data-testid="skeleton"]')
+    expect(bars).toHaveLength(2)
+    expect(bars[0].classes()).toContain('w-[60px]')
+    expect(bars[1].classes()).toContain('w-[100px]')
+
+    const titleOnly = mountCell({ loading: true, description: '' })
+      .get('[data-test="cell-skeleton-content"]')
+      .findAll('[data-testid="skeleton"]')
+    expect(titleOnly).toHaveLength(1)
+  })
+
+  it('lets the extra slot hug its content at the row height', () => {
+    const extra = mountCell({}, { extra: '<i data-test="extra" />' }).get(
+      '[data-test="extra"]',
+    ).element.parentElement as HTMLElement
+    expect(extra.className).toContain('self-stretch')
+    expect(extra.className).not.toContain('w-7')
   })
 
   it('does not emit click while loading', async () => {

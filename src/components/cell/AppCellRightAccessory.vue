@@ -101,9 +101,10 @@ const graphChange = computed(() => {
       />
     </span>
 
-    <div v-else class="flex flex-col items-end gap-2.5">
-      <AppSkeleton class="h-3 w-12" />
-      <AppSkeleton class="h-3 w-20" />
+    <!-- Figma Cell Loading: 50 / 70 bars, 8px apart. -->
+    <div v-else class="flex flex-col items-end gap-2">
+      <AppSkeleton class="h-3 w-[50px]" />
+      <AppSkeleton class="h-3 w-[70px]" />
     </div>
   </div>
 </template>

@@ -165,8 +165,12 @@ describe('AppCellRightAccessory — Cell right accessory (MEW-2445)', () => {
     const w = mountAccessory({ kind: 'loading' })
     const bars = w.findAll('[data-testid="skeleton"]')
     expect(bars).toHaveLength(2)
-    expect(bars[0].classes()).toEqual(expect.arrayContaining(['h-3', 'w-12']))
-    expect(bars[1].classes()).toEqual(expect.arrayContaining(['h-3', 'w-20']))
+    expect(bars[0].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[50px]']),
+    )
+    expect(bars[1].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[70px]']),
+    )
   })
 
   it('stays right-aligned and never wraps', () => {
