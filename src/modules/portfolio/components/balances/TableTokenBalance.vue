@@ -296,24 +296,11 @@
           >
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <app-btn-icon
+              <AppCellWatchlistToggle
                 v-if="getWatchlistId(token)"
-                :label="
-                  isWatchListed(getWatchlistId(token))
-                    ? $t('common.remove_from_watchlist')
-                    : $t('common.add_to_watchlist')
-                "
-                class="text-black"
-                @click.stop="setWatchlistToken(token)"
-              >
-                <AppIcon
-                  name="star"
-                  :variant="
-                    isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
-                  "
-                  size="xxs"
-                />
-              </app-btn-icon>
+                :model-value="isWatchListed(getWatchlistId(token))"
+                @update:model-value="setWatchlistToken(token)"
+              />
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
@@ -733,6 +720,7 @@ import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import {
   EMPHASIS_TEXT_CLASS,
   SUPPORTING_TEXT_CLASS,
@@ -16,9 +17,9 @@ import {
  * it once lets those compose it instead of re-implementing the layout.
  *
  * Colours come from `tone`: `default` (emphasis `text/default`, supporting
- * `text/subtle`) for light surfaces, `inverse` (white / white-70) for dark ones
- * such as a Toast or a dark modal header. The spans set their colour
- * explicitly, so a wrapper's `text-*` class would never reach them — use
+ * `text/subtle`) for light surfaces, `inverse` (`text/inverted` /
+ * `text/inverted-subtle`) for dark ones such as a Toast or a dark modal
+ * header. The spans set their colour explicitly, so a wrapper's `text-*` class would never reach them — use
  * `tone` instead. `inverted` swaps the two line styles: the title takes the
  * supporting style and the description the emphasis one.
  *
@@ -98,14 +99,10 @@ const descriptionClass = computed(() => [
     <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes. -->
     <template v-if="loading">
       <div class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[35px] rounded-[4px] bg-background-skeleton animate-pulse"
-        ></div>
+        <AppSkeleton class="inline-block h-3 w-[35px]" />
       </div>
       <div v-if="hasDescription" class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[79px] rounded-[4px] bg-background-skeleton animate-pulse"
-        ></div>
+        <AppSkeleton class="inline-block h-3 w-[79px]" />
       </div>
     </template>
 
@@ -116,7 +113,7 @@ const descriptionClass = computed(() => [
           class="truncate min-w-0"
           :class="titleClass"
         >
-          {{ title }}
+          <slot name="title">{{ title }}</slot>
         </span>
         <span
           v-if="slots['title-icon']"

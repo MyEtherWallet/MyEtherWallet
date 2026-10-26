@@ -20,6 +20,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Button', to: '/dev/button' },
       { name: 'Button Group', to: '/dev/button-group' },
       { name: 'Button Icon', to: '/dev/btn-icon' },
+      { name: 'Cell', to: '/dev/cell' },
       { name: 'Checkbox', to: '/dev/checkbox' },
       { name: 'Chip', to: '/dev/chip' },
       { name: 'Content Group', to: '/dev/content-group' },
