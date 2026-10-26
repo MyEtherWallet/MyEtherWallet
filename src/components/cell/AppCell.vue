@@ -1,11 +1,12 @@
 <template>
   <div
     :class="[
-      'box-border flex w-full items-center gap-3 rounded-12 border border-transparent px-4 outline-none transition-colors',
+      'box-border flex w-full items-center gap-3 rounded-12 px-4 outline-none transition-colors',
       sizeSpec.cell,
       surfaceClass,
+      // Figma Focus: 2px border/brand drawn inside, so the content doesn't move.
       isInteractive
-        ? 'cursor-pointer focus-visible:border-border-focus focus-visible:outline-none'
+        ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand'
         : '',
       disabled ? 'pointer-events-none opacity-30' : '',
     ]"
@@ -33,12 +34,12 @@
     </div>
 
     <template v-if="$slots.avatar">
+      <!-- Figma Loading: a 32px circle in both sizes. -->
       <AppSkeleton
         v-if="loading"
         shape="circle"
         data-test="cell-skeleton-avatar"
-        class="shrink-0"
-        :style="skeletonAvatarStyle"
+        class="size-8 shrink-0"
       />
       <div v-else class="relative flex shrink-0">
         <slot name="avatar" :size="sizeSpec.avatar" />
@@ -56,10 +57,20 @@
       </div>
     </template>
 
+    <!-- Figma "Content Group Skeleton": the Cell's own 60 / 100 bars, not the
+         Content Group's loading state. -->
+    <div
+      v-if="loading"
+      data-test="cell-skeleton-content"
+      class="flex min-w-0 flex-1 flex-col gap-1.5 py-[5px]"
+    >
+      <AppSkeleton class="h-3 w-[60px]" />
+      <AppSkeleton v-if="description" class="h-3 w-[100px]" />
+    </div>
     <AppContentGroup
+      v-else
       :title="title"
       :description="description"
-      :loading="loading"
       size="m"
       no-wrap
       class="flex-1"
@@ -97,7 +108,12 @@
         <slot name="suffix" />
       </div>
 
-      <div v-if="$slots.extra" class="h-11 w-7 shrink-0" @click.stop>
+      <!-- Figma "Additional content": hugs its content at the row's height. -->
+      <div
+        v-if="$slots.extra"
+        class="flex shrink-0 items-center self-stretch"
+        @click.stop
+      >
         <slot name="extra" />
       </div>
     </template>
@@ -117,7 +133,7 @@ import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
 import AppCellRightAccessory from '@/components/cell/AppCellRightAccessory.vue'
-import { AVATAR_SIZES, badgePositionStyle } from '@/components/avatar/types'
+import { badgePositionStyle } from '@/components/avatar/types'
 import {
   CELL_SIZE_SPEC,
   CELL_SURFACE_BG_CLASS,
@@ -210,12 +226,6 @@ const sizeSpec = computed(() => CELL_SIZE_SPEC[props.size])
 const selectedBadgeStyle = computed(() =>
   badgePositionStyle(sizeSpec.value.avatar, 'topLeft'),
 )
-
-// Same box as the avatar it replaces, so the row doesn't jump once it loads.
-const skeletonAvatarStyle = computed(() => {
-  const px = `${AVATAR_SIZES[sizeSpec.value.avatar].box}px`
-  return { width: px, height: px }
-})
 
 const hasAccessory = computed(
   () => Boolean(slots.accessory) || Boolean(props.rightAccessory),
