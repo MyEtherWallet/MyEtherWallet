@@ -64,7 +64,6 @@
         <input
           ref="fileInput"
           type="file"
-          accept=".json,application/json"
           class="hidden"
           data-testid="keystore-file-input"
           @change="onFileChange"
