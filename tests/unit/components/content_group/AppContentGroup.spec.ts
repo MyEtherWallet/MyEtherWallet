@@ -161,6 +161,22 @@ describe('AppContentGroup', () => {
     expect(wrapper.find(title()).exists()).toBe(false)
   })
 
+  it('loading rows keep the line heights, so the group does not grow', () => {
+    // 12px bars: py-[5px] makes a 22px row, py-1 a 20px one (the M text/sm line).
+    const rows = (props: { size?: 'm' | 'l'; inverted?: boolean }) =>
+      mount(AppContentGroup, {
+        props: { title: 'T', description: 'D', loading: true, ...props },
+      })
+        .findAll('[data-testid="cg-root"] > div')
+        .map(row => row.classes())
+    const tall = expect.arrayContaining(['py-[5px]'])
+    const short = expect.arrayContaining(['py-1'])
+
+    expect(rows({})).toEqual([tall, short])
+    expect(rows({ inverted: true })).toEqual([short, tall])
+    expect(rows({ size: 'l' })).toEqual([tall, tall])
+  })
+
   it('passes size "xs" to the icon/avatar slots for every group size', () => {
     for (const size of ['m', 'l'] as const) {
       const wrapper = mount(AppContentGroup, {

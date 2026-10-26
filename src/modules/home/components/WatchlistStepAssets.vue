@@ -8,7 +8,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
-import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
+import AppCard from '@/components/card/AppCard.vue'
 import type { RecommendedAsset } from './watchlistOnboarding'
 import { WATCHLIST_LOADER_LOGOS } from './watchlistOnboarding'
 import { WATCHLIST_MAX } from '@/stores/watchlistTableStore'
@@ -286,15 +286,16 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
               :key="index"
               class="grid grid-cols-4 gap-2 pb-2"
             >
-              <WatchlistSelectableCard
+              <AppCard
                 v-for="asset in data"
                 :key="asset.id"
                 data-test="asset-card"
+                interactive
+                :label="asset.symbol"
                 :selected="selected.includes(asset.id)"
                 :disabled="isDisabled(asset)"
-                bg="bg-white"
-                class="flex h-24 flex-col items-center justify-center gap-2"
-                @toggle="toggle(asset.id)"
+                class="h-24 items-center justify-center gap-2"
+                @click="toggle(asset.id)"
               >
                 <span class="relative">
                   <AppTokenLogo
@@ -329,7 +330,7 @@ const isDisabled = (asset: RecommendedAsset): boolean =>
                   :is-stock="asset.type === 'stock'"
                   class="max-w-full text-center text-s-16 font-semibold text-black"
                 />
-              </WatchlistSelectableCard>
+              </AppCard>
             </div>
           </div>
         </div>
