@@ -181,9 +181,9 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       >
         <AppSearchbar
           v-model="query"
+          variant="default"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-background-default"
-          class="w-full rounded-full min-[780px]:w-60"
+          class="w-full min-[780px]:w-60"
         />
         <div class="relative shrink-0 self-start">
           <button

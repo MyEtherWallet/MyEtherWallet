@@ -15,16 +15,12 @@
       >
         <!-- Search -->
         <div class="sticky top-0 bg-white z-20">
-          <div
-            class="flex items-center mb-2 bg-background-brand-subtle rounded-full p-1"
-          >
-            <app-searchbar
-              v-model="searchInput"
-              class="grow"
-              :placeholder="$t('select_chain.search_placeholder')"
-              bg-class="bg-transparent"
-            />
-          </div>
+          <app-searchbar
+            v-model="searchInput"
+            variant="outline"
+            class="mb-2"
+            :placeholder="$t('select_chain.search_placeholder')"
+          />
           <app-divider class="-mt-1 mb-1" />
         </div>
         <!-- Search Result-->

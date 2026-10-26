@@ -41,6 +41,16 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(cls).toContain(CELL_SIZE_SPEC.medium.cell.split(' ')[0])
   })
 
+  it('uses 16px side padding, or 12px with inset for rows inside a padded container', () => {
+    const regular = mountCell().classes()
+    expect(regular).toContain('px-4')
+    expect(regular).not.toContain('px-3')
+
+    const inset = mountCell({ inset: true }).classes()
+    expect(inset).toContain('px-3')
+    expect(inset).not.toContain('px-4')
+  })
+
   it('renders surface="alternative" on the grey background/default with its own hover pair', () => {
     const cls = mountCell({ surface: 'alternative' }).classes()
     expect(cls).toContain('bg-background-default')
