@@ -87,8 +87,6 @@
           "swap": "Swap",
           "bridge": "Bridge",
           "removeShort": "Remove",
-          "dragLabel": "Drag to reorder",
-          "showMore": "Show {count} more",
           "columns": {
             "token": "Token",
             "marketCap": "Market cap",

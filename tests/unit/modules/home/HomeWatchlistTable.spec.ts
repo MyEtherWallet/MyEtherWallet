@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount } from '@vue/test-utils'
+import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
 
@@ -42,24 +43,20 @@ const ROWS: WatchlistRow[] = [
 const push = vi.fn()
 vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
 
-// vuedraggable → render the #item slot per element (no real DnD in jsdom).
-vi.mock('vuedraggable', () => ({
-  default: {
-    props: ['modelValue'],
-    template:
-      '<ul><template v-for="(el,i) in modelValue" :key="el.key"><slot name="item" :element="el" :index="i" /></template></ul>',
-  },
+// jsdom has no layout: the table wrapper sizes itself from this width
+// (L ≥1280, M ≥768, S below).
+const cardWidth = ref(1300)
+vi.mock('@vueuse/core', async importOriginal => ({
+  ...(await importOriginal<typeof import('@vueuse/core')>()),
+  useElementSize: () => ({ width: cardWidth, height: ref(0) }),
 }))
-// Visual children pull the stocks store / chart.js — stub them.
+// The logo pulls the stocks store — stub it.
 vi.mock('@/components/AppTokenLogo.vue', () => ({
   default: { template: '<span />' },
 }))
-vi.mock('@/components/AppTokenSymbol.vue', () => ({
-  default: { props: ['symbol'], template: '<span>{{ symbol }}</span>' },
-}))
 vi.mock('@/components/AppSearchbar.vue', () => ({
   default: {
-    props: ['modelValue', 'placeholder', 'bgClass'],
+    props: ['modelValue', 'placeholder', 'bgClass', 'size'],
     emits: ['update:modelValue'],
     template:
       '<input data-test="search" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
@@ -70,9 +67,6 @@ vi.mock('@/components/tooltip/AppTooltip.vue', () => ({
     props: ['text', 'placement'],
     template: '<div data-test="tooltip" :data-text="text"><slot /></div>',
   },
-}))
-vi.mock('@/components/TableSparkline.vue', () => ({
-  default: { template: '<span data-test="sparkline" />' },
 }))
 // The add-to-watchlist dialog pulls the asset-picker (perps SDK) — stub it and
 // expose its open state.
@@ -91,6 +85,8 @@ vi.mock('@/modules/home/composables/useNewListingSwap', () => ({
 }))
 
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
@@ -105,15 +101,17 @@ const i18n = createI18n({
 const mountTable = (rows: WatchlistRow[] = ROWS) =>
   mount(HomeWatchlistTable, {
     props: { rows },
-    global: {
-      plugins: [i18n],
-      stubs: { RouterLink: { props: ['to'], template: '<a><slot /></a>' } },
-    },
+    global: { plugins: [i18n], directives: { ripple: {} } },
   })
+
+// The star lives inside AppTableRow (no data-test of its own).
+const stars = (w: ReturnType<typeof mountTable>) =>
+  w.findAllComponents(AppCellWatchlistToggle)
 
 describe('HomeWatchlistTable (MEW-2130)', () => {
   beforeEach(() => {
     localStorage.clear()
+    cardWidth.value = 1300
     setActivePinia(createPinia())
     push.mockClear()
     openSwapForToken.mockClear()
@@ -129,7 +127,7 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     store.setWatchlistItem('AAPL', true)
     store.setWatchlistItem('ethereum', false)
     const w = mountTable()
-    const removeButtons = w.findAll('[data-test="watchlist-remove"]')
+    const removeButtons = stars(w)
     await removeButtons[0].trigger('click') // AAPL (stock)
     expect(store.watchListedStocks).toEqual([])
     await removeButtons[1].trigger('click') // ethereum (crypto)
@@ -152,16 +150,30 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(push).toHaveBeenCalledWith(ROWS[0].route)
   })
 
-  it('exposes a focusable link for the row body (keyboard access)', () => {
+  it('the row is focusable and Enter opens the drawer (keyboard access)', async () => {
     const w = mountTable([makeRow()])
-    const link = w.find('[data-test="watchlist-row-link"]')
-    expect(link.exists()).toBe(true)
-    expect(link.element.tagName).toBe('A')
+    const row = w.get('[data-test="watchlist-row"]')
+    expect(row.attributes('tabindex')).toBe('0')
+    await row.trigger('keydown', { key: 'Enter' })
+    expect(push).toHaveBeenCalledWith(makeRow().route)
+  })
+
+  it('titles a stock row with the tokenized "on" ticker', () => {
+    const w = mountTable()
+    expect(w.findAll('[data-test="watchlist-row"]')[0].text()).toContain(
+      'AAPLon',
+    )
   })
 
   it('clicking the star (remove) does not navigate', async () => {
     const w = mountTable()
-    await w.findAll('[data-test="watchlist-remove"]')[0].trigger('click')
+    await stars(w)[0].trigger('click')
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('clicking the trade action does not navigate', async () => {
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-trade"]')[0].trigger('click')
     expect(push).not.toHaveBeenCalled()
   })
 
@@ -197,9 +209,64 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     )
     const w = mountTable(rows)
     expect(w.findAll('[data-test="watchlist-row"]').length).toBe(5)
-    await w.get('[data-test="watchlist-show-more"]').trigger('click')
+    const showMore = () =>
+      w.findAll('button').find(b => b.text() === 'common.show_count_more')
+    await showMore()!.trigger('click')
     expect(w.findAll('[data-test="watchlist-row"]').length).toBe(7)
-    expect(w.find('[data-test="watchlist-show-more"]').exists()).toBe(false)
+    expect(showMore()).toBeUndefined()
+  })
+
+  it('reordering persists the full key order, hidden rows last', () => {
+    const rows = Array.from({ length: 7 }, (_, i) =>
+      makeRow({ key: `token-${i}`, symbol: `T${i}`, removeId: `t${i}` }),
+    )
+    const w = mountTable(rows)
+    w.findComponent(AppTable).vm.$emit('reorder', { from: 0, to: 2 })
+    expect(useWatchlistStore().watchlistOrder).toEqual([
+      'token-1',
+      'token-2',
+      'token-0',
+      'token-3',
+      'token-4',
+      'token-5',
+      'token-6',
+    ])
+  })
+
+  it('turns reordering off while a filter is active', async () => {
+    const w = mountTable()
+    expect(w.findComponent(AppTable).props('reorderable')).toBe(true)
+    await w.get('[data-test="search"]').setValue('apple')
+    expect(w.findComponent(AppTable).props('reorderable')).toBe(false)
+  })
+
+  it('size S keeps price only and moves the action into the ellipsis menu', async () => {
+    cardWidth.value = 400
+    const walletMenu = useWalletMenuStore()
+    const w = mountTable()
+    expect(w.findAll('[role="columnheader"]').map(h => h.text())).toEqual([
+      'common.watchlist',
+      'homePage.hero.watchlist.table.columns.token',
+      'homePage.hero.watchlist.table.columns.price',
+      'common.actions',
+    ])
+    expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
+    await w.findAll('[data-test="watchlist-menu"]')[0].trigger('click')
+    await w.get('[data-test="watchlist-menu-trade"]').trigger('click')
+    expect(walletMenu.walletPanel).toBe('trade')
+    expect(push).not.toHaveBeenCalled()
+    expect(w.find('[data-test="watchlist-menu-trade"]').exists()).toBe(false)
+  })
+
+  it('the ellipsis menu removes the row from the watchlist', async () => {
+    cardWidth.value = 400
+    const store = useWatchlistStore()
+    store.setWatchlistItem('AAPL', true)
+    const w = mountTable()
+    await w.findAll('[data-test="watchlist-menu"]')[0].trigger('click')
+    await w.get('[data-test="watchlist-menu-remove"]').trigger('click')
+    expect(store.watchListedStocks).toEqual([])
+    expect(push).not.toHaveBeenCalled()
   })
 
   it('filters rows by category (crypto only)', async () => {
@@ -224,7 +291,7 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
       makeRow({ key: 'token-solana', symbol: '', name: '', loading: true }),
     ])
     expect(w.findAll('[data-test="watchlist-row"]').length).toBe(1)
-    expect(w.find('[data-test="watchlist-remove"]').exists()).toBe(true)
+    expect(stars(w).length).toBe(1)
     expect(w.find('[data-test="watchlist-trade"]').exists()).toBe(false)
   })
 
