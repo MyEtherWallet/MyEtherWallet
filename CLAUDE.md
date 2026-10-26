@@ -84,7 +84,7 @@ src/
 
 | Component             | Purpose                         |
 | --------------------- | ------------------------------- |
-| `AppDialog.vue`       | Full modal dialog with backdrop |
+| `modal/AppModal.vue`  | Base modal (all dialogs use it) |
 | `AppSheet.vue`        | Bottom sheet / side panel       |
 | `AppViewAsDialog.vue` | View-as / impersonation dialog  |
 | `AppPopUpMenu.vue`    | Contextual popup menu           |

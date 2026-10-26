@@ -96,6 +96,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'modal',
+              name: 'DevModal',
+              component: () => import('@/views/ViewModalShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'text-area',
               name: 'DevTextArea',
               component: () => import('@/views/ViewTextAreaShowcase.vue'),
@@ -135,6 +141,18 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'divider',
               name: 'DevDivider',
               component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toast',
+              name: 'DevToast',
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'navlink',
+              name: 'DevNavLink',
+              component: () => import('@/views/ViewNavLinkShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
