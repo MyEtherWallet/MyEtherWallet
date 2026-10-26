@@ -23,7 +23,7 @@
          trigger. Clicking it closes the popup. -->
     <address-trigger-pill
       v-if="openDialog && triggerCloneStyle"
-      :hover="false"
+      open
       :style="triggerCloneStyle"
       @click="openDialog = false"
     />
