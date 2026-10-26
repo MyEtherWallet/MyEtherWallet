@@ -20,6 +20,7 @@ import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
 import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
+import { stockBaseSymbol } from '@/utils/tokenDisplayName'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 // Rows are owned by HomeHero (so it can fall back to the banner when there are
@@ -115,13 +116,6 @@ const reorder = ({ from, to }: { from: number; to: number }) => {
   const rest = props.rows.map(r => r.key).filter(k => !shown.includes(k))
   watchlistStore.setWatchlistOrder([...shown, ...rest])
 }
-
-// The row title is plain text, so mirror AppTokenSymbol: upper-case ticker,
-// plus the lower-case "on" suffix for tokenized stocks.
-const rowTitle = (row: WatchlistRow) =>
-  row.isStock
-    ? `${row.symbol.replace(/on$/i, '').toUpperCase()}on`
-    : row.symbol.toUpperCase()
 
 // Crypto trades via Swap or Bridge (whichever the info drawer would open for
 // this token — swap on the current chain, bridge otherwise), stocks via Trade
@@ -258,12 +252,18 @@ const actionCall = (row: WatchlistRow) => {
           v-for="row in displayRows"
           :key="row.key"
           data-test="watchlist-row"
-          :title="rowTitle(row)"
+          :title="row.symbol.toUpperCase()"
           :description="row.name"
           :watchlisted="true"
           @update:watchlisted="remove(row)"
           @click="router.push(row.route)"
         >
+          <template v-if="row.isStock" #title>
+            {{ stockBaseSymbol(row.symbol)
+            }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+              >on</span
+            >
+          </template>
           <!-- AppTableRow has no loading state: skeleton the avatar and both
                text lines (a blank description still gets its bar). -->
           <template v-if="row.loading" #leading="{ size: avatarSize }">

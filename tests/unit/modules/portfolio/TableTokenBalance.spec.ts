@@ -57,7 +57,17 @@ vi.mock('@/stores/walletStore', async () => {
           market_cap: 300,
         },
       ]),
-      allStocks: r([]),
+      allStocks: r([
+        {
+          symbol: 'AAPLon',
+          name: 'Apple',
+          contract: '0xs',
+          balance: '1',
+          price: 5,
+          market_cap: 10,
+          ondo: { stockAlias: 'Apple', primaryMarket: { symbol: 'AAPLon' } },
+        },
+      ]),
       walletAddress: r('0x0'),
     })),
   }
@@ -102,7 +112,9 @@ const i18n = createI18n({
   locale: 'en',
   missingWarn: false,
   fallbackWarn: false,
-  messages: { en: {} },
+  messages: {
+    en: { portfolio: { table: { results_of: '{count} of {total} results' } } },
+  },
 })
 
 const mountTable = (view = 'all') =>
@@ -169,6 +181,24 @@ describe('TableTokenBalance', () => {
       name: expect.any(String),
       params: { tokenId: 'aaa' },
     })
+  })
+
+  it('labels the pager with the results shown so far', () => {
+    expect(mountTable().get('nav p').text()).toBe('3 of 3 results')
+  })
+
+  it('titles stocks with their ticker and a gradient "on"', () => {
+    const title = mountTable('stocks').get(
+      '[role="rowgroup"] [data-testid="cg-title"]',
+    )
+    expect(title.text()).toBe('AAPLon')
+    expect(title.get('span.bg-stock-gradient').text()).toBe('on')
+
+    const crypto = mountTable().get(
+      '[role="rowgroup"] [data-testid="cg-title"]',
+    )
+    expect(crypto.text()).toBe('AAA')
+    expect(crypto.find('span.bg-stock-gradient').exists()).toBe(false)
   })
 
   it('shows coming soon instead of the table for the earning filter', () => {

@@ -158,11 +158,14 @@ describe('HomeWatchlistTable (MEW-2130)', () => {
     expect(push).toHaveBeenCalledWith(makeRow().route)
   })
 
-  it('titles a stock row with the tokenized "on" ticker', () => {
-    const w = mountTable()
-    expect(w.findAll('[data-test="watchlist-row"]')[0].text()).toContain(
-      'AAPLon',
+  it('titles a stock row with the ticker and a gradient "on"', () => {
+    const [stock, crypto] = mountTable().findAll(
+      '[data-test="watchlist-row"] [data-testid="cg-title"]',
     )
+    expect(stock.text()).toBe('AAPLon')
+    expect(stock.get('span.bg-stock-gradient').text()).toBe('on')
+    expect(crypto.text()).toBe('ETH')
+    expect(crypto.find('span.bg-stock-gradient').exists()).toBe(false)
   })
 
   it('clicking the star (remove) does not navigate', async () => {

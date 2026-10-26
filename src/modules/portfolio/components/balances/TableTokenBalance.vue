@@ -138,6 +138,7 @@
         v-model:page="page"
         :columns="columns"
         :pages="totalPages"
+        :pagination-label="resultsLabel"
         footer="pagination"
         :watchlist="view !== 'custom'"
         actions
@@ -151,7 +152,7 @@
             token.coinId +
             token.contract
           "
-          :title="getTokenSymbol(token)"
+          :title="token.symbol.toUpperCase()"
           :description="getTokenName(token)"
           :watchlisted="
             getWatchlistId(token)
@@ -161,6 +162,12 @@
           @update:watchlisted="setWatchlistToken(token)"
           @click="goToTokenPage(token)"
         >
+          <template v-if="token.ondo" #title>
+            {{ stockBaseSymbol(token.symbol)
+            }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+              >on</span
+            >
+          </template>
           <template #avatar="{ size }">
             <AppAvatar
               :size="size"
@@ -378,6 +385,7 @@ import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
+import { stockBaseSymbol } from '@/utils/tokenDisplayName'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
@@ -648,10 +656,6 @@ const getTokenName = (token: DisplayToken): string => {
   return token.ondo?.stockAlias || token.name
 }
 
-// Stock symbols keep their tokenized "on" suffix (AAPLon); the rest read upper case.
-const getTokenSymbol = (token: DisplayToken): string =>
-  token.ondo ? token.symbol : token.symbol.toUpperCase()
-
 const getFiatValue = (token: TokenBalance): BigNumber => {
   return BigNumber(token.price || 0).multipliedBy(token.balance)
 }
@@ -829,6 +833,13 @@ const page = computed({
     currentPage.value = value - 1
   },
 })
+
+// "20 of 34 results": rows shown up to this page, out of all of them.
+const resultsLabel = (current: number) =>
+  t('portfolio.table.results_of', {
+    count: Math.min(PER_PAGE * current, tokens.value.length),
+    total: tokens.value.length,
+  })
 
 type EmptyState = 'search' | 'watchlist' | 'custom' | 'stocks'
 const emptyState = computed<EmptyState | null>(() => {

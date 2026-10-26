@@ -45,12 +45,15 @@ const ITEMS = [
   },
 ]
 const fetches: { url: Ref<string>; execute: ReturnType<typeof vi.fn> }[] = []
+// Off: execute() never answers, so the table stays loading.
+let respond = true
 vi.mock('@/composables/useFetchMewApi', () => ({
   useFetchMewApi: () => ({
     useMEWFetch: (url: Ref<string>) => {
       const data = ref<unknown>(null)
       let onResponse = () => {}
       const execute = vi.fn(() => {
+        if (!respond) return
         data.value = { items: ITEMS, total: 1, pages: 1 }
         onResponse()
       })
@@ -127,18 +130,36 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     trackSort.mockClear()
     push.mockClear()
     cardWidth.value = 1300
+    respond = true
   })
 
   it('renders the fetched stocks as table rows', async () => {
     const w = await mountModule()
     const rows = w.findAllComponents(AppTableRow)
     expect(rows).toHaveLength(1)
-    expect(rows[0].props('title')).toBe('AAPLon')
     expect(rows[0].props('description')).toBe('Apple')
     await rows[0].trigger('click')
     expect(push).toHaveBeenCalledWith(
       expect.objectContaining({ params: { symbol: 'AAPLon' } }),
     )
+  })
+
+  it('titles a stock with its ticker and a gradient "on"', async () => {
+    const w = await mountModule()
+    const title = w.get('[role="rowgroup"] [data-testid="cg-title"]')
+    expect(title.text()).toBe('AAPLon')
+    expect(title.get('span.bg-stock-gradient').text()).toBe('on')
+  })
+
+  it('blanks the pagination label while loading', async () => {
+    respond = false
+    const w = await mountModule()
+    expect(w.get('nav p').text()).toBe('')
+
+    respond = true
+    fetches[1].execute()
+    await flushPromises()
+    expect(w.get('nav p').text()).toBe('common.showing_page')
   })
 
   it('drives the API sort from the header and falls back to market cap', async () => {

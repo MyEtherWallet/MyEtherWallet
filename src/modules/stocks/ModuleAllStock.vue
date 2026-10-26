@@ -42,6 +42,7 @@
         v-model:page="page"
         :columns="columns"
         :pages="totalPages"
+        :pagination-label="isLoading ? blankLabel : undefined"
         footer="pagination"
         watchlist
         actions
@@ -59,12 +60,17 @@
             v-for="token in tokens"
             v-else
             :key="token.name + token.marketCap"
-            :title="stockSymbol(token.symbol)"
             :description="token.name"
             :watchlisted="isWatchListed(token.coinId)"
             @update:watchlisted="setWatchlistToken(token.coinId)"
             @click="onRowClick(token)"
           >
+            <template #title>
+              {{ stockBaseSymbol(token.symbol)
+              }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+                >on</span
+              >
+            </template>
             <template #avatar="{ size: avatarSize }">
               <app-token-logo
                 :url="token.iconPngUrl || token.iconSvgUrl"
@@ -195,6 +201,7 @@ import type {
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { useCurrency } from '@/composables/useCurrency'
+import { stockBaseSymbol } from '@/utils/tokenDisplayName'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -290,9 +297,8 @@ const sort = computed<TableSort | null>({
   },
 })
 
-// AppTokenSymbol's stock form (AAPL + "on") as text: the row title is a string.
-const stockSymbol = (symbol: string) =>
-  `${symbol.replace(/on$/i, '').toUpperCase()}on`
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 const setSelectedChain = (chain: Chain) => {
   activeSort.value = { label: chain.nameLong, value: chain.name }

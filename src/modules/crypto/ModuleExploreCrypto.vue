@@ -67,6 +67,7 @@
         v-model:page="page"
         :columns="columns"
         :pages="totalPages"
+        :pagination-label="isLoading ? blankLabel : undefined"
         footer="pagination"
         watchlist
         actions
@@ -84,16 +85,18 @@
             v-for="token in tokens"
             v-else
             :key="token.name + token.marketCap"
-            :title="
-              token.ondo !== null
-                ? stockSymbol(token.symbol)
-                : token.symbol.toUpperCase()
-            "
+            :title="token.symbol.toUpperCase()"
             :description="getTokenDisplayName(token)"
             :watchlisted="isWatchListed(getWatchlistId(token))"
             @update:watchlisted="setWatchlistToken(token)"
             @click="onRowClick(token)"
           >
+            <template v-if="token.ondo !== null" #title>
+              {{ stockBaseSymbol(token.symbol)
+              }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+                >on</span
+              >
+            </template>
             <template #avatar="{ size: avatarSize }">
               <app-token-logo
                 :url="token.logoUrl"
@@ -277,7 +280,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
-import { getTokenDisplayName } from '@/utils/tokenDisplayName'
+import { getTokenDisplayName, stockBaseSymbol } from '@/utils/tokenDisplayName'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -585,9 +588,8 @@ const sort = computed<TableSort | null>({
   },
 })
 
-// AppTokenSymbol's stock form (AAPL + "on") as text: the row title is a string.
-const stockSymbol = (symbol: string) =>
-  `${symbol.replace(/on$/i, '').toUpperCase()}on`
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 const setSelectedChain = (chain: Chain) => {
   analytics.trackCryptoMarketSelectNetworkEvent(
