@@ -1,52 +1,50 @@
 <template>
-  <app-dialog
-    v-model:is-open="openWelcomeDialog"
-    class="max-w-screen xs:max-w-[500px] mx-auto !min-h-[300px] rounded-32 z-[9999]"
+  <app-modal
+    v-model="openWelcomeDialog"
+    class="min-h-[300px]"
     :title="$t('portfolio.welcome.title')"
   >
-    <template #content>
-      <div class="pl-6 sm:pl-8 pb-10 pt-2 welcome-gradient">
-        <div class="flex flex-row mb-4">
-          <div class="xs:min-w-80 max-w-[400px]">
-            <p class="text-s-16 max-w-[600px] text-text-subtle">
-              {{ $t('portfolio.welcome.description') }}
-            </p>
-            <i18n-t
-              keypath="portfolio.welcome.nostalgic"
-              tag="p"
-              class="text-s-16 max-w-[600px] text-text-subtle mt-2"
-            >
-              <template #link>
-                <a
-                  :href="configs.VINTAGE"
-                  target="_blank"
-                  class="underline hover:text-black transition-colors"
-                  >{{ $t('portfolio.welcome.here') }}</a
-                >
-              </template>
-            </i18n-t>
-          </div>
-          <div class="max-w-[156px] rounded-16 flex items-center justify-end">
-            <img
-              src="@/assets/images/peggy/peggy.webp"
-              alt=""
-              width="135px"
-              height="330px"
-              class="scale-x-[-1] w-full"
-            />
-          </div>
+    <div class="pl-6 sm:pl-8 pb-10 pt-2 welcome-gradient">
+      <div class="flex flex-row mb-4">
+        <div class="xs:min-w-80 max-w-[400px]">
+          <p class="text-s-16 max-w-[600px] text-text-subtle">
+            {{ $t('portfolio.welcome.description') }}
+          </p>
+          <i18n-t
+            keypath="portfolio.welcome.nostalgic"
+            tag="p"
+            class="text-s-16 max-w-[600px] text-text-subtle mt-2"
+          >
+            <template #link>
+              <a
+                :href="configs.VINTAGE"
+                target="_blank"
+                class="underline hover:text-black transition-colors"
+                >{{ $t('portfolio.welcome.here') }}</a
+              >
+            </template>
+          </i18n-t>
         </div>
-        <AppSubscribeToUpdates
-          class="pr-6 sm:pr-8"
-          @subscribed="openWelcomeDialog = false"
-        />
+        <div class="max-w-[156px] rounded-16 flex items-center justify-end">
+          <img
+            src="@/assets/images/peggy/peggy.webp"
+            alt=""
+            width="135px"
+            height="330px"
+            class="scale-x-[-1] w-full"
+          />
+        </div>
       </div>
-    </template>
-  </app-dialog>
+      <AppSubscribeToUpdates
+        class="pr-6 sm:pr-8"
+        @subscribed="openWelcomeDialog = false"
+      />
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
 import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'

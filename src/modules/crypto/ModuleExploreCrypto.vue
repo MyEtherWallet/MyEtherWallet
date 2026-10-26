@@ -12,8 +12,7 @@
       >
         <app-searchbar
           v-model="searchInput"
-          bg-class="bg-background-default"
-          size="compact"
+          variant="default"
           :placeholder="$t('crypto.search')"
           class="w-full xs:w-60 shrink-0"
         />
@@ -210,27 +209,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <AppBtnIcon
-                  :label="
-                    isWatchListed(getWatchlistId(token))
-                      ? $t('common.remove_from_watchlist')
-                      : $t('common.add_to_watchlist')
-                  "
-                  :class="
-                    isWatchListed(getWatchlistId(token))
-                      ? 'text-text-brand'
-                      : 'text-text-subtle'
-                  "
-                  @click.stop="setWatchlistToken(token)"
-                >
-                  <AppIcon
-                    name="star"
-                    :variant="
-                      isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
-                    "
-                    size="xxs"
-                  />
-                </AppBtnIcon>
+                <AppCellWatchlistToggle
+                  :model-value="isWatchListed(getWatchlistId(token))"
+                  @update:model-value="setWatchlistToken(token)"
+                />
               </td>
               <!-- Name & Symbol -->
               <td class="px-1 py-1" colspan="2">
@@ -534,6 +516,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppPagination from '@/components/pagination/AppPagination.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
