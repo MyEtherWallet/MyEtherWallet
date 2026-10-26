@@ -151,10 +151,25 @@
               :value="formatPnl(pos.unrealizedPnl)"
               :change="parseFloat(pos.returnOnEquity) * 100"
             />
+            <AppTableCell
+              column="entry"
+              :value="formatPrice(pos.averageEntryPrice)"
+            />
             <AppTableCell column="mark" :value="formatPrice(pos.markPrice)" />
             <AppTableCell column="liq">
               <p class="max-w-full truncate text-label-base text-text-warning">
                 {{ formatPrice(pos.liquidationPrice) }}
+              </p>
+            </AppTableCell>
+            <AppTableCell column="margin" :value="formatUsd(pos.usedMargin)" />
+            <AppTableCell column="funding">
+              <p
+                :class="[
+                  'max-w-full truncate text-label-base',
+                  pnlColor(pos.netFundingSinceNeutral),
+                ]"
+              >
+                {{ formatPnl(pos.netFundingSinceNeutral) }}
               </p>
             </AppTableCell>
             <template #actions="{ size: rowSize, surface }">
@@ -763,15 +778,30 @@ const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
 const fillsTable = ref<HTMLElement | null>(null)
 const ordersTable = ref<HTMLElement | null>(null)
 
-// Every column shows from M (768px) up, so each table keeps to the four data
-// columns that fit there; the rest live in the row's detail (market page,
-// order / fill dialog). At S only the leading and `primary` columns remain.
+// Four data columns fit at M (768px); `largeOnly` ones join at L (1280px) and
+// the rest live in the row's detail (market page, order / fill dialog). At S
+// only the leading and `primary` columns remain.
 const positionColumns = computed<TableColumn[]>(() => [
   { key: 'market', label: t('perps.positions.market-header') },
   { key: 'value', label: t('perps.positions.value-label') },
   { key: 'upnl', label: t('perps.positions.upnl-header'), primary: true },
+  {
+    key: 'entry',
+    label: t('perps.positions.entry-price-label'),
+    largeOnly: true,
+  },
   { key: 'mark', label: t('perps.positions.mark-price-label') },
   { key: 'liq', label: t('perps.positions.liq-price-header') },
+  {
+    key: 'margin',
+    label: t('perps.positions.margin-used-header'),
+    largeOnly: true,
+  },
+  {
+    key: 'funding',
+    label: t('perps.positions.total-funding-header'),
+    largeOnly: true,
+  },
 ])
 
 const orderColumns = computed<TableColumn[]>(() => [
@@ -798,11 +828,17 @@ const dwColumns = computed<TableColumn[]>(() => [
   { key: 'status', label: t('perps.order.status-label') },
 ])
 
-// Skeleton headers follow the table: leading + primary below md, all above.
+// Skeleton headers follow the table: leading + primary below md, the rest
+// above, `largeOnly` from xl (1280px).
 const skeletonOf = (columns: TableColumn[]): SkeletonColumn[] =>
   columns.map((c, i) => ({
     header: c.label,
-    hidden: i === 0 || c.primary ? undefined : 'hidden md:table-cell',
+    hidden:
+      i === 0 || c.primary
+        ? undefined
+        : c.largeOnly
+          ? 'hidden xl:table-cell'
+          : 'hidden md:table-cell',
   }))
 const positionsSkeletonColumns = computed(() =>
   skeletonOf(positionColumns.value),

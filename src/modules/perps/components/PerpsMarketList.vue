@@ -92,31 +92,25 @@
           <AppTableRow
             v-for="contract in paginatedContracts"
             :key="contract.market"
+            :title="contract.baseCurrency"
+            :description="contract.longName"
             :watchlisted="watchlist.has(contract.baseCurrency)"
             @update:watchlisted="toggleWatchlist(contract.baseCurrency)"
             @click="$emit('viewMarket', contract.market)"
           >
-            <template #leading="{ size: avatarSize }">
+            <template #avatar="{ size: avatarSize }">
               <AppAvatar
                 type="perpsAsset"
                 :size="avatarSize"
                 :url="getLogoUrl(contract.baseCurrency)"
                 :symbol="contract.baseCurrency"
-                class="shrink-0"
               />
-              <AppContentGroup
-                :title="contract.baseCurrency"
-                :description="contract.longName"
-                no-wrap
-                class="min-w-0 flex-1"
-              >
-                <template #title-icon>
-                  <AppTag
-                    variant="subtle"
-                    :label="`${contract.defaultLeverage}x`"
-                  />
-                </template>
-              </AppContentGroup>
+            </template>
+            <template #title-icon>
+              <AppTag
+                variant="subtle"
+                :label="`${contract.defaultLeverage}x`"
+              />
             </template>
 
             <AppTableCell
@@ -373,7 +367,6 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
