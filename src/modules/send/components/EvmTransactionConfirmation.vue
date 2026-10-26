@@ -1,11 +1,11 @@
 <template>
-  <app-dialog
+  <app-modal
     :title="$t('verify-tx.title')"
-    v-model:is-open="openModal"
-    class="sm:max-w-[600px] sm:mx-auto"
-    has-content-gutter
+    v-model="openModal"
+    :buttons="footerButtons"
+    class="w-full sm:max-w-[600px]"
   >
-    <template #content>
+    <div class="px-4 sm:px-6">
       <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
       <div class="flex flex-col gap-3 px-1">
         <div class="text-text-subtle text-s-15 text-center mb-1">
@@ -237,18 +237,10 @@
               </div>
             </div>
           </expand-transition>
-          <app-btn-group :has-padding="false" class="mt-6 mb-4">
-            <app-base-button @click="goBack" type="secondary">
-              {{ $t('common.back') }}
-            </app-base-button>
-            <app-base-button :is-loading="signing" @click="confirmTransaction">
-              {{ $t('verify-tx.confirm') }}
-            </app-base-button>
-          </app-btn-group>
         </div>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -256,9 +248,8 @@ import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import type { ModalButtons } from '@/components/modal/types'
 import createIcon from '@/providers/ethereum/blockies'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -528,6 +519,15 @@ const confirmTransaction = async () => {
     }
   }
 }
+
+const footerButtons = computed<ModalButtons>(() => ({
+  primary: {
+    label: t('verify-tx.confirm'),
+    onClick: confirmTransaction,
+    loading: signing.value,
+  },
+  secondary: { label: t('common.back'), onClick: goBack },
+}))
 
 const formatFee = computed(() => {
   return formatFloatingPointValue(props.networkFeeCrypto).value

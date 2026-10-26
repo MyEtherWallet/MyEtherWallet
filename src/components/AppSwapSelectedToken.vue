@@ -54,363 +54,359 @@
       </div>
     </button>
   </slot>
-  <app-dialog
-    v-model:is-open="showAllTokens"
-    class="w-full sm:w-[460px] sm:mx-auto"
+  <app-modal
+    v-model="showAllTokens"
     :title="
       isFromView ? $t('select_token.swap_from') : $t('select_token.swap_to')
     "
-    has-content-gutter
   >
-    <template #content>
-      <div
-        class="min-h-[500px] lg:min-h-[90vh] max-h-[90vh] xs:max-h-[500px] pb-6 overflow-y-auto mew-scrollbar"
-        ref="scrollContainer"
-      >
-        <div class="sticky top-0 bg-white z-20 pt-2">
-          <div
-            class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
-          >
-            <app-searchbar
-              v-model="searchInput"
-              variant="outline"
-              class="grow"
-              :placeholder="$t('select_token.search')"
-            />
-            <!--SORT-->
-            <app-pop-up-menu :placeholder="$t('common.sort')">
-              <template #menu-button="{ toggleMenu }">
-                <button
-                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
-                  @click="toggleMenu"
-                >
-                  <span class="mr-2">{{ activeSortLabel }}</span>
-                  <AppIcon
-                    name="arrow-long-up"
-                    variant="filled"
-                    size="xxs"
-                    v-if="activeSortDirection === SortDirection.ASC"
-                    class="shrink-0"
-                  />
-                  <AppIcon
-                    name="arrow-long-down"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="shrink-0"
-                  />
-                </button>
-              </template>
-              <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col w-[200px] gap-1">
-                  <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
-                      {{ $t('common.sort_by') }}
-                    </p>
-                    <app-btn-icon-close @close="toggleMenu" />
-                  </div>
-                  <app-divider class="mb-1" />
-                  <button
-                    v-for="option in sortOptions"
-                    :key="option.value"
-                    :class="[
-                      option.value === activeSortValue
-                        ? 'bg-background-default'
-                        : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
-                    ]"
-                    :id="option.value"
-                    @click="setActiveSort(option.value)"
-                  >
-                    <p class="capitalize">{{ option.label }}</p>
-                    <div
-                      v-if="activeSortValue === option.value"
-                      class="ml-auto pl-2"
-                    >
-                      <AppIcon
-                        name="arrow-long-up"
-                        variant="filled"
-                        size="s"
-                        v-if="activeSortDirection === SortDirection.ASC"
-                        class="text-text-brand"
-                      />
-                      <AppIcon
-                        name="arrow-long-down"
-                        variant="filled"
-                        size="s"
-                        v-else
-                        class="text-text-brand"
-                      />
-                    </div>
-                  </button>
-                </div>
-              </template>
-            </app-pop-up-menu>
-          </div>
-          <app-divider class="-mt-1 mb-1" />
-        </div>
-
-        <!-- Stablecoins & Recently searched, pinned to the top of the results -->
+    <div
+      class="min-h-[500px] lg:min-h-[90vh] max-h-[90vh] xs:max-h-[500px] px-4 sm:px-6 pb-6 overflow-y-auto mew-scrollbar"
+      ref="scrollContainer"
+    >
+      <div class="sticky top-0 bg-white z-20 pt-2">
         <div
-          v-if="recentlySearchedResults.length || stablecoinResults.length"
-          class="mb-3"
+          class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
         >
-          <div v-if="recentlySearchedResults.length" class="mb-3">
-            <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
-              {{ $t('select_token.recently_viewed') }}
-            </p>
-            <div class="flex items-center gap-1.5 flex-wrap">
+          <app-searchbar
+            v-model="searchInput"
+            variant="outline"
+            class="grow"
+            :placeholder="$t('select_token.search')"
+          />
+          <!--SORT-->
+          <app-pop-up-menu :placeholder="$t('common.sort')">
+            <template #menu-button="{ toggleMenu }">
               <button
-                v-for="token in recentlySearchedResults"
-                :key="`recent-${token.address}`"
-                type="button"
-                class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
-                @click="setSelectedToken(token)"
+                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
+                @click="toggleMenu"
               >
-                <app-token-logo
-                  :url="token.logoURI"
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                  width="w-6"
-                  height="h-6"
-                  :no-shadow="noLogoShadow"
-                  class="mr-1.5 shrink-0"
+                <span class="mr-2">{{ activeSortLabel }}</span>
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="activeSortDirection === SortDirection.ASC"
+                  class="shrink-0"
                 />
-                <app-token-symbol
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                  class="shrink-0"
                 />
               </button>
-            </div>
-          </div>
-
-          <div v-if="stablecoinResults.length">
-            <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
-              {{ $t('crypto.stablecoins') }}
-            </p>
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <button
-                v-for="token in stablecoinResults"
-                :key="`stablecoin-${token.address}`"
-                type="button"
-                class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
-                @click="setSelectedToken(token)"
-              >
-                <app-token-logo
-                  :url="token.logoURI"
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                  width="w-6"
-                  height="h-6"
-                  :no-shadow="noLogoShadow"
-                  class="mr-1.5 shrink-0"
-                />
-                <app-token-symbol
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                />
-              </button>
-            </div>
-          </div>
-
-          <app-divider class="mt-2 -mb-1" />
-        </div>
-
-        <div v-if="enabledResults.length" class="flex flex-col gap-1">
-          <button
-            v-for="token in enabledResults"
-            :key="token.address"
-            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
-            :class="[
-              token.address === selectedToken?.address
-                ? '!bg-background-brand-subtle'
-                : 'bg-transparent hoverBGWhite',
-            ]"
-            @click="setSelectedToken(token)"
-          >
-            <div class="flex justify-between items-center w-full">
-              <div class="flex items-center">
-                <app-token-logo
-                  :url="token.logoURI"
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                  :no-shadow="noLogoShadow"
-                  class="shrink-0 mr-4"
-                />
-                <div class="text-left">
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :address="
-                      networkName
-                        ? { address: token.address, network: networkName }
-                        : undefined
-                    "
-                  />
-                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
-                      {{ truncate(token.name, 20) }}
-                    </h2>
-                  </app-tooltip>
-                  <h2
-                    v-else
-                    class="text-s-12 text-text-subtle whitespace-nowrap"
+            </template>
+            <template #menu-content="{ toggleMenu }">
+              <div class="py-4 flex flex-col w-[200px] gap-1">
+                <div class="flex items-center justify-between mb-1 mx-3">
+                  <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
+                    {{ $t('common.sort_by') }}
+                  </p>
+                  <app-btn-icon-close @close="toggleMenu" />
+                </div>
+                <app-divider class="mb-1" />
+                <button
+                  v-for="option in sortOptions"
+                  :key="option.value"
+                  :class="[
+                    option.value === activeSortValue
+                      ? 'bg-background-default'
+                      : '',
+                    'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
+                  ]"
+                  :id="option.value"
+                  @click="setActiveSort(option.value)"
+                >
+                  <p class="capitalize">{{ option.label }}</p>
+                  <div
+                    v-if="activeSortValue === option.value"
+                    class="ml-auto pl-2"
                   >
-                    {{ token.name }}
-                  </h2>
-                </div>
+                    <AppIcon
+                      name="arrow-long-up"
+                      variant="filled"
+                      size="s"
+                      v-if="activeSortDirection === SortDirection.ASC"
+                      class="text-text-brand"
+                    />
+                    <AppIcon
+                      name="arrow-long-down"
+                      variant="filled"
+                      size="s"
+                      v-else
+                      class="text-text-brand"
+                    />
+                  </div>
+                </button>
               </div>
-              <div v-if="token.price !== 0" class="text-right">
-                <div v-if="isFromView && isWalletConnected">
-                  <p class="font-medium text-black">
-                    {{ currencySymbol }}
-                    {{ formatUsdBalance(token.usd_balance) }}
-                  </p>
-                  <p class="text-text-subtle text-s-12">
-                    {{ getBalance(token?.balance || '0', token.decimals) }}
-                    {{ truncate(token.symbol, 7) }}
-                  </p>
-                </div>
-                <div v-else>
-                  <p class="font-medium text-black">
-                    {{ currencySymbol }}
-                    {{ token.price ? formatFiat(token.price).value : '0.00' }}
-                  </p>
-                  <p
-                    v-if="
-                      isWalletConnected &&
-                      token.balance &&
-                      token.usd_balance > 0
-                    "
-                    class="text-text-subtle text-s-12"
-                  >
-                    {{ getBalance(token?.balance || '0', token.decimals) }}
-                    {{ truncate(token.symbol, 7) }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </button>
+            </template>
+          </app-pop-up-menu>
         </div>
-        <div v-else-if="!disabledResults.length">
-          <div
-            class="flex justify-center items-center h-[400px] text-text-placeholder"
-          >
-            <p v-if="searchInput !== ''">
-              {{ $t('select_token.no_tokens_match') }}
-            </p>
-            <p v-else>
-              {{ $t('select_token.no_tokens_available') }}
-            </p>
-          </div>
-        </div>
+        <app-divider class="-mt-1 mb-1" />
+      </div>
 
-        <!-- Disabled group (e.g. "Trading paused for this session") -->
-        <div v-if="disabledResults.length" class="mt-5">
-          <p class="text-s-12 font-medium text-text-subtle mb-2 px-2">
-            {{ disabledGroupLabel }}
+      <!-- Stablecoins & Recently searched, pinned to the top of the results -->
+      <div
+        v-if="recentlySearchedResults.length || stablecoinResults.length"
+        class="mb-3"
+      >
+        <div v-if="recentlySearchedResults.length" class="mb-3">
+          <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
+            {{ $t('select_token.recently_viewed') }}
           </p>
-          <div class="flex flex-col gap-1">
-            <div
-              v-for="token in disabledResults"
-              :key="token.address"
-              class="flex items-center justify-between px-2 py-3 rounded-20 opacity-50 cursor-not-allowed select-none"
-              aria-disabled="true"
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button
+              v-for="token in recentlySearchedResults"
+              :key="`recent-${token.address}`"
+              type="button"
+              class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
+              @click="setSelectedToken(token)"
             >
-              <div class="flex items-center">
-                <app-token-logo
-                  :url="token.logoURI"
+              <app-token-logo
+                :url="token.logoURI"
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+                width="w-6"
+                height="h-6"
+                :no-shadow="noLogoShadow"
+                class="mr-1.5 shrink-0"
+              />
+              <app-token-symbol
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+              />
+            </button>
+          </div>
+        </div>
+
+        <div v-if="stablecoinResults.length">
+          <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
+            {{ $t('crypto.stablecoins') }}
+          </p>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button
+              v-for="token in stablecoinResults"
+              :key="`stablecoin-${token.address}`"
+              type="button"
+              class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
+              @click="setSelectedToken(token)"
+            >
+              <app-token-logo
+                :url="token.logoURI"
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+                width="w-6"
+                height="h-6"
+                :no-shadow="noLogoShadow"
+                class="mr-1.5 shrink-0"
+              />
+              <app-token-symbol
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+              />
+            </button>
+          </div>
+        </div>
+
+        <app-divider class="mt-2 -mb-1" />
+      </div>
+
+      <div v-if="enabledResults.length" class="flex flex-col gap-1">
+        <button
+          v-for="token in enabledResults"
+          :key="token.address"
+          class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
+          :class="[
+            token.address === selectedToken?.address
+              ? '!bg-background-brand-subtle'
+              : 'bg-transparent hoverBGWhite',
+          ]"
+          @click="setSelectedToken(token)"
+        >
+          <div class="flex justify-between items-center w-full">
+            <div class="flex items-center">
+              <app-token-logo
+                :url="token.logoURI"
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+                :no-shadow="noLogoShadow"
+                class="shrink-0 mr-4"
+              />
+              <div class="text-left">
+                <app-token-symbol
                   :symbol="token.symbol"
                   :address="
                     networkName
                       ? { address: token.address, network: networkName }
                       : undefined
                   "
-                  :no-shadow="noLogoShadow"
-                  class="shrink-0 mr-4"
                 />
-                <div class="text-left">
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :address="
-                      networkName
-                        ? { address: token.address, network: networkName }
-                        : undefined
-                    "
-                  />
+                <app-tooltip v-if="token.name.length > 10" :text="token.name">
                   <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
                     {{ truncate(token.name, 20) }}
                   </h2>
-                </div>
+                </app-tooltip>
+                <h2
+                  v-else
+                  class="text-s-12 text-text-subtle whitespace-nowrap"
+                >
+                  {{ token.name }}
+                </h2>
               </div>
-              <div v-if="token.price !== 0" class="text-right">
+            </div>
+            <div v-if="token.price !== 0" class="text-right">
+              <div v-if="isFromView && isWalletConnected">
+                <p class="font-medium text-black">
+                  {{ currencySymbol }}
+                  {{ formatUsdBalance(token.usd_balance) }}
+                </p>
+                <p class="text-text-subtle text-s-12">
+                  {{ getBalance(token?.balance || '0', token.decimals) }}
+                  {{ truncate(token.symbol, 7) }}
+                </p>
+              </div>
+              <div v-else>
                 <p class="font-medium text-black">
                   {{ currencySymbol }}
                   {{ token.price ? formatFiat(token.price).value : '0.00' }}
                 </p>
+                <p
+                  v-if="
+                    isWalletConnected &&
+                    token.balance &&
+                    token.usd_balance > 0
+                  "
+                  class="text-text-subtle text-s-12"
+                >
+                  {{ getBalance(token?.balance || '0', token.decimals) }}
+                  {{ truncate(token.symbol, 7) }}
+                </p>
               </div>
             </div>
           </div>
+        </button>
+      </div>
+      <div v-else-if="!disabledResults.length">
+        <div
+          class="flex justify-center items-center h-[400px] text-text-placeholder"
+        >
+          <p v-if="searchInput !== ''">
+            {{ $t('select_token.no_tokens_match') }}
+          </p>
+          <p v-else>
+            {{ $t('select_token.no_tokens_available') }}
+          </p>
         </div>
+      </div>
 
-        <div>
+      <!-- Disabled group (e.g. "Trading paused for this session") -->
+      <div v-if="disabledResults.length" class="mt-5">
+        <p class="text-s-12 font-medium text-text-subtle mb-2 px-2">
+          {{ disabledGroupLabel }}
+        </p>
+        <div class="flex flex-col gap-1">
           <div
-            v-show="tokens.length > paginatedTokens.length && !searchInput"
-            class="h-11 w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
-            :class="{
-              'cursor-pointer': !loadingMoreItems,
-            }"
-            @click="loadMoreItems"
+            v-for="token in disabledResults"
+            :key="token.address"
+            class="flex items-center justify-between px-2 py-3 rounded-20 opacity-50 cursor-not-allowed select-none"
+            aria-disabled="true"
           >
-            <svg
-              v-if="loadingMoreItems"
-              aria-hidden="true"
-              class="w-6 h-6 text-text-brand animate-spin fill-white mx-auto"
-              viewBox="0 0 100 101"
-              width="24"
-              height="24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                fill="currentColor"
+            <div class="flex items-center">
+              <app-token-logo
+                :url="token.logoURI"
+                :symbol="token.symbol"
+                :address="
+                  networkName
+                    ? { address: token.address, network: networkName }
+                    : undefined
+                "
+                :no-shadow="noLogoShadow"
+                class="shrink-0 mr-4"
               />
-              <path
-                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                fill="currentFill"
-              />
-            </svg>
-            <p
-              v-else
-              class="text-s-15 font-medium text-text-subtle cursor-pointer"
-            >
-              {{ $t('common.load_more') }}
-            </p>
+              <div class="text-left">
+                <app-token-symbol
+                  :symbol="token.symbol"
+                  :address="
+                    networkName
+                      ? { address: token.address, network: networkName }
+                      : undefined
+                  "
+                />
+                <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
+                  {{ truncate(token.name, 20) }}
+                </h2>
+              </div>
+            </div>
+            <div v-if="token.price !== 0" class="text-right">
+              <p class="font-medium text-black">
+                {{ currencySymbol }}
+                {{ token.price ? formatFiat(token.price).value : '0.00' }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <div>
+        <div
+          v-show="tokens.length > paginatedTokens.length && !searchInput"
+          class="h-11 w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
+          :class="{
+            'cursor-pointer': !loadingMoreItems,
+          }"
+          @click="loadMoreItems"
+        >
+          <svg
+            v-if="loadingMoreItems"
+            aria-hidden="true"
+            class="w-6 h-6 text-text-brand animate-spin fill-white mx-auto"
+            viewBox="0 0 100 101"
+            width="24"
+            height="24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+          <p
+            v-else
+            class="text-s-15 font-medium text-text-subtle cursor-pointer"
+          >
+            {{ $t('common.load_more') }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -420,7 +416,7 @@ import { type Ref, ref, computed, onMounted, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from './AppSearchbar.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
