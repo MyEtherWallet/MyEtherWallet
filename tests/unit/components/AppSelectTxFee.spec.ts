@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { reactive, ref } from 'vue'
+import { reactive, ref, toValue, type MaybeRefOrGetter } from 'vue'
+
+const fetchMock = vi.hoisted(() => ({ payload: undefined as unknown }))
 
 const walletStore = reactive({
   isWalletConnected: true,
@@ -37,16 +39,19 @@ vi.mock('@/composables/useCurrency', () => ({
 vi.mock('@/composables/useFetchMewApi', () => ({
   useFetchMewApi: () => ({
     useMEWFetch: () => ({
-      post: () => ({
-        json: () => ({
-          data: ref(null),
-          onFetchResponse: vi.fn(),
-          onFetchError: vi.fn(),
-          execute: vi.fn(),
-          isFetching: ref(false),
-          aborted: ref(false),
-        }),
-      }),
+      post: (payload: unknown) => {
+        fetchMock.payload = payload
+        return {
+          json: () => ({
+            data: ref(null),
+            onFetchResponse: vi.fn(),
+            onFetchError: vi.fn(),
+            execute: vi.fn(),
+            isFetching: ref(false),
+            aborted: ref(false),
+          }),
+        }
+      },
     }),
   }),
 }))
@@ -90,5 +95,31 @@ describe('AppSelectTxFee', () => {
       fees: { ECONOMY: tier, REGULAR: tier, FAST: tier, FASTEST: tier },
     })
     expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
+  })
+
+  // useFetch reads the payload when execute() runs; a string captured at setup
+  // re-posted the mount-time body after every txRequestBody change.
+  it('posts the current txRequestBody, not the one from setup', async () => {
+    const body = (address: string) => ({
+      to: '0xB000000000000000000000000000000000000002',
+      address,
+      value: '0x1',
+      data: '0x',
+    })
+    const wrapper = mount(AppSelectTxFee, {
+      props: {
+        isLoadingFees: false,
+        txRequestBody: body('0xA000000000000000000000000000000000000001'),
+      },
+      global: {
+        stubs: { AppDialog: true, AppIcon: true },
+        mocks: { $t: (k: string) => k },
+      },
+    })
+    const next = '0xC000000000000000000000000000000000000003'
+    await wrapper.setProps({ txRequestBody: body(next) })
+
+    const sent = toValue(fetchMock.payload as MaybeRefOrGetter<string>)
+    expect(JSON.parse(sent)).toMatchObject({ address: next })
   })
 })
