@@ -38,6 +38,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Spinner', to: '/dev/spinner' },
       { name: 'Tab Bar', to: '/dev/tab-bar' },
       { name: 'Tab Item', to: '/dev/tab-item' },
+      { name: 'Table', to: '/dev/table' },
       { name: 'Tag', to: '/dev/tag' },
       { name: 'Text Area', to: '/dev/text-area' },
       { name: 'Toggle', to: '/dev/toggle' },

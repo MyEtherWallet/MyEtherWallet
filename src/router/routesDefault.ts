@@ -132,6 +132,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'table',
+              name: 'DevTable',
+              component: () => import('@/views/ViewTableShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'segmented-control',
               name: 'DevSegmentedControl',
               component: () =>
