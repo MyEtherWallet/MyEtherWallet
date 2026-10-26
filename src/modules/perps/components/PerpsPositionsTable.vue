@@ -100,229 +100,137 @@
         >
           {{ $t('perps.positions.no-open-positions') }}
         </div>
-        <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
-          <thead>
-            <tr
-              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-            >
-              <th class="px-1 sm:pl-4 py-3 text-left font-bold">
-                {{ $t('perps.positions.market-header') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold">
-                {{ $t('perps.positions.value-label') }}
-              </th>
-              <th
-                class="px-1 py-3 text-right font-bold hidden xs:table-cell normal-case"
-              >
-                {{ $t('perps.positions.upnl-header') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden 2xl:table-cell">
-                {{ $t('perps.positions.entry-price-label') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden lg:table-cell">
-                {{ $t('perps.positions.mark-price-label') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
-                {{ $t('perps.positions.liq-price-header') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden 2xl:table-cell">
-                {{ $t('perps.positions.margin-used-header') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden 3xl:table-cell">
-                {{ $t('perps.positions.total-funding-header') }}
-              </th>
-              <th
-                class="px-1 sm:pr-4 py-3 text-right font-bold w-8 xs:w-10 md:w-12 lg:w-auto"
-              >
-                <p class="hidden lg:block font-bold">
-                  {{ $t('perps.market-list.column-actions') }}
-                </p>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="pos in paginatedPositions"
-              :key="pos.market"
-              class="cursor-pointer hoverBGWhite"
-              @click="$emit('viewMarket', pos.market)"
-            >
-              <!-- Market -->
-              <td class="py-3 px-1 sm:pl-4 rounded-l-12">
-                <div class="flex items-center gap-3">
-                  <app-token-logo
-                    :url="getLogoUrl(getBase(pos.market))"
-                    :symbol="getBase(pos.market)"
-                    class="rounded-full"
-                  />
-                  <div>
-                    <p class="font-bold truncate">{{ getBase(pos.market) }}</p>
-                    <p
-                      :class="[
-                        pos.direction === 'long'
-                          ? 'text-text-success'
-                          : pos.direction === 'short'
-                            ? 'text-text-error'
-                            : 'text-text-subtle',
-                        'font-medium text-s-12 capitalize hooverOpacity cursor-pointer',
-                      ]"
-                      @click.stop="openLeverage(pos)"
-                    >
-                      {{
-                        pos.direction === 'long'
-                          ? $t('perps.trade.long')
-                          : pos.direction === 'short'
-                            ? $t('perps.trade.short')
-                            : pos.direction
-                      }}
-                      {{ pos.leverage }}x
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <!-- Value -->
-              <td class="px-1 py-3 text-right font-normal text-s-14">
-                {{ formatUsd(pos.notionalValue) }}
-              </td>
-              <!-- Unrealized PnL -->
-              <td class="px-1 py-3 text-right hidden xs:table-cell">
-                <p
-                  :class="pnlColor(pos.unrealizedPnl)"
-                  class="font-normal text-s-14"
-                >
-                  {{ formatPnl(pos.unrealizedPnl) }}
-                  <span class="block text-s-12 3xl"
-                    >({{ formatRoe(pos.returnOnEquity) }})</span
-                  >
-                </p>
-              </td>
-              <!-- Entry Price -->
-              <td
-                class="px-1 py-3 text-right font-normal text-s-14 hidden 2xl:table-cell"
-              >
-                {{ formatPrice(pos.averageEntryPrice) }}
-              </td>
-              <!-- Mark Price -->
-              <td
-                class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
-              >
-                {{ formatPrice(pos.markPrice) }}
-              </td>
-              <!-- Liquidation Price -->
-              <td class="px-1 py-3 text-right hidden sm:table-cell">
-                <span class="text-text-warning font-normal text-s-14">{{
-                  formatPrice(pos.liquidationPrice)
-                }}</span>
-              </td>
-              <!-- Margin Used -->
-              <td
-                class="px-1 py-3 text-right font-normal text-s-14 hidden 2xl:table-cell"
-              >
-                {{ formatUsd(pos.usedMargin) }}
-              </td>
-              <!-- Total Funding -->
-              <td class="px-1 py-3 text-right hidden 3xl:table-cell">
-                <span
-                  :class="pnlColor(pos.netFundingSinceNeutral)"
-                  class="font-normal text-s-14"
-                >
-                  {{ formatPnl(pos.netFundingSinceNeutral) }}
-                </span>
-              </td>
-              <!-- Actions -->
-              <td class="px-1 py-3 text-right rounded-r-12">
-                <div
-                  class="flex items-center justify-end -mr-1 lg:mr-0 lg:flex-row lg:gap-2"
-                >
-                  <app-pop-up-menu
-                    :placeholder="$t('perps.market-list.actions-menu-label')"
-                    location="right"
-                  >
-                    <template #menu-button="{ toggleMenu }">
-                      <app-btn-icon
-                        :label="$t('perps.market-list.action-menu-label')"
-                        @click.stop="toggleMenu"
-                        class="lg:hidden"
-                      >
-                        <AppIcon
-                          name="ellipsis-vertical"
-                          size="s"
-                          variant="filled"
-                        />
-                      </app-btn-icon>
-                      <AppBaseButton
-                        class="hidden lg:flex"
-                        size="small"
-                        :disabled="isWatchOnly"
-                        @click="toggleMenu"
-                        :tone="pos.direction === 'long' ? 'success' : 'danger'"
-                      >
-                        {{ $t('perps.positions.manage-label') }}
-                      </AppBaseButton>
-                    </template>
-                    <template #menu-content="{ toggleMenu }">
-                      <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                      >
-                        <ul>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[toggleMenu(), openLeverage(pos)]"
-                          >
-                            <p>{{ $t('perps.market-list.change-leverage') }}</p>
-                          </li>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              openPositionAdd(pos, 'add'),
-                            ]"
-                          >
-                            <p>
-                              {{ $t('perps.positions.add-to-position-menu') }}
-                            </p>
-                          </li>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              openPositionAdd(pos, 'close'),
-                            ]"
-                          >
-                            <p>{{ $t('perps.market-list.close-position') }}</p>
-                          </li>
-                          <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              $emit('openPosition', pos.market),
-                            ]"
-                          >
-                            <p>
-                              {{ $t('perps.market-list.view-market-info') }}
-                            </p>
-                          </li>
-                        </ul>
-                      </div>
-                    </template>
-                  </app-pop-up-menu>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div
-          v-if="positions.length > 0 && positionsTotalPages > 1"
-          class="flex justify-end mt-4 px-2"
+        <AppTable
+          v-else
+          :page="positionsCurrentPage + 1"
+          :columns="positionColumns"
+          :pages="positionsTotalPages"
+          :footer="positionsTotalPages > 1 ? 'pagination' : undefined"
+          :aria-label="$t('perps.positions.tab-positions')"
+          actions
+          @update:page="positionsCurrentPage = $event - 1"
         >
-          <perps-pagination
-            :current-page="positionsCurrentPage"
-            :total-pages="positionsTotalPages"
-            :scroll-target="positionsTable"
-            @prev="positionsPrevPage"
-            @next="positionsNextPage"
-          />
-        </div>
+          <AppTableRow
+            v-for="pos in paginatedPositions"
+            :key="pos.market"
+            @click="$emit('viewMarket', pos.market)"
+          >
+            <template #leading="{ size: avatarSize }">
+              <AppAvatar
+                type="perpsAsset"
+                :size="avatarSize"
+                :url="getLogoUrl(getBase(pos.market))"
+                :symbol="getBase(pos.market)"
+                class="shrink-0"
+              />
+              <AppContentGroup
+                :title="getBase(pos.market)"
+                class="min-w-0 flex-1"
+              >
+                <template #title-icon>
+                  <AppTag
+                    :type="fillDirectionTagType(pos.direction)"
+                    variant="subtle"
+                    :label="`${
+                      pos.direction === 'long'
+                        ? $t('perps.trade.long')
+                        : pos.direction === 'short'
+                          ? $t('perps.trade.short')
+                          : pos.direction
+                    } ${pos.leverage}x`"
+                  />
+                </template>
+              </AppContentGroup>
+            </template>
+            <AppTableCell
+              column="value"
+              :value="formatUsd(pos.notionalValue)"
+            />
+            <AppTableCell
+              column="upnl"
+              :value="formatPnl(pos.unrealizedPnl)"
+              :change="parseFloat(pos.returnOnEquity) * 100"
+            />
+            <AppTableCell column="mark" :value="formatPrice(pos.markPrice)" />
+            <AppTableCell column="liq">
+              <p class="max-w-full truncate text-label-base text-text-warning">
+                {{ formatPrice(pos.liquidationPrice) }}
+              </p>
+            </AppTableCell>
+            <template #actions="{ size: rowSize, surface }">
+              <app-pop-up-menu
+                :placeholder="$t('perps.market-list.actions-menu-label')"
+                location="right"
+              >
+                <template #menu-button="{ toggleMenu }">
+                  <AppBtnIcon
+                    v-if="rowSize === 's'"
+                    icon="ellipsis-horizontal"
+                    :label="$t('perps.market-list.action-menu-label')"
+                    @click="toggleMenu"
+                  />
+                  <AppBaseButton
+                    v-else
+                    type="secondary"
+                    size="medium"
+                    class="w-24"
+                    :surface="surface"
+                    :tone="pos.direction === 'long' ? 'success' : 'danger'"
+                    :disabled="isWatchOnly"
+                    @click="toggleMenu"
+                  >
+                    {{ $t('perps.positions.manage-label') }}
+                  </AppBaseButton>
+                </template>
+                <template #menu-content="{ toggleMenu }">
+                  <div
+                    class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                  >
+                    <ul>
+                      <li
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                        @click.stop="[toggleMenu(), openLeverage(pos)]"
+                      >
+                        <p>{{ $t('perps.market-list.change-leverage') }}</p>
+                      </li>
+                      <li
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                        @click.stop="[
+                          toggleMenu(),
+                          openPositionAdd(pos, 'add'),
+                        ]"
+                      >
+                        <p>
+                          {{ $t('perps.positions.add-to-position-menu') }}
+                        </p>
+                      </li>
+                      <li
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                        @click.stop="[
+                          toggleMenu(),
+                          openPositionAdd(pos, 'close'),
+                        ]"
+                      >
+                        <p>{{ $t('perps.market-list.close-position') }}</p>
+                      </li>
+                      <li
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                        @click.stop="[
+                          toggleMenu(),
+                          $emit('openPosition', pos.market),
+                        ]"
+                      >
+                        <p>
+                          {{ $t('perps.market-list.view-market-info') }}
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </app-pop-up-menu>
+            </template>
+          </AppTableRow>
+        </AppTable>
       </template>
 
       <!-- Orders tab -->
@@ -362,85 +270,34 @@
           {{ $t('perps.positions.no-orders') }}
         </div>
 
-        <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
-          <thead>
-            <tr
-              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-            >
-              <th
-                class="px-1 sm:pl-4 py-3 text-left font-bold xs:w-[150px] 3xl:w-auto"
-              >
-                {{ $t('perps.positions.market-header') }}
-              </th>
-              <th
-                class="px-1 py-3 text-left font-bold w-[100px] 3xl:w-[120px] hidden xl:table-cell"
-              >
-                {{ $t('perps.confirm.side-label') }}
-              </th>
-              <th class="px-1 py-3 text-left font-bold hidden xs:table-cell">
-                {{ $t('perps.fill.time-label') }}
-              </th>
-              <th class="px-1 py-3 text-left font-bold hidden lg:table-cell">
-                {{ $t('perps.order.status-label') }}
-              </th>
-              <th class="px-1 py-3 text-left font-bold hidden 2xl:table-cell">
-                {{ $t('perps.order.type-label') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold 3xl:w-[120px]">
-                {{ $t('perps.order.price-label') }}
-              </th>
-              <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
-                {{ $t('perps.positions.filled-size-header') }}
-              </th>
-              <th class="w-9 xs:w-12"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
+        <div v-else ref="ordersTable">
+          <AppTable
+            :columns="orderColumns"
+            :aria-label="$t('perps.positions.tab-orders')"
+            actions
+          >
+            <AppTableRow
               v-for="order in orders"
               :key="order.orderId"
-              class="cursor-pointer hoverBGWhite"
+              :title="getBase(order.market)"
+              :description="formatDate(order.createdAt)"
               @click="openOrderDialog(order)"
             >
-              <!-- Market -->
-              <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                <div class="flex items-center gap-3">
-                  <app-token-logo
-                    :url="getLogoUrl(getBase(order.market))"
-                    :symbol="getBase(order.market)"
-                    class="rounded-full"
-                  />
-                  <div>
-                    <p class="font-bold truncate">
-                      {{ getBase(order.market) }}
-                    </p>
-                    <p
-                      :class="[
-                        order.side === 'buy'
-                          ? 'text-text-success'
-                          : 'text-text-error',
-                        ' text-s-12 capitalize xl:hidden font-medium',
-                      ]"
-                    >
-                      {{
-                        order.side === 'buy'
-                          ? $t('perps.order.buy')
-                          : order.side === 'sell'
-                            ? $t('perps.order.sell')
-                            : order.side
-                      }}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <!-- Side -->
-              <td class="px-1 py-3 hidden xl:table-cell">
-                <span
+              <template #avatar="{ size: avatarSize }">
+                <AppAvatar
+                  type="perpsAsset"
+                  :size="avatarSize"
+                  :url="getLogoUrl(getBase(order.market))"
+                  :symbol="getBase(order.market)"
+                />
+              </template>
+              <AppTableCell column="side">
+                <p
                   :class="[
                     order.side === 'buy'
                       ? 'text-text-success'
                       : 'text-text-error',
-                    'text-s-13 capitalize font-medium',
+                    'max-w-full truncate text-label-base capitalize',
                   ]"
                 >
                   {{
@@ -450,41 +307,26 @@
                         ? $t('perps.order.sell')
                         : order.side
                   }}
-                </span>
-              </td>
-              <!-- Time -->
-              <td
-                class="px-1 py-3 text-text-subtle text-s-12 hidden xs:table-cell"
-              >
-                {{ formatDate(order.createdAt) }}
-              </td>
-              <!-- Status -->
-              <td class="px-1 py-3 hidden lg:table-cell">
+                </p>
+              </AppTableCell>
+              <AppTableCell column="status">
                 <app-tag
                   :type="orderStatusTagType(order.status)"
                   variant="subtle"
-                  class="-ml-2 mt-1"
                   :label="$t(formatOrderStatus(order.status))"
                 />
-              </td>
-              <!-- Type -->
-              <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
-                {{ $t(formatOrderType(order.type)) }}
-              </td>
-              <!-- Price -->
-              <td class="px-1 py-3 text-right font-normal text-s-14">
-                <p>{{ formatPrice(getOrderPrice(order)) }}</p>
-
-                <p class="text-s-12 text-text-subtle xs:hidden">
-                  {{ formatDate(order.createdAt) }}
+              </AppTableCell>
+              <AppTableCell
+                column="price"
+                :value="formatPrice(getOrderPrice(order))"
+              />
+              <AppTableCell column="filled">
+                <p
+                  class="max-w-full truncate text-label-base text-text-default"
+                >
+                  {{ order.filledSize }} {{ getBase(order.market) }}
                 </p>
-              </td>
-              <!-- Filled Size  out of Size-->
-              <td
-                class="px-1 py-3 text-right font-normal text-s-14 hidden sm:table-cell"
-              >
-                <p>{{ order.filledSize }} {{ getBase(order.market) }}</p>
-                <p class="text-s-12 text-text-subtle">
+                <p class="max-w-full truncate text-label-xs text-text-subtle">
                   {{
                     $t('perps.positions.out-of', {
                       size: order.size,
@@ -492,81 +334,80 @@
                     })
                   }}
                 </p>
-              </td>
-
-              <!--Actions-->
-              <td class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3">
-                <app-pop-up-menu
-                  v-if="showCancelButton(order)"
-                  :placeholder="$t('perps.market-list.actions-menu-label')"
-                  location="right"
-                >
-                  <template #menu-button="{ toggleMenu }">
-                    <app-btn-icon
-                      :label="$t('perps.market-list.action-menu-label')"
-                      @click.stop="toggleMenu"
-                    >
-                      <AppIcon
-                        name="ellipsis-vertical"
-                        size="s"
-                        variant="filled"
+              </AppTableCell>
+              <!-- Viewing is the row click; the action is cancel. -->
+              <template #actions="{ size: rowSize, surface }">
+                <template v-if="showCancelButton(order)">
+                  <AppBaseButton
+                    v-if="rowSize !== 's'"
+                    type="secondary"
+                    size="medium"
+                    tone="danger"
+                    class="w-24"
+                    :surface="surface"
+                    :is-loading="cancellingOrderId === order.orderId"
+                    @click="openCancelConfirmation(order)"
+                  >
+                    {{ $t('perps.confirm.cancel') }}
+                  </AppBaseButton>
+                  <app-pop-up-menu
+                    v-else
+                    :placeholder="$t('perps.market-list.actions-menu-label')"
+                    location="right"
+                  >
+                    <template #menu-button="{ toggleMenu }">
+                      <AppBtnIcon
+                        icon="ellipsis-horizontal"
+                        :label="$t('perps.market-list.action-menu-label')"
+                        @click="toggleMenu"
                       />
-                    </app-btn-icon>
-                  </template>
-                  <template #menu-content="{ toggleMenu }">
-                    <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                    >
-                      <ul>
-                        <li
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[toggleMenu(), openOrderDialog(order)]"
-                        >
-                          <p>{{ $t('perps.positions.view-order-label') }}</p>
-                        </li>
-                        <li
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[
-                            toggleMenu(),
-                            openCancelConfirmation(order),
-                          ]"
-                        >
-                          {{
-                            cancellingOrderId === order.orderId
-                              ? $t('perps.order.cancelling')
-                              : $t('perps.order.cancel-order-button')
-                          }}
-                        </li>
-                      </ul>
-                    </div>
-                  </template>
-                </app-pop-up-menu>
-                <!-- View order details button -->
-                <app-btn-icon
-                  v-else
-                  :label="$t('perps.positions.view-order-details-label')"
-                  :class="{ 'ml-auto': !showCancelButton(order) }"
-                  @click.stop="openOrderDialog(order)"
-                >
-                  <AppIcon name="chevron-right" size="s" variant="filled" />
-                </app-btn-icon>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div
-          v-if="ordersHasPrev || ordersHasNext"
-          class="flex justify-end mt-4 px-2"
-        >
-          <perps-pagination
-            :current-page="ordersCurrentPage"
-            :has-prev="ordersHasPrev"
-            :has-next="ordersHasNext"
-            :disabled="ordersLoading"
-            :scroll-target="ordersTable"
-            @prev="ordersPrevPage"
-            @next="ordersNextPage"
-          />
+                    </template>
+                    <template #menu-content="{ toggleMenu }">
+                      <div
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                      >
+                        <ul>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[toggleMenu(), openOrderDialog(order)]"
+                          >
+                            <p>{{ $t('perps.positions.view-order-label') }}</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              openCancelConfirmation(order),
+                            ]"
+                          >
+                            {{
+                              cancellingOrderId === order.orderId
+                                ? $t('perps.order.cancelling')
+                                : $t('perps.order.cancel-order-button')
+                            }}
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
+                  </app-pop-up-menu>
+                </template>
+              </template>
+            </AppTableRow>
+          </AppTable>
+          <div
+            v-if="ordersHasPrev || ordersHasNext"
+            class="flex justify-end mt-4 px-2"
+          >
+            <perps-pagination
+              :current-page="ordersCurrentPage"
+              :has-prev="ordersHasPrev"
+              :has-next="ordersHasNext"
+              :disabled="ordersLoading"
+              :scroll-target="ordersTable"
+              @prev="ordersPrevPage"
+              @next="ordersNextPage"
+            />
+          </div>
         </div>
       </template>
 
@@ -583,109 +424,50 @@
         >
           {{ $t('perps.positions.no-fills') }}
         </div>
-        <div v-else class="overflow-x-auto">
-          <table ref="fillsTable" class="w-full text-s-14 table-fixed">
-            <thead>
-              <tr
-                class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-              >
-                <th class="px-1 sm:pl-4 py-3 text-left font-bold">
-                  {{ $t('perps.positions.market-header') }}
-                </th>
-                <th class="px-1 py-3 text-left font-bold hidden lg:table-cell">
-                  {{ $t('perps.positions.direction-header') }}
-                </th>
-                <th
-                  class="px-1 py-3 text-right lg:text-left font-bold hidden xs:table-cell"
+        <div v-else ref="fillsTable">
+          <AppTable
+            :columns="fillColumns"
+            :aria-label="$t('perps.positions.tab-fills')"
+          >
+            <AppTableRow
+              v-for="fill in fills"
+              :key="fill.id"
+              :title="getBase(fill.market)"
+              :description="formatDate(fill.time)"
+              @click="openFillDialog(fill)"
+            >
+              <template #avatar="{ size: avatarSize }">
+                <AppAvatar
+                  type="perpsAsset"
+                  :size="avatarSize"
+                  :url="getLogoUrl(getBase(fill.market))"
+                  :symbol="getBase(fill.market)"
+                />
+              </template>
+              <AppTableCell column="direction">
+                <app-tag
+                  :type="fillDirectionTagType(fill.direction)"
+                  variant="subtle"
+                  :label="$t(directionKey(fill.direction))"
+                />
+              </AppTableCell>
+              <AppTableCell column="price" :value="formatPrice(fill.price)" />
+              <AppTableCell
+                column="size"
+                :value="`${fill.size} ${getBase(fill.market)}`"
+              />
+              <AppTableCell column="pnl">
+                <p
+                  :class="[
+                    'max-w-full truncate text-label-base',
+                    fill.pnl ? pnlColor(fill.pnl) : 'text-text-subtle',
+                  ]"
                 >
-                  {{ $t('perps.fill.time-label') }}
-                </th>
-
-                <th class="px-1 py-3 text-right font-bold">
-                  {{ $t('perps.order.price-label') }}
-                </th>
-                <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
-                  {{ $t('perps.trade.size') }}
-                </th>
-                <th class="px-1 py-3 text-right font-bold hidden md:table-cell">
-                  {{ $t('perps.positions.pnl-header') }}
-                </th>
-                <th class="w-9 xs:w-12"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="fill in fills"
-                :key="fill.id"
-                class="cursor-pointer hoverBGWhite"
-                @click="openFillDialog(fill)"
-              >
-                <!-- Market -->
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                  <div class="flex items-center gap-3">
-                    <app-token-logo
-                      :url="getLogoUrl(getBase(fill.market))"
-                      :symbol="getBase(fill.market)"
-                      class="rounded-full"
-                    />
-                    <div>
-                      <p class="font-bold truncate">
-                        {{ getBase(fill.market) }}
-                      </p>
-                      <app-tag
-                        :type="fillDirectionTagType(fill.direction)"
-                        variant="subtle"
-                        class="-ml-1 mt-1 lg:hidden"
-                        :label="$t(directionKey(fill.direction))"
-                      />
-                    </div>
-                  </div>
-                </td>
-                <!-- Direction -->
-                <td class="px-1 py-3 hidden lg:table-cell">
-                  <app-tag
-                    :type="fillDirectionTagType(fill.direction)"
-                    variant="subtle"
-                    :label="$t(directionKey(fill.direction))"
-                  />
-                </td>
-                <!-- Time -->
-                <td
-                  class="px-1 py-3 text-right text-s-12 lg:text-left text-text-subtle hidden xs:table-cell"
-                >
-                  {{ formatDate(fill.time) }}
-                </td>
-                <!-- Price -->
-                <td class="px-1 py-3 text-right">
-                  <p>{{ formatPrice(fill.price) }}</p>
-                  <p class="text-text-subtle text-s-12 xs:hidden">
-                    {{ formatDate(fill.time) }}
-                  </p>
-                </td>
-                <!-- Size -->
-                <td class="px-1 py-3 text-right hidden sm:table-cell">
-                  {{ fill.size }} {{ getBase(fill.market) }}
-                </td>
-                <!-- PnL -->
-                <td class="px-1 py-3 text-right hidden md:table-cell">
-                  <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
-                    {{ formatPnl(fill.pnl) }}
-                  </span>
-                  <span v-else class="text-text-subtle">—</span>
-                </td>
-                <!-- Actions -->
-                <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
-                  <app-btn-icon
-                    :label="$t('perps.positions.view-fill-details-label')"
-                    class="ml-auto"
-                    @click="openFillDialog(fill)"
-                  >
-                    <AppIcon name="chevron-right" size="s" variant="filled" />
-                  </app-btn-icon>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  {{ fill.pnl ? formatPnl(fill.pnl) : '—' }}
+                </p>
+              </AppTableCell>
+            </AppTableRow>
+          </AppTable>
           <div
             v-if="fillsHasPrev || fillsHasNext"
             class="flex justify-end mt-4 px-2"
@@ -716,122 +498,50 @@
         >
           {{ $t('perps.positions.no-deposits-or-withdrawals') }}
         </div>
-        <div v-else class="overflow-x-auto">
-          <table ref="dwTable" class="w-full text-s-14 table-fixed">
-            <thead>
-              <tr
-                class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-              >
-                <th
-                  class="px-1 sm:pl-4 py-3 text-left font-bold hidden xs:table-cell"
-                >
-                  {{ $t('perps.order.type-label') }}
-                </th>
-                <th class="px-1 py-3 text-left font-bold">
-                  {{ $t('perps.positions.asset-header') }}
-                </th>
-                <th class="px-1 py-3 text-left font-bold hidden sm:table-cell">
-                  {{ $t('perps.fill.time-label') }}
-                </th>
-                <th class="px-1 py-3 text-right font-bold hidden md:table-cell">
-                  {{ $t('perps.positions.usd-value-header') }}
-                </th>
-                <th class="px-1 py-3 text-right font-bold">
-                  {{ $t('perps.positions.amount-header') }}
-                </th>
-
-                <th
-                  class="px-1 sm:pr-4 py-3 text-right font-bold hidden xs:table-cell"
-                >
-                  {{ $t('perps.order.status-label') }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in paginatedDW" :key="item.key">
-                <!-- Type -->
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
-                  <span
-                    :class="[
-                      item.type === 'Deposit'
-                        ? 'text-text-success'
-                        : 'text-text-warning',
-                      'font-medium text-s-13',
-                    ]"
-                  >
-                    {{ formatDWType(item.type) }}
-                  </span>
-                </td>
-                <!-- Asset -->
-                <td class="px-1 py-3 font-bold flex items-center">
-                  <app-token-logo
-                    :url="USDC_LOGO"
-                    symbol="item.coin"
-                    class="mr-2"
-                  />
-                  <div>
-                    <p>{{ item.coin }}</p>
-
-                    <p
-                      :class="[
-                        item.type === 'Deposit'
-                          ? 'text-text-success'
-                          : 'text-text-warning',
-                        'font-medium text-s-12 xs:hidden',
-                      ]"
-                    >
-                      {{ formatDWType(item.type) }}
-                    </p>
-                  </div>
-                </td>
-                <!-- Time -->
-                <td
-                  class="px-1 py-3 text-left text-text-subtle text-s-12 hidden sm:table-cell"
-                >
-                  {{ formatDate(item.time) }}
-                </td>
-                <!-- USD Value -->
-                <td class="px-1 py-3 text-right hidden md:table-cell">
-                  {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
-                </td>
-                <!-- Amount -->
-                <td class="px-1 py-3 text-right">
-                  <p class="md:hidden">
-                    {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
-                  </p>
-                  <p
-                    class="text-text-subtle text-s-12 md:text-black md:text-s-14"
-                  >
-                    {{ item.size }} {{ item.coin }}
-                  </p>
-                </td>
-                <!-- Status -->
-                <td
-                  class="px-1 py-3 sm:pr-4 rounded-r-12 text-right hidden xs:table-cell"
-                >
-                  <span
-                    :class="[
-                      'capitalize font-medium text-s-13',
-                      item.statusColor,
-                    ]"
-                  >
-                    {{ $t(statusKey(item.statusLabel)) }}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-if="dwTotalPages > 1" class="flex justify-end mt-4 px-2">
-            <perps-pagination
-              :current-page="dwCurrentPage"
-              :total-pages="dwTotalPages"
-              :disabled="dwLoading"
-              :scroll-target="dwTable"
-              @prev="dwPrevPage"
-              @next="dwNextPage"
+        <AppTable
+          v-else
+          :page="dwCurrentPage + 1"
+          :columns="dwColumns"
+          :pages="dwTotalPages"
+          :footer="dwTotalPages > 1 ? 'pagination' : undefined"
+          :aria-label="$t('perps.positions.tab-deposits')"
+          @update:page="dwCurrentPage = $event - 1"
+        >
+          <AppTableRow
+            v-for="item in paginatedDW"
+            :key="item.key"
+            :title="formatDWType(item.type)"
+            :description="item.coin"
+          >
+            <template #avatar="{ size: avatarSize }">
+              <AppAvatar
+                type="cryptoAsset"
+                :size="avatarSize"
+                :url="USDC_LOGO"
+                :symbol="item.coin"
+              />
+            </template>
+            <AppTableCell column="time" :value="formatDate(item.time)" />
+            <AppTableCell
+              column="usd"
+              :value="item.usdValue ? formatUsd(item.usdValue) : '—'"
             />
-          </div>
-        </div>
+            <AppTableCell
+              column="amount"
+              :value="`${item.size} ${item.coin}`"
+            />
+            <AppTableCell column="status">
+              <p
+                :class="[
+                  'max-w-full truncate text-label-base capitalize',
+                  item.statusColor,
+                ]"
+              >
+                {{ $t(statusKey(item.statusLabel)) }}
+              </p>
+            </AppTableCell>
+          </AppTableRow>
+        </AppTable>
       </template>
     </app-sheet>
     <perps-fill-details-dialog
@@ -878,7 +588,12 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
+import type { TableColumn } from '@/components/table/types'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTag from '@/components/tag/AppTag.vue'
@@ -903,13 +618,11 @@ import {
   formatUsd,
   formatPrice,
   formatPnl,
-  formatRoe,
   pnlColor,
   formatDate,
   getOrderPrice,
   formatOrderStatus,
   orderStatusTagType,
-  formatOrderType,
   directionKey,
   fillDirectionTagType,
   withdrawalStatusColor,
@@ -1047,102 +760,56 @@ const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
   emits('openSideMenu', pos.market, type)
 }
 
-const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)
 const ordersTable = ref<HTMLElement | null>(null)
-const dwTable = ref<HTMLElement | null>(null)
 
-const positionsSkeletonColumns = computed<SkeletonColumn[]>(() => [
-  { header: t('perps.positions.market-header') },
-  { header: t('perps.positions.value-label'), align: 'right' },
-  {
-    header: t('perps.positions.upnl-header'),
-    align: 'right',
-    hidden: 'hidden xs:table-cell',
-  },
-  {
-    header: t('perps.positions.entry-price-label'),
-    align: 'right',
-    hidden: 'hidden 2xl:table-cell',
-  },
-  {
-    header: t('perps.positions.mark-price-label'),
-    align: 'right',
-    hidden: 'hidden lg:table-cell',
-  },
-  {
-    header: t('perps.positions.liq-price-header'),
-    align: 'right',
-    hidden: 'hidden sm:table-cell',
-  },
-  {
-    header: t('perps.positions.margin-used-header'),
-    align: 'right',
-    hidden: 'hidden 2xl:table-cell',
-  },
-  {
-    header: t('perps.positions.total-funding-header'),
-    align: 'right',
-    hidden: 'hidden 3xl:table-cell',
-  },
-  { header: t('perps.market-list.column-actions'), align: 'right' },
+// Every column shows from M (768px) up, so each table keeps to the four data
+// columns that fit there; the rest live in the row's detail (market page,
+// order / fill dialog). At S only the leading and `primary` columns remain.
+const positionColumns = computed<TableColumn[]>(() => [
+  { key: 'market', label: t('perps.positions.market-header') },
+  { key: 'value', label: t('perps.positions.value-label') },
+  { key: 'upnl', label: t('perps.positions.upnl-header'), primary: true },
+  { key: 'mark', label: t('perps.positions.mark-price-label') },
+  { key: 'liq', label: t('perps.positions.liq-price-header') },
 ])
 
-const fillsSkeletonColumns = computed<SkeletonColumn[]>(() => [
-  { header: t('perps.positions.market-header') },
-  {
-    header: t('perps.positions.direction-header'),
-    hidden: 'hidden lg:table-cell',
-  },
-  { header: t('perps.fill.time-label'), hidden: 'hidden xs:table-cell' },
-  { header: t('perps.order.price-label'), align: 'right' },
-  {
-    header: t('perps.trade.size'),
-    align: 'right',
-    hidden: 'hidden sm:table-cell',
-  },
-  {
-    header: t('perps.positions.pnl-header'),
-    align: 'right',
-    hidden: 'hidden md:table-cell',
-  },
+const orderColumns = computed<TableColumn[]>(() => [
+  { key: 'market', label: t('perps.positions.market-header') },
+  { key: 'side', label: t('perps.confirm.side-label') },
+  { key: 'status', label: t('perps.order.status-label') },
+  { key: 'price', label: t('perps.order.price-label'), primary: true },
+  { key: 'filled', label: t('perps.positions.filled-size-header') },
 ])
 
-const ordersSkeletonColumns = computed<SkeletonColumn[]>(() => [
-  { header: t('perps.positions.market-header') },
-  {
-    header: t('perps.confirm.side-label'),
-    hidden: 'hidden xl:table-cell',
-    width: '100px',
-  },
-  { header: t('perps.fill.time-label'), hidden: 'hidden xs:table-cell' },
-  { header: t('perps.order.status-label'), hidden: 'hidden lg:table-cell' },
-  { header: t('perps.order.type-label'), hidden: 'hidden 2xl:table-cell' },
-  { header: t('perps.order.price-label'), align: 'right' },
-  {
-    header: t('perps.positions.filled-size-header'),
-    align: 'right',
-    hidden: 'hidden sm:table-cell',
-  },
-  { header: '', width: '48px' },
+const fillColumns = computed<TableColumn[]>(() => [
+  { key: 'market', label: t('perps.positions.market-header') },
+  { key: 'direction', label: t('perps.positions.direction-header') },
+  { key: 'price', label: t('perps.order.price-label'), primary: true },
+  { key: 'size', label: t('perps.trade.size') },
+  { key: 'pnl', label: t('perps.positions.pnl-header') },
 ])
 
-const dwSkeletonColumns = computed<SkeletonColumn[]>(() => [
-  { header: t('perps.order.type-label'), hidden: 'hidden xs:table-cell' },
-  { header: t('perps.positions.asset-header') },
-  { header: t('perps.fill.time-label'), hidden: 'hidden sm:table-cell' },
-  {
-    header: t('perps.positions.usd-value-header'),
-    align: 'right',
-    hidden: 'hidden md:table-cell',
-  },
-  { header: t('perps.positions.amount-header'), align: 'right' },
-  {
-    header: t('perps.order.status-label'),
-    align: 'right',
-    hidden: 'hidden xs:table-cell',
-  },
+const dwColumns = computed<TableColumn[]>(() => [
+  { key: 'type', label: t('perps.order.type-label') },
+  { key: 'time', label: t('perps.fill.time-label') },
+  { key: 'usd', label: t('perps.positions.usd-value-header') },
+  { key: 'amount', label: t('perps.positions.amount-header'), primary: true },
+  { key: 'status', label: t('perps.order.status-label') },
 ])
+
+// Skeleton headers follow the table: leading + primary below md, all above.
+const skeletonOf = (columns: TableColumn[]): SkeletonColumn[] =>
+  columns.map((c, i) => ({
+    header: c.label,
+    hidden: i === 0 || c.primary ? undefined : 'hidden md:table-cell',
+  }))
+const positionsSkeletonColumns = computed(() =>
+  skeletonOf(positionColumns.value),
+)
+const ordersSkeletonColumns = computed(() => skeletonOf(orderColumns.value))
+const fillsSkeletonColumns = computed(() => skeletonOf(fillColumns.value))
+const dwSkeletonColumns = computed(() => skeletonOf(dwColumns.value))
 
 const { positions, hasLoaded: positionsHasLoaded } = usePerpsPositions()
 
@@ -1150,8 +817,6 @@ const {
   currentPage: positionsCurrentPage,
   paginatedArray: paginatedPositions,
   totalPages: positionsTotalPages,
-  nextPage: positionsNextPage,
-  prevPage: positionsPrevPage,
 } = usePaginate<Position>(positions, PERPS_PAGE_SIZE)
 
 const showFillDialog = ref(false)
@@ -1389,8 +1054,6 @@ const {
   currentPage: dwCurrentPage,
   paginatedArray: paginatedDW,
   totalPages: dwTotalPages,
-  nextPage: dwNextPage,
-  prevPage: dwPrevPage,
 } = usePaginate<CombinedDWRow>(combinedDW, PERPS_PAGE_SIZE)
 
 const tabs = computed(() => [
