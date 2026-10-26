@@ -15,10 +15,10 @@ import {
 } from '@/stores/tradeOrdersStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 
-const AppDialogStub = {
-  props: { isOpen: { type: Boolean, default: false } },
+const AppModalStub = {
+  props: { modelValue: { type: Boolean, default: false }, title: String },
   template:
-    '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
+    '<div v-if="modelValue">{{ title }}<slot name="header" /><slot /></div>',
 }
 
 const ADDRESS = '0x717ba71d4ea77d1b7c49a913c28c0bd538eecd41'
@@ -77,7 +77,7 @@ const mountModal = (order: SavedTradeOrder | null = makeOrder()) => {
     },
     global: {
       plugins: [i18n, pinia],
-      stubs: { AppDialog: AppDialogStub },
+      stubs: { AppModal: AppModalStub },
     },
   })
 }

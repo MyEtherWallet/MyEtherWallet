@@ -225,6 +225,8 @@ onBeforeUnmount(close)
     </slot>
   </span>
 
+  <!-- z-[2150]: above modals (AppModal stacks from 2110), below teleported
+       menus (2200) and toasts (2300). -->
   <Teleport to="body">
     <div
       v-if="visible && !disabled"
@@ -233,7 +235,7 @@ onBeforeUnmount(close)
       role="tooltip"
       data-testid="tooltip"
       :data-placement="effectivePlacement"
-      class="pointer-events-none fixed z-[2101] flex items-center"
+      class="pointer-events-none fixed z-[2150] flex items-center"
       :class="PLACEMENT_FLEX[effectivePlacement]"
       :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
     >

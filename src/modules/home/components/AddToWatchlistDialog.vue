@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AssetPickerRow from './AssetPickerRow.vue'
 import {
@@ -25,80 +25,78 @@ const { items, isLoading } = useAssetPicker(tab, query)
 </script>
 
 <template>
-  <AppDialog
-    v-model:is-open="isOpen"
-    class="sm:mx-auto sm:w-full sm:max-w-[480px]"
+  <AppModal
+    v-model="isOpen"
+    :aria-label="t('homePage.hero.watchlist.addModal.title')"
     data-test="add-to-watchlist-dialog"
   >
-    <template #content>
-      <div class="flex flex-col px-6 pt-6">
-        <h2 class="text-s-24 font-bold text-black">
-          {{ t('homePage.hero.watchlist.addModal.title') }}
-        </h2>
-        <p class="mt-1 text-s-16 text-text-subtle">
-          {{ t('homePage.hero.watchlist.addModal.subtitle') }}
-        </p>
+    <div class="flex flex-col px-6 pt-6">
+      <h2 class="text-s-24 font-bold text-black">
+        {{ t('homePage.hero.watchlist.addModal.title') }}
+      </h2>
+      <p class="mt-1 text-s-16 text-text-subtle">
+        {{ t('homePage.hero.watchlist.addModal.subtitle') }}
+      </p>
 
-        <AppSearchbar
-          v-model="query"
-          :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-background-default"
-          class="mt-5"
-        />
+      <AppSearchbar
+        v-model="query"
+        variant="default"
+        :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
+        class="mt-5"
+      />
 
-        <!-- Tabs -->
-        <div
-          class="mt-5 flex gap-6 border-b border-border-strong/40"
-          role="tablist"
+      <!-- Tabs -->
+      <div
+        class="mt-5 flex gap-6 border-b border-border-strong/40"
+        role="tablist"
+      >
+        <button
+          v-for="tabItem in TABS"
+          :key="tabItem.id"
+          type="button"
+          role="tab"
+          data-test="picker-tab"
+          :aria-selected="tab === tabItem.id"
+          class="-mb-px border-b-2 pb-2 text-s-16 font-semibold transition-colors"
+          :class="
+            tab === tabItem.id
+              ? 'border-black text-black'
+              : 'border-transparent text-text-subtle'
+          "
+          @click="tab = tabItem.id"
         >
-          <button
-            v-for="tabItem in TABS"
-            :key="tabItem.id"
-            type="button"
-            role="tab"
-            data-test="picker-tab"
-            :aria-selected="tab === tabItem.id"
-            class="-mb-px border-b-2 pb-2 text-s-16 font-semibold transition-colors"
-            :class="
-              tab === tabItem.id
-                ? 'border-black text-black'
-                : 'border-transparent text-text-subtle'
-            "
-            @click="tab = tabItem.id"
-          >
-            {{ t(`homePage.hero.watchlist.addModal.tabs.${tabItem.labelKey}`) }}
-          </button>
-        </div>
+          {{ t(`homePage.hero.watchlist.addModal.tabs.${tabItem.labelKey}`) }}
+        </button>
+      </div>
 
-        <!-- List: fixed height so the modal never resizes between tabs or
-             loading/loaded (QA). Sits flush under the tabs (no top gap) and only
-             this area scrolls; pr keeps the star off the scrollbar. -->
-        <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
-          <div
-            v-if="isLoading"
-            data-test="picker-loading"
-            class="flex h-full items-center justify-center"
-          >
-            <span
-              class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
-              aria-hidden="true"
-            />
-          </div>
-          <p
-            v-else-if="!items.length"
-            data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-text-subtle"
-          >
-            {{ t('homePage.hero.watchlist.addModal.empty') }}
-          </p>
-          <AssetPickerRow
-            v-for="item in items"
-            v-else
-            :key="item.key"
-            :item="item"
+      <!-- List: fixed height so the modal never resizes between tabs or
+           loading/loaded (QA). Sits flush under the tabs (no top gap) and only
+           this area scrolls; pr keeps the star off the scrollbar. -->
+      <div class="mew-scrollbar h-[420px] overflow-y-auto pr-2">
+        <div
+          v-if="isLoading"
+          data-test="picker-loading"
+          class="flex h-full items-center justify-center"
+        >
+          <span
+            class="size-8 animate-spin rounded-full border-2 border-border-default border-t-black"
+            aria-hidden="true"
           />
         </div>
+        <p
+          v-else-if="!items.length"
+          data-test="picker-empty"
+          class="py-16 text-center text-s-14 text-text-subtle"
+        >
+          {{ t('homePage.hero.watchlist.addModal.empty') }}
+        </p>
+        <AssetPickerRow
+          v-for="item in items"
+          v-else
+          :key="item.key"
+          :item="item"
+        />
       </div>
-    </template>
-  </AppDialog>
+    </div>
+  </AppModal>
 </template>

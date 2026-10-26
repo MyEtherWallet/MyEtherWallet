@@ -2,11 +2,12 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 
-// AppDialog teleports; stub it to just render the title + content slots inline.
+// AppModal teleports; stub it to just render the title/subtitle + default slot inline.
 const stubs = {
-  AppDialog: {
-    name: 'AppDialog',
-    template: '<div><slot name="title" /><slot name="content" /></div>',
+  AppModal: {
+    name: 'AppModal',
+    props: ['title', 'subtitle'],
+    template: '<div><h1>{{ title }}</h1><p>{{ subtitle }}</p><slot /></div>',
   },
 }
 

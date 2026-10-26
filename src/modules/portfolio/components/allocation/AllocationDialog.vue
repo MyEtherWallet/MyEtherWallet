@@ -8,139 +8,130 @@
     >
       {{ $t('common.view_all') }}</app-base-button
     >
-    <app-dialog
-      v-model:is-open="openDialog"
-      :title="t('common.allocation')"
-      class="w-full xs:max-w-[428px] sm:mx-auto"
-    >
-      <template #content>
+    <app-modal v-model="openDialog" :title="t('common.allocation')">
+      <div
+        class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
+      >
         <div
-          class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
+          class="flex gap-4 justify-between items-center mb-4 rounded-full bg-background-formfield"
         >
-          <div
-            class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
-          >
-            <app-searchbar
-              bg-class="bg-background-alternative"
-              v-model="searchInput"
-              class="grow"
-              :placeholder="$t('select_token.search')"
-            />
-            <!--SORT-->
-            <app-pop-up-menu :placeholder="$t('common.sort')">
-              <template #menu-button="{ toggleMenu }">
-                <button
-                  class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
-                  @click="toggleMenu"
-                >
-                  <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <AppIcon
-                    name="arrow-long-up"
-                    variant="filled"
-                    size="xxs"
-                    v-if="activeSortDirection === SortDirection.ASC"
-                  />
-                  <AppIcon
-                    name="arrow-long-down"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                  />
-                </button>
-              </template>
-              <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col">
-                  <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3">
-                      {{ $t('common.sort_by') }}
-                    </p>
-                    <app-btn-icon-close @click="toggleMenu" />
-                  </div>
-                  <app-divider class="mb-1" />
-                  <button
-                    v-for="option in sortOptions"
-                    :key="option.value"
-                    :class="[
-                      option.value === activeSortValue
-                        ? 'bg-background-default'
-                        : '',
-                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium',
-                    ]"
-                    :id="option.value"
-                    @click="setActiveSort(option.value)"
-                  >
-                    <p class="capitalize">{{ option.label }}</p>
-                    <div
-                      v-if="activeSortValue === option.value"
-                      class="ml-auto"
-                    >
-                      <AppIcon
-                        name="arrow-long-up"
-                        variant="filled"
-                        size="s"
-                        v-if="activeSortDirection === SortDirection.ASC"
-                        class="text-text-brand"
-                      />
-                      <AppIcon
-                        name="arrow-long-down"
-                        variant="filled"
-                        size="s"
-                        v-else
-                        class="text-text-brand"
-                      />
-                    </div>
-                  </button>
-                </div>
-              </template>
-            </app-pop-up-menu>
-          </div>
-          <div>
-            <div v-if="searchResults.length" class="flex flex-col gap-2">
+          <app-searchbar
+            v-model="searchInput"
+            variant="outline"
+            class="grow"
+            :placeholder="$t('select_token.search')"
+          />
+          <!--SORT-->
+          <app-pop-up-menu :placeholder="$t('common.sort')">
+            <template #menu-button="{ toggleMenu }">
               <button
-                v-for="token in searchResults"
-                :key="token.symbol + token.id"
-                class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default"
-                @click="routeToToken(token)"
+                class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
+                @click="toggleMenu"
               >
-                <div class="flex justify-between items-center w-full">
-                  <div class="flex items-center">
-                    <app-token-logo
-                      :url="token.icon"
+                <span class="mr-2 ml-1">{{ activeSortValue }}</span>
+                <AppIcon
+                  name="arrow-long-up"
+                  variant="filled"
+                  size="xxs"
+                  v-if="activeSortDirection === SortDirection.ASC"
+                />
+                <AppIcon
+                  name="arrow-long-down"
+                  variant="filled"
+                  size="xxs"
+                  v-else
+                />
+              </button>
+            </template>
+            <template #menu-content="{ toggleMenu }">
+              <div class="py-4 flex flex-col">
+                <div class="flex items-center justify-between mb-1 mx-3">
+                  <p class="text-s-17 font-medium ml-3">
+                    {{ $t('common.sort_by') }}
+                  </p>
+                  <app-btn-icon-close @click="toggleMenu" />
+                </div>
+                <app-divider class="mb-1" />
+                <button
+                  v-for="option in sortOptions"
+                  :key="option.value"
+                  :class="[
+                    option.value === activeSortValue
+                      ? 'bg-background-default'
+                      : '',
+                    'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium',
+                  ]"
+                  :id="option.value"
+                  @click="setActiveSort(option.value)"
+                >
+                  <p class="capitalize">{{ option.label }}</p>
+                  <div v-if="activeSortValue === option.value" class="ml-auto">
+                    <AppIcon
+                      name="arrow-long-up"
+                      variant="filled"
+                      size="s"
+                      v-if="activeSortDirection === SortDirection.ASC"
+                      class="text-text-brand"
+                    />
+                    <AppIcon
+                      name="arrow-long-down"
+                      variant="filled"
+                      size="s"
+                      v-else
+                      class="text-text-brand"
+                    />
+                  </div>
+                </button>
+              </div>
+            </template>
+          </app-pop-up-menu>
+        </div>
+        <div>
+          <div v-if="searchResults.length" class="flex flex-col gap-2">
+            <button
+              v-for="token in searchResults"
+              :key="token.symbol + token.id"
+              class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default"
+              @click="routeToToken(token)"
+            >
+              <div class="flex justify-between items-center w-full">
+                <div class="flex items-center">
+                  <app-token-logo
+                    :url="token.icon"
+                    :symbol="token.symbol"
+                    class="mr-4"
+                    :is-stock="token.is_stock"
+                  />
+                  <div class="text-left">
+                    <app-token-symbol
                       :symbol="token.symbol"
-                      class="mr-4"
                       :is-stock="token.is_stock"
                     />
-                    <div class="text-left">
-                      <app-token-symbol
-                        :symbol="token.symbol"
-                        :is-stock="token.is_stock"
-                      />
-                      <p class="text-text-subtle text-sm mt-0.5">
-                        {{ token.stock_alias || token.name }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <p class="font-medium">
-                      {{ token.formattedPercentage }}
-                    </p>
-                    <p class="text-text-subtle text-s-14">
-                      {{ currencySymbol }} {{ token.usdBalanceFormatted }}
+                    <p class="text-text-subtle text-sm mt-0.5">
+                      {{ token.stock_alias || token.name }}
                     </p>
                   </div>
                 </div>
-              </button>
-            </div>
+                <div class="text-right">
+                  <p class="font-medium">
+                    {{ token.formattedPercentage }}
+                  </p>
+                  <p class="text-text-subtle text-s-14">
+                    {{ currencySymbol }} {{ token.usdBalanceFormatted }}
+                  </p>
+                </div>
+              </div>
+            </button>
           </div>
         </div>
-      </template>
-    </app-dialog>
+      </div>
+    </app-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
