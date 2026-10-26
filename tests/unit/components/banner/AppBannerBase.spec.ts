@@ -27,6 +27,14 @@ describe('AppBannerBase', () => {
     expect(w.text()).toContain('Funds arrive in a few minutes.')
   })
 
+  it.each([
+    [undefined, 'bg-background-default'],
+    ['alternative', 'bg-background-default'],
+    ['default', 'bg-background-alternative'],
+  ] as const)('surface %s → %s container', (surface, bg) => {
+    expect(mountBase({ surface }).classes()).toContain(bg)
+  })
+
   it('switches to the multi-line layout when a title is set', () => {
     const w = mountBase({ title: 'Heads up' })
     expect(w.classes()).toEqual(

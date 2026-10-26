@@ -40,6 +40,12 @@ describe('AppBanner', () => {
     expect(w.classes()).toContain('bg-background-default')
   })
 
+  it('turns white for a grey surface', () => {
+    const w = mountBanner({ type: 'alert', surface: 'default' })
+    expect(w.classes()).toContain('bg-background-alternative')
+    expect(w.classes()).not.toContain('bg-background-default')
+  })
+
   it('puts the sr-only type word before the title', () => {
     const w = mountBanner({ type: 'warning', title: 'Low balance' })
     expect(w.text()).toMatch(/^Warning\s*Low balance/)
@@ -62,7 +68,10 @@ describe('AppBanner', () => {
     const w = mount(AppBanner, {
       props: { title: 'Network', description: 'unused' },
       attrs: { class: 'mb-4', id: 'net-banner' },
-      slots: { default: 'Rich <b>copy</b>', actions: '<button>Switch</button>' },
+      slots: {
+        default: 'Rich <b>copy</b>',
+        actions: '<button>Switch</button>',
+      },
       global: { plugins: [i18n] },
     })
     expect(w.text()).toContain('Network')

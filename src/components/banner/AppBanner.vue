@@ -5,6 +5,7 @@
     :title="title"
     :description="description"
     :dismissible="dismissible"
+    :surface="surface"
     @close="onClose"
   >
     <template #icon>
@@ -20,13 +21,19 @@
 import { computed } from 'vue'
 import AppBannerBase from '@/components/banner/AppBannerBase.vue'
 import AppIconContainer from '@/components/icon_container/AppIconContainer.vue'
-import { BANNER_TYPE_SPEC, type BannerType } from '@/components/banner/types'
+import {
+  BANNER_TYPE_SPEC,
+  type BannerSurface,
+  type BannerType,
+} from '@/components/banner/types'
 
 /**
  * Banner (design library, Figma 3740:42238): inline feedback at the top of a
  * page or section. `type` only swaps the status icon and the live-region role;
- * the container is grey for every type. The type word is read out (sr-only)
- * before the title so meaning never rests on colour.
+ * the container colour never follows the type. It follows `surface`: grey by
+ * default (for white cards and dialogs), white with `surface="default"` (for
+ * the grey page). The type word is read out (sr-only) before the title so
+ * meaning never rests on colour.
  *
  * Visibility is `v-model` (default true). Dismissing hides it locally; bind
  * the model to persist the dismissal. Actions are caller-supplied
@@ -47,6 +54,8 @@ const props = withDefaults(
     title?: string
     description?: string
     dismissible?: boolean
+    /** Figma "Style"; the default lives in AppBannerBase. */
+    surface?: BannerSurface
   }>(),
   { type: 'info' },
 )
