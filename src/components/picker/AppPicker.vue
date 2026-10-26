@@ -4,6 +4,7 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import {
   PICKER_SIZE_CLASS,
+  PICKER_TEXT_PAD_CLASS,
   PICKER_AVATAR_SIZE,
   PICKER_SURFACE_BG_CLASS,
   type PickerSize,
@@ -94,7 +95,7 @@ const rootClass = computed(() => [
       :loading="loading"
       size="m"
       no-wrap
-      :class="isPill ? 'shrink-0' : 'flex-1'"
+      :class="[isPill ? 'shrink-0' : 'flex-1', PICKER_TEXT_PAD_CLASS[size]]"
     />
 
     <span

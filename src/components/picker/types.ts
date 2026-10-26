@@ -18,9 +18,19 @@ export type PickerSurface = 'default' | 'alternative'
 
 /** Box geometry per size: height · gap · padding · radius (Figma). */
 export const PICKER_SIZE_CLASS: Record<PickerSize, string> = {
-  s: 'h-8 gap-1 pl-1 pr-2 rounded-full', // 32 · pill, hugs its content
-  m: 'h-10 gap-2 px-3 rounded-16', // 40
+  s: 'h-8 pl-1 pr-2 rounded-full', // 32 · pill, hugs its content
+  m: 'h-10 gap-1 px-2 rounded-16', // 40
   l: 'h-16 gap-2 px-4 rounded-16', // 64
+}
+
+/**
+ * Side padding on the text block (Figma). It keeps S/M text off the edge when
+ * the avatar is off; with an avatar it adds to the box gap.
+ */
+export const PICKER_TEXT_PAD_CLASS: Record<PickerSize, string> = {
+  s: 'px-1.5', // 6
+  m: 'px-1', // 4
+  l: '',
 }
 
 /** The nested Avatar's size at each Picker size (Figma). */

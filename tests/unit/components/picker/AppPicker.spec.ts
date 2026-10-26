@@ -135,6 +135,29 @@ describe('AppPicker', () => {
     )
   })
 
+  it('pads the text so S/M without an avatar keep their inset (Figma)', () => {
+    const geometry = (size: 's' | 'm' | 'l') => {
+      const w = mount(AppPicker, { props: { title: 'T', size, avatar: false } })
+      return {
+        box: w.get(root()).classes(),
+        text: w.get('[data-testid="cg-root"]').classes(),
+      }
+    }
+
+    const s = geometry('s')
+    expect(s.box).toEqual(expect.arrayContaining(['pl-1', 'pr-2']))
+    expect(s.box.some(c => c.startsWith('gap-'))).toBe(false)
+    expect(s.text).toContain('px-1.5')
+
+    const m = geometry('m')
+    expect(m.box).toEqual(expect.arrayContaining(['gap-1', 'px-2']))
+    expect(m.text).toContain('px-1')
+
+    const l = geometry('l')
+    expect(l.box).toEqual(expect.arrayContaining(['gap-2', 'px-4']))
+    expect(l.text.some(c => c.startsWith('px-'))).toBe(false)
+  })
+
   it('fills white on the default style and grey on the alternative style', () => {
     const def = mount(AppPicker, { props: { title: 'T', surface: 'default' } })
     expect(def.get(root()).classes()).toEqual(
