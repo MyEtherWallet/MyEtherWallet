@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import WatchlistStepHeader from './WatchlistStepHeader.vue'
-import WatchlistSelectableCard from './WatchlistSelectableCard.vue'
+import AppCard from '@/components/card/AppCard.vue'
 import {
   WATCHLIST_MARKETS,
   type WatchlistMarketId,
@@ -30,6 +30,9 @@ const selected = defineModel<string[]>({ required: true })
 
 defineEmits<{ continue: []; skip: []; close: [] }>()
 
+const marketLabel = (labelKey: string) =>
+  t(`homePage.hero.watchlist.onboarding.marketLabels.${labelKey}`)
+
 // Picking a market replaces any other pick; picking the selected one clears it.
 const toggle = (id: string) => {
   selected.value = selected.value.includes(id) ? [] : [id]
@@ -46,20 +49,19 @@ const toggle = (id: string) => {
     />
 
     <div class="mt-6 grid grid-cols-2 gap-3" role="radiogroup">
-      <WatchlistSelectableCard
+      <AppCard
         v-for="market in WATCHLIST_MARKETS"
         :key="market.id"
         data-test="market-card"
+        interactive
+        surface="alternative"
+        :label="marketLabel(market.labelKey)"
         :selected="selected.includes(market.id)"
-        class="relative flex h-[120px] flex-col justify-between p-4"
-        @toggle="toggle(market.id)"
+        class="h-[120px] justify-between p-4"
+        @click="toggle(market.id)"
       >
         <span class="text-s-16 font-semibold text-black">
-          {{
-            t(
-              `homePage.hero.watchlist.onboarding.marketLabels.${market.labelKey}`,
-            )
-          }}
+          {{ marketLabel(market.labelKey) }}
         </span>
         <!-- Overlapping round asset avatars (Figma logos, 24px with card-bg ring). -->
         <span class="flex items-center" aria-hidden="true">
@@ -77,7 +79,7 @@ const toggle = (id: string) => {
             ]"
           />
         </span>
-      </WatchlistSelectableCard>
+      </AppCard>
     </div>
 
     <div class="mt-6 flex items-center justify-end gap-4">
