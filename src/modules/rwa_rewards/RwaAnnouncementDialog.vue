@@ -1,49 +1,47 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    hide-close
-    z-index-overlay="z-[200]"
-    z-index-container="z-[201]"
-    class="sm:max-w-[480px] mx-auto !rounded-32"
+  <app-modal
+    v-model="isOpen"
+    :show-close-button="false"
+    :aria-label="
+      $t('rwaRewards.announcement_title', { amount: announcementAmount })
+    "
   >
-    <template #content>
-      <div class="flex flex-col overflow-hidden rounded-32">
-        <img
-          :src="overlayImg"
-          alt=""
-          class="w-full select-none pointer-events-none"
-        />
-        <div class="flex flex-col p-6 gap-10">
-          <div class="flex flex-col gap-4">
-            <h1 class="text-heading-xl text-black text-center">
-              {{
-                $t('rwaRewards.announcement_title', {
-                  amount: announcementAmount,
-                })
-              }}
-            </h1>
-            <p
-              class="text-text-base text-text-subtle text-center whitespace-pre-line"
-            >
-              {{
-                $t('rwaRewards.announcement_desc', {
-                  amount: announcementAmount,
-                  count: round1HoldDays,
-                })
-              }}
-            </p>
-          </div>
-          <app-base-button
-            type="secondary"
-            class="w-full text-s-16 font-semibold tracking-[-0.32px]"
-            @click="onGoToOffer"
+    <div class="flex flex-col overflow-hidden">
+      <img
+        :src="overlayImg"
+        alt=""
+        class="w-full select-none pointer-events-none"
+      />
+      <div class="flex flex-col p-6 gap-10">
+        <div class="flex flex-col gap-4">
+          <h1 class="text-heading-xl text-black text-center">
+            {{
+              $t('rwaRewards.announcement_title', {
+                amount: announcementAmount,
+              })
+            }}
+          </h1>
+          <p
+            class="text-text-base text-text-subtle text-center whitespace-pre-line"
           >
-            {{ $t('rwaRewards.go_to_offer') }}
-          </app-base-button>
+            {{
+              $t('rwaRewards.announcement_desc', {
+                amount: announcementAmount,
+                count: round1HoldDays,
+              })
+            }}
+          </p>
         </div>
+        <app-base-button
+          type="secondary"
+          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
+          @click="onGoToOffer"
+        >
+          {{ $t('rwaRewards.go_to_offer') }}
+        </app-base-button>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -51,7 +49,7 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'

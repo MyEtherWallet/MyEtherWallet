@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useRecommendedWatchlist } from '@/modules/home/composables/useRecommendedWatchlist'
 import {
@@ -119,7 +119,7 @@ const skipFromIndustries = () => {
   skipToAssets()
 }
 
-// Close from the header X (the dialog owns isOpen; AppDialog's own close is
+// Close from the header X (the dialog owns isOpen; AppModal's own close is
 // hidden so the header can render the button in-row).
 const close = () => {
   isOpen.value = false
@@ -149,44 +149,41 @@ watch(isOpen, open => {
 </script>
 
 <template>
-  <AppDialog
-    v-model:is-open="isOpen"
-    hide-close
-    class="sm:mx-auto sm:w-full sm:max-w-[480px]"
+  <AppModal
+    v-model="isOpen"
+    :show-close-button="false"
+    :aria-label="$t('homePage.hero.watchlist.title')"
     data-test="watchlist-onboarding-dialog"
   >
-    <template #content>
-      <!-- Figma modal: 24px padding on all sides (the close button sits at 16px,
-           matching AppDialog's absolute top-4/right-4). v-auto-animate smoothly
-           animates the modal height as the active step swaps. -->
-      <div v-auto-animate class="p-6">
-        <WatchlistStepMarkets
-          v-if="activeStep === 0"
-          v-model="selectedMarkets"
-          @continue="goToIndustries"
-          @skip="skipFromMarkets"
-          @close="close"
-        />
-        <WatchlistStepIndustries
-          v-else-if="activeStep === 1"
-          v-model="selectedCategoryIds"
-          :categories="categories"
-          :is-loading="isLoadingCategories"
-          @continue="goToAssets"
-          @back="goToMarkets"
-          @skip="skipFromIndustries"
-          @close="close"
-        />
-        <WatchlistStepAssets
-          v-else
-          v-model="selectedAssetIds"
-          :assets="assets"
-          :is-loading="isLoadingStep3"
-          @done="finish"
-          @back="backToIndustries"
-          @close="close"
-        />
-      </div>
-    </template>
-  </AppDialog>
+    <!-- Figma modal: 24px padding on all sides. v-auto-animate smoothly
+         animates the modal height as the active step swaps. -->
+    <div v-auto-animate class="p-6">
+      <WatchlistStepMarkets
+        v-if="activeStep === 0"
+        v-model="selectedMarkets"
+        @continue="goToIndustries"
+        @skip="skipFromMarkets"
+        @close="close"
+      />
+      <WatchlistStepIndustries
+        v-else-if="activeStep === 1"
+        v-model="selectedCategoryIds"
+        :categories="categories"
+        :is-loading="isLoadingCategories"
+        @continue="goToAssets"
+        @back="goToMarkets"
+        @skip="skipFromIndustries"
+        @close="close"
+      />
+      <WatchlistStepAssets
+        v-else
+        v-model="selectedAssetIds"
+        :assets="assets"
+        :is-loading="isLoadingStep3"
+        @done="finish"
+        @back="backToIndustries"
+        @close="close"
+      />
+    </div>
+  </AppModal>
 </template>
