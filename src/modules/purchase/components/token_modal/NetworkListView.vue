@@ -18,17 +18,12 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center h-12 px-1 bg-white border-4 border-border-default rounded-24 flex-none"
-    >
-      <app-searchbar
-        v-model="searchInput"
-        size="compact"
-        bg-class="bg-transparent"
-        class="flex-1"
-        :placeholder="$t('purchase.select_token.search_placeholder')"
-      />
-    </div>
+    <app-searchbar
+      v-model="searchInput"
+      variant="outline"
+      class="flex-none"
+      :placeholder="$t('purchase.select_token.search_placeholder')"
+    />
 
     <div
       v-if="isLoading"

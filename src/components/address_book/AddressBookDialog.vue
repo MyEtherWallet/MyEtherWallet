@@ -37,9 +37,9 @@
               <div class="px-4 sm:px-6 flex items-center gap-3">
                 <app-searchbar
                   v-model="searchInput"
+                  variant="default"
                   class="grow"
                   :placeholder="$t('common.search_by_name_or_address')"
-                  bg-class="bg-background-default-hover"
                 />
                 <app-base-button
                   size="medium"

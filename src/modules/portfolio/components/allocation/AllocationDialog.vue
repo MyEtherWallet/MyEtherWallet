@@ -18,11 +18,11 @@
           class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
         >
           <div
-            class="flex gap-4 justify-between items-center mb-4 bg-background-default-hover rounded-full p-1"
+            class="flex gap-4 justify-between items-center mb-4 rounded-full bg-background-formfield"
           >
             <app-searchbar
-              bg-class="bg-background-alternative"
               v-model="searchInput"
+              variant="outline"
               class="grow"
               :placeholder="$t('select_token.search')"
             />

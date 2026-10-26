@@ -16,14 +16,14 @@
       <div class="flex items-center justify-center flex-col">
         <div
           ref="focusTarget"
-          class="flex grow gap-4 justify-between items-center p-1.5 bg-background-default-hover !w-full md:w-auto max-w-[500px] rounded-full relative"
+          class="flex grow !w-full md:w-auto max-w-[500px] relative"
         >
           <app-searchbar
-            bg-class="bg-background-alternative"
             v-model="searchInput"
+            variant="outline"
             class="grow"
             :placeholder="$t('stocks.search_stock_name_or_ticker')"
-            @keyup.enter="handleEnter"
+            @submit="handleEnter"
           />
           <transition name="fade" mode="out-in">
             <div
