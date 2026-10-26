@@ -14,6 +14,15 @@ describe('AppContentGroup', () => {
     expect(wrapper.text()).toContain('Total value')
   })
 
+  it('lets a title slot replace the title text', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'Fallback' },
+      slots: { title: '<b data-testid="custom-title">ETH</b>' },
+    })
+    expect(wrapper.find('[data-testid="custom-title"]').exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('Fallback')
+  })
+
   it('omits the description block when no description is given', () => {
     const wrapper = mount(AppContentGroup, { props: { title: 'Only title' } })
     expect(wrapper.find(description()).exists()).toBe(false)
@@ -36,9 +45,11 @@ describe('AppContentGroup', () => {
     const dark = mount(AppContentGroup, {
       props: { title: 'T', description: 'D', tone: 'inverse' },
     })
-    expect(dark.get(title()).classes()).toContain('text-white')
+    expect(dark.get(title()).classes()).toContain('text-text-inverted')
     expect(dark.get(title()).classes()).not.toContain('text-text-default')
-    expect(dark.get(description()).classes()).toContain('text-white/70')
+    expect(dark.get(description()).classes()).toContain(
+      'text-text-inverted-subtle',
+    )
   })
 
   it('size "m" uses label/base title and text/sm description', () => {
@@ -116,6 +127,22 @@ describe('AppContentGroup', () => {
     expect(rootClasses).not.toContain('items-start')
   })
 
+  it('align "center" centres both lines (Modal header)', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'T', description: 'D', align: 'center' },
+      slots: { 'title-icon': '<svg />' },
+    })
+    const rootClasses = wrapper.get('[data-testid="cg-root"]').classes()
+    expect(rootClasses).toContain('text-center')
+    expect(rootClasses).not.toContain('items-center')
+    expect(wrapper.get(title()).element.parentElement!.classList).toContain(
+      'justify-center',
+    )
+    expect(
+      wrapper.get(description()).element.parentElement!.classList,
+    ).toContain('justify-center')
+  })
+
   it('title is single-line (truncates) by default; description wraps', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D' },
@@ -139,8 +166,14 @@ describe('AppContentGroup', () => {
     })
     expect(wrapper.text()).not.toContain('Secret')
     expect(wrapper.text()).not.toContain('Hidden')
-    expect(wrapper.html()).toContain('animate-pulse')
-    expect(wrapper.html()).toContain('bg-background-skeleton')
+    const bars = wrapper.findAll('[data-testid="skeleton"]')
+    expect(bars).toHaveLength(2)
+    expect(bars[0].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[35px]']),
+    )
+    expect(bars[1].classes()).toEqual(
+      expect.arrayContaining(['h-3', 'w-[79px]']),
+    )
     expect(wrapper.find(title()).exists()).toBe(false)
   })
 

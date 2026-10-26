@@ -1,130 +1,124 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
+  <app-modal
+    v-model="isOpen"
     :title="$t('perps.withdraw.title')"
-    class="sm:max-w-[460px] sm:mx-auto"
-    has-content-gutter
-    @close-dialog="$emit('close')"
+    @close="$emit('close')"
   >
-    <template #content>
-      <div v-if="walletAddress" class="mb-6">
-        <div
-          class="bg-background-brand-subtle rounded-20 p-4 bg-background-brand-subtle mb-4"
-        >
-          <!-- Amount -->
-          <div class="mb-4">
-            <perps-amount
-              v-model:amount="amount"
-              v-model:error="amountError"
-              :title="$t('perps.withdraw.amount-label')"
-              :validate-input="validateAmount"
-            >
-              <template #footer>
-                <div class="relative">
-                  <!-- Error -->
-                  <transition name="fade">
-                    <p
-                      v-if="amountError"
-                      class="text-text-error text-s-12 absolute -top-2.5 left-0"
-                    >
-                      {{ amountError }}
-                    </p>
-                  </transition>
+    <div v-if="walletAddress" class="px-4 sm:px-6 mb-6">
+      <div
+        class="bg-background-brand-subtle rounded-20 p-4 bg-background-brand-subtle mb-4"
+      >
+        <!-- Amount -->
+        <div class="mb-4">
+          <perps-amount
+            v-model:amount="amount"
+            v-model:error="amountError"
+            :title="$t('perps.withdraw.amount-label')"
+            :validate-input="validateAmount"
+          >
+            <template #footer>
+              <div class="relative">
+                <!-- Error -->
+                <transition name="fade">
+                  <p
+                    v-if="amountError"
+                    class="text-text-error text-s-12 absolute -top-2.5 left-0"
+                  >
+                    {{ amountError }}
+                  </p>
+                </transition>
 
-                  <div class="flex justify-start justify-between mt-3">
-                    <button
-                      v-if="!hasOpenPositions"
-                      class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                      @click="setMax"
-                    >
-                      {{ $t('perps.withdraw.max') }}
-                    </button>
-                    <!-- Available balance -->
-                    <div class="ml-auto text-left">
-                      <span class="text-text-subtle text-s-13">{{
-                        $t('perps.withdraw.available-label')
-                      }}</span>
-                      <span class="font-medium text-s-13 ml-1">
-                        {{ formatUsd(withdrawableMargin) }} USDC
-                      </span>
-                    </div>
+                <div class="flex justify-start justify-between mt-3">
+                  <button
+                    v-if="!hasOpenPositions"
+                    class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    @click="setMax"
+                  >
+                    {{ $t('perps.withdraw.max') }}
+                  </button>
+                  <!-- Available balance -->
+                  <div class="ml-auto text-left">
+                    <span class="text-text-subtle text-s-13">{{
+                      $t('perps.withdraw.available-label')
+                    }}</span>
+                    <span class="font-medium text-s-13 ml-1">
+                      {{ formatUsd(withdrawableMargin) }} USDC
+                    </span>
                   </div>
                 </div>
-              </template>
-            </perps-amount>
-          </div>
-          <!-- Withdraw to -->
-          <div class="mb-4">
-            <p
-              class="text-text-subtle text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
-            >
-              {{ $t('perps.withdraw.withdraw-to-label') }}
+              </div>
+            </template>
+          </perps-amount>
+        </div>
+        <!-- Withdraw to -->
+        <div class="mb-4">
+          <p
+            class="text-text-subtle text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
+          >
+            {{ $t('perps.withdraw.withdraw-to-label') }}
+          </p>
+          <div class="flex items-center mb-1">
+            <app-blockie :address="walletAddress" class="mr-2" :size="6" />
+            <p class="font-medium text-s-12 tracking-sp-06 text-wrap break-all">
+              {{ walletAddress }}
             </p>
-            <div class="flex items-center mb-1">
-              <app-blockie :address="walletAddress" class="mr-2" :size="6" />
-              <p
-                class="font-medium text-s-12 tracking-sp-06 text-wrap break-all"
-              >
-                {{ walletAddress }}
-              </p>
-            </div>
-          </div>
-          <!-- Withdrawal fee -->
-          <div class="flex justify-between text-s-13">
-            <span class="text-text-subtle">{{
-              $t('perps.withdraw.withdrawal-fee-label')
-            }}</span>
-            <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
           </div>
         </div>
-
-        <app-warning
-          v-if="hasOpenPositions"
-          :title="$t('perps.withdraw.liquidation-risk-title')"
-          :text="$t('perps.withdraw.liquidation-risk-text')"
-          class="mb-4"
-        />
-        <transition name="fade">
-          <div
-            v-if="error"
-            class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-          >
-            <p class="text-text-error text-s-14 text-center">
-              {{ error }}
-            </p>
-          </div>
-        </transition>
-        <app-base-button
-          v-if="addressBookLoading"
-          disabled
-          :is-loading="true"
-          class="w-full"
-          >Withdraw</app-base-button
-        >
-        <app-base-button
-          v-else-if="isAddressAuthorized"
-          :disabled="sending || !isValidAmount"
-          :is-loading="sending"
-          class="w-full"
-          @click="submitWithdraw"
-          >{{ $t('perps.withdraw.withdraw-button') }}</app-base-button
-        >
-        <app-base-button
-          v-else
-          :disabled="authorizing"
-          :is-loading="authorizing"
-          class="w-full"
-          @click="submitAuthorize"
-          >{{ $t('perps.withdraw.authorize-button') }}</app-base-button
-        >
+        <!-- Withdrawal fee -->
+        <div class="flex justify-between text-s-13">
+          <span class="text-text-subtle">{{
+            $t('perps.withdraw.withdrawal-fee-label')
+          }}</span>
+          <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
+        </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <app-warning
+        v-if="hasOpenPositions"
+        :title="$t('perps.withdraw.liquidation-risk-title')"
+        :text="$t('perps.withdraw.liquidation-risk-text')"
+        class="mb-4"
+      />
+      <transition name="fade">
+        <div
+          v-if="error"
+          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
+        >
+          <p class="text-text-error text-s-14 text-center">
+            {{ error }}
+          </p>
+        </div>
+      </transition>
+      <app-base-button
+        v-if="addressBookLoading"
+        disabled
+        :is-loading="true"
+        class="w-full"
+        >Withdraw</app-base-button
+      >
+      <app-base-button
+        v-else-if="isAddressAuthorized"
+        :disabled="sending || !isValidAmount"
+        :is-loading="sending"
+        class="w-full"
+        @click="submitWithdraw"
+        >{{ $t('perps.withdraw.withdraw-button') }}</app-base-button
+      >
+      <app-base-button
+        v-else
+        :disabled="authorizing"
+        :is-loading="authorizing"
+        class="w-full"
+        @click="submitAuthorize"
+        >{{ $t('perps.withdraw.authorize-button') }}</app-base-button
+      >
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { perpsClient, USDC_DECIMALS, PERPS_CHAIN_ID } from '../configs'

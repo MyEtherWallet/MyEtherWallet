@@ -19,11 +19,11 @@
       <!-- Search and Sort -->
       <div
         :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
-        class="flex grow gap-1 justify-between items-center bg-background-default-hover rounded-full p-1"
+        class="flex grow gap-1 justify-between items-center rounded-full bg-background-formfield"
       >
         <app-searchbar
-          bg-class="bg-background-alternative"
           v-model="searchInput"
+          variant="outline"
           :class="{ 'md-header:max-w-[315px]': !isOpenSideMenu }"
           class="grow"
         />
