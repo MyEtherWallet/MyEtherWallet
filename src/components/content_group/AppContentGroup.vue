@@ -79,6 +79,12 @@ const supportingClass = computed(() => [
   TONE_SUPPORTING_CLASS[props.tone],
 ])
 
+// A skeleton row is as tall as the line it stands in for, so loading doesn't
+// grow the group: 22px (py-[5px] around the 12px bar), except the M
+// supporting line (text/sm), which is 20px.
+const skeletonRowClass = (supporting: boolean) =>
+  supporting && props.size === 'm' ? 'py-1' : 'py-[5px]'
+
 const titleClass = computed(() =>
   props.inverted ? supportingClass.value : emphasisClass.value,
 )
@@ -95,14 +101,14 @@ const descriptionClass = computed(() => [
     class="flex flex-col min-w-0"
     :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes. -->
+    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. -->
     <template v-if="loading">
-      <div class="py-[5px]">
+      <div :class="skeletonRowClass(inverted)">
         <div
           class="inline-block h-3 w-[35px] rounded-[4px] bg-background-skeleton animate-pulse"
         ></div>
       </div>
-      <div v-if="hasDescription" class="py-[5px]">
+      <div v-if="hasDescription" :class="skeletonRowClass(!inverted)">
         <div
           class="inline-block h-3 w-[79px] rounded-[4px] bg-background-skeleton animate-pulse"
         ></div>
