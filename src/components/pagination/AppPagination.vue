@@ -4,7 +4,12 @@
  * 1074:3108). Moves between pages of a long list or table with previous/next
  * icon buttons. `v-model` is the 1-based page; the buttons disable at the
  * bounds, so a single page renders with both disabled (callers `v-if` it away
- * if they prefer). Breakpoint is responsive at `md`, not a prop.
+ * if they prefer).
+ *
+ * The Mobile breakpoint is a container query, not a prop: below 48rem of its own
+ * width (the `md` value) it drops to the Mobile label and gap. It follows the
+ * space the pager actually gets (a side panel narrows it too), and a narrow
+ * wrapper forces Mobile in previews.
  *
  * Gap is 12/20 rather than Figma's 16/24 because AppDivider is an 8px slot with
  * the rule centred: the line-to-row distance still lands on 16/24.
@@ -37,40 +42,39 @@ const go = (n: number) => {
 </script>
 
 <template>
-  <nav
-    :aria-label="t('common.pagination')"
-    class="flex w-full flex-col gap-3 md:gap-5"
-  >
-    <AppDivider :variant="PAGINATION_DIVIDER[variant]" />
-    <div class="flex items-center gap-3">
-      <p
-        class="min-w-0 flex-1 text-text-sm text-text-default md:text-text-base"
-        aria-live="polite"
-      >
-        {{
-          label
-            ? label(page, totalPages)
-            : t('common.showing_page', { current: page, total: totalPages })
-        }}
-      </p>
-      <AppBtnIcon
-        variant="filled"
-        size="l"
-        :label="t('common.previous_page')"
-        :disabled="page <= 1"
-        @click="go(page - 1)"
-      >
-        <AppIcon name="chevron-left" variant="filled" size="m" />
-      </AppBtnIcon>
-      <AppBtnIcon
-        variant="filled"
-        size="l"
-        :label="t('common.next_page')"
-        :disabled="page >= totalPages"
-        @click="go(page + 1)"
-      >
-        <AppIcon name="chevron-right" variant="filled" size="m" />
-      </AppBtnIcon>
+  <nav :aria-label="t('common.pagination')" class="@container w-full">
+    <div class="flex flex-col gap-3 @3xl:gap-5">
+      <AppDivider :variant="PAGINATION_DIVIDER[variant]" />
+      <div class="flex items-center gap-3">
+        <p
+          class="min-w-0 flex-1 text-text-sm text-text-default @3xl:text-text-base"
+          aria-live="polite"
+        >
+          {{
+            label
+              ? label(page, totalPages)
+              : t('common.showing_page', { current: page, total: totalPages })
+          }}
+        </p>
+        <AppBtnIcon
+          variant="filled"
+          size="l"
+          :label="t('common.previous_page')"
+          :disabled="page <= 1"
+          @click="go(page - 1)"
+        >
+          <AppIcon name="chevron-left" variant="filled" size="m" />
+        </AppBtnIcon>
+        <AppBtnIcon
+          variant="filled"
+          size="l"
+          :label="t('common.next_page')"
+          :disabled="page >= totalPages"
+          @click="go(page + 1)"
+        >
+          <AppIcon name="chevron-right" variant="filled" size="m" />
+        </AppBtnIcon>
+      </div>
     </div>
   </nav>
 </template>
