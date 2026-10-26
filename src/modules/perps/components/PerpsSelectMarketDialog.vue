@@ -10,12 +10,12 @@
       <div class="flex flex-col">
         <!-- Search + Sort -->
         <div
-          class="flex gap-2 justify-between items-center mb-2 mx-4 bg-background-default-hover rounded-full p-1"
+          class="flex gap-2 justify-between items-center mb-2 mx-4 rounded-full bg-background-formfield"
         >
           <app-searchbar
             :model-value="search"
+            variant="outline"
             class="grow"
-            bg-class="bg-transparent"
             :placeholder="$t('perps.select-market.search-placeholder')"
             @update:model-value="$emit('update:search', $event as string)"
           />

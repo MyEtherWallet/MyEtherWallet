@@ -120,6 +120,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'scroll-fade',
+              name: 'DevScrollFade',
+              component: () => import('@/views/ViewScrollFadeShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'segmented-control',
               name: 'DevSegmentedControl',
               component: () =>
@@ -196,6 +202,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'button',
               name: 'DevButton',
               component: () => import('@/views/ViewButtonPreview.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'button-group',
+              name: 'DevButtonGroup',
+              component: () => import('@/views/ViewButtonGroupShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

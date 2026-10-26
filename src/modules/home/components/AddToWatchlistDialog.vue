@@ -41,8 +41,8 @@ const { items, isLoading } = useAssetPicker(tab, query)
 
         <AppSearchbar
           v-model="query"
+          variant="default"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-background-default"
           class="mt-5"
         />
 
