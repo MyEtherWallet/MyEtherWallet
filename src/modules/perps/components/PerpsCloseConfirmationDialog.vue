@@ -1,7 +1,7 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" class="w-full max-w-[440px]">
-    <template #title>
-      <div class="flex items-center gap-2.5 mr-8 pt-5 pl-6">
+  <app-modal v-model="isOpen" :title="dialogTitle">
+    <template #header>
+      <div class="flex items-center gap-2.5">
         <app-token-logo
           :url="getLogoUrl(displaySymbol)"
           :symbol="displaySymbol"
@@ -11,111 +11,107 @@
         <span class="font-bold text-s-20">{{ dialogTitle }}</span>
       </div>
     </template>
-    <template #content>
-      <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
-        <!-- Close Details -->
-        <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.side-label')
-            }}</span>
-            <span
-              class="font-bold"
-              :class="
-                direction === 'long' ? 'text-text-error' : 'text-text-success'
-              "
-              >{{
-                direction === 'long'
-                  ? $t('perps.close.sell-close-long')
-                  : $t('perps.close.buy-close-short')
-              }}</span
-            >
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.order-type-label')
-            }}</span>
-            <span class="font-bold">{{ $t('perps.confirm.market') }}</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.market-price')
-            }}</span>
-            <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.close.close-amount-label')
-            }}</span>
-            <span class="font-bold">{{
-              formatUsd(parseFloat(closeAmount) || 0)
-            }}</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium"
-              >{{ $t('perps.trade.size') }}
-            </span>
-            <span class="font-bold"
-              >{{ closeOrderSize }} {{ displaySymbol }}</span
-            >
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.close.close-percentage-label')
-            }}</span>
-            <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.close.current-pnl-label')
-            }}</span>
-            <span
-              class="font-bold"
-              :class="
-                positionPnl >= 0 ? 'text-text-success' : 'text-text-error'
-              "
-              >{{ formatPnl(String(positionPnl)) }} ({{
-                (positionRoe * 100).toFixed(2)
-              }}%)</span
-            >
-          </div>
-        </div>
-
-        <!-- Error -->
-        <AppBanner v-if="closeError" type="alert" :description="closeError" />
-
-        <!-- Actions -->
-        <div class="flex flex-col gap-1">
-          <app-base-button
-            :disabled="isClosing"
-            :is-loading="isClosing"
-            class="flex-1"
-            @click="$emit('confirm')"
+    <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
+      <!-- Close Details -->
+      <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.side-label')
+          }}</span>
+          <span
+            class="font-bold"
+            :class="
+              direction === 'long' ? 'text-text-error' : 'text-text-success'
+            "
             >{{
-              isClosing
-                ? $t('perps.close.closing')
-                : $t('perps.close.confirm-close')
-            }}</app-base-button
+              direction === 'long'
+                ? $t('perps.close.sell-close-long')
+                : $t('perps.close.buy-close-short')
+            }}</span
           >
-          <app-base-button
-            type="tertiary"
-            surface="alternative"
-            size="large"
-            :disabled="isClosing"
-            class="mx-auto w-full"
-            @click="isOpen = false"
-            >{{ $t('perps.confirm.cancel') }}</app-base-button
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.order-type-label')
+          }}</span>
+          <span class="font-bold">{{ $t('perps.confirm.market') }}</span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.market-price')
+          }}</span>
+          <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.close.close-amount-label')
+          }}</span>
+          <span class="font-bold">{{
+            formatUsd(parseFloat(closeAmount) || 0)
+          }}</span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium"
+            >{{ $t('perps.trade.size') }}
+          </span>
+          <span class="font-bold"
+            >{{ closeOrderSize }} {{ displaySymbol }}</span
+          >
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.close.close-percentage-label')
+          }}</span>
+          <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.close.current-pnl-label')
+          }}</span>
+          <span
+            class="font-bold"
+            :class="positionPnl >= 0 ? 'text-text-success' : 'text-text-error'"
+            >{{ formatPnl(String(positionPnl)) }} ({{
+              (positionRoe * 100).toFixed(2)
+            }}%)</span
           >
         </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <!-- Error -->
+      <AppBanner v-if="closeError" type="alert" :description="closeError" />
+
+      <!-- Actions -->
+      <div class="flex flex-col gap-1">
+        <app-base-button
+          :disabled="isClosing"
+          :is-loading="isClosing"
+          class="flex-1"
+          @click="$emit('confirm')"
+          >{{
+            isClosing
+              ? $t('perps.close.closing')
+              : $t('perps.close.confirm-close')
+          }}</app-base-button
+        >
+        <app-base-button
+          type="tertiary"
+          surface="alternative"
+          size="large"
+          :disabled="isClosing"
+          class="mx-auto w-full"
+          @click="isOpen = false"
+          >{{ $t('perps.confirm.cancel') }}</app-base-button
+        >
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBanner from '@/components/banner/AppBanner.vue'
