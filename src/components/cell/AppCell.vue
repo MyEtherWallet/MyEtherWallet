@@ -102,6 +102,16 @@
       </div>
     </template>
 
+    <!-- Decorative state glyph (the Accordion chevron): not an action, so it
+         stays while loading and clicks on it toggle the cell. -->
+    <div
+      v-if="$slots.indicator"
+      class="flex h-11 shrink-0 items-center justify-center"
+      aria-hidden="true"
+    >
+      <slot name="indicator" />
+    </div>
+
     <span v-if="radio" class="flex shrink-0" data-test="cell-radio" inert>
       <AppRadio :model-value="selected" :value="true" :name="radioName" />
     </span>
