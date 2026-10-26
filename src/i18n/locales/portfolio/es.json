@@ -52,8 +52,6 @@
       "balance_header": "Saldo",
       "add_button": "+ Agregar",
       "hide_no_value": "Ocultar tokens sin valor",
-      "add_to_watchlist": "Añadir a la lista de seguimiento",
-      "remove_from_watchlist": "Quitar de la lista de seguimiento",
       "trade": "Operar",
       "empty_watchlist": "No tienes ningún token en tu lista de seguimiento.",
       "discover_more_tokens": "Descubre más tokens",
@@ -63,7 +61,6 @@
       "no_results": "No se encontraron resultados para \"{query}\".",
       "results_of": "{count} de {total} resultados",
       "page_current": "{current}",
-      "page_of": "de",
       "page_total": "{total}"
     },
     "custom_token": {

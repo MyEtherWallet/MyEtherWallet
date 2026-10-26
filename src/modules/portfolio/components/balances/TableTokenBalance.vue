@@ -1,22 +1,16 @@
 <template>
   <div v-if="isWalletConnected">
-    <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 pt-2 pb-6 mb-4 lg:gap-6 border-b border-border-subtle"
-    >
-      <div
-        class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-4"
-      >
-        <div
-          class="flex grow justify-between items-center bg-background-default-hover rounded-full p-1 w-full xs:max-w-[500px]"
-        >
-          <app-searchbar
-            bg-class="bg-background-alternative"
-            v-model="searchInput"
-            class="grow"
-          />
-        </div>
+    <AppTableWrapper :title="$t('portfolio.your_balances')" title-tag="h1">
+      <template #toolbar="{ size }">
+        <AppSearchbar
+          v-if="!isComingSoon"
+          v-model="searchInput"
+          size="compact"
+          :class="size === 's' ? 'w-full' : 'w-60'"
+        />
+        <slot name="filters" :size="size" />
         <app-pop-up-menu
-          v-if="view !== 'watchlist'"
+          v-if="!isComingSoon && view !== 'watchlist'"
           :placeholder="$t('common.action_menu')"
           location="right"
         >
@@ -64,20 +58,8 @@
             </div>
           </template>
         </app-pop-up-menu>
-        <div
-          v-if="paginatedArray.length && props.view === 'custom'"
-          class="flex-none"
-        >
-          <app-base-button size="medium" @click="openAddCustom"
-            >{{ $t('portfolio.table.add_button') }}
-          </app-base-button>
-        </div>
-      </div>
-      <!-- TOTAL VALUE-->
-      <div
-        class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2"
-      >
-        <div class="lg:text-right">
+        <!-- TOTAL VALUE-->
+        <div v-if="!isComingSoon" class="ml-auto text-right">
           <p
             class="font-bold text-text-subtle uppercase tracking-sp-06 text-s-14"
           >
@@ -91,507 +73,241 @@
           </p>
           <div
             v-else
-            class="bg-background-default animate-pulse w-[100px] h-6 rounded-lg"
+            class="bg-background-default animate-pulse w-25 h-6 rounded-lg ml-auto"
           ></div>
         </div>
+      </template>
+      <template v-if="view === 'custom' && emptyState !== 'custom'" #action>
+        <app-base-button size="medium" @click="openAddCustom"
+          >{{ $t('portfolio.table.add_button') }}
+        </app-base-button>
+      </template>
+
+      <div v-if="isComingSoon" class="text-center my-10">
+        {{ $t('common.coming_soon') }}
       </div>
-    </div>
-    <div :class="['static', getTableHeight]" ref="tableContainer">
-      <table
-        class="w-full text-sm table-fixed border-separate border-spacing-y-0"
+      <AppTable
+        v-else-if="isLoading || !emptyState"
+        v-model:sort="sort"
+        v-model:page="page"
+        :default-sort="DEFAULT_SORT"
+        :columns="columns"
+        :pages="totalPages"
+        :pagination-label="resultsLabel"
+        :loading="isLoading"
+        :loading-rows="PER_PAGE"
+        footer="pagination"
+        watchlist
+        actions
       >
-        <!-- Header-->
-        <thead class="bg-white">
-          <tr
-            class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 border-b border-border-subtle font-bold"
-          >
-            <!-- Watchlist -->
-            <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
-            <!-- Name & Balance -->
-            <th
-              class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-              colspan="2"
+        <AppTableRow
+          v-for="(token, index) in paginatedArray"
+          :key="
+            index +
+            token.name +
+            token.market_cap +
+            token.coinId +
+            token.contract
+          "
+          :title="token.symbol.toUpperCase()"
+          :description="getTokenDisplayName(token)"
+          :to="getTokenRoute(token)"
+          :watchlisted="
+            getWatchlistId(token)
+              ? isWatchListed(getWatchlistId(token))
+              : undefined
+          "
+          @update:watchlisted="setWatchlistToken(token)"
+          @click="onTokenLinkClick(token)"
+        >
+          <template v-if="token.ondo" #title>
+            {{ stockBaseSymbol(token.symbol)
+            }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+              >on</span
             >
-              <div
-                class="flex items-center gap-1 ml-11 font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.NAME,
-                }"
-                @click="setHeaderSort(SortValueString.NAME)"
-              >
-                {{ $t('portfolio.table.token_header') }}
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.NAME &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.NAME &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
-            <!-- Market Cap -->
-            <th
-              class="hidden cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-              :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
-                }"
-                @click="setHeaderSort(SortValueString.MARKET_CAP)"
-              >
-                {{ $t('portfolio.table.market_cap_header') }}
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'desc'
-                  "
-                  class="absolute -right-4"
-                />
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'asc'
-                  "
-                  class="absolute -right-4"
-                />
-              </div>
-            </th>
-            <!-- Price -->
-            <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PRICE,
-                }"
-                @click="setHeaderSort(SortValueString.PRICE)"
-              >
-                {{ $t('portfolio.table.price_header') }}
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.PRICE &&
-                    tableDirection === 'desc'
-                  "
-                  class="absolute -right-4"
-                />
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.PRICE &&
-                    tableDirection === 'asc'
-                  "
-                  class="absolute -right-4"
-                />
-              </div>
-            </th>
-            <!-- 24h % -->
-            <th
-              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PERCENT,
-                }"
-                @click="setHeaderSort(SortValueString.PERCENT)"
-              >
-                {{ $t('portfolio.table.24h_header') }}
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'desc'
-                  "
-                  class="absolute -right-4"
-                />
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'asc'
-                  "
-                  class="absolute -right-4"
-                />
-              </div>
-            </th>
-
-            <!--Balance -->
-            <th
-              class="cursor-pointer pl-1 pr-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative text-right font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.VALUE,
-                }"
-                @click="setHeaderSort(SortValueString.VALUE)"
-              >
-                {{ $t('portfolio.table.balance_header') }}
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.VALUE &&
-                    tableDirection === 'desc'
-                  "
-                  class="absolute -right-4"
-                />
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="
-                    headerSort === SortValueString.VALUE &&
-                    tableDirection === 'asc'
-                  "
-                  class="absolute -right-4"
-                />
-              </div>
-            </th>
-            <!-- Actions -->
-            <th
-              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-40 xl:w-[180px] 2xl:w-[200px]"
-            ></th>
-          </tr>
-        </thead>
-        <!-- Body-->
-        <tbody v-if="!isLoading">
-          <tr
-            v-for="(token, index) in paginatedArray"
-            :key="
-              index +
-              token.name +
-              token.market_cap +
-              token.coinId +
-              token.contract
+          </template>
+          <template #avatar="{ size }">
+            <AppAvatar
+              :size="size"
+              :type="token.ondo ? 'stocks' : 'cryptoAsset'"
+              :url="token.logo_url"
+              :symbol="token.symbol"
+            />
+          </template>
+          <AppTableCell
+            :column="SortValueString.MARKET_CAP"
+            :value="
+              token.market_cap ? formatFiat(token.market_cap).display : '-'
             "
-            class="h-14 cursor-pointer hoverBGWhite"
-            @click="goToTokenPage(token)"
-          >
-            <!-- Watchlist -->
-            <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
-              <AppCellWatchlistToggle
-                v-if="getWatchlistId(token)"
-                :model-value="isWatchListed(getWatchlistId(token))"
-                @update:model-value="setWatchlistToken(token)"
-              />
-            </td>
-            <!-- Name -->
-            <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
-              <router-link
-                :to="getTokenRoute(token)"
-                class="flex items-center gap-3"
-                @click.stop="onTokenLinkClick(token)"
-              >
-                <app-token-logo
-                  :url="token.logo_url"
-                  :symbol="token.symbol"
-                  :is-stock="token.ondo !== undefined"
-                  class="inline-block rounded-full shadow-token"
-                />
-                <div class="truncate">
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :is-stock="token.ondo !== undefined"
-                  />
-                  <app-tooltip
-                    :text="getTokenName(token)"
-                    v-if="getTokenName(token).length > 20"
-                  >
-                    <p
-                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                    >
-                      {{ getTokenName(token) }}
-                    </p>
-                  </app-tooltip>
-                  <p
-                    v-else
-                    class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                  >
-                    {{ getTokenName(token) }}
-                  </p>
-                </div>
-              </router-link>
-            </td>
-            <!-- Market Cap -->
-            <td
-              class="hidden px-1 py-1 text-right font-normal text-s-14 text-black"
-              :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
-            >
-              {{
-                token.market_cap ? formatFiat(token.market_cap).display : '-'
-              }}
-            </td>
-            <!-- Price -->
-            <td
-              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-            >
-              {{ token.price ? formatFiat(token.price).display : '-' }}
-            </td>
-            <!-- 24H % -->
-            <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2">
-                <p
-                  class="text-s-13 font-normal mb-1"
-                  :class="[
-                    token.price_change_percentage_24h
-                      ? parsePercent(
-                          token.price_change_percentage_24h,
-                        ).includes('-')
-                        ? 'text-text-error'
-                        : 'text-text-success'
-                      : 'text-black',
-                  ]"
-                >
-                  {{
-                    token.price_change_percentage_24h
-                      ? parsePercent(token.price_change_percentage_24h)
-                      : '-'
-                  }}
-                </p>
-                <table-sparkline
-                  v-if="
-                    token.sparkline_in_7d && token.sparkline_in_7d.length > 0
-                  "
-                  :points="token.sparkline_in_7d"
-                  :width="70"
-                  :height="24"
-                  :max-points="34"
-                  fill
-                  :percent-change="token.price_change_percentage_24h"
-                />
-              </div>
-            </td>
+          />
+          <AppTableCell
+            :column="SortValueString.PRICE"
+            :value="token.price ? formatFiat(token.price).display : '-'"
+          />
+          <AppTableCell
+            :column="SortValueString.PERCENT"
+            :value="token.price_change_percentage_24h ? undefined : '-'"
+            :change="token.price_change_percentage_24h || undefined"
+            :series="
+              token.sparkline_in_7d?.length ? token.sparkline_in_7d : undefined
+            "
+          />
+          <AppTableCell :column="SortValueString.VALUE">
+            <p class="max-w-full truncate text-label-base text-text-default">
+              {{ token.fiatBalanceFormatted }}
+            </p>
+            <p class="max-w-full truncate text-label-xs text-text-subtle">
+              {{ formatFloatingPointValue(token.balance).value }}
+              <span class="uppercase">{{ truncate(token.symbol, 7) }}</span>
+            </p>
+          </AppTableCell>
 
-            <!-- Balance -->
-            <td class="pl-1 pr-1 py-1 text-right">
-              <p class="font-normal text-s-14 text-black">
-                {{ token.fiatBalanceFormatted }}
-              </p>
-              <p class="text-text-subtle text-s-12 mt-0.5">
-                {{ formatFloatingPointValue(token.balance).value }}
-                <span class="uppercase font-normal text-text-subtle">{{
-                  truncate(token.symbol, 7)
-                }}</span>
-              </p>
-            </td>
-            <!-- Actions -->
-            <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
-              <div
-                class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
+          <template #actions="{ size, surface }">
+            <!-- Overflow menu at S; custom rows keep it at M too so Delete stays reachable. -->
+            <template
+              v-if="size === 's' || (view === 'custom' && size === 'm')"
+            >
+              <app-pop-up-menu
+                v-if="
+                  view === 'custom' ||
+                  hasPrimaryAction(token) ||
+                  isBuyableOnCompatibleChain(token.coinId)
+                "
+                :placeholder="$t('common.action_menu')"
+                location="right"
               >
-                <app-pop-up-menu
-                  :placeholder="$t('common.action_menu')"
-                  location="right"
-                >
-                  <template #menu-button="{ toggleMenu }">
-                    <app-btn-icon
-                      :label="$t('common.action_menu')"
-                      @click.stop="toggleMenu"
-                    >
-                      <AppIcon
-                        name="ellipsis-vertical"
-                        variant="filled"
-                        size="s"
-                      />
-                    </app-btn-icon>
-                  </template>
-                  <template #menu-content="{ toggleMenu }">
-                    <div
-                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                    >
-                      <button
-                        v-if="getWatchlistId(token)"
-                        class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
-                        @click.stop="[setWatchlistToken(token), toggleMenu()]"
+                <template #menu-button="{ toggleMenu }">
+                  <app-btn-icon
+                    icon="ellipsis-horizontal"
+                    :label="$t('common.action_menu')"
+                    @click.stop="toggleMenu"
+                  />
+                </template>
+                <template #menu-content="{ toggleMenu }">
+                  <div
+                    class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                  >
+                    <ul v-if="view !== 'custom'">
+                      <li
+                        v-if="isBuyableOnCompatibleChain(token.coinId)"
+                        @click.stop="[buyBtn(token, true), toggleMenu()]"
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                      >
+                        <icon-buy class="text-text-brand w-4 h-4 mr-2" />
+                        <p>{{ $t('common.buy') }}</p>
+                      </li>
+                      <li
+                        v-if="token.ondo !== undefined"
+                        @click.stop="[tradeBtn(token, true), toggleMenu()]"
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                      >
+                        <icon-trade class="text-text-brand w-4 h-4 mr-2" />
+                        <p>{{ $t('portfolio.table.trade') }}</p>
+                      </li>
+                      <li
+                        v-else-if="currentChainhasSwapSupport"
+                        @click.stop="[swapBtn(token, true), toggleMenu()]"
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                      >
+                        <icon-swap class="text-text-brand w-4 h-4 mr-2" />
+                        <p>{{ $t('common.swap') }}</p>
+                      </li>
+                    </ul>
+                    <ul v-else>
+                      <li
+                        @click.stop="[
+                          customTokenAction('edit', token),
+                          toggleMenu(),
+                        ]"
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
                       >
                         <AppIcon
-                          name="star"
-                          size="xxs"
-                          v-if="!isWatchListed(getWatchlistId(token))"
-                          class="cursor-pointer"
-                        />
-                        <AppIcon
-                          name="star"
+                          name="pencil"
                           variant="filled"
                           size="xxs"
-                          v-else
-                          class="cursor-pointer"
+                          class="mr-2"
                         />
-                        <span class="ml-2">{{
-                          isWatchListed(getWatchlistId(token))
-                            ? $t('portfolio.table.remove_from_watchlist')
-                            : $t('portfolio.table.add_to_watchlist')
-                        }}</span>
-                      </button>
-                      <app-divider
-                        v-if="
-                          props.view === 'custom' ||
-                          isBuyableOnCompatibleChain(token.coinId) ||
-                          token.ondo !== undefined ||
-                          currentChainhasSwapSupport
-                        "
-                        class="my-1 xs:hidden"
-                      />
-
-                      <ul v-if="props.view !== 'custom'">
-                        <li
-                          v-if="isBuyableOnCompatibleChain(token.coinId)"
-                          @click.stop="[buyBtn(token, true), toggleMenu()]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <icon-buy class="text-text-brand w-4 h-4 mr-2" />
-                          <p>{{ $t('common.buy') }}</p>
-                        </li>
-                        <template v-if="token.ondo !== undefined">
-                          <li
-                            @click.stop="[tradeBtn(token, true), toggleMenu()]"
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                          >
-                            <icon-trade class="text-text-brand w-4 h-4 mr-2" />
-                            <p>{{ $t('portfolio.table.trade') }}</p>
-                          </li>
-                        </template>
-                        <template v-else-if="currentChainhasSwapSupport">
-                          <li
-                            @click.stop="[swapBtn(token, true), toggleMenu()]"
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                          >
-                            <icon-swap class="text-text-brand w-4 h-4 mr-2" />
-                            <p>{{ $t('common.swap') }}</p>
-                          </li>
-                        </template>
-                      </ul>
-                      <ul v-else>
-                        <li
-                          @click.stop="[
-                            customTokenAction('edit', token),
-                            toggleMenu(),
-                          ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <AppIcon
-                            name="pencil"
-                            variant="filled"
-                            size="xxs"
-                            class="mr-2"
-                          />
-                          <p>{{ $t('common.edit') }}</p>
-                        </li>
-                        <li
-                          @click.stop="[
-                            customTokenAction('delete', token),
-                            toggleMenu(),
-                          ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <AppIcon
-                            name="trash"
-                            variant="filled"
-                            size="xxs"
-                            class="mr-2"
-                          />
-                          <p>{{ $t('common.delete') }}</p>
-                        </li>
-                      </ul>
-                    </div>
-                  </template>
-                </app-pop-up-menu>
-              </div>
-              <div
-                v-if="props.view !== 'custom'"
-                class="hidden lg:grid grid-cols-2 gap-2 w-full max-w-40 ml-auto"
-              >
-                <app-base-button
-                  v-if="token.ondo !== undefined"
-                  size="small"
-                  @click="tradeBtn(token)"
-                  class="w-full"
-                  :class="{
-                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
-                  }"
-                  >{{ $t('portfolio.table.trade') }}
-                </app-base-button>
-                <app-base-button
-                  v-else-if="currentChainhasSwapSupport"
-                  size="small"
-                  @click="swapBtn(token)"
-                  class="w-full"
-                  :class="{
-                    'col-start-2': !isBuyableOnCompatibleChain(token.coinId),
-                  }"
-                  >{{ $t('common.swap') }}
-                </app-base-button>
-                <app-base-button
-                  v-if="isBuyableOnCompatibleChain(token.coinId)"
-                  size="small"
-                  @click="buyBtn(token)"
-                  type="secondary"
-                  class="w-full"
-                  :class="{ 'col-start-2': !hasPrimaryAction(token) }"
-                  >{{ $t('common.buy') }}
-                </app-base-button>
-              </div>
-              <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
-                v-else
-              >
-                <app-btn-icon
-                  :label="$t('common.edit')"
-                  @click.stop="customTokenAction('edit', token)"
-                >
-                  <AppIcon name="pencil" variant="filled" size="xxs" />
-                </app-btn-icon>
-                <app-btn-icon
-                  :label="$t('common.delete')"
-                  @click.stop="customTokenAction('delete', token)"
-                >
-                  <AppIcon name="trash" variant="filled" size="s" />
-                </app-btn-icon>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                        <p>{{ $t('common.edit') }}</p>
+                      </li>
+                      <li
+                        @click.stop="[
+                          customTokenAction('delete', token),
+                          toggleMenu(),
+                        ]"
+                        class="p-2 flex items-center hoverBGWhite rounded-12"
+                      >
+                        <AppIcon
+                          name="trash"
+                          variant="filled"
+                          size="xxs"
+                          class="mr-2"
+                        />
+                        <p>{{ $t('common.delete') }}</p>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </app-pop-up-menu>
+            </template>
+            <template v-else-if="view === 'custom'">
+              <app-base-button
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="customTokenAction('edit', token)"
+                >{{ $t('common.edit') }}
+              </app-base-button>
+              <app-base-button
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="customTokenAction('delete', token)"
+                >{{ $t('common.delete') }}
+              </app-base-button>
+            </template>
+            <template v-else>
+              <!-- L: trade/swap + buy. M: one button, trade/swap first. -->
+              <app-base-button
+                v-if="token.ondo !== undefined"
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="tradeBtn(token)"
+                >{{ $t('portfolio.table.trade') }}
+              </app-base-button>
+              <app-base-button
+                v-else-if="currentChainhasSwapSupport"
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="swapBtn(token)"
+                >{{ $t('common.swap') }}
+              </app-base-button>
+              <app-base-button
+                v-if="
+                  isBuyableOnCompatibleChain(token.coinId) &&
+                  (size === 'l' || !hasPrimaryAction(token))
+                "
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="buyBtn(token)"
+                >{{ $t('common.buy') }}
+              </app-base-button>
+            </template>
+          </template>
+        </AppTableRow>
+      </AppTable>
       <div
-        v-if="
-          searchInput.length === 0 &&
-          paginatedArray.length === 0 &&
-          props.view === 'watchlist'
-        "
+        v-else-if="emptyState === 'watchlist'"
         class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
+        <p class="mb-1">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >{{ $t('portfolio.table.discover_more_tokens') }}
           <AppIcon
@@ -603,19 +319,19 @@
         </router-link>
       </div>
       <div
-        v-if="paginatedArray.length === 0 && props.view === 'custom'"
+        v-else-if="emptyState === 'custom'"
         class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
-        <p class="mb-6 lg:mt-10">{{ $t('portfolio.table.empty_custom') }}</p>
+        <p class="mb-6">{{ $t('portfolio.table.empty_custom') }}</p>
         <app-base-button size="medium" @click="openAddCustom">{{
           $t('portfolio.table.add_custom_token')
         }}</app-base-button>
       </div>
       <div
-        v-if="paginatedArray.length === 0 && props.view === 'stocks'"
+        v-else-if="emptyState === 'stocks'"
         class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
-        <p class="mb-6 lg:mt-10">
+        <p class="mb-6">
           {{ $t('portfolio.table.empty_stocks') }}
         </p>
         <app-base-button
@@ -625,89 +341,14 @@
         >
       </div>
       <div
-        v-if="searchInput.length > 0 && paginatedArray.length === 0"
+        v-else-if="emptyState === 'search'"
         class="text-nowrap mx-auto text-text-subtle text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">
+        <p class="mb-1">
           {{ $t('portfolio.table.no_results', { query: searchInput }) }}
         </p>
       </div>
-      <!-- Loading State -->
-      <div v-if="isLoading">
-        <div
-          v-for="n in Number(activeShownItems.value)"
-          :key="n"
-          class="flex w-full h-14 py-2"
-        >
-          <div
-            class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
-          ></div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
-    >
-      <div
-        v-if="!isLoading"
-        class="text-text-subtle order-3 xs:order-1 mb-4 xs:mb-0"
-      >
-        {{
-          $t('portfolio.table.results_of', {
-            count: getCurrentViewableItemsIndex,
-            total: tokens.length,
-          })
-        }}
-      </div>
-      <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
-        <app-btn-icon
-          :disabled="!isLoading && currentPage === 0"
-          :label="$t('common.previous_page')"
-          @click.stop="prevPage"
-        >
-          <AppIcon name="chevron-left" variant="filled" size="xxs" />
-        </app-btn-icon>
-        <div class="flex items-center gap-2">
-          <span class="text-black">{{ currentPage + 1 }}</span>
-          <span class="text-text-subtle">{{
-            $t('portfolio.table.page_of')
-          }}</span>
-          <span class="text-text-subtle">{{ totalPages }}</span>
-        </div>
-        <app-btn-icon
-          :disabled="!isLoading && currentPage + 1 >= totalPages"
-          :label="$t('common.next_page')"
-          @click.stop="nextPage"
-        >
-          <AppIcon name="chevron-right" variant="filled" size="xxs" />
-        </app-btn-icon>
-      </div>
-
-      <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
-        <app-select
-          v-model:selected="activeShownItems"
-          :options="shownItemsOptions"
-          position="top-[-160px] right-0"
-          class="min-w-[70px]"
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-border-default hover:border-border-hover transition-colors"
-              @click="toggleSelect"
-            >
-              <span>{{ activeShownItems.label }}</span>
-              <AppIcon
-                name="chevron-down"
-                variant="filled"
-                size="xxs"
-                class="text-text-subtle"
-              />
-            </button>
-          </template>
-        </app-select>
-      </div>
-    </div>
+    </AppTableWrapper>
     <custom-tokens-dialog />
   </div>
 </template>
@@ -715,21 +356,26 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
 import AppSearchbar from '@/components/AppSearchbar.vue'
-import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import TableSparkline from '@/components/TableSparkline.vue'
+import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
+import type {
+  TableColumn,
+  TableSize,
+  TableSort,
+} from '@/components/table/types'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
@@ -741,12 +387,14 @@ import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
+import { getTokenDisplayName, stockBaseSymbol } from '@/utils/tokenDisplayName'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import {
-  formatFloatingPointValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+  analytics,
+  ClickTokenTradeEvent,
+  ClickTokenTradeLocation,
+} from '@/analytics'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
@@ -757,7 +405,6 @@ import type {
   TokenBalance,
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
-import type { AppSelectOption } from '@/types/components/appSelect'
 import {
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
@@ -775,7 +422,6 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppDivider from '@/components/divider/AppDivider.vue'
 /** -------------------------------
  * Constants & Types
  -------------------------------*/
@@ -799,6 +445,12 @@ const props = defineProps<{
   view: BalanceFilter
 }>()
 
+defineSlots<{
+  /** Balance filter controls, placed in the table toolbar after the search. */
+  filters?: (props: { size: TableSize }) => unknown
+}>()
+
+const { t } = useI18n()
 const router = useRouter()
 const chainStore = useChainsStore()
 const walletStore = useWalletStore()
@@ -835,8 +487,12 @@ const { openCustomTokenDialog, setCurrentView } = customTokenStore
 
 // Local State
 const searchInput = ref('')
-const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
-const tableDirection = ref<'asc' | 'desc'>('asc')
+// Header sort; a third click goes back to the default order.
+const DEFAULT_SORT: TableSort = {
+  key: SortValueString.MARKET_CAP,
+  direction: 'asc',
+}
+const sort = ref<TableSort | null>(DEFAULT_SORT)
 const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
   {},
 )
@@ -848,6 +504,39 @@ const chainCustomTokens = computed(() => {
   const chainName = chainStore.selectedChain?.name || ''
   return customTokens.value[chainName] || []
 })
+
+// The earning filter has no table yet.
+const isComingSoon = computed(() => props.view === 'earning')
+
+const columns = computed<TableColumn[]>(() => [
+  {
+    key: SortValueString.NAME,
+    label: t('portfolio.table.token_header'),
+    sortable: true,
+  },
+  {
+    key: SortValueString.MARKET_CAP,
+    label: t('portfolio.table.market_cap_header'),
+    sortable: true,
+    largeOnly: true,
+  },
+  {
+    key: SortValueString.PRICE,
+    label: t('portfolio.table.price_header'),
+    sortable: true,
+  },
+  {
+    key: SortValueString.PERCENT,
+    label: t('portfolio.table.24h_header'),
+    sortable: true,
+  },
+  {
+    key: SortValueString.VALUE,
+    label: t('portfolio.table.balance_header'),
+    sortable: true,
+    primary: true,
+  },
+])
 
 const isLoading = computed(() =>
   props.view === 'watchlist'
@@ -970,18 +659,6 @@ watch(
 /** -------------------------------
  * Table Logic
  -------------------------------*/
-const setHeaderSort = (key: SortValueString) => {
-  if (headerSort.value === key) {
-    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    tableDirection.value = 'desc'
-    headerSort.value = key
-  }
-}
-const getTokenName = (token: DisplayToken): string => {
-  return token.ondo?.stockAlias || token.name
-}
-
 const getFiatValue = (token: TokenBalance): BigNumber => {
   return BigNumber(token.price || 0).multipliedBy(token.balance)
 }
@@ -1115,24 +792,21 @@ const tokens = computed<DisplayToken[]>(() => {
   }
 
   // Sorting logic
+  const { key, direction } = sort.value ?? DEFAULT_SORT
   const sortMap: Record<SortValueString, () => DisplayToken[]> = {
     [SortValueString.NAME]: () =>
-      sortObjectArrayString(list, 'name', tableDirection.value),
+      sortObjectArrayString(list, 'name', direction),
     [SortValueString.PERCENT]: () =>
-      sortObjectArrayNumber(
-        list,
-        'price_change_percentage_24h',
-        tableDirection.value,
-      ),
+      sortObjectArrayNumber(list, 'price_change_percentage_24h', direction),
     [SortValueString.MARKET_CAP]: () =>
-      sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
+      sortObjectArrayNumber(list, 'market_cap', direction),
     [SortValueString.VALUE]: () =>
-      sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
+      sortObjectArrayNumber(list, 'fiatBalance', direction),
     [SortValueString.PRICE]: () =>
-      sortObjectArrayNumber(list, 'price', tableDirection.value),
+      sortObjectArrayNumber(list, 'price', direction),
   }
 
-  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
+  return sortMap[key as SortValueString]?.() ?? list
 })
 
 const totalValue = computed(() => {
@@ -1147,36 +821,49 @@ const totalValue = computed(() => {
 /** -------------------------------
  * Pagination Logic
  -------------------------------*/
-const shownItemsOptions: AppSelectOption[] = [
-  { label: '5', value: '5' },
-  { label: '10', value: '10' },
-  { label: '50', value: '50' },
-  { label: '100', value: '100' },
-]
-const activeShownItems = ref<AppSelectOption>(shownItemsOptions[1])
-const shownItems = computed(() => Number(activeShownItems.value.value))
+// Fixed page size: the table footer has no page-size picker.
+const PER_PAGE = 10
 
-const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
-  usePaginate<DisplayToken>(tokens, shownItems)
-
-const getTableHeight = computed(() =>
-  shownItems.value === 5 ? 'min-h-80' : 'min-h-[596px]',
+const { currentPage, paginatedArray, totalPages } = usePaginate<DisplayToken>(
+  tokens,
+  PER_PAGE,
 )
 
-const getCurrentViewableItemsIndex = computed(() =>
-  Math.min(shownItems.value * (currentPage.value + 1), tokens.value.length),
-)
+// AppTable pages are 1-based, usePaginate's are 0-based.
+const page = computed({
+  get: () => currentPage.value + 1,
+  set: (value: number) => {
+    currentPage.value = value - 1
+  },
+})
+
+// "20 of 34 results": rows shown up to this page, out of all of them.
+const resultsLabel = (current: number) =>
+  t('portfolio.table.results_of', {
+    count: Math.min(PER_PAGE * current, tokens.value.length),
+    total: tokens.value.length,
+  })
+
+type EmptyState = 'search' | 'watchlist' | 'custom' | 'stocks'
+const emptyState = computed<EmptyState | null>(() => {
+  if (paginatedArray.value.length) return null
+  if (searchInput.value) return 'search'
+  const view = props.view
+  return view === 'watchlist' || view === 'custom' || view === 'stocks'
+    ? view
+    : null
+})
 
 /** -------------------------------
  * Navigation & Handlers
  -------------------------------*/
-// A token has a "primary" action (trade / swap) in the desktop actions cell.
-// Used so a lone button spans the full actions width and rows stay aligned.
+// A token has a "primary" action (trade / swap) in the actions cell. At M only
+// one button fits, so Buy shows there only when there's no trade / swap.
 const hasPrimaryAction = (token: DisplayToken): boolean =>
   !!token.ondo || currentChainhasSwapSupport.value
 const buyBtn = (token?: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token?.symbol,
     isMobile,
   })
@@ -1243,7 +930,7 @@ const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
 
 const swapBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.SWAP, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token.symbol,
     isMobile,
   })
@@ -1254,7 +941,7 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
-    location: 'balance_table',
+    location: ClickTokenTradeLocation.BALANCE_TABLE,
     token: token.symbol,
     isMobile,
     stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
@@ -1263,10 +950,5 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('trade')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
   if (!isMobile) goToTokenPage(token)
-}
-
-const parsePercent = (val: number | null): string => {
-  if (val === null || val === undefined) return ''
-  return formatPercentageValue(val ?? 0).value
 }
 </script>

@@ -87,8 +87,6 @@
           "swap": "兑换",
           "bridge": "跨链",
           "removeShort": "移除",
-          "dragLabel": "拖动以重新排序",
-          "showMore": "显示另外 {count} 个",
           "columns": {
             "token": "代币",
             "marketCap": "市值",
