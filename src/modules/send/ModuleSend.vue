@@ -519,6 +519,12 @@ watchDebounced(
   { debounce: 500, maxWait: 2000 },
 )
 
+// The sender can change on a filled form (wallet switch, BTC public key
+// arriving late); rebuild the estimate so the fee shown is for that sender.
+watch([address, publicKey], () => {
+  gasFeeTxEstimate.value = getTxRequestBody()
+})
+
 const resetSendModule = () => {
   resetPristine()
   amountError.value = '' // Clear error immediately

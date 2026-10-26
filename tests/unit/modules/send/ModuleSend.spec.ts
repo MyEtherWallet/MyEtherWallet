@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
 
 const SIGNER = '0x1111111111111111111111111111111111111111'
 const TO = '0x2222222222222222222222222222222222222222'
+const OTHER = '0x3333333333333333333333333333333333333333'
 
 vi.mock('@/stores/walletStore', async () => {
   const { ref, computed } = await import('vue')
@@ -125,6 +126,7 @@ const AppEnterAmount = {
 }
 const AppSelectTxFee = {
   name: 'AppSelectTxFee',
+  props: ['txRequestBody'],
   emits: ['fee-is-loading'],
   template: '<div />',
 }
@@ -194,5 +196,23 @@ describe('ModuleSend quote request', () => {
       address: SIGNER,
       to: TO,
     })
+  })
+
+  it('rebuilds the fee estimate when the sender changes on a filled form', async () => {
+    const w = mount(ModuleSend, {
+      global: { stubs, mocks: { $t: (k: string) => k } },
+    })
+    h.wallet.value = makeWallet()
+    h.walletAddress.value = SIGNER
+    w.findComponent(AppEnterAmount).vm.$emit('update:amount', '0.1')
+    // let the debounced estimate watcher run for the first sender
+    await new Promise(r => setTimeout(r, 600))
+    const fee = w.findComponent(AppSelectTxFee)
+    expect(fee.props('txRequestBody')).toMatchObject({ address: SIGNER })
+
+    h.walletAddress.value = OTHER
+    await flushPromises()
+
+    expect(fee.props('txRequestBody')).toMatchObject({ address: OTHER })
   })
 })
