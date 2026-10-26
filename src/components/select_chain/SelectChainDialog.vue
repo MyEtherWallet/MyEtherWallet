@@ -1,113 +1,107 @@
 <template>
   <!-- Dialog with chains list -->
-  <app-dialog
+  <app-modal
     v-if="isLoadedChains"
-    v-model:is-open="openDialog"
-    class="w-full sm:w-[460px] sm:mx-auto"
-    :z-index-overlay="zIndexOverlay"
-    :z-index-container="zIndexContainer"
-    has-content-gutter
+    v-model="openDialog"
     :title="$t('select_chain.title')"
   >
-    <template #content>
+    <div
+      class="relative h-[70vh] sm:h-[500px] px-4 sm:px-6 pb-6 overflow-y-auto mew-scrollbar"
+    >
+      <!-- Search -->
+      <div class="sticky top-0 bg-white z-20">
+        <app-searchbar
+          v-model="searchInput"
+          variant="outline"
+          class="mb-2"
+          :placeholder="$t('select_chain.search_placeholder')"
+        />
+        <app-divider class="-mt-1 mb-1" />
+      </div>
+      <!-- Search Result-->
       <div
-        class="relative h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
+        v-if="searchResults.length || notSupportedChains.length"
+        class="flex flex-col gap-1"
       >
-        <!-- Search -->
-        <div class="sticky top-0 bg-white z-20">
-          <app-searchbar
-            v-model="searchInput"
-            variant="outline"
-            class="mb-2"
-            :placeholder="$t('select_chain.search_placeholder')"
-          />
-          <app-divider class="-mt-1 mb-1" />
-        </div>
-        <!-- Search Result-->
-        <div
-          v-if="searchResults.length || notSupportedChains.length"
-          class="flex flex-col gap-1"
+        <button
+          v-for="chain in searchResults"
+          :key="chain.name"
+          class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
+          :class="[
+            chain.name === selectedChain?.name
+              ? 'bg-background-brand-subtle'
+              : 'bg-transparent hoverBGWhite',
+          ]"
+          @click="setSelectedChain(chain)"
         >
-          <button
-            v-for="chain in searchResults"
-            :key="chain.name"
-            class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
-            :class="[
-              chain.name === selectedChain?.name
-                ? 'bg-background-brand-subtle'
-                : 'bg-transparent hoverBGWhite',
-            ]"
-            @click="setSelectedChain(chain)"
-          >
-            <div class="flex justify-between items-center w-full">
-              <div class="flex items-center">
-                <div class="relative mr-4 overflow-visible">
-                  <img
-                    v-if="chain.icon"
-                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
-                    :src="chain.icon"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                  <div
-                    v-else
-                    class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
-                  ></div>
-                </div>
-                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
+          <div class="flex justify-between items-center w-full">
+            <div class="flex items-center">
+              <div class="relative mr-4 overflow-visible">
+                <img
+                  v-if="chain.icon"
+                  class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                  :src="chain.icon"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <div
+                  v-else
+                  class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
+                ></div>
               </div>
-              <AppIcon
-                name="check"
-                variant="filled"
-                v-if="chain.name === selectedChain?.name"
-                class="text-text-brand"
-              />
+              <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
             </div>
-          </button>
-          <div
-            v-if="notSupportedChains.length"
-            class="flex items-center gap-1 pl-5 pt-5 pb-1"
-          >
-            <app-tooltip :text="$t('select_chain.incompatible_tooltip')">
-              <p class="text-s-16 font-medium text-text-subtle">
-                {{ $t('select_chain.incompatible_title') }}
-              </p></app-tooltip
-            >
+            <AppIcon
+              name="check"
+              variant="filled"
+              v-if="chain.name === selectedChain?.name"
+              class="text-text-brand"
+            />
           </div>
-          <div
-            v-for="chain in notSupportedChains"
-            :key="chain.name"
-            class="flex items-center justify-between px-4 py-3 rounded-20 box-border opacity-50"
+        </button>
+        <div
+          v-if="notSupportedChains.length"
+          class="flex items-center gap-1 pl-5 pt-5 pb-1"
+        >
+          <app-tooltip :text="$t('select_chain.incompatible_tooltip')">
+            <p class="text-s-16 font-medium text-text-subtle">
+              {{ $t('select_chain.incompatible_title') }}
+            </p></app-tooltip
           >
-            <div class="flex justify-between items-center w-full">
-              <div class="flex items-center">
-                <div class="relative mr-4 overflow-visible">
-                  <img
-                    v-if="chain.icon"
-                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
-                    :src="chain.icon"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                  <div
-                    v-else
-                    class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
-                  ></div>
-                </div>
-                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
-              </div>
-            </div>
-          </div>
         </div>
-        <!-- Search not found-->
-        <div v-else>
-          <div class="flex justify-center mt-10 h-[400px] text-text-subtle">
-            <p>{{ $t('common.not_found.chains') }}</p>
+        <div
+          v-for="chain in notSupportedChains"
+          :key="chain.name"
+          class="flex items-center justify-between px-4 py-3 rounded-20 box-border opacity-50"
+        >
+          <div class="flex justify-between items-center w-full">
+            <div class="flex items-center">
+              <div class="relative mr-4 overflow-visible">
+                <img
+                  v-if="chain.icon"
+                  class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                  :src="chain.icon"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <div
+                  v-else
+                  class="w-9 h-9 rounded-full bg-background-default-hover shadow-button"
+                ></div>
+              </div>
+              <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </template>
-  </app-dialog>
+      <!-- Search not found-->
+      <div v-else>
+        <div class="flex justify-center mt-10 h-[400px] text-text-subtle">
+          <p>{{ $t('common.not_found.chains') }}</p>
+        </div>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -133,7 +127,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
@@ -157,14 +151,6 @@ const prop = defineProps({
   filterBySelectedChainType: {
     type: Boolean,
     default: true,
-  },
-  zIndexOverlay: {
-    type: String,
-    default: 'z-[200]',
-  },
-  zIndexContainer: {
-    type: String,
-    default: 'z-[201]',
   },
 })
 

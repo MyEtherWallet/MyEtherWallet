@@ -71,85 +71,83 @@
       </transition>
     </div>
 
-    <app-dialog
+    <app-modal
       :title="$t('select_fee.title')"
-      v-model:is-open="openModal"
-      class="max-w-[560px] sm:mx-auto"
+      v-model="openModal"
+      class="w-full max-w-[560px]"
     >
-      <template #content>
-        <div class="mx-2 xs:mx-6 mb-6">
-          <p class="text-text-subtle mx-4 sm:mx-3 mb-5">
-            {{ $t('select_fee.description') }}
-          </p>
-          <!-- fee options -->
-          <div class="grid grid-cols-1 sm:p-3 gap-2 xs:gap-3">
-            <button
-              v-for="fee in displayFees"
-              :key="fee.id"
-              :class="[
-                gasPriceType === fee.id
-                  ? 'border-border-brand outline outline-border-brand bg-background-default'
-                  : ' border-border-strong',
-                'border-1 w-full  rounded-2xl hoverNoBG p-2 xs:p-4 min-h-[90px] ',
-              ]"
-              @click="setFee(fee.id)"
-            >
-              <div class="flex items-center">
-                <div
-                  :class="[
-                    { 'text-text-brand': gasPriceType === fee.id },
-                    ' mr-2 xs:mr-4',
-                  ]"
-                >
+      <div class="mx-2 xs:mx-6 mb-6">
+        <p class="text-text-subtle mx-4 sm:mx-3 mb-5">
+          {{ $t('select_fee.description') }}
+        </p>
+        <!-- fee options -->
+        <div class="grid grid-cols-1 sm:p-3 gap-2 xs:gap-3">
+          <button
+            v-for="fee in displayFees"
+            :key="fee.id"
+            :class="[
+              gasPriceType === fee.id
+                ? 'border-border-brand outline outline-border-brand bg-background-default'
+                : ' border-border-strong',
+              'border-1 w-full  rounded-2xl hoverNoBG p-2 xs:p-4 min-h-[90px] ',
+            ]"
+            @click="setFee(fee.id)"
+          >
+            <div class="flex items-center">
+              <div
+                :class="[
+                  { 'text-text-brand': gasPriceType === fee.id },
+                  ' mr-2 xs:mr-4',
+                ]"
+              >
+                <AppIcon
+                  name="currency-dollar"
+                  size="s"
+                  v-if="fee.id === GasPriceType.ECONOMY"
+                />
+                <AppIcon
+                  name="check"
+                  size="s"
+                  v-else-if="fee.id === GasPriceType.REGULAR"
+                />
+                <div v-else class="flex">
+                  <AppIcon name="arrow-long-up" variant="filled" size="s" />
                   <AppIcon
-                    name="currency-dollar"
+                    name="arrow-long-up"
+                    variant="filled"
                     size="s"
-                    v-if="fee.id === GasPriceType.ECONOMY"
+                    v-if="fee.id === GasPriceType.FASTEST"
+                    class="-mx-2"
                   />
-                  <AppIcon
-                    name="check"
-                    size="s"
-                    v-else-if="fee.id === GasPriceType.REGULAR"
-                  />
-                  <div v-else class="flex">
-                    <AppIcon name="arrow-long-up" variant="filled" size="s" />
-                    <AppIcon
-                      name="arrow-long-up"
-                      variant="filled"
-                      size="s"
-                      v-if="fee.id === GasPriceType.FASTEST"
-                      class="-mx-2"
-                    />
-                  </div>
-                </div>
-                <div class="flex flex-col text-left">
-                  <span class="text-[16px] font-medium">{{ fee.title }}</span>
-
-                  <span class="text-text-subtle text-xs mt-1">{{
-                    fee.description
-                  }}</span>
-                </div>
-                <div class="text-right ml-auto min-w-[100px] xs:min-w-[140px]">
-                  <p class="font-medium">
-                    {{ fee.fiatValue }}
-                  </p>
-                  <span class="text-text-subtle text-xs">
-                    {{ fee.nativeValue }}</span
-                  >
                 </div>
               </div>
-            </button>
-          </div>
+              <div class="flex flex-col text-left">
+                <span class="text-[16px] font-medium">{{ fee.title }}</span>
+
+                <span class="text-text-subtle text-xs mt-1">{{
+                  fee.description
+                }}</span>
+              </div>
+              <div class="text-right ml-auto min-w-[100px] xs:min-w-[140px]">
+                <p class="font-medium">
+                  {{ fee.fiatValue }}
+                </p>
+                <span class="text-text-subtle text-xs">
+                  {{ fee.nativeValue }}</span
+                >
+              </div>
+            </div>
+          </button>
         </div>
-      </template>
-    </app-dialog>
+      </div>
+    </app-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'

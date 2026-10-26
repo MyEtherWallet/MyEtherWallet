@@ -1,124 +1,118 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    hide-close
-    class="w-full sm:w-[480px] sm:mx-auto !rounded-20"
-  >
-    <template #content>
-      <div
-        class="relative h-[600px] w-full flex flex-col items-center justify-center gap-6 p-6 text-center"
-      >
-        <div class="relative w-[116px] h-10" aria-hidden="true">
-          <div
-            class="absolute top-0 transition-all duration-300 motion-reduce:transition-none"
-            :class="isSettled ? 'left-[38px] opacity-0 scale-75' : 'left-0'"
-          >
-            <app-token-logo
-              :url="fromLogo.url"
-              :symbol="fromLogo.symbol"
-              :address="fromLogo.address"
-              width="w-10"
-              height="h-10"
-              no-shadow
-            />
-          </div>
+  <app-modal v-model="model" :show-close-button="false" :aria-label="title">
+    <div
+      class="relative h-[600px] w-full flex flex-col items-center justify-center gap-6 p-6 text-center"
+    >
+      <div class="relative w-[116px] h-10" aria-hidden="true">
+        <div
+          class="absolute top-0 transition-all duration-300 motion-reduce:transition-none"
+          :class="isSettled ? 'left-[38px] opacity-0 scale-75' : 'left-0'"
+        >
+          <app-token-logo
+            :url="fromLogo.url"
+            :symbol="fromLogo.symbol"
+            :address="fromLogo.address"
+            width="w-10"
+            height="h-10"
+            no-shadow
+          />
+        </div>
+        <AppIcon
+          name="arrows-right-left"
+          variant="filled"
+          size="s"
+          class="absolute left-12 top-2.5 transition-transform duration-300 motion-reduce:transition-none"
+          :class="isSettled ? 'scale-0' : 'arrows-flip'"
+        />
+        <div
+          class="absolute top-0 transition-all duration-300 motion-reduce:transition-none"
+          :class="isSettled ? 'left-[38px]' : 'left-[76px]'"
+        >
+          <app-token-logo
+            :url="toLogo.url"
+            :symbol="toLogo.symbol"
+            :address="toLogo.address"
+            width="w-10"
+            height="h-10"
+            no-shadow
+          />
+        </div>
+        <span
+          class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
+          :class="[
+            isFailed ? 'bg-background-error' : 'bg-background-success',
+            isSettled ? 'scale-100' : 'scale-0',
+          ]"
+        >
           <AppIcon
-            name="arrows-right-left"
+            name="x-mark"
+            variant="filled"
+            size="xxs"
+            v-if="isFailed"
+            class="text-white"
+          />
+          <AppIcon
+            name="check"
+            variant="filled"
+            size="xxs"
+            v-else
+            class="text-white"
+          />
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-1 w-full">
+        <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
+          {{ title }}
+        </h2>
+        <p class="text-s-16 leading-[22px] text-text-subtle">
+          {{ subtitle }}
+        </p>
+      </div>
+
+      <app-base-button
+        type="secondary"
+        class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
+        @click="model = false"
+      >
+        {{ $t('trade.progress_modal.close_screen') }}
+      </app-base-button>
+
+      <p
+        v-if="status === 'pending' && !isDepositing"
+        class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
+      >
+        {{ $t('trade.progress_modal.background_note') }}
+      </p>
+      <transition
+        enter-active-class="transition-all duration-300 delay-300 motion-reduce:transition-none"
+        enter-from-class="opacity-0 translate-y-6"
+        enter-to-class="opacity-100 translate-y-0"
+      >
+        <a
+          v-if="status === 'filled' && explorerLink"
+          :href="explorerLink"
+          target="_blank"
+          rel="noopener"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
+        >
+          {{ $t('view_in_block_explorer') }}
+          <AppIcon
+            name="arrow-top-right-on-square"
             variant="filled"
             size="s"
-            class="absolute left-12 top-2.5 transition-transform duration-300 motion-reduce:transition-none"
-            :class="isSettled ? 'scale-0' : 'arrows-flip'"
           />
-          <div
-            class="absolute top-0 transition-all duration-300 motion-reduce:transition-none"
-            :class="isSettled ? 'left-[38px]' : 'left-[76px]'"
-          >
-            <app-token-logo
-              :url="toLogo.url"
-              :symbol="toLogo.symbol"
-              :address="toLogo.address"
-              width="w-10"
-              height="h-10"
-              no-shadow
-            />
-          </div>
-          <span
-            class="absolute left-[60px] top-[-5px] w-[22px] h-[22px] rounded-full border border-white flex items-center justify-center transition-transform duration-300 delay-300 motion-reduce:transition-none"
-            :class="[
-              isFailed ? 'bg-background-error' : 'bg-background-success',
-              isSettled ? 'scale-100' : 'scale-0',
-            ]"
-          >
-            <AppIcon
-              name="x-mark"
-              variant="filled"
-              size="xxs"
-              v-if="isFailed"
-              class="text-white"
-            />
-            <AppIcon
-              name="check"
-              variant="filled"
-              size="xxs"
-              v-else
-              class="text-white"
-            />
-          </span>
-        </div>
-
-        <div class="flex flex-col gap-1 w-full">
-          <h2 class="text-s-20 font-bold leading-[22px] tracking-[-0.4px]">
-            {{ title }}
-          </h2>
-          <p class="text-s-16 leading-[22px] text-text-subtle">
-            {{ subtitle }}
-          </p>
-        </div>
-
-        <app-base-button
-          type="secondary"
-          class="!bg-background-default !text-text-brand !font-semibold !py-[13px] !px-6 text-s-16 leading-[22px] tracking-[-0.32px]"
-          @click="model = false"
-        >
-          {{ $t('trade.progress_modal.close_screen') }}
-        </app-base-button>
-
-        <p
-          v-if="status === 'pending' && !isDepositing"
-          class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[392px] max-w-full text-s-12 leading-[18px] text-text-subtle whitespace-pre-line"
-        >
-          {{ $t('trade.progress_modal.background_note') }}
-        </p>
-        <transition
-          enter-active-class="transition-all duration-300 delay-300 motion-reduce:transition-none"
-          enter-from-class="opacity-0 translate-y-6"
-          enter-to-class="opacity-100 translate-y-0"
-        >
-          <a
-            v-if="status === 'filled' && explorerLink"
-            :href="explorerLink"
-            target="_blank"
-            rel="noopener"
-            class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-[13px] rounded-24 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] whitespace-nowrap"
-          >
-            {{ $t('view_in_block_explorer') }}
-            <AppIcon
-              name="arrow-top-right-on-square"
-              variant="filled"
-              size="s"
-            />
-          </a>
-        </transition>
-      </div>
-    </template>
-  </app-dialog>
+        </a>
+      </transition>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
