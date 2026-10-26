@@ -234,6 +234,8 @@ const publicKey = ref('')
 watch(
   wallet,
   async w => {
+    // don't pair the next wallet's address with the previous wallet's key
+    publicKey.value = ''
     const key = (await w?.getPublicKey?.()) ?? ''
     if (w === wallet.value) publicKey.value = key
   },
