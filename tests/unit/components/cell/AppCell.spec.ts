@@ -223,6 +223,26 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.emitted('click')).toBeUndefined()
   })
 
+  it('renders the indicator slot as a decorative glyph that lets clicks reach the cell', async () => {
+    const w = mountCell({}, { indicator: '<i data-test="indicator">v</i>' })
+    const wrapper = w.get('[data-test="indicator"]').element.parentElement!
+    expect(wrapper.getAttribute('aria-hidden')).toBe('true')
+    await w.get('[data-test="indicator"]').trigger('click')
+    expect(w.emitted('click')).toHaveLength(1)
+  })
+
+  it('keeps the indicator while loading, unlike the action slots', () => {
+    const w = mountCell(
+      { loading: true },
+      {
+        suffix: '<button data-test="suffix">…</button>',
+        indicator: '<i data-test="indicator">v</i>',
+      },
+    )
+    expect(w.find('[data-test="suffix"]').exists()).toBe(false)
+    expect(w.find('[data-test="indicator"]').exists()).toBe(true)
+  })
+
   it('renders the watchlist toggle in the prefix action position', async () => {
     const w = mount(AppCell, {
       props: { title: 'Title' },
