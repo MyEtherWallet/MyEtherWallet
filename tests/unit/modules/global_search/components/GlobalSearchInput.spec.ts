@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import GlobalSearchInput from '@/modules/global_search/components/GlobalSearchInput.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 
 const isBelowXl = ref(false)
@@ -48,10 +49,8 @@ describe('GlobalSearchInput (navbar trigger, MEW-2463)', () => {
     // Navbar uses the 40px Default Searchbar, not the 48px Outline default.
     expect(wrapper.getComponent(AppSearchbar).props('variant')).toBe('default')
     // AppSearchbar's own clear button is an AppBtnIcon too; no search button.
-    const icons = wrapper
-      .findAllComponents(AppBtnIcon)
-      .map(b => b.props('icon'))
-    expect(icons).not.toContain('magnifying-glass')
+    const sizes = wrapper.findAllComponents(AppBtnIcon).map(b => b.props('size'))
+    expect(sizes).not.toContain('l')
     await wrapper.get('input').setValue('eth')
     expect(query.value).toBe('eth')
     await wrapper.findComponent(AppSearchbar).trigger('focusin')
@@ -65,6 +64,11 @@ describe('GlobalSearchInput (navbar trigger, MEW-2463)', () => {
     expect(wrapper.findComponent(AppSearchbar).exists()).toBe(false)
     const btn = wrapper.getComponent(AppBtnIcon)
     expect(btn.props()).toMatchObject({ size: 'l', variant: 'filled' })
+    // 24px glyph like the bell/cog, not the 32px library glyph for L.
+    expect(btn.getComponent(AppIcon).props()).toMatchObject({
+      name: 'magnifying-glass',
+      size: 'm',
+    })
     await btn.trigger('click')
     expect(open).toHaveBeenCalled()
   })

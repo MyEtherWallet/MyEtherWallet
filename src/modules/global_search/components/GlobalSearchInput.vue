@@ -8,14 +8,16 @@
     ]"
     @keydown="trapFocus"
   >
+    <!-- 24px glyph like the bell/cog; L's library glyph (32) reads too big -->
     <app-btn-icon
       v-if="isCompact"
-      icon="magnifying-glass"
       size="l"
       variant="filled"
       :label="$t('search.placeholder')"
       @click="open"
-    />
+    >
+      <app-icon name="magnifying-glass" />
+    </app-btn-icon>
     <app-searchbar
       v-else
       v-model="query"
@@ -35,6 +37,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchPopover from './GlobalSearchPopover.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 
 const { query, open, isOpen, close } = useGlobalSearch()

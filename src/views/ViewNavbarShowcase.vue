@@ -9,6 +9,7 @@ import AppNavbar from '@/components/navbar/AppNavbar.vue'
 import AppNavLink from '@/components/navbar/AppNavLink.vue'
 import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import ethIcon from '@/assets/icons/tokens/eth.svg'
 
@@ -94,12 +95,13 @@ const bars = computed(() => [
           <template #search>
             <AppSearchbar variant="default" class="hidden w-60 xl:flex" />
             <AppBtnIcon
-              icon="magnifying-glass"
               size="l"
               variant="filled"
               label="Search"
               class="xl:hidden"
-            />
+            >
+              <AppIcon name="magnifying-glass" />
+            </AppBtnIcon>
           </template>
           <template #wallet>
             <AppAddressSelector
