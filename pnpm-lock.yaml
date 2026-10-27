@@ -96,8 +96,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0
       '@myetherwallet/vue-common-components':
-        specifier: ^2.0.0
-        version: 2.0.0(vue@3.5.42(typescript@5.9.3))
+        specifier: ^2.1.1
+        version: 2.1.1(vue@3.5.42(typescript@5.9.3))
       '@originjs/vite-plugin-commonjs':
         specifier: ^1.0.3
         version: 1.0.3
@@ -2810,8 +2810,8 @@ packages:
   '@multiversx/sdk-transaction-decoder@1.0.2':
     resolution: {integrity: sha512-j43QsKquu8N51WLmVlJ7dV2P3A1448R7/ktvl8r3i6wRMpfdtzDPNofTdHmMRT7DdQdvs4+RNgz8hVKL11Etsw==}
 
-  '@myetherwallet/vue-common-components@2.0.0':
-    resolution: {integrity: sha512-wTBSqJIsnDZo1Af+RIaNwNy1DJ3wCHf/Nni6B/LcEAk8Zik25JlAJJyprj2GFtHOzVjRZOtZ8xtSY7SC4OIs9A==}
+  '@myetherwallet/vue-common-components@2.1.1':
+    resolution: {integrity: sha512-s+wdNlqdjhzN0FuaUyKxbFbJy1y0qOJIazGdyKAuYnFrBpLvwDC4dtcbGvs5H/PLXIJM6eX+Rjlshl3dhGejTA==}
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
@@ -20429,7 +20429,7 @@ snapshots:
     dependencies:
       bech32: 2.0.0
 
-  '@myetherwallet/vue-common-components@2.0.0(vue@3.5.42(typescript@5.9.3))':
+  '@myetherwallet/vue-common-components@2.1.1(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@lottiefiles/dotlottie-vue': 0.4.10(vue@3.5.42(typescript@5.9.3))
     transitivePeerDependencies:

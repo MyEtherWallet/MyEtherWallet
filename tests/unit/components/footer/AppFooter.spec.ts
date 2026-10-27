@@ -97,6 +97,18 @@ describe('AppFooter with the app props', () => {
     expect(about.attributes('target')).toBeUndefined()
   })
 
+  it('draws the token avatar on each donation chip', () => {
+    const w = mountFooter()
+    const chips = ['Ethereum donation', 'Bitcoin donation'].map(
+      label => w.findAll('a').find(a => a.text() === label)!,
+    )
+    for (const chip of chips) {
+      const avatar = chip.get('img')
+      expect(avatar.attributes('src')).toBeTruthy()
+      expect(avatar.attributes('alt')).toBe('')
+    }
+  })
+
   it('renders the seven socials with accessible names', () => {
     const w = mountFooter()
     const socials = w.findAll('a[aria-label^="MEW "]')

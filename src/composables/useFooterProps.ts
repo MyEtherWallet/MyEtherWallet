@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { FOOTER_EVENTS } from '@myetherwallet/vue-common-components'
 import type {
-  FooterLink,
+  FooterDonation,
   FooterLinkGroup,
   FooterSocial,
 } from '@myetherwallet/vue-common-components'
@@ -116,16 +116,18 @@ export const useFooterProps = () => {
       },
     ]
 
-    const donations: FooterLink[] = [
+    const donations: FooterDonation[] = [
       {
         label: t('footer.donate_ethereum'),
         href: 'https://www.ethvm.com/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
         event: FOOTER_EVENTS.ethDonation,
+        token: 'ethereum',
       },
       {
         label: t('footer.donate_bitcoin'),
         href: 'https://www.blockchain.com/explorer/addresses/btc/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9',
         event: FOOTER_EVENTS.btcDonation,
+        token: 'bitcoin',
       },
     ]
 

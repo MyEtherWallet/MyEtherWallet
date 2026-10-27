@@ -114,6 +114,15 @@ describe('AppAvatarBadge', () => {
     expect(wrapper.classes()).toContain('bg-background-default-hover')
   })
 
+  it('icon badge switches to the dark selected fill with tone="contrast"', () => {
+    const wrapper = mount(AppAvatarBadge, {
+      props: { type: 'icon', tone: 'contrast' },
+    })
+    expect(wrapper.classes()).toContain('bg-background-contrast-default')
+    expect(wrapper.classes()).toContain('text-text-inverted')
+    expect(wrapper.classes()).not.toContain('bg-background-default-hover')
+  })
+
   it('status badge renders a status dot', () => {
     const wrapper = mount(AppAvatarBadge, {
       props: { type: 'status', status: 'success' },
