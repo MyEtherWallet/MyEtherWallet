@@ -7,7 +7,7 @@
 import { ref } from 'vue'
 import AppPicker from '@/components/picker/AppPicker.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import type { PickerSize, PickerSurface } from '@/components/picker/types'
 
 // Live sample: the picker only emits the click; the page owns the modal and
@@ -125,12 +125,10 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
       </div>
     </section>
 
-    <AppDialog v-model:is-open="isDialogOpen" title="Stub modal">
-      <template #content>
-        <p class="text-s-14 text-text-subtle">
-          The modal content belongs to the caller, not the Picker.
-        </p>
-      </template>
-    </AppDialog>
+    <AppModal v-model="isDialogOpen" title="Stub modal">
+      <p class="text-s-14 text-text-subtle">
+        The modal content belongs to the caller, not the Picker.
+      </p>
+    </AppModal>
   </div>
 </template>
