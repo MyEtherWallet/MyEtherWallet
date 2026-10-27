@@ -182,30 +182,14 @@ describe('newly extracted strings are actually translated (not English copies)',
     ['common.mew_app_banner.rewards_line1', enCommon, esCommon, zhCommon],
     ['common.mew_app_banner.download_now', enCommon, esCommon, zhCommon],
     // Wallet panel account menu (multi_address namespace)
-    [
-      'multi_address.connect_another',
-      enMultiAddress,
-      esMultiAddress,
-      zhMultiAddress,
-    ],
-    [
-      'multi_address.menu.rename',
-      enMultiAddress,
-      esMultiAddress,
-      zhMultiAddress,
-    ],
-    [
-      'multi_address.menu.explorer',
-      enMultiAddress,
-      esMultiAddress,
-      zhMultiAddress,
-    ],
-    [
-      'multi_address.menu.remove',
-      enMultiAddress,
-      esMultiAddress,
-      zhMultiAddress,
-    ],
+    ...['connect_another', 'menu.rename', 'menu.explorer', 'menu.remove'].map(
+      (key): [string, Dict, Dict, Dict] => [
+        `multi_address.${key}`,
+        enMultiAddress,
+        esMultiAddress,
+        zhMultiAddress,
+      ],
+    ),
   ]
   it.each(cases)('%s differs from English in es and zh', (key, en, es, zh) => {
     const enFlat = flatten(en as Dict)
