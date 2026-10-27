@@ -15,7 +15,9 @@ const rect = (left: number, width: number) =>
   ({ left, right: left + width, width }) as DOMRect
 
 // The popover root sits centred under the info icon; `boundary` is the pill.
-const mountInBoundary = async (popoverLeft: number) => {
+let popoverLeft = 0
+const mountInBoundary = async (left: number) => {
+  popoverLeft = left
   const boundary = document.createElement('div')
   vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
     function (this: Element) {
@@ -24,7 +26,7 @@ const mountInBoundary = async (popoverLeft: number) => {
   )
   const popover = mountPopover({ boundary })
   await nextTick()
-  return popover.get('svg + div')
+  return popover
 }
 
 describe('TradeMarketStatusPopover', () => {
@@ -84,9 +86,19 @@ describe('TradeMarketStatusPopover', () => {
     ['right past the left edge', 44, 56],
     ['left past the right edge', 300, -120],
     ['nowhere when it fits', 150, 0],
-  ])('slides the card %s', async (_, popoverLeft, shift) => {
-    expect((await mountInBoundary(popoverLeft)).attributes('style')).toContain(
+  ])('slides the card %s', async (_, left, shift) => {
+    const popover = await mountInBoundary(left)
+    expect(popover.get('svg + div').attributes('style')).toContain(
       `translateX(${shift}px)`,
+    )
+  })
+
+  it('re-clamps when the status label changes while open', async () => {
+    const popover = await mountInBoundary(44)
+    popoverLeft = 150
+    await popover.setProps({ status: 'premarket' })
+    expect(popover.get('svg + div').attributes('style')).toContain(
+      'translateX(0px)',
     )
   })
 })

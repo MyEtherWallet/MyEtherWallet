@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEventListener } from '@vueuse/core'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
@@ -98,20 +98,22 @@ const { t } = useI18n()
 
 // Centred under the info icon, the card overflows the side panel when the
 // status label is short (e.g. zh). Slide it back inside the boundary; the
-// arrow stays on the icon. The root isn't shifted, so its rect is the centred one.
+// arrow stays on the icon. Only the card moves, so the root's rect stays centred.
 const rootRef = ref<HTMLElement | null>(null)
 const shiftX = ref(0)
 const clampToBoundary = () => {
   if (!rootRef.value || !props.boundary) return
-  const card = rootRef.value.getBoundingClientRect()
-  const box = props.boundary.getBoundingClientRect()
+  const centred = rootRef.value.getBoundingClientRect()
+  const bounds = props.boundary.getBoundingClientRect()
   shiftX.value = Math.max(
-    box.left - card.left,
-    Math.min(0, box.right - card.right),
+    bounds.left - centred.left,
+    Math.min(0, bounds.right - centred.right),
   )
 }
 onMounted(clampToBoundary)
 useEventListener(window, 'resize', clampToBoundary)
+// A status change while open swaps the label, which moves the icon.
+watch(() => props.status, clampToBoundary, { flush: 'post' })
 
 const marketHoursHelpUrl = 'https://help.myetherwallet.com/'
 
