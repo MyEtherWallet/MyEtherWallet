@@ -58,9 +58,9 @@ const SLOT_SIZE = 'xs' as const
 // second row (and a skeleton bar while loading) plus the row gap.
 const hasDescription = computed(() => !!props.description)
 
-// Text alignment cascades to the (possibly wrapping) text and the inline-block
-// skeleton bars. The rows themselves stay full-width (default stretch) so the
-// title can actually clip — items-start/end would shrink them to content width.
+// Text alignment cascades to the (possibly wrapping) text. The rows themselves
+// stay full-width (default stretch) so the title can actually clip —
+// items-start/end would shrink them to content width.
 const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
   left: 'text-left',
   center: 'text-center',
@@ -68,7 +68,7 @@ const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
 }
 const alignClass = computed(() => ALIGN_CLASS[props.align])
 
-// Positions the text + trailing icons within a full-width row.
+// Positions the text + trailing icons (or a skeleton bar) within a full-width row.
 const ROW_JUSTIFY_CLASS: Record<ContentGroupAlign, string> = {
   left: 'justify-start',
   center: 'justify-center',
@@ -108,13 +108,19 @@ const descriptionClass = computed(() => [
     class="flex flex-col min-w-0"
     :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. -->
+    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. The
+         rows are flex so a bar never sits in a line box, which would take the
+         inherited line-height and stretch the row. -->
     <template v-if="loading">
-      <div :class="skeletonRowClass(inverted)">
-        <AppSkeleton class="inline-block h-3 w-[35px]" />
+      <div class="flex" :class="[rowJustifyClass, skeletonRowClass(inverted)]">
+        <AppSkeleton class="h-3 w-[35px]" />
       </div>
-      <div v-if="hasDescription" :class="skeletonRowClass(!inverted)">
-        <AppSkeleton class="inline-block h-3 w-[79px]" />
+      <div
+        v-if="hasDescription"
+        class="flex"
+        :class="[rowJustifyClass, skeletonRowClass(!inverted)]"
+      >
+        <AppSkeleton class="h-3 w-[79px]" />
       </div>
     </template>
 
