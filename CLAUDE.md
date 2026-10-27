@@ -72,7 +72,7 @@ src/
 | Component                | Purpose                                     |
 | ------------------------ | ------------------------------------------- |
 | `AppInput.vue`           | Base text input                             |
-| `AppTextArea.vue`        | Multi-line text area with error feedback    |
+| `AppTextAreaLegacy.vue`  | Legacy multi-line text area (pre DL)        |
 | `AppSearchbar.vue`       | Search field with search icon + clear       |
 | `AppSelect.vue`          | Dropdown select                             |
 | `AppTokenSelect.vue`     | Token-aware dropdown (shows logos, symbols) |
@@ -109,13 +109,13 @@ src/
 
 ### Feedback & Status
 
-| Component                   | Purpose                               |
-| --------------------------- | ------------------------------------- |
-| `AppNoChainBalance.vue`     | Empty state when chain has no balance |
-| `AppNotRecommended.vue`     | Warning banner for risky actions      |
-| `AppNeedHelp.vue`           | Help/support call-to-action           |
-| `AppMewWalletBanner.vue`    | MEW wallet promotional banner         |
-| `AppSubscribeToUpdates.vue` | Newsletter/update subscription        |
+| Component                   | Purpose                                  |
+| --------------------------- | ---------------------------------------- |
+| `AppNoChainBalance.vue`     | Empty state when chain has no balance    |
+| `banner/AppBanner.vue`      | Inline info/alert/success/warning notice |
+| `AppNeedHelp.vue`           | Help/support call-to-action              |
+| `AppMewWalletBanner.vue`    | MEW wallet promotional banner            |
+| `AppSubscribeToUpdates.vue` | Newsletter/update subscription           |
 
 ### Multi-Step Flows
 
@@ -172,6 +172,10 @@ src/
 
 - `AppTabs.vue` — tabbed interface
 - `AppTabsSimple.vue` — simplified tabs without panels
+
+**`text_area/`**
+
+- `AppTextArea.vue` — design-library multi-line field (`surface`, `label`, `message`/`errorMessage`, `disabled`, `heightClass`, trailing `actionIcon`)
 
 **`transitions/`**
 

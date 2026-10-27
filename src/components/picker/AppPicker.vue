@@ -4,6 +4,7 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import {
   PICKER_SIZE_CLASS,
+  PICKER_TEXT_PAD_CLASS,
   PICKER_AVATAR_SIZE,
   PICKER_SURFACE_BG_CLASS,
   type PickerSize,
@@ -35,8 +36,10 @@ const props = withDefaults(
     disabled?: boolean
     /** Show the leading avatar slot (on by default, per Figma). */
     avatar?: boolean
-    /** Selection not resolved yet: Content Group skeleton, clicks ignored. */
+    /** Selection not resolved yet: Content Group skeleton, clicks and keys ignored. */
     loading?: boolean
+    /** The caller's modal open state, mirrored to `aria-expanded`. */
+    expanded?: boolean
   }>(),
   {
     size: 'm',
@@ -44,6 +47,8 @@ const props = withDefaults(
     disabled: false,
     avatar: true,
     loading: false,
+    // Vue casts an absent boolean to false; keep the attribute off instead.
+    expanded: undefined,
   },
 )
 
@@ -60,18 +65,20 @@ const rootClass = computed(() => [
   PICKER_SIZE_CLASS[props.size],
   PICKER_SURFACE_BG_CLASS[props.surface],
   isPill.value ? 'inline-flex' : 'flex w-full',
-  props.loading ? 'pointer-events-none' : '',
+  // Loading also sets `disabled` (so Enter/Space can't open it) but isn't dimmed.
+  props.disabled ? 'opacity-40' : '',
 ])
 </script>
 
 <template>
   <button
     type="button"
-    :disabled="disabled"
+    :disabled="disabled || loading"
     :aria-busy="loading || undefined"
     aria-haspopup="dialog"
+    :aria-expanded="expanded"
     data-testid="picker"
-    class="items-center border border-transparent text-left transition-colors duration-200 hover:bg-background-default-hover focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    class="items-center text-left transition-colors duration-200 hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-brand disabled:pointer-events-none"
     :class="rootClass"
   >
     <span
@@ -88,11 +95,11 @@ const rootClass = computed(() => [
       :loading="loading"
       size="m"
       no-wrap
-      :class="isPill ? 'shrink-0' : 'flex-1'"
+      :class="[isPill ? 'shrink-0' : 'flex-1', PICKER_TEXT_PAD_CLASS[size]]"
     />
 
     <span
-      class="flex size-4 shrink-0 items-center justify-center text-text-subtle"
+      class="flex size-4 shrink-0 items-center justify-center text-icon-subtle"
       data-testid="picker-chevron"
     >
       <AppIcon name="chevron-right" size="xxs" />

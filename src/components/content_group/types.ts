@@ -28,7 +28,8 @@ export const TONE_EMPHASIS_CLASS: Record<ContentGroupTone, string> = {
   inverse: 'text-text-inverted',
 }
 
+// Figma's dark surfaces (Toast) keep the description at full text/inverted.
 export const TONE_SUPPORTING_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-subtle',
-  inverse: 'text-text-inverted-subtle',
+  inverse: 'text-text-inverted',
 }
