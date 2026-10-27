@@ -12,7 +12,45 @@ describe('AppPicker', () => {
   it('renders the title and the trailing chevron', () => {
     const wrapper = mount(AppPicker, { props: { title: 'Ethereum' } })
     expect(wrapper.text()).toContain('Ethereum')
-    expect(wrapper.find(chevron()).exists()).toBe(true)
+    expect(wrapper.get(chevron()).classes()).toContain('text-icon-subtle')
+  })
+
+  it('renders a dialog-trigger button with a 1px inset brand focus ring', () => {
+    const el = mount(AppPicker, { props: { title: 'T' } }).get(root())
+    expect(el.attributes('type')).toBe('button')
+    expect(el.attributes('aria-haspopup')).toBe('dialog')
+    expect(el.classes()).toEqual(
+      expect.arrayContaining([
+        'focus-visible:ring-1',
+        'focus-visible:ring-inset',
+        'focus-visible:ring-border-brand',
+      ]),
+    )
+    expect(el.classes()).not.toContain('border')
+  })
+
+  it('lets a fallthrough click and attrs reach the button, except when disabled or loading', async () => {
+    const clicks = (props: Record<string, unknown>) => {
+      let n = 0
+      const wrapper = mount(AppPicker, {
+        props: { title: 'T', ...props },
+        attrs: { onClick: () => n++, 'aria-describedby': 'hint' },
+      })
+      return { wrapper, count: () => n }
+    }
+
+    const enabled = clicks({})
+    expect(enabled.wrapper.get(root()).attributes('aria-describedby')).toBe(
+      'hint',
+    )
+    await enabled.wrapper.get(root()).trigger('click')
+    expect(enabled.count()).toBe(1)
+
+    for (const state of [{ disabled: true }, { loading: true }]) {
+      const blocked = clicks(state)
+      await blocked.wrapper.get(root()).trigger('click')
+      expect(blocked.count()).toBe(0)
+    }
   })
 
   it('renders as a button and forwards disabled', () => {
@@ -22,7 +60,18 @@ describe('AppPicker', () => {
     const el = wrapper.get(root()).element as HTMLButtonElement
     expect(el.tagName).toBe('BUTTON')
     expect(el.disabled).toBe(true)
-    expect(wrapper.get(root()).classes()).toContain('disabled:opacity-40')
+    expect(wrapper.get(root()).classes()).toContain('opacity-40')
+  })
+
+  it('mirrors the modal state through aria-expanded only when bound', () => {
+    const unbound = mount(AppPicker, { props: { title: 'T' } })
+    expect(unbound.get(root()).attributes('aria-expanded')).toBeUndefined()
+
+    const open = mount(AppPicker, { props: { title: 'T', expanded: true } })
+    expect(open.get(root()).attributes('aria-expanded')).toBe('true')
+
+    const closed = mount(AppPicker, { props: { title: 'T', expanded: false } })
+    expect(closed.get(root()).attributes('aria-expanded')).toBe('false')
   })
 
   it('shows the description only at size L', () => {
@@ -86,9 +135,37 @@ describe('AppPicker', () => {
     )
   })
 
+  it('pads the text so S/M without an avatar keep their inset (Figma)', () => {
+    const geometry = (size: 's' | 'm' | 'l') => {
+      const w = mount(AppPicker, { props: { title: 'T', size, avatar: false } })
+      return {
+        box: w.get(root()).classes(),
+        text: w.get('[data-testid="cg-root"]').classes(),
+      }
+    }
+
+    const s = geometry('s')
+    expect(s.box).toEqual(expect.arrayContaining(['pl-1', 'pr-2']))
+    expect(s.box.some(c => c.startsWith('gap-'))).toBe(false)
+    expect(s.text).toContain('px-1.5')
+
+    const m = geometry('m')
+    expect(m.box).toEqual(expect.arrayContaining(['gap-1', 'px-2']))
+    expect(m.text).toContain('px-1')
+
+    const l = geometry('l')
+    expect(l.box).toEqual(expect.arrayContaining(['gap-2', 'px-4']))
+    expect(l.text.some(c => c.startsWith('px-'))).toBe(false)
+  })
+
   it('fills white on the default style and grey on the alternative style', () => {
     const def = mount(AppPicker, { props: { title: 'T', surface: 'default' } })
-    expect(def.get(root()).classes()).toContain('bg-white')
+    expect(def.get(root()).classes()).toEqual(
+      expect.arrayContaining([
+        'bg-background-alternative',
+        'hover:bg-background-alternative-hover',
+      ]),
+    )
 
     const alt = mount(AppPicker, {
       props: { title: 'T', surface: 'alternative' },
@@ -96,13 +173,15 @@ describe('AppPicker', () => {
     expect(alt.get(root()).classes()).toContain('bg-background-default')
   })
 
-  it('shows the Content Group skeleton and ignores clicks while loading', () => {
+  it('shows the Content Group skeleton and blocks mouse + keyboard while loading', () => {
     const wrapper = mount(AppPicker, {
       props: { title: 'Ethereum', loading: true },
     })
     const root = wrapper.get('[data-testid="picker"]')
     expect(root.attributes('aria-busy')).toBe('true')
-    expect(root.classes()).toContain('pointer-events-none')
+    // Native disabled is what stops Enter/Space too; loading isn't dimmed.
+    expect((root.element as HTMLButtonElement).disabled).toBe(true)
+    expect(root.classes()).not.toContain('opacity-40')
     expect(wrapper.find('[data-testid="cg-title"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="skeleton"]').exists()).toBe(true)
   })

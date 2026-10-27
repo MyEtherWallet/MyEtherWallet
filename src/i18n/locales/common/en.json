@@ -27,6 +27,13 @@
     "not_recommended_description": "This information is sensitive and should only be used by experienced crypto users.",
     "network": "network",
     "close": "close",
+    "dismiss": "Dismiss",
+    "banner_type": {
+      "info": "Info",
+      "alert": "Error",
+      "success": "Success",
+      "warning": "Warning"
+    },
     "clear_icon": "clear input",
     "copy": "copy",
     "copy_address": "copy address",
@@ -44,6 +51,7 @@
     "all_chains": "All chains",
     "all_networks": "All networks",
     "showing_page": "Showing page {current} of {total}",
+    "pagination": "Pagination",
     "edit": "Edit",
     "delete": "Delete",
     "token_count": "no tokens| 1 token | {count} Tokens",

@@ -12,15 +12,25 @@ export type PickerSize = 's' | 'm' | 'l'
 /**
  * Figma "Style" — which surface the picker is meant to sit on. `default` is for
  * a default (grey) page and fills white; `alternative` sits on a white surface
- * and fills grey. Both darken to the shared `background/default-hover` fill.
+ * and fills grey. Both darken to the shared `background/alternative-hover` fill.
  */
 export type PickerSurface = 'default' | 'alternative'
 
 /** Box geometry per size: height · gap · padding · radius (Figma). */
 export const PICKER_SIZE_CLASS: Record<PickerSize, string> = {
-  s: 'h-8 gap-1 pl-1 pr-2 rounded-full', // 32 · pill, hugs its content
-  m: 'h-10 gap-2 px-3 rounded-16', // 40
+  s: 'h-8 pl-1 pr-2 rounded-full', // 32 · pill, hugs its content
+  m: 'h-10 gap-1 px-2 rounded-16', // 40
   l: 'h-16 gap-2 px-4 rounded-16', // 64
+}
+
+/**
+ * Side padding on the text block (Figma). It keeps S/M text off the edge when
+ * the avatar is off; with an avatar it adds to the box gap.
+ */
+export const PICKER_TEXT_PAD_CLASS: Record<PickerSize, string> = {
+  s: 'px-1.5', // 6
+  m: 'px-1', // 4
+  l: '',
 }
 
 /** The nested Avatar's size at each Picker size (Figma). */
@@ -33,9 +43,9 @@ export const PICKER_AVATAR_SIZE: Record<PickerSize, AvatarSize> = {
 /**
  * Resting fill per style. Figma tokens: default = background/alternative (white),
  * alternative = `background/default` (#f5f5f5). Hover uses the shared
- * `background/default-hover` token in AppPicker.
+ * `background/alternative-hover` token in AppPicker.
  */
 export const PICKER_SURFACE_BG_CLASS: Record<PickerSurface, string> = {
-  default: 'bg-white',
+  default: 'bg-background-alternative',
   alternative: 'bg-background-default',
 }
