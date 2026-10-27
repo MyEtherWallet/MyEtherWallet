@@ -34,6 +34,8 @@
     "more": "más",
     "dont_have_wallet": "¿No tienes una billetera?",
     "create_wallet": "Crear billetera",
+    "create_wallet_short": "Crear",
+    "connect_wallet_short": "Conectar",
     "access_wallet": "Acceder a la billetera",
     "load_more": "Cargar más",
     "not_found": {
