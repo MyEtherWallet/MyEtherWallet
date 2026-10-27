@@ -3,15 +3,15 @@
 // Compare against Figma Navbar 1078:1485. The breakpoint axis is the viewport
 // (sm 768 / xl 1280 / 2xl 1440), not a prop, so resize the window to walk the
 // four Figma columns. The dev sidebar takes width the bar still thinks it has,
-// so each bar scrolls sideways when it doesn't fit. Slots hold stand-ins:
-// AppNavLink / AppAddressSelector (MEW-2461 / MEW-2462) replace the link and
-// wallet placeholders once they land.
+// so each bar scrolls sideways when it doesn't fit. The wallet slot holds a
+// stand-in until AppAddressSelector (MEW-2462) lands.
 import { computed, ref } from 'vue'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import AppNavLink from '@/components/navbar/AppNavLink.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 
-const LINKS = ['Home', 'Portfolio', 'Stocks', 'Crypto', 'Perpetuals', 'More']
+const LINKS = ['Home', 'Portfolio', 'Stocks', 'Crypto', 'Perpetuals']
 
 const walletSaved = ref(false)
 const menuOpen = ref(false)
@@ -82,18 +82,16 @@ const bars = computed(() => [
           @connect-wallet="record('connect-wallet')"
         >
           <template #links>
-            <a
-              v-for="label in LINKS"
+            <AppNavLink
+              v-for="(label, i) in LINKS"
               :key="label"
-              href="#"
-              class="rounded-full px-3 py-1 text-s-16 font-medium"
-              @click.prevent
-            >
-              {{ label }}
-            </a>
+              :label="label"
+              :selected="i === 0"
+            />
+            <AppNavLink label="More" dropdown />
           </template>
           <template #search>
-            <AppSearchbar class="hidden w-60 xl:block" />
+            <AppSearchbar variant="default" class="hidden w-60 xl:flex" />
             <AppBtnIcon
               icon="magnifying-glass"
               size="l"

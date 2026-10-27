@@ -17,16 +17,12 @@
         <!-- Own stacking context (as the old logo group had) so the More
              dropdown can't paint over the search overlay -->
         <div class="relative z-0 flex items-center gap-2">
-          <router-link
+          <app-nav-link
             v-for="item in coreMenuList"
             :key="item.routeName"
             :to="{ name: item.routeName }"
-            class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-background-default-hover"
-            v-ripple
-          >
-            {{ item.title }}
-          </router-link>
+            :label="item.title"
+          />
           <app-select
             v-model:selected="selectedOption"
             v-model:open="isMoreOpen"
@@ -36,18 +32,13 @@
             has-on-Hover
           >
             <template #select-button="{ toggleSelect }">
-              <button
-                class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
+              <app-nav-link
+                :label="$t('common.more')"
+                dropdown
+                :expanded="isMoreOpen"
+                class="capitalize"
                 @click="toggleSelect"
-              >
-                {{ $t('common.more') }}
-                <AppIcon
-                  name="chevron-down"
-                  variant="filled"
-                  size="xxs"
-                  class="ml-2"
-                />
-              </button>
+              />
             </template>
           </app-select>
         </div>
@@ -100,8 +91,8 @@ import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import AppNavLink from '@/components/navbar/AppNavLink.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
