@@ -19,6 +19,7 @@
     <app-searchbar
       v-else
       v-model="query"
+      variant="default"
       :placeholder="$t('search.placeholder')"
       @focusin="open"
       @click="open"

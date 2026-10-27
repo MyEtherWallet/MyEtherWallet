@@ -45,6 +45,8 @@ describe('GlobalSearchInput (navbar trigger, MEW-2463)', () => {
     isBelowXl.value = false
     const wrapper = mountInput()
     expect(wrapper.classes()).toContain('w-60')
+    // Navbar uses the 40px Default Searchbar, not the 48px Outline default.
+    expect(wrapper.getComponent(AppSearchbar).props('variant')).toBe('default')
     // AppSearchbar's own clear button is an AppBtnIcon too; no search button.
     const icons = wrapper
       .findAllComponents(AppBtnIcon)
