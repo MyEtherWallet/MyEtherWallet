@@ -34,6 +34,8 @@ import zhCommon from '@/i18n/locales/common/zh.json'
 import enMultiAddress from '@/i18n/locales/multi_address/en.json'
 import esMultiAddress from '@/i18n/locales/multi_address/es.json'
 import zhMultiAddress from '@/i18n/locales/multi_address/zh.json'
+import enCrypto from '@/i18n/locales/crypto/en.json'
+import zhCrypto from '@/i18n/locales/crypto/zh.json'
 
 type Dict = Record<string, unknown>
 type Flat = Record<string, unknown>
@@ -211,4 +213,17 @@ describe('newly extracted strings are actually translated (not English copies)',
     expect(esFlat[key], `es.${key}`).not.toBe(enFlat[key])
     expect(zhFlat[key], `zh.${key}`).not.toBe(enFlat[key])
   })
+})
+
+// es keeps these as-is (DeFi, meme and TikTok read naturally in Spanish), so
+// only zh is checked.
+describe('crypto category labels are translated in zh', () => {
+  it.each(['crypto.defi', 'crypto.meme', 'crypto.tiktok'])(
+    '%s differs from English',
+    key => {
+      expect(flatten(zhCrypto as Dict)[key]).not.toBe(
+        flatten(enCrypto as Dict)[key],
+      )
+    },
+  )
 })
