@@ -91,9 +91,9 @@ import { ROUTES_MAIN } from '@/router/routeNames'
  *
  * The navbar owns layout only. Links, search, the saved-wallet trigger and the
  * notifications/settings actions come in through slots, because each of those
- * ships its own popup today. `#links` takes AppNavLinks; `#wallet` takes
- * AppAddressSelector once it lands (MEW-2462). The hamburger and the CTAs
- * only emit; the layout owns what they open.
+ * ships its own popup today. `#links` takes AppNavLinks; `#wallet` takes the
+ * AppAddressSelector trigger. The hamburger and the CTAs only emit; the
+ * layout owns what they open.
  *
  * Between 1280 and 1440 the full row doesn't fit, so the CTAs drop "wallet".
  */

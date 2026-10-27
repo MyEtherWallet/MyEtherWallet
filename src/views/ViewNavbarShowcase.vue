@@ -3,13 +3,14 @@
 // Compare against Figma Navbar 1078:1485. The breakpoint axis is the viewport
 // (sm 768 / xl 1280 / 2xl 1440), not a prop, so resize the window to walk the
 // four Figma columns. The dev sidebar takes width the bar still thinks it has,
-// so each bar scrolls sideways when it doesn't fit. The wallet slot holds a
-// stand-in until AppAddressSelector (MEW-2462) lands.
+// so each bar scrolls sideways when it doesn't fit.
 import { computed, ref } from 'vue'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
 import AppNavLink from '@/components/navbar/AppNavLink.vue'
+import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
+import ethIcon from '@/assets/icons/tokens/eth.svg'
 
 const LINKS = ['Home', 'Portfolio', 'Stocks', 'Crypto', 'Perpetuals']
 
@@ -101,11 +102,11 @@ const bars = computed(() => [
             />
           </template>
           <template #wallet>
-            <div
-              class="flex h-10 items-center rounded-full bg-background-default px-4 text-label-base"
-            >
-              0x12…abcd
-            </div>
+            <AppAddressSelector
+              address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88"
+              balance="$130.23"
+              :network-icon="ethIcon"
+            />
           </template>
           <template #actions>
             <AppBtnIcon icon="bell" label="Notifications" />
