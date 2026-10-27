@@ -32,6 +32,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Input Naked', to: '/dev/input-naked' },
       { name: 'Modal', to: '/dev/modal' },
       { name: 'NavLink', to: '/dev/navlink' },
+      { name: 'Pagination', to: '/dev/pagination' },
       { name: 'Picker', to: '/dev/picker' },
       { name: 'Radio Button', to: '/dev/radio' },
       { name: 'ScrollFade', to: '/dev/scroll-fade' },

@@ -144,6 +144,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'pagination',
+              name: 'DevPagination',
+              component: () => import('@/views/ViewPaginationShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'scroll-fade',
               name: 'DevScrollFade',
               component: () => import('@/views/ViewScrollFadeShowcase.vue'),

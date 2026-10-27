@@ -147,7 +147,6 @@
       "today": "Hoy",
       "yesterday": "Ayer",
       "daysAgo": "hace {n} días",
-      "pagination": "Mostrando página {page} de {total}",
       "readOnSource": "Lee el artículo completo en {source}",
       "readMore": "Lee el artículo completo"
     }
