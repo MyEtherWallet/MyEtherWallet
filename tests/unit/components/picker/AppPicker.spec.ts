@@ -104,6 +104,6 @@ describe('AppPicker', () => {
     expect(root.attributes('aria-busy')).toBe('true')
     expect(root.classes()).toContain('pointer-events-none')
     expect(wrapper.find('[data-testid="cg-title"]').exists()).toBe(false)
-    expect(wrapper.find('.animate-pulse').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="skeleton"]').exists()).toBe(true)
   })
 })

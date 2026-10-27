@@ -73,8 +73,6 @@
       :selected-chain="selectedChain"
       :passed-chains="passedChains"
       :filter-by-selected-chain-type="canStore"
-      :z-index-overlay="dialogZIndexOverlay"
-      :z-index-container="dialogZIndexContainer"
       @update:chain="setSelectedChain"
     />
   </div>
@@ -107,14 +105,6 @@ const prop = defineProps({
   preselectedChain: {
     type: Object as () => Chain | null,
     default: null,
-  },
-  dialogZIndexOverlay: {
-    type: String,
-    default: 'z-[200]',
-  },
-  dialogZIndexContainer: {
-    type: String,
-    default: 'z-[201]',
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']

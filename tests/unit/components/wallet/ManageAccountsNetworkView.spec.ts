@@ -98,7 +98,7 @@ describe('ManageAccountsNetworkView', () => {
 
   it('filters by search over nameLong', async () => {
     const w = factory()
-    await w.get('[data-test="net-search"]').setValue('opti')
+    await w.get('[data-test="net-search"] input').setValue('opti')
     expect(w.findAll('[data-test="net-compatible"]')).toHaveLength(1)
   })
 })
