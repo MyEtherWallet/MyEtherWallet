@@ -1,6 +1,6 @@
 {
   "multi_address": {
-    "title": "Administrar cuentas",
+    "title": "Gestionar cuentas",
     "active": "Activa",
     "saved": "Direcciones guardadas",
     "your_addresses": "Tus direcciones",
@@ -59,6 +59,7 @@
       "cancel": "Cerrar"
     },
     "menu": {
+      "label": "Menú de la cuenta",
       "rename": "Renombrar",
       "copy": "Copiar dirección",
       "refresh": "Actualizar saldo",

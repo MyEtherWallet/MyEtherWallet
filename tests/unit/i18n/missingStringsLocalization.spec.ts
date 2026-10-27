@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
-// Namespaces touched by the MEW-1993 "localize missing strings" sweep.
+// Namespaces touched by the MEW-1993 "localize missing strings" sweep, plus
+// the MEW-2527 translation fixes (multi_address, crypto categories).
 import enSettings from '@/i18n/locales/settings/en.json'
 import esSettings from '@/i18n/locales/settings/es.json'
 import zhSettings from '@/i18n/locales/settings/zh.json'
@@ -215,7 +216,7 @@ describe('newly extracted strings are actually translated (not English copies)',
   })
 })
 
-// es keeps these as-is (DeFi, meme and TikTok read naturally in Spanish), so
+// es keeps these as-is (DeFi, MEME and TikTok read naturally in Spanish), so
 // only zh is checked.
 describe('crypto category labels are translated in zh', () => {
   it.each(['crypto.defi', 'crypto.meme', 'crypto.tiktok'])(

@@ -25,8 +25,8 @@
     "cap_reached": "最多可保存 20 个地址",
     "cap_toast_title": "钱包未保存",
     "cap_toast_description": "您已达到 20 个地址的上限。请移除一个地址后再保存此地址。",
-    "cap_note_title": "未保存的地址",
-    "cap_note_description": "您已保存了最多 20 个地址，请移除一个地址以保存此地址。",
+    "cap_note_title": "地址未保存",
+    "cap_note_description": "您已达到最多保存 20 个地址的上限，请移除一个地址以保存此地址。",
     "extension_prompt": "如需连接，请打开您的扩展程序并选择上方显示的地址。",
     "network_title": "网络",
     "network_search": "搜索",
@@ -34,7 +34,7 @@
     "no_address_subtitle": "连接或添加一个地址以使用此网络，或选择其他网络。",
     "no_address_pill": "无地址",
     "address_saved": {
-      "title_suffix": "已保存",
+      "title_suffix": "已保存过",
       "subtitle": "如果您想保存其他地址，请在 {wallet} 中选择该地址后重试。",
       "open_wallet": "打开 {wallet}",
       "try_again": "重试"
@@ -59,11 +59,12 @@
       "cancel": "关闭"
     },
     "menu": {
+      "label": "账户菜单",
       "rename": "重命名",
       "copy": "复制地址",
       "refresh": "刷新余额",
       "paper_wallet": "打开纸钱包",
-      "explorer": "区块链浏览器",
+      "explorer": "区块浏览器",
       "disconnect": "断开连接",
       "remove": "移除"
     }
