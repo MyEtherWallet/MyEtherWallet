@@ -60,6 +60,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'banner',
+              name: 'DevBanner',
+              component: () => import('@/views/ViewBannerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'cell',
               name: 'DevCell',
               component: () => import('@/views/ViewCellShowcase.vue'),

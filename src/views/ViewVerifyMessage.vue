@@ -30,42 +30,25 @@
             class="w-full"
           />
 
-          <div
+          <AppBanner
             v-if="
               signingAddress !== '' &&
               message !== '' &&
               signature !== '' &&
               verifyStatusKey !== ''
             "
-            class="p-5 rounded-20 border text-s-14 transition-all"
-            :class="
-              verified
-                ? 'border-border-success/20 text-text-default bg-background-success/5'
-                : 'border-border-error/20 text-text-error bg-background-error/5'
-            "
+            :type="verified ? 'success' : 'alert'"
           >
-            <div class="flex items-start gap-3">
-              <div
-                class="w-2 h-2 mt-2 rounded-full shrink-0"
-                :class="
-                  verified ? 'bg-background-success' : 'bg-background-error'
-                "
-              ></div>
-              <i18n-t
-                :keypath="verifyStatusKey"
-                tag="p"
-                class="font-medium leading-relaxed break-words"
-              >
-                <template #message>
-                  <code class="break-all">{{ message }}</code>
-                </template>
-                <template #address>
-                  <code class="break-all">{{ signingAddress }}</code>
-                </template>
-                <template #chain>{{ selectedChain?.name ?? '' }}</template>
-              </i18n-t>
-            </div>
-          </div>
+            <i18n-t :keypath="verifyStatusKey" tag="p">
+              <template #message>
+                <code class="break-all">{{ message }}</code>
+              </template>
+              <template #address>
+                <code class="break-all">{{ signingAddress }}</code>
+              </template>
+              <template #chain>{{ selectedChain?.name ?? '' }}</template>
+            </i18n-t>
+          </AppBanner>
 
           <div class="flex justify-center">
             <app-base-button
@@ -86,6 +69,7 @@ import { ref, computed, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import { useWalletStore } from '@/stores/walletStore'

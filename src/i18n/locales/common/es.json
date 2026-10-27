@@ -27,6 +27,13 @@
     "not_recommended_description": "Esta información es sensible y solo deben usarla usuarios con experiencia en cripto.",
     "network": "red",
     "close": "cerrar",
+    "dismiss": "Descartar",
+    "banner_type": {
+      "info": "Información",
+      "alert": "Error",
+      "success": "Éxito",
+      "warning": "Advertencia"
+    },
     "clear_icon": "borrar campo",
     "copy": "copiar",
     "copy_address": "copiar dirección",

@@ -27,6 +27,13 @@
     "not_recommended_description": "此信息较为敏感，仅建议有经验的加密用户使用。",
     "network": "网络",
     "close": "关闭",
+    "dismiss": "关闭",
+    "banner_type": {
+      "info": "提示",
+      "alert": "错误",
+      "success": "成功",
+      "warning": "警告"
+    },
     "clear_icon": "清除输入",
     "copy": "复制",
     "copy_address": "复制地址",
