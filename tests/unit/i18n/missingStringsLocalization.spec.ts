@@ -31,6 +31,9 @@ import zhTrade from '@/i18n/locales/trade/zh.json'
 import enCommon from '@/i18n/locales/common/en.json'
 import esCommon from '@/i18n/locales/common/es.json'
 import zhCommon from '@/i18n/locales/common/zh.json'
+import enMultiAddress from '@/i18n/locales/multi_address/en.json'
+import esMultiAddress from '@/i18n/locales/multi_address/es.json'
+import zhMultiAddress from '@/i18n/locales/multi_address/zh.json'
 
 type Dict = Record<string, unknown>
 type Flat = Record<string, unknown>
@@ -90,6 +93,12 @@ const suites = [
   },
   { name: 'trade', en: enTrade, es: esTrade, zh: zhTrade },
   { name: 'common', en: enCommon, es: esCommon, zh: zhCommon },
+  {
+    name: 'multi_address',
+    en: enMultiAddress,
+    es: esMultiAddress,
+    zh: zhMultiAddress,
+  },
 ] as const
 
 describe.each(suites)('$name localization parity', ({ name, en, es, zh }) => {
@@ -145,7 +154,12 @@ describe.each(suites)('$name localization parity', ({ name, en, es, zh }) => {
 describe('newly extracted strings are actually translated (not English copies)', () => {
   const cases: Array<[string, Dict, Dict, Dict]> = [
     ['settings.fee_option.economy.label', enSettings, esSettings, zhSettings],
-    ['settings.fee_option.recommended.description', enSettings, esSettings, zhSettings],
+    [
+      'settings.fee_option.recommended.description',
+      enSettings,
+      esSettings,
+      zhSettings,
+    ],
     ['stocks.about', enStocks, esStocks, zhStocks],
     ['stocks.statistics', enStocks, esStocks, zhStocks],
     ['portfolio.no_balance.title', enPortfolio, esPortfolio, zhPortfolio],
@@ -164,6 +178,31 @@ describe('newly extracted strings are actually translated (not English copies)',
     ['common.mew_app_banner.title', enCommon, esCommon, zhCommon],
     ['common.mew_app_banner.rewards_line1', enCommon, esCommon, zhCommon],
     ['common.mew_app_banner.download_now', enCommon, esCommon, zhCommon],
+    // Wallet panel account menu (multi_address namespace)
+    [
+      'multi_address.connect_another',
+      enMultiAddress,
+      esMultiAddress,
+      zhMultiAddress,
+    ],
+    [
+      'multi_address.menu.rename',
+      enMultiAddress,
+      esMultiAddress,
+      zhMultiAddress,
+    ],
+    [
+      'multi_address.menu.explorer',
+      enMultiAddress,
+      esMultiAddress,
+      zhMultiAddress,
+    ],
+    [
+      'multi_address.menu.remove',
+      enMultiAddress,
+      esMultiAddress,
+      zhMultiAddress,
+    ],
   ]
   it.each(cases)('%s differs from English in es and zh', (key, en, es, zh) => {
     const enFlat = flatten(en as Dict)

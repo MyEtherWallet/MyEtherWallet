@@ -1,0 +1,71 @@
+{
+  "multi_address": {
+    "title": "Administrar cuentas",
+    "active": "Activa",
+    "saved": "Direcciones guardadas",
+    "your_addresses": "Tus direcciones",
+    "saved_group": "Direcciones {type} guardadas",
+    "add": "Agregar dirección",
+    "connect_another": "Conectar otra billetera",
+    "disconnect": "Desconectar",
+    "paper_wallet": "Ver billetera de papel",
+    "empty": "Aún no hay direcciones guardadas",
+    "unlocked": "Desbloqueada",
+    "connected": "Conectada",
+    "watch_only": "Solo lectura",
+    "watchonly": "Solo lectura",
+    "connect_address": "Conectar dirección",
+    "tokens": "tokens",
+    "copied": "¡Copiado!",
+    "detected": "Dirección detectada",
+    "detected_wallet": "Dirección de {wallet} detectada",
+    "save_address": "Guardar dirección",
+    "duplicate_name": "Ese nombre ya está en uso",
+    "duplicate_address": "Esta dirección ya está guardada. Selecciona otra en tu extensión e inténtalo de nuevo.",
+    "cap_reached": "Puedes guardar hasta 20 direcciones",
+    "cap_toast_title": "Billetera no guardada",
+    "cap_toast_description": "Llegaste al límite de 20 direcciones. Elimina una para guardar esta dirección.",
+    "cap_note_title": "Dirección no guardada",
+    "cap_note_description": "Llegaste al máximo de 20 direcciones guardadas, elimina una para guardar esta.",
+    "extension_prompt": "Para conectarte, abre tu extensión y selecciona la dirección que se muestra arriba.",
+    "network_title": "Redes",
+    "network_search": "Buscar",
+    "no_address_title": "No hay dirección para esta red",
+    "no_address_subtitle": "Conecta o agrega una dirección para usar esta red, o elige otra.",
+    "no_address_pill": "Sin dirección",
+    "address_saved": {
+      "title_suffix": "ya está guardada",
+      "subtitle": "Si quieres guardar otra dirección, selecciónala en {wallet} e inténtalo de nuevo.",
+      "open_wallet": "Abrir {wallet}",
+      "try_again": "Intentar de nuevo"
+    },
+    "connect_address_modal": {
+      "title": "Conectar dirección",
+      "subtitle": "Para conectarte, abre tu extensión de {wallet} y selecciona la siguiente dirección:",
+      "open_wallet": "Abrir {wallet}",
+      "try_again": "Intentar de nuevo"
+    },
+    "rename": {
+      "title": "Renombrar dirección",
+      "subtitle": "Escribe un nombre nuevo y guárdalo",
+      "placeholder": "Escribe aquí...",
+      "save": "Guardar",
+      "duplicate": "Ese nombre ya está en uso, escribe otro"
+    },
+    "remove": {
+      "title": "¿Eliminar {name}?",
+      "subtitle": "Esto eliminará {name} de tus direcciones guardadas. Puedes volver a agregarla cuando quieras si la reconectas.",
+      "confirm": "Eliminar dirección",
+      "cancel": "Cerrar"
+    },
+    "menu": {
+      "rename": "Renombrar",
+      "copy": "Copiar dirección",
+      "refresh": "Actualizar saldo",
+      "paper_wallet": "Abrir billetera de papel",
+      "explorer": "Explorador de bloques",
+      "disconnect": "Desconectar",
+      "remove": "Eliminar"
+    }
+  }
+}
