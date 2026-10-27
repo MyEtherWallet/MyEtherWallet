@@ -51,14 +51,16 @@ import { inputSurfaceClass, type InputSurface } from '@/components/inputSizes'
 defineOptions({ inheritAttrs: false })
 
 /**
- * Multi-line text field, restyled to match the design-library `Input`
+ * Legacy multi-line text field (pre design library). The design-library Text
+ * Area is `text_area/AppTextArea.vue`; this stays for the call sites that
+ * don't match it yet. Restyled to match the design-library `Input`
  * (MEW-1971): same surface tokens, 12px radius and focus-only error ring, at
  * textarea height. No float label — a textarea has no filled/label state.
  *
  * @example Basic
- * <app-text-area v-model="model" placeholder="Message" />
+ * <app-text-area-legacy v-model="model" placeholder="Message" />
  * @example On a white card/dialog
- * <app-text-area v-model="model" surface="alternative" placeholder="Message" />
+ * <app-text-area-legacy v-model="model" surface="alternative" placeholder="Message" />
  */
 const props = defineProps({
   placeholder: {
