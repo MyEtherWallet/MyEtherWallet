@@ -80,21 +80,13 @@ describe('TradeMarketStatusPopover', () => {
     expect(popover.emitted('close')).toHaveLength(1)
   })
 
-  it('slides the card right when a short status label puts it past the left edge', async () => {
-    expect((await mountInBoundary(44)).attributes('style')).toContain(
-      'translateX(56px)',
-    )
-  })
-
-  it('slides the card left when it would pass the right edge', async () => {
-    expect((await mountInBoundary(300)).attributes('style')).toContain(
-      'translateX(-120px)',
-    )
-  })
-
-  it('keeps the card centred under the icon when it fits', async () => {
-    expect((await mountInBoundary(150)).attributes('style')).toContain(
-      'translateX(0px)',
+  it.each([
+    ['right past the left edge', 44, 56],
+    ['left past the right edge', 300, -120],
+    ['nowhere when it fits', 150, 0],
+  ])('slides the card %s', async (_, popoverLeft, shift) => {
+    expect((await mountInBoundary(popoverLeft)).attributes('style')).toContain(
+      `translateX(${shift}px)`,
     )
   })
 })
