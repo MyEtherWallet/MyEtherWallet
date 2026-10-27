@@ -50,4 +50,12 @@ describe('TradeMarketStatusPill', () => {
     await pill.find('button').trigger('click')
     expect(pill.findComponent(TradeMarketStatusPopover).exists()).toBe(false)
   })
+
+  it('keeps the popover inside the pill', async () => {
+    const pill = mountPill()
+    await pill.find('button').trigger('click')
+    expect(pill.findComponent(TradeMarketStatusPopover).props('boundary')).toBe(
+      pill.element,
+    )
+  })
 })
