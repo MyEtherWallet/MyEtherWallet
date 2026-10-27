@@ -4,9 +4,15 @@
 // eyeball the Style × Size matrix, avatar on/off, the L-only description and the
 // disabled state against Figma. Hover and focus are native — hover a row or Tab
 // to it to see those states.
+import { ref } from 'vue'
 import AppPicker from '@/components/picker/AppPicker.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppDialog from '@/components/AppDialog.vue'
 import type { PickerSize, PickerSurface } from '@/components/picker/types'
+
+// Live sample: the picker only emits the click; the page owns the modal and
+// mirrors its open state back through `expanded` (aria-expanded).
+const isDialogOpen = ref(false)
 
 const SIZES: PickerSize[] = ['l', 'm', 's']
 
@@ -83,8 +89,48 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
               <AppAvatar type="initial" :size="avatarSize" initial="E" />
             </template>
           </AppPicker>
+
+          <AppPicker
+            class="max-w-full"
+            :size="size"
+            :surface="s.surface"
+            loading
+            title="Loading"
+          />
         </div>
       </div>
     </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-s-16 font-semibold">
+        Live — opens a stub modal, long title truncates (L / M)
+      </h2>
+      <div
+        class="flex max-w-80 flex-col gap-3 rounded-12 border border-border-default bg-white p-4"
+      >
+        <AppPicker
+          v-for="size in ['l', 'm'] as const"
+          :key="size"
+          :size="size"
+          surface="alternative"
+          title="Wrapped Ether on a very long network name that truncates"
+          description="A description long enough to clip at the row's edge"
+          :expanded="isDialogOpen"
+          @click="isDialogOpen = true"
+        >
+          <template #avatar="{ size: avatarSize }">
+            <AppAvatar type="initial" :size="avatarSize" initial="W" />
+          </template>
+        </AppPicker>
+      </div>
+    </section>
+
+    <AppDialog v-model:is-open="isDialogOpen" title="Stub modal">
+      <template #content>
+        <p class="text-s-14 text-text-subtle">
+          The modal content belongs to the caller, not the Picker.
+        </p>
+      </template>
+    </AppDialog>
   </div>
 </template>
