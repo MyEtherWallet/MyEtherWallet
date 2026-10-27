@@ -20,8 +20,7 @@
       >
         <app-searchbar
           v-model="searchQuery"
-          bg-class="bg-background-default"
-          size="compact"
+          variant="default"
           :placeholder="$t('perps.market-list.search-placeholder')"
           class="w-full xs:w-60 shrink-0"
         />
@@ -214,27 +213,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <AppBtnIcon
-                  :label="
-                    watchlist.has(contract.baseCurrency)
-                      ? $t('perps.market-list.remove-from-watchlist')
-                      : $t('perps.market-list.add-to-watchlist')
-                  "
-                  :class="
-                    watchlist.has(contract.baseCurrency)
-                      ? 'text-text-brand'
-                      : 'text-text-subtle'
-                  "
-                  @click.stop="toggleWatchlist(contract.baseCurrency)"
-                >
-                  <AppIcon
-                    name="star"
-                    :variant="
-                      watchlist.has(contract.baseCurrency) ? 'filled' : 'stroke'
-                    "
-                    size="xxs"
-                  />
-                </AppBtnIcon>
+                <AppCellWatchlistToggle
+                  :model-value="watchlist.has(contract.baseCurrency)"
+                  @update:model-value="toggleWatchlist(contract.baseCurrency)"
+                />
               </td>
               <!-- Name -->
               <td class="px-1 py-2" colspan="2">
@@ -693,6 +675,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import {
   usePerpsMarkets,
   usePerpsContracts,

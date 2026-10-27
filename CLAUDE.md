@@ -59,13 +59,13 @@ src/
 
 ### Buttons
 
-| Component             | Purpose                                                    |
-| --------------------- | ---------------------------------------------------------- |
-| `AppBaseButton.vue`   | Primary button — use as the base for all clickable actions |
-| `AppBtnText.vue`      | Text-only button (no background)                           |
-| `AppBtnIcon.vue`      | Icon-only button                                           |
-| `AppBtnIconClose.vue` | Close/dismiss icon button                                  |
-| `AppBtnCopy.vue`      | Button that copies text to clipboard                       |
+| Component             | Purpose                                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `AppBaseButton.vue`   | Primary button — use as the base for all clickable actions (`type="link"` for text-only)                      |
+| `AppBtnGroup.vue`     | Button Group — lays out 2–3 related `AppBaseButton`s (equal widths horizontal, full-width vertical, 16px gap) |
+| `AppBtnIcon.vue`      | Icon-only button                                                                                              |
+| `AppBtnIconClose.vue` | Close/dismiss icon button                                                                                     |
+| `AppBtnCopy.vue`      | Button that copies text to clipboard                                                                          |
 
 ### Inputs & Forms
 
@@ -84,7 +84,7 @@ src/
 
 | Component             | Purpose                         |
 | --------------------- | ------------------------------- |
-| `AppDialog.vue`       | Full modal dialog with backdrop |
+| `modal/AppModal.vue`  | Base modal (all dialogs use it) |
 | `AppSheet.vue`        | Bottom sheet / side panel       |
 | `AppViewAsDialog.vue` | View-as / impersonation dialog  |
 | `AppPopUpMenu.vue`    | Contextual popup menu           |

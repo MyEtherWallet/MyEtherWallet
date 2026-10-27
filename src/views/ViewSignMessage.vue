@@ -24,50 +24,50 @@
             }}
           </app-base-button>
 
-          <app-dialog
-            v-model:is-open="signedModal"
+          <app-modal
+            v-model="signedModal"
             :title="$t('sign_message.signature_title')"
-            class="sm:max-w-xl sm:mx-auto"
-            has-content-gutter
+            class="w-full sm:max-w-xl"
+            :buttons="{
+              primary: {
+                label: $t('sign_message.copy_signature'),
+                onClick: copy,
+              },
+            }"
           >
-            <template #content>
-              <div class="flex flex-col gap-6 pb-6 pt-2">
-                <div>
-                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
-                    {{ $t('sign_message.message_label') }}
-                  </h3>
-                  <div
-                    class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
-                  >
-                    {{ hexMessage }}
-                  </div>
+            <div class="flex flex-col gap-6 px-4 sm:px-6 pt-2">
+              <div>
+                <h3 class="text-s-14 font-medium text-text-muted mb-1">
+                  {{ $t('sign_message.message_label') }}
+                </h3>
+                <div
+                  class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
+                >
+                  {{ hexMessage }}
                 </div>
-                <div>
-                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
-                    {{ $t('sign_message.signing_address_label') }}
-                  </h3>
-                  <div
-                    class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
-                  >
-                    {{ walletAddress }}
-                  </div>
-                </div>
-                <div>
-                  <h3 class="text-s-14 font-medium text-text-muted mb-1">
-                    {{ $t('sign_message.signature_label') }}
-                  </h3>
-                  <div
-                    class="bg-background-default rounded-xl p-4 text-s-12 break-all border border-border-default text-text-subtle font-mono"
-                  >
-                    {{ signature }}
-                  </div>
-                </div>
-                <app-base-button @click="copy" class="xs:mx-auto xs:w-auto">
-                  {{ $t('sign_message.copy_signature') }}
-                </app-base-button>
               </div>
-            </template>
-          </app-dialog>
+              <div>
+                <h3 class="text-s-14 font-medium text-text-muted mb-1">
+                  {{ $t('sign_message.signing_address_label') }}
+                </h3>
+                <div
+                  class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
+                >
+                  {{ walletAddress }}
+                </div>
+              </div>
+              <div>
+                <h3 class="text-s-14 font-medium text-text-muted mb-1">
+                  {{ $t('sign_message.signature_label') }}
+                </h3>
+                <div
+                  class="bg-background-default rounded-xl p-4 text-s-12 break-all border border-border-default text-text-subtle font-mono"
+                >
+                  {{ signature }}
+                </div>
+              </div>
+            </div>
+          </app-modal>
         </div>
       </app-sheet>
     </div>
@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
