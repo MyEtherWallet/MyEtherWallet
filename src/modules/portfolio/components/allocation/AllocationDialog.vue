@@ -91,7 +91,8 @@
             <button
               v-for="token in searchResults"
               :key="token.symbol + token.id"
-              class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default"
+              class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default disabled:pointer-events-none"
+              :disabled="!token.id && !token.stock_route"
               @click="routeToToken(token)"
             >
               <div class="flex justify-between items-center w-full">
@@ -264,7 +265,7 @@ const routeToToken = (token: TokenAllocation) => {
   } else {
     router.push({
       name: TOKEN_INFO_ROUTE_NAMES.home,
-      params: { tokenId: token.id || token.symbol },
+      params: { tokenId: token.id },
     })
   }
 }
