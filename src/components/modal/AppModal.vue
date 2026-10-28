@@ -49,7 +49,8 @@
 
           <header
             v-if="hasHeader"
-            class="flex min-h-20 shrink-0 items-center justify-center p-4 sm:p-6"
+            class="flex min-h-20 shrink-0 items-center p-4 sm:p-6"
+            :class="{ 'justify-center': centeredHeader }"
           >
             <slot name="header">
               <!-- px-8 keeps the title clear of the 32px back/close buttons. -->
@@ -167,6 +168,7 @@ const props = withDefaults(
     title?: string
     subtitle?: string
     showHeader?: boolean
+    centeredHeader?: boolean
     showBackButton?: boolean
     showCloseButton?: boolean
     buttons?: ModalButtons
