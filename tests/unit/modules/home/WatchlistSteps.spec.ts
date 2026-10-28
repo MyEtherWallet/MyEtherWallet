@@ -57,6 +57,9 @@ const i18n = createI18n({
   messages: { en: {} },
 })
 
+// Cards are AppCards: the click lands on their stretched hit button.
+const HIT = '[data-testid="card-hit"]'
+
 const mountWith = (component: unknown, props: Record<string, unknown> = {}) =>
   mount(component as never, { props, global: { plugins: [i18n] } })
 
@@ -74,7 +77,7 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
 
   it('toggles selection via update:modelValue and emits continue', async () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: [] })
-    await w.findAll('[data-test="market-card"]')[0].trigger('click')
+    await w.findAll('[data-test="market-card"]')[0].get(HIT).trigger('click')
     expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['stocks'])
 
     const enabled = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
@@ -84,13 +87,13 @@ describe('WatchlistStepMarkets (MEW-2130)', () => {
 
   it('is single-select: picking the other market replaces the current one', async () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: ['stocks'] })
-    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    await w.findAll('[data-test="market-card"]')[1].get(HIT).trigger('click') // crypto
     expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['crypto'])
   })
 
   it('clicking the selected market clears the pick', async () => {
     const w = mountWith(WatchlistStepMarkets, { modelValue: ['crypto'] })
-    await w.findAll('[data-test="market-card"]')[1].trigger('click') // crypto
+    await w.findAll('[data-test="market-card"]')[1].get(HIT).trigger('click') // crypto
     expect(w.emitted('update:modelValue')?.[0][0]).toEqual([])
   })
 
@@ -151,7 +154,7 @@ describe('WatchlistStepIndustries (MEW-2130)', () => {
       categories: CATEGORIES,
       isLoading: false,
     })
-    await w.findAll('[data-test="industry-pill"]')[0].trigger('click')
+    await w.findAll('[data-test="industry-pill"]')[0].get(HIT).trigger('click')
     expect(w.emitted('update:modelValue')?.[0][0]).toEqual(['STOCK:Equities'])
   })
 
@@ -362,8 +365,8 @@ describe('WatchlistStepAssets (MEW-2130)', () => {
     expect(cards).toHaveLength(27)
     // Selected crypto stays enabled (so it can be toggled off); the extra
     // unselected crypto is capped; the stock is a different category, still open.
-    expect(cards[0].attributes('disabled')).toBeUndefined()
-    expect(cards[25].attributes('disabled')).toBeDefined()
-    expect(cards[26].attributes('disabled')).toBeUndefined()
+    expect(cards[0].get(HIT).attributes('disabled')).toBeUndefined()
+    expect(cards[25].get(HIT).attributes('disabled')).toBeDefined()
+    expect(cards[26].get(HIT).attributes('disabled')).toBeUndefined()
   })
 })
