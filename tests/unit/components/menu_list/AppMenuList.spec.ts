@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
@@ -76,18 +76,57 @@ describe('AppMenuList — design-library Menu List (MEW-2466)', () => {
     ).toBe('menu')
   })
 
-  it('styles the scrollbar by default, hides it with scrollbar=false and applies listClass', () => {
+  describe('scrollbar', () => {
+    // jsdom has no layout: fake the rows' content height against a 320px list.
+    const fakeContentHeight = (height: number) => {
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(
+        height,
+      )
+      vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(
+        320,
+      )
+    }
+    const settledList = async (props: Record<string, unknown> = {}) => {
+      const wrapper = mountMenu(props)
+      await nextTick()
+      await nextTick()
+      return wrapper.get('[data-testid="menu-list-rows"]')
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('shows the styled bar and its gap only while the rows overflow', async () => {
+      fakeContentHeight(800)
+      expect((await settledList()).classes()).toEqual(
+        expect.arrayContaining(['menu-list-scrollbar', 'pr-1', 'max-h-80']),
+      )
+
+      fakeContentHeight(156)
+      const fitting = await settledList()
+      expect(fitting.classes()).toContain('no-scrollbar')
+      expect(fitting.classes()).not.toContain('menu-list-scrollbar')
+      expect(fitting.classes()).not.toContain('pr-1')
+    })
+
+    it('hides the bar with scrollbar=false even when overflowing and applies listClass', async () => {
+      fakeContentHeight(800)
+      const hidden = await settledList({
+        scrollbar: false,
+        listClass: 'max-h-96',
+      })
+      expect(hidden.classes()).toContain('no-scrollbar')
+      expect(hidden.classes()).toContain('max-h-96')
+      expect(hidden.classes()).not.toContain('menu-list-scrollbar')
+    })
+  })
+
+  it('keeps rows at full height so a long list scrolls instead of squeezing them', () => {
     const list = mountMenu().get('[data-testid="menu-list-rows"]')
     expect(list.classes()).toEqual(
-      expect.arrayContaining(['menu-list-scrollbar', 'pr-1', 'max-h-80']),
+      expect.arrayContaining(['overflow-y-auto', '*:shrink-0']),
     )
-
-    const hidden = mountMenu({ scrollbar: false, listClass: 'max-h-96' }).get(
-      '[data-testid="menu-list-rows"]',
-    )
-    expect(hidden.classes()).toContain('no-scrollbar')
-    expect(hidden.classes()).toContain('max-h-96')
-    expect(hidden.classes()).not.toContain('menu-list-scrollbar')
   })
 
   it('sends attrs to the panel, not the rows region', () => {
