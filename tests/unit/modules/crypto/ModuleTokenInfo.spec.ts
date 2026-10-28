@@ -36,10 +36,11 @@ vi.mock('@/stores/walletStore', () => ({
 }))
 
 const bsc = { name: 'BSC', type: 'EVM', icon: '' }
+const ethereum = { name: 'ETHEREUM', type: 'EVM', icon: '' }
 vi.mock('@/stores/chainsStore', () => ({
   useChainsStore: defineStore('chainsStore', () => ({
     selectedChain: ref(bsc),
-    allChains: ref([bsc]),
+    allChains: ref([bsc, ethereum]),
     chainHasSwapSupport: () => true,
   })),
 }))
@@ -138,5 +139,40 @@ describe('ModuleTokenInfo swap/bridge prefill (APP-MEW-WEB-XR / 12B)', () => {
         toToken: expect.objectContaining({ address: '0x2222', decimals: 9 }),
       }),
     )
+  })
+
+  it('drops the bridge prefill once a refetch fails', async () => {
+    const storeSwapValues = vi.spyOn(useInputStore(), 'storeSwapValues')
+    mountModule()
+    data.value = {
+      coinId: 'zepe',
+      symbol: 'ZEPE',
+      name: 'Zepe',
+      supportedChains: [
+        { chainName: 'BSC', contract: '0x2222' },
+        { chainName: 'ETHEREUM', contract: '0x3333' },
+      ],
+      chainBalances: [
+        { chainName: 'ETHEREUM', result: { ok: true, value: { decimals: 6 } } },
+      ],
+    }
+    const walletMenu = useWalletMenuStore()
+    walletMenu.setWalletPanel('bridge')
+    await nextTick()
+    expect(storeSwapValues).toHaveBeenCalledWith(
+      expect.objectContaining({
+        toToken: expect.objectContaining({ address: '0x3333' }),
+      }),
+    )
+
+    walletMenu.setWalletPanel('swap')
+    await nextTick()
+    data.value = { message: 'Not Found' }
+    await flushPromises()
+    storeSwapValues.mockClear()
+    walletMenu.setWalletPanel('bridge')
+    await nextTick()
+
+    expect(storeSwapValues).not.toHaveBeenCalled()
   })
 })

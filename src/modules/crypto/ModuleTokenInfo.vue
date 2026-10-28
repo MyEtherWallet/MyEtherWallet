@@ -156,6 +156,7 @@ const setBridgeValues = (
   _chain: TokenSupportedChain | undefined = undefined,
 ) => {
   if (fetchedTokenData.value === null || tokenData.value === null) {
+    bridgeValues.value = undefined
     return
   }
   //if no chain is provided and local values exhist dont override them, this allows to switch between swap and bridge view without losing selected chain in bridge
