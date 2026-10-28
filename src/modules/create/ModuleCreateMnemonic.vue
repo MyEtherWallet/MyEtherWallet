@@ -3,7 +3,12 @@
     <div
       class="max-w-[624px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
-      <app-not-recommended class="mb-4 w-full" />
+      <app-banner
+        class="mb-4 w-full"
+        type="alert"
+        :title="$t('common.not_recommended')"
+        :description="$t('common.not_recommended_description')"
+      />
       <app-sheet sheet-class="px-4 sm:px-6 lg:px-10">
         <app-stepper
           :steps="steps"
@@ -247,7 +252,7 @@ import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'

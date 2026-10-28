@@ -1,48 +1,44 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    has-content-gutter
-    class="sm:w-[500px] sm:mx-auto"
+  <app-modal
+    v-model="isOpen"
     :title="$t('perps.balance.title')"
-    @close-dialog="$emit('close')"
+    @close="$emit('close')"
   >
-    <template #content>
-      <div class="pb-6 pt-4">
+    <div class="px-4 sm:px-6 pb-6 pt-4">
+      <div
+        class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+      >
         <div
-          class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+          v-for="row in balanceRows"
+          :key="row.label"
+          class="flex items-center justify-between px-5 py-4"
         >
-          <div
-            v-for="row in balanceRows"
-            :key="row.label"
-            class="flex items-center justify-between px-5 py-4"
+          <span
+            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
+            >{{ row.label }}</span
           >
-            <span
-              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-              >{{ row.label }}</span
-            >
-            <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
-              {{ row.value }}
-            </span>
-          </div>
+          <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
+            {{ row.value }}
+          </span>
         </div>
-
-        <app-base-button
-          type="link"
-          size="large"
-          class="w-full mt-4 text-text-brand"
-          @click="$emit('close')"
-          >{{ $t('perps.trade.tab-close') }}</app-base-button
-        >
       </div>
-    </template>
-  </app-dialog>
+
+      <app-base-button
+        type="link"
+        size="large"
+        class="w-full mt-4 text-text-brand"
+        @click="$emit('close')"
+        >{{ $t('perps.trade.tab-close') }}</app-base-button
+      >
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import {
   usePerpsBalance,
   usePerpsPortfolioSummary,

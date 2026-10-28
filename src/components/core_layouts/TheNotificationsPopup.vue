@@ -3,11 +3,11 @@
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
     <app-btn-icon
       :label="$t('menu.open-notifications')"
-      size="l"
+      size="m"
       @click="togglePopup"
     >
       <div class="relative">
-        <AppIcon name="bell" variant="filled" />
+        <AppIcon name="bell" />
         <!--  dot indicator for unseen orders -->
         <div
           v-if="hasUnseen"
