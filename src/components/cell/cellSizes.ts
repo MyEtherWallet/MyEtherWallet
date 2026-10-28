@@ -23,6 +23,17 @@ export const CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
 }
 
 /**
+ * InfoCell geometry (Figma: ↳ InfoCell, component set 2656:30288). Its own box,
+ * not the Cell's: M 74 (padding 16, gap 12, avatar L 40), S 30 (padding 4 / 16,
+ * gap 8, avatar XS 18). The loading row keeps the loaded height. Off the size
+ * scale like the Cell heights.
+ */
+export const INFO_CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
+  medium: { cell: 'h-[74px] p-4 gap-3', avatar: 'l' },
+  small: { cell: 'h-[30px] px-4 py-1 gap-2', avatar: 'xs' },
+}
+
+/**
  * Figma "Style" — which surface the cell sits on. Spelled `surface` to match
  * Chip, Picker and Input. `default` sits on the grey page and fills white
  * (background/alternative); `alternative` sits on a white card and fills the

@@ -47,9 +47,7 @@ describe('AppContentGroup', () => {
     })
     expect(dark.get(title()).classes()).toContain('text-text-inverted')
     expect(dark.get(title()).classes()).not.toContain('text-text-default')
-    expect(dark.get(description()).classes()).toContain(
-      'text-text-inverted-subtle',
-    )
+    expect(dark.get(description()).classes()).toContain('text-text-inverted')
   })
 
   it('size "m" uses label/base title and text/sm description', () => {

@@ -16,7 +16,9 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
     title: 'Components',
     items: [
       { name: 'Action Bar', to: '/dev/action-bar' },
+      { name: 'Address Selector', to: '/dev/address-selector' },
       { name: 'Avatar', to: '/dev/avatar' },
+      { name: 'Banner', to: '/dev/banner' },
       { name: 'Button', to: '/dev/button' },
       { name: 'Button Group', to: '/dev/button-group' },
       { name: 'Button Icon', to: '/dev/btn-icon' },
@@ -27,11 +29,14 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Content Group', to: '/dev/content-group' },
       { name: 'Divider', to: '/dev/divider' },
       { name: 'Icon', to: '/dev/icons' },
+      { name: 'InfoCell', to: '/dev/info-cell' },
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },
       { name: 'Input Naked', to: '/dev/input-naked' },
       { name: 'Modal', to: '/dev/modal' },
+      { name: 'Navbar', to: '/dev/navbar' },
       { name: 'NavLink', to: '/dev/navlink' },
+      { name: 'Pagination', to: '/dev/pagination' },
       { name: 'Picker', to: '/dev/picker' },
       { name: 'Radio Button', to: '/dev/radio' },
       { name: 'ScrollFade', to: '/dev/scroll-fade' },
@@ -43,6 +48,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Tab Item', to: '/dev/tab-item' },
       { name: 'Tag', to: '/dev/tag' },
       { name: 'Text Area', to: '/dev/text-area' },
+      { name: 'Toast', to: '/dev/toast' },
       { name: 'Toggle', to: '/dev/toggle' },
       { name: 'Tooltip', to: '/dev/tooltip' },
     ],
@@ -52,10 +58,8 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
 
 <template>
   <!-- Fixed to the space below the app header so only the main column scrolls;
-       the sidebar stays put. Header is 68px (xs) / 76px (sm+) — see TheHeader. -->
-  <div
-    class="flex h-[calc(100dvh-68px)] sm:h-[calc(100dvh-76px)] overflow-hidden bg-background-default"
-  >
+       the sidebar stays put. Header is 76px — see AppNavbar. -->
+  <div class="flex h-[calc(100dvh-76px)] overflow-hidden bg-background-default">
     <aside
       class="w-56 shrink-0 overflow-y-auto border-r border-border-default bg-white p-4"
     >

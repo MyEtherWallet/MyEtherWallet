@@ -60,9 +60,21 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'banner',
+              name: 'DevBanner',
+              component: () => import('@/views/ViewBannerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'cell',
               name: 'DevCell',
               component: () => import('@/views/ViewCellShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'info-cell',
+              name: 'DevInfoCell',
+              component: () => import('@/views/ViewInfoCellShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -114,6 +126,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'navbar',
+              name: 'DevNavbar',
+              component: () => import('@/views/ViewNavbarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
@@ -132,9 +150,28 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'address-selector',
+              name: 'DevAddressSelector',
+              component: () =>
+                import('@/views/ViewAddressSelectorShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toast',
+              name: 'DevToast',
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'navlink',
               name: 'DevNavLink',
               component: () => import('@/views/ViewNavLinkShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'pagination',
+              name: 'DevPagination',
+              component: () => import('@/views/ViewPaginationShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {

@@ -5,6 +5,7 @@ import { reactive } from 'vue'
 const walletStore = reactive({
   walletAddress: '0xA000000000000000000000000000000000000001',
   isWatchOnly: false,
+  isLoadingBalances: false,
   formattedTotalFiatPortfolioValue: '$130.23',
 })
 
@@ -17,10 +18,12 @@ const chainsStore = {
 }
 
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
-vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => watchOnlyStore }))
+vi.mock('@/stores/watchOnlyStore', () => ({
+  useWatchOnlyStore: () => watchOnlyStore,
+}))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
 
-vi.mock('pinia', async (importOriginal) => {
+vi.mock('pinia', async importOriginal => {
   const actual = await importOriginal<typeof import('pinia')>()
   const { toRefs } = await import('vue')
   return {
@@ -31,35 +34,54 @@ vi.mock('pinia', async (importOriginal) => {
 
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 
-const factory = () =>
+const AppAddressSelector = {
+  name: 'AppAddressSelector',
+  props: [
+    'address',
+    'name',
+    'balance',
+    'loading',
+    'connected',
+    'networkIcon',
+    'open',
+  ],
+  template: '<button />',
+}
+
+const factory = (props: Record<string, unknown> = {}) =>
   mount(AddressTriggerPill, {
-    global: {
-      stubs: { AppBlockie: true, EyeIcon: true, ChevronDownIcon: true },
-    },
+    props,
+    global: { stubs: { AppAddressSelector } },
   })
 
 describe('AddressTriggerPill', () => {
-  it('renders the formatted balance and the account name', () => {
-    const w = factory()
-    expect(w.text()).toContain('$130.23')
-    expect(w.text()).toContain('Address 1')
+  it('feeds the active account from the stores into the Address selector', () => {
+    const selector = factory().findComponent({ name: 'AppAddressSelector' })
+    expect(selector.props()).toMatchObject({
+      address: '0xA000000000000000000000000000000000000001',
+      name: 'Address 1',
+      balance: '$130.23',
+      loading: false,
+      connected: true,
+      networkIcon: 'https://example.com/eth.png',
+      open: false,
+    })
   })
 
-  it('renders the active-network icon badge when selectedChain has an icon', () => {
-    const w = factory()
-    expect(w.find('img[src="https://example.com/eth.png"]').exists()).toBe(true)
-  })
-
-  it('shows the green connected dot when not watch-only', () => {
-    walletStore.isWatchOnly = false
-    const w = factory()
-    expect(w.find('[data-test="pill-connected"]').exists()).toBe(true)
-  })
-
-  it('hides the green dot (shows the eye) when watch-only', () => {
+  it('marks a watch-only account as not connected', () => {
     walletStore.isWatchOnly = true
-    const w = factory()
-    expect(w.find('[data-test="pill-connected"]').exists()).toBe(false)
+    const selector = factory().findComponent({ name: 'AppAddressSelector' })
+    expect(selector.props('connected')).toBe(false)
     walletStore.isWatchOnly = false
+  })
+
+  it('passes the loading and open states through', () => {
+    walletStore.isLoadingBalances = true
+    const selector = factory({ open: true }).findComponent({
+      name: 'AppAddressSelector',
+    })
+    expect(selector.props('loading')).toBe(true)
+    expect(selector.props('open')).toBe(true)
+    walletStore.isLoadingBalances = false
   })
 })
