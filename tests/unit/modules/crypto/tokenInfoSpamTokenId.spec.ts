@@ -155,7 +155,7 @@ describe('AllocationDialog routing (APP-MEW-WEB-1M6)', () => {
       global: {
         plugins: [i18n],
         stubs: {
-          AppDialog: { template: '<div><slot name="content" /></div>' },
+          AppModal: { template: '<div><slot /></div>' },
         },
       },
     })

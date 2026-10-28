@@ -1,51 +1,43 @@
 <template>
-  <div
-    class="flex flex-col w-full gap-4 p-4 rounded-16 border border-black/15 bg-white"
+  <!-- Alternative (grey) fill: the card sits on the white hero surface. -->
+  <AppCard
+    surface="alternative"
+    :title="amountLabel"
+    :description="subtitle"
+    class="w-full"
   >
-    <div class="flex items-center gap-3 w-full">
-      <img :src="usdcIcon" alt="" class="w-8 h-8 shrink-0" />
-      <div class="flex flex-col flex-1 min-w-0">
-        <p class="text-label-sm text-black">
-          {{ amountLabel }}
-        </p>
-        <p v-if="subtitle" class="text-s-12 leading-[18px] text-text-subtle">
-          {{ subtitle }}
-        </p>
-      </div>
+    <template #avatar>
+      <img :src="usdcIcon" alt="" class="size-8" />
+    </template>
+
+    <template v-if="variant === 'sent' || variant === 'closed'" #action>
+      <!-- m-1 keeps the 24px dot in the header's 32px action box. -->
       <div
-        v-if="variant === 'sent' || variant === 'closed'"
-        class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
+        class="m-1 flex size-6 items-center justify-center rounded-full"
         :class="
           variant === 'sent' ? 'bg-background-success' : 'bg-background-error'
         "
       >
         <AppIcon
-          v-if="variant === 'sent'"
-          name="check"
-          variant="filled"
-          size="xxs"
-          class="text-white"
-        />
-        <AppIcon
-          v-else
-          name="x-mark"
+          :name="variant === 'sent' ? 'check' : 'x-mark'"
           variant="filled"
           size="xxs"
           class="text-white"
         />
       </div>
-    </div>
+    </template>
 
-    <app-base-button
-      v-if="variant === 'claim'"
-      :is-loading="loading"
-      class="w-full text-s-16 font-semibold tracking-[-0.32px]"
-      data-test="rwa-claim-card-button"
-      @click="onClick"
-    >
-      {{ buttonLabel }}
-    </app-base-button>
-  </div>
+    <template v-if="variant === 'claim'" #buttons>
+      <app-base-button
+        :is-loading="loading"
+        class="text-s-16 font-semibold tracking-[-0.32px]"
+        data-test="rwa-claim-card-button"
+        @click="onClick"
+      >
+        {{ buttonLabel }}
+      </app-base-button>
+    </template>
+  </AppCard>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +46,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppCard from '@/components/card/AppCard.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'

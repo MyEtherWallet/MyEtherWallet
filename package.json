@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.7.0",
+  "version": "7.8.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -52,7 +52,7 @@
     "@ledgerhq/live-common": "34.20.0",
     "@lottiefiles/dotlottie-vue": "^0.11.15",
     "@metamask/eth-sig-util": "^8.2.0",
-    "@myetherwallet/vue-common-components": "^1.3.16",
+    "@myetherwallet/vue-common-components": "^2.1.1",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@rainbow-me/rainbowkit": "^2.2.10",
     "@sentry/vue": "^10.44.0",

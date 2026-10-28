@@ -1,0 +1,72 @@
+{
+  "multi_address": {
+    "title": "管理账户",
+    "active": "当前",
+    "saved": "已保存的地址",
+    "your_addresses": "您的地址",
+    "saved_group": "已保存的 {type} 地址",
+    "add": "添加地址",
+    "connect_another": "连接其他钱包",
+    "disconnect": "断开连接",
+    "paper_wallet": "查看纸钱包",
+    "empty": "暂无已保存的地址",
+    "unlocked": "已解锁",
+    "connected": "已连接",
+    "watch_only": "仅观察",
+    "watchonly": "仅观察",
+    "connect_address": "连接地址",
+    "tokens": "代币",
+    "copied": "已复制！",
+    "detected": "检测到的地址",
+    "detected_wallet": "检测到的 {wallet} 地址",
+    "save_address": "保存地址",
+    "duplicate_name": "该名称已被使用",
+    "duplicate_address": "此地址已保存。请在您的扩展程序中选择其他地址后重试。",
+    "cap_reached": "最多可保存 20 个地址",
+    "cap_toast_title": "钱包未保存",
+    "cap_toast_description": "您已达到 20 个地址的上限。请移除一个地址后再保存此地址。",
+    "cap_note_title": "地址未保存",
+    "cap_note_description": "您已达到最多保存 20 个地址的上限，请移除一个地址以保存此地址。",
+    "extension_prompt": "如需连接，请打开您的扩展程序并选择上方显示的地址。",
+    "network_title": "网络",
+    "network_search": "搜索",
+    "no_address_title": "此网络暂无地址",
+    "no_address_subtitle": "连接或添加一个地址以使用此网络，或选择其他网络。",
+    "no_address_pill": "无地址",
+    "address_saved": {
+      "title_suffix": "已保存过",
+      "subtitle": "如果您想保存其他地址，请在 {wallet} 中选择该地址后重试。",
+      "open_wallet": "打开 {wallet}",
+      "try_again": "重试"
+    },
+    "connect_address_modal": {
+      "title": "连接地址",
+      "subtitle": "如需连接，请打开您的 {wallet} 扩展程序并选择以下地址：",
+      "open_wallet": "打开 {wallet}",
+      "try_again": "重试"
+    },
+    "rename": {
+      "title": "重命名地址",
+      "subtitle": "输入新名称并保存",
+      "placeholder": "在此输入...",
+      "save": "保存",
+      "duplicate": "名称已被使用，请输入其他名称"
+    },
+    "remove": {
+      "title": "移除 {name}？",
+      "subtitle": "这将从您已保存的地址中移除 {name}。您可以随时重新连接以再次添加。",
+      "confirm": "移除地址",
+      "cancel": "关闭"
+    },
+    "menu": {
+      "label": "账户菜单",
+      "rename": "重命名",
+      "copy": "复制地址",
+      "refresh": "刷新余额",
+      "paper_wallet": "打开纸钱包",
+      "explorer": "区块浏览器",
+      "disconnect": "断开连接",
+      "remove": "移除"
+    }
+  }
+}

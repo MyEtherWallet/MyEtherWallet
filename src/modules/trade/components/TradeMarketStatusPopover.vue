@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="rootRef"
     class="absolute top-full mt-1 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center drop-shadow-[0px_0px_0.5px_rgba(0,0,0,0.25),0px_1.5px_2px_rgba(0,0,0,0.12)]"
   >
     <svg width="12" height="10" viewBox="0 0 12 10" class="shrink-0">
@@ -7,6 +8,7 @@
     </svg>
     <div
       class="relative w-[260px] flex flex-col items-start gap-5 rounded-16 bg-white p-4"
+      :style="{ transform: `translateX(${shiftX}px)` }"
     >
       <div class="w-full">
         <p class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]">
@@ -51,8 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useEventListener } from '@vueuse/core'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import TradeMarketTimeline, {
   type TimelineSessionRanges,
@@ -74,6 +77,8 @@ const props = withDefaults(
     markerPct?: number
     timeLabel?: string
     sessionRanges?: TimelineSessionRanges
+    /** Element the card must stay within horizontally (the status pill). */
+    boundary?: HTMLElement | null
   }>(),
   {
     nextOpenText: '',
@@ -81,6 +86,7 @@ const props = withDefaults(
     markerPct: undefined,
     timeLabel: undefined,
     sessionRanges: undefined,
+    boundary: null,
   },
 )
 
@@ -89,6 +95,25 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+// Centred under the info icon, the card overflows the side panel when the
+// status label is short (e.g. zh). Slide it back inside the boundary; the
+// arrow stays on the icon. Only the card moves, so the root's rect stays centred.
+const rootRef = ref<HTMLElement | null>(null)
+const shiftX = ref(0)
+const clampToBoundary = () => {
+  if (!rootRef.value || !props.boundary) return
+  const centred = rootRef.value.getBoundingClientRect()
+  const bounds = props.boundary.getBoundingClientRect()
+  shiftX.value = Math.max(
+    bounds.left - centred.left,
+    Math.min(0, bounds.right - centred.right),
+  )
+}
+onMounted(clampToBoundary)
+useEventListener(window, 'resize', clampToBoundary)
+// A status change while open swaps the label, which moves the icon.
+watch(() => props.status, clampToBoundary, { flush: 'post' })
 
 const marketHoursHelpUrl = 'https://help.myetherwallet.com/'
 

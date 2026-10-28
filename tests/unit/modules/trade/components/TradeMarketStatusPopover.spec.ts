@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import i18n from '@/i18n'
 import TradeMarketStatusPopover from '@/modules/trade/components/TradeMarketStatusPopover.vue'
@@ -10,7 +11,27 @@ const mountPopover = (props: Record<string, unknown> = {}) =>
     global: { plugins: [i18n] },
   })
 
+const rect = (left: number, width: number) =>
+  ({ left, right: left + width, width }) as DOMRect
+
+// The popover root sits centred under the info icon; `boundary` is the pill.
+let popoverLeft = 0
+const mountInBoundary = async (left: number) => {
+  popoverLeft = left
+  const boundary = document.createElement('div')
+  vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
+    function (this: Element) {
+      return this === boundary ? rect(100, 340) : rect(popoverLeft, 260)
+    },
+  )
+  const popover = mountPopover({ boundary })
+  await nextTick()
+  return popover
+}
+
 describe('TradeMarketStatusPopover', () => {
+  afterEach(() => vi.restoreAllMocks())
+
   it.each([
     ['regular', 'The market is open.', 'All supported stocks are available.'],
     [
@@ -59,5 +80,25 @@ describe('TradeMarketStatusPopover', () => {
     const popover = mountPopover()
     await popover.find('button[aria-label="close"]').trigger('click')
     expect(popover.emitted('close')).toHaveLength(1)
+  })
+
+  it.each([
+    ['right past the left edge', 44, 56],
+    ['left past the right edge', 300, -120],
+    ['nowhere when it fits', 150, 0],
+  ])('slides the card %s', async (_, left, shift) => {
+    const popover = await mountInBoundary(left)
+    expect(popover.get('svg + div').attributes('style')).toContain(
+      `translateX(${shift}px)`,
+    )
+  })
+
+  it('re-clamps when the status label changes while open', async () => {
+    const popover = await mountInBoundary(44)
+    popoverLeft = 150
+    await popover.setProps({ status: 'premarket' })
+    expect(popover.get('svg + div').attributes('style')).toContain(
+      'translateX(0px)',
+    )
   })
 })

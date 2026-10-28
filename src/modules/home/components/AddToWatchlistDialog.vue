@@ -2,7 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTabBar from '@/components/AppTabBar.vue'
@@ -145,190 +145,179 @@ const confirm = () => {
 </script>
 
 <template>
-  <AppDialog
-    v-model:is-open="isOpen"
-    class="sm:mx-auto sm:w-full sm:max-w-[480px]"
-    close-class="top-6 right-6"
+  <AppModal
+    v-model="isOpen"
+    :title="t('homePage.hero.watchlist.addModal.title')"
     data-test="add-to-watchlist-dialog"
   >
-    <template #title>
-      <h2
-        id="dialogTitle"
-        class="w-full px-14 pb-5 pt-7 text-center text-heading-base text-black"
-      >
-        {{ t('homePage.hero.watchlist.addModal.title') }}
-      </h2>
-    </template>
-    <template #content>
-      <div class="flex flex-col px-6">
-        <AppSearchbar
-          v-model="query"
-          :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-background-default"
-        />
+    <div class="flex flex-col px-6">
+      <AppSearchbar
+        v-model="query"
+        variant="default"
+        :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
+      />
 
-        <template v-if="!isSearching">
-          <AppTabBar v-model="tabIndex" :tabs="tabLabels" class="mt-6" />
+      <template v-if="!isSearching">
+        <AppTabBar v-model="tabIndex" :tabs="tabLabels" class="mt-6" />
 
-          <div
-            role="group"
-            :aria-label="t('homePage.hero.watchlist.addModal.categories')"
-            class="mt-6 flex flex-wrap gap-2"
+        <div
+          role="group"
+          :aria-label="t('homePage.hero.watchlist.addModal.categories')"
+          class="mt-6 flex flex-wrap gap-2"
+        >
+          <button
+            v-for="option in chipOptions"
+            :key="option.value"
+            type="button"
+            data-test="picker-chip"
+            :aria-pressed="category === option.value"
+            class="flex h-8 items-center rounded-full border bg-background-default px-3 text-label-sm text-black transition-colors hover:bg-background-default-hover"
+            :class="
+              category === option.value
+                ? 'border-border-selected'
+                : 'border-transparent'
+            "
+            @click="category = option.value"
           >
-            <button
-              v-for="option in chipOptions"
-              :key="option.value"
-              type="button"
-              data-test="picker-chip"
-              :aria-pressed="category === option.value"
-              class="flex h-8 items-center rounded-full border bg-background-default px-3 text-label-sm text-black transition-colors hover:bg-background-default-hover"
-              :class="
-                category === option.value
-                  ? 'border-border-selected'
-                  : 'border-transparent'
-              "
-              @click="category = option.value"
-            >
-              {{ option.label }}
-            </button>
-            <!-- Teleported so the dialog's scroll box can't clip the menu. -->
-            <AppPopUpMenu
-              location="left"
-              teleport
-              @update:open="isMoreOpen = $event"
-            >
-              <template #menu-button="{ toggleMenu }">
+            {{ option.label }}
+          </button>
+          <!-- Teleported so the dialog's scroll box can't clip the menu. -->
+          <AppPopUpMenu
+            location="left"
+            teleport
+            @update:open="isMoreOpen = $event"
+          >
+            <template #menu-button="{ toggleMenu }">
+              <button
+                type="button"
+                data-test="picker-more"
+                :aria-pressed="!!moreSelected"
+                :aria-expanded="isMoreOpen"
+                class="flex h-8 items-center rounded-full border pl-3 pr-2 text-label-sm text-black transition-colors hover:bg-background-default-hover"
+                :class="[
+                  moreSelected
+                    ? 'border-border-selected'
+                    : 'border-transparent',
+                  isMoreOpen
+                    ? 'bg-background-default-pressed'
+                    : 'bg-background-default',
+                ]"
+                @click="toggleMenu"
+              >
+                {{
+                  moreSelected?.label ??
+                  t('homePage.hero.watchlist.addModal.more')
+                }}
+                <AppIcon name="chevron-down" size="xs" class="ml-1" />
+              </button>
+            </template>
+            <template #menu-content="{ toggleMenu }">
+              <div
+                role="listbox"
+                data-test="picker-more-menu"
+                :aria-label="t('homePage.hero.watchlist.addModal.categories')"
+                class="mew-scrollbar flex max-h-64 w-48 max-w-full flex-col gap-1 overflow-y-auto p-1.5"
+              >
                 <button
+                  v-for="option in moreOptions"
+                  :key="option.value"
                   type="button"
-                  data-test="picker-more"
-                  :aria-pressed="!!moreSelected"
-                  :aria-expanded="isMoreOpen"
-                  class="flex h-8 items-center rounded-full border pl-3 pr-2 text-label-sm text-black transition-colors hover:bg-background-default-hover"
-                  :class="[
-                    moreSelected
-                      ? 'border-border-selected'
-                      : 'border-transparent',
-                    isMoreOpen
-                      ? 'bg-background-default-pressed'
-                      : 'bg-background-default',
-                  ]"
-                  @click="toggleMenu"
+                  role="option"
+                  :aria-selected="category === option.value"
+                  class="flex h-12 shrink-0 items-center rounded-2xl px-4 text-left text-s-14 font-medium transition-colors hover:bg-background-default hover:text-text-brand"
+                  :class="
+                    category === option.value
+                      ? 'bg-background-default text-text-brand'
+                      : 'text-text-subtle'
+                  "
+                  @click="pickMore(option.value, toggleMenu)"
                 >
-                  {{
-                    moreSelected?.label ??
-                    t('homePage.hero.watchlist.addModal.more')
-                  }}
-                  <AppIcon name="chevron-down" size="xs" class="ml-1" />
+                  {{ option.label }}
+                  <AppIcon
+                    v-if="category === option.value"
+                    name="check"
+                    class="ml-auto"
+                  />
                 </button>
-              </template>
-              <template #menu-content="{ toggleMenu }">
-                <div
-                  role="listbox"
-                  data-test="picker-more-menu"
-                  :aria-label="t('homePage.hero.watchlist.addModal.categories')"
-                  class="mew-scrollbar flex max-h-64 w-48 max-w-full flex-col gap-1 overflow-y-auto p-1.5"
-                >
-                  <button
-                    v-for="option in moreOptions"
-                    :key="option.value"
-                    type="button"
-                    role="option"
-                    :aria-selected="category === option.value"
-                    class="flex h-12 shrink-0 items-center rounded-2xl px-4 text-left text-s-14 font-medium transition-colors hover:bg-background-default hover:text-text-brand"
-                    :class="
-                      category === option.value
-                        ? 'bg-background-default text-text-brand'
-                        : 'text-text-subtle'
-                    "
-                    @click="pickMore(option.value, toggleMenu)"
-                  >
-                    {{ option.label }}
-                    <AppIcon
-                      v-if="category === option.value"
-                      name="check"
-                      class="ml-auto"
-                    />
-                  </button>
-                </div>
-              </template>
-            </AppPopUpMenu>
-          </div>
-        </template>
+              </div>
+            </template>
+          </AppPopUpMenu>
+        </div>
+      </template>
 
-        <!-- Fixed height so the modal never resizes between tabs, categories
+      <!-- Fixed height so the modal never resizes between tabs, categories
              or loading; it takes over the tabs + chips space while searching.
              Only this area scrolls. -->
-        <div
-          class="mew-scrollbar mt-3 flex flex-col gap-0.5 overflow-y-auto"
-          :class="isSearching ? 'h-[470px]' : 'h-[360px]'"
-        >
-          <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
-          <template v-if="isLoading">
-            <span role="status" class="sr-only">
-              {{ t('homePage.hero.watchlist.addModal.loading') }}
-            </span>
-            <div
-              v-for="n in 6"
-              :key="n"
-              data-test="picker-skeleton"
-              class="flex h-[68px] shrink-0 items-center gap-3 p-3"
-              aria-hidden="true"
-            >
-              <div class="flex w-7 shrink-0 justify-center">
-                <div
-                  class="size-4 animate-pulse rounded-full bg-background-skeleton"
-                />
-              </div>
-              <div
-                class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
-              />
-              <div class="flex min-w-0 flex-1 flex-col gap-1">
-                <div
-                  class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
-                />
-                <div
-                  class="h-3.5 w-24 animate-pulse rounded bg-background-skeleton"
-                />
-              </div>
-              <div class="flex flex-col items-end gap-1">
-                <div
-                  class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
-                />
-                <div
-                  class="h-3.5 w-10 animate-pulse rounded bg-background-skeleton"
-                />
-              </div>
-            </div>
-          </template>
-          <p
-            v-else-if="!items.length"
-            data-test="picker-empty"
-            class="py-16 text-center text-s-14 text-text-subtle"
+      <div
+        class="mew-scrollbar mt-3 flex flex-col gap-0.5 overflow-y-auto"
+        :class="isSearching ? 'h-[470px]' : 'h-[360px]'"
+      >
+        <!-- Skeleton mirrors AssetPickerRow (star, avatar, name, price). -->
+        <template v-if="isLoading">
+          <span role="status" class="sr-only">
+            {{ t('homePage.hero.watchlist.addModal.loading') }}
+          </span>
+          <div
+            v-for="n in 6"
+            :key="n"
+            data-test="picker-skeleton"
+            class="flex h-[68px] shrink-0 items-center gap-3 p-3"
+            aria-hidden="true"
           >
-            {{ t('homePage.hero.watchlist.addModal.empty') }}
-          </p>
-          <AssetPickerRow
-            v-for="item in items"
-            v-else
-            :key="item.key"
-            :item="item"
-            :selected="isSelected(item)"
-            @toggle="toggle(item)"
-          />
-        </div>
-      </div>
-
-      <!-- CTA section: 24px on every side. The disabled state keeps the brand
-           fill, only dimmed (Figma). -->
-      <div class="p-6">
-        <AppBaseButton
-          class="w-full disabled:!bg-background-brand disabled:opacity-40"
-          :disabled="!flipped.size"
-          @click="confirm"
+            <div class="flex w-7 shrink-0 justify-center">
+              <div
+                class="size-4 animate-pulse rounded-full bg-background-skeleton"
+              />
+            </div>
+            <div
+              class="size-10 shrink-0 animate-pulse rounded-full bg-background-skeleton"
+            />
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              <div
+                class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+              />
+              <div
+                class="h-3.5 w-24 animate-pulse rounded bg-background-skeleton"
+              />
+            </div>
+            <div class="flex flex-col items-end gap-1">
+              <div
+                class="h-4 w-16 animate-pulse rounded bg-background-skeleton"
+              />
+              <div
+                class="h-3.5 w-10 animate-pulse rounded bg-background-skeleton"
+              />
+            </div>
+          </div>
+        </template>
+        <p
+          v-else-if="!items.length"
+          data-test="picker-empty"
+          class="py-16 text-center text-s-14 text-text-subtle"
         >
-          {{ confirmLabel }}
-        </AppBaseButton>
+          {{ t('homePage.hero.watchlist.addModal.empty') }}
+        </p>
+        <AssetPickerRow
+          v-for="item in items"
+          v-else
+          :key="item.key"
+          :item="item"
+          :selected="isSelected(item)"
+          @toggle="toggle(item)"
+        />
       </div>
+    </div>
+
+    <!-- CTA in the modal footer (24px padding from `sm`). The disabled state
+         keeps the brand fill, only dimmed (Figma). -->
+    <template #footer>
+      <AppBaseButton
+        class="w-full disabled:!bg-background-brand disabled:opacity-40"
+        :disabled="!flipped.size"
+        @click="confirm"
+      >
+        {{ confirmLabel }}
+      </AppBaseButton>
     </template>
-  </AppDialog>
+  </AppModal>
 </template>

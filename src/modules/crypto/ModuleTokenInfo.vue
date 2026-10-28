@@ -156,6 +156,7 @@ const setBridgeValues = (
   _chain: TokenSupportedChain | undefined = undefined,
 ) => {
   if (fetchedTokenData.value === null || tokenData.value === null) {
+    bridgeValues.value = undefined
     return
   }
   //if no chain is provided and local values exhist dont override them, this allows to switch between swap and bridge view without losing selected chain in bridge
@@ -236,10 +237,16 @@ const isLoadedData = ref(false)
 
 const { useMEWFetch } = useFetchMewApi()
 const {
-  data: fetchedTokenData,
+  data: fetchedData,
   isFetching,
   onFetchResponse,
 } = useMEWFetch(endpoint, { refetch: true }).get().json<GetWebTokenInfo>()
+// useMEWFetch sets updateDataOnError, so a failed request (e.g. a portfolio
+// token the API doesn't list) leaves the error body in `data`. Treat anything
+// without supportedChains as no data so the swap/bridge prefills skip it.
+const fetchedTokenData = computed(() =>
+  fetchedData.value?.supportedChains ? fetchedData.value : null,
+)
 
 const isLoading = computed(() => {
   return !isLoadedData.value

@@ -1,129 +1,125 @@
 <template>
-  <app-dialog v-model:is-open="isOpenModel" class="sm:max-w-[440px] sm:mx-auto">
-    <template #content>
-      <div class="px-6 py-6 flex flex-col">
-        <!-- Title -->
-        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-text-brand">Trade</h3> -->
-        <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
-          {{ t('rewards.learn_more_title') }}
-        </h3>
+  <app-modal v-model="isOpenModel" :aria-label="t('rewards.learn_more_title')">
+    <div class="px-6 py-6 flex flex-col">
+      <!-- Title -->
+      <!-- <h3 class="text-s-28 font-bold leading-p-120 text-text-brand">Trade</h3> -->
+      <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
+        {{ t('rewards.learn_more_title') }}
+      </h3>
 
-        <!-- Info Items -->
-        <div class="flex flex-col gap-4">
+      <!-- Info Items -->
+      <div class="flex flex-col gap-4">
+        <div
+          v-for="(item, index) in infoItems"
+          :key="item.icon"
+          class="flex items-start gap-3"
+        >
           <div
-            v-for="(item, index) in infoItems"
-            :key="item.icon"
-            class="flex items-start gap-3"
+            class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+            :class="
+              index < 3 ? 'bg-background-brand-subtle' : 'bg-background-default'
+            "
           >
-            <div
-              class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-              :class="
-                index < 3
-                  ? 'bg-background-brand-subtle'
-                  : 'bg-background-default'
-              "
-            >
-              <AppIcon
-                name="arrow-path-rounded-square"
-                size="xxs"
-                v-if="item.icon === 'swap'"
-                class="text-text-brand"
-              />
-              <AppIcon
-                name="trophy"
-                variant="filled"
-                size="xxs"
-                v-else-if="item.icon === 'trophy'"
-                class="text-text-brand"
-              />
-              <trade-icon
-                v-else-if="item.icon === 'trade'"
-                class="w-4 h-4 text-text-brand"
-              />
-              <AppIcon
-                name="currency-dollar"
-                variant="filled"
-                size="xxs"
-                v-else-if="item.icon === 'currency-dollar'"
-                class="text-text-brand"
-              />
-              <AppIcon
-                name="calendar"
-                variant="filled"
-                size="xxs"
-                v-else-if="item.icon === 'calendar'"
-                class="text-text-muted"
-              />
-              <AppIcon
-                name="wallet"
-                size="xxs"
-                v-else-if="item.icon === 'wallet-icon'"
-                class="text-text-muted"
-              />
-              <AppIcon
-                name="banknotes"
-                size="xxs"
-                v-else-if="item.icon === 'wallet-balance'"
-                class="text-text-muted"
-              />
-              <AppIcon
-                name="currency-dollar"
-                variant="filled"
-                size="xxs"
-                v-else-if="item.icon === 'currency-dollar-gray'"
-                class="text-text-muted"
-              />
-              <AppIcon
-                name="face-frown"
-                variant="filled"
-                size="xxs"
-                v-else-if="item.icon === 'face-frown'"
-                class="text-text-muted"
-              />
-            </div>
-            <p class="text-s-14 text-text-subtle leading-snug pt-1">
-              {{ item.text }}
-            </p>
+            <AppIcon
+              name="arrow-path-rounded-square"
+              size="xxs"
+              v-if="item.icon === 'swap'"
+              class="text-text-brand"
+            />
+            <AppIcon
+              name="trophy"
+              variant="filled"
+              size="xxs"
+              v-else-if="item.icon === 'trophy'"
+              class="text-text-brand"
+            />
+            <trade-icon
+              v-else-if="item.icon === 'trade'"
+              class="w-4 h-4 text-text-brand"
+            />
+            <AppIcon
+              name="currency-dollar"
+              variant="filled"
+              size="xxs"
+              v-else-if="item.icon === 'currency-dollar'"
+              class="text-text-brand"
+            />
+            <AppIcon
+              name="calendar"
+              variant="filled"
+              size="xxs"
+              v-else-if="item.icon === 'calendar'"
+              class="text-text-muted"
+            />
+            <AppIcon
+              name="wallet"
+              size="xxs"
+              v-else-if="item.icon === 'wallet-icon'"
+              class="text-text-muted"
+            />
+            <AppIcon
+              name="banknotes"
+              size="xxs"
+              v-else-if="item.icon === 'wallet-balance'"
+              class="text-text-muted"
+            />
+            <AppIcon
+              name="currency-dollar"
+              variant="filled"
+              size="xxs"
+              v-else-if="item.icon === 'currency-dollar-gray'"
+              class="text-text-muted"
+            />
+            <AppIcon
+              name="face-frown"
+              variant="filled"
+              size="xxs"
+              v-else-if="item.icon === 'face-frown'"
+              class="text-text-muted"
+            />
           </div>
+          <p class="text-s-14 text-text-subtle leading-snug pt-1">
+            {{ item.text }}
+          </p>
         </div>
-
-        <!-- Divider -->
-        <app-divider class="my-5" />
-
-        <rewards-rows
-          v-if="!isBanned"
-          :swap-claimed="swapClaimed"
-          :swap-no-rewards="swapNoRewards"
-          :swap-remaining-pct="swapRemainingPct"
-          :swap-remaining-count="swapRemainingCount"
-          :swap-total="swapTotal"
-          :trade-claimed="tradeClaimed"
-          :trade-no-rewards="tradeNoRewards"
-          :trade-market-closed="tradeMarketClosed"
-          :trade-paused="tradePaused"
-          :trade-remaining-pct="tradeRemainingPct"
-          :trade-remaining-count="tradeRemainingCount"
-          :trade-total="tradeTotal"
-          :time-until-hour-reset="timeUntilHourReset"
-          :time-until-swap-next-eligible="timeUntilSwapNextEligible"
-          :time-until-trade-next-eligible="timeUntilTradeNextEligible"
-          :time-until-market-open="timeUntilMarketOpen"
-          :min-spend-trade="minSpendTrade"
-          class="mt-0"
-          :has-swap="false"
-          :has-trade="true"
-          @swap="onNavigate('swap')"
-          @trade="onNavigate('trade')"
-        />
       </div>
-    </template>
-  </app-dialog>
+
+      <!-- Divider -->
+      <app-divider class="my-5" />
+
+      <rewards-rows
+        v-if="!isBanned"
+        :swap-claimed="swapClaimed"
+        :swap-no-rewards="swapNoRewards"
+        :swap-remaining-pct="swapRemainingPct"
+        :swap-remaining-count="swapRemainingCount"
+        :swap-total="swapTotal"
+        :trade-claimed="tradeClaimed"
+        :trade-no-rewards="tradeNoRewards"
+        :trade-market-closed="tradeMarketClosed"
+        :trade-paused="tradePaused"
+        :trade-remaining-pct="tradeRemainingPct"
+        :trade-remaining-count="tradeRemainingCount"
+        :trade-total="tradeTotal"
+        :time-until-hour-reset="timeUntilHourReset"
+        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+        :time-until-market-open="timeUntilMarketOpen"
+        :min-spend-trade="minSpendTrade"
+        class="mt-0"
+        :has-swap="false"
+        :has-trade="true"
+        @swap="onNavigate('swap')"
+        @trade="onNavigate('trade')"
+      />
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
 import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'

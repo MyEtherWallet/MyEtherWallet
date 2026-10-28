@@ -103,9 +103,9 @@ import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 
 // The real dialog teleports and traps focus; the modal's own content is what
 // matters here.
-const AppDialogStub = {
-  props: { isOpen: { type: Boolean, default: false } },
-  template: '<div v-if="isOpen"><slot name="content" /></div>',
+const AppModalStub = {
+  props: { modelValue: { type: Boolean, default: false } },
+  template: '<div v-if="modelValue"><slot /></div>',
 }
 
 const reward = (over: Partial<RwaRewardItem> = {}) =>
@@ -127,7 +127,7 @@ const mountModal = () => {
     global: {
       plugins: [i18n],
       directives: { ripple: {} },
-      stubs: { AppDialog: AppDialogStub },
+      stubs: { AppModal: AppModalStub },
     },
   })
   mounted.push(w)

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import {
-  TITLE_SIZE_CLASS,
-  DESCRIPTION_SIZE_CLASS,
-  TITLE_WEIGHT_CLASS,
-  TONE_TITLE_CLASS,
-  TONE_DESCRIPTION_CLASS,
+  EMPHASIS_TEXT_CLASS,
+  SUPPORTING_TEXT_CLASS,
+  TONE_EMPHASIS_CLASS,
+  TONE_SUPPORTING_CLASS,
   type ContentGroupAlign,
   type ContentGroupSize,
   type ContentGroupTone,
@@ -16,11 +16,16 @@ import {
  * reused inside Pickers, Cells, rows, cards, Toasts and Modal headers — building
  * it once lets those compose it instead of re-implementing the layout.
  *
- * Colours come from `tone`: `default` (title `text/default`, description `text/subtle`) for
- * light surfaces, `inverse` (white / white-70) for dark ones such as a Toast or
- * a dark modal header. The spans set their colour explicitly, so a wrapper's
- * `text-*` class would never reach them — use `tone` instead. The `inverted`
- * prop swaps only the *weights*, not the colour.
+ * Colours come from `tone`: `default` (emphasis `text/default`, supporting
+ * `text/subtle`) for light surfaces, `inverse` (`text/inverted` /
+ * `text/inverted-subtle`) for dark ones such as a Toast or a dark modal
+ * header. The spans set their colour explicitly, so a wrapper's `text-*` class would never reach them — use
+ * `tone` instead. `inverted` swaps the two line styles: the title takes the
+ * supporting style and the description the emphasis one.
+ *
+ * The `title-icon` / `description-icon` slots trail their line (the design
+ * never puts them on the left) and take an Icon and/or Avatar. Both slots pass
+ * `size` ('xs', 18px) for the consumer to bind, whatever the group `size`.
  */
 const props = withDefaults(
   defineProps<{
@@ -30,7 +35,7 @@ const props = withDefaults(
     align?: ContentGroupAlign
     /** Text colours for the surface underneath: `default` (light) or `inverse` (dark). */
     tone?: ContentGroupTone
-    /** Swaps emphasis: title becomes regular, description becomes semibold. */
+    /** Swaps emphasis: title gets the supporting style, description the emphasis one. */
     inverted?: boolean
     loading?: boolean
     /** Force a single-line, ellipsised description (defaults to wrapping). */
@@ -47,32 +52,52 @@ const props = withDefaults(
 )
 
 const slots = useSlots()
+// Icon and Avatar both name their 18px size 'xs'; slots pass it as `size`.
+const SLOT_SIZE = 'xs' as const
 // An empty string counts as "no description": it would otherwise render a blank
 // second row (and a skeleton bar while loading) plus the row gap.
 const hasDescription = computed(() => !!props.description)
 
-// Text alignment cascades to the (possibly wrapping) text and the inline-block
-// skeleton bars. The rows themselves stay full-width (default stretch) so the
-// title can actually clip — items-start/end would shrink them to content width.
-const alignClass = computed(() =>
-  props.align === 'right' ? 'text-right' : 'text-left',
-)
+// Text alignment cascades to the (possibly wrapping) text. The rows themselves
+// stay full-width (default stretch) so the title can actually clip —
+// items-start/end would shrink them to content width.
+const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+}
+const alignClass = computed(() => ALIGN_CLASS[props.align])
 
-// Positions the icon + text within a full-width row.
-const rowJustifyClass = computed(() =>
-  props.align === 'right' ? 'justify-end' : 'justify-start',
-)
+// Positions the text + trailing icons (or a skeleton bar) within a full-width row.
+const ROW_JUSTIFY_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}
+const rowJustifyClass = computed(() => ROW_JUSTIFY_CLASS[props.align])
 
-const titleClass = computed(() => [
-  TITLE_SIZE_CLASS[props.size],
-  TONE_TITLE_CLASS[props.tone],
-  props.inverted ? 'font-normal' : TITLE_WEIGHT_CLASS[props.size],
+const emphasisClass = computed(() => [
+  EMPHASIS_TEXT_CLASS[props.size],
+  TONE_EMPHASIS_CLASS[props.tone],
 ])
 
+const supportingClass = computed(() => [
+  SUPPORTING_TEXT_CLASS[props.size],
+  TONE_SUPPORTING_CLASS[props.tone],
+])
+
+// A skeleton row is as tall as the line it stands in for, so loading doesn't
+// grow the group: 22px (py-[5px] around the 12px bar), except the M
+// supporting line (text/sm), which is 20px.
+const skeletonRowClass = (supporting: boolean) =>
+  supporting && props.size === 'm' ? 'py-1' : 'py-[5px]'
+
+const titleClass = computed(() =>
+  props.inverted ? supportingClass.value : emphasisClass.value,
+)
+
 const descriptionClass = computed(() => [
-  DESCRIPTION_SIZE_CLASS[props.size],
-  TONE_DESCRIPTION_CLASS[props.tone],
-  props.inverted ? 'font-semibold' : 'font-normal',
+  ...(props.inverted ? emphasisClass.value : supportingClass.value),
   props.noWrap ? 'truncate' : '',
 ])
 </script>
@@ -80,37 +105,39 @@ const descriptionClass = computed(() => [
 <template>
   <div
     data-testid="cg-root"
-    class="flex flex-col gap-0.5 min-w-0"
-    :class="alignClass"
+    class="flex flex-col min-w-0"
+    :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: skeleton bars keep line height stable (12px tall, 4px radius). -->
+    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. The
+         rows are flex so a bar never sits in a line box, which would take the
+         inherited line-height and stretch the row. -->
     <template v-if="loading">
-      <div class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[35px] rounded-[4px] bg-background-default-hover animate-pulse"
-        ></div>
+      <div class="flex" :class="[rowJustifyClass, skeletonRowClass(inverted)]">
+        <AppSkeleton class="h-3 w-[35px]" />
       </div>
-      <div v-if="hasDescription" class="py-[5px]">
-        <div
-          class="inline-block h-3 w-[79px] rounded-[4px] bg-background-default-hover animate-pulse"
-        ></div>
+      <div
+        v-if="hasDescription"
+        class="flex"
+        :class="[rowJustifyClass, skeletonRowClass(!inverted)]"
+      >
+        <AppSkeleton class="h-3 w-[79px]" />
       </div>
     </template>
 
     <template v-else>
       <div class="flex items-center gap-1 min-w-0" :class="rowJustifyClass">
         <span
-          v-if="slots['title-icon']"
-          class="w-[18px] h-[18px] shrink-0 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
-        >
-          <slot name="title-icon" />
-        </span>
-        <span
           data-testid="cg-title"
           class="truncate min-w-0"
           :class="titleClass"
         >
-          {{ title }}
+          <slot name="title">{{ title }}</slot>
+        </span>
+        <span
+          v-if="slots['title-icon']"
+          class="flex shrink-0 items-center gap-1"
+        >
+          <slot name="title-icon" :size="SLOT_SIZE" />
         </span>
       </div>
 
@@ -120,17 +147,17 @@ const descriptionClass = computed(() => [
         :class="rowJustifyClass"
       >
         <span
-          v-if="slots['description-icon']"
-          class="w-[18px] h-[18px] shrink-0 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
-        >
-          <slot name="description-icon" />
-        </span>
-        <span
           data-testid="cg-description"
           class="min-w-0"
           :class="descriptionClass"
         >
           {{ description }}
+        </span>
+        <span
+          v-if="slots['description-icon']"
+          class="flex shrink-0 items-center gap-1"
+        >
+          <slot name="description-icon" :size="SLOT_SIZE" />
         </span>
       </div>
     </template>

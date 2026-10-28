@@ -1,61 +1,52 @@
 <template>
   <div
     ref="wrapperEl"
-    class="relative min-w-0 w-60"
-    :class="isOpen ? 'z-[2]' : ''"
+    :class="[
+      'relative min-w-0',
+      isCompact ? '' : 'w-60',
+      isOpen ? 'z-[2]' : '',
+    ]"
     @keydown="trapFocus"
   >
-    <button
+    <!-- 24px glyph like the bell/cog; L's library glyph (32) reads too big -->
+    <app-btn-icon
       v-if="isCompact"
-      type="button"
-      :aria-label="$t('search.placeholder')"
-      class="w-10 h-10 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-background-brand-subtle'"
+      size="l"
+      variant="filled"
+      :label="$t('search.placeholder')"
       @click="open"
     >
-      <AppIcon name="magnifying-glass" size="s" class="text-text-subtle" />
-    </button>
-    <div
+      <app-icon name="magnifying-glass" />
+    </app-btn-icon>
+    <app-searchbar
       v-else
-      class="flex items-center gap-2 h-10 px-4 rounded-full transition-colors duration-500"
-      :class="isOpen ? 'bg-white' : 'bg-background-brand-subtle'"
-    >
-      <AppIcon name="magnifying-glass" size="xxs" class="text-text-subtle" />
-      <input
-        v-model="query"
-        type="text"
-        :placeholder="$t('search.placeholder')"
-        :aria-label="$t('search.placeholder')"
-        class="flex-1 bg-transparent outline-none text-s-14 placeholder:text-text-subtle"
-        @focus="open"
-        @click="open"
-      />
-    </div>
+      v-model="query"
+      variant="default"
+      :placeholder="$t('search.placeholder')"
+      @focusin="open"
+      @click="open"
+    />
     <global-search-popover :is-compact="isCompact" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { onClickOutside, useElementSize } from '@vueuse/core'
+import { onClickOutside } from '@vueuse/core'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchPopover from './GlobalSearchPopover.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-
-const COMPACT_WIDTH_THRESHOLD = 200
+import AppSearchbar from '@/components/AppSearchbar.vue'
 
 const { query, open, isOpen, close } = useGlobalSearch()
 const { breakpoints } = useAppBreakpoints()
 
 const wrapperEl = ref<HTMLElement | null>(null)
-const { width: wrapperWidth } = useElementSize(wrapperEl)
 
-const isCompact = computed(
-  () =>
-    breakpoints.smaller('sm').value ||
-    (wrapperWidth.value > 0 && wrapperWidth.value < COMPACT_WIDTH_THRESHOLD),
-)
+// Navbar (Figma 1078:1485): Searchbar on desktop, a 40px search button < 1280.
+const isCompact = computed(() => breakpoints.smaller('xl').value)
 
 onClickOutside(wrapperEl, () => {
   if (isOpen.value) close()
