@@ -15,9 +15,8 @@ export type DropdownSurface = 'default' | 'alternative'
 /**
  * Trigger box per size × surface, one static string each so Tailwind sees
  * every class. Hover / pressed are gated on `enabled:` so a disabled trigger
- * keeps its resting fill. Only M on default draws the `border/default`
- * hairline (Figma 0.5px, drawn as a 1px inset ring); focus swaps it for the
- * 2px `border/brand` ring.
+ * keeps its resting fill. No size draws a resting border; focus adds the 2px
+ * `border/brand` ring (DROPDOWN_TRIGGER_STATE_CLASS).
  */
 export const DROPDOWN_TRIGGER_CLASS: Record<
   DropdownSize,
@@ -25,7 +24,7 @@ export const DROPDOWN_TRIGGER_CLASS: Record<
 > = {
   m: {
     default:
-      'flex h-13 w-full gap-2 rounded-16 px-4 py-1 bg-background-alternative ring-1 ring-inset ring-border-default enabled:hover:bg-background-alternative-hover enabled:active:bg-background-alternative-pressed',
+      'flex h-13 w-full gap-2 rounded-16 px-4 py-1 bg-background-alternative enabled:hover:bg-background-alternative-hover enabled:active:bg-background-alternative-pressed',
     alternative:
       'flex h-13 w-full gap-2 rounded-16 px-4 py-1 bg-background-default enabled:hover:bg-background-default-hover enabled:active:bg-background-default-pressed',
   },

@@ -184,17 +184,18 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     expect(wrapper.findComponent(AppMenuList).exists()).toBe(false)
   })
 
-  it('draws the hairline only for M on default and the suffix only at M', () => {
+  it('draws no resting border on any trigger and the suffix only at M', () => {
     const mDefault = mountDropdown({}, { suffix: '<i />' })
-    expect(trigger(mDefault).classes()).toContain('ring-border-default')
     expect(mDefault.find('[data-testid="dropdown-suffix"]').exists()).toBe(true)
 
     const mAlternative = mountDropdown({ surface: 'alternative' })
-    expect(trigger(mAlternative).classes()).not.toContain('ring-border-default')
 
     const small = mountDropdown({ size: 's' }, { suffix: '<i />' })
     expect(trigger(small).classes()).toContain('rounded-full')
     expect(small.find('[data-testid="dropdown-suffix"]').exists()).toBe(false)
+
+    for (const w of [mDefault, mAlternative, small])
+      expect(trigger(w).classes()).not.toContain('ring-border-default')
   })
 
   it('opens the menu at the trigger width for M and at 240px for S', async () => {
