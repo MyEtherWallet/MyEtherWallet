@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { nextTick, ref, useSlots } from 'vue'
+import { computed, nextTick, onUpdated, ref, useSlots } from 'vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import { useScrollEdges } from '@/components/scroll_fade/useScrollEdges'
 import { flattenVNodes } from '@/utils/flattenVNodes'
 import { useMenuListKeyboard } from './useMenuListKeyboard'
 import type { MenuListRole } from './types'
@@ -31,7 +32,7 @@ const props = withDefaults(
     searchable?: boolean
     /** Falls back to the Searchbar's localized `common.search`. */
     searchPlaceholder?: string
-    /** Figma `showScrollBar`; off, the rows still scroll with the bar hidden. */
+    /** Figma `showScrollBar`; off, the rows still scroll with the bar hidden. The bar only shows when the rows overflow. */
     scrollbar?: boolean
     role?: MenuListRole
     /** Accessible name of the listbox / menu. */
@@ -84,6 +85,17 @@ const { focusRow, onFocusIn, onKeydown } = useMenuListKeyboard({
 
 const slotRows = () => flattenVNodes(slots.default?.())
 
+// The bar and its 4px gap only take space while the rows overflow; filtering
+// re-renders the rows without resizing the list, so re-check after each update.
+const { canScrollStart, canScrollEnd, update: checkOverflow } = useScrollEdges(
+  list,
+  'y',
+)
+onUpdated(checkOverflow)
+const showScrollbar = computed(
+  () => props.scrollbar && (canScrollStart.value || canScrollEnd.value),
+)
+
 defineExpose({ focusSearch, focusRow })
 </script>
 
@@ -106,15 +118,16 @@ defineExpose({ focusSearch, focusRow })
       />
     </div>
 
-    <!-- The native scrollbar is the Figma ScrollBar: 8px pill 4px off the rows. -->
+    <!-- The native scrollbar is the Figma ScrollBar: 8px pill 4px off the rows.
+         Rows never shrink, so a long list scrolls instead of squeezing them. -->
     <div
       ref="list"
       :role="role"
       :aria-label="ariaLabel"
       data-testid="menu-list-rows"
-      class="flex min-w-0 flex-col overflow-y-auto"
+      class="flex min-w-0 flex-col overflow-y-auto *:shrink-0"
       :class="[
-        scrollbar ? 'menu-list-scrollbar pr-1' : 'no-scrollbar',
+        showScrollbar ? 'menu-list-scrollbar pr-1' : 'no-scrollbar',
         listClass,
       ]"
       @keydown="onKeydown"
@@ -132,12 +145,7 @@ defineExpose({ focusSearch, focusRow })
 </template>
 
 <style scoped>
-/* Blink/WebKit take the exact Figma geometry; Firefox only knows thin + colour.
-   The gutter stays reserved so rows don't shift once the list overflows. */
-.menu-list-scrollbar {
-  scrollbar-gutter: stable;
-}
-
+/* Blink/WebKit take the exact Figma geometry; Firefox only knows thin + colour. */
 .menu-list-scrollbar::-webkit-scrollbar {
   width: var(--size-2);
 }
