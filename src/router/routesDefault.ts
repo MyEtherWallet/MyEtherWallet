@@ -108,6 +108,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'footer',
+              name: 'DevFooter',
+              component: () => import('@/views/ViewFooterShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'modal',
               name: 'DevModal',
               component: () => import('@/views/ViewModalShowcase.vue'),
