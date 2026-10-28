@@ -132,6 +132,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'menu-list',
+              name: 'DevMenuList',
+              component: () => import('@/views/ViewMenuListShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'navbar',
               name: 'DevNavbar',
               component: () => import('@/views/ViewNavbarShowcase.vue'),

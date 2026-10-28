@@ -1,7 +1,8 @@
 <template>
   <div
     :class="[
-      'box-border flex w-full items-center gap-3 rounded-12 px-4 outline-none transition-colors',
+      'box-border flex w-full items-center gap-3 rounded-12 outline-none transition-colors',
+      inset ? 'px-3' : 'px-4',
       sizeSpec.cell,
       surfaceClass,
       // Figma Focus: 2px border/brand drawn inside, so the content doesn't move.
@@ -208,6 +209,14 @@ const props = defineProps({
     default: false,
   },
   radio: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 12px side padding instead of 16, for rows inside a padded container
+   * (Figma MenuList and List rows), so content keeps the 16px edge alignment.
+   */
+  inset: {
     type: Boolean,
     default: false,
   },

@@ -34,6 +34,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },
       { name: 'Input Naked', to: '/dev/input-naked' },
+      { name: 'Menu List', to: '/dev/menu-list' },
       { name: 'Modal', to: '/dev/modal' },
       { name: 'Navbar', to: '/dev/navbar' },
       { name: 'NavLink', to: '/dev/navlink' },
