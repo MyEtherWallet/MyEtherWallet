@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import { CARD_SURFACE_BG_CLASS, type CardSurface } from './types'
 
 /**
@@ -55,11 +56,12 @@ const AVATAR_SIZE = 'm' as const // 32px
       class="flex items-start gap-3 p-4"
     >
       <template v-if="$slots.avatar">
-        <span
+        <AppSkeleton
           v-if="loading"
           data-testid="card-avatar-skeleton"
-          class="size-8 shrink-0 self-center rounded-full bg-background-skeleton animate-pulse"
-        ></span>
+          shape="circle"
+          class="size-8 shrink-0 self-center"
+        />
         <span v-else class="shrink-0 self-center">
           <slot name="avatar" :size="AVATAR_SIZE" />
         </span>
