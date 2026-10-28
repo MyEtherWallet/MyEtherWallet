@@ -3,7 +3,11 @@
     <div
       class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-3"
     >
-      <app-not-recommended />
+      <app-banner
+        type="alert"
+        :title="$t('common.not_recommended')"
+        :description="$t('common.not_recommended_description')"
+      />
       <app-sheet class="mt-1">
         <div class="mt-5 flex flex-col align-center">
           <app-input
@@ -50,7 +54,7 @@ import BitcoinPrivateKey from '@/providers/bitcoin/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'

@@ -73,21 +73,20 @@
         </div>
       </div>
 
-      <app-warning
+      <AppBanner
         v-if="hasOpenPositions"
+        type="warning"
         :title="$t('perps.withdraw.liquidation-risk-title')"
-        :text="$t('perps.withdraw.liquidation-risk-text')"
+        :description="$t('perps.withdraw.liquidation-risk-text')"
         class="mb-4"
       />
       <transition name="fade">
-        <div
+        <AppBanner
           v-if="error"
-          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-        >
-          <p class="text-text-error text-s-14 text-center">
-            {{ error }}
-          </p>
-        </div>
+          type="alert"
+          class="mb-2"
+          :description="error"
+        />
       </transition>
       <app-base-button
         v-if="addressBookLoading"
@@ -123,7 +122,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { perpsClient, USDC_DECIMALS, PERPS_CHAIN_ID } from '../configs'
 import { mainnet } from 'viem/chains'
-import AppWarning from '@/components/AppWarning.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { useWalletStore } from '@/stores/walletStore'

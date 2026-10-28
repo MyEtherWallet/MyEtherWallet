@@ -3,7 +3,11 @@
     <div
       class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-3"
     >
-      <app-not-recommended />
+      <app-banner
+        type="alert"
+        :title="$t('common.not_recommended')"
+        :description="$t('common.not_recommended_description')"
+      />
       <app-sheet class="mt-1">
         <app-stepper
           :steps="steps"
@@ -118,7 +122,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppSheet from '@/components/AppSheet.vue'

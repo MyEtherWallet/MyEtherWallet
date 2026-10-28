@@ -2,7 +2,7 @@ import type { RouteLocationRaw } from 'vue-router'
 
 /**
  * Normalized shape shared by the Hero's trending cards (stocks and crypto), so
- * both data sources map onto the same AppTokenListRow UI.
+ * both data sources map onto the same AppCell row UI.
  */
 export interface TrendingRowItem {
   logo?: string

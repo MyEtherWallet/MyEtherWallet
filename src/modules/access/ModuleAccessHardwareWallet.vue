@@ -477,15 +477,22 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
   }
 }
 
-const connectViaUSB = async () => {
-  if (!(await openTransport(getLedgerWebUSBTransport))) return
-  return unlockWallet()
+// One Ledger connect at a time. Opening a transport releases the one we hold,
+// so a second click while the first connect is still running closed the device
+// under it and both flows raced on it (APP-MEW-WEB-1QE / 13K / 57). Keep the
+// button busy from the transport open on; unlockWallet takes the flag over in
+// the same tick, so no click gets in between.
+const connectLedger = async (getTransport: () => Promise<unknown>) => {
+  if (connectingWallet.value) return
+  connectingWallet.value = true
+  const opened = await openTransport(getTransport)
+  connectingWallet.value = false
+  if (opened) await unlockWallet()
 }
 
-const connectViaBluetooth = async () => {
-  if (!(await openTransport(getLedgerBLETransport))) return
-  return unlockWallet()
-}
+const connectViaUSB = () => connectLedger(getLedgerWebUSBTransport)
+
+const connectViaBluetooth = () => connectLedger(getLedgerBLETransport)
 
 /**------------------------
  *  Wallet List

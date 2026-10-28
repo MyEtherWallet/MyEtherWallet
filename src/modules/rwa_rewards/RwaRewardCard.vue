@@ -132,6 +132,7 @@ const {
   isEligible,
   eligibilityV2,
   tradeMarketClosed,
+  tradePaused,
   tradeClaimed,
   tradeNoRewards,
   tradeRemainingCount,
@@ -145,7 +146,7 @@ const isTradeCard = computed(() => props.illustration === 'trade')
 
 const tradeStatus = computed<RwaRewardStatus>(() => {
   if (isBanned.value) return 'banned'
-  if (tradeMarketClosed.value) return 'paused'
+  if (tradeMarketClosed.value || tradePaused.value) return 'paused'
   if (tradeClaimed.value) return 'claimed'
   if (tradeNoRewards.value) return 'noRewards'
   // Only trust ineligibility once eligibility data has loaded, otherwise

@@ -17,9 +17,7 @@
           <div
             class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
             :class="
-              index < 3
-                ? 'bg-background-brand-subtle'
-                : 'bg-background-default'
+              index < 3 ? 'bg-background-brand-subtle' : 'bg-background-default'
             "
           >
             <AppIcon
@@ -99,6 +97,7 @@
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
         :trade-market-closed="tradeMarketClosed"
+        :trade-paused="tradePaused"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
@@ -146,6 +145,7 @@ const props = defineProps<{
   tradeClaimed: boolean | null
   tradeNoRewards: boolean
   tradeMarketClosed: boolean
+  tradePaused: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null

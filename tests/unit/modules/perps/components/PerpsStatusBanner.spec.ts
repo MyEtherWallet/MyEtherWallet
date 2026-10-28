@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils'
 import { ref, computed } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enPerps from '@/i18n/locales/perps/en.json'
+import enCommon from '@/i18n/locales/common/en.json'
+import AppBanner from '@/components/banner/AppBanner.vue'
 
 const statusCode = ref<number | null>(null)
 const isPerpsRestricted = ref(false)
@@ -31,7 +33,7 @@ const i18n = createI18n({
   legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
-  messages: { en: enPerps },
+  messages: { en: { ...enCommon, ...enPerps } },
 })
 
 const mountBanner = async () => {
@@ -49,36 +51,38 @@ describe('PerpsStatusBanner', () => {
 
   it('renders nothing before the first response', async () => {
     const banner = await mountBanner()
-    expect(banner.find('[role="status"]').exists()).toBe(false)
+    expect(banner.findComponent(AppBanner).exists()).toBe(false)
   })
 
   it('renders nothing on 200', async () => {
     statusCode.value = 200
     const banner = await mountBanner()
-    expect(banner.find('[role="status"]').exists()).toBe(false)
+    expect(banner.findComponent(AppBanner).exists()).toBe(false)
   })
 
   it('renders nothing on 429', async () => {
     statusCode.value = 429
     const banner = await mountBanner()
-    expect(banner.find('[role="status"]').exists()).toBe(false)
+    expect(banner.findComponent(AppBanner).exists()).toBe(false)
   })
 
   it('announces the outage on 500', async () => {
     statusCode.value = 500
     const banner = await mountBanner()
 
-    expect(banner.find('[role="status"]').exists()).toBe(true)
+    expect(banner.find('[role="alert"]').exists()).toBe(true)
     expect(banner.text()).toContain(enPerps.perps.status.unavailable)
   })
 
-  it('is amber', async () => {
+  it('is a warning banner', async () => {
     statusCode.value = 500
     const banner = await mountBanner()
 
-    const shell = banner.get('[role="status"]')
-    expect(shell.classes()).toContain('bg-background-warning-subtle')
-    expect(banner.get('svg').classes()).toContain('text-text-warning')
+    const appBanner = banner.getComponent(AppBanner)
+    expect(appBanner.props('type')).toBe('warning')
+    expect(appBanner.props('description')).toBe(
+      enPerps.perps.status.unavailable,
+    )
   })
 
   it('yields to the jurisdiction block, which outranks service availability', async () => {
@@ -86,6 +90,6 @@ describe('PerpsStatusBanner', () => {
     isPerpsRestricted.value = true
     const banner = await mountBanner()
 
-    expect(banner.find('[role="status"]').exists()).toBe(false)
+    expect(banner.findComponent(AppBanner).exists()).toBe(false)
   })
 })
