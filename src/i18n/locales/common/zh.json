@@ -34,6 +34,8 @@
     "more": "更多",
     "dont_have_wallet": "还没有钱包？",
     "create_wallet": "创建钱包",
+    "create_wallet_short": "创建",
+    "connect_wallet_short": "连接",
     "access_wallet": "访问钱包",
     "load_more": "加载更多",
     "not_found": {
