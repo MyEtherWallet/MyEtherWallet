@@ -236,10 +236,16 @@ const isLoadedData = ref(false)
 
 const { useMEWFetch } = useFetchMewApi()
 const {
-  data: fetchedTokenData,
+  data: fetchedData,
   isFetching,
   onFetchResponse,
 } = useMEWFetch(endpoint, { refetch: true }).get().json<GetWebTokenInfo>()
+// useMEWFetch sets updateDataOnError, so a failed request (e.g. a portfolio
+// token the API doesn't list) leaves the error body in `data`. Treat anything
+// without supportedChains as no data so the swap/bridge prefills skip it.
+const fetchedTokenData = computed(() =>
+  fetchedData.value?.supportedChains ? fetchedData.value : null,
+)
 
 const isLoading = computed(() => {
   return !isLoadedData.value
