@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Preview for the List design-library component (MEW-2467) at /dev/list.
-// Figma: MEW Web App — Design Library › List (2287:17344) — its five Types,
-// with and without the header slot, plus the props Figma only describes.
+// Figma: MEW Web App — Design Library › List (2287:17344) — its Types, with
+// and without the header slot, plus the props Figma only describes.
 import { ref } from 'vue'
 import AppList from '@components/list/AppList.vue'
 import AppCell from '@components/cell/AppCell.vue'
@@ -120,34 +120,6 @@ const actions = ref(0)
               title="Title"
               description="Information"
               :right-accessory="BALANCE"
-            >
-              <template #avatar="{ size: avatarSize }">
-                <AppAvatar :size="avatarSize" type="initial" initial="U" />
-              </template>
-            </AppCell>
-          </AppList>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        <h2 class="text-label-base">
-          InfoRow in list (Cell rows, InfoCell is deprecated)
-        </h2>
-        <div class="rounded-12 bg-background-default p-6">
-          <AppList
-            class="max-w-100"
-            title="Title"
-            header="inside"
-            :action="STAR"
-            @action="actions++"
-          >
-            <AppCell
-              v-for="index in 3"
-              :key="index"
-              inset
-              :interactive="false"
-              title="Title"
-              description="Information"
             >
               <template #avatar="{ size: avatarSize }">
                 <AppAvatar :size="avatarSize" type="initial" initial="U" />

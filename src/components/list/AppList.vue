@@ -12,7 +12,7 @@ import {
 
 /**
  * List (design library, MEW-2467, Figma 2287:17344). "Vertical stack of rows
- * built from Cell, InfoCell, or Card, used to display collections of assets,
+ * built from Cell or Card, used to display collections of assets,
  * transactions, or other items." Layout only: the consumer renders the rows
  * (`AppCell`, with `inset` inside the `rows` container) or the cards; the list
  * owns the header, the container and the spacing.

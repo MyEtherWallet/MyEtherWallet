@@ -5,8 +5,7 @@ import type { CellSurface } from '@/components/cell/cellSizes'
  * List design-library types + layout classes (Figma: MEW Web App — Design
  * Library › List, component set 2287:17344). Figma Type maps to `layout` +
  * `header`: default-title in / out of list = `rows` + `inside` / `outside`,
- * Rows with spacing = `spaced`, Grid (cards) = `grid`. "InfoRow in list" is
- * `rows` + `inside` with Cell rows (InfoCell is deprecated).
+ * Rows with spacing = `spaced`, Grid (cards) = `grid`.
  */
 export type ListLayout = 'rows' | 'spaced' | 'grid'
 
