@@ -40,7 +40,6 @@
           "trade": "Operar",
           "swap": "Intercambiar",
           "bridge": "Bridge",
-          "remove": "Quitar de la lista",
           "removeShort": "Quitar",
           "dragLabel": "Arrastra para reordenar",
           "showMore": "Ver {count} más",
@@ -107,7 +106,6 @@
       "today": "Hoy",
       "yesterday": "Ayer",
       "daysAgo": "hace {n} días",
-      "pagination": "Mostrando página {page} de {total}",
       "readOnSource": "Lee el artículo completo en {source}",
       "readMore": "Lee el artículo completo"
     }

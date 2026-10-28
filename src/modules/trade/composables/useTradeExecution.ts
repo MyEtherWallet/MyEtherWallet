@@ -156,7 +156,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const addProcessingToast = (hash: string) => {
     toastStore.addToastMessage({
       id: `trade-processing-${hash}`,
-      variant: 'dark',
       text: t('trade.toast.processing_trade'),
       textSecondary: t('trade.toast.processing_note'),
       isInfinite: true,

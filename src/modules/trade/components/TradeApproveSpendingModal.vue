@@ -1,124 +1,111 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    class="w-full sm:w-[480px] sm:mx-auto sm:h-[576px] !rounded-20"
-    hide-close
+  <app-modal
+    v-model="model"
+    :aria-label="$t('trade.approve_spending.title', { symbol: tokenSymbol })"
+    class="sm:h-[576px]"
   >
-    <template #title>
-      <app-btn-icon
-        variant="filled"
-        :label="$t('common.close')"
-        class="absolute top-6 right-6"
-        @click="model = false"
-      >
-        <AppIcon name="x-mark" />
-      </app-btn-icon>
-    </template>
-    <template #content>
-      <div
-        class="flex flex-col gap-6 items-center justify-center h-full px-6 py-28"
-      >
-        <div class="flex flex-col gap-2 items-center justify-center w-full">
-          <h1
-            id="dialogTitle"
-            class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black text-center"
-          >
-            {{ $t('trade.approve_spending.title', { symbol: tokenSymbol }) }}
-          </h1>
-          <p class="text-s-16 leading-[22px] text-black text-center">
-            {{
-              $t('trade.approve_spending.subtitle', {
-                symbol: tokenSymbol,
-                wallet: walletLabel,
-              })
-            }}
-          </p>
-        </div>
-
-        <div
-          class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-background-default"
+    <div
+      class="flex flex-col gap-6 items-center justify-center h-full px-6 py-28"
+    >
+      <div class="flex flex-col gap-2 items-center justify-center w-full">
+        <h1
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black text-center"
         >
-          <div class="flex items-center justify-center gap-3 w-full">
-            <div class="flex flex-1 min-w-0 items-center gap-1">
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-              >
-                {{ $t('trade.approve_spending.network_fee') }}
-              </p>
-              <app-tooltip
-                :text="$t('trade.approve_spending.network_fee_tooltip')"
-              >
-                <AppIcon
-                  name="information-circle"
-                  size="xs"
-                  class="text-black cursor-pointer"
-                />
-              </app-tooltip>
-            </div>
+          {{ $t('trade.approve_spending.title', { symbol: tokenSymbol }) }}
+        </h1>
+        <p class="text-s-16 leading-[22px] text-black text-center">
+          {{
+            $t('trade.approve_spending.subtitle', {
+              symbol: tokenSymbol,
+              wallet: walletLabel,
+            })
+          }}
+        </p>
+      </div>
 
-            <div
-              v-if="isLoading"
-              class="flex flex-col items-end gap-1 flex-none"
+      <div
+        class="flex flex-col items-start w-full max-w-[432px] p-4 rounded-16 bg-background-default"
+      >
+        <div class="flex items-center justify-center gap-3 w-full">
+          <div class="flex flex-1 min-w-0 items-center gap-1">
+            <p
+              class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
             >
-              <div
-                class="h-[18px] w-[88px] rounded-8 bg-background-skeleton animate-pulse"
-              />
-              <div
-                class="h-3.5 w-14 rounded-8 bg-background-skeleton animate-pulse"
-              />
-            </div>
-            <div
-              v-else-if="hasFailed"
-              class="flex flex-col items-end flex-none"
+              {{ $t('trade.approve_spending.network_fee') }}
+            </p>
+            <app-tooltip
+              :text="$t('trade.approve_spending.network_fee_tooltip')"
             >
-              <p
-                class="text-s-14 leading-[20px] text-text-error whitespace-nowrap"
-              >
-                {{ $t('trade.approve_spending.fee_unavailable') }}
-              </p>
-              <button
-                type="button"
-                class="text-s-14 font-semibold leading-[20px] text-text-brand hoverNoBG"
-                @click="refetchFee"
-              >
-                {{ $t('common.retry') }}
-              </button>
-            </div>
-            <div v-else class="flex flex-col items-end flex-none">
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black whitespace-nowrap"
-              >
-                {{ nativeFee ? approx(nativeFee) : '-' }}
-              </p>
-              <p
-                v-if="fiatFee"
-                class="text-s-14 leading-[20px] text-text-subtle whitespace-nowrap"
-              >
-                {{ approx(fiatFee) }}
-              </p>
-            </div>
+              <AppIcon
+                name="information-circle"
+                size="xs"
+                class="text-black cursor-pointer"
+              />
+            </app-tooltip>
+          </div>
 
-            <app-token-logo
-              :url="nativeTokenLogo"
-              :symbol="nativeTokenSymbol"
-              width="w-10"
-              height="h-10"
-              no-shadow
-              no-ring
-              class="flex-none"
+          <div
+            v-if="isLoading"
+            class="flex flex-col items-end gap-1 flex-none"
+          >
+            <div
+              class="h-[18px] w-[88px] rounded-8 bg-background-skeleton animate-pulse"
+            />
+            <div
+              class="h-3.5 w-14 rounded-8 bg-background-skeleton animate-pulse"
             />
           </div>
-        </div>
+          <div
+            v-else-if="hasFailed"
+            class="flex flex-col items-end flex-none"
+          >
+            <p
+              class="text-s-14 leading-[20px] text-text-error whitespace-nowrap"
+            >
+              {{ $t('trade.approve_spending.fee_unavailable') }}
+            </p>
+            <button
+              type="button"
+              class="text-s-14 font-semibold leading-[20px] text-text-brand hoverNoBG"
+              @click="refetchFee"
+            >
+              {{ $t('common.retry') }}
+            </button>
+          </div>
+          <div v-else class="flex flex-col items-end flex-none">
+            <p
+              class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black whitespace-nowrap"
+            >
+              {{ nativeFee ? approx(nativeFee) : '-' }}
+            </p>
+            <p
+              v-if="fiatFee"
+              class="text-s-14 leading-[20px] text-text-subtle whitespace-nowrap"
+            >
+              {{ approx(fiatFee) }}
+            </p>
+          </div>
 
-        <app-base-button @click="emit('approve')">
-          <span class="flex items-center gap-2">
-            {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
-            <AppIcon name="arrow-top-right-on-square" size="s" />
-          </span>
-        </app-base-button>
+          <app-token-logo
+            :url="nativeTokenLogo"
+            :symbol="nativeTokenSymbol"
+            width="w-10"
+            height="h-10"
+            no-shadow
+            no-ring
+            class="flex-none"
+          />
+        </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <app-base-button @click="emit('approve')">
+        <span class="flex items-center gap-2">
+          {{ $t('trade.approve_spending.cta', { wallet: walletLabel }) }}
+          <AppIcon name="arrow-top-right-on-square" size="s" />
+        </span>
+      </app-base-button>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -126,8 +113,7 @@ import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
