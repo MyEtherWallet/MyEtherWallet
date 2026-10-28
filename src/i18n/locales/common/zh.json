@@ -231,7 +231,8 @@
   "menu": {
     "open-settings": "打开设置",
     "open-notifications": "打开通知",
-    "open-menu": "打开菜单"
+    "open-menu": "打开菜单",
+    "main": "主导航"
   },
   "home": "主页",
   "connect_wallet": "连接钱包",

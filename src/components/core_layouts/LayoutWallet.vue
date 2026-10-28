@@ -10,7 +10,7 @@
           'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]':
             hasShadow && !isOpenSideMenu,
         },
-        'fixed right-0 top-[69px] sm:top-[77px] z-[50] h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
+        'fixed right-0 top-[77px] z-[50] h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
       @select="onSelect"
       @toggle="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"

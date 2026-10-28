@@ -1,134 +1,75 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+    class="fixed top-0 w-full"
     :class="isHeaderOverlayOpen ? 'z-[201]' : 'z-10'"
   >
-    <div class="flex w-full justify-between items-center mx-auto gap-3">
-      <!-- LOGO -->
-      <div class="flex items-center gap-2 relative z-[0]">
-        <router-link
-          :to="{ name: ROUTES_MAIN.HOME.NAME }"
-          class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"
-        >
-          <img
-            v-if="!isMobile"
-            src="@/assets/images/mew/logo-header.webp"
-            :alt="t('home')"
-            width="280"
-            height="96"
-            class="w-[140px] h-12 flex-none object-contain"
-          />
-          <img
-            v-else
-            src="@/assets/images/access/portfolio_icon.webp"
-            :alt="t('home')"
-            width="100"
-            height="100"
-            class="w-8 h-8"
-          />
-        </router-link>
-        <!--Mobile Menu button -->
-        <the-app-side-menu
-          v-if="showMobileMenu"
-          :core-menu-list="coreMenuList"
-          :tools-menu-list="toolsMenuList"
-          :learn-menu-list="learnMenuList"
-        />
-        <!--Desktop Menu -->
-        <div v-if="!showMobileMenu" class="flex items-center gap-1 xl:gap-2">
-          <router-link
-            v-for="(item, index) in displayLinks"
-            :key="index"
+    <app-navbar
+      :wallet-saved="
+        isWalletConnected || hasAnySavedAccount || isRestoringWallet
+      "
+      :menu-open="isSideMenuOpen"
+      :scrolled="scrolled"
+      @toggle-menu="isSideMenuOpen = !isSideMenuOpen"
+      @create-wallet="createWallet"
+      @connect-wallet="connectWallet"
+    >
+      <template #links>
+        <!-- Own stacking context (as the old logo group had) so the More
+             dropdown can't paint over the search overlay -->
+        <div class="relative z-0 flex items-center gap-2">
+          <app-nav-link
+            v-for="item in coreMenuList"
+            :key="item.routeName"
             :to="{ name: item.routeName }"
-            class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-            active-class="bg-background-default-hover"
-            v-ripple
+            :label="item.title"
+          />
+          <app-select
+            v-model:selected="selectedOption"
+            v-model:open="isMoreOpen"
+            :options="moreMenuOptions"
+            :placeholder="$t('common.more')"
+            use-vue-router
+            has-on-Hover
           >
-            {{ item.title }}
-          </router-link>
-        </div>
-        <app-select
-          v-if="!showMobileMenu"
-          v-model:selected="selectedOption"
-          v-model:open="isMoreOpen"
-          :options="moreMenuOptions"
-          :placeholder="$t('common.more')"
-          use-vue-router
-          has-on-Hover
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
-              @click="toggleSelect"
-            >
-              {{ $t('common.more') }}
-              <AppIcon
-                name="chevron-down"
-                variant="filled"
-                size="xxs"
-                class="ml-2"
+            <template #select-button="{ toggleSelect }">
+              <app-nav-link
+                :label="$t('common.more')"
+                dropdown
+                :expanded="isMoreOpen"
+                class="capitalize"
+                @click="toggleSelect"
               />
-            </button>
-          </template>
-        </app-select>
-      </div>
-      <!-- RIGHT SIDE -->
-      <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
-        <!-- GLOBAL SEARCH -->
+            </template>
+          </app-select>
+        </div>
+      </template>
+      <template #search>
         <module-global-search />
+      </template>
+      <template #wallet>
         <the-address-menu v-if="isWalletConnected || hasAnySavedAccount" />
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
-          v-else-if="isRestoringWallet"
+          v-else
           class="w-40 h-10 rounded-[20px] bg-background-default-hover animate-pulse shrink-0"
           aria-hidden="true"
         />
-        <!-- Wallet area, trapped in its own stacking context so internal z-index
-             can't escape and paint over the search overlay -->
-        <div class="relative z-[0] flex items-center gap-2">
-          <!-- Create wallet button -->
-          <router-link
-            v-if="
-              !isWalletConnected && !isRestoringWallet && !hasAnySavedAccount
-            "
-            :to="createRoute"
-            class="hidden sm:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center items-center justify-center"
-            @click="
-              analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
-                source: 'Header_Create',
-              })
-            "
-          >
-            {{
-              isWalletCtaShort
-                ? $t('common.create_wallet_short')
-                : $t('common.create_wallet')
-            }}
-          </router-link>
-          <!-- Connect wallet button -->
-          <router-link
-            v-if="
-              !isWalletConnected && !isRestoringWallet && !hasAnySavedAccount
-            "
-            :to="accessRoute"
-            @click="
-              analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-                source: 'Header_Connect',
-              })
-            "
-            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center hidden xs:flex items-center justify-center"
-          >
-            {{
-              isWalletCtaShort
-                ? $t('common.connect_wallet_short')
-                : $t('connect_wallet')
-            }}
-          </router-link>
-          <the-settings-popup />
+      </template>
+      <template #actions>
+        <!-- Own stacking context so the popups' internal z-index can't escape
+             and paint over the search overlay -->
+        <div class="relative z-0 flex items-center gap-2">
           <the-notifications-popup v-if="isWalletConnected" />
+          <the-settings-popup />
         </div>
-      </div>
-    </div>
+      </template>
+    </app-navbar>
+    <the-app-side-menu
+      v-model:open="isSideMenuOpen"
+      :core-menu-list="coreMenuList"
+      :tools-menu-list="toolsMenuList"
+      :learn-menu-list="learnMenuList"
+    />
     <!-- Single dim overlay covering the viewport, lives inside header's stacking context -->
     <div
       class="fixed inset-0 bg-black/40 z-[1] transition-opacity duration-500"
@@ -150,10 +91,11 @@ import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import AppNavLink from '@/components/navbar/AppNavLink.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { useBreakpoints } from '@vueuse/core'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
@@ -169,7 +111,13 @@ import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
+defineProps<{
+  /** The app's scroll container has left the top: shows the navbar border. */
+  scrolled?: boolean
+}>()
+
 const { t } = useI18n()
+const router = useRouter()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected } = storeToRefs(store)
@@ -180,7 +128,6 @@ const { refreshDetectedAddress } = useDetectedAddress()
 // so cancelling returns the user here instead of rerouting them.
 const { accessRoute, createRoute } = useWalletFlowRoute()
 const watchOnlyStore = useWatchOnlyStore()
-const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 // The perps nav entry is no longer gated on region — perps renders a blocked
 // state instead of disappearing. The check is still kicked off here, on a
 // component mounted at app start, so it is resolved by the time any perps
@@ -221,29 +168,28 @@ const hasAnySavedAccount = computed<boolean>(() =>
 )
 const isRestoringWallet = ref(false)
 
-/** ------------------------------
- * Breakpoints determine menu visibility
- ------------------------------*/
-
-const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
-
-/**
- * Header-specific collapse thresholds (not Tailwind breakpoints) that shrink the
- * network button and wallet CTAs as the viewport narrows, before the bar drops
- * to the mobile hamburger at `xl-min`/1140px.
- */
-const headerCollapse = useBreakpoints({
-  networkConnected: 1310,
-  walletCta: 1500,
-  network: 1555,
+const isSideMenuOpen = ref(false)
+// The hamburger is compact-only: close the drawer when the window widens past it.
+const { isXLAndUp } = useAppBreakpoints()
+watch(isXLAndUp, desktop => {
+  if (desktop) isSideMenuOpen.value = false
 })
-/**
- * Below 1500px the Create/Connect wallet CTAs drop the "wallet" word ("Create",
- * "Connect") to save space before the network button collapses.
- */
-const isWalletCtaShort = computed<boolean>(
-  () => headerCollapse.smaller('walletCta').value,
-)
+
+/** ------------------------------
+ * Wallet CTAs
+ ------------------------------*/
+const createWallet = (): void => {
+  analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+    source: 'Header_Create',
+  })
+  void router.push(createRoute.value)
+}
+const connectWallet = (): void => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Header_Connect',
+  })
+  void router.push(accessRoute.value)
+}
 
 /** ------------------------------
  * Menu Items
@@ -300,8 +246,6 @@ const learnMenuList = computed<AppSelectOption[]>(() => [
     value: 'https://www.myetherwallet.com/blog',
   },
 ])
-
-const displayLinks = computed(() => coreMenuList.value)
 
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]

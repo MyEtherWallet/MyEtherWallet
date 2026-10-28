@@ -158,11 +158,13 @@ const ariaLabel = computed(() =>
       </span>
     </template>
 
+    <!-- starting:rotate-0 animates the flip on a selector that mounts open
+         (the manage-accounts trigger clone); it's a no-op when closed. -->
     <AppIcon
       name="chevron-down"
       variant="filled"
       size="s"
-      class="shrink-0 text-icon-default transition-transform"
+      class="shrink-0 text-icon-default transition-transform starting:rotate-0"
       :class="{ 'rotate-180': open }"
     />
   </button>

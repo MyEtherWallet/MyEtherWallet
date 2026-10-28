@@ -439,17 +439,20 @@ const triggerCloneStyle = computed<CSSProperties | null>(() => {
   void posTick.value
   if (!props.anchor) return null
   const rect = props.anchor.getBoundingClientRect()
+  // The Address selector is content-width (balance, name, loading), so the
+  // clone sizes itself from the same content and pins the right edge, like
+  // the real trigger in the right-aligned navbar group.
   return {
     position: 'fixed',
     top: `${rect.top}px`,
-    left: `${rect.left}px`,
-    width: `${rect.width}px`,
-    height: `${rect.height}px`,
+    right: `${window.innerWidth - rect.right}px`,
     zIndex: 2101,
   }
 })
 
 watch(openDialog, val => {
+  // Re-measure on open: the trigger may have resized since the last one.
+  if (val) posTick.value += 1
   if (val) void refreshDetectedAddress()
   if (!val) view.value = 'accounts'
 })
