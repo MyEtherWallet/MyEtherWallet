@@ -245,15 +245,20 @@
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
       :swap-fee-error="swapFeeError"
     />
+    <!--
+      Fed from the snapshot taken when the user confirmed the offer, not from
+      the live form: the form can be re-quoted or reset while the wallet prompt
+      is open, which left this modal showing "Unknown" / 0 (see
+      proceedWithSwap in useSwapModule).
+    -->
     <swap-initiated-modal
       v-model:swap-initiated-open="swapInitiatedOpen"
-      :from-chain="selectedChain"
-      :to-chain="selectedToChain"
-      :selected-quote="selectedQuote"
-      :tx-hash="txHash"
-      :to-address="toAddress"
-      :from-address="userAddress"
-      :swap-gas-fee-quote="swapGasFeeQuote"
+      :from-chain="initiatedSwap?.fromChain"
+      :to-chain="initiatedSwap?.toChain"
+      :selected-quote="initiatedSwap?.selectedQuote"
+      :tx-hash="initiatedSwap?.txHash ?? '0x'"
+      :to-address="initiatedSwap?.toAddress ?? ''"
+      :from-address="initiatedSwap?.fromAddress ?? ''"
     />
   </div>
 </template>
@@ -286,7 +291,6 @@ const {
   selectedChain,
   isBitcoinChain,
   isWalletConnected,
-  userAddress,
   isWatchOnly,
   hasChainBalance,
   selectedToChain,
@@ -303,7 +307,7 @@ const {
   selectedQuote,
   swapInfo,
   swapGasFeeQuote,
-  txHash,
+  initiatedSwap,
   bestSwapLoadingOpen,
   bestOfferSelectionOpen,
   swapInitiatedOpen,

@@ -18,7 +18,7 @@ import {
   inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
-import { useSwapForm } from './useSwapForm'
+import { useSwapForm, type InitiatedSwap } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useInputStore } from '@/stores/inputStore'
@@ -116,6 +116,7 @@ interface SwapModuleBindings {
   swapInfo: Ref<ProviderSwapResponse | null>
   swapGasFeeQuote: Ref<QuotesResponse | undefined>
   txHash: Ref<HexPrefixedString>
+  initiatedSwap: Ref<InitiatedSwap | null>
   bestSwapLoadingOpen: Ref<boolean>
   bestOfferSelectionOpen: Ref<boolean>
   swapInitiatedOpen: Ref<boolean>
@@ -221,6 +222,7 @@ export function useSwapModule(): SwapModuleBindings {
     swapInfo,
     swapGasFeeQuote,
     txHash,
+    initiatedSwap,
     localToTokens,
     isLoadingQuotes,
     bestSwapLoadingOpen,
@@ -622,6 +624,20 @@ export function useSwapModule(): SwapModuleBindings {
     generalError.value = ''
     const analyticsPayload = getAnalyticsShared()
     analytics.trackSwapEvent(SwapEvent.OFFER_PROCEED, analyticsPayload)
+    // Read now, not after the signature: the wallet prompt can stay open for a
+    // while, and meanwhile balance polling / token-list refreshes / quote
+    // refetches mutate the form (`selectedQuote` gets cleared, amounts reset).
+    // The initiated modal and the post-tx reward check must describe what was
+    // submitted, not what the form holds when the hash finally lands.
+    const submitted = {
+      fromChain: selectedChain.value,
+      toChain: selectedToChain.value,
+      selectedQuote: selectedQuote.value,
+      toAddress: toAddress.value,
+      fromAddress: userAddress.value,
+    }
+    const submittedUsdValue =
+      parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
     try {
       let txPromise: Promise<string> | undefined
 
@@ -636,14 +652,17 @@ export function useSwapModule(): SwapModuleBindings {
       if (txPromise) {
         const hash = await txPromise
         txHash.value = hash as HexPrefixedString
+        // Set before the modal opens so its open-watcher sees the full set.
+        initiatedSwap.value = {
+          ...submitted,
+          txHash: hash as HexPrefixedString,
+        }
         bestOfferSelectionOpen.value = false
         swapInitiatedOpen.value = true
         //check reward elements availability after transaction is sent
         let canEarnReward: undefined | boolean = undefined
 
-        const fromUsdValue =
-          parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-        if (fromUsdValue > 50) {
+        if (submittedUsdValue > 50) {
           const canEarn =
             await rewardsStore.checkAvailabilityAfterTransaction('swap')
           canEarnReward = canEarn ? true : undefined
@@ -1389,6 +1408,7 @@ export function useSwapModule(): SwapModuleBindings {
 
           // Cleanup
           txHash.value = '0x'
+          initiatedSwap.value = null
           providers.value = []
           clearValues()
         }
@@ -1703,6 +1723,7 @@ export function useSwapModule(): SwapModuleBindings {
     swapInfo,
     swapGasFeeQuote,
     txHash,
+    initiatedSwap,
     bestSwapLoadingOpen,
     bestOfferSelectionOpen,
     swapInitiatedOpen,
