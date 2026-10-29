@@ -36,8 +36,12 @@ import {
  * `largeOnly` columns show at L only.
  * Sort cycles off → desc → asc → off per column (`v-model:sort`); with
  * `defaultSort`, "off" is that sort instead of null (a column whose default
- * is asc just toggles). `loading` swaps the rows
- * for `loadingRows` skeleton rows and blanks the pagination label.
+ * is asc just toggles). `loading` swaps the rows for `loadingRows`
+ * placeholder rows and blanks the pagination label. A placeholder is a
+ * loading AppTableRow in the usual shape (star, avatar, title + description,
+ * a bar per cell, the default action skeleton); when the real rows differ,
+ * `#loading-row` gives the shape instead, e.g. no avatar or two buttons at L:
+ * `<AppTableRow loading description="-"><template #loading-actions>…`
  */
 const props = withDefaults(
   defineProps<{
@@ -109,6 +113,7 @@ provide(TABLE_CONTEXT, {
   size,
   visibleKeys,
   start,
+  watchlist: computed(() => props.watchlist),
   reorderable: computed(() => props.reorderable),
   actions: computed(() => props.actions),
 })
@@ -231,7 +236,14 @@ watch(
         ]"
       >
         <template v-if="loading">
-          <AppTableRow v-for="n in loadingRows" :key="n" loading />
+          <template v-for="n in loadingRows" :key="n">
+            <slot name="loading-row">
+              <!-- The description only marks the row as two-line; it isn't shown. -->
+              <AppTableRow loading description="-">
+                <template #avatar />
+              </AppTableRow>
+            </slot>
+          </template>
         </template>
         <slot v-else :size="size" :visible-keys="visibleKeys" />
       </div>

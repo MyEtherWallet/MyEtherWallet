@@ -50,12 +50,19 @@ export interface TableContext {
   visibleKeys: Readonly<Ref<string[]>>
   /** Leading track for the drag handle + watchlist star. */
   start: Readonly<Ref<boolean>>
+  /** The rows carry a watchlist star (loading rows hold its place). */
+  watchlist: Readonly<Ref<boolean>>
   reorderable: Readonly<Ref<boolean>>
   /** Trailing track for the row actions. */
   actions: Readonly<Ref<boolean>>
 }
 
 export const TABLE_CONTEXT: InjectionKey<TableContext> = Symbol('AppTable')
+
+/** From AppTableRow: its cells swap their lines for skeleton bars. */
+export const TABLE_ROW_LOADING: InjectionKey<Readonly<Ref<boolean>>> = Symbol(
+  'AppTableRow loading',
+)
 
 /**
  * From AppTableWrapper: its measured size, so the table follows the card's
@@ -71,6 +78,7 @@ export const defaultTableContext = (): TableContext => ({
   size: ref('l'),
   visibleKeys: ref([]),
   start: ref(false),
+  watchlist: ref(false),
   reorderable: ref(false),
   actions: ref(false),
 })

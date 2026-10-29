@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import { formatChange, trendOf, type Trend } from '@/components/cell/cellSizes'
-import { TABLE_CONTEXT, defaultTableContext } from './types'
+import { TABLE_CONTEXT, TABLE_ROW_LOADING, defaultTableContext } from './types'
 
 /**
  * Table cell (design library, Figma `_TableCell` 2801:35945). Type Number is
@@ -15,6 +16,10 @@ import { TABLE_CONTEXT, defaultTableContext } from './types'
  * `column` ties the cell to a TableColumn key so it drops out at size S with
  * its header. Give every data cell one: a cell without it always renders and
  * pushes the row off the header's tracks.
+ *
+ * In a loading AppTableRow each line becomes a skeleton bar in that line's
+ * box (value 22px, change 18px, sparkline 56×16), so the content lands where
+ * the bars were. A cell with none of the three (slot content) shows one bar.
  */
 const props = defineProps<{
   column?: string
@@ -25,6 +30,8 @@ const props = defineProps<{
 }>()
 
 const { size, visibleKeys } = inject(TABLE_CONTEXT, defaultTableContext, true)
+const rowLoading = inject(TABLE_ROW_LOADING, null)
+const loading = computed(() => rowLoading?.value ?? false)
 
 const TREND_CLASS: Record<Trend, string> = {
   up: 'text-text-success',
@@ -72,7 +79,19 @@ const points = computed(() => {
       size === 's' ? 'items-end text-right' : 'items-start',
     ]"
   >
-    <slot>
+    <template v-if="loading">
+      <div
+        v-if="value !== undefined || (change === undefined && !series)"
+        class="py-[5px]"
+      >
+        <AppSkeleton class="h-3 w-16" />
+      </div>
+      <div v-if="change !== undefined" class="py-[3px]">
+        <AppSkeleton class="h-3 w-12" />
+      </div>
+      <AppSkeleton v-if="series" class="h-4 w-14" />
+    </template>
+    <slot v-else>
       <p
         v-if="value !== undefined"
         :class="[
