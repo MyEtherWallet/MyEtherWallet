@@ -222,6 +222,16 @@ const lastClicked = ref('')
             watchlist
             actions
           >
+            <!-- Two buttons at L like the rows below; the default is one. -->
+            <template #loading-row="{ size }">
+              <AppTableRow
+                loading
+                description="-"
+                :loading-buttons="size === 'l' ? 2 : size === 'm' ? 1 : 0"
+              >
+                <template #avatar />
+              </AppTableRow>
+            </template>
             <template #default="{ size }">
               <AppTableRow
                 v-for="a in pageRows"
