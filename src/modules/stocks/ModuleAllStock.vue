@@ -401,7 +401,14 @@ const formatStock = (
 const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
   const { key, direction } = sort.value
   const sortMap: Record<string, () => DisplayToken[]> = {
-    NAME: () => sortObjectArrayString(tokensList, 'name', direction),
+    // sortObjectArrayString's 'desc' is A→Z; flip it so the list follows the
+    // header arrow.
+    NAME: () =>
+      sortObjectArrayString(
+        tokensList,
+        'name',
+        direction === 'asc' ? 'desc' : 'asc',
+      ),
     MARKET_CAP: () =>
       sortObjectArrayNumber(tokensList, 'marketCapRaw', direction),
     VOLUME_24H: () =>

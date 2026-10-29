@@ -818,8 +818,10 @@ const tokens = computed<DisplayToken[]>(() => {
   // Sorting logic
   const { key, direction } = sort.value ?? DEFAULT_SORT
   const sortMap: Record<SortValueString, () => DisplayToken[]> = {
+    // sortObjectArrayString's 'desc' is A→Z; flip it so the list follows the
+    // header arrow.
     [SortValueString.NAME]: () =>
-      sortObjectArrayString(list, 'name', direction),
+      sortObjectArrayString(list, 'name', direction === 'asc' ? 'desc' : 'asc'),
     [SortValueString.PERCENT]: () =>
       sortObjectArrayNumber(list, 'price_change_percentage_24h', direction),
     [SortValueString.MARKET_CAP]: () =>

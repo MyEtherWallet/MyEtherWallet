@@ -168,6 +168,17 @@ describe('TableTokenBalance', () => {
     expect(symbols(w)).toEqual(['AAA', 'BBB', 'CCC'])
   })
 
+  it('sorts the token column in the direction its arrow shows', async () => {
+    const w = mountTable()
+    const token = w
+      .findAll('[role="columnheader"] button')
+      .find(b => b.text() === 'portfolio.table.token_header')!
+    await token.trigger('click')
+    expect(symbols(w)).toEqual(['CCC', 'BBB', 'AAA'])
+    await token.trigger('click')
+    expect(symbols(w)).toEqual(['AAA', 'BBB', 'CCC'])
+  })
+
   it('shows swap + buy at L, swap at M, the action menu at S', async () => {
     const w = mountTable()
     expect(buttonTexts(w).filter(t => t === 'common.swap')).toHaveLength(3)
