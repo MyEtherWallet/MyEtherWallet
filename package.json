@@ -81,6 +81,7 @@
     "qr-code-styling": "^1.9.2",
     "qrcode": "^1.5.4",
     "qrcode.vue": "^3.6.0",
+    "sortablejs": "^1.14.0",
     "tiny-secp256k1": "^2.2.4",
     "underscore": "^1.13.7",
     "viem": "^2.44.0",
