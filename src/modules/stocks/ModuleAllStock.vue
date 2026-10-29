@@ -106,12 +106,15 @@
                     class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                   >
                     <ul>
-                      <li
-                        @click.stop="[toggleMenu(), tradeBtn(token, true)]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-trade class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('stocks.trade') }}</p>
+                      <li>
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), tradeBtn(token, true)]"
+                        >
+                          <icon-trade class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('stocks.trade') }}</span>
+                        </button>
                       </li>
                     </ul>
                   </div>

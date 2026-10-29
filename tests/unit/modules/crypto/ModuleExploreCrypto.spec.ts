@@ -212,4 +212,20 @@ describe('ModuleExploreCrypto table (MEW-2469)', () => {
       sortOption: 'price',
     })
   })
+
+  it('puts the S menu actions in buttons so the keyboard reaches them', async () => {
+    cardWidth.value = 400
+    // An Ondo token gets the Trade item.
+    const item = ITEMS[0] as { ondo: unknown }
+    item.ondo = { primaryMarket: { symbol: 'ETHon' }, underlyingMarket: null }
+    try {
+      const w = await mountModule()
+      const items = w.findAll('[role="cell"] li')
+      expect(items.length).toBeGreaterThan(0)
+      for (const li of items)
+        expect(li.find('button[type="button"]').exists()).toBe(true)
+    } finally {
+      item.ondo = null
+    }
+  })
 })

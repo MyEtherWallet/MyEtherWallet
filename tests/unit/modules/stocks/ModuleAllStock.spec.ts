@@ -213,4 +213,13 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     expect(labels).toContain('Market cap')
     expect(labels).not.toContain('Price')
   })
+
+  it('puts the S menu actions in buttons so the keyboard reaches them', async () => {
+    cardWidth.value = 400
+    const w = await mountModule()
+    const items = w.findAll('[role="cell"] li')
+    expect(items.length).toBeGreaterThan(0)
+    for (const li of items)
+      expect(li.find('button[type="button"]').exists()).toBe(true)
+  })
 })

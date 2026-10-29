@@ -137,37 +137,45 @@
                     class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                   >
                     <ul>
-                      <li
-                        v-if="isBuyableOnCompatibleChain(token.coinId)"
-                        @click.stop="[toggleMenu(), buyBtn(token, true)]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-buy class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('common.buy') }}</p>
+                      <li v-if="isBuyableOnCompatibleChain(token.coinId)">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), buyBtn(token, true)]"
+                        >
+                          <icon-buy class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('common.buy') }}</span>
+                        </button>
                       </li>
-                      <li
-                        v-if="token.ondo !== null"
-                        @click.stop="[tradeBtn(token, true), toggleMenu()]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-trade class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('crypto.trade') }}</p>
+                      <li v-if="token.ondo !== null">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[tradeBtn(token, true), toggleMenu()]"
+                        >
+                          <icon-trade class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('crypto.trade') }}</span>
+                        </button>
                       </li>
-                      <li
-                        v-else-if="getIsBridgeable(token)"
-                        @click.stop="[toggleMenu(), bridgeBtn(token, true)]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-bridge class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('crypto.bridge') }}</p>
+                      <li v-else-if="getIsBridgeable(token)">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), bridgeBtn(token, true)]"
+                        >
+                          <icon-bridge class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('crypto.bridge') }}</span>
+                        </button>
                       </li>
-                      <li
-                        v-else-if="canSwap(token)"
-                        @click.stop="[toggleMenu(), swapBtn(token, true)]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-swap class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('common.swap') }}</p>
+                      <li v-else-if="canSwap(token)">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), swapBtn(token, true)]"
+                        >
+                          <icon-swap class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('common.swap') }}</span>
+                        </button>
                       </li>
                     </ul>
                   </div>
