@@ -40,8 +40,9 @@ import {
  * placeholder rows and blanks the pagination label. A placeholder is a
  * loading AppTableRow in the usual shape (star, avatar, title + description,
  * a bar per cell, the default action skeleton); when the real rows differ,
- * `#loading-row` gives the shape instead, e.g. no avatar or two buttons at L:
- * `<AppTableRow loading description="-"><template #loading-actions>…`
+ * `#loading-row` (it gets `size`) gives the shape instead, e.g. no avatar,
+ * or two buttons at L:
+ * `<AppTableRow loading description="-" :loading-buttons="size === 'l' ? 2 : 0">`
  */
 const props = withDefaults(
   defineProps<{
@@ -237,7 +238,7 @@ watch(
       >
         <template v-if="loading">
           <template v-for="n in loadingRows" :key="n">
-            <slot name="loading-row">
+            <slot name="loading-row" :size="size">
               <!-- The description only marks the row as two-line; it isn't shown. -->
               <AppTableRow loading description="-">
                 <template #avatar />

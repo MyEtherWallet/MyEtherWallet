@@ -269,24 +269,21 @@ describe('AppTableRow', () => {
     expect(start({ reorderable: true }).exists()).toBe(false)
   })
 
-  it('swaps the actions for #loading-actions, by default a button skeleton', () => {
-    const actions = (size: 'l' | 's', slots: Record<string, string> = {}) =>
+  it('swaps the actions for button skeletons: one at L/M, the icon at S, or loadingButtons', () => {
+    const skeletons = (size: 'l' | 's', loadingButtons?: number) =>
       factory({
-        props: { loading: true },
-        slots: { actions: '<button>Trade</button>', ...slots },
+        props: { loading: true, loadingButtons },
+        slots: { actions: '<button>Trade</button>' },
         ctx: { actions: true, size },
-      }).findAll('[role="cell"]')
-    const lastSkeleton = (size: 'l' | 's') =>
-      actions(size).at(-1)!.get('[data-testid="skeleton"]').classes()
-    expect(actions('l').at(-1)!.text()).toBe('')
-    expect(lastSkeleton('l')).toEqual(expect.arrayContaining(['h-10', 'w-24']))
-    expect(lastSkeleton('s')).toContain('size-8')
-    expect(
-      actions('l', { 'loading-actions': '<i data-test="two" />' })
+      })
+        .findAll('[role="cell"]')
         .at(-1)!
-        .find('[data-test="two"]')
-        .exists(),
-    ).toBe(true)
+        .findAll('[data-testid="skeleton"]')
+        .map(b => b.classes())
+    expect(skeletons('l')).toEqual([expect.arrayContaining(['h-10', 'w-24'])])
+    expect(skeletons('s')).toEqual([expect.arrayContaining(['size-8'])])
+    expect(skeletons('l', 2)).toHaveLength(2)
+    expect(skeletons('l', 0)).toEqual([expect.arrayContaining(['size-8'])])
   })
 
   it('gives a placeholder row (no cells) one skeleton cell per visible column', () => {
