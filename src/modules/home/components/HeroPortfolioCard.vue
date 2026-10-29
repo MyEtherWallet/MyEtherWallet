@@ -274,14 +274,16 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           {{ t('homePage.hero.ownTotal') }}
           <!-- Refresh with existing assets: skeleton only the amount, keep the
                layout (no whole-card swap). `whitespace-nowrap` keeps the masked
-               value from wrapping onto its own line in hidden mode. -->
+               value from wrapping onto its own line in hidden mode. v-show, not
+               v-if: a browser translator rewrites this sentence and detaches the
+               spans, and a v-if swap then crashed Vue (APP-MEW-WEB-1QA). -->
           <span
-            v-if="isLoadingBalances"
+            v-show="isLoadingBalances"
             data-test="hero-amount-skeleton"
             class="ml-2 inline-block h-[30px] w-20 animate-pulse rounded-lg bg-background-skeleton align-middle min-[768px]:h-[46px] min-[768px]:w-32"
           />
           <span
-            v-else
+            v-show="!isLoadingBalances"
             class="whitespace-nowrap"
             :class="hideBalances ? 'text-text-placeholder' : 'text-text-brand'"
             >{{ totalText }}</span

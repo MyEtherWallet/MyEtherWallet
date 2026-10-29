@@ -156,7 +156,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const addProcessingToast = (hash: string) => {
     toastStore.addToastMessage({
       id: `trade-processing-${hash}`,
-      variant: 'dark',
       text: t('trade.toast.processing_trade'),
       textSecondary: t('trade.toast.processing_note'),
       isInfinite: true,
@@ -311,25 +310,67 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
   }
 
+  /**
+   * What the user actually confirmed, captured before the first await in
+   * `confirmTrade`. The form is live while the order submits: dismissing the
+   * progress modal walks the step processing → idle, and the module clears the
+   * form on that transition (empty amount, null quote, default tokens), and
+   * the balance-refresh / token-list watchers can reassign the tokens too. The
+   * saved notification, the reward registration and the status analytics all
+   * read from the saved order, so it must be built from this snapshot, never
+   * from the refs.
+   */
+  interface TradeSnapshot {
+    from: NonNullable<TradeForm['fromTokenSelected']['value']>
+    to: NonNullable<TradeForm['toTokenSelected']['value']>
+    amount: string
+    quote: QuoteData | null
+    chainId: number
+    chainName: string
+    /** Account that signs the order and owns the saved notification. */
+    walletAddress: string
+  }
+
+  const snapshotTrade = (): TradeSnapshot | null => {
+    if (!fromTokenSelected.value || !toTokenSelected.value) return null
+    if (!walletAddress.value) return null
+    return {
+      from: fromTokenSelected.value,
+      to: toTokenSelected.value,
+      amount: fromAmount.value,
+      quote: currentQuote.value,
+      chainId: parseInt(selectedFromChain.value?.chainID || '1'),
+      chainName: selectedFromChain.value?.name || 'ETHEREUM',
+      walletAddress: walletAddress.value,
+    }
+  }
+
   // Builds the persisted notification entry for an order. Amounts are stored as
   // raw decimal strings — display sites format them, and the fill-vs-expected
   // math in ModuleNotifications parses them back (a grouped/abbreviated display
   // string breaks that math).
   const buildSavedOrder = (
     hash: string,
-    chainId: number,
+    snapshot: TradeSnapshot,
     extra: Partial<SavedTradeOrder> & { status: string },
   ): SavedTradeOrder => {
-    const from = fromTokenSelected.value!
-    const to = toTokenSelected.value!
+    const {
+      from,
+      to,
+      amount: fromAmount,
+      quote,
+      chainId,
+      chainName,
+      walletAddress: fromAddress,
+    } = snapshot
     const toDecimals = to.decimals || 18
     const expectedToAmount = formatUnits(
-      currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
+      quote?.avgAmount || quote?.startAmount || 0n,
       toDecimals,
     )
     return {
       hash,
-      fromAmount: fromAmount.value,
+      fromAmount,
       fromSymbol: from.symbol,
       fromDecimals: from.decimals || 18,
       fromTokenIcon: from.logoURI,
@@ -341,7 +382,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       duration: 180,
       fills: [],
       usdValue: from.price
-        ? BigNumber(fromAmount.value || '0')
+        ? BigNumber(fromAmount || '0')
             .times(from.price)
             .toFixed(2)
         : undefined,
@@ -349,9 +390,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ? BigNumber(expectedToAmount).times(to.price).toFixed(2)
         : undefined,
       chainId,
-      fromAddress: walletAddress.value!,
+      fromAddress,
       seen: false,
-      chainName: selectedFromChain.value?.name || 'ETHEREUM',
+      chainName,
       fromTokenAddress: from.address,
       toTokenAddress: to.address,
       ...extra,
@@ -364,13 +405,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   // since there is no order on 1inch to poll.
   const persistUnsubmittedOrder = (
     e: NativeOrderUnsubmittedError,
+    snapshot: TradeSnapshot,
     analyticsPayload: TradePayloadShared,
   ) => {
-    if (!fromTokenSelected.value || !toTokenSelected.value) return
-    const chainId = parseInt(selectedFromChain.value?.chainID || '1')
     orderHash.value = e.orderHash
     tradeOrdersStore.addOrder(
-      buildSavedOrder(e.orderHash, chainId, {
+      buildSavedOrder(e.orderHash, snapshot, {
         status: 'unsubmitted',
         depositTxHash: e.depositTxHash,
         proxyAddress: e.proxyAddress,
@@ -421,6 +461,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
       return
     }
+    const snapshot = snapshotTrade()
+    if (!snapshot) return
 
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
@@ -432,14 +474,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
 
-      const chainId = parseInt(selectedFromChain.value?.chainID || '1')
+      const { chainId } = snapshot
       const fusion = new OneInchFusion(wallet.value, chainId)
 
-      const decimals = fromTokenSelected.value.decimals || 18
-      const amountInBaseUnits = parseUnits(
-        fromAmount.value,
-        decimals,
-      ).toString()
+      const decimals = snapshot.from.decimals || 18
+      const amountInBaseUnits = parseUnits(snapshot.amount, decimals).toString()
 
       // Rechecked here because the guard above ran before an await (the dynamic
       // import), and the geo check can land against the user in that gap. This is
@@ -450,16 +489,16 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       }
 
       const isNativeOrder =
-        fromTokenSelected.value.address.toLowerCase() === NATIVE_ADDRESS
+        snapshot.from.address.toLowerCase() === NATIVE_ADDRESS
       depositPending.value = isNativeOrder
       const result = await fusion.submitOrder(
         {
-          fromTokenAddress: fromTokenSelected.value.address,
-          toTokenAddress: toTokenSelected.value.address,
+          fromTokenAddress: snapshot.from.address,
+          toTokenAddress: snapshot.to.address,
           amount: amountInBaseUnits,
-          fromAddress: walletAddress.value!,
-          fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-          toTokenDecimals: toTokenSelected.value.decimals || 18,
+          fromAddress: snapshot.walletAddress,
+          fromTokenDecimals: snapshot.from.decimals || 18,
+          toTokenDecimals: snapshot.to.decimals || 18,
         },
         {
           onDepositSent: () => {
@@ -472,8 +511,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       orderHash.value = result.hash
 
       let canEarnReward: undefined | boolean = undefined
-      const fromUsdValue = BigNumber(fromAmount.value || '0').times(
-        fromTokenSelected.value?.price || 0,
+      const fromUsdValue = BigNumber(snapshot.amount || '0').times(
+        snapshot.from.price || 0,
       )
       const minSpendBN = BigNumber(minSpendTrade.value)
       const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
@@ -490,7 +529,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
 
       tradeOrdersStore.addOrder(
-        buildSavedOrder(result.hash, chainId, {
+        buildSavedOrder(result.hash, snapshot, {
           status: 'pending',
           depositTxHash: result.depositTxHash,
         }),
@@ -510,7 +549,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       if (e instanceof NativeOrderUnsubmittedError) {
         // Keep the progress modal up: it renders the unsubmitted state with the
         // recovery instructions, which a bounce back to Review would hide.
-        persistUnsubmittedOrder(e, analyticsPayload)
+        persistUnsubmittedOrder(e, snapshot, analyticsPayload)
         return
       }
 

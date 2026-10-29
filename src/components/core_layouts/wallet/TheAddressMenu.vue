@@ -2,9 +2,13 @@
   <div class="relative">
     <address-trigger-pill
       ref="triggerRef"
+      :open="isManageAccountsOpen"
       @click="isManageAccountsOpen = true"
     />
-    <the-manage-accounts v-model:open-dialog="isManageAccountsOpen" :anchor="anchorEl" />
+    <the-manage-accounts
+      v-model:open-dialog="isManageAccountsOpen"
+      :anchor="anchorEl"
+    />
   </div>
 </template>
 
@@ -37,6 +41,8 @@ const triggerRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
 const anchorEl = computed<HTMLElement | null>(() => {
   const el = triggerRef.value
   if (!el) return null
-  return ((el as ComponentPublicInstance).$el as HTMLElement) ?? (el as HTMLElement)
+  return (
+    ((el as ComponentPublicInstance).$el as HTMLElement) ?? (el as HTMLElement)
+  )
 })
 </script>

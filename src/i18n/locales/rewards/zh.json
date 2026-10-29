@@ -32,6 +32,8 @@
     "trade_button": "交易 {amount}",
     "back_in": "{time} 后返回",
     "market_is_closed": "市场已关闭",
+    "temporarily_paused": "暂时停止",
+    "paused": "已暂停",
     "info_make_trade": "进行一笔超过 ${min} 的交易。",
     "info_first_users": "成为每小时每笔交易的前 {count} 名用户之一。",
     "info_earn_per_trade": "每笔交易赚取 ${amount} USDC。",

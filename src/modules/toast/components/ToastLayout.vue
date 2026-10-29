@@ -120,7 +120,7 @@
         </div>
       </div>
 
-      <app-btn-icon-close @close="toastStore.removeToastMessage(index)" />
+      <app-btn-icon-close @close="remove" />
     </div>
   </div>
 </template>
@@ -195,6 +195,12 @@ const iconColor = computed(() => {
   }
 })
 
+// By id: the index shifts as other toasts leave, so it could close a neighbour.
+const remove = () => {
+  if (props.toast.id) toastStore.removeToastById(props.toast.id)
+  else toastStore.removeToastMessage(props.index)
+}
+
 const isShownSecondaryTextInFull = ref(false)
 const hideSecondaryText = computed(() => {
   return props.toast.textSecondary
@@ -211,9 +217,7 @@ const timeout = ref<NodeJS.Timeout | null>(null)
 onMounted(() => {
   if (!props.toast.isInfinite) {
     const time = props.toast.duration || 6000
-    timeout.value = setTimeout(() => {
-      toastStore.removeToastMessage(props.index)
-    }, time)
+    timeout.value = setTimeout(remove, time)
   }
 })
 

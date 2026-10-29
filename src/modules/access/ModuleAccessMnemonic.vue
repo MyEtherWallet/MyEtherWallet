@@ -8,7 +8,7 @@
         :title="$t('access_wallet.advanced.banner_title')"
         :text="$t('access_wallet.advanced.banner_phrase')"
       />
-      <AppTextArea
+      <AppTextAreaLegacy
         v-model="mnemonic"
         @keydown.enter.prevent="unlockWallet"
         data-private
@@ -127,7 +127,7 @@ import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppTextArea from '@/components/AppTextArea.vue'
+import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import AccessBanner from './components/AccessBanner.vue'
 import AccessDropdown from './components/AccessDropdown.vue'

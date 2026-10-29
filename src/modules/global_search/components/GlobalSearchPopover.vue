@@ -5,7 +5,7 @@
       :class="[
         'bg-white rounded-20 shadow-container z-20 overflow-hidden flex flex-col max-h-[80vh]',
         isCompact
-          ? 'fixed left-2 right-2 top-[72px] max-w-[420px] mx-auto'
+          ? 'fixed left-2 right-2 top-20 max-w-[420px] mx-auto'
           : 'absolute top-full left-0 mt-2 w-[480px]',
       ]"
     >

@@ -1,60 +1,35 @@
 <template>
-  <app-dialog
-    v-model:is-open="bigDialogOpen"
+  <app-modal
+    v-model="bigDialogOpen"
+    :title="getTitle"
+    :show-back-button="currentView !== 'default'"
     :class="[
       'w-full',
       dialogWidth,
       // Pin the top so switching network/tab/search grows the modal downward
       // instead of re-centering it. At full height the bottom gap matches the
-      // top one: the container padding (16 / xs 24 / sm 36px) plus 5dvh, or
-      // 10vh from sm, so the cap is 100dvh - 2 * (padding + offset).
+      // top one: the overlay padding (16px) plus 5dvh, or 10vh from sm, so the
+      // cap is 100dvh - 2 * (16px + offset).
       isNewView
-        ? 'self-start mt-[5dvh] max-h-[calc(90dvh-32px)] xs:max-h-[calc(90dvh-48px)] sm:mt-[10vh] sm:max-h-[calc(80vh-72px)]'
-        : 'max-h-[95vh]',
+        ? 'self-start mt-[5dvh] max-h-[calc(90dvh-32px)] sm:mt-[10vh] sm:max-h-[calc(80vh-32px)]'
+        : 'max-h-[95vh] bg-background-default',
     ]"
-    :bg="isNewView ? 'bg-white' : 'bg-background-default'"
-    :has-title-underline="!isNewView"
-    hide-close
-    @close-dialog="closeAccess()"
+    @back="goBack"
+    @close="closeAccess()"
   >
-    <template #title>
-      <div class="flex w-full flex-col gap-1 px-4 pt-4 sm:px-6 sm:pt-6">
-        <header class="flex w-full items-center gap-2">
-          <app-btn-icon
-            v-if="currentView !== 'default'"
-            variant="filled"
-            size="m"
-            :label="$t('common.back')"
-            class="shrink-0"
-            @click="goBack"
-          >
-            <AppIcon name="chevron-left" size="xs" />
-          </app-btn-icon>
-          <span v-else class="size-8 shrink-0" aria-hidden="true" />
-          <h1
-            class="grow text-center text-lg font-semibold leading-p-150 sm:text-xl"
-          >
-            {{ getTitle }}
-          </h1>
-          <app-btn-icon
-            variant="filled"
-            size="m"
-            :label="$t('common.close')"
-            class="shrink-0"
-            @click="closeDialog"
-          >
-            <AppIcon name="x-mark" size="xs" />
-          </app-btn-icon>
-        </header>
+    <!-- Steps not redesigned yet keep the help link under the title. -->
+    <template v-if="!isNewView" #header>
+      <div class="flex w-full flex-col items-center gap-1 px-8">
+        <h1 class="text-center text-lg font-semibold leading-p-150 sm:text-xl">
+          {{ getTitle }}
+        </h1>
         <app-need-help
-          v-if="!isNewView"
-          class="self-center"
           :title="$t('access_wallet.help.default')"
           help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
         />
       </div>
     </template>
-    <template #content>
+    <template #default>
       <!-- Height follows the measured content and animates between steps, like
            TheSettingsPopup. `clip` (not hidden) keeps the sticky footer working. -->
       <div
@@ -64,16 +39,16 @@
           transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
         }"
       >
-        <!-- The chooser is capped at the room left under the title (the dialog's
-             max height above minus the 56px / sm 64px title), so only the wallet
-             grid shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
+        <!-- The chooser is capped at the room left under the title (the modal's
+             max height above minus its 80px header), so only the wallet grid
+             shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
         <div
           ref="contentRef"
           data-testid="access-content"
-          class="flex flex-col px-4 pb-4 pt-4 sm:px-6 sm:pb-6"
+          class="flex flex-col px-4 pb-4 sm:px-6 sm:pb-6"
           :class="
             currentView === 'default' &&
-            'mew-scrollbar overflow-y-auto max-h-[calc(90dvh_-_88px)] xs:max-h-[calc(90dvh_-_104px)] sm:max-h-[calc(80vh_-_136px)]'
+            'mew-scrollbar overflow-y-auto max-h-[calc(90dvh_-_112px)] sm:max-h-[calc(80vh_-_112px)]'
           "
         >
           <div
@@ -128,7 +103,7 @@
         </div>
       </div>
     </template>
-  </app-dialog>
+  </app-modal>
   <!-- Overlaid step: the extension's active address is already saved. (The
        "select the intended address" prompt now lives in the address popup.) -->
   <module-access-address-saved />
@@ -145,8 +120,7 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import { parentView } from '@/modules/access/common/accessViews'
 import type { WalletView } from '@/modules/access/common/walletConfigs'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
@@ -196,13 +170,6 @@ const bigDialogOpen = computed<boolean>({
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')
-}
-
-// Same as a backdrop close: hide and reset the view, but keep the add-account
-// intent (closeAccessDialog would clear it).
-const closeDialog = () => {
-  bigDialogOpen.value = false
-  closeAccess()
 }
 
 const goBack = () => {

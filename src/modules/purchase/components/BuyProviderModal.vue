@@ -1,191 +1,190 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    has-content-gutter
-    class="sm:max-w-[480px] sm:mx-auto w-full"
+  <app-modal
+    v-model="isOpen"
+    :aria-label="
+      t('purchase.select_provider.title', { amount: formattedFiatAmount })
+    "
   >
-    <template #content>
-      <div class="flex flex-col gap-8 pt-8 pb-8">
-        <!-- Header (close button is rendered by AppDialog at top-4 right-4) -->
-        <div class="flex flex-col gap-1 pr-10">
-          <h2 id="dialogTitle" class="text-heading-xl">
-            {{
-              t('purchase.select_provider.title', {
-                amount: formattedFiatAmount,
-              })
-            }}
-          </h2>
-          <p class="text-s-16 text-text-subtle leading-[22px]">
-            {{
-              t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
-            }}
-          </p>
-        </div>
-
-        <!-- Loading -->
-        <div
-          v-if="isLoading"
-          class="flex items-center justify-center py-16"
-          aria-live="polite"
-        >
-          <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
-          />
-        </div>
-
-        <!-- Error -->
-        <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
-          {{ error }}
+    <div class="flex flex-col gap-8 px-4 sm:px-6 pt-8 pb-8">
+      <!-- Header (close button is rendered by AppModal at the top right) -->
+      <div class="flex flex-col gap-1 pr-10">
+        <h2 class="text-heading-xl">
+          {{
+            t('purchase.select_provider.title', {
+              amount: formattedFiatAmount,
+            })
+          }}
+        </h2>
+        <p class="text-s-16 text-text-subtle leading-[22px]">
+          {{
+            t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
+          }}
         </p>
+      </div>
 
-        <!-- Quotes + summary + CTA -->
-        <template v-else-if="quotes.length">
-          <!-- Provider cards (pt-3 reserves room for the "Best value" badge that overflows -14px) -->
-          <div class="flex flex-col gap-2 pt-3">
-            <div
-              v-for="(quote, index) in quotes"
-              :key="quote.provider"
-              class="relative"
+      <!-- Loading -->
+      <div
+        v-if="isLoading"
+        class="flex items-center justify-center py-16"
+        aria-live="polite"
+      >
+        <span
+          class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
+        />
+      </div>
+
+      <!-- Error -->
+      <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
+        {{ error }}
+      </p>
+
+      <!-- Quotes + summary + CTA -->
+      <template v-else-if="quotes.length">
+        <!-- Provider cards (pt-3 reserves room for the "Best value" badge that overflows -14px) -->
+        <div class="flex flex-col gap-2 pt-3">
+          <div
+            v-for="(quote, index) in quotes"
+            :key="quote.provider"
+            class="relative"
+          >
+            <AppTag
+              v-if="index === 0"
+              type="success"
+              :label="t('purchase.select_provider.best_value')"
+              class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"
+            />
+            <button
+              type="button"
+              :class="[
+                'w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 transition-colors',
+                selectedIndex === index
+                  ? 'border-black'
+                  : 'border-transparent hover:bg-transparent hover:border-border-default',
+              ]"
+              @click="selectedIndex = index"
             >
-              <AppTag
-                v-if="index === 0"
-                type="success"
-                :label="t('purchase.select_provider.best_value')"
-                class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"
-              />
-              <button
-                type="button"
-                :class="[
-                  'w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 transition-colors',
-                  selectedIndex === index
-                    ? 'border-black'
-                    : 'border-transparent hover:bg-transparent hover:border-border-default',
-                ]"
-                @click="selectedIndex = index"
+              <!-- Amounts -->
+              <div
+                class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
               >
-                <!-- Amounts -->
-                <div
-                  class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
-                >
-                  <p class="text-label-base text-black">
-                    {{ formattedCryptoAmount(quote) }}
-                    {{ quote.crypto_currency }}
-                  </p>
-                  <p class="text-label-base text-text-subtle">
-                    ≈ {{ formattedFiatReceive(quote) }}
-                  </p>
-                </div>
+                <p class="text-label-base text-black">
+                  {{ formattedCryptoAmount(quote) }}
+                  {{ quote.crypto_currency }}
+                </p>
+                <p class="text-label-base text-text-subtle">
+                  ≈ {{ formattedFiatReceive(quote) }}
+                </p>
+              </div>
 
-                <!-- Right: payment methods + provider logo -->
-                <div class="flex flex-col gap-3 items-end flex-none">
-                  <div class="flex items-center gap-0.5">
-                    <div
-                      v-for="method in getPaymentMethodIcons(
-                        quote.payment_methods,
-                      )"
-                      :key="method.alt"
-                      class="bg-white border border-border-default rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
-                    >
-                      <img
-                        :src="method.src"
-                        :alt="method.alt"
-                        class="max-w-[19px] max-h-3.5 object-contain"
-                      />
-                    </div>
+              <!-- Right: payment methods + provider logo -->
+              <div class="flex flex-col gap-3 items-end flex-none">
+                <div class="flex items-center gap-0.5">
+                  <div
+                    v-for="method in getPaymentMethodIcons(
+                      quote.payment_methods,
+                    )"
+                    :key="method.alt"
+                    class="bg-white border border-border-default rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
+                  >
+                    <img
+                      :src="method.src"
+                      :alt="method.alt"
+                      class="max-w-[19px] max-h-3.5 object-contain"
+                    />
                   </div>
-                  <img
-                    v-if="getProviderLogo(quote.provider)"
-                    :src="getProviderLogo(quote.provider)"
-                    :alt="quote.provider"
-                    class="h-[18px] w-auto object-contain"
-                  />
                 </div>
-              </button>
-            </div>
+                <img
+                  v-if="getProviderLogo(quote.provider)"
+                  :src="getProviderLogo(quote.provider)"
+                  :alt="quote.provider"
+                  class="h-[18px] w-auto object-contain"
+                />
+              </div>
+            </button>
           </div>
+        </div>
 
-          <!-- Summary -->
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center justify-between">
-              <span class="text-s-12 text-text-subtle leading-[18px]">
-                {{ t('purchase.select_provider.youll_pay') }}
-              </span>
-              <span class="text-label-xs">
-                {{ formattedFiatAmount }}
-              </span>
-            </div>
-            <app-divider class="-my-1" />
-            <div class="flex items-center justify-between">
-              <span class="text-s-12 text-text-subtle leading-[18px]">
-                {{ t('purchase.select_provider.youll_receive') }}
-              </span>
-              <span class="text-label-xs">
+        <!-- Summary -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-s-12 text-text-subtle leading-[18px]">
+              {{ t('purchase.select_provider.youll_pay') }}
+            </span>
+            <span class="text-label-xs">
+              {{ formattedFiatAmount }}
+            </span>
+          </div>
+          <app-divider class="-my-1" />
+          <div class="flex items-center justify-between">
+            <span class="text-s-12 text-text-subtle leading-[18px]">
+              {{ t('purchase.select_provider.youll_receive') }}
+            </span>
+            <span class="text-label-xs">
+              {{
+                selectedQuote
+                  ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`
+                  : ''
+              }}
+              <span class="text-text-subtle font-normal">
                 {{
                   selectedQuote
-                    ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`
+                    ? `(≈ ${formattedFiatReceive(selectedQuote)})`
                     : ''
                 }}
-                <span class="text-text-subtle font-normal">
-                  {{
-                    selectedQuote
-                      ? `(≈ ${formattedFiatReceive(selectedQuote)})`
-                      : ''
-                  }}
-                </span>
               </span>
-            </div>
-            <app-divider class="-my-1" />
-          </div>
-
-          <!-- Quote freshness -->
-          <p
-            v-if="cooldownSeconds !== null"
-            class="text-text-error text-s-12 text-center -my-4"
-            aria-live="polite"
-          >
-            {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
-          </p>
-          <p
-            v-else-if="quoteExpired"
-            class="text-text-subtle text-s-12 text-center -my-4"
-            aria-live="polite"
-          >
-            {{ t('purchase.quote.expired_refreshing') }}
-          </p>
-          <p
-            v-else-if="quoteCountdown"
-            class="text-text-subtle text-s-12 text-center -my-4"
-          >
-            {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
-          </p>
-
-          <!-- Continue CTA -->
-          <app-base-button
-            class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
-            :disabled="quoteExpired"
-            @click="onContinue"
-          >
-            <span class="flex items-center justify-center gap-2">
-              {{ t('purchase.select_provider.continue') }}
-              <AppIcon
-                name="arrow-top-right-on-square"
-                variant="filled"
-                size="s"
-                class="flex-none"
-              />
             </span>
-          </app-base-button>
-          <p class="text-text-subtle text-s-12 text-center -mt-5">
-            {{
-              t('purchase.select_provider.redirect', {
-                provider: providerNameFormatted,
-              })
-            }}
-          </p>
-        </template>
-      </div>
-    </template>
-  </app-dialog>
+          </div>
+          <app-divider class="-my-1" />
+        </div>
+
+        <!-- Quote freshness -->
+        <p
+          v-if="cooldownSeconds !== null"
+          class="text-text-error text-s-12 text-center -my-4"
+          aria-live="polite"
+        >
+          {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
+        </p>
+        <p
+          v-else-if="quoteExpired"
+          class="text-text-subtle text-s-12 text-center -my-4"
+          aria-live="polite"
+        >
+          {{ t('purchase.quote.expired_refreshing') }}
+        </p>
+        <p
+          v-else-if="quoteCountdown"
+          class="text-text-subtle text-s-12 text-center -my-4"
+        >
+          {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
+        </p>
+
+        <!-- Continue CTA -->
+        <app-base-button
+          class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+          :disabled="quoteExpired"
+          @click="onContinue"
+        >
+          <span class="flex items-center justify-center gap-2">
+            {{ t('purchase.select_provider.continue') }}
+            <AppIcon
+              name="arrow-top-right-on-square"
+              variant="filled"
+              size="s"
+              class="flex-none"
+            />
+          </span>
+        </app-base-button>
+        <p class="text-text-subtle text-s-12 text-center -mt-5">
+          {{
+            t('purchase.select_provider.redirect', {
+              provider: providerNameFormatted,
+            })
+          }}
+        </p>
+      </template>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -193,7 +192,7 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTag from '@/components/tag/AppTag.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
 import {
   formatFloatingPointValue,

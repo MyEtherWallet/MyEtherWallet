@@ -36,10 +36,15 @@ vi.mock('pinia', async importOriginal => {
 
 import ModuleAccessAddressSaved from '@/modules/access/ModuleAccessAddressSaved.vue'
 
+// AppModal teleports to #app, so stub it in place. The stub mirrors its
+// built-in back button: shown by show-back-button, labelled common.back.
 const stubs = {
-  AppDialog: {
-    name: 'AppDialog',
-    template: '<div><slot name="title" /><slot name="content" /></div>',
+  AppModal: {
+    name: 'AppModal',
+    props: { showBackButton: Boolean },
+    emits: ['back'],
+    template:
+      '<div><button v-if="showBackButton" aria-label="common.back" @click="$emit(\'back\')" /><slot /></div>',
   },
 }
 const factory = () =>
@@ -56,7 +61,7 @@ describe('ModuleAccessAddressSaved', () => {
 
   it('back clears the saved-address info (returns to chooser)', async () => {
     const w = factory()
-    await w.get('[data-test="address-saved-back"]').trigger('click')
+    await w.get('button[aria-label="common.back"]').trigger('click')
     expect(clearAddressSavedInfo).toHaveBeenCalled()
   })
 

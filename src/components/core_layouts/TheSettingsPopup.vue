@@ -2,22 +2,17 @@
   <div ref="containerRef" class="relative">
     <!-- Settings Button -->
     <app-btn-icon
-      size="l"
+      size="m"
       :label="$t('menu.open-settings')"
       @click="togglePopup"
     >
-      <AppIcon name="cog-6-tooth" variant="filled" />
+      <AppIcon name="cog-6-tooth" />
     </app-btn-icon>
 
-    <!-- Headless network selector (mobile): owns the chain dialog. It renders
-         in front of the settings popup (z above the popup's z-[2101]) so the
-         popup stays open behind it. -->
-    <select-chain-for-app
-      v-if="isXS"
-      v-model:dialog-open="networkOpen"
-      dialog-z-index-overlay="z-[2110]"
-      dialog-z-index-container="z-[2120]"
-    >
+    <!-- Headless network selector (mobile): owns the chain dialog. AppModal
+         stacks above the settings popup's z-[2101] by default, so the popup
+         stays open behind it. -->
+    <select-chain-for-app v-if="isXS" v-model:dialog-open="networkOpen">
       <template #network-button><span class="hidden" /></template>
     </select-chain-for-app>
 
@@ -473,8 +468,7 @@
               <!-- Search -->
               <app-searchbar
                 v-model="languageQuery"
-                size="compact"
-                bg-class="bg-background-default"
+                variant="default"
                 :placeholder="$t('common.search')"
               />
 

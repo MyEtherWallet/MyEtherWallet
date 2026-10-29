@@ -25,10 +25,19 @@ vi.mock('@/modules/access/ModuleAccessWalletConnect.vue', () => stub('Wc'))
 vi.mock('@/modules/access/ModuleAccessWeb3Wallet.vue', () => stub('Web3'))
 vi.mock('@/modules/access/ModuleAccessAddressSaved.vue', () => stub('Saved'))
 vi.mock('@/components/AppNeedHelp.vue', () => stub('AppNeedHelp'))
-vi.mock('@/components/AppDialog.vue', () => ({
+// AppModal teleports and locks the page; stub its contract: back emits `back`,
+// close flips v-model and then emits `close`.
+vi.mock('@/components/modal/AppModal.vue', () => ({
   default: {
-    name: 'AppDialog',
-    template: '<div><slot name="title" /><slot name="content" /></div>',
+    name: 'AppModal',
+    props: ['modelValue', 'title', 'showBackButton'],
+    emits: ['update:modelValue', 'back', 'close'],
+    template: `<div>
+      <button v-if="showBackButton" aria-label="common.back" @click="$emit('back')" />
+      <button aria-label="common.close" @click="$emit('update:modelValue', false); $emit('close')" />
+      <slot name="header"><h1>{{ title }}</h1></slot>
+      <slot />
+    </div>`,
   },
 }))
 vi.mock('@/composables/useWalletFlowRoute', () => ({
@@ -238,7 +247,7 @@ describe('ModuleAccessWallet header', () => {
     'trezor',
   ])('keeps the chooser width on %s', view => {
     const w = mountAt(view)
-    expect(w.findComponent({ name: 'AppDialog' }).classes()).toContain(
+    expect(w.findComponent({ name: 'AppModal' }).classes()).toContain(
       'max-w-[560px]',
     )
   })

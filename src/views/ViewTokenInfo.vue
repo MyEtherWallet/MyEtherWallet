@@ -14,7 +14,9 @@
 import AppViewAsDialog from '@/components/AppViewAsDialog.vue'
 import ModuleTokenInfo from '@/modules/crypto/ModuleTokenInfo.vue'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { isTradeCampaignQuery } from '@/composables/useTradeCampaignEntry'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 defineProps({
@@ -30,8 +32,12 @@ const { isMDAndUp } = useAppBreakpoints()
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
+const route = useRoute()
 
 onMounted(() => {
+  // A marketing deep link into Trade owns the panel (useTradeCampaignEntry
+  // opens it and moves to Stocks), so the breakpoint default stays out of it.
+  if (isTradeCampaignQuery(route.query)) return
   if (isMDAndUp.value) {
     walletMenu.setIsOpenSideMenu(true)
   } else {
