@@ -58,9 +58,9 @@ const SLOT_SIZE = 'xs' as const
 // second row (and a skeleton bar while loading) plus the row gap.
 const hasDescription = computed(() => !!props.description)
 
-// Text alignment cascades to the (possibly wrapping) text and the inline-block
-// skeleton bars. The rows themselves stay full-width (default stretch) so the
-// title can actually clip — items-start/end would shrink them to content width.
+// Text alignment cascades to the (possibly wrapping) text. The rows themselves
+// stay full-width (default stretch) so the title can actually clip —
+// items-start/end would shrink them to content width.
 const alignClass = computed(() =>
   props.align === 'right' ? 'text-right' : 'text-left',
 )
@@ -96,13 +96,15 @@ const descriptionClass = computed(() => [
     class="flex flex-col min-w-0"
     :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes. -->
+    <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes.
+         Flex rows: an inline bar would sit in the inherited line box and grow
+         the row past 22px. -->
     <template v-if="loading">
-      <div class="py-[5px]">
-        <AppSkeleton class="inline-block h-3 w-[35px]" />
+      <div class="flex py-[5px]" :class="rowJustifyClass">
+        <AppSkeleton class="h-3 w-[35px]" />
       </div>
-      <div v-if="hasDescription" class="py-[5px]">
-        <AppSkeleton class="inline-block h-3 w-[79px]" />
+      <div v-if="hasDescription" class="flex py-[5px]" :class="rowJustifyClass">
+        <AppSkeleton class="h-3 w-[79px]" />
       </div>
     </template>
 
