@@ -57,7 +57,7 @@ vi.mock('@/components/AppTokenLogo.vue', () => ({
 }))
 vi.mock('@/components/AppSearchbar.vue', () => ({
   default: {
-    props: ['modelValue', 'placeholder', 'bgClass', 'size'],
+    props: ['modelValue', 'placeholder', 'variant'],
     emits: ['update:modelValue'],
     template:
       '<input data-test="search" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',

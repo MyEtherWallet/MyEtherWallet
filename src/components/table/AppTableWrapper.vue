@@ -96,8 +96,7 @@ provide(TABLE_WRAPPER, { size, titleId })
         <AppSearchbar
           v-if="search !== undefined"
           v-model="search"
-          size="compact"
-          bg-class="bg-background-default"
+          variant="default"
           :placeholder="searchPlaceholder"
           :class="['shrink-0', size === 's' ? 'w-full' : 'w-60']"
         />
