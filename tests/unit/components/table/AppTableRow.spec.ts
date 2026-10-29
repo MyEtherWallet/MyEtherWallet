@@ -3,6 +3,7 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
 import {
   TABLE_CONTEXT,
   defaultTableContext,
@@ -44,6 +45,7 @@ const factory = ({
       plugins: [i18n],
       provide: { [TABLE_CONTEXT as symbol]: context },
       stubs: { RouterLink: RouterLinkStub },
+      components: { AppTableCell },
     },
   })
 }
@@ -218,23 +220,80 @@ describe('AppTableRow', () => {
     expect(handle.classes()).toContain('pointer-coarse:visible')
   })
 
-  it('shows skeletons while loading, keeps the star, drops actions and the click', () => {
+  it('loads as a skeleton copy of itself: own cells, star kept, no click', () => {
     const calls: number[] = []
     const w = factory({
       props: { loading: true, watchlisted: true },
       attrs: { onClick: () => calls.push(1) },
       slots: {
-        default: '<i data-test="cell">x</i>',
+        default: '<AppTableCell column="price" value="$1" :change="2" />',
         actions: '<button>Trade</button>',
       },
-      ctx: { start: true, actions: true, visibleKeys: ['price', 'cap'] },
+      ctx: { start: true, actions: true, visibleKeys: ['price'] },
     })
     expect(w.findComponent(AppCellWatchlistToggle).exists()).toBe(true)
-    expect(w.find('[data-test="cell"]').exists()).toBe(false)
-    expect(w.text()).not.toContain('USDC')
-    expect(w.text()).not.toContain('Trade')
-    // start + leading + 2 skeleton cells + empty actions
-    expect(w.findAll('[role="cell"]')).toHaveLength(5)
+    expect(w.text()).toBe('')
+    // start + leading + its price cell + actions
+    const cells = w.findAll('[role="cell"]')
+    expect(cells).toHaveLength(4)
+    expect(cells[2].findAll('[data-testid="skeleton"]')).toHaveLength(2)
     expect(w.attributes('tabindex')).toBeUndefined()
+  })
+
+  it('sizes the avatar skeleton like the avatar and keeps the two text lines', () => {
+    const avatar = (size: 'l' | 's') =>
+      factory({
+        props: { loading: true },
+        slots: { avatar: '<img />' },
+        ctx: { size },
+      })
+        .findAll('[role="cell"]')[0]
+        .findAll('[data-testid="skeleton"]')
+    expect(avatar('l')[0].attributes('style')).toContain('width: 40px')
+    expect(avatar('s')[0].attributes('style')).toContain('width: 32px')
+    // avatar + title + description bars
+    expect(avatar('l')).toHaveLength(3)
+    expect(
+      factory({ props: { loading: true } })
+        .findAll('[role="cell"]')[0]
+        .findAll('[data-testid="skeleton"]'),
+    ).toHaveLength(2)
+  })
+
+  it('holds the star place with a skeleton when the table has a watchlist', () => {
+    const start = (ctx: Record<string, unknown>) =>
+      factory({ props: { loading: true }, ctx: { start: true, ...ctx } })
+        .findAll('[role="cell"]')[0]
+        .find('[data-testid="skeleton"]')
+    expect(start({ watchlist: true }).exists()).toBe(true)
+    expect(start({ reorderable: true }).exists()).toBe(false)
+  })
+
+  it('swaps the actions for #loading-actions, by default a button skeleton', () => {
+    const actions = (size: 'l' | 's', slots: Record<string, string> = {}) =>
+      factory({
+        props: { loading: true },
+        slots: { actions: '<button>Trade</button>', ...slots },
+        ctx: { actions: true, size },
+      }).findAll('[role="cell"]')
+    const lastSkeleton = (size: 'l' | 's') =>
+      actions(size).at(-1)!.get('[data-testid="skeleton"]').classes()
+    expect(actions('l').at(-1)!.text()).toBe('')
+    expect(lastSkeleton('l')).toEqual(expect.arrayContaining(['h-10', 'w-24']))
+    expect(lastSkeleton('s')).toContain('size-8')
+    expect(
+      actions('l', { 'loading-actions': '<i data-test="two" />' })
+        .at(-1)!
+        .find('[data-test="two"]')
+        .exists(),
+    ).toBe(true)
+  })
+
+  it('gives a placeholder row (no cells) one skeleton cell per visible column', () => {
+    const w = factory({
+      props: { loading: true },
+      ctx: { visibleKeys: ['price', 'cap'] },
+    })
+    expect(w.findAll('[role="cell"]')).toHaveLength(3)
   })
 })

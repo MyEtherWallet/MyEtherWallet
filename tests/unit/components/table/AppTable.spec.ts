@@ -244,6 +244,37 @@ describe('AppTable', () => {
     expect(label()).toBe('')
   })
 
+  it('gives placeholder rows the full row shape so the tracks match the loaded rows', () => {
+    const w = factory({
+      loading: true,
+      loadingRows: 1,
+      watchlist: true,
+      actions: true,
+    })
+    const cells = w.get('[role="rowgroup"]').findAll('[role="cell"]')
+    // star, leading, price + volume + cap, actions
+    expect(cells).toHaveLength(6)
+    const skeletons = (i: number) =>
+      cells[i].findAll('[data-testid="skeleton"]')
+    expect(skeletons(0)).toHaveLength(1) // star
+    expect(skeletons(1)).toHaveLength(3) // avatar, title, description
+    expect(skeletons(5)).toHaveLength(1) // action button
+  })
+
+  it('takes the placeholder row from #loading-row', () => {
+    const w = mount(AppTable, {
+      props: { columns: COLUMNS, size: 'l', loading: true, loadingRows: 2 },
+      slots: { 'loading-row': () => h(AppTableRow, { loading: true }) },
+      global: { plugins: [i18n] },
+    })
+    const rows = w.get('[role="rowgroup"]').findAll('[role="row"]')
+    expect(rows).toHaveLength(2)
+    // no avatar, no description: title bar only
+    expect(
+      rows[0].findAll('[role="cell"]')[0].findAll('[data-testid="skeleton"]'),
+    ).toHaveLength(1)
+  })
+
   it('labels the start column Watchlist only when it holds the star', () => {
     expect(headers(factory({ reorderable: true }))[0]).toBe('')
     expect(headers(factory({ watchlist: true }))[0]).toBe('Watchlist')

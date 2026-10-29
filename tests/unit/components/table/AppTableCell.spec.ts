@@ -5,6 +5,7 @@ import AppTableCell from '@/components/table/AppTableCell.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import {
   TABLE_CONTEXT,
+  TABLE_ROW_LOADING,
   defaultTableContext,
   type TableSize,
 } from '@/components/table/types'
@@ -14,7 +15,8 @@ const factory = (
   {
     size = 'l',
     visibleKeys = ['price'],
-  }: { size?: TableSize; visibleKeys?: string[] } = {},
+    loading = false,
+  }: { size?: TableSize; visibleKeys?: string[]; loading?: boolean } = {},
   slots: Record<string, string> = {},
 ) =>
   mount(AppTableCell, {
@@ -27,6 +29,7 @@ const factory = (
           size: ref(size),
           visibleKeys: ref(visibleKeys),
         },
+        [TABLE_ROW_LOADING as symbol]: ref(loading),
       },
     },
   })
@@ -117,5 +120,24 @@ describe('AppTableCell', () => {
     expect(factory({ value: '$5' }).get('p').classes()).toContain(
       'text-text-default',
     )
+  })
+
+  it("swaps each line for a bar in that line's box while its row loads", () => {
+    const bars = (props: Record<string, unknown>, slots = {}) =>
+      factory(props, { loading: true }, slots)
+        .findAll('[data-testid="skeleton"]')
+        .map(b => b.classes().join(' '))
+    // value 22px line, change 18px line, 56×16 sparkline
+    expect(bars({ value: '$1', change: 2 })).toEqual(
+      ['h-3 w-16', 'h-3 w-12'].map(c => expect.stringContaining(c)),
+    )
+    expect(bars({ change: 2, series: [1, 2] })).toEqual(
+      ['h-3 w-12', 'h-4 w-14'].map(c => expect.stringContaining(c)),
+    )
+    expect(bars({}, { default: '<b>custom</b>' })).toHaveLength(1)
+    const w = factory({ value: '$1', change: 2 }, { loading: true })
+    expect(w.text()).toBe('')
+    expect(w.get('.py-\\[5px\\]').exists()).toBe(true)
+    expect(w.get('.py-\\[3px\\]').exists()).toBe(true)
   })
 })
