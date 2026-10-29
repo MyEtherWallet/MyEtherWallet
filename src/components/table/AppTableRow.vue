@@ -109,13 +109,16 @@ const activate = (e: KeyboardEvent) => {
     @keydown.space.self.prevent="activate"
   >
     <div v-if="start" role="cell" class="relative z-10 flex items-center">
-      <!-- AppTable's SortableJS drags the row by this handle. -->
+      <!-- AppTable's SortableJS drags the row by this handle. A loading row
+           keeps its box (the track stays put) but can't be grabbed. -->
       <span
         v-if="reorderable"
-        data-table-handle
+        :data-table-handle="!loading || undefined"
         aria-hidden="true"
         :class="[
-          'invisible flex cursor-grab items-center justify-center text-icon-default group-focus-within:visible group-hover:visible pointer-coarse:visible',
+          'invisible flex cursor-grab items-center justify-center text-icon-default',
+          !loading &&
+            'group-focus-within:visible group-hover:visible pointer-coarse:visible',
           BTN_ICON_SIZE.s.box,
         ]"
         @click.stop

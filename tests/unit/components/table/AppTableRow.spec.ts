@@ -213,6 +213,19 @@ describe('AppTableRow', () => {
     )
   })
 
+  it('keeps the handle box on a loading row but takes it out of the drag', () => {
+    const w = factory({
+      props: { loading: true },
+      ctx: { start: true, reorderable: true },
+    })
+    expect(w.find('[data-table-handle]').exists()).toBe(false)
+    const box = w.findAll('[role="cell"]')[0].get('span')
+    expect(box.classes()).toEqual(
+      expect.arrayContaining(['invisible', 'size-[22px]']),
+    )
+    expect(box.classes()).not.toContain('group-hover:visible')
+  })
+
   it('keeps the drag handle visible on touch screens', () => {
     const handle = factory({ ctx: { start: true, reorderable: true } }).get(
       '[data-table-handle]',
