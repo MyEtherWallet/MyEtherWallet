@@ -3,7 +3,7 @@
 // Figma: TableWrapper 2913:98036, TableRow 2126:16555, _Table 2128:5354,
 // .TableHeader 2129:5690, _TableHeaderTitle 1255:4142, _TableCell 2801:35945,
 // _TableFooter 2928:161002. Hover and focus are native: hover a row, or Tab.
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
@@ -99,6 +99,8 @@ const search = ref('')
 const loading = ref(false)
 const sort = ref<TableSort | null>({ key: 'cap', direction: 'desc' })
 const page = ref(1)
+// A narrower search can leave fewer pages than the current one.
+watch(search, () => (page.value = 1))
 const watched = ref(new Set<number>([1]))
 const PER_PAGE = 6
 
