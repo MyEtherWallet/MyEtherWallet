@@ -73,6 +73,7 @@
             <select-chain-for-app
               v-if="!isSwapView"
               :passed-chains="fromChains"
+              surface="default"
             />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
@@ -132,6 +133,7 @@
               :can-store="false"
               :passed-chains="parsedToChains"
               :preselected-chain="selectedToChain"
+              surface="default"
               :class="{
                 hidden:
                   isSwapView &&
@@ -180,26 +182,22 @@
       </div>
 
       <!-- Error Display -->
-      <div
+      <AppBanner
         v-if="!isLoading && priceImpactTooHigh"
+        type="alert"
+        :description="
+          t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+        "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-      >
-        <p class="text-text-error text-s-14 text-center">
-          {{
-            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
-          }}
-        </p>
-      </div>
-      <div
+        class="w-full max-w-[340px] mb-2"
+      />
+      <AppBanner
         v-if="!isLoading && generalError"
+        type="alert"
+        :description="generalError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-      >
-        <p class="text-text-error text-s-14 text-center">
-          {{ generalError }}
-        </p>
-      </div>
+        class="w-full max-w-[340px] mb-2"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         :class="['mx-auto w-full max-w-[340px]', blockedClass]"
@@ -249,15 +247,20 @@
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
       :swap-fee-error="swapFeeError"
     />
+    <!--
+      Fed from the snapshot taken when the user confirmed the offer, not from
+      the live form: the form can be re-quoted or reset while the wallet prompt
+      is open, which left this modal showing "Unknown" / 0 (see
+      proceedWithSwap in useSwapModule).
+    -->
     <swap-initiated-modal
       v-model:swap-initiated-open="swapInitiatedOpen"
-      :from-chain="selectedChain"
-      :to-chain="selectedToChain"
-      :selected-quote="selectedQuote"
-      :tx-hash="txHash"
-      :to-address="toAddress"
-      :from-address="userAddress"
-      :swap-gas-fee-quote="swapGasFeeQuote"
+      :from-chain="initiatedSwap?.fromChain"
+      :to-chain="initiatedSwap?.toChain"
+      :selected-quote="initiatedSwap?.selectedQuote"
+      :tx-hash="initiatedSwap?.txHash ?? '0x'"
+      :to-address="initiatedSwap?.toAddress ?? ''"
+      :from-address="initiatedSwap?.fromAddress ?? ''"
     />
   </div>
 </template>
@@ -271,6 +274,7 @@ import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 // import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 // AppBtnText is not imported: the "clear all" text button became an
 // app-base-button link in the buttons redesign.
@@ -289,7 +293,6 @@ const {
   selectedChain,
   isBitcoinChain,
   isWalletConnected,
-  userAddress,
   isWatchOnly,
   hasChainBalance,
   selectedToChain,
@@ -306,7 +309,7 @@ const {
   selectedQuote,
   swapInfo,
   swapGasFeeQuote,
-  txHash,
+  initiatedSwap,
   bestSwapLoadingOpen,
   bestOfferSelectionOpen,
   swapInitiatedOpen,

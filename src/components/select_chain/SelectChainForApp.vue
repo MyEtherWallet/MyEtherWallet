@@ -31,40 +31,25 @@
           class="h-12 w-96 animate-pulse rounded-3xl bg-background-default"
         />
       </template>
-      <button
+      <AppPicker
         v-else
-        class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+        size="l"
+        :surface="surface"
+        :title="selectedChain?.nameLong ?? ''"
+        :description="$t('common.network_label')"
+        :loading="!isLoadedChains"
+        :expanded="openDialog"
         @click="setOpenDialog(true)"
       >
-        <div v-if="selectedChain" class="flex items-center min-h-9">
-          <img
-            v-if="selectedChain.icon"
-            :src="selectedChain.icon"
-            alt=""
-            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-background-brand-subtle"
-            height="32"
-            width="32"
+        <template #avatar="{ size }">
+          <AppAvatar
+            type="network"
+            :size="size"
+            :url="selectedChain?.icon"
+            :chain="selectedChain?.name"
           />
-          <div class="ml-1 pr-1 min-w-[30px]">
-            <p
-              class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
-            >
-              {{ $t('common.network') }}
-            </p>
-            <p
-              class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
-            >
-              {{ selectedChain.nameLong }}
-            </p>
-          </div>
-          <AppIcon
-            name="chevron-down"
-            variant="filled"
-            size="xxs"
-            class="flex-none ml-auto"
-          />
-        </div>
-      </button>
+        </template>
+      </AppPicker>
     </slot>
     <!-- Dialog with chains list -->
     <select-chain-dialog
@@ -73,8 +58,6 @@
       :selected-chain="selectedChain"
       :passed-chains="passedChains"
       :filter-by-selected-chain-type="canStore"
-      :z-index-overlay="dialogZIndexOverlay"
-      :z-index-container="dialogZIndexContainer"
       @update:chain="setSelectedChain"
     />
   </div>
@@ -87,6 +70,8 @@ import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppPicker from '@components/picker/AppPicker.vue'
+import type { PickerSurface } from '@components/picker/types'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
@@ -108,13 +93,14 @@ const prop = defineProps({
     type: Object as () => Chain | null,
     default: null,
   },
-  dialogZIndexOverlay: {
-    type: String,
-    default: 'z-[200]',
-  },
-  dialogZIndexContainer: {
-    type: String,
-    default: 'z-[201]',
+  /**
+   * Picker fill. `alternative` (grey) suits a white dialog surface; pass
+   * `default` (white) when the picker sits on a tinted card next to a white
+   * amount input, as in the bridge form.
+   */
+  surface: {
+    type: String as () => PickerSurface,
+    default: 'alternative',
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']

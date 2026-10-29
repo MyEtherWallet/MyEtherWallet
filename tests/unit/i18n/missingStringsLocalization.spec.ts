@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
-// Namespaces touched by the MEW-1993 "localize missing strings" sweep.
+// Namespaces touched by the MEW-1993 "localize missing strings" sweep, plus
+// the MEW-2527 translation fixes (multi_address, crypto categories).
 import enSettings from '@/i18n/locales/settings/en.json'
 import esSettings from '@/i18n/locales/settings/es.json'
 import zhSettings from '@/i18n/locales/settings/zh.json'
@@ -31,6 +32,11 @@ import zhTrade from '@/i18n/locales/trade/zh.json'
 import enCommon from '@/i18n/locales/common/en.json'
 import esCommon from '@/i18n/locales/common/es.json'
 import zhCommon from '@/i18n/locales/common/zh.json'
+import enMultiAddress from '@/i18n/locales/multi_address/en.json'
+import esMultiAddress from '@/i18n/locales/multi_address/es.json'
+import zhMultiAddress from '@/i18n/locales/multi_address/zh.json'
+import enCrypto from '@/i18n/locales/crypto/en.json'
+import zhCrypto from '@/i18n/locales/crypto/zh.json'
 
 type Dict = Record<string, unknown>
 type Flat = Record<string, unknown>
@@ -90,6 +96,12 @@ const suites = [
   },
   { name: 'trade', en: enTrade, es: esTrade, zh: zhTrade },
   { name: 'common', en: enCommon, es: esCommon, zh: zhCommon },
+  {
+    name: 'multi_address',
+    en: enMultiAddress,
+    es: esMultiAddress,
+    zh: zhMultiAddress,
+  },
 ] as const
 
 describe.each(suites)('$name localization parity', ({ name, en, es, zh }) => {
@@ -145,7 +157,12 @@ describe.each(suites)('$name localization parity', ({ name, en, es, zh }) => {
 describe('newly extracted strings are actually translated (not English copies)', () => {
   const cases: Array<[string, Dict, Dict, Dict]> = [
     ['settings.fee_option.economy.label', enSettings, esSettings, zhSettings],
-    ['settings.fee_option.recommended.description', enSettings, esSettings, zhSettings],
+    [
+      'settings.fee_option.recommended.description',
+      enSettings,
+      esSettings,
+      zhSettings,
+    ],
     ['stocks.about', enStocks, esStocks, zhStocks],
     ['stocks.statistics', enStocks, esStocks, zhStocks],
     ['portfolio.no_balance.title', enPortfolio, esPortfolio, zhPortfolio],
@@ -164,6 +181,15 @@ describe('newly extracted strings are actually translated (not English copies)',
     ['common.mew_app_banner.title', enCommon, esCommon, zhCommon],
     ['common.mew_app_banner.rewards_line1', enCommon, esCommon, zhCommon],
     ['common.mew_app_banner.download_now', enCommon, esCommon, zhCommon],
+    // Wallet panel account menu (multi_address namespace)
+    ...['connect_another', 'menu.rename', 'menu.explorer', 'menu.remove'].map(
+      (key): [string, Dict, Dict, Dict] => [
+        `multi_address.${key}`,
+        enMultiAddress,
+        esMultiAddress,
+        zhMultiAddress,
+      ],
+    ),
   ]
   it.each(cases)('%s differs from English in es and zh', (key, en, es, zh) => {
     const enFlat = flatten(en as Dict)
@@ -172,4 +198,17 @@ describe('newly extracted strings are actually translated (not English copies)',
     expect(esFlat[key], `es.${key}`).not.toBe(enFlat[key])
     expect(zhFlat[key], `zh.${key}`).not.toBe(enFlat[key])
   })
+})
+
+// es keeps these as-is (DeFi, MEME and TikTok read naturally in Spanish), so
+// only zh is checked.
+describe('crypto category labels are translated in zh', () => {
+  it.each(['crypto.defi', 'crypto.meme', 'crypto.tiktok'])(
+    '%s differs from English',
+    key => {
+      expect(flatten(zhCrypto as Dict)[key]).not.toBe(
+        flatten(enCrypto as Dict)[key],
+      )
+    },
+  )
 })

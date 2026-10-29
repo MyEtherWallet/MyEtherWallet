@@ -72,12 +72,11 @@ const canNext = computed(() =>
 function scrollToTarget() {
   const target = props.scrollTarget
   if (!target) return
-  // Offset for the fixed app header (TheHeader.vue: h-[68px] sm:h-[76px]).
+  // Offset for the fixed app header (AppNavbar: 76px at every width) + 12.
   // Setting scroll-margin-top lets scrollIntoView honor the offset inside
   // whichever ancestor is the actual scroll container (the app layout uses
   // an inner overflow-y-auto wrapper, not the window).
-  const headerHeight = window.innerWidth >= 640 ? 76 : 68
-  target.style.scrollMarginTop = `${headerHeight + 12}px`
+  target.style.scrollMarginTop = '88px'
   target.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 

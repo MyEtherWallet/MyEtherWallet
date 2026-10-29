@@ -703,6 +703,67 @@
   --text-heading-4xl--font-weight: 700;
 }
 
+/**
+ * SKELETON SHIMMER
+ *
+ * Figma: MEW Web App — Design Library › ⚒️ Utils › Skeleton (2930:104), used
+ * by the Cell, Right Accessory and Content Group loading states. Figma fills
+ * it with a raw rgb(127 129 127) gradient, 12% at the ends and 25% in the
+ * middle, not a colour token. The box keeps the 12% as its base and a
+ * double-width layer carries the rest (14.77% over 12% composites to exactly
+ * 25%), so the layer can fade out for the loop's dissolve without the bar
+ * blinking empty. Loop per the Figma prototype: slide 0.8s, hold 0.4s,
+ * dissolve back 0.5s.
+ */
+:root {
+  --skeleton-base: rgb(127 129 127 / 0.12);
+  --skeleton-highlight: rgb(127 129 127 / 0.1477);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  47.06% {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+  70.59% {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+  85.29% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  85.3% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Figma's gradient angle depends on the layer's aspect ratio: -77.25deg on
+   the bars, -88.44deg on the square and circle (set via --skeleton-angle). */
+@utility skeleton-shimmer {
+  background-image: linear-gradient(
+    var(--skeleton-angle, -77.25deg),
+    transparent 0%,
+    var(--skeleton-highlight) 33.5%,
+    var(--skeleton-highlight) 65%,
+    transparent 99.5%
+  );
+  animation: skeleton-shimmer 1.7s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* A utility, not a theme token: font-size tokens cannot carry text-transform. */
 @utility text-overline {
   font-size: 11px;
@@ -816,6 +877,24 @@
 
 .text8 {
   @apply text-s-17 font-normal leading-p-150;
+}
+
+/**
+* AppModal panel defaults: Modal S fills the row, M is 480 from sm (768), on
+* the white surface. In the components layer so a width or background utility
+* a consumer passes to AppModal wins without `!`.
+*/
+@layer components {
+  .app-modal-panel {
+    width: 100%;
+    background-color: var(--color-background-alternative);
+  }
+
+  @media (width >=theme(--breakpoint-sm)) {
+    .app-modal-panel {
+      width: --spacing(120);
+    }
+  }
 }
 
 /**

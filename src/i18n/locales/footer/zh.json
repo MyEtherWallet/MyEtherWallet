@@ -1,0 +1,28 @@
+{
+  "footer": {
+    "nav_company": "公司",
+    "nav_products": "产品",
+    "nav_support": "支持",
+    "about_us": "关于我们",
+    "team": "团队介绍",
+    "privacy": "隐私条款",
+    "terms": "服务条款",
+    "security_policy": "安全政策",
+    "bug_bounty": "漏洞悬赏",
+    "mobile_app": "MEW移动应用程序",
+    "enkrypt": "Enkrypt",
+    "ethvm": "ethVM",
+    "help_center": "帮助中心",
+    "customer_support": "客户服务",
+    "faq": "常见问题",
+    "blog": "博客",
+    "press_kit": "媒体包",
+    "donate_text": "帮助我们使MEW保持免费开源，您的捐赠将为之做出巨大贡献。",
+    "donate_ethereum": "以太坊捐赠",
+    "donate_bitcoin": "比特币捐赠",
+    "join_community": "加入 MEW 社区",
+    "copyright": "© {year} MyEtherWallet。保留所有权利。",
+    "pricing_from": "价格数据来自",
+    "version_label": "版本："
+  }
+}

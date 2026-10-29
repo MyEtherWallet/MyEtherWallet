@@ -140,24 +140,27 @@
     </div>
 
     <!-- Native order whose deposit landed but 1inch never accepted the order -->
-    <div v-if="order.status === 'unsubmitted'" class="mb-4">
-      <p class="text-s-12 text-text-error">
-        {{ $t('notifications_module.unsubmitted_note') }}
-      </p>
-      <app-base-button
-        size="small"
-        class="mt-2"
-        :disabled="recovering"
-        :is-loading="recovering"
-        @click="$emit('recover', order)"
-      >
-        {{
-          recovering
-            ? $t('notifications_module.recovering_funds')
-            : $t('notifications_module.recover_funds')
-        }}
-      </app-base-button>
-    </div>
+    <app-banner
+      v-if="order.status === 'unsubmitted'"
+      type="alert"
+      class="mb-4"
+      :description="$t('notifications_module.unsubmitted_note')"
+    >
+      <template #actions>
+        <app-base-button
+          size="small"
+          :disabled="recovering"
+          :is-loading="recovering"
+          @click="$emit('recover', order)"
+        >
+          {{
+            recovering
+              ? $t('notifications_module.recovering_funds')
+              : $t('notifications_module.recover_funds')
+          }}
+        </app-base-button>
+      </template>
+    </app-banner>
     <div class="flex justify-space-between items-center">
       <app-base-button
         type="tertiary"
@@ -302,6 +305,7 @@ import { useI18n } from 'vue-i18n'
 import { getTradeExplorerLink } from '@/utils/tradeExplorerLink'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
