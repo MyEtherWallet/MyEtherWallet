@@ -41,7 +41,8 @@ import {
  * data lands. The avatar (when `#avatar` is given) becomes a skeleton of the
  * same size, the title and description the Content Group's bars, each
  * AppTableCell line a bar (see AppTableCell), and the actions
- * `#loading-actions` (default: a medium button at L/M, a Button Icon M at S).
+ * `loadingButtons` medium-button skeletons, or a Button Icon M one at 0
+ * (default: one at L/M, the icon at S).
  * A bound star stays live; without one, a table with a watchlist gets a
  * skeleton in its place. AppTable's `loading` rows use the same mode.
  */
@@ -54,6 +55,8 @@ const props = withDefaults(
     watchlisted?: boolean
     watchlistLoading?: boolean
     loading?: boolean
+    /** Buttons the loading actions show; 0 is the Button Icon. */
+    loadingButtons?: number
   }>(),
   { title: '', description: '', watchlisted: undefined },
 )
@@ -75,6 +78,9 @@ const clickable = computed(
 const hovered = ref(false)
 const surface = computed<CellSurface>(() =>
   hovered.value ? 'alternative' : 'default',
+)
+const loadingButtonCount = computed(
+  () => props.loadingButtons ?? (size.value === 's' ? 0 : 1),
 )
 const avatarSize = computed<AvatarSize>(() => (size.value === 's' ? 'm' : 'l'))
 // Same box as the avatar it stands in for (AppCell does the same).
@@ -187,12 +193,19 @@ const activate = (e: KeyboardEvent) => {
       @click.stop
     >
       <!-- shape circle is rounded-full: a pill on the button's box. -->
-      <slot v-if="loading" name="loading-actions" :size="size">
+      <template v-if="loading">
         <AppSkeleton
+          v-for="n in loadingButtonCount"
+          :key="n"
           shape="circle"
-          :class="size === 's' ? BTN_ICON_SIZE.m.box : 'h-10 w-24'"
+          class="h-10 w-24"
         />
-      </slot>
+        <AppSkeleton
+          v-if="!loadingButtonCount"
+          shape="circle"
+          :class="BTN_ICON_SIZE.m.box"
+        />
+      </template>
       <slot v-else name="actions" :size="size" :surface="surface" />
     </div>
   </div>

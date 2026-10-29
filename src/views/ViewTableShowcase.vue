@@ -12,7 +12,6 @@ import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import type {
   TableColumn,
   TableSize,
@@ -97,6 +96,7 @@ const COLUMNS: TableColumn[] = [
 // Live table: search, sort, pagination, watchlist, all in the parent.
 const width = ref(1296)
 const search = ref('')
+const loading = ref(false)
 const sort = ref<TableSort | null>({ key: 'cap', direction: 'desc' })
 const page = ref(1)
 const watched = ref(new Set<number>([1]))
@@ -182,18 +182,25 @@ const lastClicked = ref('')
         />
         {{ width }}px
       </label>
+      <label class="flex items-center gap-2 text-text-sm">
+        <input v-model="loading" type="checkbox" />
+        Loading (skeleton rows land on the loaded ones)
+      </label>
       <div class="rounded-12 bg-background-default p-4">
         <AppTableWrapper
+          v-model:search="search"
           title="Explore crypto"
+          search-placeholder="Search"
           :style="{ width: `${width}px` }"
         >
-          <template #toolbar="{ size }">
-            <AppSearchbar
-              v-model="search"
-              size="compact"
-              placeholder="Search"
-              :class="size === 's' ? 'w-full' : 'w-60'"
-            />
+          <template #filters>
+            <button
+              type="button"
+              class="flex h-10 items-center gap-2 rounded-full bg-background-default px-4 text-s-15 font-medium text-black"
+            >
+              All categories
+              <AppIcon name="chevron-down" variant="filled" size="xxs" />
+            </button>
           </template>
           <template #action>
             <AppBaseButton size="medium">
@@ -208,6 +215,8 @@ const lastClicked = ref('')
             v-model:page="page"
             :columns="COLUMNS"
             :pages="pages"
+            :loading="loading"
+            :loading-rows="PER_PAGE"
             footer="pagination"
             aria-label="Explore crypto"
             watchlist

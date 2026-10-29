@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { defineComponent, h, inject } from 'vue'
 import { mount } from '@vue/test-utils'
+import { createI18n } from 'vue-i18n'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import { TABLE_WRAPPER } from '@/components/table/types'
 
@@ -11,6 +12,12 @@ const SizeProbe = defineComponent({
   },
 })
 
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: { en: { common: { search: 'Search', clear_icon: 'Clear' } } },
+})
+
 const factory = (
   props: Record<string, unknown> = {},
   slots: Record<string, unknown> = {},
@@ -18,6 +25,7 @@ const factory = (
   mount(AppTableWrapper, {
     props: { title: 'Explore crypto', size: 'l', ...props },
     slots: { default: () => h(SizeProbe), ...slots },
+    global: { plugins: [i18n] },
   })
 
 const ACTION = {
@@ -76,11 +84,21 @@ describe('AppTableWrapper', () => {
     expect(w.find('[data-test="table-toolbar"]').exists()).toBe(false)
   })
 
-  it('renders the toolbar slot with the size', () => {
+  it('shows the searchbar when search is bound, then the filters with the size', async () => {
+    expect(factory().find('input').exists()).toBe(false)
     const w = factory(
-      { size: 's' },
-      { toolbar: ({ size }: { size: string }) => h('b', size) },
+      { search: '', searchPlaceholder: 'Search tokens', size: 's' },
+      { filters: ({ size }: { size: string }) => h('b', size) },
     )
-    expect(w.get('[data-test="table-toolbar"]').text()).toBe('s')
+    const toolbar = w.get('[data-test="table-toolbar"]')
+    const input = toolbar.get('input')
+    expect(input.attributes('placeholder')).toBe('Search tokens')
+    expect(toolbar.get('b').text()).toBe('s')
+    // search first, filters right after it
+    expect(
+      input.element.compareDocumentPosition(toolbar.get('b').element),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    await input.setValue('eth')
+    expect(w.emitted('update:search')).toEqual([['eth']])
   })
 })
