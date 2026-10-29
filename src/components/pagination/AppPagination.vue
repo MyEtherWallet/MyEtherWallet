@@ -31,7 +31,8 @@ const props = withDefaults(
 const { t } = useI18n()
 
 const go = (n: number) => {
-  const next = Math.min(Math.max(n, 1), props.totalPages)
+  // Floor last: with no pages (0) it still lands on page 1, never 0.
+  const next = Math.max(Math.min(n, props.totalPages), 1)
   if (next !== page.value) page.value = next
 }
 </script>
