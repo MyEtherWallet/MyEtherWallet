@@ -518,6 +518,10 @@
                 :loading-rows="3"
                 actions
               >
+                <!-- Side + date rows, no avatar. -->
+                <template #loading-row>
+                  <AppTableRow loading description="-" />
+                </template>
                 <AppTableRow
                   v-for="order in filteredMarketOrders"
                   :key="order.orderId"
@@ -613,6 +617,10 @@
                 :loading="fillsLoading && marketFills.length === 0"
                 :loading-rows="3"
               >
+                <!-- Side + date rows, no avatar. -->
+                <template #loading-row>
+                  <AppTableRow loading description="-" />
+                </template>
                 <AppTableRow
                   v-for="fill in marketFills"
                   :key="fill.id"

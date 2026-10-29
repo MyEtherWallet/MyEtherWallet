@@ -7,7 +7,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
@@ -149,17 +148,14 @@ const actionCall = (row: WatchlistRow) => {
 
 <template>
   <AppTableWrapper
+    v-model:search="query"
     data-test="home-watchlist-table"
     :title="t('homePage.hero.watchlist.table.title')"
+    :search-placeholder="
+      t('homePage.hero.watchlist.addModal.searchPlaceholder')
+    "
   >
-    <template #toolbar="{ size }">
-      <AppSearchbar
-        v-model="query"
-        size="compact"
-        :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-        bg-class="bg-background-default"
-        :class="['rounded-full', size === 's' ? 'w-full' : 'w-60']"
-      />
+    <template #filters>
       <div class="relative shrink-0">
         <button
           type="button"
@@ -278,7 +274,9 @@ const actionCall = (row: WatchlistRow) => {
           <AppTableCell
             column="change"
             :change="row.change"
-            :series="row.sparkline.length ? row.sparkline : undefined"
+            :series="
+              row.loading || row.sparkline.length ? row.sparkline : undefined
+            "
           />
           <!-- At S the change column is gone, so price carries it. -->
           <AppTableCell

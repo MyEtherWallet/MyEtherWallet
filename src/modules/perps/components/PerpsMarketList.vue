@@ -8,16 +8,13 @@
     takes its L/M/S size from AppTableWrapper's own width.
   -->
   <div class="@container">
-    <AppTableWrapper :title="$t('perps.market-list.title')" title-tag="h1">
-      <template #toolbar="{ size }">
-        <app-searchbar
-          v-model="searchQuery"
-          bg-class="bg-background-default"
-          size="compact"
-          :placeholder="$t('perps.market-list.search-placeholder')"
-          :class="['shrink-0', size === 's' ? 'w-full' : 'w-60']"
-        />
-
+    <AppTableWrapper
+      v-model:search="searchQuery"
+      :title="$t('perps.market-list.title')"
+      :search-placeholder="$t('perps.market-list.search-placeholder')"
+      title-tag="h1"
+    >
+      <template #filters>
         <!-- Category filter -->
         <app-select
           v-model:selected="selectedFilter"
@@ -90,6 +87,16 @@
         actions
         @update:page="currentPage = $event - 1"
       >
+        <!-- Long + Short at L, the menu at M/S: as the loaded rows. -->
+        <template #loading-row="{ size }">
+          <AppTableRow
+            loading
+            description="-"
+            :loading-buttons="size === 'l' ? 2 : 0"
+          >
+            <template #avatar />
+          </AppTableRow>
+        </template>
         <template #default="{ size }">
           <AppTableRow
             v-for="contract in paginatedContracts"
@@ -347,7 +354,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

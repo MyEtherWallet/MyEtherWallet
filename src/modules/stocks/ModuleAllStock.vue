@@ -1,15 +1,12 @@
 <template>
   <div class="basis-full w-full">
-    <AppTableWrapper :title="$t('stocks.all_stocks')" title-tag="h1">
-      <template #toolbar="{ size }">
-        <app-searchbar
-          v-model="searchInput"
-          bg-class="bg-background-default"
-          size="compact"
-          :placeholder="$t('common.search')"
-          :class="['shrink-0', size === 's' ? 'w-full' : 'w-60']"
-        />
-
+    <AppTableWrapper
+      v-model:search="searchInput"
+      :title="$t('stocks.all_stocks')"
+      :search-placeholder="$t('common.search')"
+      title-tag="h1"
+    >
+      <template #filters>
         <!-- Category filter -->
         <app-select
           v-model:selected="selectedCryptoFilter"
@@ -169,7 +166,6 @@
 <script lang="ts" setup>
 import { computed, ref, shallowRef, onMounted, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'

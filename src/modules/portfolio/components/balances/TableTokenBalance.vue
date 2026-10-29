@@ -1,13 +1,13 @@
 <template>
   <div v-if="isWalletConnected">
-    <AppTableWrapper :title="$t('portfolio.your_balances')" title-tag="h1">
-      <template #toolbar="{ size }">
-        <AppSearchbar
-          v-if="!isComingSoon"
-          v-model="searchInput"
-          size="compact"
-          :class="size === 's' ? 'w-full' : 'w-60'"
-        />
+    <!-- The coming-soon (earning) view has no search: unbound hides it. -->
+    <AppTableWrapper
+      :search="isComingSoon ? undefined : searchInput"
+      :title="$t('portfolio.your_balances')"
+      title-tag="h1"
+      @update:search="searchInput = $event ?? ''"
+    >
+      <template #filters="{ size }">
         <slot name="filters" :size="size" />
         <app-pop-up-menu
           v-if="!isComingSoon && view !== 'watchlist'"
@@ -100,6 +100,19 @@
         watchlist
         actions
       >
+        <!-- Trade/swap + buy at L, one button at M (the menu in the custom
+             view), the menu at S: as the loaded rows. -->
+        <template #loading-row="{ size }">
+          <AppTableRow
+            loading
+            description="-"
+            :loading-buttons="
+              size === 'l' ? 2 : size === 'm' && view !== 'custom' ? 1 : 0
+            "
+          >
+            <template #avatar />
+          </AppTableRow>
+        </template>
         <AppTableRow
           v-for="(token, index) in paginatedArray"
           :key="
@@ -362,7 +375,6 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'

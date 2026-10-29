@@ -1,15 +1,12 @@
 <template>
   <div class="basis-full w-full">
-    <AppTableWrapper :title="$t('crypto.explore_tokens')" title-tag="h1">
-      <template #toolbar="{ size }">
-        <app-searchbar
-          v-model="searchInput"
-          bg-class="bg-background-default"
-          size="compact"
-          :placeholder="$t('crypto.search')"
-          :class="['shrink-0', size === 's' ? 'w-full' : 'w-60']"
-        />
-
+    <AppTableWrapper
+      v-model:search="searchInput"
+      :title="$t('crypto.explore_tokens')"
+      :search-placeholder="$t('crypto.search')"
+      title-tag="h1"
+    >
+      <template #filters>
         <!-- Category filter -->
         <app-select
           v-model:selected="selectedCryptoFilter"
@@ -245,7 +242,6 @@
 <script lang="ts" setup>
 import { computed, ref, shallowRef, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName, stockBaseSymbol } from '@/utils/tokenDisplayName'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
