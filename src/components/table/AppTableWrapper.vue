@@ -8,6 +8,7 @@ import {
   TONE_SUPPORTING_CLASS,
 } from '@/components/content_group/types'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { TABLE_WRAPPER, tableSizeFor, type TableSize } from './types'
 
 /**
@@ -17,9 +18,10 @@ import { TABLE_WRAPPER, tableSizeFor, type TableSize } from './types'
  *
  * The card measures its own width for the Figma breakpoints (L 1280+, M from
  * 768, S below) and hands the size to the AppTable inside; `size` forces one.
- * `#toolbar` holds the searchbar and dropdowns (it gets `size`, so a searchbar
- * can go full width at S); `#action` is the primary button, at the end of the
- * toolbar at L/M and next to the title at S.
+ * Toolbar: `v-model:search` shows the searchbar first (240px, full width at
+ * S; `searchPlaceholder` sets its text), then `#filters` (it gets `size`) for
+ * the dropdowns and filter buttons beside it; `#action` is the primary button,
+ * at the end of the toolbar at L/M and next to the title at S.
  *
  * The title is a real heading (`titleTag`, h2 by default; h1 when the card is
  * the page's main content) styled as Content Group L, and names both the card
@@ -31,9 +33,12 @@ const props = withDefaults(
     description?: string
     size?: TableSize
     titleTag?: 'h1' | 'h2' | 'h3'
+    searchPlaceholder?: string
   }>(),
   { titleTag: 'h2' },
 )
+/** Bind it to show the searchbar. */
+const search = defineModel<string>('search')
 
 const root = useTemplateRef<HTMLElement>('root')
 const { width } = useElementSize(root, undefined, { box: 'border-box' })
@@ -73,18 +78,30 @@ provide(TABLE_WRAPPER, { size, titleId })
     </div>
 
     <div
-      v-if="$slots.toolbar || (size !== 's' && $slots.action)"
+      v-if="
+        search !== undefined ||
+        $slots.filters ||
+        (size !== 's' && $slots.action)
+      "
       data-test="table-toolbar"
       class="flex items-center gap-2"
     >
       <div
-        v-if="$slots.toolbar"
+        v-if="search !== undefined || $slots.filters"
         :class="[
           'flex min-w-0 flex-1 items-center gap-2',
           { 'flex-wrap': size === 's' },
         ]"
       >
-        <slot name="toolbar" :size="size" />
+        <AppSearchbar
+          v-if="search !== undefined"
+          v-model="search"
+          size="compact"
+          bg-class="bg-background-default"
+          :placeholder="searchPlaceholder"
+          :class="['shrink-0', size === 's' ? 'w-full' : 'w-60']"
+        />
+        <slot name="filters" :size="size" />
       </div>
       <div v-if="size !== 's' && $slots.action" class="ml-auto shrink-0">
         <slot name="action" :size="size" />
