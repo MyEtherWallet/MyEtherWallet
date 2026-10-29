@@ -201,61 +201,73 @@
                     class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
                   >
                     <ul v-if="view !== 'custom'">
-                      <li
-                        v-if="isBuyableOnCompatibleChain(token.coinId)"
-                        @click.stop="[buyBtn(token, true), toggleMenu()]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-buy class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('common.buy') }}</p>
+                      <li v-if="isBuyableOnCompatibleChain(token.coinId)">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[buyBtn(token, true), toggleMenu()]"
+                        >
+                          <icon-buy class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('common.buy') }}</span>
+                        </button>
                       </li>
-                      <li
-                        v-if="token.ondo !== undefined"
-                        @click.stop="[tradeBtn(token, true), toggleMenu()]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-trade class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('portfolio.table.trade') }}</p>
+                      <li v-if="token.ondo !== undefined">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[tradeBtn(token, true), toggleMenu()]"
+                        >
+                          <icon-trade class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('portfolio.table.trade') }}</span>
+                        </button>
                       </li>
-                      <li
-                        v-else-if="currentChainhasSwapSupport"
-                        @click.stop="[swapBtn(token, true), toggleMenu()]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <icon-swap class="text-text-brand w-4 h-4 mr-2" />
-                        <p>{{ $t('common.swap') }}</p>
+                      <li v-else-if="currentChainhasSwapSupport">
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[swapBtn(token, true), toggleMenu()]"
+                        >
+                          <icon-swap class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('common.swap') }}</span>
+                        </button>
                       </li>
                     </ul>
                     <ul v-else>
-                      <li
-                        @click.stop="[
-                          customTokenAction('edit', token),
-                          toggleMenu(),
-                        ]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <AppIcon
-                          name="pencil"
-                          variant="filled"
-                          size="xxs"
-                          class="mr-2"
-                        />
-                        <p>{{ $t('common.edit') }}</p>
+                      <li>
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
+                        >
+                          <AppIcon
+                            name="pencil"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
+                          <span>{{ $t('common.edit') }}</span>
+                        </button>
                       </li>
-                      <li
-                        @click.stop="[
-                          customTokenAction('delete', token),
-                          toggleMenu(),
-                        ]"
-                        class="p-2 flex items-center hoverBGWhite rounded-12"
-                      >
-                        <AppIcon
-                          name="trash"
-                          variant="filled"
-                          size="xxs"
-                          class="mr-2"
-                        />
-                        <p>{{ $t('common.delete') }}</p>
+                      <li>
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[
+                            customTokenAction('delete', token),
+                            toggleMenu(),
+                          ]"
+                        >
+                          <AppIcon
+                            name="trash"
+                            variant="filled"
+                            size="xxs"
+                            class="mr-2"
+                          />
+                          <span>{{ $t('common.delete') }}</span>
+                        </button>
                       </li>
                     </ul>
                   </div>

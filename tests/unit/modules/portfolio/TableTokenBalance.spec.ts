@@ -180,7 +180,14 @@ describe('TableTokenBalance', () => {
 
     cardWidth.value = 400
     await w.vm.$nextTick()
-    expect(buttonTexts(w)).not.toContain('common.swap')
+    // Swap moves into the menu, as a button so the keyboard reaches it.
+    const inline = w
+      .findAll(`${BODY_ROW} button`)
+      .filter(b => !b.element.closest('li'))
+    expect(inline.map(b => b.text())).not.toContain('common.swap')
+    expect(w.findAll(`${BODY_ROW} li > button`).map(b => b.text())).toContain(
+      'common.swap',
+    )
     expect(
       w.findAll(`${BODY_ROW} [aria-label="common.action_menu"]`),
     ).toHaveLength(3)
