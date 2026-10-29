@@ -43,7 +43,7 @@
               : undefined
           "
         />
-        <div class="ml-1 min-w-4 h-4">
+        <div class="ml-1 min-w-4 h-4 flex items-center">
           <AppIcon
             name="chevron-down"
             variant="filled"
@@ -268,10 +268,7 @@
                     {{ truncate(token.name, 20) }}
                   </h2>
                 </app-tooltip>
-                <h2
-                  v-else
-                  class="text-s-12 text-text-subtle whitespace-nowrap"
-                >
+                <h2 v-else class="text-s-12 text-text-subtle whitespace-nowrap">
                   {{ token.name }}
                 </h2>
               </div>
@@ -294,9 +291,7 @@
                 </p>
                 <p
                   v-if="
-                    isWalletConnected &&
-                    token.balance &&
-                    token.usd_balance > 0
+                    isWalletConnected && token.balance && token.usd_balance > 0
                   "
                   class="text-text-subtle text-s-12"
                 >

@@ -73,6 +73,7 @@
             <select-chain-for-app
               v-if="!isSwapView"
               :passed-chains="fromChains"
+              surface="default"
             />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
@@ -132,6 +133,7 @@
               :can-store="false"
               :passed-chains="parsedToChains"
               :preselected-chain="selectedToChain"
+              surface="default"
               :class="{
                 hidden:
                   isSwapView &&

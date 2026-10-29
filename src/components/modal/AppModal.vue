@@ -125,7 +125,10 @@ let stackTop = 0
  *
  * Owns the modal plumbing: Teleport to #app, the background `inert` + body
  * scroll lock (dialogStore refcount), focus in on open / back to the opener
- * on close, a Tab loop, Esc / backdrop close and stacking.
+ * on close, a Tab loop, Esc / backdrop close and stacking. On open, focus
+ * goes to the first control in the content; `:autofocus="false"` keeps it on
+ * the panel instead (a browsing list whose search field should not light up
+ * until the user reaches for it).
  *
  * Width (480 from `sm`, full width below) and the white surface are defaults
  * in the components layer (`.app-modal-panel` in main.css), so a class such
@@ -176,6 +179,12 @@ const props = withDefaults(
     closeOnEsc?: boolean
     /** Must-act flows: no Esc, no backdrop close, no close button. */
     persistent?: boolean
+    /**
+     * Focus the first control in the content on open (default). `false`
+     * focuses the panel itself, so a leading search field does not get
+     * highlighted the moment the modal appears.
+     */
+    autofocus?: boolean
     /** Accessible name when there is no default header. */
     ariaLabel?: string
   }>(),
@@ -186,6 +195,7 @@ const props = withDefaults(
     closeOnBackdrop: true,
     closeOnEsc: true,
     persistent: false,
+    autofocus: true,
   },
 )
 
@@ -300,7 +310,7 @@ watch(
       await nextTick()
       // First control in the content, else the panel: never the close button
       // or a footer action, so Enter can't confirm a destructive step.
-      const first = focusables(body.value)[0]
+      const first = props.autofocus ? focusables(body.value)[0] : undefined
       ;(first ?? panel.value)?.focus()
     } else if (opener) {
       // After the tick the background is no longer inert, so it can take focus.

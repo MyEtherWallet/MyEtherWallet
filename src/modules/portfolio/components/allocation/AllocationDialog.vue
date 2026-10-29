@@ -8,16 +8,19 @@
     >
       {{ $t('common.view_all') }}</app-base-button
     >
-    <app-modal v-model="openDialog" :title="t('common.allocation')">
+    <app-modal
+      v-model="openDialog"
+      :title="t('common.allocation')"
+      :autofocus="false"
+    >
       <div
-        class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
+        class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4 pt-4"
       >
         <div
           class="flex gap-4 justify-between items-center mb-4 rounded-full bg-background-formfield"
         >
           <app-searchbar
             v-model="searchInput"
-            variant="outline"
             class="grow"
             :placeholder="$t('select_token.search')"
           />

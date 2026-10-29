@@ -51,7 +51,7 @@
               v-if="index === 0"
               type="success"
               :label="t('purchase.select_provider.best_value')"
-              class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"
+              class="absolute -top-3.5 right-4 z-10"
             />
             <button
               type="button"
