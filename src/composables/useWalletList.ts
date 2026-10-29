@@ -11,6 +11,13 @@ import { useChainsStore } from '@/stores/chainsStore'
 import type { Connector, CreateConnectorFn } from '@wagmi/core'
 import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useAccessStore } from '@/stores/accessStore'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useProviderStore } from '@/stores/providerStore'
+import {
+  selectTabWallets,
+  type TabWallet,
+  type WalletTab,
+} from '@/modules/access/common/walletTabs'
 
 export const useWalletList = () => {
   const DEFAULT_IDS = ['enkrypt', 'mew']
@@ -162,7 +169,7 @@ export const useWalletList = () => {
         // Merge wcWallet first so the static walletConfigs UI metadata
         // (icon, name, type) wins. The wagmi connector can expose `icon`
         // as undefined or a non-function value, which used to overwrite
-        // the static MewLogo and crash BtnWallet's resolveImg.
+        // the static MewLogo and break WalletCard's icon resolution.
         defaultWallets.push(Object.assign({}, wcWallet, wallet))
       } else {
         defaultWallets.push(wallet)
@@ -174,8 +181,36 @@ export const useWalletList = () => {
     })
   })
 
+  /** -------------------
+   * Connect modal tabs
+   * -------------------*/
+  const { recentWallets } = storeToRefs(useRecentWalletsStore())
+  const { providers } = storeToRefs(useProviderStore())
+
+  /** Every wallet usable on the selected chain, static configs first, unique by name. */
+  const allWallets = computed<WalletConfig[]>(() => {
+    const seen = new Set<string>()
+    return [...defaultWallets.value, ...newWalletList.value].filter(wallet => {
+      const key = wallet.name.toLowerCase()
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+  })
+
+  /** Call inside a computed so recent / detected / chain changes re-run it. */
+  const walletsForTab = (tab: WalletTab, search = ''): TabWallet[] =>
+    selectTabWallets({
+      wallets: allWallets.value,
+      tab,
+      search,
+      recentNames: [...recentWallets.value].reverse().map(w => w.name),
+      detectedNames: providers.value.map(p => p.info.name),
+    })
+
   return {
     defaultWallets,
     newWalletList,
+    walletsForTab,
   }
 }

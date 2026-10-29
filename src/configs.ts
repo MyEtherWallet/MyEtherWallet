@@ -44,6 +44,9 @@ const configs = {
   // Watchlist (home banner + table + add modal) stays hidden unless the env var
   // is explicitly 'true', so it can be flipped per environment.
   SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true',
+  // Google/email login in the connect modal's Sign Up view stays hidden until
+  // Privy is wired up (MEW-2289); set the env var to 'true' to show it.
+  SHOW_SOCIAL_LOGIN: import.meta.env.VITE_SOCIAL_LOGIN_ENABLED === 'true',
   BUILD_MODE: import.meta.env.VITE_BUILD_MODE || 'dev',
 }
 

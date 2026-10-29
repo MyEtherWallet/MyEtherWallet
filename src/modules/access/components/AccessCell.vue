@@ -1,0 +1,47 @@
+<template>
+  <component
+    :is="as"
+    class="flex items-center gap-3 rounded-16 bg-background-default px-4 py-3 min-h-14"
+    :class="{
+      'w-full text-left cursor-pointer transition-colors hover:bg-background-default-hover':
+        as !== 'div',
+    }"
+  >
+    <slot name="avatar" />
+    <span class="flex min-w-0 grow flex-col">
+      <span
+        data-testid="cell-title"
+        class="text-base font-semibold text-text-default"
+        :class="{ truncate }"
+      >
+        {{ title }}
+      </span>
+      <span
+        v-if="description"
+        class="text-sm text-text-subtle"
+        :class="{ truncate }"
+      >
+        {{ description }}
+      </span>
+    </span>
+    <slot name="trailing" />
+  </component>
+</template>
+
+<script setup lang="ts">
+/**
+ * Local stand-in for the design-library Cell (Alternative / S) until #5766
+ * lands; swap the call sites to AppCell then.
+ */
+
+withDefaults(
+  defineProps<{
+    title: string
+    description?: string
+    as?: 'div' | 'button' | 'a'
+    /** Single-line title/description with ellipsis (e.g. long file names). */
+    truncate?: boolean
+  }>(),
+  { description: undefined, as: 'div', truncate: false },
+)
+</script>
