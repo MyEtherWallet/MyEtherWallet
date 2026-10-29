@@ -236,6 +236,18 @@ export const directionKey = (direction: string | undefined): string => {
 export const fillDirectionTagType = (direction: string | undefined): TagType =>
   direction?.toLowerCase().includes('long') ? 'success' : 'danger'
 
+// An order side (buy / sell) or position direction (long / short): its i18n
+// key and text colour. Anything else shows raw ($t renders it verbatim), subtle.
+const SIDES: Record<string, { key: string; color: string }> = {
+  buy: { key: 'perps.order.buy', color: 'text-text-success' },
+  sell: { key: 'perps.order.sell', color: 'text-text-error' },
+  long: { key: 'perps.trade.long', color: 'text-text-success' },
+  short: { key: 'perps.trade.short', color: 'text-text-error' },
+}
+export const sideKey = (side: string): string => SIDES[side]?.key ?? side
+export const sideColor = (side: string): string =>
+  SIDES[side]?.color ?? 'text-text-subtle'
+
 // Withdrawal status is a WITHDRAWAL_* enum (see WalletWithdrawal in sdk/types).
 // The label is localized via perps.positions.dw-status.* (PerpsPositionsTable's
 // statusKey); this maps a status to its display color only.

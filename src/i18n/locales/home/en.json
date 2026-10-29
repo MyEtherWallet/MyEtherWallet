@@ -87,8 +87,6 @@
           "swap": "Swap",
           "bridge": "Bridge",
           "removeShort": "Remove",
-          "dragLabel": "Drag to reorder",
-          "showMore": "Show {count} more",
           "columns": {
             "token": "Token",
             "marketCap": "Market cap",
@@ -147,7 +145,6 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "daysAgo": "{n} days ago",
-      "pagination": "Showing page {page} of {total}",
       "readOnSource": "Read the full article on {source}",
       "readMore": "Read the full article"
     }

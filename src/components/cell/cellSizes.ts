@@ -1,5 +1,6 @@
 import type { AvatarSize } from '@/components/avatar/types'
 import type { IconName } from '@/components/icon/icons'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 
 /**
  * Cell geometry (Figma: MEW Web App — Design Library › Cell, Size axis).
@@ -20,6 +21,17 @@ type CellSizeSpec = {
 export const CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
   medium: { cell: 'h-[68px] py-3', avatar: 'l' }, // Figma Size=Default
   small: { cell: 'h-[52px] py-1', avatar: 'm' }, // Figma Size=Small
+}
+
+/**
+ * InfoCell geometry (Figma: ↳ InfoCell, component set 2656:30288). Its own box,
+ * not the Cell's: M 74 (padding 16, gap 12, avatar L 40), S 30 (padding 4 / 16,
+ * gap 8, avatar XS 18). The loading row keeps the loaded height. Off the size
+ * scale like the Cell heights.
+ */
+export const INFO_CELL_SIZE_SPEC: Record<CellSize, CellSizeSpec> = {
+  medium: { cell: 'h-[74px] p-4 gap-3', avatar: 'l' },
+  small: { cell: 'h-[30px] px-4 py-1 gap-2', avatar: 'xs' },
 }
 
 /**
@@ -58,3 +70,19 @@ export type CellRightAccessory =
   | { kind: 'graph'; points: number[]; trend?: 'up' | 'down' }
   | { kind: 'icon'; icon: IconName }
   | { kind: 'loading' }
+
+export type Trend = 'up' | 'down' | 'neutral'
+
+export const trendOf = (change: number): Trend =>
+  change > 0 ? 'up' : change < 0 ? 'down' : 'neutral'
+
+/** A change as Figma writes it: +2.87%, −2.87% (U+2212), 0.00%. */
+export const formatChange = (change: number): string => {
+  const trend = trendOf(change)
+  // The shared formatter returns a bare '0' here; Figma wants 0.00%.
+  if (trend === 'neutral') return '0.00%'
+  // It keeps the sign, bounds included ('> -0.01%', '< -1000%').
+  const value = formatPercentageValue(change).value.replace('-', '−')
+  // A '+' in front of a bound would read '+< 0.01%'.
+  return trend === 'up' && !/^[<>]/.test(value) ? `+${value}` : value
+}

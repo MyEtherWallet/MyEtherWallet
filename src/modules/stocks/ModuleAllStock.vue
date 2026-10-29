@@ -1,22 +1,12 @@
 <template>
   <div class="basis-full w-full">
-    <div class="bg-white rounded-16 py-4 px-2 sm:px-4">
-      <!-- Title -->
-      <h1 class="text-s-20 xs:text-s-24 font-bold px-2 pt-2 pb-4">
-        {{ $t('stocks.all_stocks') }}
-      </h1>
-
-      <!-- Filters: search + category -->
-      <div
-        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
-      >
-        <app-searchbar
-          v-model="searchInput"
-          variant="default"
-          :placeholder="$t('common.search')"
-          class="w-full xs:w-60 shrink-0"
-        />
-
+    <AppTableWrapper
+      v-model:search="searchInput"
+      :title="$t('stocks.all_stocks')"
+      :search-placeholder="$t('common.search')"
+      title-tag="h1"
+    >
+      <template #filters>
         <!-- Category filter -->
         <app-select
           v-model:selected="selectedCryptoFilter"
@@ -26,7 +16,7 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4"
               @click="toggleSelect"
             >
               <span class="text-s-15 font-medium text-black truncate">
@@ -41,385 +31,155 @@
             </button>
           </template>
         </app-select>
-      </div>
+      </template>
 
-      <div class="static" ref="tableContainer">
-        <table
-          class="w-full text-sm table-fixed border-separate border-spacing-y-0"
-        >
-          <!-- Header-->
-          <thead class="bg-white">
-            <tr
-              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 font-normal"
-            >
-              <!-- Watchlist -->
-              <th class="w-10 pb-4 text-center"></th>
-              <!-- Name -->
-              <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-                colspan="2"
-              >
-                <div
-                  class="flex items-center gap-1 ml-9 xs:ml-11 font-normal"
-                  :class="{
-                    'text-black': headerSort === 'NAME',
-                  }"
-                  @click="setHeaderSort('NAME')"
-                >
-                  {{ $t('stocks.name') }}
-                  <AppIcon
-                    name="arrow-up"
-                    size="xxs"
-                    v-if="headerSort === 'NAME' && tableDirection === 'asc'"
-                  />
-                  <AppIcon
-                    name="arrow-down"
-                    size="xxs"
-                    v-if="headerSort === 'NAME' && tableDirection === 'desc'"
-                  />
-                </div>
-              </th>
-              <!-- Market Cap -->
-              <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
-              >
-                <div
-                  class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
-                  :class="{
-                    'text-black': headerSort === 'MARKET_CAP',
-                  }"
-                  @click="setHeaderSort('MARKET_CAP')"
-                >
-                  {{ $t('stocks.market_cap') }}
-                  <AppIcon
-                    name="arrow-up"
-                    size="xxs"
-                    v-if="
-                      headerSort === 'MARKET_CAP' && tableDirection === 'asc'
-                    "
-                  />
-                  <AppIcon
-                    name="arrow-down"
-                    size="xxs"
-                    v-if="
-                      headerSort === 'MARKET_CAP' && tableDirection === 'desc'
-                    "
-                  />
-                </div>
-              </th>
-              <!-- Volume -->
-              <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
-              >
-                <div
-                  class="flex items-center gap-1 justify-start relative text-left font-normal"
-                  :class="{
-                    'text-black': headerSort === 'VOLUME_24H',
-                  }"
-                  @click="setHeaderSort('VOLUME_24H')"
-                >
-                  {{ $t('stocks.twenty_four_h_volume') }}
-                  <AppIcon
-                    name="arrow-up"
-                    size="xxs"
-                    v-if="
-                      headerSort === 'VOLUME_24H' && tableDirection === 'asc'
-                    "
-                  />
-                  <AppIcon
-                    name="arrow-down"
-                    size="xxs"
-                    v-if="
-                      headerSort === 'VOLUME_24H' && tableDirection === 'desc'
-                    "
-                  />
-                </div>
-              </th>
-              <!-- 24H Change -->
-              <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                <div class="text-left font-normal">
-                  {{ $t('stocks.twenty_four_h_change') }}
-                </div>
-              </th>
-              <!-- Price -->
-              <th
-                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
-              >
-                <div
-                  class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
-                  :class="{
-                    'text-black': headerSort === 'PRICE',
-                  }"
-                  @click="setHeaderSort('PRICE')"
-                >
-                  {{ $t('stocks.price') }}
-                  <AppIcon
-                    name="arrow-up"
-                    size="xxs"
-                    v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
-                  />
-                  <AppIcon
-                    name="arrow-down"
-                    size="xxs"
-                    v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
-                  />
-                </div>
-              </th>
-              <!-- Actions -->
-              <th
-                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-28"
-              ></th>
-            </tr>
-          </thead>
-          <!-- Body-->
-          <tbody v-if="!isLoading">
-            <tr
-              v-for="token in tokens"
-              :key="token.name + token.marketCap"
-              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
-              @click="onRowClick(token)"
-            >
-              <!-- Watchlist -->
-              <td class="w-10 rounded-l-12 text-center">
-                <AppCellWatchlistToggle
-                  :model-value="isWatchListed(token.coinId)"
-                  @update:model-value="setWatchlistToken(token.coinId)"
-                />
-              </td>
-              <!-- Name -->
-              <td class="px-1 py-1" colspan="2">
-                <router-link
-                  :to="{
-                    name: STOCK_INFO_ROUTE_NAMES.stocks,
-                    params: {
-                      symbol: token.symbol,
-                    },
-                  }"
-                  class="flex items-center gap-3"
-                  @click.stop
-                >
-                  <app-token-logo
-                    :url="token.iconPngUrl || token.iconSvgUrl"
-                    :symbol="token.symbol"
-                    :is-stock="true"
-                    no-shadow
-                    class="inline-block rounded-full"
-                  />
-                  <div class="truncate">
-                    <app-token-symbol
-                      :symbol="token.symbol"
-                      :is-stock="true"
-                      class="!font-semibold"
-                    />
-                    <app-tooltip
-                      :text="token.name"
-                      v-if="token.name.length > 20"
-                    >
-                      <p
-                        class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                      >
-                        {{ token.name }}
-                      </p>
-                    </app-tooltip>
-                    <p
-                      v-else
-                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                    >
-                      {{ token.name }}
-                    </p>
-                  </div>
-                </router-link>
-              </td>
-              <!-- Market Cap -->
-              <td
-                class="px-1 py-1 text-right lg:text-left text-s-14 text-black"
-              >
-                <p class="font-semibold">{{ token.marketCap }}</p>
-                <p
-                  class="text-s-12 font-semibold md:hidden"
-                  :class="getPercentClass(getActivePercent(token))"
-                >
-                  {{ parsePercent(getActivePercent(token)) }}
-                </p>
-              </td>
-              <!-- Volume -->
-              <td
-                class="hidden xl:table-cell px-1 py-1 text-left font-semibold text-s-14 text-black"
-              >
-                {{ token.totalVolume }}
-              </td>
-              <!-- 24H Change -->
-              <td class="hidden xl:table-cell px-1 py-1 text-left">
-                <div class="flex flex-col items-start justify-center py-2">
-                  <p
-                    class="text-s-13 font-semibold mb-1"
-                    :class="getPercentClass(getActivePercent(token))"
-                  >
-                    {{ parsePercent(getActivePercent(token)) }}
-                  </p>
-                  <table-sparkline
-                    v-if="getSparkLinePoints(token).length > 0"
-                    :points="getSparkLinePoints(token)"
-                    :width="70"
-                    :height="24"
-                    :max-points="34"
-                    :percent-change="getActivePercent(token) || undefined"
-                  />
-                </div>
-              </td>
-              <!-- Price -->
-              <td
-                class="hidden md:table-cell pl-1 pr-1 py-1 text-right lg:text-left"
-              >
-                <p class="font-semibold text-s-14 text-black">
-                  {{ token.price }}
-                </p>
-                <p
-                  class="text-s-12 font-semibold xl:hidden"
-                  :class="getPercentClass(getActivePercent(token))"
-                >
-                  {{ parsePercent(getActivePercent(token)) }}
-                </p>
-              </td>
-              <!-- Actions -->
-              <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
-                <div
-                  class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
-                >
-                  <app-pop-up-menu
-                    :placeholder="$t('stocks.actions_menu')"
-                    location="right"
-                  >
-                    <template #menu-button="{ toggleMenu }">
-                      <app-btn-icon
-                        :label="$t('common.action_menu')"
-                        @click.stop="toggleMenu"
-                      >
-                        <AppIcon
-                          name="ellipsis-vertical"
-                          variant="filled"
-                          size="s"
-                        />
-                      </app-btn-icon>
-                    </template>
-                    <template #menu-content="{ toggleMenu }">
-                      <div
-                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
-                      >
-                        <ul>
-                          <li
-                            @click.stop="[toggleMenu(), tradeBtn(token, true)]"
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                          >
-                            <icon-trade class="text-text-brand w-4 h-4 mr-2" />
-                            <p>{{ $t('stocks.trade') }}</p>
-                          </li>
-                        </ul>
-                      </div>
-                    </template>
-                  </app-pop-up-menu>
-                </div>
-                <div class="hidden lg:flex justify-end">
-                  <app-base-button
-                    size="small"
-                    type="secondary"
-                    class="!px-3 !py-2 w-24"
-                    @click="tradeBtn(token)"
-                    >{{ $t('stocks.trade') }}
-                  </app-base-button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div
-          v-if="!isLoading && tokens.length === 0"
-          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
-        >
-          <p
-            v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
-            class="mb-1 text-center lg:mt-10"
-          >
-            {{ $t('stocks.no_watchlisted_stocks') }}
-          </p>
-          <p v-if="searchInput" class="mb-1 text-center lg:my-10">
-            {{ $t('stocks.no_results_for', { search: searchInput }) }}
-          </p>
-          <button
-            v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
-            class="underline lg:mb-10"
-            @click="selectedCryptoFilter = cryptoFilterOptions[0]"
-          >
-            {{ $t('stocks.discover_more_stocks') }}
-            <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
-          </button>
-        </div>
-        <!-- Loading State -->
-        <div v-if="isLoading" class="">
-          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-14 py-2">
-            <div
-              class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
-            ></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer / pagination -->
-      <div
-        class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
+      <AppTable
+        v-if="isLoading || tokens.length > 0"
+        v-model:sort="sort"
+        v-model:page="page"
+        :default-sort="DEFAULT_SORT"
+        :columns="columns"
+        :pages="totalPages"
+        :loading="isLoading"
+        :loading-rows="PER_PAGE"
+        footer="pagination"
+        watchlist
+        actions
       >
-        <span
-          class="text-text-subtle"
-          :class="isLoading ? 'invisible' : 'visible'"
+        <template #default="{ size }">
+          <AppTableRow
+            v-for="token in tokens"
+            :key="token.name + token.marketCap"
+            :description="token.name"
+            :to="getTokenRoute(token)"
+            :watchlisted="isWatchListed(token.coinId)"
+            @update:watchlisted="setWatchlistToken(token.coinId)"
+            @click="trackRowClick(token)"
+          >
+            <template #title>
+              {{ stockBaseSymbol(token.symbol)
+              }}<span class="bg-stock-gradient bg-clip-text text-transparent"
+                >on</span
+              >
+            </template>
+            <template #avatar="{ size: avatarSize }">
+              <app-token-logo
+                :url="token.iconPngUrl || token.iconSvgUrl"
+                :symbol="token.symbol"
+                :is-stock="true"
+                :width="avatarSize === 'l' ? 'w-10' : 'w-8'"
+                :height="avatarSize === 'l' ? 'h-10' : 'h-8'"
+                no-shadow
+              />
+            </template>
+            <AppTableCell
+              column="MARKET_CAP"
+              :value="token.marketCap"
+              :change="
+                size === 's' ? token.priceChangePercentage24h : undefined
+              "
+            />
+            <AppTableCell column="VOLUME_24H" :value="token.totalVolume" />
+            <AppTableCell
+              column="CHANGE"
+              :change="token.priceChangePercentage24h"
+              :series="
+                token.sparklineIn7d?.length ? token.sparklineIn7d : undefined
+              "
+            />
+            <AppTableCell column="PRICE" :value="token.price" />
+            <template #actions="{ size: actionSize, surface }">
+              <app-pop-up-menu
+                v-if="actionSize === 's'"
+                :placeholder="$t('stocks.actions_menu')"
+                location="right"
+              >
+                <template #menu-button="{ toggleMenu }">
+                  <AppBtnIcon
+                    icon="ellipsis-horizontal"
+                    :label="$t('common.action_menu')"
+                    @click="toggleMenu"
+                  />
+                </template>
+                <template #menu-content="{ toggleMenu }">
+                  <div
+                    class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                  >
+                    <ul>
+                      <li>
+                        <button
+                          type="button"
+                          class="flex w-full items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), tradeBtn(token, true)]"
+                        >
+                          <icon-trade class="text-text-brand w-4 h-4 mr-2" />
+                          <span>{{ $t('stocks.trade') }}</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </app-pop-up-menu>
+              <AppBaseButton
+                v-else
+                type="secondary"
+                size="medium"
+                class="w-24"
+                :surface="surface"
+                @click="tradeBtn(token)"
+                >{{ $t('stocks.trade') }}
+              </AppBaseButton>
+            </template>
+          </AppTableRow>
+        </template>
+      </AppTable>
+      <div
+        v-else
+        class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
+      >
+        <p
+          v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+          class="mb-1 text-center lg:mt-10"
         >
-          {{ $t('common.showing_page', { current: page, total: totalPages }) }}
-        </span>
-        <div class="flex items-center gap-2">
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page === 1"
-            :label="$t('common.previous_page')"
-            @click.stop="previousPage"
-          >
-            <AppIcon name="chevron-left" variant="filled" size="xxs" />
-          </app-btn-icon>
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page >= totalPages"
-            :label="$t('common.next_page')"
-            @click.stop="nextPage"
-          >
-            <AppIcon name="chevron-right" variant="filled" size="xxs" />
-          </app-btn-icon>
-        </div>
+          {{ $t('stocks.no_watchlisted_stocks') }}
+        </p>
+        <p v-if="searchInput" class="mb-1 text-center lg:my-10">
+          {{ $t('stocks.no_results_for', { search: searchInput }) }}
+        </p>
+        <button
+          v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+          class="underline lg:mb-10"
+          @click="selectedCryptoFilter = cryptoFilterOptions[0]"
+        >
+          {{ $t('stocks.discover_more_stocks') }}
+          <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
+        </button>
       </div>
-      <select-chain-dialog
-        v-if="isLoadedChains"
-        v-model:is-open="openChainDialog"
-        :selected-chain="selectedChainFilter"
-        has-all
-        @update:chain="setSelectedChain"
-      />
-    </div>
+    </AppTableWrapper>
+    <select-chain-dialog
+      v-if="isLoadedChains"
+      v-model:is-open="openChainDialog"
+      :selected-chain="selectedChainFilter"
+      has-all
+      @update:chain="setSelectedChain"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch, type Ref } from 'vue'
+import { computed, ref, shallowRef, onMounted, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
+import type { TableColumn, TableSort } from '@/components/table/types'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import TableSparkline from '@/components/TableSparkline.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
@@ -432,8 +192,8 @@ import type {
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { stockBaseSymbol } from '@/utils/tokenDisplayName'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -441,7 +201,13 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRoute, useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
-import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
+import {
+  analytics,
+  ClickTokenTradeEvent,
+  ClickTokenTradeLocation,
+  StockMarketEvent,
+  StockMarketLocation,
+} from '@/analytics'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
@@ -450,8 +216,6 @@ const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
-const tableContainer = ref<HTMLElement | null>(null)
-
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
@@ -459,8 +223,6 @@ const searchInput = ref('')
 const activeSort = ref({ label: '', value: '' })
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
-const headerSort = ref<string>('MARKET_CAP')
-const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
@@ -484,32 +246,15 @@ const setWatchlistToken = (
 -------------------------------*/
 const PER_PAGE = 10
 
-/** -------------------------------
- * Pagination
--------------------------------*/
-const previousPage = () => {
-  if (page.value > 1) {
-    page.value--
-  }
-  tableContainer.value?.scrollTo(0, 0)
-}
-
-const nextPage = () => {
-  if (page.value < totalPages.value) {
-    page.value++
-  }
-  tableContainer.value?.scrollTo(0, 0)
-}
-
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
-    location: 'stocks_table',
+    location: ClickTokenTradeLocation.STOCKS_TABLE,
     token: token.symbol,
     stock: token.name,
     isMobile,
   })
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
-    location: 'trade_button',
+    location: StockMarketLocation.TRADE_BUTTON,
     stockName: token.name,
     stockSymbol: token.symbol,
   })
@@ -523,17 +268,29 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 
-const setHeaderSort = (key: string) => {
+// Column keys are the API sort keys. The header cycles desc → asc → back to
+// the default market cap desc.
+const columns = computed<TableColumn[]>(() => [
+  { key: 'NAME', label: t('stocks.name'), sortable: true },
+  { key: 'MARKET_CAP', label: t('stocks.market_cap'), sortable: true },
+  {
+    key: 'VOLUME_24H',
+    label: t('stocks.twenty_four_h_volume'),
+    sortable: true,
+  },
+  { key: 'CHANGE', label: t('stocks.twenty_four_h_change') },
+  { key: 'PRICE', label: t('stocks.price'), sortable: true },
+])
+
+const DEFAULT_SORT: TableSort = { key: 'MARKET_CAP', direction: 'desc' }
+// Shallow so the table's DEFAULT_SORT comes back by identity.
+const sort = shallowRef<TableSort>(DEFAULT_SORT)
+// A click back to the default reports the column that was clicked.
+watch(sort, (next, prev) => {
   analytics.trackStockMarketClickSortEvent(StockMarketEvent.CLICK_SORT, {
-    sortOption: key.toLowerCase(),
+    sortOption: (next === DEFAULT_SORT ? prev : next).key.toLowerCase(),
   })
-  if (headerSort.value === key) {
-    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    tableDirection.value = 'desc'
-  }
-  headerSort.value = key
-}
+})
 
 const setSelectedChain = (chain: Chain) => {
   activeSort.value = { label: chain.nameLong, value: chain.name }
@@ -642,23 +399,26 @@ const formatStock = (
 }
 
 const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
+  const { key, direction } = sort.value
   const sortMap: Record<string, () => DisplayToken[]> = {
-    NAME: () => sortObjectArrayString(tokensList, 'name', tableDirection.value),
-    MARKET_CAP: () =>
-      sortObjectArrayNumber(tokensList, 'marketCapRaw', tableDirection.value),
-    VOLUME_24H: () =>
-      sortObjectArrayNumber(tokensList, 'totalVolumeRaw', tableDirection.value),
-    PRICE: () =>
-      sortObjectArrayNumber(tokensList, 'priceRaw', tableDirection.value),
-    PRICE_CHANGE_PERCENTAGE_24H: () =>
-      sortObjectArrayNumber(
+    // sortObjectArrayString's 'desc' is A→Z; flip it so the list follows the
+    // header arrow.
+    NAME: () =>
+      sortObjectArrayString(
         tokensList,
-        'priceChangePercentage24h',
-        tableDirection.value,
+        'name',
+        direction === 'asc' ? 'desc' : 'asc',
       ),
+    MARKET_CAP: () =>
+      sortObjectArrayNumber(tokensList, 'marketCapRaw', direction),
+    VOLUME_24H: () =>
+      sortObjectArrayNumber(tokensList, 'totalVolumeRaw', direction),
+    PRICE: () => sortObjectArrayNumber(tokensList, 'priceRaw', direction),
+    PRICE_CHANGE_PERCENTAGE_24H: () =>
+      sortObjectArrayNumber(tokensList, 'priceChangePercentage24h', direction),
   }
 
-  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : tokensList
+  return sortMap[key] ? sortMap[key]() : tokensList
 }
 
 const fetchGainersUrl = computed(() => {
@@ -689,8 +449,8 @@ const fetchTableUrl = computed(() => {
     url.searchParams.set('category', selectedCryptoFilter.value.value)
   }
 
-  const sort = `${headerSort.value}_${tableDirection.value.toUpperCase()}`
-  url.searchParams.set('sort', sort)
+  const { key, direction } = sort.value
+  url.searchParams.set('sort', `${key}_${direction.toUpperCase()}`)
 
   return url.toString()
 })
@@ -715,18 +475,9 @@ const {
   .get()
   .json<GetWebStocksTableResponse>()
 
-const debounceFetchTokens = useDebounceFn(() => {
-  fetchTokenTable()
-  tableContainer.value?.scrollTo(0, 0)
-}, 100)
-const debounceFetchWatchlist = useDebounceFn(() => {
-  fetchStocksWatchlist()
-  tableContainer.value?.scrollTo(0, 0)
-}, 100)
-const debounceFetchGainers = useDebounceFn(() => {
-  fetchGainersTable()
-  tableContainer.value?.scrollTo(0, 0)
-}, 100)
+const debounceFetchTokens = useDebounceFn(fetchTokenTable, 100)
+const debounceFetchWatchlist = useDebounceFn(fetchStocksWatchlist, 100)
+const debounceFetchGainers = useDebounceFn(fetchGainersTable, 100)
 
 onMounted(() => {
   // Fetch tokens based on the selected filter
@@ -809,18 +560,6 @@ onFetchTokenTableResponse(() => {
   isLoading.value = false
 })
 
-const parsePercent = (val: number | null): string => {
-  if (val === null || val === undefined) return '-'
-  return formatPercentageValue(val ?? 0).value
-}
-
-const getPercentClass = (val: number | null): string => {
-  if (val === null || val === undefined) return ''
-  if (val > 0) return 'text-text-success'
-  if (val < 0) return 'text-text-error'
-  return 'text-text-brand'
-}
-
 const debounceTrackSearch = useDebounceFn((value: string) => {
   if (value) {
     analytics.trackStockMarketSearchEvent(StockMarketEvent.SEARCH_STOCK, {
@@ -870,8 +609,8 @@ watch(
 const prevWatchValues = ref({
   chain: selectedChainFilter.value,
   page: page.value,
-  headerSort: headerSort.value,
-  tableDirection: tableDirection.value,
+  headerSort: sort.value.key,
+  tableDirection: sort.value.direction,
   cryptoFilter: selectedCryptoFilter.value.value,
 })
 
@@ -879,8 +618,7 @@ watch(
   () => [
     selectedChainFilter.value,
     page.value,
-    headerSort.value,
-    tableDirection.value,
+    sort.value,
     selectedCryptoFilter.value.value,
   ],
   () => {
@@ -889,15 +627,15 @@ watch(
       prev.chain === selectedChainFilter.value &&
       prev.page === page.value &&
       prev.cryptoFilter === selectedCryptoFilter.value.value &&
-      (prev.headerSort !== headerSort.value ||
-        prev.tableDirection !== tableDirection.value)
+      (prev.headerSort !== sort.value.key ||
+        prev.tableDirection !== sort.value.direction)
 
     // Update previous values
     prevWatchValues.value = {
       chain: selectedChainFilter.value,
       page: page.value,
-      headerSort: headerSort.value,
-      tableDirection: tableDirection.value,
+      headerSort: sort.value.key,
+      tableDirection: sort.value.direction,
       cryptoFilter: selectedCryptoFilter.value.value,
     }
 
@@ -934,14 +672,6 @@ watch(
   },
 )
 
-const getActivePercent = (token: DisplayToken) => {
-  return token.priceChangePercentage24h || 0
-}
-
-const getSparkLinePoints = (token: DisplayToken) => {
-  return token.sparklineIn7d || []
-}
-
 /**-------------------------------
  * Token Link
  --------------------------------*/
@@ -960,19 +690,20 @@ watch(
   },
 )
 
-const onRowClick = (token: DisplayToken) => {
+const trackRowClick = (token: DisplayToken) => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
-    location: 'token_row',
+    location: StockMarketLocation.TOKEN_ROW,
     stockName: token.name,
     stockSymbol: token.symbol,
   })
-  goToTokenPage(token)
 }
 
+const getTokenRoute = (token: DisplayToken) => ({
+  name: STOCK_INFO_ROUTE_NAMES.stocks,
+  params: { symbol: token.symbol },
+})
+
 const goToTokenPage = (token: DisplayToken) => {
-  router.push({
-    name: STOCK_INFO_ROUTE_NAMES.stocks,
-    params: { symbol: token.symbol },
-  })
+  router.push(getTokenRoute(token))
 }
 </script>

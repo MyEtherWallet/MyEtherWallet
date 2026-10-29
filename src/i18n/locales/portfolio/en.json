@@ -52,8 +52,6 @@
       "balance_header": "Balance",
       "add_button": "+ Add",
       "hide_no_value": "Hide tokens with no value",
-      "add_to_watchlist": "Add to Watchlist",
-      "remove_from_watchlist": "Remove from Watchlist",
       "trade": "Trade",
       "empty_watchlist": "You don't have any watchlisted tokens.",
       "discover_more_tokens": "Discover more tokens",
@@ -63,7 +61,6 @@
       "no_results": "No results found for \"{query}\".",
       "results_of": "{count} of {total} results",
       "page_current": "{current}",
-      "page_of": "of",
       "page_total": "{total}"
     },
     "custom_token": {

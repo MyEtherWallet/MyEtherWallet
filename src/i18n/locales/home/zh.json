@@ -87,8 +87,6 @@
           "swap": "兑换",
           "bridge": "跨链",
           "removeShort": "移除",
-          "dragLabel": "拖动以重新排序",
-          "showMore": "显示另外 {count} 个",
           "columns": {
             "token": "代币",
             "marketCap": "市值",
@@ -147,7 +145,6 @@
       "today": "今天",
       "yesterday": "昨天",
       "daysAgo": "{n} 天前",
-      "pagination": "显示第 {page} 页，共 {total} 页",
       "readOnSource": "在 {source} 阅读全文",
       "readMore": "阅读全文"
     }

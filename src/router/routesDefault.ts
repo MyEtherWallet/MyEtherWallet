@@ -66,6 +66,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'info-cell',
+              name: 'DevInfoCell',
+              component: () => import('@/views/ViewInfoCellShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'toggle',
               name: 'DevToggle',
               component: () => import('@/views/ViewToggleShowcase.vue'),
@@ -117,6 +123,18 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'divider',
               name: 'DevDivider',
               component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'pagination',
+              name: 'DevPagination',
+              component: () => import('@/views/ViewPaginationShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'table',
+              name: 'DevTable',
+              component: () => import('@/views/ViewTableShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
