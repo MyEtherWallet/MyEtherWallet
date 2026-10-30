@@ -301,7 +301,9 @@ const { data, onFetchResponse, execute, onFetchError, isFetching, aborted } =
   useMEWFetch(fetchURL, {
     immediate: false,
   })
-    .post(JSON.stringify(txData.value))
+    // getter, not a value: useFetch reads it on each execute(), so a new
+    // txRequestBody is what gets posted (a ref would add a second auto-refetch)
+    .post(() => JSON.stringify(txData.value))
     .json<QuotesResponse>()
 
 onFetchResponse(() => {
