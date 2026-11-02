@@ -156,6 +156,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'dropdown',
+              name: 'DevDropdown',
+              component: () => import('@/views/ViewDropdownShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'card',
               name: 'DevCard',
               component: () => import('@/views/ViewCardShowcase.vue'),

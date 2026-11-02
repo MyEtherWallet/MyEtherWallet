@@ -37,6 +37,10 @@ const props = withDefaults(
     role?: MenuListRole
     /** Accessible name of the listbox / menu. */
     ariaLabel?: string
+    /** Names the listbox / menu by another element, e.g. a Dropdown trigger. */
+    ariaLabelledby?: string
+    /** Id of the listbox / menu itself, for a trigger's `aria-controls`. */
+    listId?: string
     /** A divider between every row; leave off to place group dividers by hand. */
     divided?: boolean
     /** Classes for the scrolling rows region, e.g. its max height. */
@@ -48,6 +52,8 @@ const props = withDefaults(
     scrollbar: true,
     role: 'listbox',
     ariaLabel: undefined,
+    ariaLabelledby: undefined,
+    listId: undefined,
     divided: false,
     listClass: 'max-h-80',
   },
@@ -122,8 +128,10 @@ defineExpose({ focusSearch, focusRow })
          Rows never shrink, so a long list scrolls instead of squeezing them. -->
     <div
       ref="list"
+      :id="listId"
       :role="role"
       :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledby"
       data-testid="menu-list-rows"
       class="flex min-w-0 flex-col overflow-y-auto *:shrink-0"
       :class="[
