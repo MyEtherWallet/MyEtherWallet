@@ -6,9 +6,9 @@
         'flex items-center gap-2 w-full rounded-12 px-4',
         spec.field,
         surfaceClass,
-        { 'cursor-not-allowed': disabled, 'cursor-text': !disabled },
+        { 'cursor-not-allowed': disabled },
       ]"
-      @mousedown="onFieldMouseDown"
+      @click="setInFocusInput()"
     >
       <div
         v-if="$slots.leading"
@@ -61,7 +61,6 @@
 
       <div
         v-if="$slots.trailing || showClear || showReveal"
-        ref="trailingEl"
         :inert="disabled || undefined"
         :class="[
           'flex items-center shrink-0',
@@ -205,7 +204,6 @@ const onEnter = () => {
 
 const model = defineModel<string>()
 const baseInput = ref<HTMLInputElement | null>(null)
-const trailingEl = ref<HTMLDivElement | null>(null)
 const inputId = useId()
 const feedbackId = useId()
 
@@ -221,21 +219,6 @@ const {
   setInFocusInput,
   startOutOfFocusTimeout,
 } = useInFocusInput(baseInput)
-
-/**
- * The field box is wider than the <input> (padding, leading avatar, label
- * row), so a press anywhere else in the box would otherwise land on a plain
- * div and drop focus. Forward it to the input; trailing actions keep their own
- * click handling, and the input itself keeps native caret placement.
- */
-const onFieldMouseDown = (event: MouseEvent) => {
-  if (props.disabled) return
-  const target = event.target as Node | null
-  if (target === baseInput.value || trailingEl.value?.contains(target)) return
-  event.preventDefault()
-  setActive()
-  setInFocusInput()
-}
 
 /**------------------------
  * Value / label float
