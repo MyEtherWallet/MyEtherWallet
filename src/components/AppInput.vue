@@ -51,8 +51,8 @@
               : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
-          @pointerdown="setActive()"
           @focus="setInFocusInput()"
+          @click="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
           @keyup.enter="onEnter"
