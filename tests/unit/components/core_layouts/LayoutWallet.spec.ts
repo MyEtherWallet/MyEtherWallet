@@ -19,8 +19,22 @@ vi.mock('pinia', async importOriginal => {
   }
 })
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
-vi.mock('vue-router', () => ({ useRoute: () => ({}) }))
-vi.mock('@/router/routeHierarchy', () => ({ pageRouteName: () => 'home' }))
+const route = vi.hoisted(() => ({
+  query: {} as Record<string, string>,
+  matched: [] as { name?: string }[],
+}))
+const router = vi.hoisted(() => ({
+  isReady: () => Promise.resolve(),
+  push: () => Promise.resolve(),
+}))
+vi.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => router,
+}))
+const pageName = vi.hoisted(() => ({ value: 'home' }))
+vi.mock('@/router/routeHierarchy', () => ({
+  pageRouteName: () => pageName.value,
+}))
 vi.mock('@/composables/useAppBreakpoints', async () => {
   const { ref } = await import('vue')
   return {
@@ -54,9 +68,16 @@ import AppActionBar from '@/components/action_bar/AppActionBar.vue'
 import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { analytics } from '@/analytics'
+import { TRADE_CAMPAIGN_UTM } from '@/composables/useTradeCampaignEntry'
+import { ROUTES_MAIN, STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const factory = () =>
   mount(LayoutWallet, { global: { mocks: { $t: (k: string) => k } } })
+
+const flush = async () => {
+  await nextTick()
+  await new Promise(resolve => setTimeout(resolve, 0))
+}
 
 const ids = (w: ReturnType<typeof mount>) =>
   w.findAll('[data-action-id]').map(b => b.attributes('data-action-id'))
@@ -65,6 +86,29 @@ describe('LayoutWallet action bar wiring', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     walletStore.isWalletConnected = false
+    route.query = {}
+    route.matched = []
+    pageName.value = 'home'
+  })
+
+  it('closes the panel on an info page below XL', async () => {
+    pageName.value = STOCK_INFO_ROUTE_NAMES.stocks
+    const store = useWalletMenuStore()
+    store.openPanel('trade')
+    factory()
+    await flush()
+    expect(store.isOpenSideMenu).toBe(false)
+  })
+
+  it('keeps the trade panel open for a campaign deep link on any breakpoint', async () => {
+    route.query = { ...TRADE_CAMPAIGN_UTM }
+    route.matched = [{ name: ROUTES_MAIN.STOCKS.NAME }]
+    pageName.value = STOCK_INFO_ROUTE_NAMES.stocks
+    const store = useWalletMenuStore()
+    factory()
+    await flush()
+    expect(store.isOpenSideMenu).toBe(true)
+    expect(store.walletPanel).toBe('trade')
   })
 
   it('lists the rail items in Figma order, Deposit only when connected', async () => {

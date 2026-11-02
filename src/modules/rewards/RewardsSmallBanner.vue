@@ -1,7 +1,11 @@
 <template>
   <!-- Every location except the swap one advertises the hold campaign ("Trade,
        hold and get 10 USDC"), so those are hidden once it stops taking trades. -->
-  <div v-if="!isBanned && (isSwapLocation || canRegisterTrade)">
+  <div
+    v-if="
+      !isBanned && ((isSwapLocation && !isRewardsPaused) || canRegisterTrade)
+    "
+  >
     <div
       class="bg-background-brand-subtle rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
@@ -51,7 +55,7 @@ const props = defineProps<{
 }>()
 
 const rewardsStore = useRewardsStore()
-const { isBanned } = storeToRefs(rewardsStore)
+const { isBanned, isRewardsPaused } = storeToRefs(rewardsStore)
 
 const holdingsStore = useHoldingsStore()
 const { canRegisterTrade, qualificationAmount } = storeToRefs(holdingsStore)

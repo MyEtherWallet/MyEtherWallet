@@ -59,6 +59,7 @@
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
         :trade-market-closed="tradeMarketClosed"
+        :trade-paused="tradePaused"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
@@ -108,6 +109,7 @@
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
         :trade-market-closed="tradeMarketClosed"
+        :trade-paused="tradePaused"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
@@ -153,6 +155,7 @@ const {
   swapNoRewards,
   tradeNoRewards,
   tradeMarketClosed,
+  tradePaused,
   swapTotal,
   swapRemainingPct,
   swapRemainingCount,
