@@ -111,9 +111,8 @@ onMounted(async () => {
   await nextTick()
   const el = section.value
   if (!el) return
-  // Offset for the fixed app header (TheHeader.vue: h-[68px] sm:h-[76px]).
-  const headerHeight = window.innerWidth >= 640 ? 76 : 68
-  el.style.scrollMarginTop = `${headerHeight + 12}px`
+  // Offset for the fixed app header (AppNavbar: 76px at every width) + 12.
+  el.style.scrollMarginTop = '88px'
   el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 })
 

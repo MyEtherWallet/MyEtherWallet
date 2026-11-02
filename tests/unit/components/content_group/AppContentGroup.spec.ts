@@ -175,6 +175,35 @@ describe('AppContentGroup', () => {
     expect(wrapper.find(title()).exists()).toBe(false)
   })
 
+  it('loading rows keep the line heights, so the group does not grow', () => {
+    // 12px bars: py-[5px] makes a 22px row, py-1 a 20px one (the M text/sm line).
+    // Rows are flex so the bar never sits in a line box: an inline-block bar
+    // takes the inherited line-height (~24px) and stretches every row.
+    const mountLoading = (
+      props: { size?: 'm' | 'l'; inverted?: boolean; align?: 'right' } = {},
+    ) =>
+      mount(AppContentGroup, {
+        props: { title: 'T', description: 'D', loading: true, ...props },
+      })
+    const rows = (props?: Parameters<typeof mountLoading>[0]) =>
+      mountLoading(props)
+        .findAll('[data-testid="cg-root"] > div')
+        .map(row => row.classes())
+    const tall = expect.arrayContaining(['flex', 'py-[5px]'])
+    const short = expect.arrayContaining(['flex', 'py-1'])
+
+    expect(rows()).toEqual([tall, short])
+    expect(rows({ inverted: true })).toEqual([short, tall])
+    expect(rows({ size: 'l' })).toEqual([tall, tall])
+    expect(rows({ align: 'right' })).toEqual([
+      expect.arrayContaining(['justify-end']),
+      expect.arrayContaining(['justify-end']),
+    ])
+    for (const bar of mountLoading().findAll('[data-testid="skeleton"]')) {
+      expect(bar.classes()).not.toContain('inline-block')
+    }
+  })
+
   it('passes size "xs" to the icon/avatar slots for every group size', () => {
     for (const size of ['m', 'l'] as const) {
       const wrapper = mount(AppContentGroup, {

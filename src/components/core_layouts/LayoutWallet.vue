@@ -10,7 +10,7 @@
           'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]':
             hasShadow && !isOpenSideMenu,
         },
-        'fixed right-0 top-[69px] sm:top-[77px] z-[50] h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
+        'fixed right-0 top-[77px] z-[50] h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
       @select="onSelect"
       @toggle="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
@@ -78,6 +78,10 @@ import type { ComponentPublicInstance } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore, type WalletPanel } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import {
+  isTradeCampaignQuery,
+  useTradeCampaignEntry,
+} from '@/composables/useTradeCampaignEntry'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
@@ -113,6 +117,10 @@ const route = useRoute()
 const page = computed(() => pageRouteName(route))
 
 onMounted(() => {
+  // A marketing deep link into Trade owns the panel on every breakpoint, so
+  // the info-page default below must not close what useTradeCampaignEntry
+  // opens (their relative order depends on when the route resolves).
+  if (isTradeCampaignQuery(route.query)) return
   if (
     page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||
     page.value === TOKEN_INFO_ROUTE_NAMES.home ||
@@ -127,6 +135,10 @@ onMounted(() => {
     }
   }
 })
+// Registered after the onMounted above so a marketing deep link wins over the
+// info-page default (which closes the panel below the XL breakpoint).
+useTradeCampaignEntry()
+
 watch(isMDAndUp, newVal => {
   if (
     page.value === TOKEN_INFO_ROUTE_NAMES.crypto ||

@@ -6,8 +6,9 @@
       size="l"
       surface="alternative"
       :title="selectedChain?.nameLong ?? ''"
-      :description="$t('common.network')"
+      :description="$t('common.network_label')"
       :loading="!isReady"
+      :expanded="openDialog"
       @click="setOpenDialog(true)"
     >
       <template #avatar="{ size }">

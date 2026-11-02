@@ -1,164 +1,155 @@
 <template>
-  <div class="relative">
-    <!-- OPEN Mobile Menu-->
-    <app-btn-icon
-      @click="sidebarIsOpen = !sidebarIsOpen"
-      :label="$t('menu.open-menu')"
+  <!-- Opened by the navbar hamburger (AppNavbar) through v-model:open. -->
+  <!-- Background -->
+  <teleport to="#app">
+    <transition
+      enter-from-class="opacity-0"
+      enter-active-class="transform ease-out duration-300 transition"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-active-class="ease-in duration-100 transition"
+      leave-to-class="opacity-0"
+      appear
     >
-      <AppIcon name="bars-3" variant="filled" size="l" />
-    </app-btn-icon>
-    <!-- Background -->
-    <teleport to="#app">
-      <transition
-        enter-from-class="opacity-0"
-        enter-active-class="transform ease-out duration-300 transition"
-        enter-to-class="opacity-100"
-        leave-from-class="opacity-100"
-        leave-active-class="ease-in duration-100 transition"
-        leave-to-class="opacity-0"
-        appear
+      <div
+        v-if="sidebarIsOpen"
+        class="cursor-pointer fixed inset-0 bg-black/30 z-[100] h-screen w-screen overscroll-none overflow-hidden"
+        @click="sidebarIsOpen = false"
+        aria-hidden
+      />
+    </transition>
+  </teleport>
+  <!-- Side Menu -->
+  <teleport to="#app">
+    <transition
+      enter-from-class="opacity-0 -translate-x-full"
+      enter-active-class="transform ease-out duration-300 transition "
+      enter-to-class="translate-x-0"
+      leave-from-class="transform ease-out duration-300 translate-x-0"
+      leave-active-class="transition -translate-x-full"
+      appear
+    >
+      <aside
+        v-if="sidebarIsOpen"
+        id="default-sidebar"
+        class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-white"
+        :aria-label="$t('common.sidebar')"
       >
-        <div
-          v-if="sidebarIsOpen"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[100] h-screen w-screen overscroll-none overflow-hidden"
-          @click="sidebarIsOpen = false"
-          aria-hidden
-        />
-      </transition>
-    </teleport>
-    <!-- Side Menu -->
-    <teleport to="#app">
-      <transition
-        enter-from-class="opacity-0 -translate-x-full"
-        enter-active-class="transform ease-out duration-300 transition "
-        enter-to-class="translate-x-0"
-        leave-from-class="transform ease-out duration-300 translate-x-0"
-        leave-active-class="transition -translate-x-full"
-        appear
-      >
-        <aside
-          v-if="sidebarIsOpen"
-          id="default-sidebar"
-          class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-white"
-          :aria-label="$t('common.sidebar')"
-        >
-          <div class="h-full px-3 py-4 overflow-y-auto bg-white">
-            <div class="flex items-center justify-between mb-4">
-              <img
-                src="@/assets/images/mew/logo-header.webp"
-                :alt="t('home')"
-                width="280"
-                height="96"
-                class="w-[94px] h-8 flex-none object-contain"
-              />
-              <AppBtnIconClose @click="sidebarIsOpen = false" />
-            </div>
-            <div class="relative">
-              <transition-group name="fadelist">
-                <!-- CORE MENU -->
-                <div key="app-core-menu" class="pt-0">
-                  <menu-list-item
-                    v-for="item in coreMenuList"
-                    :key="item.title"
-                    :list-item="item"
-                    @click="clickListItem()"
-                  />
-                </div>
-
-                <!-- Learn MENU -->
-                <button
-                  :class="[
-                    'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
-                  ]"
-                  v-ripple
-                  @click="isOpenLearnMenu = !isOpenLearnMenu"
-                  key="app-learn-menu"
-                >
-                  <div class="mr-3 opacity-80">
-                    <AppIcon name="book-open" variant="filled" size="xxs" />
-                  </div>
-                  {{ t('learn') }}
-                  <AppIcon
-                    name="chevron-down"
-                    variant="filled"
-                    size="xxs"
-                    :class="[
-                      'ml-auto transition-transform',
-                      { 'rotate-180': isOpenLearnMenu },
-                    ]"
-                  />
-                </button>
-
-                <div v-if="isOpenLearnMenu" key="app-learn-submenu">
-                  <a
-                    v-for="item in learnMenuList"
-                    :key="item.label"
-                    :href="item.value"
-                    target="_blank"
-                    class="text-s-14 rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG pl-12"
-                  >
-                    {{ item.label }}
-                  </a>
-                </div>
-
-                <!-- TOOLS MENU -->
+        <div class="h-full px-3 py-4 overflow-y-auto bg-white">
+          <div class="flex items-center justify-between mb-4">
+            <img
+              src="@/assets/images/mew/logo-header.webp"
+              :alt="t('home')"
+              width="280"
+              height="96"
+              class="w-[94px] h-8 flex-none object-contain"
+            />
+            <AppBtnIconClose @click="sidebarIsOpen = false" />
+          </div>
+          <div class="relative">
+            <transition-group name="fadelist">
+              <!-- CORE MENU -->
+              <div key="app-core-menu" class="pt-0">
                 <menu-list-item
-                  :list-item="toolsMenuItem"
-                  :is-drop-down-open="showToolsSubmenu"
-                  is-drop-down
-                  key="app-tools-menu"
-                  @click="showToolsSubmenu = !showToolsSubmenu"
+                  v-for="item in coreMenuList"
+                  :key="item.title"
+                  :list-item="item"
+                  @click="clickListItem()"
                 />
-                <div v-if="showToolsSubmenu" key="app-tools-submenu">
-                  <menu-list-item
-                    v-for="item in toolsMenuList"
-                    :key="item.title"
-                    :list-item="item"
-                    is-submenu
-                    @click="clickListItem()"
-                  />
+              </div>
+
+              <!-- Learn MENU -->
+              <button
+                :class="[
+                  'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
+                ]"
+                v-ripple
+                @click="isOpenLearnMenu = !isOpenLearnMenu"
+                key="app-learn-menu"
+              >
+                <div class="mr-3 opacity-80">
+                  <AppIcon name="book-open" variant="filled" size="xxs" />
                 </div>
-                <!--  DIVIDER -->
-                <app-divider
-                  v-if="!isWalletConnected"
-                  class="my-2"
-                  key="app-menu-divider-2"
+                {{ t('learn') }}
+                <AppIcon
+                  name="chevron-down"
+                  variant="filled"
+                  size="xxs"
+                  :class="[
+                    'ml-auto transition-transform',
+                    { 'rotate-180': isOpenLearnMenu },
+                  ]"
                 />
-                <!--  OTHER MENU (Settings, etc) -->
-                <!-- <menu-list-item
+              </button>
+
+              <div v-if="isOpenLearnMenu" key="app-learn-submenu">
+                <a
+                  v-for="item in learnMenuList"
+                  :key="item.label"
+                  :href="item.value"
+                  target="_blank"
+                  class="text-s-14 rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG pl-12"
+                >
+                  {{ item.label }}
+                </a>
+              </div>
+
+              <!-- TOOLS MENU -->
+              <menu-list-item
+                :list-item="toolsMenuItem"
+                :is-drop-down-open="showToolsSubmenu"
+                is-drop-down
+                key="app-tools-menu"
+                @click="showToolsSubmenu = !showToolsSubmenu"
+              />
+              <div v-if="showToolsSubmenu" key="app-tools-submenu">
+                <menu-list-item
+                  v-for="item in toolsMenuList"
+                  :key="item.title"
+                  :list-item="item"
+                  is-submenu
+                  @click="clickListItem()"
+                />
+              </div>
+              <!--  DIVIDER -->
+              <app-divider
+                v-if="!isWalletConnected"
+                class="my-2"
+                key="app-menu-divider-2"
+              />
+              <!--  OTHER MENU (Settings, etc) -->
+              <!-- <menu-list-item
                   v-for="item in otherMenuList"
                   :key="item.title"
                   :list-item="item"
                   @click="clickListItem()"
                 /> -->
-                <div
-                  v-if="!isWalletConnected"
-                  class="flex flex-col gap-3 pt-5 px-5 mt-1"
+              <div
+                v-if="!isWalletConnected"
+                class="flex flex-col gap-3 pt-5 px-5 mt-1"
+              >
+                <button
+                  @click="connectWallet"
+                  class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
                 >
-                  <button
-                    @click="connectWallet"
-                    class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
-                  >
-                    {{ $t('connect_wallet') }}
-                  </button>
-                  <router-link
-                    :to="{ name: ROUTES_MAIN.HOME.NAME }"
-                    class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
-                  >
-                    {{ $t('common.create_wallet') }}
-                  </router-link>
-                </div>
-              </transition-group>
-            </div>
+                  {{ $t('connect_wallet') }}
+                </button>
+                <router-link
+                  :to="{ name: ROUTES_MAIN.HOME.NAME }"
+                  class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
+                >
+                  {{ $t('common.create_wallet') }}
+                </router-link>
+              </div>
+            </transition-group>
           </div>
-        </aside>
-      </transition>
-    </teleport>
-  </div>
+        </div>
+      </aside>
+    </transition>
+  </teleport>
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
@@ -192,7 +183,7 @@ defineProps({
   },
 })
 
-const sidebarIsOpen = ref(false)
+const sidebarIsOpen = defineModel<boolean>('open', { default: false })
 const showToolsSubmenu = ref(false)
 
 const toolsMenuItem = computed<AppMenuListItem>(() => {

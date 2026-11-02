@@ -27,6 +27,13 @@
     "not_recommended_description": "Esta información es sensible y solo deben usarla usuarios con experiencia en cripto.",
     "network": "red",
     "close": "cerrar",
+    "dismiss": "Descartar",
+    "banner_type": {
+      "info": "Información",
+      "alert": "Error",
+      "success": "Éxito",
+      "warning": "Advertencia"
+    },
     "clear_icon": "borrar campo",
     "copy": "copiar",
     "copy_address": "copiar dirección",
@@ -42,6 +49,7 @@
     "all_chains": "Todas las redes",
     "all_networks": "Todas las redes",
     "showing_page": "Mostrando página {current} de {total}",
+    "pagination": "Paginación",
     "edit": "Editar",
     "delete": "Eliminar",
     "token_count": "sin tokens| 1 token | {count} tokens",
@@ -223,7 +231,8 @@
   "menu": {
     "open-settings": "Abrir configuración",
     "open-notifications": "Abrir notificaciones",
-    "open-menu": "Abrir menú"
+    "open-menu": "Abrir menú",
+    "main": "Principal"
   },
   "home": "Inicio",
   "connect_wallet": "Conectar billetera",

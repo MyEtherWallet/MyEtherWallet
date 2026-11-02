@@ -23,6 +23,7 @@ const h = vi.hoisted(() => ({
   ledgerGetSupportedPaths: vi.fn(),
   ledgerGetAddress: vi.fn(),
   resolveTransport: null as null | ((v: unknown) => void),
+  rejectTransport: null as null | ((e: unknown) => void),
 }))
 
 vi.mock('@enkryptcom/hw-wallets', () => {
@@ -128,10 +129,13 @@ vi.mock('@/providers/hw/ledger', () => ({
   },
 }))
 vi.mock('@/providers/hw/ledger/transport', () => ({
-  getLedgerWebUSBTransport: () =>
-    new Promise(resolve => {
-      h.resolveTransport = resolve
-    }),
+  getLedgerWebUSBTransport: vi.fn(
+    () =>
+      new Promise((resolve, reject) => {
+        h.resolveTransport = resolve
+        h.rejectTransport = reject
+      }),
+  ),
   getLedgerBLETransport: vi.fn(),
   closeLedgerTransport: vi.fn(async () => undefined),
   isLedgerInterfaceBusyError: () => false,
@@ -143,12 +147,14 @@ import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWal
 import { useAccessStore } from '@/stores/accessStore'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { resetTrezorManager } from '@/providers/hw/trezorManager'
+import { getLedgerWebUSBTransport } from '@/providers/hw/ledger/transport'
 
 const stubs = {
   AppSheet: { template: '<div><slot /></div>' },
   AppStepper: { template: '<div><slot /></div>' },
   AppStepDescription: { template: '<div />' },
   AppBaseButton: {
+    emits: ['click'],
     template: '<button @click="$emit(\'click\')"><slot /></button>',
   },
   AppBtnText: { template: '<button><slot /></button>' },
@@ -170,6 +176,7 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ['setTimeout'] })
   resetTrezorManager()
   h.resolveTransport = null
+  h.rejectTransport = null
   h.ledgerIsConnected.mockResolvedValue(true)
   h.ledgerGetSupportedPaths.mockResolvedValue([
     { basePath: "m/44'/60'/0'", path: "m/44'/60'/0'/0", label: 'Ethereum' },
@@ -319,5 +326,44 @@ describe('ModuleAccessHardwareWallet – Ledger connect (APP-MEW-WEB-1ND)', () =
     await vi.advanceTimersByTimeAsync(1000)
 
     expect(h.ledgerGetAddress).not.toHaveBeenCalled()
+  })
+})
+
+/**
+ * Regression test for Sentry APP-MEW-WEB-1QE (with 13K and 57 from the same
+ * session). A second "Connect via USB" click while the first connect was still
+ * running started another flow: its getLedgerWebUSBTransport closed the
+ * transport the first flow was using, and both flows hit the device at once.
+ */
+describe('ModuleAccessHardwareWallet – Ledger connect runs once at a time (APP-MEW-WEB-1QE)', () => {
+  it('ignores a second USB click while the first connect is in flight', async () => {
+    const wrapper = factory()
+    await flushPromises()
+
+    const button = wrapper.find('button')
+    await button.trigger('click') // transport opening
+    await button.trigger('click')
+    h.resolveTransport!({})
+    await flushPromises()
+    await button.trigger('click') // unlock running, 1s wait pending
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(getLedgerWebUSBTransport).toHaveBeenCalledTimes(1)
+    expect(h.ledgerIsConnected).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+  })
+
+  it('lets the user try again after cancelling the device picker', async () => {
+    const wrapper = factory()
+    await flushPromises()
+
+    const button = wrapper.find('button')
+    await button.trigger('click')
+    h.rejectTransport!(new Error('No device selected'))
+    await flushPromises()
+    await button.trigger('click')
+
+    expect(getLedgerWebUSBTransport).toHaveBeenCalledTimes(2)
+    wrapper.unmount()
   })
 })

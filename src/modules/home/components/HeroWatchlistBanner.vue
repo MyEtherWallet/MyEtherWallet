@@ -9,9 +9,8 @@ import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 
 defineEmits<{
-  // Starts the "build your watchlist" onboarding flow. The flow itself is not
-  // built yet, so the parent handles this as a placeholder for now.
-  begin: []
+  // The parent opens the add-to-watchlist modal.
+  add: []
 }>()
 
 // Decorative sample stock logos (SPOT / IBM / NKE / LLY), exported from Figma.
@@ -29,9 +28,9 @@ defineEmits<{
     tabindex="0"
     :aria-label="t('homePage.hero.watchlist.title')"
     class="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-white py-6 pr-6 transition-colors hover:bg-background-default-hover"
-    @click="$emit('begin')"
-    @keydown.enter="$emit('begin')"
-    @keydown.space.prevent="$emit('begin')"
+    @click="$emit('add')"
+    @keydown.enter="$emit('add')"
+    @keydown.space.prevent="$emit('add')"
   >
     <div class="flex min-w-0 flex-1 items-center gap-6">
       <!-- Overlapping stock logos (SPOT clipped at the left, under the fade) -->
@@ -48,21 +47,21 @@ defineEmits<{
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
         <img
           :src="stockNke"
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
         <img
           :src="stockLly"
           alt=""
           aria-hidden="true"
           data-test="stock-avatar"
-          class="-ml-3 size-10 shrink-0"
+          class="-ml-4 size-10 shrink-0"
         />
       </div>
       <div class="flex min-w-0 flex-col gap-1">
@@ -76,11 +75,11 @@ defineEmits<{
     </div>
 
     <span
-      data-test="hero-watchlist-begin"
-      class="flex h-12 shrink-0 items-center gap-1 rounded-3xl px-4 text-s-16 font-semibold tracking-[-0.32px] text-black"
+      data-test="hero-watchlist-cta"
+      class="flex h-12 shrink-0 items-center gap-2 rounded-3xl pl-4 pr-6 text-s-16 font-semibold tracking-[-0.32px] text-black"
     >
-      {{ t('homePage.hero.watchlist.begin') }}
-      <AppIcon name="chevron-right" variant="filled" />
+      <AppIcon name="plus" />
+      {{ t('homePage.hero.watchlist.addAssets') }}
     </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end
