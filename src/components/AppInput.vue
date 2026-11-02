@@ -8,7 +8,7 @@
         surfaceClass,
         { 'cursor-not-allowed': disabled },
       ]"
-      @click="setInFocusInput()"
+      @click="onFieldClick"
     >
       <div
         v-if="$slots.leading"
@@ -51,8 +51,8 @@
               : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
+          @pointerdown="setActive()"
           @focus="setInFocusInput()"
-          @click="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
           @keyup.enter="onEnter"
@@ -61,6 +61,7 @@
 
       <div
         v-if="$slots.trailing || showClear || showReveal"
+        ref="trailingEl"
         :inert="disabled || undefined"
         :class="[
           'flex items-center shrink-0',
@@ -204,6 +205,7 @@ const onEnter = () => {
 
 const model = defineModel<string>()
 const baseInput = ref<HTMLInputElement | null>(null)
+const trailingEl = ref<HTMLDivElement | null>(null)
 const inputId = useId()
 const feedbackId = useId()
 
@@ -219,6 +221,20 @@ const {
   setInFocusInput,
   startOutOfFocusTimeout,
 } = useInFocusInput(baseInput)
+
+/**
+ * The field box is wider than the <input> (padding, leading avatar, label
+ * row), so a click there would otherwise land on a plain div. Forward it to
+ * the input as a pointer edit (Active, no ring). Disabled fields are skipped
+ * because `focus()` is a no-op on a disabled input and the focus flag would
+ * stick; trailing actions keep their own click handling.
+ */
+const onFieldClick = (event: MouseEvent) => {
+  if (props.disabled) return
+  if (trailingEl.value?.contains(event.target as Node)) return
+  setActive()
+  setInFocusInput()
+}
 
 /**------------------------
  * Value / label float
