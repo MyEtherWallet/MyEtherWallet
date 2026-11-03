@@ -135,7 +135,7 @@
             />
             <AppTableCell
               :column="SortValue.PERCENT"
-              :value="contract.priceChangePercent ? undefined : '—'"
+              :value="changeOf(contract) === undefined ? '—' : undefined"
               :change="changeOf(contract)"
               :series="
                 contract.sparkline?.price?.length
@@ -701,8 +701,12 @@ const filteredContracts = computed(() => {
   return list
 })
 
-const changeOf = (c: Contract) =>
-  c.priceChangePercent ? parseFloat(c.priceChangePercent) : undefined
+// A missing or malformed percentage is no change (the cell shows "—"),
+// never a made-up 0.00%.
+const changeOf = (c: Contract) => {
+  const change = parseFloat(c.priceChangePercent ?? '')
+  return Number.isFinite(change) ? change : undefined
+}
 
 const {
   currentPage,

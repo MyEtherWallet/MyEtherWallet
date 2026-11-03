@@ -3,6 +3,7 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import { ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enPerps from '@/i18n/locales/perps/en.json'
+import AppTableCell from '@/components/table/AppTableCell.vue'
 
 const contract = (baseCurrency: string, usdVolume: string) => ({
   market: `${baseCurrency}-USD`,
@@ -181,5 +182,15 @@ describe('PerpsMarketList', () => {
       .findAll('li button')
       .map(b => b.text())
     expect(items).toEqual(['Long', 'Short', 'View Market Info'])
+  })
+
+  it('shows a dash, not 0.00%, for a malformed 24h change', async () => {
+    contracts.value = [{ ...contract('BBB', '300'), priceChangePercent: 'n/a' }]
+    const w = await mountList()
+    const cell = w
+      .findAllComponents(AppTableCell)
+      .find(c => c.props('column') === 'PERCENT')!
+    expect(cell.props('change')).toBeUndefined()
+    expect(cell.props('value')).toBe('—')
   })
 })
