@@ -140,4 +140,16 @@ describe('AppTableCell', () => {
     expect(w.get('.py-\\[5px\\]').exists()).toBe(true)
     expect(w.get('.py-\\[3px\\]').exists()).toBe(true)
   })
+
+  it('drops the change line when the change is not a number', () => {
+    const w = factory({ value: '$1', change: Number.NaN })
+    expect(w.find('[data-test="table-cell-trend"]').exists()).toBe(false)
+    expect(w.text()).toBe('$1')
+    // and keeps one bar (the value) while loading
+    expect(
+      factory({ value: '$1', change: Number.NaN }, { loading: true }).findAll(
+        '[data-testid="skeleton"]',
+      ),
+    ).toHaveLength(1)
+  })
 })

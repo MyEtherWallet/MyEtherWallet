@@ -48,6 +48,9 @@ const VALUE_TONE_CLASS: Record<Trend, string> = {
 const visible = computed(
   () => !props.column || visibleKeys.value.includes(props.column),
 )
+// Malformed upstream data parses to NaN; show no change line rather than a
+// made-up 0.00%.
+const hasChange = computed(() => Number.isFinite(props.change))
 const trend = computed(() => trendOf(props.change ?? 0))
 
 // Figma Chart box. The line keeps 1px clear of the edges so the 1.5 stroke
@@ -81,12 +84,12 @@ const points = computed(() => {
   >
     <template v-if="loading">
       <div
-        v-if="value !== undefined || (change === undefined && !series)"
+        v-if="value !== undefined || (!hasChange && !series)"
         class="py-[5px]"
       >
         <AppSkeleton class="h-3 w-16" />
       </div>
-      <div v-if="change !== undefined" class="py-[3px]">
+      <div v-if="hasChange" class="py-[3px]">
         <AppSkeleton class="h-3 w-12" />
       </div>
       <AppSkeleton v-if="series" class="h-4 w-14" />
@@ -102,14 +105,14 @@ const points = computed(() => {
         {{ value }}
       </p>
       <p
-        v-if="change !== undefined"
+        v-if="hasChange"
         data-test="table-cell-trend"
         :class="[
           'flex items-center whitespace-nowrap text-label-xs',
           TREND_CLASS[trend],
         ]"
       >
-        {{ formatChange(change) }}
+        {{ formatChange(change ?? 0) }}
         <AppIcon
           v-if="trend !== 'neutral'"
           :name="trend === 'up' ? 'arrow-small-up' : 'arrow-small-down'"
