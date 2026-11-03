@@ -541,14 +541,18 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
 }
 
 // Column keys are the API sort keys. The header cycles desc → asc → back to
-// the default market cap desc.
-const columns = computed<TableColumn[]>(() => [
-  { key: 'NAME', label: t('crypto.token'), sortable: true },
-  { key: 'MARKET_CAP', label: t('crypto.market_cap'), sortable: true },
-  { key: 'TOTAL_VOLUME', label: t('crypto.volume'), sortable: true },
-  { key: 'CHANGE', label: t('crypto.twenty_four_h_change') },
-  { key: 'PRICE', label: t('crypto.price'), sortable: true },
-])
+// the default market cap desc. Top Gainers / Losers come ranked by 24h change
+// whatever the sort, so their headers don't sort.
+const columns = computed<TableColumn[]>(() => {
+  const sortable = !isMovers.value
+  return [
+    { key: 'NAME', label: t('crypto.token'), sortable },
+    { key: 'MARKET_CAP', label: t('crypto.market_cap'), sortable },
+    { key: 'TOTAL_VOLUME', label: t('crypto.volume'), sortable },
+    { key: 'CHANGE', label: t('crypto.twenty_four_h_change') },
+    { key: 'PRICE', label: t('crypto.price'), sortable },
+  ]
+})
 
 const DEFAULT_SORT: TableSort = { key: 'MARKET_CAP', direction: 'desc' }
 // Shallow so the table's DEFAULT_SORT comes back by identity.
@@ -585,6 +589,11 @@ const cryptoFilterOptions = computed(() => [
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+const isMovers = computed(
+  () =>
+    selectedCryptoFilter.value.value === 'topGainers' ||
+    selectedCryptoFilter.value.value === 'topLosers',
+)
 
 // Deep-link: a home Industry Sectors tile opens /crypto?category=<value>.
 // Preselect the matching filter so the list opens on that category.
@@ -854,10 +863,7 @@ watch(
     page.value = 1
     isLoading.value = true
     tokens.value = []
-    if (
-      selectedCryptoFilter.value.value === 'topGainers' ||
-      selectedCryptoFilter.value.value === 'topLosers'
-    ) {
+    if (isMovers.value) {
       debounceFetchGainers()
     } else if (selectedCryptoFilter.value.value === 'watchlist') {
       debounceFetchWatchlist()
@@ -930,10 +936,7 @@ watch(
 
     isLoading.value = true
     tokens.value = []
-    if (
-      selectedCryptoFilter.value.value === 'topGainers' ||
-      selectedCryptoFilter.value.value === 'topLosers'
-    ) {
+    if (isMovers.value) {
       fetchGainersTable()
     } else if (
       selectedCryptoFilter.value.value === 'watchlist' &&

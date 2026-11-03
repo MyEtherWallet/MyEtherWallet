@@ -4,9 +4,11 @@ import { flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { ref, type Ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 
+// The ?category= deep-link picks the filter on mount.
+const routeQuery: Record<string, string> = {}
 vi.mock('vue-router', async () => ({
   RouterLink: (await import('@vue/test-utils')).RouterLinkStub,
-  useRoute: () => ({ query: {} }),
+  useRoute: () => ({ query: routeQuery }),
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }))
 
@@ -226,6 +228,16 @@ describe('ModuleExploreCrypto table (MEW-2469)', () => {
         expect(li.find('button[type="button"]').exists()).toBe(true)
     } finally {
       item.ondo = null
+    }
+  })
+
+  it('turns the header sort off in Top Gainers, which the API ranks by 24h change', async () => {
+    routeQuery.category = 'topGainers'
+    try {
+      const w = await mountModule()
+      expect(w.findAll('[role="columnheader"] button')).toHaveLength(0)
+    } finally {
+      delete routeQuery.category
     }
   })
 })
