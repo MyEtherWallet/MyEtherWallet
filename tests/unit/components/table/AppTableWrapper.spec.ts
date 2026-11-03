@@ -46,10 +46,12 @@ describe('AppTableWrapper', () => {
     expect(factory({ titleTag: 'h1' }).find('h1').text()).toBe('Explore crypto')
   })
 
-  it('pads 24 at L/M and 16 at S', () => {
+  it('pads 24 at L/M, and 16 tall by 8 wide at S', () => {
     expect(factory().classes()).toContain('p-6')
     expect(factory({ size: 'm' }).classes()).toContain('p-6')
-    expect(factory({ size: 's' }).classes()).toContain('p-4')
+    expect(factory({ size: 's' }).classes()).toEqual(
+      expect.arrayContaining(['px-2', 'py-4']),
+    )
   })
 
   it('hands its size to the table inside', () => {

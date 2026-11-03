@@ -53,7 +53,9 @@ provide(TABLE_WRAPPER, { size, titleId })
     :aria-labelledby="titleId"
     :class="[
       'flex w-full flex-col gap-6 rounded-16 bg-background-alternative',
-      size === 's' ? 'p-4' : 'p-6',
+      // Mobile keeps 16 top/bottom but only 8 on the sides (product call;
+      // Figma has 16), so the rows get the width.
+      size === 's' ? 'px-2 py-4' : 'p-6',
     ]"
   >
     <div data-test="table-heading" class="flex items-center gap-6">
