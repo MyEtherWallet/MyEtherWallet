@@ -1,16 +1,14 @@
 <template>
   <div v-if="isWalletConnected">
-    <!-- The coming-soon (earning) view has no search: unbound hides it. -->
     <AppTableWrapper
-      :search="isComingSoon ? undefined : searchInput"
+      v-model:search="searchInput"
       :title="$t('portfolio.your_balances')"
       title-tag="h1"
-      @update:search="searchInput = $event ?? ''"
     >
       <template #filters="{ size }">
         <slot name="filters" :size="size" />
         <app-pop-up-menu
-          v-if="!isComingSoon && view !== 'watchlist'"
+          v-if="view !== 'watchlist'"
           :placeholder="$t('common.action_menu')"
           location="right"
         >
@@ -59,7 +57,7 @@
           </template>
         </app-pop-up-menu>
         <!-- TOTAL VALUE-->
-        <div v-if="!isComingSoon" class="ml-auto text-right">
+        <div class="ml-auto text-right">
           <p
             class="font-bold text-text-subtle uppercase tracking-sp-06 text-s-14"
           >
@@ -83,11 +81,8 @@
         </app-base-button>
       </template>
 
-      <div v-if="isComingSoon" class="text-center my-10">
-        {{ $t('common.coming_soon') }}
-      </div>
       <AppTable
-        v-else-if="isLoading || !emptyState"
+        v-if="isLoading || !emptyState"
         v-model:sort="sort"
         v-model:page="page"
         :default-sort="DEFAULT_SORT"
@@ -528,9 +523,6 @@ const chainCustomTokens = computed(() => {
   const chainName = chainStore.selectedChain?.name || ''
   return customTokens.value[chainName] || []
 })
-
-// The earning filter has no table yet.
-const isComingSoon = computed(() => props.view === 'earning')
 
 const columns = computed<TableColumn[]>(() => [
   {

@@ -262,10 +262,4 @@ describe('TableTokenBalance', () => {
     expect(crypto.text()).toBe('AAA')
     expect(crypto.find('span.bg-stock-gradient').exists()).toBe(false)
   })
-
-  it('shows coming soon instead of the table for the earning filter', () => {
-    const w = mountTable('earning')
-    expect(w.text()).toContain('common.coming_soon')
-    expect(w.find('[role="table"]').exists()).toBe(false)
-  })
 })
