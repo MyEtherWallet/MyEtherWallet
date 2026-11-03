@@ -366,6 +366,18 @@ describe('ModuleAccessMnemonic', () => {
     expect(labels).toEqual(['Ethereum', 'Ledger', 'Mine'])
   })
 
+  it('offers Add only on EVM chains', async () => {
+    selectedChain.value = {
+      name: 'BITCOIN',
+      nameLong: 'Bitcoin',
+      type: 'BITCOIN',
+    }
+    const w = mountIt()
+    await toStep2(w)
+    await w.get('[data-testid="path-trigger"]').trigger('click')
+    expect(w.find('[data-testid="path-add"]').exists()).toBe(false)
+  })
+
   it('rebuilds the wallet for the new chain id when the EVM network changes', async () => {
     vi.useFakeTimers()
     const w = mountIt()

@@ -107,7 +107,13 @@ describe('AccessDerivationPath', () => {
     const w = mountIt(true)
     await open(w)
     await w.get('[data-testid="path-add"]').trigger('click')
+    const [label] = w.findAll('[role="dialog"] input')
+    await label.setValue('Draft')
     await footerButton(w, 'common.cancel').trigger('click')
     expect(options(w)).toHaveLength(3)
+
+    await w.get('[data-testid="path-add"]').trigger('click')
+    const [fresh] = w.findAll('[role="dialog"] input')
+    expect((fresh.element as HTMLInputElement).value).toBe('')
   })
 })

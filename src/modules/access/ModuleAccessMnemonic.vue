@@ -75,7 +75,7 @@
         <AccessDerivationPath
           :paths="paths"
           :model-value="selectedDerivation"
-          allow-custom
+          :allow-custom="!isBitcoin"
           @update:model-value="setSelectedDerivation"
           @add="addPath"
         />
@@ -213,9 +213,10 @@ const paths = computed<DerivationPath[]>(() => [
   ),
 ])
 
-// A custom path belongs to the chain family it was added on.
-const addPath = ({ label, path }: { label: string; path: string }) => {
-  const custom = { label, path, type: selectedChain.value?.type ?? 'EVM' }
+// EVM only (no Add on Bitcoin): a custom Bitcoin path would be shared by every
+// Bitcoin-family chain and always derive segwit addresses, whatever its purpose.
+const addPath = ({ label, path }: Pick<DerivationPath, 'label' | 'path'>) => {
+  const custom = { label, path, type: 'EVM' }
   addCustomDerivation(custom)
   setSelectedDerivation(custom)
 }

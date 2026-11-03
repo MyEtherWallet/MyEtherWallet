@@ -64,7 +64,7 @@
             v-if="allowCustom"
             data-testid="path-add"
             size="medium"
-            @click="isAdding = true"
+            @click="startAdding"
           >
             {{ t('common.add') }}
           </AppBaseButton>
@@ -104,7 +104,11 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends { label: string; path: string }">
+<script
+  setup
+  lang="ts"
+  generic="T extends Pick<DerivationPath, 'label' | 'path'>"
+>
 /**
  * Derivation path picker: a dropdown-style trigger that opens a modal with a
  * searchable path list and, when `allowCustom` is set, an Add form for a
@@ -119,6 +123,7 @@ import AppInput from '@/components/AppInput.vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import type { ModalButtons } from '@/components/modal/types'
 import { checkCustomPath } from '@/utils/customPathHelpers'
+import type { DerivationPath } from '../common/configs/configPaths'
 
 const props = defineProps<{
   paths: T[]
@@ -127,7 +132,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{
   'update:modelValue': [path: T]
-  add: [path: { label: string; path: string }]
+  add: [path: Pick<DerivationPath, 'label' | 'path'>]
 }>()
 
 const { t } = useI18n()
@@ -143,9 +148,14 @@ const pathError = ref('')
 const openModal = () => {
   isAdding.value = false
   search.value = ''
+  isOpen.value = true
+}
+
+// A fresh form each time, so a cancelled draft doesn't come back.
+const startAdding = () => {
   newLabel.value = ''
   newPath.value = ''
-  isOpen.value = true
+  isAdding.value = true
 }
 
 const isSelected = (path: T) =>
