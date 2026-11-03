@@ -16,6 +16,8 @@
       <AppIcon name="chevron-down" size="xs" class="shrink-0" />
     </button>
 
+    <!-- Pinned to the top like the access dialog, so the list and the Add form
+         grow and shrink downward instead of re-centering the modal. -->
     <AppModal
       v-model="isOpen"
       :title="
@@ -24,81 +26,123 @@
           : t('derivation_path.select_path')
       "
       :show-back-button="isAdding"
-      :buttons="isAdding ? addButtons : undefined"
+      class="self-start mt-[5dvh] max-h-[calc(90dvh-32px)] sm:mt-[10vh] sm:max-h-[calc(80vh-32px)]"
       @back="isAdding = false"
     >
-      <div v-if="isAdding" class="flex flex-col gap-2 px-4 sm:px-6">
-        <AppInput
-          v-model="newLabel"
-          surface="alternative"
-          :label="t('derivation_path.enter_label')"
-          :error-message="labelError"
-        />
-        <AppInput
-          v-model="newPath"
-          surface="alternative"
-          :label="t('derivation_path.enter_path')"
-          :error-message="pathError"
-          :submit-disabled="!canAdd"
-          @enter="add"
-        />
-      </div>
-      <div v-else class="flex flex-col gap-2 px-4 pb-4 sm:px-6 sm:pb-6">
-        <div class="flex items-center gap-2">
-          <AppInput
-            v-model="search"
-            size="small"
-            surface="alternative"
-            :label="t('derivation_path.search')"
-            class="grow"
-          >
-            <template #leading>
-              <AppIcon
-                name="magnifying-glass"
-                size="s"
-                class="text-text-subtle"
-              />
-            </template>
-          </AppInput>
-          <AppBaseButton
-            v-if="allowCustom"
-            data-testid="path-add"
-            size="medium"
-            @click="startAdding"
-          >
-            {{ t('common.add') }}
-          </AppBaseButton>
-        </div>
-        <ul
-          class="flex flex-col gap-1"
-          role="listbox"
-          :aria-label="t('access_wallet.advanced.derivation_path')"
+      <!-- Height follows the measured content and animates, like the access
+           dialog. The Add form's buttons live in here (not the modal footer)
+           so they animate with it. -->
+      <div
+        class="overflow-clip"
+        :style="{
+          height: contentHeight > 0 ? `${contentHeight}px` : undefined,
+          transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
+        }"
+      >
+        <div
+          ref="contentRef"
+          class="flex flex-col gap-2 px-4 pb-4 sm:px-6 sm:pb-6"
         >
-          <li v-for="path in filtered" :key="`${path.label}:${path.path}`">
-            <button
-              type="button"
-              role="option"
-              data-testid="path-option"
-              class="flex min-h-[54px] w-full items-center gap-3 rounded-12 px-3 text-left text-sm cursor-pointer hover:bg-background-default-hover"
-              :class="{ 'bg-background-default': isSelected(path) }"
-              :aria-selected="isSelected(path)"
-              @click="pick(path)"
+          <template v-if="isAdding">
+            <AppInput
+              v-model="newLabel"
+              surface="alternative"
+              :label="t('derivation_path.enter_label')"
+              :error-message="labelError"
+            />
+            <AppInput
+              v-model="newPath"
+              surface="alternative"
+              :label="t('derivation_path.enter_path')"
+              :error-message="pathError"
+              :submit-disabled="!canAdd"
+              @enter="add"
+            />
+            <AppBtnGroup :has-padding="false" class="mt-2 sm:mt-4">
+              <AppBaseButton
+                type="secondary"
+                surface="alternative"
+                data-testid="path-cancel"
+                class="w-full"
+                @click="isAdding = false"
+              >
+                {{ t('common.cancel') }}
+              </AppBaseButton>
+              <AppBaseButton
+                surface="alternative"
+                data-testid="path-submit"
+                class="w-full"
+                :disabled="!canAdd"
+                @click="add"
+              >
+                {{ t('common.add') }}
+              </AppBaseButton>
+            </AppBtnGroup>
+          </template>
+          <template v-else>
+            <div class="flex items-center gap-2">
+              <AppInput
+                v-model="search"
+                size="small"
+                surface="alternative"
+                :label="t('derivation_path.search')"
+                class="grow"
+              >
+                <template #leading>
+                  <AppIcon
+                    name="magnifying-glass"
+                    size="s"
+                    class="text-text-subtle"
+                  />
+                </template>
+              </AppInput>
+              <AppBaseButton
+                v-if="allowCustom"
+                data-testid="path-add"
+                size="medium"
+                @click="startAdding"
+              >
+                {{ t('common.add') }}
+              </AppBaseButton>
+            </div>
+            <!-- Only the list scrolls; search and Add stay put above it. -->
+            <ul
+              class="mew-scrollbar flex max-h-[min(280px,45dvh)] flex-col gap-1 overflow-y-auto"
+              role="listbox"
+              :aria-label="t('access_wallet.advanced.derivation_path')"
             >
-              <span class="min-w-0 grow font-semibold">{{ path.label }}</span>
-              <span class="shrink-0 text-text-subtle">{{ path.path }}</span>
-              <AppIcon
-                v-if="isSelected(path)"
-                name="check-circle"
-                variant="filled"
-                size="s"
-                class="shrink-0 text-icon-default"
-              />
-            </button>
-          </li>
-        </ul>
-        <p v-if="!filtered.length" class="px-3 py-4 text-sm text-text-subtle">
-          {{ t('access_wallet.advanced.no_paths') }}
-        </p>
+              <li v-for="path in filtered" :key="`${path.label}:${path.path}`">
+                <button
+                  type="button"
+                  role="option"
+                  data-testid="path-option"
+                  class="flex min-h-[54px] w-full items-center gap-3 rounded-12 px-3 text-left text-sm cursor-pointer hover:bg-background-default-hover"
+                  :class="{ 'bg-background-default': isSelected(path) }"
+                  :aria-selected="isSelected(path)"
+                  @click="pick(path)"
+                >
+                  <span class="min-w-0 grow font-semibold">{{
+                    path.label
+                  }}</span>
+                  <span class="shrink-0 text-text-subtle">{{ path.path }}</span>
+                  <AppIcon
+                    v-if="isSelected(path)"
+                    name="check-circle"
+                    variant="filled"
+                    size="s"
+                    class="shrink-0 text-icon-default"
+                  />
+                </button>
+              </li>
+            </ul>
+            <p
+              v-if="!filtered.length"
+              class="px-3 py-4 text-sm text-text-subtle"
+            >
+              {{ t('access_wallet.advanced.no_paths') }}
+            </p>
+          </template>
+        </div>
       </div>
     </AppModal>
   </div>
@@ -117,11 +161,12 @@
  */
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useResizeObserver } from '@vueuse/core'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppModal from '@/components/modal/AppModal.vue'
-import type { ModalButtons } from '@/components/modal/types'
 import { checkCustomPath } from '@/utils/customPathHelpers'
 import type { DerivationPath } from '../common/configs/configPaths'
 
@@ -145,9 +190,18 @@ const newPath = ref('')
 const labelError = ref('')
 const pathError = ref('')
 
+/** Measured content height, animated by the wrapper in the modal body. */
+const contentRef = ref<HTMLElement | null>(null)
+const contentHeight = ref(0)
+useResizeObserver(contentRef, () => {
+  contentHeight.value = contentRef.value?.offsetHeight ?? 0
+})
+
 const openModal = () => {
   isAdding.value = false
   search.value = ''
+  // Measure fresh, so it doesn't animate from where it was last closed.
+  contentHeight.value = 0
   isOpen.value = true
 }
 
@@ -194,12 +248,4 @@ const add = () => {
   emit('add', { label, path })
   isOpen.value = false
 }
-
-const addButtons = computed<ModalButtons>(() => ({
-  primary: { label: t('common.add'), onClick: add, disabled: !canAdd.value },
-  secondary: {
-    label: t('common.cancel'),
-    onClick: () => (isAdding.value = false),
-  },
-}))
 </script>

@@ -339,10 +339,7 @@ describe('ModuleAccessMnemonic', () => {
     const [label, path] = w.findAll('[role="dialog"] input')
     await label.setValue('Mine')
     await path.setValue("m/44'/60'/7'/0")
-    await w
-      .findAll('footer button')
-      .find(b => b.text() === 'common.add')!
-      .trigger('click')
+    await w.get('[data-testid="path-submit"]').trigger('click')
 
     const mine = { label: 'Mine', path: "m/44'/60'/7'/0", type: 'EVM' }
     expect(customDerivations.value).toEqual([mine])

@@ -32,8 +32,6 @@ const mountIt = (allowCustom = false) => {
 const open = (w: VueWrapper) =>
   w.get('[data-testid="path-trigger"]').trigger('click')
 const options = (w: VueWrapper) => w.findAll('[data-testid="path-option"]')
-const footerButton = (w: VueWrapper, label: string) =>
-  w.findAll('footer button').find(b => b.text() === label)!
 
 describe('AccessDerivationPath', () => {
   it('shows the selected path and lists every path in a modal', async () => {
@@ -75,12 +73,14 @@ describe('AccessDerivationPath', () => {
     expect(w.get('[role="dialog"]').text()).toContain(
       'derivation_path.add_path',
     )
-    expect(footerButton(w, 'common.add').attributes('disabled')).toBeDefined()
+    expect(
+      w.get('[data-testid="path-submit"]').attributes('disabled'),
+    ).toBeDefined()
 
     const [label, path] = w.findAll('[role="dialog"] input')
     await label.setValue(' Mine ')
     await path.setValue(" m/44'/60'/1'/0 ")
-    await footerButton(w, 'common.add').trigger('click')
+    await w.get('[data-testid="path-submit"]').trigger('click')
 
     expect(w.emitted('add')).toEqual([
       [{ label: 'Mine', path: "m/44'/60'/1'/0" }],
@@ -95,7 +95,7 @@ describe('AccessDerivationPath', () => {
     const [label, path] = w.findAll('[role="dialog"] input')
     await label.setValue('ledger')
     await path.setValue('m/44/x')
-    await footerButton(w, 'common.add').trigger('click')
+    await w.get('[data-testid="path-submit"]').trigger('click')
 
     expect(w.emitted('add')).toBeUndefined()
     const text = w.get('[role="dialog"]').text()
@@ -109,7 +109,7 @@ describe('AccessDerivationPath', () => {
     await w.get('[data-testid="path-add"]').trigger('click')
     const [label] = w.findAll('[role="dialog"] input')
     await label.setValue('Draft')
-    await footerButton(w, 'common.cancel').trigger('click')
+    await w.get('[data-testid="path-cancel"]').trigger('click')
     expect(options(w)).toHaveLength(3)
 
     await w.get('[data-testid="path-add"]').trigger('click')
