@@ -215,6 +215,7 @@ const walletConnectWallet: WalletConfig = {
 describe('useConnectWallet — WalletConnect approved (MEW-2588)', () => {
   beforeEach(() => {
     addToastMessage.mockReset()
+    captureExceptionSpy.mockReset()
     setWalletSpy.mockReset()
     accessStoreMock.closeAccessDialog.mockReset()
     connectorsRef.length = 0
@@ -238,5 +239,6 @@ describe('useConnectWallet — WalletConnect approved (MEW-2588)', () => {
       text: 'access_wallet.toast.could_not_connect',
       textSecondary: 'boom',
     })
+    expect(captureExceptionSpy).toHaveBeenCalled()
   })
 })
