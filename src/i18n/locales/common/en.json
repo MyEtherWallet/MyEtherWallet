@@ -27,6 +27,13 @@
     "not_recommended_description": "This information is sensitive and should only be used by experienced crypto users.",
     "network": "network",
     "close": "close",
+    "dismiss": "Dismiss",
+    "banner_type": {
+      "info": "Info",
+      "alert": "Error",
+      "success": "Success",
+      "warning": "Warning"
+    },
     "clear_icon": "clear input",
     "copy": "copy",
     "copy_address": "copy address",
@@ -232,7 +239,8 @@
   "menu": {
     "open-settings": "Open Settings",
     "open-notifications": "Open Notifications",
-    "open-menu": "Open Menu"
+    "open-menu": "Open Menu",
+    "main": "Main"
   },
   "home": "Home",
   "connect_wallet": "Connect wallet",

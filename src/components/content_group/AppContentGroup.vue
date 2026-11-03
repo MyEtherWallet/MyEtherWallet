@@ -61,14 +61,20 @@ const hasDescription = computed(() => !!props.description)
 // Text alignment cascades to the (possibly wrapping) text. The rows themselves
 // stay full-width (default stretch) so the title can actually clip —
 // items-start/end would shrink them to content width.
-const alignClass = computed(() =>
-  props.align === 'right' ? 'text-right' : 'text-left',
-)
+const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+}
+const alignClass = computed(() => ALIGN_CLASS[props.align])
 
-// Positions the text + trailing icons within a full-width row.
-const rowJustifyClass = computed(() =>
-  props.align === 'right' ? 'justify-end' : 'justify-start',
-)
+// Positions the text + trailing icons (or a skeleton bar) within a full-width row.
+const ROW_JUSTIFY_CLASS: Record<ContentGroupAlign, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}
+const rowJustifyClass = computed(() => ROW_JUSTIFY_CLASS[props.align])
 
 const emphasisClass = computed(() => [
   EMPHASIS_TEXT_CLASS[props.size],
@@ -79,6 +85,12 @@ const supportingClass = computed(() => [
   SUPPORTING_TEXT_CLASS[props.size],
   TONE_SUPPORTING_CLASS[props.tone],
 ])
+
+// A skeleton row is as tall as the line it stands in for, so loading doesn't
+// grow the group: 22px (py-[5px] around the 12px bar), except the M
+// supporting line (text/sm), which is 20px.
+const skeletonRowClass = (supporting: boolean) =>
+  supporting && props.size === 'm' ? 'py-1' : 'py-[5px]'
 
 const titleClass = computed(() =>
   props.inverted ? supportingClass.value : emphasisClass.value,
@@ -96,14 +108,18 @@ const descriptionClass = computed(() => [
     class="flex flex-col min-w-0"
     :class="[alignClass, { 'gap-1': size === 'l' }]"
   >
-    <!-- Loading: 12px bars (4px radius) in 22px rows, per Figma for both sizes.
-         Flex rows: an inline bar would sit in the inherited line box and grow
-         the row past 22px. -->
+    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. The
+         rows are flex so a bar never sits in a line box, which would take the
+         inherited line-height and stretch the row. -->
     <template v-if="loading">
-      <div class="flex py-[5px]" :class="rowJustifyClass">
+      <div class="flex" :class="[rowJustifyClass, skeletonRowClass(inverted)]">
         <AppSkeleton class="h-3 w-[35px]" />
       </div>
-      <div v-if="hasDescription" class="flex py-[5px]" :class="rowJustifyClass">
+      <div
+        v-if="hasDescription"
+        class="flex"
+        :class="[rowJustifyClass, skeletonRowClass(!inverted)]"
+      >
         <AppSkeleton class="h-3 w-[79px]" />
       </div>
     </template>

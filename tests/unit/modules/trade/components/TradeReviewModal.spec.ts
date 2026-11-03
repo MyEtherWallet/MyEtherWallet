@@ -12,10 +12,10 @@ import { analytics, TradeEvent } from '@/analytics'
 import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 import type { NewTokenInfo } from '@/composables/useSwap'
 
-const AppDialogStub = {
-  props: { isOpen: { type: Boolean, default: false } },
+const AppModalStub = {
+  props: { modelValue: { type: Boolean, default: false }, title: String },
   template:
-    '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
+    '<div v-if="modelValue">{{ title }}<slot name="header" /><slot /></div>',
 }
 
 const usdt = {
@@ -63,7 +63,7 @@ const mountModal = (props: Record<string, unknown> = {}) =>
     },
     global: {
       plugins: [i18n, pinia],
-      stubs: { AppDialog: AppDialogStub, RewardsTradeConfirmationBanner: true },
+      stubs: { AppModal: AppModalStub, RewardsTradeConfirmationBanner: true },
     },
   })
 

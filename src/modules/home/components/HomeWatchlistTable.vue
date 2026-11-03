@@ -203,6 +203,7 @@ const actionCall = (row: WatchlistRow) => {
       >
         <AppBaseButton
           data-test="watchlist-add-new"
+          type="secondary"
           size="medium"
           :disabled="isWatchlistFull"
           @click="isAddOpen = true"

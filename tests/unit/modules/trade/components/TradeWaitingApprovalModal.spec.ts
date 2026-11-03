@@ -11,10 +11,10 @@ import TradeWaitingApprovalModal from '@/modules/trade/components/TradeWaitingAp
 import { useWalletStore } from '@/stores/walletStore'
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 
-const AppDialogStub = {
-  props: { isOpen: { type: Boolean, default: false } },
+const AppModalStub = {
+  props: { modelValue: { type: Boolean, default: false }, title: String },
   template:
-    '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
+    '<div v-if="modelValue">{{ title }}<slot name="header" /><slot /></div>',
 }
 
 let pinia: Pinia
@@ -24,7 +24,7 @@ const mountModal = () =>
     props: { isOpen: true },
     global: {
       plugins: [i18n, pinia],
-      stubs: { AppDialog: AppDialogStub, AppBlockie: true },
+      stubs: { AppModal: AppModalStub, AppBlockie: true },
     },
   })
 

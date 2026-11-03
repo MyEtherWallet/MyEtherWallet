@@ -31,91 +31,82 @@
     </button>
 
     <!-- Dialog with chains list -->
-    <app-dialog
-      v-model:is-open="openDialog"
-      :title="dialogTitle"
-      class="xs:max-w-[428px] sm:mx-auto"
-      z-index-overlay="z-[200]"
-      z-index-container="z-[201]"
-      has-content-gutter
-    >
-      <template #content>
-        <div class="max-h-[95vh] sm:max-h-[500px] pb-6">
-          <transition name="fade" mode="out-in">
-            <!--PATH LIST-->
-            <div v-if="!showAddPath">
-              <!-- Seacrh -->
-              <div class="sticky top-0 bg-white z-10 pt-2">
-                <div class="mb-1 flex items-center gap-2">
-                  <app-searchbar
-                    v-model="searchInput"
-                    variant="default"
-                    class="grow"
-                    :placeholder="$t('derivation_path.search')"
-                  />
-                  <app-base-button
-                    class="!px-4 !py-2 !rounded-full !text-s-12 mr-2"
-                    @click="setShowAddPath(true)"
-                    >{{ $t('common.add') }}</app-base-button
-                  >
-                </div>
-                <app-divider class="-my-1" />
-              </div>
-              <!-- Seacrh Result-->
-              <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
-                <button
-                  v-for="(path, index) in searchResults"
-                  :key="`${path.path}-${index}-${path.label}`"
-                  class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
-                  @click="setSelectedPath(path)"
-                >
-                  <div class="flex justify-between items-center w-full">
-                    <p>{{ path.label }}</p>
-                    <p class="text-text-subtle">{{ path.path }}</p>
-                  </div>
-                </button>
-              </div>
-              <!-- Seacrh not found-->
-              <div v-else>
-                <div
-                  class="flex justify-center mt-10 h-[400px] text-text-subtle"
-                >
-                  <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
-                </div>
-              </div>
-            </div>
-            <!-- Add Path-->
-            <div v-else class="px-5">
-              <app-input
-                v-model="newPathLabel"
-                surface="alternative"
-                :label="$t('derivation_path.enter_label')"
-                is-required
-                class="mt-4"
-              />
-              <app-input
-                v-model="newPath"
-                surface="alternative"
-                :label="$t('derivation_path.enter_path')"
-                is-required
-              />
-              <div class="flex items-center flex-col justify-center mt-3">
-                <app-base-button class="!py-3">{{
-                  $t('common.add')
-                }}</app-base-button>
+    <app-modal v-model="openDialog" :title="dialogTitle">
+      <div class="max-h-[95vh] sm:max-h-[500px] pb-6 px-4 sm:px-6">
+        <transition name="fade" mode="out-in">
+          <!--PATH LIST-->
+          <div v-if="!showAddPath">
+            <!-- Seacrh -->
+            <div class="sticky top-0 bg-white z-10 pt-2">
+              <div class="mb-1 flex items-center gap-2">
+                <app-searchbar
+                  v-model="searchInput"
+                  variant="default"
+                  class="grow"
+                  :placeholder="$t('derivation_path.search')"
+                />
                 <app-base-button
-                  type="link"
-                  size="large"
-                  class="text-text-brand mt-4"
-                  @click="setShowAddPath(false)"
-                  >{{ $t('common.cancel') }}</app-base-button
+                  class="!px-4 !py-2 !rounded-full !text-s-12 mr-2"
+                  @click="setShowAddPath(true)"
+                  >{{ $t('common.add') }}</app-base-button
                 >
               </div>
+              <app-divider class="-my-1" />
             </div>
-          </transition>
-        </div>
-      </template>
-    </app-dialog>
+            <!-- Seacrh Result-->
+            <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
+              <button
+                v-for="(path, index) in searchResults"
+                :key="`${path.path}-${index}-${path.label}`"
+                class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
+                @click="setSelectedPath(path)"
+              >
+                <div class="flex justify-between items-center w-full">
+                  <p>{{ path.label }}</p>
+                  <p class="text-text-subtle">{{ path.path }}</p>
+                </div>
+              </button>
+            </div>
+            <!-- Seacrh not found-->
+            <div v-else>
+              <div
+                class="flex justify-center mt-10 h-[400px] text-text-subtle"
+              >
+                <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
+              </div>
+            </div>
+          </div>
+          <!-- Add Path-->
+          <div v-else class="px-5">
+            <app-input
+              v-model="newPathLabel"
+              surface="alternative"
+              :label="$t('derivation_path.enter_label')"
+              is-required
+              class="mt-4"
+            />
+            <app-input
+              v-model="newPath"
+              surface="alternative"
+              :label="$t('derivation_path.enter_path')"
+              is-required
+            />
+            <div class="flex items-center flex-col justify-center mt-3">
+              <app-base-button class="!py-3">{{
+                $t('common.add')
+              }}</app-base-button>
+              <app-base-button
+                type="link"
+                size="large"
+                class="text-text-brand mt-4"
+                @click="setShowAddPath(false)"
+                >{{ $t('common.cancel') }}</app-base-button
+              >
+            </div>
+          </div>
+        </transition>
+      </div>
+    </app-modal>
   </div>
 </template>
 
@@ -124,7 +115,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'

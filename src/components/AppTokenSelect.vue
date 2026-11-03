@@ -37,13 +37,8 @@
       </div>
     </div>
   </button>
-  <app-dialog
-    v-model:is-open="showAllTokens"
-    class="w-full sm:w-[460px] sm:mx-auto"
-    :title="$t('select_token.title')"
-    has-content-gutter
-  >
-    <template #content>
+  <app-modal v-model="showAllTokens" :title="$t('select_token.title')">
+    <div class="px-4 sm:px-6">
       <div
         class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] mb-6 overflow-y-auto mew-scrollbar px-1"
       >
@@ -203,8 +198,8 @@
           </div>
         </div>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -215,7 +210,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from './AppSearchbar.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'

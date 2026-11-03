@@ -47,9 +47,7 @@ describe('AppContentGroup', () => {
     })
     expect(dark.get(title()).classes()).toContain('text-text-inverted')
     expect(dark.get(title()).classes()).not.toContain('text-text-default')
-    expect(dark.get(description()).classes()).toContain(
-      'text-text-inverted-subtle',
-    )
+    expect(dark.get(description()).classes()).toContain('text-text-inverted')
   })
 
   it('size "m" uses label/base title and text/sm description', () => {
@@ -127,6 +125,22 @@ describe('AppContentGroup', () => {
     expect(rootClasses).not.toContain('items-start')
   })
 
+  it('align "center" centres both lines (Modal header)', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'T', description: 'D', align: 'center' },
+      slots: { 'title-icon': '<svg />' },
+    })
+    const rootClasses = wrapper.get('[data-testid="cg-root"]').classes()
+    expect(rootClasses).toContain('text-center')
+    expect(rootClasses).not.toContain('items-center')
+    expect(wrapper.get(title()).element.parentElement!.classList).toContain(
+      'justify-center',
+    )
+    expect(
+      wrapper.get(description()).element.parentElement!.classList,
+    ).toContain('justify-center')
+  })
+
   it('title is single-line (truncates) by default; description wraps', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'T', description: 'D' },
@@ -159,6 +173,35 @@ describe('AppContentGroup', () => {
       expect.arrayContaining(['h-3', 'w-[79px]']),
     )
     expect(wrapper.find(title()).exists()).toBe(false)
+  })
+
+  it('loading rows keep the line heights, so the group does not grow', () => {
+    // 12px bars: py-[5px] makes a 22px row, py-1 a 20px one (the M text/sm line).
+    // Rows are flex so the bar never sits in a line box: an inline-block bar
+    // takes the inherited line-height (~24px) and stretches every row.
+    const mountLoading = (
+      props: { size?: 'm' | 'l'; inverted?: boolean; align?: 'right' } = {},
+    ) =>
+      mount(AppContentGroup, {
+        props: { title: 'T', description: 'D', loading: true, ...props },
+      })
+    const rows = (props?: Parameters<typeof mountLoading>[0]) =>
+      mountLoading(props)
+        .findAll('[data-testid="cg-root"] > div')
+        .map(row => row.classes())
+    const tall = expect.arrayContaining(['flex', 'py-[5px]'])
+    const short = expect.arrayContaining(['flex', 'py-1'])
+
+    expect(rows()).toEqual([tall, short])
+    expect(rows({ inverted: true })).toEqual([short, tall])
+    expect(rows({ size: 'l' })).toEqual([tall, tall])
+    expect(rows({ align: 'right' })).toEqual([
+      expect.arrayContaining(['justify-end']),
+      expect.arrayContaining(['justify-end']),
+    ])
+    for (const bar of mountLoading().findAll('[data-testid="skeleton"]')) {
+      expect(bar.classes()).not.toContain('inline-block')
+    }
   })
 
   it('passes size "xs" to the icon/avatar slots for every group size', () => {

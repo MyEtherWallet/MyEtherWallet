@@ -1,5 +1,6 @@
 export type ContentGroupSize = 'm' | 'l'
-export type ContentGroupAlign = 'left' | 'right'
+/** `center` is the Modal header layout. */
+export type ContentGroupAlign = 'left' | 'center' | 'right'
 /** Which surface the group sits on — picks the text colours. */
 export type ContentGroupTone = 'default' | 'inverse'
 
@@ -27,7 +28,8 @@ export const TONE_EMPHASIS_CLASS: Record<ContentGroupTone, string> = {
   inverse: 'text-text-inverted',
 }
 
+// Figma's dark surfaces (Toast) keep the description at full text/inverted.
 export const TONE_SUPPORTING_CLASS: Record<ContentGroupTone, string> = {
   default: 'text-text-subtle',
-  inverse: 'text-text-inverted-subtle',
+  inverse: 'text-text-inverted',
 }

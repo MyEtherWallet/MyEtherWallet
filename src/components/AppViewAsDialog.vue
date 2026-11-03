@@ -12,7 +12,7 @@
     >
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 bg-black/40 overscroll-none overflow-hidden min-w-80 min-h-lvh mt-[68px] sm:mt-[76px]"
+        class="cursor-pointer fixed inset-0 bg-black/40 overscroll-none overflow-hidden min-w-80 min-h-lvh mt-19"
         :class="zIndexOverlay"
         @click="closeDialog()"
         aria-hidden
@@ -21,11 +21,8 @@
     <!-- Dialog Container -->
     <div
       v-if="isOpen"
-      :class="[
-        isOpenSideMenu ? 'mr-[455px]' : 'mr-20',
-        zIndexContainer,
-      ]"
-      class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none overflow-y-auto scrollbar-hide no-scrollbar mt-[69px] sm:mt-[77px]"
+      :class="[isOpenSideMenu ? 'mr-[455px]' : 'mr-20', zIndexContainer]"
+      class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none overflow-y-auto scrollbar-hide no-scrollbar mt-[77px]"
       @click="closeDialog()"
     >
       <transition
@@ -39,7 +36,7 @@
         <div
           v-if="isOpen"
           :class="[
-            'cursor-default  w-[100%] max-w-[1384px] bg-white rounded-l-16 lg:rounded-l-32 h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] overflow-y-auto mew-scrollbar overflow-hidden relative',
+            'cursor-default  w-[100%] max-w-[1384px] bg-white rounded-l-16 lg:rounded-l-32 h-[calc(100vh-77px)] overflow-y-auto mew-scrollbar overflow-hidden relative',
             containerClass,
           ]"
           @click.stop

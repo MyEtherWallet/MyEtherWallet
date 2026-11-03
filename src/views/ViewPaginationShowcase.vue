@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // Preview for the Pagination design-library component (MEW-2447) at
-// /dev/pagination. Matches Figma set 1074:3108; each variant on its surface.
-// The Mobile breakpoint follows the viewport (below md), so resize the window
-// to see it.
+// /dev/pagination. Matches Figma set 1074:3108: each variant on its surface,
+// in both breakpoints. Breakpoint is a container query on the pager's width
+// (48rem), so the Mobile cells sit in a narrow wrapper; the Default cells need
+// a window of ~1120px or more to clear 48rem next to the dev sidebar.
 import { computed, ref } from 'vue'
 import AppPagination from '@/components/pagination/AppPagination.vue'
 import type { PaginationVariant } from '@/components/pagination/types'
@@ -20,6 +21,10 @@ const VARIANTS: { variant: PaginationVariant; label: string; page: string }[] =
       page: 'bg-background-alternative',
     },
   ]
+const BREAKPOINTS = [
+  { name: 'Default', width: 'w-full' },
+  { name: 'Mobile', width: 'max-w-sm' },
+]
 
 const PER_PAGE = 3
 const ITEMS = Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`)
@@ -49,12 +54,23 @@ const customLabel = (p: number, total: number) => `${p} / ${total}`
 
     <section v-for="v in VARIANTS" :key="v.variant" class="flex flex-col gap-4">
       <h2 class="text-label-base">{{ v.label }}</h2>
-      <div class="rounded-12 border border-border-default p-6" :class="v.page">
-        <AppPagination
-          v-model="variantPages[v.variant]"
-          :total-pages="3"
-          :variant="v.variant"
-        />
+      <div
+        class="flex flex-col gap-8 rounded-12 border border-border-default p-6"
+        :class="v.page"
+      >
+        <div
+          v-for="b in BREAKPOINTS"
+          :key="b.name"
+          class="flex flex-col gap-2"
+          :class="b.width"
+        >
+          <p class="text-text-sm text-text-subtle">Breakpoint: {{ b.name }}</p>
+          <AppPagination
+            v-model="variantPages[v.variant]"
+            :total-pages="3"
+            :variant="v.variant"
+          />
+        </div>
       </div>
     </section>
 

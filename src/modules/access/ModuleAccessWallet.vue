@@ -1,50 +1,32 @@
 <template>
-  <app-dialog
-    v-model:is-open="bigDialogOpen"
+  <app-modal
+    v-model="bigDialogOpen"
+    :title="getTitle"
+    :show-back-button="currentView !== 'default'"
     :class="[
-      'w-full max-h-[95vh]',
+      'w-full max-h-[95vh] bg-background-default',
       currentView === 'mnemonic' ||
       currentView === 'keystore' ||
       currentView === 'private_key'
         ? 'max-w-[800px]'
         : '!max-w-[900px]',
     ]"
-    bg="bg-background-default"
-    has-title-underline
-    @close-dialog="closeAccess()"
+    @close="closeAccess()"
+    @back="accessStore.setCurrentView('default')"
   >
-    <template #title>
-      <div class="flex w-full flex-col sm:flex-row px-4 xs:px-6">
-        <div class="w-8 sm:ml-[-12px]">
-          <app-btn-icon
-            v-if="currentView !== 'default'"
-            size="l"
-            :label="$t('access_wallet.back_to_connect_options')"
-            class="mr-auto mt-4"
-            @click="accessStore.setCurrentView('default')"
-          >
-            <AppIcon name="arrow-left" size="s" />
-          </app-btn-icon>
-        </div>
-        <div
-          :class="
-            currentView === 'default'
-              ? 'mt-4 sm:items-center justify-center'
-              : 'sm:items-center justify-center'
-          "
-          class="flex flex-col w-full sm:mt-6 sm:mb-2"
-        >
-          <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
-            {{ getTitle }}
-          </h1>
-          <app-need-help
-            :title="helpLinkText"
-            help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-          />
-        </div>
+    <template #header>
+      <!-- px-8 keeps the title clear of the absolute back/close buttons. -->
+      <div class="flex flex-col w-full px-8 sm:items-center justify-center">
+        <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
+          {{ getTitle }}
+        </h1>
+        <app-need-help
+          :title="helpLinkText"
+          help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
+        />
       </div>
     </template>
-    <template #content>
+    <template #default>
       <div class="px-4 xs:px-6 pb-6">
         <div v-if="currentView === 'default'">
           <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
@@ -75,7 +57,7 @@
         <module-access-web3-wallet v-else-if="currentView === 'web3_wallet'" />
       </div>
     </template>
-  </app-dialog>
+  </app-modal>
   <!-- Overlaid step: the extension's active address is already saved. (The
        "select the intended address" prompt now lives in the address popup.) -->
   <module-access-address-saved />
@@ -85,9 +67,7 @@ import WalletsDefaultList from '@/modules/access/components/wallets_lists/Wallet
 import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'

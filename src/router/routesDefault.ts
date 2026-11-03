@@ -66,6 +66,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'banner',
+              name: 'DevBanner',
+              component: () => import('@/views/ViewBannerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'cell',
               name: 'DevCell',
               component: () => import('@/views/ViewCellShowcase.vue'),
@@ -108,6 +114,18 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'footer',
+              name: 'DevFooter',
+              component: () => import('@/views/ViewFooterShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'modal',
+              name: 'DevModal',
+              component: () => import('@/views/ViewModalShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'text-area',
               name: 'DevTextArea',
               component: () => import('@/views/ViewTextAreaShowcase.vue'),
@@ -120,15 +138,64 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'list',
+              name: 'DevList',
+              component: () => import('@/views/ViewListShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'menu-list',
+              name: 'DevMenuList',
+              component: () => import('@/views/ViewMenuListShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'navbar',
+              name: 'DevNavbar',
+              component: () => import('@/views/ViewNavbarShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'dropdown',
+              name: 'DevDropdown',
+              component: () => import('@/views/ViewDropdownShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'card',
+              name: 'DevCard',
+              component: () => import('@/views/ViewCardShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'divider',
               name: 'DevDivider',
               component: () => import('@/views/ViewDividerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'address-selector',
+              name: 'DevAddressSelector',
+              component: () =>
+                import('@/views/ViewAddressSelectorShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'toast',
+              name: 'DevToast',
+              component: () => import('@/views/ViewToastShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'navlink',
+              name: 'DevNavLink',
+              component: () => import('@/views/ViewNavLinkShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
