@@ -44,6 +44,17 @@ export const ROW_PADDING: Record<TableSize, string> = {
   s: 'px-1',
 }
 
+/**
+ * The size a row's `#avatar` slot gets: L (40px), S (24px) on mobile, a step
+ * under Figma's 32 (product call). Avatars take it as `size`; AppTokenLogo,
+ * which sizes by class, takes `v-bind="TOKEN_LOGO_SIZE[size]"`.
+ */
+export const TOKEN_LOGO_SIZE = {
+  l: { width: 'w-10', height: 'h-10' },
+  s: { width: 'w-6', height: 'h-6' },
+} as const
+export type TableAvatarSize = keyof typeof TOKEN_LOGO_SIZE
+
 export interface TableContext {
   size: Readonly<Ref<TableSize>>
   /** Data column keys rendered at the current size. */

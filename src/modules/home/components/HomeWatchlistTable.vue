@@ -11,7 +11,7 @@ import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
-import type { TableColumn } from '@/components/table/types'
+import { type TableColumn, TOKEN_LOGO_SIZE } from '@/components/table/types'
 import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
 import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -260,8 +260,7 @@ const actionCall = (row: WatchlistRow) => {
               :url="row.logoUrl"
               :symbol="row.symbol"
               :is-stock="row.isStock"
-              :width="avatarSize === 'm' ? 'w-8' : 'w-10'"
-              :height="avatarSize === 'm' ? 'h-8' : 'h-10'"
+              v-bind="TOKEN_LOGO_SIZE[avatarSize]"
               no-shadow
             />
           </template>

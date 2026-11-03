@@ -7,13 +7,14 @@ import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue
 import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppTableCell from './AppTableCell.vue'
 import { BTN_ICON_SIZE } from '@/components/btnIconTypes'
-import { AVATAR_SIZES, type AvatarSize } from '@/components/avatar/types'
+import { AVATAR_SIZES } from '@/components/avatar/types'
 import type { CellSurface } from '@/components/cell/cellSizes'
 import {
   ROW_PADDING,
   TABLE_CONTEXT,
   TABLE_ROW_LOADING,
   defaultTableContext,
+  type TableAvatarSize,
 } from './types'
 
 /**
@@ -82,7 +83,9 @@ const surface = computed<CellSurface>(() =>
 const loadingButtonCount = computed(
   () => props.loadingButtons ?? (size.value === 's' ? 0 : 1),
 )
-const avatarSize = computed<AvatarSize>(() => (size.value === 's' ? 'm' : 'l'))
+const avatarSize = computed<TableAvatarSize>(() =>
+  size.value === 's' ? 's' : 'l',
+)
 // Same box as the avatar it stands in for (AppCell does the same).
 const avatarBox = computed(() => {
   const px = `${AVATAR_SIZES[avatarSize.value].box}px`

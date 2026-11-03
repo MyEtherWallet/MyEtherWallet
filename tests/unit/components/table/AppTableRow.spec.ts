@@ -70,7 +70,7 @@ describe('AppTableRow', () => {
     expect(w.text()).toContain('USD Coin')
   })
 
-  it('passes the avatar size: L at sizes L/M, M at size S', () => {
+  it('passes the avatar size: L at sizes L/M, S (24px) on mobile', () => {
     const avatar = { avatar: '<i>{{ params.size }}</i>' }
     expect(factory({ slots: avatar }).get('i').text()).toBe('l')
     expect(
@@ -82,7 +82,7 @@ describe('AppTableRow', () => {
       factory({ slots: avatar, ctx: { size: 's' } })
         .get('i')
         .text(),
-    ).toBe('m')
+    ).toBe('s')
   })
 
   it('is not focusable without a click listener', () => {
@@ -279,7 +279,7 @@ describe('AppTableRow', () => {
         .findAll('[role="cell"]')[0]
         .findAll('[data-testid="skeleton"]')
     expect(avatar('l')[0].attributes('style')).toContain('width: 40px')
-    expect(avatar('s')[0].attributes('style')).toContain('width: 32px')
+    expect(avatar('s')[0].attributes('style')).toContain('width: 24px')
     // avatar + title + description bars
     expect(avatar('l')).toHaveLength(3)
     expect(

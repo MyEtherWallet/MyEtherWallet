@@ -93,8 +93,7 @@
                 :url="token.logoUrl"
                 :symbol="token.symbol"
                 :is-stock="token.ondo !== null"
-                :width="avatarSize === 'l' ? 'w-10' : 'w-8'"
-                :height="avatarSize === 'l' ? 'h-10' : 'h-8'"
+                v-bind="TOKEN_LOGO_SIZE[avatarSize]"
                 no-shadow
               />
             </template>
@@ -259,7 +258,11 @@ import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
 import AppTable from '@/components/table/AppTable.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
-import type { TableColumn, TableSort } from '@/components/table/types'
+import {
+  type TableColumn,
+  type TableSort,
+  TOKEN_LOGO_SIZE,
+} from '@/components/table/types'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
