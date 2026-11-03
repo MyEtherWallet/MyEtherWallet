@@ -140,12 +140,26 @@ describe('ModuleAccessWallet header', () => {
     const content = (w: VueWrapper) => w.get('[data-testid="access-content"]')
     let w = mountAt('default')
     expect(content(w).classes()).toContain('overflow-y-auto')
-    expect(content(w).classes().some(c => c.startsWith('max-h-'))).toBe(true)
+    expect(
+      content(w)
+        .classes()
+        .some(c => c.startsWith('max-h-')),
+    ).toBe(true)
     w.unmount()
+    // The address steps too, so only their address list shrinks and scrolls.
+    for (const view of ['mnemonic', 'ledger', 'trezor'] as const) {
+      w = mountAt(view)
+      expect(content(w).classes()).toContain('overflow-y-auto')
+      w.unmount()
+    }
     // Other steps scroll in the dialog itself, which their sticky footers need.
     w = mountAt('keystore')
     expect(content(w).classes()).not.toContain('overflow-y-auto')
-    expect(content(w).classes().some(c => c.startsWith('max-h-'))).toBe(false)
+    expect(
+      content(w)
+        .classes()
+        .some(c => c.startsWith('max-h-')),
+    ).toBe(false)
   })
 
   it('goes back from sign-up to the chooser', async () => {

@@ -217,7 +217,8 @@ describe('ModuleAccessMnemonic', () => {
     await toStep2(w)
     const scroll = w.get('[data-testid="address-scroll"]')
     expect(scroll.classes()).toContain('overflow-y-auto')
-    expect(scroll.classes().some(c => c.startsWith('max-h-'))).toBe(true)
+    // It shrinks to whatever the capped dialog leaves, instead of a fixed max-h.
+    expect(scroll.classes()).toContain('min-h-0')
     expect(scroll.findAll('[data-testid="address-row"]')).toHaveLength(5)
     expect(scroll.find('[data-testid="show-more"]').exists()).toBe(true)
     expect(scroll.find('[data-testid="balances-error"]').exists()).toBe(false)

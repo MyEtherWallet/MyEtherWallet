@@ -39,15 +39,16 @@
           transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
         }"
       >
-        <!-- The chooser is capped at the room left under the title (the modal's
-             max height above minus its 80px header), so only the wallet grid
-             shrinks and scrolls. If even its minimum doesn't fit, this scrolls. -->
+        <!-- The chooser and the address steps are capped at the room left under
+             the title (the modal's max height above minus its 80px header), so
+             only the wallet grid / address list shrinks and scrolls. If even its
+             minimum doesn't fit, this scrolls. -->
         <div
           ref="contentRef"
           data-testid="access-content"
           class="flex flex-col px-4 pb-4 sm:px-6 sm:pb-6"
           :class="
-            currentView === 'default' &&
+            isCappedView &&
             'mew-scrollbar overflow-y-auto max-h-[calc(90dvh_-_112px)] sm:max-h-[calc(80vh_-_112px)]'
           "
         >
@@ -193,6 +194,10 @@ const NEW_VIEWS: WalletView[] = [
   'trezor',
 ]
 const isNewView = computed(() => NEW_VIEWS.includes(currentView.value))
+// Views with a list that shrinks to fit (see the content wrapper). The others
+// scroll in the dialog itself, which their sticky footers need.
+const CAPPED_VIEWS: WalletView[] = ['default', 'mnemonic', 'ledger', 'trezor']
+const isCappedView = computed(() => CAPPED_VIEWS.includes(currentView.value))
 
 // Every redesigned step keeps the chooser's width so the modal doesn't jump.
 const dialogWidth = computed(() =>

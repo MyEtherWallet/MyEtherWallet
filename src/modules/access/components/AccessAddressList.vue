@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col gap-1">
+  <div class="flex min-h-0 flex-col gap-1">
     <!-- Only the addresses scroll; the step bar, pickers, error, Connect and the help
-         footer stay put. The cap is the dialog's max height minus those fixed parts
-         (measured 356px from sm with the balances error; pickers stack below xs). -->
+         footer stay put. The access dialog caps its content under the title, and
+         min-h-0 (here and on the step's root) lets this list take the shrink. -->
     <div
       data-testid="address-scroll"
-      class="mew-scrollbar -mx-1 flex flex-col gap-1 overflow-y-auto px-1 max-h-[calc(95vh-440px)] xs:max-h-[calc(95vh-350px)] sm:max-h-[calc(90vh-430px)]"
+      class="mew-scrollbar -mx-1 flex min-h-0 flex-col gap-1 overflow-y-auto px-1"
     >
       <template v-if="isLoading && !entries.length">
         <div

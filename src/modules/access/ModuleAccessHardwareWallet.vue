@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-5">
+  <div class="flex min-h-0 flex-col gap-5">
     <AccessStepIndicator :step="accessStep" />
 
     <!-- Step 1: plug in / pair the device -->
