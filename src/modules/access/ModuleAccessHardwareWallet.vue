@@ -77,8 +77,12 @@
             <span class="truncate">{{ item?.path }}</span>
           </template>
           <template #item="{ item }">
-            <span class="grow font-semibold">{{ item.label }}</span>
-            <span class="shrink-0 text-text-subtle">{{ item.path }}</span>
+            <span class="min-w-0 grow text-sm font-semibold leading-tight">
+              {{ item.label }}
+            </span>
+            <span class="shrink-0 text-sm text-text-subtle">{{
+              item.path
+            }}</span>
           </template>
         </AccessDropdown>
       </div>
