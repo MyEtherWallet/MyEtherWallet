@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import { createPinia } from 'pinia'
 
 const VALID_PHRASE =
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about'
@@ -42,6 +43,7 @@ const selectedDerivation = ref({
   path: "m/44'/60'/0'/0",
   type: 'EVM',
 })
+const customDerivations = ref<(typeof selectedDerivation.value)[]>([])
 
 vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({
@@ -54,8 +56,12 @@ vi.mock('@/stores/accessStore', () => ({
 vi.mock('@/stores/derivationStore', () => ({
   useDerivationStore: () => ({
     selectedDerivation,
+    customDerivations,
     setSelectedDerivation: (path: typeof selectedDerivation.value) => {
       selectedDerivation.value = path
+    },
+    addCustomDerivation: (path: typeof selectedDerivation.value) => {
+      customDerivations.value.push(path)
     },
   }),
 }))
@@ -139,7 +145,7 @@ const mountIt = () => {
   wrapper = mount(ModuleAccessMnemonic, {
     attachTo: document.body,
     global: {
-      plugins: [i18n],
+      plugins: [i18n, createPinia()],
       stubs: { AccessHelpFooter: true, teleport: true },
     },
   })
@@ -160,6 +166,7 @@ beforeEach(() => {
     path: "m/44'/60'/0'/0",
     type: 'EVM',
   }
+  customDerivations.value = []
   built.evm.length = 0
   built.btc.length = 0
   Object.values(h).forEach(fn => fn.mockReset())
@@ -321,6 +328,42 @@ describe('ModuleAccessMnemonic', () => {
     expect(
       w.get('[data-testid="phrase-connect"]').attributes('disabled'),
     ).toBeUndefined()
+  })
+
+  it('adds a custom path, selects it and derives with it', async () => {
+    vi.useFakeTimers()
+    const w = mountIt()
+    await toStep2(w)
+    await w.get('[data-testid="path-trigger"]').trigger('click')
+    await w.get('[data-testid="path-add"]').trigger('click')
+    const [label, path] = w.findAll('[role="dialog"] input')
+    await label.setValue('Mine')
+    await path.setValue("m/44'/60'/7'/0")
+    await w
+      .findAll('footer button')
+      .find(b => b.text() === 'common.add')!
+      .trigger('click')
+
+    const mine = { label: 'Mine', path: "m/44'/60'/7'/0", type: 'EVM' }
+    expect(customDerivations.value).toEqual([mine])
+    expect(selectedDerivation.value).toEqual(mine)
+    await vi.advanceTimersByTimeAsync(600)
+    await flushPromises()
+    expect(built.evm.at(-1)).toMatchObject({ basePath: mine.path })
+  })
+
+  it('lists custom paths only for their own chain family', async () => {
+    customDerivations.value = [
+      { label: 'Mine', path: "m/44'/60'/7'/0", type: 'EVM' },
+      { label: 'Old BTC', path: "m/44'/0'/0'/0", type: 'BITCOIN' },
+    ]
+    const w = mountIt()
+    await toStep2(w)
+    await w.get('[data-testid="path-trigger"]').trigger('click')
+    const labels = w
+      .findAll('[data-testid="path-option"]')
+      .map(o => o.find('span').text())
+    expect(labels).toEqual(['Ethereum', 'Ledger', 'Mine'])
   })
 
   it('rebuilds the wallet for the new chain id when the EVM network changes', async () => {

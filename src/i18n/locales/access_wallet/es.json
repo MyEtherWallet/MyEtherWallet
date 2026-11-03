@@ -150,10 +150,12 @@
   "derivation_path": {
     "title": "Ruta de derivación",
     "select_path": "Seleccionar ruta de derivación",
+    "add_path": "Agregar ruta",
+    "enter_label": "Ingresa la etiqueta",
+    "enter_path": "Ingresa la ruta",
     "search": "Buscar por etiqueta o ruta",
     "not_found": "No se encontraron rutas de derivación:",
     "label_exists": "¡La etiqueta de derivación ya existe!",
-    "added_successfully": "¡Ruta de derivación personalizada añadida correctamente!",
     "invalid_path": "¡Ruta de derivación no válida!"
   },
   "error_connecting": "No se pudo conectar. Revisa tu billetera para ver los errores"

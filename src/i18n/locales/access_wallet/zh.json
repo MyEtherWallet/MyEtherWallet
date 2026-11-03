@@ -150,10 +150,12 @@
   "derivation_path": {
     "title": "派生路径",
     "select_path": "选择派生路径",
+    "add_path": "添加路径",
+    "enter_label": "输入标签",
+    "enter_path": "输入路径",
     "search": "按标签或路径搜索",
     "not_found": "未找到派生路径：",
     "label_exists": "派生标签已存在！",
-    "added_successfully": "自定义派生路径添加成功！",
     "invalid_path": "无效的派生路径！"
   },
   "error_connecting": "连接失败。请检查您的钱包是否有错误"

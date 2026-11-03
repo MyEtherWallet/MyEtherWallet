@@ -151,10 +151,12 @@
   "derivation_path": {
     "title": "Derivation Path",
     "select_path": "Select Derivation Path",
+    "add_path": "Add Path",
+    "enter_label": "Enter label",
+    "enter_path": "Enter path",
     "search": "Search by label or path",
     "not_found": "No derivation paths found:",
     "label_exists": "Derivation label already exists!",
-    "added_successfully": "Custom Derivation Path added successfully!",
     "invalid_path": "Invalid Derivation Path!"
   },
   "error_connecting": "Failed to connect. Check your wallet for errors"

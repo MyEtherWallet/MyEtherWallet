@@ -72,28 +72,13 @@
             <span class="text-sm">{{ item.nameLong }}</span>
           </template>
         </AccessDropdown>
-        <AccessDropdown
-          :label="$t('access_wallet.advanced.derivation_path')"
-          :items="paths"
+        <AccessDerivationPath
+          :paths="paths"
           :model-value="selectedDerivation"
-          :search-placeholder="$t('derivation_path.search')"
-          :empty-text="$t('access_wallet.advanced.no_paths')"
-          :item-key="pathKey"
-          :search-text="pathSearchText"
+          allow-custom
           @update:model-value="setSelectedDerivation"
-        >
-          <template #selected="{ item }">
-            <span class="truncate">{{ item?.path }}</span>
-          </template>
-          <template #item="{ item }">
-            <span class="min-w-0 grow text-sm font-semibold leading-tight">
-              {{ item.label }}
-            </span>
-            <span class="shrink-0 text-sm text-text-subtle">{{
-              item.path
-            }}</span>
-          </template>
-        </AccessDropdown>
+          @add="addPath"
+        />
       </div>
       <!-- While a chain / path change waits for the debounced re-derive, the rows
            still belong to the old chain, so show skeletons instead of the old
@@ -134,6 +119,7 @@ import AppInput from '@/components/AppInput.vue'
 import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import AccessBanner from './components/AccessBanner.vue'
+import AccessDerivationPath from './components/AccessDerivationPath.vue'
 import AccessDropdown from './components/AccessDropdown.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'
 import AccessStepIndicator from './components/AccessStepIndicator.vue'
@@ -174,8 +160,8 @@ const accessStore = useAccessStore()
 const { selectedChain, accessStep } = storeToRefs(accessStore)
 const { chains } = storeToRefs(useChainsStore())
 const derivationStore = useDerivationStore()
-const { selectedDerivation } = storeToRefs(derivationStore)
-const { setSelectedDerivation } = derivationStore
+const { selectedDerivation, customDerivations } = storeToRefs(derivationStore)
+const { setSelectedDerivation, addCustomDerivation } = derivationStore
 const { setSelectedNetwork } = useGlobalStore()
 const { setWallet } = useWalletStore()
 const { addWallet } = useRecentWalletsStore()
@@ -216,15 +202,23 @@ const mnemonicChains = computed(() =>
 const chainKey = (chain: Chain) => chain.name
 const chainSearchText = (chain: Chain) => chain.nameLong
 
-const paths = computed<DerivationPath[]>(() =>
-  isBitcoin.value
+const paths = computed<DerivationPath[]>(() => [
+  ...(isBitcoin.value
     ? MnemonicToBitcoinWallet.getSupportedPaths(
         selectedChain.value?.name ?? 'BITCOIN',
       )
-    : Bip44Paths[WALLET_TYPES.MNEMONIC],
-)
-const pathKey = (path: DerivationPath) => `${path.label}:${path.path}`
-const pathSearchText = (path: DerivationPath) => `${path.label} ${path.path}`
+    : Bip44Paths[WALLET_TYPES.MNEMONIC]),
+  ...customDerivations.value.filter(
+    path => path.type === selectedChain.value?.type,
+  ),
+])
+
+// A custom path belongs to the chain family it was added on.
+const addPath = ({ label, path }: { label: string; path: string }) => {
+  const custom = { label, path, type: selectedChain.value?.type ?? 'EVM' }
+  addCustomDerivation(custom)
+  setSelectedDerivation(custom)
+}
 
 // A stored path from another chain family can't derive on this chain: fall back
 // to the chain's default (Ethereum's for EVM, the first supported one for Bitcoin).

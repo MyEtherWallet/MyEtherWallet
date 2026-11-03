@@ -63,28 +63,11 @@
             <span class="text-sm">{{ item.nameLong }}</span>
           </template>
         </AccessDropdown>
-        <AccessDropdown
-          :label="$t('access_wallet.advanced.derivation_path')"
-          :items="paths"
+        <AccessDerivationPath
+          :paths="paths"
           :model-value="selectedDerivation"
-          :search-placeholder="$t('derivation_path.search')"
-          :empty-text="$t('access_wallet.advanced.no_paths')"
-          :item-key="pathKey"
-          :search-text="pathSearchText"
           @update:model-value="setSelectedDerivation"
-        >
-          <template #selected="{ item }">
-            <span class="truncate">{{ item?.path }}</span>
-          </template>
-          <template #item="{ item }">
-            <span class="min-w-0 grow text-sm font-semibold leading-tight">
-              {{ item.label }}
-            </span>
-            <span class="shrink-0 text-sm text-text-subtle">{{
-              item.path
-            }}</span>
-          </template>
-        </AccessDropdown>
+        />
       </div>
       <AccessAddressList
         v-model="selectedIndex"
@@ -126,6 +109,7 @@ import type { ComputedRef } from 'vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AccessStepIndicator from './components/AccessStepIndicator.vue'
+import AccessDerivationPath from './components/AccessDerivationPath.vue'
 import AccessDropdown from './components/AccessDropdown.vue'
 import AccessAddressList from './components/AccessAddressList.vue'
 import AccessHelpFooter from './components/AccessHelpFooter.vue'
@@ -221,8 +205,6 @@ const updateChain = (chain: Chain) => {
 }
 const chainKey = (chain: Chain) => chain.name
 const chainSearchText = (chain: Chain) => chain.nameLong
-const pathKey = (path: PathType) => `${path.label}:${path.path}`
-const pathSearchText = (path: PathType) => `${path.label} ${path.path}`
 
 /**------------------------
  * Derivation Path

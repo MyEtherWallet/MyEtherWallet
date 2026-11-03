@@ -161,6 +161,7 @@ const stubs = {
     template: '<button @click="$emit(\'click\')"><slot /></button>',
   },
   AccessDropdown: { template: '<div />' },
+  AccessDerivationPath: { template: '<div />' },
   AccessAddressList: { template: '<div />' },
 }
 

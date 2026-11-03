@@ -219,6 +219,7 @@ const AccessAddressList = {
 const stubs = {
   AccessAddressList,
   AccessDropdown: { template: '<div />' },
+  AccessDerivationPath: { template: '<div />' },
   // Native click falls through to the root <button>; do NOT also $emit('click')
   // or the parent handler runs twice.
   AppBaseButton: {
