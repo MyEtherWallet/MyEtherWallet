@@ -54,6 +54,17 @@ describe('AppTableWrapper', () => {
     )
   })
 
+  it('insets the heading and toolbar 8 more at S, back to 16 like Figma', () => {
+    const inset = (size: string) => {
+      const w = factory({ size, search: '' })
+      return ['table-heading', 'table-toolbar'].map(t =>
+        w.get(`[data-test="${t}"]`).classes().includes('px-2'),
+      )
+    }
+    expect(inset('s')).toEqual([true, true])
+    expect(inset('l')).toEqual([false, false])
+  })
+
   it('hands its size to the table inside', () => {
     expect(factory({ size: 'm' }).get('[data-test="probe"]').text()).toBe('m')
   })

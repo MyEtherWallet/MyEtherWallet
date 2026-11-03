@@ -54,11 +54,15 @@ provide(TABLE_WRAPPER, { size, titleId })
     :class="[
       'flex w-full flex-col gap-6 rounded-16 bg-background-alternative',
       // Mobile keeps 16 top/bottom but only 8 on the sides (product call;
-      // Figma has 16), so the rows get the width.
+      // Figma has 16), so the rows get the width. The heading and toolbar
+      // add 8 back below, so only the table runs wider.
       size === 's' ? 'px-2 py-4' : 'p-6',
     ]"
   >
-    <div data-test="table-heading" class="flex items-center gap-6">
+    <div
+      data-test="table-heading"
+      :class="['flex items-center gap-6', { 'px-2': size === 's' }]"
+    >
       <div class="flex min-w-0 flex-1 flex-col gap-1">
         <component
           :is="titleTag"
@@ -86,7 +90,7 @@ provide(TABLE_WRAPPER, { size, titleId })
         (size !== 's' && $slots.action)
       "
       data-test="table-toolbar"
-      class="flex items-center gap-2"
+      :class="['flex items-center gap-2', { 'px-2': size === 's' }]"
     >
       <div
         v-if="search !== undefined || $slots.filters"
