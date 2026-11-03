@@ -107,7 +107,7 @@
             </div>
             <!-- Only the list scrolls; search and Add stay put above it. -->
             <ul
-              class="mew-scrollbar flex max-h-[min(280px,45dvh)] flex-col gap-1 overflow-y-auto"
+              class="mew-scrollbar flex max-h-[min(360px,55dvh)] flex-col gap-1 overflow-y-auto"
               role="listbox"
               :aria-label="t('access_wallet.advanced.derivation_path')"
             >
