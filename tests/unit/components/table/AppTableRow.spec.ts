@@ -226,6 +226,22 @@ describe('AppTableRow', () => {
     expect(box.classes()).not.toContain('group-hover:visible')
   })
 
+  it('gives the star a 40px tap box on mobile, icon unchanged', () => {
+    const star = (size: 'l' | 's') =>
+      factory({ props: { watchlisted: false }, ctx: { start: true, size } })
+        .getComponent(AppCellWatchlistToggle)
+        .classes()
+    expect(star('s')).toContain('size-10!')
+    expect(star('l')).not.toContain('size-10!')
+    const placeholder = factory({
+      props: { loading: true },
+      ctx: { start: true, watchlist: true, size: 's' },
+    })
+      .findAll('[role="cell"]')[0]
+      .get('span')
+    expect(placeholder.classes()).toContain('size-10')
+  })
+
   it('keeps the drag handle visible on touch screens', () => {
     const handle = factory({ ctx: { start: true, reorderable: true } }).get(
       '[data-table-handle]',

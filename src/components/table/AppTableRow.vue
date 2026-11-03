@@ -125,15 +125,21 @@ const activate = (e: KeyboardEvent) => {
       >
         <AppIcon name="bars-2" size="xxs" />
       </span>
+      <!-- Figma's star is a 22px Button Icon S. On mobile its tap box grows
+           to 40px (the icon stays 16px); `!` beats the Button Icon's own box. -->
       <AppCellWatchlistToggle
         v-if="watchlisted !== undefined"
         :model-value="watchlisted"
         :loading="watchlistLoading"
+        :class="{ 'size-10!': size === 's' }"
         @update:model-value="emit('update:watchlisted', $event)"
       />
       <span
         v-else-if="loading && watchlist"
-        :class="['flex items-center justify-center', BTN_ICON_SIZE.s.box]"
+        :class="[
+          'flex items-center justify-center',
+          size === 's' ? 'size-10' : BTN_ICON_SIZE.s.box,
+        ]"
       >
         <AppSkeleton shape="circle" class="size-4" />
       </span>
