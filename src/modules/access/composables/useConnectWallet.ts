@@ -71,7 +71,9 @@ export const useConnectWallet = () => {
     }
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
-    setWallet(wallet, config.name, config.type[0])
+    // Await so a getAddress()/restriction failure reaches the caller's catch
+    // instead of closing the dialog with no wallet (MEW-2185).
+    await setWallet(wallet, config.name, config.type[0])
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
@@ -147,10 +149,10 @@ export const useConnectWallet = () => {
 
       unisatWallet
         .connect()
-        .then(res => {
+        .then(async res => {
           if (res) {
             try {
-              void _storeWallet(unisatWallet, wallet)
+              await _storeWallet(unisatWallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -300,10 +302,10 @@ export const useConnectWallet = () => {
     )
     return wagWallet
       .connect()
-      .then(res => {
+      .then(async res => {
         if (res) {
           try {
-            void _storeWallet(wagWallet, wallet)
+            await _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
               text: t('access_wallet.toast.could_not_connect'),

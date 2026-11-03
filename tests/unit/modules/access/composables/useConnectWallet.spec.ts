@@ -13,6 +13,7 @@ import {
 const addToastMessage = vi.fn()
 const captureExceptionSpy = vi.fn()
 const wagmiConstructorSpy = vi.fn()
+const setWalletSpy = vi.fn()
 
 // generateConfig returns a wagmi config whose connector list is controllable
 // per-test. An empty list reproduces the "no matching connector" scenario.
@@ -52,6 +53,9 @@ vi.mock('@/providers/ethereum/wagmiWallet', () => ({
         accounts: string[]
       }
       return conn.accounts.length > 0
+    }
+    async getAddress(): Promise<string> {
+      return '0xabc'
     }
   },
 }))
@@ -112,7 +116,7 @@ vi.mock('@/stores/providerStore', () => ({
   useProviderStore: () => ({ providers: ref([]) }),
 }))
 vi.mock('@/stores/walletStore', () => ({
-  useWalletStore: () => ({ setWallet: vi.fn() }),
+  useWalletStore: () => ({ setWallet: setWalletSpy }),
 }))
 vi.mock('@/stores/recentWalletsStore', () => ({
   useRecentWalletsStore: () => ({ addWallet: vi.fn() }),
@@ -198,5 +202,41 @@ describe('useConnectWallet — extension not detected (MEW-2589)', () => {
     expect(first.isInfinite).toBeFalsy()
     expect(first.id).toBeTruthy()
     expect(second.id).toBe(first.id)
+  })
+})
+
+const walletConnectWallet: WalletConfig = {
+  id: 'walletConnect',
+  name: 'WalletConnect',
+  icon: 'data:image/png;base64,x',
+  type: [],
+}
+
+describe('useConnectWallet — WalletConnect approved (MEW-2588)', () => {
+  beforeEach(() => {
+    addToastMessage.mockReset()
+    setWalletSpy.mockReset()
+    accessStoreMock.closeAccessDialog.mockReset()
+    connectorsRef.length = 0
+    connectorsRef.push({
+      id: 'walletConnect',
+      onDisconnect: vi.fn(),
+      emitter: { on: vi.fn() },
+      connect: async () => ({ accounts: ['0xabc'] }),
+    })
+  })
+
+  it('toasts a failure after approval instead of closing with no wallet', async () => {
+    setWalletSpy.mockRejectedValueOnce(new Error('boom'))
+    const { connect } = useConnectWallet()
+    await connect(walletConnectWallet)
+    await flushPromises()
+
+    expect(accessStoreMock.closeAccessDialog).not.toHaveBeenCalled()
+    expect(addToastMessage).toHaveBeenCalledTimes(1)
+    expect(addToastMessage.mock.calls[0][0]).toMatchObject({
+      text: 'access_wallet.toast.could_not_connect',
+      textSecondary: 'boom',
+    })
   })
 })
