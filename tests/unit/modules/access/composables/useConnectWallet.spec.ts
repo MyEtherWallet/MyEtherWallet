@@ -174,3 +174,29 @@ describe('useConnectWallet — no matching wagmi connector', () => {
     expect(captureExceptionSpy).not.toHaveBeenCalled()
   })
 })
+
+// Not injected and not a mobile wallet, so there is no WalletConnect fallback.
+const extensionOnlyWallet: WalletConfig = {
+  id: 'coinbase',
+  name: 'Coinbase Wallet',
+  icon: 'data:image/png;base64,x',
+  type: [WalletConfigType.EXTENSION],
+}
+
+describe('useConnectWallet — extension not detected (MEW-2589)', () => {
+  beforeEach(() => {
+    addToastMessage.mockReset()
+  })
+
+  it('auto-dismisses the toast and replaces it on a repeat click', async () => {
+    const { connect } = useConnectWallet()
+    await connect(extensionOnlyWallet)
+    await connect(extensionOnlyWallet)
+
+    const [first, second] = addToastMessage.mock.calls.map(([toast]) => toast)
+    expect(first.text).toBe('access_wallet.toast.web3_wallet_not_detected')
+    expect(first.isInfinite).toBeFalsy()
+    expect(first.id).toBeTruthy()
+    expect(second.id).toBe(first.id)
+  })
+})
