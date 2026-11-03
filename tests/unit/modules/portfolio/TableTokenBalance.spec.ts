@@ -107,6 +107,7 @@ vi.mock(
   }),
 )
 
+import { useChainsStore } from '@/stores/chainsStore'
 import TableTokenBalance from '@/modules/portfolio/components/balances/TableTokenBalance.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
@@ -179,10 +180,10 @@ describe('TableTokenBalance', () => {
     expect(symbols(w)).toEqual(['AAA', 'BBB', 'CCC'])
   })
 
-  it('shows swap + buy at L, swap at M, the action menu at S', async () => {
+  it('shows one action at L and M like Explore crypto, the action menu at S', async () => {
     const w = mountTable()
     expect(buttonTexts(w).filter(t => t === 'common.swap')).toHaveLength(3)
-    expect(buttonTexts(w).filter(t => t === 'common.buy')).toHaveLength(3)
+    expect(buttonTexts(w)).not.toContain('common.buy')
 
     cardWidth.value = 900
     await w.vm.$nextTick()
@@ -202,6 +203,14 @@ describe('TableTokenBalance', () => {
     expect(
       w.findAll(`${BODY_ROW} [aria-label="common.action_menu"]`),
     ).toHaveLength(3)
+  })
+
+  it('falls back to Buy when the chain has no swap', async () => {
+    const w = mountTable()
+    useChainsStore().currentChainhasSwapSupport = false
+    await w.vm.$nextTick()
+    expect(buttonTexts(w).filter(t => t === 'common.buy')).toHaveLength(3)
+    expect(buttonTexts(w)).not.toContain('common.swap')
   })
 
   it('shows the market cap column at L only', async () => {

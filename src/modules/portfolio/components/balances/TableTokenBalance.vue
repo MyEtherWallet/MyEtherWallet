@@ -95,15 +95,13 @@
         watchlist
         actions
       >
-        <!-- Trade/swap + buy at L, one button at M (the menu in the custom
-             view), the menu at S: as the loaded rows. -->
-        <template #loading-row="{ size }">
+        <!-- Custom tokens show Edit + Delete at L and the menu below it; the
+             other views have the default one button. -->
+        <template v-if="view === 'custom'" #loading-row="{ size }">
           <AppTableRow
             loading
             description="-"
-            :loading-buttons="
-              size === 'l' ? 2 : size === 'm' && view !== 'custom' ? 1 : 0
-            "
+            :loading-buttons="size === 'l' ? 2 : 0"
           >
             <template #avatar />
           </AppTableRow>
@@ -288,7 +286,9 @@
               </app-base-button>
             </template>
             <template v-else>
-              <!-- L: trade/swap + buy. M: one button, trade/swap first. -->
+              <!-- One button at L and M, as on Explore crypto: Trade for stocks,
+                   else Swap, and Buy only when neither applies. Buy stays in
+                   the S menu. -->
               <app-base-button
                 v-if="token.ondo !== undefined"
                 type="secondary"
@@ -308,10 +308,7 @@
                 >{{ $t('common.swap') }}
               </app-base-button>
               <app-base-button
-                v-if="
-                  isBuyableOnCompatibleChain(token.coinId) &&
-                  (size === 'l' || !hasPrimaryAction(token))
-                "
+                v-else-if="isBuyableOnCompatibleChain(token.coinId)"
                 type="secondary"
                 size="medium"
                 class="w-24"
