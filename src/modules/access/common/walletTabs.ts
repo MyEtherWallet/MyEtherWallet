@@ -22,7 +22,7 @@ export interface TabWallet {
 /**
  * Curated wallets per tab, in Figma order (Onboarding › 3201:43865). Ids are
  * RainbowKit ids for RainbowKit wallets and `walletConfigs` keys otherwise.
- * Extension isn't curated: it lists every extension wallet.
+ * Extension isn't curated: it lists extension-only and installed wallets.
  */
 const TAB_WALLET_IDS: Record<Exclude<WalletTab, 'extension'>, string[]> = {
   popular: [
@@ -102,12 +102,16 @@ export const selectTabWallets = ({
     return [...starts, ...contains].map(withStatus)
   }
 
-  // Labelled wallets (recent, detected, official) first, then A-Z.
+  // Extension-only wallets: those with a mobile app too (MetaMask, Trust, ...)
+  // only when installed. Labelled ones (recent, detected, official) first, then A-Z.
   if (tab === 'extension') {
+    const isExtension = (w: WalletConfig) =>
+      w.type.includes(WalletConfigType.EXTENSION) &&
+      (!w.type.includes(WalletConfigType.MOBILE) || detected.has(lower(w.name)))
     const rank = ({ status }: TabWallet) =>
       status ? STATUS_ORDER.indexOf(status) : STATUS_ORDER.length
     return wallets
-      .filter(w => w.type.includes(WalletConfigType.EXTENSION))
+      .filter(isExtension)
       .map(withStatus)
       .sort(
         (a, b) =>

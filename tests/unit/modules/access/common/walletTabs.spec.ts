@@ -100,31 +100,33 @@ describe('selectTabWallets', () => {
     ])
   })
 
-  it('lists every extension wallet in Extension, labelled ones first then A-Z', () => {
+  it('lists extension-only wallets in Extension, plus installed ones that also have a mobile app', () => {
     const r = selectTabWallets({
       ...base,
+      wallets: [
+        ...POOL,
+        rk('taho', 'Taho', ['extension']),
+        rk('frame', 'Frame', ['extension']),
+      ],
       tab: 'extension',
+      // Zerion was used (maybe over WalletConnect) but isn't installed.
       recentNames: ['Zerion'],
-      detectedNames: ['Rabby Wallet'],
+      detectedNames: ['MetaMask', 'Rabby Wallet'],
     })
+    // Labelled first (detected, then official), then A-Z.
     expect(names(r)).toEqual([
-      'Zerion',
+      'MetaMask',
       'Rabby Wallet',
       'Enkrypt',
-      'Bitget Wallet',
-      'Bybit Wallet',
-      'CLV',
-      'Coinbase Wallet',
-      'Core',
-      'MetaMask',
-      'Phantom',
-      'Rainbow',
-      'Trust Wallet',
+      'Frame',
+      'Taho',
     ])
-    expect(r.slice(0, 3).map(x => x.status)).toEqual([
-      'recent',
+    expect(r.map(x => x.status)).toEqual([
+      'detected',
       'detected',
       'official',
+      undefined,
+      undefined,
     ])
   })
 
