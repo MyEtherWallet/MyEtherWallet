@@ -1,33 +1,32 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    class="sm:max-w-[400px] !min-h-[385px] sm:mx-auto"
+  <app-modal
+    v-model="model"
+    :aria-label="t('swap.best-offer.looking')"
+    class="min-h-[385px]"
   >
-    <template #content>
-      <div class="flex items-center justify-center pt-12">
-        <DotLottieVue
-          :src="bestOfferAnimation"
-          class="w-[175px] aspect-square"
-          autoplay
-          loop
-          role="img"
-          :aria-label="t('swap.best-offer.looking')"
-        />
-      </div>
-      <div class="p-8 pb-12 flex flex-col items-center">
-        <h3 class="text-s-24 text-p-120 font-bold">
-          {{ t('swap.best-offer.looking') }}
-        </h3>
-        <p class="text-s-14 text-text-muted font-normal mt-2">
-          {{ t('swap.best-offer.analyzing') }}
-        </p>
-      </div>
-    </template>
-  </app-dialog>
+    <div class="flex items-center justify-center pt-12">
+      <DotLottieVue
+        :src="bestOfferAnimation"
+        class="w-[175px] aspect-square"
+        autoplay
+        loop
+        role="img"
+        :aria-label="t('swap.best-offer.looking')"
+      />
+    </div>
+    <div class="p-8 pb-12 flex flex-col items-center">
+      <h3 class="text-s-24 text-p-120 font-bold">
+        {{ t('swap.best-offer.looking') }}
+      </h3>
+      <p class="text-s-14 text-text-muted font-normal mt-2">
+        {{ t('swap.best-offer.analyzing') }}
+      </p>
+    </div>
+  </app-modal>
 </template>
 
 <script lang="ts" setup>
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import bestOfferAnimation from '@/assets/images/swap/looking-for-best-offer.lottie?url'
 import { useI18n } from 'vue-i18n'

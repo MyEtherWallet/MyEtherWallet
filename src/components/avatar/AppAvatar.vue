@@ -10,9 +10,11 @@ import AvatarAccount from './types/AvatarAccount.vue'
 import AvatarInitial from './types/AvatarInitial.vue'
 import configs from '@/configs'
 import {
+  AVATAR_ICON_TONE_CLASS,
   AVATAR_SIZES,
   badgePositionStyle,
   type AvatarBadgePosition,
+  type AvatarIconTone,
   type AvatarSize,
   type AvatarType,
 } from './types'
@@ -43,6 +45,8 @@ const props = withDefaults(
     name?: string
     /** Image fit for remote-logo types; `cover` for non-square art. */
     fit?: 'contain' | 'cover'
+    /** Icon type only: solid status fill with an inverted glyph. */
+    tone?: AvatarIconTone
   }>(),
   {
     size: 'm',
@@ -68,10 +72,22 @@ const boxStyle = computed(() => {
   return { width: `${box}px`, height: `${box}px` }
 })
 
+const iconTone = computed(() =>
+  props.type === 'icon' ? props.tone : undefined,
+)
+
 // Every type sits on the neutral fallback bg so transparent remote logos stay
-// legible on any surface. The Icon type can opt out via `background: false`.
+// legible on any surface. The Icon type can opt out via `background: false`,
+// or swap it for a status fill via `tone`.
 const showFallbackBg = computed(
-  () => !(props.type === 'icon' && props.background === false),
+  () =>
+    !iconTone.value && !(props.type === 'icon' && props.background === false),
+)
+
+const innerBgClass = computed(() =>
+  iconTone.value
+    ? AVATAR_ICON_TONE_CLASS[iconTone.value]
+    : { 'bg-background-info-subtle': showFallbackBg.value },
 )
 
 const forwardProps = computed(() => ({
@@ -85,6 +101,7 @@ const forwardProps = computed(() => ({
   background: props.background,
   name: props.name,
   fit: props.fit,
+  tone: iconTone.value,
 }))
 
 const activePositions = computed(() => {
@@ -128,7 +145,7 @@ watchEffect(() => {
     <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
     <div
       class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-      :class="{ 'bg-background-info-subtle': showFallbackBg }"
+      :class="innerBgClass"
     >
       <component :is="typeComponent" v-bind="forwardProps">
         <slot name="icon" />

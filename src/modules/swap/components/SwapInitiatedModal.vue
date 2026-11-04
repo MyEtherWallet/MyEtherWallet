@@ -1,121 +1,149 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    class="sm:max-w-[420px] sm:mx-auto"
-    :title="title"
-  >
-    <template #content>
-      <div class="px-4 lg:px-6 pb-8 pt-2">
-        <div class="flex flex-col items-center text-center">
-          <div
-            class="text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
-          >
-            {{ completedNote }}
-            <div class="inline-flex align-middle">
-              <app-blockie
-                v-if="isBridge"
-                :address="snapshot.toAddress"
-                :size="5"
-                class="inline-block mx-2 align-middle"
-              />
-              <a
-                v-if="isBridge && snapshot.toChain?.blockExplorerAddr"
-                :href="addressExplorerUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
-              >
-                {{ truncateHash(snapshot.toAddress) }}
-                <AppIcon
-                  name="arrow-up-right"
-                  variant="filled"
-                  size="xxs"
-                  class="inline-block align-middle text-black"
-              /></a>
-            </div>
-            <span
-              v-if="isBridge && !snapshot.toChain?.blockExplorerAddr"
-              class="font-mono text-s-13 lg:text-s-16"
+  <app-modal v-model="model" :title="title">
+    <div class="px-4 lg:px-6 pb-8 pt-2">
+      <div class="flex flex-col items-center text-center">
+        <div
+          class="text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
+        >
+          {{ completedNote }}
+          <div class="inline-flex align-middle">
+            <app-blockie
+              v-if="isBridge"
+              :address="snapshot.toAddress"
+              :size="5"
+              class="inline-block mx-2 align-middle"
+            />
+            <a
+              v-if="isBridge && snapshot.toChain?.blockExplorerAddr"
+              :href="addressExplorerUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
             >
               {{ truncateHash(snapshot.toAddress) }}
-            </span>
-
-            {{ t('swap.initiated.on-chain', { chain: toTokenChain }) }}
+              <AppIcon
+                name="arrow-up-right"
+                variant="filled"
+                size="xxs"
+                class="inline-block align-middle text-black"
+            /></a>
           </div>
+          <span
+            v-if="isBridge && !snapshot.toChain?.blockExplorerAddr"
+            class="font-mono text-s-13 lg:text-s-16"
+          >
+            {{ truncateHash(snapshot.toAddress) }}
+          </span>
 
-          <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
-            <!-- Progress -->
-            <div
-              class="flex items-end justify-center rounded-full mb-2 mx-auto"
-            >
-              <!-- Spinner / Status Icon -->
-              <div class="mr-2">
-                <svg
-                  v-if="notificationStatus === 'sent'"
-                  class="w-5 h-5 animate-spin text-text-brand"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="3"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <AppIcon
-                  name="check-circle"
-                  variant="filled"
-                  size="s"
-                  v-else-if="notificationStatus === 'confirmed'"
-                  class="text-text-success"
-                />
-                <AppIcon
-                  name="x-circle"
-                  variant="filled"
-                  size="s"
-                  v-else-if="notificationStatus === 'failed'"
-                  class="text-text-error"
-                />
-              </div>
+          {{ t('swap.initiated.on-chain', { chain: toTokenChain }) }}
+        </div>
 
-              <!-- Status Text -->
-              <span
-                class="text-s-14 font-semibold"
-                :class="{
-                  'text-text-brand': notificationStatus === 'sent',
-                  'text-text-success': notificationStatus === 'confirmed',
-                  'text-text-error': notificationStatus === 'failed',
-                }"
+        <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
+          <!-- Progress -->
+          <div
+            class="flex items-end justify-center rounded-full mb-2 mx-auto"
+          >
+            <!-- Spinner / Status Icon -->
+            <div class="mr-2">
+              <svg
+                v-if="notificationStatus === 'sent'"
+                class="w-5 h-5 animate-spin text-text-brand"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
               >
-                {{
-                  notificationStatus === 'sent'
-                    ? t('swap.initiated.pending')
-                    : notificationStatus === 'confirmed'
-                      ? t('swap.initiated.successful')
-                      : notificationStatus === 'failed'
-                        ? t('swap.initiated.failed')
-                        : t('swap.initiated.pending')
-                }}
-              </span>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="3"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <AppIcon
+                name="check-circle"
+                variant="filled"
+                size="s"
+                v-else-if="notificationStatus === 'confirmed'"
+                class="text-text-success"
+              />
+              <AppIcon
+                name="x-circle"
+                variant="filled"
+                size="s"
+                v-else-if="notificationStatus === 'failed'"
+                class="text-text-error"
+              />
             </div>
 
-            <div
-              class="flex flex-col justify-start bg-background-brand-subtle p-4 rounded-20"
+            <!-- Status Text -->
+            <span
+              class="text-s-14 font-semibold"
+              :class="{
+                'text-text-brand': notificationStatus === 'sent',
+                'text-text-success': notificationStatus === 'confirmed',
+                'text-text-error': notificationStatus === 'failed',
+              }"
             >
-              <!-- From Row -->
-              <div class="flex items-center gap-4">
-                <div class="relative">
+              {{
+                notificationStatus === 'sent'
+                  ? t('swap.initiated.pending')
+                  : notificationStatus === 'confirmed'
+                    ? t('swap.initiated.successful')
+                    : notificationStatus === 'failed'
+                      ? t('swap.initiated.failed')
+                      : t('swap.initiated.pending')
+              }}
+            </span>
+          </div>
+
+          <div
+            class="flex flex-col justify-start bg-background-brand-subtle p-4 rounded-20"
+          >
+            <!-- From Row -->
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <app-token-logo
+                  :url="fromTokenIcon"
+                  :symbol="fromTokenSymbol"
+                  :address="
+                    snapshot.fromChain
+                      ? {
+                          address: fromTokenAddress,
+                          network: snapshot.fromChain?.name,
+                        }
+                      : undefined
+                  "
+                  width="w-9 lg:w-12"
+                  height="h-9 lg:h-12"
+                />
+                <div class="absolute -bottom-1 -right-1">
                   <app-token-logo
-                    :url="fromTokenIcon"
+                    :url="fromTokenChainImg"
+                    :symbol="fromTokenChain"
+                    width="w-5"
+                    height="h-5"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col text-left">
+                <p
+                  v-if="isBridge"
+                  class="text-s-9 font-bold tracking-sp-06 uppercase text-text-subtle"
+                >
+                  {{
+                    t('swap.initiated.from-chain', { chain: fromTokenChain })
+                  }}
+                </p>
+                <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
+                  {{ formatFloatingPointValue(fromTokenAmount).value }}
+                  <app-token-symbol
                     :symbol="fromTokenSymbol"
                     :address="
                       snapshot.fromChain
@@ -125,58 +153,56 @@
                           }
                         : undefined
                     "
-                    width="w-9 lg:w-12"
-                    height="h-9 lg:h-12"
+                    class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                   />
-                  <div class="absolute -bottom-1 -right-1">
-                    <app-token-logo
-                      :url="fromTokenChainImg"
-                      :symbol="fromTokenChain"
-                      width="w-5"
-                      height="h-5"
-                    />
-                  </div>
-                </div>
-                <div class="flex flex-col text-left">
-                  <p
-                    v-if="isBridge"
-                    class="text-s-9 font-bold tracking-sp-06 uppercase text-text-subtle"
-                  >
-                    {{
-                      t('swap.initiated.from-chain', { chain: fromTokenChain })
-                    }}
-                  </p>
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
-                    {{ formatFloatingPointValue(fromTokenAmount).value }}
-                    <app-token-symbol
-                      :symbol="fromTokenSymbol"
-                      :address="
-                        snapshot.fromChain
-                          ? {
-                              address: fromTokenAddress,
-                              network: snapshot.fromChain?.name,
-                            }
-                          : undefined
-                      "
-                      class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
-                    />
-                  </p>
-                  <p class="text-text-subtle text-s-14">
-                    {{ formatFiat(fromTokenAmountFiat).display }}
-                  </p>
-                </div>
+                </p>
+                <p class="text-text-subtle text-s-14">
+                  {{ formatFiat(fromTokenAmountFiat).display }}
+                </p>
               </div>
+            </div>
 
-              <!-- Divider Arrow -->
-              <div class="flex justify-start my-2 lg:my-4 mx-1.5 lg:mx-3">
-                <AppIcon name="arrow-long-down" variant="filled" />
-              </div>
+            <!-- Divider Arrow -->
+            <div class="flex justify-start my-2 lg:my-4 mx-1.5 lg:mx-3">
+              <AppIcon name="arrow-long-down" variant="filled" />
+            </div>
 
-              <!-- To Row -->
-              <div class="flex items-center gap-4">
-                <div class="relative">
+            <!-- To Row -->
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <app-token-logo
+                  :url="toTokenIcon"
+                  :symbol="toTokenSymbol"
+                  :address="
+                    snapshot.toChain
+                      ? {
+                          address: toTokenAddress,
+                          network: snapshot.toChain?.name,
+                        }
+                      : undefined
+                  "
+                  width="w-9 lg:w-12"
+                  height="h-9 lg:h-12"
+                />
+                <div class="absolute -bottom-1 -right-1">
                   <app-token-logo
-                    :url="toTokenIcon"
+                    :url="toTokenChainImg"
+                    :symbol="toTokenChain"
+                    width="w-5"
+                    height="h-5"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col text-left">
+                <p
+                  v-if="isBridge"
+                  class="text-s-9 font-bold tracking-sp-06 uppercase text-text-subtle"
+                >
+                  {{ t('swap.initiated.to-chain', { chain: toTokenChain }) }}
+                </p>
+                <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
+                  {{ formatFloatingPointValue(toTokenAmount).value }}
+                  <app-token-symbol
                     :symbol="toTokenSymbol"
                     :address="
                       snapshot.toChain
@@ -186,104 +212,72 @@
                           }
                         : undefined
                     "
-                    width="w-9 lg:w-12"
-                    height="h-9 lg:h-12"
+                    class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
                   />
-                  <div class="absolute -bottom-1 -right-1">
-                    <app-token-logo
-                      :url="toTokenChainImg"
-                      :symbol="toTokenChain"
-                      width="w-5"
-                      height="h-5"
-                    />
-                  </div>
-                </div>
-                <div class="flex flex-col text-left">
-                  <p
-                    v-if="isBridge"
-                    class="text-s-9 font-bold tracking-sp-06 uppercase text-text-subtle"
-                  >
-                    {{ t('swap.initiated.to-chain', { chain: toTokenChain }) }}
-                  </p>
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
-                    {{ formatFloatingPointValue(toTokenAmount).value }}
-                    <app-token-symbol
-                      :symbol="toTokenSymbol"
-                      :address="
-                        snapshot.toChain
-                          ? {
-                              address: toTokenAddress,
-                              network: snapshot.toChain?.name,
-                            }
-                          : undefined
-                      "
-                      class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
-                    />
-                  </p>
-                  <p class="text-text-subtle text-s-14">
-                    {{ formatFiat(toTokenAmountFiat).display }}
-                  </p>
-                </div>
+                </p>
+                <p class="text-text-subtle text-s-14">
+                  {{ formatFiat(toTokenAmountFiat).display }}
+                </p>
               </div>
             </div>
+          </div>
 
-            <!-- Transaction Info -->
-            <div class="w-full my-5 px-2 lg:px-4">
-              <div class="flex justify-between items-center">
-                <span
-                  class="text-s-11 uppercase tracking-sp-06 font-bold text-text-subtle"
-                  >{{ t('common.transaction_hash') }}</span
-                >
-                <div class="flex items-center gap-2">
-                  <span class="text-s-12 font-mono truncate max-w-[150px]">
-                    {{ truncatedTxHash }}
-                  </span>
-                  <app-btn-copy :copy-value="snapshot.txHash" class="-mr-3" />
-                </div>
+          <!-- Transaction Info -->
+          <div class="w-full my-5 px-2 lg:px-4">
+            <div class="flex justify-between items-center">
+              <span
+                class="text-s-11 uppercase tracking-sp-06 font-bold text-text-subtle"
+                >{{ t('common.transaction_hash') }}</span
+              >
+              <div class="flex items-center gap-2">
+                <span class="text-s-12 font-mono truncate max-w-[150px]">
+                  {{ truncatedTxHash }}
+                </span>
+                <app-btn-copy :copy-value="snapshot.txHash" class="-mr-3" />
               </div>
             </div>
           </div>
         </div>
-
-        <div class="mt-6">
-          <p
-            class="text-center text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
-          >
-            {{ t('swap.initiated.close-window') }}
-          </p>
-          <app-base-button
-            class="group border-2 mt-2 w-full"
-            @click="openNotifications"
-          >
-            {{ t('swap.initiated.track-progress') }}
-          </app-base-button>
-
-          <p class="text-center mt-4">
-            <a
-              v-if="blockExplorerUrl !== ''"
-              :href="blockExplorerUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group underline inline-block"
-              >{{ t('swap.initiated.check-explorer') }}
-              <AppIcon
-                name="arrow-long-right"
-                variant="filled"
-                size="xxs"
-                class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1"
-              />
-            </a>
-          </p>
-        </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <div class="mt-6">
+        <p
+          class="text-center text-s-13 lg:text-s-16 text-text-subtle px-4 leading-p-160"
+        >
+          {{ t('swap.initiated.close-window') }}
+        </p>
+        <app-base-button
+          class="group border-2 mt-2 w-full"
+          @click="openNotifications"
+        >
+          {{ t('swap.initiated.track-progress') }}
+        </app-base-button>
+
+        <p class="text-center mt-4">
+          <a
+            v-if="blockExplorerUrl !== ''"
+            :href="blockExplorerUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group underline inline-block"
+            >{{ t('swap.initiated.check-explorer') }}
+            <AppIcon
+              name="arrow-long-right"
+              variant="filled"
+              size="xxs"
+              class="inline-block align-middle ml-1 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        </p>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed, watch, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import ethSvg from '@/assets/icons/tokens/eth.svg'

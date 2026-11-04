@@ -180,26 +180,22 @@
       </div>
 
       <!-- Error Display -->
-      <div
+      <AppBanner
         v-if="!isLoading && priceImpactTooHigh"
+        type="alert"
+        :description="
+          t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+        "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-      >
-        <p class="text-text-error text-s-14 text-center">
-          {{
-            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
-          }}
-        </p>
-      </div>
-      <div
+        class="w-full max-w-[340px] mb-2"
+      />
+      <AppBanner
         v-if="!isLoading && generalError"
+        type="alert"
+        :description="generalError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-background-error-subtle border border-border-error rounded-12 mb-2"
-      >
-        <p class="text-text-error text-s-14 text-center">
-          {{ generalError }}
-        </p>
-      </div>
+        class="w-full max-w-[340px] mb-2"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         :class="['mx-auto w-full max-w-[340px]', blockedClass]"
@@ -271,6 +267,7 @@ import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 // import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 // AppBtnText is not imported: the "clear all" text button became an
 // app-base-button link in the buttons redesign.

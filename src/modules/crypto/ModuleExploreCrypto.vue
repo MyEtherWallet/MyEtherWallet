@@ -12,8 +12,7 @@
       >
         <app-searchbar
           v-model="searchInput"
-          bg-class="bg-background-default"
-          size="compact"
+          variant="default"
           :placeholder="$t('crypto.search')"
           class="w-full xs:w-60 shrink-0"
         />
@@ -210,27 +209,10 @@
             >
               <!-- Watchlist -->
               <td class="w-10 rounded-l-12 text-center">
-                <AppBtnIcon
-                  :label="
-                    isWatchListed(getWatchlistId(token))
-                      ? $t('common.remove_from_watchlist')
-                      : $t('common.add_to_watchlist')
-                  "
-                  :class="
-                    isWatchListed(getWatchlistId(token))
-                      ? 'text-text-brand'
-                      : 'text-text-subtle'
-                  "
-                  @click.stop="setWatchlistToken(token)"
-                >
-                  <AppIcon
-                    name="star"
-                    :variant="
-                      isWatchListed(getWatchlistId(token)) ? 'filled' : 'stroke'
-                    "
-                    size="xxs"
-                  />
-                </AppBtnIcon>
+                <AppCellWatchlistToggle
+                  :model-value="isWatchListed(getWatchlistId(token))"
+                  @update:model-value="setWatchlistToken(token)"
+                />
               </td>
               <!-- Name & Symbol -->
               <td class="px-1 py-1" colspan="2">
@@ -506,37 +488,14 @@
         </div>
       </div>
 
-      <!-- Footer / pagination -->
-      <div
-        class="flex items-center justify-between text-s-14 mt-4 border-t border-border-subtle pt-4 px-2"
-      >
-        <span
-          class="text-text-subtle"
-          :class="isLoading ? 'invisible' : 'visible'"
-        >
-          {{ $t('common.showing_page', { current: page, total: totalPages }) }}
-        </span>
-        <div class="flex items-center gap-2">
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page === 1"
-            :label="$t('common.previous_page')"
-            @click="previousPage"
-          >
-            <AppIcon name="chevron-left" variant="filled" size="xxs" />
-          </app-btn-icon>
-          <app-btn-icon
-            variant="filled"
-            size="l"
-            :disabled="!isLoading && page >= totalPages"
-            :label="$t('common.next_page')"
-            @click="nextPage"
-          >
-            <AppIcon name="chevron-right" variant="filled" size="xxs" />
-          </app-btn-icon>
-        </div>
-      </div>
+      <AppPagination
+        :model-value="page"
+        :total-pages="totalPages"
+        variant="alternative"
+        :label="isLoading ? blankLabel : undefined"
+        class="mt-4"
+        @update:model-value="setPage"
+      />
       <select-chain-dialog
         v-if="isLoadedChains"
         v-model:is-open="openChainDialog"
@@ -556,6 +515,8 @@ import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -667,19 +628,12 @@ const PER_PAGE = 10
 /** -------------------------------
  * Pagination
 -------------------------------*/
-const previousPage = () => {
-  if (page.value > 1) {
-    page.value--
-  }
+const setPage = (p: number) => {
+  page.value = p
   tableContainer.value?.scrollTo(0, 0)
 }
-
-const nextPage = () => {
-  if (page.value < totalPages.value) {
-    page.value++
-  }
-  tableContainer.value?.scrollTo(0, 0)
-}
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 /** -------------------------------
  * Buy/Trade/Swap/Bridge Button Actions

@@ -5,7 +5,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { useStocksStore } from '@/stores/stocksStore'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import AppNewsCard from '@/components/AppNewsCard.vue'
-import AppPagination from '@/components/AppPagination.vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
 
 const PER_PAGE = 6
 
@@ -14,6 +14,7 @@ const stocksStore = useStocksStore()
 const page = ref(1)
 
 const total = computed(() => stocksStore.recentNews.length)
+const pages = computed(() => Math.ceil(total.value / PER_PAGE))
 const pageItems = computed(() =>
   stocksStore.recentNews.slice(
     (page.value - 1) * PER_PAGE,
@@ -108,16 +109,12 @@ const tokenTo = (item: {
         </div>
       </div>
       <AppPagination
-        v-if="total > PER_PAGE"
+        v-if="pages > 1"
         v-model="page"
-        :total="total"
-        :per-page="PER_PAGE"
+        :total-pages="pages"
+        variant="default"
         class="mt-6"
-      >
-        <template #label="{ page: p, pages }">
-          {{ t('homePage.news.pagination', { page: p, total: pages }) }}
-        </template>
-      </AppPagination>
+      />
     </template>
   </div>
 </template>

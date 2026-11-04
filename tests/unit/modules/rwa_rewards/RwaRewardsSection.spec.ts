@@ -56,6 +56,7 @@ vi.mock('@/stores/rewardsStore', async () => {
       isEligible: r(true),
       eligibilityV2: r(null),
       tradeMarketClosed: r(false),
+      tradePaused: r(false),
       tradeClaimed: r(false),
       tradeNoRewards: r(false),
       tradeRemainingCount: r(null),

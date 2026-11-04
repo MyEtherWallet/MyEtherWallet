@@ -1,94 +1,93 @@
 <template>
-  <app-dialog
+  <app-modal
     v-if="isWalletConnected && isLoadedChainsData"
-    v-model:is-open="openDialog"
-    class="xs:max-w-[420px] sm:mx-auto !min-h-[400px]"
-    z-index-overlay="z-[200]"
-    z-index-container="z-[201]"
+    v-model="openDialog"
+    :title="
+      $t('common.deposit_title', {
+        chain: selectedChain?.nameLong || 'Ethereum',
+      })
+    "
+    class="min-h-[400px]"
   >
-    <template #title>
-      <div class="px-3 mt-3">
-        <app-token-logo
-          v-if="selectedChain?.icon"
-          :url="selectedChain?.icon"
-          :symbol="selectedChain.currencyName"
-          width="w-12"
-          height="h-12"
-        ></app-token-logo>
-      </div>
+    <template #header>
+      <app-token-logo
+        v-if="selectedChain?.icon"
+        :url="selectedChain?.icon"
+        :symbol="selectedChain.currencyName"
+        width="w-12"
+        height="h-12"
+      ></app-token-logo>
     </template>
-    <template #content>
-      <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
-        <h1 class="text-s-28 font-bold text-left leading-tight">
-          {{
-            $t('common.deposit_title', {
-              chain: selectedChain?.nameLong || 'Ethereum',
-            })
-          }}
-        </h1>
-        <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
-          {{
-            $t('common.deposit_description', {
-              chain: selectedChain?.nameLong || 'Ethereum',
-            })
-          }}
-        </p>
-        <div class="flex items-center justify-center my-6">
+    <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
+      <h1 class="text-s-28 font-bold text-left leading-tight">
+        {{
+          $t('common.deposit_title', {
+            chain: selectedChain?.nameLong || 'Ethereum',
+          })
+        }}
+      </h1>
+      <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
+        {{
+          $t('common.deposit_description', {
+            chain: selectedChain?.nameLong || 'Ethereum',
+          })
+        }}
+      </p>
+      <div class="flex items-center justify-center my-6">
+        <div
+          class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
+        >
           <div
-            class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
-          >
-            <div
-              v-show="!isLoadingQRCode"
-              ref="qrCode"
-              class="qr-code-container"
-            ></div>
-            <!-- Loading QR Placeholder -->
-            <div
-              v-show="isLoadingQRCode"
-              class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
-            ></div>
-          </div>
+            v-show="!isLoadingQRCode"
+            ref="qrCode"
+            class="qr-code-container"
+          ></div>
+          <!-- Loading QR Placeholder -->
+          <div
+            v-show="isLoadingQRCode"
+            class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
+          ></div>
         </div>
-        <div class="flex items-center gap-4 mt-2">
-          <app-blockie
-            :address="walletAddress"
-            :size="12"
-            class="flex-none rounded-full"
+      </div>
+      <div class="flex items-center gap-4 mt-2">
+        <app-blockie
+          :address="walletAddress"
+          :size="12"
+          class="flex-none rounded-full"
+        />
+        <div
+          class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
+        >
+          {{ walletAddress }}
+        </div>
+        <div class="flex items-center gap-1">
+          <!-- Copy -->
+          <app-btn-copy
+            :copy-value="walletAddress"
+            size="l"
+            class="text-text-brand"
           />
-          <div
-            class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
+          <!-- Block Explorer Link -->
+          <a
+            :href="getExplorerLink"
+            :aria-label="$t('view_in_block_explorer')"
+            target="_blank"
+            class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
           >
-            {{ walletAddress }}
-          </div>
-          <div class="flex items-center gap-1">
-            <!-- Copy -->
-            <app-btn-copy
-              :copy-value="walletAddress"
-              size="l"
+            <AppIcon
+              name="arrow-top-right-on-square"
               class="text-text-brand"
             />
-            <!-- Block Explorer Link -->
-            <a
-              :href="getExplorerLink"
-              :aria-label="$t('view_in_block_explorer')"
-              target="_blank"
-              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
-            >
-              <AppIcon
-                name="arrow-top-right-on-square"
-                class="text-text-brand"
-              />
-            </a>
-          </div>
+          </a>
         </div>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
