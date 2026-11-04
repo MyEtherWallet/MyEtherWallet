@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, useId, useSlots } from 'vue'
+import { computed, inject, provide, useId, useSlots } from 'vue'
 import AppCell from '@components/cell/AppCell.vue'
 import AppIcon from '@components/icon/AppIcon.vue'
 import ExpandTransition from '@components/transitions/ExpandTransition.vue'
@@ -99,6 +99,8 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 const group = inject(ACCORDION_GROUP_KEY, null)
+// An accordion in this one's body keeps its own open state.
+provide(ACCORDION_GROUP_KEY, null)
 
 // useId always runs (stable across renders); the ids follow a changed `id`.
 const generatedId = useId()

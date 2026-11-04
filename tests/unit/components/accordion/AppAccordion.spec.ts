@@ -267,4 +267,24 @@ describe('AppAccordionGroup', () => {
     await w.setProps({ modelValue: 'b' })
     expect(panels(w).map(p => p.isVisible())).toEqual([false, true])
   })
+
+  it("keeps a nested accordion out of the outer group, so it doesn't close its parent", async () => {
+    const w = mount(AppAccordionGroup, {
+      props: { modelValue: 'outer', 'onUpdate:modelValue': () => {} },
+      ...opts,
+      slots: {
+        default: () =>
+          h(
+            AppAccordion,
+            { value: 'outer', title: 'Outer' },
+            { default: () => h(AppAccordion, { title: 'Inner' }) },
+          ),
+      },
+    })
+    const [outer, inner] = headers(w)
+    await inner.trigger('click')
+    expect(w.emitted('update:modelValue')).toBeUndefined()
+    expect(panels(w).map(p => p.isVisible())).toEqual([true, true])
+    expect(outer.attributes('aria-expanded')).toBe('true')
+  })
 })
