@@ -233,6 +233,23 @@ describe('ModuleExploreCrypto table (MEW-2469)', () => {
     }
   })
 
+  it('shows the S menu only on a row with an action', async () => {
+    cardWidth.value = 400
+    const menu = async () =>
+      (await mountModule())
+        .find('[role="row"] [aria-label="common.action_menu"]')
+        .exists()
+    // Not buyable, not Ondo, no bridge, no swap support on this chain.
+    expect(await menu()).toBe(false)
+    const item = ITEMS[0] as { ondo: unknown }
+    item.ondo = { primaryMarket: { symbol: 'ETHon' }, underlyingMarket: null }
+    try {
+      expect(await menu()).toBe(true)
+    } finally {
+      item.ondo = null
+    }
+  })
+
   it('turns the header sort off in Top Gainers, which the API ranks by 24h change', async () => {
     routeQuery.category = 'topGainers'
     try {

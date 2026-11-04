@@ -123,8 +123,10 @@
             />
             <AppTableCell column="PRICE" :value="token.price" />
             <template #actions="{ size: actionSize, surface }">
+              <!-- S menu; a row with no action gets none (the L/M buttons
+                   below are a subset of its actions, so they stay out too). -->
               <app-pop-up-menu
-                v-if="actionSize === 's'"
+                v-if="actionSize === 's' && hasMenuActions(token)"
                 :placeholder="$t('common.action_menu')"
                 location="right"
                 teleport
@@ -418,6 +420,14 @@ const canSwap = (token: DisplayToken): boolean => {
   const chainName = swapChain.value?.name
   return token.chains.some(c => c.chainName === chainName && !!c.address)
 }
+
+// Same actions as the S menu: Buy, then Trade, Bridge or Swap.
+const hasMenuActions = (token: DisplayToken): boolean =>
+  isBuyableOnCompatibleChain(token.coinId) ||
+  token.ondo !== null ||
+  getIsBridgeable(token) ||
+  canSwap(token)
+
 const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: ClickTokenTradeLocation.CRYPTO_TABLE,
