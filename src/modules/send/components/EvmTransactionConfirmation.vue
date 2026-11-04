@@ -76,6 +76,7 @@
             :tx-request-body="txRequestBody"
             v-model:gas-fee-error="gasFeeError"
             :reset-to-default="false"
+            :disabled="signing"
             dropdown
           />
         </div>

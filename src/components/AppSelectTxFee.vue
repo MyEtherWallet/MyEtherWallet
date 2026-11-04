@@ -5,7 +5,7 @@
       v-if="dropdown"
       surface="alternative"
       :title="selectedFeeTitle"
-      :disabled="!hasFees"
+      :disabled="!hasFees || disabled"
     >
       <template #title>
         <app-skeleton v-if="!hasFees" class="h-3 w-24" />
@@ -254,6 +254,8 @@ interface Props {
    * picked the fee (the Send and Sell reviews), so it isn't reset.
    */
   resetToDefault?: boolean
+  /** Lock the choice, e.g. while the tx built for it is being signed. */
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), { resetToDefault: true })
@@ -495,8 +497,8 @@ const hasFiatEstimates = computed(() => {
 const selectedFeeFiat = computed(() => {
   if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiat(
-      usedFeeToDisplay.value[gasPriceType.value].fiatValue ||
-        usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal ||
+      usedFeeToDisplay.value[gasPriceType.value]?.fiatValue ||
+        usedFeeToDisplay.value[gasPriceType.value]?.fiatFeeTotal ||
         0,
     ).display
     return `${fiatValue} `
@@ -524,62 +526,47 @@ interface DisplayFee {
   nativeValue: string
 }
 const { t } = useI18n()
+const FEE_TIERS = [
+  {
+    id: GasPriceType.ECONOMY,
+    title: 'select_fee.economy.title',
+    description: 'select_fee.economy.description',
+  },
+  {
+    id: GasPriceType.REGULAR,
+    title: 'select_fee.regular.title',
+    description: 'select_fee.regular.description',
+  },
+  {
+    id: GasPriceType.FAST,
+    title: 'select_fee.fast.title',
+    description: 'select_fee.fast.description',
+  },
+  {
+    id: GasPriceType.FASTEST,
+    title: 'select_fee.fastest.title',
+    description: 'select_fee.fastest.description',
+  },
+]
+
+// A quote can omit tiers (e.g. some BTC quotes): skip those instead of
+// reading them, since the Dropdown renders this list on first paint.
 const displayFees = computed<DisplayFee[]>(() => {
-  const economy = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatValue)
-    : undefined
-  const regular = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.REGULAR].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.REGULAR].fiatValue)
-    : undefined
-  const fast = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.FAST].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.FAST].fiatValue)
-    : undefined
-  const fastest = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.FASTEST].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.FASTEST].fiatValue)
-    : undefined
-  const a = [
-    {
-      id: GasPriceType.ECONOMY,
-      title: t('select_fee.economy.title'),
-      description: t('select_fee.economy.description'),
-      fiatValue: formatFiat(economy || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.ECONOMY])
-        : '0',
-    },
-    {
-      id: GasPriceType.REGULAR,
-      title: t('select_fee.regular.title'),
-      description: t('select_fee.regular.description'),
-      fiatValue: formatFiat(regular || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.REGULAR])
-        : '0',
-    },
-    {
-      id: GasPriceType.FAST,
-      title: t('select_fee.fast.title'),
-      description: t('select_fee.fast.description'),
-      fiatValue: formatFiat(fast || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.FAST])
-        : '0',
-    },
-    {
-      id: GasPriceType.FASTEST,
-      title: t('select_fee.fastest.title'),
-      description: t('select_fee.fastest.description'),
-      fiatValue: formatFiat(fastest || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.FASTEST])
-        : '0',
-    },
-  ]
-  return a
+  const fees = usedFeeToDisplay.value
+  return FEE_TIERS.flatMap(tier => {
+    const fee = fees?.[tier.id]
+    if (fees && !fee) return []
+    return [
+      {
+        id: tier.id,
+        title: t(tier.title),
+        description: t(tier.description),
+        fiatValue: formatFiat((fee?.fiatFeeTotal ?? fee?.fiatValue) || 0)
+          .display,
+        nativeValue: fee ? formatFee(fee) : '0',
+      },
+    ]
+  })
 })
 
 const selectedFeeOption = computed(() =>

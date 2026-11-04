@@ -41,7 +41,8 @@ export { getFiatIcon } from '@/utils/fiatIcons'
 /**
  * Icon of the asset being bought or sold: the chain icon for its native
  * coin (or before a token is picked), else the coin image, then the market
- * data icon.
+ * data icon. A token with neither gets none (the logo shows its symbol)
+ * rather than the chain's coin.
  */
 export const getSelectedTokenIcon = (
   token: PurchaseAsset | null,
@@ -49,7 +50,5 @@ export const getSelectedTokenIcon = (
   coinImages: Map<string, string>,
 ): string | undefined => {
   if (!token || token.symbol === chain?.currencyName) return chain?.icon
-  return (
-    coinImages.get(token.coingecko_id) ?? token.market_data?.icon ?? chain?.icon
-  )
+  return coinImages.get(token.coingecko_id) ?? token.market_data?.icon
 }

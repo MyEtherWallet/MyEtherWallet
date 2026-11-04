@@ -297,6 +297,41 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     expect(wrapper.getComponent(AppMenuList).classes()).toContain('bottom-full')
   })
 
+  it('stays below when it would fit above only outside the clipping ancestor', async () => {
+    const scroller = document.createElement('div')
+    scroller.style.overflowY = 'auto'
+    document.body.appendChild(scroller)
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: HTMLElement) {
+        // Below: 352 + 4 + 208 > 552. Above: 300 - 4 - 208 = 88 fits the
+        // viewport but not the scroller, which starts at 200.
+        return (
+          this === scroller
+            ? { top: 200, bottom: 552 }
+            : { top: 300, bottom: 352 }
+        ) as DOMRect
+      },
+    )
+    vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(1000)
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(208)
+    const wrapper = mount(AppDropdown, {
+      props: { title: 'Network fee' },
+      slots: {
+        default: () =>
+          h(AppCell, {
+            size: 'small',
+            inset: true,
+            role: 'option',
+            title: 'Economy',
+          }),
+      },
+      global: { plugins: [i18n] },
+      attachTo: scroller,
+    })
+    await openMenu(wrapper as ReturnType<typeof mountDropdown>)
+    expect(wrapper.getComponent(AppMenuList).classes()).toContain('top-full')
+  })
+
   it('opens below when there is room', async () => {
     const wrapper = mountDropdown()
     await openMenu(wrapper)

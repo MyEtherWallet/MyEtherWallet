@@ -3,6 +3,10 @@ import {
   formatProviderName,
   getProviderIcon,
 } from '@/modules/purchase/helpers/purchaseProviders'
+import moonpayIcon from '@/assets/images/buy/providers/moonpay.svg'
+import simplexIcon from '@/assets/images/buy/providers/simplex.svg'
+import topperIcon from '@/assets/images/buy/providers/topper.svg'
+import coinbaseIcon from '@/assets/images/buy/providers/coinbase.svg'
 
 describe('purchaseProviders', () => {
   it('formats a provider code as a display name', () => {
@@ -10,11 +14,10 @@ describe('purchaseProviders', () => {
   })
 
   it('maps known providers to their brand mark', () => {
-    const icons = ['MOONPAY', 'SIMPLEX', 'TOPPER', 'COINBASE'].map(
-      getProviderIcon,
-    )
-    for (const icon of icons) expect(icon).toBeTruthy()
-    expect(new Set(icons).size).toBe(icons.length)
+    expect(getProviderIcon('MOONPAY')).toBe(moonpayIcon)
+    expect(getProviderIcon('SIMPLEX')).toBe(simplexIcon)
+    expect(getProviderIcon('TOPPER')).toBe(topperIcon)
+    expect(getProviderIcon('COINBASE')).toBe(coinbaseIcon)
   })
 
   it('returns no icon for unknown or missing providers (initials fallback)', () => {

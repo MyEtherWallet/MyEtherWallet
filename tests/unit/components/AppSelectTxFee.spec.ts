@@ -143,5 +143,27 @@ describe('AppSelectTxFee', () => {
         wrapper.get('[data-testid="dropdown-trigger"]').attributes('disabled'),
       ).toBeDefined()
     })
+
+    it('locks the choice when disabled, e.g. while the tx is being signed', () => {
+      const wrapper = mountWithFees(fees, { dropdown: true, disabled: true })
+      expect(
+        wrapper.get('[data-testid="dropdown-trigger"]').attributes('disabled'),
+      ).toBeDefined()
+    })
+
+    it('skips tiers the quote omits instead of throwing', async () => {
+      globalStore.gasPriceType = 'ECONOMY'
+      const partial = {
+        quoteId: 'q',
+        fees: { ECONOMY: tier('1'), FAST: tier('3') },
+      }
+      const wrapper = mountWithFees(partial, { dropdown: true })
+      await wrapper.get('[data-testid="dropdown-trigger"]').trigger('click')
+      const rows = wrapper.findAll('[role="option"]')
+      expect(rows.map(r => r.text())).toEqual([
+        expect.stringContaining('select_fee.economy.title'),
+        expect.stringContaining('select_fee.fast.title'),
+      ])
+    })
   })
 })

@@ -126,7 +126,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, type Ref, watch } from 'vue'
+import { nextTick, onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
@@ -287,26 +287,31 @@ const isNativeTokenSelected = computed(() => {
 /** ----------------
  * Max Amount
  ------------------*/
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
-  useMaxAmount({
-    getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
-    getDecimals: () => tokenSelected.value?.decimals ?? 18,
-    getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
-    isNativeToken: () => isNativeTokenSelected.value,
-    isTokenSelected: () => !!tokenSelected.value,
-    getAmount: () => amount.value,
-    onAmountChange: value => {
-      amount.value = value
-    },
-    markFormDirty,
-    resetFormPristine: resetPristine,
-    getTokenIdentifier: () => tokenSelectedContract.value,
-    getDependencies: () => [
-      tokenSelected.value?.balanceWei,
-      selectedFeeNativeValue.value,
-    ],
-    onMaxApplied: () => checkAmountForError(),
-  })
+const {
+  setMaxAmount,
+  resetMaxState,
+  isInternalWallet,
+  isMaxSelected,
+  applyMaxAmount,
+} = useMaxAmount({
+  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+  getDecimals: () => tokenSelected.value?.decimals ?? 18,
+  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+  isNativeToken: () => isNativeTokenSelected.value,
+  isTokenSelected: () => !!tokenSelected.value,
+  getAmount: () => amount.value,
+  onAmountChange: value => {
+    amount.value = value
+  },
+  markFormDirty,
+  resetFormPristine: resetPristine,
+  getTokenIdentifier: () => tokenSelectedContract.value,
+  getDependencies: () => [
+    tokenSelected.value?.balanceWei,
+    selectedFeeNativeValue.value,
+  ],
+  onMaxApplied: () => checkAmountForError(),
+})
 
 const checkAmountForError = () => {
   // Skip validation if form is pristine (just cleared or initial state)
@@ -582,8 +587,9 @@ const exceedsBalance = (
 ) => {
   const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
   const evmValue = (body as EstimatesRequestBody).value
+  const fee = gasFees.value?.fees[selectedFee.value]
   const totalBalanceNeeded =
-    BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
+    BigInt(fee?.nativeValue || fee?.nativeFeeTotal || '0') +
     BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
   return totalBalanceNeeded > BigInt(balanceWei.value)
 }
@@ -656,11 +662,18 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
   if (!wallet.value) return false
   const buildId = ++latestTxBuildId
   isPreparingTx.value = true
+  const isStale = () => buildId !== latestTxBuildId
   try {
-    const signableTx = await wallet.value.getSignableTransaction({
-      priority: selectedFee.value,
-      quoteId,
-    })
+    let signableTx
+    try {
+      signableTx = await wallet.value.getSignableTransaction({
+        priority: selectedFee.value,
+        quoteId,
+      })
+    } catch (e) {
+      if (isStale()) return null
+      throw e
+    }
     let serialized = signableTx.serialized as string
     if (
       wallet.value.getWalletType() === WalletType.PRIVATE_KEY ||
@@ -676,6 +689,7 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
         )
         serialized = signResponse.signed
       } catch (e) {
+        if (isStale()) return null
         const errorMsg =
           e instanceof Error ? e.message : (e as { message?: string })?.message
         analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
@@ -690,11 +704,11 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
         return false
       }
     }
-    if (buildId !== latestTxBuildId) return null
+    if (isStale()) return null
     signedTx.value = serialized
     return true
   } finally {
-    if (buildId === latestTxBuildId) isPreparingTx.value = false
+    if (!isStale()) isPreparingTx.value = false
   }
 }
 
@@ -708,19 +722,39 @@ const handleSubmit = async () => {
 }
 
 // A fee picked on the review changes the tx, so rebuild (and re-sign) it
-// before it can be confirmed.
+// before it can be confirmed. Only the latest pick may update it.
+let latestFeeChange = 0
 watch(selectedFee, async () => {
   if (!openTxModal.value || !gasFees.value?.quoteId) return
-  const body = gasFeeTxEstimate.value
-  if (body && exceedsBalance(body)) {
-    gasFeeError.value = NOT_ENOUGH_BALANCE
-    return
-  }
-  if (gasFeeError.value === NOT_ENOUGH_BALANCE) gasFeeError.value = ''
+  const change = ++latestFeeChange
+  const isStale = () => change !== latestFeeChange || !openTxModal.value
+  isPreparingTx.value = true
   try {
-    if ((await buildSignedTx(gasFees.value.quoteId)) === false)
+    let quoteId = gasFees.value.quoteId
+    if (isMaxSelected.value && isNativeTokenSelected.value) {
+      // Native MAX sends balance minus fee: a new tier changes the amount, so
+      // the tx needs a fresh quote for it.
+      await nextTick()
+      await applyMaxAmount()
+      const quote = await getGasFeeQuotes()
+      if (isStale()) return
+      if (!quote || gasFeeError.value) {
+        openTxModal.value = false
+        return
+      }
+      quoteId = quote.quoteId
+    } else {
+      const body = gasFeeTxEstimate.value
+      if (body && exceedsBalance(body)) {
+        gasFeeError.value = NOT_ENOUGH_BALANCE
+        return
+      }
+      if (gasFeeError.value === NOT_ENOUGH_BALANCE) gasFeeError.value = ''
+    }
+    if ((await buildSignedTx(quoteId)) === false && !isStale())
       openTxModal.value = false
   } catch (e) {
+    if (isStale()) return
     openTxModal.value = false
     const errorMsg =
       e instanceof Error ? e.message : (e as { message?: string })?.message
@@ -729,6 +763,8 @@ watch(selectedFee, async () => {
       text: t('send.toast.failed_to_sign'),
       textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
     })
+  } finally {
+    if (change === latestFeeChange) isPreparingTx.value = false
   }
 })
 </script>

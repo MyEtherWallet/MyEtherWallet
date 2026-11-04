@@ -162,6 +162,9 @@
                       width="w-4"
                       height="h-4"
                     />
+                    <span class="sr-only">{{
+                      toChain?.nameLong || toChain?.name
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -390,9 +393,23 @@ const PROVIDER_LOGOS: Record<string, string> = {
 
 const providerLogo = (name?: string) => (name && PROVIDER_LOGOS[name]) || null
 
-// Quotes arrive best-first.
+// The quote list is ordered by minimum amount, not by output, so "Best value"
+// goes to the quote that receives the most.
+const bestQuote = computed(() =>
+  props.quotes.reduce<(typeof props.quotes)[number] | undefined>(
+    (best, quote) =>
+      !best ||
+      BigInt(quote.toTokenAmount.toString()) >
+        BigInt(best.toTokenAmount.toString())
+        ? quote
+        : best,
+    undefined,
+  ),
+)
 const isBestQuote = computed(
-  () => props.quotes[0]?.quote.provider === selectedQuote.value?.provider,
+  () =>
+    !!bestQuote.value &&
+    bestQuote.value.quote.provider === selectedQuote.value?.provider,
 )
 
 const tokenAddress = (
@@ -518,7 +535,7 @@ const minimumReceived = computed(() => {
 
 const getAmountData = (amount: BN, decimals: number) => {
   if (!amount) return { value: '0' }
-  const full = formatUnits(BigInt(amount.toString()), decimals || 18)
+  const full = formatUnits(BigInt(amount.toString()), decimals ?? 18)
   return formatFloatingPointValue(BigNumber(full))
 }
 

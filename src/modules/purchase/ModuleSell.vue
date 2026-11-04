@@ -506,9 +506,22 @@ const networkFeeDisplay = computed(() => {
   return native
 })
 
-// Market value of the typed amount, shown under it on the review.
+// Market value of the typed amount, shown under it on the review. Only with
+// the token's own price: tokenPrice falls back to the chain's native price,
+// which is right for the native coin only.
 const cryptoFiatValue = computed(() => {
-  if (!cryptoAmount.value || tokenPrice.value <= 0 || !fiatRate.value) return ''
+  const token = selectedToken.value
+  const hasOwnPrice =
+    !token ||
+    !!token.market_data?.price ||
+    token.symbol === displayChain.value?.currencyName
+  if (
+    !cryptoAmount.value ||
+    !hasOwnPrice ||
+    tokenPrice.value <= 0 ||
+    !fiatRate.value
+  )
+    return ''
   const value = new BigNumber(cryptoAmount.value)
     .times(tokenPrice.value)
     .times(fiatRate.value)
