@@ -214,7 +214,8 @@ const paths = computed<DerivationPath[]>(() => [
 ])
 
 // EVM only (no Add on Bitcoin): a custom Bitcoin path would be shared by every
-// Bitcoin-family chain and always derive segwit addresses, whatever its purpose.
+// Bitcoin-family chain, and each chain fixes its address type (btcInfo)
+// whatever the path's purpose.
 const addPath = ({ label, path }: Pick<DerivationPath, 'label' | 'path'>) => {
   const custom = { label, path, type: 'EVM' }
   addCustomDerivation(custom)
