@@ -100,6 +100,29 @@ describe('selectTabWallets', () => {
     ])
   })
 
+  it('lists every extension wallet in Extension', () => {
+    const r = selectTabWallets({
+      ...base,
+      tab: 'extension',
+      detectedNames: ['Rabby Wallet'],
+    })
+    expect(names(r)).toEqual([
+      'Enkrypt',
+      'Phantom',
+      'MetaMask',
+      'Coinbase Wallet',
+      'Trust Wallet',
+      'Rainbow',
+      'Bitget Wallet',
+      'Bybit Wallet',
+      'CLV',
+      'Core',
+      'Zerion',
+      'Rabby Wallet',
+    ])
+    expect(r.at(-1)?.status).toBe('detected')
+  })
+
   it('puts recent first, then detected, with Recent > Detected > Official', () => {
     const r = selectTabWallets({
       ...base,
@@ -188,7 +211,7 @@ describe('selectTabWallets', () => {
     ).toEqual([])
   })
 
-  it('scopes Mobile and Hardware searches to their type', () => {
+  it('scopes Mobile, Hardware and Extension searches to their type', () => {
     expect(
       names(selectTabWallets({ ...base, tab: 'mobile', search: 'rabby' })),
     ).toEqual([])
@@ -198,6 +221,15 @@ describe('selectTabWallets', () => {
     expect(
       names(selectTabWallets({ ...base, tab: 'hardware', search: 'tre' })),
     ).toEqual(['Trezor'])
+    expect(
+      names(selectTabWallets({ ...base, tab: 'extension', search: 'wallet' })),
+    ).toEqual([
+      'Coinbase Wallet',
+      'Trust Wallet',
+      'Bitget Wallet',
+      'Bybit Wallet',
+      'Rabby Wallet',
+    ])
   })
 
   it('ignores search on Advanced', () => {

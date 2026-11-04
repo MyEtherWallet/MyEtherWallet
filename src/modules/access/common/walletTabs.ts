@@ -7,6 +7,7 @@ export const WALLET_TABS = [
   'popular',
   'hardware',
   'mobile',
+  'extension',
   'advanced',
 ] as const
 export type WalletTab = (typeof WALLET_TABS)[number]
@@ -20,8 +21,9 @@ export interface TabWallet {
 /**
  * Curated wallets per tab, in Figma order (Onboarding › 3201:43865). Ids are
  * RainbowKit ids for RainbowKit wallets and `walletConfigs` keys otherwise.
+ * Extension isn't curated: it lists every extension wallet.
  */
-const TAB_WALLET_IDS: Record<WalletTab, string[]> = {
+const TAB_WALLET_IDS: Record<Exclude<WalletTab, 'extension'>, string[]> = {
   popular: [
     'phantom',
     'mew',
@@ -50,6 +52,8 @@ const TAB_WALLET_IDS: Record<WalletTab, string[]> = {
 const inSearchPool = (tab: WalletTab, wallet: WalletConfig): boolean => {
   if (tab === 'hardware') return wallet.type.includes(WalletConfigType.HARDWARE)
   if (tab === 'mobile') return wallet.type.includes(WalletConfigType.MOBILE)
+  if (tab === 'extension')
+    return wallet.type.includes(WalletConfigType.EXTENSION)
   return !wallet.type.some(
     type =>
       type === WalletConfigType.HARDWARE || type === WalletConfigType.SOFTWARE,
@@ -101,6 +105,9 @@ export const selectTabWallets = ({
     )
     return [...starts, ...contains].map(withStatus)
   }
+
+  if (tab === 'extension')
+    return wallets.filter(w => inSearchPool(tab, w)).map(withStatus)
 
   // First entry wins: static configs come first, so the Ledger device keeps the
   // 'ledger' slot even though Ledger Mobile inherits rkDetails.id === 'ledger'.

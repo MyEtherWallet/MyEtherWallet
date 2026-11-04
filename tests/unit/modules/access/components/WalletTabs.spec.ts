@@ -85,9 +85,20 @@ describe('WalletTabs', () => {
     expect(w.findAll('.card').map(c => c.text())).toEqual(['popular wallet'])
   })
 
+  it('puts Extension between Mobile and Advanced', () => {
+    const w = mountTabs()
+    expect(w.findAll('[role="tab"]').map(tab => tab.text())).toEqual([
+      'access_wallet.tabs.popular',
+      'access_wallet.tabs.hardware',
+      'access_wallet.tabs.mobile',
+      'access_wallet.tabs.extension',
+      'access_wallet.tabs.advanced',
+    ])
+  })
+
   it('switches tabs and hides search on Advanced', async () => {
     const w = mountTabs()
-    await w.findAll('[role="tab"]')[3].trigger('click')
+    await w.findAll('[role="tab"]')[4].trigger('click')
     expect(w.find('input').exists()).toBe(false)
     expect(w.text()).toContain('advanced wallet')
   })
