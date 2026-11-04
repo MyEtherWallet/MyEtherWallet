@@ -66,24 +66,49 @@ describe('AppTableCell', () => {
     expect(w.findComponent(AppIcon).exists()).toBe(false)
   })
 
-  it('draws a sparkline with one point per sample instead of the value', () => {
+  // Every "x,y" pair in the path: the start point, then each Bézier's two
+  // control points and its end point.
+  const pairs = (d: string) =>
+    [...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m => [+m[1], +m[2]])
+
+  it('draws the sparkline as a smooth curve instead of the value', () => {
     const w = factory({ change: -1.2, series: [3, 1, 2, 5] })
-    const line = w.get('polyline')
-    expect(line.attributes('points')!.trim().split(' ')).toHaveLength(4)
+    const d = w.get('[data-test="table-cell-sparkline"] path').attributes('d')!
+    expect(d.startsWith('M')).toBe(true)
+    // 4 points, 3 curved segments, no straight lines
+    expect(d.match(/C/g)).toHaveLength(3)
+    expect(d).not.toMatch(/L/)
     const spark = w.get('[data-test="table-cell-sparkline"]')
     expect(spark.attributes('aria-hidden')).toBe('true')
     expect(spark.classes()).toContain('text-text-error')
     expect(w.text()).toBe('−1.20%')
   })
 
+  it('averages a long series down to 10 points', () => {
+    const hourly = Array.from({ length: 168 }, (_, i) => (i % 2 ? 1 : 9) + i)
+    const d = factory({ change: 1, series: hourly })
+      .get('[data-test="table-cell-sparkline"] path')
+      .attributes('d')!
+    expect(d.match(/C/g)).toHaveLength(9)
+  })
+
+  it('keeps the curve inside the box, spikes included', () => {
+    const d = factory({ change: 1, series: [1, 9, 1, 9, 1, 30, 1] })
+      .get('[data-test="table-cell-sparkline"] path')
+      .attributes('d')!
+    for (const [x, y] of pairs(d)) {
+      expect(x).toBeGreaterThanOrEqual(0)
+      expect(x).toBeLessThanOrEqual(56)
+      expect(y).toBeGreaterThanOrEqual(1)
+      expect(y).toBeLessThanOrEqual(15)
+    }
+  })
+
   it('draws a flat line for a flat series', () => {
-    const w = factory({ change: 0, series: [2, 2, 2] })
-    const ys = w
-      .get('polyline')
-      .attributes('points')!
-      .split(' ')
-      .map(p => p.split(',')[1])
-    expect(new Set(ys).size).toBe(1)
+    const d = factory({ change: 0, series: [2, 2, 2] })
+      .get('[data-test="table-cell-sparkline"] path')
+      .attributes('d')!
+    expect(new Set(pairs(d).map(([, y]) => y)).size).toBe(1)
   })
 
   it('renders nothing when its column is hidden at this size', () => {

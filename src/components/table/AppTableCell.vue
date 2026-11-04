@@ -53,23 +53,55 @@ const visible = computed(
 const hasChange = computed(() => Number.isFinite(props.change))
 const trend = computed(() => trendOf(props.change ?? 0))
 
-// Figma Chart box. The line keeps 1px clear of the edges so the 1.5 stroke
-// isn't clipped; a flat series sits at mid-height.
+// Figma Chart box (56×16). 168 hourly samples in 56px read as noise, so the
+// series is averaged into SPARK_POINTS buckets and drawn as a smooth curve, the
+// way the old chart.js sparkline looked. The line keeps 1px clear of the edges
+// so the 1.5 stroke isn't clipped; a flat series sits at mid-height.
 const SPARK_W = 56
 const SPARK_H = 16
-const points = computed(() => {
-  const series = props.series ?? []
+const SPARK_POINTS = 10
+
+const downsample = (values: number[], target: number) => {
+  if (values.length <= target) return values
+  const size = values.length / target
+  return Array.from({ length: target }, (_, i) => {
+    const bucket = values.slice(
+      Math.round(i * size),
+      Math.round((i + 1) * size),
+    )
+    return bucket.reduce((sum, v) => sum + v, 0) / bucket.length
+  })
+}
+
+const clampY = (y: number) => Math.min(Math.max(y, 1), SPARK_H - 1)
+const xy = ([x, y]: number[]) => `${x.toFixed(2)},${y.toFixed(2)}`
+
+// Catmull-Rom through the points as cubic Béziers. Control points are clamped
+// to the box so the curve never overshoots past the edge.
+const path = computed(() => {
+  const series = downsample(props.series ?? [], SPARK_POINTS)
   const min = Math.min(...series)
   const span = Math.max(...series) - min
   const step = series.length > 1 ? SPARK_W / (series.length - 1) : 0
-  return series
-    .map((v, i) => {
-      const y = span
-        ? SPARK_H - 1 - ((v - min) / span) * (SPARK_H - 2)
-        : SPARK_H / 2
-      return `${(i * step).toFixed(2)},${y.toFixed(2)}`
-    })
-    .join(' ')
+  const pts = series.map((v, i) => [
+    i * step,
+    span ? SPARK_H - 1 - ((v - min) / span) * (SPARK_H - 2) : SPARK_H / 2,
+  ])
+  return pts.reduce((d, p, i) => {
+    if (i === 0) return `M${xy(p)}`
+    const prev = pts[i - 1]
+    const before = pts[i - 2] ?? prev
+    const after = pts[i + 1] ?? p
+    const c1 = [
+      prev[0] + (p[0] - before[0]) / 6,
+      clampY(prev[1] + (p[1] - before[1]) / 6),
+    ]
+    const c2 = [
+      p[0] - (after[0] - prev[0]) / 6,
+      clampY(p[1] - (after[1] - prev[1]) / 6),
+    ]
+    return `${d} C${xy(c1)} ${xy(c2)} ${xy(p)}`
+  }, '')
 })
 </script>
 
@@ -127,12 +159,11 @@ const points = computed(() => {
         fill="none"
         aria-hidden="true"
       >
-        <polyline
-          :points="points"
+        <path
+          :d="path"
           stroke="currentColor"
           stroke-width="1.5"
           stroke-linecap="round"
-          stroke-linejoin="round"
           vector-effect="non-scaling-stroke"
         />
       </svg>
