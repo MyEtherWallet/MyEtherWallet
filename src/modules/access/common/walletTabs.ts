@@ -13,6 +13,7 @@ export const WALLET_TABS = [
 export type WalletTab = (typeof WALLET_TABS)[number]
 
 export type WalletStatus = 'recent' | 'detected' | 'official'
+const STATUS_ORDER: WalletStatus[] = ['recent', 'detected', 'official']
 export interface TabWallet {
   wallet: WalletConfig
   status?: WalletStatus
@@ -101,10 +102,18 @@ export const selectTabWallets = ({
     return [...starts, ...contains].map(withStatus)
   }
 
-  if (tab === 'extension')
+  // Labelled wallets (recent, detected, official) first, then A-Z.
+  if (tab === 'extension') {
+    const rank = ({ status }: TabWallet) =>
+      status ? STATUS_ORDER.indexOf(status) : STATUS_ORDER.length
     return wallets
       .filter(w => w.type.includes(WalletConfigType.EXTENSION))
       .map(withStatus)
+      .sort(
+        (a, b) =>
+          rank(a) - rank(b) || a.wallet.name.localeCompare(b.wallet.name),
+      )
+  }
 
   // First entry wins: static configs come first, so the Ledger device keeps the
   // 'ledger' slot even though Ledger Mobile inherits rkDetails.id === 'ledger'.

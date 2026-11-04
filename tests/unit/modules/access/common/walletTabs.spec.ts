@@ -100,27 +100,32 @@ describe('selectTabWallets', () => {
     ])
   })
 
-  it('lists every extension wallet in Extension', () => {
+  it('lists every extension wallet in Extension, labelled ones first then A-Z', () => {
     const r = selectTabWallets({
       ...base,
       tab: 'extension',
+      recentNames: ['Zerion'],
       detectedNames: ['Rabby Wallet'],
     })
     expect(names(r)).toEqual([
+      'Zerion',
+      'Rabby Wallet',
       'Enkrypt',
-      'Phantom',
-      'MetaMask',
-      'Coinbase Wallet',
-      'Trust Wallet',
-      'Rainbow',
       'Bitget Wallet',
       'Bybit Wallet',
       'CLV',
+      'Coinbase Wallet',
       'Core',
-      'Zerion',
-      'Rabby Wallet',
+      'MetaMask',
+      'Phantom',
+      'Rainbow',
+      'Trust Wallet',
     ])
-    expect(r.at(-1)?.status).toBe('detected')
+    expect(r.slice(0, 3).map(x => x.status)).toEqual([
+      'recent',
+      'detected',
+      'official',
+    ])
   })
 
   it('puts recent first, then detected, with Recent > Detected > Official', () => {
@@ -204,15 +209,16 @@ describe('selectTabWallets', () => {
 
   it('searches across every tab, whichever one is open', () => {
     for (const tab of WALLET_TABS) {
-      expect(names(selectTabWallets({ ...base, tab, search: 'key' }))).toEqual(
-        ['Keystore', 'Private Key'],
-      )
+      expect(names(selectTabWallets({ ...base, tab, search: 'key' }))).toEqual([
+        'Keystore',
+        'Private Key',
+      ])
       expect(
         names(selectTabWallets({ ...base, tab, search: 'ledger' })),
       ).toEqual(['Ledger'])
-      expect(names(selectTabWallets({ ...base, tab, search: 'zer' }))).toEqual(
-        ['Zerion'],
-      )
+      expect(names(selectTabWallets({ ...base, tab, search: 'zer' }))).toEqual([
+        'Zerion',
+      ])
     }
   })
 })
