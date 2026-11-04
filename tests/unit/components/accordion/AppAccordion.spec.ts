@@ -96,6 +96,14 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(panel(w).attributes('id')).toBe('fees-body')
   })
 
+  it('follows a later id change on the header and body', async () => {
+    const w = mountAccordion({ id: 'fees' })
+    await w.setProps({ id: 'gas' })
+    expect(header(w).attributes('id')).toBe('gas-header')
+    expect(header(w).attributes('aria-controls')).toBe('gas-body')
+    expect(panel(w).attributes('id')).toBe('gas-body')
+  })
+
   it('gives each instance its own ids', () => {
     // useId is unique per app tree, so both live under one parent.
     const w = mount(

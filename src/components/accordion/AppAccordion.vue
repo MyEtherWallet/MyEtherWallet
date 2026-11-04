@@ -100,10 +100,12 @@ const emit = defineEmits<{
 const slots = useSlots()
 const group = inject(ACCORDION_GROUP_KEY, null)
 
-const id = props.id ?? useId()
-const headerId = `${id}-header`
-const bodyId = `${id}-body`
-const key = computed(() => props.value ?? id)
+// useId always runs (stable across renders); the ids follow a changed `id`.
+const generatedId = useId()
+const baseId = computed(() => props.id ?? generatedId)
+const headerId = computed(() => `${baseId.value}-header`)
+const bodyId = computed(() => `${baseId.value}-body`)
+const key = computed(() => props.value ?? baseId.value)
 
 const isOpen = computed(() => (group ? group.isOpen(key.value) : open.value))
 
