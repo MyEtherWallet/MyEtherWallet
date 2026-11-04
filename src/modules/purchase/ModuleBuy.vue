@@ -80,6 +80,7 @@
       :fiat-amount="fiatAmount"
       :fiat-currency="selectedFiat"
       :crypto-currency="tokenSymbol"
+      :token-icon="tokenIcon"
       :is-loading="isFetchingQuotes && !buyQuotes.length"
       :error="buyQuotesError"
       :analytics-payload="buyPayload"
@@ -101,6 +102,7 @@ import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
+import { getSelectedTokenIcon } from './helpers/purchaseIcons'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
@@ -141,6 +143,7 @@ const {
   isFetchingEstimate,
   exchangeRates,
   rateLimitedUntil,
+  coinImages,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -221,6 +224,14 @@ const purchaseChainCode = computed<string>(
 const tokenSymbol = computed<string>(
   () =>
     selectedToken.value?.symbol ?? displayChain.value?.currencyName ?? 'ETH',
+)
+
+const tokenIcon = computed(() =>
+  getSelectedTokenIcon(
+    selectedToken.value,
+    displayChain.value,
+    coinImages.value,
+  ),
 )
 
 const walletMenu = useWalletMenuStore()

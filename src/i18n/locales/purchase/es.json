@@ -34,16 +34,13 @@
         "insufficient": "No tienes suficiente {symbol}"
       },
       "provider": {
-        "title": "Venderás {amount}",
-        "youll_send": "Enviarás",
-        "youll_receive": "Recibirás",
-        "continue": "Continuar"
+        "review_title": "Revisar venta",
+        "confirm": "Confirmar venta"
       }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
     "min": "Mín",
     "max": "Máx",
-    "bank": "Banco",
     "select_token": {
       "title": "Tokens",
       "subtitle": "Selecciona uno de la lista",
@@ -60,16 +57,21 @@
       "no_results": "Ninguna moneda coincide"
     },
     "select_provider": {
-      "title": "Pagarás {amount}",
-      "subtitle": "Selecciona uno de los siguientes proveedores para definir cuánto {crypto} recibirás.",
       "best_value": "Mejor valor",
-      "youll_pay": "Pagarás",
-      "youll_receive": "Recibirás",
-      "continue": "Continuar",
       "error": {
         "no_quotes": "No hay proveedores disponibles para esta selección. Prueba con otra cantidad o moneda."
       },
-      "redirect": "Se te redirigirá a {provider} para completar tu compra."
+      "review_title": "Revisar compra",
+      "provider": "Proveedor de compra",
+      "summary": "Resumen",
+      "youre_paying": "Estás pagando",
+      "expected_to_receive": "Recibirás aprox.",
+      "confirm": "Confirmar compra"
+    },
+    "quote": {
+      "updates_in": "La cotización se actualiza en {time}",
+      "expired_refreshing": "Cotización vencida: obteniendo una nueva…",
+      "rate_limited": "Demasiadas solicitudes: reintenta en {seconds} s"
     }
   }
 }

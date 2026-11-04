@@ -34,16 +34,13 @@
         "insufficient": "{symbol} 不足"
       },
       "provider": {
-        "title": "您将出售 {amount}",
-        "youll_send": "您将发送",
-        "youll_receive": "您将收到",
-        "continue": "继续"
+        "review_title": "查看出售",
+        "confirm": "确认出售"
       }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
     "min": "最低",
     "max": "最高",
-    "bank": "银行",
     "select_token": {
       "title": "代币",
       "subtitle": "从列表中选择一个",
@@ -60,16 +57,21 @@
       "no_results": "没有匹配的货币"
     },
     "select_provider": {
-      "title": "您将支付 {amount}",
-      "subtitle": "请从以下服务商中选择一个，以确定您将收到多少 {crypto}。",
       "best_value": "最优",
-      "youll_pay": "您将支付",
-      "youll_receive": "您将收到",
-      "continue": "继续",
       "error": {
         "no_quotes": "没有适用于此选择的服务商。请尝试其他数量或货币。"
       },
-      "redirect": "您将被重定向至 {provider} 以完成购买。"
+      "review_title": "查看购买",
+      "provider": "购买服务商",
+      "summary": "摘要",
+      "youre_paying": "您将支付",
+      "expected_to_receive": "预计获得",
+      "confirm": "确认购买"
+    },
+    "quote": {
+      "updates_in": "报价将在 {time} 后刷新",
+      "expired_refreshing": "报价已过期，正在获取新报价…",
+      "rate_limited": "请求过多，请在 {seconds} 秒后重试"
     }
   }
 }

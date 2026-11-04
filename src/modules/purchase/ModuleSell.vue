@@ -177,6 +177,8 @@
       :quote="sellQuote"
       :crypto-amount="cryptoAmount"
       :crypto-symbol="tokenSymbol"
+      :crypto-fiat="cryptoFiatValue"
+      :token-icon="tokenIcon"
       :is-loading="isFetchingSellQuote && !sellQuote"
       :error="sellQuoteError"
       :analytics-payload="sellPayload"
@@ -198,6 +200,7 @@ import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import SellProviderModal from './components/SellProviderModal.vue'
+import { getSelectedTokenIcon } from './helpers/purchaseIcons'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
@@ -213,6 +216,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
+import BigNumber from 'bignumber.js'
 import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
@@ -238,6 +242,7 @@ const {
   sellQuoteExpiresAt,
   exchangeRates,
   rateLimitedUntil,
+  coinImages,
 } = storeToRefs(purchaseStore)
 const { fetchPurchaseInfo, fetchSellQuote, clearSellQuote } = purchaseStore
 
@@ -318,6 +323,14 @@ const purchaseChainCode = computed<string>(
 const tokenSymbol = computed<string>(
   () =>
     selectedToken.value?.symbol ?? displayChain.value?.currencyName ?? 'ETH',
+)
+
+const tokenIcon = computed(() =>
+  getSelectedTokenIcon(
+    selectedToken.value,
+    displayChain.value,
+    coinImages.value,
+  ),
 )
 
 onMounted(() => {
@@ -491,6 +504,15 @@ const networkFeeDisplay = computed(() => {
     return `${native} (${fiat})`
   }
   return native
+})
+
+// Market value of the typed amount, shown under it on the review.
+const cryptoFiatValue = computed(() => {
+  if (!cryptoAmount.value || tokenPrice.value <= 0 || !fiatRate.value) return ''
+  const value = new BigNumber(cryptoAmount.value)
+    .times(tokenPrice.value)
+    .times(fiatRate.value)
+  return `${getCurrencySymbol(selectedFiat.value)}${formatFiatValue(value.toFixed()).value}`
 })
 
 const formattedFiatEstimate = computed(() => {

@@ -1,6 +1,48 @@
 <template>
   <div>
+    <!-- Summary screens: the design-library Dropdown with the same options. -->
+    <app-dropdown
+      v-if="dropdown"
+      surface="alternative"
+      :title="selectedFeeTitle"
+      :disabled="!hasFees"
+    >
+      <template #title>
+        <app-skeleton v-if="!hasFees" class="h-3 w-24" />
+        <span v-else class="text-label-sm text-text-default">
+          {{ hasFiatEstimates ? `≈ ${selectedFeeFiat}` : selectedFeeNative }}
+          <span v-if="hasFiatEstimates" class="text-text-sm text-text-subtle">
+            ({{ selectedFeeNative }})
+          </span>
+        </span>
+      </template>
+      <template v-if="hasFees" #suffix>
+        <app-tag
+          type="success"
+          variant="contrast"
+          leading-icon="check-badge"
+          :label="selectedFeeOption?.title"
+        />
+      </template>
+      <app-cell
+        v-for="fee in displayFees"
+        :key="fee.id"
+        size="small"
+        inset
+        role="option"
+        :aria-selected="gasPriceType === fee.id"
+        :selected="gasPriceType === fee.id"
+        :title="fee.title"
+        :right-accessory="{
+          kind: 'balance',
+          primary: fee.fiatValue,
+          secondary: fee.nativeValue,
+        }"
+        @click="setFee(fee.id)"
+      />
+    </app-dropdown>
     <button
+      v-else
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
@@ -37,7 +79,7 @@
     </button>
     <div
       v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
-      class="min-h-6 mt-1"
+      :class="['mt-1', dropdown ? 'empty:hidden' : 'min-h-6']"
     >
       <transition name="fade" mode="out-in">
         <AppInputFeedback
@@ -72,6 +114,7 @@
     </div>
 
     <app-modal
+      v-if="!dropdown"
       :title="$t('select_fee.title')"
       v-model="openModal"
       class="w-full max-w-[560px]"
@@ -174,6 +217,10 @@ import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDropdown from '@/components/dropdown/AppDropdown.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 const walletMenu = useWalletMenuStore()
 const { formatFiat } = useCurrency()
 
@@ -200,9 +247,16 @@ interface Props {
   fees?: QuotesResponse
   isLoadingFees?: boolean
   txRequestBody?: EstimatesRequestBody | GetBtcTransactionEstimateBody
+  /** Render the options as a design-library Dropdown instead of a modal. */
+  dropdown?: boolean
+  /**
+   * Start on the user's default fee. Off where an earlier step already
+   * picked the fee (the Send and Sell reviews), so it isn't reset.
+   */
+  resetToDefault?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { resetToDefault: true })
 
 /** ----------------
  * Fee Error
@@ -271,8 +325,7 @@ const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
     ) {
       // Return a default BTC estimate body
       return {} as unknown as
-        | EstimatesRequestBody
-        | GetBtcTransactionEstimateBody
+        EstimatesRequestBody | GetBtcTransactionEstimateBody
     }
     /**
      * Right now bitcoin wallets are only fetched when the user is logged in.
@@ -368,7 +421,7 @@ watch(
   },
 )
 onMounted(() => {
-  gasPriceType.value = defaultGasPriceType.value
+  if (props.resetToDefault) gasPriceType.value = defaultGasPriceType.value
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
     if (isBitcoinChain.value && !isWalletConnected.value) {
@@ -528,6 +581,14 @@ const displayFees = computed<DisplayFee[]>(() => {
   ]
   return a
 })
+
+const selectedFeeOption = computed(() =>
+  displayFees.value.find(fee => fee.id === gasPriceType.value),
+)
+
+const selectedFeeTitle = computed(() =>
+  hasFiatEstimates.value ? selectedFeeFiat.value : selectedFeeNative.value,
+)
 
 const hasFees = computed(() => {
   if (props.fees) {

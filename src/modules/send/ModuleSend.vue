@@ -104,6 +104,10 @@
       :to-amount="new BigNumber(amount).toFixed()"
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
+      :gas-fees="gasFees"
+      :tx-request-body="gasFeeTxEstimate"
+      :is-preparing="isPreparingTx"
+      v-model:gas-fee-error="gasFeeError"
       v-model="openTxModal"
       @tx-sent="onTxSent"
     />
@@ -208,6 +212,8 @@ const gasFeeError = ref('')
 const selectedFeeNativeValue = ref('0')
 
 const openTxModal = ref(false)
+// AppSelectTxFee's code for a fee the balance can't cover.
+const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
 const sendInitiatedOpen = ref(false)
 const isLoadingFees = ref(false)
 
@@ -570,6 +576,18 @@ const saveToAddressBookAfterSending = () => {
 // toast store
 const toastStore = useToastStore()
 
+// Selected fee plus the amount sent, against the native balance.
+const exceedsBalance = (
+  body: EstimatesRequestBody | BitcoinQuotesRequestBody,
+) => {
+  const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
+  const evmValue = (body as EstimatesRequestBody).value
+  const totalBalanceNeeded =
+    BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
+    BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
+  return totalBalanceNeeded > BigInt(balanceWei.value)
+}
+
 // Get quotes:
 const getGasFeeQuotes = async () => {
   try {
@@ -591,13 +609,7 @@ const getGasFeeQuotes = async () => {
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
-    const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
-    const evmValue = (body as EstimatesRequestBody).value
-    const totalBalanceNeeded =
-      BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
-      BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
-
-    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+    if (exceedsBalance(body)) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
     isLoadingFees.value = false
@@ -628,50 +640,95 @@ const getGasFeeQuotes = async () => {
   }
 }
 
+/** ----------------
+ * Signable transaction
+ ------------------*/
+const isPreparingTx = ref(false)
+// Each build bumps the id, so a slower earlier build can't overwrite a newer one.
+let latestTxBuildId = 0
+
+/**
+ * Builds the transaction for the selected fee; private key and mnemonic
+ * wallets sign it here too, the rest sign on confirm. Resolves false when
+ * signing failed (already reported) and null when a newer build took over.
+ */
+const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
+  if (!wallet.value) return false
+  const buildId = ++latestTxBuildId
+  isPreparingTx.value = true
+  try {
+    const signableTx = await wallet.value.getSignableTransaction({
+      priority: selectedFee.value,
+      quoteId,
+    })
+    let serialized = signableTx.serialized as string
+    if (
+      wallet.value.getWalletType() === WalletType.PRIVATE_KEY ||
+      wallet.value.getWalletType() === WalletType.MNEMONIC
+    ) {
+      if (!wallet.value.SignTransaction) {
+        console.error('SignTransaction not implemented')
+        return false
+      }
+      try {
+        const signResponse = await wallet.value.SignTransaction(
+          serialized as HexPrefixedString,
+        )
+        serialized = signResponse.signed
+      } catch (e) {
+        const errorMsg =
+          e instanceof Error ? e.message : (e as { message?: string })?.message
+        analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+          token: tokenSelected.value?.symbol,
+          errorMsg: errorMsg ?? 'Unknown error during signing',
+        })
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('send.toast.failed_to_sign'),
+          textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
+        })
+        return false
+      }
+    }
+    if (buildId !== latestTxBuildId) return null
+    signedTx.value = serialized
+    return true
+  } finally {
+    if (buildId === latestTxBuildId) isPreparingTx.value = false
+  }
+}
+
 const handleSubmit = async () => {
   analytics.trackSendEvent(SendEvent.CLICK_SEND, {
     token: tokenSelected.value?.symbol,
   })
   const latestGasFees = await getGasFeeQuotes()
   if (!wallet.value || !latestGasFees || gasFeeError.value) return
-  // generate signable transaction
-  const signableTx = await wallet.value?.getSignableTransaction({
-    priority: selectedFee.value,
-    quoteId: latestGasFees.quoteId,
-  })
+  if (await buildSignedTx(latestGasFees.quoteId)) openTxModal.value = true
+}
 
-  if (
-    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
-    wallet.value?.getWalletType() === WalletType.MNEMONIC
-  ) {
-    if (!wallet.value?.SignTransaction) {
-      console.error('SignTransaction not implemented')
-      return
-    }
-    try {
-      const signResponse = await wallet.value?.SignTransaction(
-        signableTx.serialized as HexPrefixedString,
-      )
-
-      signedTx.value = signResponse.signed
-      openTxModal.value = true
-    } catch (e) {
-      const errorMsg =
-        e instanceof Error ? e.message : (e as { message?: string })?.message
-      analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
-        token: tokenSelected.value?.symbol,
-        errorMsg: errorMsg ?? 'Unknown error during signing',
-      })
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: t('send.toast.failed_to_sign'),
-        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
-      })
-    }
+// A fee picked on the review changes the tx, so rebuild (and re-sign) it
+// before it can be confirmed.
+watch(selectedFee, async () => {
+  if (!openTxModal.value || !gasFees.value?.quoteId) return
+  const body = gasFeeTxEstimate.value
+  if (body && exceedsBalance(body)) {
+    gasFeeError.value = NOT_ENOUGH_BALANCE
     return
   }
-
-  openTxModal.value = true
-  signedTx.value = signableTx.serialized
-}
+  if (gasFeeError.value === NOT_ENOUGH_BALANCE) gasFeeError.value = ''
+  try {
+    if ((await buildSignedTx(gasFees.value.quoteId)) === false)
+      openTxModal.value = false
+  } catch (e) {
+    openTxModal.value = false
+    const errorMsg =
+      e instanceof Error ? e.message : (e as { message?: string })?.message
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('send.toast.failed_to_sign'),
+      textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
+    })
+  }
+})
 </script>

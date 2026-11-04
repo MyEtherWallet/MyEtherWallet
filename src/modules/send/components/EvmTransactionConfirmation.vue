@@ -1,244 +1,94 @@
 <template>
-  <app-modal
-    :title="$t('verify-tx.title')"
-    v-model="openModal"
-    :buttons="footerButtons"
-    class="w-full sm:max-w-[600px]"
-  >
-    <div class="px-4 sm:px-6">
-      <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
-      <div class="flex flex-col gap-3 px-1">
-        <div class="text-text-subtle text-s-15 text-center mb-1">
-          {{ $t('verify-tx.description') }}
+  <app-modal :title="$t('verify-tx.title')" v-model="openModal">
+    <div class="flex flex-col gap-6 p-6">
+      <expand-transition>
+        <div v-if="showApproveMessage">
+          <p
+            key="confirmation-approve-message"
+            class="text-center text-label-base text-text-brand animate-pulse"
+          >
+            {{ $t('send.approve-tx-on-device') }}
+          </p>
         </div>
-        <expand-transition>
-          <div v-if="showApproveMessage">
-            <div
-              class="flex items-center justify-center gap-5 my-4 font-bold text-text-brand animate-pulse"
-              key="confirmation-approve-message"
-            >
-              {{ $t('send.approve-tx-on-device') }}
-            </div>
-          </div>
-        </expand-transition>
-        <div class="flex flex-col gap-2 text-wrap">
-          <!-- Network -->
-          <div
-            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex items-center"
-          >
-            <img
-              :src="selectedChain?.icon || '@/assets/icons/tokens/eth.svg'"
-              alt=""
-              class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
-            />
-            <div>
-              <p
-                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle"
-              >
-                {{ $t('common.network') }}
-              </p>
-              <p class="text-s-17 font-medium text-black">
-                {{ selectedChain?.nameLong || $t('verify-tx.unknown-network') }}
-              </p>
-            </div>
-          </div>
-          <!-- From-->
-          <div
-            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
-          >
-            <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
-            >
-              {{ $t('common.from') }}
-            </p>
+      </expand-transition>
 
-            <div class="flex items-center">
-              <img
-                alt=""
-                :src="createIcon(fromAddress)"
-                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+      <div class="flex flex-col gap-8 pb-6">
+        <div class="flex flex-col gap-3">
+          <p class="text-label-base text-text-default">
+            {{ $t('verify-tx.summary') }}
+          </p>
+          <div
+            class="flex w-full flex-col gap-4 overflow-hidden rounded-16 bg-background-default p-4"
+          >
+            <div class="flex items-center gap-3">
+              <app-content-group
+                :title="$t('verify-tx.youre-sending')"
+                class="flex-1"
               />
-              <p
-                class="text-s-15 font-medium text-black break-all leading-relaxed"
-              >
-                {{ fromAddress }}
-              </p>
-            </div>
-          </div>
-          <!-- Token Amount-->
-          <div
-            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
-          >
-            <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
-            >
-              {{ $t('common.amount') }}
-            </p>
-            <div class="flex items-center">
-              <img
-                alt=""
-                :src="toToken.logo_url || selectedChain?.icon"
-                class="w-10 h-10 mr-4 overflow-hidden shadow-token rounded-full bg-white p-0.5"
+              <app-content-group
+                :title="`${toAmount} ${toToken.symbol ?? ''}`"
+                :description="`≈ ${formatFiat(toAmountFiat).display}`"
+                align="right"
+                class="flex-1"
               />
-              <div class="grow">
-                <p class="text-s-20 font-bold text-black leading-tight">
-                  {{ toAmount }}
-                  <span class="text-s-14 text-text-subtle">{{
-                    toToken.symbol
-                  }}</span>
-                </p>
-                <p class="text-text-subtle text-s-14 font-medium">
-                  {{ formatFiat(toAmountFiat).display }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <!-- To -->
-          <div
-            class="bg-background-brand-subtle border-none rounded-20 px-5 py-4 flex flex-col gap-1"
-          >
-            <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-text-subtle ml-14"
-            >
-              {{ $t('common.to') }}
-            </p>
-
-            <div class="flex items-center">
-              <img
-                alt=""
-                :src="createIcon(toAddress)"
-                class="w-10 h-10 mr-4 rounded-full overflow-hidden shadow-token bg-white p-0.5 flex-none"
+              <app-token-logo
+                :url="toToken.logo_url || selectedChain?.icon"
+                :symbol="toToken.symbol"
+                width="w-10"
+                height="h-10"
+                no-shadow
               />
-              <p
-                class="text-s-15 font-medium text-black break-all leading-relaxed"
-              >
-                {{ toAddress }}
-              </p>
+            </div>
+
+            <app-divider variant="alternative" class="-my-1" />
+
+            <div class="flex items-center gap-3">
+              <app-content-group :title="$t('common.from')" class="flex-1" />
+              <app-content-group
+                :title="truncateAddress(fromAddress, 6, 4)"
+                :description="fromAccountName"
+                align="right"
+                class="flex-1"
+              />
+              <app-avatar type="account" size="l" :address="fromAddress" />
+            </div>
+
+            <app-divider variant="alternative" class="-my-1" />
+
+            <div class="flex items-center gap-3">
+              <app-content-group :title="$t('common.to')" class="flex-1" />
+              <app-content-group
+                :title="truncateAddress(toAddress, 6, 4)"
+                align="right"
+                class="flex-1"
+              />
+              <app-avatar type="account" size="l" :address="toAddress" />
             </div>
           </div>
+        </div>
 
-          <!-- Network fee -->
-          <div class="px-5 py-2 flex items-start justify-between mt-1">
-            <p
-              class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle py-1"
-            >
-              {{ $t('common.network_fee') }}
-            </p>
-            <div class="text-right">
-              <p class="font-bold text-s-15 text-black">
-                {{ formatFee }} {{ network?.currencyName }}
-              </p>
-              <p class="text-s-12 font-medium text-text-subtle mt-0.5">
-                {{ formatFiat(networkFeeUSD).display }}
-              </p>
-            </div>
-          </div>
-          <button
-            v-if="txDataFormatted"
-            class="rounded-full hoverNoBG py-2 px-4 flex items-center justify-center max-w-fit mr-auto -mt-1 text-s-14 font-medium"
-            @click="showMoreDetails = !showMoreDetails"
-          >
-            {{ $t('common.more_details') }}
-            <AppIcon
-              name="chevron-down"
-              variant="filled"
-              size="xxs"
-              :class="[
-                'transition-transform ml-2',
-                { 'rotate-180': showMoreDetails },
-              ]"
-            />
-          </button>
-          <expand-transition>
-            <div v-if="showMoreDetails && txDataFormatted !== null">
-              <div
-                class="my-2 flex flex-col gap-4 bg-background-brand-subtle py-6 rounded-20"
-              >
-                <!-- Nonce-->
-                <div class="px-5 flex items-center justify-between">
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
-                  >
-                    {{ $t('common.nonce') }}
-                  </p>
-                  <p class="text-right text-s-14 font-medium text-black">
-                    {{ txDataFormatted.nonce }}
-                  </p>
-                </div>
-                <!-- Gas Limit -->
-                <div class="px-5 flex items-center justify-between">
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
-                  >
-                    {{ $t('gas.limit') }}
-                  </p>
-                  <p class="text-right text-s-14 font-medium text-black">
-                    {{ txDataFormatted.gasLimit }}
-                  </p>
-                </div>
-                <!-- Max fee per gas -->
-                <div
-                  v-if="txDataFormatted.maxFeePerGas"
-                  class="px-5 flex items-center justify-between"
-                >
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
-                  >
-                    {{ $t('gas.max_fee') }}
-                  </p>
-                  <p class="text-right text-s-14 font-medium text-black">
-                    {{ txDataFormatted.maxFeePerGas }} Gwei
-                  </p>
-                </div>
-                <!-- Max Priority fee per gas -->
-                <div
-                  v-if="txDataFormatted.maxPriorityFeePerGas"
-                  class="px-5 flex items-center justify-between"
-                >
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
-                  >
-                    {{ $t('gas.max_priority') }}
-                  </p>
-                  <p class="text-right text-s-14 font-medium text-black">
-                    {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
-                  </p>
-                </div>
-                <!-- Gas Price -->
-
-                <div
-                  v-if="txDataFormatted.gasPrice"
-                  class="px-5 flex items-center justify-between"
-                >
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle"
-                  >
-                    {{ $t('gas.price') }}
-                  </p>
-                  <p class="text-right text-s-14 font-medium text-black">
-                    {{ txDataFormatted.gasPrice }} Gwei
-                  </p>
-                </div>
-                <!-- Data -->
-                <div class="px-5 flex items-start justify-between">
-                  <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-text-subtle pt-2"
-                  >
-                    {{ $t('common.data') }}
-                  </p>
-                  <div class="flex justify-end max-w-[70%]">
-                    <p
-                      class="text-right text-s-12 break-all font-mono bg-white px-3 py-2 rounded-lg text-black"
-                    >
-                      {{ txDataFormatted.data }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </expand-transition>
+        <div class="flex flex-col gap-3">
+          <p class="text-label-base text-text-default">
+            {{ $t('common.network_fee') }}
+          </p>
+          <app-select-tx-fee
+            :fees="gasFees"
+            :tx-request-body="txRequestBody"
+            v-model:gas-fee-error="gasFeeError"
+            :reset-to-default="false"
+            dropdown
+          />
         </div>
       </div>
+
+      <app-base-button
+        class="w-full"
+        :disabled="isPreparing || !!gasFeeError"
+        :is-loading="signing"
+        @click="confirmTransaction"
+      >
+        {{ $t('verify-tx.confirm') }}
+      </app-base-button>
     </div>
   </app-modal>
 </template>
@@ -247,29 +97,31 @@
 import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import type { TokenBalanceRaw } from '@/mew_api/types'
+import type {
+  TokenBalanceRaw,
+  QuotesResponse,
+  EstimatesRequestBody,
+  BitcoinQuotesRequestBody,
+} from '@/mew_api/types'
 import AppModal from '@/components/modal/AppModal.vue'
-import type { ModalButtons } from '@/components/modal/types'
-import createIcon from '@/providers/ethereum/blockies'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { truncateAddress } from '@/utils/filters'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
-import {
-  formatFloatingPointValue,
-  formatIntegerToString,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
-import { commonGenerator } from '@/providers/ethereum/utils'
-import { Hardfork } from '@ethereumjs/common'
-import { hexToBytes, bytesToHex } from '@ethereumjs/util'
-import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
 import {
   isSignableWallet,
@@ -296,10 +148,15 @@ interface EvmTxType {
   toAmount: string
   toAmountFiat: string
   signedTx: HexPrefixedString | string // rawTx may be different,
+  gasFees?: QuotesResponse
+  txRequestBody?: EstimatesRequestBody | BitcoinQuotesRequestBody
+  /** The parent is rebuilding the tx for a newly picked fee. */
+  isPreparing?: boolean
 }
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
+const gasFeeError = defineModel<string>('gasFeeError', { default: '' })
 const emit = defineEmits<{
   'tx-sent': [txHash: string]
 }>()
@@ -338,10 +195,12 @@ const signing = ref(false)
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
 
-const goBack = () => {
-  openModal.value = false
-  model.value = false
-}
+// The account's saved name; skipped while it is just the shortened address.
+const watchOnlyStore = useWatchOnlyStore()
+const fromAccountName = computed(() => {
+  const name = watchOnlyStore.activeAccount?.addressName
+  return name && name !== truncateAddress(props.fromAddress, 6, 4) ? name : ''
+})
 // Toast
 const toastStore = useToastStore()
 const { t } = useI18n()
@@ -520,87 +379,7 @@ const confirmTransaction = async () => {
   }
 }
 
-const footerButtons = computed<ModalButtons>(() => ({
-  primary: {
-    label: t('verify-tx.confirm'),
-    onClick: confirmTransaction,
-    loading: signing.value,
-  },
-  secondary: { label: t('common.back'), onClick: goBack },
-}))
-
 const formatFee = computed(() => {
   return formatFloatingPointValue(props.networkFeeCrypto).value
-})
-
-/** ------------------------------
- * More details
- ------------------------------*/
-
-const showMoreDetails = ref(false)
-
-/**
- * Get transaction details from the signed transaction.
- * It tries to parse the transaction as an EIP-1559 transaction first,
- * and if it fails, it assumes it's a legacy transaction.
- * @returns {FeeMarketEIP1559Transaction | LegacyTransaction | null} The transaction details or null if the chain is not selected.
- */
-const getDetails = () => {
-  if (selectedChain.value && selectedChain.value.chainID) {
-    //evm Only
-    const chainId = selectedChain.value.chainID
-    const serializedTx = props.signedTx
-    try {
-      const common = commonGenerator(BigInt(chainId), Hardfork.London)
-      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-        hexToBytes(serializedTx),
-        { common },
-      )
-      return tx
-
-      // on fail, assume legacy tx
-    } catch {
-      const common = commonGenerator(BigInt(chainId), Hardfork.Berlin)
-      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
-        common,
-      })
-      return tx
-    }
-  }
-  return null
-}
-
-/**
- * Formats the transaction data for display.
- * It extracts the data, nonce, gas limit, and gas price or max fee per gas
- * from the transaction details and formats them for display.
- * @returns {object | null} An object containing the formatted transaction data or null if details are not available.
- */
-const txDataFormatted = computed(() => {
-  const details = getDetails()
-  if (!details) return null
-  if (details.type === 2) {
-    const _details = details as FeeMarketEIP1559Transaction
-    return {
-      data: bytesToHex(_details.data),
-      nonce: _details.nonce.toString(),
-      gasLimit: formatIntegerToString(_details.gasLimit.toString()),
-      maxFeePerGas: formatFloatingPointValue(
-        fromWei(_details.maxFeePerGas, 'gwei'),
-      ).value,
-      maxPriorityFeePerGas: formatFloatingPointValue(
-        fromWei(_details.maxPriorityFeePerGas, 'gwei'),
-      ).value,
-    }
-  }
-  const _details = details as LegacyTransaction
-  return {
-    data: bytesToHex(_details.data) || '0x',
-    nonce: _details.nonce.toString(),
-    gasLimit: formatIntegerToString(_details.gasLimit.toString()),
-    gasPrice: formatFloatingPointValue(
-      fromWei(_details.gasPrice.toString(), 'gwei'),
-    ).value,
-  }
 })
 </script>

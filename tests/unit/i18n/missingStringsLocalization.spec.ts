@@ -151,7 +151,6 @@ describe('newly extracted strings are actually translated (not English copies)',
     ['portfolio.no_balance.title', enPortfolio, esPortfolio, zhPortfolio],
     ['portfolio.welcome.title', enPortfolio, esPortfolio, zhPortfolio],
     ['purchase.min', enPurchase, esPurchase, zhPurchase],
-    ['purchase.bank', enPurchase, esPurchase, zhPurchase],
     // Weekend-trading promo copy (trade namespace)
     ['trade.weekend.dialog_headline', enTrade, esTrade, zhTrade],
     ['trade.weekend.dialog_body', enTrade, esTrade, zhTrade],

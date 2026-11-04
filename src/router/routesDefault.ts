@@ -72,12 +72,6 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'info-cell',
-              name: 'DevInfoCell',
-              component: () => import('@/views/ViewInfoCellShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
               path: 'toggle',
               name: 'DevToggle',
               component: () => import('@/views/ViewToggleShowcase.vue'),

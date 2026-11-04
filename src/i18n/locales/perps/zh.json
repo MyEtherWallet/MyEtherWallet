@@ -122,9 +122,6 @@
     "confirm": {
       "long": "做多",
       "short": "做空",
-      "title": "确认{side} {symbol}",
-      "confirm-action": "确认{side}",
-      "processing": "处理中...",
       "side-label": "方向",
       "order-type-label": "订单类型",
       "market": "市价",
@@ -134,14 +131,23 @@
       "margin": "保证金",
       "leverage": "杠杆",
       "position-size": "仓位大小",
-      "size": "数量 ({symbol})",
-      "est-liquidation": "预计强平价格",
-      "est-fee": "预计费用 ({type})",
       "maker": "挂单",
       "taker": "吃单",
       "take-profit": "止盈",
       "stop-loss": "止损",
-      "cancel": "取消"
+      "cancel": "取消",
+      "review-long": "查看 {symbol} 做多",
+      "review-short": "查看 {symbol} 做空",
+      "confirm-long": "确认做多",
+      "confirm-short": "确认做空",
+      "place-order-at": "挂单价格",
+      "take-profit-at": "止盈价格",
+      "stop-loss-at": "止损价格",
+      "order-size": "订单数量",
+      "est-liquidation-price": "预估强平价格",
+      "tx-fee": "交易费",
+      "expand-breakdown": "展开明细",
+      "close-breakdown": "收起明细"
     },
     "amount": {
       "price-label": "价格"

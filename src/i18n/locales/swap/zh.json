@@ -63,24 +63,26 @@
       "check-explorer": "或查看区块浏览器"
     },
     "swap-offer": {
-      "best-offer-from": "最优报价来自",
-      "you-will-get": "您将获得",
       "max-slippage": "最大滑点",
       "minimum-received": "最少获得",
-      "offer-includes": "报价含 {feePercent}% 费用",
-      "proceed": "继续兑换",
-      "proceed-bridge": "继续跨链",
+      "proceed": "确认兑换",
+      "proceed-bridge": "确认跨链",
       "decline": "拒绝兑换",
       "unknown-provider": "未知提供方",
-      "offers": "报价 | 另有 {count} 个报价",
-      "offer_from": "报价来自 { provider }",
-      "best-rate": "最优汇率",
       "rate": "汇率",
       "approve-tx-on-device": "在您的设备上批准交易",
-      "title-swap": "兑换",
-      "title-bridge": "跨链"
+      "title-swap": "查看兑换",
+      "title-bridge": "查看跨链",
+      "swap-provider": "兑换服务商",
+      "bridge-provider": "跨链服务商",
+      "summary": "摘要",
+      "youre-paying": "您将支付",
+      "expected-to-receive": "预计获得",
+      "best-value": "最优",
+      "expand-breakdown": "展开明细",
+      "close-breakdown": "收起明细",
+      "network-fee": "网络费"
     },
-    "for": "用",
     "offer": "报价"
   }
 }
