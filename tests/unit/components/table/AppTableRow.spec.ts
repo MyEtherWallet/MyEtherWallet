@@ -221,7 +221,7 @@ describe('AppTableRow', () => {
     expect(w.find('[data-table-handle]').exists()).toBe(false)
     const box = w.findAll('[role="cell"]')[0].get('span')
     expect(box.classes()).toEqual(
-      expect.arrayContaining(['invisible', 'size-[22px]']),
+      expect.arrayContaining(['invisible', 'size-8']),
     )
     expect(box.classes()).not.toContain('group-hover:visible')
   })
@@ -310,9 +310,9 @@ describe('AppTableRow', () => {
         .findAll('[data-testid="skeleton"]')
         .map(b => b.classes())
     expect(skeletons('l')).toEqual([expect.arrayContaining(['h-10', 'w-24'])])
-    expect(skeletons('s')).toEqual([expect.arrayContaining(['size-8'])])
+    expect(skeletons('s')).toEqual([expect.arrayContaining(['size-10'])])
     expect(skeletons('l', 2)).toHaveLength(2)
-    expect(skeletons('l', 0)).toEqual([expect.arrayContaining(['size-8'])])
+    expect(skeletons('l', 0)).toEqual([expect.arrayContaining(['size-10'])])
   })
 
   it('gives a placeholder row (no cells) one skeleton cell per visible column', () => {

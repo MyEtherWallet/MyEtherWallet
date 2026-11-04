@@ -128,8 +128,8 @@ const activate = (e: KeyboardEvent) => {
       >
         <AppIcon name="bars-2" size="xxs" />
       </span>
-      <!-- Figma's star is a 22px Button Icon S. On mobile its tap box grows
-           to 40px (the icon stays 16px); `!` beats the Button Icon's own box. -->
+      <!-- The star is a 32px Button Icon S. On mobile its tap box grows to
+           40px (the icon stays 16px); `!` beats the Button Icon's own box. -->
       <AppCellWatchlistToggle
         v-if="watchlisted !== undefined"
         :model-value="watchlisted"

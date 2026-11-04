@@ -44,7 +44,7 @@ describe('AppCellWatchlistToggle — Cell watchlist star (MEW-2446)', () => {
       size: 'xxs',
     })
     expect(btn.classes()).toContain('text-icon-default')
-    expect(btn.classes()).toContain('size-[22px]')
+    expect(btn.classes()).toContain('size-8')
     expect(btn.attributes('aria-pressed')).toBe('false')
     expect(btn.attributes('aria-label')).toBe('Add to Watchlist')
   })
