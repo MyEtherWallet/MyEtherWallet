@@ -13,6 +13,7 @@
       :right-accessory="rightAccessory"
       :disabled="disabled"
       :loading="loading"
+      role="button"
       :aria-expanded="isOpen"
       :aria-controls="bodyId"
       @click="toggle"
@@ -63,7 +64,9 @@ import { ACCORDION_GROUP_KEY, type AccordionKey } from './types'
  * State → the Cell's own hover / pressed / focus plus `disabled` / `loading`.
  * Named slots (avatar, title, accessory…) go straight to the Cell. Inside an
  * AppAccordionGroup the group decides what is open. Disabled / loading a11y
- * (aria-disabled, aria-busy) comes from the Cell.
+ * (aria-disabled, aria-busy) comes from the Cell; the header keeps its button
+ * role in those states (the Cell drops it when not interactive), so
+ * aria-expanded still has a disclosure to describe.
  */
 const props = withDefaults(
   defineProps<{

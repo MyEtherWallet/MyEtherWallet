@@ -122,6 +122,19 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(header(w).attributes(aria)).toBe('true')
   })
 
+  it.each(['disabled', 'loading'])(
+    'keeps the disclosure role and state on the header while %s',
+    prop => {
+      const h = header(
+        mountAccordion({ [prop]: true, open: true, 'onUpdate:open': () => {} }),
+      )
+      expect(h.attributes('role')).toBe('button')
+      expect(h.attributes('aria-expanded')).toBe('true')
+      // still out of the tab order, like the Cell
+      expect(h.attributes('tabindex')).toBeUndefined()
+    },
+  )
+
   it('keeps the chevron visible while loading', () => {
     expect(
       mountAccordion({ loading: true }).findComponent(AppIcon).exists(),
