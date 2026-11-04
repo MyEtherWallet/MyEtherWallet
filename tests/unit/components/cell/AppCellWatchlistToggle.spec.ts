@@ -49,6 +49,12 @@ describe('AppCellWatchlistToggle — Cell watchlist star (MEW-2446)', () => {
     expect(btn.attributes('aria-label')).toBe('Add to Watchlist')
   })
 
+  it('takes a Button Icon size, S by default', () => {
+    const btn = mountToggle({ size: 'm' })
+    expect(btn.get('button').classes()).toContain('size-10')
+    expect(btn.getComponent(AppIcon).props('size')).toBe('m')
+  })
+
   it('on: filled star, icon/brand, aria-pressed true, "remove" label', () => {
     const w = mountToggle({ modelValue: true })
     const btn = w.get('button')

@@ -226,20 +226,30 @@ describe('AppTableRow', () => {
     expect(box.classes()).not.toContain('group-hover:visible')
   })
 
-  it('gives the star a 40px tap box on mobile, icon unchanged', () => {
-    const star = (size: 'l' | 's') =>
+  it('uses Button Icon S for the star on mobile and M above, skeleton too', () => {
+    const star = (size: 'l' | 'm' | 's') =>
       factory({ props: { watchlisted: false }, ctx: { start: true, size } })
         .getComponent(AppCellWatchlistToggle)
-        .classes()
-    expect(star('s')).toContain('size-10!')
-    expect(star('l')).not.toContain('size-10!')
-    const placeholder = factory({
-      props: { loading: true },
-      ctx: { start: true, watchlist: true, size: 's' },
-    })
-      .findAll('[role="cell"]')[0]
-      .get('span')
-    expect(placeholder.classes()).toContain('size-10')
+        .props('size')
+    expect([star('s'), star('m'), star('l')]).toEqual(['s', 'm', 'm'])
+    const placeholder = (size: 'l' | 's') => {
+      const box = factory({
+        props: { loading: true },
+        ctx: { start: true, watchlist: true, size },
+      })
+        .findAll('[role="cell"]')[0]
+        .get('span')
+      return [box.classes(), box.get('[data-testid="skeleton"]').classes()]
+    }
+    // box and glyph of Button Icon S (32/16) and M (40/24)
+    expect(placeholder('s')).toEqual([
+      expect.arrayContaining(['size-8']),
+      expect.arrayContaining(['size-4']),
+    ])
+    expect(placeholder('l')).toEqual([
+      expect.arrayContaining(['size-10']),
+      expect.arrayContaining(['size-6']),
+    ])
   })
 
   it('keeps the drag handle visible on touch screens', () => {

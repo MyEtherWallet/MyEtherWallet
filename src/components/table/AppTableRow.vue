@@ -6,7 +6,8 @@ import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppTableCell from './AppTableCell.vue'
-import { BTN_ICON_SIZE } from '@/components/btnIconTypes'
+import { BTN_ICON_SIZE, type BtnIconSize } from '@/components/btnIconTypes'
+import { ICON_SIZE_CLASS } from '@/components/icon/icons'
 import { AVATAR_SIZES } from '@/components/avatar/types'
 import type { CellSurface } from '@/components/cell/cellSizes'
 import {
@@ -86,6 +87,7 @@ const loadingButtonCount = computed(
 const avatarSize = computed<TableAvatarSize>(() =>
   size.value === 's' ? 's' : 'l',
 )
+const starSize = computed<BtnIconSize>(() => (size.value === 's' ? 's' : 'm'))
 // Same box as the avatar it stands in for (AppCell does the same).
 const avatarBox = computed(() => {
   const px = `${AVATAR_SIZES[avatarSize.value].box}px`
@@ -128,23 +130,26 @@ const activate = (e: KeyboardEvent) => {
       >
         <AppIcon name="bars-2" size="xxs" />
       </span>
-      <!-- The star is a 32px Button Icon S. On mobile its tap box grows to
-           40px (the icon stays 16px); `!` beats the Button Icon's own box. -->
+      <!-- The star is a Button Icon S on mobile and M above; its skeleton
+           takes the same box and glyph size. -->
       <AppCellWatchlistToggle
         v-if="watchlisted !== undefined"
         :model-value="watchlisted"
         :loading="watchlistLoading"
-        :class="{ 'size-10!': size === 's' }"
+        :size="starSize"
         @update:model-value="emit('update:watchlisted', $event)"
       />
       <span
         v-else-if="loading && watchlist"
         :class="[
           'flex items-center justify-center',
-          size === 's' ? 'size-10' : BTN_ICON_SIZE.s.box,
+          BTN_ICON_SIZE[starSize].box,
         ]"
       >
-        <AppSkeleton shape="circle" class="size-4" />
+        <AppSkeleton
+          shape="circle"
+          :class="ICON_SIZE_CLASS[BTN_ICON_SIZE[starSize].icon]"
+        />
       </span>
     </div>
 
