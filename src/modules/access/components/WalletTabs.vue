@@ -2,23 +2,16 @@
   <div class="contents">
     <!-- `contents` makes these items of the chooser's column, so the grid is
          the one that shrinks when the dialog runs out of height. -->
+    <!-- Search spans every tab, so the tabs step aside while there's a query
+         (same as the watchlist picker). -->
+    <AppSearchbar v-model="search" variant="default" class="shrink-0" />
     <AppTabBar
+      v-if="!isSearching"
       v-model="tab"
       :items="tabItems"
       :label="t('access_wallet.tabs.label')"
     />
-    <AppInput
-      v-if="tab !== 'advanced'"
-      v-model="search"
-      size="small"
-      surface="alternative"
-      :label="t('common.search')"
-    >
-      <template #leading>
-        <AppIcon name="magnifying-glass" size="s" class="text-text-subtle" />
-      </template>
-    </AppInput>
-    <!-- Only the wallet grid scrolls; network chips, tabs, search and the
+    <!-- Only the wallet grid scrolls; network chips, search, tabs and the
          download footer keep their size (see ModuleAccessWallet). It shrinks
          down to one 64px card row before the whole chooser has to scroll. -->
     <div
@@ -43,12 +36,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import AppTabBar from '@/components/tabs/AppTabBar.vue'
-import AppInput from '@/components/AppInput.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import WalletCard from './WalletCard.vue'
 import { useWalletList } from '@/composables/useWalletList'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
@@ -75,10 +67,7 @@ const tab = computed<WalletTab>({
   },
 })
 const search = ref('')
-// Advanced has no search box, so a leftover query must not filter it.
-watch(tab, () => {
-  search.value = ''
-})
+const isSearching = computed(() => !!search.value.trim())
 
 const tabItems = computed(() =>
   WALLET_TABS.map(id => ({ id, label: t(`access_wallet.tabs.${id}`) })),

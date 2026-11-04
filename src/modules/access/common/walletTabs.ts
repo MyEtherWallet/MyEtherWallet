@@ -48,17 +48,12 @@ const TAB_WALLET_IDS: Record<Exclude<WalletTab, 'extension'>, string[]> = {
   advanced: ['privateKey', 'mnemonic', 'keystore'],
 }
 
-/** Search pool per tab: Popular leaves out hardware and advanced methods. */
-const inSearchPool = (tab: WalletTab, wallet: WalletConfig): boolean => {
-  if (tab === 'hardware') return wallet.type.includes(WalletConfigType.HARDWARE)
-  if (tab === 'mobile') return wallet.type.includes(WalletConfigType.MOBILE)
-  if (tab === 'extension')
-    return wallet.type.includes(WalletConfigType.EXTENSION)
-  return !wallet.type.some(
+/** Popular leaves out hardware and advanced methods. */
+const isAppWallet = (wallet: WalletConfig): boolean =>
+  !wallet.type.some(
     type =>
       type === WalletConfigType.HARDWARE || type === WalletConfigType.SOFTWARE,
   )
-}
 
 /** RainbowKit connectors keep their wallet id in `rkDetails`; static configs use `id`. */
 export const walletKey = (wallet: WalletConfig): string =>
@@ -96,18 +91,20 @@ export const selectTabWallets = ({
     status: statusOf(wallet),
   })
 
+  // Search spans every tab, so the open one doesn't matter.
   const query = lower(search.trim())
-  if (query && tab !== 'advanced') {
-    const pool = wallets.filter(w => inSearchPool(tab, w))
-    const starts = pool.filter(w => lower(w.name).startsWith(query))
-    const contains = pool.filter(
+  if (query) {
+    const starts = wallets.filter(w => lower(w.name).startsWith(query))
+    const contains = wallets.filter(
       w => !lower(w.name).startsWith(query) && lower(w.name).includes(query),
     )
     return [...starts, ...contains].map(withStatus)
   }
 
   if (tab === 'extension')
-    return wallets.filter(w => inSearchPool(tab, w)).map(withStatus)
+    return wallets
+      .filter(w => w.type.includes(WalletConfigType.EXTENSION))
+      .map(withStatus)
 
   // First entry wins: static configs come first, so the Ledger device keeps the
   // 'ledger' slot even though Ledger Mobile inherits rkDetails.id === 'ledger'.
@@ -126,7 +123,7 @@ export const selectTabWallets = ({
       (a, b) => recent.indexOf(lower(a.name)) - recent.indexOf(lower(b.name)),
     )
   const detectedNext = wallets.filter(
-    w => statusOf(w) === 'detected' && inSearchPool('popular', w),
+    w => statusOf(w) === 'detected' && isAppWallet(w),
   )
   const defaults = wallets.filter(w => w.isDefault)
   const seen = new Set<string>()

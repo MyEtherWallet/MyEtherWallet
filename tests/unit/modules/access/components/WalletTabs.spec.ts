@@ -96,20 +96,28 @@ describe('WalletTabs', () => {
     ])
   })
 
-  it('switches tabs and hides search on Advanced', async () => {
+  it('puts the search above the tabs and keeps it on Advanced', async () => {
     const w = mountTabs()
+    const input = w.get('input').element
+    const tablist = w.get('[role="tablist"]').element
+    expect(
+      input.compareDocumentPosition(tablist) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+
     await w.findAll('[role="tab"]')[4].trigger('click')
-    expect(w.find('input').exists()).toBe(false)
+    expect(w.find('input').exists()).toBe(true)
     expect(w.text()).toContain('advanced wallet')
   })
 
-  it('clears search when the tab changes', async () => {
+  it('hides the tabs while searching, since results span every tab', async () => {
     const w = mountTabs()
     await w.get('input').setValue('none')
+    expect(w.find('[role="tablist"]').exists()).toBe(false)
     expect(w.text()).toContain('access_wallet.not_found')
-    await w.findAll('[role="tab"]')[1].trigger('click')
-    expect(walletsForTab).toHaveBeenLastCalledWith('hardware', '')
-    expect(w.text()).toContain('hardware wallet')
+
+    await w.get('input').setValue('')
+    expect(w.find('[role="tablist"]').exists()).toBe(true)
+    expect(walletsForTab).toHaveBeenLastCalledWith('popular', '')
   })
 
   it('connects the selected wallet', async () => {

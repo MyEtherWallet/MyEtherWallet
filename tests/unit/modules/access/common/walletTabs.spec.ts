@@ -11,7 +11,7 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   },
 }))
 
-const { selectTabWallets, walletKey } =
+const { selectTabWallets, walletKey, WALLET_TABS } =
   await import('@/modules/access/common/walletTabs')
 
 type W = Parameters<typeof walletKey>[0]
@@ -186,7 +186,7 @@ describe('selectTabWallets', () => {
     ).toEqual(['Ledger'])
   })
 
-  it('searches every compatible wallet in Popular, prefix matches first', () => {
+  it('searches every wallet, prefix matches first', () => {
     expect(
       names(selectTabWallets({ ...base, tab: 'popular', search: 'ze' })),
     ).toEqual(['Zerion'])
@@ -202,39 +202,17 @@ describe('selectTabWallets', () => {
     ])
   })
 
-  it('never returns advanced or hardware wallets from a Popular search', () => {
-    expect(
-      selectTabWallets({ ...base, tab: 'popular', search: 'key' }),
-    ).toEqual([])
-    expect(
-      selectTabWallets({ ...base, tab: 'popular', search: 'ledger' }),
-    ).toEqual([])
-  })
-
-  it('scopes Mobile, Hardware and Extension searches to their type', () => {
-    expect(
-      names(selectTabWallets({ ...base, tab: 'mobile', search: 'rabby' })),
-    ).toEqual([])
-    expect(
-      names(selectTabWallets({ ...base, tab: 'mobile', search: 'zer' })),
-    ).toEqual(['Zerion'])
-    expect(
-      names(selectTabWallets({ ...base, tab: 'hardware', search: 'tre' })),
-    ).toEqual(['Trezor'])
-    expect(
-      names(selectTabWallets({ ...base, tab: 'extension', search: 'wallet' })),
-    ).toEqual([
-      'Coinbase Wallet',
-      'Trust Wallet',
-      'Bitget Wallet',
-      'Bybit Wallet',
-      'Rabby Wallet',
-    ])
-  })
-
-  it('ignores search on Advanced', () => {
-    expect(
-      selectTabWallets({ ...base, tab: 'advanced', search: 'zzz' }),
-    ).toHaveLength(3)
+  it('searches across every tab, whichever one is open', () => {
+    for (const tab of WALLET_TABS) {
+      expect(names(selectTabWallets({ ...base, tab, search: 'key' }))).toEqual(
+        ['Keystore', 'Private Key'],
+      )
+      expect(
+        names(selectTabWallets({ ...base, tab, search: 'ledger' })),
+      ).toEqual(['Ledger'])
+      expect(names(selectTabWallets({ ...base, tab, search: 'zer' }))).toEqual(
+        ['Zerion'],
+      )
+    }
   })
 })
