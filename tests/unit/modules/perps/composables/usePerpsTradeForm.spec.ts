@@ -46,8 +46,15 @@ vi.mock('vue-i18n', () => {
   }
 })
 
+// Shared so the sign-in tests (MEW-2470) can set the current route and assert
+// on navigation.
+const routerMock = vi.hoisted(() => ({
+  push: vi.fn(),
+  route: { matched: [] as { name: string }[] },
+}))
 vi.mock('vue-router', () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push: routerMock.push }),
+  useRoute: () => routerMock.route,
 }))
 
 const walletMenuState = reactive<Record<string, unknown>>({
@@ -101,11 +108,16 @@ const mockPerpsState = vi.hoisted(
     }) as const,
 )
 
+const loginMock = vi.hoisted(() => vi.fn())
+const mockAuthState = vi.hoisted(() => ({
+  isWalletConnected: { value: true } as Ref<boolean>,
+}))
 vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsAuth: () => ({
     token: ref(null),
-    login: vi.fn(),
+    login: loginMock,
     triggerRefresh: vi.fn(),
+    isWalletConnected: mockAuthState.isWalletConnected,
   }),
   usePerpsBalance: () => ({ balance: mockPerpsState.balance }),
 }))
@@ -150,6 +162,8 @@ import {
   usePerpsTradeForm,
   triggerOrderPriceErrorKey,
 } from '@/modules/perps/composables/usePerpsTradeForm'
+import { PerpsEventSource } from '@/analytics/events'
+import { ROUTES_MAIN, PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 
 describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
   beforeEach(() => {
@@ -440,6 +454,44 @@ describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
     expect(form.displaySymbol.value).toBe('NOTLISTED')
     mockContracts.contracts.value = [makeContract('BTC-USD')]
     expect(form.displaySymbol.value).toBe('BTC')
+  })
+})
+
+describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    routerMock.route.matched = []
+    mockAuthState.isWalletConnected.value = true
+  })
+
+  it('navigates to the perps page and starts the login when outside perps', () => {
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: ROUTES_MAIN.PERPS.NAME,
+    })
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
+  })
+
+  it('stays on the market drawer (a perps child route) and only logs in', () => {
+    routerMock.route.matched = [
+      { name: ROUTES_MAIN.PERPS.NAME },
+      { name: PERP_INFO_ROUTE_NAME },
+    ]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
+  })
+
+  it('leaves the page alone when no wallet is connected', () => {
+    mockAuthState.isWalletConnected.value = false
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
   })
 })
 

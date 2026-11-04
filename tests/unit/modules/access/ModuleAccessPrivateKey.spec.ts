@@ -101,7 +101,7 @@ const AppInput = {
 const stubs = {
   AppInput,
   AppSheet: { template: '<div><slot /></div>' },
-  AppNotRecommended: { template: '<div />' },
+  AppBanner: { template: '<div />' },
   ButtonNoWallet: { template: '<div />' },
   AppBaseButton: {
     props: ['disabled'],

@@ -500,7 +500,6 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     ) {
       toastStore.addToastMessage({
         id: `trade-completed-${hash}`,
-        variant: 'dark',
         text: t('trade.toast.trade_completed'),
         textSecondary: t('trade.toast.received_total', {
           amount: `${formatFloatingPointValue(finalAmount).value} ${order.toSymbol}`,

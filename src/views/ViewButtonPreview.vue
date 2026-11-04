@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Dev-only preview for AppBaseButton and AppBtnGroup, rendered inside the
+// Dev-only preview for AppBaseButton, rendered inside the
 // design-library shell (ViewDevLayout). Route is registered only outside
 // production builds — see routesDefault.ts.
 // Visit https://localhost:8080/dev/button in dev.
@@ -8,7 +8,6 @@
 // multiple contexts" surface: the Contexts section below renders the secondary
 // against every background it ships on.
 import AppBaseButton from '@components/AppBaseButton.vue'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
 import { BTN_SIZES } from '@components/buttonSizes'
 
 const types = [
@@ -114,49 +113,6 @@ const contexts = [
           </AppBaseButton>
           <AppBaseButton type="primary" size="medium">Primary</AppBaseButton>
         </div>
-      </div>
-    </div>
-
-    <h2 class="title5 mb-4">AppBtnGroup</h2>
-    <div class="grid grid-cols-2 gap-6 mb-10">
-      <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-text-subtle mb-2">Horizontal</p>
-        <AppBtnGroup>
-          <AppBaseButton type="secondary" surface="alternative"
-            >Cancel</AppBaseButton
-          >
-          <AppBaseButton>Confirm</AppBaseButton>
-        </AppBtnGroup>
-      </div>
-      <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-text-subtle mb-2">
-          Horizontal — with tertiary
-        </p>
-        <AppBtnGroup>
-          <AppBaseButton type="tertiary">Learn more</AppBaseButton>
-          <AppBaseButton type="secondary" surface="alternative"
-            >Cancel</AppBaseButton
-          >
-          <AppBaseButton>Confirm</AppBaseButton>
-        </AppBtnGroup>
-      </div>
-      <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-text-subtle mb-2">Vertical</p>
-        <AppBtnGroup orientation="vertical">
-          <AppBaseButton type="secondary" surface="alternative"
-            >Cancel</AppBaseButton
-          >
-          <AppBaseButton>Confirm</AppBaseButton>
-        </AppBtnGroup>
-      </div>
-      <div class="bg-white rounded-20 p-4">
-        <p class="text-s-13 text-text-subtle mb-2">Vertical — danger</p>
-        <AppBtnGroup orientation="vertical">
-          <AppBaseButton type="secondary" surface="alternative"
-            >Keep</AppBaseButton
-          >
-          <AppBaseButton tone="danger">Delete</AppBaseButton>
-        </AppBtnGroup>
       </div>
     </div>
 

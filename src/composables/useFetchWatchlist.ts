@@ -14,6 +14,16 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
 
   const { useMEWFetch } = useFetchMewApi()
 
+  // An emptied bucket turns its URL into '', and `refetch` would then request
+  // the bare API root. Its error body lands in `data` (updateDataOnError) as an
+  // object, breaking every `.map` over the watchlist data. Skip the request and
+  // keep the last list instead.
+  const skipWhenEmpty =
+    (url: Ref<string>) =>
+    ({ cancel }: { cancel: () => void }) => {
+      if (!url.value) cancel()
+    }
+
   /**
    * Fetch tokens watchlist data
    */
@@ -23,8 +33,8 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
 
     const filterChainParam =
       filterChain.value &&
-        filterChain.value.name !== 'all' &&
-        filterChain.value.name !== ''
+      filterChain.value.name !== 'all' &&
+      filterChain.value.name !== ''
         ? `&filterChain=${filterChain.value.name}`
         : ''
     return `/v1/web/tokens-watchlist?coins=${coins}${filterChainParam}`
@@ -36,7 +46,11 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     error: tokensWatchlistError,
     execute: fetchTokensWatchlist,
     onFetchResponse: onTokensWatchlistResponse,
-  } = useMEWFetch(fetchWatchListUrl, { immediate: false, refetch: true })
+  } = useMEWFetch(fetchWatchListUrl, {
+    immediate: false,
+    refetch: true,
+    beforeFetch: skipWhenEmpty(fetchWatchListUrl),
+  })
     .get()
     .json<GetWebTokensWatchlistResponse>()
 
@@ -48,8 +62,8 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     const symbols = watchListedStocks.value.join(',')
     const filterChainParam =
       filterChain.value &&
-        filterChain.value.name !== 'all' &&
-        filterChain.value.name !== ''
+      filterChain.value.name !== 'all' &&
+      filterChain.value.name !== ''
         ? `&filterChain=${filterChain.value.name}`
         : ''
     return `/v1/web/pages/stocks/watchlist?symbols=${symbols}${filterChainParam}`
@@ -61,7 +75,11 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     error: stocksWatchlistError,
     execute: fetchStocksWatchlist,
     onFetchResponse: onStocksWatchlistResponse,
-  } = useMEWFetch(fetchStocksWatchListUrl, { immediate: false, refetch: true })
+  } = useMEWFetch(fetchStocksWatchListUrl, {
+    immediate: false,
+    refetch: true,
+    beforeFetch: skipWhenEmpty(fetchStocksWatchListUrl),
+  })
     .get()
     .json<GetWebStocksWatchlistResponse>()
   /**

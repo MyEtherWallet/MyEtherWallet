@@ -1,67 +1,64 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    z-index-overlay="z-[200]"
-    z-index-container="z-[201]"
-    class="xs:max-w-[480px] xs:h-[382px] mx-auto rounded-32"
-    @close-dialog="onCloseIcon"
+  <app-modal
+    v-model="isOpen"
+    :aria-label="`${$t('trade.weekend.dialog_headline')} ${$t('trade.weekend.dialog_headline_highlight')}`"
+    class="xs:h-[382px]"
+    @close="onCloseIcon"
   >
-    <template #content>
-      <div class="p-6 h-full flex flex-col justify-between">
-        <!-- Top: token icons + headline -->
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center">
-            <img
-              v-for="(icon, i) in tokenIcons"
-              :key="i"
-              :src="icon"
-              alt=""
-              class="w-10 h-10 rounded-full border-[1.5px] border-white bg-white object-cover"
-              :class="i > 0 ? '-ml-2' : ''"
-            />
-          </div>
-          <h1 class="text-s-28 font-bold leading-8 tracking-tight">
-            {{ $t('trade.weekend.dialog_headline') }}
-            <span class="text-text-brand">{{
-              $t('trade.weekend.dialog_headline_highlight')
-            }}</span>
-          </h1>
+    <div class="p-6 h-full flex flex-col justify-between">
+      <!-- Top: token icons + headline -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center">
+          <img
+            v-for="(icon, i) in tokenIcons"
+            :key="i"
+            :src="icon"
+            alt=""
+            class="w-10 h-10 rounded-full border-[1.5px] border-white bg-white object-cover"
+            :class="i > 0 ? '-ml-2' : ''"
+          />
         </div>
-        <!-- Footer: body + actions (mt on mobile where height is auto and
-             justify-between gives no gap; reset at xs+ where height is fixed) -->
-        <div class="flex flex-col gap-5 mt-8 xs:mt-0">
-          <p class="text-s-16 leading-[22px] text-text-subtle">
-            {{
-              $t('trade.weekend.dialog_body', {
-                tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
-              })
-            }}
-          </p>
-          <div class="flex gap-2">
-            <button
-              class="flex-1 h-12 rounded-24 bg-background-brand text-white text-s-16 font-semibold"
-              @click="onTradeNow"
-            >
-              {{ $t('trade.weekend.trade_now') }}
-            </button>
-            <button
-              class="flex-1 h-12 rounded-24 bg-background-default-hover text-black text-s-16 font-semibold"
-              @click="onGotIt"
-            >
-              {{ $t('common.got_it') }}
-            </button>
-          </div>
+        <h1 class="text-s-28 font-bold leading-8 tracking-tight">
+          {{ $t('trade.weekend.dialog_headline') }}
+          <span class="text-text-brand">{{
+            $t('trade.weekend.dialog_headline_highlight')
+          }}</span>
+        </h1>
+      </div>
+      <!-- Footer: body + actions (mt on mobile where height is auto and
+           justify-between gives no gap; reset at xs+ where height is fixed) -->
+      <div class="flex flex-col gap-5 mt-8 xs:mt-0">
+        <p class="text-s-16 leading-[22px] text-text-subtle">
+          {{
+            $t('trade.weekend.dialog_body', {
+              tickers: 'SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon',
+            })
+          }}
+        </p>
+        <div class="flex gap-2">
+          <button
+            class="flex-1 h-12 rounded-24 bg-background-brand text-white text-s-16 font-semibold"
+            @click="onTradeNow"
+          >
+            {{ $t('trade.weekend.trade_now') }}
+          </button>
+          <button
+            class="flex-1 h-12 rounded-24 bg-background-default-hover text-black text-s-16 font-semibold"
+            @click="onGotIt"
+          >
+            {{ $t('common.got_it') }}
+          </button>
         </div>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
@@ -165,7 +162,7 @@ const onGotIt = () => {
   )
 }
 
-// Close (X) icon / overlay click — AppDialog has already closed itself,
+// Close (X) icon / overlay click / Esc — AppModal has already closed itself,
 // so just report the dismissal.
 const onCloseIcon = () => {
   analytics.trackWeekendTradingAnnouncementEvent(

@@ -12,7 +12,9 @@
 import AppViewAsDialog from '@/components/AppViewAsDialog.vue'
 import ModuleStockInfo from '@/modules/stocks/ModuleStockInfo.vue'
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { isTradeCampaignQuery } from '@/composables/useTradeCampaignEntry'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const props = defineProps({
@@ -28,12 +30,15 @@ const { isMDAndUp } = useAppBreakpoints()
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
+const route = useRoute()
 
 onMounted(() => {
   // Set the selected token symbol for the Trade module
   walletMenu.setSelectedTradeTokenSymbol(props.symbol)
 
-  if (isMDAndUp.value) {
+  // Below md the drawer normally takes the whole screen and the panel closes;
+  // a marketing deep link into Trade opens it on every breakpoint instead.
+  if (isMDAndUp.value || isTradeCampaignQuery(route.query)) {
     walletMenu.setWalletPanel('trade')
     walletMenu.setIsOpenSideMenu(true)
   } else {
