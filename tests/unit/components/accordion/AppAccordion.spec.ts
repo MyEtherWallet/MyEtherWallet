@@ -242,6 +242,11 @@ describe('AppAccordionGroup', () => {
     expect(w.emitted('update:modelValue')).toEqual([[null]])
   })
 
+  it('opens only one panel in single mode even if the model holds several keys', () => {
+    const w = mountGroup({ modelValue: ['a', 'b'] })
+    expect(panels(w).map(p => p.isVisible())).toEqual([true, false])
+  })
+
   it('lets several stay open with multiple', async () => {
     const w = mountGroup({ multiple: true })
     await headers(w)[0].trigger('click')
