@@ -117,6 +117,7 @@ vi.mock('@/components/select_chain/SelectChainDialog.vue', () => ({
 
 import ModuleExploreCrypto from '@/modules/crypto/ModuleExploreCrypto.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
 import { CryptoMarketEvent, CryptoMarketLocation } from '@/analytics/events'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
@@ -238,6 +239,21 @@ describe('ModuleExploreCrypto table (MEW-2469)', () => {
       expect(w.findAll('[role="columnheader"] button')).toHaveLength(0)
     } finally {
       delete routeQuery.category
+    }
+  })
+
+  it('shows the unknown-change dash for a 24h change that is not a number', async () => {
+    // formatStock turns a malformed percentage into NaN, not null.
+    const item = ITEMS[0] as { priceChangePercentage24h: unknown }
+    item.priceChangePercentage24h = Number.NaN
+    try {
+      const w = await mountModule()
+      const change = w
+        .findAllComponents(AppTableCell)
+        .find(c => c.props('column') === 'CHANGE')!
+      expect(change.props('value')).toBe('-')
+    } finally {
+      item.priceChangePercentage24h = null
     }
   })
 })

@@ -109,7 +109,11 @@
             <AppTableCell column="TOTAL_VOLUME" :value="token.totalVolume" />
             <AppTableCell
               column="CHANGE"
-              :value="token.priceChangePercentage24h === null ? '-' : undefined"
+              :value="
+                Number.isFinite(token.priceChangePercentage24h)
+                  ? undefined
+                  : '-'
+              "
               :change="token.priceChangePercentage24h ?? undefined"
               :series="
                 getSparkLinePoints(token).length
