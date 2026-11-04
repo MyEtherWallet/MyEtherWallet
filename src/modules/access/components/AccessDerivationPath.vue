@@ -3,17 +3,27 @@
     <span class="text-[11px] leading-4 text-text-subtle">{{
       t('access_wallet.advanced.derivation_path')
     }}</span>
-    <!-- Same trigger as AccessDropdown, so it matches the network picker beside it. -->
+    <!-- Same trigger as AccessDropdown, so it matches the network picker beside it.
+         Locked (no chevron, no modal) when there's nothing to switch to or add. -->
     <button
       type="button"
       data-testid="path-trigger"
-      class="flex h-[52px] w-full items-center gap-2 rounded-16 bg-background-default px-4 text-left cursor-pointer hover:bg-background-default-hover"
+      class="flex h-[52px] w-full items-center gap-2 rounded-16 bg-background-default px-4 text-left"
+      :class="{
+        'cursor-pointer hover:bg-background-default-hover': !isLocked,
+      }"
       :aria-label="t('access_wallet.advanced.derivation_path')"
       aria-haspopup="dialog"
+      :disabled="isLocked"
       @click="openModal"
     >
       <span class="min-w-0 grow truncate">{{ modelValue?.path }}</span>
-      <AppIcon name="chevron-down" size="xs" class="shrink-0" />
+      <AppIcon
+        v-if="!isLocked"
+        name="chevron-down"
+        size="xs"
+        class="shrink-0"
+      />
     </button>
 
     <!-- Pinned to the top like the access dialog, so the list and the Add form
@@ -196,6 +206,8 @@ const contentHeight = ref(0)
 useResizeObserver(contentRef, () => {
   contentHeight.value = contentRef.value?.offsetHeight ?? 0
 })
+
+const isLocked = computed(() => !props.allowCustom && props.paths.length <= 1)
 
 const openModal = () => {
   isAdding.value = false

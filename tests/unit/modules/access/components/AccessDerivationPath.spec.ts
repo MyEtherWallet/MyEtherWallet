@@ -21,9 +21,9 @@ const PATHS = [
 let wrapper: VueWrapper | undefined
 afterEach(() => wrapper?.unmount())
 
-const mountIt = (allowCustom = false) => {
+const mountIt = (allowCustom = false, paths = PATHS) => {
   wrapper = mount(AccessDerivationPath, {
-    props: { paths: PATHS, modelValue: PATHS[0], allowCustom },
+    props: { paths, modelValue: paths[0], allowCustom },
     attachTo: document.body,
     global: { plugins: [i18n, createPinia()], stubs: { teleport: true } },
   })
@@ -45,6 +45,16 @@ describe('AccessDerivationPath', () => {
     )
     expect(options(w)).toHaveLength(3)
     expect(options(w)[0].attributes('aria-selected')).toBe('true')
+  })
+
+  it("won't open when there's no other path to pick and no Add", async () => {
+    const w = mountIt(false, PATHS.slice(0, 1))
+    const trigger = w.get('[data-testid="path-trigger"]')
+    expect(trigger.attributes('disabled')).toBeDefined()
+    expect(trigger.find('svg').exists()).toBe(false)
+
+    await open(w)
+    expect(w.find('[role="dialog"]').exists()).toBe(false)
   })
 
   it('filters by label or path and closes on pick', async () => {
