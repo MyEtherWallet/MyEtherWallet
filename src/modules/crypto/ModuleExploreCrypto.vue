@@ -402,9 +402,21 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
-const canSwap = (token: DisplayToken): boolean =>
-  currentChainhasSwapSupport.value &&
-  (token.chains.length > 0 || getTokenIsCurrentNative(token))
+// The chain Swap and Bridge act on: the chain filter, or the wallet's chain
+// when the filter is "all".
+const swapChain = computed(() =>
+  selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
+    ? selectedChainFilter.value
+    : selectedChainStore.value,
+)
+// Same lookup as swapBtn: a native token, or an address on the swap chain.
+// Listed only on other chains, Swap would open nothing.
+const canSwap = (token: DisplayToken): boolean => {
+  if (!currentChainhasSwapSupport.value) return false
+  if (getTokenIsCurrentNative(token)) return true
+  const chainName = swapChain.value?.name
+  return token.chains.some(c => c.chainName === chainName && !!c.address)
+}
 const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: ClickTokenTradeLocation.CRYPTO_TABLE,
@@ -430,11 +442,7 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
-  const selectedChain = (
-    selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
-      ? selectedChainFilter.value
-      : selectedChainStore.value
-  ) as Chain
+  const selectedChain = swapChain.value as Chain
   // Find the first native chain with swap support
   const tokenOnChain = token.nativeChains.find(c =>
     chainsStore.chainHasSwapSupport(c.chainName),
@@ -482,11 +490,7 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
-  const selectedChain = (
-    selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
-      ? selectedChainFilter.value
-      : selectedChainStore.value
-  ) as Chain
+  const selectedChain = swapChain.value as Chain
   const _chains = getTokenIsCurrentNative(token)
     ? token.nativeChains
     : token.chains

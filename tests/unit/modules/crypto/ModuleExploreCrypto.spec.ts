@@ -118,6 +118,7 @@ vi.mock('@/components/select_chain/SelectChainDialog.vue', () => ({
 import ModuleExploreCrypto from '@/modules/crypto/ModuleExploreCrypto.vue'
 import AppTableRow from '@/components/table/AppTableRow.vue'
 import AppTableCell from '@/components/table/AppTableCell.vue'
+import { useChainsStore } from '@/stores/chainsStore'
 import { CryptoMarketEvent, CryptoMarketLocation } from '@/analytics/events'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
@@ -256,4 +257,27 @@ describe('ModuleExploreCrypto table (MEW-2469)', () => {
       item.priceChangePercentage24h = null
     }
   })
+
+  it.each([
+    ['ETHEREUM', true],
+    ['POLYGON', false],
+  ])(
+    'shows Swap only when the token has an address on the swap chain (listed on %s → %s)',
+    async (chainName, shown) => {
+      const chains = useChainsStore()
+      chains.selectedChain = { name: 'ETHEREUM' } as never
+      chains.currentChainhasSwapSupport = true
+      const item = ITEMS[0] as { chains: unknown[] }
+      item.chains = [{ chainName, address: '0xabc', decimals: 18 }]
+      try {
+        const w = await mountModule()
+        const swap = w
+          .findAll('[role="rowgroup"] button')
+          .filter(b => b.text() === 'common.swap')
+        expect(swap.length > 0).toBe(shown)
+      } finally {
+        item.chains = []
+      }
+    },
+  )
 })
