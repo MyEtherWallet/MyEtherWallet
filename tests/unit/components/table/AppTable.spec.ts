@@ -178,6 +178,14 @@ describe('AppTable', () => {
     ])
   })
 
+  it('drops aria-sort from a column that stopped being sortable', () => {
+    // e.g. sorted by price, then a view where the API fixes the order
+    const columns = COLUMNS.map(c => ({ ...c, sortable: false }))
+    const w = factory({ columns, sort: { key: 'price', direction: 'asc' } })
+    for (const h of w.findAll('[role="columnheader"]'))
+      expect(h.attributes('aria-sort')).toBeUndefined()
+  })
+
   it('marks the sorted column with aria-sort, the arrow and the default colour', () => {
     const w = factory({ sort: { key: 'price', direction: 'asc' } })
     const price = w.findAll('[role="columnheader"]')[1]

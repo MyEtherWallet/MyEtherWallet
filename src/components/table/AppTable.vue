@@ -122,10 +122,13 @@ provide(TABLE_CONTEXT, {
 const directionOf = (col: TableColumn) =>
   sort.value?.key === col.key ? sort.value.direction : null
 
+// A column that isn't sortable has no aria-sort, even if the kept sort points
+// at it (a view where the API fixes the order).
 const ariaSort = (col: TableColumn) => {
+  if (!col.sortable) return undefined
   const direction = directionOf(col)
   if (direction) return direction === 'asc' ? 'ascending' : 'descending'
-  return col.sortable ? 'none' : undefined
+  return 'none'
 }
 
 const onSort = (col: TableColumn) => {
