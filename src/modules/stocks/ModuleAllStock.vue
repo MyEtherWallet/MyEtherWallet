@@ -92,6 +92,7 @@
                 v-if="actionSize === 's'"
                 :placeholder="$t('stocks.actions_menu')"
                 location="right"
+                teleport
               >
                 <template #menu-button="{ toggleMenu }">
                   <AppBtnIcon

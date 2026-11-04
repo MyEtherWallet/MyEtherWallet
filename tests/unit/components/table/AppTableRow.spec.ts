@@ -196,7 +196,7 @@ describe('AppTableRow', () => {
     expect(calls).toHaveLength(1)
   })
 
-  it('keeps the star and actions above the row link', () => {
+  it('keeps the star and actions above the row link, inside the row', () => {
     const w = factory({
       props: { to: '/x', watchlisted: false },
       slots: { actions: '<button>Trade</button>' },
@@ -205,6 +205,8 @@ describe('AppTableRow', () => {
     const cells = w.findAll('[role="cell"]')
     expect(cells[0].classes()).toContain('z-10')
     expect(cells.at(-1)!.classes()).toContain('z-10')
+    // its own stacking context: the z-10 never climbs over the fixed header
+    expect(w.get('[role="row"]').classes()).toContain('isolate')
   })
 
   it('shows the full title as a tooltip on the leading cell', () => {

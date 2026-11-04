@@ -105,7 +105,11 @@ const mountTable = (rows: WatchlistRow[] = ROWS) =>
   mount(HomeWatchlistTable, {
     props: { rows },
     attachTo: document.body,
-    global: { plugins: [i18n], directives: { ripple: {} } },
+    global: {
+      plugins: [i18n],
+      directives: { ripple: {} },
+      stubs: { teleport: true },
+    },
   })
 
 // The star lives inside AppTableRow (no data-test of its own).

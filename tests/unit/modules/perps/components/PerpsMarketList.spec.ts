@@ -83,7 +83,7 @@ const mountList = async () => {
     global: {
       plugins: [i18n],
       directives: { ripple: {} },
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { RouterLink: RouterLinkStub, teleport: true },
     },
   })
 }

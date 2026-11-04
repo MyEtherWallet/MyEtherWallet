@@ -163,6 +163,7 @@
               <app-pop-up-menu
                 :placeholder="$t('perps.market-list.actions-menu-label')"
                 location="right"
+                teleport
               >
                 <template #menu-button="{ toggleMenu }">
                   <AppBtnIcon

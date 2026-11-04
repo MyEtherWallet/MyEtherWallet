@@ -301,6 +301,7 @@ const actionCall = (row: WatchlistRow) => {
               v-else
               :placeholder="t('homePage.hero.watchlist.table.moreActions')"
               location="right"
+              teleport
             >
               <template #menu-button="{ toggleMenu }">
                 <AppBtnIcon

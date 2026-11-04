@@ -23,7 +23,11 @@ const mountActions = (props: {
 }) =>
   mount(PerpsOrderActions, {
     props: { surface: 'default', ...props },
-    global: { plugins: [i18n], directives: { ripple: {} } },
+    global: {
+      plugins: [i18n],
+      directives: { ripple: {} },
+      stubs: { teleport: true },
+    },
   })
 
 const item = (w: ReturnType<typeof mountActions>, text: string) =>

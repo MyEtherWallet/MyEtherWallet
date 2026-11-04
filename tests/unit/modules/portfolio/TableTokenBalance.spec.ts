@@ -133,7 +133,7 @@ const mountTable = (view = 'all') =>
       plugins: [i18n],
       directives: { ripple: {} },
       // The empty-watchlist state uses the global router-link.
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { RouterLink: RouterLinkStub, teleport: true },
     },
   })
 

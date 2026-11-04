@@ -136,7 +136,7 @@ const mountModule = async () => {
       plugins: [i18n],
       directives: { ripple: {} },
       // AppSelect resolves the global router-link.
-      stubs: { RouterLink: RouterLinkStub },
+      stubs: { RouterLink: RouterLinkStub, teleport: true },
     },
   })
   await flushPromises()

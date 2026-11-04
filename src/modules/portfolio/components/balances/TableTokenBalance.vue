@@ -181,6 +181,7 @@
                 "
                 :placeholder="$t('common.action_menu')"
                 location="right"
+                teleport
               >
                 <template #menu-button="{ toggleMenu }">
                   <app-btn-icon

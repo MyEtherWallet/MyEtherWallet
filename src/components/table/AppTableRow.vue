@@ -104,7 +104,7 @@ const activate = (e: KeyboardEvent) => {
     role="row"
     :tabindex="clickable ? 0 : undefined"
     :class="[
-      'group relative col-span-full grid grid-cols-subgrid items-center rounded-12 bg-background-alternative py-3 transition-colors hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand',
+      'group relative isolate col-span-full grid grid-cols-subgrid items-center rounded-12 bg-background-alternative py-3 transition-colors hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand',
       ROW_PADDING[size],
       { 'cursor-pointer': clickable },
     ]"

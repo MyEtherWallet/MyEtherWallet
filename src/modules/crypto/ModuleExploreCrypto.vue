@@ -127,6 +127,7 @@
                 v-if="actionSize === 's'"
                 :placeholder="$t('common.action_menu')"
                 location="right"
+                teleport
               >
                 <template #menu-button="{ toggleMenu }">
                   <AppBtnIcon
