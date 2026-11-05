@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useId } from 'vue'
+import { computed, nextTick, ref, useId, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
@@ -11,9 +11,11 @@ import {
 import { useFlipPlacement } from './useFlipPlacement'
 import {
   DROPDOWN_BARE_TRIGGER_CLASS,
+  DROPDOWN_MENU_ALIGN_CLASS,
   DROPDOWN_MENU_WIDTH_CLASS,
   DROPDOWN_TRIGGER_CLASS,
   DROPDOWN_TRIGGER_STATE_CLASS,
+  type DropdownMenuAlign,
   type DropdownSize,
   type DropdownSurface,
 } from './types'
@@ -55,11 +57,14 @@ const props = withDefaults(
     menuClass?: string
     /** Text trigger without the pill box (title + 18px chevron); opens the S menu. */
     bare?: boolean
+    /** S menu edge: `end` for a trigger near the right edge of its container. */
+    menuAlign?: DropdownMenuAlign
   }>(),
   {
     size: 'm',
     surface: 'default',
     bare: false,
+    menuAlign: 'start',
     disabled: false,
     closeOnSelect: true,
     searchable: false,
@@ -77,6 +82,11 @@ const AVATAR_SIZE = 's' as const // 24px in both sizes
 
 // A bare trigger lays out like S: inline, label title, 240px menu.
 const layout = computed<DropdownSize>(() => (props.bare ? 's' : props.size))
+const menuPositionClass = computed(() =>
+  layout.value === 'm'
+    ? DROPDOWN_MENU_WIDTH_CLASS.m
+    : [DROPDOWN_MENU_WIDTH_CLASS.s, DROPDOWN_MENU_ALIGN_CLASS[props.menuAlign]],
+)
 const triggerClass = computed(() =>
   props.bare
     ? DROPDOWN_BARE_TRIGGER_CLASS
@@ -119,6 +129,17 @@ const toggle = (event: MouseEvent) =>
   open.value ? close(true) : show(event.detail === 0)
 
 onClickOutside(root, () => close(false))
+
+// Inside a scrolling container (a modal list) the menu can open past its
+// clipped edge: bring it into view once placed. No-op when already visible.
+watch(open, async isOpen => {
+  if (!isOpen) return
+  await nextTick() // menu rendered
+  await nextTick() // flip placement applied
+  ;(menu.value?.$el as HTMLElement | undefined)?.scrollIntoView?.({
+    block: 'nearest',
+  })
+})
 
 const onFocusOut = (event: FocusEvent) => {
   const next = event.relatedTarget as Node | null
@@ -209,7 +230,7 @@ defineExpose({ show, close })
       :list-class="menuClass"
       class="absolute z-20"
       :class="[
-        DROPDOWN_MENU_WIDTH_CLASS[layout],
+        menuPositionClass,
         flipUp ? 'bottom-full mb-1' : 'top-full mt-1',
       ]"
       @click="onMenuClick"

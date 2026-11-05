@@ -44,10 +44,18 @@ export const DROPDOWN_TRIGGER_STATE_CLASS =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default disabled:*:opacity-40'
 
 /**
- * Open menu placement: M takes the trigger's width, S keeps Figma's 240px
- * panel left-aligned under its narrower pill.
+ * Open menu width: M takes the trigger's width, S keeps Figma's 240px panel
+ * (lined up by DROPDOWN_MENU_ALIGN_CLASS).
  */
 export const DROPDOWN_MENU_WIDTH_CLASS: Record<DropdownSize, string> = {
   m: 'left-0 right-0',
-  s: 'left-0 w-60',
+  s: 'w-60',
+}
+
+/** Which trigger edge an S menu lines up with; M always spans the trigger. */
+export type DropdownMenuAlign = 'start' | 'end'
+
+export const DROPDOWN_MENU_ALIGN_CLASS: Record<DropdownMenuAlign, string> = {
+  start: 'left-0',
+  end: 'right-0',
 }

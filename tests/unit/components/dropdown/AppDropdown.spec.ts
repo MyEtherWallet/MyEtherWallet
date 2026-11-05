@@ -222,6 +222,27 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     expect(small.getComponent(AppMenuList).classes()).toContain('w-60')
   })
 
+  it('lines an S menu up with the trigger end when asked', async () => {
+    const start = mountDropdown({ size: 's' })
+    await openMenu(start)
+    expect(start.getComponent(AppMenuList).classes()).toContain('left-0')
+
+    const end = mountDropdown({ size: 's', menuAlign: 'end' })
+    await openMenu(end)
+    const classes = end.getComponent(AppMenuList).classes()
+    expect(classes).toEqual(expect.arrayContaining(['right-0', 'w-60']))
+    expect(classes).not.toContain('left-0')
+  })
+
+  it('scrolls the opened menu into view inside a clipping container', async () => {
+    const scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = scrollIntoView
+    const wrapper = mountDropdown()
+    await openMenu(wrapper)
+    await nextTick()
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' })
+  })
+
   it('forwards the search query both ways', async () => {
     const wrapper = mountDropdown({ searchable: true })
     await openMenu(wrapper)
