@@ -17,7 +17,8 @@ export const tokenRowAccessory = ({
   price?: string
   change?: number
 }): CellRightAccessory | undefined => {
-  if (balanceFiat) return { kind: 'balance', primary: balanceFiat, secondary: balance }
+  if (balanceFiat)
+    return { kind: 'balance', primary: balanceFiat, secondary: balance }
   if (!price) return undefined
   return change === undefined || Number.isNaN(change)
     ? { kind: 'balance', primary: price }

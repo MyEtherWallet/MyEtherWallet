@@ -6,7 +6,13 @@ import {
 import type { TokenSelectorItem } from '@/components/token_selector/types'
 
 const item = (symbol: string, extra: Partial<TokenSelectorItem> = {}) =>
-  ({ id: symbol.toLowerCase(), symbol, name: symbol, raw: null, ...extra }) as TokenSelectorItem
+  ({
+    id: symbol.toLowerCase(),
+    symbol,
+    name: symbol,
+    raw: null,
+    ...extra,
+  }) as TokenSelectorItem
 
 describe('tokenRowAccessory', () => {
   it('shows the holding when the token has a fiat balance', () => {
@@ -46,7 +52,13 @@ describe('tokenRowAccessory', () => {
 
 describe('pickQuickPicks', () => {
   it('returns USDC, WBTC, the native token and USDT in Figma order', () => {
-    const items = [item('USDT'), item('ETH'), item('DAI'), item('WBTC'), item('USDC')]
+    const items = [
+      item('USDT'),
+      item('ETH'),
+      item('DAI'),
+      item('WBTC'),
+      item('USDC'),
+    ]
     expect(pickQuickPicks(items, 'ETH').map(i => i.symbol)).toEqual([
       'USDC',
       'WBTC',

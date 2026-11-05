@@ -327,7 +327,10 @@ const onClosed = () => {
             class="flex flex-col gap-2"
             :aria-label="disabledGroupTitle"
           >
-            <p v-if="disabledGroupTitle" class="text-text-base text-text-subtle">
+            <p
+              v-if="disabledGroupTitle"
+              class="text-text-base text-text-subtle"
+            >
               {{ disabledGroupTitle }}
             </p>
             <div role="list" class="flex flex-col gap-0.5">
