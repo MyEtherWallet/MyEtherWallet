@@ -47,11 +47,7 @@
     "bank": "Banco",
     "select_token": {
       "title": "Tokens",
-      "subtitle": "Selecciona uno de la lista",
-      "search_placeholder": "Buscar",
       "filter_all_networks": "Todas las redes",
-      "filter_title": "Filtrar por red",
-      "filter_subtitle": "Selecciona una red de la lista",
       "no_results": "Ningún token coincide"
     },
     "select_currency": {

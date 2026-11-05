@@ -47,11 +47,7 @@
     "bank": "银行",
     "select_token": {
       "title": "代币",
-      "subtitle": "从列表中选择一个",
-      "search_placeholder": "搜索",
       "filter_all_networks": "所有网络",
-      "filter_title": "按网络筛选",
-      "filter_subtitle": "从列表中选择一个网络",
       "no_results": "没有匹配的代币"
     },
     "select_currency": {
