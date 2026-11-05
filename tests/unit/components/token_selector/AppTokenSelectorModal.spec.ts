@@ -186,10 +186,13 @@ describe('AppTokenSelectorModal', () => {
     expect(avatars.map(a => a.props('type'))).toEqual(['stocks', 'cryptoAsset'])
   })
 
-  it('marks the selected token', async () => {
+  it('marks the selected token, for screen readers too', async () => {
     const wrapper = await mountModal({ selectedId: 'eth' })
     const rows = wrapper.findAllComponents(AppCell)
     expect(rows.map(row => row.props('selected'))).toEqual([false, true, false])
+    expect(
+      rowsIn('token-selector-all').map(row => row.getAttribute('aria-current')),
+    ).toEqual([null, 'true', null])
   })
 
   it('keeps the selected mark on a token that became unavailable', async () => {

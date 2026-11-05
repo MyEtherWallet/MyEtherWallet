@@ -24,6 +24,7 @@ const emit = defineEmits<{ select: [item: TokenSelectorItem] }>()
         :description="item.name"
         :right-accessory="item.rightAccessory"
         :selected="item.id === selectedId"
+        :aria-current="item.id === selectedId ? 'true' : undefined"
         :disabled="item.disabled"
         @click="emit('select', item)"
       >
