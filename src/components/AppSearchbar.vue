@@ -51,9 +51,25 @@
   </label>
 </template>
 
+<script lang="ts">
+// Whether the user's last input was a key press, shared by every searchbar.
+// Module scope so a field mounted by that key press (a modal opened with
+// Enter) still knows its focus came from the keyboard.
+let lastInputWasKey = false
+if (typeof document !== 'undefined') {
+  const options = { capture: true, passive: true }
+  document.addEventListener('keydown', () => (lastInputWasKey = true), options)
+  document.addEventListener(
+    'pointerdown',
+    () => (lastInputWasKey = false),
+    options,
+  )
+}
+</script>
+
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useEventListener, useTimeoutFn } from '@vueuse/core'
+import { useTimeoutFn } from '@vueuse/core'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import type { IconName } from '@/components/icon/icons'
@@ -146,15 +162,6 @@ const isActive = ref(false)
 
 // Only keyboard focus gets the ring: focus that code moves in after a click
 // (a modal opening on its search) shows just the caret, like a click would.
-let lastInputWasKey = false
-useEventListener(document, 'keydown', () => (lastInputWasKey = true), {
-  capture: true,
-  passive: true,
-})
-useEventListener(document, 'pointerdown', () => (lastInputWasKey = false), {
-  capture: true,
-  passive: true,
-})
 const onFocus = () => {
   if (!lastInputWasKey) isActive.value = true
 }

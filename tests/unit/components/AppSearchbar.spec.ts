@@ -231,6 +231,15 @@ describe('AppSearchbar — design-library Searchbar (MEW-1976)', () => {
     expect(w.classes()).toContain(RING)
   })
 
+  it('keeps the ring when the key press came before the field mounted', async () => {
+    // e.g. a modal opened with Enter that focuses its search on open
+    const RING = 'has-[input:focus]:outline-border-focus'
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
+    const w = mountFull({ modelValue: '' })
+    await w.get('input').trigger('focus')
+    expect(w.classes()).toContain(RING)
+  })
+
   it('takes an explicit aria-label over the placeholder', () => {
     const input = mountFull({ ariaLabel: 'Filter icons' }).get('input')
     expect(input.attributes('aria-label')).toBe('Filter icons')
