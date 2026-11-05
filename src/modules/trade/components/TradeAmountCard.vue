@@ -232,11 +232,10 @@ const quickActions = computed(() =>
 )
 
 // Same casing as AppTokenSymbol: ticker uppercase, Ondo "on" suffix lowercase.
+// Both sides check the stocks list: a cash-out buys a supporting asset (USDC).
 const pickerTitle = (token: NewTokenInfo) => {
   const isStock =
-    props.side === 'buy' ||
-    (!!props.networkName &&
-      stocksStore.isStock(token.address, props.networkName))
+    !!props.networkName && stocksStore.isStock(token.address, props.networkName)
   const symbol = token.symbol.toUpperCase()
   if (!isStock) return symbol
   return `${symbol.endsWith('ON') ? symbol.slice(0, -2) : symbol}on`
