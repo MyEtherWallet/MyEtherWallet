@@ -145,7 +145,7 @@ const onClosed = () => {
     <div class="flex h-full flex-col">
       <div
         data-testid="token-selector-toolbar"
-        class="flex flex-none items-center gap-2 px-4 pb-6 sm:px-6"
+        class="flex flex-none items-center gap-2 px-4 pt-1 pb-5 sm:px-6"
       >
         <AppSearchbar
           v-model="search"
@@ -158,6 +158,7 @@ const onClosed = () => {
           v-model:search="networkQuery"
           size="s"
           surface="alternative"
+          menu-align="end"
           class="shrink-0"
           :title="currentNetwork.name"
           :searchable="networks.length > 6"
