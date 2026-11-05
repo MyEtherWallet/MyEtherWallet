@@ -32,6 +32,8 @@
     "trade_button": "Trade {amount}",
     "back_in": "Back in {time}",
     "market_is_closed": "Market is closed",
+    "temporarily_paused": "Temporarily paused",
+    "paused": "Paused",
     "info_make_trade": "Make a trade over ${min}.",
     "info_first_users": "Be among the first {count} users per hour, per trade.",
     "info_earn_per_trade": "Earn ${amount} USDC per trade.",

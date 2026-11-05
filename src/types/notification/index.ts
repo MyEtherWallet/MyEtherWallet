@@ -13,7 +13,6 @@ export interface ToastLink {
 
 export interface Toast {
   id?: string
-  variant?: 'default' | 'dark'
   type?: ToastType
   text: string
   textSecondary?: string

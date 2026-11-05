@@ -1,143 +1,130 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpenCustomTokenDialog"
+  <app-modal
+    v-model="isOpenCustomTokenDialog"
     :title="title"
-    class="sm:max-w-[420px]"
     :class="{ '!min-h-0': currentView === 'delete' }"
+    :buttons="buttons"
   >
-    <template #content>
-      <div class="px-6 pb-8 pt-4 w-full flex flex-col items-center">
-        <div v-if="currentView === 'add'" class="w-full flex flex-col gap-4">
-          <address-input
-            v-model:adr-input="adrInput"
-            :label="t('portfolio.custom_token.token_address')"
-            :resolved-address="resolvedAddress"
-            :address-error-messages="addressError"
-            :chain="selectedChain"
-            :is-raised="false"
-            @validate:address="validateAddressInput"
-            @immediate-update:resolved-address="onInput"
-          />
+    <div class="px-6 pt-4 w-full flex flex-col items-center">
+      <div v-if="currentView === 'add'" class="w-full flex flex-col gap-4">
+        <address-input
+          v-model:adr-input="adrInput"
+          :label="t('portfolio.custom_token.token_address')"
+          :resolved-address="resolvedAddress"
+          :address-error-messages="addressError"
+          :chain="selectedChain"
+          :is-raised="false"
+          @validate:address="validateAddressInput"
+          @immediate-update:resolved-address="onInput"
+        />
 
-          <transition-group
-            enter-active-class="transform ease-out duration-300 transition"
-            enter-from-class="opacity-0 -translate-y-2"
-            enter-to-class="opacity-100 translate-y-0"
-          >
-            <app-input
-              v-if="fetchedInfoViaAddress"
-              key="name"
-              surface="alternative"
-              :label="t('portfolio.custom_token.token_name_placeholder')"
-              v-model="tokenName"
-              :disabled="fetchingDetails"
-              :error-message="nameError"
-            />
-            <app-input
-              v-if="fetchedInfoViaAddress"
-              key="symbol"
-              surface="alternative"
-              :label="t('portfolio.custom_token.token_symbol_placeholder')"
-              v-model="tokenSymbol"
-              :disabled="fetchingDetails"
-              :error-message="symbolError"
-            />
-            <app-input
-              v-if="fetchedInfoViaAddress"
-              key="decimals"
-              surface="alternative"
-              :label="t('portfolio.custom_token.token_decimals_placeholder')"
-              v-model="tokenDecimals"
-              :disabled="fetchingDetails"
-              :error-message="decimalsError"
-            />
-          </transition-group>
-
-          <div
-            v-if="fetchingDetails"
-            class="flex justify-center items-center py-4"
-          >
-            <svg
-              class="animate-spin h-8 w-8 text-text-brand"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </div>
-        </div>
-        <div v-if="currentView === 'edit'" class="w-full flex flex-col gap-4">
-          <address-input
-            v-model:adr-input="adrInput"
-            :label="t('portfolio.custom_token.token_address')"
-            :is-disabled="true"
-            :resolved-address="resolvedAddress"
-            :chain="selectedChain"
-          />
+        <transition-group
+          enter-active-class="transform ease-out duration-300 transition"
+          enter-from-class="opacity-0 -translate-y-2"
+          enter-to-class="opacity-100 translate-y-0"
+        >
           <app-input
+            v-if="fetchedInfoViaAddress"
+            key="name"
             surface="alternative"
             :label="t('portfolio.custom_token.token_name_placeholder')"
             v-model="tokenName"
+            :disabled="fetchingDetails"
             :error-message="nameError"
           />
           <app-input
+            v-if="fetchedInfoViaAddress"
+            key="symbol"
             surface="alternative"
             :label="t('portfolio.custom_token.token_symbol_placeholder')"
             v-model="tokenSymbol"
+            :disabled="fetchingDetails"
             :error-message="symbolError"
           />
           <app-input
+            v-if="fetchedInfoViaAddress"
+            key="decimals"
             surface="alternative"
             :label="t('portfolio.custom_token.token_decimals_placeholder')"
             v-model="tokenDecimals"
-            :disabled="true"
+            :disabled="fetchingDetails"
             :error-message="decimalsError"
           />
+        </transition-group>
+
+        <div v-if="fetchingDetails" class="flex justify-center items-center py-4">
+          <svg
+            class="animate-spin h-8 w-8 text-text-brand"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
         </div>
-        <div
-          v-if="currentView === 'delete'"
-          class="max-w-[340px] text-center mb-2"
-        >
-          <p class="text-s-16 text-black leading-relaxed">
-            {{
-              t('portfolio.custom_token.delete_confirm', {
-                name: selectedToken?.name ?? '',
-              })
-            }}
-          </p>
-        </div>
-        <app-base-button
-          class="mt-8 mx-auto w-full xs:w-[220px]"
-          :disabled="disableSubmit"
-          :tone="currentView === 'delete' ? 'danger' : 'default'"
-          @click="action"
-        >
-          {{ buttonTitle }}
-        </app-base-button>
       </div>
-    </template>
-  </app-dialog>
+      <div v-if="currentView === 'edit'" class="w-full flex flex-col gap-4">
+        <address-input
+          v-model:adr-input="adrInput"
+          :label="t('portfolio.custom_token.token_address')"
+          :is-disabled="true"
+          :resolved-address="resolvedAddress"
+          :chain="selectedChain"
+        />
+        <app-input
+          surface="alternative"
+          :label="t('portfolio.custom_token.token_name_placeholder')"
+          v-model="tokenName"
+          :error-message="nameError"
+        />
+        <app-input
+          surface="alternative"
+          :label="t('portfolio.custom_token.token_symbol_placeholder')"
+          v-model="tokenSymbol"
+          :error-message="symbolError"
+        />
+        <app-input
+          surface="alternative"
+          :label="t('portfolio.custom_token.token_decimals_placeholder')"
+          v-model="tokenDecimals"
+          :disabled="true"
+          :error-message="decimalsError"
+        />
+      </div>
+      <div
+        v-if="currentView === 'delete'"
+        class="max-w-[340px] text-center mb-2"
+      >
+        <p class="text-s-16 text-black leading-relaxed">
+          {{
+            t('portfolio.custom_token.delete_confirm', {
+              name: selectedToken?.name ?? '',
+            })
+          }}
+        </p>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import type { ModalButtons } from '@/components/modal/types'
 import AppInput from '@/components/AppInput.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useCustomTokenStore } from '@/stores/customTokenStore'
 import { storeToRefs } from 'pinia'
 import { ref, computed, watch } from 'vue'
@@ -308,6 +295,15 @@ const action = () => {
   resetForm()
   isOpenCustomTokenDialog.value = false
 }
+
+const buttons = computed<ModalButtons>(() => ({
+  primary: {
+    label: buttonTitle.value,
+    onClick: action,
+    disabled: disableSubmit.value,
+    tone: currentView.value === 'delete' ? 'danger' : 'default',
+  },
+}))
 
 // --- Watchers ---
 

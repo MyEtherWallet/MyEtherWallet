@@ -15,8 +15,8 @@ const i18n = createI18n({
         hero: {
           watchlist: {
             title: 'Build your watchlist',
-            subtitle: 'Find assets to follow based on your interests',
-            begin: "Let's begin",
+            subtitle: 'Find and follow assets you’d like to keep an eye on',
+            addAssets: 'Add assets',
           },
         },
       },
@@ -27,12 +27,12 @@ const i18n = createI18n({
 const mountBanner = () =>
   mount(HeroWatchlistBanner, { global: { plugins: [i18n] } })
 
-describe('HeroWatchlistBanner (MEW-2094 watchlist onboarding)', () => {
-  it('renders the title, subtitle and begin CTA', () => {
+describe('HeroWatchlistBanner', () => {
+  it('renders the title, subtitle and "Add assets" CTA', () => {
     const w = mountBanner()
     expect(w.text()).toContain('Build your watchlist')
-    expect(w.text()).toContain('Find assets to follow')
-    expect(w.find('[data-test="hero-watchlist-begin"]').exists()).toBe(true)
+    expect(w.text()).toContain('Find and follow assets')
+    expect(w.get('[data-test="hero-watchlist-cta"]').text()).toBe('Add assets')
   })
 
   it('renders four decorative stock avatars', () => {
@@ -40,21 +40,21 @@ describe('HeroWatchlistBanner (MEW-2094 watchlist onboarding)', () => {
     expect(w.findAll('[data-test="stock-avatar"]').length).toBe(4)
   })
 
-  it('emits "begin" when the CTA is clicked', async () => {
+  it('emits "add" when the CTA is clicked', async () => {
     const w = mountBanner()
-    await w.get('[data-test="hero-watchlist-begin"]').trigger('click')
-    expect(w.emitted('begin')).toHaveLength(1)
+    await w.get('[data-test="hero-watchlist-cta"]').trigger('click')
+    expect(w.emitted('add')).toHaveLength(1)
   })
 
-  it('emits "begin" when clicking anywhere on the banner, not just the CTA', async () => {
+  it('emits "add" when clicking anywhere on the banner, not just the CTA', async () => {
     const w = mountBanner()
     await w.get('[data-test="hero-watchlist-banner"]').trigger('click')
-    expect(w.emitted('begin')).toHaveLength(1)
+    expect(w.emitted('add')).toHaveLength(1)
   })
 
   it('launches the flow via keyboard (Enter)', async () => {
     const w = mountBanner()
     await w.get('[data-test="hero-watchlist-banner"]').trigger('keydown.enter')
-    expect(w.emitted('begin')).toHaveLength(1)
+    expect(w.emitted('add')).toHaveLength(1)
   })
 })

@@ -31,30 +31,12 @@
 
     <!-- Search bar (fixed, does not scroll) -->
     <div class="shrink-0 flex flex-col gap-4">
-      <!-- Filled grey search bar -->
-      <div
-        class="flex items-center gap-2.5 h-10 px-2.5 rounded-[24px] bg-background-default-hover w-full"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          class="w-5 h-5 text-text-muted shrink-0"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        <input
-          data-test="net-search"
-          v-model="search"
-          type="text"
-          :placeholder="$t('multi_address.network_search')"
-          class="bg-transparent outline-none border-0 w-full text-s-14 text-black placeholder:text-text-muted"
-        />
-      </div>
+      <AppSearchbar
+        v-model="search"
+        variant="default"
+        data-test="net-search"
+        :placeholder="$t('multi_address.network_search')"
+      />
     </div>
 
     <!-- Scrollable chain list -->
@@ -151,6 +133,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 
 const emit = defineEmits<{
   (e: 'back'): void

@@ -64,14 +64,14 @@ describe('HomeMarketNews', () => {
     const w = mountIt()
     expect(w.findAll('[data-test="news-card"]').length).toBe(6)
 
-    await w.get('[data-test="next"]').trigger('click')
+    await w.get('button[aria-label="common.next_page"]').trigger('click')
     expect(w.findAll('[data-test="news-card"]').length).toBe(2)
   })
 
   it('does not render pagination when there is only one page', () => {
     box.value = makeNews(6)
     const w = mountIt()
-    expect(w.find('[data-test="next"]').exists()).toBe(false)
+    expect(w.find('button[aria-label="common.next_page"]').exists()).toBe(false)
   })
 
   it('shows the empty state and no news cards when there is no news', () => {

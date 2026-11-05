@@ -17,30 +17,10 @@
       />
 
       <!--
-        Service outage notice. The panel opens without ViewPerps (and its
-        PerpsStatusBanner) in the tree, so the outage needs saying here too — kept
-        to a compact label since the panel is narrow.
-
-        Suppressed while the region block shows, matching PerpsStatusBanner's
-        precedence: the jurisdiction card already explains why the form is
-        unusable, and a second notice would only compete with it.
+        Service outage notice. The panel opens without ViewPerps in the tree, so
+        it mounts its own copy; it already yields to the region block below.
       -->
-      <div
-        v-if="showStatusLabel"
-        role="status"
-        class="flex items-center gap-1.5 px-3 py-2 rounded-12 bg-background-warning-subtle"
-      >
-        <!-- Amber in the shell and icon only: `warning` on this tint is ~2:1,
-             unreadable for copy, so the text stays near-black. -->
-        <AppIcon
-          name="exclamation-triangle"
-          variant="filled"
-          size="xxs"
-          aria-hidden="true"
-          class="shrink-0 text-text-warning"
-        />
-        <p class="text-s-12">{{ $t('perps.status.unavailable') }}</p>
-      </div>
+      <PerpsStatusBanner />
 
       <!-- Region-blocked: card explains why, form below stays visible but dimmed
            and inert so the panel reads as present-but-unusable. -->
@@ -255,7 +235,9 @@
 
           <!-- Margin (new position or add to it) -->
           <template v-if="!activePosition || manageMode === 'add'">
-            <div class="flex flex-col gap-4 rounded-16 bg-background-default p-4">
+            <div
+              class="flex flex-col gap-4 rounded-16 bg-background-default p-4"
+            >
               <div
                 class="flex items-center justify-between gap-2 text-text-base text-text-subtle"
               >
@@ -282,6 +264,7 @@
                     :avatar="false"
                     :loading="isLoadingLeverage"
                     :disabled="isLoadingLeverage"
+                    :expanded="showLeverageModal"
                     @click="openLeverage"
                   />
                 </div>
@@ -355,7 +338,9 @@
 
           <!-- Close part of the open position -->
           <template v-if="activePosition && manageMode === 'close'">
-            <div class="flex flex-col gap-4 rounded-16 bg-background-default p-4">
+            <div
+              class="flex flex-col gap-4 rounded-16 bg-background-default p-4"
+            >
               <p class="text-text-base text-text-subtle">
                 {{ $t('perps.trade.amount-to-close') }}
               </p>
@@ -392,9 +377,7 @@
               </div>
 
               <AppDivider />
-              <div
-                class="flex items-center justify-between gap-2 text-text-sm"
-              >
+              <div class="flex items-center justify-between gap-2 text-text-sm">
                 <p class="text-text-subtle">
                   {{ $t('perps.trade.new-size') }}
                 </p>
@@ -422,17 +405,17 @@
         </div>
 
         <!-- Submit Button -->
-        <div
+        <AppBanner
           v-if="!isSupportedNetwork"
-          class="flex flex-col gap-3 text-center"
+          type="info"
+          :description="$t('perps.trade.eth-only')"
         >
-          <p class="text-text-sm text-text-subtle">
-            {{ $t('perps.trade.eth-only') }}
-          </p>
-          <app-base-button class="w-full" @click="onSwitchToEthereum">
-            {{ $t('perps.trade.switch-to-ethereum') }}
-          </app-base-button>
-        </div>
+          <template #actions>
+            <app-base-button size="small" @click="onSwitchToEthereum">
+              {{ $t('perps.trade.switch-to-ethereum') }}
+            </app-base-button>
+          </template>
+        </AppBanner>
         <!-- Stays enabled during an outage: connecting a wallet is a
              wallet-side action that doesn't touch the perps service, and it's
              useful across the rest of the app regardless. -->
@@ -444,13 +427,14 @@
           {{ t('connect_wallet') }}
         </app-base-button>
         <!-- Signing in hits the perps service, so during an outage it would
-             only prompt for a signature the backend cannot redeem. The label
+             only prompt for a signature the backend cannot redeem. The banner
              at the top of the panel says why the button is dead. -->
         <app-base-button
           v-else-if="!token"
           class="w-full"
+          :is-loading="isAuthenticating"
           :disabled="isServiceUnavailable"
-          @click="login(PerpsEventSource.TRADE)"
+          @click="signIn(PerpsEventSource.TRADE)"
         >
           {{ $t('perps.trade.sign-in') }}
         </app-base-button>
@@ -589,7 +573,9 @@ import { usePerpsRestriction } from './composables/usePerpsRestriction'
 import { usePerpsStatus } from './composables/usePerpsStatus'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
+import PerpsStatusBanner from './components/PerpsStatusBanner.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import AppLearnMoreLink from '@/components/AppLearnMoreLink.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -631,6 +617,7 @@ import {
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
 const {
+  isAuthenticating,
   showSigningPrompt,
   signingMessage,
   isHardwareWalletSigning,
@@ -645,10 +632,6 @@ const { blockedClass } = useBlockedContent(isPerpsRestricted)
 // ViewPerps (and its banner) in the tree, so without this the panel would keep
 // firing orders and quotes at a service reporting 500.
 const { isServiceUnavailable } = usePerpsStatus()
-// Restricted outranks the outage: see the template comment on the label.
-const showStatusLabel = computed(
-  () => isServiceUnavailable.value && !isPerpsRestricted.value,
-)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
@@ -741,7 +724,7 @@ const onLimitPriceInput = (e: Event) => {
 const {
   // Auth
   token,
-  login,
+  signIn,
   // Market info
   displaySymbol,
   currentPrice,
@@ -941,8 +924,7 @@ const orderTypeLabel = computed(() =>
     : t('perps.trade.limit'),
 )
 
-const formatSliderPercent = (value: number) =>
-  `${+Number(value).toFixed(1)}%`
+const formatSliderPercent = (value: number) => `${+Number(value).toFixed(1)}%`
 
 const displayLeverage = computed(() =>
   manageMode.value === 'add' ? effectiveLeverage.value : leverage.value,
@@ -1012,5 +994,4 @@ const limitPriceErrorMessage = computed(() => {
   if (limitPriceOutOfTolerance.value) return t('perps.errors.out-of-tolerance')
   return undefined
 })
-
 </script>

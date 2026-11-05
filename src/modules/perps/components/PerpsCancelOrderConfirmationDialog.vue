@@ -1,12 +1,7 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    class="w-full max-w-[440px]"
-    z-index-container="z-[201]"
-    z-index-overlay="z-[200]"
-  >
-    <template #title>
-      <div class="flex items-center gap-2.5 mr-8 pt-5 pl-6">
+  <app-modal v-model="isOpen" :title="$t('perps.cancel-order.title')">
+    <template #header>
+      <div class="flex items-center gap-2.5">
         <app-token-logo
           :url="getLogoUrl(displaySymbol)"
           :symbol="displaySymbol"
@@ -18,104 +13,99 @@
         }}</span>
       </div>
     </template>
-    <template #content>
-      <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
-        <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.market')
-            }}</span>
-            <span class="font-bold">{{ displaySymbol }}</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.side-label')
-            }}</span>
-            <span
-              class="font-bold"
-              :class="
-                order.side === 'buy' ? 'text-text-success' : 'text-text-error'
-              "
-            >
-              {{
-                order.side === 'buy'
-                  ? $t('perps.confirm.long')
-                  : $t('perps.confirm.short')
-              }}
-            </span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.confirm.order-type-label')
-            }}</span>
-            <span class="font-bold">{{ humanCategory(order.type) }}</span>
-          </div>
-          <div
-            v-if="order.type !== 'market'"
-            class="flex justify-between text-s-14"
-          >
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.cancel-order.price-label')
-            }}</span>
-            <span class="font-bold">{{
-              formatPrice(getOrderPrice(order))
-            }}</span>
-          </div>
-          <div class="flex justify-between text-s-14">
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.trade.size')
-            }}</span>
-            <div class="text-right">
-              <p class="font-bold">{{ order.size }} {{ displaySymbol }}</p>
-              <p class="text-text-muted">{{ orderSizeInUsd }}</p>
-            </div>
-          </div>
-          <div
-            v-if="parseFloat(order.filledSize) > 0"
-            class="flex justify-between text-s-14"
-          >
-            <span class="text-text-subtle font-medium">{{
-              $t('perps.cancel-order.filled-label')
-            }}</span>
-            <span class="font-bold"
-              >{{ order.filledSize }} / {{ order.size }}
-              {{ displaySymbol }}</span
-            >
-          </div>
+    <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
+      <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.market')
+          }}</span>
+          <span class="font-bold">{{ displaySymbol }}</span>
         </div>
-
-        <div class="flex flex-col gap-1">
-          <app-base-button
-            :disabled="isCancelling"
-            :is-loading="isCancelling"
-            tone="danger"
-            class="flex-1"
-            @click="$emit('confirm')"
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.side-label')
+          }}</span>
+          <span
+            class="font-bold"
+            :class="
+              order.side === 'buy' ? 'text-text-success' : 'text-text-error'
+            "
           >
             {{
-              isCancelling
-                ? $t('perps.cancel-order.cancelling')
-                : $t('perps.cancel-order.confirm-cancel')
+              order.side === 'buy'
+                ? $t('perps.confirm.long')
+                : $t('perps.confirm.short')
             }}
-          </app-base-button>
-          <app-base-button
-            type="tertiary"
-            surface="alternative"
-            size="large"
-            :disabled="isCancelling"
-            class="mx-auto w-full"
-            @click="isOpen = false"
+          </span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.confirm.order-type-label')
+          }}</span>
+          <span class="font-bold">{{ humanCategory(order.type) }}</span>
+        </div>
+        <div
+          v-if="order.type !== 'market'"
+          class="flex justify-between text-s-14"
+        >
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.cancel-order.price-label')
+          }}</span>
+          <span class="font-bold">{{ formatPrice(getOrderPrice(order)) }}</span>
+        </div>
+        <div class="flex justify-between text-s-14">
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.trade.size')
+          }}</span>
+          <div class="text-right">
+            <p class="font-bold">{{ order.size }} {{ displaySymbol }}</p>
+            <p class="text-text-muted">{{ orderSizeInUsd }}</p>
+          </div>
+        </div>
+        <div
+          v-if="parseFloat(order.filledSize) > 0"
+          class="flex justify-between text-s-14"
+        >
+          <span class="text-text-subtle font-medium">{{
+            $t('perps.cancel-order.filled-label')
+          }}</span>
+          <span class="font-bold"
+            >{{ order.filledSize }} / {{ order.size }} {{ displaySymbol }}</span
           >
-            {{ $t('perps.trade.tab-close') }}
-          </app-base-button>
         </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <div class="flex flex-col gap-1">
+        <app-base-button
+          :disabled="isCancelling"
+          :is-loading="isCancelling"
+          tone="danger"
+          class="flex-1"
+          @click="$emit('confirm')"
+        >
+          {{
+            isCancelling
+              ? $t('perps.cancel-order.cancelling')
+              : $t('perps.cancel-order.confirm-cancel')
+          }}
+        </app-base-button>
+        <app-base-button
+          type="tertiary"
+          surface="alternative"
+          size="large"
+          :disabled="isCancelling"
+          class="mx-auto w-full"
+          @click="isOpen = false"
+        >
+          {{ $t('perps.trade.tab-close') }}
+        </app-base-button>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatPrice, getOrderPrice } from '../utils/formatters'

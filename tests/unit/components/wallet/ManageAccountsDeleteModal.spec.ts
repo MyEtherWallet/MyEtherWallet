@@ -2,13 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAccountsDeleteModal.vue'
 
-// AppDialog teleports; stub it to render the title + content slots inline and
-// surface its is-open model so we can assert the modal closes.
+// AppModal teleports; stub it to render the title/subtitle props + default slot
+// inline and surface its v-model so we can assert the modal closes.
 const stubs = {
-  AppDialog: {
-    name: 'AppDialog',
-    props: ['isOpen'],
-    template: '<div :data-open="isOpen"><slot name="title" /><slot name="content" /></div>',
+  AppModal: {
+    name: 'AppModal',
+    props: ['modelValue', 'title', 'subtitle'],
+    template:
+      '<div :data-open="modelValue"><h1>{{ title }}</h1><p>{{ subtitle }}</p><slot /></div>',
   },
 }
 

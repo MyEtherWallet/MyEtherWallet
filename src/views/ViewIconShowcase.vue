@@ -7,6 +7,7 @@
 // A glyph with only one variant falls back, so nothing renders blank.
 import { computed, ref } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import {
   ICON_NAMES,
   ICON_SIZES,
@@ -89,12 +90,12 @@ const SAMPLE: IconName = 'wallet'
         </button>
       </div>
 
-      <input
+      <AppSearchbar
         v-model="query"
-        type="search"
+        variant="default"
         aria-label="Filter icons by name"
         placeholder="Filter by name…"
-        class="ml-auto w-56 rounded-8 border border-border-default px-3 py-1.5 text-s-14 outline-none focus:border-border-brand"
+        class="ml-auto w-56"
       />
     </section>
 

@@ -1,11 +1,6 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    has-content-gutter
-    class="sm:w-[440px] sm:mx-auto"
-    @close-dialog="$emit('close')"
-  >
-    <template #content>
+  <app-modal v-model="isOpen" :aria-label="base" @close="$emit('close')">
+    <div class="px-4 sm:px-6">
       <div class="flex items-center gap-3 w-full mt-5 px-4">
         <div class="flex items-center gap-3">
           <app-token-logo
@@ -52,14 +47,14 @@
           $t('perps.trade.tab-close')
         }}</app-base-button>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import type { ApiFill } from '../sdk/types'

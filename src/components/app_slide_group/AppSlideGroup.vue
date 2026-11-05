@@ -4,13 +4,9 @@
       class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
       :class="{
         'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1]  before:pointer-events-none':
-          blurFront && !edgeNav,
+          canScrollStart && !edgeNav,
         'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-background-default after:to-transparent  after:pointer-events-none  after:z-[1]':
-          blurEnd && !edgeNav,
-        'before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-background-default before:to-transparent before:z-[1] before:pointer-events-none':
-          blurFront && edgeNav,
-        'after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-background-default after:to-transparent after:pointer-events-none after:z-[1]':
-          blurEnd && edgeNav,
+          canScrollEnd && !edgeNav,
         'order-2': paginateLocation === 'top',
       }"
     >
@@ -37,25 +33,18 @@
         </div>
       </div>
 
-      <!-- Edge-centered circular nav buttons (opt-in via edgeNav) -->
-      <button
-        v-if="edgeNav && blurFront"
-        type="button"
-        :aria-label="$t('common.previous_page')"
-        class="absolute left-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+      <AppScrollFade
+        v-if="edgeNav && canScrollStart"
+        side="left"
+        :label="$t('common.previous_page')"
         @click="scrollToPreviousGroup"
-      >
-        <AppIcon name="chevron-left" variant="filled" size="s" />
-      </button>
-      <button
-        v-if="edgeNav && blurEnd"
-        type="button"
-        :aria-label="$t('common.next_page')"
-        class="absolute right-1 top-1/2 z-[2] flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.12)] transition hover:shadow-md"
+      />
+      <AppScrollFade
+        v-if="edgeNav && canScrollEnd"
+        side="right"
+        :label="$t('common.next_page')"
         @click="scrollToNextGroup"
-      >
-        <AppIcon name="chevron-right" variant="filled" size="s" />
-      </button>
+      />
     </div>
     <div
       v-if="!edgeNav || title"
@@ -88,16 +77,17 @@
 import AppSlideItem from './AppSlideItem.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppScrollFade from '@/components/scroll_fade/AppScrollFade.vue'
+import { useScrollEdges } from '@/components/scroll_fade/useScrollEdges'
 import {
   computed,
   ref,
   useTemplateRef,
-  onMounted,
   nextTick,
   watch,
   type PropType,
 } from 'vue'
-import { useElementBounding, useScroll, useResizeObserver } from '@vueuse/core'
+import { useElementBounding } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 const props = defineProps({
   totalItems: {
@@ -114,8 +104,8 @@ const props = defineProps({
     required: false,
   },
   /**
-   * Opt-in: render circular edge-centered prev/next buttons (over the fades)
-   * instead of the default bottom-right icon buttons.
+   * Opt-in: render design-library ScrollFades (fade + edge-centered prev/next
+   * buttons) instead of the narrow fades and bottom-right icon buttons.
    */
   edgeNav: {
     type: Boolean,
@@ -133,22 +123,15 @@ const { width } = useElementBounding(scrollContainer)
 // scroll. We recompute the edges on scroll AND on mount / resize / item-count
 // change — the last is essential because async-loaded items grow scrollWidth
 // without resizing the container, so a scroll-only signal would miss them.
-const { x: scrollX } = useScroll(scrollContainer)
-const atStart = ref(true)
-const atEnd = ref(true)
-const updateEdges = () => {
-  const el = scrollContainer.value
-  if (!el) return
-  atStart.value = el.scrollLeft <= 1
-  atEnd.value = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
-}
-watch(scrollX, updateEdges)
+const {
+  canScrollStart,
+  canScrollEnd,
+  update: updateEdges,
+} = useScrollEdges(scrollContainer)
 watch(
   () => props.totalItems,
   () => nextTick(updateEdges),
 )
-useResizeObserver(scrollContainer, updateEdges)
-onMounted(() => nextTick(updateEdges))
 
 const visibleItems = ref<Set<number>>(new Set<number>())
 
@@ -163,9 +146,6 @@ const setVisibility = (itemIndex: number, isVisible: boolean) => {
 const allIsVisible = computed(() => {
   return visibleItems.value.size === props.totalItems
 })
-
-const blurFront = computed(() => !atStart.value)
-const blurEnd = computed(() => !atEnd.value)
 
 const scrollToNextGroup = () => {
   const scrollSize = new BigNumber(width.value).multipliedBy(0.8).toNumber()

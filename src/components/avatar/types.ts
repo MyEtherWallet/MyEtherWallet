@@ -25,8 +25,25 @@ export type AvatarSize = 'xs' | 's' | 'm' | 'l' | 'xl'
 
 export type AvatarBadgeType = 'network' | 'icon' | 'status'
 
+/** Icon badge fill: grey by default; `contrast` is the dark (#222) selected check. */
+export type AvatarBadgeTone = 'default' | 'contrast'
+
 /** Status-dot colors — mapped to the theme's semantic tokens in AvatarStatusDot. */
 export type AvatarStatus = 'error' | 'warning' | 'success' | 'muted'
+
+/**
+ * Solid fill for the Icon type (Figma `_Icon` with Background, as the Toast
+ * status avatars use it); the glyph turns `icon/inverted`. Info is bound to the
+ * neutral/600 primitive in Figma, which has no semantic background token.
+ */
+export const AVATAR_ICON_TONE_CLASS = {
+  warning: 'bg-background-warning',
+  success: 'bg-background-success',
+  error: 'bg-background-error',
+  info: 'bg-[var(--neutral-600)]',
+} as const
+
+export type AvatarIconTone = keyof typeof AVATAR_ICON_TONE_CLASS
 
 /**
  * Badge corners, 1:1 with the Figma parent booleans:
@@ -40,12 +57,7 @@ export type AvatarBadgePosition = 'top' | 'bottom' | 'topLeft' | 'bottomLeft'
  * rectangular card, separate from the circular Avatar system.
  */
 export type PaymentMethod =
-  | 'applePay'
-  | 'gPay'
-  | 'masterCard'
-  | 'paypal'
-  | 'pix'
-  | 'visa'
+  'applePay' | 'gPay' | 'masterCard' | 'paypal' | 'pix' | 'visa'
 
 interface AvatarSizeSpec {
   /** Avatar box (px), width = height, perfect circle. */

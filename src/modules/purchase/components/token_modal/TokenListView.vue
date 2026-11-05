@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col gap-6">
     <div class="flex flex-col gap-1 pr-12 flex-none">
-      <h2 id="dialogTitle" class="text-heading-xl">
+      <h2 class="text-heading-xl">
         {{ $t('purchase.select_token.title') }}
       </h2>
       <p class="text-s-16 text-text-subtle leading-[22px]">
@@ -10,12 +10,11 @@
     </div>
 
     <div
-      class="flex items-center gap-2 h-12 px-1 bg-background-default-hover rounded-24 flex-none"
+      class="flex items-center gap-2 rounded-full bg-background-formfield flex-none"
     >
       <app-searchbar
         v-model="searchInput"
-        size="compact"
-        bg-class="bg-white"
+        variant="outline"
         class="flex-1"
         :placeholder="$t('purchase.select_token.search_placeholder')"
       />
