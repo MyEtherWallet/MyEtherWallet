@@ -4,18 +4,22 @@
       {{ $t('purchase.payment_methods_list') }}
     </p>
     <div class="flex items-center gap-1">
-      <img
-        v-for="icon in icons"
-        :key="icon.alt"
-        :src="icon.src"
-        :alt="icon.alt"
-        class="h-[18px] w-auto"
-        height="18"
-      />
+      <AppAvatarCard v-for="method in methods" :key="method" :method="method" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PAYMENT_METHOD_BANNER_ICONS as icons } from '../helpers/purchaseProviders'
+import AppAvatarCard from '@components/avatar/AppAvatarCard.vue'
+import type { PaymentMethod } from '@components/avatar/types'
+
+// Order is driven by design, not by any specific quote.
+const methods: PaymentMethod[] = [
+  'visa',
+  'masterCard',
+  'applePay',
+  'gPay',
+  'pix',
+  'paypal',
+]
 </script>

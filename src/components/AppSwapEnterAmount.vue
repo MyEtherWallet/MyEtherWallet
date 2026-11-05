@@ -1,122 +1,48 @@
 <template>
-  <div
-    ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
-    :class="{
-      'ring-2 ring-border-brand':
-        (inFocusInput || isOpenSelectToken) && !readonly,
-    }"
-    @click="setInFocusInput"
-  >
-    <slot name="header" />
-    <div class="flex items-center w-full gap-2">
-      <p
-        v-if="!isFromView && !isLoading && amount"
-        :class="{
-          'text-text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-text-subtle': isLoading,
-          '!text-s-24':
-            amount &&
-            amount.toString().length > 7 &&
-            amount.toString().length <= 10,
-          '!text-s-16':
-            amount &&
-            amount.toString().length > 10 &&
-            amount.toString().length <= 15,
-          '!text-s-12': amount && amount.toString().length > 15,
-        }"
-      >
-        ≈
-      </p>
-      <input
-        ref="amountInput"
-        class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
-        :class="{
-          'text-text-error': hasError && !isOpenSelectToken && !isPristine,
-          'animate-pulse text-text-subtle': isLoading,
-          '!text-s-24':
-            amount &&
-            amount.toString().length > 7 &&
-            amount.toString().length <= 10,
-          '!text-s-16':
-            amount &&
-            amount.toString().length > 10 &&
-            amount.toString().length <= 15,
-          '!text-s-12': amount && amount.toString().length > 15,
-        }"
-        name="amount-input"
-        type="text"
-        autoComplete="off"
-        placeholder="0"
-        :aria-label="$t('common.amount')"
-        v-model="amount"
-        :readonly="readonly"
-        @focus="setInFocusInput"
-        @keypress="checkIfNumber"
-      />
-      <app-swap-token-select
-        v-model:selected-token="selectedToken"
-        :external-loading="isLoading"
-        :chain-tokens="tokens || []"
-        :is-from-view="isFromView"
-        :network-name="networkName"
-        :sort-context="sortContext"
-        :disabled-tokens="disabledTokens"
-        :disabled-group-title="disabledGroupTitle"
-        @open:select-token="setIsOpenSelectToken"
-        @select:token="emit('select:token', $event)"
-      />
-    </div>
-    <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
-      <transition name="fade" mode="out-in">
-        <div
-          v-if="isLoading"
-          class="h-5 flex bg-background-default-hover rounded-full w-1/2"
-        ></div>
-        <div v-else class="flex justify-between items-center">
-          <div
-            class="text-sm"
-            :class="[
-              hasError && !isOpenSelectToken && !isPristine
-                ? 'text-text-error'
-                : 'text-text-subtle',
-            ]"
-          >
-            {{ balanceFiatOrError }}
-          </div>
-          <div
-            v-if="showBalance && isFromView"
-            class="flex items-baseline gap-2 whitespace-nowrap"
-          >
-            <div
-              class="text-s-12 leading-p-120 text-text-subtle transition-colors"
-              :class="{
-                'text-text-brand':
-                  (inFocusInput || isOpenSelectToken) &&
-                  (!hasError || isPristine),
-              }"
-            >
-              {{ $t('common.balance') }}:
-              <span class="text-black">{{ balance }}</span>
-            </div>
-            <slot name="balance-action" />
-          </div>
-          <div v-else class="text-s-12 text-text-subtle transition-colors h-5">
-            {{ $t('common.price') }}:
-            <span>{{ currencySymbol }}{{ tokenPrice }}</span>
-          </div>
-        </div>
-      </transition>
-      <transition name="fade" mode="out-in">
-        <!-- Inside the card padding, so no side inset of its own -->
-        <AppInputFeedback
-          v-if="hasError && !isLoading && !isOpenSelectToken && !isPristine"
-          type="error"
-          :message="errorMessage"
-          class="mt-1 px-0!"
+  <div ref="target" @click="setInFocusInput">
+    <AppTransactionInputCard
+      v-model="amount"
+      :input-label="$t('common.amount')"
+      :readonly="readonly"
+      :error="showError"
+      :loading="isLoading"
+      :info-message="isFromView ? $t('common.enter_amount') : conversion"
+      :conversion="conversion"
+      :balance="caption"
+      @focus="setInFocusInput"
+    >
+      <template v-if="$slots.header" #header>
+        <slot name="header" />
+      </template>
+      <template #picker>
+        <app-swap-token-select
+          v-model:selected-token="selectedToken"
+          :external-loading="isLoading"
+          :chain-tokens="tokens || []"
+          :is-from-view="isFromView"
+          :network-name="networkName"
+          :sort-context="sortContext"
+          :disabled-tokens="disabledTokens"
+          :disabled-group-title="disabledGroupTitle"
+          @open:select-token="setIsOpenSelectToken"
+          @select:token="emit('select:token', $event)"
         />
-      </transition>
-    </div>
+      </template>
+      <template #feedback>
+        <transition name="fade" mode="out-in">
+          <!-- Inside the card padding, so no side inset of its own -->
+          <AppInputFeedback
+            v-if="showError && !isLoading"
+            type="error"
+            :message="errorMessage"
+            class="px-0!"
+          />
+        </transition>
+      </template>
+      <template v-if="$slots.actions" #actions>
+        <slot name="actions" />
+      </template>
+    </AppTransactionInputCard>
   </div>
 </template>
 
@@ -125,6 +51,7 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { ref, computed, type PropType, watch, nextTick } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
+import AppTransactionInputCard from './AppTransactionInputCard.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
@@ -133,12 +60,14 @@ import { useCurrency } from '@/composables/useCurrency'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
   storeToRefs(walletStore)
 
 const { formatFiat, currencySymbol } = useCurrency()
+const { t } = useI18n()
 
 const props = defineProps({
   externalLoading: {
@@ -291,18 +220,37 @@ const balance = computed(() => {
   return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
 })
 
+// Figma prefixes every fiat estimate with "≈"; the to-side already carries it.
+const conversion = computed(() =>
+  props.isEstimate ? balanceFiatOrError.value : `≈ ${balanceFiatOrError.value}`,
+)
+
+const caption = computed(() =>
+  props.showBalance && props.isFromView
+    ? t('common.balance_amount', {
+        amount: `${balance.value} ${selectedToken.value?.symbol ?? ''}`.trim(),
+      })
+    : t('common.price_amount', {
+        amount: `${currencySymbol.value}${tokenPrice.value}`,
+      }),
+)
+
+const showError = computed(
+  () => hasError.value && !isOpenSelectToken.value && !props.isPristine,
+)
+
 /**------------------------
  * Focus State
  -------------------------*/
 const target = ref<HTMLElement | null>(null)
 const targetValue = ref<HTMLElement | null>(null)
-const amountInput = ref<HTMLElement | null>(null)
+// AppInputNaked owns the <input>; focus goes to it through the card root.
+const amountInput = computed<HTMLElement | null>(
+  () => target.value?.querySelector('input') ?? null,
+)
 
-const {
-  inFocusInput,
-  setInFocusInput: setInFocusInputElement,
-  startOutOfFocusTimeout,
-} = useInFocusInput(amountInput)
+const { setInFocusInput: setInFocusInputElement, startOutOfFocusTimeout } =
+  useInFocusInput(amountInput)
 
 const setInFocusInput = () => {
   if (props.isFromView) {
@@ -326,21 +274,4 @@ onClickOutside(targetValue, () => {
     errorMessage.value = ''
   }
 })
-
-const checkIfNumber = (e: KeyboardEvent) => {
-  const key = e.key
-  // Numeric
-  if (key >= '0' && key <= '9') {
-    return
-  }
-  // Only allow a single period
-  if (key === '.') {
-    const input = amount.value.toString()
-    if (!input.includes('.')) {
-      return
-    }
-  }
-  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
-  e.preventDefault()
-}
 </script>

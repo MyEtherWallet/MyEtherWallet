@@ -93,6 +93,21 @@ describe('AppSelectTxFee', () => {
     expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
   })
 
+  it('hides the fee row but keeps emitting the selected fee with hideSelector', () => {
+    const tier = { nativeValue: '1000', fiatValue: '1', nativeSymbol: 'ETH' }
+    const wrapper = mountWithFees(
+      {
+        quoteId: 'q',
+        fees: { ECONOMY: tier, REGULAR: tier, FAST: tier, FASTEST: tier },
+      },
+      { hideSelector: true },
+    )
+    expect(wrapper.find('button').exists()).toBe(false)
+    expect(wrapper.emitted('update:selectedFeeNativeValue')?.at(-1)).toEqual([
+      '1000',
+    ])
+  })
+
   describe('dropdown', () => {
     const tier = (fiat: string) => ({
       nativeValue: '1000',

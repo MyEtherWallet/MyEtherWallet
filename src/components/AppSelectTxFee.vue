@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ contents: hideSelector }">
     <!-- Summary screens: the design-library Dropdown with the same options. -->
     <app-dropdown
       v-if="dropdown"
@@ -42,7 +42,7 @@
       />
     </app-dropdown>
     <button
-      v-else
+      v-else-if="!hideSelector"
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
@@ -78,16 +78,18 @@
       </div>
     </button>
     <div
-      v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
-      :class="['mt-1', dropdown ? 'empty:hidden' : 'min-h-6']"
+      v-if="
+        !(isLoadingFees || isLoadingBalances) &&
+        isLoadedChainsData &&
+        (!hideSelector || showFeeError)
+      "
+      :class="
+        hideSelector ? '' : ['mt-1', dropdown ? 'empty:hidden' : 'min-h-6']
+      "
     >
       <transition name="fade" mode="out-in">
         <AppInputFeedback
-          v-if="
-            isWalletConnected &&
-            gasFeeError &&
-            (!isNotEnoughBalance || hasChainBalance)
-          "
+          v-if="showFeeError"
           type="error"
           :message="gasFeeError"
         >
@@ -256,6 +258,12 @@ interface Props {
   resetToDefault?: boolean
   /** Lock the choice, e.g. while the tx built for it is being signed. */
   disabled?: boolean
+  /**
+   * Hide the fee row but keep fetching, validating and emitting the selected
+   * fee; only the error message shows. The Send panel moves the fee to its
+   * summary screen.
+   */
+  hideSelector?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), { resetToDefault: true })
@@ -296,6 +304,12 @@ const {
   hasChainBalance,
   isLoadingBalances,
 } = storeToRefs(walletStore)
+const showFeeError = computed(
+  () =>
+    isWalletConnected.value &&
+    !!gasFeeError.value &&
+    (!isNotEnoughBalance.value || hasChainBalance.value),
+)
 
 const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
   (): EstimatesRequestBody | GetBtcTransactionEstimateBody => {
