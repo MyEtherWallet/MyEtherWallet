@@ -75,6 +75,7 @@
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
+      side="sell"
       :networks="sellNetworks"
       :default-chain-code="purchaseChainCode"
       :selected-token="selectedToken"

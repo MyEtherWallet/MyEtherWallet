@@ -73,6 +73,7 @@ const mountModal = async (props: Record<string, unknown> = {}) => {
   const wrapper = mount(PurchaseTokenModal, {
     props: {
       isOpen: false,
+      side: 'buy',
       networks: NETWORKS,
       defaultChainCode: 'ETH',
       selectedToken: ETH_ETH,
@@ -94,6 +95,15 @@ const ids = (items: TokenSelectorItem[]) => items.map(item => item.id)
 
 describe('PurchaseTokenModal', () => {
   beforeEach(() => localStorage.clear())
+
+  it('titles the modal by side, as in Figma', async () => {
+    const title = async (side: string) =>
+      (await mountModal({ side }))
+        .findComponent(AppTokenSelectorModal)
+        .props('title')
+    expect(await title('buy')).toBe('Select asset to buy')
+    expect(await title('sell')).toBe('Select asset to sell')
+  })
 
   it('lists all networks, the compatible ones, then the incompatible ones disabled', async () => {
     const wrapper = await mountModal()

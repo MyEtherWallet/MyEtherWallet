@@ -46,7 +46,8 @@
     "max": "Máx",
     "bank": "Banco",
     "select_token": {
-      "title": "Tokens",
+      "title_buy": "Selecciona el activo a comprar",
+      "title_sell": "Selecciona el activo a vender",
       "filter_all_networks": "Todas las redes",
       "no_results": "Ningún token coincide"
     },

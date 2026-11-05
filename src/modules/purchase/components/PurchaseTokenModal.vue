@@ -3,7 +3,11 @@
     v-model="isOpen"
     v-model:search="search"
     v-model:network="networkFilter"
-    :title="$t('purchase.select_token.title')"
+    :title="
+      side === 'sell'
+        ? $t('purchase.select_token.title_sell')
+        : $t('purchase.select_token.title_buy')
+    "
     :items="items"
     :quick-picks="quickPicks"
     :recent-items="recentItems"
@@ -40,6 +44,7 @@ import { purchaseChainToChain } from '../helpers/chainMapping'
 import type { PurchaseAsset } from '@/types/buyToken'
 
 const props = defineProps<{
+  side: 'buy' | 'sell'
   networks: BuyNetwork[]
   defaultChainCode: string | null
   selectedToken: PurchaseAsset | null
