@@ -356,6 +356,7 @@ const onClosed = () => {
             </p>
             <TokenSelectorList
               :items="unavailableRows"
+              :selected-id="selectedId"
               :network-icon="networkIcon"
             >
               <template v-if="$slots['item-suffix']" #item-suffix="{ item }">

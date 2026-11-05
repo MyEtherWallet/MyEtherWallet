@@ -192,6 +192,16 @@ describe('AppTokenSelectorModal', () => {
     expect(rows.map(row => row.props('selected'))).toEqual([false, true, false])
   })
 
+  it('keeps the selected mark on a token that became unavailable', async () => {
+    const wrapper = await mountModal({
+      items: [USDC],
+      unavailableItems: [ETH],
+      selectedId: 'eth',
+    })
+    const rows = wrapper.findAllComponents(AppCell)
+    expect(rows.map(row => row.props('selected'))).toEqual([false, true])
+  })
+
   it('marks the selected quick pick, leaving the others unpressed', async () => {
     await mountModal({ quickPicks: [USDC, ETH], selectedId: 'eth' })
     const hits = qa(
