@@ -16,7 +16,6 @@
     "
     :items="items"
     :list-title="listTitle"
-    :quick-picks="quickPicks"
     :recent-items="recentItems"
     :owned-items="ownedItems"
     :unavailable-items="unavailableItems"
@@ -310,10 +309,6 @@ const unavailableItems = computed(() =>
       )
     : [],
 )
-
-// Handpicked stock cards are hidden for now (product call, 2026-11-05); bring
-// them back with `isBuy.value ? pickStockQuickPicks(listedItems.value) : []`.
-const quickPicks = computed<TokenSelectorItem<TradeAssetToken>[]>(() => [])
 
 // The stock page and global search store a stock by its tokenized symbol.
 const recentItems = computed(() =>

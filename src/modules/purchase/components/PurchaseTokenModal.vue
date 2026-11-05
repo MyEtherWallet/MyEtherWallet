@@ -9,7 +9,6 @@
         : $t('purchase.select_token.title_buy')
     "
     :items="items"
-    :quick-picks="quickPicks"
     :recent-items="recentItems"
     :selected-id="selectedId"
     :networks="networkOptions"
@@ -24,7 +23,6 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
-  pickQuickPicks,
   pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
@@ -40,7 +38,6 @@ import {
   getPurchaseChainIcon,
   getPurchaseTokenIcon,
 } from '../helpers/purchaseIcons'
-import { purchaseChainToChain } from '../helpers/chainMapping'
 import type { PurchaseAsset } from '@/types/buyToken'
 
 const props = defineProps<{
@@ -61,7 +58,6 @@ const isOpen = defineModel('isOpen', { type: Boolean, required: true })
 
 const { t } = useI18n()
 const chainsStore = useChainsStore()
-const { chains } = storeToRefs(chainsStore)
 const { coinImages } = storeToRefs(usePurchaseStore())
 const { recentlyViewedCrypto } = storeToRefs(useRecentlyViewedTokensStore())
 const { formatFiat } = useCurrency()
@@ -152,16 +148,6 @@ const items = computed(() => {
       symbol.toLowerCase().includes(term) || name.toLowerCase().includes(term),
   )
 })
-
-const quickPicks = computed(() =>
-  pickQuickPicks(
-    networkItems.value,
-    networkFilter.value
-      ? (purchaseChainToChain(networkFilter.value, chains.value)
-          ?.currencyName ?? networkFilter.value)
-      : 'ETH',
-  ),
-)
 
 // Recently viewed entries are keyed by coingecko id.
 const recentItems = computed(() =>

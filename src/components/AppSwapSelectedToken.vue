@@ -37,7 +37,6 @@
       isFromView ? $t('select_token.swap_from') : $t('select_token.swap_to')
     "
     :items="items"
-    :quick-picks="quickPicks"
     :recent-items="recentItems"
     :selected-id="selectedToken?.address"
     :sort-options="sortOptions"
@@ -76,7 +75,6 @@ import { analytics, SwapClickSortEvent } from '@/analytics'
 import AppPicker from '@/components/picker/AppPicker.vue'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
-  pickQuickPicks,
   pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
@@ -366,8 +364,7 @@ const toItem = (
 
 const items = computed(() => searchResults.value.map(toItem))
 
-// Bare rows keep the quick pick and recent scans cheap; only the picks get
-// formatted.
+// Bare rows keep the recent scan cheap; only the picks get formatted.
 const bareItem = (
   token: TokenBalanceWithUsd,
 ): TokenSelectorItem<TokenBalanceWithUsd> => ({
@@ -376,14 +373,6 @@ const bareItem = (
   name: token.name,
   raw: token,
 })
-
-// Rank order so a duplicate symbol resolves to the better-ranked token.
-const quickPicks = computed(() =>
-  pickQuickPicks(
-    sortObjectArrayNumber(enrichedTokens.value, 'rank', 'asc').map(bareItem),
-    currentChain.value?.currencyName ?? '',
-  ).map(({ raw }) => toItem(raw)),
-)
 
 // Store ids are the CoinGecko id, or the address for tokens without one.
 const recentItems = computed(() =>

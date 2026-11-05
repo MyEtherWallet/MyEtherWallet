@@ -23,7 +23,6 @@
     v-model:search="searchInput"
     :title="$t('select_token.title')"
     :items="items"
-    :quick-picks="quickPicks"
     :recent-items="recentItems"
     :selected-id="selectedTokenContract?.toLowerCase()"
     :sort-options="sortOptions"
@@ -48,7 +47,6 @@ import AppTokenLogo from './AppTokenLogo.vue'
 import AppPicker from '@/components/picker/AppPicker.vue'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
-  pickQuickPicks,
   pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
@@ -215,10 +213,6 @@ const allItems = computed(() => sortedTokens.value.map(toItem))
 // `raw.name`: search the token's own name, not the Ondo alias the row shows.
 const items = computed(() =>
   fuzzySearchByKeys(allItems.value, ['raw.name', 'symbol'], searchInput.value),
-)
-
-const quickPicks = computed(() =>
-  pickQuickPicks(allItems.value, safeMainTokenBalance.value?.symbol ?? ''),
 )
 
 // Store ids are the CoinGecko id or the contract (see AppSwapSelectedToken).

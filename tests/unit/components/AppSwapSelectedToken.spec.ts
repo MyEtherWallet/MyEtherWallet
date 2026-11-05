@@ -146,15 +146,9 @@ describe('AppSwapSelectedToken', () => {
     })
   })
 
-  it('builds the quick picks from the chain native symbol, best rank first', () => {
+  it('passes no quick-pick cards and badges rows with the chain icon', () => {
     const modal = modalOf(mountWrapper())
-    const picks = modal.props('quickPicks') as TokenSelectorItem[]
-    expect(picks.map(item => item.id)).toEqual([
-      '0xUSDC',
-      '0xWBTC',
-      '0xEEE',
-      '0xUSDT',
-    ])
+    expect(modal.props('quickPicks')).toEqual([])
     expect(modal.props('networkIcon')).toBe('eth-chain.svg')
   })
 

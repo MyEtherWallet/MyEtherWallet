@@ -159,13 +159,9 @@ describe('AppTokenSelect', () => {
     expect(modal.props('networks')).toEqual([])
   })
 
-  it('builds quick picks with the chain native symbol', () => {
+  it('passes no quick-pick cards', () => {
     const wrapper = mountSelect(MAIN)
-    expect(symbols(modalOf(wrapper).props('quickPicks'))).toEqual([
-      'USDC',
-      'WBTC',
-      'ETH',
-    ])
+    expect(modalOf(wrapper).props('quickPicks')).toEqual([])
   })
 
   it('shows recently viewed tokens matched by CoinGecko id or contract', () => {

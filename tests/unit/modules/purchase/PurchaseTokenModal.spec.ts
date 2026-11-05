@@ -142,10 +142,7 @@ describe('PurchaseTokenModal', () => {
     // No market data, no right column.
     expect(items[1].rightAccessory).toBeUndefined()
     expect(modal.props('selectedId')).toBe('ETH:ETH')
-    expect(ids(modal.props('quickPicks') as TokenSelectorItem[])).toEqual([
-      'ETH:USDC',
-      'ETH:ETH',
-    ])
+    expect(modal.props('quickPicks')).toEqual([])
   })
 
   it('filters by network and search, never showing incompatible chains', async () => {
@@ -161,10 +158,6 @@ describe('PurchaseTokenModal', () => {
 
     await modal.vm.$emit('update:network', 'POL')
     expect(ids(modal.props('items') as TokenSelectorItem[])).toEqual([
-      'POL:POL',
-    ])
-    // Polygon's native symbol comes from the chain data.
-    expect(ids(modal.props('quickPicks') as TokenSelectorItem[])).toEqual([
       'POL:POL',
     ])
 
