@@ -19,18 +19,23 @@ import type {
 
 /**
  * Token selector (design library, MEW-2554, Figma 12526:110349): search and
- * network on top, quick-pick cards, "Recently viewed", then every token under a
- * sort control. Presentational: callers filter and sort `items` from `search`
- * and `sort`, so each flow keeps its own pipeline. Closes itself after `select`.
+ * network on top, quick-pick cards, "Recently viewed", "Your assets", then the
+ * main list under a sort control and the unavailable group last. Presentational:
+ * callers filter and sort the lists from `search` and `sort`, so each flow
+ * keeps its own pipeline. Closes itself after `select`.
  */
 const props = withDefaults(
   defineProps<{
     title: string
     subtitle?: string
-    /** Main list, already filtered and sorted. Disabled items go last. */
+    /** Main list, already filtered and sorted. Disabled items stay in place. */
     items: TokenSelectorItem[]
+    /** Replaces "All tokens" over the main list. */
+    listTitle?: string
     quickPicks?: TokenSelectorItem[]
     recentItems?: TokenSelectorItem[]
+    /** "Your assets", between "Recently viewed" and the main list. */
+    ownedItems?: TokenSelectorItem[]
     selectedId?: string
     sortOptions?: TokenSelectorSortOption[]
     /** Active sort; every pick emits `sort`, a repeat pick included. */
@@ -43,12 +48,16 @@ const props = withDefaults(
     loading?: boolean
     hasMore?: boolean
     loadingMore?: boolean
-    disabledGroupTitle?: string
+    /** Drawn last, dimmed and never picked, under `unavailableTitle`. */
+    unavailableItems?: TokenSelectorItem[]
+    unavailableTitle?: string
   }>(),
   {
     subtitle: undefined,
+    listTitle: undefined,
     quickPicks: () => [],
     recentItems: () => [],
+    ownedItems: () => [],
     selectedId: undefined,
     sortOptions: () => [],
     sortValue: undefined,
@@ -58,7 +67,8 @@ const props = withDefaults(
     loading: false,
     hasMore: false,
     loadingMore: false,
-    disabledGroupTitle: undefined,
+    unavailableItems: () => [],
+    unavailableTitle: undefined,
   },
 )
 
@@ -78,8 +88,12 @@ const isSearching = computed(() => search.value.trim() !== '')
 // Pinned sections make way for the results while searching.
 const showPinned = computed(() => !isSearching.value && !props.loading)
 
-const enabledItems = computed(() => props.items.filter(item => !item.disabled))
-const disabledItems = computed(() => props.items.filter(item => item.disabled))
+const mainTitle = computed(
+  () => props.listTitle ?? t('select_token.all_tokens'),
+)
+const unavailableRows = computed(() =>
+  props.unavailableItems.map(item => ({ ...item, disabled: true })),
+)
 
 const emptyCopy = computed(() =>
   t(
@@ -257,14 +271,35 @@ const onClosed = () => {
           </section>
 
           <section
+            v-if="showPinned && ownedItems.length"
+            data-testid="token-selector-owned"
+            class="flex flex-col gap-2"
+            :aria-label="$t('select_token.your_assets')"
+          >
+            <p class="text-text-base text-text-subtle">
+              {{ $t('select_token.your_assets') }}
+            </p>
+            <TokenSelectorList
+              :items="ownedItems"
+              :selected-id="selectedId"
+              :network-icon="networkIcon"
+              @select="pick"
+            >
+              <template v-if="$slots['item-suffix']" #item-suffix="{ item }">
+                <slot name="item-suffix" :item="item" />
+              </template>
+            </TokenSelectorList>
+          </section>
+
+          <section
             data-testid="token-selector-all"
             class="flex flex-col gap-2"
-            :aria-label="$t('select_token.all_tokens')"
+            :aria-label="mainTitle"
           >
             <div
               class="flex items-center gap-1 text-text-base text-text-subtle"
             >
-              <span>{{ $t('select_token.all_tokens') }}</span>
+              <span>{{ mainTitle }}</span>
               <template v-if="activeSort">
                 <span aria-hidden="true">·</span>
                 <AppDropdown bare :title="sortTitle">
@@ -288,8 +323,8 @@ const onClosed = () => {
             </div>
 
             <TokenSelectorList
-              v-if="enabledItems.length"
-              :items="enabledItems"
+              v-if="items.length"
+              :items="items"
               :selected-id="selectedId"
               :network-icon="networkIcon"
               @select="pick"
@@ -299,7 +334,7 @@ const onClosed = () => {
               </template>
             </TokenSelectorList>
             <p
-              v-else-if="!disabledItems.length"
+              v-else-if="!unavailableRows.length"
               data-testid="token-selector-empty"
               class="py-10 text-center text-text-base text-text-subtle"
             >
@@ -308,19 +343,16 @@ const onClosed = () => {
           </section>
 
           <section
-            v-if="disabledItems.length"
-            data-testid="token-selector-disabled"
+            v-if="unavailableRows.length"
+            data-testid="token-selector-unavailable"
             class="flex flex-col gap-2"
-            :aria-label="disabledGroupTitle"
+            :aria-label="unavailableTitle"
           >
-            <p
-              v-if="disabledGroupTitle"
-              class="text-text-base text-text-subtle"
-            >
-              {{ disabledGroupTitle }}
+            <p v-if="unavailableTitle" class="text-text-base text-text-subtle">
+              {{ unavailableTitle }}
             </p>
             <TokenSelectorList
-              :items="disabledItems"
+              :items="unavailableRows"
               :network-icon="networkIcon"
             >
               <template v-if="$slots['item-suffix']" #item-suffix="{ item }">

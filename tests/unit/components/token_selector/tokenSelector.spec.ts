@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   pickQuickPicks,
   pickRecentItems,
+  pickStockQuickPicks,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
 import type { TokenSelectorItem } from '@/components/token_selector/types'
@@ -82,6 +83,34 @@ describe('pickQuickPicks', () => {
       item('USDC', { id: 'usdc-base' }),
     ]
     expect(pickQuickPicks(items, 'USDC').map(i => i.id)).toEqual(['usdc-eth'])
+  })
+})
+
+describe('pickStockQuickPicks', () => {
+  it('returns AAPL, NVDA, ADBE and META in Figma order, with or without the "on" suffix', () => {
+    const items = [
+      item('METAon'),
+      item('TSLAon'),
+      item('ADBEON'),
+      item('AAPLon'),
+      item('NVDA'),
+    ]
+    expect(pickStockQuickPicks(items).map(i => i.symbol)).toEqual([
+      'AAPLon',
+      'NVDA',
+      'ADBEON',
+      'METAon',
+    ])
+  })
+
+  it('skips the tickers the list does not have and disabled assets', () => {
+    const items = [
+      item('AAPLon', { id: 'paused', disabled: true }),
+      item('AAPLon'),
+      item('METAon', { disabled: true }),
+    ]
+    expect(pickStockQuickPicks(items).map(i => i.id)).toEqual(['aaplon'])
+    expect(pickStockQuickPicks([item('TSLAon')])).toEqual([])
   })
 })
 

@@ -33,6 +33,25 @@ const quickPickSymbols = (nativeSymbol: string) => [
   'USDT',
 ]
 
+/** Trade buy cards, Figma 12526:110434 order, as plain tickers. */
+const STOCK_QUICK_PICKS = ['AAPL', 'NVDA', 'ADBE', 'META']
+
+// First enabled item per symbol, in `symbols` order.
+const pickBySymbols = <T>(
+  items: TokenSelectorItem<T>[],
+  symbols: string[],
+  symbolOf: (item: TokenSelectorItem<T>) => string,
+): TokenSelectorItem<T>[] => {
+  const picks: TokenSelectorItem<T>[] = []
+  for (const symbol of new Set(symbols)) {
+    const match = items.find(
+      item => !item.disabled && symbolOf(item) === symbol,
+    )
+    if (match) picks.push(match)
+  }
+  return picks
+}
+
 /**
  * Up to four quick-pick cards: USDC, WBTC, the chain's native token and USDT,
  * whichever of them the list has (first enabled match per symbol).
@@ -40,16 +59,21 @@ const quickPickSymbols = (nativeSymbol: string) => [
 export const pickQuickPicks = <T>(
   items: TokenSelectorItem<T>[],
   nativeSymbol: string,
-): TokenSelectorItem<T>[] => {
-  const picks: TokenSelectorItem<T>[] = []
-  for (const symbol of new Set(quickPickSymbols(nativeSymbol.toUpperCase()))) {
-    const match = items.find(
-      item => !item.disabled && item.symbol.toUpperCase() === symbol,
-    )
-    if (match) picks.push(match)
-  }
-  return picks
-}
+): TokenSelectorItem<T>[] =>
+  pickBySymbols(items, quickPickSymbols(nativeSymbol.toUpperCase()), item =>
+    item.symbol.toUpperCase(),
+  )
+
+/**
+ * Trade's stock cards: AAPL, NVDA, ADBE and META, matched on the ticker with or
+ * without the Ondo "on" suffix (AAPLon), whichever of them the list has.
+ */
+export const pickStockQuickPicks = <T>(
+  items: TokenSelectorItem<T>[],
+): TokenSelectorItem<T>[] =>
+  pickBySymbols(items, STOCK_QUICK_PICKS, item =>
+    item.symbol.toUpperCase().replace(/ON$/, ''),
+  )
 
 /**
  * "Recently viewed" rows: for each stored id in order, the first enabled item

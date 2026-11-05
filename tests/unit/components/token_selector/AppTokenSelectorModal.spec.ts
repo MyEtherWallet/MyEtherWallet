@@ -117,20 +117,65 @@ describe('AppTokenSelectorModal', () => {
     expect(wrapper.emitted('select')?.[1]).toEqual([ETH])
   })
 
-  it('groups disabled tokens last under their title and never picks them', async () => {
-    const wrapper = await mountModal({
-      items: [USDC, PAUSED],
-      disabledGroupTitle: 'Unavailable',
-    })
-    expect(rowsIn('token-selector-all')).toHaveLength(1)
-    const disabled = rowsIn('token-selector-disabled')
-    expect(disabled).toHaveLength(1)
-    expect(q('[data-testid="token-selector-disabled"]')?.textContent).toContain(
-      'Unavailable',
-    )
-    disabled[0].click()
+  it('keeps disabled tokens in place and never picks them', async () => {
+    const wrapper = await mountModal({ items: [PAUSED, USDC] })
+    const rows = rowsIn('token-selector-all')
+    expect(rows.map(row => row.getAttribute('aria-disabled'))).toEqual([
+      'true',
+      null,
+    ])
+    rows[0].click()
     await nextTick()
     expect(wrapper.emitted('select')).toBeUndefined()
+  })
+
+  it('draws the unavailable tokens last, dimmed, under their title', async () => {
+    const wrapper = await mountModal({
+      items: [USDC],
+      unavailableItems: [ETH],
+      unavailableTitle: 'Unavailable during post-market',
+    })
+    const group = q('[data-testid="token-selector-unavailable"]')!
+    expect(group.textContent).toContain('Unavailable during post-market')
+    expect(group.previousElementSibling?.getAttribute('data-testid')).toBe(
+      'token-selector-all',
+    )
+    const [row] = rowsIn('token-selector-unavailable')
+    expect(row.getAttribute('aria-disabled')).toBe('true')
+    row.click()
+    await nextTick()
+    expect(wrapper.emitted('select')).toBeUndefined()
+  })
+
+  it('shows "Your assets" between "Recently viewed" and the main list', async () => {
+    const wrapper = await mountModal({ recentItems: [WBTC], ownedItems: [ETH] })
+    const owned = q('[data-testid="token-selector-owned"]')!
+    expect(owned.textContent).toContain('Your assets')
+    expect(owned.previousElementSibling?.getAttribute('data-testid')).toBe(
+      'token-selector-recent',
+    )
+    expect(owned.nextElementSibling?.getAttribute('data-testid')).toBe(
+      'token-selector-all',
+    )
+    rowsIn('token-selector-owned')[0].click()
+    await nextTick()
+    expect(wrapper.emitted('select')?.[0]).toEqual([ETH])
+
+    await wrapper.setProps({ modelValue: true, search: 'us' } as never)
+    expect(q('[data-testid="token-selector-owned"]')).toBeNull()
+    await wrapper.setProps({ search: '', loading: true } as never)
+    expect(q('[data-testid="token-selector-owned"]')).toBeNull()
+  })
+
+  it('titles the main list with listTitle, keeping the sort control', async () => {
+    await mountModal({
+      listTitle: 'Available in post-market',
+      sortOptions: [{ value: 'market_cap', label: 'Market Cap' }],
+    })
+    const header = q('[data-testid="token-selector-all"]')!
+    expect(header.textContent).toContain('Available in post-market')
+    expect(header.textContent).toContain('by market cap')
+    expect(header.textContent).not.toContain('All tokens')
   })
 
   it('draws tokenized stocks with the Stocks avatar', async () => {

@@ -9,7 +9,12 @@
       isInteractive
         ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand'
         : '',
-      disabled ? 'pointer-events-none opacity-30' : '',
+      disabled ? 'pointer-events-none' : '',
+      // The suffix (a status tag) stays at full opacity on a dimmed row.
+      disabled &&
+        ($slots.suffix
+          ? '[&>:not([data-test=cell-suffix])]:opacity-30'
+          : 'opacity-30'),
     ]"
     :role="isInteractive ? 'button' : undefined"
     :tabindex="isInteractive ? 0 : undefined"
@@ -103,6 +108,7 @@
 
       <div
         v-if="$slots.suffix"
+        data-test="cell-suffix"
         class="flex h-11 shrink-0 items-center justify-center"
         @click.stop
       >

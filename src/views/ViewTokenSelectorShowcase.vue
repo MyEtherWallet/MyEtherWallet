@@ -25,6 +25,7 @@ interface MockToken {
   balance?: number
   logo?: string
   paused?: boolean
+  unavailable?: boolean
 }
 
 const TOKENS: MockToken[] = [
@@ -77,6 +78,14 @@ const TOKENS: MockToken[] = [
     marketCap: 4,
     paused: true,
   },
+  {
+    symbol: 'AAVE',
+    name: 'Aave',
+    price: 152.3,
+    change: 0.8,
+    marketCap: 3,
+    unavailable: true,
+  },
 ]
 
 const usd = (value: number) =>
@@ -99,32 +108,47 @@ const toItem = (token: MockToken): TokenSelectorItem<MockToken> => ({
   logo: token.logo,
   disabled: token.paused,
   rightAccessory: tokenRowAccessory({
-    balanceFiat: token.balance ? usd(token.balance * token.price) : undefined,
-    balance: token.balance ? `${token.balance} ${token.symbol}` : undefined,
     price: usd(token.price),
     change: token.change,
   }),
   raw: token,
 })
 
-const allItems = computed(() => {
+const sorted = computed(() => {
   const dir = sortDirection.value === 'asc' ? 1 : -1
   const key = sortValue.value === 'price' ? 'price' : 'marketCap'
   return [...TOKENS].sort((a, b) => (a[key] - b[key]) * dir).map(toItem)
 })
-const items = computed(() => {
+const matching = (list: TokenSelectorItem<MockToken>[]) => {
   const query = search.value.trim().toLowerCase()
   return query
-    ? allItems.value.filter(
+    ? list.filter(
         item =>
           item.symbol.toLowerCase().includes(query) ||
           item.name.toLowerCase().includes(query),
       )
-    : allItems.value
-})
+    : list
+}
+const allItems = computed(() =>
+  sorted.value.filter(item => !item.raw.unavailable),
+)
+const items = computed(() => matching(allItems.value))
+const unavailableItems = computed(() =>
+  matching(sorted.value.filter(item => item.raw.unavailable)),
+)
 const quickPicks = computed(() => pickQuickPicks(allItems.value, 'ETH'))
 const recentItems = computed(() =>
-  allItems.value.filter(item => ['usdc', 'wbtc', 'weth'].includes(item.id)),
+  allItems.value.filter(item => ['wbtc', 'weth'].includes(item.id)),
+)
+// "Your assets" rows show the holding instead of the price.
+const ownedItems = computed(() =>
+  TOKENS.filter(token => token.balance).map(token => ({
+    ...toItem(token),
+    rightAccessory: tokenRowAccessory({
+      balanceFiat: usd((token.balance ?? 0) * token.price),
+      balance: `${token.balance} ${token.symbol}`,
+    }),
+  })),
 )
 
 const onSort = (value: string) => {
@@ -182,6 +206,9 @@ const onSelect = (item: TokenSelectorItem) => {
       :items="items"
       :quick-picks="quickPicks"
       :recent-items="recentItems"
+      :owned-items="ownedItems"
+      :unavailable-items="unavailableItems"
+      unavailable-title="Unavailable during post-market"
       :selected-id="selectedId"
       :network-icon="ethLogo"
       :networks="
@@ -205,7 +232,6 @@ const onSelect = (item: TokenSelectorItem) => {
       :sort-value="sortValue"
       :sort-direction="sortDirection"
       :loading="loading"
-      disabled-group-title="Trading paused"
       @sort="onSort"
       @select="onSelect"
     />
