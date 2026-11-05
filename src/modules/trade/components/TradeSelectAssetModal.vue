@@ -58,7 +58,6 @@ import { useI18n } from 'vue-i18n'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
   pickRecentItems,
-  pickStockQuickPicks,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
 import type {
@@ -312,9 +311,9 @@ const unavailableItems = computed(() =>
     : [],
 )
 
-const quickPicks = computed(() =>
-  isBuy.value ? pickStockQuickPicks(listedItems.value) : [],
-)
+// Handpicked stock cards are hidden for now (product call, 2026-11-05); bring
+// them back with `isBuy.value ? pickStockQuickPicks(listedItems.value) : []`.
+const quickPicks = computed<TokenSelectorItem<TradeAssetToken>[]>(() => [])
 
 // The stock page and global search store a stock by its tokenized symbol.
 const recentItems = computed(() =>

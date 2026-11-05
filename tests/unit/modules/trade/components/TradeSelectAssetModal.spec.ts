@@ -148,17 +148,11 @@ describe('TradeSelectAssetModal (buy)', () => {
     ).toBeNull()
   })
 
-  it('offers AAPL, NVDA, ADBE and META as quick picks, skipping unavailable ones', async () => {
+  it('shows no quick-pick cards on the buy side for now', async () => {
     const wrapper = await mountOpenModal({
       chainTokens: [ABNB, META, AAPL, NVDA, ADBE],
-      disabledTokens: [NVDA.address],
     })
-
-    expect(symbolsOf(wrapper, 'quickPicks')).toEqual([
-      'AAPLon',
-      'ADBEon',
-      'METAon',
-    ])
+    expect(symbolsOf(wrapper, 'quickPicks')).toEqual([])
   })
 
   it('lists the recently viewed stocks it can buy, newest first', async () => {
