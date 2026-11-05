@@ -9,7 +9,7 @@ import AppCell from '@/components/cell/AppCell.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
-import TokenSelectorRow from './TokenSelectorRow.vue'
+import TokenSelectorList from './TokenSelectorList.vue'
 import type {
   TokenSelectorItem,
   TokenSelectorNetwork,
@@ -44,7 +44,6 @@ const props = withDefaults(
     hasMore?: boolean
     loadingMore?: boolean
     disabledGroupTitle?: string
-    emptyText?: string
   }>(),
   {
     subtitle: undefined,
@@ -60,7 +59,6 @@ const props = withDefaults(
     hasMore: false,
     loadingMore: false,
     disabledGroupTitle: undefined,
-    emptyText: undefined,
   },
 )
 
@@ -83,14 +81,12 @@ const showPinned = computed(() => !isSearching.value && !props.loading)
 const enabledItems = computed(() => props.items.filter(item => !item.disabled))
 const disabledItems = computed(() => props.items.filter(item => item.disabled))
 
-const emptyCopy = computed(
-  () =>
-    props.emptyText ??
-    t(
-      isSearching.value
-        ? 'select_token.no_tokens_match'
-        : 'select_token.no_tokens_available',
-    ),
+const emptyCopy = computed(() =>
+  t(
+    isSearching.value
+      ? 'select_token.no_tokens_match'
+      : 'select_token.no_tokens_available',
+  ),
 )
 
 const currentNetwork = computed(
@@ -139,7 +135,7 @@ const onClosed = () => {
     v-model="open"
     :title="title"
     :subtitle="subtitle"
-    class="sm:h-[640px]"
+    class="h-full sm:h-[640px]"
     @closed="onClosed"
   >
     <div class="flex h-full flex-col">
@@ -218,6 +214,7 @@ const onClosed = () => {
               surface="alternative"
               interactive
               :label="item.symbol"
+              :selected="item.id === selectedId || undefined"
               :disabled="item.disabled"
               @click="pick(item)"
             >
@@ -247,21 +244,16 @@ const onClosed = () => {
             <p class="text-text-base text-text-subtle">
               {{ $t('select_token.recently_viewed') }}
             </p>
-            <!-- Figma draws the rows flush, without List's padded container -->
-            <div role="list" class="flex flex-col gap-0.5">
-              <div v-for="item in recentItems" :key="item.id" role="listitem">
-                <TokenSelectorRow
-                  :item="item"
-                  :selected="item.id === selectedId"
-                  :network-icon="networkIcon"
-                  @select="pick"
-                >
-                  <template v-if="$slots['item-suffix']" #suffix>
-                    <slot name="item-suffix" :item="item" />
-                  </template>
-                </TokenSelectorRow>
-              </div>
-            </div>
+            <TokenSelectorList
+              :items="recentItems"
+              :selected-id="selectedId"
+              :network-icon="networkIcon"
+              @select="pick"
+            >
+              <template v-if="$slots['item-suffix']" #item-suffix="{ item }">
+                <slot name="item-suffix" :item="item" />
+              </template>
+            </TokenSelectorList>
           </section>
 
           <section
@@ -295,24 +287,17 @@ const onClosed = () => {
               </template>
             </div>
 
-            <div
+            <TokenSelectorList
               v-if="enabledItems.length"
-              role="list"
-              class="flex flex-col gap-0.5"
+              :items="enabledItems"
+              :selected-id="selectedId"
+              :network-icon="networkIcon"
+              @select="pick"
             >
-              <div v-for="item in enabledItems" :key="item.id" role="listitem">
-                <TokenSelectorRow
-                  :item="item"
-                  :selected="item.id === selectedId"
-                  :network-icon="networkIcon"
-                  @select="pick"
-                >
-                  <template v-if="$slots['item-suffix']" #suffix>
-                    <slot name="item-suffix" :item="item" />
-                  </template>
-                </TokenSelectorRow>
-              </div>
-            </div>
+              <template v-if="$slots['item-suffix']" #item-suffix="{ item }">
+                <slot name="item-suffix" :item="item" />
+              </template>
+            </TokenSelectorList>
             <p
               v-else-if="!disabledItems.length"
               data-testid="token-selector-empty"
@@ -334,15 +319,14 @@ const onClosed = () => {
             >
               {{ disabledGroupTitle }}
             </p>
-            <div role="list" class="flex flex-col gap-0.5">
-              <div v-for="item in disabledItems" :key="item.id" role="listitem">
-                <TokenSelectorRow :item="item" :network-icon="networkIcon">
-                  <template v-if="$slots['item-suffix']" #suffix>
-                    <slot name="item-suffix" :item="item" />
-                  </template>
-                </TokenSelectorRow>
-              </div>
-            </div>
+            <TokenSelectorList
+              :items="disabledItems"
+              :network-icon="networkIcon"
+            >
+              <template v-if="$slots['item-suffix']" #item-suffix="{ item }">
+                <slot name="item-suffix" :item="item" />
+              </template>
+            </TokenSelectorList>
           </section>
 
           <AppBaseButton

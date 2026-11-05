@@ -9,6 +9,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import i18n from '@/i18n'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
+import AppCell from '@/components/cell/AppCell.vue'
 import type { TokenSelectorItem } from '@/components/token_selector/types'
 
 const token = (
@@ -142,8 +143,19 @@ describe('AppTokenSelectorModal', () => {
 
   it('marks the selected token', async () => {
     const wrapper = await mountModal({ selectedId: 'eth' })
-    const rows = wrapper.findAllComponents({ name: 'TokenSelectorRow' })
+    const rows = wrapper.findAllComponents(AppCell)
     expect(rows.map(row => row.props('selected'))).toEqual([false, true, false])
+  })
+
+  it('marks the selected quick pick, leaving the others unpressed', async () => {
+    await mountModal({ quickPicks: [USDC, ETH], selectedId: 'eth' })
+    const hits = qa(
+      '[data-testid="token-selector-quick-picks"] [data-testid="card-hit"]',
+    )
+    expect(hits.map(hit => hit.getAttribute('aria-pressed'))).toEqual([
+      null,
+      'true',
+    ])
   })
 
   it('tells an empty list from an empty search', async () => {

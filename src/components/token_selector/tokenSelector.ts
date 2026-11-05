@@ -50,3 +50,23 @@ export const pickQuickPicks = <T>(
   }
   return picks
 }
+
+/**
+ * "Recently viewed" rows: for each stored id in order, the first enabled item
+ * `matches` accepts, without repeats, up to `limit`. Each flow stores its own
+ * kind of id, hence the callback.
+ */
+export const pickRecentItems = <T>(
+  items: TokenSelectorItem<T>[],
+  recentIds: string[],
+  matches: (item: TokenSelectorItem<T>, id: string) => boolean,
+  limit = 6,
+): TokenSelectorItem<T>[] => {
+  const picks = new Map<string, TokenSelectorItem<T>>()
+  for (const id of recentIds) {
+    if (picks.size >= limit) break
+    const match = items.find(item => !item.disabled && matches(item, id))
+    if (match) picks.set(match.id, match)
+  }
+  return [...picks.values()]
+}

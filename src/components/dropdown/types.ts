@@ -36,16 +36,16 @@ export const DROPDOWN_TRIGGER_CLASS: Record<
   },
 }
 
-/** Focus and disabled are shared: 2px brand ring inside, content at 40%. */
 /** `bare`: a text trigger with no pill box, e.g. a list header's sort control. */
 export const DROPDOWN_BARE_TRIGGER_CLASS = 'inline-flex gap-1 rounded-4'
 
+/** Focus and disabled are shared: 2px brand ring inside, content at 40%. */
 export const DROPDOWN_TRIGGER_STATE_CLASS =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default disabled:*:opacity-40'
 
 /**
  * Open menu width: M takes the trigger's width, S keeps Figma's 240px panel
- * (lined up by DROPDOWN_MENU_ALIGN_CLASS).
+ * (lined up by `menuAlign`).
  */
 export const DROPDOWN_MENU_WIDTH_CLASS: Record<DropdownSize, string> = {
   m: 'left-0 right-0',
@@ -54,8 +54,3 @@ export const DROPDOWN_MENU_WIDTH_CLASS: Record<DropdownSize, string> = {
 
 /** Which trigger edge an S menu lines up with; M always spans the trigger. */
 export type DropdownMenuAlign = 'start' | 'end'
-
-export const DROPDOWN_MENU_ALIGN_CLASS: Record<DropdownMenuAlign, string> = {
-  start: 'left-0',
-  end: 'right-0',
-}

@@ -11,7 +11,6 @@ import {
 import { useFlipPlacement } from './useFlipPlacement'
 import {
   DROPDOWN_BARE_TRIGGER_CLASS,
-  DROPDOWN_MENU_ALIGN_CLASS,
   DROPDOWN_MENU_WIDTH_CLASS,
   DROPDOWN_TRIGGER_CLASS,
   DROPDOWN_TRIGGER_STATE_CLASS,
@@ -85,7 +84,10 @@ const layout = computed<DropdownSize>(() => (props.bare ? 's' : props.size))
 const menuPositionClass = computed(() =>
   layout.value === 'm'
     ? DROPDOWN_MENU_WIDTH_CLASS.m
-    : [DROPDOWN_MENU_WIDTH_CLASS.s, DROPDOWN_MENU_ALIGN_CLASS[props.menuAlign]],
+    : [
+        DROPDOWN_MENU_WIDTH_CLASS.s,
+        props.menuAlign === 'end' ? 'right-0' : 'left-0',
+      ],
 )
 const triggerClass = computed(() =>
   props.bare

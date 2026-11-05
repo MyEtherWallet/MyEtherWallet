@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   pickQuickPicks,
+  pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
 import type { TokenSelectorItem } from '@/components/token_selector/types'
@@ -81,5 +82,44 @@ describe('pickQuickPicks', () => {
       item('USDC', { id: 'usdc-base' }),
     ]
     expect(pickQuickPicks(items, 'USDC').map(i => i.id)).toEqual(['usdc-eth'])
+  })
+})
+
+describe('pickRecentItems', () => {
+  const bySymbol = (entry: TokenSelectorItem, id: string) =>
+    entry.symbol.toLowerCase() === id
+
+  it('follows the recent order, not the list order', () => {
+    const items = [item('USDC'), item('ETH'), item('WBTC')]
+    expect(
+      pickRecentItems(items, ['wbtc', 'usdc'], bySymbol).map(i => i.symbol),
+    ).toEqual(['WBTC', 'USDC'])
+  })
+
+  it('takes the first enabled match and never repeats an item', () => {
+    const items = [
+      item('USDC', { id: 'usdc-paused', disabled: true }),
+      item('USDC', { id: 'usdc-eth' }),
+      item('USDC', { id: 'usdc-base' }),
+    ]
+    expect(
+      pickRecentItems(items, ['usdc', 'usdc', 'dai'], bySymbol).map(i => i.id),
+    ).toEqual(['usdc-eth'])
+  })
+
+  it('skips ids whose only match is disabled', () => {
+    const items = [item('ETH', { disabled: true }), item('DAI')]
+    expect(
+      pickRecentItems(items, ['eth', 'dai'], bySymbol).map(i => i.id),
+    ).toEqual(['dai'])
+  })
+
+  it('stops at the limit', () => {
+    const symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    const items = symbols.map(symbol => item(symbol))
+    expect(pickRecentItems(items, symbols, bySymbol)).toHaveLength(6)
+    expect(
+      pickRecentItems(items, symbols, bySymbol, 2).map(i => i.symbol),
+    ).toEqual(['a', 'b'])
   })
 })
