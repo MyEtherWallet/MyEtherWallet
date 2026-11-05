@@ -12,6 +12,8 @@ export interface TokenSelectorItem<T = unknown> {
   logo?: string | null
   /** Network badge for this row; falls back to the modal's `networkIcon`. */
   chainIcon?: string | null
+  /** Tokenized stock: drawn with the Stocks avatar. */
+  isStock?: boolean
   rightAccessory?: CellRightAccessory
   disabled?: boolean
   raw: T

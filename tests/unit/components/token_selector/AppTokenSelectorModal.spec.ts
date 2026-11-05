@@ -36,7 +36,8 @@ const mountModal = async (props: Record<string, unknown> = {}) => {
   const wrapper = mount(AppTokenSelectorModal, {
     props: {
       modelValue: true,
-      'onUpdate:modelValue': (v: boolean) => wrapper.setProps({ modelValue: v }),
+      'onUpdate:modelValue': (v: boolean) =>
+        wrapper.setProps({ modelValue: v }),
       title: 'Select asset to buy',
       items: [USDC, ETH, WBTC],
       ...props,
@@ -68,7 +69,9 @@ describe('AppTokenSelectorModal', () => {
     await mountModal({ quickPicks: [USDC, ETH], recentItems: [WBTC] })
 
     expect(q('[role="dialog"]')?.textContent).toContain('Select asset to buy')
-    const cards = qa('[data-testid="token-selector-quick-picks"] [data-testid="card"]')
+    const cards = qa(
+      '[data-testid="token-selector-quick-picks"] [data-testid="card"]',
+    )
     // The avatars fall back to initials, so match the symbol label.
     expect(cards.map(card => card.textContent?.trim())).toEqual([
       expect.stringMatching(/USDC$/),
@@ -106,7 +109,9 @@ describe('AppTokenSelectorModal', () => {
 
     await wrapper.setProps({ modelValue: true } as never)
     await flushPromises()
-    q('[data-testid="token-selector-quick-picks"] [data-testid="card-hit"]')!.click()
+    q(
+      '[data-testid="token-selector-quick-picks"] [data-testid="card-hit"]',
+    )!.click()
     await nextTick()
     expect(wrapper.emitted('select')?.[1]).toEqual([ETH])
   })
@@ -125,6 +130,14 @@ describe('AppTokenSelectorModal', () => {
     disabled[0].click()
     await nextTick()
     expect(wrapper.emitted('select')).toBeUndefined()
+  })
+
+  it('draws tokenized stocks with the Stocks avatar', async () => {
+    const wrapper = await mountModal({
+      items: [token('AAPLON', { isStock: true }), USDC],
+    })
+    const avatars = wrapper.findAllComponents({ name: 'AppAvatar' })
+    expect(avatars.map(a => a.props('type'))).toEqual(['stocks', 'cryptoAsset'])
   })
 
   it('marks the selected token', async () => {
@@ -159,7 +172,9 @@ describe('AppTokenSelectorModal', () => {
       ],
       sortValue: 'market_cap',
     })
-    const sort = q('[data-testid="token-selector-all"] [data-testid="dropdown-trigger"]')!
+    const sort = q(
+      '[data-testid="token-selector-all"] [data-testid="dropdown-trigger"]',
+    )!
     expect(sort.textContent?.trim()).toBe('by market cap')
 
     sort.click()
@@ -176,7 +191,9 @@ describe('AppTokenSelectorModal', () => {
 
   it('reads "All tokens" with no sort control when the flow has no sort', async () => {
     await mountModal()
-    expect(q('[data-testid="token-selector-all"] [data-testid="dropdown"]')).toBeNull()
+    expect(
+      q('[data-testid="token-selector-all"] [data-testid="dropdown"]'),
+    ).toBeNull()
     expect(q('[data-testid="token-selector-all"]')?.textContent).toContain(
       'All tokens',
     )
@@ -184,7 +201,9 @@ describe('AppTokenSelectorModal', () => {
 
   it('shows the network dropdown only when networks are passed', async () => {
     const wrapper = await mountModal()
-    expect(q('[data-testid="token-selector-toolbar"] [data-testid="dropdown"]')).toBeNull()
+    expect(
+      q('[data-testid="token-selector-toolbar"] [data-testid="dropdown"]'),
+    ).toBeNull()
 
     await wrapper.setProps({
       networks: [
@@ -193,7 +212,9 @@ describe('AppTokenSelectorModal', () => {
       ],
       network: 'ETH',
     } as never)
-    const trigger = q('[data-testid="token-selector-toolbar"] [data-testid="dropdown-trigger"]')!
+    const trigger = q(
+      '[data-testid="token-selector-toolbar"] [data-testid="dropdown-trigger"]',
+    )!
     expect(trigger.textContent).toContain('Ethereum')
     trigger.click()
     await flushPromises()

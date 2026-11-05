@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <AppAvatar
-    type="cryptoAsset"
+    :type="item.isStock ? 'stocks' : 'cryptoAsset'"
     :size="size"
     :url="item.logo"
     :symbol="item.symbol"
