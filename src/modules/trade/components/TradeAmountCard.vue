@@ -233,6 +233,5 @@ const quickActions = computed(() =>
 )
 
 const pickerTitle = (token: NewTokenInfo) =>
-  tradeAssetLabel(token, props.side, props.networkName, stocksStore.isStock)
-    .symbol
+  tradeAssetLabel(token, props.networkName, stocksStore.isStock).symbol
 </script>

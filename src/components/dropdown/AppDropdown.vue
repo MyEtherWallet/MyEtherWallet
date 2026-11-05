@@ -15,6 +15,7 @@ import {
   DROPDOWN_TRIGGER_CLASS,
   DROPDOWN_TRIGGER_STATE_CLASS,
   type DropdownMenuAlign,
+  DROPDOWN_TRIGGER_BORDER_CLASS,
   type DropdownSize,
   type DropdownSurface,
 } from './types'
@@ -29,6 +30,8 @@ import {
  * or above it when it doesn't fit below. It doesn't own a value: the rows are
  * consumer `AppCell size="small" inset` in the default slot (scope `close`),
  * and the consumer updates `title` and the `avatar` slot from its selection.
+ * The `title` slot replaces the title text when it needs mixed styles (e.g. a
+ * value plus a subtle detail).
  * Attrs land on the wrapper.
  *
  * @example
@@ -58,6 +61,8 @@ const props = withDefaults(
     bare?: boolean
     /** S menu edge: `end` for a trigger near the right edge of its container. */
     menuAlign?: DropdownMenuAlign
+    /** 0.5px `border/default` hairline, for instances that override the stroke (e.g. Summary providers). */
+    bordered?: boolean
   }>(),
   {
     size: 'm',
@@ -70,6 +75,7 @@ const props = withDefaults(
     searchPlaceholder: '',
     menuRole: 'listbox',
     menuClass: undefined,
+    bordered: false,
   },
 )
 
@@ -184,7 +190,11 @@ defineExpose({ show, close })
       :aria-controls="open ? listId : undefined"
       :disabled="disabled"
       class="items-center text-left transition-colors"
-      :class="[triggerClass, DROPDOWN_TRIGGER_STATE_CLASS]"
+      :class="[
+        triggerClass,
+        DROPDOWN_TRIGGER_STATE_CLASS,
+        { [DROPDOWN_TRIGGER_BORDER_CLASS]: bordered },
+      ]"
       @click="toggle"
       @keydown.down.prevent="show()"
     >
@@ -196,19 +206,24 @@ defineExpose({ show, close })
         :title="title"
         size="m"
         no-wrap
-        class="flex-1"
-      />
+        class="min-w-0 flex-1"
+      >
+        <template v-if="$slots.title" #title>
+          <slot name="title" />
+        </template>
+      </AppContentGroup>
       <span
         v-else
         class="whitespace-nowrap text-label-base text-text-default"
         :class="{ 'px-2': !bare }"
       >
-        {{ title }}
+        <slot name="title">{{ title }}</slot>
       </span>
+      <!-- Figma "Custom content": shares the row with the title, right-aligned. -->
       <span
         v-if="layout === 'm' && $slots.suffix"
         data-testid="dropdown-suffix"
-        class="flex h-8 w-10 shrink-0 items-center justify-center"
+        class="flex min-w-0 flex-1 items-center justify-end overflow-hidden"
       >
         <slot name="suffix" />
       </span>

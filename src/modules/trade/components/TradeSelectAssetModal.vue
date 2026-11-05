@@ -193,7 +193,6 @@ const toItem = ({
 }: TradeAsset): TokenSelectorItem<TradeAssetToken> => {
   const { isStock, symbol } = tradeAssetLabel(
     token,
-    props.side,
     props.networkName,
     stocksStore.isStock,
   )

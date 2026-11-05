@@ -66,24 +66,26 @@
       "check-explorer": "or check block explorer"
     },
     "swap-offer": {
-      "best-offer-from": "Best offer from",
-      "you-will-get": "you will get",
       "max-slippage": "Max. slippage",
-      "minimum-received": "Minimum received",
-      "offer-includes": "Offer includes {feePercent}% fee",
-      "proceed": "Proceed With Swap",
-      "proceed-bridge": "Proceed With Bridge",
+      "minimum-received": "Minimum you’ll receive",
+      "proceed": "Confirm swap",
+      "proceed-bridge": "Confirm bridge",
       "decline": "Decline Swap",
       "unknown-provider": "Unknown provider",
-      "offers": "Offer | {count} other offers",
-      "offer_from": "Offer from { provider }",
-      "best-rate": "Best rate",
       "rate": "Rate",
       "approve-tx-on-device": "Approve Tx on your device",
-      "title-swap": "Swap",
-      "title-bridge": "Bridge"
+      "title-swap": "Review swap",
+      "title-bridge": "Review bridge",
+      "swap-provider": "Swap provider",
+      "bridge-provider": "Bridge provider",
+      "summary": "Summary",
+      "youre-paying": "You’re paying",
+      "expected-to-receive": "Expected to receive",
+      "best-value": "Best value",
+      "expand-breakdown": "Expand breakdown",
+      "close-breakdown": "Close breakdown",
+      "network-fee": "Network fee"
     },
-    "for": "for",
     "offer": "Offer"
   }
 }

@@ -87,6 +87,7 @@
       :fiat-amount="fiatAmount"
       :fiat-currency="selectedFiat"
       :crypto-currency="tokenSymbol"
+      :token-icon="tokenIcon"
       :is-loading="isFetchingQuotes && !buyQuotes.length"
       :error="buyQuotesError"
       :analytics-payload="buyPayload"
@@ -102,12 +103,14 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
+import BigNumber from 'bignumber.js'
 
 import PurchaseTokenPicker from './components/PurchaseTokenPicker.vue'
 import PurchaseCurrencyPicker from './components/PurchaseCurrencyPicker.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
+import { getSelectedTokenIcon } from './helpers/purchaseIcons'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
@@ -149,6 +152,7 @@ const {
   isFetchingEstimate,
   exchangeRates,
   rateLimitedUntil,
+  coinImages,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -233,6 +237,14 @@ const tokenSymbol = computed<string>(
     selectedToken.value?.symbol ?? displayChain.value?.currencyName ?? 'ETH',
 )
 
+const tokenIcon = computed(() =>
+  getSelectedTokenIcon(
+    selectedToken.value,
+    displayChain.value,
+    coinImages.value,
+  ),
+)
+
 const walletMenu = useWalletMenuStore()
 
 // Pre-populate the token when opened from a "Buy" button on the crypto/balance
@@ -310,16 +322,28 @@ const buildButtons = (ideal: number[], min: number, max: number) => {
   const values = increasing
     ? rounded
     : ideal.map(v => clamp(Math.round(v), min, max))
-  return values.map(value => ({
+  // A narrow limit window can round several presets to the same amount.
+  return [...new Set(values)].map(value => ({
     label: formatAmount(value),
     value,
     usdValue: value,
   }))
 }
 
+// Provider limits can carry more decimals than the input accepts: keep the
+// presets inside the limits at that precision (min up, max down).
+const limitAtPrecision = (value: number, roundUp: boolean): number =>
+  new BigNumber(value)
+    .decimalPlaces(
+      MAX_FIAT_DECIMALS,
+      roundUp ? BigNumber.ROUND_UP : BigNumber.ROUND_DOWN,
+    )
+    .toNumber()
+
 const quickButtons = computed(() => {
   const rate = currencyRate.value
-  const { min, max } = fiatLimits.value
+  const min = limitAtPrecision(fiatLimits.value.min, true)
+  const max = limitAtPrecision(fiatLimits.value.max, false)
   if (!rate || max <= 0) return []
 
   const raw = USD_AMOUNTS.map(usd => Math.round(usd * rate))

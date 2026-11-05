@@ -211,6 +211,40 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
       expect(trigger(w).classes()).not.toContain('ring-border-default')
   })
 
+  it('draws the 0.5px border/default hairline only when bordered', () => {
+    const bordered = mountDropdown({ bordered: true })
+    expect(trigger(bordered).classes()).toEqual(
+      expect.arrayContaining([
+        'ring-[0.5px]',
+        'ring-inset',
+        'ring-border-default',
+      ]),
+    )
+    expect(trigger(mountDropdown()).classes()).not.toContain('ring-[0.5px]')
+  })
+
+  it('lets the M suffix share the row with the title, right-aligned', () => {
+    const wrapper = mountDropdown({}, { suffix: '<b>Best value</b>' })
+    const suffix = wrapper.get('[data-testid="dropdown-suffix"]')
+    expect(suffix.classes()).toEqual(
+      expect.arrayContaining(['flex-1', 'justify-end']),
+    )
+    expect(suffix.classes()).not.toContain('w-10')
+  })
+
+  it('renders the title slot in place of the title text at both sizes', () => {
+    for (const size of ['m', 's']) {
+      const wrapper = mountDropdown(
+        { size },
+        { title: '<b data-test="rich-title">≈ $0.26</b>' },
+      )
+      expect(trigger(wrapper).find('[data-test="rich-title"]').exists()).toBe(
+        true,
+      )
+      expect(trigger(wrapper).text()).not.toContain('Network')
+    }
+  })
+
   it('opens the menu at the trigger width for M and at 240px for S', async () => {
     const medium = mountDropdown()
     await openMenu(medium)
@@ -261,6 +295,75 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     const wrapper = mountDropdown()
     await openMenu(wrapper)
     expect(wrapper.getComponent(AppMenuList).classes()).toContain('bottom-full')
+  })
+
+  it('opens above when a clipping ancestor (e.g. a modal body) cuts it off below', async () => {
+    const scroller = document.createElement('div')
+    scroller.style.overflowY = 'auto'
+    document.body.appendChild(scroller)
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: HTMLElement) {
+        // The viewport has room below; the scrolling body ends 100px lower.
+        return (
+          this === scroller
+            ? { top: 0, bottom: 552 }
+            : { top: 400, bottom: 452 }
+        ) as DOMRect
+      },
+    )
+    vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(1000)
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(208)
+    const wrapper = mount(AppDropdown, {
+      props: { title: 'Network fee' },
+      slots: {
+        default: () =>
+          h(AppCell, {
+            size: 'small',
+            inset: true,
+            role: 'option',
+            title: 'Economy',
+          }),
+      },
+      global: { plugins: [i18n] },
+      attachTo: scroller,
+    })
+    await openMenu(wrapper as ReturnType<typeof mountDropdown>)
+    expect(wrapper.getComponent(AppMenuList).classes()).toContain('bottom-full')
+  })
+
+  it('stays below when it would fit above only outside the clipping ancestor', async () => {
+    const scroller = document.createElement('div')
+    scroller.style.overflowY = 'auto'
+    document.body.appendChild(scroller)
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: HTMLElement) {
+        // Below: 352 + 4 + 208 > 552. Above: 300 - 4 - 208 = 88 fits the
+        // viewport but not the scroller, which starts at 200.
+        return (
+          this === scroller
+            ? { top: 200, bottom: 552 }
+            : { top: 300, bottom: 352 }
+        ) as DOMRect
+      },
+    )
+    vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(1000)
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(208)
+    const wrapper = mount(AppDropdown, {
+      props: { title: 'Network fee' },
+      slots: {
+        default: () =>
+          h(AppCell, {
+            size: 'small',
+            inset: true,
+            role: 'option',
+            title: 'Economy',
+          }),
+      },
+      global: { plugins: [i18n] },
+      attachTo: scroller,
+    })
+    await openMenu(wrapper as ReturnType<typeof mountDropdown>)
+    expect(wrapper.getComponent(AppMenuList).classes()).toContain('top-full')
   })
 
   it('opens below when there is room', async () => {

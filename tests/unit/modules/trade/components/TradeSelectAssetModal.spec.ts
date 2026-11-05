@@ -11,6 +11,7 @@ import i18n from '@/i18n'
 import TradeSelectAssetModal from '@/modules/trade/components/TradeSelectAssetModal.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useStocksStore } from '@/stores/stocksStore'
 import type { TokenSelectorItem } from '@/components/token_selector/types'
 
 const asset = (symbol: string, address: string, extra = {}) => ({
@@ -31,6 +32,10 @@ const ABT = asset('ABTON', '0x0000000000000000000000000000000000000003', {
 })
 const ACN = asset('ACNON', '0x0000000000000000000000000000000000000004')
 
+const STOCK_ADDRESSES = new Set(
+  [AAPL, ABNB, ABT, ACN].map(({ address }) => address),
+)
+
 const mounted: VueWrapper[] = []
 
 const mountOpenModal = async (
@@ -40,11 +45,16 @@ const mountOpenModal = async (
   const pinia = createPinia()
   setActivePinia(pinia)
   useChainsStore().isLoaded = true
+  // The fixtures are listed stocks unless a test says otherwise.
+  vi.spyOn(useStocksStore(), 'isStock').mockImplementation(address =>
+    STOCK_ADDRESSES.has(address),
+  )
   setup()
 
   const wrapper = mount(TradeSelectAssetModal, {
     props: {
       side: 'buy',
+      networkName: 'ETHEREUM',
       chainTokens: [AAPL, ABNB, ACN],
       ...props,
     } as never,

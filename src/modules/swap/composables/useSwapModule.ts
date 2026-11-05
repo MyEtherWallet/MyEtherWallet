@@ -145,7 +145,6 @@ interface SwapModuleBindings {
   validateToAddress: () => Promise<void>
   proceedWithSwap: (quoteId: string) => Promise<void>
   swapButton: () => Promise<void>
-  cancelSwap: () => void
   setToChain: (chain: Chain) => void
   connectWalletForSwap: () => void
   bindWatchers: () => void
@@ -916,10 +915,6 @@ export function useSwapModule(): SwapModuleBindings {
     const analyticsPayload = getAnalyticsShared()
     analytics.trackSwapEvent(SwapEvent.CLICK_SWAP, analyticsPayload)
     return isBitcoinChain.value ? swapForBtc() : swapForEvm()
-  }
-
-  const cancelSwap = () => {
-    bestOfferSelectionOpen.value = false
   }
 
   // Monotonic id so a superseded in-flight request can't apply its results or
@@ -1736,7 +1731,6 @@ export function useSwapModule(): SwapModuleBindings {
     validateToAddress,
     proceedWithSwap: swapExecutionFeature.proceedWithSwap,
     swapButton: swapExecutionFeature.swapButton,
-    cancelSwap,
     setToChain,
     connectWalletForSwap,
     bindWatchers,

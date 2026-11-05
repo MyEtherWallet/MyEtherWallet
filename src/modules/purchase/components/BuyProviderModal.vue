@@ -1,187 +1,139 @@
 <template>
   <app-modal
     v-model="isOpen"
-    :aria-label="
-      t('purchase.select_provider.title', { amount: formattedFiatAmount })
-    "
+    :title="t('purchase.select_provider.review_title')"
   >
-    <div class="flex flex-col gap-8 px-4 sm:px-6 pt-8 pb-8">
-      <!-- Header (close button is rendered by AppModal at the top right) -->
-      <div class="flex flex-col gap-1 pr-10">
-        <h2 class="text-heading-xl">
-          {{
-            t('purchase.select_provider.title', {
-              amount: formattedFiatAmount,
-            })
-          }}
-        </h2>
-        <p class="text-s-16 text-text-subtle leading-[22px]">
-          {{
-            t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
-          }}
-        </p>
-      </div>
-
-      <!-- Loading -->
+    <div class="flex flex-col gap-6 p-6">
       <div
         v-if="isLoading"
         class="flex items-center justify-center py-16"
         aria-live="polite"
       >
-        <span
-          class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
-        />
+        <app-spinner />
       </div>
 
-      <!-- Error -->
-      <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
+      <p
+        v-else-if="error"
+        class="py-8 text-center text-text-sm text-text-error"
+      >
         {{ error }}
       </p>
 
-      <!-- Quotes + summary + CTA -->
       <template v-else-if="quotes.length">
-        <!-- Provider cards (pt-3 reserves room for the "Best value" badge that overflows -14px) -->
-        <div class="flex flex-col gap-2 pt-3">
-          <div
-            v-for="(quote, index) in quotes"
-            :key="quote.provider"
-            class="relative"
-          >
-            <AppTag
-              v-if="index === 0"
-              type="success"
-              :label="t('purchase.select_provider.best_value')"
-              class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"
-            />
-            <button
-              type="button"
-              :class="[
-                'w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 transition-colors',
-                selectedIndex === index
-                  ? 'border-black'
-                  : 'border-transparent hover:bg-transparent hover:border-border-default',
-              ]"
-              @click="selectedIndex = index"
-            >
-              <!-- Amounts -->
-              <div
-                class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
+        <div class="flex flex-col gap-8 pb-6">
+          <div class="flex flex-col gap-3">
+            <p class="text-label-base text-text-default">
+              {{ t('purchase.select_provider.provider') }}
+            </p>
+            <app-dropdown :title="providerLabel(selectedQuote)" bordered>
+              <template #avatar="{ size }">
+                <app-avatar
+                  type="cryptoAsset"
+                  :size="size"
+                  :url="getProviderIcon(selectedQuote?.provider)"
+                  :symbol="providerLabel(selectedQuote)"
+                />
+              </template>
+              <template v-if="selectedIndex === 0" #suffix>
+                <app-tag
+                  type="success"
+                  variant="contrast"
+                  leading-icon="check-badge"
+                  :label="t('purchase.select_provider.best_value')"
+                />
+              </template>
+              <app-cell
+                v-for="(quote, index) in quotes"
+                :key="quote.provider"
+                size="small"
+                inset
+                role="option"
+                :aria-selected="selectedIndex === index"
+                :selected="selectedIndex === index"
+                :title="providerLabel(quote)"
+                :right-accessory="{
+                  kind: 'balance',
+                  primary: `${formattedCryptoAmount(quote)} ${quote.crypto_currency}`,
+                  secondary: `≈ ${formattedFiatReceive(quote)}`,
+                }"
+                @click="selectedIndex = index"
               >
-                <p class="text-label-base text-black">
-                  {{ formattedCryptoAmount(quote) }}
-                  {{ quote.crypto_currency }}
-                </p>
-                <p class="text-label-base text-text-subtle">
-                  ≈ {{ formattedFiatReceive(quote) }}
-                </p>
-              </div>
+                <template #avatar="{ size }">
+                  <app-avatar
+                    type="cryptoAsset"
+                    :size="size"
+                    :url="getProviderIcon(quote.provider)"
+                    :symbol="providerLabel(quote)"
+                  />
+                </template>
+              </app-cell>
+            </app-dropdown>
+          </div>
 
-              <!-- Right: payment methods + provider logo -->
-              <div class="flex flex-col gap-3 items-end flex-none">
-                <div class="flex items-center gap-0.5">
-                  <div
-                    v-for="method in getPaymentMethodIcons(
-                      quote.payment_methods,
-                    )"
-                    :key="method.alt"
-                    class="bg-white border border-border-default rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
-                  >
-                    <img
-                      :src="method.src"
-                      :alt="method.alt"
-                      class="max-w-[19px] max-h-3.5 object-contain"
-                    />
-                  </div>
-                </div>
-                <img
-                  v-if="getProviderLogo(quote.provider)"
-                  :src="getProviderLogo(quote.provider)"
-                  :alt="quote.provider"
-                  class="h-[18px] w-auto object-contain"
+          <div class="flex flex-col gap-3">
+            <p class="text-label-base text-text-default">
+              {{ t('purchase.select_provider.summary') }}
+            </p>
+            <div
+              class="flex w-full flex-col gap-4 overflow-hidden rounded-16 bg-background-default p-4"
+            >
+              <div class="flex items-center gap-3">
+                <app-content-group
+                  :title="t('purchase.select_provider.youre_paying')"
+                  class="flex-1"
+                />
+                <app-content-group
+                  :title="formattedFiatAmount"
+                  align="right"
+                  class="flex-1"
+                />
+                <app-token-logo
+                  :url="getFiatIcon(fiatCurrency)"
+                  :symbol="fiatCurrency"
+                  cover
+                  width="w-10"
+                  height="h-10"
+                  no-shadow
                 />
               </div>
-            </button>
+              <app-divider variant="alternative" class="-my-1" />
+              <div v-if="selectedQuote" class="flex items-center gap-3">
+                <app-content-group
+                  :title="t('purchase.select_provider.expected_to_receive')"
+                  class="flex-1"
+                />
+                <app-content-group
+                  :title="`${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`"
+                  :description="`≈ ${formattedFiatReceive(selectedQuote)}`"
+                  align="right"
+                  class="flex-1"
+                />
+                <app-token-logo
+                  :url="tokenIcon"
+                  :symbol="cryptoCurrency"
+                  width="w-10"
+                  height="h-10"
+                  no-shadow
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Summary -->
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <span class="text-s-12 text-text-subtle leading-[18px]">
-              {{ t('purchase.select_provider.youll_pay') }}
-            </span>
-            <span class="text-label-xs">
-              {{ formattedFiatAmount }}
-            </span>
-          </div>
-          <app-divider class="-my-1" />
-          <div class="flex items-center justify-between">
-            <span class="text-s-12 text-text-subtle leading-[18px]">
-              {{ t('purchase.select_provider.youll_receive') }}
-            </span>
-            <span class="text-label-xs">
-              {{
-                selectedQuote
-                  ? `${formattedCryptoAmount(selectedQuote)} ${selectedQuote.crypto_currency}`
-                  : ''
-              }}
-              <span class="text-text-subtle font-normal">
-                {{
-                  selectedQuote
-                    ? `(≈ ${formattedFiatReceive(selectedQuote)})`
-                    : ''
-                }}
-              </span>
-            </span>
-          </div>
-          <app-divider class="-my-1" />
+        <div class="flex flex-col items-center gap-4">
+          <app-base-button
+            class="w-full"
+            :disabled="quoteExpired"
+            @click="onContinue"
+          >
+            {{ t('purchase.select_provider.confirm') }}
+          </app-base-button>
+          <purchase-quote-status
+            :quote-countdown="quoteCountdown"
+            :quote-expired="quoteExpired"
+            :cooldown-seconds="cooldownSeconds"
+          />
         </div>
-
-        <!-- Quote freshness -->
-        <p
-          v-if="cooldownSeconds !== null"
-          class="text-text-error text-s-12 text-center -my-4"
-          aria-live="polite"
-        >
-          {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
-        </p>
-        <p
-          v-else-if="quoteExpired"
-          class="text-text-subtle text-s-12 text-center -my-4"
-          aria-live="polite"
-        >
-          {{ t('purchase.quote.expired_refreshing') }}
-        </p>
-        <p
-          v-else-if="quoteCountdown"
-          class="text-text-subtle text-s-12 text-center -my-4"
-        >
-          {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
-        </p>
-
-        <!-- Continue CTA -->
-        <app-base-button
-          class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
-          :disabled="quoteExpired"
-          @click="onContinue"
-        >
-          <span class="flex items-center justify-center gap-2">
-            {{ t('purchase.select_provider.continue') }}
-            <AppIcon
-              name="arrow-top-right-on-square"
-              variant="filled"
-              size="s"
-              class="flex-none"
-            />
-          </span>
-        </app-base-button>
-        <p class="text-text-subtle text-s-12 text-center -mt-5">
-          {{
-            t('purchase.select_provider.redirect', {
-              provider: providerNameFormatted,
-            })
-          }}
-        </p>
       </template>
     </div>
   </app-modal>
@@ -190,18 +142,25 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppTag from '@/components/tag/AppTag.vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
+import AppDropdown from '@/components/dropdown/AppDropdown.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
+import PurchaseQuoteStatus from './PurchaseQuoteStatus.vue'
+import { getFiatIcon } from '../helpers/purchaseIcons'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
-  getProviderLogo,
-  getPaymentMethodIcons,
+  formatProviderName,
+  getProviderIcon,
 } from '../helpers/purchaseProviders'
 import type { BuyQuote } from '@/types/buyToken'
 import { analytics, BuyOfferEvent, BuyEventError } from '@/analytics'
@@ -217,6 +176,7 @@ const props = defineProps<{
   fiatAmount: string
   fiatCurrency: string
   cryptoCurrency: string
+  tokenIcon?: string
   isLoading: boolean
   error: string
   analyticsPayload: BuyPayloadShared
@@ -315,8 +275,6 @@ const onContinue = () => {
   window.open(selectedQuote.value.url, '_blank')
   isOpen.value = false
 }
-const providerNameFormatted = computed(() => {
-  const providerName = selectedQuote.value?.provider.toLowerCase() ?? ''
-  return providerName.charAt(0).toUpperCase() + providerName.slice(1)
-})
+const providerLabel = (quote: BuyQuote | null) =>
+  quote ? formatProviderName(quote.provider) : ''
 </script>
