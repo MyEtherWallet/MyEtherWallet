@@ -89,6 +89,7 @@ const onKeydown = (event: KeyboardEvent) => {
         :size="size"
         :selected="item.value === model"
         :trailing-icon="item.trailingIcon"
+        :tone="item.tone"
         :tabindex="item.value === focusableValue ? 0 : -1"
         :class="{ 'flex-1': fullWidth }"
         @click="model = item.value"

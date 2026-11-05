@@ -301,6 +301,7 @@ export function useTradeModule() {
     hasPreQuoteError,
     fromAmountError,
     isInsufficientBalanceError,
+    isDecimalsError,
     isTradeDisabled,
     isSameTokenSelected,
   } = useTradeValidation({
@@ -396,6 +397,17 @@ export function useTradeModule() {
     })
   }
 
+  // Mirrored from the sell card, so the CTA spins and shows the error in sync with it.
+  const isFromAmountBusy = ref(false)
+  const isFromAmountErrorVisible = ref(false)
+
+  const isCtaLoading = computed(
+    () =>
+      isFromAmountBusy.value &&
+      fromAmount.value !== '' &&
+      fromAmount.value !== '0',
+  )
+
   const ctaDisabledLabel = computed(() => {
     if (!isTradingSessionOpen.value) {
       return t('trade.market_status.paused')
@@ -406,6 +418,9 @@ export function useTradeModule() {
     const parsedAmount = Number(fromAmount.value)
     if (fromAmount.value.trim() === '' || !parsedAmount) {
       return t('trade.enter_amount')
+    }
+    if (isFromAmountErrorVisible.value && fromAmountError.value) {
+      return fromAmountError.value
     }
     return t('trade.review_trade')
   })
@@ -849,8 +864,12 @@ export function useTradeModule() {
     quoteRefreshFailed,
     refreshExpiredQuote,
     ctaDisabledLabel,
+    isFromAmountBusy,
+    isFromAmountErrorVisible,
+    isCtaLoading,
     showHelpLink,
     isInsufficientBalanceError,
+    isDecimalsError,
     isPairUnavailable,
     pillStatus,
     untilText,

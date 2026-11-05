@@ -3,6 +3,8 @@
     "send-tokens": "Send Tokens",
     "send-nfts": "Send NFTs",
     "need-help": "Need help sending?",
+    "description": "To any crypto address",
+    "review-send": "Review send",
     "approve-tx-on-device": "Approve Tx on your device",
     "unknown": "Unknown",
     "unknown_chain": "Unknown Chain",

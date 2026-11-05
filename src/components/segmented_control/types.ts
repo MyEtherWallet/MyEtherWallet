@@ -3,10 +3,19 @@ import type { IconName } from '@components/icon/icons'
 
 export type SegmentSize = 'default' | 'small'
 
+/** Selected fill. `success` / `danger` mark a side, e.g. Perps long / short. */
+export type SegmentTone = 'success' | 'danger'
+
+export const SEGMENT_TONE_CLASS: Record<SegmentTone, string> = {
+  success: 'bg-background-success text-text-inverted',
+  danger: 'bg-background-error text-text-inverted',
+}
+
 export interface SegmentItem<TValue extends string = string> {
   value: TValue
   label: string
   trailingIcon?: IconName
+  tone?: SegmentTone
 }
 
 /**
