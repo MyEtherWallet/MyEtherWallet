@@ -49,9 +49,13 @@ import AppPicker from '@/components/picker/AppPicker.vue'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
   pickQuickPicks,
+  pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
-import type { TokenSelectorItem } from '@/components/token_selector/types'
+import type {
+  TokenSelectorItem,
+  TokenSelectorSortDirection,
+} from '@/components/token_selector/types'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
@@ -138,30 +142,21 @@ const sortOptions = computed(() => {
   ]
 })
 
-enum SortDirection {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
-const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
+const activeSortDirection = ref<TokenSelectorSortDirection>('desc')
 
 // The modal emits every pick, so a repeat pick flips the direction.
 const setActiveSort = (value: string) => {
   if (value === activeSortValue.value) {
     activeSortDirection.value =
-      activeSortDirection.value === SortDirection.ASC
-        ? SortDirection.DESC
-        : SortDirection.ASC
+      activeSortDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
     activeSortValue.value = value as SortValueString
     const isNumericSort = [
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(activeSortValue.value)
-    activeSortDirection.value = isNumericSort
-      ? SortDirection.DESC
-      : SortDirection.ASC
+    activeSortDirection.value = isNumericSort ? 'desc' : 'asc'
   }
 }
 
@@ -217,7 +212,7 @@ const toItem = (token: TokenBalanceWithUsd): SendTokenItem => ({
 
 const allItems = computed(() => sortedTokens.value.map(toItem))
 
-// Same keys as before: the token's own name (not the Ondo alias) and symbol.
+// `raw.name`: search the token's own name, not the Ondo alias the row shows.
 const items = computed(() =>
   fuzzySearchByKeys(allItems.value, ['raw.name', 'symbol'], searchInput.value),
 )
@@ -227,17 +222,13 @@ const quickPicks = computed(() =>
 )
 
 // Store ids are the CoinGecko id or the contract (see AppSwapSelectedToken).
-const RECENT_LIMIT = 6
-const recentItems = computed(() => {
-  const found = new Set<SendTokenItem>()
-  for (const { id } of recentlyViewedCrypto.value) {
-    const match = allItems.value.find(
-      item => item.raw.coinId === id || item.id === id.toLowerCase(),
-    )
-    if (match) found.add(match)
-  }
-  return [...found].slice(0, RECENT_LIMIT)
-})
+const recentItems = computed(() =>
+  pickRecentItems(
+    allItems.value,
+    recentlyViewedCrypto.value.map(({ id }) => id),
+    (item, id) => item.raw.coinId === id || item.id === id.toLowerCase(),
+  ),
+)
 
 const onSelect = (item: TokenSelectorItem) => {
   selectedTokenContract.value = (item.raw as TokenBalance).contract
