@@ -12,7 +12,6 @@
     "trading_restricted": "El acceso a las operaciones está restringido en tu jurisdicción.",
     "learn_more": "Más información",
     "review_trade": "Revisar operación",
-    "need_help": "¿Necesitas ayuda para operar?",
     "tokens_not_tradable": "Uno o más tokens no se pueden operar actualmente. Inténtalo más tarde o selecciona tokens diferentes.",
     "service_unavailable": "El servicio de operaciones no está disponible temporalmente. Inténtalo de nuevo más tarde.",
     "asset_not_tradable": "no se puede operar actualmente debido a {reason}",
@@ -35,7 +34,8 @@
       "title": "Revisar operación",
       "trade_provider": "Proveedor de la operación",
       "provider_1inch": "1 Inch Fusion",
-      "estimated_summary": "Resumen estimado",
+      "best_value": "Mejor valor",
+      "summary": "Resumen",
       "you_pay": "Estás pagando",
       "you_receive": "Vas a recibir",
       "value_estimated": "(El valor es estimado)",
@@ -140,9 +140,10 @@
     "buy_label": "Comprar",
     "enter_amount": "Ingresa el monto",
     "select_asset": {
-      "title": "Seleccionar activo",
-      "subtitle": "Algunos pueden no estar disponibles temporalmente",
-      "available_in": "Activos disponibles en {marketStatus}",
+      "buy_title": "Selecciona el activo a comprar",
+      "sell_title": "Selecciona el activo a vender",
+      "available_in": "Disponibles en {marketStatus}",
+      "unavailable_in": "No disponibles durante {marketStatus}",
       "unavailable": "Activos no disponibles"
     },
     "pause_reason": {

@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="pillRef"
     class="w-full flex items-center justify-between bg-white border-1 border-border-default rounded-full px-3 py-2"
   >
     <div class="relative flex items-center gap-1">
@@ -35,6 +36,7 @@
           :marker-pct="markerPct"
           :time-label="timeLabel"
           :session-ranges="sessionRanges"
+          :boundary="pillRef"
           @close="infoOpen = false"
         />
       </span>
@@ -64,6 +66,8 @@ const props = defineProps<{
 }>()
 
 const infoOpen = defineModel<boolean>('infoOpen', { default: false })
+
+const pillRef = ref<HTMLElement | null>(null)
 
 // Wrapper around the info button and the popover: clicks inside it (the toggle
 // button included) don't count as outside.

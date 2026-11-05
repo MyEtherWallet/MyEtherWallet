@@ -34,7 +34,7 @@
       <AppPicker
         v-else
         size="l"
-        surface="alternative"
+        :surface="surface"
         :title="selectedChain?.nameLong ?? ''"
         :description="$t('common.network_label')"
         :loading="!isLoadedChains"
@@ -71,6 +71,7 @@ import { type Chain } from '@/mew_api/types'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import AppAvatar from '@components/avatar/AppAvatar.vue'
 import AppPicker from '@components/picker/AppPicker.vue'
+import type { PickerSurface } from '@components/picker/types'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
@@ -91,6 +92,15 @@ const prop = defineProps({
   preselectedChain: {
     type: Object as () => Chain | null,
     default: null,
+  },
+  /**
+   * Picker fill. `alternative` (grey) suits a white dialog surface; pass
+   * `default` (white) when the picker sits on a tinted card next to a white
+   * amount input, as in the bridge form.
+   */
+  surface: {
+    type: String as () => PickerSurface,
+    default: 'alternative',
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']

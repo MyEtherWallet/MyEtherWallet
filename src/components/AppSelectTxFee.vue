@@ -1,6 +1,48 @@
 <template>
-  <div>
+  <div :class="{ contents: hideSelector }">
+    <!-- Summary screens: the design-library Dropdown with the same options. -->
+    <app-dropdown
+      v-if="dropdown"
+      surface="alternative"
+      :title="selectedFeeTitle"
+      :disabled="!hasFees || disabled"
+    >
+      <template #title>
+        <app-skeleton v-if="!hasFees" class="h-3 w-24" />
+        <span v-else class="text-label-sm text-text-default">
+          {{ hasFiatEstimates ? `≈ ${selectedFeeFiat}` : selectedFeeNative }}
+          <span v-if="hasFiatEstimates" class="text-text-sm text-text-subtle">
+            ({{ selectedFeeNative }})
+          </span>
+        </span>
+      </template>
+      <template v-if="hasFees" #suffix>
+        <app-tag
+          type="success"
+          variant="contrast"
+          leading-icon="check-badge"
+          :label="selectedFeeOption?.title"
+        />
+      </template>
+      <app-cell
+        v-for="fee in displayFees"
+        :key="fee.id"
+        size="small"
+        inset
+        role="option"
+        :aria-selected="gasPriceType === fee.id"
+        :selected="gasPriceType === fee.id"
+        :title="fee.title"
+        :right-accessory="{
+          kind: 'balance',
+          primary: fee.fiatValue,
+          secondary: fee.nativeValue,
+        }"
+        @click="setFee(fee.id)"
+      />
+    </app-dropdown>
     <button
+      v-else-if="!hideSelector"
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
@@ -36,16 +78,18 @@
       </div>
     </button>
     <div
-      v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
-      class="min-h-6 mt-1"
+      v-if="
+        !(isLoadingFees || isLoadingBalances) &&
+        isLoadedChainsData &&
+        (!hideSelector || showFeeError)
+      "
+      :class="
+        hideSelector ? '' : ['mt-1', dropdown ? 'empty:hidden' : 'min-h-6']
+      "
     >
       <transition name="fade" mode="out-in">
         <AppInputFeedback
-          v-if="
-            isWalletConnected &&
-            gasFeeError &&
-            (!isNotEnoughBalance || hasChainBalance)
-          "
+          v-if="showFeeError"
           type="error"
           :message="gasFeeError"
         >
@@ -72,6 +116,7 @@
     </div>
 
     <app-modal
+      v-if="!dropdown"
       :title="$t('select_fee.title')"
       v-model="openModal"
       class="w-full max-w-[560px]"
@@ -174,6 +219,10 @@ import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDropdown from '@/components/dropdown/AppDropdown.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 const walletMenu = useWalletMenuStore()
 const { formatFiat } = useCurrency()
 
@@ -200,9 +249,24 @@ interface Props {
   fees?: QuotesResponse
   isLoadingFees?: boolean
   txRequestBody?: EstimatesRequestBody | GetBtcTransactionEstimateBody
+  /** Render the options as a design-library Dropdown instead of a modal. */
+  dropdown?: boolean
+  /**
+   * Start on the user's default fee. Off where an earlier step already
+   * picked the fee (the Send and Sell reviews), so it isn't reset.
+   */
+  resetToDefault?: boolean
+  /** Lock the choice, e.g. while the tx built for it is being signed. */
+  disabled?: boolean
+  /**
+   * Hide the fee row but keep fetching, validating and emitting the selected
+   * fee; only the error message shows. The Send panel moves the fee to its
+   * summary screen.
+   */
+  hideSelector?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { resetToDefault: true })
 
 /** ----------------
  * Fee Error
@@ -240,6 +304,12 @@ const {
   hasChainBalance,
   isLoadingBalances,
 } = storeToRefs(walletStore)
+const showFeeError = computed(
+  () =>
+    isWalletConnected.value &&
+    !!gasFeeError.value &&
+    (!isNotEnoughBalance.value || hasChainBalance.value),
+)
 
 const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
   (): EstimatesRequestBody | GetBtcTransactionEstimateBody => {
@@ -271,8 +341,7 @@ const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
     ) {
       // Return a default BTC estimate body
       return {} as unknown as
-        | EstimatesRequestBody
-        | GetBtcTransactionEstimateBody
+        EstimatesRequestBody | GetBtcTransactionEstimateBody
     }
     /**
      * Right now bitcoin wallets are only fetched when the user is logged in.
@@ -310,8 +379,8 @@ onFetchResponse(() => {
     feesReady.value = true
     const _gasPriceType = gasPriceType.value as GasPriceType
     const nativeFeeValue =
-      feeEstmates.value[_gasPriceType].nativeValue ||
-      feeEstmates.value[_gasPriceType].nativeFeeTotal ||
+      feeEstmates.value[_gasPriceType]?.nativeValue ||
+      feeEstmates.value[_gasPriceType]?.nativeFeeTotal ||
       0
     const txDataValue =
       (txData.value as EstimatesRequestBody).value ?? P2WPKH_DUST
@@ -368,7 +437,7 @@ watch(
   },
 )
 onMounted(() => {
-  gasPriceType.value = defaultGasPriceType.value
+  if (props.resetToDefault) gasPriceType.value = defaultGasPriceType.value
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
     if (isBitcoinChain.value && !isWalletConnected.value) {
@@ -442,8 +511,8 @@ const hasFiatEstimates = computed(() => {
 const selectedFeeFiat = computed(() => {
   if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiat(
-      usedFeeToDisplay.value[gasPriceType.value].fiatValue ||
-        usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal ||
+      usedFeeToDisplay.value[gasPriceType.value]?.fiatValue ||
+        usedFeeToDisplay.value[gasPriceType.value]?.fiatFeeTotal ||
         0,
     ).display
     return `${fiatValue} `
@@ -471,63 +540,56 @@ interface DisplayFee {
   nativeValue: string
 }
 const { t } = useI18n()
+const FEE_TIERS = [
+  {
+    id: GasPriceType.ECONOMY,
+    title: 'select_fee.economy.title',
+    description: 'select_fee.economy.description',
+  },
+  {
+    id: GasPriceType.REGULAR,
+    title: 'select_fee.regular.title',
+    description: 'select_fee.regular.description',
+  },
+  {
+    id: GasPriceType.FAST,
+    title: 'select_fee.fast.title',
+    description: 'select_fee.fast.description',
+  },
+  {
+    id: GasPriceType.FASTEST,
+    title: 'select_fee.fastest.title',
+    description: 'select_fee.fastest.description',
+  },
+]
+
+// A quote can omit tiers (e.g. some BTC quotes): skip those instead of
+// reading them, since the Dropdown renders this list on first paint.
 const displayFees = computed<DisplayFee[]>(() => {
-  const economy = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatValue)
-    : undefined
-  const regular = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.REGULAR].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.REGULAR].fiatValue)
-    : undefined
-  const fast = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.FAST].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.FAST].fiatValue)
-    : undefined
-  const fastest = usedFeeToDisplay.value
-    ? (usedFeeToDisplay.value[GasPriceType.FASTEST].fiatFeeTotal ??
-      usedFeeToDisplay.value[GasPriceType.FASTEST].fiatValue)
-    : undefined
-  const a = [
-    {
-      id: GasPriceType.ECONOMY,
-      title: t('select_fee.economy.title'),
-      description: t('select_fee.economy.description'),
-      fiatValue: formatFiat(economy || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.ECONOMY])
-        : '0',
-    },
-    {
-      id: GasPriceType.REGULAR,
-      title: t('select_fee.regular.title'),
-      description: t('select_fee.regular.description'),
-      fiatValue: formatFiat(regular || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.REGULAR])
-        : '0',
-    },
-    {
-      id: GasPriceType.FAST,
-      title: t('select_fee.fast.title'),
-      description: t('select_fee.fast.description'),
-      fiatValue: formatFiat(fast || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.FAST])
-        : '0',
-    },
-    {
-      id: GasPriceType.FASTEST,
-      title: t('select_fee.fastest.title'),
-      description: t('select_fee.fastest.description'),
-      fiatValue: formatFiat(fastest || 0).display,
-      nativeValue: usedFeeToDisplay.value
-        ? formatFee(usedFeeToDisplay.value[GasPriceType.FASTEST])
-        : '0',
-    },
-  ]
-  return a
+  const fees = usedFeeToDisplay.value
+  return FEE_TIERS.flatMap(tier => {
+    const fee = fees?.[tier.id]
+    if (fees && !fee) return []
+    return [
+      {
+        id: tier.id,
+        title: t(tier.title),
+        description: t(tier.description),
+        fiatValue: formatFiat((fee?.fiatFeeTotal ?? fee?.fiatValue) || 0)
+          .display,
+        nativeValue: fee ? formatFee(fee) : '0',
+      },
+    ]
+  })
 })
+
+const selectedFeeOption = computed(() =>
+  displayFees.value.find(fee => fee.id === gasPriceType.value),
+)
+
+const selectedFeeTitle = computed(() =>
+  hasFiatEstimates.value ? selectedFeeFiat.value : selectedFeeNative.value,
+)
 
 const hasFees = computed(() => {
   if (props.fees) {

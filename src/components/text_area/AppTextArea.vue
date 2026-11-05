@@ -38,10 +38,8 @@
             ? 'text-text-disabled placeholder:text-text-disabled'
             : 'text-text-default placeholder:text-text-placeholder',
         ]"
-        @pointerdown="setActive()"
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
-        @input="setActive()"
       />
       <AppBtnIcon
         v-if="actionIcon"
@@ -143,13 +141,8 @@ const textareaAttrs = computed(() => {
   return rest
 })
 
-const {
-  inFocusInput,
-  isActive,
-  setActive,
-  setInFocusInput,
-  startOutOfFocusTimeout,
-} = useInFocusInput(textarea)
+const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
+  useInFocusInput(textarea)
 
 const hasValue = computed(() => !!model.value)
 const isFloating = computed(() => !!props.label && hasValue.value)
@@ -167,7 +160,6 @@ const fieldClass = computed(() =>
     error: hasError.value,
     disabled: props.disabled,
     focused: inFocusInput.value,
-    active: isActive.value,
   }),
 )
 </script>

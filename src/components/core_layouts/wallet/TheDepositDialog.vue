@@ -10,13 +10,15 @@
     class="min-h-[400px]"
   >
     <template #header>
-      <app-token-logo
-        v-if="selectedChain?.icon"
-        :url="selectedChain?.icon"
-        :symbol="selectedChain.currencyName"
-        width="w-12"
-        height="h-12"
-      ></app-token-logo>
+      <div class="flex justify-start!">
+        <app-token-logo
+          v-if="selectedChain?.icon"
+          :url="selectedChain?.icon"
+          :symbol="selectedChain.currencyName"
+          width="w-12"
+          height="h-12"
+        ></app-token-logo>
+      </div>
     </template>
     <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
       <h1 class="text-s-28 font-bold text-left leading-tight">
@@ -74,10 +76,7 @@
             target="_blank"
             class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
           >
-            <AppIcon
-              name="arrow-top-right-on-square"
-              class="text-text-brand"
-            />
+            <AppIcon name="arrow-top-right-on-square" class="text-text-brand" />
           </a>
         </div>
       </div>

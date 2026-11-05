@@ -78,12 +78,6 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
-              path: 'info-cell',
-              name: 'DevInfoCell',
-              component: () => import('@/views/ViewInfoCellShowcase.vue'),
-              meta: { noAuth: true, noWalletFlow: true },
-            },
-            {
               path: 'toggle',
               name: 'DevToggle',
               component: () => import('@/views/ViewToggleShowcase.vue'),
@@ -275,6 +269,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'radio',
               name: 'DevRadio',
               component: () => import('@/views/ViewRadioShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'token-selector',
+              name: 'DevTokenSelector',
+              component: () => import('@/views/ViewTokenSelectorShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
