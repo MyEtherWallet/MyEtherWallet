@@ -51,9 +51,7 @@
       "filter_all_networks": "所有网络"
     },
     "select_currency": {
-      "title": "货币",
-      "subtitle": "从列表中选择一种货币",
-      "search_placeholder": "搜索",
+      "title": "选择货币",
       "no_results": "没有匹配的货币"
     },
     "select_provider": {

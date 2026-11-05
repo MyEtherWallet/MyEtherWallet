@@ -51,9 +51,7 @@
       "filter_all_networks": "Todas las redes"
     },
     "select_currency": {
-      "title": "Moneda",
-      "subtitle": "Selecciona una moneda de la lista",
-      "search_placeholder": "Buscar",
+      "title": "Selecciona la moneda",
       "no_results": "Ninguna moneda coincide"
     },
     "select_provider": {

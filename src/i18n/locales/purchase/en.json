@@ -51,9 +51,7 @@
       "filter_all_networks": "All networks"
     },
     "select_currency": {
-      "title": "Currency",
-      "subtitle": "Select a currency from the list",
-      "search_placeholder": "Search",
+      "title": "Select currency",
       "no_results": "No currencies match"
     },
     "select_provider": {

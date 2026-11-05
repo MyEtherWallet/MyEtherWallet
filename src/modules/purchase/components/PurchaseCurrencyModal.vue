@@ -1,62 +1,60 @@
 <template>
   <app-modal
     v-model="isOpen"
-    :aria-label="$t('purchase.select_currency.title')"
-    class="h-[calc(100dvh-40px)] sm:h-[calc(100dvh-312px)]"
+    :title="$t('purchase.select_currency.title')"
+    class="h-full sm:h-[600px]"
   >
-    <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
-      <div class="flex flex-col gap-1 pr-12 flex-none">
-        <h2 class="text-heading-xl">
-          {{ $t('purchase.select_currency.title') }}
-        </h2>
-        <p class="text-s-16 text-text-subtle leading-[22px]">
-          {{ $t('purchase.select_currency.subtitle') }}
-        </p>
+    <div class="flex h-full flex-col">
+      <!-- pt-1 keeps the search focus ring inside the scrolling body -->
+      <div class="flex-none px-4 pt-1 pb-5 sm:px-6">
+        <app-searchbar v-model="searchInput" variant="default" />
       </div>
-      <app-searchbar
-        v-model="searchInput"
-        variant="outline"
-        class="flex-none"
-        :placeholder="$t('purchase.select_currency.search_placeholder')"
-      />
+
       <div
-        v-if="isLoading"
-        class="flex flex-1 items-center justify-center py-16"
-        aria-live="polite"
+        class="mew-scrollbar min-h-0 flex-1 overflow-y-auto px-4 pb-6 sm:px-6"
       >
-        <span
-          class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
-        />
-      </div>
-      <ul v-else role="listbox" class="flex flex-col flex-1 overflow-y-auto">
-        <li v-for="currency in filteredCurrencies" :key="currency">
-          <button
-            type="button"
-            :class="[
-              currency === selected ? '!bg-background-brand-subtle' : '',
-              'flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left',
-            ]"
-            @click="onSelect(currency)"
+        <div v-if="isLoading" class="flex flex-col gap-0.5" aria-busy="true">
+          <app-cell v-for="n in 6" :key="n" inset loading />
+        </div>
+        <!-- Figma 12526:110248 draws the rows flush, without List's container -->
+        <div
+          v-else-if="filteredCurrencies.length"
+          role="list"
+          class="flex flex-col gap-0.5"
+        >
+          <div
+            v-for="currency in filteredCurrencies"
+            :key="currency"
+            role="listitem"
           >
-            <app-token-logo
-              :url="getFiatIcon(currency)"
-              :symbol="currency"
-              cover
-              width="w-7"
-              height="h-7"
-            />
-            <span class="text-s-14 font-bold text-black">
-              {{ currency }}
-            </span>
-          </button>
-        </li>
-        <li
-          v-if="filteredCurrencies.length === 0"
-          class="text-text-subtle text-s-14 text-center py-10"
+            <app-cell
+              data-testid="currency-row"
+              inset
+              :title="currency"
+              :description="getCurrencyName(currency)"
+              :selected="currency === selected"
+              @click="onSelect(currency)"
+            >
+              <template #avatar="{ size }">
+                <app-avatar
+                  type="cryptoAsset"
+                  :size="size"
+                  :url="getFiatIcon(currency)"
+                  :symbol="currency"
+                  fit="cover"
+                />
+              </template>
+            </app-cell>
+          </div>
+        </div>
+        <p
+          v-else
+          data-testid="currency-empty"
+          class="py-10 text-center text-text-base text-text-subtle"
         >
           {{ $t('purchase.select_currency.no_results') }}
-        </li>
-      </ul>
+        </p>
+      </div>
     </div>
   </app-modal>
 </template>
@@ -65,7 +63,8 @@
 import { ref, computed, watch } from 'vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { getCurrencyName } from '../helpers/currencyName'
