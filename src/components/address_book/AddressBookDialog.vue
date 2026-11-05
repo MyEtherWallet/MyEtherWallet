@@ -1,138 +1,122 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    class="w-full max-w-[460px] mx-auto min-h-[600px]"
+  <app-modal
+    v-model="isOpen"
+    :title="dialogTitle"
+    :show-back-button="showAddAddress"
+    class="min-h-[600px]"
+    @back="closeAddEdit"
   >
-    <template #title>
-      <div class="px-4 sm:px-6 pt-4 sm:pt-6">
-        <div class="flex items-center">
-          <app-btn-icon
-            v-if="showAddAddress"
-            :label="$t('common.go_back')"
-            class="-ml-3 mr-3"
-            @click="closeAddEdit"
-          >
-            <AppIcon name="arrow-left" variant="filled" size="s" />
-          </app-btn-icon>
-          <h1 class="text-s-28 font-bold">
-            {{ dialogTitle }}
-          </h1>
+    <div class="pb-10">
+      <transition name="fade" mode="out-in">
+        <div v-if="showAddAddress" class="px-4 sm:px-6">
+          <add-address
+            :address-edit="editAdr"
+            @close="closeAddEdit"
+            @add-address="showAddAddress = false"
+          />
         </div>
-      </div>
-    </template>
-    <template #content>
-      <div class="pb-10">
-        <transition name="fade" mode="out-in">
-          <div v-if="showAddAddress" class="px-4 sm:px-6">
-            <add-address
-              :address-edit="editAdr"
-              @close="closeAddEdit"
-              @add-address="showAddAddress = false"
+
+        <div v-else>
+          <!-- Search -->
+          <div class="sticky top-0 bg-white z-10 pt-2">
+            <div class="px-4 sm:px-6 flex items-center gap-3">
+              <app-searchbar
+                v-model="searchInput"
+                variant="default"
+                class="grow"
+                :placeholder="$t('common.search_by_name_or_address')"
+              />
+              <app-base-button
+                size="medium"
+                class="!px-5 !min-h-10 !text-s-15"
+                @click="showAddAddress = true"
+              >
+                {{ $t('common.add') }}
+              </app-base-button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="mt-6 mb-4 px-4 sm:px-6">
+            <AppSegmentedControl
+              v-model="selectedListItem"
+              :items="addressList"
+              size="small"
+              :label="$t('address_book.title')"
             />
           </div>
+          <div class="px-3 sm:px-5">
+            <!-- Compatible -->
+            <p
+              v-if="currentChainOnlyAdrs.length"
+              class="font-medium text-s-17 mb-2 px-2"
+            >
+              {{
+                selectedListItem === 'recent'
+                  ? $t('address_book.recent_transactions')
+                  : $t('address_book.chain_addresses', {
+                      chain: network?.nameLong || selectedChain?.nameLong,
+                    })
+              }}
+            </p>
+            <address-book-item
+              v-for="adr in currentChainOnlyAdrs"
+              :key="adr.address"
+              :adr="adr"
+              :isSelectable="!isStandAlone"
+              :selected-address="selectedAddress"
+              @edit="editItem"
+              @delete="deleteAddress"
+              @set-item="setItem"
+            />
+            <p
+              v-if="otherChainsAdrs.length"
+              class="font-medium text-s-17 mb-2 px-2 mt-6"
+            >
+              {{
+                $t('address_book.non_compatible', {
+                  chain: network?.nameLong || selectedChain?.nameLong,
+                })
+              }}
+            </p>
+            <address-book-item
+              v-for="adr in otherChainsAdrs"
+              :key="adr.address"
+              :adr="adr"
+              :isSelectable="!isStandAlone"
+              :selected-address="selectedAddress"
+              show-chain
+              @edit="editItem"
+              @delete="deleteAddress"
+              @set-item="setItem"
+            />
+            <p
+              v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
+              class="text-s-17 mb-2 px-2 mt-6 text-text-subtle text-center"
+            >
+              {{ $t('address_book.no_saved_addresses') }}
+            </p>
 
-          <div v-else>
-            <!-- Search -->
-            <div class="sticky top-0 bg-white z-10 pt-2">
-              <div class="px-4 sm:px-6 flex items-center gap-3">
-                <app-searchbar
-                  v-model="searchInput"
-                  class="grow"
-                  :placeholder="$t('common.search_by_name_or_address')"
-                  bg-class="bg-background-default-hover"
-                />
-                <app-base-button
-                  size="medium"
-                  class="!px-5 !min-h-10 !text-s-15"
-                  @click="showAddAddress = true"
-                >
-                  {{ $t('common.add') }}
-                </app-base-button>
-              </div>
-            </div>
-
-            <!-- Filters -->
-            <div class="mt-6 mb-4 px-4 sm:px-6">
-              <AppSegmentedControl
-                v-model="selectedListItem"
-                :items="addressList"
-                size="small"
-                :label="$t('address_book.title')"
-              />
-            </div>
-            <div class="px-3 sm:px-5">
-              <!-- Compatible -->
-              <p
-                v-if="currentChainOnlyAdrs.length"
-                class="font-medium text-s-17 mb-2 px-2"
-              >
-                {{
-                  selectedListItem === 'recent'
-                    ? $t('address_book.recent_transactions')
-                    : $t('address_book.chain_addresses', {
-                        chain: network?.nameLong || selectedChain?.nameLong,
-                      })
-                }}
-              </p>
-              <address-book-item
-                v-for="adr in currentChainOnlyAdrs"
-                :key="adr.address"
-                :adr="adr"
-                :isSelectable="!isStandAlone"
-                :selected-address="selectedAddress"
-                @edit="editItem"
-                @delete="deleteAddress"
-                @set-item="setItem"
-              />
-              <p
-                v-if="otherChainsAdrs.length"
-                class="font-medium text-s-17 mb-2 px-2 mt-6"
-              >
-                {{
-                  $t('address_book.non_compatible', {
-                    chain: network?.nameLong || selectedChain?.nameLong,
-                  })
-                }}
-              </p>
-              <address-book-item
-                v-for="adr in otherChainsAdrs"
-                :key="adr.address"
-                :adr="adr"
-                :isSelectable="!isStandAlone"
-                :selected-address="selectedAddress"
-                show-chain
-                @edit="editItem"
-                @delete="deleteAddress"
-                @set-item="setItem"
-              />
-              <p
-                v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
-                class="text-s-17 mb-2 px-2 mt-6 text-text-subtle text-center"
-              >
-                {{ $t('address_book.no_saved_addresses') }}
-              </p>
-
-              <p
-                v-if="otherAddressBook.length"
-                class="font-medium text-s-17 mb-2 px-2 mt-6"
-              >
-                {{ $t('address_book.incompatible_addresses') }}
-              </p>
-              <address-book-item
-                v-for="adr in incompatibleAddresses"
-                :key="adr.address"
-                :adr="adr"
-                :isSelectable="false"
-                @edit="editItem"
-                @delete="deleteAddress"
-                show-chain
-              />
-            </div>
+            <p
+              v-if="otherAddressBook.length"
+              class="font-medium text-s-17 mb-2 px-2 mt-6"
+            >
+              {{ $t('address_book.incompatible_addresses') }}
+            </p>
+            <address-book-item
+              v-for="adr in incompatibleAddresses"
+              :key="adr.address"
+              :adr="adr"
+              :isSelectable="false"
+              @edit="editItem"
+              @delete="deleteAddress"
+              show-chain
+            />
           </div>
-        </transition>
-      </div>
-    </template>
-  </app-dialog>
+        </div>
+      </transition>
+    </div>
+  </app-modal>
 </template>
 
 <script lang="ts" setup>
@@ -153,9 +137,7 @@ import AppBaseButton from '../AppBaseButton.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import { storeToRefs } from 'pinia'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
-import AppDialog from '@components/AppDialog.vue'
-import AppBtnIcon from '@components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
 import { searchArrayByKeysStr } from '@/utils/searchArray'

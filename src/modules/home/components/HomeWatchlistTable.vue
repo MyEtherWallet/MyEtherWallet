@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import draggable from 'vuedraggable'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
@@ -162,11 +163,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new-mobile"
           :disabled="isWatchlistFull"
-          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 shrink-0 items-center gap-1 rounded-full bg-background-default pl-4 pr-3 text-label-sm text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <AppIcon name="plus" variant="filled" size="xs" />
+          <AppIcon name="plus-small" size="xs" />
         </button>
       </AppTooltip>
     </div>
@@ -180,9 +181,9 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
       >
         <AppSearchbar
           v-model="query"
+          variant="default"
           :placeholder="t('homePage.hero.watchlist.addModal.searchPlaceholder')"
-          bg-class="bg-background-default"
-          class="w-full rounded-full min-[780px]:w-60"
+          class="w-full min-[780px]:w-60"
         />
         <div class="relative shrink-0 self-start">
           <button
@@ -234,11 +235,11 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
           type="button"
           data-test="watchlist-add-new"
           :disabled="isWatchlistFull"
-          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-brand px-4 text-s-16 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          class="flex h-10 w-full shrink-0 items-center gap-1 rounded-full bg-background-default pl-4 pr-3 text-label-sm text-text-brand transition-colors hover:bg-background-default-hover disabled:cursor-not-allowed disabled:opacity-40"
           @click="isAddOpen = true"
         >
           {{ t('homePage.hero.watchlist.table.addAsset') }}
-          <AppIcon name="plus" variant="filled" size="xs" />
+          <AppIcon name="plus-small" size="xs" />
         </button>
       </AppTooltip>
     </div>
@@ -332,17 +333,14 @@ const openInfo = (row: WatchlistRow, e: MouseEvent) => {
             />
           </span>
 
-          <!-- Star toggle (remove). Grows a light circular background on hover
-               (Figma), via negative margin (32px box - 2 x 6px) so the 20px column stays
-               aligned. -->
-          <AppBtnIcon
+          <!-- Star toggle: every row here is watched, so a click removes it.
+               -m-px fits the 22px button into the 20px header column. -->
+          <AppCellWatchlistToggle
             data-test="watchlist-remove"
-            :label="t('homePage.hero.watchlist.table.remove')"
-            class="-m-1.5 text-text-brand"
-            @click="remove(row)"
-          >
-            <AppIcon name="star" variant="filled" size="s" />
-          </AppBtnIcon>
+            :model-value="true"
+            class="-m-px"
+            @update:model-value="remove(row)"
+          />
 
           <!-- Token — a focusable link so keyboard users can open the drawer
                (the row-body click is a mouse convenience layered on top). -->

@@ -1,238 +1,86 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    :title="title"
-    class="lg:min-h-[614px] xs:min-w-[450px]"
-  >
-    <template #content>
-      <div class="mx-4 mb-2">
-        <expand-transition>
-          <div v-if="showApproveMessage">
-            <div
-              class="flex items-center justify-center gap-5 my-4 font-bold text-text-brand animate-pulse"
-              key="confirmation-approve-message"
-            >
-              {{ t('swap.swap-offer.approve-tx-on-device') }}
-            </div>
-          </div>
-        </expand-transition>
-        <div
-          class="p-4 flex flex-col border border-solid border-border-default rounded-20 mb-2"
-        >
-          <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
-            {{ t('swap.swap-offer.best-offer-from') }}
-            {{ providerName }}
-          </h3>
-          <p
-            class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
-          >
-            {{ t('swap.for') }}
-            <app-token-logo
-              :url="fromToken?.logoURI"
-              :symbol="fromToken?.symbol"
-              :address="
-                fromToken && fromChain
-                  ? { address: fromToken.address, network: fromChain.name }
-                  : undefined
-              "
-              width="w-6 lg:w-8"
-              height="h-6 lg:h-8"
-            />
-            <span class="font-bold">
-              {{ amount }}
-            </span>
-            <app-token-symbol
-              :symbol="fromToken?.symbol || 'UNKNOWN'"
-              :address="
-                fromToken && fromChain
-                  ? { address: fromToken.address, network: fromChain.name }
-                  : undefined
-              "
-              class="text-s-17 lg:text-s-20 !font-bold !leading-p-100 inline-block align-middle"
-            />
-            {{ t('swap.swap-offer.you-will-get') }}:
-          </p>
+  <app-modal v-model="model" :title="title" class="lg:min-h-[614px]">
+    <div class="mx-4 mb-2">
+      <expand-transition>
+        <div v-if="showApproveMessage">
           <div
-            class="flex items-center bg-background-brand-subtle rounded-20 p-4 my-2"
+            class="flex items-center justify-center gap-5 my-4 font-bold text-text-brand animate-pulse"
+            key="confirmation-approve-message"
           >
-            <div class="relative">
+            {{ t('swap.swap-offer.approve-tx-on-device') }}
+          </div>
+        </div>
+      </expand-transition>
+      <div
+        class="p-4 flex flex-col border border-solid border-border-default rounded-20 mb-2"
+      >
+        <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
+          {{ t('swap.swap-offer.best-offer-from') }}
+          {{ providerName }}
+        </h3>
+        <p
+          class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
+        >
+          {{ t('swap.for') }}
+          <app-token-logo
+            :url="fromToken?.logoURI"
+            :symbol="fromToken?.symbol"
+            :address="
+              fromToken && fromChain
+                ? { address: fromToken.address, network: fromChain.name }
+                : undefined
+            "
+            width="w-6 lg:w-8"
+            height="h-6 lg:h-8"
+          />
+          <span class="font-bold">
+            {{ amount }}
+          </span>
+          <app-token-symbol
+            :symbol="fromToken?.symbol || 'UNKNOWN'"
+            :address="
+              fromToken && fromChain
+                ? { address: fromToken.address, network: fromChain.name }
+                : undefined
+            "
+            class="text-s-17 lg:text-s-20 !font-bold !leading-p-100 inline-block align-middle"
+          />
+          {{ t('swap.swap-offer.you-will-get') }}:
+        </p>
+        <div
+          class="flex items-center bg-background-brand-subtle rounded-20 p-4 my-2"
+        >
+          <div class="relative">
+            <app-token-logo
+              :url="toToken?.logoURI"
+              :symbol="toToken?.symbol"
+              :address="
+                toToken && toChain
+                  ? { address: toToken.address, network: toChain.name }
+                  : undefined
+              "
+              width="w-8 lg:w-12"
+              height="h-8 lg:h-12"
+            />
+            <div
+              class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"
+            >
               <app-token-logo
-                :url="toToken?.logoURI"
-                :symbol="toToken?.symbol"
-                :address="
-                  toToken && toChain
-                    ? { address: toToken.address, network: toChain.name }
-                    : undefined
-                "
-                width="w-8 lg:w-12"
-                height="h-8 lg:h-12"
+                :url="toChain?.icon"
+                symbol=""
+                width="w-4 lg:w-6"
+                height="h-4 lg:h-6"
               />
-              <div
-                class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"
-              >
-                <app-token-logo
-                  :url="toChain?.icon"
-                  symbol=""
-                  width="w-4 lg:w-6"
-                  height="h-4 lg:h-6"
-                />
-              </div>
-            </div>
-            <div class="ml-5 min-w-0">
-              <div
-                class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
-              >
-                <span class="flex-none">≈</span>
-                <span class="cursor-pointer truncate">{{
-                  toAmountFormatted.value
-                }}</span>
-                <app-token-symbol
-                  :symbol="toToken?.symbol || 'UNKNOWN'"
-                  :address="
-                    toToken && toChain
-                      ? { address: toToken.address, network: toChain.name }
-                      : undefined
-                  "
-                  class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
-                />
-                <app-tooltip
-                  v-if="toAmountFormatted.tooltipText"
-                  :text="toAmountFormatted.tooltipText"
-                  class="truncate"
-                >
-                </app-tooltip>
-              </div>
-              <div class="text-s-12 text-text-subtle">
-                ≈ {{ currencySymbol }}{{ toAmountFiat }}
-              </div>
             </div>
           </div>
-          <app-pop-up-menu
-            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length - 1 })}`"
-            location="left"
-            v-if="quotes.length > 1"
-          >
-            <template #menu-content="{ toggleMenu }">
-              <div class="p-2">
-                <button
-                  v-for="(item, idx) in quotes"
-                  :key="idx + item.quote.provider + item.toTokenAmount"
-                  class="w-full text-left p-3 rounded-12 mb-2 hoverBGWhite"
-                  :class="{
-                    'bg-background-brand-subtle':
-                      item.quote.provider === selectedQuote?.provider,
-                  }"
-                  @click="
-                    () => {
-                      setItem(item, toggleMenu)
-                    }
-                  "
-                >
-                  <div class="flex items-center justify-between w-full">
-                    <div class="grow min-w-0">
-                      <div class="flex items-center gap-2">
-                        <p
-                          class="text-text-subtle text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
-                        >
-                          {{
-                            t('swap.swap-offer.offer_from', {
-                              provider: getProviderDisplayName(
-                                item.quote.provider,
-                              ),
-                            })
-                          }}
-                        </p>
-                        <AppTag
-                          v-if="idx === 0"
-                          type="branded"
-                          :label="t('swap.swap-offer.best-rate')"
-                          class="ml-1"
-                        />
-                      </div>
-                      <div
-                        class="font-semibold text-s-14 flex items-center gap-1"
-                      >
-                        <span>~</span>
-                        <span>
-                          {{
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).value
-                          }}
-                        </span>
-
-                        <app-token-symbol
-                          :symbol="
-                            item.quote?.options?.toToken?.symbol || 'UNKNOWN'
-                          "
-                          :address="
-                            item.quote?.options?.toToken && toChain
-                              ? {
-                                  address: item.quote.options.toToken.address,
-                                  network: toChain.name,
-                                }
-                              : undefined
-                          "
-                          class="text-s-14 !font-semibold !leading-p-160 inline-block align-middle"
-                        />
-                        <app-tooltip
-                          v-if="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).tooltipText
-                          "
-                          :text="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).tooltipText
-                          "
-                        >
-                        </app-tooltip>
-                      </div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-none ml-auto">
-                      <span
-                        v-if="idx > 0"
-                        class="text-text-error text-s-12 whitespace-nowrap text-right mr-2"
-                      >
-                        ({{
-                          getPercentageDiff(
-                            item.toTokenAmount,
-                            item.quote?.options?.toToken?.decimals,
-                          )
-                        }}%)
-                      </span>
-                      <AppIcon
-                        name="check"
-                        variant="filled"
-                        size="s"
-                        v-if="item.quote.provider === selectedQuote?.provider"
-                        class="text-text-brand"
-                      />
-                      <div v-else class="w-4 h-4" />
-                    </div>
-                  </div>
-                </button>
-              </div>
-            </template>
-          </app-pop-up-menu>
-          <div class="pt-3 ml-2">
-            <div class="text-s-14 text-text-subtle flex items-center gap-1">
-              <span>{{ t('swap.swap-offer.rate') }}: 1</span>
-              <app-token-symbol
-                :symbol="fromToken?.symbol || 'UNKNOWN'"
-                :address="
-                  fromToken && fromChain
-                    ? { address: fromToken.address, network: fromChain.name }
-                    : undefined
-                "
-                :has-gradient="false"
-                class="!text-s-14 !font-normal !leading-p-100"
-              />
-              <span>≈ {{ exchangeRate }}</span>
+          <div class="ml-5 min-w-0">
+            <div
+              class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
+            >
+              <span class="flex-none">≈</span>
+              <span class="cursor-pointer truncate">{{
+                toAmountFormatted.value
+              }}</span>
               <app-token-symbol
                 :symbol="toToken?.symbol || 'UNKNOWN'"
                 :address="
@@ -240,57 +88,203 @@
                     ? { address: toToken.address, network: toChain.name }
                     : undefined
                 "
-                :has-gradient="false"
-                class="!text-s-14 !font-normal !leading-p-100"
+                class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
               />
+              <app-tooltip
+                v-if="toAmountFormatted.tooltipText"
+                :text="toAmountFormatted.tooltipText"
+                class="truncate"
+              >
+              </app-tooltip>
             </div>
-            <!-- TODO: make library return these values -->
-            <!-- <div class="text-s-14 text-text-subtle">Price impact: -0.07%</div> -->
-            <div class="text-s-14 text-text-subtle">
-              {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
-            </div>
-            <!-- <div class="text-s-14 text-text-subtle">
-              {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
-            </div> -->
-            <div class="text-s-14 text-text-subtle">
-              {{
-                t('swap.swap-offer.offer-includes', {
-                  feePercent: swapInfo?.fee,
-                })
-              }}
+            <div class="text-s-12 text-text-subtle">
+              ≈ {{ currencySymbol }}{{ toAmountFiat }}
             </div>
           </div>
         </div>
-        <app-select-tx-fee
-          :fees="swapGasFeeQuote"
-          v-model:gas-fee-error="gasFeeError"
-          class="mb-2"
-        />
-        <app-base-button
-          class="w-full"
-          @click="proceedWithSwap"
-          :is-loading="loadingModel"
-          :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
+        <app-pop-up-menu
+          :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length - 1 })}`"
+          location="left"
+          v-if="quotes.length > 1"
         >
-          {{ btnText }}
-        </app-base-button>
-        <app-base-button
-          type="link"
-          tone="danger"
-          size="large"
-          class="mx-auto w-full mt-2"
-          @click="declineSwap"
-        >
-          {{ t('common.cancel') }}
-        </app-base-button>
+          <template #menu-content="{ toggleMenu }">
+            <div class="p-2">
+              <button
+                v-for="(item, idx) in quotes"
+                :key="idx + item.quote.provider + item.toTokenAmount"
+                class="w-full text-left p-3 rounded-12 mb-2 hoverBGWhite"
+                :class="{
+                  'bg-background-brand-subtle':
+                    item.quote.provider === selectedQuote?.provider,
+                }"
+                @click="
+                  () => {
+                    setItem(item, toggleMenu)
+                  }
+                "
+              >
+                <div class="flex items-center justify-between w-full">
+                  <div class="grow min-w-0">
+                    <div class="flex items-center gap-2">
+                      <p
+                        class="text-text-subtle text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
+                      >
+                        {{
+                          t('swap.swap-offer.offer_from', {
+                            provider: getProviderDisplayName(
+                              item.quote.provider,
+                            ),
+                          })
+                        }}
+                      </p>
+                      <AppTag
+                        v-if="idx === 0"
+                        type="branded"
+                        :label="t('swap.swap-offer.best-rate')"
+                        class="ml-1"
+                      />
+                    </div>
+                    <div
+                      class="font-semibold text-s-14 flex items-center gap-1"
+                    >
+                      <span>~</span>
+                      <span>
+                        {{
+                          getAmountData(
+                            item.toTokenAmount,
+                            item.quote?.options?.toToken?.decimals,
+                          ).value
+                        }}
+                      </span>
+
+                      <app-token-symbol
+                        :symbol="
+                          item.quote?.options?.toToken?.symbol || 'UNKNOWN'
+                        "
+                        :address="
+                          item.quote?.options?.toToken && toChain
+                            ? {
+                                address: item.quote.options.toToken.address,
+                                network: toChain.name,
+                              }
+                            : undefined
+                        "
+                        class="text-s-14 !font-semibold !leading-p-160 inline-block align-middle"
+                      />
+                      <app-tooltip
+                        v-if="
+                          getAmountData(
+                            item.toTokenAmount,
+                            item.quote?.options?.toToken?.decimals,
+                          ).tooltipText
+                        "
+                        :text="
+                          getAmountData(
+                            item.toTokenAmount,
+                            item.quote?.options?.toToken?.decimals,
+                          ).tooltipText
+                        "
+                      >
+                      </app-tooltip>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 flex-none ml-auto">
+                    <span
+                      v-if="idx > 0"
+                      class="text-text-error text-s-12 whitespace-nowrap text-right mr-2"
+                    >
+                      ({{
+                        getPercentageDiff(
+                          item.toTokenAmount,
+                          item.quote?.options?.toToken?.decimals,
+                        )
+                      }}%)
+                    </span>
+                    <AppIcon
+                      name="check"
+                      variant="filled"
+                      size="s"
+                      v-if="item.quote.provider === selectedQuote?.provider"
+                      class="text-text-brand"
+                    />
+                    <div v-else class="w-4 h-4" />
+                  </div>
+                </div>
+              </button>
+            </div>
+          </template>
+        </app-pop-up-menu>
+        <div class="pt-3 ml-2">
+          <div class="text-s-14 text-text-subtle flex items-center gap-1">
+            <span>{{ t('swap.swap-offer.rate') }}: 1</span>
+            <app-token-symbol
+              :symbol="fromToken?.symbol || 'UNKNOWN'"
+              :address="
+                fromToken && fromChain
+                  ? { address: fromToken.address, network: fromChain.name }
+                  : undefined
+              "
+              :has-gradient="false"
+              class="!text-s-14 !font-normal !leading-p-100"
+            />
+            <span>≈ {{ exchangeRate }}</span>
+            <app-token-symbol
+              :symbol="toToken?.symbol || 'UNKNOWN'"
+              :address="
+                toToken && toChain
+                  ? { address: toToken.address, network: toChain.name }
+                  : undefined
+              "
+              :has-gradient="false"
+              class="!text-s-14 !font-normal !leading-p-100"
+            />
+          </div>
+          <!-- TODO: make library return these values -->
+          <!-- <div class="text-s-14 text-text-subtle">Price impact: -0.07%</div> -->
+          <div class="text-s-14 text-text-subtle">
+            {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
+          </div>
+          <!-- <div class="text-s-14 text-text-subtle">
+            {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
+          </div> -->
+          <div class="text-s-14 text-text-subtle">
+            {{
+              t('swap.swap-offer.offer-includes', {
+                feePercent: swapInfo?.fee,
+              })
+            }}
+          </div>
+        </div>
       </div>
-    </template>
-  </app-dialog>
+      <app-select-tx-fee
+        :fees="swapGasFeeQuote"
+        v-model:gas-fee-error="gasFeeError"
+        class="mb-2"
+      />
+      <app-base-button
+        class="w-full"
+        @click="proceedWithSwap"
+        :is-loading="loadingModel"
+        :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
+      >
+        {{ btnText }}
+      </app-base-button>
+      <app-base-button
+        type="link"
+        tone="danger"
+        size="large"
+        class="mx-auto w-full mt-2"
+        @click="declineSwap"
+      >
+        {{ t('common.cancel') }}
+      </app-base-button>
+    </div>
+  </app-modal>
 </template>
 
 <script lang="ts" setup>
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'

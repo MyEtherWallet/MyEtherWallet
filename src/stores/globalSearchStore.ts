@@ -151,6 +151,8 @@ export const useGlobalSearchStore = defineStore('globalSearch', () => {
   })
 
   const open = () => {
+    // The searchbar fires focusin and click together: one opening, one SHOWN.
+    if (isOpen.value) return
     isOpen.value = true
     isOverflowHidden.value = true
     analytics.trackGlobalSearchEvent(GlobalSearchEvent.SHOWN)

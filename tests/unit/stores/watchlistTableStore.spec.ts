@@ -114,7 +114,7 @@ describe('watchlistTableStore — limit toast (MEW-2374)', () => {
 
   it('surfaces the limit toast once for a batch overflow, as a warning', () => {
     const store = useWatchlistStore()
-    // Reject several adds in one run (mirrors the onboarding batch).
+    // Reject several adds in one run (mirrors the add modal confirm).
     for (let i = 0; i < WATCHLIST_MAX + 5; i++) {
       store.setWatchlistItem(`coin-${i}`, false)
     }

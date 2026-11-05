@@ -91,26 +91,20 @@
           @validate:address="validateToAddress"
         />
         <!-- Error Display -->
-        <div
+        <AppBanner
           v-if="!isLoading && priceImpactTooHigh"
-          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12"
-        >
-          <p class="text-text-error text-s-14 text-center">
-            {{
-              t('swap.price-impact-too-high', {
-                percent: priceImpact.toFixed(2),
-              })
-            }}
-          </p>
-        </div>
-        <div
+          type="alert"
+          :description="
+            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+          "
+          class="w-full"
+        />
+        <AppBanner
           v-if="!isLoading && generalError"
-          class="w-full p-4 bg-background-error-subtle border border-border-error rounded-12"
-        >
-          <p class="text-text-error text-s-14 text-center">
-            {{ generalError }}
-          </p>
-        </div>
+          type="alert"
+          :description="generalError"
+          class="w-full"
+        />
         <template
           v-if="!isWalletConnected || isWatchOnly || !hasChainBalance"
           #cta
@@ -178,6 +172,7 @@ import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'

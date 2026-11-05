@@ -70,7 +70,7 @@ const mountWithFees = (fees: unknown, props: Record<string, unknown> = {}) =>
   mount(AppSelectTxFee, {
     props: { fees: fees as never, isLoadingFees: false, ...props },
     global: {
-      stubs: { AppDialog: true, AppIcon: true },
+      stubs: { AppModal: true, AppIcon: true },
       mocks: { $t: (k: string) => k },
     },
   })

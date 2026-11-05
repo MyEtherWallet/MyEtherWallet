@@ -68,8 +68,14 @@ import type { Toast } from '@/types/notification/index'
 
 export const useToastStore = defineStore('toastStore', () => {
   const messages = ref<Toast[]>([])
+  let nextToastId = 0
+  // Every toast gets an id so the host can key and remove it reliably. Re-adding
+  // an id that is already showing replaces that toast in place.
   const addToastMessage = (message: Toast) => {
-    messages.value.push(message)
+    const toast = { ...message, id: message.id ?? `toast-${++nextToastId}` }
+    const existingIndex = messages.value.findIndex(({ id }) => id === toast.id)
+    if (existingIndex >= 0) messages.value.splice(existingIndex, 1, toast)
+    else messages.value.push(toast)
   }
   const removeToastMessage = (index: number) => {
     messages.value.splice(index, 1)

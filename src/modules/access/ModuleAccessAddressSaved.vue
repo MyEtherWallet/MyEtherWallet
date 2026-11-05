@@ -1,84 +1,73 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
+  <app-modal
+    v-model="isOpen"
     persistent
-    class="w-full sm:max-w-[400px] sm:mx-auto"
+    show-back-button
+    :aria-label="`${titleLead} ${$t('multi_address.address_saved.title_suffix')}`"
+    @back="onBack"
   >
-    <template #title>
-      <AppBtnIcon
-        data-test="address-saved-back"
-        :label="$t('common.back')"
-        class="absolute top-4 left-4 text-black"
-        @click="onBack"
+    <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">
+      <div
+        class="size-16 rounded-full bg-background-default overflow-hidden shrink-0"
       >
-        <AppIcon name="chevron-left" variant="filled" size="s" />
-      </AppBtnIcon>
-    </template>
-    <template #content>
-      <div class="flex flex-col items-center gap-6 px-6 pt-12 pb-6 text-center">
-        <div
-          class="size-16 rounded-full bg-background-default overflow-hidden shrink-0"
-        >
-          <img
-            v-if="info?.walletIcon"
-            :src="info.walletIcon"
-            alt=""
-            aria-hidden="true"
-            class="size-full object-cover"
-          />
-        </div>
-        <div class="flex flex-col gap-2 w-full">
-          <h2 class="text-heading-base text-black">
-            {{ titleLead }}<br />{{
-              $t('multi_address.address_saved.title_suffix')
-            }}
-          </h2>
-          <p class="text-s-14 text-text-subtle leading-[20px]">
-            {{
-              $t('multi_address.address_saved.subtitle', {
-                wallet: info?.walletName,
-              })
-            }}
-          </p>
-        </div>
-        <div class="flex flex-col gap-2 w-full">
-          <!-- Hidden for now (MEW-1840): "Open <wallet>" CTA — no reliable API
-               to open the extension popup (esp. BTC). Kept for quick re-enable. -->
-          <button
-            v-if="false"
-            data-test="address-saved-open"
-            class="h-12 w-full rounded-[24px] bg-background-brand text-white text-s-16 font-semibold flex items-center justify-center gap-2"
-            @click="onOpenWallet"
-          >
-            {{
-              $t('multi_address.address_saved.open_wallet', {
-                wallet: info?.walletName,
-              })
-            }}
-            <AppIcon
-              name="arrow-top-right-on-square"
-              variant="filled"
-              size="s"
-            />
-          </button>
-          <button
-            data-test="address-saved-retry"
-            class="h-12 w-full rounded-[24px] bg-background-default-hover text-black text-s-16 font-semibold"
-            @click="onTryAgain"
-          >
-            {{ $t('multi_address.address_saved.try_again') }}
-          </button>
-        </div>
+        <img
+          v-if="info?.walletIcon"
+          :src="info.walletIcon"
+          alt=""
+          aria-hidden="true"
+          class="size-full object-cover"
+        />
       </div>
-    </template>
-  </app-dialog>
+      <div class="flex flex-col gap-2 w-full">
+        <h2 class="text-heading-base text-black">
+          {{ titleLead }}<br />{{
+            $t('multi_address.address_saved.title_suffix')
+          }}
+        </h2>
+        <p class="text-s-14 text-text-subtle leading-[20px]">
+          {{
+            $t('multi_address.address_saved.subtitle', {
+              wallet: info?.walletName,
+            })
+          }}
+        </p>
+      </div>
+      <div class="flex flex-col gap-2 w-full">
+        <!-- Hidden for now (MEW-1840): "Open <wallet>" CTA — no reliable API
+             to open the extension popup (esp. BTC). Kept for quick re-enable. -->
+        <button
+          v-if="false"
+          data-test="address-saved-open"
+          class="h-12 w-full rounded-[24px] bg-background-brand text-white text-s-16 font-semibold flex items-center justify-center gap-2"
+          @click="onOpenWallet"
+        >
+          {{
+            $t('multi_address.address_saved.open_wallet', {
+              wallet: info?.walletName,
+            })
+          }}
+          <AppIcon
+            name="arrow-top-right-on-square"
+            variant="filled"
+            size="s"
+          />
+        </button>
+        <button
+          data-test="address-saved-retry"
+          class="h-12 w-full rounded-[24px] bg-background-default-hover text-black text-s-16 font-semibold"
+          @click="onTryAgain"
+        >
+          {{ $t('multi_address.address_saved.try_again') }}
+        </button>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { truncateAddress } from '@/utils/filters'

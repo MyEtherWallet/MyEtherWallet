@@ -1,75 +1,69 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    class="w-[calc(100vw-40px)] sm:w-full sm:max-w-[480px] sm:mx-auto h-[calc(100dvh-40px)] sm:h-[calc(100dvh-312px)] rounded-20! sm:rounded-32!"
+  <app-modal
+    v-model="isOpen"
+    :aria-label="$t('purchase.select_currency.title')"
+    class="h-[calc(100dvh-40px)] sm:h-[calc(100dvh-312px)]"
   >
-    <template #content>
-      <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
-        <div class="flex flex-col gap-1 pr-12 flex-none">
-          <h2 id="dialogTitle" class="text-heading-xl">
-            {{ $t('purchase.select_currency.title') }}
-          </h2>
-          <p class="text-s-16 text-text-subtle leading-[22px]">
-            {{ $t('purchase.select_currency.subtitle') }}
-          </p>
-        </div>
-        <div
-          class="flex items-center h-12 px-1 bg-white border-4 border-border-default rounded-24 flex-none"
-        >
-          <app-searchbar
-            v-model="searchInput"
-            size="compact"
-            bg-class="bg-transparent"
-            class="flex-1"
-            :placeholder="$t('purchase.select_currency.search_placeholder')"
-          />
-        </div>
-        <div
-          v-if="isLoading"
-          class="flex flex-1 items-center justify-center py-16"
-          aria-live="polite"
-        >
-          <span
-            class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
-          />
-        </div>
-        <ul v-else role="listbox" class="flex flex-col flex-1 overflow-y-auto">
-          <li v-for="currency in filteredCurrencies" :key="currency">
-            <button
-              type="button"
-              :class="[
-                currency === selected ? '!bg-background-brand-subtle' : '',
-                'flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left',
-              ]"
-              @click="onSelect(currency)"
-            >
-              <app-token-logo
-                :url="getFiatIcon(currency)"
-                :symbol="currency"
-                cover
-                width="w-7"
-                height="h-7"
-              />
-              <span class="text-s-14 font-bold text-black">
-                {{ currency }}
-              </span>
-            </button>
-          </li>
-          <li
-            v-if="filteredCurrencies.length === 0"
-            class="text-text-subtle text-s-14 text-center py-10"
-          >
-            {{ $t('purchase.select_currency.no_results') }}
-          </li>
-        </ul>
+    <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
+      <div class="flex flex-col gap-1 pr-12 flex-none">
+        <h2 class="text-heading-xl">
+          {{ $t('purchase.select_currency.title') }}
+        </h2>
+        <p class="text-s-16 text-text-subtle leading-[22px]">
+          {{ $t('purchase.select_currency.subtitle') }}
+        </p>
       </div>
-    </template>
-  </app-dialog>
+      <app-searchbar
+        v-model="searchInput"
+        variant="outline"
+        class="flex-none"
+        :placeholder="$t('purchase.select_currency.search_placeholder')"
+      />
+      <div
+        v-if="isLoading"
+        class="flex flex-1 items-center justify-center py-16"
+        aria-live="polite"
+      >
+        <span
+          class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
+        />
+      </div>
+      <ul v-else role="listbox" class="flex flex-col flex-1 overflow-y-auto">
+        <li v-for="currency in filteredCurrencies" :key="currency">
+          <button
+            type="button"
+            :class="[
+              currency === selected ? '!bg-background-brand-subtle' : '',
+              'flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left',
+            ]"
+            @click="onSelect(currency)"
+          >
+            <app-token-logo
+              :url="getFiatIcon(currency)"
+              :symbol="currency"
+              cover
+              width="w-7"
+              height="h-7"
+            />
+            <span class="text-s-14 font-bold text-black">
+              {{ currency }}
+            </span>
+          </button>
+        </li>
+        <li
+          v-if="filteredCurrencies.length === 0"
+          class="text-text-subtle text-s-14 text-center py-10"
+        >
+          {{ $t('purchase.select_currency.no_results') }}
+        </li>
+      </ul>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
