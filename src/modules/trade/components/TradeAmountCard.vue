@@ -76,6 +76,7 @@ import { useStocksStore } from '@/stores/stocksStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { type NewTokenInfo } from '@/stores/swapStore'
+import { tradeAssetLabel } from '../common/tradeAssetLabel'
 
 const props = withDefaults(
   defineProps<{
@@ -231,14 +232,7 @@ const quickActions = computed(() =>
     : [],
 )
 
-// Same casing as AppTokenSymbol: ticker uppercase, Ondo "on" suffix lowercase.
-const pickerTitle = (token: NewTokenInfo) => {
-  const isStock =
-    props.side === 'buy' ||
-    (!!props.networkName &&
-      stocksStore.isStock(token.address, props.networkName))
-  const symbol = token.symbol.toUpperCase()
-  if (!isStock) return symbol
-  return `${symbol.endsWith('ON') ? symbol.slice(0, -2) : symbol}on`
-}
+const pickerTitle = (token: NewTokenInfo) =>
+  tradeAssetLabel(token, props.side, props.networkName, stocksStore.isStock)
+    .symbol
 </script>

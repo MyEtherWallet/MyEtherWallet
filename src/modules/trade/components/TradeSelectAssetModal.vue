@@ -70,6 +70,7 @@ import { truncate } from '@/utils/filters'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
+import { tradeAssetLabel } from '../common/tradeAssetLabel'
 
 const props = withDefaults(
   defineProps<{
@@ -144,16 +145,6 @@ const pauseReasonOf = (token: TradeAssetToken) =>
 const itemPauseReason = (item: TokenSelectorItem) =>
   pauseReasonOf(item.raw as TradeAssetToken)
 
-// Same rule as the trigger's title: every buy-side asset is a stock.
-const isStockToken = (token: NewTokenInfo) =>
-  props.side === 'buy' ||
-  (!!props.networkName && stocksStore.isStock(token.address, props.networkName))
-
-const stockSymbol = (symbol: string) => {
-  const upper = symbol.toUpperCase()
-  return `${upper.endsWith('ON') ? upper.slice(0, -2) : upper}on`
-}
-
 interface TradeAsset {
   token: TradeAssetToken
   amount: string
@@ -200,12 +191,17 @@ const toItem = ({
   amount,
   fiatValue,
 }: TradeAsset): TokenSelectorItem<TradeAssetToken> => {
-  const isStock = isStockToken(token)
+  const { isStock, symbol } = tradeAssetLabel(
+    token,
+    props.side,
+    props.networkName,
+    stocksStore.isStock,
+  )
   const held = BigNumber(amount).isGreaterThan(0)
   const paused = !!pauseReasonOf(token)
   return {
     id: tokenId(token),
-    symbol: isStock ? stockSymbol(token.symbol) : token.symbol,
+    symbol,
     name: token.name,
     logo: token.logoURI,
     isStock,
@@ -229,9 +225,7 @@ const toItem = ({
 const allItems = computed(() => assets.value.map(toItem))
 
 const items = computed(() =>
-  searchInput.value
-    ? fuzzySearchByKeys(allItems.value, ['name', 'symbol'], searchInput.value)
-    : allItems.value,
+  fuzzySearchByKeys(allItems.value, ['name', 'symbol'], searchInput.value),
 )
 
 const quickPicks = computed(() =>

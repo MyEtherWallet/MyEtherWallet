@@ -71,8 +71,8 @@ const tickersIn = (section: string) =>
   )
 const rowItems = (wrapper: VueWrapper) =>
   wrapper
-    .findAllComponents({ name: 'TokenSelectorRow' })
-    .map(row => row.props('item') as TokenSelectorItem)
+    .findAllComponents({ name: 'TokenSelectorList' })
+    .flatMap(list => list.props('items') as TokenSelectorItem[])
 
 beforeEach(() => {
   document.body.innerHTML = '<div id="app"></div>'
