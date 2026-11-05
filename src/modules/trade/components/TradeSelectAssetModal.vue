@@ -6,152 +6,40 @@
     :selected-token="selectedToken"
   />
 
-  <app-modal
+  <app-token-selector-modal
     v-model="isOpen"
+    v-model:search="searchInput"
     :title="$t('trade.select_asset.title')"
     :subtitle="side === 'buy' ? $t('trade.select_asset.subtitle') : undefined"
-    :class="side === 'sell' ? 'sm:h-[600px]' : 'sm:h-[640px]'"
+    :items="items"
+    :quick-picks="quickPicks"
+    :selected-id="selectedToken ? tokenId(selectedToken) : undefined"
+    :network-icon="networkIcon"
+    :loading="!isLoaded"
+    :disabled-group-title="$t('trade.select_asset.unavailable')"
+    @select="selectAsset"
   >
-    <div class="flex h-full flex-col">
-      <div
-        :class="[
-          sectionHeader ? 'pb-0.5' : 'pb-6',
-          'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
-        ]"
+    <template v-if="sectionHeader" #before-list>
+      <p class="text-label-base text-text-default">{{ sectionHeader }}</p>
+    </template>
+
+    <template v-if="hasPausedAsset" #item-suffix="{ item }">
+      <!-- The disabled row turns pointer events off; the tag keeps its tooltip. -->
+      <app-tooltip
+        v-if="itemPauseReason(item)"
+        :text="$t(`trade.pause_reason.${itemPauseReason(item)}.tooltip`)"
+        placement="right"
+        class="pointer-events-auto"
       >
-        <app-searchbar
-          v-model="searchInput"
-          variant="default"
-          :placeholder="$t('select_token.search')"
+        <app-tag
+          type="warning"
+          variant="subtle"
+          trailing-icon="information-circle"
+          :label="$t(`trade.pause_reason.${itemPauseReason(item)}.tag`)"
         />
-        <p
-          v-if="sectionHeader"
-          class="flex items-center px-3 py-2 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-        >
-          {{ sectionHeader }}
-        </p>
-      </div>
-
-      <div
-        class="flex flex-1 flex-col gap-0.5 overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
-      >
-        <template v-for="asset in searchResults" :key="asset.address">
-          <p
-            v-if="asset === firstUnavailableAsset"
-            class="sticky top-0 z-10 flex items-center px-3 py-2 mt-[22px] bg-white text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-          >
-            {{ $t('trade.select_asset.unavailable') }}
-          </p>
-          <component
-            :is="isAssetPaused(asset) ? 'div' : 'button'"
-            :type="isAssetPaused(asset) ? undefined : 'button'"
-            :class="[
-              isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
-              isSessionUnavailable(asset) ? 'opacity-30' : '',
-              'flex flex-none items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
-            ]"
-            @click="!isAssetPaused(asset) && selectAsset(asset)"
-          >
-            <div
-              :class="[
-                isDimmed(asset) ? 'opacity-40' : '',
-                'relative flex-none',
-              ]"
-            >
-              <app-token-logo
-                :url="asset.logoURI"
-                :symbol="asset.symbol"
-                :address="tokenAddress(asset)"
-                :is-stock="side === 'buy'"
-                width="w-10"
-                height="h-10"
-                no-shadow
-              />
-              <span
-                v-if="isSelected(asset)"
-                class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-background-skeleton"
-              >
-                <AppIcon
-                  name="check-circle"
-                  variant="filled"
-                  class="flex-none text-black"
-                />
-              </span>
-            </div>
-
-            <div
-              :class="[
-                isDimmed(asset) ? 'opacity-40' : '',
-                'flex flex-col items-start flex-1 min-w-0',
-              ]"
-            >
-              <app-token-symbol
-                :symbol="asset.symbol"
-                :address="tokenAddress(asset)"
-                :is-stock="side === 'buy'"
-                class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
-              />
-              <p
-                class="text-s-14 leading-[20px] text-text-subtle truncate max-w-full"
-              >
-                {{ asset.name }}
-              </p>
-            </div>
-
-            <app-tooltip
-              v-if="pauseReasonOf(asset)"
-              :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
-              placement="right"
-              class="flex-none"
-            >
-              <span
-                class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
-              >
-                <span
-                  class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-text-warning"
-                >
-                  {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
-                </span>
-                <AppIcon
-                  name="information-circle"
-                  variant="filled"
-                  size="xs"
-                  class="text-text-warning"
-                />
-              </span>
-            </app-tooltip>
-
-            <div v-else class="flex flex-col items-end flex-none">
-              <p
-                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-              >
-                {{ asset.fiatValueFormatted }}
-              </p>
-              <p
-                :class="[
-                  side === 'buy' ? changeColor(asset) : 'text-text-subtle',
-                  'text-s-14 leading-[20px] whitespace-nowrap',
-                ]"
-              >
-                {{ asset.secondaryLine }}
-              </p>
-            </div>
-          </component>
-        </template>
-
-        <p
-          v-if="!searchResults.length"
-          class="text-s-14 leading-[20px] text-text-subtle text-center py-6"
-        >
-          {{
-            searchInput
-              ? $t('select_token.no_tokens_match')
-              : $t('select_token.no_tokens_available')
-          }}
-        </p>
-      </div>
-    </div>
-  </app-modal>
+      </app-tooltip>
+    </template>
+  </app-token-selector-modal>
 </template>
 
 <script setup lang="ts">
@@ -161,34 +49,27 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 
-import AppModal from '@/components/modal/AppModal.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
+import {
+  pickQuickPicks,
+  tokenRowAccessory,
+} from '@/components/token_selector/tokenSelector'
+import type { TokenSelectorItem } from '@/components/token_selector/types'
+import AppTag from '@/components/tag/AppTag.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
-import { useWalletStore } from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useStocksStore } from '@/stores/stocksStore'
 import { useMarketStatusStore } from '@/stores/marketStatusStore'
 import { useCurrency } from '@/composables/useCurrency'
-import {
-  formatFloatingPointValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import type { TradeAssetToken } from '../composables/useTradeTokens'
 import { isPauseReason } from '../common/tradeSession'
-
-interface DisplayAsset extends TradeAssetToken {
-  fiatValue: BigNumber
-  fiatValueFormatted: string
-  secondaryLine: string
-  hasBalance?: boolean
-}
 
 const props = withDefaults(
   defineProps<{
@@ -216,8 +97,10 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
+const stocksStore = useStocksStore()
 const { isLoadingBalances, isWalletConnected } = storeToRefs(walletStore)
-const { isLoaded } = storeToRefs(useChainsStore())
+const chainsStore = useChainsStore()
+const { isLoaded } = storeToRefs(chainsStore)
 const { currentSession } = storeToRefs(useMarketStatusStore())
 
 const isOpen = ref(false)
@@ -243,111 +126,136 @@ const sectionHeader = computed(() => {
     : t('trade.select_asset.available_in', { marketStatus: name })
 })
 
-const changeLabel = (change: number): string => {
-  const formatted = formatPercentageValue(change).value
-  return change > 0 && !/^[+<>]/.test(formatted) ? `+${formatted}` : formatted
-}
+const networkIcon = computed(() =>
+  props.networkName ? chainsStore.getChainIcon(props.networkName) : undefined,
+)
 
-const tokenAddress = (token: NewTokenInfo) =>
-  props.networkName
-    ? { address: token.address, network: props.networkName }
-    : undefined
-
-const assets = computed<DisplayAsset[]>(() => {
-  if (!isLoaded.value) return []
-  const tokens = props.chainTokens as TradeAssetToken[]
-
-  if (props.side === 'buy') {
-    return tokens.map(token => ({
-      ...token,
-      fiatValue: BigNumber(token.price || 0),
-      fiatValueFormatted: formatFiat(BigNumber(token.price || 0)).display,
-      secondaryLine: changeLabel(token.priceChangePercentage24h ?? 0),
-    }))
-  }
-
-  return (
-    tokens
-      .map(token => {
-        const amountOwned = token.balance
-          ? formatUnits(BigInt(token.balance), token.decimals)
-          : '0'
-        const fiatValue = BigNumber(amountOwned).multipliedBy(token.price || 0)
-        const walletToken = walletStore.getTokenBalance(token.address)
-        return {
-          ...token,
-          name: getTokenDisplayName({
-            name: token.name,
-            ondo: walletToken?.ondo,
-          }),
-          fiatValue,
-          hasBalance: BigNumber(amountOwned).isGreaterThan(0),
-          fiatValueFormatted: formatFiat(fiatValue).display,
-          secondaryLine: `${formatFloatingPointValue(amountOwned).value} ${truncate(token.symbol, 7)}`,
-        }
-      })
-      // Filter on balance, not fiat value: a held token whose price feed is
-      // missing must stay sellable. With no wallet connected there are no
-      // balances at all — show the list rather than an empty "no tokens" state.
-      .filter(asset => !isWalletConnected.value || asset.hasBalance)
-      .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
-  )
-})
+const tokenId = (token: NewTokenInfo) =>
+  (token.address || token.symbol).toLowerCase()
 
 const disabledAddresses = computed(
   () => new Set(props.disabledTokens.map(address => address.toLowerCase())),
 )
 
-const pauseReasonOf = (asset: DisplayAsset) =>
-  asset.pauseReason && isPauseReason(asset.pauseReason)
-    ? asset.pauseReason
+const pauseReasonOf = (token: TradeAssetToken) =>
+  token.pauseReason && isPauseReason(token.pauseReason)
+    ? token.pauseReason
     : null
+const itemPauseReason = (item: TokenSelectorItem) =>
+  pauseReasonOf(item.raw as TradeAssetToken)
 
-// Side-agnostic: a held asset that is out of session must be grouped and
-// explained on the sell side too, not rendered as a dead, untagged row.
-const isSessionUnavailable = (asset: DisplayAsset) =>
-  !pauseReasonOf(asset) &&
-  disabledAddresses.value.has(asset.address?.toLowerCase())
+// Same rule as the trigger's title: every buy-side asset is a stock.
+const isStockToken = (token: NewTokenInfo) =>
+  props.side === 'buy' ||
+  (!!props.networkName && stocksStore.isStock(token.address, props.networkName))
 
-const isAssetPaused = (asset: DisplayAsset) =>
-  !!pauseReasonOf(asset) ||
-  disabledAddresses.value.has(asset.address?.toLowerCase())
-
-const isDimmed = (asset: DisplayAsset) =>
-  isAssetPaused(asset) && !isSessionUnavailable(asset)
-
-const searchResults = computed<DisplayAsset[]>(() => {
-  const matches = searchInput.value
-    ? fuzzySearchByKeys(assets.value, ['name', 'symbol'], searchInput.value)
-    : assets.value
-  return [
-    ...matches.filter(asset => !isSessionUnavailable(asset)),
-    ...matches.filter(isSessionUnavailable),
-  ]
-})
-
-const firstUnavailableAsset = computed(() =>
-  searchResults.value.find(isSessionUnavailable),
-)
-
-const changeColor = (asset: DisplayAsset) =>
-  (asset.priceChangePercentage24h ?? 0) < 0
-    ? 'text-text-error'
-    : 'text-text-success'
-
-const isSelected = (asset: DisplayAsset) =>
-  selectedToken.value?.address?.toLowerCase() === asset.address?.toLowerCase()
-
-const selectAsset = (asset: DisplayAsset) => {
-  selectedToken.value = asset
-  emit('select:token', asset)
-  isOpen.value = false
+const stockSymbol = (symbol: string) => {
+  const upper = symbol.toUpperCase()
+  return `${upper.endsWith('ON') ? upper.slice(0, -2) : upper}on`
 }
 
-watch(isOpen, value => {
-  if (!value) searchInput.value = ''
-  emit('open:selectToken', value)
+interface TradeAsset {
+  token: TradeAssetToken
+  amount: string
+  fiatValue: BigNumber
+}
+
+const assets = computed<TradeAsset[]>(() => {
+  if (!isLoaded.value) return []
+  const assets = (props.chainTokens as TradeAssetToken[]).map(token => {
+    const amount = token.balance
+      ? formatUnits(BigInt(token.balance), token.decimals)
+      : '0'
+    return {
+      token:
+        props.side === 'sell'
+          ? {
+              ...token,
+              name: getTokenDisplayName({
+                name: token.name,
+                ondo: walletStore.getTokenBalance(token.address)?.ondo,
+              }),
+            }
+          : token,
+      amount,
+      fiatValue: BigNumber(amount).multipliedBy(token.price || 0),
+    }
+  })
+  if (props.side === 'buy') return assets
+  return (
+    assets
+      // Filter on balance, not fiat value: a held token whose price feed is
+      // missing must stay sellable. With no wallet connected there are no
+      // balances at all — show the list rather than an empty "no tokens" state.
+      .filter(
+        ({ amount }) =>
+          !isWalletConnected.value || BigNumber(amount).isGreaterThan(0),
+      )
+      .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
+  )
 })
+
+const toItem = ({
+  token,
+  amount,
+  fiatValue,
+}: TradeAsset): TokenSelectorItem<TradeAssetToken> => {
+  const isStock = isStockToken(token)
+  const held = BigNumber(amount).isGreaterThan(0)
+  const paused = !!pauseReasonOf(token)
+  return {
+    id: tokenId(token),
+    symbol: isStock ? stockSymbol(token.symbol) : token.symbol,
+    name: token.name,
+    logo: token.logoURI,
+    isStock,
+    // A paused row shows its pause tag in place of the numbers.
+    rightAccessory: paused
+      ? undefined
+      : tokenRowAccessory({
+          balanceFiat: held ? formatFiat(fiatValue).display : undefined,
+          balance: held
+            ? `${formatFloatingPointValue(amount).value} ${truncate(token.symbol, 7)}`
+            : undefined,
+          price: formatFiat(BigNumber(token.price || 0)).display,
+          change: token.priceChangePercentage24h,
+        }),
+    disabled:
+      paused || disabledAddresses.value.has(token.address?.toLowerCase()),
+    raw: token,
+  }
+}
+
+const allItems = computed(() => assets.value.map(toItem))
+
+const items = computed(() =>
+  searchInput.value
+    ? fuzzySearchByKeys(allItems.value, ['name', 'symbol'], searchInput.value)
+    : allItems.value,
+)
+
+const quickPicks = computed(() =>
+  pickQuickPicks(
+    allItems.value,
+    assets.value.find(
+      ({ token }) => token.address?.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )?.token.symbol ?? '',
+  ),
+)
+
+// Only pass the suffix slot when it has something to draw: the row reserves
+// room for it otherwise.
+const hasPausedAsset = computed(() =>
+  assets.value.some(({ token }) => pauseReasonOf(token)),
+)
+
+const selectAsset = (item: TokenSelectorItem) => {
+  const token = item.raw as TradeAssetToken
+  selectedToken.value = token
+  emit('select:token', token)
+}
+
+watch(isOpen, value => emit('open:selectToken', value))
 
 // Deliberately no networkName watcher here: on a chain switch this fires while
 // `chainTokens` still holds the previous chain's list (the swap store re-inits
