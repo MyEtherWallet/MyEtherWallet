@@ -25,7 +25,7 @@ defineProps<{
         <img
           :src="(item.chainIcon ?? networkIcon)!"
           alt=""
-          class="size-full object-cover"
+          class="size-full object-contain"
         />
       </AppAvatarBadge>
     </template>

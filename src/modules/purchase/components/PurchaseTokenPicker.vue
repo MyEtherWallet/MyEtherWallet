@@ -18,7 +18,7 @@
             <img
               :src="chain.icon"
               :alt="networkName"
-              class="w-full h-full object-cover"
+              class="size-full object-contain"
             />
           </app-avatar-badge>
         </template>
