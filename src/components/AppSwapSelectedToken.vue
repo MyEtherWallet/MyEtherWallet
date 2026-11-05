@@ -48,7 +48,6 @@
     :loading="!isLoaded"
     :has-more="tokens.length > endingPagination && !searchInput"
     :loading-more="loadingMoreItems"
-    :disabled-group-title="disabledGroupLabel"
     @select="setSelectedToken"
     @sort="setActiveSort($event as SortValueString)"
     @load-more="loadMoreItems"
@@ -58,7 +57,7 @@
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
-import { type PropType, ref, computed, onMounted, watch } from 'vue'
+import { type PropType, ref, computed, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -68,15 +67,17 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
+import { useStocksStore } from '@/stores/stocksStore'
 import { useI18n } from 'vue-i18n'
 import { refDebounced } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
-import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
+import { analytics, SwapClickSortEvent } from '@/analytics'
 import AppPicker from '@/components/picker/AppPicker.vue'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
   pickQuickPicks,
+  pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
 import type {
@@ -102,20 +103,6 @@ const props = defineProps({
     default: true,
   },
   networkName: {
-    type: String,
-    required: false,
-  },
-  sortContext: {
-    type: String as () => 'trade' | 'swap' | undefined,
-    default: undefined,
-  },
-  // Token addresses (any case) to render disabled under `disabledGroupTitle`.
-  // Generic so Trade (and later Swap) can gray out non-selectable tokens.
-  disabledTokens: {
-    type: Array as () => string[],
-    default: () => [],
-  },
-  disabledGroupTitle: {
     type: String,
     required: false,
   },
@@ -146,6 +133,7 @@ const {
   isWalletConnected,
   allTokens: walletTokens,
 } = storeToRefs(store)
+const stocksStore = useStocksStore()
 
 const chainsStore = useChainsStore()
 const { isLoaded, allChains } = storeToRefs(chainsStore)
@@ -180,32 +168,12 @@ const searchInput = ref('')
 const debouncedSearchInput = refDebounced(searchInput, 250)
 const loadingMoreItems = ref(false)
 
-onMounted(() => {
-  if (!props.isFromView || !isWalletConnected.value) {
-    if (
-      props.sortContext !== 'trade' ||
-      (props.isFromView && !isWalletConnected.value)
-    ) {
-      activeSortValue.value = SortValueString.RANK
-    } else {
-      activeSortValue.value = SortValueString.PRICE
-      activeSortDirection.value = 'desc'
-    }
-  }
-})
-
 // Set default token to the top of the sorted list on network change
 watch(
   () => props.networkName,
   () => {
-    if (tokens.value.length > 0) {
-      // Prefer an enabled token; never default-select a disabled one. Fall back
-      // to the full list only when nothing is enabled.
-      const top =
-        searchResults.value.find(token => !isTokenDisabled(token)) ??
-        searchResults.value[0]
-      if (top) emit('update:selectedToken', top)
-    }
+    const [top] = searchResults.value
+    if (top) emit('update:selectedToken', top)
   },
 )
 
@@ -236,6 +204,10 @@ enum SortValueString {
 const sortOptions = computed(() => {
   const shared = [
     {
+      value: SortValueString.RANK,
+      label: t('common.rank'),
+    },
+    {
       value: SortValueString.NAME,
       label: t('common.name'),
     },
@@ -244,12 +216,6 @@ const sortOptions = computed(() => {
       label: t('common.symbol'),
     },
   ]
-  if (props.isFromView || props.sortContext !== 'trade') {
-    shared.unshift({
-      value: SortValueString.RANK,
-      label: t('common.rank'),
-    })
-  }
   const marketOptions = [
     { value: SortValueString.PRICE, label: t('common.price') },
     { value: SortValueString.MARKET_CAP, label: t('common.market_cap') },
@@ -271,17 +237,10 @@ const activeSortValue = ref<SortValueString>(SortValueString.RANK)
 const activeSortDirection = ref<TokenSelectorSortDirection>('asc')
 
 const setActiveSort = (value: SortValueString) => {
-  if (props.sortContext === 'trade') {
-    analytics.trackTradeClickSortEvent(TradeClickSortEvent, {
-      sortOption: value,
-      isFromView: props.isFromView,
-    })
-  } else if (props.sortContext === 'swap') {
-    analytics.trackSwapClickSortEvent(SwapClickSortEvent, {
-      sortOption: value,
-      isFromView: props.isFromView,
-    })
-  }
+  analytics.trackSwapClickSortEvent(SwapClickSortEvent, {
+    sortOption: value,
+    isFromView: props.isFromView,
+  })
   if (value === activeSortValue.value) {
     activeSortDirection.value =
       activeSortDirection.value === 'asc' ? 'desc' : 'asc'
@@ -303,7 +262,6 @@ interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
   market_cap: number
   volume24h: number
-  change24h?: number
 }
 
 const marketByContract = computed(
@@ -313,8 +271,9 @@ const marketByContract = computed(
     ),
 )
 
-// Enriched token list (adds usd_balance and the wallet's market data). Shared by
-// the main results, the quick picks and the recently viewed rows.
+// Enriched token list (adds usd_balance and the wallet's market data for the
+// sorts). Shared by the main results, the quick picks and the recently viewed
+// rows.
 const enrichedTokens = computed<TokenBalanceWithUsd[]>(() => {
   return tokens.value.map(token => {
     const usdBalance = BigNumber(
@@ -333,7 +292,6 @@ const enrichedTokens = computed<TokenBalanceWithUsd[]>(() => {
       price: token.price || 0,
       market_cap: market?.market_cap ?? 0,
       volume24h: market?.volume_24h ?? 0,
-      change24h: market?.price_change_percentage_24h,
     }
   })
 })
@@ -368,29 +326,15 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       debouncedSearchInput.value,
     )
   }
-
-  const enabledSorted = sorted.filter(t => !isTokenDisabled(t))
-  const disabledSorted = sorted.filter(t => isTokenDisabled(t))
-  const combinedSorted = [...enabledSorted, ...disabledSorted]
-  return combinedSorted.slice(0, endingPagination.value)
+  return sorted.slice(0, endingPagination.value)
 })
-
-// Disabled tokens render under the modal's disabled group at the bottom.
-const disabledSet = computed(
-  () => new Set(props.disabledTokens.map(a => a.toLowerCase())),
-)
-const isTokenDisabled = (token: NewTokenInfo) =>
-  disabledSet.value.has(token.address?.toLowerCase())
-const disabledGroupLabel = computed(
-  () => props.disabledGroupTitle || t('trade.trading_paused_session'),
-)
 
 const getBalance = (value: string, decimals: number) => {
   return formatFloatingPointValue(formatUnits(BigInt(value), decimals)).value
 }
 
-// Holdings on the from side (and for any held token), the price otherwise.
-// Tokens without a price show nothing on the right, as before.
+// Holdings on the from side (and for any held token), the price otherwise. A
+// missing price would format as $0.00, so those rows stay blank instead.
 const rowAccessory = (token: TokenBalanceWithUsd) => {
   if (!token.price) return undefined
   const showBalance =
@@ -403,7 +347,6 @@ const rowAccessory = (token: TokenBalanceWithUsd) => {
       ? `${getBalance(token.balance || '0', token.decimals)} ${truncate(token.symbol, 7)}`
       : undefined,
     price: formatFiat(token.price).display,
-    change: token.change24h,
   })
 }
 
@@ -414,54 +357,44 @@ const toItem = (
   symbol: token.symbol,
   name: token.name,
   logo: token.logoURI,
-  disabled: isTokenDisabled(token),
+  isStock:
+    !!props.networkName &&
+    stocksStore.isStock(token.address, props.networkName),
   rightAccessory: rowAccessory(token),
   raw: token,
 })
 
 const items = computed(() => searchResults.value.map(toItem))
 
-// Rank order so a duplicate symbol resolves to the better-ranked token; the
-// bare rows keep the scan cheap and only the picks get formatted.
+// Bare rows keep the quick pick and recent scans cheap; only the picks get
+// formatted.
+const bareItem = (
+  token: TokenBalanceWithUsd,
+): TokenSelectorItem<TokenBalanceWithUsd> => ({
+  id: token.address,
+  symbol: token.symbol,
+  name: token.name,
+  raw: token,
+})
+
+// Rank order so a duplicate symbol resolves to the better-ranked token.
 const quickPicks = computed(() =>
   pickQuickPicks(
-    sortObjectArrayNumber(enrichedTokens.value, 'rank', 'asc').map(token => ({
-      id: token.address,
-      symbol: token.symbol,
-      name: token.name,
-      disabled: isTokenDisabled(token),
-      raw: token,
-    })),
+    sortObjectArrayNumber(enrichedTokens.value, 'rank', 'asc').map(bareItem),
     currentChain.value?.currencyName ?? '',
   ).map(({ raw }) => toItem(raw)),
 )
 
-const RECENT_LIMIT = 6
-
-// Recently viewed reuses the shared store, resolving each entry against the
-// current chain's tokens (by coingecko id, falling back to address) so only
-// selectable tokens are shown.
-const recentItems = computed(() => {
-  const resolved: TokenBalanceWithUsd[] = []
-  const seen = new Set<string>()
-  for (const entry of recentlyViewedCrypto.value) {
-    if (resolved.length >= RECENT_LIMIT) break
-    const match = enrichedTokens.value.find(
-      token =>
-        (token.cgId && token.cgId === entry.id) ||
-        token.address?.toLowerCase() === entry.id?.toLowerCase(),
-    )
-    if (
-      match &&
-      !isTokenDisabled(match) &&
-      !seen.has(match.address.toLowerCase())
-    ) {
-      seen.add(match.address.toLowerCase())
-      resolved.push(match)
-    }
-  }
-  return resolved.map(toItem)
-})
+// Store ids are the CoinGecko id, or the address for tokens without one.
+const recentItems = computed(() =>
+  pickRecentItems(
+    enrichedTokens.value.map(bareItem),
+    recentlyViewedCrypto.value.map(({ id }) => id),
+    ({ raw }, id) =>
+      (!!raw.cgId && raw.cgId === id) ||
+      raw.address?.toLowerCase() === id?.toLowerCase(),
+  ).map(({ raw }) => toItem(raw)),
+)
 
 const loadMoreItems = () => {
   loadingMoreItems.value = true

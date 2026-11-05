@@ -5,13 +5,18 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {},
 }))
 vi.mock('@/analytics', () => ({
-  analytics: {
-    trackSwapClickSortEvent: vi.fn(),
-    trackTradeClickSortEvent: vi.fn(),
-  },
+  analytics: { trackSwapClickSortEvent: vi.fn() },
   SwapClickSortEvent: 'Swap_Click_Sort',
-  TradeClickSortEvent: 'Trade_Click_Sort',
 }))
+vi.mock('@/stores/stocksStore', async () => {
+  const { defineStore } = await import('pinia')
+  return {
+    useStocksStore: defineStore('stocksStore', () => ({
+      isStock: (address: string, chain: string) =>
+        address === '0xAAPL' && chain === 'ETHEREUM',
+    })),
+  }
+})
 // The real walletStore loads the hw-wallet providers; the wrapper only reads
 // these refs.
 vi.mock('@/stores/walletStore', async () => {
@@ -26,7 +31,6 @@ vi.mock('@/stores/walletStore', async () => {
           contract: '0xUSDC',
           market_cap: 70,
           volume_24h: 5,
-          price_change_percentage_24h: -0.5,
         },
       ]),
     })),
@@ -80,7 +84,6 @@ const mountWrapper = (props: Record<string, unknown> = {}) =>
       chainTokens: TOKENS,
       networkName: 'ETHEREUM',
       isFromView: false,
-      sortContext: 'swap',
       ...props,
     },
     global: {
@@ -108,7 +111,7 @@ beforeEach(() => {
 })
 
 describe('AppSwapSelectedToken', () => {
-  it('maps tokens to rows: holdings, then price with the 24h change when known', () => {
+  it('maps tokens to rows: holdings, then the price', () => {
     const items = modalOf(mountWrapper()).props('items') as TokenSelectorItem[]
     const byId = Object.fromEntries(items.map(item => [item.id, item]))
 
@@ -118,11 +121,9 @@ describe('AppSwapSelectedToken', () => {
       secondary: '1 ETH',
     })
     expect(byId['0xUSDC'].rightAccessory).toEqual({
-      kind: 'balance-performance',
+      kind: 'balance',
       primary: expect.stringContaining('1'),
-      change: -0.5,
     })
-    // No wallet market data for WBTC: price only.
     expect(byId['0xWBTC'].rightAccessory).toEqual({
       kind: 'balance',
       primary: expect.stringContaining('60,000'),
@@ -169,13 +170,17 @@ describe('AppSwapSelectedToken', () => {
     expect(recent.map(item => item.id)).toEqual(['0xWBTC'])
   })
 
-  it('marks disabled tokens and keeps them last', () => {
-    const modal = modalOf(
-      mountWrapper({ disabledTokens: ['0xdai'], disabledGroupTitle: 'Paused' }),
-    )
-    const items = modal.props('items') as TokenSelectorItem[]
-    expect(items.at(-1)).toMatchObject({ id: '0xDAI', disabled: true })
-    expect(modal.props('disabledGroupTitle')).toBe('Paused')
+  it('draws tokenized stocks with the Stocks avatar', () => {
+    const chainTokens = [token('AAPLon', '0xAAPL'), token('DAI', '0xDAI')]
+    const isStock = (props: Record<string, unknown>) =>
+      (
+        modalOf(mountWrapper({ chainTokens, ...props })).props(
+          'items',
+        ) as TokenSelectorItem[]
+      ).map(item => item.isStock)
+
+    expect(isStock({})).toEqual([true, false])
+    expect(isStock({ networkName: undefined })).toEqual([false, false])
   })
 
   it('toggles the direction on a repeat sort pick and tracks every pick', async () => {

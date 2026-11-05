@@ -110,7 +110,6 @@ const selectToNetwork = (name: string | null) => {
         :tokens="fromTokens"
         :show-balance="showBalance"
         :is-pristine="isPristine"
-        sort-context="swap"
       >
         <template v-if="showFromNetwork" #header>
           <SelectChainPicker :passed-chains="fromChains" />
@@ -152,7 +151,6 @@ const selectToNetwork = (name: string | null) => {
         :is-pristine="isPristine"
         :networks="showToNetwork ? toNetworks : []"
         :network="toChain?.name ?? null"
-        sort-context="swap"
         @update:network="selectToNetwork"
       >
         <template #header>

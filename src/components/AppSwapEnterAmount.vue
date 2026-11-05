@@ -21,9 +21,6 @@
           :chain-tokens="tokens || []"
           :is-from-view="isFromView"
           :network-name="networkName"
-          :sort-context="sortContext"
-          :disabled-tokens="disabledTokens"
-          :disabled-group-title="disabledGroupTitle"
           :networks="networks"
           v-model:network="network"
           @open:select-token="setIsOpenSelectToken"
@@ -104,18 +101,6 @@ const props = defineProps({
   isPristine: {
     type: Boolean,
     default: false,
-  },
-  sortContext: {
-    type: String as () => 'trade' | 'swap' | undefined,
-    default: undefined,
-  },
-  disabledTokens: {
-    type: Array as () => string[],
-    default: () => [],
-  },
-  disabledGroupTitle: {
-    type: String,
-    required: false,
   },
   // Network dropdown in the token modal; empty hides it.
   networks: {
