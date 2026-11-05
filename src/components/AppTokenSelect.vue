@@ -18,169 +18,22 @@
       />
     </template>
   </AppPicker>
-  <app-modal v-model="showAllTokens" :title="$t('select_token.title')">
-    <div class="px-4 sm:px-6">
-      <div
-        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] mb-6 overflow-y-auto mew-scrollbar px-1"
-      >
-        <div class="sticky top-0 bg-white z-20 pt-4">
-          <div
-            class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
-          >
-            <app-searchbar
-              v-model="searchInput"
-              variant="outline"
-              class="grow"
-              :placeholder="$t('select_token.search')"
-            />
-            <!--SORT-->
-            <app-pop-up-menu :placeholder="$t('common.sort')">
-              <template #menu-button="{ toggleMenu }">
-                <button
-                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
-                  @click="toggleMenu"
-                >
-                  <span class="mr-2">{{ activeSortLabel }}</span>
-                  <AppIcon
-                    name="arrow-long-up"
-                    variant="filled"
-                    size="xxs"
-                    v-if="activeSortDirection === SortDirection.ASC"
-                    class="shrink-0"
-                  />
-                  <AppIcon
-                    name="arrow-long-down"
-                    variant="filled"
-                    size="xxs"
-                    v-else
-                    class="shrink-0"
-                  />
-                </button>
-              </template>
-              <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col w-[200px] gap-1">
-                  <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
-                      {{ $t('common.sort_by') }}
-                    </p>
-                    <app-btn-icon-close @close="toggleMenu" />
-                  </div>
-                  <app-divider class="mb-1" />
-                  <button
-                    v-for="option in sortOptions"
-                    :key="option.value"
-                    :class="[
-                      option.value === activeSortValue
-                        ? 'bg-background-default'
-                        : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
-                    ]"
-                    :id="option.value"
-                    @click="setActiveSort(option.value)"
-                  >
-                    <p class="capitalize">{{ option.label }}</p>
-                    <div
-                      v-if="activeSortValue === option.value"
-                      class="ml-auto pl-2"
-                    >
-                      <AppIcon
-                        name="arrow-long-up"
-                        variant="filled"
-                        size="s"
-                        v-if="activeSortDirection === SortDirection.ASC"
-                        class="text-text-brand"
-                      />
-                      <AppIcon
-                        name="arrow-long-down"
-                        variant="filled"
-                        size="s"
-                        v-else
-                        class="text-text-brand"
-                      />
-                    </div>
-                  </button>
-                </div>
-              </template>
-            </app-pop-up-menu>
-          </div>
-          <app-divider class="-mt-1 mb-1" />
-        </div>
-
-        <div v-if="searchResults.length" class="flex flex-col gap-1">
-          <button
-            v-for="token in searchResults"
-            :key="token.contract"
-            class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
-            :class="[
-              token.contract === selectedTokenContract
-                ? 'bg-background-brand-subtle'
-                : 'bg-transparent hoverBGWhite',
-            ]"
-            @click="setSelectedToken(token)"
-          >
-            <div class="flex justify-between items-center w-full">
-              <div class="flex items-center">
-                <app-token-logo
-                  :url="token.logo_url"
-                  :alt="token.symbol"
-                  :is-stock="token.ondo !== undefined"
-                  class="mr-4"
-                />
-                <div class="text-left">
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :is-stock="token.ondo !== undefined"
-                  />
-                  <app-tooltip
-                    v-if="getName(token).length > 10"
-                    :text="getName(token)"
-                  >
-                    <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
-                      {{ truncate(getName(token), 10) }}
-                    </h2>
-                  </app-tooltip>
-                  <h2
-                    v-else
-                    class="text-s-12 text-text-subtle whitespace-nowrap"
-                  >
-                    {{ getName(token) }}
-                  </h2>
-                </div>
-              </div>
-              <div v-if="token.price !== 0" class="text-right">
-                <p class="font-normal text-s-14 text-black">
-                  {{ currencySymbol }} {{ formatUsdBalance(token.usd_balance) }}
-                </p>
-                <div class="flex item-center justify-end gap-1">
-                  <p class="text-text-subtle text-text-xs">
-                    {{ getBalance(token.balance) }}
-                  </p>
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :is-stock="token.ondo !== undefined"
-                    :has-gradient="false"
-                    class="text-text-subtle !text-s-12 font-normal"
-                  />
-                </div>
-              </div>
-            </div>
-          </button>
-        </div>
-        <div v-else>
-          <div
-            class="flex justify-center items-center h-[400px] text-text-subtle"
-          >
-            <p v-if="searchInput !== ''">
-              {{ $t('select_token.no_tokens_match') }}
-            </p>
-            <p v-else>
-              {{ $t('select_token.no_tokens_available') }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </app-modal>
+  <AppTokenSelectorModal
+    v-model="showAllTokens"
+    v-model:search="searchInput"
+    :title="$t('select_token.title')"
+    :items="items"
+    :quick-picks="quickPicks"
+    :recent-items="recentItems"
+    :selected-id="selectedTokenContract?.toLowerCase()"
+    :sort-options="sortOptions"
+    :sort-value="activeSortValue"
+    :sort-direction="activeSortDirection"
+    :network-icon="selectedChain?.icon"
+    :loading="isLoading"
+    @sort="setActiveSort"
+    @select="onSelect"
+  />
 </template>
 
 <script setup lang="ts">
@@ -191,23 +44,22 @@ import { ref, computed, onMounted, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import AppModal from '@/components/modal/AppModal.vue'
-import AppSearchbar from './AppSearchbar.vue'
-import AppPopUpMenu from './AppPopUpMenu.vue'
-import AppBtnIconClose from './AppBtnIconClose.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
-import AppTokenSymbol from './AppTokenSymbol.vue'
 import AppPicker from '@/components/picker/AppPicker.vue'
+import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
+import {
+  pickQuickPicks,
+  tokenRowAccessory,
+} from '@/components/token_selector/tokenSelector'
+import type { TokenSelectorItem } from '@/components/token_selector/types'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { useI18n } from 'vue-i18n'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppDivider from '@/components/divider/AppDivider.vue'
 const props = defineProps({
   externalLoading: {
     type: Boolean,
@@ -216,7 +68,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { formatFiat, currencySymbol } = useCurrency()
+const { formatFiat } = useCurrency()
 
 const store = useWalletStore()
 const {
@@ -226,7 +78,9 @@ const {
 } = storeToRefs(store)
 
 const chainsStore = useChainsStore()
-const { isLoaded } = storeToRefs(chainsStore)
+const { isLoaded, selectedChain } = storeToRefs(chainsStore)
+
+const { recentlyViewedCrypto } = storeToRefs(useRecentlyViewedTokensStore())
 
 const isLoading = computed(() => {
   return props.externalLoading || isLoadingBalances.value || !isLoaded.value
@@ -249,7 +103,8 @@ const showAllTokens = ref(false)
 const searchInput = ref('')
 
 onMounted(() => {
-  if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
+  if (tokens.value.length > 0)
+    selectedTokenContract.value = tokens.value[0].contract
 })
 
 /** -------------------
@@ -290,25 +145,20 @@ enum SortDirection {
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
-const activeSortLabel = computed(() => {
-  const option = sortOptions.value.find(
-    option => option.value === activeSortValue.value,
-  )
-  return option ? option.label : ''
-})
 
-const setActiveSort = (value: SortValueString) => {
+// The modal emits every pick, so a repeat pick flips the direction.
+const setActiveSort = (value: string) => {
   if (value === activeSortValue.value) {
     activeSortDirection.value =
       activeSortDirection.value === SortDirection.ASC
         ? SortDirection.DESC
         : SortDirection.ASC
   } else {
-    activeSortValue.value = value
+    activeSortValue.value = value as SortValueString
     const isNumericSort = [
       SortValueString.USD,
       SortValueString.BALANCE,
-    ].includes(value)
+    ].includes(activeSortValue.value)
     activeSortDirection.value = isNumericSort
       ? SortDirection.DESC
       : SortDirection.ASC
@@ -318,7 +168,7 @@ const setActiveSort = (value: SortValueString) => {
 interface TokenBalanceWithUsd extends TokenBalance {
   usd_balance: number
 }
-const searchResults = computed<TokenBalanceWithUsd[]>(() => {
+const sortedTokens = computed<TokenBalanceWithUsd[]>(() => {
   const items = tokens.value.map(token => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(BigNumber(token.balance)),
@@ -341,32 +191,57 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   }
 
   const { key, type } = sortKeyMap[activeSortValue.value]
-  const sorted =
-    type === 'string'
-      ? sortObjectArrayString(items, key, activeSortDirection.value)
-      : sortObjectArrayNumber(items, key, activeSortDirection.value)
-
-  if (searchInput.value) {
-    return fuzzySearchByKeys(sorted, ['name', 'symbol'], searchInput.value)
-  }
-
-  return sorted
+  return type === 'string'
+    ? sortObjectArrayString(items, key, activeSortDirection.value)
+    : sortObjectArrayNumber(items, key, activeSortDirection.value)
 })
 
-const setSelectedToken = (token: TokenBalance) => {
-  selectedTokenContract.value = token.contract
-  showAllTokens.value = false
-}
+type SendTokenItem = TokenSelectorItem<TokenBalanceWithUsd>
 
-const formatUsdBalance = (_value: number) => {
-  return formatFiat(_value).value
-}
+// Right column: the holding, or the price (+24h) when the token has no fiat value.
+const toItem = (token: TokenBalanceWithUsd): SendTokenItem => ({
+  id: token.contract.toLowerCase(),
+  symbol: token.symbol,
+  name: getTokenDisplayName(token),
+  logo: token.logo_url,
+  isStock: token.ondo !== undefined,
+  rightAccessory: tokenRowAccessory({
+    balanceFiat:
+      token.usd_balance > 0 ? formatFiat(token.usd_balance).display : undefined,
+    balance: `${formatFloatingPointValue(token.balance).value} ${token.symbol}`,
+    price: token.price ? formatFiat(token.price).display : undefined,
+    change: token.price_change_percentage_24h,
+  }),
+  raw: token,
+})
 
-const getBalance = (_value: string) => {
-  return formatFloatingPointValue(_value).value
-}
+const allItems = computed(() => sortedTokens.value.map(toItem))
 
-const getName = (token: TokenBalance): string => getTokenDisplayName(token)
+// Same keys as before: the token's own name (not the Ondo alias) and symbol.
+const items = computed(() =>
+  fuzzySearchByKeys(allItems.value, ['raw.name', 'symbol'], searchInput.value),
+)
+
+const quickPicks = computed(() =>
+  pickQuickPicks(allItems.value, safeMainTokenBalance.value?.symbol ?? ''),
+)
+
+// Store ids are the CoinGecko id or the contract (see AppSwapSelectedToken).
+const RECENT_LIMIT = 6
+const recentItems = computed(() => {
+  const found = new Set<SendTokenItem>()
+  for (const { id } of recentlyViewedCrypto.value) {
+    const match = allItems.value.find(
+      item => item.raw.coinId === id || item.id === id.toLowerCase(),
+    )
+    if (match) found.add(match)
+  }
+  return [...found].slice(0, RECENT_LIMIT)
+})
+
+const onSelect = (item: TokenSelectorItem) => {
+  selectedTokenContract.value = (item.raw as TokenBalance).contract
+}
 
 const emit = defineEmits<{
   'open:selectToken': [isOpen: boolean]
